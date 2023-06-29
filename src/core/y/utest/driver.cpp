@@ -1,6 +1,6 @@
 
 #include "y/utest/driver.hpp"
-#include "y/memory/out-of-reach.h"
+#include "y/memory/out-of-reach.hpp"
 
 namespace Yttrium
 {
@@ -49,7 +49,7 @@ namespace Yttrium
 
     void UnitTests:: clear() noexcept
     {
-        Y_OutOfReach_Zero(utest,sizeof(UnitTest)*capacity);
+        Memory::OutOfReach::Zero(utest,sizeof(UnitTest)*capacity);
     }
 
     UnitTests:: ~UnitTests() noexcept

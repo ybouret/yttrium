@@ -1,5 +1,6 @@
-#include "y/memory/chunk.h"
-#include "y/memory/out-of-reach.h"
+#include "y/memory/chunk.hpp"
+#include "y/memory/out-of-reach.hpp"
+#include "y/memory/ram.hpp"
 #include "y/utest/run.hpp"
 
 #include <cmath>
@@ -32,14 +33,10 @@ namespace
 
 Y_UTEST(memory_chunk)
 {
-    Y_MemoryChunk chunk = Y_MemoryChunk_Static_Init;
-
-    Y_OutOfReach_Init(chunk);
-
-    std::cerr << "sizeof(chunk)=" << sizeof(Y_MemoryChunk) << std::endl;
+    std::cerr << "sizeof(Memory::Chunk)=" << sizeof(Memory::Chunk) << std::endl;
 
     void *addr[256];
-    Y_OutOfReach_Zero(addr,sizeof(addr));
+    Y_STATIC_ZARR(addr);
 
     const size_t max_block_size = 40;
     for(size_t block_size=1;block_size<=max_block_size;++block_size)
@@ -49,9 +46,8 @@ Y_UTEST(memory_chunk)
         const size_t max_chunk_size = max_blocks * block_size;
         for(size_t chunk_size=block_size;chunk_size<=max_chunk_size;chunk_size += 1+alea_leq(block_size))
         {
-            void *chunk_data = calloc(1, chunk_size);
-            if(!chunk_data) throw std::exception();
-            Y_MemoryChunk_Init(&chunk, block_size, chunk_data, chunk_size);
+            void *chunk_data = Memory::RAM::Acquire(chunk_size);
+            Memory::Chunk chunk(block_size, chunk_data, chunk_size);
             
             size_t count = 0;
 
@@ -59,22 +55,18 @@ Y_UTEST(memory_chunk)
             {
                 while(chunk.still_available)
                 {
-                    addr[count++] = Y_MemoryChunk_Acquire(&chunk,block_size);
+                    addr[count++] = chunk.acquire(block_size);
                 }
                 alea_shuffle(addr,count);
                 size_t half = count >> 1;
-                while(half-- > 0) Y_MemoryChunk_Release(&chunk,addr[--count],block_size);
+                while(half-- > 0) chunk.release(addr[--count],block_size);
             }
-            int res = 0;
+            bool res = 0;
             while(count>0)
-                res = Y_MemoryChunk_Release(&chunk,addr[--count],block_size);
+                res = chunk.release(addr[--count],block_size);
             if(!res) throw std::exception();
 
-            Y_MemoryChunk_Quit(&chunk,block_size);
-
-
-
-            free(chunk_data);
+            Memory::RAM::Release(chunk_data,chunk_size);
         }
     }
 
