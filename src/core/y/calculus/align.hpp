@@ -30,13 +30,15 @@
 #define Y_ALIGN16(N)  Y_ALIGN_LN2(4,N) //!< align on 16 bytes | 128 bits
 #define Y_ALIGN32(N)  Y_ALIGN_LN2(5,N) //!< align on 32 bytes | 256 bits
 
-#define Y_MEMALIGN(N) Y_ALIGN16(N)    //!< default memory alignment
 
 //! align on power of two SIZE
 #define Y_ALIGN_ON(SIZE,N) Y_ALIGN_LN2(Yttrium::iLog2<SIZE>::Value,N)
 
 //! align on sizeof(TYPE) = power of two
 #define Y_ALIGN_TO(TYPE,N) Y_ALIGN_ON(sizeof(TYPE),N)
+
+
+#define Y_MEMALIGN(N) Y_ALIGN_TO(void*,N)    //!< default memory alignment
 
 
 //! number of word to hold BYTES

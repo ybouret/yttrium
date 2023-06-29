@@ -1,5 +1,7 @@
 #include "y/memory/chunk.hpp"
 #include "y/memory/out-of-reach.hpp"
+#include "y/calculus/align.hpp"
+
 #include <cstring>
 
 namespace Yttrium
@@ -131,8 +133,9 @@ namespace Yttrium
         {
             const size_t infoSize = sizeof(Chunk);
             const size_t dataSize = numBlocks * blockSize;
-
-            return infoSize + dataSize;
+            
+            
+            return infoSize + Y_MEMALIGN(dataSize);
         }
 
 

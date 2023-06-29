@@ -2,6 +2,9 @@
 #include "y/memory/out-of-reach.hpp"
 #include "y/memory/ram.hpp"
 #include "y/utest/run.hpp"
+#include "y/calculus/align.hpp"
+#include "y/calculus/base2.hpp"
+
 #include "../alea.hpp"
 
 
@@ -49,10 +52,27 @@ Y_UTEST(memory_chunk)
     }
 
     Y_SIZEOF(Memory::Chunk);
-    
-    for(size_t block_size=1;block_size<=max_block_size;++block_size)
-    {
 
+
+    const unsigned infoSize = sizeof(Memory::Chunk);
+    for(unsigned blockSize=1;blockSize<=max_block_size;++blockSize)
+    {
+        std::cerr << "blockSize: " << blockSize << std::endl;
+        const size_t maxChunkSize = 255 * blockSize;
+        const size_t maxFullBytes = infoSize + Y_MEMALIGN(maxChunkSize);
+        const size_t logFullBytes = Base2<size_t>::Log(maxFullBytes);
+        const size_t optPageBytes = Base2<size_t>::One << logFullBytes;
+        const size_t optNumBlocks = (optPageBytes-infoSize)/blockSize;
+        const size_t optChunkSize = optNumBlocks * blockSize;
+        const size_t optFullBytes = infoSize + Y_MEMALIGN(optChunkSize);
+
+        std::cerr << "\tmaxFullBytes = " << maxFullBytes << std::endl;
+        std::cerr << "\tlogFullBytes = " << logFullBytes << " => " << (1<<logFullBytes) << std::endl;
+        std::cerr << "\toptPageBytes = " << optPageBytes << std::endl;
+        std::cerr << "\toptNumBlocks = " << optNumBlocks << std::endl;
+        std::cerr << "\toptChunkSize = " << optChunkSize << std::endl;
+        std::cerr << "\toptFullBytes = " << optFullBytes << " optLoss=" << optPageBytes - optFullBytes << std::endl;
+        
     }
 
 
