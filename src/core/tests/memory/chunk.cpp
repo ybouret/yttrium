@@ -48,7 +48,12 @@ Y_UTEST(memory_chunk)
         }
     }
 
+    Y_SIZEOF(Memory::Chunk);
     
+    for(size_t block_size=1;block_size<=max_block_size;++block_size)
+    {
+
+    }
 
 
 
