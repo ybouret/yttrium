@@ -38,7 +38,6 @@ add_subdirectory(core)
 
 
 find_program(doxygen doxygen)
-message( STATUS "doxygen=${doxygen}")
 if("${doxygen}" EQUAL "doxygen-NOTFOUND" )
     message( STATUS "missing Doxygen")
 else()

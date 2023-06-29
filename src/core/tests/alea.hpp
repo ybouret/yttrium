@@ -1,10 +1,26 @@
+
+#ifndef TestAleaIncluded
+#define TestAleaIncluded 1
+
 #include <cmath>
 #include <ctime>
+#include "y/check/crc32.hpp"
 
 namespace
 {
+
+    inline unsigned alea_seed()
+    {
+        const time_t   tm = time(0);
+        const uint32_t dw = Yttrium::CRC32::Of(tm);
+        srand(dw);
+        return dw;
+    }
+
     inline double alea()
     {
+        static volatile unsigned seed = alea_seed();
+        (void)seed;
         return (0.5 + rand()) / (1.0+RAND_MAX);
     }
 
@@ -24,4 +40,6 @@ namespace
     }
 
 }
+
+#endif
 

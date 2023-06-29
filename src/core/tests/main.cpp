@@ -13,5 +13,6 @@ Y_UTEST_DECL(16)
 
     Y_UTEST(calculus_ilog2);
     Y_UTEST(calculus_align);
+    Y_UTEST(calculus_base2);
 }
 Y_UTEST_EXEC()

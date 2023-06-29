@@ -17,24 +17,24 @@ namespace Yttrium
         }
 
 
-        Chunk:: Chunk(const size_t   block_size,
-                      void          *chunk_data,
-                      const size_t   chunk_size) noexcept :
-        first_available(0),
-        still_available(num_blocks(block_size,chunk_size)),
-        operated_number(0),
-        provided_number(still_available),
-        data( static_cast<uint8_t *>(chunk_data)  ),
-        last( data + block_size * provided_number ),
+        Chunk:: Chunk(const size_t   blockSize,
+                      void          *chunkData,
+                      const size_t   chunkSize) noexcept :
+        firstAvailable(0),
+        stillAvailable(num_blocks(blockSize,chunkSize)),
+        operatedNumber(0),
+        providedNumber(stillAvailable),
+        data( static_cast<uint8_t *>(chunkData)  ),
+        last( data + blockSize * providedNumber ),
         next(0),
         prev(0)
         {
-            assert(Good(chunk_data,chunk_size));
+            assert(Good(chunkData,chunkSize));
 
-            const uint8_t n = provided_number;
-            for(uint8_t   q = 0, *p=data;q!=n; p += block_size)
+            const uint8_t n = providedNumber;
+            for(uint8_t   q = 0, *p=data;q!=n; p += blockSize)
             {
-                assert(owns(p,block_size));
+                assert(owns(p,blockSize));
                 *p = ++q;
             }
         }
@@ -80,19 +80,19 @@ namespace Yttrium
             assert(NULL==prev);
         }
 
-        void * Chunk:: acquire(const size_t block_size) noexcept
+        void * Chunk:: acquire(const size_t blockSize) noexcept
         {
-            assert(still_available>0);
-            assert(still_available<=provided_number);
-            assert(operated_number+still_available==provided_number);
-            assert(block_size>0);
+            assert(stillAvailable>0);
+            assert(stillAvailable<=providedNumber);
+            assert(operatedNumber+stillAvailable==providedNumber);
+            assert(blockSize>0);
 
             {
-                uint8_t * p = &data[first_available*block_size]; /* get address                 */
-                first_available = *p;                            /* read next available address */
-                --still_available;                               /* bookkeeping                 */
-                ++operated_number;                               /* bookkeeping                 */
-                memset(p,0,block_size);                          /* zero memory                 */
+                uint8_t * p = &data[firstAvailable*blockSize]; /* get address                 */
+                firstAvailable = *p;                            /* read next available address */
+                --stillAvailable;                               /* bookkeeping                 */
+                ++operatedNumber;                               /* bookkeeping                 */
+                memset(p,0,blockSize);                          /* zero memory                 */
                 return p;                                        /* done                        */
             }
         }
@@ -107,8 +107,8 @@ namespace Yttrium
             //------------------------------------------------------------------
             assert(block_size>0);
             assert(owns(block_addr,block_size));
-            assert(operated_number>0);
-            assert(operated_number+still_available==provided_number);
+            assert(operatedNumber>0);
+            assert(operatedNumber+stillAvailable==providedNumber);
 
 
 
@@ -120,130 +120,21 @@ namespace Yttrium
             {
                 uint8_t     *to_release = static_cast<uint8_t *>(block_addr);
                 const size_t indx       = (size_t)(to_release-data)/block_size;
-                *to_release             = first_available;
-                first_available         = (uint8_t)indx;
-                ++still_available;
-                return (--operated_number) <= 0;
+                *to_release             = firstAvailable;
+                firstAvailable         = (uint8_t)indx;
+                ++stillAvailable;
+                return (--operatedNumber) <= 0;
             }
         }
 
+        size_t Chunk:: BytesFor(const uint8_t numBlocks, const size_t blockSize) noexcept
+        {
+            const size_t infoSize = sizeof(Chunk);
+            const size_t dataSize = numBlocks * blockSize;
 
-#if 0
+            return infoSize + dataSize;
+        }
 
-        
-
-
-        
-        
-#include <stdio.h>
-#include <string.h>
-#include "y/memory/out-of-reach.h"
-        
-        void Y_MemoryChunk_Quit(Y_MemoryChunk *chunk,
-                                const size_t   block_size)
-        {
-            assert(NULL!=chunk);
-            assert(block_size>0);
-            if(chunk->operated_number) {
-                fprintf(stderr,"[Yttrium::MemoryChunk] still %2lu block_size=%3lu\n", (unsigned long)(chunk->operated_number), (unsigned long)block_size);
-            }
-            memset(chunk,0,sizeof(Y_MemoryChunk));
-        }
-        
-        int Y_MemoryChunk_Owns(const Y_MemoryChunk *chunk,
-                               const void          *block,
-                               const size_t         block_size)
-        {
-            const uint8_t *p = (const uint8_t *)block;
-            assert(NULL!=chunk);
-            assert(NULL!=block);
-            assert(block_size>0);
-            if(p>=chunk->data&&p<chunk->last)
-            {
-                const ptrdiff_t shift = Y_OutOfReach_Diff(chunk->data,p);
-                return (0 == (shift%block_size) ) ? 1 : 0;
-            }
-            else
-            {
-                return 0;
-            }
-            
-        }
-        
-        Y_MemoryChunkOwner Y_MemoryChunk_Whose(const Y_MemoryChunk *chunk,
-                                               const void          *block)
-        {
-            const uint8_t *p = (const uint8_t *)block;
-            assert(NULL!=chunk);
-            assert(NULL!=block);
-            if(p<chunk->data)
-                return Y_MemoryChunkPrev;
-            else
-            {
-                if(p>=chunk->last)
-                {
-                    return Y_MemoryChunkNext;
-                }
-                else
-                {
-                    return Y_MemoryChunkSelf;
-                }
-            }
-            
-        }
-        
-        
-        void *Y_MemoryChunk_Acquire(Y_MemoryChunk *chunk,
-                                    const size_t   block_size)
-        {
-            assert(NULL!=chunk);
-            assert(chunk->still_available>0);
-            assert(chunk->still_available<=chunk->provided_number);
-            assert(chunk->operated_number+chunk->still_available==chunk->provided_number);
-            assert(block_size>0);
-            
-            {
-                uint8_t * p = &chunk->data[chunk->first_available*block_size]; /* get address                 */
-                chunk->first_available = *p;                                   /* read next available address */
-                --chunk->still_available;                                      /* bookkeeping                 */
-                ++chunk->operated_number;                                      /* bookkeeping                 */
-                memset(p,0,block_size);                                        /* zero memory                 */
-                return p;                                                      /* done                        */
-            }
-        }
-        
-        int Y_MemoryChunk_Release(Y_MemoryChunk *chunk,
-                                  void          *block_addr,
-                                  const size_t   block_size)
-        {
-            //------------------------------------------------------------------
-            //
-            // sanity check
-            //
-            //------------------------------------------------------------------
-            assert(NULL!=chunk);
-            assert(block_size>0);
-            assert(Y_MemoryChunk_Owns(chunk,block_addr,block_size));
-            assert(chunk->operated_number>0);
-            assert(chunk->operated_number+chunk->still_available==chunk->provided_number);
-            
-            
-            
-            //------------------------------------------------------------------
-            //
-            // find block and update status
-            //
-            //------------------------------------------------------------------
-            {
-                uint8_t     *to_release = (uint8_t *)block_addr;
-                const size_t indx       = (size_t)(to_release-chunk->data)/block_size;
-                *to_release             = chunk->first_available;
-                chunk->first_available  = (uint8_t)indx;
-                ++chunk->still_available;
-                return (--chunk->operated_number) <= 0 ? 1 : 0;
-            }
-        }
-#endif
 
     }
 }

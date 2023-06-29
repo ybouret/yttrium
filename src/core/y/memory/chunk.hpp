@@ -38,9 +38,9 @@ namespace Yttrium
             // C++
             //__________________________________________________________________
 
-            Chunk(const size_t   block_size,
-                  void          *chunk_data,
-                  const size_t   chunk_size) noexcept;
+            Chunk(const size_t   blockSize,
+                  void          *chunkData,
+                  const size_t   chunkSize) noexcept;
             ~Chunk() noexcept;
 
             //__________________________________________________________________
@@ -48,19 +48,20 @@ namespace Yttrium
             // methods
             //__________________________________________________________________
 
-            bool       owns(const void *addr, const size_t block_size) const noexcept;
-            Ownership  whose(const void *addr) const noexcept;
-            void     * acquire(const size_t block_size) noexcept;
-            bool       release(void *block_addr, const size_t block_size) noexcept;
+            bool          owns(const void *addr, const size_t block_size)       const noexcept; //!< check exactly owned
+            Ownership     whose(const void *addr)                               const noexcept; //!< locate address
+            void     *    acquire(const size_t block_size)                            noexcept; //!< acquire zeroed block[block_size]
+            bool          release(void *block_addr, const size_t block_size)          noexcept; //!< release a previously acquire block
+            static size_t BytesFor(const uint8_t num_blocks, const size_t block_size) noexcept;
 
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            uint8_t                first_available; //!< bookkeeping
-            uint8_t                still_available; //!< bookkeeping
-            uint8_t                operated_number; //!< bookkeeping
-            const uint8_t          provided_number; //!< initial count : still_available + operated_number
+            uint8_t                firstAvailable;  //!< bookkeeping
+            uint8_t                stillAvailable;  //!< bookkeeping
+            uint8_t                operatedNumber;  //!< bookkeeping
+            const uint8_t          providedNumber;  //!< initial count : still_available + operated_number
             uint8_t       *        data;            //!< first item
             const uint8_t * const  last;            //!< first invalid item
             Chunk *                next;            //!< for list

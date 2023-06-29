@@ -12,7 +12,6 @@ Y_UTEST(memory_chunk)
 {
     srand(unsigned(time(0)));
 
-    std::cerr << "sizeof(Memory::Chunk)=" << sizeof(Memory::Chunk) << std::endl;
 
     void *addr[256];
     Y_STATIC_ZARR(addr);
@@ -32,7 +31,7 @@ Y_UTEST(memory_chunk)
 
             for(size_t loop=1;loop<=10;++loop)
             {
-                while(chunk.still_available)
+                while(chunk.stillAvailable)
                 {
                     addr[count++] = chunk.acquire(block_size);
                 }
@@ -48,6 +47,10 @@ Y_UTEST(memory_chunk)
             Memory::RAM::Release(chunk_data,chunk_size);
         }
     }
+
+    
+
+
 
     
 
