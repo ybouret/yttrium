@@ -5,8 +5,19 @@
 
 #include <exception>
 #include <iostream>
-#include "y/config/noexcept.hpp"
-#include "y/config/starting.hpp"
+#include "y/exception.hpp"
+
+namespace Yttrium
+{
+    struct SizeOf
+    {
+        static size_t Width;
+        static void Display(const char  *className,
+                            const size_t classSize);
+    };
+}
+
+#define Y_SIZEOF(CLASS) Yttrium::SizeOf::Display(#CLASS,sizeof(CLASS))
 
 //! start a new test
 #define Y_UTEST(NAME)                                              \
@@ -16,11 +27,15 @@
 
 //! leave the test
 #define Y_UDONE()                                                  \
+/**/    catch(const Yttrium::Exception &e) {                       \
+/**/    e.display(); return 1; }                                   \
 /**/    catch(const std::exception  &e) {                          \
 /**/      std::cerr << " *** std::exception" << std::endl;         \
-/**/      std::cerr << " *** " << e.what()   << std::endl; }       \
+/**/      std::cerr << " *** " << e.what()   << std::endl;         \
+/**/      return 1; }                                              \
 /**/    catch(...) {                                               \
-/**/      std::cerr << " *** Unhandled Exception" << std::endl; }  \
+/**/      std::cerr << " *** Unhandled Exception" << std::endl;    \
+/**/      return 1; }                                              \
 /**/    return 0;                                                  \
 /**/  }
 

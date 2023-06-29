@@ -52,19 +52,5 @@ typedef __int64 int64_t;
 
 
 
-#if defined(__cplusplus)
-extern "C" {
-#endif
-
-    extern const char Y_Unknown[];         /*!< "unknown" */
-    extern const char Y_Success[];         /*!< "success" */
-    extern const char Y_Failure[];         /*!< "failure" */
-    extern const char Y_Warning[];         /*!< "warning" */
-    extern const char Y_Message[];         /*!< "message" */
-    int               Y_Die(const char *); /*!< return 1  */
-    int               Y_Good(const void *addr, const size_t size); /*!< !(addr==NULL&&size>0) */
-#if defined(__cplusplus)
-}
-#endif
 
 #endif

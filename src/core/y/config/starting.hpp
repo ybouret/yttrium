@@ -23,6 +23,20 @@ namespace Yttrium
         b = t;
     }
 
+    namespace Core
+    {
+        extern const char Unknown[];         //!< "unknown"
+        extern const char Success[];         //!< "success"
+        extern const char Failure[];         //!< "failure"
+        extern const char Warning[];         //!< "warning"
+        extern const char Message[];         //!< "message"
+    }
+
+    bool Die(const char *); //!< return true
+    bool Say(const char *); //!< return false
+    bool Good(const void *addr, const size_t size); //!< !(addr==NULL&&size>0) */
+
+
 }
 
 #endif

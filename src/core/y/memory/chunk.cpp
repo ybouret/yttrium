@@ -29,7 +29,7 @@ namespace Yttrium
         next(0),
         prev(0)
         {
-            assert(Y_Good(chunk_data,chunk_size));
+            assert(Good(chunk_data,chunk_size));
 
             const uint8_t n = provided_number;
             for(uint8_t   q = 0, *p=data;q!=n; p += block_size)

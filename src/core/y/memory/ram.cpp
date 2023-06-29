@@ -1,6 +1,7 @@
 #include "y/memory/ram.hpp"
+#include "y/system/exception.hpp"
 #include <cstdlib>
-#include <exception>
+#include <cerrno>
 
 namespace Yttrium
 {
@@ -19,7 +20,7 @@ namespace Yttrium
             {
                 void *res = calloc(1,block_size);
                 if(!res)
-                    throw std::exception();
+                    throw Libc::Exception(ENOMEM,"RAM::Acquire(%lu)", (unsigned long)block_size);
 
                 AllocatedRAM += block_size;
                 return res;
@@ -28,7 +29,7 @@ namespace Yttrium
 
         void RAM:: Release(void *block_addr, const size_t block_size) noexcept
         {
-            assert(Y_Good(block_addr,block_size));
+            assert(Good(block_addr,block_size));
             if(0 != block_addr)
             {
                 assert(block_size>0);
