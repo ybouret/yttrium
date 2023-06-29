@@ -21,8 +21,12 @@ namespace Yttrium
         virtual ~Exception() noexcept;
         Exception(const Exception &) noexcept;
 
-        virtual const char *what() const noexcept; //!< defaut: Exception
-        virtual const char *when() const noexcept; //!< formated text
+        virtual const char *what() const noexcept; //!< defaut: "Exception"
+        virtual const char *when() const noexcept; //!< formated story
+
+        Exception & operator<< (const char *) noexcept;
+        Exception & operator<< (const char  ) noexcept;
+        Exception & add(const char *fmt,...) noexcept Y_PRINTF_API;
 
         void display() const;
 

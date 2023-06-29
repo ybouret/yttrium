@@ -61,10 +61,10 @@ Y_UTEST(memory_chunk)
                 size_t half = count >> 1;
                 while(half-- > 0) chunk.release(addr[--count],block_size);
             }
-            bool res = 0;
+            bool released = false;
             while(count>0)
-                res = chunk.release(addr[--count],block_size);
-            if(!res) throw std::exception();
+                released = chunk.release(addr[--count],block_size);
+            Y_ASSERT(true==released);
 
             Memory::RAM::Release(chunk_data,chunk_size);
         }

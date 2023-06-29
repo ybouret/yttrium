@@ -5,7 +5,7 @@
 
 #include <exception>
 #include <iostream>
-#include "y/exception.hpp"
+#include "y/check/claim.hpp"
 
 namespace Yttrium
 {

@@ -2,6 +2,8 @@
 #include "y/type/utils.hpp"
 
 #include <cstring>
+#include <cstdarg>
+#include <cstdio>
 
 
 
@@ -22,6 +24,29 @@ namespace Yttrium
                 const size_t errlen = strlen(errbuf);
                 memcpy(buffer,errbuf,Min(errlen,buflen-1));
             }
+        }
+
+        void CriticalError(const int err, const char *fmt,...)
+        {
+            static const char pfx[] = " *** ";
+            assert(NULL!=fmt);
+
+            fputs(pfx,stderr);
+            {
+                va_list ap;
+                va_start(ap,fmt);
+                vfprintf(stderr,fmt,ap);
+                va_end(ap);
+            }
+            fputc('\n',stderr);
+
+            fputs(pfx,stderr);
+            char buffer[256];
+            Libc:: FormatError(buffer, sizeof(buffer), err);
+            fputs(buffer,stderr);
+            fputc('\n',stderr);
+
+            abort();
         }
     }
     

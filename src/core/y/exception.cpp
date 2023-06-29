@@ -86,5 +86,35 @@ namespace Yttrium
 
     }
 
+    Exception & Exception:: operator<<(const char c) noexcept
+    {
+        const size_t len = strlen(story);
+        if(len<sizeof(story)-1) story[len] = c;
+        return *this;
+    }
+
+    Exception & Exception:: operator<<(const char *msg) noexcept
+    {
+        if(msg)
+        {
+            const size_t msgLen = strlen(msg);
+            size_t       length = strlen(story);
+            for(size_t i=0;i<msgLen && length < sizeof(story)-1;++i,++length)
+            {
+                story[length] = msg[i];
+            }
+        }
+        return *this;
+    }
+
+    Exception & Exception::add(const char *fmt, ...) noexcept
+    {
+        Exception excp;
+        va_list ap;
+        va_start(ap,fmt);
+        excp.format(fmt,&ap);
+        va_end(ap);
+        return (*this) << excp.story;
+    }
 
 }

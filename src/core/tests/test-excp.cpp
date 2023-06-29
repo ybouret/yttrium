@@ -1,6 +1,7 @@
 
 #include "y/system/exception.hpp"
 #include "y/utest/run.hpp"
+#include "y/system/error.hpp"
 
 #include <cmath>
 #include <cerrno>
@@ -16,6 +17,8 @@ Y_UTEST(excp)
         Libc::Exception excp(ENOMEM,"Trial @%s",program);
         excp.display();
     }
+
+    //Libc::CriticalError(ENOMEM, "At the End of %s",program);
 
 }
 Y_UDONE()
