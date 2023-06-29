@@ -54,26 +54,30 @@ Y_UTEST(memory_chunk)
     Y_SIZEOF(Memory::Chunk);
 
 
-    const unsigned infoSize = sizeof(Memory::Chunk);
     for(unsigned blockSize=1;blockSize<=max_block_size;++blockSize)
     {
-        std::cerr << "blockSize: " << blockSize << std::endl;
-        const size_t maxChunkSize = 255 * blockSize;
-        const size_t maxFullBytes = infoSize + Y_MEMALIGN(maxChunkSize);
-        const size_t logFullBytes = Base2<size_t>::Log(maxFullBytes);
-        const size_t optPageBytes = Base2<size_t>::One << logFullBytes;
-        const size_t optNumBlocks = (optPageBytes-infoSize)/blockSize;
-        const size_t optChunkSize = optNumBlocks * blockSize;
-        const size_t optFullBytes = infoSize + Y_MEMALIGN(optChunkSize);
+        size_t optPageBytes = Memory::Chunk::OptPageBytes(blockSize);
 
-        std::cerr << "\tmaxFullBytes = " << maxFullBytes << std::endl;
-        std::cerr << "\tlogFullBytes = " << logFullBytes << " => " << (1<<logFullBytes) << std::endl;
-        std::cerr << "\toptPageBytes = " << optPageBytes << std::endl;
-        std::cerr << "\toptNumBlocks = " << optNumBlocks << std::endl;
-        std::cerr << "\toptChunkSize = " << optChunkSize << std::endl;
-        std::cerr << "\toptFullBytes = " << optFullBytes << " optLoss=" << optPageBytes - optFullBytes << std::endl;
-        
+
+        std::cerr << "blockSize = " << std::setw(4) << blockSize;
+        std::cerr << " | optPageBytes = " << std::setw(6) << optPageBytes;
+        std::cerr << " | optNumBlocks =";
+        while(optPageBytes>=256)
+        {
+            const size_t optNumBlocks = Memory::Chunk::OptNumBlocks(blockSize, optPageBytes);
+            const size_t optFlatBytes = Memory::Chunk::GetFlatBytes(blockSize,optNumBlocks);
+            const size_t loss         = optPageBytes - optFlatBytes;
+            std::cerr << ' ' << std::setw(4) << optNumBlocks << "(" << std::setw(3) << loss << ")";
+            optPageBytes /= 2;
+        }
+
+        std::cerr << std::endl;
+
+
+
     }
+
+
 
 
 

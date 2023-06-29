@@ -5,6 +5,8 @@
 
 #include <exception>
 #include <iostream>
+#include <iomanip>
+
 #include "y/check/claim.hpp"
 
 namespace Yttrium

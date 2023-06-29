@@ -52,8 +52,12 @@ namespace Yttrium
             Ownership     whose(const void *addr)                               const noexcept; //!< locate address
             void     *    acquire(const size_t block_size)                            noexcept; //!< acquire zeroed block[block_size]
             bool          release(void *block_addr, const size_t block_size)          noexcept; //!< release a previously acquire block
-            static size_t BytesFor(const uint8_t num_blocks, const size_t block_size) noexcept;
 
+
+            static size_t  GetFlatBytes(const size_t blockSize, const uint8_t numBlocks) noexcept;
+            static size_t  OptPageBytes(const size_t blockSize) noexcept;
+            static uint8_t OptNumBlocks(const size_t blockSize, const size_t pageBytes) noexcept;
+            
             //__________________________________________________________________
             //
             // members

@@ -1,6 +1,7 @@
 #include "y/memory/chunk.hpp"
 #include "y/memory/out-of-reach.hpp"
 #include "y/calculus/align.hpp"
+#include "y/calculus/base2.hpp"
 
 #include <cstring>
 
@@ -129,15 +130,41 @@ namespace Yttrium
             }
         }
 
-        size_t Chunk:: BytesFor(const uint8_t numBlocks, const size_t blockSize) noexcept
+
+        static const size_t headerBytes = sizeof(Chunk);
+
+
+        size_t  Chunk:: GetFlatBytes(const size_t blockSize, const uint8_t numBlocks) noexcept
         {
-            const size_t infoSize = sizeof(Chunk);
-            const size_t dataSize = numBlocks * blockSize;
-            
-            
-            return infoSize + Y_MEMALIGN(dataSize);
+            assert(blockSize>0);
+            const size_t dataSize = blockSize * numBlocks;
+            return headerBytes + Y_MEMALIGN(dataSize);
         }
 
+        size_t Chunk:: OptPageBytes(const size_t blockSize) noexcept
+        {
+            const size_t        maxPageSize = GetFlatBytes(blockSize, 255);
+            const size_t        logPageSize = Base2<size_t>::Log(maxPageSize);
+
+            return              Base2<size_t>::One << logPageSize;
+        }
+
+
+        uint8_t Chunk:: OptNumBlocks(const size_t blockSize, const size_t pageBytes) noexcept
+        {
+            assert(blockSize>0);
+            if(pageBytes<=headerBytes)
+                return 0;
+            else
+            {
+                const size_t chunkSize = pageBytes - headerBytes;
+                const size_t numBlocks = chunkSize/blockSize;
+                if(numBlocks>=255)
+                    return 255;
+                else
+                    return static_cast<uint8_t>(numBlocks);
+            }
+        }
 
     }
 }
