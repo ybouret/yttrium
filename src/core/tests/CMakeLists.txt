@@ -1,7 +1,8 @@
 Y_CreateTest(core
 memory 
 type
-data)
+data
+calculus)
 
 target_link_libraries(test-core y)
 
@@ -18,3 +19,8 @@ add_test(type:ints test-core type_ints)
 
 #data
 add_test(data:list test-core data_list)
+add_test(data:pool test-core data_pool)
+
+#calculus
+add_test(calculus:ilog2 test-core calculus_ilog2)
+add_test(calculus:align test-core calculus_align)

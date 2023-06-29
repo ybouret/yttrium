@@ -46,7 +46,7 @@ Y_UTEST(data_pool)
     while(iPool.size)
     {
         delete iPool.query();
-       std::cerr << iPool << std::endl;
+        std::cerr << iPool << std::endl;
     }
 
 }

@@ -35,6 +35,17 @@ namespace Yttrium
         inline explicit Linked() noexcept : Core::Linked(), head(0) {}
         inline virtual ~Linked() noexcept { assert(0==head); }
 
+        inline bool owns(const NODE *node) const noexcept
+        {
+            const NODE *scan = head;
+            for(size_t i=size;i>0;--i,scan=scan->next)
+            {
+                assert(0!=scan);
+                if(scan == node) return true;
+            }
+            return false;
+        }
+
         inline friend std::ostream & operator<<(std::ostream &os, const Linked &self)
         {
             os << '[';

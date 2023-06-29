@@ -8,6 +8,7 @@ config
 check
 type
 system
+calculus
 ios
 data
 data/list

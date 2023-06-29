@@ -1,4 +1,6 @@
 #include "y/data/list.hpp"
+#include "y/memory/out-of-reach.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/check/crc32.hpp"
 #include "../alea.hpp"
@@ -18,7 +20,7 @@ namespace
         static int Counter;
 
         explicit iNode() noexcept : next(0), prev(0),  data(++Counter) {}
-        virtual ~iNode() noexcept {}
+        virtual ~iNode() noexcept { --Counter; }
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(iNode);
@@ -46,6 +48,30 @@ Y_UTEST(data_list)
     {
         delete ( (alea()>0.5) ? iList.popTail() : iList.popHead());
         std::cerr << iList << std::endl;
+    }
+
+    {
+        static const size_t n = 20;
+        iNode  nodes[n];
+        size_t indx[n];
+        for(size_t i=0;i<n;++i)
+        {
+            indx[i] = i;
+        }
+        alea_shuffle(indx,n);
+        for(size_t i=0;i<n;++i)
+        {
+            iNode *node = &nodes[ indx[i] ];
+            std::cerr << "using node #" << **node << std::endl;
+            ListOps::InsertOrdered(iList,node, ListOps::IncreasingAddresses<iNode>);
+            std::cerr << iList << std::endl;
+        }
+
+        Memory::OutOfReach::Zero(&iList,sizeof(iList));
+
+
+
+
     }
     
 }
