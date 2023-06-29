@@ -23,6 +23,12 @@ namespace Yttrium
         b = t;
     }
 
+    template <typename T>
+    inline T &Coerce(const T &args) noexcept
+    {
+        return (T&)args;
+    }
+
     namespace Core
     {
         extern const char Unknown[];         //!< "unknown"

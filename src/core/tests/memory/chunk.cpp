@@ -2,37 +2,16 @@
 #include "y/memory/out-of-reach.hpp"
 #include "y/memory/ram.hpp"
 #include "y/utest/run.hpp"
+#include "../alea.hpp"
 
-#include <cmath>
 
 using namespace Yttrium;
 
-namespace
-{
-    double alea()
-    {
-        return (0.5 + rand()) / (1.0+RAND_MAX);
-    }
-
-    size_t alea_leq(const size_t n)
-    {
-        return static_cast<size_t>(floor(double(n) * alea() + 0.5));
-    }
-
-    template <typename T>
-    void alea_shuffle(T a[], const size_t n)
-    {
-        for(size_t i=n-1;i>0;--i)
-        {
-            const size_t j = alea_leq(i);
-            Swap(a[i], a[j]);
-        }
-    }
-
-}
 
 Y_UTEST(memory_chunk)
 {
+    srand(unsigned(time(0)));
+
     std::cerr << "sizeof(Memory::Chunk)=" << sizeof(Memory::Chunk) << std::endl;
 
     void *addr[256];

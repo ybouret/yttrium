@@ -8,6 +8,10 @@ config
 check
 type
 system
+ios
+data
+data/list
+data/pool
 utest 
 memory)
 
