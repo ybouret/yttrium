@@ -4,12 +4,13 @@
 #include "y/calculus/base2.hpp"
 
 #include <cstring>
+#include <new>
 
 namespace Yttrium
 {
     namespace Memory
     {
-        static inline uint8_t num_blocks(const size_t block_size, const size_t chunk_size)
+        static inline uint8_t getNumBlocks(const size_t block_size, const size_t chunk_size)
         {
             assert(block_size>0);
             const size_t nb = chunk_size/block_size;
@@ -24,7 +25,7 @@ namespace Yttrium
                       void          *chunkData,
                       const size_t   chunkSize) noexcept :
         firstAvailable(0),
-        stillAvailable(num_blocks(blockSize,chunkSize)),
+        stillAvailable(getNumBlocks(blockSize,chunkSize)),
         operatedNumber(0),
         providedNumber(stillAvailable),
         data( static_cast<uint8_t *>(chunkData)  ),
@@ -158,12 +159,21 @@ namespace Yttrium
             else
             {
                 const size_t chunkSize = pageBytes - headerBytes;
-                const size_t numBlocks = chunkSize/blockSize;
-                if(numBlocks>=255)
-                    return 255;
-                else
-                    return static_cast<uint8_t>(numBlocks);
+                return getNumBlocks(blockSize,chunkSize);
             }
+        }
+
+        Chunk * Chunk::Create(const size_t blockSize,
+                              void        *page,
+                              const size_t size) noexcept
+        {
+            assert(0!=page);
+            assert(size>=headerBytes);
+
+            void        *chunkData = OutOfReach::Haul(page, headerBytes);
+            const size_t chunkSize = size-headerBytes;
+
+            return new (page) Chunk(blockSize,chunkData,chunkSize);
         }
 
     }

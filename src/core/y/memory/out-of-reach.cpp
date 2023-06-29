@@ -83,6 +83,13 @@ namespace Yttrium
         }
 
 
+        void * OutOfReach:: Haul(void *addr, ptrdiff_t delta) noexcept
+        {
+            uint8_t *p = static_cast<uint8_t *>(addr);
+            return p+delta;
+        }
+
+
     }
 }
 

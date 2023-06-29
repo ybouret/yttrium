@@ -37,7 +37,6 @@ namespace Yttrium
             //
             // C++
             //__________________________________________________________________
-
             Chunk(const size_t   blockSize,
                   void          *chunkData,
                   const size_t   chunkSize) noexcept;
@@ -53,6 +52,9 @@ namespace Yttrium
             void     *    acquire(const size_t block_size)                            noexcept; //!< acquire zeroed block[block_size]
             bool          release(void *block_addr, const size_t block_size)          noexcept; //!< release a previously acquire block
 
+            static Chunk *Create(const size_t blockSize,
+                                 void        *page,
+                                 const size_t size) noexcept;
 
             static size_t  GetFlatBytes(const size_t blockSize, const uint8_t numBlocks) noexcept;
             static size_t  OptPageBytes(const size_t blockSize) noexcept;

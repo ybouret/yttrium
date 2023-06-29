@@ -13,12 +13,13 @@ namespace Yttrium
         {
             static void *       Addr(void *       addr)                                           noexcept;
             static const void * Addr(const void * addr)                                           noexcept;
-            static void       * Zero(void *       addr,   const size_t size)                      noexcept;
-            static void       * Move(void *       target, const void * source, const size_t size) noexcept;
-            static void       * Mov0(void *       target, void *       source, const size_t size) noexcept;
-            static void       * Swap(void *       target, void *       source, const size_t size) noexcept;
+            static void *       Zero(void *       addr,   const size_t size)                      noexcept;
+            static void *       Move(void *       target, const void * source, const size_t size) noexcept;
+            static void *       Mov0(void *       target, void *       source, const size_t size) noexcept;
+            static void *       Swap(void *       target, void *       source, const size_t size) noexcept;
             static ptrdiff_t    Diff(const void * a,      const void * b)                         noexcept;
             static bool         Are0(const void * addr,   const size_t size)                      noexcept;
+            static void *       Haul(void *addr, ptrdiff_t delta) noexcept;
         };
     }
 

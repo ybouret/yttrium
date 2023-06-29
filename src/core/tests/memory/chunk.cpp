@@ -19,7 +19,7 @@ Y_UTEST(memory_chunk)
     void *addr[256];
     Y_STATIC_ZARR(addr);
 
-    const size_t max_block_size = 40;
+    const size_t max_block_size = 128;
     for(size_t block_size=1;block_size<=max_block_size;++block_size)
     {
         std::cerr << "[block_size=" << block_size << "]" << std::endl;
@@ -64,11 +64,19 @@ Y_UTEST(memory_chunk)
         std::cerr << " | optNumBlocks =";
         while(optPageBytes>=256)
         {
-            const size_t optNumBlocks = Memory::Chunk::OptNumBlocks(blockSize, optPageBytes);
+            const size_t optNumBlocks = Memory::Chunk::OptNumBlocks(blockSize,optPageBytes);
             const size_t optFlatBytes = Memory::Chunk::GetFlatBytes(blockSize,optNumBlocks);
             const size_t loss         = optPageBytes - optFlatBytes;
             std::cerr << ' ' << std::setw(4) << optNumBlocks << "(" << std::setw(3) << loss << ")";
+
+            void          *page = Memory::RAM::Acquire(optPageBytes);
+            Memory::Chunk *ch   = Memory::Chunk::Create(blockSize,page,optPageBytes);
+            Y_ASSERT(ch->providedNumber==optNumBlocks);
+            Memory::RAM::Release(ch,optPageBytes);
+            
+
             optPageBytes /= 2;
+
         }
 
         std::cerr << std::endl;
