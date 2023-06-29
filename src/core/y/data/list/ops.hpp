@@ -49,15 +49,15 @@ namespace Yttrium
         }
 
 
-        template <typename LIST,typename NODE> static
-        inline NODE * PopTail(LIST &L) noexcept
+        template <typename LIST> static
+        inline typename LIST::NodeType * PopTail(LIST &L) noexcept
         {
             // sanity check
             assert(L.size>0);
             assert(0!=L.head);
             assert(0!=L.tail);
 
-            NODE *node = L.tail;
+            typename LIST::NodeType *node = L.tail;
             if(1==L.size)
             {
                 assert(L.head==L.tail);
@@ -77,15 +77,15 @@ namespace Yttrium
             return node;
         }
 
-        template <typename LIST,typename NODE> static
-        inline NODE * PopHead(LIST &L) noexcept
+        template <typename LIST> static
+        inline typename LIST::NodeType * PopHead(LIST &L) noexcept
         {
             // sanity check
             assert(L.size>0);
             assert(0!=L.head);
             assert(0!=L.tail);
 
-            NODE *node = L.head;
+            typename LIST::NodeType *node = L.head;
             if(1==L.size)
             {
                 assert(L.head==L.tail);

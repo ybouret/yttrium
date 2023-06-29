@@ -38,7 +38,7 @@ namespace Yttrium
         inline friend std::ostream & operator<<(std::ostream &os, const Linked &self)
         {
             os << '[';
-            if(self.size)
+            if(self.size>0)
             {
                 const NODE *node = self.head; assert(0!=node);
                 os << **node;

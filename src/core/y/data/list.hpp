@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Data_List_Included
@@ -23,8 +22,8 @@ namespace Yttrium
 
         inline NODE *pushTail(NODE *node) noexcept { return ListOps::PushTail(*this,node); }
         inline NODE *pushHead(NODE *node) noexcept { return ListOps::PushHead(*this,node); }
-        inline NODE *popTail() noexcept { return ListOps::PopTail<SelfType,NODE>(*this); }
-        inline NODE *popHead() noexcept { return ListOps::PopHead<SelfType,NODE>(*this); }
+        inline NODE *popTail() noexcept { return ListOps::PopTail(*this); }
+        inline NODE *popHead() noexcept { return ListOps::PopHead(*this); }
 
         NODE *tail;
 
