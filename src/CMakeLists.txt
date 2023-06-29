@@ -2,8 +2,8 @@ project(yttrium)
 cmake_minimum_required(VERSION 3.0)
 include(../etc/y.cmake)
 
-#set(HERE ${CMAKE_CURRENT_SOURCE_DIR})
-#message( STATUS "HERE='${HERE}'")
+set(HERE ${CMAKE_CURRENT_SOURCE_DIR})
+message( STATUS "HERE='${HERE}'")
 
 macro(Y_CreateTest id)
     message( STATUS "[yttrium] <test-${id}>")
@@ -35,3 +35,14 @@ macro(Y_CreateLibrary id)
 endmacro()
 
 add_subdirectory(core)
+
+
+find_program(doxygen doxygen)
+message( STATUS "doxygen=${doxygen}")
+if("${doxygen}" EQUAL "doxygen-NOTFOUND" )
+    message( STATUS "missing Doxygen")
+else()
+    message( STATUS "found Doxygen at ${doxygen}")
+    add_custom_target(dox ${doxygen}
+                        WORKING_DIRECTORY ${HERE}/..)
+endif()
