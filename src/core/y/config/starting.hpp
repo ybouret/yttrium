@@ -5,6 +5,7 @@
 
 
 #include "y/config/starting.h"
+#include "y/config/noexcept.hpp"
 
 #define Y_DISABLE_COPY(CLASS)   private: CLASS(const CLASS &)
 #define Y_DISABLE_ASSIGN(CLASS) private: CLASS & operator=(const CLASS &)
