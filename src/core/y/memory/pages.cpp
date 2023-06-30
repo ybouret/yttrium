@@ -100,7 +100,7 @@ namespace Yttrium
             SYSTEM_INFO si;
             ::GetSystemInfo(&si);
             if(si.dwPageSize<=0) return DefaultBytes;
-            return si.dwPagesSize;
+            return si.dwPageSize;
 #endif
 
         }
