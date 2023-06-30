@@ -200,10 +200,6 @@ if(${Y_CC} STREQUAL "cl" )
 	 
 endif()
 
-if(NOT YACK_KNOWN_COMPILER)
-	message( FATAL_ERROR "[YACK] unknown compilers '${YACK_CC}'" )
-endif()
-
 ########################################################################
 ##
 ##
