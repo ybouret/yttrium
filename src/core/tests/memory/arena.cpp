@@ -2,6 +2,7 @@
 
 #include "y/memory/arena.hpp"
 #include "y/memory/pages.hpp"
+#include "y/memory/album.hpp"
 
 #include "y/utest/run.hpp"
 #include "../alea.hpp"
@@ -20,16 +21,22 @@ Y_UTEST(memory_arena)
 
     for(size_t blockSize = 1; blockSize <= 256; ++blockSize )
     {
-        uint8_t        nblks = 0;
+        size_t         nblks = 0;
         const unsigned shift = Memory::Arena::ComputeShift(blockSize, pageBytes, nblks);
         const size_t   bytes = Base2<size_t>::One << shift;
         const size_t   loss  = bytes - (sizeof(Memory::Chunk) + nblks * blockSize);
         std::cerr << "blockSize = " << std::setw(4) << blockSize
         << " : pageSize = " << std::setw(6) << pageBytes
-        << " -> "           << std::setw(6) << bytes << " : #" << std::setw(4) << int(nblks) << " | loss=" << loss << std::endl;
-
+        << " -> "           << std::setw(6) << bytes << " : #" << std::setw(4) <<  (nblks) << " | loss=" << loss << std::endl;
     }
 
+    Memory::Album album;
+
+    std::cerr << "Using Arena" << std::endl;
+    for(size_t blockSize = 1; blockSize <= 16; ++blockSize )
+    {
+        Memory::Arena arena(blockSize,album,pageBytes);
+    }
 
 
 }

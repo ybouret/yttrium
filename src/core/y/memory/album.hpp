@@ -19,6 +19,8 @@ namespace Yttrium
             explicit Album();
             virtual ~Album() noexcept;
 
+            Pages & operator[](const unsigned shift) noexcept;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Album);
             Pages *pages;

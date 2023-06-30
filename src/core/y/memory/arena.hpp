@@ -14,7 +14,8 @@ namespace Yttrium
     {
 
         class Pages;
-        
+        class Album;
+
         class Arena : public ListOf<Chunk>
         {
         public:
@@ -22,18 +23,26 @@ namespace Yttrium
             static const uint8_t MaxBlocksPerChunk = 255;
 
             explicit Arena(const size_t  userBlockSize,
-                           Pages        &userDataPages);
+                           Album        &userDataPages,
+                           const size_t  userpageBytes);
+            
             virtual ~Arena() noexcept;
 
             static unsigned ComputeShift(const size_t blockSize,
                                          const size_t pageBytes,
-                                         uint8_t     &numBlocks) noexcept;
+                                         size_t      &numBlocks) noexcept;
 
-            const size_t blockSize;
-            Pages &      dataPages;
+            Chunk        *acquiring; //!< acquiring chunk
+            Chunk        *releasing; //!< releasing chunk
+            size_t        available; //!< available blocks
+            const size_t  blockSize;
+            const size_t  numBlocks;
+            Pages &       dataPages;
+            const size_t  addBlocks;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Arena);
+            Chunk *queryChunk();
         };
 
     }

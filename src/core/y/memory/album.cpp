@@ -30,6 +30,14 @@ namespace Yttrium
             }
         }
 
+        Pages & Album:: operator[](const unsigned shift) noexcept
+        {
+            assert(shift>=Pages::MinShift);
+            assert(shift<=Pages::MaxShift);
+            return pages[shift];
+        }
+
+
     }
 
 }

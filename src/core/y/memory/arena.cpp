@@ -1,6 +1,7 @@
 
 #include "y/memory/arena.hpp"
 #include "y/memory/pages.hpp"
+#include "y/memory/album.hpp"
 #include "y/calculus/align.hpp"
 #include "y/type/utils.hpp"
 
@@ -12,15 +13,48 @@ namespace Yttrium
 
         Arena:: ~Arena() noexcept
         {
+
+
+            while(size>0)
+            {
+                Chunk         *chunk = popTail();
+                const unsigned inUse = chunk->operatedNumber;
+                dataPages.store( chunk );
+                if(inUse>0)
+                {
+                    std::cerr << "*** Memory::Chunk[" << blockSize << "] missing #" << inUse << std::endl;
+                }
+            }
+
+            acquiring = 0;
+            releasing = 0;
+            available = 0;
+            
         }
 
-        Arena:: Arena(const size_t  userBlockSize,
-                      Pages        &userDataPages) :
-        ListOf<Chunk>(),
-        blockSize(userBlockSize),
-        dataPages(userDataPages)
+        Chunk * Arena:: queryChunk()
         {
+            Chunk *chunk = Chunk::Create(blockSize, dataPages.query(), dataPages.bytes);
+            assert(0!=chunk);
+            assert(numBlocks==static_cast<size_t>(chunk->providedNumber));
+            return chunk;
+        }
 
+
+        Arena:: Arena(const size_t  userBlockSize,
+                      Album        &userDataPages,
+                      const size_t  userPageBytes) :
+        ListOf<Chunk>(),
+        acquiring(0),
+        releasing(0),
+        available(0),
+        blockSize(userBlockSize),
+        numBlocks(0),
+        dataPages( userDataPages[ComputeShift(blockSize,userPageBytes,Coerce(numBlocks))] ),
+        addBlocks(numBlocks-1)
+        {
+            acquiring = releasing = pushTail( queryChunk()  );
+            available = numBlocks;
         }
 
         static const size_t Header = sizeof(Chunk);
@@ -39,7 +73,7 @@ namespace Yttrium
 
         unsigned Arena:: ComputeShift(const size_t blockSize,
                                       const size_t pageBytes,
-                                      uint8_t     &numBlocks) noexcept
+                                      size_t      &numBlocks) noexcept
         {
 
             assert(blockSize>0);
