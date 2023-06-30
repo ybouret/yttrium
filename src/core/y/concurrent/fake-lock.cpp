@@ -6,7 +6,9 @@ namespace Yttrium
 {
     FakeLock:: ~FakeLock() noexcept {}
 
-    FakeLock:: FakeLock(const char *id) noexcept : Lockable(id)
+    FakeLock:: FakeLock(const char *id) noexcept :
+    Lockable(id),
+    impl(0)
     {
 
     }
