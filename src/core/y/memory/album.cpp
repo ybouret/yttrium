@@ -1,4 +1,4 @@
-#include "y/memory/book.hpp"
+#include "y/memory/album.hpp"
 #include "y/memory/out-of-reach.hpp"
 #include "y/lockable.hpp"
 
@@ -9,7 +9,7 @@ namespace Yttrium
     namespace Memory
     {
 
-        Book:: Book() :
+        Album:: Album() :
         pages(NULL),
         pages_()
         {
@@ -22,11 +22,11 @@ namespace Yttrium
             }
         }
 
-        Book:: ~Book() noexcept
+        Album:: ~Album() noexcept
         {
             for(unsigned shift=Pages::MaxShift;shift>=Pages::MinShift;--shift)
             {
-
+                (void) OutOfReach::naught( &pages[shift] );
             }
         }
 

@@ -20,8 +20,7 @@ namespace Yttrium
     {
         static const size_t MaxLen = sizeof(uuid)-1;
 
-        std::cerr << "sizeof(uuid)=" << sizeof(uuid) << std::endl;
-
+        
         char *buff = (char *)&uuid[0];
         memset(buff,0,sizeof(uuid));
 

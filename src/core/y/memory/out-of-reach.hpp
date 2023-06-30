@@ -4,6 +4,7 @@
 #define Y_Memory_OutOfReach_Included 1
 
 #include "y/config/starting.hpp"
+#include "y/type/destruct.hpp"
 
 namespace Yttrium
 {
@@ -20,6 +21,12 @@ namespace Yttrium
             static ptrdiff_t    Diff(const void * a,      const void * b)                         noexcept;
             static bool         Are0(const void * addr,   const size_t size)                      noexcept;
             static void *       Haul(void *addr, ptrdiff_t delta) noexcept;
+
+            template <typename T> static inline
+            T *naught(T *item) noexcept
+            {
+                return static_cast<T*>(Zero(Destructed(item),sizeof(T)));
+            }
         };
     }
 

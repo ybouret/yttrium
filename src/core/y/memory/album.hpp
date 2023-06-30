@@ -12,14 +12,15 @@ namespace Yttrium
     
     namespace Memory
     {
-        class Book
+        class Album
         {
         public:
             static const size_t Required = Pages::Number * sizeof(Pages);
-            explicit Book();
-            virtual ~Book() noexcept;
+            explicit Album();
+            virtual ~Album() noexcept;
 
         private:
+            Y_DISABLE_COPY_AND_ASSIGN(Album);
             Pages *pages;
             void  *pages_[Y_WORDS_GEQ(Required)];
         };
