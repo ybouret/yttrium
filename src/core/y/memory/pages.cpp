@@ -1,9 +1,11 @@
 
 #include "y/memory/pages.hpp"
+#include "y/memory/out-of-reach.hpp"
 #include "y/system/exception.hpp"
 #include "y/system/error.hpp"
+
 #include "y/lockable.hpp"
-#include "y/memory/out-of-reach.hpp"
+#include "y/type/utils.hpp"
 
 #include <cstring>
 
@@ -17,8 +19,7 @@ namespace Yttrium
 
         Pages:: ~Pages() noexcept
         {
-
-            const ScopedLock guard(access);
+            const ScopedLock guard(giant);
             while(size)
             {
                 --Coerce(delta);
@@ -31,43 +32,39 @@ namespace Yttrium
             }
         }
 
-        static unsigned checkShift(const unsigned userShift)
-        {
-            if(userShift<Pages::MinShift)
-                return Pages::MinShift;
 
-            if(userShift>Pages::MaxShift)
-                throw Specific::Exception(Pages::CallSign,"2^%u exceeds capacity",userShift);
-
-            return userShift;
-        }
-
-        Pages:: Pages(const unsigned userShift) :
+        Pages:: Pages(const unsigned userShift,
+                      Lockable      &userMutex) noexcept :
         ListOf<Page>(),
-        shift( checkShift(userShift) ),
+        shift( Max(MinShift,userShift) ),
         bytes( Base2<size_t>::One << shift ),
         delta(0),
-        access( Lockable::Giant() )
+        giant( userMutex )
         {
+            assert(shift<=MaxShift);
         }
 
-        void * Pages:: acquire() {
-            const ScopedLock guard(access);
+        void * Pages:: acquire()
+        {
+            const ScopedLock guard(giant);
             void  *page = calloc(1,bytes);
-            if(!page) throw Libc::Exception(ENOMEM,"Memory::Pages(%lu)", (unsigned long)bytes);
+
+            if(!page)
+                throw Libc::Exception(ENOMEM,"Memory::Pages(%lu)", (unsigned long)bytes);
+
             ++Coerce(delta);
             return page;
         }
 
         void Pages:: release(void *page) noexcept
         {
-            const ScopedLock guard(access);
+            const ScopedLock guard(giant);
             assert(0!=page);
             --Coerce(delta);
             free(page);
         }
 
-        void * Pages:: request()
+        void * Pages:: query()
         {
             if(size>0)
             {
@@ -79,7 +76,7 @@ namespace Yttrium
             }
         }
 
-        void Pages:: dismiss(void *addr) noexcept
+        void Pages:: store(void *addr) noexcept
         {
             assert(0!=addr);
             pushHead(static_cast<Page *>(memset(addr,0,sizeof(Page))));

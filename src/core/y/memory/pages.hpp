@@ -29,34 +29,35 @@ namespace Yttrium
         class Pages : public ListOf<Page>
         {
         public:
-            static const unsigned     useShift = 1+iLog2Of<Page>::Value;
-            static const unsigned     usrShift =     iLog2<256> ::Value;
-            static const unsigned     MinShift = usrShift > useShift ? usrShift : useShift;
-            static const size_t       MinBytes = Base2<size_t>::One << MinShift;
-            static const unsigned     MaxShift = Base2<size_t>::MaxShift;
-            static const size_t       MaxBytes = Base2<size_t>::One << MaxShift;
-
+            static const unsigned     useShift  = 1+iLog2Of<Page>::Value;
+            static const unsigned     usrShift  =     iLog2<256> ::Value;
+            static const unsigned     MinShift  = usrShift > useShift ? usrShift : useShift;
+            static const size_t       MinBytes  = Base2<size_t>::One << MinShift;
+            static const unsigned     MaxShift  = Base2<size_t>::MaxShift;
+            static const size_t       MaxBytes  = Base2<size_t>::One << MaxShift;
+            static const size_t       Number    = 1+MaxShift - MinShift;
+            
             static const char * const CallSign;
             
-            explicit Pages(const unsigned userShift);
+            explicit Pages(const unsigned userShift,
+                           Lockable      &userMutex) noexcept;
             virtual ~Pages() noexcept;
 
             void *acquire();                //!< acquire with a protected calloc
             void  release(void *) noexcept; //!< release with a protected free
-            void  reserve(size_t n);
+            void  reserve(size_t n);        //!< prepare some pages
 
-            void *request();
-            void  dismiss(void*) noexcept;
+            void *query();
+            void  store(void*) noexcept;
 
 
             const unsigned  shift; //!< bit shift
             const size_t    bytes; //!< bytes = 2^shift
-            const ptrdiff_t delta; //!< acquire-release
-
+            const ptrdiff_t delta; //!< acquire-release bookkeeping
+            Lockable       &giant; //!< giant mutex
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pages);
-            Lockable &access; //!< will be giant lock
         };
 
     }

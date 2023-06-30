@@ -14,7 +14,7 @@ namespace Yttrium
     {
 
         class Pages;
-
+        
         class Arena : public ListOf<Chunk>
         {
         public:

@@ -44,7 +44,11 @@ namespace Yttrium
 
             assert(blockSize>0);
 
-            // compute the smallest possible configuration
+            //------------------------------------------------------------------
+            //
+            // compute the smallest required dataBytes for a page
+            //
+            //------------------------------------------------------------------
             size_t chunkSize = MinBlocksPerChunk * blockSize;
             size_t dataBytes = NextPowerOfTwo(Header + Y_MEMALIGN(chunkSize));
             numBlocks        = getNumBlocks(blockSize,dataBytes); assert(numBlocks>=MinBlocksPerChunk);
@@ -52,7 +56,9 @@ namespace Yttrium
 
             if(pageBytes<=dataBytes)
             {
+                //--------------------------------------------------------------
                 // get the smallest dataBytes after minimal value
+                //--------------------------------------------------------------
                 const unsigned shift = Max( Base2<size_t>::Log(dataBytes), Pages::MinShift );
                 dataBytes            = Base2<size_t>::One << shift;
                 numBlocks            = getNumBlocks(blockSize,dataBytes);
@@ -60,13 +66,17 @@ namespace Yttrium
             }
             else
             {
+                //--------------------------------------------------------------
                 // start from the highest fitted dataBytes
+                //--------------------------------------------------------------
                 chunkSize      = MaxBlocksPerChunk * blockSize;
                 dataBytes      = Header + Y_MEMALIGN(chunkSize);
                 unsigned shift = Base2<size_t>::Log(dataBytes);
                 dataBytes      = Base2<size_t>::One << shift;    assert(getNumBlocks(blockSize,dataBytes)>=MinBlocksPerChunk);
 
+                //--------------------------------------------------------------
                 // and decrease until fitting the page bytes
+                //--------------------------------------------------------------
                 while(dataBytes>pageBytes)
                 {
                     --shift;
@@ -78,27 +88,7 @@ namespace Yttrium
 
 
 
-
-
-#if 0
-            const size_t minChunkSize  = MinBlocksPerChunk * blockSize;
-            const size_t minDataBytes  = NextPowerOfTwo(Header + Y_MEMALIGN(minChunkSize));
-
-
-            if(pageBytes<=minDataBytes)
-            {
-                return Max(Pages::MinShift,Base2<size_t>::Log(minDataBytes));
-            }
-            else
-            {
-                const size_t   maxChunkSize = MaxBlocksPerChunk * blockSize;
-                const size_t   maxDataBytes = Header + Y_MEMALIGN(maxChunkSize);
-                unsigned       shift     = Base2<size_t>::Log(maxDataBytes);
-                while( (Base2<size_t>::One << shift) > pageBytes )
-                    --shift;
-                return shift;
-            }
-#endif
+            
 
         }
     }

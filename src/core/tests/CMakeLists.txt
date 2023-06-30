@@ -19,6 +19,7 @@ add_test(main:lockable test-core lockable)
 add_test(memory:chunk test-core memory_chunk)
 add_test(memory:pages test-core memory_pages)
 add_test(memory:arena test-core memory_arena)
+add_test(memory:book  test-core memory_book)
 
 #type
 add_test(type:ints test-core type_ints)
