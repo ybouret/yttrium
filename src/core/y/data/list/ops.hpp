@@ -22,6 +22,8 @@ namespace Yttrium
         template <typename LIST, typename NODE> static inline
         void PushTail_(LIST &L, NODE *node) noexcept
         {
+            assert(L.size>0);
+            assert(0!=L.tail);
             L.tail->next = node;
             node->prev   = L.tail;
             L.tail       = node;
@@ -30,6 +32,8 @@ namespace Yttrium
         template <typename LIST, typename NODE> static inline
         void PushHead_(LIST &L, NODE *node) noexcept
         {
+            assert(L.size>0);
+            assert(0!=L.head);
             L.head->prev = node;
             node->next   = L.head;
             L.head       = node;
