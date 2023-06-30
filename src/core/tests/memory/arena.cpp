@@ -18,10 +18,16 @@ Y_UTEST(memory_arena)
 
     size_t pageBytes = 4096;
 
-    for(size_t blockSize = 1; blockSize <= 10; ++blockSize )
+    for(size_t blockSize = 1; blockSize <= 256; ++blockSize )
     {
-        const unsigned shift = Memory::Arena::ComputeShift(blockSize, pageBytes);
-        std::cerr << "blockSize = " << blockSize << " => " << (Base2<size_t>::One << shift) << std::endl;
+        uint8_t        nblks = 0;
+        const unsigned shift = Memory::Arena::ComputeShift(blockSize, pageBytes, nblks);
+        const size_t   bytes = Base2<size_t>::One << shift;
+        const size_t   loss  = bytes - (sizeof(Memory::Chunk) + nblks * blockSize);
+        std::cerr << "blockSize = " << std::setw(4) << blockSize
+        << " : pageSize = " << std::setw(6) << pageBytes
+        << " -> "           << std::setw(6) << bytes << " : #" << std::setw(4) << int(nblks) << " | loss=" << loss << std::endl;
+
     }
 
 

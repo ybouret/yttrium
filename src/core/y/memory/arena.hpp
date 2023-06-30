@@ -26,7 +26,8 @@ namespace Yttrium
             virtual ~Arena() noexcept;
 
             static unsigned ComputeShift(const size_t blockSize,
-                                         const size_t pageBytes) noexcept;
+                                         const size_t pageBytes,
+                                         uint8_t     &numBlocks) noexcept;
 
             const size_t blockSize;
             Pages &      dataPages;
