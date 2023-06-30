@@ -21,7 +21,8 @@ Y_UTEST(memory_chunk)
 
     Memory::RAM ram;
 
-    const size_t max_block_size = 128;
+    const size_t max_block_size = 16;
+
     for(size_t block_size=1;block_size<=max_block_size;++block_size)
     {
         std::cerr << "[block_size=" << block_size << "]" << std::endl;
@@ -71,12 +72,12 @@ Y_UTEST(memory_chunk)
             const size_t optFlatBytes = Memory::Chunk::GetFlatBytes(blockSize,optNumBlocks);
             const size_t loss         = optPageBytes - optFlatBytes;
             std::cerr << ' ' << std::setw(4) << optNumBlocks << "(" << std::setw(3) << loss << ")";
-#if 0
-            void          *page = Memory::RAM::Acquire(optPageBytes);
+
+            size_t         count = 1;
+            void          *page = ram.acquire(count,optPageBytes);
             Memory::Chunk *ch   = Memory::Chunk::Create(blockSize,page,optPageBytes);
             Y_ASSERT(ch->providedNumber==optNumBlocks);
-            Memory::RAM::Release(ch,optPageBytes);
-#endif
+            ram.release(page,count);
 
             optPageBytes /= 2;
 

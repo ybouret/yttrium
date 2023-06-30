@@ -50,4 +50,27 @@ namespace Yttrium
     }
 
 
+    void Lockable:: lock()    noexcept
+    {
+        doLock();
+        ++Coerce(depth);
+    }
+
+    void Lockable:: unlock() noexcept
+    {
+        doUnlock();
+        --Coerce(depth);
+    }
+
+    bool Lockable:: tryLock() noexcept
+    {
+        if(doTryLock())
+        {
+            ++Coerce(depth);
+            return true;
+        }
+        else
+            return false;
+    }
+
 }
