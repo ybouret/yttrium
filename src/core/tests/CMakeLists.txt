@@ -11,6 +11,7 @@ enable_testing()
 #main
 add_test(main:excp   test-core excp)
 add_test(main:atexit test-core atexit)
+add_test(main:lockable test-core lockable)
 
 #memory
 add_test(memory:chunk test-core memory_chunk)

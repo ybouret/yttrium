@@ -4,7 +4,7 @@
 #ifndef Y_Memory_RAM_Included
 #define Y_Memory_RAM_Included 1
 
-#include "y/config/starting.hpp"
+#include "y/memory/allocator.hpp"
 
 namespace Yttrium
 {
@@ -12,11 +12,24 @@ namespace Yttrium
     namespace Memory
     {
 
-        struct RAM
+        //! not thread safe
+        class RAM : public Allocator
         {
-            static void    *Acquire(size_t block_size);
-            static void     Release(void *block_addr, const size_t block_size) noexcept;
+        public:
+            static const char * const CallSign;
+            
+            explicit RAM() noexcept;
+            virtual ~RAM() noexcept;
+
+
+            virtual void    *    acquire(size_t &count, const size_t blockSize);
+            virtual void         release(void * &entry, size_t &     count) noexcept;
+            virtual const char * variety() const noexcept;
+
             static uint64_t Allocated() noexcept;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(RAM);
         };
 
     }

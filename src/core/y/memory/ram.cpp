@@ -12,39 +12,52 @@ namespace Yttrium
     {
         static uint64_t AllocatedRAM = 0x00;
 
-        void * RAM:: Acquire(size_t block_size)
+
+        RAM::  RAM() noexcept : Allocator() {}
+        RAM:: ~RAM() noexcept {}
+
+
+        const char * const RAM:: CallSign = "RAM";
+
+        const char * RAM:: variety() const noexcept { return CallSign; }
+
+        void * RAM:: acquire(size_t &count, const size_t blockSize)
         {
-            if(block_size<=0)
+            size_t required = count * blockSize;
+            if(required<=0)
             {
                 return 0;
             }
             else
             {
-                const uint64_t AllocatedNew = Addition::Of(AllocatedRAM,block_size, "of RAM");
-                void *res = calloc(1,block_size);
+                const uint64_t AllocatedNew = Addition::Of(AllocatedRAM,required, "of RAM");
+                void *res = calloc(1,required);
                 if(!res)
-                    throw Libc::Exception(ENOMEM,"RAM::Acquire(%lu)", (unsigned long)block_size);
+                    throw Libc::Exception(ENOMEM,"RAM::Acquire(%lu)", (unsigned long)required);
 
                 AllocatedRAM = AllocatedNew;
+                count = required;
                 return res;
             }
         }
 
-        void RAM:: Release(void *block_addr, const size_t block_size) noexcept
+        void RAM:: release(void * &entry, size_t & count) noexcept
         {
-            assert(Good(block_addr,block_size));
-            if(0 != block_addr)
+            assert(Good(entry,count));
+            if(0 != entry)
             {
-                assert(block_size>0);
-                if(block_size>AllocatedRAM)
+                assert(count>0);
+                if(count>AllocatedRAM)
                 {
                     Libc::CriticalError(ERANGE,
-                                        "RAM::Releasing(block_size=%lu>RAM=%lu)",
-                                        (unsigned long)block_size,
+                                        "RAM::Releasing(count=%lu>RAM=%lu)",
+                                        (unsigned long)count,
                                         (unsigned long)AllocatedRAM);
                 }
-                free(block_addr);
-                AllocatedRAM -= block_size;
+                free(entry);
+                AllocatedRAM -= count;
+                entry = 0;
+                count = 0;
             }
         }
 

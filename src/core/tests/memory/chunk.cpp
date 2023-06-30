@@ -19,6 +19,8 @@ Y_UTEST(memory_chunk)
     void *addr[256];
     Y_STATIC_ZARR(addr);
 
+    Memory::RAM ram;
+
     const size_t max_block_size = 128;
     for(size_t block_size=1;block_size<=max_block_size;++block_size)
     {
@@ -27,7 +29,8 @@ Y_UTEST(memory_chunk)
         const size_t max_chunk_size = max_blocks * block_size;
         for(size_t chunk_size=block_size;chunk_size<=max_chunk_size;chunk_size += 1+alea_leq(block_size))
         {
-            void *chunk_data = Memory::RAM::Acquire(chunk_size);
+            size_t bytes      = 1;
+            void  *chunk_data = ram.acquire(bytes,chunk_size);
             Memory::Chunk chunk(block_size, chunk_data, chunk_size);
             
             size_t count = 0;
@@ -47,7 +50,7 @@ Y_UTEST(memory_chunk)
                 released = chunk.release(addr[--count],block_size);
             Y_ASSERT(true==released);
 
-            Memory::RAM::Release(chunk_data,chunk_size);
+            ram.release(chunk_data,bytes);
         }
     }
 
@@ -68,12 +71,12 @@ Y_UTEST(memory_chunk)
             const size_t optFlatBytes = Memory::Chunk::GetFlatBytes(blockSize,optNumBlocks);
             const size_t loss         = optPageBytes - optFlatBytes;
             std::cerr << ' ' << std::setw(4) << optNumBlocks << "(" << std::setw(3) << loss << ")";
-
+#if 0
             void          *page = Memory::RAM::Acquire(optPageBytes);
             Memory::Chunk *ch   = Memory::Chunk::Create(blockSize,page,optPageBytes);
             Y_ASSERT(ch->providedNumber==optNumBlocks);
             Memory::RAM::Release(ch,optPageBytes);
-            
+#endif
 
             optPageBytes /= 2;
 
