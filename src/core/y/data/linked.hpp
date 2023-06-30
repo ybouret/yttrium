@@ -16,6 +16,8 @@ namespace Yttrium
         public:
             const size_t size;
 
+            virtual void reverse() noexcept = 0;
+
             virtual ~Linked() noexcept;
         protected:
             explicit Linked() noexcept;

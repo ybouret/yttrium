@@ -2,7 +2,9 @@
 #include "y/memory/pages.hpp"
 #include "y/system/exception.hpp"
 #include "y/lockable.hpp"
+#include "y/memory/out-of-reach.hpp"
 
+#include <cstring>
 
 namespace Yttrium
 {
@@ -48,7 +50,7 @@ namespace Yttrium
             free(page);
         }
 
-        void * Pages:: query()
+        void * Pages:: request()
         {
             if(size>0)
             {
@@ -60,10 +62,20 @@ namespace Yttrium
             }
         }
 
-        void Pages:: store(void *addr) noexcept
+        void Pages:: dismiss(void *addr) noexcept
         {
             assert(0!=addr);
+            pushHead(static_cast<Page *>(memset(addr,0,sizeof(Page))));
+        }
 
+        void  Pages:: reserve(size_t n)
+        {
+            while(n-- > 0)
+            {
+                Page *page = static_cast<Page *>(acquire());
+                assert( OutOfReach::Are0(page,sizeof(Page) ) );
+                store(page);
+            }
         }
 
 

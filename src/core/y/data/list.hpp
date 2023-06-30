@@ -14,6 +14,7 @@ namespace Yttrium
     {
     public:
         using   Linked<NODE>::head;
+        using   Linked<NODE>::size;
         typedef ListOf<NODE> SelfType;
 
         explicit ListOf() noexcept : Linked<NODE>(), tail(0) {}
@@ -24,6 +25,23 @@ namespace Yttrium
         inline NODE *pushHead(NODE *node) noexcept { return ListOps::PushHead(*this,node); }
         inline NODE *popTail() noexcept { return ListOps::PopTail(*this); }
         inline NODE *popHead() noexcept { return ListOps::PopHead(*this); }
+
+
+
+        inline void swapWith(ListOf &other) noexcept
+        {
+            Swap(tail,other.tail);
+            Swap(head,other.head);
+            Swap(Coerce(size),Coerce(other.size));
+        }
+
+        inline virtual void reverse() noexcept
+        {
+            SelfType temp;
+            while(size>0)
+                temp.pushHead( popHead() );
+            swapWith(temp);
+        }
 
         NODE *tail;
 

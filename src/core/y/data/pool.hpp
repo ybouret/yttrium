@@ -15,6 +15,7 @@ namespace Yttrium
     {
     public:
         using   Linked<NODE>::head;
+        using   Linked<NODE>::size;
         typedef PoolOf<NODE> SelfType;
 
         explicit PoolOf() noexcept : Linked<NODE>()  {}
@@ -22,6 +23,20 @@ namespace Yttrium
 
         inline NODE *store(NODE *node) noexcept { return PoolOps::Store(*this,node); }
         inline NODE *query()           noexcept { return PoolOps::Query(*this);      }
+
+        inline void swapWith(PoolOf &other) noexcept
+        {
+            Swap(head,other.head);
+            Swap(Coerce(size),Coerce(other.size));
+        }
+
+        inline virtual void reverse() noexcept
+        {
+            SelfType temp;
+            while(size>0)
+                temp.store( query() );
+            swapWith(temp);
+        }
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(PoolOf);

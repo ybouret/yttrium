@@ -259,7 +259,7 @@ namespace Yttrium
             return SignOf(lhs,rhs);
         }
 
-
+        
     };
 
 }

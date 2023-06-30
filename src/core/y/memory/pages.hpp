@@ -35,14 +35,17 @@ namespace Yttrium
             Pages(const size_t userShift);
             ~Pages() noexcept;
 
-            const size_t shift; //!< bit shift
-            const size_t bytes; //!< bytes = 2^shift
-
+            void  reserve(size_t n);
             void *acquire();
             void  release(void *) noexcept;
 
-            void *query();
-            void  store(void*) noexcept;
+            void *request();
+            void  dismiss(void*) noexcept;
+
+            const size_t shift; //!< bit shift
+            const size_t bytes; //!< bytes = 2^shift
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pages);
