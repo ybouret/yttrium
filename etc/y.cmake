@@ -1,4 +1,8 @@
-
+########################################################################
+##
+## global settings
+##
+########################################################################
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS    ON)
 set(CMAKE_SKIP_PREPROCESSED_SOURCE_RULES ON)
 set(CMAKE_SKIP_ASSEMBLY_SOURCE_RULES     ON)

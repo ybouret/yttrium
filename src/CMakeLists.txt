@@ -1,10 +1,15 @@
 project(yttrium)
+
+## global settings
 cmake_minimum_required(VERSION 3.0)
 include(../etc/y.cmake)
 
 set(HERE ${CMAKE_CURRENT_SOURCE_DIR})
 message( STATUS "HERE='${HERE}'")
 
+set(CMAKE_INSTALL_PREFIX "${HERE}/../sdk")
+
+## macro to create a series of tests
 macro(Y_CreateTest id)
     message( STATUS "[yttrium] <test-${id}>")
     file(GLOB srcs test-*.cpp)
@@ -19,7 +24,7 @@ macro(Y_CreateTest id)
     message( STATUS "[yttrium] <test-${id}/>")
 endmacro()
 
-
+## macro to create a library from a series of subdir
 macro(Y_CreateLibrary id)
     message( STATUS "[yttrium] <${id}>")
     set(srcs "")
@@ -34,9 +39,18 @@ macro(Y_CreateLibrary id)
     message( STATUS "[yttrium] <${id}/>")
 endmacro()
 
+macro(Y_LinkLibraries target)
+    set(libs y)
+    if(Y_LINUX)
+        list(APPEND libs pthread)
+    endif()
+    target_link_libraries(${target} ${libs})
+endmacro()
+
+# all subdirectory
 add_subdirectory(core)
 
-
+# looking for Doxygen to generate documentation
 find_program(doxygen doxygen)
 if("${doxygen}" EQUAL "doxygen-NOTFOUND" )
     message( STATUS "missing Doxygen")
