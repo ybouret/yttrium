@@ -4,7 +4,7 @@
 #define Y_System_AtExit_Included 1
 
 
-#include "y/config/starting.hpp"
+#include "y/type/ints.hpp"
 
 namespace Yttrium
 {
@@ -16,8 +16,8 @@ namespace Yttrium
         typedef void *       Arguments;
         typedef void       (*Procedure)(Arguments);
         typedef int          Longevity;
-        static  const size_t MaxNumber = 64;
-
+        static const size_t    MaxNumber = 64;
+        static const Longevity MaximumLongevity = IntegerFor<AtExit::Longevity>::Maximum;
         
         Procedure procedure;
         Arguments arguments;

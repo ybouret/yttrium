@@ -2,7 +2,9 @@ Y_CreateTest(core
 memory 
 type
 data
-calculus)
+calculus
+concurrent
+)
 
 target_link_libraries(test-core y)
 
@@ -27,3 +29,6 @@ add_test(data:pool test-core data_pool)
 add_test(calculus:ilog2 test-core calculus_ilog2)
 add_test(calculus:align test-core calculus_align)
 add_test(calculus:base2 test-core calculus_base2)
+
+#concurrent
+add_test(concurrent:mutex test-core concurrent_mutex)

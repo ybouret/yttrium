@@ -20,6 +20,8 @@ Y_UTEST_DECL(16)
     Y_UTEST(calculus_align);
     Y_UTEST(calculus_base2);
 
+    Y_UTEST(concurrent_mutex);
+
     std::cerr << "-------- Platform: " << Y_PLATFORM << std::endl;
     std::cerr << "-------- Compiler: " << Y_COMPILER << std::endl;
 }

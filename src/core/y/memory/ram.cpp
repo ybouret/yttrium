@@ -2,8 +2,10 @@
 #include "y/system/exception.hpp"
 #include "y/type/addition.hpp"
 #include "y/system/error.hpp"
+#include "y/concurrent/mutex.hpp"
 #include <cstdlib>
 #include <cerrno>
+#include <iostream>
 
 namespace Yttrium
 {
@@ -13,8 +15,14 @@ namespace Yttrium
         static uint64_t AllocatedRAM = 0x00;
 
 
-        RAM::  RAM() noexcept : Allocator() {}
-        RAM:: ~RAM() noexcept {}
+        RAM::  RAM() : Allocator(), access( Concurrent::Mutex::Giant() ) {}
+        RAM:: ~RAM() noexcept
+        {
+            if(AllocatedRAM)
+            {
+                std::cerr << "[RAM : " << AllocatedRAM << "]" << std::endl;
+            }
+        }
 
 
         const char * const RAM:: CallSign = "RAM";
@@ -23,6 +31,8 @@ namespace Yttrium
 
         void * RAM:: acquire(size_t &count, const size_t blockSize)
         {
+            const ScopedLock guard(access);
+
             size_t required = count * blockSize;
             if(required<=0)
             {
@@ -43,6 +53,8 @@ namespace Yttrium
 
         void RAM:: release(void * &entry, size_t & count) noexcept
         {
+            const ScopedLock guard(access);
+
             assert(Good(entry,count));
             if(0 != entry)
             {

@@ -8,17 +8,17 @@
 
 namespace Yttrium
 {
-
+    class Lockable;
+    
     namespace Memory
     {
 
-        //! not thread safe
         class RAM : public Allocator
         {
         public:
             static const char * const CallSign;
             
-            explicit RAM() noexcept;
+            explicit RAM();
             virtual ~RAM() noexcept;
 
 
@@ -30,6 +30,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(RAM);
+            Lockable &access;
         };
 
     }

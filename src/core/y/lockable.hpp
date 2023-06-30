@@ -13,14 +13,15 @@ namespace Yttrium
     class Lockable
     {
     public:
-        const int  depth;
-        const char uuid[64-2*sizeof(void*)-sizeof(int)];
-
+        
         virtual ~Lockable() noexcept;
+        void     lock()    noexcept;
+        void     unlock()  noexcept;
+        bool     tryLock() noexcept;
 
-        void lock()    noexcept;
-        void unlock()  noexcept;
-        bool tryLock() noexcept;
+        const  int  depth;
+        const  char uuid[64-2*sizeof(void*)-sizeof(int)];
+
 
     protected:
         explicit Lockable(const char *id) noexcept;
@@ -32,10 +33,20 @@ namespace Yttrium
         virtual bool doTryLock() noexcept = 0;
     };
 
-#define Y_DECL_LOCKABLE()          \
+#define Y_LOCKABLE_API()           \
 virtual void doLock()    noexcept; \
 virtual void doUnlock()  noexcept; \
 virtual bool doTryLock() noexcept
+
+    class ScopedLock
+    {
+    public:
+        ScopedLock(Lockable &) noexcept;
+        ~ScopedLock() noexcept;
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(ScopedLock);
+        Lockable &host;
+    };
 
 }
 

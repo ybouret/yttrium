@@ -8,8 +8,11 @@
 
 namespace Yttrium
 {
+    
     Lockable:: ~Lockable() noexcept
-    {}
+    {
+        memset( (void *)&uuid[0],0, sizeof(uuid) );
+    }
 
     Lockable:: Lockable(const char *id) noexcept :
     depth(0),
@@ -58,8 +61,8 @@ namespace Yttrium
 
     void Lockable:: unlock() noexcept
     {
-        doUnlock();
         --Coerce(depth);
+        doUnlock();
     }
 
     bool Lockable:: tryLock() noexcept
@@ -73,4 +76,19 @@ namespace Yttrium
             return false;
     }
 
+}
+
+
+
+namespace Yttrium
+{
+    ScopedLock:: ScopedLock(Lockable &l) noexcept : host(l)
+    {
+        host.lock();
+    }
+
+    ScopedLock:: ~ScopedLock() noexcept
+    {
+        host.unlock();
+    }
 }

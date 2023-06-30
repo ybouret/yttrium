@@ -21,7 +21,7 @@ Y_UTEST(memory_chunk)
 
     Memory::RAM ram;
 
-    const size_t max_block_size = 16;
+    const size_t max_block_size = 128;
 
     for(size_t block_size=1;block_size<=max_block_size;++block_size)
     {
