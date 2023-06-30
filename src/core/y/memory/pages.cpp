@@ -1,6 +1,7 @@
 
 #include "y/memory/pages.hpp"
 #include "y/system/exception.hpp"
+#include "y/system/error.hpp"
 #include "y/lockable.hpp"
 #include "y/memory/out-of-reach.hpp"
 
@@ -12,26 +13,40 @@ namespace Yttrium
     namespace Memory
     {
 
+        const char * const Pages:: CallSign = "Memory::Pages";
+
         Pages:: ~Pages() noexcept
         {
 
+            const ScopedLock guard(access);
+            while(size)
+            {
+                --Coerce(delta);
+                free( popHead() );
+            }
+
+            if(delta!=0)
+            {
+                std::cerr << "*** " << CallSign << "[" << bytes << "] delta=" << delta << std::endl;
+            }
         }
 
-        static size_t checkShift(const size_t userShift)
+        static unsigned checkShift(const unsigned userShift)
         {
             if(userShift<Pages::MinShift)
                 return Pages::MinShift;
 
             if(userShift>Pages::MaxShift)
-                throw Specific::Exception("Memory::Pages","2^%lu exceeds capacity",(unsigned long)userShift);
+                throw Specific::Exception(Pages::CallSign,"2^%u exceeds capacity",userShift);
 
             return userShift;
         }
 
-        Pages:: Pages(const size_t userShift) :
+        Pages:: Pages(const unsigned userShift) :
         ListOf<Page>(),
         shift( checkShift(userShift) ),
         bytes( Base2<size_t>::One << shift ),
+        delta(0),
         access( Lockable::Giant() )
         {
         }
@@ -39,7 +54,8 @@ namespace Yttrium
         void * Pages:: acquire() {
             const ScopedLock guard(access);
             void  *page = calloc(1,bytes);
-            if(!page) throw Libc::Exception(ENOMEM,"Pages(%lu)", (unsigned long)bytes);
+            if(!page) throw Libc::Exception(ENOMEM,"Memory::Pages(%lu)", (unsigned long)bytes);
+            ++Coerce(delta);
             return page;
         }
 
@@ -47,6 +63,7 @@ namespace Yttrium
         {
             const ScopedLock guard(access);
             assert(0!=page);
+            --Coerce(delta);
             free(page);
         }
 
@@ -74,7 +91,7 @@ namespace Yttrium
             {
                 Page *page = static_cast<Page *>(acquire());
                 assert( OutOfReach::Are0(page,sizeof(Page) ) );
-                store(page);
+                pushTail(page);
             }
         }
 
