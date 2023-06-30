@@ -22,8 +22,7 @@ namespace Yttrium
             explicit Mutex(const char *id);
             virtual ~Mutex() noexcept;
 
-            static Lockable &Giant();
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Mutex);
             Y_LOCKABLE_API();

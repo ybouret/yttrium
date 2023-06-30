@@ -213,15 +213,16 @@ namespace Yttrium
 
 namespace Yttrium
 {
+
+    Lockable & Lockable::Giant()
+    {
+        static Lockable &giant = Concurrent:: Quark:: AtelierInstance();
+        return giant;
+    }
+
     namespace Concurrent
     {
-
-        Lockable & Mutex::Giant()
-        {
-            static Lockable &giant = Quark::AtelierInstance();
-            return giant;
-        }
-
+        
         Mutex:: Mutex(const char *id) :
         Lockable(id),
         mutex(0)

@@ -19,6 +19,8 @@ namespace Yttrium
         void     unlock()  noexcept;
         bool     tryLock() noexcept;
 
+        static Lockable &Giant();
+        
         const  int  depth;
         const  char uuid[64-2*sizeof(void*)-sizeof(int)];
 

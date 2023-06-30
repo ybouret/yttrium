@@ -10,12 +10,17 @@
 namespace Yttrium
 {
 
+    class Lockable;
+    
     namespace Memory
     {
 
-
         struct Page
         {
+            static const size_t DefaultBytes = 4096;
+            static const size_t DefaultShift = iLog2<DefaultBytes>::Value;
+            static size_t       QueryOsBytes() noexcept;
+
             Page *next;
             Page *prev;
         };
@@ -32,10 +37,16 @@ namespace Yttrium
 
             const size_t shift; //!< bit shift
             const size_t bytes; //!< bytes = 2^shift
-            
+
+            void *acquire();
+            void  release(void *) noexcept;
+
+            void *query();
+            void  store(void*) noexcept;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pages);
+            Lockable &access;
         };
 
     }

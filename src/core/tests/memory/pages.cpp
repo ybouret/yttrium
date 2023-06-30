@@ -13,6 +13,6 @@ Y_UTEST(memory_pages)
 
     Memory::Pages pages(10);
     
-
+    std::cerr << "PageSize=" << Memory::Page::QueryOsBytes() << std::endl;
 }
 Y_UDONE()
