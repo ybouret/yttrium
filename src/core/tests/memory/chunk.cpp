@@ -13,8 +13,7 @@ using namespace Yttrium;
 
 Y_UTEST(memory_chunk)
 {
-    srand(unsigned(time(0)));
-
+    alea_seed();
 
     void *addr[256];
     Y_STATIC_ZARR(addr);

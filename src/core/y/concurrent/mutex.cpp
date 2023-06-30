@@ -97,22 +97,43 @@ namespace Yttrium
 #endif
 
 #if                 defined(Y_WIN)
-                    ::DeleteCriticalSection(**m);
+                    ::DeleteCriticalSection(&m);
 #endif
                 }
 
                 inline void lock() noexcept
                 {
+#if defined(Y_BSD)
+                    const int res = pthread_mutex_lock(&m);
+                    if( res != 0 ) Libc::CriticalError(res,"pthread_mutex_lock");
+#endif
 
+#if defined(Y_WIN)
+                    ::EnterCriticalSection(&m);
+#endif
                 }
 
                 inline void unlock() noexcept
                 {
+#if defined(Y_BSD)
+                    const int res = pthread_mutex_unlock(&m);
+                    if( res != 0 ) Libc::CriticalError(res,"pthread_mutex_unlock");
+#endif
+
+#if defined(Y_WIN)
+                    ::LeaveCriticalSection(&m);
+#endif
                 }
 
                 inline bool tryLock() noexcept
                 {
-                    return false;
+#if defined(Y_WIN)
+                    return ::TryEnterCriticalSection(&m) == TRUE;
+#endif
+
+#if defined(Y_BSD)
+                    return pthread_mutex_trylock(&m) == 0;
+#endif
                 }
 
                 MutexType m;

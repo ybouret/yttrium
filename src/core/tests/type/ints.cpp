@@ -1,6 +1,7 @@
 
 #include "y/type/ints.hpp"
 #include "y/utest/run.hpp"
+#include "y/type/utils.hpp"
 
 
 using namespace Yttrium;
@@ -55,6 +56,12 @@ Y_UTEST(type_ints)
     Y_DISPLAY(char);
     Y_DISPLAY(short);
     Y_DISPLAY(size_t);
+
+
+    for(int i=-5;i<=5;++i)
+    {
+        std::cerr << i << " -> " << Clamp(-3,i,3) << std::endl;
+    }
 
 }
 Y_UDONE()

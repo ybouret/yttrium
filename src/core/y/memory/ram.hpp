@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Memory_RAM_Included
@@ -20,7 +19,7 @@ namespace Yttrium
             
             explicit RAM();
             virtual ~RAM() noexcept;
-
+            
 
             virtual void    *    acquire(size_t &count, const size_t blockSize);
             virtual void         release(void * &entry, size_t &     count) noexcept;

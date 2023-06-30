@@ -19,6 +19,12 @@ namespace Yttrium
         return lhs < rhs ? rhs : lhs;
     }
 
+    template <typename T> inline
+    T Clamp(const T lo, const T x, const T hi)
+    {
+        return Min(Max(lo,x),hi);
+    }
+
     size_t LengthOf(const char *s) noexcept;
 
 }

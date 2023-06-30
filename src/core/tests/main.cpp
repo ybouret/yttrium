@@ -10,6 +10,7 @@ Y_UTEST_DECL(16)
     Y_UTEST(lockable);
     
     Y_UTEST(memory_chunk);
+    Y_UTEST(memory_pages);
 
     Y_UTEST(type_ints);
 
