@@ -13,8 +13,9 @@ Y_UTEST(lockable)
     Y_SIZEOF(FakeLock);
 
     FakeLock keep(NULL);
+    FakeLock guard("guard");
 
-    std::cerr << "id=" << keep.uuid << std::endl;
+    std::cerr << "id=" << keep.uuid << ", " << guard.uuid << std::endl;
 
 }
 Y_UDONE()
