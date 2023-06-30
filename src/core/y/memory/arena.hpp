@@ -32,8 +32,13 @@ namespace Yttrium
                                          const size_t pageBytes,
                                          size_t      &numBlocks) noexcept;
 
+            void *acquire();
+            void  release(void *blockAddr) noexcept;
+
+
             Chunk        *acquiring; //!< acquiring chunk
             Chunk        *releasing; //!< releasing chunk
+            Chunk        *wandering; //!< last empty
             size_t        available; //!< available blocks
             const size_t  blockSize;
             const size_t  numBlocks;

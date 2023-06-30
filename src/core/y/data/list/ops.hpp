@@ -59,12 +59,23 @@ namespace Yttrium
         }
 
     public:
+        template <typename LIST, typename NODE> static inline
+        bool OwnedBy(const LIST &L, const NODE *node) noexcept
+        {
+            for(const NODE *scan=L.head;scan;scan=scan->next)
+            {
+                if(scan==node) return true;
+            }
+            return false;
+        }
+
         template <typename LIST, typename NODE> static
         inline NODE * PushTail(LIST &L, NODE *node) noexcept
         {
             assert(0!=node);
             assert(0==node->next);
             assert(0==node->prev);
+            assert(!OwnedBy(L,node));
 
             if(L.size<=0)
                 Starting_(L,node);
@@ -80,6 +91,7 @@ namespace Yttrium
             assert(0!=node);
             assert(0==node->next);
             assert(0==node->prev);
+            assert(!OwnedBy(L,node));
 
             if(L.size<=0)
                 Starting_(L,node);
@@ -149,7 +161,7 @@ namespace Yttrium
         template <typename LIST, typename NODE> static inline
         NODE *InsertAfter(LIST &L, NODE *mine, NODE *node) noexcept
         {
-            assert(L.owns(mine));
+            assert(OwnedBy(L,mine));
             assert(0!=node);
             assert(0==node->next);
             assert(0==node->prev);
@@ -171,6 +183,7 @@ namespace Yttrium
             assert(0!=node);
             assert(0==node->next);
             assert(0==node->prev);
+            assert(!OwnedBy(L,node));
 
             switch(L.size)
             {
@@ -259,7 +272,69 @@ namespace Yttrium
             return SignOf(lhs,rhs);
         }
 
-        
+
+        template <typename LIST, typename NODE> static inline
+        NODE *InsertByIncreasingAddress(LIST &L, NODE *node) noexcept
+        {
+            assert(0!=node);
+            assert(0==node->next);
+            assert(0==node->prev);
+            assert(!OwnedBy(L,node));
+
+            switch(L.size)
+            {
+                case 0:
+                    Starting_(L,node);
+                    return Upgraded_(L,node);
+
+                case 1:
+                    if(node<L.head)
+                    {
+                        PushHead_(L,node);
+                    }
+                    else
+                    {
+                        assert(L.head<node);
+                        PushTail_(L,node);
+                    }
+                    return Upgraded_(L,node);
+
+                default:
+                    break;
+
+            }
+            assert(L.size>=2);
+            NODE *lower = L.head;
+            if(node<lower)
+            {
+                PushHead_(L,node);
+                return Upgraded_(L,node);
+            }
+
+            assert(node>lower);
+            NODE *upper = L.tail;
+            if(node>upper)
+            {
+                PushTail_(L,node);
+                return Upgraded_(L,node);
+            }
+
+            {
+                NODE *probe = lower->next; assert(probe);
+                while(probe!=upper)
+                {
+                    if(node<probe)
+                        break;
+                    lower = probe;
+                    probe = lower->next;
+                }
+                upper = probe;
+            }
+            assert(node>lower);
+            assert(node<upper);
+            return InsertAfter(L,lower,node);
+
+        }
     };
 
 }

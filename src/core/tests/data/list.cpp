@@ -64,8 +64,19 @@ Y_UTEST(data_list)
             std::cerr << iList << std::endl;
         }
 
-        Memory::OutOfReach::Zero(&iList,sizeof(iList));
+        while(iList.size) iList.popTail();
+        //Memory::OutOfReach::Zero(&iList,sizeof(iList));
+        alea_shuffle(indx,n);
 
+        for(size_t i=0;i<n;++i)
+        {
+            iNode *node = &nodes[ indx[i] ];
+            std::cerr << "using node #" << **node << std::endl;
+            iList.pushByAddr(node);
+            std::cerr << iList << std::endl;
+        }
+
+        while(iList.size) iList.popTail();
 
 
 

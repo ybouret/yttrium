@@ -47,10 +47,11 @@ namespace Yttrium
             // methods
             //__________________________________________________________________
 
-            bool          owns(const void *addr, const size_t block_size)       const noexcept; //!< check exactly owned
-            Ownership     whose(const void *addr)                               const noexcept; //!< locate address
-            void     *    acquire(const size_t block_size)                            noexcept; //!< acquire zeroed block[block_size]
-            bool          release(void *block_addr, const size_t block_size)          noexcept; //!< release a previously acquire block
+            bool          owns(const void *blockAddr, const size_t blockSize)   const noexcept; //!< check exactly owned
+            Ownership     whose(const void *blockAddr)                          const noexcept; //!< locate address
+            void     *    acquire(const size_t blockSize)                             noexcept; //!< acquire zeroed block[block_size]
+            bool          release(void *blockAddr, const size_t blockSize)            noexcept; //!< release a previously acquire block
+            bool          entails(const void *blockAddr)                        const noexcept;
 
             static Chunk *Create(const size_t blockSize,
                                  void        *page,

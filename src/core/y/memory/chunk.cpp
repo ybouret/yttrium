@@ -60,6 +60,12 @@ namespace Yttrium
             }
         }
 
+        bool Chunk::entails(const void *blockAddr) const noexcept
+        {
+            const uint8_t *p = static_cast<const uint8_t *>(blockAddr);
+            return (p>=data&&p<last);
+        }
+
         Chunk::Ownership Chunk:: whose(const void *block) const noexcept
         {
             const uint8_t *p = static_cast<const uint8_t *>(block);
@@ -122,10 +128,10 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             {
-                uint8_t     *to_release = static_cast<uint8_t *>(block_addr);
-                const size_t indx       = (size_t)(to_release-data)/block_size;
-                *to_release             = firstAvailable;
-                firstAvailable         = (uint8_t)indx;
+                uint8_t     *toRelease = static_cast<uint8_t *>(block_addr);
+                const size_t indx      = static_cast<size_t>(toRelease-data)/block_size;
+                *toRelease             = firstAvailable;
+                firstAvailable         = static_cast<uint8_t>(indx);
                 ++stillAvailable;
                 return (--operatedNumber) <= 0;
             }

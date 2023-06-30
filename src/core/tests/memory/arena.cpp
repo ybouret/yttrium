@@ -7,6 +7,7 @@
 #include "y/utest/run.hpp"
 #include "../alea.hpp"
 
+#include <cstring>
 
 using namespace Yttrium;
 
@@ -33,9 +34,19 @@ Y_UTEST(memory_arena)
     Memory::Album album;
 
     std::cerr << "Using Arena" << std::endl;
+
+    const size_t NB = 1000;
+    void *blk[NB];
+
     for(size_t blockSize = 1; blockSize <= 16; ++blockSize )
     {
         Memory::Arena arena(blockSize,album,pageBytes);
+        memset(blk,0,sizeof(blk));
+        for(size_t i=0;i<NB;++i)
+        {
+            blk[i] = arena.acquire();
+        }
+
     }
 
 

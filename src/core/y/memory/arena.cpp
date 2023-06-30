@@ -4,6 +4,7 @@
 #include "y/memory/album.hpp"
 #include "y/calculus/align.hpp"
 #include "y/type/utils.hpp"
+#include <iomanip>
 
 namespace Yttrium
 {
@@ -22,7 +23,7 @@ namespace Yttrium
                 dataPages.store( chunk );
                 if(inUse>0)
                 {
-                    std::cerr << "*** Memory::Chunk[" << blockSize << "] missing #" << inUse << std::endl;
+                    std::cerr << "*** Memory::Chunk[" << std::setw(4) << blockSize << "] missing #" << inUse << std::endl;
                 }
             }
 
@@ -47,13 +48,15 @@ namespace Yttrium
         ListOf<Chunk>(),
         acquiring(0),
         releasing(0),
+        wandering(0),
         available(0),
         blockSize(userBlockSize),
         numBlocks(0),
         dataPages( userDataPages[ComputeShift(blockSize,userPageBytes,Coerce(numBlocks))] ),
         addBlocks(numBlocks-1)
         {
-            acquiring = releasing = pushTail( queryChunk()  );
+            std::cerr << "Arena: blockSize=" << std::setw(4) << blockSize << " pageBytes: " << std::setw(6) << userPageBytes << " -> " << std::setw(6) << dataPages.bytes << " @" << numBlocks << " bpp" << std::endl;
+            acquiring = releasing = wandering = pushTail( queryChunk()  );
             available = numBlocks;
         }
 
@@ -120,11 +123,94 @@ namespace Yttrium
                 return shift;
             }
 
-
-
-            
-
         }
+
+
+        void *Arena:: acquire()
+        {
+            assert(acquiring);
+            assert(releasing);
+            if(acquiring->stillAvailable>0)
+            {
+                //--------------------------------------------------------------
+                //
+                // fully cached!
+                //
+                //--------------------------------------------------------------
+                --available;
+                if(wandering==acquiring) wandering = 0;
+                return acquiring->acquire(blockSize);
+            }
+            else
+            {
+                //--------------------------------------------------------------
+                //
+                // look up
+                //
+                //--------------------------------------------------------------
+                if(available)
+                {
+                    // some memory somewhere
+                    Chunk *lower = acquiring->prev;
+                    Chunk *upper = acquiring->next;
+                    while(0!=lower && 0!=upper)
+                    {
+                        if(lower->stillAvailable)
+                        {
+                            acquiring = lower;
+                            goto FOUND;
+                        }
+
+                        if(upper->stillAvailable)
+                        {
+                            acquiring = upper;
+                            goto FOUND;
+                        }
+                        lower=lower->prev;
+                        upper=upper->next;
+                    }
+
+                    assert(0==lower || 0==upper);
+
+                    while(0!=lower)
+                    {
+                        if(lower->stillAvailable)
+                        {
+                            acquiring = lower;
+                            goto FOUND;
+                        }
+                        lower=lower->prev;
+                    }
+
+                    while(0!=upper)
+                    {
+                        if(upper->stillAvailable)
+                        {
+                            acquiring = upper;
+                            goto FOUND;
+                        }
+                        upper=upper->next;
+                    }
+
+
+
+                FOUND:
+                    assert(acquiring->stillAvailable);
+                    --available;
+                    if(wandering==acquiring) wandering = 0;
+                    return acquiring->acquire(blockSize);
+                }
+                else
+                {
+                    // get a fresh chunk
+                    acquiring = pushByAddr( queryChunk() );
+                    assert(acquiring->providedNumber==numBlocks);
+                    available += addBlocks;
+                    return acquiring->acquire(blockSize);
+                }
+            }
+        }
+
     }
 
 }
