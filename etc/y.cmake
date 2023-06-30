@@ -1,4 +1,7 @@
-set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true)
+
+set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS    ON)
+set(CMAKE_SKIP_PREPROCESSED_SOURCE_RULES ON)
+set(CMAKE_SKIP_ASSEMBLY_SOURCE_RULES     ON)
 
 ########################################################################
 ##
@@ -152,6 +155,53 @@ if(${Y_CC} MATCHES "gcc.*" )
         set(Y_FLAGS_RELEASE "-O2 -DNDEBUG=1 -D_FORTIFY_SOURCE=2")
 
 
+endif()
+
+
+########################################################################
+##
+##
+##  Intel
+##
+##
+########################################################################
+if(${Y_CC} MATCHES "icc.*" )
+
+	set(Y_KNOWN_COMPILER ON)
+	set(Y_COMPILERS      "intel")
+	set(Y_INTEL          ON)
+	Y_FIND_COMPILER_VERSION()
+
+	set(CMAKE_C_FLAGS   "-Wall -pipe -wd981 -fPIC -xHost")
+	set(CMAKE_CXX_FLAGS "-Wall -pipe -wd981 -fPIC -xHost -fexceptions -std=c++11" )
+	
+	set(Y_FLAGS_DEBUG   "-O0 -g")
+	set(Y_FLAGS_RELEASE "-O2 -DNDEBUG=1 -D_FORTIFY_SOURCE=2")
+	
+endif()
+
+########################################################################
+##
+##
+##  Microsoft
+##
+##
+########################################################################
+if(${Y_CC} STREQUAL "cl" )
+
+	set(Y_KNOWN_COMPILER ON)
+	set(Y_COMPILERS      "microsoft")
+	set(Y_MICROSOFT      ON)
+	
+	set(CMAKE_C_FLAGS   "-nologo")
+	set(CMAKE_CXX_FLAGS "-nologo -EHsc" )
+	set(Y_FLAGS_DEBUG   "")
+	set(Y_FLAGS_RELEASE "-Ox -DNDEBUG=1")
+	 
+endif()
+
+if(NOT YACK_KNOWN_COMPILER)
+	message( FATAL_ERROR "[YACK] unknown compilers '${YACK_CC}'" )
 endif()
 
 ########################################################################
