@@ -13,8 +13,8 @@ namespace Yttrium
     class Exception : public std::exception
     {
     public:
-        static const size_t BaseSize = 128;
-        static const size_t TextSize = BaseSize-sizeof(std::exception);
+        static const size_t ClassSize = 128;
+        static const size_t StorySize = ClassSize-sizeof(std::exception);
 
         explicit Exception()                    noexcept;
         explicit Exception(const char *fmt,...) noexcept Y_PRINTF_API;
@@ -36,7 +36,7 @@ namespace Yttrium
     private:
         Y_DISABLE_ASSIGN(Exception);
         void reset() noexcept;
-        char story[TextSize];
+        char story[StorySize];
     };
 
 }

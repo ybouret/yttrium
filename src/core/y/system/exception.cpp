@@ -1,10 +1,43 @@
 #include "y/system/exception.hpp"
 #include "y/system/error.hpp"
+#include "y/type/utils.hpp"
 #include <cstdarg>
 #include <cstring>
 
 namespace Yttrium
 {
+
+    namespace Specific
+    {
+
+        Exception:: ~Exception() noexcept {}
+
+        Exception:: Exception(const char *header,
+                              const char *fmt,...) noexcept :
+        Yttrium::Exception(),
+        title()
+        {
+            memset(title,0,sizeof(title));
+            memcpy(title,header,Min(LengthOf(header),sizeof(title)-1));
+            va_list ap;
+            va_start(ap,fmt);
+            format(fmt,&ap);
+            va_end(ap);
+        }
+
+        Exception:: Exception(const Exception &excp) noexcept :
+        Yttrium::Exception(excp),
+        title()
+        {
+            memcpy(title,excp.title,sizeof(title));
+        }
+
+        const char *Exception:: what() const noexcept
+        {
+            return title;
+        }
+
+    }
 
     namespace Libc
     {
