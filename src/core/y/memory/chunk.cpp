@@ -10,14 +10,17 @@ namespace Yttrium
 {
     namespace Memory
     {
-        static inline uint8_t getNumBlocks(const size_t block_size, const size_t chunk_size)
+
+        const char * const Chunk::CallSign = "Memory::Chunk";
+
+        uint8_t Chunk:: GetNumBlocks(const size_t blockSize, const size_t chunkSize) noexcept
         {
-            assert(block_size>0);
-            const size_t nb = chunk_size/block_size;
+            assert(blockSize>0);
+            const size_t nb = chunkSize/blockSize;
             if(nb>0xff)
                 return 0xff;
             else
-                return (uint8_t)nb;
+                return static_cast<uint8_t>(nb);
         }
 
 
@@ -25,7 +28,7 @@ namespace Yttrium
                       void          *chunkData,
                       const size_t   chunkSize) noexcept :
         firstAvailable(0),
-        stillAvailable(getNumBlocks(blockSize,chunkSize)),
+        stillAvailable( GetNumBlocks(blockSize,chunkSize) ),
         operatedNumber(0),
         providedNumber(stillAvailable),
         data( static_cast<uint8_t *>(chunkData)  ),
@@ -152,7 +155,6 @@ namespace Yttrium
         {
             const size_t        maxPageSize = GetFlatBytes(blockSize, 255);
             const size_t        logPageSize = Base2<size_t>::Log(maxPageSize);
-
             return              Base2<size_t>::One << logPageSize;
         }
 
@@ -165,7 +167,7 @@ namespace Yttrium
             else
             {
                 const size_t chunkSize = pageBytes - headerBytes;
-                return getNumBlocks(blockSize,chunkSize);
+                return GetNumBlocks(blockSize,chunkSize);
             }
         }
 

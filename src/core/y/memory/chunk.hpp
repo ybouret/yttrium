@@ -25,6 +25,8 @@ namespace Yttrium
             // definitions
             //__________________________________________________________________
 
+            static const char * const CallSign;
+
             //! Ownership for address lookup
             enum Ownership
             {
@@ -57,9 +59,14 @@ namespace Yttrium
                                  void        *page,
                                  const size_t size) noexcept;
 
+            //__________________________________________________________________
+            //
+            // helpers
+            //__________________________________________________________________
             static size_t  GetFlatBytes(const size_t blockSize, const uint8_t numBlocks) noexcept;
             static size_t  OptPageBytes(const size_t blockSize) noexcept;
             static uint8_t OptNumBlocks(const size_t blockSize, const size_t pageBytes) noexcept;
+            static uint8_t GetNumBlocks(const size_t blockSize, const size_t chunkSize) noexcept;
             
             //__________________________________________________________________
             //

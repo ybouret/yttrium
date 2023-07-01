@@ -12,6 +12,8 @@ namespace Yttrium
     namespace Memory
     {
 
+        const char * const Arena :: CallSign = "Memory::Arena";
+        
         Arena:: ~Arena() noexcept
         {
 
@@ -125,11 +127,23 @@ namespace Yttrium
 
         }
 
+    }
+
+}
+
+#include "y/system/exception.hpp"
+
+namespace Yttrium
+{
+
+    namespace Memory
+    {
 
         void *Arena:: acquire()
         {
-            assert(acquiring);
-            assert(releasing);
+            assert(0!=acquiring);
+            assert(0!=releasing);
+
             if(acquiring->stillAvailable>0)
             {
                 //--------------------------------------------------------------
@@ -138,7 +152,11 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 --available;
-                if(wandering==acquiring) wandering = 0;
+                if(wandering==acquiring)
+                {
+                    assert(0==wandering->operatedNumber);
+                    wandering = 0;
+                }
                 return acquiring->acquire(blockSize);
             }
             else
@@ -150,7 +168,9 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 if(available)
                 {
-                    // some memory somewhere
+                    //----------------------------------------------------------
+                    // some memory somewhere: start interleaved lookup
+                    //----------------------------------------------------------
                     Chunk *lower = acquiring->prev;
                     Chunk *upper = acquiring->next;
                     while(0!=lower && 0!=upper)
@@ -192,17 +212,23 @@ namespace Yttrium
                         upper=upper->next;
                     }
 
-
+                    throw Specific::Exception(CallSign,"corrupted acquire()");
 
                 FOUND:
                     assert(acquiring->stillAvailable);
                     --available;
-                    if(wandering==acquiring) wandering = 0;
+                    if(wandering==acquiring)
+                    {
+                        assert(0==wandering->operatedNumber);
+                        wandering = 0;
+                    }
                     return acquiring->acquire(blockSize);
                 }
                 else
                 {
+                    //----------------------------------------------------------
                     // get a fresh chunk
+                    //----------------------------------------------------------
                     acquiring = pushByAddr( queryChunk() );
                     assert(acquiring->providedNumber==numBlocks);
                     available += addBlocks;
@@ -211,6 +237,22 @@ namespace Yttrium
             }
         }
 
+    }
+}
+
+namespace Yttrium
+{
+
+    namespace Memory
+    {
+
+        void Arena:: release(void *blockAddr) noexcept
+        {
+            assert(0!=blockAddr);
+            assert(0!=acquiring);
+            assert(0!=releasing);
+
+        }
     }
 
 }

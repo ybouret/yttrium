@@ -19,8 +19,9 @@ namespace Yttrium
         class Arena : public ListOf<Chunk>
         {
         public:
-            static const uint8_t MinBlocksPerChunk = 16;
-            static const uint8_t MaxBlocksPerChunk = 255;
+            static const uint8_t      MinBlocksPerChunk = 16;
+            static const uint8_t      MaxBlocksPerChunk = 255;
+            static const char * const CallSign;
 
             explicit Arena(const size_t  userBlockSize,
                            Album        &userDataPages,
@@ -40,10 +41,10 @@ namespace Yttrium
             Chunk        *releasing; //!< releasing chunk
             Chunk        *wandering; //!< last empty
             size_t        available; //!< available blocks
-            const size_t  blockSize;
-            const size_t  numBlocks;
-            Pages &       dataPages;
-            const size_t  addBlocks;
+            const size_t  blockSize; //!< common blockSize
+            const size_t  numBlocks; //!< numBlocks per Chunk
+            Pages &       dataPages; //!< the chosen Pages
+            const size_t  addBlocks; //!< numBlocks-1
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Arena);
