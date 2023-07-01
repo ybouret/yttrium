@@ -294,11 +294,14 @@ namespace Yttrium
                 if(wandering)
                 {
                     assert(wandering!=releasing);
+                    assert(size>=2);
                     std::cerr << "found two empty chunks!" << std::endl;
                     exit(0);
 
-                    // selecting wandering to release
+                    // selecting wandering to be released
                     if(wandering<releasing) Swap(wandering,releasing);
+
+                    // check is acquiring need to be LOCALLY moved
                     if(acquiring==wandering)
                     {
                         assert(0!=acquiring->next || 0!=acquiring->prev);
