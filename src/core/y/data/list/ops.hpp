@@ -177,6 +177,79 @@ namespace Yttrium
             return Upgraded_(L,node);
         }
 
+        template <typename LIST, typename NODE> static inline
+        NODE *Pop(LIST &L, NODE *node) noexcept
+        {
+            assert(OwnedBy(L,node));
+            if(L.head==node)
+                return PopHead(L);
+            else
+            {
+                if(L.tail==node)
+                    return PopTail(L);
+                else
+                {
+                    assert(L.size>2);
+                    assert(L.head!=node);
+                    assert(L.tail!=node);
+                    NODE *next = node->next;
+                    NODE *prev = node->prev;
+                    next->prev = prev;
+                    prev->next = next;
+                    node->next = 0;
+                    node->prev = 0;
+                    --Coerce(L.size);
+                    return node;
+                }
+            }
+        }
+
+        template <typename LIST> static inline
+        void MergeBack(LIST &target, LIST &source) noexcept
+        {
+            if(source.size<=0) return;
+
+            if(target.size<=0)
+            {
+                Swap(target.head,source.head);
+                Swap(target.head,source.head);
+                Swap(Coerce(target.size),Coerce(source.size));
+            }
+            else
+            {
+                target.tail->next    = source.head;
+                source.head->prev    = target.tail;
+                target.tail          = source.tail;
+                Coerce(target.size) += source.size;
+                source.head          = 0;
+                source.tail          = 0;
+                Coerce(source.size)  = 0;
+            }
+        }
+
+        template <typename LIST, typename COMPARE> static inline
+        void Fusion(LIST &target, LIST &lhs, LIST &rhs, COMPARE &compare) noexcept
+        {
+            assert(0==target.size);
+            assert(0==target.head);
+            assert(0==target.tail);
+            while(lhs.size>0 && rhs.size>0)
+            {
+                switch( compare(lhs.head, rhs.head) )
+                {
+                    case Negative:
+                    case __Zero__:
+                        PushTail(target, PopHead(lhs) ); break;
+
+                    case Positive:
+                        PushTail(target, PopHead(rhs) ); break;
+                }
+            }
+            assert(0==lhs.size||0==rhs.size);
+            MergeBack(target,lhs);
+            MergeBack(target,rhs);
+        }
+
 
 
         template <typename LIST, typename NODE, typename COMPARE> static inline
@@ -276,7 +349,7 @@ namespace Yttrium
 
 
         template <typename LIST> static inline
-        bool NodesByIncreasingAddress(const LIST &L) noexcept
+        bool CheckIncreasingAddresses(const LIST &L) noexcept
         {
             for(const typename LIST::NodeType *node=L.head;node;node=node->next)
             {

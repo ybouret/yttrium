@@ -229,9 +229,9 @@ namespace Yttrium
                     //----------------------------------------------------------
                     // get a fresh chunk
                     //----------------------------------------------------------
-                    acquiring = pushByAddr( queryChunk() );
+                    acquiring = insertByIncreasingAddress( queryChunk() );
                     assert(acquiring->providedNumber==numBlocks);
-                    assert(ListOps::NodesByIncreasingAddress(*this));
+                    assert(ListOps::CheckIncreasingAddresses(*this));
                     available += addBlocks;
                     return acquiring->acquire(blockSize);
                 }
@@ -256,7 +256,6 @@ namespace Yttrium
             assert(0!=acquiring);
             assert(0!=releasing);
 
-            //std::cerr << "releasing" << std::endl;
 
             switch( releasing->whose(blockAddr) )
             {
@@ -290,7 +289,15 @@ namespace Yttrium
 
 
         FOUND:
-            releasing->release(blockAddr,blockSize);
+            if(releasing->release(blockAddr,blockSize))
+            {
+                if(wandering)
+                {
+                    assert(wandering!=releasing);
+                    Chunk *toRelease = Min(releasing,wandering);
+                    dataPages.store( pop(toRelease) );
+                }
+            }
 
 
         }

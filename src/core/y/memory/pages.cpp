@@ -79,7 +79,8 @@ namespace Yttrium
         void Pages:: store(void *addr) noexcept
         {
             assert(0!=addr);
-            pushHead(static_cast<Page *>(memset(addr,0,sizeof(Page))));
+            insertByIncreasingAddress( static_cast<Page *>(memset(addr,0,sizeof(Page))) );
+            assert( ListOps:: CheckIncreasingAddresses(*this) );
         }
 
         void  Pages:: reserve(size_t n)
@@ -88,7 +89,7 @@ namespace Yttrium
             {
                 Page *page = static_cast<Page *>(acquire());
                 assert( OutOfReach::Are0(page,sizeof(Page) ) );
-                pushTail(page);
+                store(page);
             }
         }
 

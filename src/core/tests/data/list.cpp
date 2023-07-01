@@ -65,20 +65,20 @@ Y_UTEST(data_list)
         }
 
         while(iList.size) iList.popTail();
-        //Memory::OutOfReach::Zero(&iList,sizeof(iList));
         alea_shuffle(indx,n);
 
         for(size_t i=0;i<n;++i)
         {
             iNode *node = &nodes[ indx[i] ];
             std::cerr << "using node #" << **node << std::endl;
-            iList.pushByAddr(node);
+            iList.insertByIncreasingAddress(node);
+            Y_ASSERT( ListOps::CheckIncreasingAddresses(iList) );
             std::cerr << iList << std::endl;
         }
 
         while(iList.size) iList.popTail();
 
-
+        Y_SIZEOF(ListOf<int>);
 
     }
     

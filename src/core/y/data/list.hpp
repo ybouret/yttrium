@@ -23,15 +23,16 @@ namespace Yttrium
 
         inline NODE *pushTail(NODE *node) noexcept { return ListOps::PushTail(*this,node); }
         inline NODE *pushHead(NODE *node) noexcept { return ListOps::PushHead(*this,node); }
-        inline NODE *popTail() noexcept { return ListOps::PopTail(*this); }
-        inline NODE *popHead() noexcept { return ListOps::PopHead(*this); }
+        inline NODE *popTail()            noexcept { return ListOps::PopTail(*this);       }
+        inline NODE *popHead()            noexcept { return ListOps::PopHead(*this);       }
+        inline NODE *pop(NODE *node)      noexcept { return ListOps::Pop(*this,node);      }
 
         inline NODE *insertAfter(NODE *mine, NODE *node) noexcept
         {
             return ListOps:: InsertAfter(*this,mine,node);
         }
 
-        inline NODE *pushByAddr(NODE *node) noexcept
+        inline NODE *insertByIncreasingAddress(NODE *node) noexcept
         {
             return ListOps::InsertByIncreasingAddress(*this,node);
         }
