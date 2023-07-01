@@ -42,16 +42,31 @@ Y_UTEST(memory_arena)
     {
         Memory::Arena arena(blockSize,album,pageBytes);
         memset(blk,0,sizeof(blk));
+
+
         for(size_t i=0;i<NB;++i)
         {
             blk[i] = arena.acquire();
         }
 
-        alea_shuffle(blk,NB);
+        for(size_t loop=1;loop<=4;++loop)
+        {
+            alea_shuffle(blk,NB);
+            for(size_t i=0;i<NB/2;++i)
+            {
+                arena.release(blk[i]);
+            }
+            for(size_t i=0;i<NB/2;++i)
+            {
+                blk[i] = arena.acquire();
+            }
+        }
+
         for(size_t i=0;i<NB;++i)
         {
-            arena.release(blk[i]);
+           arena.release( blk[i] );
         }
+
     }
 
 
