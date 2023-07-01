@@ -47,6 +47,11 @@ Y_UTEST(memory_arena)
             blk[i] = arena.acquire();
         }
 
+        alea_shuffle(blk,NB);
+        for(size_t i=0;i<NB;++i)
+        {
+            arena.release(blk[i]);
+        }
     }
 
 

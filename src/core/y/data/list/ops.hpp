@@ -177,6 +177,8 @@ namespace Yttrium
             return Upgraded_(L,node);
         }
 
+
+
         template <typename LIST, typename NODE, typename COMPARE> static inline
         NODE *InsertOrdered(LIST &L, NODE *node, COMPARE &compare) noexcept
         {
@@ -272,6 +274,16 @@ namespace Yttrium
             return SignOf(lhs,rhs);
         }
 
+
+        template <typename LIST> static inline
+        bool NodesByIncreasingAddress(const LIST &L) noexcept
+        {
+            for(const typename LIST::NodeType *node=L.head;node;node=node->next)
+            {
+                if(0!=node->next && node->next < node) return false;
+            }
+            return true;
+        }
 
         template <typename LIST, typename NODE> static inline
         NODE *InsertByIncreasingAddress(LIST &L, NODE *node) noexcept

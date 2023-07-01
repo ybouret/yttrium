@@ -231,6 +231,7 @@ namespace Yttrium
                     //----------------------------------------------------------
                     acquiring = pushByAddr( queryChunk() );
                     assert(acquiring->providedNumber==numBlocks);
+                    assert(ListOps::NodesByIncreasingAddress(*this));
                     available += addBlocks;
                     return acquiring->acquire(blockSize);
                 }
@@ -239,6 +240,9 @@ namespace Yttrium
 
     }
 }
+
+
+#include "y/system/error.hpp"
 
 namespace Yttrium
 {
@@ -251,6 +255,43 @@ namespace Yttrium
             assert(0!=blockAddr);
             assert(0!=acquiring);
             assert(0!=releasing);
+
+            //std::cerr << "releasing" << std::endl;
+
+            switch( releasing->whose(blockAddr) )
+            {
+                case Chunk::IsOwnedByThis:
+                    goto FOUND;
+
+                case Chunk::IsOwnedByNext:
+                    for(Chunk *chunk=releasing->next;chunk;chunk=chunk->next)
+                    {
+                        if(chunk->entails(blockAddr))
+                        {
+                            releasing = chunk;
+                            goto FOUND;
+                        }
+                    }
+                    break;
+
+                case Chunk::IsOwnedByPrev:
+                    for(Chunk *chunk=releasing->prev;chunk;chunk=chunk->prev)
+                    {
+                        if(chunk->entails(blockAddr))
+                        {
+                            releasing = chunk;
+                            goto FOUND;
+                        }
+                    }
+                    break;
+            }
+
+            Libc::CriticalError(EINVAL, "%s unregistered address %p", CallSign, blockAddr);
+
+
+        FOUND:
+            releasing->release(blockAddr,blockSize);
+
 
         }
     }
