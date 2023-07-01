@@ -227,6 +227,55 @@ namespace Yttrium
             }
         }
 
+        template <typename NODE> static inline
+        NODE *Next(NODE *node, size_t count) noexcept
+        {
+            assert(node);
+            while(count-- > 0)
+            {
+                node = node->next; assert(0!=node);
+            }
+            return node;
+        }
+
+        template <typename LIST> static inline
+        void Divide(LIST &lhs, LIST &rhs, LIST &src) noexcept
+        {
+            typedef typename LIST::NodeType NodeType;
+
+            // sanity check
+            assert(src.size>=2);
+            assert(0==lhs.size);
+            assert(0==rhs.size);
+
+            // compute half size and get half node
+            const size_t size = src.size;
+            const size_t half = size >> 1; assert(half>0);
+            NodeType *   head = src.head;  assert(0!=head);
+            NodeType    *node = Next(head,half-1);
+
+            // create lhs sub-list
+            lhs.head         = head;
+            lhs.tail         = node;
+            Coerce(lhs.size) = half;
+
+            // create rhs sub-list
+            rhs.head         = node->next;   assert(0!=node->next);
+            rhs.tail         = src.tail;
+            Coerce(rhs.size) = size-half;
+
+            // detach lists
+            rhs.head->prev = 0;
+            lhs.tail->next = 0;
+
+            // cleanup src
+            src.head = 0;
+            src.tail = 0;
+            Coerce(src.size) = 0;
+
+        }
+
+
         template <typename LIST, typename COMPARE> static inline
         void Fusion(LIST &target, LIST &lhs, LIST &rhs, COMPARE &compare) noexcept
         {

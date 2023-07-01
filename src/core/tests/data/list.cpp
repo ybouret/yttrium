@@ -76,6 +76,14 @@ Y_UTEST(data_list)
             std::cerr << iList << std::endl;
         }
 
+        ListOf<iNode> lhs, rhs;
+        ListOps:: Divide(lhs,rhs,iList);
+        std::cerr << "lhs = " << lhs << std::endl;
+        std::cerr << "rhs = " << rhs << std::endl;
+
+        ListOps:: Fusion(iList, rhs, lhs,  ListOps::IncreasingAddresses<iNode> );
+        std::cerr << "tgt = " << iList << std::endl;
+        
         while(iList.size) iList.popTail();
 
         Y_SIZEOF(ListOf<int>);
