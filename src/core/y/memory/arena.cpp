@@ -294,8 +294,26 @@ namespace Yttrium
                 if(wandering)
                 {
                     assert(wandering!=releasing);
-                    Chunk *toRelease = Min(releasing,wandering);
-                    dataPages.store( pop(toRelease) );
+                    std::cerr << "found two empty chunks!" << std::endl;
+                    exit(0);
+
+                    // selecting wandering to release
+                    if(wandering<releasing) Swap(wandering,releasing);
+                    if(acquiring==wandering)
+                    {
+                        assert(0!=acquiring->next || 0!=acquiring->prev);
+                        Chunk *prev = acquiring->prev;
+                        acquiring   = prev ? prev : acquiring->next;
+                        assert(acquiring);
+                    }
+
+                    dataPages.store( pop(wandering) );
+                    wandering  = 0;
+                    available -= numBlocks;
+                }
+                else
+                {
+                    wandering = releasing;
                 }
             }
 
