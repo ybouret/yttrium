@@ -332,6 +332,7 @@ namespace Yttrium
 }
 
 #include "y/memory/out-of-reach.hpp"
+#include "y/text/human-readable.hpp"
 
 namespace Yttrium
 {
@@ -346,7 +347,11 @@ namespace Yttrium
             const size_t totalBytes  = totalChunks * dataPages.bytes;
 
             Core::Indent(std::cerr,chunkIndent);
-            std::cerr << "available = " << std::setw(6) << available << " / " << std::setw(6) << totalChunks << " in #" << totalBytes << std::endl;
+            std::cerr
+            << "available = " << std::setw(6) << available
+            << " / "
+            << std::setw(6) << totalChunks
+            << " | " << HumanReadable(totalBytes) << std::endl;
             const void *base = head;
             for(const Chunk *chunk=head;chunk;chunk=chunk->next)
             {
