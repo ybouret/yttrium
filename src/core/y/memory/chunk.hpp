@@ -54,18 +54,27 @@ namespace Yttrium
             void     *    acquire(const size_t blockSize)                             noexcept; //!< acquire zeroed block[block_size]
             bool          release(void *blockAddr, const size_t blockSize)            noexcept; //!< release a previously acquire block
             bool          entails(const void *blockAddr)                        const noexcept;
+            static Chunk *MakeFor(const size_t blockSize,
+                                  void        *page,
+                                  const size_t size) noexcept;
 
-            static Chunk *Create(const size_t blockSize,
-                                 void        *page,
-                                 const size_t size) noexcept;
+            void displayInfo(const size_t indent, const ptrdiff_t delta=0) const;
 
             //__________________________________________________________________
             //
             // helpers
             //__________________________________________________________________
+
+            //! sizeof(Chunk) + Y_MEMALIGN(numBlocks*blockSize*);
             static size_t  GetFlatBytes(const size_t blockSize, const uint8_t numBlocks) noexcept;
+
+            //! 2^( Log2(GetFlatBytes(blockSize,255))
             static size_t  OptPageBytes(const size_t blockSize) noexcept;
+
+            //! Min(255,(pageBytes-sizeof(Chunk))/blockSize))
             static uint8_t OptNumBlocks(const size_t blockSize, const size_t pageBytes) noexcept;
+
+            //! Min(255,chunkSize/blockSize)
             static uint8_t GetNumBlocks(const size_t blockSize, const size_t chunkSize) noexcept;
             
             //__________________________________________________________________

@@ -171,9 +171,9 @@ namespace Yttrium
             }
         }
 
-        Chunk * Chunk::Create(const size_t blockSize,
-                              void        *page,
-                              const size_t size) noexcept
+        Chunk * Chunk:: MakeFor(const size_t blockSize,
+                                void        *page,
+                                const size_t size) noexcept
         {
             assert(0!=page);
             assert(size>=headerBytes);
@@ -184,5 +184,38 @@ namespace Yttrium
             return new (page) Chunk(blockSize,chunkData,chunkSize);
         }
 
+
+
     }
+}
+
+#include <iostream>
+#include <iomanip>
+#include "y/ios/plural.hpp"
+
+namespace Yttrium
+{
+    namespace Memory
+    {
+        void Chunk:: displayInfo(const size_t indent, const ptrdiff_t delta) const
+        {
+            Core::Indent(std::cerr, indent) << CallSign;
+            std::cerr << '[';
+            std::cerr << std::setw(3) << int(operatedNumber);
+            std::cerr << " / ";
+            std::cerr << std::setw(3) << int(providedNumber);
+            std::cerr << ']';
+
+            if(0!=delta)
+            {
+                std::cerr << " @" << std::setw(4) << delta << " page" << Plural::s(delta);
+            }
+            else
+            {
+                std::cerr << " @     head";
+            }
+            std::cerr << std::endl;
+        }
+    }
+
 }

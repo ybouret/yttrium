@@ -39,11 +39,18 @@ namespace Yttrium
         extern const char Failure[];         //!< "failure"
         extern const char Warning[];         //!< "warning"
         extern const char Message[];         //!< "message"
+        template <typename OSTREAM> inline
+        OSTREAM & Indent(OSTREAM &os, size_t indent, const char ch = ' ') {
+            while(indent-- > 0) os << ch;
+            return os;
+        }
     }
 
     bool Die(const char *); //!< return true
     bool Say(const char *); //!< return false
     bool Good(const void *addr, const size_t size); //!< !(addr==NULL&&size>0) */
+
+
 
 
 }

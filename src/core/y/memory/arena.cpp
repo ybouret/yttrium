@@ -37,7 +37,7 @@ namespace Yttrium
 
         Chunk * Arena:: queryChunk()
         {
-            Chunk *chunk = Chunk::Create(blockSize, dataPages.query(), dataPages.bytes);
+            Chunk *chunk = Chunk::MakeFor(blockSize, dataPages.query(), dataPages.bytes);
             assert(0!=chunk);
             assert(numBlocks==static_cast<size_t>(chunk->providedNumber));
             return chunk;
@@ -57,7 +57,7 @@ namespace Yttrium
         dataPages( userDataPages[ComputeShift(blockSize,userPageBytes,Coerce(numBlocks))] ),
         addBlocks(numBlocks-1)
         {
-            std::cerr << "Arena: blockSize=" << std::setw(4) << blockSize << " pageBytes: " << std::setw(6) << userPageBytes << " -> " << std::setw(6) << dataPages.bytes << " @" << numBlocks << " bpp" << std::endl;
+            //std::cerr << "Arena: blockSize=" << std::setw(4) << blockSize << " pageBytes: " << std::setw(6) << userPageBytes << " -> " << std::setw(6) << dataPages.bytes << " @" << numBlocks << " bpp" << std::endl;
             acquiring = releasing = wandering = pushTail( queryChunk()  );
             available = numBlocks;
         }
@@ -326,6 +326,35 @@ namespace Yttrium
             }
 
 
+        }
+    }
+
+}
+
+#include "y/memory/out-of-reach.hpp"
+
+namespace Yttrium
+{
+
+    namespace Memory
+    {
+        void Arena:: displayInfo(const size_t indent) const
+        {
+            Core::Indent(std::cerr,indent)<< '<' << CallSign << " blockSize='" << blockSize << "'>" << std::endl;
+            const size_t chunkIndent = indent+2;
+            const size_t totalChunks = numBlocks * size;
+            const size_t totalBytes  = totalChunks * dataPages.bytes;
+
+            Core::Indent(std::cerr,chunkIndent);
+            std::cerr << "available = " << std::setw(6) << available << " / " << std::setw(6) << totalChunks << " in #" << totalBytes << std::endl;
+            const void *base = head;
+            for(const Chunk *chunk=head;chunk;chunk=chunk->next)
+            {
+                const ptrdiff_t diff = OutOfReach::Diff(base,chunk) / dataPages.bytes;
+                chunk->displayInfo(chunkIndent,diff);
+
+            }
+            Core::Indent(std::cerr,indent)<< '<' << CallSign << '>' << std::endl;
         }
     }
 

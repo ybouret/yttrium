@@ -36,6 +36,7 @@ namespace Yttrium
             void *acquire();
             void  release(void *blockAddr) noexcept;
 
+            void displayInfo(const size_t indent) const;
 
             Chunk        *acquiring; //!< acquiring chunk
             Chunk        *releasing; //!< releasing chunk

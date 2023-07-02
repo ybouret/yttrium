@@ -74,7 +74,7 @@ Y_UTEST(memory_chunk)
 
             size_t         count = 1;
             void          *page = ram.acquire(count,optPageBytes);
-            Memory::Chunk *ch   = Memory::Chunk::Create(blockSize,page,optPageBytes);
+            Memory::Chunk *ch   = Memory::Chunk::MakeFor(blockSize,page,optPageBytes);
             Y_ASSERT(ch->providedNumber==optNumBlocks);
             ram.release(page,count);
 
