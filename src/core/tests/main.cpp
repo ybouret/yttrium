@@ -16,6 +16,9 @@ Y_UTEST_DECL(16)
 
     Y_UTEST(type_ints);
 
+    Y_UTEST(text_plural);
+    Y_UTEST(text_human_readable);
+
     Y_UTEST(data_list);
     Y_UTEST(data_pool);
 

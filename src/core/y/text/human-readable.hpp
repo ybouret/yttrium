@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Text_Plural_Included
@@ -8,11 +7,12 @@
 
 namespace Yttrium
 {
-    struct Plural
+    struct HumanReadable
     {
-        static const char *S(const size_t) noexcept;
-        static const char *s(const size_t) noexcept;
-
+        static const char   Suffix[];
+        static const size_t Number;
+        static const size_t MaxExp;
+        
     };
 }
 

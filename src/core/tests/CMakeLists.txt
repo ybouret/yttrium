@@ -2,6 +2,7 @@ Y_CreateTest(core
 memory 
 type
 data
+text
 calculus
 concurrent
 )
@@ -14,6 +15,11 @@ enable_testing()
 add_test(main:excp   test-core excp)
 add_test(main:atexit test-core atexit)
 add_test(main:lockable test-core lockable)
+
+#text
+add_test(text:plural test-core text_plural)
+add_test(text:human-readable test-core text_human_readable)
+
 
 #memory
 add_test(memory:chunk test-core memory_chunk)
