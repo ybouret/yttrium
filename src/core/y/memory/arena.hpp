@@ -43,7 +43,7 @@ namespace Yttrium
             size_t        available; //!< available blocks
             const size_t  blockSize; //!< common blockSize
             const size_t  numBlocks; //!< numBlocks per Chunk
-            Pages &       dataPages; //!< the chosen Pages
+            Pages &       dataPages; //!< the chosen Pages for Chunk I/O
             const size_t  addBlocks; //!< numBlocks-1
             
         private:

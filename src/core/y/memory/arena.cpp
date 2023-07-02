@@ -291,15 +291,20 @@ namespace Yttrium
         FOUND:
             if(releasing->release(blockAddr,blockSize))
             {
+                assert(available>numBlocks);
+
                 if(wandering)
                 {
                     assert(wandering!=releasing);
                     assert(size>=2);
                     std::cerr << "found two empty chunks!" << std::endl;
-                    exit(0);
 
                     // selecting wandering to be released
-                    if(wandering<releasing) Swap(wandering,releasing);
+                    if(releasing<wandering)
+                    {
+                        Swap(wandering,releasing);
+                        assert(wandering<releasing);
+                    }
 
                     // check is acquiring need to be LOCALLY moved
                     if(acquiring==wandering)
