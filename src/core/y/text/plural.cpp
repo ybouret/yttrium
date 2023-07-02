@@ -1,5 +1,5 @@
 
-#include "y/ios/plural.hpp"
+#include "y/text/plural.hpp"
 
 namespace Yttrium
 {

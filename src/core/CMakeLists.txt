@@ -10,6 +10,7 @@ type
 system
 calculus
 ios
+text
 data
 data/list
 data/pool

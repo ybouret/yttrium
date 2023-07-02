@@ -191,7 +191,7 @@ namespace Yttrium
 
 #include <iostream>
 #include <iomanip>
-#include "y/ios/plural.hpp"
+#include "y/text/plural.hpp"
 
 namespace Yttrium
 {
