@@ -42,7 +42,6 @@ namespace Yttrium
             while(u<v) { v = Divide[--p].factor; }
             Coerce(quot) = static_cast<unsigned>(u/v);
             Coerce(rem)  = static_cast<unsigned>(u-v*quot);
-            //std::cerr << "u: " << u << " => " << v << ", p=" << p << " : q=" << quot << ", r=" << rem << std::endl;
             assert(quot<1024);
         }
 

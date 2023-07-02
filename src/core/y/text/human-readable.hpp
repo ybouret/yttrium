@@ -22,7 +22,7 @@ namespace Yttrium
 
 
         HumanReadable(const HumanReadable &) noexcept;
-        HumanReadable(const uint64_t u) noexcept;
+        HumanReadable(const uint64_t)        noexcept;
         ~HumanReadable() noexcept;
         Y_OSTREAM_PROTO(HumanReadable);
 

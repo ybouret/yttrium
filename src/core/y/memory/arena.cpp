@@ -297,7 +297,7 @@ namespace Yttrium
                 {
                     assert(wandering!=releasing);
                     assert(size>=2);
-                    std::cerr << "found two empty chunks!" << std::endl;
+                    //std::cerr << "found two empty chunks!" << std::endl;
 
                     // selecting wandering to be released
                     if(releasing<wandering)
