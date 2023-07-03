@@ -65,12 +65,18 @@ Y_UTEST(memory_arena)
             }
         }
 
+        std::cerr << "Full Usage: " << std::endl;
+        album.displayInfo(0);
+        arena.displayInfo(0);
         alea_shuffle(blk,NB);
         for(size_t i=0;i<NB;++i)
         {
            arena.release( blk[i] );
         }
 
+        std::cerr << "Empty: " << std::endl;
+        album.displayInfo(0);
+        arena.displayInfo(0);
     }
 
 

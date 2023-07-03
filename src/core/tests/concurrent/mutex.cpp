@@ -15,7 +15,7 @@ Y_UTEST(concurrent_mutex)
     std::cerr << giant.uuid << std::endl;
 
     {
-        ScopedLock guard(giant);
+        Y_LOCK(giant);
         std::cerr << "guarded..." << std::endl;
     }
 

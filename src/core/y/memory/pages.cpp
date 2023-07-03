@@ -4,6 +4,7 @@
 #include "y/system/exception.hpp"
 #include "y/system/error.hpp"
 
+
 #include "y/lockable.hpp"
 #include "y/type/utils.hpp"
 #include "y/text/human-readable.hpp"
@@ -21,7 +22,7 @@ namespace Yttrium
 
         Pages:: ~Pages() noexcept
         {
-            const ScopedLock guard(giant);
+            Y_LOCK(giant);
             while(size)
             {
                 --Coerce(delta);
@@ -48,7 +49,7 @@ namespace Yttrium
 
         void * Pages:: acquire()
         {
-            const ScopedLock guard(giant);
+            Y_LOCK(giant);
             void  *page = calloc(1,bytes);
 
             if(!page)

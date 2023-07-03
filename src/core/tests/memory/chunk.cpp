@@ -1,6 +1,6 @@
 #include "y/memory/chunk.hpp"
 #include "y/memory/out-of-reach.hpp"
-#include "y/memory/ram.hpp"
+#include "y/memory/legacy.hpp"
 #include "y/utest/run.hpp"
 #include "y/calculus/align.hpp"
 #include "y/calculus/base2.hpp"
@@ -18,7 +18,7 @@ Y_UTEST(memory_chunk)
     void *addr[256];
     Y_STATIC_ZARR(addr);
 
-    Memory::RAM ram;
+    Memory::Legacy ram;
 
     const size_t max_block_size = 128;
 
@@ -29,8 +29,7 @@ Y_UTEST(memory_chunk)
         const size_t max_chunk_size = max_blocks * block_size;
         for(size_t chunk_size=block_size;chunk_size<=max_chunk_size;chunk_size += 1+alea_leq(block_size))
         {
-            size_t bytes      = 1;
-            void  *chunk_data = ram.acquire(bytes,chunk_size);
+            void  *chunk_data = ram.acquire(chunk_size);
             Memory::Chunk chunk(block_size, chunk_data, chunk_size);
             
             size_t count = 0;
@@ -50,7 +49,7 @@ Y_UTEST(memory_chunk)
                 released = chunk.release(addr[--count],block_size);
             Y_ASSERT(true==released);
 
-            ram.release(chunk_data,bytes);
+            ram.release(chunk_data,chunk_size);
         }
     }
 
@@ -72,11 +71,10 @@ Y_UTEST(memory_chunk)
             const size_t loss         = optPageBytes - optFlatBytes;
             std::cerr << ' ' << std::setw(4) << optNumBlocks << "(" << std::setw(3) << loss << ")";
 
-            size_t         count = 1;
-            void          *page = ram.acquire(count,optPageBytes);
+            void          *page = ram.acquire(optPageBytes);
             Memory::Chunk *ch   = Memory::Chunk::MakeFor(blockSize,page,optPageBytes);
             Y_ASSERT(ch->providedNumber==optNumBlocks);
-            ram.release(page,count);
+            ram.release(page,optPageBytes);
 
             optPageBytes /= 2;
 
