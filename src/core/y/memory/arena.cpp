@@ -162,6 +162,7 @@ namespace Yttrium
                 // fully cached!
                 //
                 //--------------------------------------------------------------
+                assert(available>0);
                 --available;
                 if(wandering==acquiring)
                 {
@@ -177,7 +178,7 @@ namespace Yttrium
                 // look up
                 //
                 //--------------------------------------------------------------
-                if(available)
+                if(available>0)
                 {
                     //----------------------------------------------------------
                     // some memory somewhere: start interleaved lookup
@@ -300,6 +301,7 @@ namespace Yttrium
 
 
         FOUND:
+            ++available;
             if(releasing->release(blockAddr,blockSize))
             {
                 assert(available>numBlocks);
@@ -308,8 +310,7 @@ namespace Yttrium
                 {
                     assert(wandering!=releasing);
                     assert(size>=2);
-                    //std::cerr << "found two empty chunks!" << std::endl;
-
+                    
                     // selecting wandering to be released
                     if(releasing<wandering)
                     {

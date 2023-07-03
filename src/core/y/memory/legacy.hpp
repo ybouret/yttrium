@@ -4,7 +4,7 @@
 #ifndef Y_Memory_Legacy_Included
 #define Y_Memory_Legacy_Included 1
 
-#include "y/config/starting.hpp"
+#include "y/memory/allocator.hpp"
 
 namespace Yttrium
 {
@@ -12,7 +12,7 @@ namespace Yttrium
 
     namespace Memory
     {
-        
+
         class Legacy
         {
         public:
@@ -23,6 +23,8 @@ namespace Yttrium
             void  release(void *blockAddr, const size_t blockSize) noexcept;
             
             static  uint64_t Allocated() noexcept;
+
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Legacy);

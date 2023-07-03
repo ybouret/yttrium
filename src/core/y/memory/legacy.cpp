@@ -27,7 +27,10 @@ namespace Yttrium
 
         }
 
-
+        uint64_t Legacy:: Allocated() noexcept
+        {
+            return RAM;
+        }
 
         void * Legacy:: acquire(const size_t blockSize)
         {
