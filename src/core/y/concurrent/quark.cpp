@@ -194,7 +194,7 @@ namespace Yttrium
             {
                 if(Atelier_)
                 {
-                    Memory::OutOfReach::Zero( Destructed(Atelier_), sizeof(Atelier_) );
+                    Memory::OutOfReach::Zero( Destructed(Atelier_), sizeof(Atelier__) );
                     Atelier_ = 0;
                 }
             }
