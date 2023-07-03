@@ -6,6 +6,7 @@
 #include "y/memory/out-of-reach.hpp"
 #include "y/type/destruct.hpp"
 #include "y/memory/album.hpp"
+#include "y/memory/arena.hpp"
 
 #include <cstring>
 #include <new>
@@ -174,13 +175,16 @@ namespace Yttrium
                 Lockable("GIANT"),
                 param(),
                 giant(param),
-                album(*this)
+                album(*this),
+                mutexArena(sizeof(Quark::Mutex),album, Memory::Page::DefaultBytes)
                 {
                 }
 
                 MutexAttribute param;
                 Mutex          giant;
                 Memory::Album  album;
+                Memory::Arena  mutexArena;
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Atelier);
@@ -206,6 +210,8 @@ namespace Yttrium
                 if(!Atelier_)
                 {
                     std::cerr << "sizeof(Quark::Atelier)=" << sizeof(Atelier) << " => " << sizeof(Atelier__) << std::endl;
+                    std::cerr << "sizeof(Quark::Mutex)  =" << sizeof(Quark::Mutex) << std::endl;
+
                     if(AtelierInit)
                     {
                         AtExit::Register(AtelierQuit, 0, AtExit::MaximumLongevity);
@@ -259,14 +265,17 @@ namespace Yttrium
         }
 
         void Mutex:: doLock() noexcept {
+            assert(0!=mutex);
             mutex->lock();
         }
 
         void Mutex:: doUnlock() noexcept {
+            assert(0!=mutex);
             mutex->unlock();
         }
 
         bool Mutex:: doTryLock() noexcept {
+            assert(0!=mutex);
             return mutex->tryLock();
         }
     }
