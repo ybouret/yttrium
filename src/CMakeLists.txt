@@ -25,9 +25,10 @@ macro(Y_CreateTest id)
 endmacro()
 
 ## macro to create a library from a series of subdir
+## assuming srcs is existing
 macro(Y_CreateLibrary id)
     message( STATUS "[yttrium] <${id}>")
-    set(srcs "")
+    #set(srcs "")
     foreach(subdir ${ARGN})
         message( STATUS "        |- ${subdir}")
         file(GLOB decl y/${subdir}/*.h   y/${subdir}/*.hpp)

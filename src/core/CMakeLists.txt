@@ -1,6 +1,10 @@
 
 include_directories(.)
-set(srcs "")
+
+file(GLOB quark y/concurrent/*.hxx)
+message(STATUS "quark=${quark}")
+set(srcs ${quark})
+source_group(concurrent FILES ${quark})
 
 Y_CreateLibrary(y
 .
