@@ -28,6 +28,7 @@ add_test(memory:pages  test-core memory_pages)
 add_test(memory:arena  test-core memory_arena)
 add_test(memory:album  test-core memory_album)
 add_test(memory:sentry test-core memory_sentry)
+add_test(memory:blocks test-core memory_blocks)
 
 #type
 add_test(type:ints test-core type_ints)

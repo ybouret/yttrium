@@ -87,7 +87,7 @@ Y_UTEST(memory_arena)
     std::cerr << "Final: " << std::endl;
     album.displayInfo(0);
 
-
+    Y_SIZEOF(Memory::Arena);
 
 }
 Y_UDONE()

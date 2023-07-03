@@ -33,7 +33,7 @@ namespace Yttrium
         {
             for(unsigned shift=Pages::MaxShift;shift>=Pages::MinShift;--shift)
             {
-                (void) OutOfReach::naught( &pages[shift] );
+                (void) OutOfReach::Naught( &pages[shift] );
             }
         }
 

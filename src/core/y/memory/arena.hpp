@@ -112,7 +112,6 @@ namespace Yttrium
             void displayInfo(const size_t indent) const;
 
             
-
             //__________________________________________________________________
             //
             //

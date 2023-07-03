@@ -32,6 +32,14 @@ namespace Yttrium
             return target;
         }
 
+        void *OutOfReach:: Copy(void *target, const void *source, const size_t size) noexcept
+        {
+            assert(Good(target,size));
+            assert(Good(source,size));
+            memcpy(target,source,size);
+            return target;
+        }
+
 
         void * OutOfReach:: Swap(void *target, void *source, const size_t size) noexcept
         {
@@ -49,6 +57,23 @@ namespace Yttrium
 
             return target;
         }
+
+        void * OutOfReach:: Grab(void *target, void *source, const size_t size) noexcept
+        {
+            assert(Good(target,size));
+            assert(Good(source,size));
+
+            uint8_t *p = static_cast<uint8_t *>(target);
+            uint8_t *q = static_cast<uint8_t *>(source);
+
+            for(size_t i=0;i<size;++i) {
+                p[i]      = q[i];
+                q[i]      = 0;
+            }
+
+            return target;
+        }
+
 
 #if 0
         void * OutOfReach:: Mov0(void *target, void *source, const size_t size) noexcept

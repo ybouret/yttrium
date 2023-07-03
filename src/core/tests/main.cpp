@@ -15,6 +15,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(memory_arena);
     Y_UTEST(memory_album);
     Y_UTEST(memory_sentry);
+    Y_UTEST(memory_blocks);
 
     Y_UTEST(type_ints);
 

@@ -23,6 +23,8 @@ namespace Yttrium
             static void *       Addr(void *       addr)                                           noexcept; //!< addr
             static const void * Addr(const void * addr)                                           noexcept; //!< addr
             static void *       Zero(void *       addr,   const size_t size)                      noexcept; //!< memset(addr,0,size)
+            static void *       Copy(void *       target, const void * source, const size_t size) noexcept; //!< memcpy(target,source,size)
+            static void *       Grab(void *       target, void       * source, const size_t size) noexcept; //!< memcpy/zero
             static void *       Move(void *       target, const void * source, const size_t size) noexcept; //!< memove(target,source,size)
             static void *       Swap(void *       target, void *       source, const size_t size) noexcept; //!< memswap(target,source,size
             static ptrdiff_t    Diff(const void * a,      const void * b)                         noexcept; //!< b-a in bytes
@@ -32,7 +34,7 @@ namespace Yttrium
 
             //! zeroed, destructed item
             template <typename T> static inline
-            T *naught(T *item) noexcept
+            T *Naught(T *item) noexcept
             {
                 return static_cast<T*>(Zero(Destructed(item),sizeof(T)));
             }
