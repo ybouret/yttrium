@@ -180,11 +180,12 @@ namespace Yttrium
                 {
                 }
 
-                Mutex *createMutex() {
+                inline Mutex *createMutex()
+                {
                     return mutexes.construct(param);
                 }
 
-                void deleteMutex(Mutex * &mutex) noexcept
+                inline void deleteMutex(Mutex * &mutex) noexcept
                 {
                     mutexes.eradicate(mutex);
                 }
@@ -203,7 +204,7 @@ namespace Yttrium
             };
 
             static void     *Quark__[ Y_WORDS_FOR(Quark) ];
-            static Quark   *Quark_ = 0;
+            static Quark    *Quark_ = 0;
             static bool      QuarkInit = true;
             static void      QuarkQuit(void*) noexcept
             {
@@ -219,7 +220,7 @@ namespace Yttrium
                 if(!Quark_)
                 {
                     std::cerr << "sizeof(Quark) = " << sizeof(Quark) << " => " << sizeof(Quark__) << std::endl;
-                    std::cerr << "sizeof(Mutex)  = " << sizeof(Mutex) << std::endl;
+                    std::cerr << "sizeof(Mutex) = " << sizeof(Mutex) << std::endl;
 
                     if(QuarkInit)
                     {
