@@ -96,7 +96,16 @@ namespace Yttrium
             assert(0!=addr);
             assert(size>0);
             assert(blockSize>0);
-            
+            {
+                uint8_t *p = static_cast<uint8_t *>(addr)+size;
+                uint8_t *q = p+blockSize;
+                for(size_t i=size;i>0;--i)
+                {
+                    *(--q) = *(--p);
+                }
+            }
+            memset(addr,0,blockSize);
+
         }
 
 
