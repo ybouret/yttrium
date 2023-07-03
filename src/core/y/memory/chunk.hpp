@@ -14,7 +14,9 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
+        //
         //! basic chunk of same sized blocks
+        //
         //
         //______________________________________________________________________
         class Chunk
@@ -22,10 +24,12 @@ namespace Yttrium
         public:
             //__________________________________________________________________
             //
-            // definitions
+            //
+            // Definitions
+            //
             //__________________________________________________________________
 
-            static const char * const CallSign;
+            static const char * const CallSign; //!< "Memory::Chunk"
 
             //! Ownership for address lookup
             enum Ownership
@@ -37,32 +41,60 @@ namespace Yttrium
 
             //__________________________________________________________________
             //
+            //
             // C++
+            //
+            //__________________________________________________________________
+
+            //__________________________________________________________________
+            //
+            //! format chunk
+            /**
+             \param blockSize the chunk blockSize for later calls
+             \param chunkData address of first block
+             \param chunkSize memory for blocks: numBlocks=chunkSize/sizeof(blocks)
+             */
             //__________________________________________________________________
             Chunk(const size_t   blockSize,
                   void          *chunkData,
                   const size_t   chunkSize) noexcept;
+
+            //__________________________________________________________________
+            //
+            //! cleanup
+            //__________________________________________________________________
             ~Chunk() noexcept;
 
             //__________________________________________________________________
             //
-            // methods
+            //
+            // Methods
+            //
             //__________________________________________________________________
 
             bool          owns(const void *blockAddr, const size_t blockSize)   const noexcept; //!< check exactly owned
             Ownership     whose(const void *blockAddr)                          const noexcept; //!< locate address
             void     *    acquire(const size_t blockSize)                             noexcept; //!< acquire zeroed block[block_size]
             bool          release(void *blockAddr, const size_t blockSize)            noexcept; //!< release a previously acquire block
-            bool          entails(const void *blockAddr)                        const noexcept;
+            bool          entails(const void *blockAddr)                        const noexcept; //!< check within memory range, not blocked aligned
+
+            //__________________________________________________________________
+            //
+            //! convert page[size] flat memory into a chunk with blockSize
+            //__________________________________________________________________
             static Chunk *MakeFor(const size_t blockSize,
                                   void        *page,
                                   const size_t size) noexcept;
 
+
+            //! display memory statistics
             void displayInfo(const size_t indent, const ptrdiff_t delta=0) const;
 
             //__________________________________________________________________
             //
+            //
             // helpers
+            //
             //__________________________________________________________________
 
             //! sizeof(Chunk) + Y_MEMALIGN(numBlocks*blockSize*);

@@ -47,6 +47,8 @@ namespace Yttrium
             assert(shift<=MaxShift);
         }
 
+
+
         void * Pages:: acquire()
         {
             Y_LOCK(giant);

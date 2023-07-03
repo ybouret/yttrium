@@ -9,9 +9,25 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //! helper for careful addition
+    //
+    //__________________________________________________________________________
     struct Addition
     {
+        //______________________________________________________________________
+        //
+        //! throw exception with optional context
+        //______________________________________________________________________
         static void RaiseOverflow(const char *ctx);
+
+
+        //______________________________________________________________________
+        //
+        //! return lhs+rhs with overflow control
+        //______________________________________________________________________
         template <typename LHS, typename RHS> static inline
         LHS Of(const LHS lhs,
                const RHS rhs,

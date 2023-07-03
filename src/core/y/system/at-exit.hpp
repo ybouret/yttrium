@@ -4,26 +4,53 @@
 #define Y_System_AtExit_Included 1
 
 
-#include "y/type/ints.hpp"
+#include "y/config/starting.hpp"
 
 namespace Yttrium
 {
-
+    //__________________________________________________________________________
+    //
+    //
+    //! customized atexit
+    //
+    //__________________________________________________________________________
     struct AtExit
     {
-        static const char * const CallSign;
+        //______________________________________________________________________
+        //
+        //
+        // definitions
+        //
+        //______________________________________________________________________
+        static const char * const CallSign;               //!< "AtExit"
+        typedef void *            Arguments;              //!< alias
+        typedef void            (*Procedure)(Arguments);  //!< alias
+        typedef int               Longevity;              //!< alias
+        static const size_t       MaxNumber =   64;       //!< internal stack size
+        static const Longevity    MaximumLongevity;       //!< for giant mutex  
 
-        typedef void *       Arguments;
-        typedef void       (*Procedure)(Arguments);
-        typedef int          Longevity;
-        static const size_t    MaxNumber = 64;
-        static const Longevity MaximumLongevity = IntegerFor<AtExit::Longevity>::Maximum;
-        
-        Procedure procedure;
-        Arguments arguments;
-        Longevity longevity;
-
+        //______________________________________________________________________
+        //
+        //
+        //! registering procedure(arguments) with its longevity
+        /**
+         no similar longevities are accepted
+         */
+        //
+        //______________________________________________________________________
         static void Register(Procedure,Arguments,Longevity);
+
+
+        //______________________________________________________________________
+        //
+        //
+        // fields
+        //
+        //______________________________________________________________________
+        Procedure procedure; //!< procedure to call
+        Arguments arguments; //!< arguments for procedure
+        Longevity longevity; //!< longevity: the higher, the later call
+
 
     };
 

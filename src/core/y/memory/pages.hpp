@@ -36,7 +36,6 @@ namespace Yttrium
             static const unsigned     MaxShift  = Base2<size_t>::MaxShift;
             static const size_t       MaxBytes  = Base2<size_t>::One << MaxShift;
             static const size_t       Number    = 1+MaxShift - MinShift;
-            
             static const char * const CallSign;
             
             explicit Pages(const unsigned userShift,
@@ -52,7 +51,7 @@ namespace Yttrium
 
             uint64_t displayInfo(const size_t indent) const;
 
-
+            
             const unsigned  shift; //!< bit shift
             const size_t    bytes; //!< bytes = 2^shift
             const ptrdiff_t delta; //!< acquire-release bookkeeping

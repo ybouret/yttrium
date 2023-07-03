@@ -12,16 +12,54 @@ namespace Yttrium
     
     namespace Memory
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Album of all possible Pages
+        //
+        //
+        //______________________________________________________________________
         class Album
         {
         public:
-            static const size_t       Required = Pages::Number * sizeof(Pages);
-            static const char * const CallSign;
-            
-            explicit Album();
-            virtual ~Album() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            //! Definitions
+            //
+            //__________________________________________________________________
+            static const size_t       Required = Pages::Number * sizeof(Pages); //!< flat memory for all pages
+            static const char * const CallSign;                                 //!< "Memory::Album"
 
+
+            //__________________________________________________________________
+            //
+            //
+            //  C++
+            //
+            //__________________________________________________________________
+            explicit Album();          //!< setup all empty pages
+            virtual ~Album() noexcept; //!< cleanup
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //__________________________________________________________________
+            //
+            //! acess pages from MinShift to MaxShift
+            //__________________________________________________________________
             Pages & operator[](const unsigned shift) noexcept;
+
+            //__________________________________________________________________
+            //
+            //! display statistics
+            //__________________________________________________________________
             void displayInfo(const size_t indent) const;
 
         private:

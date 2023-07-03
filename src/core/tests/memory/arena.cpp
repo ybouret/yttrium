@@ -35,7 +35,7 @@ Y_UTEST(memory_arena)
 
     std::cerr << "Using Arena" << std::endl;
 
-    const size_t NB = 1000;
+    const size_t NB = 10000;
     void *blk[NB];
 
     for(size_t blockSize = 1; blockSize <= 64; blockSize += 1)

@@ -1,5 +1,6 @@
 #include "y/system/at-exit.hpp"
 #include "y/system/exception.hpp"
+#include "y/type/ints.hpp"
 
 #include <cstring>
 #include <cstdlib>
@@ -8,6 +9,7 @@
 
 namespace Yttrium
 {
+    const AtExit::Longevity  AtExit:: MaximumLongevity =  IntegerFor<AtExit::Longevity>::Maximum;
 
     namespace
     {
