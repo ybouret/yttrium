@@ -10,18 +10,26 @@ namespace Yttrium
 {
     namespace Memory
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! algorithms on out-of-reach memory
+        //
+        //
+        //______________________________________________________________________
         struct OutOfReach
         {
-            static void *       Addr(void *       addr)                                           noexcept;
-            static const void * Addr(const void * addr)                                           noexcept;
-            static void *       Zero(void *       addr,   const size_t size)                      noexcept;
-            static void *       Move(void *       target, const void * source, const size_t size) noexcept;
-            static void *       Mov0(void *       target, void *       source, const size_t size) noexcept;
-            static void *       Swap(void *       target, void *       source, const size_t size) noexcept;
-            static ptrdiff_t    Diff(const void * a,      const void * b)                         noexcept;
-            static bool         Are0(const void * addr,   const size_t size)                      noexcept;
-            static void *       Haul(void *addr, ptrdiff_t delta) noexcept;
+            static void *       Addr(void *       addr)                                           noexcept; //!< addr
+            static const void * Addr(const void * addr)                                           noexcept; //!< addr
+            static void *       Zero(void *       addr,   const size_t size)                      noexcept; //!< memset(addr,0,size)
+            static void *       Move(void *       target, const void * source, const size_t size) noexcept; //!< memove(target,source,size)
+            static void *       Swap(void *       target, void *       source, const size_t size) noexcept; //!< memswap(target,source,size
+            static ptrdiff_t    Diff(const void * a,      const void * b)                         noexcept; //!< b-a in bytes
+            static bool         Are0(const void * addr,   const size_t size)                      noexcept; //!< check all bytes are 0
+            static void *       Haul(void *addr, ptrdiff_t delta)                                 noexcept; //!< addr+delta
 
+            //! zeroed,destructer item
             template <typename T> static inline
             T *naught(T *item) noexcept
             {
@@ -32,8 +40,8 @@ namespace Yttrium
 
 }
 
-#define Y_STATIC_ZVAR(VAR) Yttrium::Memory::OutOfReach::Zero(&VAR,sizeof(VAR))
-#define Y_STATIC_ZARR(ARR) Yttrium::Memory::OutOfReach::Zero(ARR, sizeof(ARR))
+#define Y_STATIC_ZVAR(VAR) Yttrium::Memory::OutOfReach::Zero(&VAR,sizeof(VAR)) //!< cleanup a variable
+#define Y_STATIC_ZARR(ARR) Yttrium::Memory::OutOfReach::Zero(ARR, sizeof(ARR)) //!< cleanup an array
 
 #endif
 

@@ -9,11 +9,19 @@
 
 namespace Yttrium
 {
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! FakeLock to only count calls
+    //
+    //
+    //__________________________________________________________________________
     class FakeLock : public Lockable
     {
     public:
-        explicit FakeLock(const char *id) noexcept;
-        virtual ~FakeLock() noexcept;
+        explicit FakeLock(const char *id) noexcept; //!< setup
+        virtual ~FakeLock() noexcept;               //!< cleanup
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(FakeLock);

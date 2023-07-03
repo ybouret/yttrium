@@ -9,9 +9,21 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Operations on Pool
+    //
+    //
+    //__________________________________________________________________________
     struct PoolOps
     {
 
+        //______________________________________________________________________
+        //
+        //! store node
+        //______________________________________________________________________
         template <typename POOL, typename NODE> static
         inline NODE * Store(POOL &P, NODE *node) noexcept
         {
@@ -25,6 +37,10 @@ namespace Yttrium
             return node;
         }
 
+        //______________________________________________________________________
+        //
+        //! query (head) node
+        //______________________________________________________________________
         template <typename POOL> static
         inline typename POOL::NodeType * Query(POOL &P) noexcept
         {

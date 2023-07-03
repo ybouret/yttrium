@@ -10,28 +10,52 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! base Exception class
+    //
+    //
+    //__________________________________________________________________________
     class Exception : public std::exception
     {
     public:
-        static const size_t ClassSize = 128;
-        static const size_t StorySize = ClassSize-sizeof(std::exception);
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        static const size_t ClassSize = 128;                              //!< this+data
+        static const size_t StorySize = ClassSize-sizeof(std::exception); //!< alias
 
-        explicit Exception()                    noexcept;
-        explicit Exception(const char *fmt,...) noexcept Y_PRINTF_API;
-        virtual ~Exception() noexcept;
-        Exception(const Exception &) noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        explicit Exception()                    noexcept;               //!< setup empty
+        explicit Exception(const char *fmt,...) noexcept Y_PRINTF_API;  //!< setup formated
+        virtual ~Exception()                    noexcept;               //!< cleanup
+        Exception(const Exception &)            noexcept;               //!< copy
 
-        virtual const char *what() const noexcept; //!< defaut: "Exception"
-        virtual const char *when() const noexcept; //!< formated story
-
-        Exception & operator<< (const char *) noexcept;
-        Exception & operator<< (const char  ) noexcept;
-        Exception & add(const char *fmt,...) noexcept Y_PRINTF_API;
-
-        void display() const;
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        virtual const char *what()                    const noexcept;        //!< defaut: "Exception"
+        virtual const char *when()                    const noexcept;        //!< formated story
+        Exception &         operator<< (const char *) noexcept;              //!< append text
+        Exception &         operator<< (const char  ) noexcept;              //!< append char
+        Exception &         add(const char *fmt,...)  noexcept Y_PRINTF_API; //!< append formated
+        void                display() const;                                 //!< helper
 
     protected:
-        void format(const char *fmt, void *ptr) noexcept;
+        void format(const char *fmt, void *ptr) noexcept; //!< format with va_list
 
     private:
         Y_DISABLE_ASSIGN(Exception);

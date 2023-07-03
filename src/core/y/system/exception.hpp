@@ -14,19 +14,41 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
+        //
         //! Exception with strerror(err)
+        //
         //
         //______________________________________________________________________
         class Exception : public Yttrium::Exception
         {
         public:
-            static const size_t TitleSize = ClassSize;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const size_t TitleSize = ClassSize; //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup with fixed header and formated message
             explicit Exception(const char *header, const char *fmt,...) noexcept Y_PRINTF_CHECK(3,4);
-            virtual ~Exception() noexcept;
-            Exception(const Exception &) noexcept;
+            virtual ~Exception()         noexcept; //!< cleanup
+            Exception(const Exception &) noexcept; //!< copy
 
-            virtual const char *what() const noexcept; //!< title
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            virtual const char *what() const noexcept; //!< return title
 
         private:
             Y_DISABLE_ASSIGN(Exception);
@@ -39,20 +61,50 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        //! Exception with strerror(err)
+        //
+        //! Exception with strerror(errno)
+        //
         //
         //______________________________________________________________________
         class Exception : public Yttrium::Exception
         {
         public:
-            static const size_t TitleSize = ClassSize - sizeof(int);
-            
-            explicit Exception(const int err, const char *fmt,...) noexcept Y_PRINTF_CHECK(3,4);
-            virtual ~Exception() noexcept;
-            Exception(const Exception &) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Definition
+            //
+            //__________________________________________________________________
+            static const size_t TitleSize = ClassSize - sizeof(int); //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup with errno and formated message
+            explicit Exception(const int err, const char *fmt,...) noexcept Y_PRINTF_CHECK(3,4);
+            virtual ~Exception()         noexcept; //!< cleanup
+            Exception(const Exception &) noexcept; //!< copy
+
+            //__________________________________________________________________
+            //
+            //
+            // Method
+            //
+            //__________________________________________________________________
             virtual const char *what() const noexcept; //!< title
-            const int code;
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Member
+            //
+            //__________________________________________________________________
+            const int code; //!< original errno
 
         private:
             Y_DISABLE_ASSIGN(Exception);

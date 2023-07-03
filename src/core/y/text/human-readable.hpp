@@ -8,23 +8,45 @@
 
 namespace Yttrium
 {
+
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! make Human Readable integer(s)
+    //
+    //
+    //__________________________________________________________________________
     class HumanReadable
     {
     public:
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+
+        //! Divider
         struct Divider {
-            const char     suffix;
-            const uint64_t factor;
+            const char     suffix; //!< b|k|M|G|T|P|E
+            const uint64_t factor; //!< 2^(0|10|20|30|40|50|60)
         };
 
-        static const Divider Divide[];
-        static const size_t  Number;
+        static const Divider Divide[]; //!< precomputed dividers
+        static const size_t  Number;   //!< sizeof(Divide)/sizeof(Divide[0)
         
 
-
-        HumanReadable(const HumanReadable &) noexcept;
-        HumanReadable(const uint64_t)        noexcept;
-        ~HumanReadable() noexcept;
-        Y_OSTREAM_PROTO(HumanReadable);
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        HumanReadable(const HumanReadable &) noexcept; //!< copy
+        HumanReadable(const uint64_t)        noexcept; //!< setup
+        ~HumanReadable()                     noexcept; //!< cleanup
+        Y_OSTREAM_PROTO(HumanReadable);                //!< display with 2 digits
 
         const unsigned quot; //!< quotient
         const unsigned rem;  //!< remainder

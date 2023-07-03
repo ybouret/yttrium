@@ -7,8 +7,10 @@
 #include "y/config/starting.h"
 #include "y/config/noexcept.hpp"
 
-#define Y_DISABLE_COPY(CLASS)   private: CLASS(const CLASS &)
-#define Y_DISABLE_ASSIGN(CLASS) private: CLASS & operator=(const CLASS &)
+#define Y_DISABLE_COPY(CLASS)   private: CLASS(const CLASS &)               //!< no copy constructor
+#define Y_DISABLE_ASSIGN(CLASS) private: CLASS & operator=(const CLASS &)   //!< no assign method
+
+//! no copy/assign class
 #define Y_DISABLE_COPY_AND_ASSIGN(CLASS) \
 Y_DISABLE_ASSIGN(CLASS);\
 Y_DISABLE_COPY(CLASS)

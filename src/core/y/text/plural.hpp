@@ -8,11 +8,16 @@
 
 namespace Yttrium
 {
+    //__________________________________________________________________________
+    //
+    //
+    //!  Plural forms
+    //
+    //__________________________________________________________________________
     struct Plural
     {
-        static const char *S(const size_t) noexcept;
-        static const char *s(const size_t) noexcept;
-
+        static const char *S(const size_t) noexcept; //!< "S" | ""
+        static const char *s(const size_t) noexcept; //!< "s" | ""
     };
 }
 

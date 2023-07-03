@@ -11,17 +11,25 @@ namespace Yttrium
 {
     namespace Concurrent
     {
+
         namespace Quark
         {
             class Mutex;
         }
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Mutex object
+        //
+        //
+        //______________________________________________________________________
         class Mutex : public Lockable
         {
         public:
-            explicit Mutex(const char *id);
-            virtual ~Mutex() noexcept;
-
+            explicit Mutex(const char *id); //!< setup with optional id
+            virtual ~Mutex() noexcept;      //!< cleanup
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Mutex);

@@ -6,6 +6,7 @@
 
 #include <iostream>
 
+//! helper to define an output operator
 #define Y_OSTREAM_PROTO(CLASS) friend std::ostream & operator<<(std::ostream &, const CLASS &)
 
 #endif

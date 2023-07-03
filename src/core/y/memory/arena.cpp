@@ -255,6 +255,7 @@ namespace Yttrium
 
 
 #include "y/system/error.hpp"
+#include <cerrno>
 
 namespace Yttrium
 {
@@ -312,10 +313,10 @@ namespace Yttrium
                     assert(size>=2);
                     
                     // selecting wandering to be released
-                    if(releasing<wandering)
+                    if(wandering<releasing)
                     {
                         Swap(wandering,releasing);
-                        assert(wandering<releasing);
+                        assert(releasing<wandering);
                     }
 
                     // check is acquiring need to be LOCALLY moved

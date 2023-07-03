@@ -10,6 +10,12 @@
 namespace Yttrium
 {
 
+    //______________________________________________________________________
+    //
+    //
+    //! call item's destructor
+    //
+    //______________________________________________________________________
     template <typename T>
     inline void Destruct(T *item) noexcept
     {
@@ -17,6 +23,12 @@ namespace Yttrium
         item->~T();
     }
 
+    //______________________________________________________________________
+    //
+    //
+    //! return destructed item address
+    //
+    //______________________________________________________________________
     template <typename T>
     inline T *Destructed(T *item) noexcept
     {

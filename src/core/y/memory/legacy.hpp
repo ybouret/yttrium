@@ -12,17 +12,35 @@ namespace Yttrium
 
     namespace Memory
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! C Legacy protected memory
+        //
+        //
+        //______________________________________________________________________
         class Legacy
         {
         public:
-            explicit Legacy();
-            virtual ~Legacy() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Legacy();          //!< setup by fetching giant lock
+            virtual ~Legacy() noexcept; //!< cleanup
 
-            void *acquire(const size_t blockSize);
-            void  release(void *blockAddr, const size_t blockSize) noexcept;
-            
-            static  uint64_t Allocated() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            void *          acquire(const size_t blockSize);                           //!< calloc(1,blockSize), update memory
+            void            release(void *blockAddr, const size_t blockSize) noexcept; //!< free(blockAddr), update memory
+            static uint64_t Allocated()                                      noexcept; //!< global memory count
 
             
 
