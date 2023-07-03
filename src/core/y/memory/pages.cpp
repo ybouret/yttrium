@@ -11,6 +11,7 @@
 
 #include <cstring>
 #include <iomanip>
+#include <cerrno>
 
 namespace Yttrium
 {
@@ -31,7 +32,7 @@ namespace Yttrium
 
             if(delta!=0)
             {
-                std::cerr << "*** " << CallSign << "[" << bytes << "] delta=" << delta << std::endl;
+                std::cerr << "*** " << CallSign << "[" << std::setw(6) << bytes << "] delta=" << delta << std::endl;
             }
         }
 
