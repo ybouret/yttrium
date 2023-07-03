@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Memory_Arena_Included
@@ -111,7 +110,7 @@ namespace Yttrium
 
             //! display statistics
             void displayInfo(const size_t indent) const;
-            
+
 
 
             //__________________________________________________________________
