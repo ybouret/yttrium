@@ -12,9 +12,10 @@ namespace Yttrium
     namespace Concurrent
     {
 
-        namespace Quark
+        namespace Nucleus
         {
             class Mutex;
+            class Quark;
         }
 
         //______________________________________________________________________
@@ -34,7 +35,8 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Mutex);
             Y_LOCKABLE_API();
-            Quark::Mutex *mutex;
+            Nucleus::Quark &quark;
+            Nucleus::Mutex *mutex;
         };
 
         

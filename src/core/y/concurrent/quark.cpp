@@ -6,7 +6,7 @@
 #include "y/memory/out-of-reach.hpp"
 #include "y/type/destruct.hpp"
 #include "y/memory/album.hpp"
-#include "y/memory/arena.hpp"
+#include "y/memory/guild.hpp"
 
 #include <cstring>
 #include <new>
@@ -30,7 +30,7 @@ namespace Yttrium
     namespace Concurrent
     {
 
-        namespace Quark
+        namespace Nucleus
         {
 
             //------------------------------------------------------------------
@@ -166,70 +166,80 @@ namespace Yttrium
             // concurrent data
             //
             //------------------------------------------------------------------
-            class Atelier : public Lockable
+            class Quark : public Lockable
             {
             public:
-                inline virtual ~Atelier() noexcept {}
+                inline virtual ~Quark() noexcept {}
 
-                inline explicit Atelier() :
+                inline explicit Quark() :
                 Lockable("GIANT"),
                 param(),
                 giant(param),
                 album(*this),
-                mutexArena(sizeof(Quark::Mutex),album, Memory::Page::DefaultBytes)
+                mutexes(album, Memory::Page::DefaultBytes)
                 {
                 }
 
-                MutexAttribute param;
-                Mutex          giant;
-                Memory::Album  album;
-                Memory::Arena  mutexArena;
+                Mutex *createMutex() {
+                    return mutexes.construct(param);
+                }
 
+                void deleteMutex(Mutex * &mutex) noexcept
+                {
+                    mutexes.eradicate(mutex);
+                }
+
+
+                MutexAttribute       param;
+                Mutex                giant;
+                Memory::Album        album;
+                Memory::Guild<Mutex> mutexes;
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Atelier);
+                Y_DISABLE_COPY_AND_ASSIGN(Quark);
                 inline virtual void doLock()     noexcept { giant.lock();   }
                 inline virtual void doUnlock()   noexcept { giant.unlock(); }
                 inline virtual bool doTryLock()  noexcept { return giant.tryLock(); }
             };
 
-            static void    *Atelier__[ Y_WORDS_FOR(Atelier) ];
-            static Atelier *Atelier_ = 0;
-            static bool     AtelierInit = true;
-            static void     AtelierQuit(void*) noexcept
+            static void     *Quark__[ Y_WORDS_FOR(Quark) ];
+            static Quark   *Quark_ = 0;
+            static bool      QuarkInit = true;
+            static void      QuarkQuit(void*) noexcept
             {
-                if(Atelier_)
+                if(Quark_)
                 {
-                    Memory::OutOfReach::Zero( Destructed(Atelier_), sizeof(Atelier__) );
-                    Atelier_ = 0;
+                    Memory::OutOfReach::Zero( Destructed(Quark_), sizeof(Quark__) );
+                    Quark_ = 0;
                 }
             }
 
-            static Atelier & AtelierInstance()
+            static Quark & QuarkInstance()
             {
-                if(!Atelier_)
+                if(!Quark_)
                 {
-                    std::cerr << "sizeof(Quark::Atelier)=" << sizeof(Atelier) << " => " << sizeof(Atelier__) << std::endl;
-                    std::cerr << "sizeof(Quark::Mutex)  =" << sizeof(Quark::Mutex) << std::endl;
+                    std::cerr << "sizeof(Quark) = " << sizeof(Quark) << " => " << sizeof(Quark__) << std::endl;
+                    std::cerr << "sizeof(Mutex)  = " << sizeof(Mutex) << std::endl;
 
-                    if(AtelierInit)
+                    if(QuarkInit)
                     {
-                        AtExit::Register(AtelierQuit, 0, AtExit::MaximumLongevity);
-                        AtelierInit = false;
+                        AtExit::Register(QuarkQuit, 0, AtExit::MaximumLongevity);
+                        QuarkInit = false;
                     }
 
-                    try {
-                        Atelier_ = new ( Y_STATIC_ZARR(Atelier__) ) Atelier();
+                    try
+                    {
+                        Quark_ = new ( Y_STATIC_ZARR(Quark__) ) Quark();
                     }
                     catch(...)
                     {
-                        Atelier_ = 0;
+                        Quark_ = 0;
                         throw;
                     }
 
                 }
-                assert(0!=Atelier_);
-                return *Atelier_;
+                assert(0!=Quark_);
+                return *Quark_;
             }
 
 
@@ -246,7 +256,7 @@ namespace Yttrium
 
     Lockable & Lockable::Giant()
     {
-        static Lockable &giant = Concurrent:: Quark:: AtelierInstance();
+        static Lockable &giant = Concurrent:: Nucleus:: QuarkInstance();
         return giant;
     }
 
@@ -255,13 +265,16 @@ namespace Yttrium
         
         Mutex:: Mutex(const char *id) :
         Lockable(id),
-        mutex(0)
+        quark( Nucleus::QuarkInstance() ),
+        mutex( quark.createMutex() )
         {
         }
 
         Mutex:: ~Mutex() noexcept
         {
-            
+            assert(0!=mutex);
+            quark.deleteMutex(mutex);
+            assert(0==mutex);
         }
 
         void Mutex:: doLock() noexcept {
