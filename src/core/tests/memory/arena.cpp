@@ -35,15 +35,20 @@ Y_UTEST(memory_arena)
 
     std::cerr << "Using Arena" << std::endl;
 
+
+
+
     const size_t NB = 10000;
     void *blk[NB];
 
     for(size_t blockSize = 1; blockSize <= 64; blockSize += 1)
     {
         Memory::Arena arena(blockSize,album,pageBytes);
+
+        arena.release( arena.acquire() );
+        
+
         memset(blk,0,sizeof(blk));
-
-
         for(size_t i=0;i<NB;++i)
         {
             blk[i] = arena.acquire();

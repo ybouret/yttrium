@@ -305,7 +305,7 @@ namespace Yttrium
             ++available;
             if(releasing->release(blockAddr,blockSize))
             {
-                assert(available>numBlocks);
+                assert(available>=numBlocks);
 
                 if(wandering)
                 {
@@ -358,7 +358,7 @@ namespace Yttrium
             Core::Indent(std::cerr,indent)<< '<' << CallSign << " blockSize='" << blockSize << "' pageBytes='" << pageBytes << "'>" << std::endl;
             const size_t chunkIndent = indent+2;
             const size_t totalChunks = numBlocks * size;
-            const size_t totalBytes  = totalChunks * pageBytes;
+            const size_t totalBytes  = totalChunks * blockSize;
 
             Core::Indent(std::cerr,chunkIndent);
             std::cerr

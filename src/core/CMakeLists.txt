@@ -2,9 +2,8 @@
 include_directories(.)
 
 file(GLOB quark y/concurrent/*.hxx)
-message(STATUS "quark=${quark}")
+#message(STATUS "quark=${quark}")
 set(srcs ${quark})
-source_group(concurrent FILES ${quark})
 
 Y_CreateLibrary(y
 .
@@ -21,5 +20,7 @@ data/pool
 concurrent
 utest 
 memory)
+
+source_group(concurrent FILES ${quark})
 
 add_subdirectory(tests)

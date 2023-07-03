@@ -29,8 +29,8 @@ namespace Yttrium
         class Mutex : public Lockable
         {
         public:
-            explicit Mutex(const char *id); //!< setup with optional id
-            virtual ~Mutex() noexcept;      //!< cleanup
+            explicit Mutex(const char *id=0); //!< setup with optional id
+            virtual ~Mutex() noexcept;        //!< cleanup
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Mutex);

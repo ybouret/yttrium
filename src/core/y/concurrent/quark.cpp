@@ -95,7 +95,7 @@ namespace Yttrium
             {
                 if(!Quark_)
                 {
-                    std::cerr << "sizeof(Quark) = " << sizeof(Quark) << " => " << sizeof(Quark__) << std::endl;
+                    std::cerr << "sizeof(Quark) = " << sizeof(Quark) << "/" << sizeof(Quark__) << std::endl;
                     std::cerr << "sizeof(Mutex) = " << sizeof(Mutex) << std::endl;
 
                     if(QuarkInit)
@@ -115,6 +115,7 @@ namespace Yttrium
                     }
 
                 }
+                
                 assert(0!=Quark_);
                 return *Quark_;
             }
