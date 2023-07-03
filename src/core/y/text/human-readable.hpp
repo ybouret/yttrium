@@ -4,7 +4,7 @@
 #define Y_Text_Plural_Included 1
 
 #include "y/config/starting.hpp"
-#include "y/ios/ostream-proto.hpp"
+#include "y/ostream-proto.hpp"
 
 namespace Yttrium
 {

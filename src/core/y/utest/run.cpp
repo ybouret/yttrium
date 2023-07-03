@@ -11,7 +11,7 @@ namespace Yttrium
     {
         assert(className);
         const size_t length = strlen(className);
-        std::cerr << "sizeof(" << className << ")";
+        std::cerr << "sizeof(" << className << ") = ";
         for(size_t i=length;i<Width;++i) std::cerr << ' ';
         std::cerr << std::setw(6) << classSize << std::endl;
     }

@@ -9,27 +9,54 @@
 
 namespace Yttrium
 {
-
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Linked pool of NODEs
+    //
+    //
+    //__________________________________________________________________________
     template <typename NODE>
     class PoolOf : public Linked<NODE>
     {
     public:
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
         using   Linked<NODE>::head;
         using   Linked<NODE>::size;
-        typedef PoolOf<NODE> SelfType;
+        typedef PoolOf<NODE> SelfType; //!< alias
 
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
         explicit PoolOf() noexcept : Linked<NODE>()  {}
         virtual ~PoolOf() noexcept {}
 
-        inline NODE *store(NODE *node) noexcept { return PoolOps::Store(*this,node); }
-        inline NODE *query()           noexcept { return PoolOps::Query(*this);      }
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        inline NODE *store(NODE *node) noexcept { return PoolOps::Store(*this,node); } //!< store a new node
+        inline NODE *query()           noexcept { return PoolOps::Query(*this);      } //!< query first node
 
+        //! noexcept swap with another pool
         inline void swapWith(PoolOf &other) noexcept
         {
             Swap(head,other.head);
             Swap(Coerce(size),Coerce(other.size));
         }
 
+        //! reverse order
         inline virtual void reverse() noexcept
         {
             SelfType temp;

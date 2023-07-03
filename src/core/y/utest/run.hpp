@@ -11,14 +11,18 @@
 
 namespace Yttrium
 {
+    //! helper to display aligned sizeof()
     struct SizeOf
     {
-        static size_t Width;
+        static size_t Width; //!< default width
+
+        //! display 'sizeof(className) = classSize'
         static void Display(const char  *className,
                             const size_t classSize);
     };
 }
 
+//! helper to replace sizeof()
 #define Y_SIZEOF(CLASS) Yttrium::SizeOf::Display(#CLASS,sizeof(CLASS))
 
 //! start a new test

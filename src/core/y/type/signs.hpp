@@ -8,14 +8,26 @@
 
 namespace Yttrium
 {
-
+    //__________________________________________________________________________
+    //
+    //
+    //! system wide signs
+    //
+    //__________________________________________________________________________
     enum SignType
     {
-        Negative,
-        __Zero__,
-        Positive
+        Negative = -1, //!< alias for negative sign
+        __Zero__ =  0, //!< alias for zero sign
+        Positive =  1  //!< alias for positive sign
     };
 
+
+    //______________________________________________________________________
+    //
+    //
+    //! natural comparison to sign
+    //
+    //______________________________________________________________________
     template <typename LHS, typename RHS> inline
     SignType SignOf(LHS &lhs, RHS &rhs)
     {
