@@ -5,7 +5,7 @@
 #include "y/calculus/align.hpp"
 #include "y/memory/out-of-reach.hpp"
 #include "y/type/destruct.hpp"
-
+#include "y/memory/album.hpp"
 
 #include <cstring>
 #include <new>
@@ -173,12 +173,14 @@ namespace Yttrium
                 inline explicit Atelier() :
                 Lockable("GIANT"),
                 param(),
-                giant(param)
+                giant(param),
+                album(*this)
                 {
                 }
 
                 MutexAttribute param;
                 Mutex          giant;
+                Memory::Album  album;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Atelier);
@@ -203,6 +205,7 @@ namespace Yttrium
             {
                 if(!Atelier_)
                 {
+                    std::cerr << "sizeof(Quark::Atelier)=" << sizeof(Atelier) << " => " << sizeof(Atelier__) << std::endl;
                     if(AtelierInit)
                     {
                         AtExit::Register(AtelierQuit, 0, AtExit::MaximumLongevity);

@@ -39,8 +39,9 @@ namespace Yttrium
             //  C++
             //
             //__________________________________________________________________
-            explicit Album();          //!< setup all empty pages
-            virtual ~Album() noexcept; //!< cleanup
+            explicit Album();                    //!< setup all empty pages
+            explicit Album(Lockable &) noexcept; //!< setup all empty pages, using existing giant lock
+            virtual ~Album()           noexcept; //!< cleanup
 
 
             //__________________________________________________________________
@@ -66,6 +67,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Album);
             Pages *pages;
             void  *pages_[Y_WORDS_GEQ(Required)];
+            void   setupWith(Lockable &) noexcept;
         };
     }
 

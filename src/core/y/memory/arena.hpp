@@ -111,6 +111,7 @@ namespace Yttrium
 
             //! display statistics
             void displayInfo(const size_t indent) const;
+            
 
 
             //__________________________________________________________________
@@ -132,6 +133,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Arena);
             Chunk *queryChunk();
         };
+        
 
     }
 

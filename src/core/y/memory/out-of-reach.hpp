@@ -28,8 +28,9 @@ namespace Yttrium
             static ptrdiff_t    Diff(const void * a,      const void * b)                         noexcept; //!< b-a in bytes
             static bool         Are0(const void * addr,   const size_t size)                      noexcept; //!< check all bytes are 0
             static void *       Haul(void *addr, ptrdiff_t delta)                                 noexcept; //!< addr+delta
+            static void         Lift(void *addr, size_t size, const size_t blockSize)             noexcept; //!< addr+size -> addr+size+blockSize, addr[blockSize] = 0
 
-            //! zeroed,destructer item
+            //! zeroed, destructed item
             template <typename T> static inline
             T *naught(T *item) noexcept
             {

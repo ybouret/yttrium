@@ -91,6 +91,15 @@ namespace Yttrium
             return p+delta;
         }
 
+        void OutOfReach:: Lift(void *addr, size_t size, const size_t blockSize) noexcept
+        {
+            assert(0!=addr);
+            assert(size>0);
+            assert(blockSize>0);
+            
+        }
+
+
 
     }
 }

@@ -11,12 +11,9 @@ namespace Yttrium
     {
 
         const char * const  Album::CallSign = "Memory::Album";
-        
-        Album:: Album() :
-        pages(NULL),
-        pages_()
+
+        void Album:: setupWith(Lockable &giant) noexcept
         {
-            Lockable &giant = Lockable::Giant();
             pages = static_cast<Pages*>( OutOfReach::Zero(pages_,sizeof(pages_)) );
             pages -= Pages::MinShift;
             for(unsigned shift=Pages::MinShift;shift<=Pages::MaxShift;++shift)
@@ -25,6 +22,12 @@ namespace Yttrium
                 assert(pages[shift].bytes == (Base2<size_t>::One << shift) );
             }
         }
+
+
+        Album:: Album() : pages(NULL), pages_() { setupWith(Lockable::Giant()); }
+
+        Album:: Album(Lockable &giant) noexcept : pages(NULL), pages_() { setupWith(giant); }
+
 
         Album:: ~Album() noexcept
         {
