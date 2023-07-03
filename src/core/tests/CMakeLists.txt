@@ -22,10 +22,11 @@ add_test(text:human-readable test-core text_human_readable)
 
 
 #memory
-add_test(memory:chunk test-core memory_chunk)
-add_test(memory:pages test-core memory_pages)
-add_test(memory:arena test-core memory_arena)
-add_test(memory:album test-core memory_album)
+add_test(memory:chunk  test-core memory_chunk)
+add_test(memory:pages  test-core memory_pages)
+add_test(memory:arena  test-core memory_arena)
+add_test(memory:album  test-core memory_album)
+add_test(memory:sentry test-core memory_sentry)
 
 #type
 add_test(type:ints test-core type_ints)
