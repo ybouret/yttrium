@@ -38,7 +38,7 @@ Y_UTEST(memory_arena)
     const size_t NB = 1000;
     void *blk[NB];
 
-    for(size_t blockSize = 1; blockSize <= 16; ++blockSize )
+    for(size_t blockSize = 1; blockSize <= 16; blockSize += 1)
     {
         Memory::Arena arena(blockSize,album,pageBytes);
         memset(blk,0,sizeof(blk));
@@ -49,8 +49,9 @@ Y_UTEST(memory_arena)
             blk[i] = arena.acquire();
         }
 
+        album.displayInfo(0);
         arena.displayInfo(0);
-
+        
         for(size_t loop=1;loop<=4;++loop)
         {
             alea_shuffle(blk,NB);

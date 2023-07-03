@@ -50,6 +50,8 @@ namespace Yttrium
             void *query();
             void  store(void*) noexcept;
 
+            uint64_t displayInfo(const size_t indent) const;
+
 
             const unsigned  shift; //!< bit shift
             const size_t    bytes; //!< bytes = 2^shift

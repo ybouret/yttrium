@@ -54,26 +54,37 @@ namespace Yttrium
         available(0),
         blockSize(userBlockSize),
         numBlocks(0),
-        dataPages( userDataPages[ComputeShift(blockSize,userPageBytes,Coerce(numBlocks))] ),
+        dataPages( userDataPages[ ComputeShift(blockSize,userPageBytes,Coerce(numBlocks)) ] ),
         addBlocks(numBlocks-1)
         {
-            //std::cerr << "Arena: blockSize=" << std::setw(4) << blockSize << " pageBytes: " << std::setw(6) << userPageBytes << " -> " << std::setw(6) << dataPages.bytes << " @" << numBlocks << " bpp" << std::endl;
+#if 0
+            std::cerr << CallSign << " :"
+            << " blockSize= " << std::setw(4) << blockSize
+            << " pageBytes= " << std::setw(6) << userPageBytes
+            << " -> "         << std::setw(6) << dataPages.bytes
+            << " @"           << numBlocks << " blocksPerChunk" << std::endl;
+#endif
+            
             acquiring = releasing = wandering = pushTail( queryChunk()  );
             available = numBlocks;
         }
 
-        static const size_t Header = sizeof(Chunk);
-
-        static inline uint8_t getNumBlocks(const size_t blockSize,
-                                           const size_t dataBytes) noexcept
+        namespace
         {
-            assert(blockSize>0);
-            assert(dataBytes>Header);
-            const size_t nb = (dataBytes - Header) / blockSize;
-            if(nb<=Arena::MaxBlocksPerChunk)
-                return static_cast<uint8_t>(nb);
-            else
-                return Arena::MaxBlocksPerChunk;
+            static const size_t Header = sizeof(Chunk);
+
+            static inline uint8_t getNumBlocks(const size_t blockSize,
+                                               const size_t dataBytes) noexcept
+            {
+                assert(blockSize>0);
+                assert(dataBytes>Header);
+                const size_t nb = (dataBytes - Header) / blockSize;
+                if(nb<=Arena::MaxBlocksPerChunk)
+                    return static_cast<uint8_t>(nb);
+                else
+                    return Arena::MaxBlocksPerChunk;
+            }
+
         }
 
         unsigned Arena:: ComputeShift(const size_t blockSize,
@@ -341,17 +352,18 @@ namespace Yttrium
     {
         void Arena:: displayInfo(const size_t indent) const
         {
-            Core::Indent(std::cerr,indent)<< '<' << CallSign << " blockSize='" << blockSize << "'>" << std::endl;
+            const size_t pageBytes = dataPages.bytes;
+            Core::Indent(std::cerr,indent)<< '<' << CallSign << " blockSize='" << blockSize << "' pageBytes='" << pageBytes << "'>" << std::endl;
             const size_t chunkIndent = indent+2;
             const size_t totalChunks = numBlocks * size;
-            const size_t totalBytes  = totalChunks * dataPages.bytes;
+            const size_t totalBytes  = totalChunks * pageBytes;
 
             Core::Indent(std::cerr,chunkIndent);
             std::cerr
             << "available = " << std::setw(6) << available
             << " / "
             << std::setw(6) << totalChunks
-            << " | " << HumanReadable(totalBytes) << std::endl;
+            << " @ " << HumanReadable(totalBytes) << std::endl;
             const void *base = head;
             for(const Chunk *chunk=head;chunk;chunk=chunk->next)
             {

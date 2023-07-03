@@ -6,8 +6,10 @@
 
 #include "y/lockable.hpp"
 #include "y/type/utils.hpp"
+#include "y/text/human-readable.hpp"
 
 #include <cstring>
+#include <iomanip>
 
 namespace Yttrium
 {
@@ -36,7 +38,7 @@ namespace Yttrium
         Pages:: Pages(const unsigned userShift,
                       Lockable      &userMutex) noexcept :
         ListOf<Page>(),
-        shift( Max(MinShift,userShift) ),
+        shift( Max(MinShift,userShift)     ),
         bytes( Base2<size_t>::One << shift ),
         delta(0),
         giant( userMutex )
@@ -93,6 +95,15 @@ namespace Yttrium
             }
         }
 
+        uint64_t Pages:: displayInfo(const size_t indent) const
+        {
+            const size_t allocated = delta * bytes;
+            if(delta>0)
+            {
+                Core::Indent(std::cerr,indent) << "[" << std::setw(6) << bytes << "] ready = " << std::setw(6) << size << " / " << std::setw(6) << delta << " @" << HumanReadable(allocated) <<std::endl;
+            }
+            return allocated;
+        }
 
     }
 
