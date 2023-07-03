@@ -86,7 +86,7 @@ Y_UTEST(data_list)
         
         while(iList.size) iList.popTail();
 
-        Y_SIZEOF(ListOf<int>);
+        Y_SIZEOF(ListOf<iNode>);
 
     }
     
