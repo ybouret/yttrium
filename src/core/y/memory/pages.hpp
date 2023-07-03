@@ -63,7 +63,6 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-
             explicit Pages(const unsigned userShift, Lockable &) noexcept; //!< setup with user's shift and giant mutex
             virtual ~Pages()                                     noexcept; //!< cleanup
 
