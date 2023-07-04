@@ -378,7 +378,7 @@ namespace Yttrium
                 chunk->displayInfo(chunkIndent,diff);
 
             }
-            Core::Indent(std::cerr,indent)<< '<' << CallSign << '>' << std::endl;
+            Core::Indent(std::cerr,indent)<< '<' << CallSign << '/' << '>' << std::endl;
         }
     }
 

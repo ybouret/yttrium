@@ -11,33 +11,65 @@ namespace Yttrium
     namespace Memory
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Open Hash Table of list of Arenas
+        //
+        //
+        //______________________________________________________________________
         class Blocks
         {
         public:
-            typedef void * (Blocks:: *Acquire)(const size_t);
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef ListOf<Arena>     Slot;     //!< alias
+            static const char * const CallSign; //!< "Memory::Block"
 
-            typedef ListOf<Arena>     Slot;
-            static const char * const CallSign;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Blocks(Album &);   //!< create slots
+            virtual ~Blocks() noexcept; //!< clean all
 
-            explicit Blocks(Album &);
-            virtual ~Blocks() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void *acquire(const size_t blockSize);                           //!< acquire a block[blockSize]
+            void  release(void *blockAddr, const size_t blockSize) noexcept; //!< release a previously acquired block
 
-            void *acquire(const size_t blockSize);
-            void  release(void *blockAddr, const size_t blockSize) noexcept;
-            
+            //! display statistics
             void  displayInfo(size_t indent) const;
 
 
-            Album &      album;
-            const size_t nslot;
-            const size_t smask;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            Album &      album; //!< persistent albumm of pages
+            const size_t nslot; //!< power of two initial slots : pageSize/sizeof(Slot)
+            const size_t smask; //!< nslot-1
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Blocks);
-            Arena       *cache;
-            Slot        *slots;
-            Acquire      which;
-            Arena        build;
+            typedef void * (Blocks:: *Acquire)(const size_t);
+            Arena       *cache; //!< I/O cache
+            Slot        *slots; //!< slot memory
+            Acquire      which; //!< acquire methods
+            Arena        build; //!< Arena to build Arenas
             
             void *  acquireFirst(const size_t blockSize);
             void *  acquireExtra(const size_t blockSize);

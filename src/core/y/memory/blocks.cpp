@@ -72,12 +72,12 @@ namespace Yttrium
             {
                 const Slot &slot = slots[i];
                 if(slot.size<=0) continue;
-                Core::Indent(std::cerr,indent+2) << "<Slot index='" << i << "'>" << std::endl;
+                if(slot.size>1) Core::Indent(std::cerr,indent+2) << "<Slot index='" << i << "' count='" << slot.size << "'>" << std::endl;
                 for(const Arena *node=slot.head;node;node=node->next)
                 {
                     node->displayInfo(indent+4);
                 }
-                Core::Indent(std::cerr,indent+2) << "<Slot/>" << std::endl;
+                if(slot.size>1) Core::Indent(std::cerr,indent+2) << "<Slot/>" << std::endl;
             }
             Core::Indent(std::cerr,indent) << "<" << CallSign << "/>" << std::endl;
         }
