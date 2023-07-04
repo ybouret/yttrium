@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_Memory_Book_Included
-#define Y_Memory_Book_Included 1
+#ifndef Y_Memory_Album_Included
+#define Y_Memory_Album_Included 1
 
 #include "y/memory/pages.hpp"
 #include "y/calculus/align.hpp"

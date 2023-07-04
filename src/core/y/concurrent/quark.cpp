@@ -48,7 +48,7 @@ namespace Yttrium
                 inline virtual ~Quark() noexcept {}
 
                 inline explicit Quark() :
-                Lockable("GIANT"),
+                Lockable("GiantMutex"),
                 param(),
                 giant(param),
                 album(*this),
@@ -141,7 +141,7 @@ namespace Yttrium
 
     namespace Concurrent
     {
-        
+
         Mutex:: Mutex(const char *id) :
         Lockable(id),
         quark( Nucleus::QuarkInstance() ),
