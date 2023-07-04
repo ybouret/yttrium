@@ -17,7 +17,6 @@ namespace Yttrium
         Arena:: ~Arena() noexcept
         {
 
-
             while(size>0)
             {
                 Chunk         *chunk = popTail();
@@ -48,6 +47,8 @@ namespace Yttrium
                       Album        &userDataPages,
                       const size_t  userPageBytes) :
         ListOf<Chunk>(),
+        next(0),
+        prev(0),
         acquiring(0),
         releasing(0),
         wandering(0),
@@ -57,14 +58,7 @@ namespace Yttrium
         dataPages( userDataPages[ ComputeShift(blockSize,userPageBytes,Coerce(numBlocks)) ] ),
         addBlocks(numBlocks-1)
         {
-#if 0
-            std::cerr << CallSign << " :"
-            << " blockSize= " << std::setw(4) << blockSize
-            << " pageBytes= " << std::setw(6) << userPageBytes
-            << " -> "         << std::setw(6) << dataPages.bytes
-            << " @"           << numBlocks << " blocksPerChunk" << std::endl;
-#endif
-            
+
             acquiring = releasing = wandering = pushTail( queryChunk()  );
             available = numBlocks;
         }
