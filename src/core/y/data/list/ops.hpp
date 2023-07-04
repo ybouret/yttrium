@@ -55,6 +55,7 @@ namespace Yttrium
         {
             assert(L.size>0);
             assert(0!=L.head);
+
             L.head->prev = node;
             node->next   = L.head;
             L.head       = node;
@@ -564,7 +565,63 @@ namespace Yttrium
             assert(node>lower);
             assert(node<upper);
             return InsertAfter(L,lower,node);
+        }
 
+
+        template <typename LIST, typename NODE> static inline
+        NODE *MoveToFront(LIST &L, NODE *node) noexcept
+        {
+            assert(OwnedBy(L,node));
+            assert(L.size>0);
+            switch(L.size)
+            {
+                case 0: // N/A
+                case 1:
+                    return node;
+
+                case 2:
+                    if(node==L.tail)
+                    {
+                        Swap(L.head,L.tail);
+                        L.head->prev = 0;
+                        L.head->next = L.tail;
+                        L.tail->prev = L.head;
+                        L.tail->next = 0;
+                    } else { assert(node==L.head); }
+                    return node;
+
+                default:
+                    break;
+            }
+
+            if(L.head==node) {
+                return node;
+            }
+            else
+            {
+                // detach node
+                if(L.tail==node)
+                {
+                    assert(0!=L.tail->prev);
+                    assert(0==L.tail->next);
+
+                    L.tail = L.tail->prev;
+                    L.tail->next = 0;
+                    node->prev = 0;
+                }
+                else
+                {
+                    NODE *prev = node->prev; assert(0!=prev);
+                    NODE *next = node->next; assert(0!=next);
+                    prev->next = next;
+                    next->prev = prev;
+                    node->prev = 0;
+                }
+
+                // push at head
+                PushHead_(L,node); assert(L.head==node);
+                return node;
+            }
         }
     };
 

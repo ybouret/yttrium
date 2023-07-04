@@ -118,6 +118,8 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
+            Arena        *next;
+            Arena        *prev;
             Chunk        *acquiring; //!< acquiring chunk
             Chunk        *releasing; //!< releasing chunk
             Chunk        *wandering; //!< last empty

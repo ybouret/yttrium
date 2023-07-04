@@ -80,6 +80,12 @@ namespace Yttrium
             swapWith(temp);
         }
 
+        NODE *moveToFront(NODE *node) noexcept
+        {
+            return ListOps:: MoveToFront(*this,node);
+        }
+
+
         //______________________________________________________________________
         //
         //

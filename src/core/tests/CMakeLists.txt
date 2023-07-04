@@ -32,6 +32,7 @@ add_test(memory:blocks test-core memory_blocks)
 
 #type
 add_test(type:ints test-core type_ints)
+add_test(type:hash32 test-core type_hash32)
 
 #data
 add_test(data:list test-core data_list)

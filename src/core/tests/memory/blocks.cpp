@@ -17,7 +17,13 @@ Y_UTEST(memory_blocks)
 
     Memory::Album  album;
     Memory::Blocks blocks(album);
-    blocks.expand();
+
+    std::cerr << "#slots=" << blocks.nslot << std::endl;
+
+    blocks.acquire(12);
     
+
+
+
 }
 Y_UDONE()

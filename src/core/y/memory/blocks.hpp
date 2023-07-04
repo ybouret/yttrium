@@ -14,7 +14,9 @@ namespace Yttrium
         class Blocks
         {
         public:
-            static const size_t       MinAvailable = 4;
+            typedef void * (Blocks:: *Acquire)(const size_t);
+
+            typedef ListOf<Arena>     Slot;
             static const char * const CallSign;
 
             explicit Blocks(Album &);
@@ -22,21 +24,22 @@ namespace Yttrium
 
             void *acquire(const size_t blockSize);
 
-            void expand();
 
 
-        private:
             Album &      album;
-            size_t       numArenas;
-            size_t       available; //!< maximum number of arenas
-            Arena *      acquiring; //!< acquiring cache
-            Arena *      releasing; //!< releasing cache
-            Pages *      dataPages; //!< memory owner
-            Arena *      arenaHead; //!< arena[0]
-            Arena *      arenaTail; //!< arena[count-1]
+            const size_t nslot;
+            const size_t smask;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Blocks);
+            Arena       *cache;
+            Slot        *slots;
+            Acquire      which;
+            Arena        build;
+            
+            void *  acquireFirst(const size_t blockSize);
+            void *  acquireExtra(const size_t blockSize);
+            Arena * makeNewArena(const size_t blockSize);
         };
 
     }

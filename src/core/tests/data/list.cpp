@@ -89,6 +89,31 @@ Y_UTEST(data_list)
         Y_SIZEOF(ListOf<iNode>);
 
     }
+
+    {
+        std::cerr << "MoveToFront" << std::endl;
+        for(size_t n=1;n<=10;++n)
+        {
+            for(size_t i=0;i<n;++i)
+            {
+                if( alea() > 0.5 )
+                    iList.pushTail( new iNode() );
+                else
+                    iList.pushHead( new iNode() );
+            }
+            Y_ASSERT(n==iList.size);
+
+            for(size_t loop=0;loop<n;++loop)
+            {
+                iNode *node = ListOps::Next(iList.head,loop);
+                Y_ASSERT(0!=node);
+                iList.moveToFront(node);
+            }
+
+
+            while(iList.size) delete iList.popTail();
+        }
+    }
     
 }
 Y_UDONE()

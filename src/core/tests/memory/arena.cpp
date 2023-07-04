@@ -88,6 +88,8 @@ Y_UTEST(memory_arena)
     album.displayInfo(0);
 
     Y_SIZEOF(Memory::Arena);
+    Memory::Arena selfArena(sizeof(Memory::Arena),album,Memory::Page::DefaultBytes);
+    selfArena.displayInfo(0);
 
 }
 Y_UDONE()
