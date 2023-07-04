@@ -64,6 +64,7 @@ namespace Yttrium
                 inline void deleteMutex(Mutex * &mutex) noexcept
                 {
                     mutexes.eradicate(mutex);
+                    mutex = 0;
                 }
 
 
@@ -95,9 +96,7 @@ namespace Yttrium
             {
                 if(!Quark_)
                 {
-                    std::cerr << "sizeof(Quark) = " << sizeof(Quark) << "/" << sizeof(Quark__) << std::endl;
-                    std::cerr << "sizeof(Mutex) = " << sizeof(Mutex) << std::endl;
-
+                    
                     if(QuarkInit)
                     {
                         AtExit::Register(QuarkQuit, 0, AtExit::MaximumLongevity);
@@ -128,6 +127,8 @@ namespace Yttrium
 
 }
 
+
+#include <iomanip>
 
 namespace Yttrium
 {

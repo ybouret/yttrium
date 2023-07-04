@@ -38,6 +38,13 @@ namespace Yttrium
             {
                 return static_cast<T*>(Zero(Destructed(item),sizeof(T)));
             }
+
+            template <typename T, typename U> static inline
+            T *Cast(U *source) noexcept
+            {
+                return static_cast<T*>( Addr(source) );
+            }
+
         };
     }
 

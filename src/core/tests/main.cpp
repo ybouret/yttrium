@@ -9,6 +9,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(atexit);
     Y_UTEST(lockable);
     Y_UTEST(wtime);
+    Y_UTEST(singleton);
     
     Y_UTEST(memory_chunk);
     Y_UTEST(memory_pages);
