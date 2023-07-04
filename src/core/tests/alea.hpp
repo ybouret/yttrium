@@ -5,6 +5,7 @@
 #include <cmath>
 #include <ctime>
 #include "y/check/crc32.hpp"
+#include "y/memory/out-of-reach.hpp"
 
 namespace
 {
@@ -35,7 +36,7 @@ namespace
         for(size_t i=n-1;i>0;--i)
         {
             const size_t j = alea_leq(i);
-            Yttrium::Swap(a[i], a[j]);
+            Yttrium::Memory::OutOfReach::Swap(&a[i], &a[j], sizeof(T) );
         }
     }
 

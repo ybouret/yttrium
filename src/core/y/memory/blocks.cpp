@@ -18,7 +18,17 @@ namespace Yttrium
 
         Blocks:: ~Blocks() noexcept
         {
-
+            {
+                Slot *slot = slots+nslot;
+                for(size_t i=nslot;i>0;--i)
+                {
+                    --slot;
+                    while(slot->size>0)
+                        build.release( Destructed(slot->popTail()) );
+                    slot->~Slot();
+                }
+            }
+            album[ Page::DefaultShift ].release(slots);
         }
 
 
@@ -86,9 +96,11 @@ namespace Yttrium
                 {
                     if(node->blockSize==blockSize)
                     {
-                        
+                        return (cache = slot.moveToFront(node))->acquire();
                     }
                 }
+                assert(0==node);
+                return (cache = slot.pushHead( makeNewArena(blockSize) ))->acquire();
             }
         }
 
