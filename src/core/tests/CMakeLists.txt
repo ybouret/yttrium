@@ -5,6 +5,7 @@ data
 text
 calculus
 concurrent
+random
 )
 
 Y_LinkLibraries(test-core)
@@ -46,3 +47,7 @@ add_test(calculus:base2 test-core calculus_base2)
 
 #concurrent
 add_test(concurrent:mutex test-core concurrent_mutex)
+
+#random
+add_test(random:bits test-core random_bits)
+

@@ -55,11 +55,11 @@ namespace Yttrium
             if(p>=data&&p<last)
             {
                 const ptrdiff_t shift = OutOfReach:: Diff(data,p);
-                return (0 == (shift%block_size) ) ? 1 : 0;
+                return (0 == (shift%block_size) );
             }
             else
             {
-                return 0;
+                return false;
             }
         }
 
@@ -100,14 +100,13 @@ namespace Yttrium
             assert(operatedNumber+stillAvailable==providedNumber);
             assert(blockSize>0);
 
-            {
-                uint8_t * p = &data[firstAvailable*blockSize]; /* get address                 */
-                firstAvailable = *p;                            /* read next available address */
-                --stillAvailable;                               /* bookkeeping                 */
-                ++operatedNumber;                               /* bookkeeping                 */
-                memset(p,0,blockSize);                          /* zero memory                 */
-                return p;                                        /* done                        */
-            }
+            uint8_t * p = &data[firstAvailable*blockSize]; // get address
+            firstAvailable = *p;                           // read next available address
+            --stillAvailable;                              // bookkeeping
+            ++operatedNumber;                              // bookkeeping
+            memset(p,0,blockSize);                         // zero memory
+            return p;                                      // done
+
         }
 
         bool Chunk:: release(void          *block_addr,
@@ -130,14 +129,13 @@ namespace Yttrium
             // find block and update status
             //
             //------------------------------------------------------------------
-            {
-                uint8_t     *toRelease = static_cast<uint8_t *>(block_addr);
-                const size_t indx      = static_cast<size_t>(toRelease-data)/block_size;
-                *toRelease             = firstAvailable;
-                firstAvailable         = static_cast<uint8_t>(indx);
-                ++stillAvailable;
-                return (--operatedNumber) <= 0;
-            }
+            uint8_t     *toRelease = static_cast<uint8_t *>(block_addr);
+            const size_t indx      = static_cast<size_t>(toRelease-data)/block_size;
+            *toRelease             = firstAvailable;
+            firstAvailable         = static_cast<uint8_t>(indx);
+            ++stillAvailable;
+            return (--operatedNumber) <= 0;
+
         }
 
 
@@ -178,7 +176,7 @@ namespace Yttrium
             assert(0!=page);
             assert(size>=headerBytes);
 
-            void        *chunkData = OutOfReach::Haul(page, headerBytes);
+            void        *chunkData = static_cast<uint8_t *>(page)+ headerBytes;
             const size_t chunkSize = size-headerBytes;
 
             return new (page) Chunk(blockSize,chunkData,chunkSize);

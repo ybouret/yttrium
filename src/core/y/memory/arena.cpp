@@ -346,7 +346,7 @@ namespace Yttrium
 
     namespace Memory
     {
-        void Arena:: displayInfo(const size_t indent) const
+        void Arena:: displayInfo(const size_t indent, const bool verbose) const
         {
             const size_t pageBytes = dataPages.bytes;
             Core::Indent(std::cerr,indent)
@@ -365,12 +365,15 @@ namespace Yttrium
             << " / "
             << std::setw(6) << totalChunks
             << " @ " << HumanReadable(totalBytes) << std::endl;
-            const void *base = head;
-            for(const Chunk *chunk=head;chunk;chunk=chunk->next)
+            if(verbose)
             {
-                const ptrdiff_t diff = OutOfReach::Diff(base,chunk) / dataPages.bytes;
-                chunk->displayInfo(chunkIndent,diff);
-
+                const void *base = head;
+                for(const Chunk *chunk=head;chunk;chunk=chunk->next)
+                {
+                    const ptrdiff_t diff = OutOfReach::Diff(base,chunk) / dataPages.bytes;
+                    chunk->displayInfo(chunkIndent,diff);
+                    
+                }
             }
             Core::Indent(std::cerr,indent)<< '<' << CallSign << '/' << '>' << std::endl;
         }

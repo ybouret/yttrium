@@ -71,7 +71,6 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-
             bool          owns(const void *blockAddr, const size_t blockSize)   const noexcept; //!< check exactly owned
             Ownership     whose(const void *blockAddr)                          const noexcept; //!< locate address
             void     *    acquire(const size_t blockSize)                             noexcept; //!< acquire zeroed block[block_size]

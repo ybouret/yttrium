@@ -59,7 +59,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            Album &      album; //!< persistent albumm of pages
+            Album &      album; //!< persistent album of pages
             const size_t nslot; //!< power of two initial slots : pageSize/sizeof(Slot)
             const size_t smask; //!< nslot-1
 
@@ -68,7 +68,7 @@ namespace Yttrium
             typedef void * (Blocks:: *Acquire)(const size_t);
             Arena       *cache; //!< I/O cache
             Slot        *slots; //!< slot memory
-            Acquire      which; //!< acquire methods
+            Acquire      which; //!< acquire methods, initially acquireFirst
             Arena        build; //!< Arena to build Arenas
             
             void *  acquireFirst(const size_t blockSize);

@@ -109,7 +109,7 @@ namespace Yttrium
 
 
             //! display statistics
-            void displayInfo(const size_t indent) const;
+            void displayInfo(const size_t indent, const bool verbose=true) const;
 
             
             //__________________________________________________________________

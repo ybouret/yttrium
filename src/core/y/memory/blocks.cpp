@@ -18,6 +18,7 @@ namespace Yttrium
 
         Blocks:: ~Blocks() noexcept
         {
+            // clean all slots
             {
                 Slot *slot = slots+nslot;
                 for(size_t i=nslot;i>0;--i)
@@ -28,7 +29,14 @@ namespace Yttrium
                     slot->~Slot();
                 }
             }
+
+            // release slots
             album[ Page::DefaultShift ].release(slots);
+            slots = 0;
+            Coerce(nslot) = 0;
+            Coerce(smask) = 0;
+            cache         = 0;
+            which         = 0;
         }
 
 
@@ -39,15 +47,17 @@ namespace Yttrium
         }
 
         Blocks:: Blocks(Album &userAlbum) :
-        album(userAlbum),
+        album( userAlbum      ),
         nslot( ComputeSlots() ),
-        smask( nslot-1 ),
-        cache(0),
+        smask( nslot-1        ),
+        cache( 0              ),
         slots( static_cast<Slot *>(album[ Page::DefaultShift ].acquire()) ),
         which( &Blocks::acquireFirst ),
         build( sizeof(Arena), album, Page::DefaultBytes )
         {
-            for(size_t i=0;i<nslot;++i) new (&slots[i]) Slot();
+            // format slots
+            for(size_t i=0;i<nslot;++i)
+                new (&slots[i]) Slot();
         }
 
         Arena * Blocks:: makeNewArena(const size_t blockSize)
@@ -75,7 +85,7 @@ namespace Yttrium
                 if(slot.size>1) Core::Indent(std::cerr,indent+2) << "<Slot index='" << i << "' count='" << slot.size << "'>" << std::endl;
                 for(const Arena *node=slot.head;node;node=node->next)
                 {
-                    node->displayInfo(indent+4);
+                    node->displayInfo(indent+4,false);
                 }
                 if(slot.size>1) Core::Indent(std::cerr,indent+2) << "<Slot/>" << std::endl;
             }
@@ -91,9 +101,10 @@ namespace Yttrium
 
         void *Blocks:: acquireFirst(const size_t blockSize)
         {
+            // create first Arena and change methods
             assert(0==cache);
             cache = slots[blockSize&smask].pushHead(makeNewArena(blockSize));
-            which = & Blocks::acquireExtra;
+            which = & Blocks::acquireExtra; // will never come back
             return cache->acquire();
         }
 
@@ -103,10 +114,12 @@ namespace Yttrium
             assert(0!=cache);
             if(cache->blockSize==blockSize)
             {
+                // cached!
                 return cache->acquire();
             }
             else
             {
+                // look for cache in dedicated slot
                 Slot  &slot = slots[blockSize&smask];
                 Arena *node = slot.head;
                 for(;node;node=node->next)
