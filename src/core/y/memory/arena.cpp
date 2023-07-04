@@ -355,7 +355,12 @@ namespace Yttrium
         void Arena:: displayInfo(const size_t indent) const
         {
             const size_t pageBytes = dataPages.bytes;
-            Core::Indent(std::cerr,indent)<< '<' << CallSign << " blockSize='" << blockSize << "' pageBytes='" << pageBytes << "'>" << std::endl;
+            Core::Indent(std::cerr,indent)
+            << '<' << CallSign
+            << " blockSize='" << blockSize
+            << "' pageBytes='" << pageBytes
+            << "' BPP='" << numBlocks
+            << "'>" << std::endl;
             const size_t chunkIndent = indent+2;
             const size_t totalChunks = numBlocks * size;
             const size_t totalBytes  = totalChunks * blockSize;

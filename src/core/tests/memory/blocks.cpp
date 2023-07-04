@@ -37,5 +37,16 @@ Y_UTEST(memory_blocks)
         b.addr = blocks.acquire(b.size);
     }
 
+    alea_shuffle(blk,num);
+
+    for(size_t i=0;i<num;++i)
+    {
+        block_t &b = blk[i];
+        blocks.release(b.addr,b.size);
+    }
+
+    blocks.displayInfo(0);
+    album.displayInfo(0);
+
 }
 Y_UDONE()

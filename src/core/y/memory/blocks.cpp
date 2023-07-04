@@ -65,6 +65,23 @@ namespace Yttrium
             }
         }
 
+        void  Blocks:: displayInfo(size_t indent) const
+        {
+            Core::Indent(std::cerr,indent) << "<" << CallSign << " slots='" << nslot << "'>" << std::endl;
+            for(size_t i=0;i<nslot;++i)
+            {
+                const Slot &slot = slots[i];
+                if(slot.size<=0) continue;
+                Core::Indent(std::cerr,indent+2) << "<Slot index='" << i << "'>" << std::endl;
+                for(const Arena *node=slot.head;node;node=node->next)
+                {
+                    node->displayInfo(indent+4);
+                }
+                Core::Indent(std::cerr,indent+2) << "<Slot/>" << std::endl;
+            }
+            Core::Indent(std::cerr,indent) << "<" << CallSign << "/>" << std::endl;
+        }
+
 
         void * Blocks:: acquire(const size_t blockSize)
         {
@@ -104,7 +121,44 @@ namespace Yttrium
             }
         }
 
-        
+    }
+
+}
+
+#include "y/system/error.hpp"
+
+namespace Yttrium
+{
+
+    namespace Memory
+    {
+
+
+        void  Blocks:: release(void *blockAddr, const size_t blockSize) noexcept
+        {
+            assert(blockAddr);
+            assert(blockSize>0);
+            assert(0!=cache || Die("not previous acquire"));
+            if(cache->blockSize==blockSize)
+            {
+                cache->release(blockAddr);
+            }
+            else
+            {
+                Slot  &slot = slots[blockSize&smask];
+                Arena *node = slot.head;
+                for(;node;node=node->next)
+                {
+                    if(node->blockSize==blockSize)
+                    {
+                        return (cache = slot.moveToFront(node))->release(blockAddr);
+                    }
+                }
+                Libc::CriticalError(EINVAL, "%s: corrupted release(blockSize=%lu)", CallSign, (unsigned long)blockSize);
+
+            }
+        }
+
 
     }
 

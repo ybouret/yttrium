@@ -23,7 +23,9 @@ namespace Yttrium
             virtual ~Blocks() noexcept;
 
             void *acquire(const size_t blockSize);
-
+            void  release(void *blockAddr, const size_t blockSize) noexcept;
+            
+            void  displayInfo(size_t indent) const;
 
 
             Album &      album;
