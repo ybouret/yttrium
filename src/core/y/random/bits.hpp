@@ -9,20 +9,22 @@ namespace Yttrium
 {
     namespace Random
     {
-
+        template <typename T> class Metrics32;
+        
         
         //! Random Bits interface
         class Bits
         {
-        protected:
-            explicit Bits(const uint32_t maxU32) noexcept;
-
-            const uint32_t    umax;
-            
-
         public:
+            explicit Bits(const uint32_t maxU32) noexcept;
             virtual ~Bits() noexcept;
 
+            const uint32_t                 umax;
+            const Metrics32<float>       * const metricsF;
+            const Metrics32<double>      * const metricsD;
+            const Metrics32<long double> * const metricsL;
+
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Bits);
