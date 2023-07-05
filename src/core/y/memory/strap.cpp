@@ -124,6 +124,18 @@ namespace Yttrium
             std::cerr << '|' << std::endl;
         }
 
+        void Strap:: Release(void *addr) noexcept
+        {
+            assert(NULL!=addr);
+            Block *block = static_cast<Block *>(addr)-1;
+            assert(0!=block->used);
+            assert(0!=block->prev || 0!=block->next);
+            assert(block->size>0);
+            assert( 0 == (block->size%sizeof(Block)) );
+            
+        }
+
+
     }
 
 }

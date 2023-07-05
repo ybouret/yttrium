@@ -2,6 +2,7 @@
 #include "y/memory/strap.hpp"
 #include "y/utest/run.hpp"
 #include "../alea.hpp"
+#include "y/data/list/cxx.hpp"
 
 using namespace Yttrium;
 
