@@ -13,31 +13,19 @@ namespace Yttrium
     namespace Memory
     {
 
+        struct Block;
+
         class Strap
         {
         public:
-            typedef UnsignedInt<sizeof(void*)>::Type len_t;
-
-            struct Block
-            {
-                Block *next;
-                Block *prev;
-                Strap *used;
-                len_t  size;
-            };
-
-            static const size_t   BlockBytes = sizeof(Block);
-            static const unsigned BlockShift = iLog2<BlockBytes>::Value;
-            static const size_t   MinRequest = 4 * BlockBytes;
-
-
             Strap(void *addr, const size_t size) noexcept;
             ~Strap() noexcept;
 
-            static size_t BlockSize(const size_t blockSize) noexcept;
+            static size_t BlockSizeFor(const size_t blockSize) noexcept;
             
             void *acquire(size_t &blockSize) noexcept;
 
+            void displayInfo(size_t indent) const;
 
             Strap *next;
             Strap *prev;
