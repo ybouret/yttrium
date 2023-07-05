@@ -567,7 +567,10 @@ namespace Yttrium
             return InsertAfter(L,lower,node);
         }
 
-
+        //______________________________________________________________________
+        //
+        //! move node to front
+        //______________________________________________________________________
         template <typename LIST, typename NODE> static inline
         NODE *MoveToFront(LIST &L, NODE *node) noexcept
         {

@@ -25,6 +25,7 @@ Y_UTEST(memory_notes)
             Memory::Dyad &dyad = notes[shift];
             dyad.release( dyad.acquire() );
         }
+        notes.displayInfo(0);
     }
     album.displayInfo(0);
 

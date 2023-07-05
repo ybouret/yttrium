@@ -13,19 +13,44 @@ namespace Yttrium
 
     namespace Memory
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! small blockSize DyadicArenas
+        //
+        //
+        //______________________________________________________________________
         class Notes
         {
         public:
-            static const unsigned MinShift = 0;
-            static const unsigned MaxShift = Pages::MinShift-1;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const unsigned MinShift = 0;                     //!< MinBlockSize = 1
+            static const unsigned MaxShift = Pages::MinShift-1;     //!< MaxBlockSize = 2^MaxShift
             static const size_t   Number   = 1+MaxShift - MinShift; //!< number of possible dyadic arenas
 
-            explicit Notes(Album &);
-            virtual ~Notes() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Notes(Album &);    //!< setup with album
+            virtual ~Notes() noexcept;  //!< cleanup
 
-            DyadicArena &operator[](const size_t shift) noexcept;
-
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            DyadicArena &operator[](const size_t shift) noexcept; //!< access arena
+            void displayInfo(const size_t indent) const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Notes);

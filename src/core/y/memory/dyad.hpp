@@ -11,9 +11,22 @@ namespace Yttrium
 
     namespace Memory
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! allocating power-of-two blocks
+        //
+        //
+        //______________________________________________________________________
         class Dyad
         {
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
         protected:
             //! 0 <= userShift <= Base2<size_t>::MaxShift
             explicit Dyad(const unsigned userShift) noexcept;
@@ -22,11 +35,24 @@ namespace Yttrium
             //! cleanup
             virtual ~Dyad() noexcept;
 
-            virtual void *acquire()               = 0;
-            virtual void  release(void*) noexcept = 0;
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
 
-            const unsigned shift;
-            const size_t   bytes;
+            virtual void *acquire()               = 0; //!< acquire a new block
+            virtual void  release(void*) noexcept = 0; //!< release a prevuusly acquired block
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const unsigned shift; //!< bit shift
+            const size_t   bytes; //!< 2^shift
 
 
         private:

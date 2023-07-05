@@ -53,6 +53,17 @@ namespace Yttrium
         }
 
 
+        void Notes:: displayInfo(const size_t indent) const
+        {
+            Core::Indent(std::cerr,indent) << "<Memory::Notes MinShift='" << MinShift << "' MaxShift='" << MaxShift << "'>" << std::endl;
+            for(unsigned shift=MinShift;shift<=MaxShift;++shift)
+            {
+                dyad[shift].displayInfo(indent+2);
+            }
+            Core::Indent(std::cerr,indent) << "<Memory::Notes/>" << std::endl;
+        }
+
+
     }
 
 }
