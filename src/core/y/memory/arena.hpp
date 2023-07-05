@@ -92,7 +92,7 @@ namespace Yttrium
              - or create a new chunk and return its first block
              */
             //__________________________________________________________________
-            void *acquire();
+            void *acquireBlock();
 
 
             //__________________________________________________________________
@@ -105,7 +105,7 @@ namespace Yttrium
              \param blockAddr a block a blockSize belonging to this arena
              */
             //__________________________________________________________________
-            void  release(void *blockAddr) noexcept;
+            void  releaseBlock(void *blockAddr) noexcept;
 
 
             //! display statistics

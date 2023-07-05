@@ -144,7 +144,7 @@ namespace Yttrium
     namespace Memory
     {
 
-        void *Arena:: acquire()
+        void *Arena:: acquireBlock()
         {
             assert(0!=acquiring);
             assert(0!=releasing);
@@ -257,7 +257,7 @@ namespace Yttrium
     namespace Memory
     {
 
-        void Arena:: release(void *blockAddr) noexcept
+        void Arena:: releaseBlock(void *blockAddr) noexcept
         {
             assert(0!=blockAddr);
             assert(0!=acquiring);

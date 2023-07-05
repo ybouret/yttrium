@@ -32,6 +32,7 @@ add_test(memory:album  test-core memory_album)
 add_test(memory:sentry test-core memory_sentry)
 add_test(memory:blocks test-core memory_blocks)
 add_test(memory:guild  test-core memory_guild)
+add_test(memory:notes  test-core memory_notes)
 
 #type
 add_test(type:ints test-core type_ints)

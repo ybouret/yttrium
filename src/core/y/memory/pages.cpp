@@ -40,8 +40,7 @@ namespace Yttrium
         Pages:: Pages(const unsigned userShift,
                       Lockable      &userMutex) noexcept :
         ListOf<Page>(),
-        shift( Max(MinShift,userShift)     ),
-        bytes( Base2<size_t>::One << shift ),
+        Dyad( Max(MinShift,userShift) ),
         delta(0),
         giant( userMutex )
         {

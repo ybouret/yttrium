@@ -6,6 +6,7 @@
 #include "y/calculus/ilog2.hpp"
 #include "y/calculus/base2.hpp"
 #include "y/data/list.hpp"
+#include "y/memory/dyad.hpp"
 
 namespace Yttrium
 {
@@ -38,7 +39,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Pages : public ListOf<Page>
+        class Pages : public ListOf<Page>, public Dyad
         {
         public:
             //__________________________________________________________________
@@ -72,12 +73,12 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void *   acquire();                              //!< acquire with a protected calloc
-            void     release(void *) noexcept;               //!< release with a protected free
-            void     reserve(size_t n);                      //!< prepare some pages
-            void *   query();                                //!< pop/acquire
-            void     store(void*) noexcept;                  //!< store ordered by memory
-            uint64_t displayInfo(const size_t indent) const; //!< display statistics, return involved memory
+            virtual void * acquire();                              //!< acquire with a protected calloc
+            virtual void   release(void *) noexcept;               //!< release with a protected free
+            void           reserve(size_t n);                      //!< prepare some pages
+            void *         query();                                //!< pop/acquire
+            void           store(void*) noexcept;                  //!< store ordered by memory
+            uint64_t       displayInfo(const size_t indent) const; //!< display statistics, return involved memory
 
             //__________________________________________________________________
             //
@@ -85,8 +86,6 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const unsigned  shift; //!< bits shift
-            const size_t    bytes; //!< bytes = 2^shift
             const ptrdiff_t delta; //!< acquire-release bookkeeping
             Lockable       &giant; //!< giant mutex
 

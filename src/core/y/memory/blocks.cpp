@@ -25,7 +25,7 @@ namespace Yttrium
                 {
                     --slot;
                     while(slot->size>0)
-                        build.release( Destructed(slot->popTail()) );
+                        build.releaseBlock( Destructed(slot->popTail()) );
                     slot->~Slot();
                 }
             }
@@ -63,14 +63,14 @@ namespace Yttrium
         Arena * Blocks:: makeNewArena(const size_t blockSize)
         {
             assert(sizeof(Arena) == build.blockSize);
-            void *blockAddr = build.acquire();
+            void *blockAddr = build.acquireBlock();
             try
             {
                 return new (blockAddr) Arena(blockSize,album,Page::DefaultBytes);
             }
             catch(...)
             {
-                build.release(blockAddr);
+                build.releaseBlock(blockAddr);
                 throw;
             }
         }
@@ -105,7 +105,7 @@ namespace Yttrium
             assert(0==cache);
             cache = slots[blockSize&smask].pushHead(makeNewArena(blockSize));
             which = & Blocks::acquireExtra; // will never come back
-            return cache->acquire();
+            return cache->acquireBlock();
         }
 
 
@@ -115,7 +115,7 @@ namespace Yttrium
             if(cache->blockSize==blockSize)
             {
                 // cached!
-                return cache->acquire();
+                return cache->acquireBlock();
             }
             else
             {
@@ -126,11 +126,13 @@ namespace Yttrium
                 {
                     if(node->blockSize==blockSize)
                     {
-                        return (cache = slot.moveToFront(node))->acquire();
+                        return (cache = slot.moveToFront(node))->acquireBlock();
                     }
                 }
+
+                // create new arena
                 assert(0==node);
-                return (cache = slot.pushHead( makeNewArena(blockSize) ))->acquire();
+                return (cache = slot.pushHead( makeNewArena(blockSize) ))->acquireBlock();
             }
         }
 
@@ -154,7 +156,7 @@ namespace Yttrium
             assert(0!=cache || Die("not previous acquire"));
             if(cache->blockSize==blockSize)
             {
-                cache->release(blockAddr);
+                cache->releaseBlock(blockAddr);
             }
             else
             {
@@ -164,7 +166,7 @@ namespace Yttrium
                 {
                     if(node->blockSize==blockSize)
                     {
-                        return (cache = slot.moveToFront(node))->release(blockAddr);
+                        return (cache = slot.moveToFront(node))->releaseBlock(blockAddr);
                     }
                 }
                 Libc::CriticalError(EINVAL, "%s: corrupted release(blockSize=%lu)", CallSign, (unsigned long)blockSize);

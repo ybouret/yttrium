@@ -13,7 +13,6 @@ namespace Yttrium
     namespace Memory
     {
 
-
         //______________________________________________________________________
         //
         //
@@ -50,8 +49,8 @@ namespace Yttrium
             // Methods for dangling items
             //
             //__________________________________________________________________
-            inline T   *zombie()                  { return static_cast<T*>(acquire()); }                  //!< create a zombie node
-            inline void zstore(T *dead) noexcept  { assert(0!=dead); release( OutOfReach::Addr(dead) ); } //!< store a zombie node
+            inline T   *zombie()                  { return static_cast<T*>(acquireBlock()); }                  //!< create a zombie node
+            inline void zstore(T *dead) noexcept  { assert(0!=dead); releaseBlock( OutOfReach::Addr(dead) ); } //!< store a zombie node
 
             //__________________________________________________________________
             //
@@ -65,17 +64,17 @@ namespace Yttrium
 
             //! construct with default constructor
             inline T   *construct() {
-                void *blockAddr = acquire();
+                void *blockAddr = acquireBlock();
                 try { return new (blockAddr) T(); }
-                catch(...) {  release(blockAddr); throw; }
+                catch(...) {  releaseBlock(blockAddr); throw; }
             }
 
             //! construct with 1-argument constructor
             template <typename U>
             inline T *construct(U &args) {
-                void *blockAddr = acquire();
+                void *blockAddr = acquireBlock();
                 try { return new (blockAddr) T(args); }
-                catch(...) {  release(blockAddr); throw; }
+                catch(...) {  releaseBlock(blockAddr); throw; }
             }
 
 

@@ -18,6 +18,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(memory_sentry);
     Y_UTEST(memory_blocks);
     Y_UTEST(memory_guild);
+    Y_UTEST(memory_notes);
 
     Y_UTEST(type_ints);
     Y_UTEST(type_hash32);

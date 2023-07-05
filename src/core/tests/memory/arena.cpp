@@ -45,13 +45,13 @@ Y_UTEST(memory_arena)
     {
         Memory::Arena arena(blockSize,album,pageBytes);
 
-        arena.release( arena.acquire() );
+        arena.releaseBlock( arena.acquireBlock() );
         
 
         memset(blk,0,sizeof(blk));
         for(size_t i=0;i<NB;++i)
         {
-            blk[i] = arena.acquire();
+            blk[i] = arena.acquireBlock();
         }
 
         album.displayInfo(0);
@@ -62,11 +62,11 @@ Y_UTEST(memory_arena)
             alea_shuffle(blk,NB);
             for(size_t i=0;i<NB/2;++i)
             {
-                arena.release(blk[i]);
+                arena.releaseBlock(blk[i]);
             }
             for(size_t i=0;i<NB/2;++i)
             {
-                blk[i] = arena.acquire();
+                blk[i] = arena.acquireBlock();
             }
         }
 
@@ -76,7 +76,7 @@ Y_UTEST(memory_arena)
         alea_shuffle(blk,NB);
         for(size_t i=0;i<NB;++i)
         {
-           arena.release( blk[i] );
+           arena.releaseBlock( blk[i] );
         }
 
         std::cerr << "-------- Empty: " << std::endl;
