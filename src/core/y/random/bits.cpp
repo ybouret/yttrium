@@ -17,7 +17,6 @@ namespace Yttrium
             denom(0)
             {
                 static const uint64_t one64 = 1;
-                //static const T        one   = 1;
                 unsigned              msb = 32;
                 uint64_t              top = one64 << msb;
 
