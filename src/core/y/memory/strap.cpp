@@ -1,5 +1,9 @@
 #include "y/memory/strap.hpp"
 #include "y/check/static.hpp"
+#include "y/calculus/align.hpp"
+
+#include <iostream>
+#include <iomanip>
 
 namespace Yttrium
 {
@@ -22,18 +26,30 @@ namespace Yttrium
 
             head->next = tail;
             head->prev = 0;
-            head->from = 0;    // means free
+            head->used = 0;    // means free
             head->size = (numBlocks-2) * sizeof(Block);
 
             tail->prev = head;
             tail->next = 0 ;
-            tail->from = this; // means used
+            tail->used = this; // means used
             tail->size = 0;    // and no length
         }
 
         Strap:: ~Strap() noexcept
         {
         }
+
+        size_t Strap:: BlockSize(const size_t blockSize) noexcept
+        {
+            return blockSize <= BlockBytes ? BlockBytes : Y_ALIGN_LN2(BlockShift, blockSize);
+        }
+
+
+        void * Strap:: acquire(size_t &blockSize) noexcept
+        {
+            
+        }
+
 
     }
 

@@ -17,6 +17,13 @@ Y_UTEST(memory_strap)
     std::cerr << "tail@" << strap->tail << std::endl;
 
 
+    for(size_t blockSize = 0; blockSize<=40;++blockSize)
+    {
+        std::cerr << blockSize << " -> " << Memory::Strap::BlockSize(blockSize) << std::endl;
+    }
+
+
+
 }
 Y_UDONE()
 

@@ -22,7 +22,7 @@ namespace Yttrium
             {
                 Block *next;
                 Block *prev;
-                Strap *from;
+                Strap *used;
                 len_t  size;
             };
 
@@ -33,6 +33,11 @@ namespace Yttrium
 
             Strap(void *addr, const size_t size) noexcept;
             ~Strap() noexcept;
+
+            static size_t BlockSize(const size_t blockSize) noexcept;
+            
+            void *acquire(size_t &blockSize) noexcept;
+
 
             Strap *next;
             Strap *prev;
