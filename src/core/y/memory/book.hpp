@@ -12,17 +12,44 @@ namespace Yttrium
 
     namespace Memory
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! aggregates Album+Notes to cover 2^0 -> 2^MaxShift possibilities
+        //
+        //
+        //______________________________________________________________________
         class Book
         {
         public:
-            static const unsigned MinShift = 0;
-            static const unsigned MidShift = Pages::MinShift;
-            static const unsigned MaxShift = Pages::MaxShift;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const unsigned MinShift = 0;               //!< alias
+            static const unsigned MidShift = Pages::MinShift; //!< alias
+            static const unsigned MaxShift = Pages::MaxShift; //!< alias
 
-            explicit Book(Album &userAlbum);
-            virtual ~Book() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Book(Album &userAlbum); //!< setup from persistent Album
+            virtual ~Book() noexcept;        //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! access proper Dyad
             Dyad & operator[](const unsigned shift) noexcept;
 
         private:

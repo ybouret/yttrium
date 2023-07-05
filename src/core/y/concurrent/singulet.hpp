@@ -10,20 +10,54 @@ namespace Yttrium
 {
     namespace Concurrent
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! base class for Singleton
+        //
+        //
+        //______________________________________________________________________
         class Singulet
         {
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
         protected:
             explicit Singulet() noexcept;
 
         public:
             virtual ~Singulet() noexcept;
 
-            virtual const char *      callSign() const noexcept = 0;
-            virtual AtExit::Longevity lifeTime() const noexcept = 0;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            virtual const char *      callSign() const noexcept = 0; //!< forward CallSign
+            virtual AtExit::Longevity lifeTime() const noexcept = 0; //!< forward LifeTime
 
-            
-            
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            static bool Verbose; //!< operations verbosity
+
+        protected:
+            //! check valid LifeTime, throw on error
+            static void CheckLifeTime(const char             *whose,
+                                      const AtExit::Longevity which);
+
+            //! check valid address, critical on error
+            static void CheckInstance(const char *whose,
+                                      void       *where);
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Singulet);
         };

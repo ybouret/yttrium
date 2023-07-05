@@ -11,7 +11,7 @@ namespace Yttrium
     {
 
         
-
+        //! Random Bits interface
         class Bits
         {
         protected:

@@ -50,7 +50,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             DyadicArena &operator[](const size_t shift) noexcept; //!< access arena
-            void displayInfo(const size_t indent) const;
+            void displayInfo(const size_t indent)          const; //!< display Statistics
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Notes);

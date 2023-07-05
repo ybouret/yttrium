@@ -13,15 +13,48 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    // Building Singleton for any class
+    /**
+     assuming that class have
+     - a 'const char * const CallSign'
+     - 'AtExit::Longevity  LifeTime'
+     */
+    //
+    //
+    //__________________________________________________________________________
     template <typename T>
     class Singleton : public Concurrent::Singulet
     {
     public:
-        static Concurrent::Mutex Access;
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        static Concurrent::Mutex Access; //!< static class level mutex
 
-        inline virtual const char *      callSign() const noexcept { return T::CallSign; }
-        inline virtual AtExit::Longevity lifeTime() const noexcept { return T::LifeTime; }
-        
+        //______________________________________________________________________
+        //
+        //
+        // Interface
+        //
+        //______________________________________________________________________
+        inline virtual const char *      callSign() const noexcept { return T::CallSign; } //!< forward CallSign
+        inline virtual AtExit::Longevity lifeTime() const noexcept { return T::LifeTime; } //!< forward LifeTime
+
+        //______________________________________________________________________
+        //
+        //! return or create Instance
+        /**
+         - register destruction upon first call
+         - create if not
+         */
+        //______________________________________________________________________
         static inline T & Instance()
         {
             Y_LOCK(Access);
@@ -30,20 +63,32 @@ namespace Yttrium
                 Y_LOCK(Access);
                 if(Register)
                 {
-                    AtExit::Register(Quit,0, T::LifeTime);
+                    CheckLifeTime(T::CallSign,T::LifeTime);
+                    AtExit::Register(Quit, 0, T::LifeTime);
                     Register = false;
                 }
 
-                Instance_ = new ( Memory::OutOfReach::Zero(Instance__,Required) ) T();
+                return *(Instance_ = new ( Memory::OutOfReach::Zero(Instance__,Required) ) T());
             }
+            else
+                return *Instance_;
+        }
 
-            assert(0!=Instance_);
+        //______________________________________________________________________
+        //
+        //! return checked existing Instance
+        //______________________________________________________________________
+        static inline T &Location() noexcept
+        {
+            CheckInstance(T::CallSign,Instance_);
+            assert(Instance_);
             return *Instance_;
         }
 
+
     protected:
-        inline explicit Singleton() noexcept : Concurrent::Singulet() {}
-        inline virtual ~Singleton() noexcept {}
+        inline explicit Singleton() noexcept : Concurrent::Singulet() {} //!< setup
+        inline virtual ~Singleton() noexcept {}                          //!< cleanup
 
 
     private:
