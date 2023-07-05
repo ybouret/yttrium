@@ -69,7 +69,8 @@ namespace Yttrium
                 best = curr;
                 goto FOUND;
             }
-
+            return 0;
+            
         FOUND:
             // initialize first length
             size_t blen  = best->size;
@@ -86,11 +87,11 @@ namespace Yttrium
             static const size_t CutThreshold = 2 * sizeof(Block);
             const size_t        optBlockSize = BlockSizeFor(bs); assert(optBlockSize>0); assert( 0 == (optBlockSize%sizeof(Block)) );
             const size_t        optEmptySize = blen - optBlockSize;
-            std::cerr << "bs=" << bs << " -> " << optBlockSize << " in " << blen << " => empty=" << optEmptySize << "/cut=" << CutThreshold << std::endl;
+            //std::cerr << "bs=" << bs << " -> " << optBlockSize << " in " << blen << " => empty=" << optEmptySize << "/cut=" << CutThreshold << std::endl;
 
             if( optEmptySize>=CutThreshold)
             {
-                std::cerr << "=> Cut!" << std::endl;
+                //std::cerr << "=> Cut!" << std::endl;
                 const size_t optBlocks = optBlockSize / sizeof(Block); assert(optBlocks>0);
                 Block *gate = &best[1+optBlocks];
                 Block *next = best->next;
