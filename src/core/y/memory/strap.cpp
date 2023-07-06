@@ -21,6 +21,15 @@ namespace Yttrium
             len_t  size;
         };
 
+        static inline void UpdateSizeOf(Block *self) noexcept
+        {
+            assert(0!=self);
+            assert(0!=self->next);
+            assert(self->next>self);
+            self->size = static_cast<size_t>(self->next - (self+1)) * sizeof(Block);
+        }
+
+
 
         Strap:: Strap(void *addr, const size_t size) noexcept :
         next(0),
@@ -35,14 +44,14 @@ namespace Yttrium
             head = static_cast<Block *>(addr)+1;
             tail = &head[numBlocks-1];
 
-            head->next = tail;
-            head->prev = 0;
-            head->used = 0;    // means free
-            head->size = (numBlocks-2) * sizeof(Block);
+            head->next = tail;   // linking
+            head->prev = 0;      // sentinel
+            head->used = 0;      // means free
+            head->size = (numBlocks-2) * sizeof(Block); // initial full capacity
 
-            tail->prev = head;
-            tail->next = 0 ;
-            tail->used = this; // means used
+            tail->prev = head; // linking
+            tail->next = 0 ;   // sentinel
+            tail->used = this; // means always used
             tail->size = 0;    // and no length
         }
 
@@ -100,7 +109,8 @@ namespace Yttrium
                 best->next  = gate;
                 next->prev  = gate;
                 gate->used  = 0;
-                gate->size  = (gate->next - (gate+1)) * sizeof(Block);
+                UpdateSizeOf(gate);
+                //gate->size  = (gate->next - (gate+1)) * sizeof(Block);
                 best->size  = optBlockSize;
                 assert(best->size+sizeof(Block)+gate->size==blen);
             }
@@ -124,15 +134,65 @@ namespace Yttrium
             std::cerr << '|' << std::endl;
         }
 
-        void Strap:: Release(void *addr) noexcept
+        void Strap:: Release(void *blockAddr) noexcept
         {
-            assert(NULL!=addr);
-            Block *block = static_cast<Block *>(addr)-1;
+            static const unsigned Solo  = 0x00;
+            static const unsigned Next  = 0x01;
+            static const unsigned Prev  = 0x02;
+            static const unsigned Both  = Next|Prev;
+
+            assert(0!=blockAddr);
+            Block *block = static_cast<Block *>(blockAddr)-1;
             assert(0!=block->used);
             assert(0!=block->prev || 0!=block->next);
             assert(block->size>0);
             assert( 0 == (block->size%sizeof(Block)) );
-            
+            assert( 0 != block->next);
+
+            //std::cerr << "-- releasing " << block->size << std::endl;
+            Strap *strap = block->used;
+
+            unsigned flag  = Solo;
+            Block   *prev  = block->prev; if(prev && !(prev->used)) flag |= Prev;
+            Block   *next  = block->next; if(!(next->used))         flag |= Next;
+
+
+            switch(flag)
+            {
+                case Solo:
+                    block->used = 0;
+                    break;
+
+                case Prev:
+                    prev->next = next;
+                    next->prev = prev;
+                    UpdateSizeOf(prev);
+                    break;
+
+                case Next: {
+                    assert(next!=strap->tail);
+                    assert(0!=next->next);
+                    Block *after = next->next;
+                    block->next = after;
+                    after->prev = block;
+                    block->used = 0;
+                    UpdateSizeOf(block);
+                } break;
+
+
+                case Both: {
+                    assert(next!=strap->tail);
+                    assert(0!=next->next);
+                    Block *after = next->next;
+                    prev->next   = after;
+                    after->prev  = prev;
+                    UpdateSizeOf(prev);
+                }
+
+            }
+
+
+            strap->displayInfo(0);
         }
 
 

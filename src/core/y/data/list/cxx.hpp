@@ -5,12 +5,13 @@
 #define Y_Data_List_Cxx_Included 1
 
 #include "y/data/list.hpp"
+#include "y/type/releasable.hpp"
 
 namespace Yttrium
 {
 
     template <typename NODE>
-    class CxxListOf : public ListOf<NODE>
+    class CxxListOf : public ListOf<NODE>, public Releasable
     {
     public:
         typedef ListOf<NODE> ListType;
@@ -24,10 +25,10 @@ namespace Yttrium
 
         virtual ~CxxListOf() noexcept
         {
-            Release();
+            release();
         }
 
-        virtual void Release() noexcept
+        virtual void release() noexcept
         {
             while(size>0) delete popTail();
         }

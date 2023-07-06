@@ -40,6 +40,21 @@ namespace
         }
     }
 
+    template <typename LIST> inline
+    void alea_shuffle(LIST &L)
+    {
+        LIST temp;
+        while(L.size)
+        {
+            if( alea() > 0.5 )
+                temp.pushTail( L.popTail() );
+            else
+                temp.pushHead( L.popTail() );
+        }
+        temp.swapWith(L);
+    }
+
+
 }
 
 #endif

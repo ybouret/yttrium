@@ -6,24 +6,84 @@
 
 using namespace Yttrium;
 
+namespace
+{
+    class block
+    {
+    public:
+        block(void *userAddr, const size_t userSize) noexcept :
+        next(0),
+        prev(0),
+        addr(userAddr),
+        size(userSize)
+        {
+        }
+
+        ~block() noexcept
+        {
+        }
+
+        block *next, *prev;
+        void        *addr;
+        const size_t size;
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(block);
+    };
+
+    static inline
+    void fill(ListOf<block> &blocks, Memory::Strap *strap)
+    {
+        while(true)
+        {
+            size_t blockSize = alea_leq(100);
+            void  *blockAddr = strap->acquire(blockSize);
+            if(!blockAddr) break;
+
+            blocks.pushTail( new block(blockAddr,blockSize) );
+            strap->displayInfo(0);
+        }
+    }
+
+}
+
+
+
 Y_UTEST(memory_strap)
 {
 
     alea_seed();
     
-    void          *wksp[64];
+    void          *wksp[256];
     Memory::Strap *strap = new (wksp) Memory::Strap(wksp,sizeof(wksp));
     strap->displayInfo(0);
 
-    while(true)
-    {
-        size_t blockSize = alea_leq(100);
-        void  *blockAddr = strap->acquire(blockSize);
-        if(!blockAddr) break;
+    CxxListOf<block> blocks;
+    fill(blocks,strap);
 
-        std::cerr << blockSize << " @" << blockAddr << std::endl;
-        strap->displayInfo(0);
+
+    for(size_t iter=0;iter<16;++iter)
+    {
+        alea_shuffle(blocks);
+        const size_t half = blocks.size/2;
+        while(blocks.size>half)
+        {
+            block *b = blocks.popTail();
+            Memory::Strap::Release(b->addr);
+            delete b;
+        }
+
+        fill(blocks,strap);
     }
+
+    while(blocks.size)
+    {
+        block *b = blocks.popTail();
+        Memory::Strap::Release(b->addr);
+        delete b;
+    }
+
+
 
 
 

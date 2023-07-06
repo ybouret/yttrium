@@ -24,7 +24,8 @@ namespace Yttrium
             static size_t BlockSizeFor(const size_t blockSize) noexcept;
             
             void *acquire(size_t &blockSize) noexcept;
-            static void Release(void *addr) noexcept;
+
+            static void Release(void *blockAddr) noexcept;
 
             void displayInfo(size_t indent) const;
 
