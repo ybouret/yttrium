@@ -61,6 +61,14 @@ namespace Yttrium
         {
         }
 
+        size_t Strap:: shift__() const noexcept
+        {
+            const size_t blocks = tail-head+2;
+            return blocks*sizeof(Block);
+        }
+
+
+
         size_t Strap:: BlockSizeFor(const size_t blockSize) noexcept
         {
             return blockSize <= sizeof(Block) ? sizeof(Block) : Y_ALIGN_TO(Block,blockSize);
@@ -75,6 +83,7 @@ namespace Yttrium
         }
 
 
+        
 
         void * Strap:: acquire(size_t &blockSize) noexcept
         {

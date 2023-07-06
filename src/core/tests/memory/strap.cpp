@@ -58,6 +58,9 @@ Y_UTEST(memory_strap)
     Memory::Strap *strap = new (wksp) Memory::Strap(wksp,sizeof(wksp));
     strap->displayInfo(0);
 
+    std::cerr << "bytes = " << strap->shift__() << " / " << sizeof(wkps) << std::endl;
+    
+
     CxxListOf<block> blocks;
     fill(blocks,strap);
 

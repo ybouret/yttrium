@@ -17,24 +17,33 @@ namespace Yttrium
         typedef ListOf<NODE> ListType;
         using ListType::size;
         using ListType::popTail;
+        using ListType::pushTail;
 
-        explicit CxxListOf() noexcept : ListOf<NODE>()
+        explicit CxxListOf() noexcept : ListType(), Releasable() {          }
+        virtual ~CxxListOf() noexcept { release(); }
+        CxxListOf( const CxxListOf &other ) : ListType(), Releasable()
         {
-
+            duplicate_(other);
         }
 
-        virtual ~CxxListOf() noexcept
-        {
-            release();
-        }
-
-        virtual void release() noexcept
-        {
-            while(size>0) delete popTail();
-        }
+        virtual void release() noexcept { release_(); }
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(CxxListOf);
+        Y_DISABLE_ASSIGN(CxxListOf);
+        inline void release_() noexcept { while(size>0) delete popTail(); }
+        inline void duplicate_(const ListType &other) noexcept
+        {
+            try
+            {
+                for(const NODE *node=other.head;node;node=node->next)
+                    pushBack( new NODE(*node) );
+            }
+            catch(...)
+            {
+                release_();
+                throw;
+            }
+        }
     };
 
 }

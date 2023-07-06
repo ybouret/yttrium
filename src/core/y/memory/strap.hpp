@@ -1,11 +1,9 @@
-
 //! \file
 
 #ifndef Y_Memory_Strap_Included
 #define Y_Memory_Strap_Included 1
 
 #include "y/calculus/ilog2.hpp"
-#include "y/type/ints.hpp"
 
 namespace Yttrium
 {
@@ -21,14 +19,16 @@ namespace Yttrium
             Strap(void *addr, const size_t size) noexcept;
             ~Strap() noexcept;
 
-            static size_t BlockSizeFor(const size_t blockSize) noexcept;
-            
-            void *acquire(size_t &blockSize) noexcept;
 
-            static void   Release(void *blockAddr) noexcept;
+            void *        acquire(size_t &blockSize) noexcept;
+            static void   Release(void *  blockAddr) noexcept;
+            size_t        shift__() const noexcept;
+
+            static size_t BlockSizeFor(const size_t blockSize) noexcept;
             static size_t ShiftToHold(const size_t blockSize);
 
-            void displayInfo(size_t indent) const;
+
+            void   displayInfo(size_t indent) const;
 
             Strap *next;
             Strap *prev;
