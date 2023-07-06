@@ -1,6 +1,8 @@
 #include "y/memory/strap.hpp"
 #include "y/check/static.hpp"
 #include "y/calculus/align.hpp"
+#include "y/calculus/base2.hpp"
+#include "y/system/exception.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -63,6 +65,15 @@ namespace Yttrium
         {
             return blockSize <= sizeof(Block) ? sizeof(Block) : Y_ALIGN_TO(Block,blockSize);
         }
+
+        size_t Strap:: ShiftToHold(const size_t blockSize)
+        {
+            size_t bs = BlockSizeFor(blockSize);
+            bs += 3*sizeof(Block); // Strap+Head+Tail
+            if(bs>Base2<size_t>::MaxPowerOfTwo) throw Specific::Exception("Memory::Strap","blockSize exceeds capacity");
+            return Base2<size_t>::Log( NextPowerOfTwo(bs) );
+        }
+
 
 
         void * Strap:: acquire(size_t &blockSize) noexcept

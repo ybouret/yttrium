@@ -25,7 +25,8 @@ namespace Yttrium
             
             void *acquire(size_t &blockSize) noexcept;
 
-            static void Release(void *blockAddr) noexcept;
+            static void   Release(void *blockAddr) noexcept;
+            static size_t ShiftToHold(const size_t blockSize);
 
             void displayInfo(size_t indent) const;
 
