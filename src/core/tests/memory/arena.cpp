@@ -92,10 +92,12 @@ Y_UTEST(memory_arena)
     selfArena.displayInfo(0);
 
 
-    for(size_t blockSize = 8; blockSize <= 256; blockSize += 8)
+    for(size_t blockSize = 4; blockSize <= 512; blockSize += 4)
     {
         Memory::Arena arena(blockSize,album);
         std::cerr << "Arena[" << std::setw(4) << blockSize << "] : pageSize=" << std::setw(6) << arena.dataPages.bytes <<  " | BPP = " << arena.numBlocks << std::endl;
+        if( arena.dataPages.bytes > Memory::Page::DefaultBytes)
+            break;
     }
 
 }

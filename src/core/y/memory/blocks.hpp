@@ -15,7 +15,7 @@ namespace Yttrium
         //
         //
         //
-        //! Open Hash Table of list of Arenas
+        //! Open Hash Table of Arenas
         //
         //
         //______________________________________________________________________

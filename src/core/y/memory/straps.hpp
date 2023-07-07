@@ -53,9 +53,9 @@ namespace Yttrium
 
             
         private:
-            typedef void * (Straps:: *Proc)(size_t &);
+            typedef void * (Straps:: *Acquire)(size_t &);
 
-            Proc     build;
+            Acquire  build;
             Strap   *cache;
             Strap   *empty;
             unsigned eshft;

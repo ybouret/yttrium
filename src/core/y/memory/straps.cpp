@@ -44,12 +44,13 @@ namespace Yttrium
             return ((*this).*build)(blockSize);
         }
 
+        //! get minimal shift to acquire blockSize in a new strap
         static inline unsigned ShiftFor(const size_t blockSize)
         {
             return Max(Strap::ShiftToHold(blockSize),Page::DefaultShift);
         }
 
-
+        
         static inline Strap *CreateStrapFor(const size_t blockSize, Album &album)
         {
             const unsigned shift = ShiftFor(blockSize);
