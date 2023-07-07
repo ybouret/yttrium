@@ -42,6 +42,7 @@ namespace
 
             blocks.pushTail( new block(blockAddr,blockSize) );
             strap->displayInfo(0);
+            Y_ASSERT( Memory::OutOfReach::Are0(blocks.tail->addr,blocks.tail->size));
         }
     }
 
@@ -58,8 +59,7 @@ Y_UTEST(memory_strap)
     Memory::Strap *strap = new (wksp) Memory::Strap(wksp,sizeof(wksp));
     strap->displayInfo(0);
 
-    std::cerr << "bytes = " << strap->shift__() << " / " << sizeof(wksp) << std::endl;
-    
+
 
     CxxListOf<block> blocks;
     fill(blocks,strap);
@@ -87,6 +87,7 @@ Y_UTEST(memory_strap)
     }
 
 
+    std::cerr << "bytes = " << strap->shift__() << " / " << iLog2<sizeof(wksp)>::Value << std::endl;
 
 
 

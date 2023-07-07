@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <cstring>
 
 namespace Yttrium
 {
@@ -31,8 +32,8 @@ namespace Yttrium
             self->size = static_cast<size_t>(self->next - (self+1)) * sizeof(Block);
         }
 
-
-
+        const size_t Strap:: MinBytes = MinBlockCount * sizeof(Block);
+        
         Strap:: Strap(void *addr, const size_t size) noexcept :
         next(0),
         prev(0),
@@ -40,17 +41,27 @@ namespace Yttrium
         tail(0)
         {
             Y_STATIC_CHECK(sizeof(Strap)==sizeof(Block),MismatchSizes);
-            assert(size>=4*sizeof(Block));
+            assert(size>=MinBlockCount*sizeof(Block));
+            assert(IsPowerOfTwo(size));
             
-            const size_t numBlocks = (size - sizeof(Block)) / sizeof(Block); assert(numBlocks>=3);
-            head = static_cast<Block *>(addr)+1;
-            tail = &head[numBlocks-1];
+            //------------------------------------------------------------------
+            // available blocks after header = this
+            //------------------------------------------------------------------
+            const size_t numBlocks = (size - sizeof(Block)) / sizeof(Block); assert(numBlocks>=MinBlockCount-1);
+            head                   = static_cast<Block *>(addr)+1;
+            tail                   = &head[numBlocks-1];
 
+            //------------------------------------------------------------------
+            // prepare head
+            //------------------------------------------------------------------
             head->next = tail;   // linking
             head->prev = 0;      // sentinel
             head->used = 0;      // means free
             head->size = (numBlocks-2) * sizeof(Block); // initial full capacity
 
+            //------------------------------------------------------------------
+            // prepare tail
+            //------------------------------------------------------------------
             tail->prev = head; // linking
             tail->next = 0 ;   // sentinel
             tail->used = this; // means always used
@@ -63,8 +74,18 @@ namespace Yttrium
 
         size_t Strap:: shift__() const noexcept
         {
-            const size_t blocks = tail-head+2;
-            return blocks*sizeof(Block);
+            assert(0!=head);
+            assert(0!=tail);
+            assert(tail>head);
+            const size_t blocks = static_cast<size_t>(tail-head)+2; assert(blocks>=MinBlockCount);
+            unsigned     shift  = MinBlockShift;
+            size_t       count  = MinBlockCount;
+            while(count<blocks)
+            {
+                ++shift;
+                count <<= 1;
+            }
+            return shift + iLog2Of<Block>::Value;
         }
 
 
@@ -98,10 +119,12 @@ namespace Yttrium
                 best = curr;
                 goto FOUND;
             }
-            return 0;
+            return 0; // no free, matching block
             
         FOUND:
-            // initialize first length
+            //------------------------------------------------------------------
+            // look for a better block
+            //------------------------------------------------------------------
             size_t blen  = best->size;
             for(Block *curr=best->next;curr;curr=curr->next)
             {
@@ -113,14 +136,15 @@ namespace Yttrium
                 blen = temp;
             }
 
+            //------------------------------------------------------------------
+            // do we need to cut after it ?
+            //------------------------------------------------------------------
             static const size_t CutThreshold = 2 * sizeof(Block);
             const size_t        optBlockSize = BlockSizeFor(bs); assert(optBlockSize>0); assert( 0 == (optBlockSize%sizeof(Block)) );
             const size_t        optEmptySize = blen - optBlockSize;
-            //std::cerr << "bs=" << bs << " -> " << optBlockSize << " in " << blen << " => empty=" << optEmptySize << "/cut=" << CutThreshold << std::endl;
 
             if( optEmptySize>=CutThreshold)
             {
-                //std::cerr << "=> Cut!" << std::endl;
                 const size_t optBlocks = optBlockSize / sizeof(Block); assert(optBlocks>0);
                 Block *gate = &best[1+optBlocks];
                 Block *next = best->next;
@@ -130,14 +154,16 @@ namespace Yttrium
                 next->prev  = gate;
                 gate->used  = 0;
                 UpdateSizeOf(gate);
-                //gate->size  = (gate->next - (gate+1)) * sizeof(Block);
                 best->size  = optBlockSize;
                 assert(best->size+sizeof(Block)+gate->size==blen);
             }
 
+            //------------------------------------------------------------------
+            // update status
+            //------------------------------------------------------------------
             blockSize  = best->size;
             best->used = this;
-            return best+1;
+            return memset(best+1,0,blockSize);
         }
 
         void Strap:: displayInfo(size_t indent) const
@@ -154,42 +180,58 @@ namespace Yttrium
             std::cerr << '|' << std::endl;
         }
 
-        void Strap:: Release(void *blockAddr) noexcept
+        Strap *Strap:: Release(void *blockAddr) noexcept
         {
+            //------------------------------------------------------------------
+            // local definitions
+            //------------------------------------------------------------------
             static const unsigned Solo  = 0x00;
             static const unsigned Next  = 0x01;
             static const unsigned Prev  = 0x02;
             static const unsigned Both  = Next|Prev;
 
+            //------------------------------------------------------------------
+            // get parent block, with sanity check
+            //------------------------------------------------------------------
             assert(0!=blockAddr);
-            Block *block = static_cast<Block *>(blockAddr)-1;
-            assert(0!=block->used);
-            assert(0!=block->prev || 0!=block->next);
-            assert(block->size>0);
-            assert( 0 == (block->size%sizeof(Block)) );
-            assert( 0 != block->next);
+            Block *block = static_cast<Block *>(blockAddr)-1; // parent address
+            assert(0!=block->used);                           // strap address
+            assert(block->size>0);                            // current size
+            assert( 0 == (block->size%sizeof(Block)) );       // sanity check
+            assert( 0 != block->next);                        // tail is never used
 
-            //std::cerr << "-- releasing " << block->size << std::endl;
-            Strap *strap = block->used;
+            //------------------------------------------------------------------
+            // get strap and compute fusion flags
+            //------------------------------------------------------------------
+            Strap   *strap = block->used;
+            unsigned flags = Solo;
+            Block   *prev  = block->prev; if(prev && !(prev->used)) flags |= Prev;
+            Block   *next  = block->next; if(!(next->used))         flags |= Next;
 
-            unsigned flag  = Solo;
-            Block   *prev  = block->prev; if(prev && !(prev->used)) flag |= Prev;
-            Block   *next  = block->next; if(!(next->used))         flag |= Next;
 
-
-            switch(flag)
+            switch(flags)
             {
+
                 case Solo:
+                    //----------------------------------------------------------
+                    // no fusion
+                    //----------------------------------------------------------
                     block->used = 0;
                     break;
 
                 case Prev:
+                    //----------------------------------------------------------
+                    // fusion with previous block
+                    //----------------------------------------------------------
                     prev->next = next;
                     next->prev = prev;
                     UpdateSizeOf(prev);
                     break;
 
                 case Next: {
+                    //----------------------------------------------------------
+                    // fusion with next block
+                    //----------------------------------------------------------
                     assert(next!=strap->tail);
                     assert(0!=next->next);
                     Block *after = next->next;
@@ -213,6 +255,7 @@ namespace Yttrium
 
 
             strap->displayInfo(0);
+            return strap;
         }
 
 

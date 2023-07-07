@@ -277,7 +277,7 @@ namespace Yttrium
         //! target = target+source, source=0
         //______________________________________________________________________
         template <typename LIST> static inline
-        void MergeBack(LIST &target, LIST &source) noexcept
+        void MergeTail(LIST &target, LIST &source) noexcept
         {
             if(source.size<=0) return;
 
@@ -298,6 +298,9 @@ namespace Yttrium
                 Coerce(source.size)  = 0;
             }
         }
+
+
+        
 
         //______________________________________________________________________
         //
@@ -379,8 +382,8 @@ namespace Yttrium
                 }
             }
             assert(0==lhs.size||0==rhs.size);
-            MergeBack(target,lhs);
-            MergeBack(target,rhs);
+            MergeTail(target,lhs);
+            MergeTail(target,rhs);
         }
 
 

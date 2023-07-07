@@ -86,6 +86,19 @@ namespace Yttrium
             return ListOps:: MoveToFront(*this,node);
         }
 
+        //! merge content at tail
+        inline void mergeTail(ListOf &other) noexcept
+        {
+            ListOps:: MergeTail(*this,other);
+        }
+
+        //! merge content at tail
+        inline void mergeHead(ListOf &other) noexcept
+        {
+            ListOps:: MergeTail(other,*this);
+            swapWith(other);
+        }
+
 
         //______________________________________________________________________
         //

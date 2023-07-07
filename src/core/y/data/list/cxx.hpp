@@ -10,23 +10,52 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! C++ type list, assuming NODE is a C++ (copiable) class
+    //
+    //
+    //__________________________________________________________________________
     template <typename NODE>
     class CxxListOf : public ListOf<NODE>, public Releasable
     {
     public:
-        typedef ListOf<NODE> ListType;
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        typedef ListOf<NODE> ListType;   //!< alias
         using ListType::size;
         using ListType::popTail;
         using ListType::pushTail;
 
-        explicit CxxListOf() noexcept : ListType(), Releasable() {          }
-        virtual ~CxxListOf() noexcept { release(); }
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        explicit CxxListOf() noexcept : ListType(), Releasable() { } //!< setup
+        virtual ~CxxListOf() noexcept { release(); }                 //!< cleanup
+
+        //! copy using NODE copy constructor
         CxxListOf( const CxxListOf &other ) : ListType(), Releasable()
         {
             duplicate_(other);
         }
 
-        virtual void release() noexcept { release_(); }
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        virtual void release() noexcept { release_(); } //!< delete all nodes
+
 
     private:
         Y_DISABLE_ASSIGN(CxxListOf);
