@@ -31,7 +31,7 @@ Y_UTEST(memory_straps)
             straps.release(p);
         }
 
-        if(false)
+        if(true)
         {
             static const size_t NB = 1024;
             block_t             blocks[NB];
