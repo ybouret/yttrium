@@ -32,7 +32,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const uint8_t      MinBlocksPerChunk = 16;  //!< alias for consistency
+            static const uint8_t      MinBlocksPerChunk =  15; //!< alias for consistency
             static const uint8_t      MaxBlocksPerChunk = 255; //!< alias for computations
             static const char * const CallSign;                //!< "Memory::Arena"
 

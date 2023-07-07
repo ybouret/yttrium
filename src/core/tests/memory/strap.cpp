@@ -3,6 +3,8 @@
 #include "y/utest/run.hpp"
 #include "../alea.hpp"
 #include "y/data/list/cxx.hpp"
+#include "y/memory/pages.hpp"
+#include "y/calculus/align.hpp"
 
 using namespace Yttrium;
 
@@ -36,7 +38,7 @@ namespace
     {
         while(true)
         {
-            size_t blockSize = alea_leq(100);
+            size_t blockSize = alea_leq(200);
             void  *blockAddr = strap->acquire(blockSize);
             if(!blockAddr) break;
 
@@ -54,8 +56,8 @@ Y_UTEST(memory_strap)
 {
 
     alea_seed();
-    
-    void          *wksp[256];
+
+    void          *wksp[ Memory::Page::DefaultBytes / sizeof(void*) ];
     Memory::Strap *strap = new (wksp) Memory::Strap(wksp,sizeof(wksp));
     strap->displayInfo(0);
 
@@ -88,6 +90,7 @@ Y_UTEST(memory_strap)
 
 
     std::cerr << "bytes = " << strap->myShift() << " / " << iLog2<sizeof(wksp)>::Value << std::endl;
+
 
 
 
