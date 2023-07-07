@@ -23,8 +23,8 @@ namespace Yttrium
         //______________________________________________________________________
         struct Page
         {
-            static const size_t DefaultBytes = 4096;                       //!< most common page size
-            static const size_t DefaultShift = iLog2<DefaultBytes>::Value; //!< Log2(DefaultBytes)
+            static const size_t   DefaultBytes = 4096;                       //!< most common page size
+            static const unsigned DefaultShift = iLog2<DefaultBytes>::Value; //!< Log2(DefaultBytes)
             static size_t       QueryOsBytes() noexcept;                   //!< GetPageSize() from os
 
             Page *next; //!< for List

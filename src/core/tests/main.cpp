@@ -20,6 +20,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(memory_guild);
     Y_UTEST(memory_notes);
     Y_UTEST(memory_strap);
+    Y_UTEST(memory_straps);
 
     Y_UTEST(type_ints);
     Y_UTEST(type_hash32);

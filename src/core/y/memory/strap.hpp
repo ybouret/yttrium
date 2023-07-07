@@ -30,9 +30,10 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const size_t   MinBlockCount = 4;                           //!< strap+head+data+tail
-            static const unsigned MinBlockShift = iLog2<MinBlockCount>::Value; //!< helper for shift__()
-            static const size_t   MinBytes;                                    //!< MinBlockCount * sizeof(Strap)
+            static const char * const CallSign;                                    //!< "Memory::Strap"
+            static const size_t       MinBlockCount = 4;                           //!< strap+head+data+tail
+            static const unsigned     MinBlockShift = iLog2<MinBlockCount>::Value; //!< helper for shift__()
+            static const size_t       MinBytes;                                    //!< MinBlockCount * sizeof(Strap)
 
 
             //__________________________________________________________________
@@ -75,7 +76,7 @@ namespace Yttrium
             //
             //! compute original blockSize
             //__________________________________________________________________
-            size_t         shift__() const noexcept;
+            unsigned       shift__() const noexcept;
 
             //__________________________________________________________________
             //
@@ -88,7 +89,7 @@ namespace Yttrium
             //
             //! 2^ShiftToHold is the page size required to hold blockSize
             //__________________________________________________________________
-            static size_t ShiftToHold(const size_t blockSize);
+            static unsigned ShiftToHold(const size_t blockSize);
 
             //__________________________________________________________________
             //

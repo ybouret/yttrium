@@ -34,6 +34,7 @@ add_test(memory:blocks test-core memory_blocks)
 add_test(memory:guild  test-core memory_guild)
 add_test(memory:notes  test-core memory_notes)
 add_test(memory:strap  test-core memory_strap)
+add_test(memory:straps test-core memory_straps)
 
 #type
 add_test(type:ints test-core type_ints)

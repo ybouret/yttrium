@@ -32,8 +32,9 @@ namespace Yttrium
             self->size = static_cast<size_t>(self->next - (self+1)) * sizeof(Block);
         }
 
-        const size_t Strap:: MinBytes = MinBlockCount * sizeof(Block);
-        
+        const size_t       Strap:: MinBytes = MinBlockCount * sizeof(Block);
+        const char * const Strap:: CallSign = "Memory::Strap" ;
+
         Strap:: Strap(void *addr, const size_t size) noexcept :
         next(0),
         prev(0),
@@ -70,9 +71,30 @@ namespace Yttrium
 
         Strap:: ~Strap() noexcept
         {
+            assert(head);
+            assert(tail);
+            bool   leaking = false;
+            size_t count   = 0;
+            for(const Block *block=head;block!=tail;block=block->next)
+            {
+                if(block->used)
+                {
+                    ++count;
+                    if(!leaking)
+                    {
+                        std::cerr << "*** [" << CallSign << "] leaking |";
+                        leaking = true;
+                    }
+                    std::cerr << block->size << "|";
+                }
+            }
+            if(leaking)
+            {
+                std::cerr << "#=" << count << std::endl;
+            }
         }
 
-        size_t Strap:: shift__() const noexcept
+        unsigned Strap:: shift__() const noexcept
         {
             assert(0!=head);
             assert(0!=tail);
@@ -95,11 +117,11 @@ namespace Yttrium
             return blockSize <= sizeof(Block) ? sizeof(Block) : Y_ALIGN_TO(Block,blockSize);
         }
 
-        size_t Strap:: ShiftToHold(const size_t blockSize)
+        unsigned Strap:: ShiftToHold(const size_t blockSize)
         {
             size_t bs = BlockSizeFor(blockSize);
             bs += 3*sizeof(Block); // Strap+Head+Tail
-            if(bs>Base2<size_t>::MaxPowerOfTwo) throw Specific::Exception("Memory::Strap","blockSize exceeds capacity");
+            if(bs>Base2<size_t>::MaxPowerOfTwo) throw Specific::Exception(CallSign,"blockSize exceeds capacity");
             return Base2<size_t>::Log( NextPowerOfTwo(bs) );
         }
 
@@ -115,7 +137,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             for(Block *curr=head;curr;curr=curr->next)
             {
-                if(curr->used || curr->size<bs) continue;
+                if(0!=curr->used || curr->size<bs) continue;
                 best = curr;
                 goto FOUND;
             }
@@ -125,6 +147,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             // look for a better block
             //------------------------------------------------------------------
+            assert(0!=best);
             size_t blen  = best->size;
             for(Block *curr=best->next;curr;curr=curr->next)
             {

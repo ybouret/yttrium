@@ -12,20 +12,48 @@ namespace Yttrium
     namespace Memory
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Straps of Block
+        //
+        //
+        //______________________________________________________________________
         class Straps : public ListOf<Strap>
         {
         public:
-            explicit Straps(Album &userAlbum) noexcept;
-            virtual ~Straps() noexcept;
-            
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< "Memory::Straps"
+            typedef void * (Straps:: *Proc)(size_t &);
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Straps(Album &userAlbum) noexcept; //!< setup with persistent Album
+            virtual ~Straps()                 noexcept; //!< cleanup
+
+            void *acquire(size_t &blockSize);
+
 
             
         private:
+            Proc    hProc;
             Strap  *cache;
             Strap  *empty;
             Album  &album;
-            
+
             Y_DISABLE_COPY_AND_ASSIGN(Straps);
+            void * acquireIni(size_t &);
+            void * acquireAny(size_t &);
 
         };
     }
