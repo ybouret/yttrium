@@ -57,6 +57,7 @@ namespace Yttrium
         //______________________________________________________________________
         static inline T & Instance()
         {
+            void * Instance__[ Y_WORDS_FOR(T) ];
             Y_LOCK(Access);
             if(0 == Instance_)
             {
@@ -68,7 +69,7 @@ namespace Yttrium
                     Register = false;
                 }
 
-                return *(Instance_ = new ( Memory::OutOfReach::Zero(Instance__,Required) ) T());
+                return *(Instance_ = new ( Memory::OutOfReach::Zero(Instance__,sizeof(Instance__)) ) T());
             }
             else
                 return *Instance_;
@@ -95,14 +96,14 @@ namespace Yttrium
         Y_DISABLE_COPY_AND_ASSIGN(Singleton);
 
         static T    *       Instance_;
-        static void *       Instance__[];
-        static const size_t Required;
+        //static void *       Instance__[];
+        //static const size_t Required;
         static bool         Register;
 
         static inline void  Quit(void*) noexcept {
             if(0!=Instance_) {
                 Instance_->~T();
-                Memory::OutOfReach::Zero(Instance__,Required);
+                //Memory::OutOfReach::Zero(Instance__,Required);
                 Instance_ = 0;
             }
         }
@@ -114,12 +115,13 @@ namespace Yttrium
     template <typename T>
     T * Singleton<T>:: Instance_ = 0;
 
+#if 0
     template <typename T>
     void * Singleton<T>:: Instance__[ Y_WORDS_FOR(T) ];
 
     template <typename T>
     const size_t Singleton<T>:: Required = sizeof(Instance__);
-
+#endif
 
     template <typename T>
     Concurrent::Mutex Singleton<T>:: Access(T::CallSign);
