@@ -48,15 +48,22 @@ namespace Yttrium
             return Max(Strap::ShiftToHold(blockSize),Page::DefaultShift);
         }
 
+
+        static inline Strap *CreateStrapFor(const size_t blockSize, Album &album)
+        {
+            const unsigned shift = ShiftFor(blockSize);
+            Pages         &pages = album[shift];
+            void          *addr  = pages.acquire();
+            return new (addr) Strap(addr,pages.bytes);
+        }
+
         void *Straps:: acquireIni(size_t &blockSize)
         {
             assert(0==cache);
             assert(0==empty);
-            const unsigned shift = ShiftFor(blockSize);                     // first required shift
-            Pages         &pages = album[shift];                            // get pages
-            cache   = pushTail(new Strap( pages.acquire(), pages.bytes ));  // create first strap
-            hProc   = & Straps:: acquireAny;                                // change state
-            void *p = cache->acquire(blockSize);                            // get first block of a new Strap
+            cache   = pushTail(CreateStrapFor(blockSize,album)); // create first strap
+            hProc   = & Straps:: acquireAny;                     // change state
+            void *p = cache->acquire(blockSize);                 // get first block of a new Strap
             assert(0!=p);
             return p;
         }
@@ -153,10 +160,8 @@ namespace Yttrium
             assert(0==p);
             assert(0!=cache);
             {
-                const unsigned shift = ShiftFor(blockSize);                                      // required shift
-                Pages         &pages = album[shift];                                             // get pages
-                cache   = insertByIncreasingAddress(new Strap(pages.acquire(),pages.bytes ));    // create new strap
-                void *p = cache->acquire(blockSize);                                             // get first block of a new Strap
+                cache   = insertByIncreasingAddress(CreateStrapFor(blockSize,album)); // create new strap
+                void *p = cache->acquire(blockSize);                                  // get first block of a new Strap
                 assert(0!=p);
                 assert(cache!=empty);
                 return p;
