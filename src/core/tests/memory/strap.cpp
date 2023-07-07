@@ -87,7 +87,7 @@ Y_UTEST(memory_strap)
     }
 
 
-    std::cerr << "bytes = " << strap->shift__() << " / " << iLog2<sizeof(wksp)>::Value << std::endl;
+    std::cerr << "bytes = " << strap->myShift() << " / " << iLog2<sizeof(wksp)>::Value << std::endl;
 
 
 

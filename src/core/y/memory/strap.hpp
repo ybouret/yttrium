@@ -80,9 +80,9 @@ namespace Yttrium
 
             //__________________________________________________________________
             //
-            //! compute original blockSize
+            //! compute original memory bytes = 2^myShift
             //__________________________________________________________________
-            unsigned       shift__() const noexcept;
+            unsigned       myShift() const noexcept;
 
             //__________________________________________________________________
             //

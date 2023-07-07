@@ -10,17 +10,17 @@ namespace Yttrium
 
         Straps:: ~Straps() noexcept
         {
-            std::cerr << "~Straps()" << std::endl;
             while(size>0)
             {
-                Strap         *strap = popTail();        assert(0!=strap);
-                const unsigned shift = strap->shift__();
+                Strap         *strap = popTail(); assert(0!=strap);
+                const unsigned shift = strap->myShift();
                 assert(0==strap->next);
                 assert(0==strap->prev);
                 album[shift].store( Destructed(strap) );
             }
             cache = 0;
             empty = 0;
+            eshft = 0;
         }
 
 
@@ -28,9 +28,10 @@ namespace Yttrium
 
         Straps:: Straps(Album &userAlbum) noexcept :
         ListOf<Strap>(),
-        hProc( & Straps:: acquireIni ),
+        build( & Straps:: acquireIni ),
         cache( 0 ),
         empty( 0 ),
+        eshft( 0 ),
         album(userAlbum)
         {
             
@@ -39,8 +40,8 @@ namespace Yttrium
 
         void *Straps:: acquire(size_t &blockSize)
         {
-            assert(0!=hProc);
-            return ((*this).*hProc)(blockSize);
+            assert(0!=build);
+            return ((*this).*build)(blockSize);
         }
 
         static inline unsigned ShiftFor(const size_t blockSize)
@@ -62,7 +63,7 @@ namespace Yttrium
             assert(0==cache);
             assert(0==empty);
             cache   = pushTail(CreateStrapFor(blockSize,album)); // create first strap
-            hProc   = & Straps:: acquireAny;                     // change state
+            build   = & Straps:: acquireAny;                     // change state
             void *p = cache->acquire(blockSize);                 // get first block of a new Strap
             assert(0!=p);
             return p;
@@ -170,8 +171,50 @@ namespace Yttrium
         RETURN:
             assert(0!=p);
             assert(0!=cache);
-            if(cache==empty) empty = 0;
+            if(cache==empty)
+            {
+                std::cerr << "cleaning empty!" << std::endl;
+                assert(eshft>0);
+                empty = 0;
+                eshft = 0;
+            }
             return p;
+
+        }
+
+        void  SetupToRelease(Strap * &strap, unsigned  &shift,
+                             Strap * &empty, unsigned  &eshft) noexcept
+        {
+            assert(0!=empty);
+            assert(0!=strap);
+            assert(strap!=empty);
+            if(shift<eshft)
+            {
+                return;
+            }
+            else
+            {
+                if(eshft<shift)
+                {
+                    Swap(strap,empty);
+                    Swap(shift,eshft);
+                    return;
+                }
+                else
+                {
+                    assert(eshft==shift);
+                    if(strap<empty)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        Swap(strap,empty);
+                        Swap(shift,eshft);
+                        return;
+                    }
+                }
+            }
 
         }
 
@@ -179,7 +222,30 @@ namespace Yttrium
         {
             assert(0!=blockAddr);
             Strap *strap = Strap::Release(blockAddr);
-            
+            if(strap->isEmpty())
+            {
+                if(0!=empty)
+                {
+                    assert(eshft>0);           // previously computed
+                    assert(empty->isEmpty());  // impossible
+                    assert(strap!=empty);      // impossible
+
+                    
+                    unsigned shift = strap->myShift();
+                    SetupToRelease(strap,shift,empty,eshft);
+                    assert(shift<eshft||strap<empty);
+                    assert(empty->isEmpty());
+                    assert(empty->myShift() == eshft);
+
+                    album[shift].store( Destructed( pop(strap) ) );
+
+                }
+                else
+                {
+                    empty = strap;
+                    eshft = strap->myShift();
+                }
+            }
         }
 
 

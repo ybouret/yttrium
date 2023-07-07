@@ -101,7 +101,7 @@ namespace Yttrium
         }
 
 
-        unsigned Strap:: shift__() const noexcept
+        unsigned Strap:: myShift() const noexcept
         {
             assert(0!=head);
             assert(0!=tail);

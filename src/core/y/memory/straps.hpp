@@ -43,14 +43,15 @@ namespace Yttrium
 
             void *acquire(size_t &blockSize);
             void  release(void *blockAddr) noexcept;
-            
+
 
             
         private:
-            Proc    hProc;
-            Strap  *cache;
-            Strap  *empty;
-            Album  &album;
+            Proc     build;
+            Strap   *cache;
+            Strap   *empty;
+            unsigned eshft;
+            Album   &album;
 
             Y_DISABLE_COPY_AND_ASSIGN(Straps);
             void * acquireIni(size_t &);
