@@ -52,7 +52,7 @@ namespace Yttrium
                 param(),
                 giant(param),
                 album(*this),
-                mutexes(album, Memory::Page::DefaultBytes)
+                mutexes(album)
                 {
                 }
 

@@ -45,8 +45,8 @@ Y_UTEST(memory_guild)
     typedef ListOf<dNode> dList;
 
     Memory::Album        album;
-    Memory::Guild<iNode> iG(album, Memory::Page::DefaultBytes);
-    Memory::Guild<dNode> dG(album, Memory::Page::DefaultBytes);
+    Memory::Guild<iNode> iG(album);
+    Memory::Guild<dNode> dG(album);
 
     iG.zstore( iG.zombie() );
     dG.zstore( dG.zombie() );

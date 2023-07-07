@@ -53,7 +53,7 @@ namespace Yttrium
         cache( 0              ),
         slots( static_cast<Slot *>(album[ Page::DefaultShift ].acquire()) ),
         which( &Blocks::acquireFirst ),
-        build( sizeof(Arena), album, Page::DefaultBytes )
+        build( sizeof(Arena), album )
         {
             // format slots
             for(size_t i=0;i<nslot;++i)
@@ -66,7 +66,7 @@ namespace Yttrium
             void *blockAddr = build.acquireBlock();
             try
             {
-                return new (blockAddr) Arena(blockSize,album,Page::DefaultBytes);
+                return new (blockAddr) Arena(blockSize,album);
             }
             catch(...)
             {

@@ -12,10 +12,9 @@ namespace Yttrium
         }
 
         DyadicArena:: DyadicArena(const unsigned userShift,
-                                  Album         &userDataPages,
-                                  const size_t   userPageBytes) :
+                                  Album         &userAlbum) :
         Dyad(userShift),
-        Arena(bytes,userDataPages,userPageBytes)
+        Arena(bytes,userAlbum)
         {
 
         }

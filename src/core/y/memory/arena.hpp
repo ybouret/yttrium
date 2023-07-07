@@ -49,12 +49,10 @@ namespace Yttrium
             /**
              \param userBlockSize blockSize>0
              \param userDataPages persistents pages
-             \param userPageBytes target pageBytes
              */
             //__________________________________________________________________
             explicit Arena(const size_t  userBlockSize,
-                           Album        &userDataPages,
-                           const size_t  userPageBytes);
+                           Album        &userDataPages);
 
 
             virtual ~Arena() noexcept; //!< cleanup

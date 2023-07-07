@@ -33,8 +33,7 @@ namespace Yttrium
 
             //! setup with 2^userShift blockSize
             explicit DyadicArena(const unsigned  userShift,
-                                 Album        &userDataPages,
-                                 const size_t  userPageBytes);
+                                 Album          &userAlbum);
 
             //! cleanup
             virtual ~DyadicArena() noexcept;

@@ -33,7 +33,7 @@ namespace Yttrium
             while(built<Number)
             {
                 try {
-                    new ( dyad+built ) DyadicArena(built,album,Page::DefaultBytes);
+                    new ( dyad+built ) DyadicArena(built,album);
                     ++built;
                 }
                 catch(...)

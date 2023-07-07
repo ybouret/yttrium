@@ -33,9 +33,8 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! setup like Arena with sizeof(T)
-            inline explicit Guild(Album        &userDataPages,
-                                  const size_t  userPageBytes) :
-            Arena(sizeof(T),userDataPages,userPageBytes)
+            inline explicit Guild(Album        &userAlbum) :
+            Arena(sizeof(T),userAlbum)
             {
                 assert(blockSize>=sizeof(T));
             }

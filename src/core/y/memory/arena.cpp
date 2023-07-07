@@ -44,8 +44,7 @@ namespace Yttrium
 
 
         Arena:: Arena(const size_t  userBlockSize,
-                      Album        &userDataPages,
-                      const size_t  userPageBytes) :
+                      Album        &userDataPages) :
         ListOf<Chunk>(),
         next(0),
         prev(0),
@@ -55,7 +54,7 @@ namespace Yttrium
         available(0),
         blockSize(userBlockSize),
         numBlocks(0),
-        dataPages( userDataPages[ ComputeShift(blockSize,userPageBytes,Coerce(numBlocks)) ] ),
+        dataPages( userDataPages[ ComputeShift(blockSize,Page::DefaultBytes,Coerce(numBlocks)) ] ),
         addBlocks(numBlocks-1)
         {
 

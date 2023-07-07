@@ -43,7 +43,7 @@ Y_UTEST(memory_arena)
 
     for(size_t blockSize = 1; blockSize <= 64; blockSize += 1)
     {
-        Memory::Arena arena(blockSize,album,pageBytes);
+        Memory::Arena arena(blockSize,album);
 
         arena.releaseBlock( arena.acquireBlock() );
         
@@ -88,7 +88,7 @@ Y_UTEST(memory_arena)
     album.displayInfo(0);
 
     Y_SIZEOF(Memory::Arena);
-    Memory::Arena selfArena(sizeof(Memory::Arena),album,Memory::Page::DefaultBytes);
+    Memory::Arena selfArena(sizeof(Memory::Arena),album);
     selfArena.displayInfo(0);
 
 }
