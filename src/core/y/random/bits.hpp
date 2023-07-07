@@ -3,31 +3,54 @@
 #ifndef Y_Random_Bits_Included
 #define Y_Random_Bits_Included 1
 
-#include "y/config/starting.hpp"
+#include "y/calculus/align.hpp"
 
 namespace Yttrium
 {
     namespace Random
     {
-        template <typename T> class Metrics32;
-        
-        
+
+
+
         //! Random Bits interface
         class Bits
         {
         public:
-            explicit Bits(const uint32_t maxU32) noexcept;
+            template <typename T> class Engine;
+            static const size_t         EngineBytes = 48;
+
+            explicit Bits(const uint32_t umax) noexcept;
             virtual ~Bits() noexcept;
 
-            const uint32_t                 umax;
-            const Metrics32<float>       * const metricsF;
-            const Metrics32<double>      * const metricsD;
-            const Metrics32<long double> * const metricsL;
+            virtual uint32_t next32() noexcept = 0;
 
-            
+            template <typename T> T to() noexcept;
+
+            const Engine<float>       * const F;
+            const Engine<double>      * const D;
+            const Engine<long double> * const L;
+
+            template <typename T>
+            T raw(const uint32_t u) noexcept;
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Bits);
+            void *wkspF[ Y_WORDS_GEQ(48)  ];
+            void *wkspD[ Y_WORDS_GEQ(48)  ];
+            void *wkspL[ Y_WORDS_GEQ(48)  ];
+        };
+
+        class Rand : public Bits
+        {
+        public:
+            explicit Rand() noexcept;
+            virtual ~Rand() noexcept;
+
+            virtual uint32_t next32() noexcept;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Rand);
         };
 
 

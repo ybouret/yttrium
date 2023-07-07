@@ -1,79 +1,27 @@
 #include "y/random/bits.hpp"
-#include <iostream>
-#include <iomanip>
+#include "y/memory/out-of-reach.hpp"
+#include "y/check/static.hpp"
+
+#include <cmath>
+#include <new>
 
 namespace Yttrium
 {
     namespace Random
     {
 
-        template <typename T>
-        class Eval32
-        {
-
-        protected:
-            inline explicit Eval32() noexcept {}
-
-        public:
-            inline virtual ~Eval32() noexcept {}
-
-            virtual T conv(const uint32_t) const noexcept = 0;
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Eval32);
-        };
-
-        template <typename T> class Pack32 : public Eval32<T>
-        {
-        public:
-            
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Pack32);
-        };
-
-
-        template <typename T> class Full32 : public Eval32<T>
-        {
-        public:
-            static const T denom;
-
-            inline explicit Full32() noexcept : Eval32<T>()
-            {
-
-            }
-            inline virtual ~Full32() noexcept {}
-
-            inline virtual T conv(const uint32_t u) const noexcept
-            {
-                static const T half(0.5);
-                return ( T(u) + half ) / denom;
-            }
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Full32);
-        };
-
-        template <> const float       Full32<float>::       denom = 4294967296.0f;
-        template <> const double      Full32<double>::      denom = 4294967296.0;
-        template <> const long double Full32<long double>:: denom = 4294967296.0L;
-
-
-
 
         template <typename T>
-        class Metrics32
+        class Metrics
         {
         public:
-            inline Metrics32() noexcept :
-            shift(0),
-            max32(0),
-            denom(0)
+            inline Metrics() noexcept :
+            loss(0),
+            mask(0)
             {
                 static const uint64_t one64 = 1;
-                unsigned              msb = 32;
-                uint64_t              top = one64 << msb;
+                unsigned              msb   = 32;
+                uint64_t              top   = one64 << msb;
 
                 while(true)
                 {
@@ -99,28 +47,132 @@ namespace Yttrium
                     top >>= 1;
                 }
 
-                Coerce(shift) = 32-msb;
-                Coerce(max32) = uint32_t(top-1);
-                Coerce(denom) = T(top);
-
-                std::cerr << "float" << std::setw(3) << sizeof(T)*8 << ": denom=2^" << (32-shift) << " = " << denom << " => max32=" << max32 << std::endl;
+                Coerce(loss)  = 32-msb;
+                Coerce(mask)  = uint32_t(top-1);
 
             }
 
-            inline ~Metrics32() noexcept
+            inline ~Metrics() noexcept
             {
             }
 
-            const unsigned shift;
-            const uint32_t max32;
-            const T        denom;
+            const unsigned loss;
+            const uint32_t mask;
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Metrics32);
+            Y_DISABLE_COPY_AND_ASSIGN(Metrics);
+        };
+
+        template <typename T>
+        class Bits:: Engine
+        {
+        protected:
+            inline explicit Engine(const uint32_t _range,
+                                   const uint32_t _umask,
+                                   const T        _denom) noexcept :
+            range(_range),
+            umask(_umask),
+            denom(_denom)
+            {}
+
+            static inline T Denom(uint64_t u) noexcept {
+                return static_cast<T>(++u);
+            }
+
+        public:
+            inline virtual ~Engine() noexcept {}
+
+            virtual T compute(const uint32_t u) const noexcept = 0;
+
+            const uint64_t range;
+            const uint64_t umask;
+            const T        denom;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Engine);
+        };
+
+        template <typename T>
+        class FullEngine : public Bits::Engine<T>
+        {
+        public:
+            using Bits::Engine<T>::Denom;
+            using Bits::Engine<T>::range;
+            using Bits::Engine<T>::denom;
+
+            inline explicit FullEngine(const uint32_t _range) noexcept :
+            Bits::Engine<T>(_range,0xffffffff,Denom(_range))
+            {
+            }
+
+            inline virtual ~FullEngine() noexcept {}
+
+            inline virtual T compute(const uint32_t u) const noexcept
+            {
+                static const T half(0.5);
+                assert(u<=range);
+                return (static_cast<T>(u)+half)/denom;
+            }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(FullEngine);
+        };
+
+        template <typename T>
+        class PackEngine : public Bits::Engine<T>
+        {
+        public:
+            using Bits::Engine<T>::Denom;
+            using Bits::Engine<T>::range;
+            using Bits::Engine<T>::umask;
+            using Bits::Engine<T>::denom;
+
+            inline explicit PackEngine(const uint32_t _range,
+                                       const uint32_t _umask) noexcept :
+            Bits::Engine<T>(_range,_umask,Denom(_umask))
+            {
+            }
+
+            inline virtual ~PackEngine() noexcept {}
+
+            inline virtual T compute(const uint32_t u) const noexcept
+            {
+                static const T half(0.5);
+                assert(u<=range);
+                const uint32_t num = static_cast<uint32_t>( (uint64_t(u)*umask)/range );
+                return (static_cast<T>(num)+half)/denom;
+            }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(PackEngine);
         };
 
 
+
+
+
+
+
+
+
+
+        template <typename T> static inline
+        Bits::Engine<T> * BuildEngine(const uint32_t umax, void *wksp) noexcept
+        {
+            static const Metrics<T> metrics;
+            if(umax>metrics.mask)
+            {
+                //std::cerr << "pack:float " << sizeof(T) << " : " << umax << " exceeds " << metrics.mask << std::endl;
+                return new (wksp) PackEngine<T>(umax,metrics.mask);
+            }
+            else
+            {
+                //std::cerr << "full:float " << sizeof(T) << " : " << umax << " lower than " << metrics.mask << std::endl;
+                return new (wksp) FullEngine<T>(umax);
+            }
+            return 0;
+        }
 
 
         Bits:: ~Bits() noexcept
@@ -128,24 +180,112 @@ namespace Yttrium
         }
 
 
-        static const Metrics32<float>       metricsF__;
-        static const Metrics32<double>      metricsD__;
-        static const Metrics32<long double> metricsL__;
-
-        static const Full32<float>       full32F__;
-        static const Full32<double>      full32D__;
-        static const Full32<long double> full32L__;
 
 
-        Bits:: Bits(const uint32_t maxU32) noexcept :
-        umax(maxU32),
-        metricsF( &metricsF__),
-        metricsD( &metricsD__),
-        metricsL( &metricsL__)
+
+
+
+        Bits:: Bits(const uint32_t umax) noexcept :
+        F(0),
+        D(0),
+        L(0),
+        wkspF(),
+        wkspD(),
+        wkspL()
+        {
+            //std::cerr << "sizeof(FullEngine<float>)       = " << sizeof(FullEngine<float>) << std::endl;
+            //std::cerr << "sizeof(FullEngine<double>)      = " << sizeof(FullEngine<double>) << std::endl;
+            //std::cerr << "sizeof(FullEngine<long double>) = " << sizeof(FullEngine<long double>) << std::endl;
+            //std::cerr << "sizeof(PackEngine<float>)       = " << sizeof(PackEngine<float>) << std::endl;
+            //std::cerr << "sizeof(PackEngine<double>)      = " << sizeof(PackEngine<double>) << std::endl;
+            //std::cerr << "sizeof(PackEngine<long double>) = " << sizeof(PackEngine<long double>) << std::endl;
+
+            Coerce(F) = BuildEngine<float>(       umax ,Y_STATIC_ZARR(wkspF));
+            Coerce(D) = BuildEngine<double>(      umax, Y_STATIC_ZARR(wkspD));
+            Coerce(L) = BuildEngine<long double>( umax, Y_STATIC_ZARR(wkspL));
+        }
+
+        template <>
+        float Bits:: raw<float>(uint32_t u) noexcept
+        {
+            return F->compute(u);
+        }
+
+        template <>
+        double Bits:: raw<double>(uint32_t u) noexcept
+        {
+            return D->compute(u);
+        }
+
+        template <>
+        long double Bits:: raw<long double>(uint32_t u) noexcept
+        {
+            return L->compute(u);
+        }
+
+        template <> float Bits:: to<float>() noexcept
+        {
+            return F->compute( next32() );
+        }
+
+        template <> double Bits:: to<double>() noexcept
+        {
+            return D->compute( next32() );
+        }
+
+        template <> long double Bits:: to<long double>() noexcept
+        {
+            return L->compute( next32() );
+        }
+
+        template <> uint8_t Bits:: to<uint8_t>() noexcept
+        {
+            return static_cast<uint8_t>( floor(255.0 * to<double>() + 0.5) );
+        }
+
+        template <> uint16_t Bits:: to<uint16_t>() noexcept
+        {
+            return static_cast<uint16_t>( floor(65535.0 * to<double>() + 0.5) );
+        }
+
+        template <> uint32_t Bits:: to<uint32_t>() noexcept
+        {
+            return static_cast<uint32_t>( floor(4294967295 * to<double>() + 0.5) );
+        }
+
+        template <> uint64_t Bits:: to<uint64_t>() noexcept
+        {
+            union {
+                uint64_t qw;
+                uint32_t dw[2];
+            } alias =  { 0 };
+            alias.dw[0] = to<uint32_t>();
+            alias.dw[1] = to<uint32_t>();
+            return alias.qw;
+        }
+
+    }
+
+}
+
+#include <cstdlib>
+
+namespace Yttrium
+{
+    namespace Random
+    {
+        Rand:: Rand() noexcept : Bits(RAND_MAX)
         {
         }
 
+        Rand:: ~Rand() noexcept
+        {
+        }
 
+        uint32_t Rand:: next32() noexcept
+        {
+            return rand();
+        }
     }
 
 }
