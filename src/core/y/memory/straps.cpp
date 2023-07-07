@@ -10,10 +10,13 @@ namespace Yttrium
 
         Straps:: ~Straps() noexcept
         {
-            while(size)
+            std::cerr << "~Straps()" << std::endl;
+            while(size>0)
             {
-                Strap         *strap = popTail();
+                Strap         *strap = popTail();        assert(0!=strap);
                 const unsigned shift = strap->shift__();
+                assert(0==strap->next);
+                assert(0==strap->prev);
                 album[shift].store( Destructed(strap) );
             }
             cache = 0;
