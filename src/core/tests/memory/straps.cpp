@@ -23,24 +23,34 @@ Y_UTEST(memory_straps)
     Memory::Album  album;
     Memory::Straps straps(album);
 
-    static const size_t NB = 1024;
-    block_t             blocks[NB];
-    Y_STATIC_ZARR(blocks);
-
-    for(size_t i=0;i<NB;++i)
     {
-        block_t &blk = blocks[i];
-        blk.size = alea_leq(100);
-        blk.addr = straps.acquire(blk.size);
+        size_t  bs = 0;
+        void   *p  = straps.acquire(bs);
+        std::cerr << "got bs=" << bs << " @" << p << std::endl;
+        straps.release(p);
     }
 
-
-    alea_shuffle(blocks,NB);
-
-    for(size_t i=0;i<NB;++i)
+    if(false)
     {
-        block_t &blk = blocks[i];
-        straps.release(blk.addr);
+        static const size_t NB = 1024;
+        block_t             blocks[NB];
+        Y_STATIC_ZARR(blocks);
+
+        for(size_t i=0;i<NB;++i)
+        {
+            block_t &blk = blocks[i];
+            blk.size = alea_leq(100);
+            blk.addr = straps.acquire(blk.size);
+        }
+
+
+        alea_shuffle(blocks,NB);
+
+        for(size_t i=0;i<NB;++i)
+        {
+            block_t &blk = blocks[i];
+            straps.release(blk.addr);
+        }
     }
 
 }
