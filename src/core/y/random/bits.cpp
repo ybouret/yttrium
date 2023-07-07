@@ -205,24 +205,7 @@ namespace Yttrium
             Coerce(L) = BuildEngine<long double>( umax, Y_STATIC_ZARR(wkspL));
         }
 
-        template <>
-        float Bits:: raw<float>(uint32_t u) noexcept
-        {
-            return F->compute(u);
-        }
-
-        template <>
-        double Bits:: raw<double>(uint32_t u) noexcept
-        {
-            return D->compute(u);
-        }
-
-        template <>
-        long double Bits:: raw<long double>(uint32_t u) noexcept
-        {
-            return L->compute(u);
-        }
-
+        
         template <> float Bits:: to<float>() noexcept
         {
             return F->compute( next32() );

@@ -11,7 +11,6 @@ namespace Yttrium
     {
 
 
-
         //! Random Bits interface
         class Bits
         {
@@ -29,16 +28,13 @@ namespace Yttrium
             const Engine<float>       * const F;
             const Engine<double>      * const D;
             const Engine<long double> * const L;
-
-            template <typename T>
-            T raw(const uint32_t u) noexcept;
-
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Bits);
-            void *wkspF[ Y_WORDS_GEQ(48)  ];
-            void *wkspD[ Y_WORDS_GEQ(48)  ];
-            void *wkspL[ Y_WORDS_GEQ(48)  ];
+            void *wkspF[ Y_WORDS_GEQ(EngineBytes)  ];
+            void *wkspD[ Y_WORDS_GEQ(EngineBytes)  ];
+            void *wkspL[ Y_WORDS_GEQ(EngineBytes)  ];
         };
 
         class Rand : public Bits

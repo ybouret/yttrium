@@ -1,4 +1,4 @@
-#include "y/random/bits.hpp"
+#include "y/random/park-miller.hpp"
 #include "y/utest/run.hpp"
 #include "y/check/crc32.hpp"
 
@@ -12,20 +12,24 @@ using namespace Yttrium;
 Y_UTEST(random_bits)
 {
     const time_t tm = time(0);
-    srand( CRC32::Of(tm) );
+    const uint32_t seed = CRC32::Of(tm);
+    srand(seed);
 
     Y_SIZEOF(Random::Bits);
 
-    Random::Rand ran;
+    Random::Rand       ran1;
+    Random::ParkMiller ran2(seed);
 
     for(size_t i=0;i<10;++i)
     {
-        std::cerr << ran.to<double>() << std::endl;
-        std::cerr << int(ran.to<uint8_t>()) << std::endl;
+        std::cerr << ran1.to<double>() << std::endl;
     }
 
 
-
+    for(size_t i=0;i<10;++i)
+    {
+        std::cerr << ran2.to<double>() << std::endl;
+    }
 
 
 }
