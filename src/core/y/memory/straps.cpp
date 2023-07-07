@@ -226,22 +226,33 @@ namespace Yttrium
             {
                 if(0!=empty)
                 {
+                    //----------------------------------------------------------
+                    // detected a second empty strap
+                    //----------------------------------------------------------
                     assert(eshft>0);           // previously computed
                     assert(empty->isEmpty());  // impossible
                     assert(strap!=empty);      // impossible
 
-                    
+                    //----------------------------------------------------------
+                    // select strap/shift to release
+                    //----------------------------------------------------------
                     unsigned shift = strap->myShift();
                     SetupToRelease(strap,shift,empty,eshft);
                     assert(shift<eshft||strap<empty);
                     assert(empty->isEmpty());
                     assert(empty->myShift() == eshft);
 
+                    //----------------------------------------------------------
+                    // release strap. empty/eshft is already set
+                    //----------------------------------------------------------
                     album[shift].store( Destructed( pop(strap) ) );
 
                 }
                 else
                 {
+                    //----------------------------------------------------------
+                    // set as first empty strap
+                    //----------------------------------------------------------
                     empty = strap;
                     eshft = strap->myShift();
                 }

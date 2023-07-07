@@ -30,7 +30,6 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const char * const CallSign; //!< "Memory::Straps"
-            typedef void * (Straps:: *Proc)(size_t &);
 
             //__________________________________________________________________
             //
@@ -41,12 +40,21 @@ namespace Yttrium
             explicit Straps(Album &userAlbum) noexcept; //!< setup with persistent Album
             virtual ~Straps()                 noexcept; //!< cleanup
 
-            void *acquire(size_t &blockSize);
-            void  release(void *blockAddr) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            
+            void *acquire(size_t &blockSize);         //!< acquire and update blockSize bytes
+            void  release(void *blockAddr) noexcept;  //!< release previously acquired block
 
 
             
         private:
+            typedef void * (Straps:: *Proc)(size_t &);
+
             Proc     build;
             Strap   *cache;
             Strap   *empty;
