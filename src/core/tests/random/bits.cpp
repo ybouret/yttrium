@@ -11,7 +11,7 @@ using namespace Yttrium;
 
 Y_UTEST(random_bits)
 {
-    const time_t tm = time(0);
+    const time_t   tm   = time(0);
     const uint32_t seed = CRC32::Of(tm);
     srand(seed);
 
