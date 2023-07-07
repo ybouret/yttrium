@@ -42,7 +42,8 @@ namespace Yttrium
             virtual ~Straps()                 noexcept; //!< cleanup
 
             void *acquire(size_t &blockSize);
-
+            void  release(void *blockAddr) noexcept;
+            
 
             
         private:

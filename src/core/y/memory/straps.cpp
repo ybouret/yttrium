@@ -60,10 +60,10 @@ namespace Yttrium
 
 
 
-
         void *Straps:: acquireAny(size_t &blockSize)
         {
             assert(0!=cache);
+
             //------------------------------------------------------------------
             //
             // checking cache
@@ -166,6 +166,14 @@ namespace Yttrium
             return p;
 
         }
+
+        void  Straps:: release(void *blockAddr) noexcept
+        {
+            assert(0!=blockAddr);
+            Strap *strap = Strap::Release(blockAddr);
+            
+        }
+
 
     }
 }

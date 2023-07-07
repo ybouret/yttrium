@@ -94,6 +94,13 @@ namespace Yttrium
             }
         }
 
+        bool Strap:: isEmpty() const noexcept
+        {
+            assert(head);
+            return (0 == head->used) && (tail == head->next);
+        }
+
+
         unsigned Strap:: shift__() const noexcept
         {
             assert(0!=head);
@@ -137,6 +144,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             for(Block *curr=head;curr;curr=curr->next)
             {
+                assert(0!=curr);
                 if(0!=curr->used || curr->size<bs) continue;
                 best = curr;
                 goto FOUND;
@@ -170,7 +178,7 @@ namespace Yttrium
             {
                 const size_t optBlocks = optBlockSize / sizeof(Block); assert(optBlocks>0);
                 Block *gate = &best[1+optBlocks];
-                Block *next = best->next;
+                Block *next = best->next;         assert(0!=next);
                 gate->next  = next;
                 gate->prev  = best;
                 best->next  = gate;
@@ -280,7 +288,7 @@ namespace Yttrium
             }
 
 
-            strap->displayInfo(0);
+            //strap->displayInfo(0);
             return strap;
         }
 

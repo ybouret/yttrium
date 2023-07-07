@@ -35,6 +35,14 @@ Y_UTEST(memory_straps)
     }
 
 
+    alea_shuffle(blocks,NB);
+
+    for(size_t i=0;i<NB;++i)
+    {
+        block_t &blk = blocks[i];
+        straps.release(blk.addr);
+    }
+
 }
 Y_UDONE()
 
