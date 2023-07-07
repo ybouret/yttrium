@@ -78,8 +78,8 @@ namespace Yttrium
             assert(0!=tail);
             assert(tail>head);
             const size_t blocks = static_cast<size_t>(tail-head)+2; assert(blocks>=MinBlockCount);
-            unsigned     shift  = MinBlockShift;
-            size_t       count  = MinBlockCount;
+            unsigned     shift  = MinBlockShift; 
+            size_t       count  = MinBlockCount; assert(count<=blocks);
             while(count<blocks)
             {
                 ++shift;
@@ -143,7 +143,7 @@ namespace Yttrium
             const size_t        optBlockSize = BlockSizeFor(bs); assert(optBlockSize>0); assert( 0 == (optBlockSize%sizeof(Block)) );
             const size_t        optEmptySize = blen - optBlockSize;
 
-            if( optEmptySize>=CutThreshold)
+            if(optEmptySize>=CutThreshold)
             {
                 const size_t optBlocks = optBlockSize / sizeof(Block); assert(optBlocks>0);
                 Block *gate = &best[1+optBlocks];
@@ -201,7 +201,7 @@ namespace Yttrium
             assert( 0 != block->next);                        // tail is never used
 
             //------------------------------------------------------------------
-            // get strap and compute fusion flags
+            // get Strap and compute fusion flags
             //------------------------------------------------------------------
             Strap   *strap = block->used;
             unsigned flags = Solo;
@@ -243,6 +243,9 @@ namespace Yttrium
 
 
                 case Both: {
+                    //----------------------------------------------------------
+                    // fusion with both prev and next block
+                    //----------------------------------------------------------
                     assert(next!=strap->tail);
                     assert(0!=next->next);
                     Block *after = next->next;

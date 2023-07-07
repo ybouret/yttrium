@@ -59,21 +59,53 @@ namespace Yttrium
              - upon failure, return 0, blockSize is left untouched
              */
             //__________________________________________________________________
-
             void *         acquire(size_t &blockSize) noexcept;
+
+            //__________________________________________________________________
+            //
+            //! release a previously acquired block
+            /**
+             \param blockAddr a valid block address
+             \return owning Strap
+             */
+            //__________________________________________________________________
             static Strap * Release(void *  blockAddr) noexcept;
+
+            //__________________________________________________________________
+            //
+            //! compute original blockSize
+            //__________________________________________________________________
             size_t         shift__() const noexcept;
 
+            //__________________________________________________________________
+            //
+            //! return positive, aligned block size
+            //__________________________________________________________________
             static size_t BlockSizeFor(const size_t blockSize) noexcept;
+
+
+            //__________________________________________________________________
+            //
+            //! 2^ShiftToHold is the page size required to hold blockSize
+            //__________________________________________________________________
             static size_t ShiftToHold(const size_t blockSize);
 
-
+            //__________________________________________________________________
+            //
+            //! display statistics
+            //__________________________________________________________________
             void   displayInfo(size_t indent) const;
 
-            Strap *next;
-            Strap *prev;
-            Block *head;
-            Block *tail;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            Strap *next; //!< for list
+            Strap *prev; //!< for list
+            Block *head; //!< sentinel for internal linked list
+            Block *tail; //!< sentinel for internal linked list
 
 
 
