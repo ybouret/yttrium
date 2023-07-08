@@ -29,8 +29,9 @@ namespace Yttrium
             static void *       Swap(void *       target, void *       source, const size_t size) noexcept; //!< memswap(target,source,size
             static ptrdiff_t    Diff(const void * a,      const void * b)                         noexcept; //!< b-a in bytes
             static bool         Are0(const void * addr,   const size_t size)                      noexcept; //!< check all bytes are 0
-            static void *       Haul(void *addr, ptrdiff_t delta)                                 noexcept; //!< addr+delta
+            static void *       Haul(void *addr, ptrdiff_t delta)                                 noexcept; //!< return addr+delta
             static void         Lift(void *addr, size_t size, const size_t blockSize)             noexcept; //!< addr+size -> addr+size+blockSize, addr[blockSize] = 0
+            static void         Fill(void *tgt, const size_t, const void *src, const size_t)      noexcept; //!< fill tgt with copy(ies) of src
 
             //! zeroed, destructed item
             template <typename T> static inline

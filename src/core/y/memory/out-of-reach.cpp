@@ -133,7 +133,14 @@ namespace Yttrium
 
         }
 
-
+        void OutOfReach:: Fill(void *       tgtAddr,
+                               const size_t tgtSize,
+                               const void  *srcAddr,
+                               const size_t srcSize) noexcept
+        {
+            assert(Good(tgtAddr,tgtSize));
+            assert(Good(srcAddr,srcSize));
+        }
 
     }
 }
