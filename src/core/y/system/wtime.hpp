@@ -13,7 +13,9 @@ namespace Yttrium
     public:
         explicit WallTime();
         virtual ~WallTime() noexcept;
-        
+
+        static uint64_t Ticks();
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(WallTime);
     };

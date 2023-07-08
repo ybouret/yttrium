@@ -6,6 +6,7 @@ text
 calculus
 concurrent
 random
+hashing
 )
 
 Y_LinkLibraries(test-core)
@@ -54,4 +55,7 @@ add_test(concurrent:mutex test-core concurrent_mutex)
 
 #random
 add_test(random:bits test-core random_bits)
+
+#hashing
+add_test(hashing:mix64 test-core hashing_mix64)
 

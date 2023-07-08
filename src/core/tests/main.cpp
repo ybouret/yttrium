@@ -38,6 +38,8 @@ Y_UTEST_DECL(256)
 
     Y_UTEST(concurrent_mutex);
 
+    Y_UTEST(hashing_mix64);
+
     Y_UTEST(random_bits);
     //std::cerr << "-------- Platform: " << Y_PLATFORM << std::endl;
     //std::cerr << "-------- Compiler: " << Y_COMPILER << std::endl;

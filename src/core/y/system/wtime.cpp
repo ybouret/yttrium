@@ -1,0 +1,50 @@
+
+#include "y/system/wtime.hpp"
+#include "y/system/exception.hpp"
+#include "y/lockable.hpp"
+
+#if defined(Y_Darwin)
+#include <mach/mach.h>
+#include <mach/mach_time.h>
+#endif
+
+#if defined(Y_Linux) || defined(Y_FreeBSD) || defined(Y_SunOS) || defined(Y_OpenBSD)
+#define Y_USE_CLOCK_GETTIME 1
+#include <time.h>
+#include <sys/time.h>
+#include <cerrno>
+#endif
+
+#if defined(Y_WIN)
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
+
+namespace Yttrium
+{
+
+#if defined(Y_Darwin)
+    uint64_t WallTime::Ticks()
+    {
+        Y_GIANT_LOCK();
+        return mach_absolute_time();
+    }
+#endif
+
+#if defined(Y_USE_CLOCK_GETTIME)
+    static const uint64_t __giga64 = YACK_U64(0x3B9ACA00);
+
+    uint64_t wtime:: ticks()
+    {
+        Y_GIANT_LOCK();
+        struct timespec tp  = { 0, 0 };
+        const int       err = clock_gettime( CLOCK_REALTIME, &tp );
+        if(err!=0)
+            throw Libc::Exception( errno, "clock_gettime" );
+        return __giga64*uint64_t(tp.tv_sec) + uint64_t(tp.tv_nsec);
+    }
+#endif
+
+
+}
+

@@ -106,6 +106,9 @@ virtual bool doTryLock() noexcept
     //! use a local ScopedLock to lock HOST
 #define Y_LOCK(HOST) Y_LOCK_(HOST,__LINE__)
 
+#define Y_GIANT_LOCK() static Yttrium::Lockable &giantLock = Yttrium::Lockable::Giant();\
+Y_LOCK(giantLock)
+    
 }
 
 #endif

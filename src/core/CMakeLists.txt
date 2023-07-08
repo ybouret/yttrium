@@ -19,6 +19,7 @@ data/list
 data/pool
 concurrent
 random
+hashing
 utest 
 memory)
 
