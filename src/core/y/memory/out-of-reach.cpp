@@ -3,6 +3,7 @@
 #include "y/type/div.hpp"
 
 #include <cstring>
+#include <cstdlib>
 
 namespace Yttrium
 {
@@ -149,6 +150,7 @@ namespace Yttrium
             else
             {
                 assert(srcSize<tgtSize);
+                
             }
         }
 

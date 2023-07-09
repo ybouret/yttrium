@@ -13,6 +13,8 @@ namespace Yttrium
         {
             static const char * const CallSign;
             typedef div_t Type;
+            typedef int   Args;
+            static  Type (*Proc)(Args,Args);
 
         };
 
@@ -20,12 +22,16 @@ namespace Yttrium
         {
             static const char * const CallSign;
             typedef ldiv_t Type;
+            typedef long   Args;
+            static  Type (*Proc)(Args,Args);
         };
 
         struct DivLongLong
         {
             static const char * const CallSign;
-            typedef ldiv_t Type;
+            typedef lldiv_t   Type;
+            typedef long long Args;
+            static  Type    (*Proc)(Args,Args);
         };
     }
 
