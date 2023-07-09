@@ -34,7 +34,7 @@ namespace Yttrium
 #if defined(Y_USE_CLOCK_GETTIME)
     static const uint64_t __giga64 = Y_U64(0x3B9ACA00);
 
-    uint64_t wtime:: ticks()
+    uint64_t WallTime:: ticks()
     {
         Y_GIANT_LOCK();
         struct timespec tp  = { 0, 0 };
