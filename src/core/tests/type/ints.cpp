@@ -2,6 +2,7 @@
 #include "y/type/ints.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/utils.hpp"
+#include "y/type/bitlib.hpp"
 
 
 using namespace Yttrium;
@@ -62,6 +63,21 @@ Y_UTEST(type_ints)
     {
         std::cerr << i << " -> " << Clamp(-3,i,3) << std::endl;
     }
+
+    Y_SIZEOF(int);
+    Y_SIZEOF(long);
+    Y_SIZEOF(long long);
+
+    for(uint8_t i=0;i<=200;i+=10)
+    {
+
+        BitLib::Display(std::cerr, i) << " -> ";
+        BitLib::Display(std::cerr, BitLib::LRoll(i) ) << std::endl;
+
+    }
+
+
+
 
 }
 Y_UDONE()

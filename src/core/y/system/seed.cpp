@@ -1,0 +1,25 @@
+
+#include "y/system/seed.hpp"
+#include "y/system/wtime.hpp"
+#include "y/hashing/ibj64.hpp"
+#include "y/check/crc32.hpp"
+#include "y/system/pid.hpp"
+#include "y/type/bitlib.hpp"
+
+#include <iostream>
+
+namespace Yttrium
+{
+
+    uint32_t SystemSeed:: Get()
+    {
+        union
+        {
+            uint64_t qw[2];
+            uint32_t dw[4];
+        } alias = { { WallTime::Ticks(), BitLib::LRoll(ProcessId::Get()) } };
+        for(size_t i=0;i<4;++i) alias.dw[i] = Hashing::IBJ32(alias.dw[i]);
+
+        return CRC32::Of(&alias,sizeof(alias));
+    }
+}

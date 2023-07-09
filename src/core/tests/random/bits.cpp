@@ -1,4 +1,5 @@
 #include "y/random/park-miller.hpp"
+#include "y/system/seed.hpp"
 #include "y/utest/run.hpp"
 #include "y/check/crc32.hpp"
 
@@ -31,6 +32,11 @@ Y_UTEST(random_bits)
         std::cerr << ran2.to<double>() << std::endl;
     }
 
+    for(size_t i=0;i<10;++i)
+    {
+        std::cerr << "seed=" << SystemSeed::Get() << std::endl;
+    }
+    
 
 }
 Y_UDONE()
