@@ -40,6 +40,7 @@ add_test(memory:straps test-core memory_straps)
 #type
 add_test(type:ints test-core type_ints)
 add_test(type:hash32 test-core type_hash32)
+add_test(type:div    test-core type_div)
 
 #data
 add_test(data:list test-core data_list)

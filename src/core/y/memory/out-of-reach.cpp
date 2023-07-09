@@ -1,5 +1,7 @@
 
 #include "y/memory/out-of-reach.hpp"
+#include "y/type/div.hpp"
+
 #include <cstring>
 
 namespace Yttrium
