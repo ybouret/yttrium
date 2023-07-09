@@ -32,7 +32,7 @@ namespace Yttrium
 #endif
 
 #if defined(Y_USE_CLOCK_GETTIME)
-    static const uint64_t __giga64 = YACK_U64(0x3B9ACA00);
+    static const uint64_t __giga64 = Y_U64(0x3B9ACA00);
 
     uint64_t wtime:: ticks()
     {
