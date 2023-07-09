@@ -13,6 +13,7 @@ namespace Yttrium
         {
             static const char * const CallSign;
             typedef div_t Type;
+
         };
 
         struct DivLong
@@ -31,14 +32,16 @@ namespace Yttrium
     template <typename T>
     struct Div
     {
-        static const size_t TypeSize      = sizeof(T);
-        static const bool   ChooseInt     = TypeSize <= sizeof(int);
-        static const bool   ChooseLong    = TypeSize <= sizeof(long);
+        static const bool   ChooseInt     = sizeof(T) <= sizeof(int);
+        static const bool   ChooseLong    = sizeof(T) <= sizeof(long);
 
 
         typedef typename Pick<ChooseInt,
         Core::DivInt,
-        typename Pick<ChooseLong,Core::DivLong,Core::DivLongLong>::Type >::Type DivType;
+        typename Pick<ChooseLong,Core::DivLong,Core::DivLongLong>::Type >::Type API;
+
+        typedef typename API::Type Type;
+
 
     };
 

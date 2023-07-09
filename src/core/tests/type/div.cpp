@@ -11,8 +11,8 @@ namespace
     void testDiv(const char *className)
     {
         std::cerr << std::setw(8) << className << " => ";
-        typedef typename Div<T>::DivType DivType;
-        std::cerr << DivType::CallSign << std::endl;
+        typedef typename Div<T>::API DivAPI;
+        std::cerr << DivAPI::CallSign << std::endl;
     }
 }
 
