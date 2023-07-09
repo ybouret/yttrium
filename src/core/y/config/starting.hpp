@@ -18,6 +18,8 @@ Y_DISABLE_COPY(CLASS)
 namespace Yttrium
 {
 
+    typedef ptrdiff_t unit_t; //!< alias
+
     //__________________________________________________________________________
     //
     //! C-stype swap

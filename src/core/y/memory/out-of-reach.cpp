@@ -150,7 +150,19 @@ namespace Yttrium
             else
             {
                 assert(srcSize<tgtSize);
-                
+                typedef Div<unit_t> DivAPI;
+                DivAPI::Type    dv = DivAPI::Call(tgtSize,srcSize);
+                uint8_t *       p  = static_cast<uint8_t *>(tgtAddr);
+                const uint8_t * q   = static_cast<const uint8_t *>(srcAddr);
+                while( dv.quot-- > 0)
+                {
+                    memcpy(p,q,srcSize);
+                    p += srcSize;
+                }
+                while( dv.rem-- > 0 )
+                {
+                    *(p++) = *(q++);
+                }
             }
         }
 

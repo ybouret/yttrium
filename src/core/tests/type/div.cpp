@@ -1,5 +1,6 @@
 #include "y/type/div.hpp"
 #include "y/utest/run.hpp"
+#include "y/memory/out-of-reach.hpp"
 
 
 using namespace Yttrium;
@@ -29,5 +30,6 @@ Y_UTEST(type_div)
     Y_TEST_DIV(int32_t);
     Y_TEST_DIV(int64_t);
 
+    uint64_t 
 }
 Y_UDONE()
