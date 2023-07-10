@@ -33,7 +33,7 @@ namespace Yttrium
             void List(LIST &L, Bits &ran) noexcept
             {
                 typename LIST::SelfType temp;
-                while(L.size)
+                while(L.size>0)
                 {
                     if( ran.choice() )
                         temp.pushTail( L.popTail() );
@@ -41,6 +41,20 @@ namespace Yttrium
                         temp.pushHead( L.popTail() );
                 }
                 temp.swapWith(L);
+            }
+
+            template <typename POOL> static inline
+            void Pool(POOL &P, Bits &ran) noexcept
+            {
+                typename POOL::SelfType temp;
+                while(P.size>0)
+                {
+                    if( ran.choice() )
+                        temp.store( P.query() );
+                    else
+                        temp.stash( P.query() );
+                }
+                temp.swapWith(P);
             }
 
 

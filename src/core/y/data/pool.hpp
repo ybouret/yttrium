@@ -47,6 +47,8 @@ namespace Yttrium
         //
         //______________________________________________________________________
         inline NODE *store(NODE *node) noexcept { return PoolOps::Store(*this,node); } //!< store a new node
+        inline NODE *stash(NODE *node) noexcept { return PoolOps::Stash(*this,node); } //!< store a new node (slow)
+
         inline NODE *query()           noexcept { return PoolOps::Query(*this);      } //!< query first node
 
         //! noexcept swap with another pool

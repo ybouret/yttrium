@@ -24,8 +24,8 @@ namespace Yttrium
         //
         //! store node
         //______________________________________________________________________
-        template <typename POOL, typename NODE> static
-        inline NODE * Store(POOL &P, NODE *node) noexcept
+        template <typename POOL, typename NODE> static inline
+        NODE * Store(POOL &P, NODE *node) noexcept
         {
             assert(0!=node);
             assert(0==node->next);
@@ -35,6 +35,24 @@ namespace Yttrium
             P.head = node;
             ++Coerce(P.size);
             return node;
+        }
+
+        template <typename POOL, typename NODE> static inline
+        NODE *Stash(POOL &P, NODE *node) noexcept
+        {
+            assert(0!=node);
+            assert(0==node->next);
+            assert(0==node->prev);
+            if(P.size<=0)
+                return Store(P,node);
+            else
+            {
+                NODE  *curr = P.head; assert(0!=curr);
+                while(0!=curr->next) curr = curr->next;
+                curr->next = node;
+                ++Coerce(P.size);
+                return node;
+            }
         }
 
         //______________________________________________________________________

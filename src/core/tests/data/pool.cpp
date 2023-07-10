@@ -40,6 +40,8 @@ Y_UTEST(data_pool)
         std::cerr << iPool << std::endl;
     }
 
+    Random::Shuffle::Pool(iPool,ran);
+
     std::cerr << "query" << std::endl;
     while(iPool.size)
     {
