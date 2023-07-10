@@ -23,6 +23,7 @@ add_test(main:singleton test-core singleton)
 #text
 add_test(text:plural test-core text_plural)
 add_test(text:human-readable test-core text_human_readable)
+add_test(text:ops test-core text_ops)
 
 
 #memory

@@ -50,7 +50,7 @@ typedef __int64 int64_t;
 #    error "no STDINT"
 #endif
 
-
-
+//! get static size of an array
+#define Y_STATIC_SIZE(ARR) ( sizeof(ARR) / sizeof(ARR[0]) )
 
 #endif
