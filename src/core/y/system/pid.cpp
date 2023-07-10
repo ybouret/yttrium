@@ -1,5 +1,6 @@
 
 #include "y/system/pid.hpp"
+#include "y/memory/out-of-reach.hpp"
 
 #if defined(Y_BSD)
 #include <unistd.h>

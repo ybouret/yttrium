@@ -7,9 +7,17 @@
 
 namespace Yttrium
 {
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Process Identifier access
+    //
+    //
+    //__________________________________________________________________________
     struct ProcessId
     {
-        static uint64_t Get() noexcept;
+        static uint64_t Get() noexcept; //!< getpid|GetCurrentProcessId
     };
 }
 

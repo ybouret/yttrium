@@ -36,5 +36,9 @@ Y_UTEST(type_div)
     Y_TEST_DIV(int64_t);
 
 
+    uint64_t qw = 0;
+    uint16_t w  = 0xabcd;
+    Memory::OutOfReach::Fill(&qw, sizeof(qw), &w, sizeof(w) );
+    std::cerr << "qw=" << std::hex << qw << std::endl;
 }
 Y_UDONE()

@@ -21,16 +21,33 @@ namespace Yttrium
         //______________________________________________________________________
         class Mix64
         {
-            
-        protected:
-            explicit Mix64() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+        protected: explicit Mix64() noexcept; //!< setup
+        public:    virtual ~Mix64() noexcept; //!< cleanup
 
-        public:
-            virtual ~Mix64() noexcept;
 
-            virtual const char * protocol()                         const noexcept = 0;
-            virtual void         operator()(uint32_t &, uint32_t &) const noexcept = 0;
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual const char * protocol()                         const noexcept = 0; //!< identifier
+            virtual void         operator()(uint32_t &, uint32_t &) const noexcept = 0; //!< mix left/right words
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! output a mixed value, for any unsigned integers
             template <typename T,typename U> inline
             U mix(const T value) const noexcept
             {

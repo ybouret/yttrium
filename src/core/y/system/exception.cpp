@@ -18,7 +18,7 @@ namespace Yttrium
         title()
         {
             memset(title,0,sizeof(title));
-            memcpy(title,header,Min(LengthOf(header),sizeof(title)-1));
+            memcpy(title,header,Min(Core::Length(header),sizeof(title)-1));
             va_list ap;
             va_start(ap,fmt);
             format(fmt,&ap);

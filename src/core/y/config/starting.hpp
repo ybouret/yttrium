@@ -61,6 +61,19 @@ namespace Yttrium
             while(indent-- > 0) os << ch;
             return os;
         }
+
+        template <typename T> static inline
+        size_t Length(const T *arr) noexcept
+        {
+            if(0==arr)
+                return 0;
+            else
+            {
+                size_t count = 0;
+                while(0 != *(arr++) ) ++count;
+                return count;
+            }
+        }
     }
 
     bool Die(const char *);                         //!< return true

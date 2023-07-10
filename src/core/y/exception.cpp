@@ -75,9 +75,9 @@ namespace Yttrium
     void Exception:: display() const
     {
         const char * what_text = what();
-        const size_t what_size = LengthOf(what_text);
+        const size_t what_size = Core::Length(what_text);
         const char * when_text = when();
-        const size_t when_size = LengthOf(when_text);
+        const size_t when_size = Core::Length(when_text);
         const size_t line_size = Max(what_size,when_size)+5;
         std::cerr << "/"; displayLine(line_size);
         std::cerr << "| *** " << what_text << std::endl;

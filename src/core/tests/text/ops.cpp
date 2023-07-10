@@ -3,6 +3,7 @@
 #include "y/text/ops.hpp"
 #include "y/utest/run.hpp"
 
+#include <cstring>
 
 using namespace Yttrium;
 

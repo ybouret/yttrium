@@ -10,41 +10,71 @@ namespace Yttrium
     namespace Random
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
         //! Random Bits interface
+        //
+        //
+        //______________________________________________________________________
         class Bits
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             template <typename T> class Engine;
-            static const size_t         EngineBytes = 48;
+            static const size_t         EngineBytes = 48; //!< max system size
 
-            explicit Bits(const uint32_t umax) noexcept;
-            virtual ~Bits() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+        protected: explicit Bits(const uint32_t umax) noexcept; //!< setup to be used within [0..umax]
+        public:    virtual ~Bits()                    noexcept; //!< cleanup
 
-            virtual uint32_t next32() noexcept = 0;
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual uint32_t        next32() noexcept = 0; //!< generate next 32bit value in [0..umax]
+            template <typename T> T to()     noexcept;     //!< float|double|long double|uint[8|16|32|64]_t
 
-            template <typename T> T to() noexcept;
-
-            const Engine<float>       * const F;
-            const Engine<double>      * const D;
-            const Engine<long double> * const L;
-            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Bits);
+            const Engine<float>       * const F;
+            const Engine<double>      * const D;
+            const Engine<long double> * const L;
             void *wkspF[ Y_WORDS_GEQ(EngineBytes)  ];
             void *wkspD[ Y_WORDS_GEQ(EngineBytes)  ];
             void *wkspL[ Y_WORDS_GEQ(EngineBytes)  ];
         };
 
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Wrapper around rand() function
+        //
+        //
+        //______________________________________________________________________
         class Rand : public Bits
         {
         public:
-            explicit Rand() noexcept;
-            virtual ~Rand() noexcept;
-
-            virtual uint32_t next32() noexcept;
-
+            explicit Rand()           noexcept; //!< initialized in [0..RAND_MAX] with system rand seed in srand()
+            virtual ~Rand()           noexcept; //!< cleanup
+            virtual uint32_t next32() noexcept; //!< rand()
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Rand);
         };

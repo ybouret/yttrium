@@ -11,19 +11,45 @@ namespace Yttrium
     namespace Hashing
     {
 
-        //! integer hashing
-        uint32_t IBJ32(uint32_t a) noexcept;
+        //! integer hashing of 32 bits words
+        uint32_t IBJ32(uint32_t) noexcept;
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Bob Jenkins' integer hash
+        //
+        //
+        //______________________________________________________________________
         class IBJ64 : public Mix64
         {
         public:
-            static const char * const CallSign;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< "Hashing::IBJ64"
 
-            explicit IBJ64() noexcept;
-            virtual ~IBJ64() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit IBJ64() noexcept; //!< setup
+            virtual ~IBJ64() noexcept; //!< cleanup
 
-            virtual const char * protocol()                         const noexcept;
-            virtual void         operator()(uint32_t &, uint32_t &) const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            virtual const char * protocol()                         const noexcept; //!< CallSign
+            virtual void         operator()(uint32_t &, uint32_t &) const noexcept; //!< compute
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(IBJ64);

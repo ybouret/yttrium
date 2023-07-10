@@ -246,6 +246,7 @@ namespace Yttrium
 }
 
 #include <cstdlib>
+#include "y/system/seed.hpp"
 
 namespace Yttrium
 {
@@ -253,6 +254,7 @@ namespace Yttrium
     {
         Rand:: Rand() noexcept : Bits(RAND_MAX)
         {
+            srand( unsigned(SystemSeed::Get()) );
         }
 
         Rand:: ~Rand() noexcept

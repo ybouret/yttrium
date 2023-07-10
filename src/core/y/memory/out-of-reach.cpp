@@ -143,6 +143,7 @@ namespace Yttrium
         {
             assert(Good(tgtAddr,tgtSize));
             assert(Good(srcAddr,srcSize));
+
             if(srcSize>=tgtSize)
             {
                 memcpy(tgtAddr,srcAddr,tgtSize);

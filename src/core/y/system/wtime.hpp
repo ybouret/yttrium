@@ -8,13 +8,21 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! real time handling
+    //
+    //
+    //__________________________________________________________________________
     class WallTime
     {
     public:
-        explicit WallTime();
-        virtual ~WallTime() noexcept;
+        explicit WallTime();           //!< setup
+        virtual ~WallTime() noexcept;  //!< cleanup
 
-        static uint64_t Ticks();
+        static uint64_t Ticks();       //!< system's ticks
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(WallTime);

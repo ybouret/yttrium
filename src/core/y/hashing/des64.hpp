@@ -10,18 +10,43 @@ namespace Yttrium
     namespace Hashing
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! DES-like hashing
+        //
+        //
+        //______________________________________________________________________
         class DES64 : public Mix64
         {
         public:
-            static const char * const CallSign;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< "Hashing::DES64"
 
-            explicit DES64() noexcept;
-            virtual ~DES64() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit DES64() noexcept; //!< setup
+            virtual ~DES64() noexcept; //!< cleanup
 
-            virtual const char * protocol()                         const noexcept;
-            virtual void         operator()(uint32_t &, uint32_t &) const noexcept;
-
-            bool test() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            virtual const char * protocol()                         const noexcept; //!< CallSign
+            virtual void         operator()(uint32_t &, uint32_t &) const noexcept; //!< compute
+            bool                 test()                             const noexcept; //!< test challenge
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DES64);

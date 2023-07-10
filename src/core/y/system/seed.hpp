@@ -8,9 +8,17 @@
 
 namespace Yttrium
 {
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! computing a random seed from pid and ticks
+    //
+    //
+    //__________________________________________________________________________
     struct SystemSeed
     {
-        static uint32_t Get();
+        static uint32_t Get(); //!< from system info
     };
 }
 

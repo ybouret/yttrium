@@ -8,9 +8,20 @@
 
 namespace Yttrium
 {
-
+    //__________________________________________________________________________
+    //
+    //
+    //! operations on unsigned integral type
+    //
+    //__________________________________________________________________________
     struct BitLib
     {
+        //______________________________________________________________________
+        //
+        //
+        //! display as binary digits
+        //
+        //______________________________________________________________________
         template <typename OSTREAM, typename T> static inline
         OSTREAM & Display(OSTREAM &os, const T value)
         {
@@ -24,7 +35,13 @@ namespace Yttrium
             }
             return os;
         }
-        
+
+        //______________________________________________________________________
+        //
+        //
+        //! roll left by one bit: [ab..de] -> [b..dea]
+        //
+        //______________________________________________________________________
         template <typename T> static inline
         T LRoll(T value) noexcept
         {
