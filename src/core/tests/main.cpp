@@ -21,6 +21,8 @@ Y_UTEST_DECL(256)
     Y_UTEST(memory_notes);
     Y_UTEST(memory_strap);
     Y_UTEST(memory_straps);
+    Y_UTEST(memory_quanta);
+
 
     Y_UTEST(type_ints);
     Y_UTEST(type_div);

@@ -59,7 +59,7 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! destruct and release into arena
-            inline void eradicate(T * live) noexcept { assert(0!=live); zstore( Destructed(live) ); live=0; }
+            inline void eradicate(T * live) noexcept { assert(0!=live); zstore( Destructed(live) ); }
 
             //! construct with default constructor
             inline T   *construct() {

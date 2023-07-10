@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Memory_Notes_Included

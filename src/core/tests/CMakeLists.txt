@@ -38,6 +38,8 @@ add_test(memory:guild  test-core memory_guild)
 add_test(memory:notes  test-core memory_notes)
 add_test(memory:strap  test-core memory_strap)
 add_test(memory:straps test-core memory_straps)
+add_test(memory:quanta test-core memory_quanta)
+
 
 #type
 add_test(type:ints test-core type_ints)

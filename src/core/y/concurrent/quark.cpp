@@ -1,12 +1,9 @@
 #include "y/concurrent/mutex.hpp"
 #include "y/system/exception.hpp"
 #include "y/system/error.hpp"
-#include "y/system/at-exit.hpp"
-#include "y/calculus/align.hpp"
 #include "y/memory/out-of-reach.hpp"
-#include "y/type/destruct.hpp"
-#include "y/memory/album.hpp"
-#include "y/memory/guild.hpp"
+
+
 
 #include <cstring>
 #include <new>
@@ -27,6 +24,14 @@ typedef CRITICAL_SECTION MutexType;
 
 #include "mutex.hxx"
 
+#include "y/system/at-exit.hpp"
+#include "y/calculus/align.hpp"
+#include "y/type/destruct.hpp"
+#include "y/memory/album.hpp"
+#include "y/memory/guild.hpp"
+#include "y/memory/blocks.hpp"
+#include "y/memory/straps.hpp"
+#include "y/memory/quanta.hpp"
 
 namespace Yttrium
 {
@@ -52,7 +57,10 @@ namespace Yttrium
                 param(),
                 giant(param),
                 album(*this),
-                mutexes(album)
+                mutexes(album),
+                blocks(album),
+                straps(album),
+                quanta(blocks,straps)
                 {
                 }
 
@@ -72,6 +80,9 @@ namespace Yttrium
                 Mutex                giant;
                 Memory::Album        album;
                 Memory::Guild<Mutex> mutexes;
+                Memory::Blocks       blocks;
+                Memory::Straps       straps;
+                Memory::Quanta       quanta;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Quark);
@@ -99,6 +110,7 @@ namespace Yttrium
                     
                     if(QuarkInit)
                     {
+                        //std::cerr << "sizeof(Quark) = " << sizeof(Quark) << std::endl;
                         AtExit::Register(QuarkQuit, 0, AtExit::MaximumLongevity);
                         QuarkInit = false;
                     }
