@@ -95,7 +95,17 @@ namespace Yttrium
         }
     }
 
+    template <int N>
+    struct Int2Type
+    {
+        static const int Value = N;
+    };
 
+    template <typename T>
+    struct Type2Type
+    {
+        typedef T Type;
+    };
 
 
 

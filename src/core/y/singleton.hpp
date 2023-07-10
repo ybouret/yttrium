@@ -7,11 +7,29 @@
 #include "y/concurrent/singulet.hpp"
 #include "y/memory/out-of-reach.hpp"
 #include "y/calculus/align.hpp"
+#include "y/type/pick.hpp"
 
 #include <iostream>
 
 namespace Yttrium
 {
+
+    class NucleusSingleton
+    {
+    public:
+        static const bool                IsRegular = false;
+        static const bool                IsNucleus = true;
+        typedef Concurrent::NucleusMutex MutexType;
+    };
+
+    class RegularSingleton
+    {
+    public:
+        static const bool                IsRegular = true;
+        static const bool                IsNucleus = false;
+        typedef Concurrent::Mutex        MutexType;
+    };
+
 
     //__________________________________________________________________________
     //
@@ -26,17 +44,20 @@ namespace Yttrium
     //
     //
     //__________________________________________________________________________
-    template <typename T>
-    class Singleton : public Concurrent::Singulet
+    template <typename T, class POLICY = RegularSingleton >
+    class Singleton : public Concurrent::Singulet, public POLICY
     {
     public:
+        typedef typename POLICY::MutexType MutexType;
+        typedef Singleton<T,POLICY>        SingletonType;
+
         //______________________________________________________________________
         //
         //
         // Definitions
         //
         //______________________________________________________________________
-        static Concurrent::Mutex Access; //!< static class level mutex
+        static MutexType Access; //!< static class level mutex
 
         //______________________________________________________________________
         //
@@ -102,19 +123,19 @@ namespace Yttrium
         static inline void  Quit(void*) noexcept {
             if(0!=Instance_) {
                 Instance_->~T();
-                //Memory::OutOfReach::Zero(Instance__,Required);
+                Memory::OutOfReach::Zero(Instance_,Required);
                 Instance_ = 0;
             }
         }
     };
 
-    template <typename T> bool   Singleton<T>:: Register  = true;
-    template <typename T> T *    Singleton<T>:: Instance_ = 0;
-    template <typename T> size_t Singleton<T>:: Required  = 0;
+    template <typename T,class R> bool   Singleton<T,R>:: Register  = true;
+    template <typename T,class R> T *    Singleton<T,R>:: Instance_ = 0;
+    template <typename T,class R> size_t Singleton<T,R>:: Required  = 0;
 
-    template <typename T>
-    Concurrent::Mutex Singleton<T>:: Access(T::CallSign);
-    
+    template <typename T,class R>
+    typename Singleton<T,R>::MutexType Singleton<T,R>:: Access(T::CallSign);
+
 
 }
 

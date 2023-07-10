@@ -20,6 +20,23 @@ namespace
     };
 
     const char * const MyData:: CallSign = "MyData";
+
+    class SysData : public Singleton<SysData,NucleusSingleton>
+    {
+    public:
+        static const char * const      CallSign;
+        static const AtExit::Longevity LifeTime=777;
+
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(SysData);
+        SysData() : SingletonType() { std::cerr << "+SysData" << std::endl; }
+        virtual ~SysData() noexcept { std::cerr << "-SysData" << std::endl;}
+        friend class Singleton<SysData,NucleusSingleton>;
+    };
+
+    const char * const SysData:: CallSign = "SysData";
+
 }
 
 Y_UTEST(singleton)
@@ -27,7 +44,17 @@ Y_UTEST(singleton)
     
     MyData &data = MyData::Instance();
     std::cerr << "data.callSign = " << data.callSign() << std::endl;
-    
+    {
+        Y_LOCK(MyData::Access);
+    }
+
+
+    SysData &sysData = SysData::Instance();
+    std::cerr << "sysd.callSign = " << sysData.callSign() << std::endl;
+    {
+        Y_LOCK(SysData::Access);
+    }
+
 }
 Y_UDONE()
 

@@ -110,7 +110,6 @@ namespace Yttrium
                     
                     if(QuarkInit)
                     {
-                        //std::cerr << "sizeof(Quark) = " << sizeof(Quark) << std::endl;
                         AtExit::Register(QuarkQuit, 0, AtExit::MaximumLongevity);
                         QuarkInit = false;
                     }
@@ -140,7 +139,6 @@ namespace Yttrium
 }
 
 
-#include <iomanip>
 
 namespace Yttrium
 {
@@ -153,10 +151,46 @@ namespace Yttrium
 
     namespace Concurrent
     {
+        MutexProto:: ~MutexProto() noexcept
+        {
+        }
+
+        MutexProto:: MutexProto(const char *id) :
+        Lockable(id),
+        quark( Nucleus::QuarkInstance() )
+        {
+        }
+
+    }
+
+    namespace Concurrent
+    {
+        NucleusMutex:: NucleusMutex(const char *id) : MutexProto(id) {}
+        NucleusMutex:: ~NucleusMutex() noexcept {}
+
+        void NucleusMutex:: doLock() noexcept {
+            quark.lock();
+        }
+
+        void NucleusMutex:: doUnlock() noexcept {
+            quark.unlock();
+        }
+
+        bool NucleusMutex:: doTryLock() noexcept {
+            return quark.tryLock();
+        }
+
+        Nucleus::Mutex & NucleusMutex:: operator*() noexcept
+        {
+            return quark.giant;
+        }
+    }
+
+    namespace Concurrent
+    {
 
         Mutex:: Mutex(const char *id) :
-        Lockable(id),
-        quark( Nucleus::QuarkInstance() ),
+        MutexProto(id),
         mutex( quark.createMutex() )
         {
         }
@@ -181,6 +215,12 @@ namespace Yttrium
         bool Mutex:: doTryLock() noexcept {
             assert(0!=mutex);
             return mutex->tryLock();
+        }
+
+        Nucleus::Mutex & Mutex:: operator*() noexcept
+        {
+            assert(0!=mutex);
+            return *mutex;
         }
     }
 }
