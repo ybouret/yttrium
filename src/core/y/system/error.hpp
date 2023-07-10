@@ -9,27 +9,41 @@
 namespace Yttrium
 {
 
-    namespace Libc
-    {
-        //______________________________________________________________________
-        //
-        //
-        //! using strerror
-        //
-        //______________________________________________________________________
-        void FormatError(char  *      buffer,
-                         const size_t buflen,
-                         const int    err) noexcept;
+	namespace Libc
+	{
+		//______________________________________________________________________
+		//
+		//
+		//! using strerror
+		//
+		//______________________________________________________________________
+		void FormatError(char* buffer,
+			const size_t buflen,
+			const int    err) noexcept;
 
-        //______________________________________________________________________
-        //
-        //
-        //! using strerror + formated message, then abort
-        //
-        //______________________________________________________________________
-        void CriticalError(const int err, const char *fmt,...) Y_PRINTF_CHECK(2,3);
-    }
+		//______________________________________________________________________
+		//
+		//
+		//! using strerror + formated message, then abort
+		//
+		//______________________________________________________________________
+		void CriticalError(const int err, const char* fmt, ...) Y_PRINTF_CHECK(2, 3);
+	}
 
+#if defined(Y_WIN)
+	namespace Win32
+	{
+		//______________________________________________________________________
+	   //
+	   //
+	   //! using strerror
+	   //
+	   //______________________________________________________________________
+		void FormatError(char* buffer,
+			const size_t buflen,
+			const uint32_t    err) noexcept;
+	}
+#endif
 
 }
 

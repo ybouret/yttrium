@@ -45,6 +45,19 @@ namespace Yttrium
     }
 #endif
 
+#if defined(Y_WIN)
+    uint64_t WallTime::Ticks()
+    {
+        Y_GIANT_LOCK();
+        int64_t Q = 0;
+        if (!::QueryPerformanceCounter((LARGE_INTEGER*)&Q))
+        {
+            //throw win32::exception(::GetLastError(), " ::QueryPerformanceCounter");
+        }
+        return uint64_t(Q);
+    }
+#endif
+
 
 }
 
