@@ -4,6 +4,7 @@
 #include "y/system/exception.hpp"
 #include "y/system/error.hpp"
 #include "y/type/addition.hpp"
+#include "y/text/human-readable.hpp"
 
 #include <cerrno>
 
@@ -24,7 +25,10 @@ namespace Yttrium
 
         Legacy:: ~Legacy() noexcept
         {
-
+            if(RAM>0)
+            {
+                std::cerr << "*** RAM : still " << HumanReadable(RAM) << " available" << std::endl;
+            }
         }
 
         uint64_t Legacy:: Allocated() noexcept

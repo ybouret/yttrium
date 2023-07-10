@@ -22,6 +22,8 @@ Y_UTEST_DECL(256)
     Y_UTEST(memory_strap);
     Y_UTEST(memory_straps);
     Y_UTEST(memory_quanta);
+    Y_UTEST(memory_allocator);
+
 
 
     Y_UTEST(type_ints);

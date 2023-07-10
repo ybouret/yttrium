@@ -30,6 +30,10 @@ namespace Yttrium
             legacy = new ( Y_STATIC_ZARR(workspace) ) Legacy();
         }
 
+        const char * Global:: variety() const noexcept
+        {
+            return CallSign;
+        }
 
         void * Global:: acquire(size_t & count, const size_t blockSize)
         {
