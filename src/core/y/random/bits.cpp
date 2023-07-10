@@ -193,12 +193,6 @@ namespace Yttrium
         wkspD(),
         wkspL()
         {
-            //std::cerr << "sizeof(FullEngine<float>)       = " << sizeof(FullEngine<float>) << std::endl;
-            //std::cerr << "sizeof(FullEngine<double>)      = " << sizeof(FullEngine<double>) << std::endl;
-            //std::cerr << "sizeof(FullEngine<long double>) = " << sizeof(FullEngine<long double>) << std::endl;
-            //std::cerr << "sizeof(PackEngine<float>)       = " << sizeof(PackEngine<float>) << std::endl;
-            //std::cerr << "sizeof(PackEngine<double>)      = " << sizeof(PackEngine<double>) << std::endl;
-            //std::cerr << "sizeof(PackEngine<long double>) = " << sizeof(PackEngine<long double>) << std::endl;
 
             Coerce(F) = BuildEngine<float>(       umax ,Y_STATIC_ZARR(wkspF));
             Coerce(D) = BuildEngine<double>(      umax, Y_STATIC_ZARR(wkspD));

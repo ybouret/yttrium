@@ -14,6 +14,11 @@ namespace
         std::cerr << std::setw(8) << className << " => ";
         typedef typename Div<T>::API DivAPI;
         std::cerr << DivAPI::CallSign << std::endl;
+        const T numer = 254;
+        const T denom = 13;
+        const typename Div<T>::Type dv = DivAPI::Call(numer,denom);
+        std::cerr << numer << "/" << denom << " = " << dv.quot << " + " << dv.rem << "/" << denom << std::endl;
+        Y_CHECK(dv.quot*denom+dv.rem==numer);
     }
 }
 
@@ -30,6 +35,6 @@ Y_UTEST(type_div)
     Y_TEST_DIV(int32_t);
     Y_TEST_DIV(int64_t);
 
-    uint64_t 
+
 }
 Y_UDONE()
