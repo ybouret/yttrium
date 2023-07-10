@@ -46,6 +46,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(random_bits);
     Y_UTEST(random_shuffle);
 
+    Y_UTEST(sort_heap);
     //std::cerr << "-------- Platform: " << Y_PLATFORM << std::endl;
     //std::cerr << "-------- Compiler: " << Y_COMPILER << std::endl;
 }

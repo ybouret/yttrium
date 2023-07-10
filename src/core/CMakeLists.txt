@@ -20,6 +20,7 @@ data/pool
 concurrent
 random
 hashing
+sort
 utest 
 memory)
 

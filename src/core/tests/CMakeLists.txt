@@ -7,6 +7,7 @@ calculus
 concurrent
 random
 hashing
+sort
 )
 
 Y_LinkLibraries(test-core)
@@ -61,4 +62,7 @@ add_test(random:shuffle test-core random_shuffle)
 
 #hashing
 add_test(hashing:mix64 test-core hashing_mix64)
+
+#sort
+add_test(sort:heap     test-core sort_heap)
 
