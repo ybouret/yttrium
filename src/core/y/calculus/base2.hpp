@@ -81,6 +81,21 @@ namespace Yttrium
         return 0;
     }
 
+    //! bits necessary to write v
+    template <typename T>
+    inline unsigned BitsFor(const T v) noexcept
+    {
+        T        mask = Base2<T>::MaxPowerOfTwo;
+        unsigned nbit = 8*sizeof(T);
+        while(mask)
+        {
+            if(0!=(v&mask)) return nbit;
+            mask >>= 1;
+            --nbit;
+        }
+        return 0;
+    }
+
     //! previous power of two, v>0
     template <typename T>
     inline T PrevPowerOfTwo( const T v ) noexcept

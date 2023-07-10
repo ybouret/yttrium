@@ -20,6 +20,11 @@ namespace Yttrium
         static const bool                IsRegular = false;
         static const bool                IsNucleus = true;
         typedef Concurrent::NucleusMutex MutexType;
+
+        explicit NucleusSingleton() noexcept {}
+        virtual ~NucleusSingleton() noexcept {}
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(NucleusSingleton);
     };
 
     class RegularSingleton
@@ -28,6 +33,11 @@ namespace Yttrium
         static const bool                IsRegular = true;
         static const bool                IsNucleus = false;
         typedef Concurrent::Mutex        MutexType;
+
+        explicit RegularSingleton() noexcept {}
+        virtual ~RegularSingleton() noexcept {}
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(RegularSingleton);
     };
 
 
