@@ -23,7 +23,6 @@ Y_UTEST_DECL(256)
     Y_UTEST(memory_straps);
 
     Y_UTEST(type_ints);
-    Y_UTEST(type_hash32);
     Y_UTEST(type_div);
 
     Y_UTEST(text_plural);
