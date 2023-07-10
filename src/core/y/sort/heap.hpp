@@ -11,6 +11,61 @@ namespace Yttrium
     struct HeapSort
     {
 
+        template <typename T, typename COMPARE>
+        static inline
+        void Call(T ra[], const size_t n, COMPARE &proc)
+        {
+            if(n<2) return;
+            size_t   l   =(n >> 1)+1;
+            size_t   ir  = n;
+
+            T rra;
+
+            while(true)
+            {
+                if (l>1)
+                {
+                    rra=ra[--l];
+                    //memcpy(rra,&ra[--l*itsz],itsz);
+
+                }
+                else
+                {
+                    rra=ra[ir];
+                    ra[ir]=ra[1];
+
+                    if(--ir == 1)
+                    {
+                        ra[1]=rra;
+                        break;
+                    }
+                }
+
+                size_t    i   = l;
+                size_t    j   = l+l;
+
+                while (j <= ir)
+                {
+                    if( (j<ir) && proc(ra[j],ra[j+1])<0 )
+                            ++j;
+
+
+                    if( proc(rra,ra[j]) < 0 )
+                    {
+                        ra[i]=ra[j];
+                        i   = j;
+                        j <<= 1;
+                    }
+                    else
+                        break;
+                }
+                ra[i]=rra;
+            }
+        }
+
+
+
+#if 0
         //! arr[0..num-1] sorted using proc
         template <typename T, typename COMPARE>
         static inline
@@ -19,6 +74,7 @@ namespace Yttrium
             void *temp[ Y_WORDS_FOR(T) ];
             return Call(arr,num,sizeof(T),temp, Compare<T,COMPARE>, (void *) &proc);
         }
+#endif
 
     private:
         static void Call(void        *base,
