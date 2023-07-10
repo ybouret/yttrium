@@ -32,6 +32,7 @@ typedef CRITICAL_SECTION MutexType;
 #include "y/memory/blocks.hpp"
 #include "y/memory/straps.hpp"
 #include "y/memory/quanta.hpp"
+#include "y/memory/corpus.hpp"
 
 namespace Yttrium
 {
@@ -60,7 +61,8 @@ namespace Yttrium
                 mutexes(album),
                 blocks(album),
                 straps(album),
-                quanta(blocks,straps)
+                quanta(blocks,straps),
+                corpus(album)
                 {
                 }
 
@@ -83,6 +85,7 @@ namespace Yttrium
                 Memory::Blocks       blocks;
                 Memory::Straps       straps;
                 Memory::Quanta       quanta;
+                Memory::Corpus       corpus;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Quark);

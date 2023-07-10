@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_Memory_Book_Included
-#define Y_Memory_Book_Included 1
+#ifndef Y_Memory_Corpus_Included
+#define Y_Memory_Corpus_Included 1
 
 #include "y/config/starting.hpp"
 #include "y/memory/notes.hpp"
@@ -20,7 +20,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Book
+        class Corpus
         {
         public:
             //__________________________________________________________________
@@ -39,8 +39,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Book(Album &userAlbum); //!< setup from persistent Album
-            virtual ~Book() noexcept;        //!< cleanup
+            explicit Corpus(Album &userAlbum); //!< setup from persistent Album
+            virtual ~Corpus() noexcept;        //!< cleanup
 
             //__________________________________________________________________
             //
@@ -52,8 +52,12 @@ namespace Yttrium
             //! access proper Dyad
             Dyad & operator[](const unsigned shift) noexcept;
 
+            //! display statistics
+            void displayInfo(const size_t indent) const;
+
+
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Book);
+            Y_DISABLE_COPY_AND_ASSIGN(Corpus);
             Album &album;
             Notes  notes;
         };
