@@ -44,6 +44,8 @@ Y_UTEST_DECL(256)
     Y_UTEST(hashing_mix64);
 
     Y_UTEST(random_bits);
+    Y_UTEST(random_shuffle);
+
     //std::cerr << "-------- Platform: " << Y_PLATFORM << std::endl;
     //std::cerr << "-------- Compiler: " << Y_COMPILER << std::endl;
 }

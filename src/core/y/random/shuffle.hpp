@@ -1,0 +1,55 @@
+
+// \file
+
+#ifndef Y_Random_Shuffle_Included
+#define Y_Random_Shuffle_Included 1
+
+#include "y/random/bits.hpp"
+
+namespace Yttrium
+{
+    namespace Random
+    {
+
+        struct Shuffle
+        {
+
+            static void Tableau(void        *base,
+                                const size_t size,
+                                const size_t itemSize,
+                                Bits        &ran) noexcept;
+
+
+            template <typename T> static inline
+            void Tableau(T           *arr,
+                         const size_t num,
+                         Bits        &ran) noexcept
+            {
+                assert(Good(arr,num));
+                Tableau(arr,num,sizeof(T),ran);
+            }
+
+            template <typename LIST> static inline
+            void List(LIST &L, Bits &ran) noexcept
+            {
+                typename LIST::SelfType temp;
+                while(L.size)
+                {
+                    if( ran.choice() )
+                        temp.pushTail( L.popTail() );
+                    else
+                        temp.pushHead( L.popTail() );
+                }
+                temp.swapWith(L);
+            }
+
+
+        };
+
+
+    }
+
+}
+
+#endif
+

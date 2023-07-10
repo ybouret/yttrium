@@ -49,6 +49,15 @@ namespace Yttrium
             template <typename T> T to()     noexcept;     //!< float|double|long double|uint[8|16|32|64]_t
 
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            size_t leq(size_t n) noexcept;
+            bool   choice()      noexcept; //!< 50/50 choice
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Bits);
             const Engine<float>       * const F;

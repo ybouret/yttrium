@@ -36,7 +36,9 @@ Y_UTEST(random_bits)
     {
         std::cerr << "seed=" << SystemSeed::Get() << std::endl;
     }
+
     
+
 
 }
 Y_UDONE()

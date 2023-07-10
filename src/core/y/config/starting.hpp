@@ -42,7 +42,9 @@ namespace Yttrium
         return (T&)args;
     }
 
-
+    bool Die(const char *);                         //!< return true
+    bool Say(const char *);                         //!< return false
+    bool Good(const void *addr, const size_t size); //!< !(addr==NULL&&size>0) */
 
     namespace Core
     {
@@ -62,6 +64,23 @@ namespace Yttrium
             return os;
         }
 
+        template <typename OSTREAM, typename T> inline
+        OSTREAM & Display(OSTREAM &os, T *arr, const size_t num) {
+            assert(Good(arr,num));
+            os << '[';
+            if(num>0)
+            {
+                os << arr[0];
+                for(size_t i=1;i<num;++i) os << ';' << arr[i];
+            }
+            os << ']';
+            return os;
+        }
+
+        //______________________________________________________________________
+        //
+        //! helper to safe string-like length
+        //______________________________________________________________________
         template <typename T> static inline
         size_t Length(const T *arr) noexcept
         {
@@ -76,9 +95,7 @@ namespace Yttrium
         }
     }
 
-    bool Die(const char *);                         //!< return true
-    bool Say(const char *);                         //!< return false
-    bool Good(const void *addr, const size_t size); //!< !(addr==NULL&&size>0) */
+
 
 
 

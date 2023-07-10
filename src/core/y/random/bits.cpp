@@ -1,6 +1,7 @@
 #include "y/random/bits.hpp"
 #include "y/memory/out-of-reach.hpp"
 #include "y/check/static.hpp"
+#include "y/type/ints.hpp"
 
 #include <cmath>
 #include <new>
@@ -151,27 +152,18 @@ namespace Yttrium
 
 
 
-
-
-
-
-
-
         template <typename T> static inline
         Bits::Engine<T> * BuildEngine(const uint32_t umax, void *wksp) noexcept
         {
             static const Metrics<T> metrics;
             if(umax>metrics.mask)
             {
-                //std::cerr << "pack:float " << sizeof(T) << " : " << umax << " exceeds " << metrics.mask << std::endl;
                 return new (wksp) PackEngine<T>(umax,metrics.mask);
             }
             else
             {
-                //std::cerr << "full:float " << sizeof(T) << " : " << umax << " lower than " << metrics.mask << std::endl;
                 return new (wksp) FullEngine<T>(umax);
             }
-            return 0;
         }
 
 
@@ -198,6 +190,9 @@ namespace Yttrium
             Coerce(D) = BuildEngine<double>(      umax, Y_STATIC_ZARR(wkspD));
             Coerce(L) = BuildEngine<long double>( umax, Y_STATIC_ZARR(wkspL));
         }
+
+
+
 
         
         template <> float Bits:: to<float>() noexcept
@@ -239,6 +234,18 @@ namespace Yttrium
             alias.dw[0] = to<uint32_t>();
             alias.dw[1] = to<uint32_t>();
             return alias.qw;
+        }
+
+        size_t Bits:: leq(size_t n) noexcept
+        {
+            typedef UnsignedInt<sizeof(size_t)>::Type WordType;
+            return (to<WordType>() % (++n));
+        }
+
+
+        bool   Bits:: choice() noexcept
+        {
+            return to<double>() >= 0.5;
         }
 
     }
