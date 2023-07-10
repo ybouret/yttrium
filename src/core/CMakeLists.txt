@@ -21,7 +21,8 @@ random
 hashing
 sort
 utest 
-memory)
+memory
+memory/allocator)
 
 source_group(concurrent FILES ${quark})
 
