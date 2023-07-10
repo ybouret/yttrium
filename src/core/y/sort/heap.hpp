@@ -4,6 +4,8 @@
 #define Y_Sort_Heap_Included 1
 
 #include "y/calculus/align.hpp"
+#include "y/memory/out-of-reach.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
@@ -16,17 +18,16 @@ namespace Yttrium
         void Call(T ra[], const size_t n, COMPARE &proc)
         {
             if(n<2) return;
+            void *   _[ Y_WORDS_FOR(T) ];
             size_t   l   =(n >> 1)+1;
             size_t   ir  = n;
-
-            T rra;
+            T       &rra = *static_cast<T*>(Memory::OutOfReach::Addr(_));
 
             while(true)
             {
                 if (l>1)
                 {
-                    rra=ra[--l];
-                    //memcpy(rra,&ra[--l*itsz],itsz);
+                    memcpy(&rra,&ra[--l],sizeof(T));
 
                 }
                 else
