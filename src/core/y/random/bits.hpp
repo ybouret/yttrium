@@ -55,7 +55,7 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            size_t leq(size_t n) noexcept;
+            size_t leq(size_t n) noexcept; //!< in 0..n
             bool   choice()      noexcept; //!< 50/50 choice
 
         private:

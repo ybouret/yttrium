@@ -9,11 +9,34 @@
 
 namespace Yttrium
 {
-
+    //__________________________________________________________________________
+    //
+    //
+    //! HeapSort algorithm
+    //
+    //__________________________________________________________________________
     struct HeapSort
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! arr[0..num-1]
+        //
+        //______________________________________________________________________
+        template <typename T, typename COMPARE> static inline
+        void Tableau(T arr[], size_t num, COMPARE &proc)
+        {
+            Call<T,T*,COMPARE>( Memory::OutOfReach::Shift(arr,-1),num,proc);
+        }
+
+
+        //______________________________________________________________________
+        //
+        //
         //! arr = T[1..n]
+        //
+        //______________________________________________________________________
         template <
         typename T,
         typename ARRAY,
@@ -25,11 +48,11 @@ namespace Yttrium
         {
             if(num<2) return;
 
-            void *   _[ Y_WORDS_FOR(T) ];
-            size_t          il  = (num>>1)+1;
-            size_t          ir  = num;
-            T       &       __  = *static_cast<T*>(Memory::OutOfReach::Addr(_));
-            T       * const a1  = &arr[1];
+            void *          _[ Y_WORDS_FOR(T) ];                                 // temporary
+            size_t          il  = (num>>1)+1;                                    // left index
+            size_t          ir  = num;                                           // right index
+            T       &       __  = *static_cast<T*>(Memory::OutOfReach::Addr(_)); // alias
+            T       * const a1  = &arr[1];                                       // alias
 
             while(true)
             {
@@ -68,12 +91,6 @@ namespace Yttrium
             }
         }
 
-        //! arr[0..num-1]
-        template <typename T, typename COMPARE> static inline
-        void Tableau(T arr[], size_t num, COMPARE &proc)
-        {
-            Call<T,T*,COMPARE>( Memory::OutOfReach::Shift(arr,-1),num,proc);
-        }
 
         
         
