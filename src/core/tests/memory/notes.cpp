@@ -1,7 +1,6 @@
 #include "y/memory/album.hpp"
 #include "y/memory/notes.hpp"
 #include "y/utest/run.hpp"
-#include "../alea.hpp"
 
 #include <cstring>
 
@@ -15,8 +14,6 @@ struct block_t
 
 Y_UTEST(memory_notes)
 {
-    alea_seed();
-
     Memory::Album  album;
     {
         Memory::Notes notes(album);

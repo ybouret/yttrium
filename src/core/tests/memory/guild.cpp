@@ -5,7 +5,7 @@
 #include "y/memory/album.hpp"
 
 #include "y/utest/run.hpp"
-#include "../alea.hpp"
+#include "y/random/shuffle.hpp"
 
 #include <cstring>
 
@@ -36,8 +36,7 @@ namespace
 
 Y_UTEST(memory_guild)
 {
-    alea_seed();
-
+    Random::Rand          ran;
     typedef XNode<short>  iNode;
     typedef XNode<double> dNode;
 
@@ -55,8 +54,8 @@ Y_UTEST(memory_guild)
     dList dl;
     for(size_t i=10;i>0;--i)
     {
-        if(alea()>0.5) il.pushTail( iG.construct() ); else il.pushHead( iG.construct() );
-        if(alea()>0.5) dl.pushTail( dG.construct() ); else dl.pushHead( dG.construct() );
+        if(ran.choice()) il.pushTail( iG.construct() ); else il.pushHead( iG.construct() );
+        if(ran.choice()) dl.pushTail( dG.construct() ); else dl.pushHead( dG.construct() );
     }
 
     std::cerr << il << std::endl;
@@ -64,8 +63,8 @@ Y_UTEST(memory_guild)
 
     for(size_t i=1000;i>0;--i)
     {
-        if(alea()>0.5) il.pushTail( iG.construct() ); else il.pushHead( iG.construct() );
-        if(alea()>0.5) dl.pushTail( dG.construct() ); else dl.pushHead( dG.construct() );
+        if(ran.choice()) il.pushTail( iG.construct() ); else il.pushHead( iG.construct() );
+        if(ran.choice()) dl.pushTail( dG.construct() ); else dl.pushHead( dG.construct() );
     }
 
     while( il.size ) iG.eradicate( il.popTail() );

@@ -5,7 +5,7 @@
 #include "y/memory/album.hpp"
 
 #include "y/utest/run.hpp"
-#include "../alea.hpp"
+#include "y/random/shuffle.hpp"
 
 #include <cstring>
 
@@ -14,8 +14,7 @@ using namespace Yttrium;
 
 Y_UTEST(memory_arena)
 {
-    alea_seed();
-
+    Random::Rand ran;
     Y_SIZEOF(Memory::Arena);
 
     size_t pageBytes = 4096;
@@ -59,7 +58,7 @@ Y_UTEST(memory_arena)
         
         for(size_t loop=1;loop<=4;++loop)
         {
-            alea_shuffle(blk,NB);
+            Random::Shuffle::Tableau(blk,NB,ran);
             for(size_t i=0;i<NB/2;++i)
             {
                 arena.releaseBlock(blk[i]);
@@ -73,7 +72,7 @@ Y_UTEST(memory_arena)
         std::cerr << "-------- Full Usage: " << std::endl;
         album.displayInfo(0);
         arena.displayInfo(0);
-        alea_shuffle(blk,NB);
+        Random::Shuffle::Tableau(blk,NB,ran);
         for(size_t i=0;i<NB;++i)
         {
            arena.releaseBlock( blk[i] );

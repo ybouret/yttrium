@@ -1,8 +1,9 @@
 
 #include "y/memory/straps.hpp"
 #include "y/utest/run.hpp"
-#include "../alea.hpp"
 #include "y/data/list/cxx.hpp"
+#include "y/random/shuffle.hpp"
+#include "y/memory/out-of-reach.hpp"
 
 using namespace Yttrium;
 
@@ -18,8 +19,8 @@ namespace
 
 Y_UTEST(memory_straps)
 {
-    alea_seed();
 
+    Random::Rand   ran;
     Memory::Album  album;
     {
         Memory::Straps straps(album);
@@ -40,13 +41,13 @@ Y_UTEST(memory_straps)
             for(size_t i=0;i<NB;++i)
             {
                 block_t &blk = blocks[i];
-                blk.size = alea_leq(100);
+                blk.size = ran.leq(100);
                 blk.addr = straps.acquire(blk.size);
             }
 
             for(size_t iter=0;iter<16;++iter)
             {
-                alea_shuffle(blocks,NB);
+                Random::Shuffle::Tableau(blocks,NB,ran);
                 for(size_t i=NB-1;i>=NB/2;--i)
                 {
                     block_t &blk = blocks[i];
@@ -56,13 +57,13 @@ Y_UTEST(memory_straps)
                 for(size_t i=NB/2;i<NB;++i)
                 {
                     block_t &blk = blocks[i];
-                    blk.size = alea_leq(100);
+                    blk.size = ran.leq(100);
                     blk.addr = straps.acquire(blk.size);
                 }
             }
 
 
-            alea_shuffle(blocks,NB);
+            Random::Shuffle::Tableau(blocks,NB,ran);
             for(size_t i=0;i<NB;++i)
             {
                 block_t &blk = blocks[i];

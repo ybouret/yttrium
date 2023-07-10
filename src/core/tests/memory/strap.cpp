@@ -1,10 +1,11 @@
 
 #include "y/memory/strap.hpp"
 #include "y/utest/run.hpp"
-#include "../alea.hpp"
 #include "y/data/list/cxx.hpp"
 #include "y/memory/pages.hpp"
 #include "y/calculus/align.hpp"
+#include "y/random/shuffle.hpp"
+#include "y/memory/out-of-reach.hpp"
 
 using namespace Yttrium;
 
@@ -34,11 +35,13 @@ namespace
     };
 
     static inline
-    void fill(ListOf<block> &blocks, Memory::Strap *strap)
+    void fill(ListOf<block> &blocks,
+              Memory::Strap *strap,
+              Random::Bits  &ran)
     {
         while(true)
         {
-            size_t blockSize = alea_leq(200);
+            size_t blockSize = ran.leq(200);
             void  *blockAddr = strap->acquire(blockSize);
             if(!blockAddr) break;
 
@@ -55,7 +58,7 @@ namespace
 Y_UTEST(memory_strap)
 {
 
-    alea_seed();
+    Random::Rand   ran;
 
     void          *wksp[ Memory::Page::DefaultBytes / sizeof(void*) ];
     Memory::Strap *strap = new (wksp) Memory::Strap(wksp,sizeof(wksp));
@@ -64,12 +67,12 @@ Y_UTEST(memory_strap)
 
 
     CxxListOf<block> blocks;
-    fill(blocks,strap);
+    fill(blocks,strap,ran);
 
 
     for(size_t iter=0;iter<16;++iter)
     {
-        alea_shuffle(blocks);
+        Random::Shuffle::List(blocks,ran);
         const size_t half = blocks.size/2;
         while(blocks.size>half)
         {
@@ -78,7 +81,7 @@ Y_UTEST(memory_strap)
             delete b;
         }
 
-        fill(blocks,strap);
+        fill(blocks,strap,ran);
     }
 
     while(blocks.size)

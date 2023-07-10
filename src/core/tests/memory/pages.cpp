@@ -1,16 +1,15 @@
 
 #include "y/memory/pages.hpp"
 #include "y/utest/run.hpp"
-#include "../alea.hpp"
 #include "y/lockable.hpp"
+#include "y/random/shuffle.hpp"
 
 using namespace Yttrium;
 
 
 Y_UTEST(memory_pages)
 {
-    alea_seed();
-
+    Random::Rand ran;
     std::cerr << "Memory::Pages::MinBytes = " << Memory::Pages::MinBytes << std::endl;
     std::cerr << "Memory::Pages::MaxBytes = " << Memory::Pages::MaxBytes << std::endl;
     std::cerr << "Memory::Pages::Number   = " << Memory::Pages::Number   << std::endl;

@@ -4,8 +4,7 @@
 #include "y/utest/run.hpp"
 #include "y/calculus/align.hpp"
 #include "y/calculus/base2.hpp"
-
-#include "../alea.hpp"
+#include "y/random/shuffle.hpp"
 
 
 using namespace Yttrium;
@@ -13,8 +12,7 @@ using namespace Yttrium;
 
 Y_UTEST(memory_chunk)
 {
-    alea_seed();
-
+    Random::Rand ran;
     void *addr[256];
     Y_STATIC_ZARR(addr);
 
@@ -25,9 +23,9 @@ Y_UTEST(memory_chunk)
     for(size_t block_size=1;block_size<=max_block_size;++block_size)
     {
         std::cerr << "[block_size=" << block_size << "]" << std::endl;
-        const size_t max_blocks     = 1+alea_leq(254);
+        const size_t max_blocks     = 1+ran.leq(254);
         const size_t max_chunk_size = max_blocks * block_size;
-        for(size_t chunk_size=block_size;chunk_size<=max_chunk_size;chunk_size += 1+alea_leq(block_size))
+        for(size_t chunk_size=block_size;chunk_size<=max_chunk_size;chunk_size += 1+ran.leq(block_size))
         {
             void  *chunk_data = ram.acquire(chunk_size);
             Memory::Chunk chunk(block_size, chunk_data, chunk_size);
@@ -40,7 +38,7 @@ Y_UTEST(memory_chunk)
                 {
                     addr[count++] = chunk.acquire(block_size);
                 }
-                alea_shuffle(addr,count);
+                Random::Shuffle::Tableau(addr,count,ran);
                 size_t half = count >> 1;
                 while(half-- > 0) chunk.release(addr[--count],block_size);
             }

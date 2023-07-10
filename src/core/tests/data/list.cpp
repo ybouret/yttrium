@@ -2,7 +2,7 @@
 #include "y/memory/out-of-reach.hpp"
 
 #include "y/utest/run.hpp"
-#include "../alea.hpp"
+#include "y/random/shuffle.hpp"
 
 using namespace Yttrium;
 
@@ -30,11 +30,11 @@ namespace
 
 Y_UTEST(data_list)
 {
-
+    Random::Rand  ran;
     ListOf<iNode> iList;
-    for(size_t i=10+alea_leq(10);i>0;--i)
+    for(size_t i=10+ran.leq(10);i>0;--i)
     {
-        if( alea() > 0.5 )
+        if( ran.choice() )
             iList.pushTail( new iNode() );
         else
             iList.pushHead( new iNode() );
@@ -43,7 +43,7 @@ Y_UTEST(data_list)
     std::cerr << iList << std::endl;
     while(iList.size)
     {
-        delete ( (alea()>0.5) ? iList.popTail() : iList.popHead());
+        delete ( ran.choice() ? iList.popTail() : iList.popHead());
         std::cerr << iList << std::endl;
     }
 
@@ -55,7 +55,7 @@ Y_UTEST(data_list)
         {
             indx[i] = i;
         }
-        alea_shuffle(indx,n);
+        Random::Shuffle::Tableau(indx,n,ran);
         for(size_t i=0;i<n;++i)
         {
             iNode *node = &nodes[ indx[i] ];
@@ -65,7 +65,7 @@ Y_UTEST(data_list)
         }
 
         while(iList.size) iList.popTail();
-        alea_shuffle(indx,n);
+        Random::Shuffle::Tableau(indx,n,ran);
 
         for(size_t i=0;i<n;++i)
         {
@@ -96,7 +96,7 @@ Y_UTEST(data_list)
         {
             for(size_t i=0;i<n;++i)
             {
-                if( alea() > 0.5 )
+                if( ran.choice() > 0.5 )
                     iList.pushTail( new iNode() );
                 else
                     iList.pushHead( new iNode() );

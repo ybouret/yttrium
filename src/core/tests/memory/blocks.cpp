@@ -6,7 +6,7 @@
 #include "y/memory/out-of-reach.hpp"
 
 #include "y/utest/run.hpp"
-#include "../alea.hpp"
+#include "y/random/shuffle.hpp"
 
 #include <cstring>
 
@@ -20,8 +20,8 @@ struct block_t
 
 Y_UTEST(memory_blocks)
 {
-    alea_seed();
 
+    Random::Rand   ran;
     Memory::Album  album;
     Memory::Blocks blocks(album);
 
@@ -33,11 +33,11 @@ Y_UTEST(memory_blocks)
     for(size_t i=0;i<num;++i)
     {
         block_t &b = blk[i];
-        b.size = 1 + alea_leq(255);
+        b.size = 1 + ran.leq(255);
         b.addr = blocks.acquire(b.size);
     }
 
-    alea_shuffle(blk,num);
+    Random::Shuffle::Tableau(blk,num,ran);
 
     for(size_t i=0;i<num;++i)
     {

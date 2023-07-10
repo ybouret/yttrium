@@ -1,8 +1,7 @@
 
 #include "y/data/pool.hpp"
 #include "y/utest/run.hpp"
-#include "y/check/crc32.hpp"
-#include "../alea.hpp"
+#include "y/random/shuffle.hpp"
 
 using namespace Yttrium;
 
@@ -30,13 +29,12 @@ namespace
 
 Y_UTEST(data_pool)
 {
-    const unsigned seed = unsigned(time(0));
-    srand( CRC32::Of(seed) );
 
+    Random::Rand  ran;
     PoolOf<iNode> iPool;
 
     std::cerr << "store" << std::endl;
-    for(size_t i=alea_leq(30)+2;i>0;--i)
+    for(size_t i=ran.leq(30)+2;i>0;--i)
     {
         iPool.store( new iNode() );
         std::cerr << iPool << std::endl;
