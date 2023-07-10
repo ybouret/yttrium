@@ -225,3 +225,19 @@ namespace Yttrium
     }
 }
 
+#include "y/concurrent/memory.hpp"
+
+
+
+namespace Yttrium
+{
+    namespace Concurrent
+    {
+
+        Memory::Straps & Mem:: StrapsInstance()
+        {
+            return Nucleus:: QuarkInstance().straps;
+        }
+    }
+
+}

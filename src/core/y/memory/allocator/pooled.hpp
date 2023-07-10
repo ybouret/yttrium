@@ -19,9 +19,9 @@ namespace Yttrium
             static const char * const      CallSign; //!< "Memory::Global"
             static const AtExit::Longevity LifeTime; //!< AtExit::MaximumLongevity - 1;
 
-            virtual void * acquire(size_t & count, const size_t blockSize);
-            virtual void   release(void * & entry, size_t &     count) noexcept;
-
+            virtual void *       acquire(size_t & count, const size_t blockSize);
+            virtual void         release(void * & entry, size_t &     count) noexcept;
+            virtual const char * variety()                             const noexcept;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pooled);

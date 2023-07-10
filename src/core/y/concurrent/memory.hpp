@@ -15,7 +15,10 @@ namespace Yttrium
 
     namespace Concurrent
     {
-        
+        struct Mem
+        {
+            static Memory::Straps &StrapsInstance();
+        };
     }
 
 }

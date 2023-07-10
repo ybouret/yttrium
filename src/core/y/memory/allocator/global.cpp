@@ -57,6 +57,8 @@ namespace Yttrium
         {
             assert(0!=legacy);
             legacy->release(entry,count); // system locked
+            entry = 0;
+            count = 0;
         }
 
         

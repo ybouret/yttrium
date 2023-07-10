@@ -39,7 +39,7 @@ namespace Yttrium
     /**
      assuming that class have
      - a 'const char * const CallSign'
-     - 'AtExit::Longevity  LifeTime'
+     - a 'AtExit::Longevity  LifeTime'
      */
     //
     //
