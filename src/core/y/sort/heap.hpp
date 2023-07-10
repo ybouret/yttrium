@@ -13,89 +13,73 @@ namespace Yttrium
     struct HeapSort
     {
 
-        template <typename T, typename COMPARE>
+        //! arr = T[1..n]
+        template <
+        typename T,
+        typename ARRAY,
+        typename COMPARE>
         static inline
-        void Call(T ra[], const size_t n, COMPARE &proc)
+        void Call(T            arr[],
+                  const size_t num,
+                  COMPARE     &proc)
         {
-            if(n<2) return;
+            if(num<2) return;
+
             void *   _[ Y_WORDS_FOR(T) ];
-            size_t   l   =(n >> 1)+1;
-            size_t   ir  = n;
-            T       &rra = *static_cast<T*>(Memory::OutOfReach::Addr(_));
+            size_t   il  = (num>>1)+1;
+            size_t   ir  = num;
+            T       &__  = *static_cast<T*>(Memory::OutOfReach::Addr(_));
+            T       *ar1 = &arr[1];
 
             while(true)
             {
-                if (l>1)
+                if(il>1)
                 {
-                    memcpy(&rra,&ra[--l],sizeof(T));
-
+                    Memory::OutOfReach::Copy(_,&arr[--il],sizeof(T));
                 }
                 else
                 {
-                    rra=ra[ir];
-                    ra[ir]=ra[1];
-
+                    Memory::OutOfReach::Move(_,&arr[ir],ar1,sizeof(T));
                     if(--ir == 1)
                     {
-                        ra[1]=rra;
+                        Memory::OutOfReach::Copy(ar1,_,sizeof(T));
                         break;
                     }
                 }
 
-                size_t    i   = l;
-                size_t    j   = l+l;
+                size_t    i   = il;
+                size_t    j   = il<<1;
 
                 while (j <= ir)
                 {
-                    if( (j<ir) && proc(ra[j],ra[j+1])<0 )
+                    if( (j<ir) && proc(arr[j],arr[j+1]) < 0 )
                             ++j;
 
 
-                    if( proc(rra,ra[j]) < 0 )
+                    if( proc(__,arr[j]) < 0 )
                     {
-                        ra[i]=ra[j];
+                        arr[i]=arr[j];
                         i   = j;
                         j <<= 1;
                     }
                     else
                         break;
                 }
-                ra[i]=rra;
+
+                Memory::OutOfReach::Copy(&arr[i],_,sizeof(T));
             }
         }
 
-
-
-#if 0
-        //! arr[0..num-1] sorted using proc
-        template <typename T, typename COMPARE>
-        static inline
-        void Call(T arr[], const size_t num, COMPARE &proc)
-        {
-            void *temp[ Y_WORDS_FOR(T) ];
-            return Call(arr,num,sizeof(T),temp, Compare<T,COMPARE>, (void *) &proc);
-        }
-#endif
-
-    private:
-        static void Call(void        *base,
-                         const size_t size,
-                         const size_t itsz,
-                         void        *temp,
-                         int        (*proc)(const void *,const void *,void*),
-                         void        *args) noexcept;
-
+        //! arr[0..num-1]
         template <typename T, typename COMPARE> static inline
-        int Compare(const void *lhs, const void *rhs, void *args)
+        void Tableau(T arr[], size_t num, COMPARE &proc)
         {
-            assert(0!=lhs);
-            assert(0!=rhs);
-            assert(0!=args);
-            COMPARE &f = *(COMPARE*)args;
-            const T &l = *static_cast<const T *>(lhs);
-            const T &r = *static_cast<const T *>(rhs);
-            return f(l,r);
+            Call<T,T*,COMPARE>( Memory::OutOfReach::Shift(arr,-1),num,proc);
         }
+
+        
+        
+
 
     };
 

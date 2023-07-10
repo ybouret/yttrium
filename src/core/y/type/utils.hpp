@@ -37,7 +37,11 @@ namespace Yttrium
         return Min(Max(lo,x),hi);
     }
 
-    
+    template <typename T> inline
+    T Squared(T x)
+    {
+        return x*x;
+    }
 
 }
 

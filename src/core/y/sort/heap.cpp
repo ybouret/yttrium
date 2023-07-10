@@ -3,7 +3,7 @@
 
 namespace Yttrium
 {
-    
+#if 0
     void HeapSort:: Call(void        *p,
                          const size_t n,
                          const size_t itsz,
@@ -83,5 +83,7 @@ namespace Yttrium
         }
 
     }
+#endif
+    
 
 }

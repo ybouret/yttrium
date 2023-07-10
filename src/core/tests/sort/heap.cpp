@@ -36,11 +36,11 @@ Y_UTEST(sort_heap)
             Random::Shuffle::Tableau(arr,n,ran);
 
             Core::Display(std::cerr,arr,n) << std::endl;
-            HeapSort::Call(arr-1,n,compare<double>);
+            HeapSort::Tableau(arr,n,compare<double>);
             Core::Display(std::cerr,arr,n) << std::endl;
             for(size_t i=0;i<n;++i)
             {
-                Y_ASSERT(size_t(arr[i]) == i);
+                Y_ASSERT( size_t(arr[i]) == i );
             }
         }
     }

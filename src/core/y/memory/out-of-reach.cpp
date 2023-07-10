@@ -136,6 +136,23 @@ namespace Yttrium
 
         }
 
+        void OutOfReach:: Move(void *a, void *b, const void *c, const size_t size)          noexcept
+        {
+            assert( Good(a,size) );
+            assert( Good(b,size) );
+            assert( Good(c,size) );
+            uint8_t *       p = static_cast<uint8_t *>(a);
+            uint8_t *       q = static_cast<uint8_t *>(b);
+            const uint8_t * r = static_cast<const uint8_t *>(c);
+            for(size_t i=0;i<size;++i)
+            {
+                p[i] = q[i];
+                q[i] = r[i];
+            }
+
+
+        }
+
         void OutOfReach:: Fill(void *       tgtAddr,
                                const size_t tgtSize,
                                const void  *srcAddr,

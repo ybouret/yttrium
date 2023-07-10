@@ -14,12 +14,14 @@ namespace Yttrium
         struct Shuffle
         {
 
+            //! generic call on base[0..size*itemize-1]
             static void Tableau(void        *base,
                                 const size_t size,
                                 const size_t itemSize,
                                 Bits        &ran) noexcept;
 
 
+            //! genric call on Tableau[0..num-1]
             template <typename T> static inline
             void Tableau(T           *arr,
                          const size_t num,

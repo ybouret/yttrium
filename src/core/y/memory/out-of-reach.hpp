@@ -32,6 +32,7 @@ namespace Yttrium
             static void *       Haul(void *addr, ptrdiff_t delta)                                 noexcept; //!< return addr+delta
             static void         Lift(void *addr, size_t size, const size_t blockSize)             noexcept; //!< addr+size -> addr+size+blockSize, addr[blockSize] = 0
             static void         Fill(void *tgt, const size_t, const void *src, const size_t)      noexcept; //!< fill tgt with copy(ies) of src
+            static void         Move(void *a, void *b, const void *c, const size_t size)          noexcept; //!< a=b,b=c
 
             //! zeroed, destructed item
             template <typename T> static inline
@@ -45,6 +46,14 @@ namespace Yttrium
             T *Cast(U *source) noexcept
             {
                 return static_cast<T*>( Addr(source) );
+            }
+
+            //! force Haul
+            template <typename T> static inline
+            T *Shift(T *item, const ptrdiff_t n) noexcept
+            {
+                static const ptrdiff_t sz = sizeof(T);
+                return static_cast<T*>( Haul(item,n*sz) );
             }
 
         };
