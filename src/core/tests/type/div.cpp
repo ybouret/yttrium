@@ -14,7 +14,7 @@ namespace
         std::cerr << std::setw(8) << className << " => ";
         typedef typename Div<T>::API DivAPI;
         std::cerr << DivAPI::CallSign << std::endl;
-        const T numer = 254;
+        const T numer = 126;
         const T denom = 13;
         const typename Div<T>::Type dv = DivAPI::Call(numer,denom);
         std::cerr << numer << "/" << denom << " = " << dv.quot << " + " << dv.rem << "/" << denom << std::endl;
