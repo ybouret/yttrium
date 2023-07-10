@@ -53,6 +53,15 @@ Y_UTEST(memory_guild)
 
     iList il;
     dList dl;
+    for(size_t i=10;i>0;--i)
+    {
+        if(alea()>0.5) il.pushTail( iG.construct() ); else il.pushHead( iG.construct() );
+        if(alea()>0.5) dl.pushTail( dG.construct() ); else dl.pushHead( dG.construct() );
+    }
+
+    std::cerr << il << std::endl;
+    std::cerr << dl << std::endl;
+
     for(size_t i=1000;i>0;--i)
     {
         if(alea()>0.5) il.pushTail( iG.construct() ); else il.pushHead( iG.construct() );
