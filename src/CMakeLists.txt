@@ -45,6 +45,11 @@ macro(Y_LinkLibraries target)
     if(Y_LINUX)
         list(APPEND libs pthread)
     endif()
+    
+    if(Y_LINUX)
+		list(APPEND libs rt)
+    endif()
+    
     target_link_libraries(${target} ${libs})
 endmacro()
 
