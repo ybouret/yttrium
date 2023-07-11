@@ -100,7 +100,7 @@ namespace Yttrium
                     Required = sizeof(Instance__);
                 }
 
-                return *(Instance_ = new ( Y_STATIC_ZARR(Instance__) ) T() );
+                return *( Instance_ = new ( Y_STATIC_ZARR(Instance__) ) T() );
             }
             else
                 return *Instance_;

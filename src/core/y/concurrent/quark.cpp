@@ -241,6 +241,11 @@ namespace Yttrium
         {
             return Nucleus:: QuarkInstance().straps;
         }
+
+        Memory::Corpus & Mem:: CorpusInstance()
+        {
+            return Nucleus:: QuarkInstance().corpus;
+        }
     }
 
 }

@@ -18,7 +18,8 @@ namespace Yttrium
         }
 
         static Straps   * straps = 0;
-        Pooled:: Pooled()
+
+        Pooled:: Pooled() : SingletonType(), Allocator()
         {
             straps = & Concurrent::Mem::StrapsInstance();
         }

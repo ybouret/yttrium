@@ -11,6 +11,7 @@ namespace Yttrium
     namespace Memory
     {
         class Straps;
+        class Corpus;
     };
 
     namespace Concurrent
@@ -18,6 +19,8 @@ namespace Yttrium
         struct Mem
         {
             static Memory::Straps &StrapsInstance();
+            static Memory::Corpus &CorpusInstance();
+
         };
     }
 
