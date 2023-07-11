@@ -1,6 +1,5 @@
 
 #include "y/memory/allocator/dyadic.hpp"
-#include "y/memory/allocator/pooled.hpp"
 #include "y/memory/corpus.hpp"
 #include "y/concurrent/memory.hpp"
 #include "y/system/exception.hpp"
@@ -14,8 +13,7 @@ namespace Yttrium
     namespace Memory
     {
 
-        const AtExit::Longevity Dyadic:: LifeTime = Pooled::LifeTime - 1;
-        const char * const      Dyadic:: CallSign = "Memory::Dyadic";
+        const char * const Dyadic:: CallSign = "Memory::Dyadic";
 
         const char * Dyadic :: variety() const noexcept { return CallSign; }
 

@@ -1,6 +1,5 @@
 
 #include "y/memory/allocator/pooled.hpp"
-#include "y/memory/allocator/global.hpp"
 #include "y/memory/straps.hpp"
 #include "y/concurrent/memory.hpp"
 
@@ -9,7 +8,6 @@ namespace Yttrium
 
     namespace Memory
     {
-        const AtExit::Longevity Pooled:: LifeTime = Global::LifeTime - 1;
         const char * const      Pooled:: CallSign = "Memory::Pooled";
 
         const char * Pooled:: variety() const noexcept

@@ -3,6 +3,8 @@
 #include "y/system/exception.hpp"
 #include "y/system/error.hpp"
 #include <cerrno>
+#include <iostream>
+#include <iomanip>
 
 namespace Yttrium
 {
@@ -39,6 +41,28 @@ namespace Yttrium
                 Libc::CriticalError(EINVAL, "No %s::Instance !!", whose);
             }
         }
+
+        void Singulet:: OnInitDisplay(const char             *name,
+                                      const AtExit::Longevity last) noexcept
+        {
+            try {
+                assert(0!=name);
+                std::cerr << "==> +[" << std::setw(20) << name << "] @" << last << std::endl;
+            }
+            catch(...) {}
+        }
+
+
+        void Singulet:: OnQuitDisplay(const char             *name,
+                                      const AtExit::Longevity last) noexcept
+        {
+            try {
+                assert(0!=name);
+                std::cerr << "<== -[" << std::setw(20) << name << "] @" << last << std::endl;
+            }
+            catch(...) {}
+        }
+
     }
 
 

@@ -4,7 +4,7 @@
 #define Y_System_AtExit_Included 1
 
 
-#include "y/config/starting.hpp"
+#include "y/type/ints.hpp"
 
 namespace Yttrium
 {
@@ -27,7 +27,7 @@ namespace Yttrium
         typedef void            (*Procedure)(Arguments);  //!< alias
         typedef int               Longevity;              //!< alias
         static const size_t       MaxNumber =   64;       //!< internal stack size
-        static const Longevity    MaximumLongevity;       //!< for giant mutex  
+        static const Longevity    MaximumLongevity = IntegerFor<Longevity>::Maximum; //!< for giant mutex
 
         //______________________________________________________________________
         //

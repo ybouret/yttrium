@@ -9,8 +9,7 @@
 
 namespace Yttrium
 {
-    const AtExit::Longevity  AtExit:: MaximumLongevity =  IntegerFor<AtExit::Longevity>::Maximum;
-
+    
     namespace
     {
         static AtExit   axStack[AtExit::MaxNumber] = {};

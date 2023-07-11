@@ -3,7 +3,6 @@
 #ifndef Y_Concurrent_Singulet_Included
 #define Y_Concurrent_Singulet_Included 1
 
-#include "y/concurrent/mutex.hpp"
 #include "y/system/at-exit.hpp"
 
 namespace Yttrium
@@ -41,6 +40,13 @@ namespace Yttrium
             virtual const char *      callSign() const noexcept = 0; //!< forward CallSign
             virtual AtExit::Longevity lifeTime() const noexcept = 0; //!< forward LifeTime
 
+            //! show if Verbose
+            static void OnInitDisplay(const char             *name,
+                                      const AtExit::Longevity last) noexcept;
+
+            //! show if Verbose
+            static void OnQuitDisplay(const char             *name,
+                                      const AtExit::Longevity last) noexcept;
             //__________________________________________________________________
             //
             //
@@ -58,6 +64,7 @@ namespace Yttrium
             static void CheckInstance(const char *whose,
                                       void       *where);
 
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Singulet);
         };

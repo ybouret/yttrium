@@ -5,9 +5,10 @@
 #define  Y_Singleton_Included 1
 
 #include "y/concurrent/singulet.hpp"
+#include "y/concurrent/mutex.hpp"
 #include "y/memory/out-of-reach.hpp"
 #include "y/calculus/align.hpp"
-#include "y/type/pick.hpp"
+//#include "y/type/pick.hpp"
 
 #include <iostream>
 
@@ -111,6 +112,16 @@ namespace Yttrium
         inline virtual const char *      callSign() const noexcept { return T::CallSign; } //!< forward CallSign
         inline virtual AtExit::Longevity lifeTime() const noexcept { return T::LifeTime; } //!< forward LifeTime
 
+
+        //______________________________________________________________________
+        //
+        //! check existence
+        //______________________________________________________________________
+        static bool Exists() noexcept
+        {
+            return 0 != Instance_;
+        }
+
         //______________________________________________________________________
         //
         //! return or create Instance
@@ -127,6 +138,7 @@ namespace Yttrium
             {
                 Y_LOCK(Access);
                 if(Register) {
+                    OnInitDisplay(T::CallSign,T::LifeTime);
                     CheckLifeTime(T::CallSign,T::LifeTime);
                     AtExit::Register(Quit, 0, T::LifeTime);
                     Register = false;
@@ -165,6 +177,7 @@ namespace Yttrium
 
         static inline void  Quit(void*) noexcept {
             if(0!=Instance_) {
+                OnQuitDisplay(T::CallSign,T::LifeTime);
                 Instance_->~T();
                 Memory::OutOfReach::Zero(Instance_,Required);
                 Instance_ = 0;

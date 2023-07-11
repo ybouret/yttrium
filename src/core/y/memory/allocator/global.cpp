@@ -8,7 +8,6 @@ namespace Yttrium
 
     namespace Memory
     {
-        const AtExit::Longevity Global:: LifeTime = AtExit::MaximumLongevity - 1;
         const char * const      Global:: CallSign = "Memory::Global";
 
 

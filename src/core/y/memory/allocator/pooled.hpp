@@ -30,8 +30,8 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const char * const      CallSign; //!< "Memory::Pooled"
-            static const AtExit::Longevity LifeTime; //!< Global::LifeTime - 1;
+            static const char * const      CallSign;                                //!< "Memory::Pooled"
+            static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 2; //!< longevity
 
             //__________________________________________________________________
             //

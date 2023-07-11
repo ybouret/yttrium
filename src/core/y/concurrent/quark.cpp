@@ -33,6 +33,7 @@ typedef CRITICAL_SECTION MutexType;
 #include "y/memory/straps.hpp"
 #include "y/memory/quanta.hpp"
 #include "y/memory/corpus.hpp"
+#include "y/concurrent/singulet.hpp"
 
 namespace Yttrium
 {
@@ -48,9 +49,12 @@ namespace Yttrium
             // concurrent data
             //
             //------------------------------------------------------------------
-            class Quark : public Lockable
+            class Quark : public Lockable, public Singulet
             {
             public:
+                static const char * const       CallSign;
+                static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity;
+
                 inline virtual ~Quark() noexcept {}
 
                 inline explicit Quark() :
@@ -77,6 +81,9 @@ namespace Yttrium
                     mutex = 0;
                 }
 
+                virtual const char *       callSign() const noexcept { return CallSign; }
+                virtual AtExit::Longevity  lifeTime() const noexcept { return LifeTime; }
+
 
                 MutexAttribute       param;
                 Mutex                giant;
@@ -94,6 +101,8 @@ namespace Yttrium
                 inline virtual bool doTryLock()  noexcept { return giant.tryLock(); }
             };
 
+            const char * const Quark:: CallSign = "Quark";
+
             static void     *Quark__[ Y_WORDS_FOR(Quark) ];
             static Quark    *Quark_ = 0;
             static bool      QuarkInit = true;
@@ -101,6 +110,7 @@ namespace Yttrium
             {
                 if(Quark_)
                 {
+                    Singulet::OnQuitDisplay(Quark::CallSign,Quark::LifeTime);
                     Memory::OutOfReach::Zero( Destructed(Quark_), sizeof(Quark__) );
                     Quark_ = 0;
                 }
@@ -113,7 +123,8 @@ namespace Yttrium
                     
                     if(QuarkInit)
                     {
-                        AtExit::Register(QuarkQuit, 0, AtExit::MaximumLongevity);
+                        Singulet::OnInitDisplay(Quark::CallSign,Quark::LifeTime);
+                        AtExit::Register(QuarkQuit, 0, Quark::LifeTime);
                         QuarkInit = false;
                     }
 
@@ -245,6 +256,11 @@ namespace Yttrium
         Memory::Corpus & Mem:: CorpusInstance()
         {
             return Nucleus:: QuarkInstance().corpus;
+        }
+
+        Memory::Quanta & Mem:: QuantaInstance()
+        {
+            return Nucleus:: QuarkInstance().quanta;
         }
     }
 

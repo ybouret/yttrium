@@ -20,6 +20,7 @@ add_test(main:atexit   test-core atexit)
 add_test(main:lockable test-core lockable)
 add_test(main:wtime    test-core wtime)
 add_test(main:singleton test-core singleton)
+add_test(main:object    test-core object)
 
 #text
 add_test(text:plural test-core text_plural)

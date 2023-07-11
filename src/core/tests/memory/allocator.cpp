@@ -12,6 +12,7 @@ using namespace Yttrium;
 
 Y_UTEST(memory_allocator)
 {
+    std::cerr << "MaximumLongevity = " << AtExit::MaximumLongevity << std::endl;
 
     Memory::Allocator &G = Memory::Global::Instance();
     std::cerr << G.variety() << std::endl;
