@@ -10,11 +10,20 @@ namespace Yttrium
 {
     namespace Random
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! filling with random content
+        //
+        //______________________________________________________________________
         struct Fill
         {
+            //! each byte in 0x00..0xff
             static void Block(void *blockAddr,    size_t blockSize, Bits &ran) noexcept;
+
+            //! each byte in 0x01..0xff
             static void BlockGTZ(void *blockAddr, size_t blockSize, Bits &ran) noexcept;
+            
         };
 
     }

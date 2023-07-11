@@ -38,15 +38,15 @@ namespace Yttrium
         //
         // multiple objects new[]/delete[]
         //______________________________________________________________________
-        static void * operator new    [](const size_t block_size);                           //!< new[block_size]
-        static void   operator delete [](void *block_addr, const size_t block_size) noexcept; //!< delete[block_size]
+        static void * operator new    [](const size_t blockSize);                           //!< new[block_size]
+        static void   operator delete [](void *blockAddr, const size_t blockSize) noexcept; //!< delete[block_size]
 
         //______________________________________________________________________
         //
         // placement new()/delete()
         //______________________________________________________________________
-        static void *operator new(size_t block_size, void *addr) noexcept; //!< placement new
-        static void  operator delete(void *, void *) noexcept;             //!< placement delete
+        static void *operator new(size_t blockSize, void *addr) noexcept; //!< placement new
+        static void  operator delete(void *, void *) noexcept;            //!< placement delete
 
         //______________________________________________________________________
         //

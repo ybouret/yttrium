@@ -32,6 +32,7 @@ namespace Yttrium
             //__________________________________________________________________
             static const char * const      CallSign; //!< "Memory::Grains"
             static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 4; //!< longevity
+            
 
             //__________________________________________________________________
             //
