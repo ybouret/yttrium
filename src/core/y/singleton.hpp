@@ -13,26 +13,60 @@
 
 namespace Yttrium
 {
-
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Base class to use Singleton based on system wide mutex
+    //
+    //
+    //__________________________________________________________________________
     class NucleusSingleton
     {
     public:
-        static const bool                IsRegular = false;
-        static const bool                IsNucleus = true;
-        typedef Concurrent::NucleusMutex MutexType;
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        static const bool                IsRegular = false; //!< alias
+        static const bool                IsNucleus = true;  //!< alias
+        typedef Concurrent::NucleusMutex MutexType;         //!< alias
 
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
         explicit NucleusSingleton() noexcept {}
         virtual ~NucleusSingleton() noexcept {}
     private:
         Y_DISABLE_COPY_AND_ASSIGN(NucleusSingleton);
     };
 
+
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Base class to use Singleton based on class wide mutex
+    //
+    //
+    //__________________________________________________________________________
     class RegularSingleton
     {
     public:
-        static const bool                IsRegular = true;
-        static const bool                IsNucleus = false;
-        typedef Concurrent::Mutex        MutexType;
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        static const bool                IsRegular = true;  //!< alias
+        static const bool                IsNucleus = false; //!< alias
+        typedef Concurrent::Mutex        MutexType;         //!< alias
 
         explicit RegularSingleton() noexcept {}
         virtual ~RegularSingleton() noexcept {}
@@ -58,16 +92,15 @@ namespace Yttrium
     class Singleton : public Concurrent::Singulet, public POLICY
     {
     public:
-        typedef typename POLICY::MutexType MutexType;
-        typedef Singleton<T,POLICY>        SingletonType;
-
         //______________________________________________________________________
         //
         //
         // Definitions
         //
         //______________________________________________________________________
-        static MutexType Access; //!< static class level mutex
+        typedef typename POLICY::MutexType MutexType;     //!< alias
+        typedef Singleton<T,POLICY>        SingletonType; //!< alias
+        static MutexType                   Access;        //!< static class/system level mutex
 
         //______________________________________________________________________
         //

@@ -64,6 +64,11 @@ namespace Yttrium
             return os;
         }
 
+
+        //______________________________________________________________________
+        //
+        //! helper to display arrays
+        //______________________________________________________________________
         template <typename OSTREAM, typename T> inline
         OSTREAM & Display(OSTREAM &os, T *arr, const size_t num) {
             assert(Good(arr,num));
@@ -95,16 +100,18 @@ namespace Yttrium
         }
     }
 
+    //! mapping integer to class
     template <int N>
     struct Int2Type
     {
-        static const int Value = N;
+        static const int Value = N; //!< alias
     };
 
+    //! mapping type to class
     template <typename T>
     struct Type2Type
     {
-        typedef T Type;
+        typedef T Type; //!< alias
     };
 
 

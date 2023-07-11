@@ -10,7 +10,14 @@ namespace Yttrium
 {
     namespace Random
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Shuffling data with Bits
+        //
+        //
+        //______________________________________________________________________
         struct Shuffle
         {
 
@@ -21,7 +28,7 @@ namespace Yttrium
                                 Bits        &ran) noexcept;
 
 
-            //! genric call on Tableau[0..num-1]
+            //! generic call on Tableau[0..num-1]
             template <typename T> static inline
             void Tableau(T           *arr,
                          const size_t num,
@@ -31,6 +38,7 @@ namespace Yttrium
                 Tableau(arr,num,sizeof(T),ran);
             }
 
+            //! shuffling list
             template <typename LIST> static inline
             void List(LIST &L, Bits &ran) noexcept
             {
@@ -42,6 +50,7 @@ namespace Yttrium
                 temp.swapWith(L);
             }
 
+            //! shuffling pool
             template <typename POOL> static inline
             void Pool(POOL &P, Bits &ran) noexcept
             {
