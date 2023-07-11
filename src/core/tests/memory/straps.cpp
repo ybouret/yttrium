@@ -62,6 +62,7 @@ Y_UTEST(memory_straps)
                 }
             }
 
+            straps.displayInfo(0);
 
             Random::Shuffle::Tableau(blocks,NB,ran);
             for(size_t i=0;i<NB;++i)

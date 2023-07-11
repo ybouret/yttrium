@@ -55,8 +55,9 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            size_t leq(size_t n) noexcept; //!< in 0..n
-            bool   choice()      noexcept; //!< 50/50 choice
+            size_t leq(size_t n)      noexcept; //!< in 0..n
+            size_t lt(const size_t n) noexcept; //!< in 0..n-1, n>0
+            bool   choice()           noexcept; //!< 50/50 choice
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Bits);

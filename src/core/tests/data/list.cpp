@@ -110,6 +110,13 @@ Y_UTEST(data_list)
                 iList.moveToFront(node);
             }
 
+            for(size_t i=0;i<iList.size;++i)
+            {
+                const ListOf<iNode> &cL = iList;
+                iNode       *lhs = iList.fetch(i);
+                const iNode *rhs = cL.fetch(i);
+                Y_ASSERT(lhs==rhs);
+            }
 
             while(iList.size) delete iList.popTail();
         }

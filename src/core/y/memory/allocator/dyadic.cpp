@@ -37,13 +37,8 @@ namespace Yttrium
             const size_t   req = count * blockSize;
             if( req > Base2<size_t>::MaxPowerOfTwo )
                 throw Specific::Exception(CallSign,"bytes request is too high");
-            unsigned shift = 0;
-            size_t   bytes = 1;
-            while(bytes<req)
-            {
-                bytes <<= 1;
-                ++shift;
-            }
+            size_t         bytes = req;
+            const unsigned shift = Base2<size_t>::LogFor(bytes);
             Y_LOCK(Access);
             try {
                 void *p = mgr[shift].acquire(); assert( OutOfReach::Are0(p,bytes) );
@@ -65,13 +60,8 @@ namespace Yttrium
             assert(count<=Base2<size_t>::MaxPowerOfTwo);
 
             static Corpus &mgr  = *corpus;
-            unsigned      shift = 0;
-            size_t        bytes = 1;
-            while(bytes<count)
-            {
-                bytes <<= 1;
-                ++shift;
-            }
+            size_t         bytes = count;
+            const unsigned shift = Base2<size_t>::LogFor(bytes);
             if(bytes!=count) Libc::CriticalError(EINVAL, "%s.release(bad count=%lu)", CallSign, (unsigned long)count );
             mgr[shift].release(entry);
             entry = 0;

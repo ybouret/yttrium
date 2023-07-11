@@ -11,16 +11,35 @@ namespace Yttrium
 
     namespace Memory
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Allocator of system wide memory
+        //
+        //
+        //______________________________________________________________________
         class Global : public Singleton<Global,NucleusSingleton>, public Allocator
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             static const char * const      CallSign; //!< "Memory::Global"
             static const AtExit::Longevity LifeTime; //!< AtExit::MaximumLongevity - 1;
-            
-            virtual void *       acquire(size_t & count, const size_t blockSize);
-            virtual void         release(void * & entry, size_t &     count) noexcept;
-            virtual const char * variety()                             const noexcept;
+
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual void *       acquire(size_t & count, const size_t blockSize);      //!< any count of any blockSize
+            virtual void         release(void * & entry, size_t &     count) noexcept; //!< release a previously acquired
+            virtual const char * variety()                             const noexcept; //!< CallSign
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Global);

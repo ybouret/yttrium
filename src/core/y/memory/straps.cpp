@@ -260,6 +260,15 @@ namespace Yttrium
             }
         }
 
+        void Straps:: displayInfo(const size_t indent) const
+        {
+            Core::Indent(std::cerr,indent) << "<" << CallSign << " straps='" << size << "'>" << std::endl;
+            for(const Strap *strap = head; strap; strap=strap->next)
+            {
+                Core::Indent(std::cerr,indent+1) << "@" << strap << " : 2^" << strap->myShift() << std::endl;
+            }
+            Core::Indent(std::cerr,indent) << "<" << CallSign << "/>" << std::endl;
+        }
 
     }
 }

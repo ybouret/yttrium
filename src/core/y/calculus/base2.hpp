@@ -27,7 +27,7 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //! compute r such that v <= (1<<r)
-        //__________________________________________________________________________
+        //______________________________________________________________________
         static inline unsigned Log(Type v) noexcept
         {
             assert(v>0);
@@ -35,6 +35,21 @@ namespace Yttrium
             while( (v>>=1) > 0 ) ++r;
             assert( v <= (One<<r) );
             return r;
+        }
+
+
+        //______________________________________________________________________
+        //
+        //! return shift such that updated request = 2^shift
+        //______________________________________________________________________
+        static inline unsigned LogFor(Type &request) noexcept
+        {
+            assert(request<=MaxPowerOfTwo);
+            unsigned shift = 0;
+            unsigned bytes = 1;
+            while(bytes<request) { bytes <<= 1; ++shift; }
+            request = bytes;
+            return shift;
         }
 
 

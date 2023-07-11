@@ -242,6 +242,16 @@ namespace Yttrium
             return (to<WordType>() % (++n));
         }
 
+        size_t Bits:: lt(const size_t n) noexcept
+        {
+            assert(n>0);
+            typedef UnsignedInt<sizeof(size_t)>::Type WordType;
+            return (to<WordType>() %n);
+        }
+
+
+
+
 
         bool   Bits:: choice() noexcept
         {

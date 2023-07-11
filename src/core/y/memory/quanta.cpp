@@ -41,6 +41,17 @@ namespace Yttrium
         }
 
 
+        const char * const Quanta:: CallSign = "Memory::Quanta";
+
+        void Quanta:: displayInfo(const size_t indent) const
+        {
+            Core::Indent(std::cerr,indent) << "<" << CallSign << ">" << std::endl;
+            blocks.displayInfo(indent+2);
+            straps.displayInfo(indent+2);
+            Core::Indent(std::cerr,indent) << "<" << CallSign << "/>" << std::endl;
+        }
+
+
     }
 
 }

@@ -37,6 +37,10 @@ namespace Yttrium
             return node;
         }
 
+        //______________________________________________________________________
+        //
+        //! stash node (slow)
+        //______________________________________________________________________
         template <typename POOL, typename NODE> static inline
         NODE *Stash(POOL &P, NODE *node) noexcept
         {

@@ -13,15 +13,35 @@ namespace Yttrium
     namespace Memory
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Allocator based on Quark.straps
+        //
+        //
+        //______________________________________________________________________
         class Pooled : public Singleton<Pooled,NucleusSingleton>, public Allocator
         {
         public:
-            static const char * const      CallSign; //!< "Memory::Global"
-            static const AtExit::Longevity LifeTime; //!< AtExit::MaximumLongevity - 1;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const      CallSign; //!< "Memory::Pooled"
+            static const AtExit::Longevity LifeTime; //!< Global::LifeTime - 1;
 
-            virtual void *       acquire(size_t & count, const size_t blockSize);
-            virtual void         release(void * & entry, size_t &     count) noexcept;
-            virtual const char * variety()                             const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            virtual void *       acquire(size_t & count, const size_t blockSize);      //!< never empty
+            virtual void         release(void * & entry, size_t &     count) noexcept; //!< release a previously acquired
+            virtual const char * variety()                             const noexcept; //!< CallSign
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pooled);

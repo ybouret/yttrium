@@ -13,16 +13,51 @@ namespace Yttrium
         class Blocks;
         class Straps;
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Allocating quanta of Memory
+        /**
+         - use Blocks for blockSize <= LimitSize
+         - use Straps for blockSize >  LimitSize
+         */
+        //
+        //
+        //______________________________________________________________________
         class Quanta
         {
         public:
-            static const size_t LimitSize = 256;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const size_t       LimitSize = 256; //!< behaviour change
+            static const char * const CallSign;        //!< "Memory::Quanta"
             
-            explicit Quanta(Blocks &, Straps &) noexcept;
-            virtual ~Quanta() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            explicit Quanta(Blocks &, Straps &) noexcept; //!< initialize from persistent
+            virtual ~Quanta()                   noexcept; //!< cleanup
 
-            void * acquire(size_t blockSize);
-            void   release(void *blockAddr, const size_t blockSize) noexcept;
+
+            //__________________________________________________________________
+            //
+            //
+            // interface
+            //
+            //__________________________________________________________________
+            void * acquire(size_t blockSize);                                 //!< call blocks or straps
+            void   release(void *blockAddr, const size_t blockSize) noexcept; //!< call blocks or straps
+
+            //! display statistics
+            void displayInfo(const size_t indent) const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Quanta);

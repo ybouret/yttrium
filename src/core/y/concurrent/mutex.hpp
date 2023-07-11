@@ -18,29 +18,66 @@ namespace Yttrium
             class Quark;
         }
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Mutex Prototype
+        //
+        //
+        //______________________________________________________________________
         class MutexProto : public Lockable
         {
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
         protected:
-            explicit MutexProto(const char *id=0);
+            //! set lockable and fetch Quark instance
+            explicit MutexProto(const char *id);
 
         public:
             virtual ~MutexProto() noexcept;
-            virtual Nucleus::Mutex & operator*() noexcept = 0;
 
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual Nucleus::Mutex & operator*() noexcept = 0; //!< access internal mutex
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
         protected:
-            Nucleus::Quark &quark;
+            Nucleus::Quark &quark; //!< internal uniq Quark
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MutexProto);
         };
 
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Mutex interface for internal Quark
+        //
+        //
+        //______________________________________________________________________
         class NucleusMutex : public MutexProto
         {
         public:
-            explicit NucleusMutex(const char *id=0);
-            virtual ~NucleusMutex() noexcept;
-            virtual Nucleus::Mutex & operator*() noexcept;
+            explicit NucleusMutex(const char *id=0);        //!< setup
+            virtual ~NucleusMutex() noexcept;               //!< cleanup
+            virtual Nucleus::Mutex & operator*() noexcept;  //!< Quark.giant
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(NucleusMutex);
@@ -52,16 +89,16 @@ namespace Yttrium
         //
         //
         //
-        //! Mutex object
+        //! [Regular]Mutex object
         //
         //
         //______________________________________________________________________
         class Mutex : public MutexProto
         {
         public:
-            explicit Mutex(const char *id=0); //!< setup with optional id
-            virtual ~Mutex() noexcept;        //!< cleanup
-            virtual Nucleus::Mutex & operator*() noexcept;
+            explicit Mutex(const char *id=0);              //!< setup with optional id
+            virtual ~Mutex() noexcept;                     //!< cleanup
+            virtual Nucleus::Mutex & operator*() noexcept; //!< self mutex
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Mutex);

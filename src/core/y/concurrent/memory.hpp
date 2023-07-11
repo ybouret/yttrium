@@ -16,10 +16,11 @@ namespace Yttrium
 
     namespace Concurrent
     {
+        //! accessing internal memory objects
         struct Mem
         {
-            static Memory::Straps &StrapsInstance();
-            static Memory::Corpus &CorpusInstance();
+            static Memory::Straps &StrapsInstance(); //!< Quark.straps
+            static Memory::Corpus &CorpusInstance(); //!< Quark.corpus
 
         };
     }

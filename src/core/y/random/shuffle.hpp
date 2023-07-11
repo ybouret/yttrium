@@ -37,10 +37,7 @@ namespace Yttrium
                 typename LIST::SelfType temp;
                 while(L.size>0)
                 {
-                    if( ran.choice() )
-                        temp.pushTail( L.popTail() );
-                    else
-                        temp.pushHead( L.popTail() );
+                    temp.pushTail( L.pop( L.fetch( ran.lt(L.size) ) ) );
                 }
                 temp.swapWith(L);
             }
