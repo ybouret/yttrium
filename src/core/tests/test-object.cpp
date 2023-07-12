@@ -15,7 +15,7 @@ namespace
         explicit Derived(Random::Bits &ran) noexcept : Object(), data()
         {
             std::cerr << "+Derived<" << N << ">" << std::endl;
-            Random::Fill::BlockGTZ(data, sizeof(data), ran);
+            Random::Fill::Block(data, sizeof(data), ran,1);
         }
 
         virtual ~Derived() noexcept

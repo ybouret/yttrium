@@ -69,6 +69,23 @@ Y_UTEST(random_bits)
     TestBits<float>(ran2);
 
 
+    std::cerr << "Testing Random Bytes" << std::endl;
+    for(unsigned lo=0;lo<=255;++lo)
+    {
+        const double half  = 0.5;
+        const double start = lo;
+        for(unsigned hi=lo;hi<=255;++hi)
+        {
+            const double delta = double(hi) - double(lo);
+            for(size_t loop=0;loop<1000;++loop)
+            {
+                const uint8_t r    = static_cast<uint8_t>(floor( start + ran1.to<double>() * delta + half ));
+                Y_ASSERT(r>=lo);
+                Y_ASSERT(r<=hi);
+            }
+        }
+    }
+
 }
 Y_UDONE()
 

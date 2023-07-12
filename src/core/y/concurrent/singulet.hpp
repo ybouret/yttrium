@@ -22,14 +22,14 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // Definitions
+            // C++
             //
             //__________________________________________________________________
         protected:
-            explicit Singulet() noexcept;
+            explicit Singulet() noexcept; //!< setup
 
         public:
-            virtual ~Singulet() noexcept;
+            virtual ~Singulet() noexcept; //!< cleanup
 
             //__________________________________________________________________
             //

@@ -19,10 +19,11 @@ namespace Yttrium
         struct Fill
         {
             //! each byte in 0x00..0xff
-            static void Block(void *blockAddr,    size_t blockSize, Bits &ran) noexcept;
-
-            //! each byte in 0x01..0xff
-            static void BlockGTZ(void *blockAddr, size_t blockSize, Bits &ran) noexcept;
+            static void Block(void  *       blockAddr,
+                              size_t        blockSize,
+                              Bits &        ran,
+                              const uint8_t lo=0x00,
+                              const uint8_t hi=0xff) noexcept;
             
         };
 

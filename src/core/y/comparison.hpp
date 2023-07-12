@@ -26,6 +26,17 @@ namespace Yttrium
         {
             return lhs < rhs ? -1 : ( rhs < lhs ? 1 : 0);
         }
+
+        //______________________________________________________________________
+        //
+        //! C style decreasing
+        //______________________________________________________________________
+        template <typename T> static inline
+        int Decreasing(const T &lhs, const T &rhs)
+        {
+            return lhs < rhs ? 1 : ( rhs < lhs ? -1 : 0);
+        }
+
     };
 
 }

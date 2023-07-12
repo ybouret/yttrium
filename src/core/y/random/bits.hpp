@@ -4,6 +4,7 @@
 #define Y_Random_Bits_Included 1
 
 #include "y/calculus/align.hpp"
+#include <cmath>
 
 namespace Yttrium
 {
@@ -55,6 +56,15 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+            template <typename T> inline
+            T in(const T lo, const T hi) noexcept
+            {
+                static const long double half(0.5);
+                const long double delta = hi-lo;
+                const long double start = lo;
+                return static_cast<T>( floorl( start + delta * to<long double>() + half) ) ;
+            }
+            
             size_t leq(size_t n)      noexcept; //!< in 0..n
             size_t lt(const size_t n) noexcept; //!< in 0..n-1, n>0
             bool   choice()           noexcept; //!< 50/50 choice

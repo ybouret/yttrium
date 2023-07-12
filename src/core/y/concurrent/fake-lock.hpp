@@ -26,7 +26,7 @@ namespace Yttrium
     private:
         Y_DISABLE_COPY_AND_ASSIGN(FakeLock);
         Y_LOCKABLE_API();
-        void *impl;
+        void *impl; //!< only for padding
     };
 }
 

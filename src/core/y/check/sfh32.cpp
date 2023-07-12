@@ -16,7 +16,7 @@ namespace Yttrium
     {
         assert( Good(buf,len) );
         const uint8_t *data = static_cast<const uint8_t*>(buf);
-        const size_t rem = len & 3;
+        const size_t   rem  = len & 3;
         len >>= 2;
 
         /* Main loop */
