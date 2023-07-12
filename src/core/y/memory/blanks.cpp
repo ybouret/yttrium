@@ -1,0 +1,125 @@
+
+#include "y/memory/blanks.hpp"
+#include "y/calculus/align.hpp"
+#include "y/concurrent/memory.hpp"
+#include "y/memory/blocks.hpp"
+#include "y/memory/out-of-reach.hpp"
+#include "y/system/error.hpp"
+
+#include <cerrno>
+
+namespace Yttrium
+{
+    namespace Memory
+    {
+        static inline size_t BlockSizeFor(const size_t bs)
+        {
+            if(bs<=sizeof(BlankNode))
+            {
+                return sizeof(BlankNode);
+            }
+            else
+            {
+                return Y_MEMALIGN(bs);
+            }
+        }
+
+        static Arena & GetArena(const size_t blockSize,
+                                Lockable    &giantLock)
+        {
+            Y_LOCK(giantLock);
+            return Concurrent::Mem::BlocksInstance()[blockSize];
+        }
+
+        Blanks:: Blanks(const size_t userBlockSize,
+                        const size_t startCapacity) :
+        BlankNode::Pool(),
+        allocated(0),
+        giantLock( Lockable::Giant() ),
+        coreArena( GetArena(BlockSizeFor(userBlockSize),giantLock) )
+        {
+            try {
+                reserve(startCapacity);
+            }
+            catch(...)
+            {
+                empty();
+                throw;
+            }
+        }
+
+        void Blanks:: empty() noexcept
+        {
+            Y_LOCK(giantLock);
+            while(size>0)
+            {
+                coreArena.releaseBlock( query() );
+            }
+        }
+
+        void Blanks:: release() noexcept
+        {
+            empty();
+        }
+
+        Blanks:: ~Blanks() noexcept
+        {
+            empty();
+        }
+
+        void   Blanks:: reserve(size_t n)
+        {
+            Y_LOCK(giantLock);
+            while(n-- > 0) store( static_cast<BlankNode *>( coreArena.acquireBlock()) );
+        }
+
+
+        void * Blanks:: acquireBlock()
+        {
+            if(size>0)
+            {
+                ++Coerce(allocated);
+                return OutOfReach::Zero( query(), coreArena.blockSize);
+            }
+            else
+            {
+                Y_LOCK(giantLock);
+                void *blockAddr = coreArena.acquireBlock();
+                ++Coerce(allocated);
+                return blockAddr;
+            }
+        }
+
+        void Blanks:: zrelease(void *blockAddr) noexcept
+        {
+            assert(0!=blockAddr);
+            assert(allocated>0);
+            --Coerce(allocated);
+            store( static_cast<BlankNode *>( OutOfReach::Zero(blockAddr,sizeof(BlankNode))) );
+        }
+
+        
+        void Blanks:: criticalCheck(const size_t blockSize,
+                                    const char  *context) const noexcept
+        {
+            if(blockSize>coreArena.blockSize)
+            {
+                if(!context) context = Core::Unknown;
+                Libc::CriticalError(EINVAL, "Memory::Blanks for %s",context);
+            }
+        }
+
+        void Blanks:: displayInfo(const size_t indent) const
+        {
+            static const char id[] = "Memory::Blanks";
+
+            Core::Indent(std::cerr,indent) << "<" << id << " blockSize='" << coreArena.blockSize << "'>" << std::endl;
+            Core::Indent(std::cerr,indent) << "  allocated = " << allocated << std::endl;
+            Core::Indent(std::cerr,indent) << "  available = " << size      << std::endl;
+            Core::Indent(std::cerr,indent) << "<" << id << "/>" << std::endl;
+        }
+
+
+    }
+}
+

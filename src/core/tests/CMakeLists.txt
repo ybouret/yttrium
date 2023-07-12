@@ -42,7 +42,8 @@ add_test(memory:straps test-core memory_straps)
 add_test(memory:quanta test-core memory_quanta)
 add_test(memory:corpus test-core memory_corpus)
 add_test(memory:allocator test-core memory_allocator)
-add_test(memory:zcache test-core memory_zcache)
+add_test(memory:blanks    test-core memory_blanks)
+add_test(memory:studio    test-core memory_studio)
 
 
 #type

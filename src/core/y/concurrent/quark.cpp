@@ -84,7 +84,7 @@ namespace Yttrium
                 virtual const char *       callSign() const noexcept { return CallSign; }
                 virtual AtExit::Longevity  lifeTime() const noexcept { return LifeTime; }
 
-
+                
                 MutexAttribute       param;
                 Mutex                giant;
                 Memory::Album        album;

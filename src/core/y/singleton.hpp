@@ -109,9 +109,8 @@ namespace Yttrium
         // Interface
         //
         //______________________________________________________________________
-        inline virtual const char *      callSign() const noexcept { return T::CallSign; } //!< forward CallSign
-        inline virtual AtExit::Longevity lifeTime() const noexcept { return T::LifeTime; } //!< forward LifeTime
-
+        inline virtual const char *             callSign() const noexcept { return T::CallSign; } //!< forward CallSign
+        inline virtual AtExit::Longevity        lifeTime() const noexcept { return T::LifeTime; } //!< forward LifeTime
 
         //______________________________________________________________________
         //

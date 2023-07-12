@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_Memory_ZCache_Included
-#define Y_Memory_ZCache_Included 1
+#ifndef Y_Memory_Blanks_Included
+#define Y_Memory_Blanks_Included 1
 
 #include "y/lockable.hpp"
 #include "y/data/pool.hpp"
@@ -20,20 +20,14 @@ namespace Yttrium
         //! alias to internally handled data blocks
         //
         //______________________________________________________________________
-        struct ZombieNode
+        struct BlankNode
         {
-            ZombieNode *next; //!< for pool/list
-            ZombieNode *prev; //!< for list
+            BlankNode *next; //!< for pool/list
+            BlankNode *prev; //!< for list
+            typedef PoolOf<BlankNode> Pool;
         };
 
 
-        //______________________________________________________________________
-        //
-        //
-        //! base class for ZombieCache
-        //
-        //______________________________________________________________________
-        typedef PoolOf<ZombieNode> ZombiePool;
 
         //______________________________________________________________________
         //
@@ -43,7 +37,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class ZombieCache : public ZombiePool, public Releasable
+        class Blanks : public BlankNode::Pool, public Releasable
         {
             //__________________________________________________________________
             //
@@ -53,12 +47,12 @@ namespace Yttrium
             //__________________________________________________________________
         protected:
             //! setup with (minimal) blockSize and initial capacity
-            explicit ZombieCache(const size_t userBlockSize,
-                                 const size_t startCapacity);
+            explicit Blanks(const size_t userBlockSize,
+                            const size_t startCapacity);
 
         public:
             //! cleanup
-            virtual ~ZombieCache() noexcept;
+            virtual ~Blanks() noexcept;
 
             //__________________________________________________________________
             //
@@ -68,25 +62,31 @@ namespace Yttrium
             //__________________________________________________________________
             void        reserve(size_t n);  //!< populate cache with more blocks
         protected:
-            void       *acquireBlock();    //!< acquire new/query a block
+            void       *acquireBlock();    //!< [locked acquire new|query a block]
 
         public:
             virtual void release()        noexcept; //!< Releasable interface
             void         zrelease(void *) noexcept; //!< release a previously acquired
 
+            void         criticalCheck(const size_t blockSize,
+                                       const char  *context) const noexcept;
+
+            void         displayInfo(const size_t indent) const;
+
             //__________________________________________________________________
             //
             //
-            // members
+            // Members
             //
             //__________________________________________________________________
-            const size_t blockSize; //!< adjusted blockSize
+            const size_t allocated;
+        private:
             Lockable    &giantLock; //!< to access coreArena
             Arena       &coreArena; //!< Quark's arena
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(ZombieCache);
-            void empty() noexcept;
+            Y_DISABLE_COPY_AND_ASSIGN(Blanks);
+            void empty() noexcept; //!< return to locked arena
         };
 
     }
@@ -101,7 +101,7 @@ namespace Yttrium
     //
     //__________________________________________________________________________
     template <typename T>
-    class ZombieCache : public Memory::ZombieCache
+    class Blanks : public Memory::Blanks
     {
     public:
         //______________________________________________________________________
@@ -112,10 +112,10 @@ namespace Yttrium
         //______________________________________________________________________
 
         //! initialize
-        inline explicit ZombieCache(const size_t startCapacity) : Memory::ZombieCache(sizeof(T), startCapacity) {}
+        inline explicit Blanks(const size_t startCapacity) : Memory::Blanks(sizeof(T), startCapacity) {}
 
         //! cleanup
-        inline virtual ~ZombieCache() noexcept {}
+        inline virtual ~Blanks() noexcept {}
 
         //______________________________________________________________________
         //
@@ -128,7 +128,7 @@ namespace Yttrium
         inline T *  zacquire() { return static_cast<T*>(acquireBlock()); }
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(ZombieCache);
+        Y_DISABLE_COPY_AND_ASSIGN(Blanks);
     };
     
 }

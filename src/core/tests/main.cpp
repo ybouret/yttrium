@@ -25,7 +25,8 @@ Y_UTEST_DECL(256)
     Y_UTEST(memory_quanta);
     Y_UTEST(memory_corpus);
     Y_UTEST(memory_allocator);
-    Y_UTEST(memory_zcache);
+    Y_UTEST(memory_blanks);
+    Y_UTEST(memory_studio);
 
 
 

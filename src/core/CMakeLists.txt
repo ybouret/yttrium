@@ -22,7 +22,8 @@ hashing
 sort
 utest 
 memory
-memory/allocator)
+memory/allocator
+memory/exclusive)
 
 source_group(concurrent FILES ${quark})
 
