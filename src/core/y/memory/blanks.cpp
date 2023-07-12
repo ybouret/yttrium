@@ -98,17 +98,13 @@ namespace Yttrium
             store( static_cast<BlankNode *>( OutOfReach::Zero(blockAddr,sizeof(BlankNode))) );
         }
 
-        
-        void Blanks:: criticalCheck(const size_t blockSize,
-                                    const char  *context) const noexcept
+        size_t Blanks:: blockSize() const noexcept
         {
-            if(blockSize>coreArena.blockSize)
-            {
-                if(!context) context = Core::Unknown;
-                Libc::CriticalError(EINVAL, "Memory::Blanks for %s",context);
-            }
+            return coreArena.blockSize;
         }
 
+
+        
         void Blanks:: displayInfo(const size_t indent) const
         {
             static const char id[] = "Memory::Blanks";

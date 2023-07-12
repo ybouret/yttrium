@@ -7,24 +7,35 @@
 
 #include "y/memory/studio.hpp"
 
-//! implemented values for a given class
+//______________________________________________________________________________
+//
+//
+//! implement values for a given class
+//
+//______________________________________________________________________________
 #define Y_Studio(CLASS,LIFE_TIME,STARTING) \
 template <> const char * const               Yttrium:: Studio<CLASS>:: CallSign = "Studio<" #CLASS ">"; \
 template <> const Yttrium::AtExit::Longevity Yttrium:: Studio<CLASS>:: LifeTime = (LIFE_TIME);          \
 template <> const size_t                     Yttrium:: Studio<CLASS>:: Starting = (STARTING)
 
+
+//______________________________________________________________________________
+//
+//
 //! implement operator new/delete for  given class
+//
+//______________________________________________________________________________
 #define Y_EXCLUSIVE_IMPL(CLASS) \
 /**/  void * CLASS:: operator new(size_t blockSize) {                                       \
 /**/    static Yttrium::Studio<CLASS> &mgr = Yttrium:: Studio<CLASS>:: Single:: Instance(); \
-/**/    mgr.criticalCheck(blockSize,Yttrium:: Studio<CLASS>:: CallSign);                    \
+/**/    (void)blockSize; assert(blockSize<=mgr.blockSize());                                \
 /**/    Y_LOCK(Yttrium::Studio<CLASS>::Single::Access);                                     \
 /**/    return mgr.zacquire(); \
 /**/  }\
 void  CLASS:: operator delete(void *blockAddr, size_t blockSize) noexcept {                 \
 /**/    if(0==blockAddr) return;                                                            \
 /**/    static Yttrium::Studio<CLASS> &mgr = Yttrium:: Studio<CLASS>:: Single:: Location(); \
-/**/    mgr.criticalCheck(blockSize,Yttrium:: Studio<CLASS>:: CallSign);                    \
+/**/    (void)blockSize; assert(blockSize<=mgr.blockSize());                                \
 /**/    Y_LOCK(Yttrium::Studio<CLASS>::Single::Access);                                     \
 /**/    mgr.zrelease(blockAddr);                                                            \
 /**/  }

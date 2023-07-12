@@ -22,9 +22,9 @@ namespace Yttrium
         //______________________________________________________________________
         struct BlankNode
         {
-            BlankNode *next; //!< for pool/list
-            BlankNode *prev; //!< for list
-            typedef PoolOf<BlankNode> Pool;
+            typedef PoolOf<BlankNode> Pool; //!< alias
+            BlankNode *next;                //!< for pool/list
+            BlankNode *prev;                //!< for list
         };
 
 
@@ -65,12 +65,12 @@ namespace Yttrium
             void       *acquireBlock();    //!< [locked acquire new|query a block]
 
         public:
-            virtual void release()        noexcept; //!< Releasable interface
-            void         zrelease(void *) noexcept; //!< release a previously acquired
+            virtual void release()         noexcept; //!< Releasable interface
+            void         zrelease(void *)  noexcept; //!< release a previously acquired
+            size_t       blockSize() const noexcept; //!< coreArena.blockSize
 
-            void         criticalCheck(const size_t blockSize,
-                                       const char  *context) const noexcept;
-
+            
+            //! display statistics
             void         displayInfo(const size_t indent) const;
 
             //__________________________________________________________________
@@ -79,7 +79,8 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const size_t allocated;
+            const size_t allocated; //!< bookeeping of allocated blocks
+            
         private:
             Lockable    &giantLock; //!< to access coreArena
             Arena       &coreArena; //!< Quark's arena

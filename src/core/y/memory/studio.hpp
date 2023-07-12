@@ -9,8 +9,12 @@
 
 namespace Yttrium
 {
-
+    //__________________________________________________________________________
+    //
+    //
     //! Studio to provide User-Level cache of a given type
+    //
+    //__________________________________________________________________________
     template <typename T>
     class Studio : public Blanks<T>
     {

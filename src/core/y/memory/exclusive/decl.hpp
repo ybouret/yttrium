@@ -5,6 +5,12 @@
 #define Y_Memory_Exclusive_Decl_Included 1
 
 
+//______________________________________________________________________________
+//
+//
+//! declare new/delete operators
+//
+//______________________________________________________________________________
 #define Y_EXCLUSIVE_DECL()                                                      \
 public:                                                                         \
 /* using Studio */ static void * operator new(const size_t );                   \
