@@ -28,13 +28,21 @@ namespace Yttrium
             return Concurrent::Mem::BlocksInstance()[blockSize];
         }
 
-        ZombieCache:: ZombieCache(const size_t bs) :
+        ZombieCache:: ZombieCache(const size_t userBlockSize,
+                                  const size_t startCapacity) :
         ZombiePool(),
-        blockSize( BlockSizeFor(bs)  ),
+        blockSize( BlockSizeFor(userBlockSize)  ),
         giantLock( Lockable::Giant() ),
         coreArena( GetArena(blockSize,giantLock) )
         {
-
+            try {
+                reserve(startCapacity);
+            }
+            catch(...)
+            {
+                empty();
+                throw;
+            }
         }
 
         void ZombieCache:: empty() noexcept
@@ -74,7 +82,7 @@ namespace Yttrium
             }
         }
 
-        void ZombieCache:: release(void *blockAddr) noexcept
+        void ZombieCache:: zrelease(void *blockAddr) noexcept
         {
             assert(0!=blockAddr);
             store( static_cast<ZombieNode *>( OutOfReach::Zero(blockAddr,sizeof(ZombieNode))) );

@@ -13,11 +13,11 @@ Y_UTEST(memory_zcache)
     Y_SIZEOF(Memory::ZombieCache);
 
 
-    ZombieCache<int> icache;
+    ZombieCache<int> icache(0);
 
-    int *a = icache.acquire();
+    int *a = icache.zacquire();
 
-    icache.release(a);
+    icache.zrelease(a);
 
 
 }
