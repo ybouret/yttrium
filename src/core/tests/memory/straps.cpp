@@ -47,7 +47,7 @@ Y_UTEST(memory_straps)
 
             for(size_t iter=0;iter<16;++iter)
             {
-                Random::Shuffle::Tableau(blocks,NB,ran);
+                Random::Shuffle::Range(blocks,NB,ran);
                 for(size_t i=NB-1;i>=NB/2;--i)
                 {
                     block_t &blk = blocks[i];
@@ -64,7 +64,7 @@ Y_UTEST(memory_straps)
 
             straps.displayInfo(0);
 
-            Random::Shuffle::Tableau(blocks,NB,ran);
+            Random::Shuffle::Range(blocks,NB,ran);
             for(size_t i=0;i<NB;++i)
             {
                 block_t &blk = blocks[i];

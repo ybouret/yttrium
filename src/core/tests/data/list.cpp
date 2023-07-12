@@ -55,7 +55,7 @@ Y_UTEST(data_list)
         {
             indx[i] = i;
         }
-        Random::Shuffle::Tableau(indx,n,ran);
+        Random::Shuffle::Range(indx,n,ran);
         for(size_t i=0;i<n;++i)
         {
             iNode *node = &nodes[ indx[i] ];
@@ -65,7 +65,7 @@ Y_UTEST(data_list)
         }
 
         while(iList.size) iList.popTail();
-        Random::Shuffle::Tableau(indx,n,ran);
+        Random::Shuffle::Range(indx,n,ran);
 
         for(size_t i=0;i<n;++i)
         {

@@ -33,7 +33,7 @@ Y_UTEST(sort_heap)
         for(size_t loop=0;loop<64;++loop)
         {
             for(size_t i=0;i<n;++i) arr[i] = double(i);
-            Random::Shuffle::Tableau(arr,n,ran);
+            Random::Shuffle::Range(arr,n,ran);
 
             Core::Display(std::cerr,arr,n) << std::endl;
             HeapSort::Tableau(arr,n,compare<double>);

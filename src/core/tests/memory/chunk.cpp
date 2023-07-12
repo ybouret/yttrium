@@ -38,7 +38,7 @@ Y_UTEST(memory_chunk)
                 {
                     addr[count++] = chunk.acquire(block_size);
                 }
-                Random::Shuffle::Tableau(addr,count,ran);
+                Random::Shuffle::Range(addr,count,ran);
                 size_t half = count >> 1;
                 while(half-- > 0) chunk.release(addr[--count],block_size);
             }

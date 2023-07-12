@@ -5,6 +5,7 @@
 #define Y_Random_Shuffle_Included 1
 
 #include "y/random/bits.hpp"
+#include "y/memory/out-of-reach.hpp"
 
 namespace Yttrium
 {
@@ -21,23 +22,21 @@ namespace Yttrium
         struct Shuffle
         {
 
-            //! generic call on base[0..size*itemize-1]
-            static void Tableau(void        *base,
-                                const size_t size,
-                                const size_t itemSize,
-                                Bits        &ran) noexcept;
-
-
-            //! generic call on Tableau[0..num-1]
+            //! Exchange wrapper
             template <typename T> static inline
-            void Tableau(T           *arr,
-                         const size_t num,
-                         Bits        &ran) noexcept
-            {
-                assert(Good(arr,num));
-                Tableau(arr,num,sizeof(T),ran);
+            void Exchange(T &lhs, T &rhs) noexcept {
+                if(&lhs!=&rhs) Memory::OutOfReach::Swap(&lhs,&rhs,sizeof(T));
             }
 
+            //! Fisher-Yates
+            template <typename ITERATOR>
+            static void Range(ITERATOR curr, const size_t n, Bits &ran)
+            {
+                for(size_t i=n-1;i>0;--i)
+                    Exchange(*(curr+i), *(curr+ran.leq(i)));
+            }
+
+            
             //! shuffling list
             template <typename LIST> static inline
             void List(LIST &L, Bits &ran) noexcept

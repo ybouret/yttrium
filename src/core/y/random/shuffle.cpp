@@ -6,15 +6,9 @@ namespace Yttrium
     namespace Random
     {
 
-        static inline
-        void Exch(uint8_t *a, uint8_t *b, const size_t n) noexcept
-        {
-            for(size_t i=0;i<n;++i)
-            {
-                Swap(a[i],b[i]);
-            }
-        }
+        
 
+#if 0
         void Shuffle:: Tableau(void        *base,
                                const size_t size,
                                const size_t itemSize,
@@ -35,6 +29,8 @@ namespace Yttrium
                 }
             }
         }
+
+#endif
 
     }
 

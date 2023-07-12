@@ -31,7 +31,7 @@ Y_UTEST(random_shuffle)
     int arr[] = { 1, 2, 3, 4, 5};
     
     Core::Display(std::cerr << "arr=", arr, Y_STATIC_SIZE(arr)) << std::endl;
-    Random::Shuffle::Tableau(arr,Y_STATIC_SIZE(arr),sizeof(arr[0]),ran);
+    Random::Shuffle::Range(arr,Y_STATIC_SIZE(arr),ran);
     Core::Display(std::cerr << "arr=", arr, Y_STATIC_SIZE(arr)) << std::endl;
 
     CxxListOf<Node> L;

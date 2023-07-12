@@ -37,7 +37,7 @@ Y_UTEST(memory_blocks)
         b.addr = blocks.acquire(b.size);
     }
 
-    Random::Shuffle::Tableau(blk,num,ran);
+    Random::Shuffle::Range(blk,num,ran);
 
     for(size_t i=0;i<num;++i)
     {

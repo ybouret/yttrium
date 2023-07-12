@@ -58,7 +58,7 @@ Y_UTEST(memory_arena)
         
         for(size_t loop=1;loop<=4;++loop)
         {
-            Random::Shuffle::Tableau(blk,NB,ran);
+            Random::Shuffle::Range(blk,NB,ran);
             for(size_t i=0;i<NB/2;++i)
             {
                 arena.releaseBlock(blk[i]);
@@ -72,7 +72,7 @@ Y_UTEST(memory_arena)
         std::cerr << "-------- Full Usage: " << std::endl;
         album.displayInfo(0);
         arena.displayInfo(0);
-        Random::Shuffle::Tableau(blk,NB,ran);
+        Random::Shuffle::Range(blk,NB,ran);
         for(size_t i=0;i<NB;++i)
         {
            arena.releaseBlock( blk[i] );

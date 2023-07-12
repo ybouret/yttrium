@@ -55,7 +55,7 @@ Y_UTEST(object)
             new Derived<20>(ran)
         };
 
-        Random::Shuffle::Tableau(ptr,sizeof(ptr)/sizeof(ptr[0]), sizeof(ptr[0]),ran);
+        Random::Shuffle::Range(ptr,sizeof(ptr)/sizeof(ptr[0]),ran);
 
         for(size_t i=0;i<sizeof(ptr)/sizeof(ptr[0]);++i)
         {
