@@ -262,6 +262,12 @@ namespace Yttrium
         {
             return Nucleus:: QuarkInstance().quanta;
         }
+
+
+        Memory::Blocks & Mem:: BlocksInstance()
+        {
+            return Nucleus:: QuarkInstance().blocks;
+        }
     }
 
 }

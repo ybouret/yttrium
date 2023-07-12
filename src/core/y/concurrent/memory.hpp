@@ -13,6 +13,7 @@ namespace Yttrium
         class Straps;
         class Corpus;
         class Quanta;
+        class Blocks;
     };
 
     namespace Concurrent
@@ -23,6 +24,8 @@ namespace Yttrium
             static Memory::Straps &StrapsInstance(); //!< Quark.straps
             static Memory::Corpus &CorpusInstance(); //!< Quark.corpus
             static Memory::Quanta &QuantaInstance(); //!< Quark.quanta
+            static Memory::Blocks &BlocksInstance(); //!< Quark.quanta
+
         };
     }
 

@@ -99,6 +99,22 @@ namespace Yttrium
         }
 
 
+        Arena & Blocks:: operator[](const size_t blockSize)
+        {
+            assert(blockSize>0);
+            
+            if(0==cache || blockSize != cache->blockSize)
+            {
+                void *dummy = acquire(blockSize);
+                release(dummy,blockSize);
+            }
+
+            assert(0!=cache);
+            assert(blockSize==cache->blockSize);
+            return *cache;
+
+        }
+
         void *Blocks:: acquireFirst(const size_t blockSize)
         {
             // create first Arena and change methods

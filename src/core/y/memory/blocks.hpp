@@ -52,6 +52,8 @@ namespace Yttrium
             //! display statistics
             void  displayInfo(size_t indent) const;
 
+            //! get/on-the-fly create arena
+            Arena & operator[](const size_t blockSize);
 
             
             //__________________________________________________________________
