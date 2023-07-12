@@ -12,7 +12,7 @@
 
 //! no copy/assign class
 #define Y_DISABLE_COPY_AND_ASSIGN(CLASS) \
-Y_DISABLE_ASSIGN(CLASS);\
+Y_DISABLE_ASSIGN(CLASS);                 \
 Y_DISABLE_COPY(CLASS)
 
 namespace Yttrium
@@ -67,16 +67,15 @@ namespace Yttrium
 
         //______________________________________________________________________
         //
-        //! helper to display arrays
+        //! helper to display ranges
         //______________________________________________________________________
-        template <typename OSTREAM, typename T> inline
-        OSTREAM & Display(OSTREAM &os, T *arr, const size_t num) {
-            assert(Good(arr,num));
+        template <typename OSTREAM, typename ITERATOR> inline
+        OSTREAM & Display(OSTREAM &os, ITERATOR curr, const size_t size) {
             os << '[';
-            if(num>0)
+            if(size>0)
             {
-                os << arr[0];
-                for(size_t i=1;i<num;++i) os << ';' << arr[i];
+                os << *(curr++);
+                for(size_t i=1;i<size;++i) os << ';' << *(curr++);
             }
             os << ']';
             return os;
