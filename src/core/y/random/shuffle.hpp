@@ -45,7 +45,7 @@ namespace Yttrium
                 typename LIST::SelfType temp;
                 while(L.size>0)
                 {
-                    temp.pushTail( L.pop( L.fetch( ran.lt(L.size) ) ) );
+                    temp.pushTail( L.pop( L.fetch( ran.index(L.size) ) ) );
                 }
                 temp.swapWith(L);
             }

@@ -110,7 +110,7 @@ Y_UTEST(data_list)
                 iList.moveToFront(node);
             }
 
-            for(size_t i=0;i<iList.size;++i)
+            for(size_t i=1;i<=iList.size;++i)
             {
                 const ListOf<iNode> &cL = iList;
                 iNode       *lhs = iList.fetch(i);

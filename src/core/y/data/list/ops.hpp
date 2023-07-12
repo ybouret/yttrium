@@ -334,23 +334,22 @@ namespace Yttrium
 
         //______________________________________________________________________
         //
-        //! access node in [0..size-1]
+        //! access node in [1..size]
         //______________________________________________________________________
         template <typename LIST, typename NODE> static inline
         NODE *Fetch(LIST &L, size_t indx) noexcept
         {
-            assert(indx<L.size);
+            assert(1<=indx); assert(indx<=L.size);
             const size_t size = L.size;
             const size_t half = size >> 1;
             if(indx<=half)
             {
-                return Next(L.head,indx);
+                return Next(L.head,--indx);
             }
             else
             {
-                return Prev(L.tail,size - ++indx);
+                return Prev(L.tail,size - indx);
             }
-
         }
 
 

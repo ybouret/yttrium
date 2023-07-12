@@ -250,6 +250,14 @@ namespace Yttrium
         }
 
 
+        size_t Bits:: index(const size_t n) noexcept
+        {
+            assert(n>0);
+            typedef UnsignedInt<sizeof(size_t)>::Type WordType;
+            return 1+(to<WordType>() %n);
+        }
+
+
 
 
 

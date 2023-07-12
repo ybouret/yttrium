@@ -99,13 +99,13 @@ namespace Yttrium
             swapWith(other);
         }
 
-        //! fetch node in [0..size-1]
+        //! fetch node in [1..size]
         inline NODE *fetch(const size_t indx) noexcept
         {
             return ListOps:: Fetch<ListOf,NODE>(*this,indx);
         }
 
-        //! fetch const node in [0..size-1]
+        //! fetch const node in [1..size]
         inline const NODE *fetch(const size_t indx) const noexcept
         {
             return ListOps:: Fetch<const ListOf,const NODE>(*this,indx);

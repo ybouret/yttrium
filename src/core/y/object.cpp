@@ -1,6 +1,8 @@
 #include "y/object.hpp"
 #include "y/memory/grains.hpp"
 
+#include <cstring>
+
 namespace Yttrium
 {
     Object:: ~Object() noexcept
