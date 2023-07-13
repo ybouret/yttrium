@@ -5,7 +5,7 @@
 
 #include "y/lockable.hpp"
 #include "y/data/pool.hpp"
-#include "y/type/releasable.hpp"
+#include "y/type/cache.hpp"
 
 namespace Yttrium
 {
@@ -37,7 +37,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Blanks : public BlankNode::Pool, public Releasable
+        class Blanks : public BlankNode::Pool, public Cache
         {
             //__________________________________________________________________
             //
@@ -60,14 +60,15 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void        reserve(size_t n);  //!< populate cache with more blocks
         protected:
             void       *acquireBlock();    //!< [locked acquire new|query a block]
 
         public:
-            virtual void release()         noexcept; //!< Releasable interface
-            void         zrelease(void *)  noexcept; //!< release a previously acquired
-            size_t       blockSize() const noexcept; //!< coreArena.blockSize
+            virtual void release()                 noexcept; //!< [Releasable] empty
+            virtual void gc(const size_t maxCount) noexcept; //!< [Cache] keep no more than maxCount blocks
+            void         zrelease(void *)          noexcept; //!< release a previously acquired
+            size_t       blockSize()         const noexcept; //!< coreArena.blockSize
+            void         reserve(size_t n);                  //!< populate cache with more blocks
 
             
             //! display statistics

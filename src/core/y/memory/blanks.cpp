@@ -116,6 +116,12 @@ namespace Yttrium
         }
 
 
+        void Blanks:: gc(const size_t maxCount) noexcept
+        {
+            
+        }
+
+
     }
 }
 

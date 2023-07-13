@@ -74,6 +74,8 @@ add_test(hashing:mix64 test-core hashing_mix64)
 
 #sort
 add_test(sort:heap     test-core sort_heap)
+add_test(sort:merge    test-core sort_merge)
+
 
 #apex
 add_test(apex:archon   test-core apex_archon)
