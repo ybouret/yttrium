@@ -29,7 +29,7 @@ namespace Yttrium
         inline explicit Studio() : Blanks<T>(Starting) {}
         inline virtual ~Studio() noexcept {}
         Y_DISABLE_COPY_AND_ASSIGN(Studio);
-        friend Single;
+        friend class Singleton<Studio,RegularSingleton>;
     };
     
 
