@@ -4,38 +4,57 @@
 #include "y/memory/out-of-reach.hpp"
 #include "y/system/exception.hpp"
 #include "y/type/utils.hpp"
+#include "y/text/human-readable.hpp"
+
+#include <iomanip>
 
 namespace Yttrium
 {
 
     namespace Memory
     {
+        const char * const Quarry::Vein:: CallSign = "Memory::Quary::Vein";
+        
         Quarry:: Vein:: ~Vein() noexcept
         {
-            std::cerr << "-Vein @2^" << dyad.shift << " = " << dyad.bytes << std::endl;
+            //std::cerr << "-Vein @2^" << dyad.shift << " = " << dyad.bytes << std::endl;
+            release();
         }
 
         Quarry:: Vein:: Vein(Dyad &user) noexcept :
-        ListOf<Stone>(),
+        PoolOf<Stone>(),
         dyad(user)
         {
-            std::cerr << "+Vein @2^" << dyad.shift << " = " << dyad.bytes << std::endl;
+            //std::cerr << "+Vein @2^" << dyad.shift << " = " << dyad.bytes << std::endl;
         }
 
         void * Quarry:: Vein:: acquire()
         {
-            return (size>0) ? OutOfReach::Zero(popHead(),dyad.bytes) : dyad.acquire();
+            return (size>0) ? OutOfReach::Zero(query(),dyad.bytes) : dyad.acquire();
         }
 
         void Quarry:: Vein:: release(void *blockAddr) noexcept
         {
             assert(0!=blockAddr);
-            pushHead( static_cast<Stone *>( OutOfReach::Zero(blockAddr,sizeof(Stone))) );
+            store( static_cast<Stone *>( OutOfReach::Zero(blockAddr,sizeof(Stone))) );
         }
 
         void Quarry:: Vein:: release() noexcept
         {
-            while(size>0) dyad.release( popTail() );
+            while(size>0) dyad.release( query() );
+        }
+
+        uint64_t Quarry:: Vein:: displayInfo(const size_t indent) const
+        {
+            uint64_t res = 0;
+            if(size)
+            {
+                Core::Indent(std::cerr,indent) << "<" << CallSign << " blockSize='2^" << dyad.shift << " = " << dyad.bytes << "'>" << std::endl;
+                Core::Indent(std::cerr,indent+2) << "available = " << std::setw(7) << size << std::endl;
+                Core::Indent(std::cerr,indent+2) << "allocated = " << HumanReadable(res += size*dyad.bytes) << std::endl;
+                Core::Indent(std::cerr,indent) << "<" << CallSign << "/>" << std::endl;
+            }
+            return res;
         }
 
     }
@@ -72,6 +91,16 @@ namespace Yttrium
             return blockAddr;
         }
 
+
+        void Quarry:: release(void *entry, const unsigned int shift) noexcept
+        {
+            assert(0!=entry);
+            assert(shift>=MinShift);
+            assert(shift<=MaxShift);
+            vein[shift].release(entry);
+        }
+
+
         void Quarry:: release() noexcept
         {
             for(unsigned shift=MaxShift;shift>=MinShift;--shift)
@@ -83,6 +112,18 @@ namespace Yttrium
         void Quarry:: gc(const size_t maxBytes) noexcept
         {
             
+        }
+
+        void  Quarry:: displayInfo(const size_t indent) const
+        {
+            uint64_t sum = 0;
+            Core::Indent(std::cerr,indent) << "<" << CallSign << ">" << std::endl;
+            for(unsigned shift=MinShift;shift<=MaxShift;++shift)
+            {
+                sum += vein[shift].displayInfo(indent+4);
+            }
+            Core::Indent(std::cerr,indent+2) << "totalAllocated : " << HumanReadable(sum) << std::endl;
+            Core::Indent(std::cerr,indent) << "<" << CallSign << "/>" << std::endl;
         }
 
     }

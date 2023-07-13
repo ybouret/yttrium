@@ -32,7 +32,7 @@ namespace Yttrium
 
             if(delta!=0)
             {
-                std::cerr << "*** " << CallSign << "[" << std::setw(6) << bytes << "] delta=" << delta << std::endl;
+                std::cerr << "*** " << CallSign << "[" << std::setw(6) << bytes << "] missing #" << delta << std::endl;
             }
         }
 

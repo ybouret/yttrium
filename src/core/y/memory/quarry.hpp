@@ -4,7 +4,7 @@
 #ifndef Y_Memory_Quarry_Included
 #define Y_Memory_Quarry_Included 1
 
-#include "y/data/list.hpp"
+#include "y/data/pool.hpp"
 #include "y/calculus/base2.hpp"
 #include "y/calculus/ilog2.hpp"
 #include "y/calculus/align.hpp"
@@ -51,14 +51,16 @@ namespace Yttrium
             //
             //! Cache of same length blocks
             //__________________________________________________________________
-            class Vein : public ListOf<Stone>, public Releasable
+            class Vein : public PoolOf<Stone>, public Releasable
             {
             public:
-                explicit     Vein(Dyad &)   noexcept; //!< setup from persistent dyad
-                virtual     ~Vein()         noexcept; //!< cleanup
-                void *       acquire();               //!< [query block | acquire block]
-                void         release(void*) noexcept; //!< store previously acquired block
-                virtual void release()      noexcept; //!< release content
+                static const char * const CallSign;
+                explicit     Vein(Dyad &)   noexcept;         //!< setup from persistent dyad
+                virtual     ~Vein()         noexcept;         //!< cleanup
+                void *       acquire();                       //!< [query block | acquire block]
+                void         release(void*) noexcept;         //!< store previously acquired block
+                virtual void release()      noexcept;         //!< release content
+                uint64_t     displayInfo(const size_t) const; //!< display statistics
 
                 Dyad &dyad; //!< internal allocator with bytes=2^shift
             private:
@@ -93,6 +95,10 @@ namespace Yttrium
 
             virtual void release() noexcept;
             virtual void gc(const size_t maxBytes) noexcept;
+
+            void         displayInfo(const size_t) const; //!< display statistics
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Quarry);

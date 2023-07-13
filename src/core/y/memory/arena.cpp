@@ -24,7 +24,7 @@ namespace Yttrium
                 dataPages.store( chunk );
                 if(inUse>0)
                 {
-                    std::cerr << "*** Memory::Chunk[" << std::setw(4) << blockSize << "] missing #" << inUse << std::endl;
+                    std::cerr << "*** Memory::Chunk[" << std::setw(6) << blockSize << "] missing #" << inUse << std::endl;
                 }
             }
 
