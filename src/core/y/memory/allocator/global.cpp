@@ -23,7 +23,7 @@ namespace Yttrium
         }
 
         Global:: Global() :
-        Singleton<Global,NucleusSingleton>(),
+        Singleton<Global,Locking::Nucleus>(),
         Allocator()
         {
             legacy = new ( Y_STATIC_ZARR(workspace) ) Legacy();

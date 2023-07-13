@@ -56,6 +56,9 @@ Y_UTEST_DECL(256)
     Y_UTEST(random_shuffle);
 
     Y_UTEST(sort_heap);
+
+    Y_UTEST(apex_archon);
+
     //std::cerr << "-------- Platform: " << Y_PLATFORM << std::endl;
     //std::cerr << "-------- Compiler: " << Y_COMPILER << std::endl;
 }

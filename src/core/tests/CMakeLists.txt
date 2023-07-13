@@ -8,6 +8,7 @@ concurrent
 random
 hashing
 sort
+apex
 )
 
 Y_LinkLibraries(test-core)
@@ -73,4 +74,7 @@ add_test(hashing:mix64 test-core hashing_mix64)
 
 #sort
 add_test(sort:heap     test-core sort_heap)
+
+#apex
+add_test(apex:archon   test-core apex_archon)
 

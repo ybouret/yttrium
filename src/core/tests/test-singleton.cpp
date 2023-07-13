@@ -1,5 +1,6 @@
 #include "y/singleton.hpp"
 #include "y/utest/run.hpp"
+#include "y/locking/nucleus.hpp"
 
 using namespace Yttrium;
 
@@ -21,7 +22,7 @@ namespace
 
     const char * const MyData:: CallSign = "MyData";
 
-    class SysData : public Singleton<SysData,NucleusSingleton>
+    class SysData : public Singleton<SysData,Locking::Nucleus>
     {
     public:
         static const char * const      CallSign;
@@ -30,9 +31,9 @@ namespace
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(SysData);
-        SysData() : Singleton<SysData,NucleusSingleton>() { std::cerr << "+SysData" << std::endl; }
+        SysData() : Singleton<SysData,Locking::Nucleus>() { std::cerr << "+SysData" << std::endl; }
         virtual ~SysData() noexcept { std::cerr << "-SysData" << std::endl;}
-        friend class Singleton<SysData,NucleusSingleton>;
+        friend class Singleton<SysData,Locking::Nucleus>;
     };
 
     const char * const SysData:: CallSign = "SysData";

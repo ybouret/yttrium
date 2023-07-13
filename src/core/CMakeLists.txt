@@ -6,6 +6,7 @@ set(srcs ${quark})
 
 Y_CreateLibrary(y
 .
+locking
 config
 check
 type
@@ -23,7 +24,10 @@ sort
 utest 
 memory
 memory/allocator
-memory/exclusive)
+memory/exclusive
+apex
+apex/m
+)
 
 source_group(concurrent FILES ${quark})
 

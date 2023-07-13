@@ -6,6 +6,7 @@
 
 #include "y/singleton.hpp"
 #include "y/memory/allocator.hpp"
+#include "y/locking/nucleus.hpp"
 
 namespace Yttrium
 {
@@ -21,7 +22,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Pooled : public Singleton<Pooled,NucleusSingleton>, public Allocator
+        class Pooled : public Singleton<Pooled,Locking::Nucleus>, public Allocator
         {
         public:
             //__________________________________________________________________
@@ -47,7 +48,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Pooled);
             explicit Pooled();
             virtual ~Pooled() noexcept;
-            friend class Singleton<Pooled,NucleusSingleton>;
+            friend class Singleton<Pooled,Locking::Nucleus>;
 
         };
 

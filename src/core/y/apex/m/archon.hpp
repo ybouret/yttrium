@@ -1,38 +1,36 @@
+
 //! \file
 
 
-#ifndef Y_Memory_Grains_Included
-#define Y_Memory_Grains_Included 1
+#ifndef Y_Apex_Archon_Included
+#define Y_Apex_Archon_Included 1
 
 #include "y/singleton.hpp"
-#include "y/locking/nucleus.hpp"
-
 
 namespace Yttrium
 {
-
-    namespace Memory
+    namespace Apex
     {
+
         //______________________________________________________________________
         //
         //
         //
-        //! Allocator of Quanta
+        //! singleton for cache of memory blocks
         //
         //
         //______________________________________________________________________
-        class Grains : public Singleton<Grains,Locking::Nucleus>
+        class Archon : public Singleton<Archon>
         {
         public:
             //__________________________________________________________________
             //
             //
-            // Definitions
+            // Definition
             //
             //__________________________________________________________________
-            static const char * const      CallSign; //!< "Memory::Grains"
-            static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 4; //!< longevity
-            
+            static const char * const      CallSign;                                //!< "Apex::Archon"
+            static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 5; //!< alias
 
             //__________________________________________________________________
             //
@@ -40,19 +38,15 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void *acquire(size_t blockSize);               //!< acquire blockSize
-            void  release(void *, const size_t) noexcept;  //!< release previously acquired
-
+            
         private:
-            explicit  Grains();
-            virtual  ~Grains() noexcept;
-            Y_DISABLE_COPY_AND_ASSIGN(Grains);
-            friend class Singleton<Grains,Locking::Nucleus>;
+            Y_DISABLE_COPY_AND_ASSIGN(Archon);
+            explicit Archon() noexcept;
+            virtual ~Archon() noexcept;
+            friend class Singleton<Archon>;
         };
-
     }
 
 }
 
 #endif
-

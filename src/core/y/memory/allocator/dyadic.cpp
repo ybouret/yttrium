@@ -19,7 +19,7 @@ namespace Yttrium
 
         static Corpus *corpus = 0;
         
-        Dyadic:: Dyadic() : Singleton<Dyadic,NucleusSingleton>(), Allocator()
+        Dyadic:: Dyadic() : Singleton<Dyadic,Locking::Nucleus>(), Allocator()
         {
             corpus = & Concurrent::Mem::CorpusInstance();
         }

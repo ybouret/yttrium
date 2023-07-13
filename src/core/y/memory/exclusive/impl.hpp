@@ -39,6 +39,7 @@ void   CLASS:: operator delete(void *, void *) noexcept {                       
 
 #else
 
+//! helper to cancel warnings
 #define Y_EXCLUSIVE_IMPL_EXTRA(CLASS)
 
 #endif

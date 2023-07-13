@@ -5,6 +5,7 @@
 
 #include "y/singleton.hpp"
 #include "y/memory/allocator.hpp"
+#include "y/locking/nucleus.hpp"
 
 namespace Yttrium
 {
@@ -19,7 +20,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Global : public Singleton<Global,NucleusSingleton>, public Allocator
+        class Global : public Singleton<Global,Locking::Nucleus>, public Allocator
         {
         public:
             //__________________________________________________________________
@@ -45,7 +46,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Global);
             explicit Global();
             virtual ~Global() noexcept;
-            friend class Singleton<Global,NucleusSingleton>;
+            friend class Singleton<Global,Locking::Nucleus>;
             
         };
 
