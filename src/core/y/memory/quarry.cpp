@@ -5,6 +5,8 @@
 #include "y/system/exception.hpp"
 #include "y/type/utils.hpp"
 #include "y/text/human-readable.hpp"
+#include "y/sort/merge.hpp"
+#include "y/data/rework.hpp"
 
 #include <iomanip>
 
@@ -55,6 +57,18 @@ namespace Yttrium
                 Core::Indent(std::cerr,indent) << "<" << CallSign << "/>" << std::endl;
             }
             return res;
+        }
+
+        uint64_t Quarry:: Vein:: gc() noexcept
+        {
+            {
+                ListOf<Stone> data;
+                Rework::PoolToList(data,*this);
+                MergeSort::ByIncreasingAddress(data);
+                while(data.size) store( data.popHead() );
+            }
+
+            return size * dyad.bytes;
         }
 
     }
@@ -111,6 +125,13 @@ namespace Yttrium
 
         void Quarry:: gc(const size_t maxBytes) noexcept
         {
+            uint64_t total = 0;
+            uint64_t hist[MaxShift+1];
+            Y_STATIC_ZARR(hist);
+            for(unsigned shift=MinShift;shift<=MaxShift;++shift)
+            {
+                total += (hist[shift] = vein[shift].gc());
+            }
             
         }
 

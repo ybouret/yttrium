@@ -61,7 +61,7 @@ namespace Yttrium
                 void         release(void*) noexcept;         //!< store previously acquired block
                 virtual void release()      noexcept;         //!< release content
                 uint64_t     displayInfo(const size_t) const; //!< display statistics
-
+                uint64_t     gc() noexcept;                   //!< order and return total vailable bytes
                 Dyad &dyad; //!< internal allocator with bytes=2^shift
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Vein);

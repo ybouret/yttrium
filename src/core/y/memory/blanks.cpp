@@ -117,15 +117,12 @@ namespace Yttrium
 
         void Blanks:: gc(const size_t maxCount) noexcept
         {
-
             ListOf<BlankNode> data;
-            Rework::PoolToList(data,*this);
-            MergeSort::ByIncreasingAddress(data);
+            Rework::PoolToList(data,*this);               // get data
+            MergeSort::ByIncreasingAddress(data);         // sort by increasing address
             while(data.size>maxCount)
-            {
-                coreArena.releaseBlock( data.popTail() );
-            }
-            while(data.size) store( data.popTail() );
+                coreArena.releaseBlock( data.popTail() ); // return highest
+            while(data.size) store( data.popHead() );     // will use highest firts
         }
 
 
