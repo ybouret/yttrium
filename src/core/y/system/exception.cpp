@@ -48,7 +48,7 @@ namespace Yttrium
                               const char *fmt,
                               ...) noexcept :
         Yttrium::Exception(),
-        code(0),
+        code(err),
         title()
         {
             Libc::FormatError(title,sizeof(title),err);
@@ -80,11 +80,11 @@ namespace Yttrium
         Exception:: ~Exception() noexcept {}
 
         Exception::Exception(const uint32_t   err,
-            const char* fmt,
-            ...) noexcept :
-            Yttrium::Exception(),
-            code(0),
-            title()
+                             const char* fmt,
+                             ...) noexcept :
+        Yttrium::Exception(),
+        code(err),
+        title()
         {
             Win32::FormatError(title, sizeof(title), err);
             va_list ap;
@@ -94,9 +94,9 @@ namespace Yttrium
         }
 
         Exception::Exception(const Exception& excp) noexcept :
-            Yttrium::Exception(excp),
-            code(excp.code),
-            title()
+        Yttrium::Exception(excp),
+        code(excp.code),
+        title()
         {
             memcpy(title, excp.title, sizeof(title));
         }
@@ -111,4 +111,48 @@ namespace Yttrium
 
 }
 
+#if defined(Y_Darwin)
+#include <mach/mach.h>
+#include "y/text/ops.hpp"
 
+namespace Yttrium
+{
+
+    namespace Mach
+    {
+
+        Exception:: ~Exception() noexcept {}
+
+        Exception:: Exception(const int   err,
+                              const char *fmt,
+                              ...) noexcept :
+        Yttrium::Exception(),
+        code(err),
+        title()
+        {
+            TextOps::CopyMessage(title,sizeof(title),mach_error_string(err));
+            va_list ap;
+            va_start(ap,fmt);
+            format(fmt,&ap);
+            va_end(ap);
+        }
+
+        Exception:: Exception(const Exception &excp) noexcept :
+        Yttrium::Exception(excp),
+        code(excp.code),
+        title()
+        {
+            memcpy(title,excp.title,sizeof(title));
+        }
+
+        const char *Exception:: what() const noexcept
+        {
+            return title;
+        }
+
+    }
+
+}
+
+
+#endif

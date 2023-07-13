@@ -55,6 +55,7 @@ add_test(type:div    test-core type_div)
 #data
 add_test(data:list test-core data_list)
 add_test(data:pool test-core data_pool)
+add_test(data:rework test-core data_rework)
 
 #calculus
 add_test(calculus:ilog2 test-core calculus_ilog2)

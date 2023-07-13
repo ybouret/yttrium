@@ -29,6 +29,21 @@ namespace Yttrium
         Y_GIANT_LOCK();
         return mach_absolute_time();
     }
+
+    static inline double WallTimeCalibrate()
+    {
+        Y_GIANT_LOCK();
+        mach_timebase_info_data_t timebase;
+        const kern_return_t       err = mach_timebase_info(&timebase);
+        if(KERN_SUCCESS !=err)
+        {
+            throw Mach::Exception(err,"mach_timebase_info");
+        }
+        const double  conversion_factor = double(timebase.numer) / timebase.denom;
+        return 1e-9 * conversion_factor;
+    }
+
+
 #endif
 
 #if defined(Y_USE_CLOCK_GETTIME)
@@ -43,6 +58,18 @@ namespace Yttrium
             throw Libc::Exception( errno, "clock_gettime" );
         return __giga64*uint64_t(tp.tv_sec) + uint64_t(tp.tv_nsec);
     }
+
+
+    static inline uint64_t WallTimeCalibrate()
+    {
+        YACK_GIANT_LOCK();
+        struct timespec tp  = { 0, 0 };
+        const int       err = clock_getres(CLOCK_REALTIME,&tp);
+        if(err!=0) throw Libc::Exception( errno, "clock_getres" );
+        return __giga64*uint64_t(tp.tv_sec) + uint64_t(tp.tv_nsec);
+    }
+
+
 #endif
 
 #if defined(Y_WIN)
@@ -57,6 +84,10 @@ namespace Yttrium
         return uint64_t(Q);
     }
 #endif
+
+    WallTime:: ~WallTime() noexcept
+    {
+    }
 
 
 }

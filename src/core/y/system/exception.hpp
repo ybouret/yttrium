@@ -112,6 +112,65 @@ namespace Yttrium
         };
     }
 
+#if defined(Y_Darwin)
+    namespace Mach
+    {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Exception with mach error
+        //
+        //
+        //______________________________________________________________________
+        class Exception : public Yttrium::Exception
+        {
+        public:
+            //__________________________________________________________________
+            //
+            //
+            // Definition
+            //
+            //__________________________________________________________________
+            static const size_t TitleSize = ClassSize - sizeof(int); //!< alias
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup with mach error and formated message
+            explicit Exception(const int err, const char *fmt,...) noexcept Y_PRINTF_CHECK(3,4);
+            virtual ~Exception()         noexcept; //!< cleanup
+            Exception(const Exception &) noexcept; //!< copy
+
+            //__________________________________________________________________
+            //
+            //
+            // Method
+            //
+            //__________________________________________________________________
+            virtual const char *what() const noexcept; //!< title
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Member
+            //
+            //__________________________________________________________________
+            const int code; //!< original mach error
+
+        private:
+            Y_DISABLE_ASSIGN(Exception);
+            char title[TitleSize];
+        };
+    }
+#endif
+
+
 #if defined(Y_WIN)
     namespace Win32
     {

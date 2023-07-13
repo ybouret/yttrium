@@ -26,6 +26,7 @@ namespace Yttrium
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(WallTime);
+        void *freq;
     };
 
 }
