@@ -73,6 +73,42 @@ namespace Yttrium
 
     }
 
+#if defined(Y_WIN)
+    namespace Win32
+    {
+
+        Exception:: ~Exception() noexcept {}
+
+        Exception::Exception(const uint32_t   err,
+            const char* fmt,
+            ...) noexcept :
+            Yttrium::Exception(),
+            code(0),
+            title()
+        {
+            Win32::FormatError(title, sizeof(title), err);
+            va_list ap;
+            va_start(ap, fmt);
+            format(fmt, &ap);
+            va_end(ap);
+        }
+
+        Exception::Exception(const Exception& excp) noexcept :
+            Yttrium::Exception(excp),
+            code(excp.code),
+            title()
+        {
+            memcpy(title, excp.title, sizeof(title));
+        }
+
+        const char* Exception::what() const noexcept
+        {
+            return title;
+        }
+
+    }
+#endif
+
 }
 
 

@@ -111,6 +111,65 @@ namespace Yttrium
             char title[TitleSize];
         };
     }
+
+#if defined(Y_WIN)
+    namespace Win32
+    {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Exception with FormatMessage
+        //
+        //
+        //______________________________________________________________________
+        class Exception : public Yttrium::Exception
+        {
+        public:
+            //__________________________________________________________________
+            //
+            //
+            // Definition
+            //
+            //__________________________________________________________________
+            static const size_t TitleSize = ClassSize - sizeof(uint32_t); //!< alias
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup with errno and formated message
+            explicit Exception(const uint32_t err, const char* fmt, ...) noexcept Y_PRINTF_CHECK(3, 4);
+            virtual ~Exception()         noexcept; //!< cleanup
+            Exception(const Exception&) noexcept; //!< copy
+
+            //__________________________________________________________________
+            //
+            //
+            // Method
+            //
+            //__________________________________________________________________
+            virtual const char* what() const noexcept; //!< title
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Member
+            //
+            //__________________________________________________________________
+            const uint32_t code; //!< original errno
+
+        private:
+            Y_DISABLE_ASSIGN(Exception);
+            char title[TitleSize];
+        };
+    }
+#endif
+
 }
 
 #endif
