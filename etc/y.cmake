@@ -246,7 +246,7 @@ macro(Y_LinkLibraries target)
 		
 	if(Y_WINDOWS)
 		if(Y_GNU)
-			target_link_libraries(${program} -static-libgcc -static-libstdc++) 
+			target_link_libraries(${target} -static-libgcc -static-libstdc++) 
 		endif()
 	endif()
     
