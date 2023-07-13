@@ -40,18 +40,7 @@ macro(Y_CreateLibrary id)
     message( STATUS "[yttrium] <${id}/>")
 endmacro()
 
-macro(Y_LinkLibraries target)
-    set(libs y)
-    if(Y_LINUX)
-        list(APPEND libs pthread)
-    endif()
-    
-    if(Y_LINUX)
-		list(APPEND libs rt)
-    endif()
-    
-    target_link_libraries(${target} ${libs})
-endmacro()
+
 
 # all subdirectory
 add_subdirectory(core)

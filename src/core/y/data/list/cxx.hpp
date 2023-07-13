@@ -59,7 +59,7 @@ namespace Yttrium
     private:
         Y_DISABLE_ASSIGN(CxxListOf);
         inline void release_() noexcept { while(size>0) delete popTail(); }
-        inline void duplicate_(const ListType &other) noexcept
+        inline void duplicate_(const ListType &other)  
         {
             try
             {

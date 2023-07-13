@@ -20,11 +20,11 @@ namespace {
         static int Count;
 
         virtual ~iNode() noexcept { --Count; }
-        explicit iNode() noexcept : next(0), prev(0), data(++Count), mark(data) {}
+        explicit iNode() noexcept : Object(), next(0), prev(0), data(++Count), mark(data) {}
 
 
         inline const int & operator*() const noexcept { return data; }
-        iNode(const iNode &other) : next(0), prev(0), data(other.data), mark(++Count) {}
+        iNode(const iNode &other) noexcept: Object(), next(0), prev(0), data(other.data), mark(++Count) {}
 
 
     private:

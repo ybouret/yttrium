@@ -61,7 +61,7 @@ namespace Yttrium
         Y_DISABLE_ASSIGN(CxxPoolOf);
         inline void release_() noexcept { while(size>0) delete query(); }
 
-        inline void duplicate_(const PoolType &other) noexcept
+        inline void duplicate_(const PoolType &other)  
         {
             try
             {

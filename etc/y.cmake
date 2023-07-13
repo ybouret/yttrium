@@ -226,3 +226,29 @@ set(CMAKE_C_FLAGS_RELEASE   ${Y_FLAGS_RELEASE})
 set(CMAKE_CXX_FLAGS_RELEASE ${Y_FLAGS_RELEASE})
 set(CMAKE_C_FLAGS_DEBUG     ${Y_FLAGS_DEBUG})
 set(CMAKE_CXX_FLAGS_DEBUG   ${Y_FLAGS_DEBUG})
+
+########################################################################
+##
+##
+##  Linking
+##
+##
+########################################################################
+macro(Y_LinkLibraries target)
+    set(libs y)
+    if(Y_LINUX)
+        list(APPEND libs pthread)
+    endif()
+    
+    if(Y_LINUX)
+		list(APPEND libs rt)
+    endif()
+		
+	if(Y_WINDOWS)
+		if(Y_GNU)
+			target_link_libraries(${program} -static-libgcc -static-libstdc++) 
+		endif()
+	endif()
+    
+    target_link_libraries(${target} ${libs})
+endmacro()
