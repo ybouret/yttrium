@@ -8,7 +8,7 @@
 #include "y/calculus/base2.hpp"
 #include "y/calculus/ilog2.hpp"
 #include "y/calculus/align.hpp"
-//#include "y/type/releasable.hpp"
+#include "y/type/cache.hpp"
 
 namespace Yttrium
 {
@@ -26,7 +26,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Quarry
+        class Quarry : public Cache
         {
         public:
             //__________________________________________________________________
@@ -51,13 +51,14 @@ namespace Yttrium
             //
             //! Cache of same length blocks
             //__________________________________________________________________
-            class Vein : public ListOf<Stone>
+            class Vein : public ListOf<Stone>, public Releasable
             {
             public:
-                explicit Vein(Dyad &)   noexcept; //!< setup from persistent dyad
-                virtual ~Vein()         noexcept; //!< cleanup
-                void *   acquire();               //!< [query block | acquire block]
-                void     release(void*) noexcept; //!< store previously acquired block
+                explicit    Vein(Dyad &)    noexcept; //!< setup from persistent dyad
+                virtual     ~Vein()         noexcept; //!< cleanup
+                void *       acquire();               //!< [query block | acquire block]
+                void         release(void*) noexcept; //!< store previously acquired block
+                virtual void release()      noexcept; //!< release content
 
                 Dyad &dyad; //!< internal allocator with bytes=2^shift
             private:
@@ -87,9 +88,11 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void * acquire(unsigned &shift);                             //!< fetch block 2^(MaxOf(shift,MinShift)), shift<=MaxShift
+            void * acquire(unsigned &shift);                            //!< fetch block 2^(MaxOf(shift,MinShift)), shift<=MaxShift
             void   release(void *entry, const unsigned shift) noexcept; //!< store previously acquire blocks
 
+            virtual void release() noexcept;
+            virtual void gc(const size_t maxBytes) noexcept;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Quarry);
