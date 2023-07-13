@@ -12,21 +12,39 @@ namespace Yttrium
     //
     //
     //
-    //! real time handling
+    //! Wall Time handling
     //
     //
     //__________________________________________________________________________
     class WallTime
     {
     public:
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
         explicit WallTime();           //!< setup
         virtual ~WallTime() noexcept;  //!< cleanup
 
-        static uint64_t Ticks();       //!< system's ticks
-        double operator()(const uint64_t) const noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        static uint64_t Ticks();                          //!< system's ticks
+        double operator()(const uint64_t) const noexcept; //!< ticks to seconds
+        void wait(const double nsec) const;               //!< self loop
 
-        const long double freq;
-        void wait(const double nsec) const;
+        //______________________________________________________________________
+        //
+        //
+        // members
+        //
+        //______________________________________________________________________
+        const long double freq; //!< system ticks to time factor
 
 
     private:

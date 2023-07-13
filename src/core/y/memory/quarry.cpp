@@ -52,8 +52,7 @@ namespace Yttrium
             if(size)
             {
                 Core::Indent(std::cerr,indent) << "<" << CallSign << " blockSize='2^" << dyad.shift << " = " << dyad.bytes << "'>" << std::endl;
-                Core::Indent(std::cerr,indent+2) << "available = " << std::setw(7) << size << std::endl;
-                Core::Indent(std::cerr,indent+2) << "allocated = " << HumanReadable(res += size*dyad.bytes) << std::endl;
+                Core::Indent(std::cerr,indent+2) << "available = " << size << " / " << HumanReadable(res += size*dyad.bytes) << std::endl;
                 Core::Indent(std::cerr,indent) << "<" << CallSign << "/>" << std::endl;
             }
             return res;
@@ -132,6 +131,9 @@ namespace Yttrium
             {
                 total += (hist[shift] = vein[shift].gc());
             }
+            size_t n=1;
+            while(total/n>maxBytes) ++n;
+            
             
         }
 

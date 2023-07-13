@@ -37,12 +37,20 @@ namespace Yttrium
             return lhs < rhs ? 1 : ( rhs < lhs ? -1 : 0);
         }
 
+        //______________________________________________________________________
+        //
+        //! C++ style increasing
+        //______________________________________________________________________
         template <typename T> static inline
         SignType CxxIncreasing(const T &lhs, const T &rhs)
         {
             return SignOf(lhs,rhs);
         }
 
+        //______________________________________________________________________
+        //
+        //! C++ style decreasing
+        //______________________________________________________________________
         template <typename T> static inline
         SignType CxxDecreasing(const T &lhs, const T &rhs)
         {

@@ -1,18 +1,61 @@
 
 #include "y/apex/m/archon.hpp"
+#include "y/memory/quarry.hpp"
+#include "y/memory/corpus.hpp"
+#include "y/memory/album.hpp"
+#include "y/memory/out-of-reach.hpp"
 
 namespace Yttrium
 {
     namespace Apex
     {
         const char * const Archon:: CallSign = "Apex::Archon";
-        
+
+        namespace
+        {
+            class CoreEngine
+            {
+            public:
+                inline   CoreEngine() : album(), corpus(album) { }
+                virtual ~CoreEngine() noexcept {}
+
+                Memory::Album  album;
+                Memory::Corpus corpus;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(CoreEngine);
+            };
+        }
+
+        class Archon:: Engine : public CoreEngine, public Memory::Quarry
+        {
+        public:
+            explicit Engine() : CoreEngine(), Memory::Quarry(corpus) {}
+            virtual ~Engine() noexcept {}
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Engine);
+        };
+
+
+
+        static Archon::Engine *engine = 0;
+        static void           *engine_[ Y_WORDS_FOR(Archon::Engine) ];
+
+
         Archon:: ~Archon() noexcept
         {
+            assert(0!=engine);
+            Destruct(engine);
+            engine = 0;
+            Y_STATIC_ZARR(engine_);
         }
 
         Archon:: Archon() noexcept : Singleton<Archon>()
         {
+            std::cerr << "sizeof(Engine)=" << sizeof(Engine) << std::endl;
+            assert(0==engine);
+            engine = new ( Y_STATIC_ZARR(engine_) ) Engine();
 
         }
 

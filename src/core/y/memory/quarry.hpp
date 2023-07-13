@@ -54,14 +54,15 @@ namespace Yttrium
             class Vein : public PoolOf<Stone>, public Releasable
             {
             public:
-                static const char * const CallSign;
+                static const char * const CallSign;           //!< Memory::Quarry::Vein
                 explicit     Vein(Dyad &)   noexcept;         //!< setup from persistent dyad
                 virtual     ~Vein()         noexcept;         //!< cleanup
                 void *       acquire();                       //!< [query block | acquire block]
                 void         release(void*) noexcept;         //!< store previously acquired block
                 virtual void release()      noexcept;         //!< release content
                 uint64_t     displayInfo(const size_t) const; //!< display statistics
-                uint64_t     gc() noexcept;                   //!< order and return total vailable bytes
+                uint64_t     gc() noexcept;                   //!< order and return total available bytes
+
                 Dyad &dyad; //!< internal allocator with bytes=2^shift
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Vein);

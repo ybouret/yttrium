@@ -10,9 +10,26 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! MergeSort algorithms
+    //
+    //
+    //__________________________________________________________________________
     struct MergeSort
     {
-        
+        //______________________________________________________________________
+        //
+        //
+        //! sort a list
+        /**
+         \param L            list of nodes
+         \param compareNodes is SignType compareNodes(const NODE *, const NODE *)
+         */
+        //
+        //______________________________________________________________________
         template <typename NODE, typename COMPARE_NODES> static inline
         void Call(ListOf<NODE> &L, COMPARE_NODES &compareNodes)
         {
@@ -30,6 +47,12 @@ namespace Yttrium
             }
         }
 
+        //______________________________________________________________________
+        //
+        //
+        //! sort nodes by increasing address
+        //
+        //______________________________________________________________________
         template <typename NODE> static inline
         void ByIncreasingAddress(ListOf<NODE> &L)
         {

@@ -76,7 +76,10 @@ namespace Yttrium
             return node;
         }
 
-
+        //______________________________________________________________________
+        //
+        //! query [1..size] node
+        //______________________________________________________________________
         template <typename POOL> static inline
         typename POOL::NodeType *Query(POOL &P, size_t indx) noexcept
         {

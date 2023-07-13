@@ -31,6 +31,7 @@ namespace Yttrium
             //__________________________________________________________________
             static const char * const      CallSign;                                //!< "Apex::Archon"
             static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 5; //!< alias
+            class Engine;
 
             //__________________________________________________________________
             //
