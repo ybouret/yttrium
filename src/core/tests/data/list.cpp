@@ -96,7 +96,7 @@ Y_UTEST(data_list)
         {
             for(size_t i=0;i<n;++i)
             {
-                if( ran.choice() > 0.5 )
+                if( ran.choice()  )
                     iList.pushTail( new iNode() );
                 else
                     iList.pushHead( new iNode() );
