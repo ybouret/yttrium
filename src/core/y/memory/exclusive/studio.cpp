@@ -15,6 +15,9 @@ namespace Yttrium
         const char Studio:: MultipleNew[]    = "operator new[]";
         const char Studio:: MultipleDelete[] = "operator delete[]";
 
+        const char Studio:: PlacementNew[]    = "placement new";
+        const char Studio:: PlacementDelete[] = "placement delete";
+
         static const char prolog[] = "Unauthorized ";
 
         void * Studio:: ThrowUnauthorized(const char *clid, const char *fnid)
