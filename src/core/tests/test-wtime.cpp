@@ -14,7 +14,13 @@ Y_UTEST(wtime)
     }
 
     WallTime chrono;
-    
+    std::cerr << "freq=" << chrono.freq << std::endl;
+    std::cerr << "waiting 1 second..." << std::endl;
+    const uint64_t mark = WallTime::Ticks();
+    while( chrono( WallTime::Ticks() - mark ) < 1.0 )
+        ;
+
+
 
 }
 Y_UDONE()

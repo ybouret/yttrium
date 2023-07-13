@@ -32,8 +32,9 @@ namespace Yttrium
         return mach_absolute_time();
     }
 
-    static inline double WallTimeCalibrate()
+    static inline long double WallTimeCalibrate()
     {
+        static const long double nano = 1.0e-9L;
         Y_GIANT_LOCK();
         mach_timebase_info_data_t timebase;
         const kern_return_t       err = mach_timebase_info(&timebase);
@@ -41,8 +42,8 @@ namespace Yttrium
         {
             throw Mach::Exception(err,"mach_timebase_info");
         }
-        const double  conversion_factor = double(timebase.numer) / timebase.denom;
-        return 1e-9 * conversion_factor;
+        const long double  conversion_factor = static_cast<long double>(timebase.numer) / timebase.denom;
+        return nano * conversion_factor;
     }
 
 
@@ -62,14 +63,15 @@ namespace Yttrium
     }
 
 
-    static inline double WallTimeCalibrate()
+    static inline long double WallTimeCalibrate()
     {
+        static const long double nano = 1.0e-9L;
         Y_GIANT_LOCK();
         struct timespec tp  = { 0, 0 };
         const int       err = clock_getres(CLOCK_REALTIME,&tp);
         if(err!=0) throw Libc::Exception( errno, "clock_getres" );
         std::cerr << tp.tv_sec << " s + " << tp.tv_nsec << " ns" << std::endl;
-        return  1.0e-9 * double(__giga64*uint64_t(tp.tv_sec) + uint64_t(tp.tv_nsec));
+        return  nano * static_cast<long double>(__giga64*uint64_t(tp.tv_sec) + uint64_t(tp.tv_nsec));
     }
 
 
@@ -87,7 +89,7 @@ namespace Yttrium
         return uint64_t(Q);
     }
 
-    static inline double WallTimeCalibrate()
+    static inline long double WallTimeCalibrate()
     {
         static const long double l_one = 1;
         Y_GIANT_LOCK();
@@ -96,7 +98,7 @@ namespace Yttrium
         {
             throw Win32::Exception( ::GetLastError(), "::QueryPerformanceFrequency" );
         }
-        return static_cast<double>(l_one / static_cast<long double>( F.QuadPart ));
+        return  l_one / static_cast<long double>( F.QuadPart );
     }
 
 
@@ -108,6 +110,19 @@ namespace Yttrium
 
     WallTime:: WallTime() : freq( WallTimeCalibrate() )
     {
+    }
+
+    double WallTime:: operator()(const uint64_t u) const noexcept
+    {
+        return static_cast<double>(u*freq);
+    }
+
+    void WallTime:: wait(const double nsec) const
+    {
+        const WallTime &self = *this;
+        const uint64_t  mark = Ticks();
+        while(self(Ticks()-mark)<nsec)
+            ;
     }
 
 

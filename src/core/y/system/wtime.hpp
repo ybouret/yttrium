@@ -23,9 +23,12 @@ namespace Yttrium
         virtual ~WallTime() noexcept;  //!< cleanup
 
         static uint64_t Ticks();       //!< system's ticks
+        double operator()(const uint64_t) const noexcept;
 
-        const double freq;
-        
+        const long double freq;
+        void wait(const double nsec) const;
+
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(WallTime);
     };
