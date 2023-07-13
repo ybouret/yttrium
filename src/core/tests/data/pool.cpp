@@ -40,6 +40,13 @@ Y_UTEST(data_pool)
         std::cerr << iPool << std::endl;
     }
 
+    for(size_t loop=0;loop<100;++loop)
+    {
+        PoolOf<iNode> temp;
+        while(iPool.size) temp.store( iPool.query( ran.index(iPool.size) ) );
+        temp.swapWith(iPool);
+    }
+
     Random::Shuffle::Pool(iPool,ran);
 
     std::cerr << "query" << std::endl;
@@ -48,6 +55,9 @@ Y_UTEST(data_pool)
         delete iPool.query();
         std::cerr << iPool << std::endl;
     }
+
+
+
 
 }
 Y_UDONE()

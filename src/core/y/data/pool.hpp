@@ -46,10 +46,10 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        inline NODE *store(NODE *node) noexcept { return PoolOps::Store(*this,node); } //!< store a new node
-        inline NODE *stash(NODE *node) noexcept { return PoolOps::Stash(*this,node); } //!< store a new node (slow)
-
-        inline NODE *query()           noexcept { return PoolOps::Query(*this);      } //!< query first node
+        inline NODE *store(NODE *node)        noexcept { return PoolOps::Store(*this,node); } //!< store a new node
+        inline NODE *stash(NODE *node)        noexcept { return PoolOps::Stash(*this,node); } //!< store a new node (slow)
+        inline NODE *query()                  noexcept { return PoolOps::Query(*this);      } //!< query first node
+        inline NODE *query(const size_t indx) noexcept { return PoolOps::Query(*this,indx); } //!< query node[1..size]
 
         //! noexcept swap with another pool
         inline void swapWith(PoolOf &other) noexcept

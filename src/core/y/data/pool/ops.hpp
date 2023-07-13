@@ -59,6 +59,7 @@ namespace Yttrium
             }
         }
 
+
         //______________________________________________________________________
         //
         //! query (head) node
@@ -74,7 +75,49 @@ namespace Yttrium
             --Coerce(P.size);
             return node;
         }
-        
+
+
+        template <typename POOL> static inline
+        typename POOL::NodeType *Query(POOL &P, size_t indx) noexcept
+        {
+            assert(indx>=1);
+            assert(indx<=P.size);
+            if(1==indx)
+            {
+                // special case
+                return Query(P);
+            }
+            else
+            {
+                // look up
+                typedef typename POOL::NodeType NodeType;
+                NodeType *node = P.head;
+                NodeType *prev = 0;
+                while(--indx>0)
+                {
+                    assert(0!=node);
+                    prev = node;
+                    node = node->next;
+                }
+                assert(NULL!=prev);
+                NodeType *next = node->next;
+                if(0!=next)
+                {
+                    // not at the end
+                    prev->next = next;
+                    node->next = 0;
+                }
+                else
+                {
+                    // at the end
+                    prev->next = 0;
+                }
+                --Coerce(P.size);
+                return node;
+            }
+
+        }
+
         
     };
 

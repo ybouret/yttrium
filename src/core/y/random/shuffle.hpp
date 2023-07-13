@@ -22,13 +22,19 @@ namespace Yttrium
         struct Shuffle
         {
 
+            //__________________________________________________________________
+            //
             //! Exchange wrapper
+            //__________________________________________________________________
             template <typename T> static inline
             void Exchange(T &lhs, T &rhs) noexcept {
                 if(&lhs!=&rhs) Memory::OutOfReach::Swap(&lhs,&rhs,sizeof(T));
             }
 
+            //__________________________________________________________________
+            //
             //! Fisher-Yates
+            //__________________________________________________________________
             template <typename ITERATOR>
             static void Range(ITERATOR curr, const size_t n, Bits &ran)
             {
@@ -36,31 +42,29 @@ namespace Yttrium
                     Exchange(*(curr+i), *(curr+ran.leq(i)));
             }
 
-            
+            //__________________________________________________________________
+            //
             //! shuffling list
+            //__________________________________________________________________
             template <typename LIST> static inline
             void List(LIST &L, Bits &ran) noexcept
             {
                 typename LIST::SelfType temp;
                 while(L.size>0)
-                {
                     temp.pushTail( L.pop( L.fetch( ran.index(L.size) ) ) );
-                }
                 temp.swapWith(L);
             }
 
+            //__________________________________________________________________
+            //
             //! shuffling pool
+            //__________________________________________________________________
             template <typename POOL> static inline
             void Pool(POOL &P, Bits &ran) noexcept
             {
                 typename POOL::SelfType temp;
                 while(P.size>0)
-                {
-                    if( ran.choice() )
-                        temp.store( P.query() );
-                    else
-                        temp.stash( P.query() );
-                }
+                    temp.store( P.query( ran.index(P.size)) );
                 temp.swapWith(P);
             }
 
