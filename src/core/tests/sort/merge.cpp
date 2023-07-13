@@ -47,7 +47,8 @@ Y_UTEST(sort_merge)
     std::cerr << L << std::endl;
 
     MergeSort::Call(L, XNode<int>::Compare );
-    
+    std::cerr << L << std::endl;
+
 
 }
 Y_UDONE()
