@@ -43,7 +43,7 @@ namespace Yttrium
             //__________________________________________________________________
             struct Stone
             {
-                Stone *next; //!< for list
+                Stone *next; //!< for list/pool
                 Stone *prev; //!< for list
             };
 
@@ -54,7 +54,7 @@ namespace Yttrium
             class Vein : public ListOf<Stone>, public Releasable
             {
             public:
-                explicit    Vein(Dyad &)    noexcept; //!< setup from persistent dyad
+                explicit     Vein(Dyad &)   noexcept; //!< setup from persistent dyad
                 virtual     ~Vein()         noexcept; //!< cleanup
                 void *       acquire();               //!< [query block | acquire block]
                 void         release(void*) noexcept; //!< store previously acquired block
