@@ -58,6 +58,7 @@ namespace Yttrium
         const int       err = clock_gettime( CLOCK_REALTIME, &tp );
         if(err!=0)
             throw Libc::Exception( errno, "clock_gettime" );
+        std::cerr << tp.tc_sec << " s + " << tp.tv_nsec << " ns" << std::endl;
         return __giga64*uint64_t(tp.tv_sec) + uint64_t(tp.tv_nsec);
     }
 
