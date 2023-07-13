@@ -1,5 +1,5 @@
 
-#include "y/memory/studio.hpp"
+#include "y/memory/exclusive/studio.hpp"
 #include "y/utest/run.hpp"
 #include "y/memory/exclusive/decl.hpp"
 #include "y/memory/exclusive/impl.hpp"

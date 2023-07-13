@@ -5,7 +5,7 @@
 #ifndef Y_Memory_Exclusive_Impl_Included
 #define Y_Memory_Exclusive_Impl_Included 1
 
-#include "y/memory/studio.hpp"
+#include "y/memory/exclusive/studio.hpp"
 
 //______________________________________________________________________________
 //
