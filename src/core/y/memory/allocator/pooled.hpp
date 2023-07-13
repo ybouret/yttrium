@@ -47,7 +47,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Pooled);
             explicit Pooled();
             virtual ~Pooled() noexcept;
-            friend SingletonType;
+            friend class Singleton<Pooled,NucleusSingleton>;
 
         };
 

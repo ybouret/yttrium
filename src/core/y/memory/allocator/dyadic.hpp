@@ -47,7 +47,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Dyadic);
             explicit Dyadic();
             virtual ~Dyadic() noexcept;
-            friend SingletonType;
+            friend class Singleton<Dyadic,NucleusSingleton>;
 
         };
     }

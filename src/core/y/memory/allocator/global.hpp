@@ -45,7 +45,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Global);
             explicit Global();
             virtual ~Global() noexcept;
-            friend SingletonType;
+            friend class Singleton<Global,NucleusSingleton>;
             
         };
 
