@@ -276,8 +276,8 @@ namespace Yttrium
         //
         //! target = target+source, source=0
         //______________________________________________________________________
-        template <typename LIST> static inline
-        void MergeTail(LIST &target, LIST &source) noexcept
+        template <typename TARGET, typename SOURCE> static inline
+        void MergeTail(TARGET &target, SOURCE &source) noexcept
         {
             if(source.size<=0) return;
 
@@ -359,8 +359,8 @@ namespace Yttrium
         //
         //!  lhs=src/2, rhs=src-lhs
         //______________________________________________________________________
-        template <typename LIST> static inline
-        void Divide(LIST &lhs, LIST &rhs, LIST &src) noexcept
+        template <typename LIST, typename SOURCE> static inline
+        void Divide(LIST &lhs, LIST &rhs, SOURCE &src) noexcept
         {
             typedef typename LIST::NodeType NodeType;
 
@@ -400,15 +400,15 @@ namespace Yttrium
         //
         //! fusion of two sorted list into another sorted
         //______________________________________________________________________
-        template <typename LIST, typename COMPARE> static inline
-        void Fusion(LIST &target, LIST &lhs, LIST &rhs, COMPARE &compare) noexcept
+        template <typename TARGET, typename LIST, typename COMPARE_NODES> static inline
+        void Fusion(TARGET &target, LIST &lhs, LIST &rhs, COMPARE_NODES &compareNodes) noexcept
         {
             assert(0==target.size);
             assert(0==target.head);
             assert(0==target.tail);
             while(lhs.size>0 && rhs.size>0)
             {
-                switch( compare(lhs.head, rhs.head) )
+                switch( compareNodes(lhs.head, rhs.head) )
                 {
                     case Negative:
                     case __Zero__:
