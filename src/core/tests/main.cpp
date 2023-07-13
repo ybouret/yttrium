@@ -27,6 +27,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(memory_allocator);
     Y_UTEST(memory_blanks);
     Y_UTEST(memory_studio);
+    Y_UTEST(memory_quarry);
 
 
 

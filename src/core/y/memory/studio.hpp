@@ -12,7 +12,7 @@ namespace Yttrium
     //__________________________________________________________________________
     //
     //
-    //! Studio to provide User-Level cache of a given type
+    //! Studio to provide User-Level cache of ONE given type
     //
     //__________________________________________________________________________
     template <typename T>

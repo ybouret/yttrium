@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Type_Releasable_Included

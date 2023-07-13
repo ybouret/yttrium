@@ -8,7 +8,6 @@
 #include "y/concurrent/mutex.hpp"
 #include "y/memory/out-of-reach.hpp"
 #include "y/calculus/align.hpp"
-//#include "y/type/pick.hpp"
 
 #include <iostream>
 
@@ -41,8 +40,9 @@ namespace Yttrium
         // C++
         //
         //______________________________________________________________________
-        explicit NucleusSingleton() noexcept {}
-        virtual ~NucleusSingleton() noexcept {}
+        explicit NucleusSingleton() noexcept;
+        virtual ~NucleusSingleton() noexcept;
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(NucleusSingleton);
     };
@@ -69,8 +69,9 @@ namespace Yttrium
         static const bool                IsNucleus = false; //!< alias
         typedef Concurrent::Mutex        MutexType;         //!< alias
 
-        explicit RegularSingleton() noexcept {}
-        virtual ~RegularSingleton() noexcept {}
+        explicit RegularSingleton() noexcept;
+        virtual ~RegularSingleton() noexcept;
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(RegularSingleton);
     };
@@ -116,10 +117,7 @@ namespace Yttrium
         //
         //! check existence
         //______________________________________________________________________
-        static bool Exists() noexcept
-        {
-            return 0 != Instance_;
-        }
+        static bool Exists() noexcept { return 0 != Instance_; }
 
         //______________________________________________________________________
         //
@@ -184,12 +182,13 @@ namespace Yttrium
         }
     };
 
+    template <typename T,class R>
+    typename Singleton<T,R>::MutexType   Singleton<T,R>:: Access(T::CallSign);
     template <typename T,class R> bool   Singleton<T,R>:: Register  = true;
     template <typename T,class R> T *    Singleton<T,R>:: Instance_ = 0;
     template <typename T,class R> size_t Singleton<T,R>:: Required  = 0;
 
-    template <typename T,class R>
-    typename Singleton<T,R>::MutexType Singleton<T,R>:: Access(T::CallSign);
+
 
 
 }

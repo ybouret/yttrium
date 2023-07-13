@@ -47,7 +47,7 @@ namespace Yttrium
         {
             try {
                 assert(0!=name);
-                std::cerr << "==> +[" << std::setw(20) << name << "] @" << last << std::endl;
+                std::cerr << "+[" << name << "] @" << last << std::endl;
             }
             catch(...) {}
         }
@@ -58,7 +58,7 @@ namespace Yttrium
         {
             try {
                 assert(0!=name);
-                std::cerr << "<== -[" << std::setw(20) << name << "] @" << last << std::endl;
+                std::cerr << "~[" << name << "] @" << last << std::endl;
             }
             catch(...) {}
         }
