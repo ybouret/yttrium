@@ -30,19 +30,24 @@ template <> const size_t                     Yttrium:: Studio<CLASS>:: Starting 
 /**/    static Yttrium::Studio<CLASS> &mgr = Yttrium:: Studio<CLASS>:: Single:: Instance(); \
 /**/    (void)blockSize; assert(blockSize<=mgr.blockSize());                                \
 /**/    Y_LOCK(Yttrium::Studio<CLASS>::Single::Access);                                     \
-/**/    return mgr.zacquire(); \
-/**/  }\
+/**/    return mgr.zacquire();                                                              \
+/**/  }                                                                                     \
 void  CLASS:: operator delete(void *blockAddr, size_t blockSize) noexcept {                 \
 /**/    if(0==blockAddr) return;                                                            \
 /**/    static Yttrium::Studio<CLASS> &mgr = Yttrium:: Studio<CLASS>:: Single:: Location(); \
 /**/    (void)blockSize; assert(blockSize<=mgr.blockSize());                                \
 /**/    Y_LOCK(Yttrium::Studio<CLASS>::Single::Access);                                     \
 /**/    mgr.zrelease(blockAddr);                                                            \
-/**/  }\
-void * CLASS:: operator new[](const size_t) {\
-/**/    typedef Yttrium::Studio<CLASS> Self;\
-/**/    return Self::ThrowUnauthorized(#CLASS,Self::MultipleNew);\
+/**/  }                                                                                     \
+void * CLASS:: operator new[](const size_t) {                                               \
+/**/    typedef Yttrium::Studio<CLASS> Self;                                                \
+/**/    return Self::ThrowUnauthorized(#CLASS,Self::MultipleNew);                           \
+/**/  }                                                                                     \
+void   CLASS:: operator delete [](void *, const size_t ) noexcept {                         \
+/**/    typedef Yttrium::Studio<CLASS> Self;                                                \
+/**/    Self::AbortUnauthorized(#CLASS,Self::MultipleDelete);                               \
 /**/  }
+
 
 #endif
 
