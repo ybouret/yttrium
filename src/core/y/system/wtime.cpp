@@ -62,7 +62,7 @@ namespace Yttrium
 
     static inline uint64_t WallTimeCalibrate()
     {
-        YACK_GIANT_LOCK();
+        Y_GIANT_LOCK();
         struct timespec tp  = { 0, 0 };
         const int       err = clock_getres(CLOCK_REALTIME,&tp);
         if(err!=0) throw Libc::Exception( errno, "clock_getres" );
