@@ -18,7 +18,7 @@ public:                                                                         
 private:                                                                        \
 static void * operator new    [](const size_t);                                 \
 static void   operator delete [](void *, const size_t ) noexcept;               \
-static void * operator new(size_t, void *)    noexcept;                         \
+static void * operator new(size_t, void *);                                     \
 static void   operator delete(void *, void *) noexcept
 
 

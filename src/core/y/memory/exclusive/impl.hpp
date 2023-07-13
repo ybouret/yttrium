@@ -46,8 +46,15 @@ void * CLASS:: operator new[](const size_t) {                                   
 void   CLASS:: operator delete [](void *, const size_t ) noexcept {                         \
 /**/    typedef Yttrium::Studio<CLASS> Self;                                                \
 /**/    Self::AbortUnauthorized(#CLASS,Self::MultipleDelete);                               \
+/**/  }                                                                                     \
+void * CLASS:: operator new(size_t, void *) {                                               \
+/**/    typedef Yttrium::Studio<CLASS> Self;                                                \
+/**/    return Self::ThrowUnauthorized(#CLASS,Self::PlacementNew);                          \
+/**/  }                                                                                     \
+void   CLASS:: operator delete(void *, void *) noexcept {                                   \
+/**/    typedef Yttrium::Studio<CLASS> Self;                                                \
+/**/    Self::AbortUnauthorized(#CLASS,Self::PlacementDelete);                              \
 /**/  }
-
 
 #endif
 
