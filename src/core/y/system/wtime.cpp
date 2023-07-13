@@ -20,6 +20,8 @@
 #include <windows.h>
 #endif
 
+#include <iostream>
+
 namespace Yttrium
 {
 
@@ -66,7 +68,7 @@ namespace Yttrium
         struct timespec tp  = { 0, 0 };
         const int       err = clock_getres(CLOCK_REALTIME,&tp);
         if(err!=0) throw Libc::Exception( errno, "clock_getres" );
-        return __giga64*uint64_t(tp.tv_sec) + uint64_t(tp.tv_nsec);
+        return  __giga64*uint64_t(tp.tv_sec) + uint64_t(tp.tv_nsec);
     }
 
 
@@ -83,10 +85,29 @@ namespace Yttrium
         }
         return uint64_t(Q);
     }
+
+    static inline double WallTimeCalibrate()
+    {
+        static const long double l_one = 1;
+        Y_GIANT_LOCK();
+        LARGE_INTEGER F;
+        if( ! :: QueryPerformanceFrequency( &F ) )
+        {
+            throw Win32::Exception( ::GetLastError(), "::QueryPerformanceFrequency" );
+        }
+        return static_cast<double>(l_one / static_cast<long double>( F.QuadPart ));
+    }
+
+
 #endif
 
     WallTime:: ~WallTime() noexcept
     {
+    }
+
+    WallTime:: WallTime()
+    {
+        std::cerr << "calibrate: " << WallTimeCalibrate() << std::endl;
     }
 
 

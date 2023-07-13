@@ -13,6 +13,9 @@ Y_UTEST(wtime)
         std::cerr << WallTime::Ticks() << std::endl;
     }
 
+    WallTime chrono;
+    
+
 }
 Y_UDONE()
 
