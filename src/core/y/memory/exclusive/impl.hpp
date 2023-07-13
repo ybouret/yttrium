@@ -38,8 +38,11 @@ void  CLASS:: operator delete(void *blockAddr, size_t blockSize) noexcept {     
 /**/    (void)blockSize; assert(blockSize<=mgr.blockSize());                                \
 /**/    Y_LOCK(Yttrium::Studio<CLASS>::Single::Access);                                     \
 /**/    mgr.zrelease(blockAddr);                                                            \
+/**/  }\
+void * CLASS:: operator new[](const size_t) {\
+/**/    typedef Yttrium::Studio<CLASS> Self;\
+/**/    return Self::ThrowUnauthorized(#CLASS,Self::MultipleNew);\
 /**/  }
-
 
 #endif
 
