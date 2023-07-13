@@ -1,9 +1,9 @@
 //! \file
 
-#ifndef Y_Data_List_Cxx_Included
-#define Y_Data_List_Cxx_Included 1
+#ifndef Y_Data_Pool_Cxx_Included
+#define Y_Data_Pool_Cxx_Included 1
 
-#include "y/data/list.hpp"
+#include "y/data/pool.hpp"
 #include "y/type/releasable.hpp"
 
 namespace Yttrium
@@ -13,12 +13,12 @@ namespace Yttrium
     //
     //
     //
-    //! C++ type list, assuming NODE is a C++ (copiable) class
+    //! C++ type pool, assuming NODE is a C++ (copiable) class
     //
     //
     //__________________________________________________________________________
     template <typename NODE>
-    class CxxListOf : public ListOf<NODE>, public Releasable
+    class CxxPoolOf : public PoolOf<NODE>, public Releasable
     {
     public:
         //______________________________________________________________________
@@ -27,10 +27,11 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        typedef ListOf<NODE> ListType;   //!< alias
-        using ListType::size;
-        using ListType::popTail;
-        using ListType::pushTail;
+        typedef PoolOf<NODE> PoolType;   //!< alias
+        using PoolType::size;
+        using PoolType::query;
+        using PoolType::store;
+        using PoolType::reverse;
 
         //______________________________________________________________________
         //
@@ -38,11 +39,11 @@ namespace Yttrium
         // C++
         //
         //______________________________________________________________________
-        explicit CxxListOf() noexcept : ListType(), Releasable() { } //!< setup
-        virtual ~CxxListOf() noexcept { release(); }                 //!< cleanup
+        explicit CxxPoolOf() noexcept : PoolType(), Releasable() { } //!< setup
+        virtual ~CxxPoolOf() noexcept { release(); }                 //!< cleanup
 
         //! copy using NODE copy constructor
-        CxxListOf( const CxxListOf &other ) : ListType(), Releasable()
+        CxxPoolOf( const CxxPoolOf &other ) : PoolType(), Releasable()
         {
             duplicate_(other);
         }
@@ -57,14 +58,16 @@ namespace Yttrium
 
 
     private:
-        Y_DISABLE_ASSIGN(CxxListOf);
-        inline void release_() noexcept { while(size>0) delete popTail(); }
-        inline void duplicate_(const ListType &other) noexcept
+        Y_DISABLE_ASSIGN(CxxPoolOf);
+        inline void release_() noexcept { while(size>0) delete query(); }
+
+        inline void duplicate_(const PoolType &other) noexcept
         {
             try
             {
                 for(const NODE *node=other.head;node;node=node->next)
-                    pushBack( new NODE(*node) );
+                    store( new NODE(*node) );
+                reverse();
             }
             catch(...)
             {
@@ -74,6 +77,8 @@ namespace Yttrium
         }
     };
 
+
 }
 
 #endif
+

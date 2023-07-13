@@ -60,6 +60,8 @@ Y_UTEST(memory_studio)
     }
 
     S.displayInfo(0);
+    S.gc(100);
+    S.displayInfo(0);
 
 
 

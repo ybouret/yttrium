@@ -4,9 +4,8 @@
 #include "y/concurrent/memory.hpp"
 #include "y/memory/blocks.hpp"
 #include "y/memory/out-of-reach.hpp"
-#include "y/system/error.hpp"
-
-#include <cerrno>
+#include "y/data/rework.hpp"
+#include "y/sort/merge.hpp"
 
 namespace Yttrium
 {
@@ -118,7 +117,15 @@ namespace Yttrium
 
         void Blanks:: gc(const size_t maxCount) noexcept
         {
+
             ListOf<BlankNode> data;
+            Rework::PoolToList(data,*this);
+            MergeSort::ByIncreasingAddress(data);
+            while(data.size>maxCount)
+            {
+                coreArena.releaseBlock( data.popTail() );
+            }
+            while(data.size) store( data.popTail() );
         }
 
 

@@ -41,13 +41,19 @@ Y_UTEST(sort_merge)
 
     CxxListOf< XNode<int> > L;
     for(int i=0; i <= 23; ++i) L.pushTail( new XNode<int>(i) );
-    std::cerr << L << std::endl;
+
+    std::cerr << "Init = " << L << std::endl;
 
     Random::Shuffle::List(L,ran);
-    std::cerr << L << std::endl;
+    std::cerr << "Rand = " << L << std::endl;
 
     MergeSort::Call(L, XNode<int>::Compare );
-    std::cerr << L << std::endl;
+    std::cerr << "Sort = " << L << std::endl;
+
+    Random::Shuffle::List(L,ran);
+
+    MergeSort:: ByIncreasingAddress(L);
+    std::cerr << "Addr = " << L << std::endl;
 
 
 }

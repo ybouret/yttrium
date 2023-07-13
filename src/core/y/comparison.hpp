@@ -44,7 +44,7 @@ namespace Yttrium
         }
 
         template <typename T> static inline
-        SignType CxxDecreasingg(const T &lhs, const T &rhs)
+        SignType CxxDecreasing(const T &lhs, const T &rhs)
         {
             return SignOf(rhs,lhs);
         }
