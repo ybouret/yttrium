@@ -47,7 +47,7 @@ namespace Yttrium
             explicit  Grains();
             virtual  ~Grains() noexcept;
             Y_DISABLE_COPY_AND_ASSIGN(Grains);
-            friend SingletonType;
+            friend class Singleton<Grains,NucleusSingleton>;
         };
 
     }
