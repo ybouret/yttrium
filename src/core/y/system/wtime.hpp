@@ -24,9 +24,10 @@ namespace Yttrium
 
         static uint64_t Ticks();       //!< system's ticks
 
+        const double freq;
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(WallTime);
-        void *data;
     };
 
 }

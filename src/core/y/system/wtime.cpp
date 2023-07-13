@@ -62,14 +62,14 @@ namespace Yttrium
     }
 
 
-    static inline uint64_t WallTimeCalibrate()
+    static inline double WallTimeCalibrate()
     {
         Y_GIANT_LOCK();
         struct timespec tp  = { 0, 0 };
         const int       err = clock_getres(CLOCK_REALTIME,&tp);
         if(err!=0) throw Libc::Exception( errno, "clock_getres" );
         std::cerr << tp.tv_sec << " s + " << tp.tv_nsec << " ns" << std::endl;
-        return  __giga64*uint64_t(tp.tv_sec) + uint64_t(tp.tv_nsec);
+        return  1.0e-9 * double(__giga64*uint64_t(tp.tv_sec) + uint64_t(tp.tv_nsec));
     }
 
 
@@ -82,7 +82,7 @@ namespace Yttrium
         int64_t Q = 0;
         if (!::QueryPerformanceCounter((LARGE_INTEGER*)&Q))
         {
-            //throw win32::exception(::GetLastError(), " ::QueryPerformanceCounter");
+            throw Win32:: Exception(::GetLastError(), " ::QueryPerformanceCounter");
         }
         return uint64_t(Q);
     }
@@ -106,9 +106,8 @@ namespace Yttrium
     {
     }
 
-    WallTime:: WallTime()
+    WallTime:: WallTime() : freq( WallTimeCalibrate() )
     {
-        std::cerr << "calibrate: " << WallTimeCalibrate() << std::endl;
     }
 
 
