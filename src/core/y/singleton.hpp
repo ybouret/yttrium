@@ -101,7 +101,6 @@ namespace Yttrium
         //
         //______________________________________________________________________
         typedef typename POLICY::MutexType MutexType;     //!< alias
-        typedef Singleton<T,POLICY>        SingletonType; //!< alias
         static MutexType                   Access;        //!< static class/system level mutex
 
         //______________________________________________________________________

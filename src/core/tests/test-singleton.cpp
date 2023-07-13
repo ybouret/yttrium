@@ -16,7 +16,7 @@ namespace
         Y_DISABLE_COPY_AND_ASSIGN(MyData);
         MyData() : Singleton<MyData>() { std::cerr << "+MyData" << std::endl; }
         virtual ~MyData() noexcept { std::cerr << "-MyData" << std::endl;}
-        friend SingletonType;
+        friend class Singleton<MyData>;
     };
 
     const char * const MyData:: CallSign = "MyData";
@@ -30,9 +30,9 @@ namespace
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(SysData);
-        SysData() : SingletonType() { std::cerr << "+SysData" << std::endl; }
+        SysData() : Singleton<SysData,NucleusSingleton>() { std::cerr << "+SysData" << std::endl; }
         virtual ~SysData() noexcept { std::cerr << "-SysData" << std::endl;}
-        friend SingletonType;
+        friend class Singleton<SysData,NucleusSingleton>;
     };
 
     const char * const SysData:: CallSign = "SysData";

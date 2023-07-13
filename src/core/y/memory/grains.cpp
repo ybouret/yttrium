@@ -18,7 +18,7 @@ namespace Yttrium
         {
         }
 
-        Grains:: Grains() : SingletonType()
+        Grains:: Grains() : Singleton<Grains,NucleusSingleton>()
         {
             quanta = & Concurrent::Mem::QuantaInstance();
         }
