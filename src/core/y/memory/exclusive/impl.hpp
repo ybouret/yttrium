@@ -18,6 +18,30 @@ template <> const char * const               Yttrium:: Studio<CLASS>:: CallSign 
 template <> const Yttrium::AtExit::Longevity Yttrium:: Studio<CLASS>:: LifeTime = (LIFE_TIME);          \
 template <> const size_t                     Yttrium:: Studio<CLASS>:: Starting = (STARTING)
 
+#if defined(Y_INTEL)
+#define Y_EXCLUSIVE_IMPL_EXTRA(CLASS) \
+void * CLASS:: operator new[](const size_t) {                                               \
+/**/    typedef Yttrium::Studio<CLASS> Self;                                                \
+/**/    return Self::ThrowUnauthorized(#CLASS,Self::MultipleNew);                           \
+/**/  }                                                                                     \
+void   CLASS:: operator delete [](void *, const size_t ) noexcept {                         \
+/**/    typedef Yttrium::Studio<CLASS> Self;                                                \
+/**/    Self::AbortUnauthorized(#CLASS,Self::MultipleDelete);                               \
+/**/  }                                                                                     \
+void * CLASS:: operator new(size_t, void *) {                                               \
+/**/    typedef Yttrium::Studio<CLASS> Self;                                                \
+/**/    return Self::ThrowUnauthorized(#CLASS,Self::PlacementNew);                          \
+/**/  }                                                                                     \
+void   CLASS:: operator delete(void *, void *) noexcept {                                   \
+/**/    typedef Yttrium::Studio<CLASS> Self;                                                \
+/**/    Self::AbortUnauthorized(#CLASS,Self::PlacementDelete);                              \
+/**/  }
+
+#else
+
+#define Y_EXCLUSIVE_IMPL_EXTRA(CLASS)
+
+#endif
 
 //______________________________________________________________________________
 //
@@ -39,22 +63,7 @@ void  CLASS:: operator delete(void *blockAddr, size_t blockSize) noexcept {     
 /**/    Y_LOCK(Yttrium::Studio<CLASS>::Single::Access);                                     \
 /**/    mgr.zrelease(blockAddr);                                                            \
 /**/  }                                                                                     \
-void * CLASS:: operator new[](const size_t) {                                               \
-/**/    typedef Yttrium::Studio<CLASS> Self;                                                \
-/**/    return Self::ThrowUnauthorized(#CLASS,Self::MultipleNew);                           \
-/**/  }                                                                                     \
-void   CLASS:: operator delete [](void *, const size_t ) noexcept {                         \
-/**/    typedef Yttrium::Studio<CLASS> Self;                                                \
-/**/    Self::AbortUnauthorized(#CLASS,Self::MultipleDelete);                               \
-/**/  }                                                                                     \
-void * CLASS:: operator new(size_t, void *) {                                               \
-/**/    typedef Yttrium::Studio<CLASS> Self;                                                \
-/**/    return Self::ThrowUnauthorized(#CLASS,Self::PlacementNew);                          \
-/**/  }                                                                                     \
-void   CLASS:: operator delete(void *, void *) noexcept {                                   \
-/**/    typedef Yttrium::Studio<CLASS> Self;                                                \
-/**/    Self::AbortUnauthorized(#CLASS,Self::PlacementDelete);                              \
-/**/  }
+Y_EXCLUSIVE_IMPL_EXTRA(CLASS)
 
 #endif
 
