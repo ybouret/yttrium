@@ -84,6 +84,12 @@ namespace Yttrium
             shift = Base2<size_t>::LogFor(bytes);
         }
 
+        unsigned Archon:: ShiftFor(size_t &bytes)
+        {
+            if(bytes>Base2<size_t>::MaxPowerOfTwo) throw Specific::Exception(CallSign,"too many required bytes");
+            return Base2<size_t>::LogFor(bytes);
+        }
+
     }
 
 }

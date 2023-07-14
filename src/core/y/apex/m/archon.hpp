@@ -6,11 +6,16 @@
 #define Y_Apex_Archon_Included 1
 
 #include "y/singleton.hpp"
+#include "y/calculus/base2.hpp"
+#include "y/type/utils.hpp"
 
 namespace Yttrium
 {
     namespace Apex
     {
+
+
+
 
 
         //______________________________________________________________________
@@ -43,44 +48,54 @@ namespace Yttrium
             void * acquire(unsigned &shift);                            //!< fetch block 2^(MaxOf(shift,MinShift)), shift<=MaxShift
             void   release(void *entry, const unsigned shift) noexcept; //!< store previously acquire blocks
 
-            template <typename WORD> inline
-            WORD *acquire(size_t   &words,
-                          size_t   &bytes,
-                          unsigned &shift)
+
+            template <typename WORD>
+            class Block
             {
-                assert(0==bytes);
-                assert(0==shift);
-                CheckRequired( bytes = words * sizeof(WORD), shift);
-                try {
-                    void *block = acquire(shift);
-                    words       = bytes/sizeof(WORD);
-                    return block;
-                }
-                catch(...)
+            public:
+                static const size_t WordSize = sizeof(WORD);
+
+                explicit Block(size_t numWords) :
+                entry(0),
+                words(0),
+                bytes( Max(numWords*WordSize,WordSize) ),
+                shift( ShiftFor(Coerce(bytes))         )
                 {
-                    words = 0;
-                    bytes = 0;
-                    shift = 0;
-                    throw;
+                    static Archon &     mgr = Archon::Instance();
+                    static const size_t one = 1;
+                    try {
+                        Coerce(entry) = static_cast<WORD *>( mgr.acquire( Coerce(shift)) );
+                        Coerce(bytes) = one << shift;
+                        Coerce(words) = bytes / WordSize;
+                    }
+                    catch(...) { hardReset(); throw; }
                 }
-            }
 
-            template <typename WORD> inline
-            void release(WORD *   &block,
-                         size_t   &words,
-                         size_t   &bytes,
-                         unsigned &shift)
-            {
-                assert(0!=block);
-                assert( (size_t(1)<<shift) == bytes);
-                assert( bytes >= words * sizeof(WORD) );
-                release(block,shift);
-                block = 0;
-                words = 0;
-                bytes = 0;
-                shift = 0;
-            }
 
+                virtual ~Block() noexcept {
+                    static Archon &mgr = Archon::Location();
+                    assert(0!=entry);
+                    assert(bytes>=words*WordSize);
+                    assert( (size_t(1)<<shift) == bytes );
+                    mgr.release(entry,shift);
+                    hardReset();
+                }
+
+                WORD * const   entry;
+                const size_t   words;
+                const size_t   bytes;
+                const unsigned shift;
+
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Block);
+                inline void hardReset() noexcept {
+                    Coerce(entry) = 0;
+                    Coerce(words) = 0;
+                    Coerce(bytes) = 0;
+                    Coerce(shift) = 0;
+                }
+            };
 
 
         private:
@@ -90,6 +105,7 @@ namespace Yttrium
             friend class Singleton<Archon>;
             static void  CheckRequired(size_t       &bytes,
                                        unsigned     &shift);
+            static unsigned ShiftFor(size_t       &bytes);
 
         };
     }
