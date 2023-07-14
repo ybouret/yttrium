@@ -39,6 +39,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+            void * acquire(unsigned &shift);                            //!< fetch block 2^(MaxOf(shift,MinShift)), shift<=MaxShift
+            void   release(void *entry, const unsigned shift) noexcept; //!< store previously acquire blocks
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Archon);

@@ -30,8 +30,11 @@ namespace Yttrium
         class Archon:: Engine : public CoreEngine, public Memory::Quarry
         {
         public:
-            explicit Engine() : CoreEngine(), Memory::Quarry(corpus) {}
-            virtual ~Engine() noexcept {}
+            explicit Engine() : CoreEngine(), Memory::Quarry(corpus)
+            {
+            }
+            virtual ~Engine() noexcept {
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Engine);
@@ -53,12 +56,24 @@ namespace Yttrium
 
         Archon:: Archon() noexcept : Singleton<Archon>()
         {
-            std::cerr << "sizeof(Engine)=" << sizeof(Engine) << std::endl;
             assert(0==engine);
             engine = new ( Y_STATIC_ZARR(engine_) ) Engine();
-
         }
 
+        void * Archon:: acquire(unsigned &shift)
+        {
+            assert(0!=engine);
+            Y_LOCK(Access);
+            return engine->acquire(shift);
+        }
+
+        void Archon:: release(void *entry, const unsigned shift) noexcept
+        {
+            assert(0!=engine);
+            assert(0!=entry);
+            Y_LOCK(Access);
+            engine->release(entry,shift);
+        }
 
     }
 
