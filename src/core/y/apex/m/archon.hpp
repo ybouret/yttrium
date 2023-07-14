@@ -49,53 +49,9 @@ namespace Yttrium
             void   release(void *entry, const unsigned shift) noexcept; //!< store previously acquire blocks
 
 
-            template <typename WORD>
-            class Block
-            {
-            public:
-                static const size_t WordSize = sizeof(WORD);
 
-                explicit Block(size_t numWords) :
-                entry(0),
-                words(0),
-                bytes( Max(numWords*WordSize,WordSize) ),
-                shift( ShiftFor(Coerce(bytes))         )
-                {
-                    static Archon &     mgr = Archon::Instance();
-                    static const size_t one = 1;
-                    try {
-                        Coerce(entry) = static_cast<WORD *>( mgr.acquire( Coerce(shift)) );
-                        Coerce(bytes) = one << shift;
-                        Coerce(words) = bytes / WordSize;
-                    }
-                    catch(...) { hardReset(); throw; }
-                }
+            static unsigned ShiftFor(size_t       &bytes);
 
-
-                virtual ~Block() noexcept {
-                    static Archon &mgr = Archon::Location();
-                    assert(0!=entry);
-                    assert(bytes>=words*WordSize);
-                    assert( (size_t(1)<<shift) == bytes );
-                    mgr.release(entry,shift);
-                    hardReset();
-                }
-
-                WORD * const   entry;
-                const size_t   words;
-                const size_t   bytes;
-                const unsigned shift;
-
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Block);
-                inline void hardReset() noexcept {
-                    Coerce(entry) = 0;
-                    Coerce(words) = 0;
-                    Coerce(bytes) = 0;
-                    Coerce(shift) = 0;
-                }
-            };
 
 
         private:
@@ -105,8 +61,26 @@ namespace Yttrium
             friend class Singleton<Archon>;
             static void  CheckRequired(size_t       &bytes,
                                        unsigned     &shift);
-            static unsigned ShiftFor(size_t       &bytes);
 
+        };
+
+        template <typename WORD>
+        class Block
+        {
+        public:
+            static const size_t   WordBytes = sizeof(WORD);
+            static const unsigned WordShift = iLog2<WordBytes>::Value;
+            static const unsigned MaxShift  = 9;
+
+            explicit Block(const size_t numWords),
+            bytes()
+            {
+            }
+
+            
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Block);
         };
     }
 
