@@ -4,6 +4,7 @@
 #include "y/memory/corpus.hpp"
 #include "y/memory/album.hpp"
 #include "y/memory/out-of-reach.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -73,6 +74,14 @@ namespace Yttrium
             assert(0!=entry);
             Y_LOCK(Access);
             engine->release(entry,shift);
+        }
+
+        void Archon:: CheckRequired(size_t   & bytes,
+                                    unsigned & shift)
+        {
+            assert(0==shift);
+            if(bytes>Base2<size_t>::MaxPowerOfTwo) throw Specific::Exception(CallSign,"too many required bytes");
+            shift = Base2<size_t>::LogFor(bytes);
         }
 
     }
