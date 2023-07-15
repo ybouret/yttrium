@@ -21,7 +21,7 @@ namespace Yttrium
             static const unsigned                        WordSize = sizeof(WORD_TYPE);
             typedef typename UnsignedInt<CoreSize>::Type CoreType;
             typedef typename UnsignedInt<WordSize>::Type WordType;
-            typedef Block<WordType>                      Block;
+            typedef Block<WordType>                      DataBlock;
 
             inline explicit Proto() : data(0)
             {
@@ -31,7 +31,7 @@ namespace Yttrium
             inline virtual ~Proto() noexcept
             {}
 
-            Block data;
+            DataBlock data;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Proto);
