@@ -20,6 +20,7 @@ namespace Yttrium
         static void SizeOf(const char  *className,
                            const size_t classSize);
 
+        //! display 'field = value'
         static void AsU64(const char    *field,
                           const uint64_t value);
     };
@@ -27,6 +28,8 @@ namespace Yttrium
 
 //! helper to replace sizeof()
 #define Y_SIZEOF(CLASS) Yttrium::UnitTestDisplay::SizeOf(#CLASS,sizeof(CLASS))
+
+//! helper to display unsigned field
 #define Y_USHOW(FIELD)  Yttrium::UnitTestDisplay::AsU64(#FIELD,static_cast<uint64_t>(FIELD))
 
 

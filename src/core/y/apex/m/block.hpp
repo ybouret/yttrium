@@ -23,19 +23,20 @@ namespace Yttrium
             //__________________________________________________________________
             struct Block
             {
-                static void *Acquire(unsigned &shift);                            //!< forward to Archon
-                static void  Release(void *entry, const unsigned shift) noexcept; //!< forward to Archon
-                static void  TooBigException(const unsigned usrShift,
-                                             const unsigned maxShift); //!< raise exception
+                static uint32_t Hash32(const void *, const size_t) noexcept;         //!< helper
+                static void *   Acquire(unsigned &shift);                            //!< forward to Archon
+                static void     Release(void *entry, const unsigned shift) noexcept; //!< forward to Archon
+                static void     TooBigException(const unsigned usrShift,             //
+                                                const unsigned maxShift);            //!< raise exception
 
-                static uint32_t Hash32(const void *, const size_t) noexcept;
 
             };
         }
 
-        typedef Int2Type<1>        IncreaseSize_;
-        extern const IncreaseSize_ IncreaseSize;
+        typedef Int2Type<1>        IncreaseSize_; //!< alias
+        extern const IncreaseSize_ IncreaseSize;  //!< alias
 
+        //! helper for constructor
 #define Y_APEX_BLOCK_CTOR(ARGS)                                   \
 shift( ARGS ),                                                    \
 entry( static_cast<WORD*>(Nexus::Block::Acquire(Coerce(shift))) ), \
@@ -46,7 +47,7 @@ words( bytes >> WordShift        )
         //
         //
         //
-        // Handling power-of-two sized blocks of power-of-to sized data
+        //! Handling power-of-two sized blocks of power-of-to sized data
         //
         //
         //______________________________________________________________________
@@ -71,14 +72,18 @@ words( bytes >> WordShift        )
             // C++
             //
             //__________________________________________________________________
+
+            //! setup with >= 2^usrShift words
             inline   Block(const unsigned usrShift) :
             Y_APEX_BLOCK_CTOR( CheckShift(usrShift)+WordShift )
             {
             }
 
+            //! cleanup
             inline   ~Block() noexcept { Nexus::Block::Release(entry,shift); }
 
 
+            //! copy
             inline Block(const Block &other) :
             Y_APEX_BLOCK_CTOR( other.shift )
             {
@@ -87,11 +92,12 @@ words( bytes >> WordShift        )
                 memcpy(words,other.words,bytes);
             }
 
+            //! copy into increased size
             inline Block(const Block &other, const IncreaseSize_ &) :
             Y_APEX_BLOCK_CTOR( other.shift+1 )
             {
-                assert(words>=other.words);
-                assert(bytes>=other.bytes);
+                assert(words>other.words);
+                assert(bytes>other.bytes);
                 memcpy(words,other.words,bytes);
             }
 
@@ -102,10 +108,10 @@ words( bytes >> WordShift        )
             // Members
             //
             //__________________________________________________________________
-            const unsigned shift;
-            WORD * const   entry;
-            const size_t   bytes;
-            const size_t   words;
+            const unsigned shift; //!< bytes = 2^shift
+            WORD * const   entry; //!< entry[0..words-1]
+            const size_t   bytes; //!< bytes = 2^shift
+            const size_t   words; //!< words = bytes >> WordShift
 
         private:
             Y_DISABLE_ASSIGN(Block);
