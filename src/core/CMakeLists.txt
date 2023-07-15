@@ -27,6 +27,7 @@ memory/allocator
 memory/exclusive
 apex
 apex/m
+apex/n
 )
 
 source_group(concurrent FILES ${quark})

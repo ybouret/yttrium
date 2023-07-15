@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Apex_Natural_Included
