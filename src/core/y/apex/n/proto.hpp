@@ -16,21 +16,46 @@ namespace Yttrium
     namespace Apex
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! splitting unisgned 64bits into smaller words
+        //
+        //
+        //______________________________________________________________________
         template <typename WordType>
         class Split64Into
         {
         public:
-            static const unsigned WordSize  = sizeof(WordType);
-            static const unsigned WordBits  = WordSize << 3;
-            static const unsigned SelfSize = sizeof(uint64_t);
-            static const unsigned MaxWords = Y_ALIGN_ON(WordSize,SelfSize)/WordSize;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const unsigned WordSize  = sizeof(WordType);                       //!< alias
+            static const unsigned WordBits  = WordSize << 3;                          //!< alias
+            static const unsigned SelfSize  = sizeof(uint64_t);                       //!< alias
+            static const unsigned MaxWords  = Y_ALIGN_ON(WordSize,SelfSize)/WordSize; //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // Helpers
+            //
+            //__________________________________________________________________
+
+            //! words to wrap a given number of bytes
             static inline size_t WordsFor(const size_t bytes) noexcept
             {
                 return Y_ALIGN_ON(WordSize,bytes)/WordSize;
             }
 
+            //! words to wrap a given u64
             static inline size_t ToWords(const uint64_t X) noexcept { return WordsFor( BytesFor(X) ); }
+
+            //! split algorithm to given W[] with precomped N = ToWords(X)
             static inline void   DoSplit(WordType *W, const size_t N, uint64_t X) noexcept
             {
                 assert(N==ToWords(X));
@@ -44,6 +69,14 @@ namespace Yttrium
                 std::cerr << std::endl;
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // Helpers
+            //
+            //__________________________________________________________________
+
+            //! setup by using local memory to perform algorithm
             inline explicit Split64Into(uint64_t X) noexcept :
             n( ToWords(X)  ),
             w()
@@ -53,10 +86,17 @@ namespace Yttrium
                 for(size_t i=n;i<MaxWords;++i) Coerce(w[i]) = 0;
             }
 
+            //! cleanup
             inline ~Split64Into() noexcept {}
 
-            const size_t   n;
-            const WordType w[MaxWords];
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const size_t   n;            //!< 0..MaxWords
+            const WordType w[MaxWords];  //!< resulting data
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Split64Into);
@@ -64,22 +104,32 @@ namespace Yttrium
         };
 
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Algorithm prototypes
+        //
+        //
+        //______________________________________________________________________
         template <typename CORE_TYPE, typename WORD_TYPE>
         class Proto : public Object
         {
         public:
-            static const unsigned                        CoreSize  = sizeof(CORE_TYPE);
-            static const unsigned                        WordSize  = sizeof(WORD_TYPE);
-            static const unsigned                        WordBits  = WordSize << 3;
-            typedef typename UnsignedInt<CoreSize>::Type CoreType;
-            typedef typename UnsignedInt<WordSize>::Type WordType;
-            typedef Block<WordType>                      DataType;
-            typedef Split64Into<WordType>                Splitter;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const unsigned                        CoreSize  = sizeof(CORE_TYPE); //!< alias
+            static const unsigned                        WordSize  = sizeof(WORD_TYPE); //!< alias
+            static const unsigned                        WordBits  = WordSize << 3;     //!< alias
+            typedef typename UnsignedInt<CoreSize>::Type CoreType;                      //!< alias
+            typedef typename UnsignedInt<WordSize>::Type WordType;                      //!< alias
+            typedef Block<WordType>                      DataType;                      //!< alias
+            typedef Split64Into<WordType>                Splitter;                      //!< alias
 
-            static inline size_t WordsFor(const size_t num) noexcept
-            {
-                return Y_ALIGN_ON(WordSize,num)/WordSize;
-            }
 
 
             inline explicit Proto(const size_t       n,
@@ -94,17 +144,16 @@ namespace Yttrium
 
             inline explicit Proto(const uint64_t qword) :
             Object(),
-            bytes( BytesFor(qword)  ),
-            words( WordsFor(bytes)  ),
-            block( sizeof(qword)    )
+            bytes( BytesFor(qword)            ),
+            words( Splitter::WordsFor(bytes)  ),
+            block( sizeof(qword)              )
             {
                 assert(block.words>=Splitter::MaxWords);
                 Splitter::DoSplit(block.entry,words,qword);
             }
 
 
-            inline virtual ~Proto() noexcept
-            {}
+            inline virtual ~Proto() noexcept {}
 
 
             size_t   bytes; //!< exact bytes

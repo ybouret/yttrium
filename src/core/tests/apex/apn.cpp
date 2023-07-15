@@ -22,8 +22,13 @@ namespace
 
         const uint64_t U[] =
         {
+            0x00,
+            0x06,
             0xab,
+            0xabc,
             0xabcd,
+            0xabcde,
+            0xabcdef,
             0xabcdef12,
             Y_U64(0x12345678abcdef00)
         };
