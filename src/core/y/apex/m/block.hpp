@@ -65,7 +65,7 @@ words( bytes >> WordShift        )
             static const unsigned WordShift = iLog2<WordBytes>::Value;             //!< alias
             static const unsigned MaxShift  = Base2<size_t>::MaxShift - WordShift; //!< alias
             static const size_t   MaxWords  = Base2<size_t>::One << MaxShift;      //!< alias
-            static const size_t   MinWords  = sizeof(uint64_t) >> WordShift;       //!< alias
+            static const size_t   MinWords  = (2*sizeof(uint64_t)) >> WordShift;       //!< alias
             static const size_t   MinShift  = iLog2<MinWords>::Value;              //!< alias
 
             //__________________________________________________________________
