@@ -17,7 +17,7 @@ namespace Yttrium
     {
 
         template <typename WordType>
-        class Part64Into
+        class Split64Into
         {
         public:
             static const unsigned WordSize  = sizeof(WordType);
@@ -30,32 +30,36 @@ namespace Yttrium
                 return Y_ALIGN_ON(WordSize,bytes)/WordSize;
             }
 
-            inline explicit Part64Into(uint64_t X) noexcept :
-            n( WordsFor( BytesFor(X) )  ),
+            static inline size_t ToWords(const uint64_t X) noexcept { return WordsFor( BytesFor(X) ); }
+            static inline void   DoSplit(WordType *W, const size_t N, uint64_t X) noexcept
+            {
+                assert(N==ToWords(X));
+                assert(N<=MaxWords);
+                for(size_t i=0;i<N;++i)
+                {
+                    W[i] = static_cast<WordType>(X);
+                    X >>= WordBits;
+                }
+                for(size_t i=0;i<N;++i) std::cerr << " " << Hexadecimal(W[i]);
+                std::cerr << std::endl;
+            }
+
+            inline explicit Split64Into(uint64_t X) noexcept :
+            n( ToWords(X)  ),
             w()
             {
                 std::cerr << "Split(" << Hexadecimal(X) << ") : n = " << n << " :";
-
-                for(size_t i=0;i<n;++i)
-                {
-                    Coerce(w[i]) = static_cast<WordType>(X);
-                    X >>= WordBits;
-                    std::cerr << " " << Hexadecimal(w[i]);
-                }
-                std::cerr << std::endl;
+                DoSplit(Coerce(w),n,X);
                 for(size_t i=n;i<MaxWords;++i) Coerce(w[i]) = 0;
             }
 
-
-
-
-            inline ~Part64Into() noexcept {}
+            inline ~Split64Into() noexcept {}
 
             const size_t   n;
             const WordType w[MaxWords];
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Part64Into);
+            Y_DISABLE_COPY_AND_ASSIGN(Split64Into);
 
         };
 
@@ -70,7 +74,7 @@ namespace Yttrium
             typedef typename UnsignedInt<CoreSize>::Type CoreType;
             typedef typename UnsignedInt<WordSize>::Type WordType;
             typedef Block<WordType>                      DataType;
-            typedef Part64Into<WordType>                 PartType;
+            typedef Split64Into<WordType>                Splitter;
 
             static inline size_t WordsFor(const size_t num) noexcept
             {
@@ -78,7 +82,8 @@ namespace Yttrium
             }
 
 
-            inline explicit Proto(const size_t n, const AsCapacity_ &)  :
+            inline explicit Proto(const size_t       n,
+                                  const AsCapacity_ &)  :
             Object(),
             bytes(0),
             words(0),
@@ -87,11 +92,20 @@ namespace Yttrium
                 Y_STATIC_CHECK(WordSize<CoreSize,InvalidMetrics);
             }
 
-
+            inline explicit Proto(const uint64_t qword) :
+            Object(),
+            bytes( BytesFor(qword)  ),
+            words( WordsFor(bytes)  ),
+            block( sizeof(qword)    )
+            {
+                assert(block.words>=Splitter::MaxWords);
+                Splitter::DoSplit(block.entry,words,qword);
+            }
 
 
             inline virtual ~Proto() noexcept
             {}
+
 
             size_t   bytes; //!< exact bytes
             size_t   words; //!< aligned to bytes
