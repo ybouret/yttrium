@@ -56,6 +56,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
+            //! draw within range
             template <typename T> inline
             T in(const T lo, const T hi) noexcept
             {

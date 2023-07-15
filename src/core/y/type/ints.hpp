@@ -105,12 +105,12 @@ namespace Yttrium
     template <>
     struct UnsignedInt<2>
     {
-        typedef uint16_t  Type;                     //!< alias
-        static const bool Signed  = false;          //!< alias
-        static const Type Minimum = 0;              //!< alias
-        static const Type Maximum = Type(0xFFFF);   //!< alias
-        static const Type Mask2   = 0xFF00;
-        static const Type Mask1   = 0x00FF;
+        typedef uint16_t  Type;                   //!< alias
+        static const bool Signed  = false;        //!< alias
+        static const Type Minimum = 0;            //!< alias
+        static const Type Maximum = Type(0xFFFF); //!< alias
+        static const Type Mask2   = Type(0xFF00); //!< aliss
+        static const Type Mask1   = Type(0x00FF); //!< alias
         static const Type Maxi1   = Type(0xFF);   //!< alias
         static const Type Maxi2   = Type(0xFFFF); //!< alias
 
