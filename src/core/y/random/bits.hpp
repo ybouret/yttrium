@@ -56,7 +56,6 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-#if 0
             template <typename T> inline
             T in(const T lo, const T hi) noexcept
             {
@@ -65,7 +64,6 @@ namespace Yttrium
                 const long double start = lo;
                 return static_cast<T>( floorl( start + delta * to<long double>() + half) ) ;
             }
-#endif
 
             size_t index(const size_t n) noexcept; //!< in 1...n
             size_t leq(size_t n)         noexcept; //!< in 0..n

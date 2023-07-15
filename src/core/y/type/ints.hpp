@@ -86,6 +86,14 @@ namespace Yttrium
         static const bool Signed  = false;      //!< alias
         static const Type Minimum = 0;          //!< alias
         static const Type Maximum = Type(0xFF); //!< alias
+        static const Type Maxi1   = Type(0xFF); //!< alias
+        static const Type Mask1   = Type(0xFF); //!< alias
+
+        //! compute bytes for one byte
+        static inline unsigned BytesFor(const Type x) noexcept
+        {
+            return x>0 ? 1 : 0;
+        }
     };
 
     //__________________________________________________________________________
@@ -101,6 +109,18 @@ namespace Yttrium
         static const bool Signed  = false;          //!< alias
         static const Type Minimum = 0;              //!< alias
         static const Type Maximum = Type(0xFFFF);   //!< alias
+        static const Type Mask2   = 0xFF00;
+        static const Type Mask1   = 0x00FF;
+        static const Type Maxi1   = Type(0xFF);   //!< alias
+        static const Type Maxi2   = Type(0xFFFF); //!< alias
+
+        //! compute bytes for a word
+        static inline unsigned BytesFor(const Type x) noexcept
+        {
+            if(0 != (x&Mask2) ) return 2;
+            if(0 != (x&Mask1) ) return 1;
+            return 0;
+        }
     };
 
     //__________________________________________________________________________
@@ -116,6 +136,25 @@ namespace Yttrium
         static const bool Signed  = false;            //!< alias
         static const Type Minimum = 0;                //!< alias
         static const Type Maximum = Type(0xFFFFFFFF); //!< alias
+        static const Type Mask4   = Type(0xFF000000); //!< alias
+        static const Type Mask3   = Type(0x00FF0000); //!< alias
+        static const Type Mask2   = Type(0x0000FF00); //!< alias
+        static const Type Mask1   = Type(0x000000FF); //!< alias
+
+        static const Type Maxi4   = Type(0xFFFFFFFF); //!< alias
+        static const Type Maxi3   = Type(0x00FFFFFF); //!< alias
+        static const Type Maxi2   = Type(0x0000FFFF); //!< alias
+        static const Type Maxi1   = Type(0x000000FF); //!< alias
+
+        //! compute bytes for a dword
+        static inline unsigned BytesFor(const Type x) noexcept
+        {
+            if(0 != (x&Mask4) ) return 4;
+            if(0 != (x&Mask3) ) return 3;
+            if(0 != (x&Mask2) ) return 2;
+            if(0 != (x&Mask1) ) return 1;
+            return 0;
+        }
     };
 
     //__________________________________________________________________________
@@ -130,7 +169,38 @@ namespace Yttrium
         typedef uint64_t  Type;                                //!< alias
         static const bool Signed  = false;                     //!< alias
         static const Type Minimum = 0;                         //!< alias
-        static const Type Maximum = Y_I64(0xFFFFFFFFFFFFFFFF); //!< alias
+        static const Type Maximum = Y_U64(0xFFFFFFFFFFFFFFFF); //!< alias
+        static const Type Mask8   = Y_U64(0xFF00000000000000); //!< alias
+        static const Type Mask7   = Y_U64(0x00FF000000000000); //!< alias
+        static const Type Mask6   = Y_U64(0x0000FF0000000000); //!< alias
+        static const Type Mask5   = Y_U64(0x000000FF00000000); //!< alias
+        static const Type Mask4   = Y_U64(0x00000000FF000000); //!< alias
+        static const Type Mask3   = Y_U64(0x0000000000FF0000); //!< alias
+        static const Type Mask2   = Y_U64(0x000000000000FF00); //!< alias
+        static const Type Mask1   = Y_U64(0x00000000000000FF); //!< alias
+
+        static const Type Maxi8   = Y_U64(0xFFFFFFFFFFFFFFFF); //!< alias
+        static const Type Maxi7   = Y_U64(0x00FFFFFFFFFFFFFF); //!< alias
+        static const Type Maxi6   = Y_U64(0x0000FFFFFFFFFFFF); //!< alias
+        static const Type Maxi5   = Y_U64(0x000000FFFFFFFFFF); //!< alias
+        static const Type Maxi4   = Y_U64(0x00000000FFFFFFFF); //!< alias
+        static const Type Maxi3   = Y_U64(0x0000000000FFFFFF); //!< alias
+        static const Type Maxi2   = Y_U64(0x000000000000FFFF); //!< alias
+        static const Type Maxi1   = Y_U64(0x00000000000000FF); //!< alias
+
+        //! compute bytes for a qword
+        static inline unsigned BytesFor(const Type x) noexcept
+        {
+            if(0 != (x&Mask8) ) return 8;
+            if(0 != (x&Mask7) ) return 7;
+            if(0 != (x&Mask6) ) return 6;
+            if(0 != (x&Mask5) ) return 5;
+            if(0 != (x&Mask4) ) return 4;
+            if(0 != (x&Mask3) ) return 3;
+            if(0 != (x&Mask2) ) return 2;
+            if(0 != (x&Mask1) ) return 1;
+            return 0;
+        }
     };
 
     //__________________________________________________________________________
@@ -164,7 +234,14 @@ namespace Yttrium
         static  const Type Maximum = Info::Maximum; //!< alias
 
     };
-    
+
+    //! computing bytes required for an integral type
+    template <typename T>
+    static inline unsigned BytesFor(const T x) noexcept
+    {
+        return IntegerFor<T>::UInt::BytesFor(x);
+    }
+
 
 }
 
