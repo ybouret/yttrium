@@ -65,6 +65,8 @@ words( bytes >> WordShift        )
             static const unsigned WordShift = iLog2<WordBytes>::Value;             //!< alias
             static const unsigned MaxShift  = Base2<size_t>::MaxShift - WordShift; //!< alias
             static const size_t   MaxWords  = Base2<size_t>::One << MaxShift;      //!< alias
+            static const size_t   MinWords  = sizeof(uint64_t) >> WordShift;       //!< alias
+            static const size_t   MinShift  = iLog2<MinWords>::Value;              //!< alias
 
             //__________________________________________________________________
             //
@@ -115,8 +117,9 @@ words( bytes >> WordShift        )
 
         private:
             Y_DISABLE_ASSIGN(Block);
-            static inline unsigned CheckShift(const unsigned usrShift)
+            static inline unsigned CheckShift(unsigned usrShift)
             {
+                if(usrShift<MinShift) usrShift = MinShift;
                 if(usrShift>MaxShift) Nexus::Block::TooBigException(usrShift,MaxShift);
                 return usrShift;
             }
