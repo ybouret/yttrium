@@ -12,12 +12,37 @@ namespace Yttrium
 
         namespace Nexus
         {
-            void Block:: TooBigException(const unsigned int usrShift, const unsigned int maxShift)
+
+            static const char fn[] = "Apex::Memory";
+
+            unsigned Block:: ShiftFor(const size_t usrBytes)
             {
-                assert(usrShift>maxShift);
-                throw Specific::Exception("Apex::Memory",
-                                          "Block 2^%u > 2^%u",usrShift,maxShift);
+                if(usrBytes<=MinBytes)
+                    return MinShift;
+
+                if(usrBytes>MaxBytes) throw Specific::Exception(fn,"Too many bytes");
+
+                unsigned shift = MinShift;
+                size_t   bytes = MinBytes;
+                while(bytes<usrBytes)
+                {
+                    bytes <<= 1;
+                    ++shift;
+                }
+                return shift;
+
             }
+
+            unsigned   Block:: ShiftInc(unsigned shift)
+            {
+                assert(shift>=MinShift);
+                if(shift>=MaxShift)
+                    throw Specific::Exception(fn,"already at maximum bytes");
+                return ++shift;
+            }
+
+            
+            
 
             void * Block:: Acquire(unsigned &shift)
             {

@@ -3,6 +3,7 @@
 #include "y/apex/m/block.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/shuffle.hpp"
+#include "y/random/fill.hpp"
 
 using namespace Yttrium;
 
@@ -10,28 +11,53 @@ using namespace Yttrium;
 namespace
 {
     template <typename BLOCK>
-    static inline void display(const BLOCK &block)
+    static inline void display(Random::Bits &ran)
     {
-        std::cerr << "Block" << std::setw(2) << BLOCK::WordBytes << " : words=" << block.words;
-        std::cerr << " in #" << block.bytes << " bytes" << std::endl;
+        std::cerr << std::endl;
+        Y_USHOW(BLOCK::WordBytes);
+        Y_USHOW(BLOCK::WordShift);
+        BLOCK block(0);
+        Y_USHOW(block.bytes);
+        Y_USHOW(block.shift);
+        Y_USHOW(block.words);
+
+        Random::Fill::Block(block.entry,block.bytes,ran,1,255);
+
+        std::cerr << "\tcopy" << std::endl;
+        {
+            const BLOCK bcopy(block);
+            Y_USHOW(bcopy.bytes);
+            Y_USHOW(bcopy.shift);
+            Y_USHOW(bcopy.words);
+            for(size_t i=0;i<block.words;++i)
+            {
+                Y_ASSERT(bcopy.entry[i]==block.entry[i]);
+            }
+        }
+
+        std::cerr << "\tcopy+" << std::endl;
+        {
+            const BLOCK bcopy(block,Apex::IncreaseSize);
+            Y_USHOW(bcopy.bytes);
+            Y_USHOW(bcopy.shift);
+            Y_USHOW(bcopy.words);
+            for(size_t i=0;i<block.words;++i)
+            {
+                Y_ASSERT(bcopy.entry[i]==block.entry[i]);
+            }
+        }
+
     }
 }
 
 Y_UTEST(apex_block)
 {
 
-    Y_SIZEOF(Apex::Block<uint8_t>);  Y_USHOW(Apex::Block<uint8_t>::MaxWords);
-    Y_SIZEOF(Apex::Block<uint16_t>); Y_USHOW(Apex::Block<uint16_t>::MaxWords);
-    Y_SIZEOF(Apex::Block<uint32_t>); Y_USHOW(Apex::Block<uint32_t>::MaxWords);
-    Y_SIZEOF(Apex::Block<uint64_t>); Y_USHOW(Apex::Block<uint64_t>::MaxWords);
-
-
-
-    Apex::Block<uint8_t>  b8(4);  display(b8);
-    Apex::Block<uint16_t> b16(4); display(b16);
-    Apex::Block<uint32_t> b32(4); display(b32);
-    Apex::Block<uint64_t> b64(4); display(b64);
-
+    Random::Rand ran;
+    display< Apex::Block<uint8_t>  >(ran);
+    display< Apex::Block<uint16_t> >(ran);
+    display< Apex::Block<uint32_t> >(ran);
+    display< Apex::Block<uint64_t> >(ran);
 
 }
 Y_UDONE()

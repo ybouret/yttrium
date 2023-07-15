@@ -8,6 +8,7 @@
 #include "y/calculus/base2.hpp"
 #include "y/calculus/ilog2.hpp"
 #include <cstring>
+#include <iostream>
 
 namespace Yttrium
 {
@@ -23,12 +24,19 @@ namespace Yttrium
             //__________________________________________________________________
             struct Block
             {
+                static const size_t   MinBytes = 2*sizeof(uint64_t);
+                static const unsigned MinShift = iLog2<MinBytes>::Value;
+                static const size_t   MaxBytes = Base2<size_t>::MaxPowerOfTwo;
+                static const unsigned MaxShift = Base2<size_t>::MaxShift;
+
+                static unsigned   ShiftFor(const size_t usrBytes);
+                static unsigned   ShiftInc(unsigned shift);
+
+
                 static uint32_t Hash32(const void *, const size_t) noexcept;         //!< helper
                 static void *   Acquire(unsigned &shift);                            //!< forward to Archon
                 static void     Release(void *entry, const unsigned shift) noexcept; //!< forward to Archon
-                static void     TooBigException(const unsigned usrShift,             //
-                                                const unsigned maxShift);            //!< raise exception
-
+                
 
             };
         }
@@ -36,12 +44,12 @@ namespace Yttrium
         typedef Int2Type<1>        IncreaseSize_; //!< alias
         extern const IncreaseSize_ IncreaseSize;  //!< alias
 
-        //! helper for constructor
-#define Y_APEX_BLOCK_CTOR(ARGS)                                   \
-shift( ARGS ),                                                    \
-entry( static_cast<WORD*>(Nexus::Block::Acquire(Coerce(shift))) ), \
-bytes( Base2<size_t>::One<<shift ),                                \
-words( bytes >> WordShift        )
+
+#define Y_APEX_BLOCK_CTOR(SHIFT)                                      \
+shift( SHIFT ),                                                       \
+entry( static_cast<WORD*>(Nexus::Block::Acquire( Coerce(shift) ) ) ), \
+bytes( Base2<size_t>::One << shift ),                                 \
+words( bytes >> WordShift )
 
         //______________________________________________________________________
         //
@@ -61,47 +69,40 @@ words( bytes >> WordShift        )
             // Definitions
             //
             //__________________________________________________________________
-            static const size_t   WordBytes = sizeof(WORD);                        //!< alias
-            static const unsigned WordShift = iLog2<WordBytes>::Value;             //!< alias
-            static const unsigned MaxShift  = Base2<size_t>::MaxShift - WordShift; //!< alias
-            static const size_t   MaxWords  = Base2<size_t>::One << MaxShift;      //!< alias
-            static const size_t   MinWords  = (2*sizeof(uint64_t)) >> WordShift;       //!< alias
-            static const size_t   MinShift  = iLog2<MinWords>::Value;              //!< alias
-
+            static const size_t   WordBytes    = sizeof(WORD); //!< alias
+            static const unsigned WordShift    = iLog2<WordBytes>::Value;
+            
             //__________________________________________________________________
             //
             //
             // C++
             //
             //__________________________________________________________________
-
-            //! setup with >= 2^usrShift words
-            inline   Block(const unsigned usrShift) :
-            Y_APEX_BLOCK_CTOR( CheckShift(usrShift)+WordShift )
+            explicit Block(size_t usrBytes) :
+            Y_APEX_BLOCK_CTOR(Nexus::Block::ShiftFor(usrBytes))
             {
             }
 
-            //! cleanup
-            inline   ~Block() noexcept { Nexus::Block::Release(entry,shift); }
-
-
-            //! copy
-            inline Block(const Block &other) :
-            Y_APEX_BLOCK_CTOR( other.shift )
+            explicit Block(const Block &other) :
+            Y_APEX_BLOCK_CTOR(other.shift)
             {
-                assert(words>=other.words);
+                assert(shift>=other.shift);
                 assert(bytes>=other.bytes);
-                memcpy(words,other.words,bytes);
+                assert(words>=other.words);
+                memcpy(entry,other.entry,other.bytes);
             }
 
-            //! copy into increased size
-            inline Block(const Block &other, const IncreaseSize_ &) :
-            Y_APEX_BLOCK_CTOR( other.shift+1 )
+            explicit Block(const Block &other, const IncreaseSize_ &) :
+            Y_APEX_BLOCK_CTOR( Nexus::Block::ShiftInc(other.shift) )
             {
-                assert(words>other.words);
-                assert(bytes>other.bytes);
-                memcpy(words,other.words,bytes);
+                assert(shift>=other.shift);
+                assert(bytes>=other.bytes);
+                assert(words>=other.words);
+                memcpy(entry,other.entry,other.bytes);
             }
+
+
+            virtual ~Block() noexcept { Nexus::Block::Release(entry,shift); }
 
 
             //__________________________________________________________________
@@ -110,19 +111,13 @@ words( bytes >> WordShift        )
             // Members
             //
             //__________________________________________________________________
-            const unsigned shift; //!< bytes = 2^shift
-            WORD * const   entry; //!< entry[0..words-1]
-            const size_t   bytes; //!< bytes = 2^shift
-            const size_t   words; //!< words = bytes >> WordShift
+            const unsigned shift;
+            WORD  * const  entry;
+            const size_t   bytes;
+            const size_t   words;
 
         private:
             Y_DISABLE_ASSIGN(Block);
-            static inline unsigned CheckShift(unsigned usrShift)
-            {
-                if(usrShift<MinShift) usrShift = MinShift;
-                if(usrShift>MaxShift) Nexus::Block::TooBigException(usrShift,MaxShift);
-                return usrShift;
-            }
         };
     }
 
