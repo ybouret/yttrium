@@ -80,4 +80,5 @@ add_test(sort:merge    test-core sort_merge)
 
 #apex
 add_test(apex:archon   test-core apex_archon)
+add_test(apex:block    test-core apex_block)
 

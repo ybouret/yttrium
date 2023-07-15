@@ -6,17 +6,11 @@
 #define Y_Apex_Archon_Included 1
 
 #include "y/singleton.hpp"
-#include "y/calculus/base2.hpp"
-#include "y/type/utils.hpp"
 
 namespace Yttrium
 {
     namespace Apex
     {
-
-
-
-
 
         //______________________________________________________________________
         //
@@ -64,24 +58,7 @@ namespace Yttrium
 
         };
 
-        template <typename WORD>
-        class Block
-        {
-        public:
-            static const size_t   WordBytes = sizeof(WORD);
-            static const unsigned WordShift = iLog2<WordBytes>::Value;
-            static const unsigned MaxShift  = 9;
-
-            explicit Block(const size_t numWords),
-            bytes()
-            {
-            }
-
-            
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Block);
-        };
+      
     }
 
 }
