@@ -62,6 +62,7 @@ Y_UTEST_DECL(256)
 
     Y_UTEST(apex_archon);
     Y_UTEST(apex_block);
+    Y_UTEST(apex_natural);
 
     //std::cerr << "-------- Platform: " << Y_PLATFORM << std::endl;
     //std::cerr << "-------- Compiler: " << Y_COMPILER << std::endl;

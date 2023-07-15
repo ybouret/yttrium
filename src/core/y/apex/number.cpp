@@ -10,6 +10,11 @@ namespace Yttrium
         {
         }
 
+        Number:: Number() noexcept
+        {
+        }
+        
+
     }
 
 }
