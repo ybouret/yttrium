@@ -13,7 +13,7 @@ namespace
     static inline void display(const BLOCK &block)
     {
         std::cerr << "Block" << std::setw(2) << BLOCK::WordBytes << " : words=" << block.words;
-        std::cerr << " in #" << (1<<block.shift) << " bytes" << std::endl;
+        std::cerr << " in #" << block.bytes << " bytes" << std::endl;
     }
 }
 

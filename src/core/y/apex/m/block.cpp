@@ -2,11 +2,13 @@
 #include "y/apex/m/block.hpp"
 #include "y/apex/m/archon.hpp"
 #include "y/system/exception.hpp"
+#include "y/check/sfh32.hpp"
 
 namespace Yttrium
 {
     namespace Apex
     {
+        const IncreaseSize_ IncreaseSize = {};
 
         namespace Nexus
         {
@@ -29,6 +31,11 @@ namespace Yttrium
                 archon.release(entry,shift);
             }
 
+            uint32_t Block:: Hash32(const void *entry, const size_t bytes) noexcept
+            {
+                assert( Good(entry, bytes) );
+                return SFH32::Of(entry,bytes);
+            }
         }
     }
 
