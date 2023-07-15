@@ -75,21 +75,7 @@ namespace Yttrium
             Y_LOCK(Access);
             engine->release(entry,shift);
         }
-
-        void Archon:: CheckRequired(size_t   & bytes,
-                                    unsigned & shift)
-        {
-            assert(0==shift);
-            if(bytes>Base2<size_t>::MaxPowerOfTwo) throw Specific::Exception(CallSign,"too many required bytes");
-            shift = Base2<size_t>::LogFor(bytes);
-        }
-
-        unsigned Archon:: ShiftFor(size_t &bytes)
-        {
-            if(bytes>Base2<size_t>::MaxPowerOfTwo) throw Specific::Exception(CallSign,"too many required bytes");
-            return Base2<size_t>::LogFor(bytes);
-        }
-
+        
     }
 
 }

@@ -20,10 +20,12 @@ namespace
 Y_UTEST(apex_block)
 {
 
-    Y_SIZEOF(Apex::Block<uint8_t>);
-    Y_SIZEOF(Apex::Block<uint16_t>);
-    Y_SIZEOF(Apex::Block<uint32_t>);
-    Y_SIZEOF(Apex::Block<uint64_t>);
+    Y_SIZEOF(Apex::Block<uint8_t>);  Y_USHOW(Apex::Block<uint8_t>::MaxWords);
+    Y_SIZEOF(Apex::Block<uint16_t>); Y_USHOW(Apex::Block<uint16_t>::MaxWords);
+    Y_SIZEOF(Apex::Block<uint32_t>); Y_USHOW(Apex::Block<uint32_t>::MaxWords);
+    Y_SIZEOF(Apex::Block<uint64_t>); Y_USHOW(Apex::Block<uint64_t>::MaxWords);
+
+
 
     Apex::Block<uint8_t>  b8(4);  display(b8);
     Apex::Block<uint16_t> b16(4); display(b16);

@@ -41,20 +41,13 @@ namespace Yttrium
             //__________________________________________________________________
             void * acquire(unsigned &shift);                            //!< fetch block 2^(MaxOf(shift,MinShift)), shift<=MaxShift
             void   release(void *entry, const unsigned shift) noexcept; //!< store previously acquire blocks
-
-
-
-            static unsigned ShiftFor(size_t       &bytes);
-
-
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Archon);
             explicit Archon() noexcept;
             virtual ~Archon() noexcept;
             friend class Singleton<Archon>;
-            static void  CheckRequired(size_t       &bytes,
-                                       unsigned     &shift);
+            
 
         };
 

@@ -5,15 +5,27 @@
 namespace Yttrium
 {
 
-    size_t SizeOf::Width = 32;
+    size_t UnitTestDisplay::Width = 32;
 
-    void SizeOf::Display(const char *className, const size_t classSize)
+    void UnitTestDisplay:: SizeOf(const char *className, const size_t classSize)
     {
-        assert(className);
+        assert(0!=className);
         const size_t length = strlen(className);
-        std::cerr << "sizeof(" << className << ") = ";
+        std::cerr << "sizeof(" << className << ")";
         for(size_t i=length;i<Width;++i) std::cerr << ' ';
+        std::cerr << " = ";
         std::cerr << std::setw(6) << classSize << std::endl;
+    }
+
+    void UnitTestDisplay::AsU64(const char    *field,
+                                const uint64_t value)
+    {
+        assert(0!=field);
+        const size_t length = strlen(field);
+        std::cerr << field;
+        for(size_t i=length;i<Width+8;++i) std::cerr << ' ';
+        std::cerr << " = ";
+        std::cerr << std::setw(18) << value << std::endl;
     }
 
 }

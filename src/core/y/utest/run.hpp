@@ -11,19 +11,24 @@
 
 namespace Yttrium
 {
-    //! helper to display aligned sizeof()
-    struct SizeOf
+    //! helper to display metrics...
+    struct UnitTestDisplay
     {
         static size_t Width; //!< default width
 
         //! display 'sizeof(className) = classSize'
-        static void Display(const char  *className,
-                            const size_t classSize);
+        static void SizeOf(const char  *className,
+                           const size_t classSize);
+
+        static void AsU64(const char    *field,
+                          const uint64_t value);
     };
 }
 
 //! helper to replace sizeof()
-#define Y_SIZEOF(CLASS) Yttrium::SizeOf::Display(#CLASS,sizeof(CLASS))
+#define Y_SIZEOF(CLASS) Yttrium::UnitTestDisplay::SizeOf(#CLASS,sizeof(CLASS))
+#define Y_USHOW(FIELD)  Yttrium::UnitTestDisplay::AsU64(#FIELD,static_cast<uint64_t>(FIELD))
+
 
 //! start a new test
 #define Y_UTEST(NAME)                                              \

@@ -14,26 +14,50 @@ namespace Yttrium
     {
         namespace Nexus
         {
+            //__________________________________________________________________
+            //
+            //
+            //! Common methods for Apex::Block
+            //
+            //__________________________________________________________________
             struct Block
             {
-                static void TooBigException(const unsigned usrShift,
-                                            const unsigned maxShift);
-
-                static void *Acquire(unsigned &shift);
-                static void  Release(void *entry, const unsigned shift) noexcept;
+                static void *Acquire(unsigned &shift);                            //!< forward to Archon
+                static void  Release(void *entry, const unsigned shift) noexcept; //!< forward to Archon
+                static void  TooBigException(const unsigned usrShift,
+                                             const unsigned maxShift); //!< raise exception
             };
         }
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        // Handling power-of-two sized blocks of power-of-to sized data
+        //
+        //
+        //______________________________________________________________________
         template <typename WORD>
         class Block
         {
         public:
-            static const size_t   WordBytes = sizeof(WORD);
-            static const unsigned WordShift = iLog2<WordBytes>::Value;
-            static const unsigned MaxShift  = Base2<size_t>::MaxShift - WordShift;
-            static const size_t   MaxWords  = Base2<size_t>::One << MaxShift;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const size_t   WordBytes = sizeof(WORD);                        //!< alias
+            static const unsigned WordShift = iLog2<WordBytes>::Value;             //!< alias
+            static const unsigned MaxShift  = Base2<size_t>::MaxShift - WordShift; //!< alias
+            static const size_t   MaxWords  = Base2<size_t>::One << MaxShift;      //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             inline explicit Block(const unsigned usrShift) :
             shift( CheckShift(usrShift)+WordShift ),
             entry( static_cast<WORD*>(Nexus::Block::Acquire(Coerce(shift))) ),
@@ -43,6 +67,12 @@ namespace Yttrium
 
             inline virtual ~Block() noexcept { Nexus::Block::Release(entry,shift); }
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
             const unsigned shift;
             WORD * const   entry;
             const size_t   words;
