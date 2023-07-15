@@ -1,5 +1,7 @@
 
 #include "y/text/hexadecimal.hpp"
+#include <cstring>
+#include <iostream>
 
 namespace Yttrium
 {
@@ -22,6 +24,22 @@ namespace Yttrium
         "d0", "d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8", "d9", "da", "db", "dc", "dd", "de", "df",
         "e0", "e1", "e2", "e3", "e4", "e5", "e6", "e7", "e8", "e9", "ea", "eb", "ec", "ed", "ee", "ef",
         "f0", "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "fa", "fb", "fc", "fd", "fe", "ff"
+    };
+
+    const char Hexadecimal:: Lower[16] =
+    {
+        '0', '1', '2', '3',
+        '4', '5', '6', '7',
+        '8', '9', 'a', 'b',
+        'c', 'd', 'e', 'f'
+    };
+
+    const char Hexadecimal:: Upper[16] =
+    {
+        '0', '1', '2', '3',
+        '4', '5', '6', '7',
+        '8', '9', 'A', 'B',
+        'C', 'D', 'E', 'F'
     };
 
 
@@ -61,4 +79,79 @@ namespace Yttrium
         return -1;
     }
 
+    Hexadecimal:: Hexadecimal(const Hexadecimal &other) noexcept :
+    data()
+    {
+        memcpy(data,other.data,CharsPerWord);
+    }
+
+    Hexadecimal:: ~Hexadecimal() noexcept
+    {
+        memset(data,0,sizeof(data));
+    }
+
+
+    void Hexadecimal:: setup(const uint64_t   qw,
+                             const unsigned   sz,
+                             const OutputSize outputSize,
+                             const OutputCase outputCase) noexcept
+    {
+        assert(sz>0);
+        memset(data,0,sizeof(data));
+        const char *ch = 0;
+        switch(outputCase)
+        {
+            case LowerCase: ch = Lower; break;
+            case UpperCase: ch = Upper; break;
+        }
+        assert(0!=ch);
+
+        switch(outputSize)
+        {
+            case Default:
+                for(unsigned i=0,j=0,shr=(sz-1)<<3;i<sz;++i,shr -= 8)
+                {
+                    const uint8_t b = static_cast<uint8_t>(qw >> shr);
+                    data[j++] = ch[(b>>4)];
+                    data[j++] = ch[(b&0xf)];
+                }
+                break;
+
+            case Compact: {
+                const unsigned n = BytesFor(qw); assert(n<=sz);
+                if(n<=0)
+                {
+                    data[0] = ch[0]; return;
+                }
+                else
+                {
+                    bool first = true;
+                    for(unsigned i=0,j=0,shr=(n-1)<<3;i<sz;++i,shr -= 8)
+                    {
+                        const uint8_t b = static_cast<uint8_t>(qw >> shr);
+                        const uint8_t l = (b>>4);
+                        if(first)
+                        {
+                            if(l>0)
+                                data[j++] = ch[l];
+                            first = false;
+                        }
+                        else
+                        {
+                            data[j++] = ch[l];
+                        }
+                        data[j++] = ch[(b&0xf)];
+                    }
+                }
+            } break;
+        }
+
+
+    }
+
+    std::ostream & operator<<(std::ostream &os, const Hexadecimal &h)
+    {
+        os << h.data;
+        return os;
+    }
 }
