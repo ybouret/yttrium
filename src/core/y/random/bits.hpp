@@ -57,6 +57,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+
+
             //! draw within range
             template <typename T> inline
             T in(const T lo, const T hi) noexcept
@@ -72,6 +74,14 @@ namespace Yttrium
             size_t lt(const size_t n)    noexcept; //!< in 0..n-1, n>0
             bool   choice()              noexcept; //!< 50/50 choice
             
+            template <typename T> inline T to(unsigned nbit) noexcept
+            {
+                assert(nbit<=sizeof(T)*8);
+                if(nbit<=0) return 0;
+                T res = 1;
+                while(--nbit>0) { res <<= 1; if(choice()) res |= 1; }
+                return res;
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Bits);

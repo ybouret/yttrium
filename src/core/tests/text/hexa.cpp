@@ -18,7 +18,7 @@ Y_UTEST(text_hexa)
     Y_USHOW(Hexadecimal::Required);
     Y_USHOW(Hexadecimal::DataSize);
 
-    uint32_t x = 0xbcdef01;
+    uint64_t x = 0xbcdef01;
 
     std::cerr << Hexadecimal(x,Hexadecimal::Default,Hexadecimal::LowerCase) << std::endl;
     std::cerr << Hexadecimal(x,Hexadecimal::Default,Hexadecimal::UpperCase) << std::endl;

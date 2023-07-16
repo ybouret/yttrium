@@ -9,8 +9,8 @@
 namespace Yttrium
 {
 
-    struct       AsCapacity_ {};
-    extern const AsCapacity_ AsCapacity;
+    struct       AsCapacity_ {};           //!< type helper
+    extern const AsCapacity_ AsCapacity;   //!< type helper
 
 
 }

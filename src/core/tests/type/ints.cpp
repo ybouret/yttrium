@@ -205,12 +205,9 @@ Y_UTEST(type_ints)
             const uint64_t u = ran.in<uint64_t>(UnsignedInt<8>::Maxi7+1,UnsignedInt<8>::Maxi8);
             Y_ASSERT(8==BytesFor<uint64_t>( u));
         }
-
-
-        
     }
 
-
+    
 
 
 }

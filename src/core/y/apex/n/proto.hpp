@@ -46,16 +46,25 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //__________________________________________________________________
+            //
             //! words to wrap a given number of bytes
+            //__________________________________________________________________
             static inline size_t WordsFor(const size_t bytes) noexcept
             {
                 return Y_ALIGN_ON(WordSize,bytes)/WordSize;
             }
 
+            //__________________________________________________________________
+            //
             //! words to wrap a given u64
+            //__________________________________________________________________
             static inline size_t ToWords(const uint64_t X) noexcept { return WordsFor( BytesFor(X) ); }
 
+            //__________________________________________________________________
+            //
             //! split algorithm to given W[] with precomped N = ToWords(X)
+            //__________________________________________________________________
             static inline void   DoSplit(WordType *W, const size_t N, uint64_t X) noexcept
             {
                 assert(N==ToWords(X));
@@ -72,12 +81,12 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // Helpers
+            // C++
             //
             //__________________________________________________________________
 
             //! setup by using local memory to perform algorithm
-            inline explicit Split64Into(uint64_t X) noexcept :
+            inline Split64Into(uint64_t X) noexcept :
             n( ToWords(X)  ),
             w()
             {
@@ -131,7 +140,14 @@ namespace Yttrium
             typedef Split64Into<WordType>                Splitter;                      //!< alias
 
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
+            //! create a Proto with a given minimal capacity
             inline explicit Proto(const size_t       n,
                                   const AsCapacity_ &)  :
             Object(),

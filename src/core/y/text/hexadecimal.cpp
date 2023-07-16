@@ -126,7 +126,7 @@ namespace Yttrium
                 else
                 {
                     bool first = true;
-                    for(unsigned i=0,j=0,shr=(n-1)<<3;i<sz;++i,shr -= 8)
+                    for(unsigned i=0,j=0,shr=(n-1)<<3;i<n;++i,shr -= 8)
                     {
                         const uint8_t b = static_cast<uint8_t>(qw >> shr);
                         const uint8_t l = (b>>4);

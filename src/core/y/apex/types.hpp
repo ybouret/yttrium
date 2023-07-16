@@ -11,8 +11,8 @@ namespace Yttrium
     namespace Apex
     {
 
-        typedef uint64_t UIntType;
-        
+        typedef uint64_t UIntType; //!< scalar unsigned
+        typedef int64_t  IntType;  //!< scalar signed
 
     }
 

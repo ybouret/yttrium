@@ -55,6 +55,10 @@ namespace Yttrium
 
     };
 
+    
+
+   
+
 
     //! power of two detection
     template <typename T> inline
@@ -83,33 +87,8 @@ namespace Yttrium
         }
     }
 
-    //! most_significant_bit of v>=0
-    template <typename T>
-    inline T MostSignificantBit(const T v) noexcept
-    {
-        T mask = Base2<T>::MaxPowerOfTwo;
-        while(mask)
-        {
-            if(0!=(v&mask)) return mask;
-            mask >>= 1;
-        }
-        return 0;
-    }
+    
 
-    //! bits necessary to write v
-    template <typename T>
-    inline unsigned BitsFor(const T v) noexcept
-    {
-        T        mask = Base2<T>::MaxPowerOfTwo;
-        unsigned nbit = 8*sizeof(T);
-        while(mask)
-        {
-            if(0!=(v&mask)) return nbit;
-            mask >>= 1;
-            --nbit;
-        }
-        return 0;
-    }
 
     //! previous power of two, v>0
     template <typename T>

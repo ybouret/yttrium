@@ -19,23 +19,23 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            //! Common methods for Apex::Block
+            //
+            //! Common methods and parameters for Apex::Block
+            //
             //
             //__________________________________________________________________
             struct Block
             {
-                static const size_t   MinBytes = 2*sizeof(uint64_t);
-                static const unsigned MinShift = iLog2<MinBytes>::Value;
-                static const size_t   MaxBytes = Base2<size_t>::MaxPowerOfTwo;
-                static const unsigned MaxShift = Base2<size_t>::MaxShift;
+                static const size_t   MinBytes = 2*sizeof(uint64_t);           //!< at least 128 bits
+                static const unsigned MinShift = iLog2<MinBytes>::Value;       //!< Log2(MinBytes)
+                static const size_t   MaxBytes = Base2<size_t>::MaxPowerOfTwo; //!< alias
+                static const unsigned MaxShift = Base2<size_t>::MaxShift;      //!< alias
 
-                static unsigned   ShiftFor(const size_t usrBytes);
-                static unsigned   ShiftInc(unsigned shift);
+                static unsigned   ShiftFor(const size_t usrBytes); //!< Log2(NextPowerOfTwo(usrBytes)) with limits
+                static unsigned   ShiftInc(unsigned shift);        //!< shift+1 with limits
 
-
-                static uint32_t Hash32(const void *, const size_t) noexcept;         //!< helper
-                static void *   Acquire(unsigned &shift);                            //!< forward to Archon
-                static void     Release(void *entry, const unsigned shift) noexcept; //!< forward to Archon
+                static void *     Acquire(unsigned &shift);                            //!< forward to Archon
+                static void       Release(void *entry, const unsigned shift) noexcept; //!< forward to Archon
                 
 
             };
@@ -44,7 +44,12 @@ namespace Yttrium
         typedef Int2Type<1>        IncreaseSize_; //!< alias
         extern const IncreaseSize_ IncreaseSize;  //!< alias
 
-
+        //______________________________________________________________________
+        //
+        //
+        //! helper to construct a block with a given SHIFT
+        //
+        //______________________________________________________________________
 #define Y_APEX_BLOCK_CTOR(SHIFT)                                      \
 shift( SHIFT ),                                                       \
 entry( static_cast<WORD*>(Nexus::Block::Acquire( Coerce(shift) ) ) ), \
@@ -69,8 +74,8 @@ words( bytes >> WordShift )
             // Definitions
             //
             //__________________________________________________________________
-            static const size_t   WordBytes    = sizeof(WORD); //!< alias
-            static const unsigned WordShift    = iLog2<WordBytes>::Value;
+            static const size_t   WordBytes    = sizeof(WORD);            //!< alias
+            static const unsigned WordShift    = iLog2<WordBytes>::Value; //!< alis
             
             //__________________________________________________________________
             //
@@ -78,11 +83,14 @@ words( bytes >> WordShift )
             // C++
             //
             //__________________________________________________________________
+
+            //! setup for usrBytes
             explicit Block(size_t usrBytes) :
             Y_APEX_BLOCK_CTOR(Nexus::Block::ShiftFor(usrBytes))
             {
             }
 
+            //! copy
             explicit Block(const Block &other) :
             Y_APEX_BLOCK_CTOR(other.shift)
             {
@@ -92,6 +100,7 @@ words( bytes >> WordShift )
                 memcpy(entry,other.entry,other.bytes);
             }
 
+            //! copy with increasing capacity
             explicit Block(const Block &other, const IncreaseSize_ &) :
             Y_APEX_BLOCK_CTOR( Nexus::Block::ShiftInc(other.shift) )
             {
@@ -101,7 +110,7 @@ words( bytes >> WordShift )
                 memcpy(entry,other.entry,other.bytes);
             }
 
-
+            //! cleanup
             virtual ~Block() noexcept { Nexus::Block::Release(entry,shift); }
 
 
@@ -111,10 +120,10 @@ words( bytes >> WordShift )
             // Members
             //
             //__________________________________________________________________
-            const unsigned shift;
-            WORD  * const  entry;
-            const size_t   bytes;
-            const size_t   words;
+            const unsigned shift; //!< bytes = 2^shift
+            WORD  * const  entry; //!< memory
+            const size_t   bytes; //!< bytes = 2^shift
+            const size_t   words; //!< words wrapping bytes
 
         private:
             Y_DISABLE_ASSIGN(Block);

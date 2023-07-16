@@ -35,7 +35,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         static uint64_t Ticks();                          //!< system's ticks
-        double operator()(const uint64_t) const noexcept; //!< ticks to seconds
+        long double operator()(const uint64_t) const noexcept; //!< ticks to seconds
         void wait(const double nsec) const;               //!< self loop
 
         //______________________________________________________________________
