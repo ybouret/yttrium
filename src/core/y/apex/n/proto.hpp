@@ -177,7 +177,7 @@ namespace Yttrium
             block( proto.block )
             {
             }
-            
+
 
             inline virtual ~Proto() noexcept {}
 
@@ -188,7 +188,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! updating nbit
+            //__________________________________________________________________
+            //
+            //! update bit count
+            //__________________________________________________________________
             inline void updateBitCount() noexcept
             {
                 if(words) {
@@ -200,6 +203,18 @@ namespace Yttrium
                     Coerce(nbits) = 0;
             }
 
+            inline uint64_t ls64() const noexcept
+            {
+                uint64_t qw = 0;
+                for(size_t i=words;i>0;)
+                    (qw <<= WordBits) |= block.entry[--i];
+                return qw;
+            }
+
+            //__________________________________________________________________
+            //
+            //! display status
+            //__________________________________________________________________
             inline void display() const
             {
                 std::cerr << "<APEX " << CoreBits << "-" << WordBits;
@@ -210,7 +225,6 @@ namespace Yttrium
                 std::cerr << " [";
                 for(size_t i=0;i<words;++i) std::cerr << ' ' << Hexadecimal(block.entry[i]);
                 std::cerr << " ]" << std::endl;
-
             }
 
             //__________________________________________________________________

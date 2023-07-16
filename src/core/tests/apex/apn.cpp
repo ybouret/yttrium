@@ -10,7 +10,7 @@ using namespace Yttrium;
 namespace
 {
     template <typename Core, typename Word> static inline
-    void TestProto()
+    void TestProto(Random::Bits &ran)
     {
         std::cerr << std::endl;
         typedef Apex::Proto<Core,Word> PROTO;
@@ -21,25 +21,15 @@ namespace
             PROTO proto(0,AsCapacity);
         }
 
-        const uint64_t U[] =
-        {
-            0x00,
-            0x06,
-            0xab,
-            0xabc,
-            0xabcd,
-            0xabcde,
-            0xabcdef,
-            0xabcdef12,
-            Y_U64(0x12345678abcdef00)
-        };
 
-        for(size_t i=0;i<sizeof(U)/sizeof(U[0]);++i)
+        for(unsigned i=0;i<=64;++i)
         {
-            const uint64_t u = U[i];
+            const uint64_t u = ran.to<uint64_t>(i);
             PROTO proto(u);
             Y_ASSERT( proto.nbits == BitsFor_(u) );
             proto.display();
+            const uint64_t p = proto.ls64();
+            Y_ASSERT(p==u);
         }
 
 
@@ -48,14 +38,15 @@ namespace
 
 Y_UTEST(apex_natural)
 {
-    TestProto<uint64_t,uint32_t>();
-    TestProto<uint64_t,uint16_t>();
-    TestProto<uint64_t,uint8_t>();
+    Random::Rand ran;
+    TestProto<uint64_t,uint32_t>(ran);
+    TestProto<uint64_t,uint16_t>(ran);
+    TestProto<uint64_t,uint8_t>(ran);
 
-    TestProto<uint32_t,uint16_t>();
-    TestProto<uint32_t,uint8_t>();
+    TestProto<uint32_t,uint16_t>(ran);
+    TestProto<uint32_t,uint8_t>(ran);
 
-    TestProto<uint16_t,uint8_t>();
+    TestProto<uint16_t,uint8_t>(ran);
 
 
 
