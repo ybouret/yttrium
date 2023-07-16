@@ -35,7 +35,10 @@ namespace
 
         for(size_t i=0;i<sizeof(U)/sizeof(U[0]);++i)
         {
-            PROTO proto(U[i]);
+            const uint64_t u = U[i];
+            PROTO proto(u);
+            Y_ASSERT( proto.nbits == BitsFor_(u) );
+            proto.display();
         }
 
 

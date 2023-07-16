@@ -8,8 +8,10 @@
 #include "y/apex/m/block.hpp"
 #include "y/check/static.hpp"
 #include "y/calculus/align.hpp"
+#include "y/calculus/bit-count.hpp"
 #include "y/type/capacity.hpp"
 #include "y/text/hexadecimal.hpp"
+#include <iomanip>
 
 namespace Yttrium
 {
@@ -74,8 +76,6 @@ namespace Yttrium
                     W[i] = static_cast<WordType>(X);
                     X >>= WordBits;
                 }
-                for(size_t i=0;i<N;++i) std::cerr << " " << Hexadecimal(W[i]);
-                std::cerr << std::endl;
             }
 
             //__________________________________________________________________
@@ -90,7 +90,6 @@ namespace Yttrium
             n( ToWords(X)  ),
             w()
             {
-                std::cerr << "Split(" << Hexadecimal(X) << ") : n = " << n << " :";
                 DoSplit(Coerce(w),n,X);
                 for(size_t i=n;i<MaxWords;++i) Coerce(w[i]) = 0;
             }
@@ -134,6 +133,7 @@ namespace Yttrium
             static const unsigned                        CoreSize  = sizeof(CORE_TYPE); //!< alias
             static const unsigned                        WordSize  = sizeof(WORD_TYPE); //!< alias
             static const unsigned                        WordBits  = WordSize << 3;     //!< alias
+            static const unsigned                        CoreBits  = CoreSize << 3;     //!< alias
             typedef typename UnsignedInt<CoreSize>::Type CoreType;                      //!< alias
             typedef typename UnsignedInt<WordSize>::Type WordType;                      //!< alias
             typedef Block<WordType>                      DataType;                      //!< alias
@@ -153,6 +153,7 @@ namespace Yttrium
             Object(),
             bytes(0),
             words(0),
+            nbits(0),
             block(n)
             {
                 Y_STATIC_CHECK(WordSize<CoreSize,InvalidMetrics);
@@ -162,19 +163,49 @@ namespace Yttrium
             Object(),
             bytes( BytesFor(qword)            ),
             words( Splitter::WordsFor(bytes)  ),
+            nbits( 0 ),
             block( sizeof(qword)              )
             {
                 assert(block.words>=Splitter::MaxWords);
                 Splitter::DoSplit(block.entry,words,qword);
+                updateBits();
             }
 
 
             inline virtual ~Proto() noexcept {}
 
+            inline void updateBits() noexcept
+            {
+                if(words) {
+                    const size_t    msi = words-1;          // most significant index
+                    const WordType &msw = block.entry[msi]; // mist significant word
+                    assert(msw>0);
+                    Coerce(nbits) = BitCount::For(msw) + msi * WordBits;
+                }
+                else
+                {
+                    Coerce(nbits) = 0;
+                }
+            }
 
-            size_t   bytes; //!< exact bytes
-            size_t   words; //!< aligned to bytes
-            DataType block; //!< resources
+            inline void display() const
+            {
+                std::cerr << "<APEX " << CoreBits << "-" << WordBits;
+                std::cerr << " bytes="  << std::setw(3) << bytes;
+                std::cerr << ", words=" << std::setw(3) << words;
+                std::cerr << ", nbits=" << std::setw(5) << nbits ;
+                std::cerr << ">";
+                std::cerr << " [";
+                for(size_t i=0;i<words;++i) std::cerr << ' ' << Hexadecimal(block.entry[i]);
+                std::cerr << " ]" << std::endl;
+
+            }
+
+
+            const size_t bytes; //!< exact bytes
+            const size_t words; //!< aligned to bytes
+            const size_t nbits; //!< exact bit count
+            DataType     block; //!< resources
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Proto);
