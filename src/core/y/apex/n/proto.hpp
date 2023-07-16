@@ -169,6 +169,15 @@ namespace Yttrium
                 updateBitCount();
             }
 
+            inline Proto(const Proto &proto) :
+            Object(),
+            bytes( proto.bytes ),
+            words( proto.words ),
+            nbits( proto.nbits ),
+            block( proto.block )
+            {
+            }
+            
 
             inline virtual ~Proto() noexcept {}
 
@@ -215,8 +224,10 @@ namespace Yttrium
             const size_t nbits; //!< exact number of bits
             DataType     block; //!< resources
 
+
+
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Proto);
+            Y_DISABLE_ASSIGN(Proto);
         };
 
     }
