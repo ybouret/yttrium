@@ -14,6 +14,7 @@ namespace
     {
         std::cerr << std::endl;
         typedef Apex::Proto<Core,Word> PROTO;
+        Y_SIZEOF(PROTO);
         std::cerr << "Apex::Proto<" << PROTO::CoreSize*8 << "," << PROTO::WordSize*8 << ">" << std::endl;
         std::cerr << "Splitter::MaxWord=" << PROTO::Splitter::MaxWords << std::endl;
         {

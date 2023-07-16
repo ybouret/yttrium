@@ -26,7 +26,7 @@ namespace Yttrium
 
     }
 
-    typedef Apex::Natural APN;
+    typedef Apex::Natural APN; //!< alias
 
 }
 

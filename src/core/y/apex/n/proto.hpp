@@ -86,9 +86,7 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! setup by using local memory to perform algorithm
-            inline Split64Into(uint64_t X) noexcept :
-            n( ToWords(X)  ),
-            w()
+            inline Split64Into(uint64_t X) noexcept : n( ToWords(X)  ), w()
             {
                 DoSplit(Coerce(w),n,X);
                 for(size_t i=n;i<MaxWords;++i) Coerce(w[i]) = 0;
@@ -168,24 +166,29 @@ namespace Yttrium
             {
                 assert(block.words>=Splitter::MaxWords);
                 Splitter::DoSplit(block.entry,words,qword);
-                updateBits();
+                updateBitCount();
             }
 
 
             inline virtual ~Proto() noexcept {}
 
-            inline void updateBits() noexcept
+            //__________________________________________________________________
+            //
+            //
+            // methods
+            //
+            //__________________________________________________________________
+
+            //! updating nbit
+            inline void updateBitCount() noexcept
             {
                 if(words) {
-                    const size_t    msi = words-1;          // most significant index
-                    const WordType &msw = block.entry[msi]; // mist significant word
-                    assert(msw>0);
+                    const size_t    msi = words-1;                         // most significant index
+                    const WordType &msw = block.entry[msi]; assert(msw>0); // most significant word
                     Coerce(nbits) = BitCount::For(msw) + msi * WordBits;
                 }
                 else
-                {
                     Coerce(nbits) = 0;
-                }
             }
 
             inline void display() const
@@ -201,10 +204,15 @@ namespace Yttrium
 
             }
 
-
-            const size_t bytes; //!< exact bytes
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const size_t bytes; //!< exact number of bytes
             const size_t words; //!< aligned to bytes
-            const size_t nbits; //!< exact bit count
+            const size_t nbits; //!< exact number of bits
             DataType     block; //!< resources
 
         private:

@@ -9,20 +9,25 @@
 namespace Yttrium
 {
 
+    //! Bit counting
     struct BitCount
     {
+        //! precomputed table of bits count
         static const uint8_t Table[256];
 
+
+        //! bits required for a byte
         static inline unsigned For(const uint8_t &b) noexcept {
             return Table[b];
         }
 
-
+        //! bits required for a word
         static inline unsigned For(const uint16_t &w) noexcept {
             const  unsigned       n = Table[ uint8_t(w>>8) ];
             return (n>0) ? (n+8) : Table[ uint8_t(w) ];
         }
 
+        //! bits required for a dword
         static inline unsigned For(const uint32_t &w) noexcept {
             { const unsigned n = Table[ uint8_t(w>>24) ]; if(n>0) return n+24; }
             { const unsigned n = Table[ uint8_t(w>>16) ]; if(n>0) return n+16; }
@@ -30,6 +35,7 @@ namespace Yttrium
             return Table[ uint8_t(w) ];
         }
 
+        //! bits required for a qword
         static inline unsigned For(const uint64_t &w) noexcept {
             { const unsigned n = Table[ uint8_t(w>>56) ]; if(n>0) return n+56; }
             { const unsigned n = Table[ uint8_t(w>>48) ]; if(n>0) return n+48; }
