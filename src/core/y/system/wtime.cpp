@@ -20,7 +20,6 @@
 #include <windows.h>
 #endif
 
-#include <iostream>
 
 namespace Yttrium
 {
@@ -70,7 +69,6 @@ namespace Yttrium
         struct timespec tp  = { 0, 0 };
         const int       err = clock_getres(CLOCK_REALTIME,&tp);
         if(err!=0) throw Libc::Exception( errno, "clock_getres" );
-        std::cerr << tp.tv_sec << " s + " << tp.tv_nsec << " ns" << std::endl;
         return  nano * static_cast<long double>(__giga64*uint64_t(tp.tv_sec) + uint64_t(tp.tv_nsec));
     }
 
