@@ -27,7 +27,7 @@ void Call8_()
 {
     volatile unsigned toto = 0;
     for(unsigned i=0;i<256;++i)
-    { const uint8_t b(i); toto = BitsFor_(b); }
+    { const uint8_t b(i); toto = BitsFor(b); }
     (void)Memory::OutOfReach::Addr((void*)&toto);
 }
 
@@ -44,7 +44,7 @@ static inline
 void Call16_()
 {
     volatile unsigned toto = 0;
-    for(unsigned i=0;i<65536;++i) { const uint16_t b(i); toto = BitsFor_(b); }
+    for(unsigned i=0;i<65536;++i) { const uint16_t b(i); toto = BitsFor(b); }
     (void)Memory::OutOfReach::Addr((void*)&toto);
 }
 
@@ -60,7 +60,7 @@ static inline
 void Call32_(const uint32_t *u, unsigned n)
 {
     volatile unsigned toto = 0;
-    for(unsigned i=0;i<n;++i) {  toto = BitsFor_(u[i]);   }
+    for(unsigned i=0;i<n;++i) {  toto = BitsFor(u[i]);   }
     (void)Memory::OutOfReach::Addr((void*)&toto);
 }
 
@@ -76,7 +76,7 @@ static inline
 void Call64_(const uint64_t *u, unsigned n)
 {
     volatile unsigned toto = 0;
-    for(unsigned i=0;i<n;++i) {  toto = BitsFor_(u[i]);   }
+    for(unsigned i=0;i<n;++i) {  toto = BitsFor(u[i]);   }
     (void)Memory::OutOfReach::Addr((void*)&toto);
 }
 
@@ -107,7 +107,7 @@ Y_UTEST(calculus_base2)
             for(size_t loop=0;loop<1000;++loop)
             {
                 const uint64_t qw = ran.to<uint64_t>(nbit);
-                Y_ASSERT(nbit==BitsFor_(qw));
+                Y_ASSERT(nbit==BitsFor(qw));
             }
         }
 
@@ -117,7 +117,7 @@ Y_UTEST(calculus_base2)
         unsigned nbit = 0;
         for(uint32_t i=0;i<65536;++i)
         {
-            const unsigned n = BitsFor_(i);
+            const unsigned n = BitsFor(i);
             if(n>nbit)
             {
                 std::cerr << i << " -> " << n << std::endl;
@@ -145,14 +145,14 @@ Y_UTEST(calculus_base2)
     std::cerr << "\tCheck Table" << std::endl;
     for(unsigned i=0;i<256;++i)
     {
-        Y_ASSERT(BitsFor_(i) == BitCount::Table[i] );
+        Y_ASSERT(BitsFor(i) == BitCount::Table[i] );
     }
 
     std::cerr << "\tCheck 8-bits" << std::endl;
     for(unsigned i=0;i<256;++i)
     {
         const uint8_t b(i);
-        Y_ASSERT(BitsFor_(i) == BitCount::For(b) );
+        Y_ASSERT(BitsFor(i) == BitCount::For(b) );
     }
 
     Timing tmx;
@@ -166,7 +166,7 @@ Y_UTEST(calculus_base2)
     for(unsigned i=0;i<65536;++i)
     {
         const uint16_t w(i);
-        Y_ASSERT(BitsFor_(i) == BitCount::For(w) );
+        Y_ASSERT(BitsFor(i) == BitCount::For(w) );
     }
     Y_Timing(tmx,Call16_(),1);
     std::cerr << "\t\traw: " << HumanReadable(tmx.speed()) << std::endl;
@@ -180,7 +180,7 @@ Y_UTEST(calculus_base2)
         for(size_t loop=0; loop<10000; ++loop)
         {
             const uint32_t dw = ran.to<uint32_t>(nbit);
-            Y_ASSERT(nbit==BitsFor_(dw));
+            Y_ASSERT(nbit==BitsFor(dw));
             Y_ASSERT(nbit==BitCount::For(dw));
         }
     }
@@ -203,7 +203,7 @@ Y_UTEST(calculus_base2)
         for(size_t loop=0; loop<10000; ++loop)
         {
             const uint64_t qw = ran.to<uint64_t>(nbit);
-            Y_ASSERT(nbit==BitsFor_(qw));
+            Y_ASSERT(nbit==BitsFor(qw));
             Y_ASSERT(nbit==BitCount::For(qw));
         }
     }

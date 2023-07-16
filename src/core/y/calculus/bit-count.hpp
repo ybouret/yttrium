@@ -53,7 +53,7 @@ namespace Yttrium
 
     //! bits necessary to write v
     template <typename T>
-    inline unsigned BitsFor_(const T v) noexcept
+    inline unsigned BitsFor(const T v) noexcept
     {
         typedef typename  IntegerFor<T>::UInt::Type U;
         const U  word(v);

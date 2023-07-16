@@ -26,7 +26,7 @@ namespace
         {
             const uint64_t u = ran.to<uint64_t>(i);
             PROTO proto(u);
-            Y_ASSERT( proto.nbits == BitsFor_(u) );
+            Y_ASSERT( proto.nbits == BitsFor(u) );
             proto.display();
             const uint64_t p = proto.ls64();
             Y_ASSERT(p==u);
