@@ -238,7 +238,13 @@ namespace Yttrium
             const size_t nbits; //!< exact number of bits
             DataType     block; //!< resources
 
-
+            //__________________________________________________________________
+            //
+            //
+            // API
+            //
+            //__________________________________________________________________
+            static void
 
         private:
             Y_DISABLE_ASSIGN(Proto);
