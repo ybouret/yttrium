@@ -5,20 +5,33 @@
 #include "y/random/shuffle.hpp"
 #include "y/utest/timing.hpp"
 
+#include <cstdio>
+
 using namespace Yttrium;
 
 
 namespace
 {
 
-    template <typename Core, typename Word> static inline
-    void TestProto(Random::Bits &ran)
+    struct Perf
     {
-        std::cerr << std::endl;
-        typedef Apex::Proto<Core,Word> PROTO;
-        std::cerr << "Apex::Proto<" << PROTO::CoreSize*8 << "," << PROTO::WordSize*8 << ">" << std::endl;
-        //std::cerr << "Splitter::MaxWord=" << PROTO::Splitter::MaxWords << std::endl;
+        const char *id;
+        uint64_t    addRate;
+    };
 
+    static unsigned MaxBits = 1024;
+    static unsigned Loops   = 16;
+
+    template <typename Core, typename Word> static inline
+    void TestProto(Random::Bits &ran, Perf &perf)
+    {
+        typedef Apex::Proto<Core,Word> PROTO;
+        static char label[256];
+        snprintf(label,sizeof(label),"Apex::Proto<%3u,%3u>",PROTO::CoreSize*8,PROTO::WordSize*8 );
+        perf.id = label;
+        std::cerr << std::endl;
+        std::cerr << label << std::endl;
+        
         // default
         std::cerr << "-- Checking Default" << std::endl;
         {
@@ -30,7 +43,7 @@ namespace
         std::cerr << "-- Checking 64 bits conversion" << std::endl;
         for(unsigned i=0;i<=64;++i)
         {
-            for(size_t loop=0;loop<16;++loop)
+            for(size_t loop=0;loop<Loops;++loop)
             {
                 const uint64_t u = ran.to<uint64_t>(i);
                 PROTO proto(u);
@@ -46,7 +59,7 @@ namespace
         std::cerr << "-- Checking Random Bits" << std::endl;
         for(unsigned i=0;i<=1000;++i)
         {
-            for(size_t loop=0;loop<16;++loop)
+            for(size_t loop=0;loop<Loops;++loop)
             {
                 PROTO proto(i,ran);
                 Y_ASSERT(proto.nbits==i);
@@ -65,14 +78,13 @@ namespace
         Timing tmx;
 
 
-
         (std::cerr << "   (*) Addition consistency @").flush();
         tmx.reset();
         for(unsigned i=0;i<=63;++i)
         {
             for(unsigned j=0;j<=63;++j)
             {
-                for(unsigned loop=0;loop<16;++loop)
+                for(unsigned loop=0;loop<Loops;++loop)
                 {
                     const uint64_t l = ran.to<uint64_t>( i );
                     const uint64_t r = ran.to<uint64_t>( j );
@@ -95,11 +107,11 @@ namespace
         (std::cerr << "   (*) Addition performance @").flush();
         tmx.reset();
         {
-            for(unsigned i=8;i<=1024;i += 8)
+            for(unsigned i=8;i<=MaxBits;i += 8)
             {
-                for(unsigned j=8;j<=1024;++j)
+                for(unsigned j=8;j<=MaxBits;++j)
                 {
-                    for(size_t loop=0;loop<16;++loop)
+                    for(size_t loop=0;loop<Loops;++loop)
                     {
                         PROTO lhs(i,ran); Y_ASSERT(lhs.nbits==i);
                         PROTO rhs(j,ran); Y_ASSERT(rhs.nbits==j);
@@ -110,26 +122,36 @@ namespace
                 }
             }
         }
-        std::cerr << HumanReadable(tmx.speed()) << "Op/s" << std::endl;
+        std::cerr << HumanReadable(perf.addRate=tmx.speed()) << "Op/s" << std::endl;
 
 
     }
 }
 
+
+
 Y_UTEST(apex_proto)
 {
     Random::Rand ran;
-    TestProto<uint64_t,uint32_t>(ran);
-    TestProto<uint64_t,uint16_t>(ran);
-    TestProto<uint64_t,uint8_t>(ran);
 
-    TestProto<uint32_t,uint16_t>(ran);
-    TestProto<uint32_t,uint8_t>(ran);
+    Perf Table[6];
 
-    TestProto<uint16_t,uint8_t>(ran);
+    TestProto<uint64_t,uint32_t>( ran, Table[0]);
+    TestProto<uint64_t,uint16_t>( ran, Table[1]);
+    TestProto<uint64_t,uint8_t>(  ran, Table[2]);
 
+    TestProto<uint32_t,uint16_t>( ran, Table[3]);
+    TestProto<uint32_t,uint8_t>(  ran, Table[4]);
 
+    TestProto<uint16_t,uint8_t>(  ran, Table[5]);
 
+    std::cerr << std::endl;
+    std::cerr << "Summary:" << std::endl;
+    for(size_t i=0;i<6;++i)
+    {
+        const Perf &perf = Table[i];
+        std::cerr << perf.id << ": add@" << HumanReadable(perf.addRate) << std::endl;
+    }
 
 
 }

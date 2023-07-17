@@ -151,7 +151,7 @@ namespace Yttrium
 
             //__________________________________________________________________
             //
-            //! update metrics from a precomputed number of words
+            //! update metrics from CURRENT number of words
             //__________________________________________________________________
             inline void update() noexcept
             {
