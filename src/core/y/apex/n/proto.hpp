@@ -14,6 +14,7 @@
 #include "y/system/wtime.hpp"
 #include "y/system/exception.hpp"
 #include "y/random/bits.hpp"
+#include "y/type/signs.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -199,7 +200,7 @@ namespace Yttrium
                     assert(remaining<WordBits);
                     *target = ran.to<WordType>( static_cast<unsigned>(remaining) );
                 }
-                
+                update();
             }
 
             //__________________________________________________________________
@@ -210,11 +211,11 @@ namespace Yttrium
                          const size_t    N) :
             Nexus::Proto(),
             nbits(0),
-            bytes(N*sizeof(words)),
+            bytes(N*WordSize),
             words(N),
             block(bytes)
             {
-                assert(W);
+                assert(0!=W);
                 memcpy(block.entry,W,bytes);
                 update();
             }
@@ -228,6 +229,36 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+            static inline bool AreDifferent(const Proto &lhs, const Proto &rhs) noexcept
+            {
+                const size_t lwords = lhs.words;
+                switch(SignOf(lwords,rhs.words))
+                {
+                    case Negative:
+                    case Positive: return true;
+                    case __Zero__:
+                        break;
+                }
+                return 0 != memcmp(lhs.block.entry,rhs.block.entry,lwords*WordSize);
+            }
+
+            static inline bool AreEqual(const Proto &lhs, const Proto &rhs) noexcept
+            {
+                const size_t lwords = lhs.words;
+                std::cerr << "Eq : LHS="; lhs.printHex(std::cerr);
+                std::cerr << " RHS="; rhs.printHex(std::cerr);
+                std::cerr << std::endl;
+                switch(SignOf(lwords,rhs.words))
+                {
+                    case Negative:
+                    case Positive:
+                        std::cerr << "different #words" << std::endl;
+                        return false;
+                    case __Zero__:
+                        break;
+                }
+                return 0 == memcmp(lhs.block.entry,rhs.block.entry,lwords*WordSize);
+            }
 
             //__________________________________________________________________
             //
@@ -240,9 +271,10 @@ namespace Yttrium
                     const size_t    msi = words-1;
                     const WordType &msw = block.entry[msi];
                     if(msw<=0) { Coerce(words) = msi; continue; }
+                    assert(words>0);
                     Coerce(nbits) = BitCount::For(msw) + msi * WordBits;
                     Coerce(bytes) = BitsToBytes(nbits);
-                    //std::cerr << "words=" << words << ", nbits=" << nbits << ", bytes=" << bytes << std::endl;
+                    std::cerr << "msw=" << Hexadecimal(msw) << " => " << BitCount::For(msw) << " bits => " << nbits << std::endl;
                     return;
                 }
                 assert(0==words);
@@ -317,6 +349,7 @@ namespace Yttrium
             void printHex(std::ostream &os) const
             {
                 if(bytes<=0) { os << '0'; return; }
+
                 bool   first = true;
                 size_t i     = bytes;
                 while(i>0)
@@ -325,6 +358,11 @@ namespace Yttrium
                     const uint8_t l = b>>4;
                     if(first)
                     {
+                        if(b<=0)
+                        {
+                            display(); std::cerr << std::endl;
+                            std::cerr << "Error Getting Byte[" << i << "] : Word" << WordBits << " = " << Hexadecimal(block.entry[i/WordSize]) << " +" << (i%WordSize) << ", nbits=" << nbits << " | " << BitCount::For(block.entry[i/WordSize]) << std::endl;
+                        }
                         assert(b>0);
                         if(l>0) os << Hexadecimal::Upper[l];
                         first = false;
@@ -579,13 +617,13 @@ namespace Yttrium
                                 const CIntType del = CIntType(lhs[i]) - CIntType(rhs[i]) - carry;
                                 if(del<0)
                                 {
-                                    carry = 1;
                                     d[i]  = WordType(del+Radix);
+                                    carry = 1;
                                 }
                                 else
                                 {
-                                    carry = 0;
                                     d[i]  = WordType(del);
+                                    carry = 0;
                                 }
                             }
 
@@ -594,13 +632,13 @@ namespace Yttrium
                                 CIntType del = CIntType(lhs[i]) - carry;
                                 if(del<0)
                                 {
-                                    carry = 1;
                                     d[i]  = WordType(del+Radix);
+                                    carry = 1;
                                 }
                                 else
                                 {
-                                    carry = 0;
                                     d[i]  = WordType(del);
+                                    carry = 0;
                                 }
                             }
 

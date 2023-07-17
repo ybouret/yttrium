@@ -161,7 +161,8 @@ namespace
                     const PROTO  lhs(i,ran);
                     const PROTO  rhs(j,ran);
                     const hPROTO sum( PROTO::Add(lhs,rhs) );
-
+                    const hPROTO dif1( PROTO::Sub(*sum,lhs) );
+                    Y_ASSERT( PROTO::AreEqual(rhs,*dif1) );
                 }
 
             }
