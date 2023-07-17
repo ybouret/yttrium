@@ -1,5 +1,3 @@
-
-
 #include "y/apex/n/proto.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/shuffle.hpp"
@@ -48,7 +46,6 @@ namespace
                 const uint64_t u = ran.to<uint64_t>(i);
                 PROTO proto(u);
                 Y_ASSERT( proto.nbits == BitsFor(u) );
-                //proto.display();
                 const uint64_t p = proto.ls64();
                 Y_ASSERT(p==u);
                 const PROTO copy(proto);
@@ -71,6 +68,7 @@ namespace
             const Word W[] = { 1,2,3,4,5 };
             PROTO proto(W,sizeof(W)/sizeof(W[0]));
             std::cerr << "\t"; proto.display();
+            std::cerr << "\t"; proto.printHex(std::cerr); std::cerr << std::endl;
         }
 
 

@@ -13,7 +13,8 @@ namespace Yttrium
         Number:: Number() noexcept
         {
         }
-        
+
+        uint64_t Number:: addTicks = 0;
 
     }
 

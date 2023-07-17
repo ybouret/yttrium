@@ -6,6 +6,7 @@
 #include "y/type/addition.hpp"
 #include "y/text/human-readable.hpp"
 
+#include <iostream>
 #include <cerrno>
 
 namespace Yttrium

@@ -15,7 +15,7 @@ namespace Yttrium
         //
         //
         //
-        //! splitting unisgned 64bits into smaller words
+        //! splitting unsigned 64bits into smaller words
         //
         //
         //______________________________________________________________________
@@ -29,10 +29,11 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const unsigned WordSize  = sizeof(WordType);                       //!< alias
-            static const unsigned WordBits  = WordSize << 3;                          //!< alias
-            static const unsigned SelfSize  = sizeof(uint64_t);                       //!< alias
-            static const unsigned MaxWords  = Y_ALIGN_ON(WordSize,SelfSize)/WordSize; //!< alias
+            static const unsigned WordSize  = sizeof(WordType);                          //!< alias
+            static const unsigned WordLog2  = iLog2<WordSize>::Value;                    //!< alias
+            static const unsigned WordBits  = WordSize << 3;                             //!< alias
+            static const unsigned SelfSize  = sizeof(uint64_t);                          //!< alias
+            static const unsigned MaxWords  = Y_ALIGN_ON(WordSize,SelfSize) >> WordLog2; //!< alias
 
             //__________________________________________________________________
             //
@@ -47,7 +48,7 @@ namespace Yttrium
             //__________________________________________________________________
             static inline size_t BytesToWords(const size_t bytes) noexcept
             {
-                return Y_ALIGN_ON(WordSize,bytes)/WordSize;
+                return Y_ALIGN_ON(WordSize,bytes) >> WordLog2;
             }
 
             //__________________________________________________________________
@@ -81,8 +82,9 @@ namespace Yttrium
             //! setup by using local memory to perform algorithm
             inline Split64Into(uint64_t X) noexcept : n( ToWords(X)  ), w()
             {
-                DoSplit(Coerce(w),n,X);
-                for(size_t i=n;i<MaxWords;++i) Coerce(w[i]) = 0;
+                DoSplit(Coerce(w),n,X);          // Algorithm
+                for(size_t i=n;i<MaxWords;++i)
+                    Coerce(w[i]) = 0;            // Local cleanup
             }
 
             //! cleanup

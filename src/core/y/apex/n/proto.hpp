@@ -13,6 +13,8 @@
 #include "y/text/hexadecimal.hpp"
 #include "y/system/wtime.hpp"
 #include "y/random/bits.hpp"
+
+#include <iostream>
 #include <iomanip>
 
 namespace Yttrium
@@ -22,14 +24,40 @@ namespace Yttrium
 
         namespace Nexus
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Base class for operations prototype
+            //
+            //
+            //__________________________________________________________________
             class Proto : public Object
             {
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
             protected:
-                explicit Proto() noexcept;
+                explicit Proto() noexcept; //!< setup
 
             public:
-                virtual ~Proto() noexcept;
+                virtual ~Proto() noexcept; //!< cleanup
 
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                //______________________________________________________________
+                //
+                //! number of bytes to hold numBits
+                //______________________________________________________________
                 static size_t BitsToBytes(const size_t numBits) noexcept;
 
             private:
@@ -73,7 +101,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //__________________________________________________________________
+            //
             //! create a Proto with a given minimal BYTES capacity
+            //__________________________________________________________________
             inline explicit Proto(const size_t      numBytes,
                                   const AsCapacity_ &)  :
             Nexus::Proto(),
@@ -85,6 +116,10 @@ namespace Yttrium
                 Y_STATIC_CHECK(WordSize<CoreSize,InvalidMetrics);
             }
 
+            //__________________________________________________________________
+            //
+            //! create a Proto with a given uint64_t
+            //__________________________________________________________________
             inline explicit Proto(const uint64_t qword) :
             Nexus::Proto(),
             nbits( BitCount::For(qword)          ),
@@ -96,6 +131,10 @@ namespace Yttrium
                 Splitter::DoSplit(block.entry,words,qword);
             }
 
+            //__________________________________________________________________
+            //
+            //! copy constructor
+            //__________________________________________________________________
             inline Proto(const Proto &proto) :
             Nexus::Proto(),
             nbits( proto.nbits ),
@@ -103,8 +142,13 @@ namespace Yttrium
             words( proto.words ),
             block( proto.block )
             {
+                memcpy(block.entry,proto.block.entry,words*WordSize);
             }
 
+            //__________________________________________________________________
+            //
+            //! create a random Proto with exactly userBits
+            //__________________________________________________________________
             inline Proto(const size_t userBits, Random::Bits &ran) :
             Nexus::Proto(),
             nbits( userBits ),
@@ -127,7 +171,12 @@ namespace Yttrium
                 
             }
 
-            inline Proto(const WordType *W, const size_t N) :
+            //__________________________________________________________________
+            //
+            //! create a Proto from W[N], then update
+            //__________________________________________________________________
+            inline Proto(const WordType *W,
+                         const size_t    N) :
             Nexus::Proto(),
             nbits(0),
             bytes(N*sizeof(words)),
@@ -145,7 +194,7 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // methods
+            // Methods
             //
             //__________________________________________________________________
 
@@ -161,7 +210,8 @@ namespace Yttrium
                     const WordType &msw = block.entry[msi];
                     if(msw<=0) { Coerce(words) = msi; continue; }
                     Coerce(nbits) = BitCount::For(msw) + msi * WordBits;
-                    Coerce(bytes) = RequiredBytesFor(nbits);
+                    Coerce(bytes) = BitsToBytes(nbits);
+                    //std::cerr << "words=" << words << ", nbits=" << nbits << ", bytes=" << bytes << std::endl;
                     return;
                 }
                 assert(0==words);
@@ -169,7 +219,10 @@ namespace Yttrium
                 Coerce(nbits) = 0;
             }
 
-
+            //__________________________________________________________________
+            //
+            //! Least Significant 64 bits
+            //__________________________________________________________________
             inline uint64_t ls64() const noexcept
             {
                 uint64_t qw = 0;
@@ -212,7 +265,78 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //__________________________________________________________________
+            //
+            //! clean extraneous words
+            //__________________________________________________________________
+            inline void ztrim() noexcept
+            {
+                memset(block.entry+words,0,(block.words-words)*WordSize);
+            }
 
+            uint8_t getByte(const size_t i) const noexcept
+            {
+                assert(i<bytes);
+                WordType w = block.entry[i/WordSize];
+                size_t   r = i%WordSize;
+                while(r-- > 0) w = UnsignedInt<WordSize>::SHR8(w);
+                return uint8_t(w);
+            }
+
+            void printHex(std::ostream &os) const
+            {
+                if(bytes<=0) { os << '0'; return; }
+                bool   first = true;
+                size_t i     = bytes;
+                while(i>0)
+                {
+                    const uint8_t b = getByte(--i);
+                    const uint8_t l = b>>4;
+                    if(first)
+                    {
+                        assert(b>0);
+                        if(l>0) os << Hexadecimal::Upper[l];
+                        first = false;
+                    }
+                    else
+                    {
+                        os << Hexadecimal::Upper[l];
+                    }
+                    os << Hexadecimal::Upper[b&0xf];
+                }
+            }
+
+            //__________________________________________________________________
+            //
+            //! try to steal proto
+            //__________________________________________________________________
+            inline bool couldSteal(const Proto &other) noexcept
+            {
+                if(other.words<=block.words)
+                {
+                    Coerce(bytes) = other.bytes;
+                    Coerce(words) = other.words;
+                    Coerce(nbits) = other.nbits;
+                    memcpy(block.entry,other.block.entry,words*WordSize);
+                    ztrim();
+                    return true;
+                }
+                else
+                    return false;
+            }
+
+            //__________________________________________________________________
+            //
+            //! load 64 bits
+            //__________________________________________________________________
+            inline void ld64(const uint64_t qword) noexcept
+            {
+                Coerce(nbits) = BitCount::For(qword);
+                Coerce(bytes) = BitsToBytes(nbits);
+                Coerce(words) = Splitter::BytesToWords(bytes);
+                Splitter::DoSplit(block.entry,words,qword);
+                ztrim();
+            }
 
             //__________________________________________________________________
             //
@@ -221,7 +345,8 @@ namespace Yttrium
              \param lhs left words
              \param lnw left num words
              \param rhs right words
-             \param rns right num words
+             \param rnw right num words
+             \param ell ellapsed ticks in computation
              */
             //__________________________________________________________________
             static inline
@@ -234,24 +359,31 @@ namespace Yttrium
                 if(lnw<=0)
                 {
                     if(rnw<=0)
-                    {
+                        //------------------------------------------------------
+                        // 0 + 0
+                        //------------------------------------------------------
                         return new Proto(0,AsCapacity);
-                    }
                     else
-                    {
+                        //------------------------------------------------------
+                        // 0 + rhs = rhs
+                        //------------------------------------------------------
                         return new Proto(rhs,rnw);
-                    }
                 }
                 else
                 {
                     assert(lnw>0);
                     if(rnw<=0)
                     {
+                        //------------------------------------------------------
+                        // lhs + 0 = lhs
+                        //------------------------------------------------------
                         return new Proto(lhs,lnw);
                     }
                     else
                     {
+                        //------------------------------------------------------
                         // order a >= b
+                        //------------------------------------------------------
                         const WordType *a  = lhs; assert(0!=a);
                         const size_t    na = lnw; assert(na>0);
                         const WordType *b  = rhs; assert(0!=b);
@@ -259,18 +391,24 @@ namespace Yttrium
                         if(na<nb) { Swap(a,b); CoerceSwap(na,nb); }
                         assert(na>=nb);
 
+                        //------------------------------------------------------
                         // acquire resources
+                        //------------------------------------------------------
                         const size_t    ns = na+1;
                         Proto          *S  = new Proto(ns << WordLog2,AsCapacity); assert(S->block.words>=ns);
                         WordType       *s  = S->block.entry;
 
                         const uint64_t  mark = WallTime::Ticks();
                         {
+                            //--------------------------------------------------
                             // initialize algorithm
+                            //--------------------------------------------------
                             CoreType sum = CoreType(a[0]) + CoreType(b[0]);
                             s[0]         = static_cast<WordType>(sum);
 
-                            // common size
+                            //--------------------------------------------------
+                            // common word(s)
+                            //--------------------------------------------------
                             for(size_t i=1;i<nb;++i)
                             {
                                 sum >>= WordBits;
@@ -278,7 +416,9 @@ namespace Yttrium
                                 s[i] = static_cast<WordType>(sum);
                             }
 
-                            // extra size
+                            //--------------------------------------------------
+                            // extra word(s)
+                            //--------------------------------------------------
                             for(size_t i=nb;i<na;++i)
                             {
                                 sum >>= WordBits;
@@ -286,11 +426,16 @@ namespace Yttrium
                                 s[i] = static_cast<WordType>(sum);
                             }
 
-                            // final
+                            //--------------------------------------------------
+                            // final word
+                            //--------------------------------------------------
                             sum >>= WordBits;
                             s[na] = static_cast<WordType>(sum);
                         }
 
+                        //------------------------------------------------------
+                        // update resources
+                        //------------------------------------------------------
                         Coerce(S->words) = ns;
                         S->update();
                         ell += WallTime::Ticks() - mark;
@@ -300,6 +445,10 @@ namespace Yttrium
                 }
             }
 
+            //__________________________________________________________________
+            //
+            //! Addition for two Proto
+            //__________________________________________________________________
             static inline
             Proto * Add(const Proto &lhs,
                         const Proto &rhs,
@@ -307,7 +456,35 @@ namespace Yttrium
             {
                 return Add(lhs.block.entry,lhs.words,rhs.block.entry,rhs.words,ell);
             }
-            
+
+            //__________________________________________________________________
+            //
+            //! Addition for Proto + uint64_t
+            //__________________________________________________________________
+            static inline
+            Proto * Add(const Proto    &lhs,
+                        const uint64_t &rhs,
+                        uint64_t       &ell)
+            {
+                const Splitter alias(rhs);
+                return Add(lhs.block.entry,lhs.words,alias.w,alias.n,ell);
+            }
+
+            //__________________________________________________________________
+            //
+            //! Add one
+            //__________________________________________________________________
+            static inline
+            Proto *Add1(const Proto &lhs,
+                        uint64_t    &ell)
+            {
+                static const WordType One(1);
+                return Add(lhs.block.entry,lhs.words,&One,1,ell);
+            }
+
+
+
+
         private:
             Y_DISABLE_ASSIGN(Proto);
         };

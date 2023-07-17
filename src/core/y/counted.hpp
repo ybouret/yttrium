@@ -8,15 +8,35 @@
 
 namespace Yttrium
 {
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Simplest Counted class for counting intrusive pointers
+    //
+    //
+    //__________________________________________________________________________
     class Counted
     {
     public:
-        explicit Counted() noexcept;
-        virtual ~Counted() noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        explicit Counted() noexcept; //!< setup
+        virtual ~Counted() noexcept; //!< cleanup
 
-        void   withhold() noexcept;
-        bool   liberate() noexcept;
-        size_t quantity() const noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        void   withhold() noexcept;         //!< ++nref
+        bool   liberate() noexcept;         //!< --nref<=0
+        size_t quantity() const noexcept;   //!< nref
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Counted);

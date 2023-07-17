@@ -9,6 +9,7 @@
 namespace Yttrium
 {
 
+    //! use of AsCapacity[_]
     Y_SHALLOW_DECL(AsCapacity);
 
 }
