@@ -45,6 +45,7 @@ namespace Yttrium
         void Singulet:: OnInitDisplay(const char             *name,
                                       const AtExit::Longevity last) noexcept
         {
+            if(!Verbose) return;
             try {
                 assert(0!=name);
                 std::cerr << "+[" << name << "] @" << last << std::endl;
@@ -56,6 +57,7 @@ namespace Yttrium
         void Singulet:: OnQuitDisplay(const char             *name,
                                       const AtExit::Longevity last) noexcept
         {
+            if(!Verbose) return;
             try {
                 assert(0!=name);
                 std::cerr << "~[" << name << "] @" << last << std::endl;

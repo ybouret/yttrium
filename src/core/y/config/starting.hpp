@@ -42,6 +42,17 @@ namespace Yttrium
         return (T&)args;
     }
 
+
+    //__________________________________________________________________________
+    //
+    //! Coerce swap
+    //__________________________________________________________________________
+    template <typename T>
+    inline void CoerceSwap(const T &a, const T &b)
+    {
+        Swap( Coerce(a), Coerce(b) );
+    }
+
     bool Die(const char *);                         //!< return true
     bool Say(const char *);                         //!< return false
     bool Good(const void *addr, const size_t size); //!< !(addr==NULL&&size>0) */

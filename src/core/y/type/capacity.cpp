@@ -3,8 +3,7 @@
 
 namespace Yttrium
 {
-
-    const AsCapacity_ AsCapacity = {};
-
+    Y_SHALLOW_IMPL(AsCapacity);
+    
 }
 

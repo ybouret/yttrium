@@ -11,12 +11,31 @@
 #include "y/calculus/bit-count.hpp"
 #include "y/type/capacity.hpp"
 #include "y/text/hexadecimal.hpp"
+#include "y/system/wtime.hpp"
+#include "y/random/bits.hpp"
 #include <iomanip>
 
 namespace Yttrium
 {
     namespace Apex
     {
+
+        namespace Nexus
+        {
+            class Proto : public Object
+            {
+            protected:
+                explicit Proto() noexcept;
+
+            public:
+                virtual ~Proto() noexcept;
+
+                static size_t BitsToBytes(const size_t numBits) noexcept;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Proto);
+            };
+        }
 
         //______________________________________________________________________
         //
@@ -27,7 +46,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename CORE_TYPE, typename WORD_TYPE>
-        class Proto : public Object
+        class Proto : public Nexus::Proto
         {
         public:
             //__________________________________________________________________
@@ -36,19 +55,16 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const unsigned                        CoreSize  = sizeof(CORE_TYPE); //!< alias
-            static const unsigned                        WordSize  = sizeof(WORD_TYPE); //!< alias
-            static const unsigned                        WordBits  = WordSize << 3;     //!< alias
-            static const unsigned                        CoreBits  = CoreSize << 3;     //!< alias
-            typedef typename UnsignedInt<CoreSize>::Type CoreType;                      //!< alias
-            typedef typename UnsignedInt<WordSize>::Type WordType;                      //!< alias
-            typedef Block<WordType>                      DataType;                      //!< alias
-            typedef Split64Into<WordType>                Splitter;                      //!< alias
+            static const unsigned                        CoreSize  = sizeof(CORE_TYPE);       //!< alias
+            static const unsigned                        WordSize  = sizeof(WORD_TYPE);       //!< alias
+            static const unsigned                        WordLog2  = iLog2<WordSize>::Value ; //!< alias
+            static const unsigned                        WordBits  = WordSize << 3;           //!< alias
+            static const unsigned                        CoreBits  = CoreSize << 3;           //!< alias
+            typedef typename UnsignedInt<CoreSize>::Type CoreType;                            //!< alias
+            typedef typename UnsignedInt<WordSize>::Type WordType;                            //!< alias
+            typedef Block<WordType>                      DataType;                            //!< alias
+            typedef Split64Into<WordType>                Splitter;                            //!< alias
 
-            static inline size_t  BitsToBytes(const size_t numBits) noexcept
-            {
-                return Y_ALIGN_ON(8,numBits) >> 3;
-            }
 
             //__________________________________________________________________
             //
@@ -57,20 +73,20 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! create a Proto with a given minimal capacity
-            inline explicit Proto(const size_t       n,
+            //! create a Proto with a given minimal BYTES capacity
+            inline explicit Proto(const size_t      numBytes,
                                   const AsCapacity_ &)  :
-            Object(),
+            Nexus::Proto(),
             nbits(0),
             bytes(0),
             words(0),
-            block(n)
+            block(numBytes)
             {
                 Y_STATIC_CHECK(WordSize<CoreSize,InvalidMetrics);
             }
 
             inline explicit Proto(const uint64_t qword) :
-            Object(),
+            Nexus::Proto(),
             nbits( BitCount::For(qword)          ),
             bytes( BitsToBytes(nbits)            ),
             words( Splitter::BytesToWords(bytes) ),
@@ -81,7 +97,7 @@ namespace Yttrium
             }
 
             inline Proto(const Proto &proto) :
-            Object(),
+            Nexus::Proto(),
             nbits( proto.nbits ),
             bytes( proto.bytes ),
             words( proto.words ),
@@ -89,8 +105,30 @@ namespace Yttrium
             {
             }
 
+            inline Proto(const size_t userBits, Random::Bits &ran) :
+            Nexus::Proto(),
+            nbits( userBits ),
+            bytes( BitsToBytes(nbits) ),
+            words( Splitter::BytesToWords(bytes) ),
+            block( bytes )
+            {
+                size_t    remaining = nbits;
+                WordType *target    = block.entry;
+                while(remaining>=WordBits)
+                {
+                    *(target++) = ran.to<WordType>();
+                    remaining  -= WordBits;
+                }
+                if(remaining>0)
+                {
+                    assert(remaining<WordBits);
+                    *target = ran.to<WordType>( static_cast<unsigned>(remaining) );
+                }
+                
+            }
+
             inline Proto(const WordType *W, const size_t N) :
-            Object(),
+            Nexus::Proto(),
             nbits(0),
             bytes(N*sizeof(words)),
             words(N),
@@ -113,7 +151,7 @@ namespace Yttrium
 
             //__________________________________________________________________
             //
-            //! update metrics
+            //! update metrics from a precomputed number of words
             //__________________________________________________________________
             inline void update() noexcept
             {
@@ -187,8 +225,9 @@ namespace Yttrium
              */
             //__________________________________________________________________
             static inline
-            Proto * Add(const WordType *lhs, const size_t lnw,
-                        const WordType *rhs, const size_t rnw)
+            Proto * Add(const WordType * const lhs, const size_t lnw,
+                        const WordType * const rhs, const size_t rnw,
+                        uint64_t &ell)
             {
                 assert(0!=lhs);
                 assert(0!=rhs);
@@ -212,18 +251,63 @@ namespace Yttrium
                     }
                     else
                     {
-                        const WordType *a  = lhs;
-                        const size_t    na = lnw;
-                        const WordType *b  = rhs;
-                        const size_t    nb = rnw;
-                        if(na<nb) { Swap(a,b); Swap(Coerce(na),Coerce(nb)); }
+                        // order a >= b
+                        const WordType *a  = lhs; assert(0!=a);
+                        const size_t    na = lnw; assert(na>0);
+                        const WordType *b  = rhs; assert(0!=b);
+                        const size_t    nb = rnw; assert(nb>0);
+                        if(na<nb) { Swap(a,b); CoerceSwap(na,nb); }
+                        assert(na>=nb);
 
+                        // acquire resources
+                        const size_t    ns = na+1;
+                        Proto          *S  = new Proto(ns << WordLog2,AsCapacity); assert(S->block.words>=ns);
+                        WordType       *s  = S->block.entry;
+
+                        const uint64_t  mark = WallTime::Ticks();
+                        {
+                            // initialize algorithm
+                            CoreType sum = CoreType(a[0]) + CoreType(b[0]);
+                            s[0]         = static_cast<WordType>(sum);
+
+                            // common size
+                            for(size_t i=1;i<nb;++i)
+                            {
+                                sum >>= WordBits;
+                                sum += CoreType(a[i]) + CoreType(b[i]);
+                                s[i] = static_cast<WordType>(sum);
+                            }
+
+                            // extra size
+                            for(size_t i=nb;i<na;++i)
+                            {
+                                sum >>= WordBits;
+                                sum += CoreType(a[i]);
+                                s[i] = static_cast<WordType>(sum);
+                            }
+
+                            // final
+                            sum >>= WordBits;
+                            s[na] = static_cast<WordType>(sum);
+                        }
+
+                        Coerce(S->words) = ns;
+                        S->update();
+                        ell += WallTime::Ticks() - mark;
+                        return S;
                     }
 
                 }
-                return 0;
             }
 
+            static inline
+            Proto * Add(const Proto &lhs,
+                        const Proto &rhs,
+                        uint64_t    &ell)
+            {
+                return Add(lhs.block.entry,lhs.words,rhs.block.entry,rhs.words,ell);
+            }
+            
         private:
             Y_DISABLE_ASSIGN(Proto);
         };

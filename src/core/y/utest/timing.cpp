@@ -22,8 +22,13 @@ namespace Yttrium
     uint64_t Timing:: speed() const noexcept
     {
         const long double numer = cycle;
-        const long double denom = (*this)(ticks);
+        const long double denom = probe();
         return static_cast<uint64_t>( floorl(numer/denom+0.5L) );
+    }
+
+    long double Timing:: probe() const noexcept
+    {
+        return (*this)(ticks);
     }
 
 }
