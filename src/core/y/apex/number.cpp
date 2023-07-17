@@ -14,8 +14,7 @@ namespace Yttrium
         {
         }
 
-        uint64_t Number:: addTicks = 0;
-
+        
     }
 
 }

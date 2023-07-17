@@ -30,7 +30,6 @@ namespace Yttrium
         public:
             virtual ~Number() noexcept; //!< cleanup
 
-            static uint64_t addTicks;
             
         private:
             Y_DISABLE_ASSIGN(Number);

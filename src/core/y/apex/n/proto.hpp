@@ -351,8 +351,7 @@ namespace Yttrium
             //__________________________________________________________________
             static inline
             Proto * Add(const WordType * const lhs, const size_t lnw,
-                        const WordType * const rhs, const size_t rnw,
-                        uint64_t &ell)
+                        const WordType * const rhs, const size_t rnw)
             {
                 assert(0!=lhs);
                 assert(0!=rhs);
@@ -398,7 +397,6 @@ namespace Yttrium
                         Proto          *S  = new Proto(ns << WordLog2,AsCapacity); assert(S->block.words>=ns);
                         WordType       *s  = S->block.entry;
 
-                        const uint64_t  mark = WallTime::Ticks();
                         {
                             //--------------------------------------------------
                             // initialize algorithm
@@ -438,7 +436,6 @@ namespace Yttrium
                         //------------------------------------------------------
                         Coerce(S->words) = ns;
                         S->update();
-                        ell += WallTime::Ticks() - mark;
                         return S;
                     }
 
@@ -451,10 +448,9 @@ namespace Yttrium
             //__________________________________________________________________
             static inline
             Proto * Add(const Proto &lhs,
-                        const Proto &rhs,
-                        uint64_t    &ell)
+                        const Proto &rhs)
             {
-                return Add(lhs.block.entry,lhs.words,rhs.block.entry,rhs.words,ell);
+                return Add(lhs.block.entry,lhs.words,rhs.block.entry,rhs.words);
             }
 
             //__________________________________________________________________
@@ -463,11 +459,10 @@ namespace Yttrium
             //__________________________________________________________________
             static inline
             Proto * Add(const Proto    &lhs,
-                        const uint64_t &rhs,
-                        uint64_t       &ell)
+                        const uint64_t &rhs )
             {
                 const Splitter alias(rhs);
-                return Add(lhs.block.entry,lhs.words,alias.w,alias.n,ell);
+                return Add(lhs.block.entry,lhs.words,alias.w,alias.n);
             }
 
             //__________________________________________________________________
@@ -475,11 +470,10 @@ namespace Yttrium
             //! Add one
             //__________________________________________________________________
             static inline
-            Proto *Add1(const Proto &lhs,
-                        uint64_t    &ell)
+            Proto *Add1(const Proto &lhs)
             {
                 static const WordType One(1);
-                return Add(lhs.block.entry,lhs.words,&One,1,ell);
+                return Add(lhs.block.entry,lhs.words,&One,1);
             }
 
 

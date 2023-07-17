@@ -91,7 +91,9 @@ namespace
                     PROTO R( r );
                     typename PROTO::Splitter ls(l);
                     typename PROTO::Splitter rs(r);
-                    PROTO   *pS = PROTO::Add(ls.w,ls.n,rs.w,rs.n,tmx.ticks);
+                    const uint64_t mark = WallTime::Ticks();
+                    PROTO   *pS = PROTO::Add(ls.w,ls.n,rs.w,rs.n);
+                    tmx.ticks += WallTime::Ticks() - mark;
                     const uint64_t S = pS->ls64();
                     delete pS;
                     Y_ASSERT(S==s);
@@ -115,7 +117,9 @@ namespace
                     {
                         PROTO lhs(i,ran); Y_ASSERT(lhs.nbits==i);
                         PROTO rhs(j,ran); Y_ASSERT(rhs.nbits==j);
-                        PROTO *sum = PROTO::Add(lhs,rhs,tmx.ticks);
+                        const uint64_t mark = WallTime::Ticks();
+                        PROTO *sum = PROTO::Add(lhs,rhs);
+                        tmx.ticks += WallTime::Ticks() - mark;
                         ++tmx.cycle;
                         delete sum;
                     }
