@@ -15,6 +15,7 @@ namespace Yttrium
                 return Y_ALIGN_ON(8,numBits) >> 3;
             }
 
+            const char Proto:: CallSign[] = "Apex::Natural";
         }
 
     }

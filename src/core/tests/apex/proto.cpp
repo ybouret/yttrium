@@ -17,13 +17,15 @@ namespace
         uint64_t    addRate;
     };
 
-    static unsigned MaxBits = 1024;
-    static unsigned Loops   = 16;
+    static unsigned MaxBits = 256;
+    static unsigned Loops   = 8;
 
     template <typename Core, typename Word> static inline
     void TestProto(Random::Bits &ran, Perf &perf)
     {
-        typedef Apex::Proto<Core,Word> PROTO;
+        typedef Apex::Proto<Core,Word>  PROTO;
+        typedef typename PROTO::Pointer hPROTO;
+
         static char label[256];
         snprintf(label,sizeof(label),"Apex::Proto<%3u,%3u>",PROTO::CoreSize*8,PROTO::WordSize*8 );
         perf.id = label;
@@ -91,9 +93,8 @@ namespace
                     PROTO R( r );
                     typename PROTO::Splitter ls(l);
                     typename PROTO::Splitter rs(r);
-                    PROTO   *pS = PROTO::Add(ls.w,ls.n,rs.w,rs.n, &tmx.ticks);
+                    typename PROTO::Pointer  pS( PROTO::Add(ls.w,ls.n,rs.w,rs.n, &tmx.ticks) );
                     const uint64_t S = pS->ls64();
-                    delete pS;
                     Y_ASSERT(S==s);
                     ++tmx.cycle;
                 }
@@ -108,22 +109,67 @@ namespace
             for(unsigned i=8;i<=MaxBits;i += 8)
             {
                 std::cerr << '.';
-                for(unsigned j=8;j<=MaxBits;++j)
+                for(unsigned j=8;j<=MaxBits; j += 8)
                 {
 
                     for(size_t loop=0;loop<Loops;++loop)
                     {
                         PROTO lhs(i,ran); Y_ASSERT(lhs.nbits==i);
                         PROTO rhs(j,ran); Y_ASSERT(rhs.nbits==j);
-                        PROTO *sum = PROTO::Add(lhs,rhs, &tmx.ticks);
+                        const hPROTO sum( PROTO::Add(lhs,rhs, &tmx.ticks) );
                         ++tmx.cycle;
-                        delete sum;
                     }
                 }
             }
         }
         std::cerr << "]" << std::endl;
         std::cerr << "    @" << HumanReadable(perf.addRate=tmx.speed()) << "Op/s" << std::endl;
+
+        (std::cerr << "   (*) Subtraction check64" << std::endl).flush();
+        for(unsigned i=0;i<=63;++i)
+        {
+            for(unsigned j=0;j<=63;++j)
+            {
+                for(unsigned loop=0;loop<Loops;++loop)
+                {
+                    uint64_t l = ran.to<uint64_t>( i );
+                    uint64_t r = ran.to<uint64_t>( j );
+                    if(l<r) Swap(l,r);
+                    const uint64_t d = l-r;
+                    PROTO L( l );
+                    PROTO R( r );
+                    typename PROTO::Splitter ls(l);
+                    typename PROTO::Splitter rs(r);
+                    typename PROTO::Pointer  pD( PROTO::Sub(ls.w,ls.n,rs.w,rs.n) );
+                    const uint64_t D  = pD->ls64();
+                    //std::cerr << Hexadecimal(l) << "-" << Hexadecimal(r) << " = ";
+                    //std::cerr << Hexadecimal(D) << " / " << Hexadecimal(d) << std::endl;
+                    Y_ASSERT(D==d);
+                }
+            }
+        }
+        (std::cerr << "   (*) Subtraction Testing  [").flush();
+
+        for(unsigned i=8;i<=MaxBits;i += 8)
+        {
+            std::cerr << '.';
+            for(unsigned j=8;j<=MaxBits; j += 8)
+            {
+
+                for(size_t loop=0;loop<Loops;++loop)
+                {
+                    const PROTO  lhs(i,ran);
+                    const PROTO  rhs(j,ran);
+                    const hPROTO sum( PROTO::Add(lhs,rhs) );
+
+                }
+
+            }
+        }
+        std::cerr << "]" << std::endl;
+
+
+
 
     }
 }

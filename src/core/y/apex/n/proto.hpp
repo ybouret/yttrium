@@ -12,6 +12,7 @@
 #include "y/type/capacity.hpp"
 #include "y/text/hexadecimal.hpp"
 #include "y/system/wtime.hpp"
+#include "y/system/exception.hpp"
 #include "y/random/bits.hpp"
 
 #include <iostream>
@@ -34,6 +35,9 @@ namespace Yttrium
             //__________________________________________________________________
             class Proto : public Object
             {
+            public:
+                static const char CallSign[];
+
                 //______________________________________________________________
                 //
                 //
@@ -92,7 +96,34 @@ namespace Yttrium
             typedef typename UnsignedInt<WordSize>::Type WordType;                            //!< alias
             typedef Block<WordType>                      DataType;                            //!< alias
             typedef Split64Into<WordType>                Splitter;                            //!< alias
+            typedef typename SignedInt<CoreSize>::Type   CIntType;                            //!< alias
+            static  const WordType                       WordMaxi = UnsignedInt<WordSize>::Maximum;
+            static  const CIntType                       Radix    = CIntType(WordMaxi) + 1;
 
+            class Pointer
+            {
+            public:
+                inline Pointer(Proto *p) noexcept :
+                handle(p)
+                {
+                }
+
+                inline ~Pointer() noexcept
+                {
+                    if(handle) { delete handle; handle=0; }
+                }
+
+                inline Proto &       operator*()        noexcept { assert(0!=handle); return *handle; }
+                inline const Proto & operator*()  const noexcept { assert(0!=handle); return *handle; }
+                inline Proto *       operator->()       noexcept { assert(0!=handle); return  handle; }
+                inline const Proto * operator->() const noexcept { assert(0!=handle); return  handle; }
+
+
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Pointer);
+                Proto *handle;
+            };
 
             //__________________________________________________________________
             //
@@ -498,13 +529,103 @@ namespace Yttrium
             Proto * Sub(const WordType * const lhs,
                         const size_t           lnw,
                         const WordType * const rhs,
-                        const size_t           rnw,
-                        uint64_t *             ell = 0)
+                        const size_t           rnw)
             {
                 assert(0!=lhs);
                 assert(0!=rhs);
+                if(lnw<=0)
+                {
+                    if(rnw<=0)
+                    {
+                        //------------------------------------------------------
+                        // 0 - 0
+                        //------------------------------------------------------
+                        return new Proto(0,AsCapacity);
+                    }
+                    else
+                    {
+                        //------------------------------------------------------
+                        // 0 - (>0)
+                        //------------------------------------------------------
+                        throw Specific::Exception(CallSign,"subtract positive from 0");
+                    }
+                }
+                else
+                {
+                    assert(lnw>0);
+                    if(rnw<=0)
+                    {
+                        //------------------------------------------------------
+                        // lhs  - 0
+                        //------------------------------------------------------
+                        return new Proto(lhs,lnw);
+                    }
+                    else
+                    {
+                        assert(rnw>0);
+                        //------------------------------------------------------
+                        // lhs  - rhs, generic case
+                        //------------------------------------------------------
+                        if(rnw>lnw) throw Specific::Exception(CallSign,"invalid subtraction level-1");
 
-                return 0;
+                        Proto    *D = new Proto(lnw*WordSize,AsCapacity);
+                        WordType *d = D->block.entry;
+                        assert(lnw>=rnw);
+
+                        {
+                            CIntType carry = 0;
+                            for(size_t i=0;i<rnw;++i)
+                            {
+                                const CIntType del = CIntType(lhs[i]) - CIntType(rhs[i]) - carry;
+                                if(del<0)
+                                {
+                                    carry = 1;
+                                    d[i]  = WordType(del+Radix);
+                                }
+                                else
+                                {
+                                    carry = 0;
+                                    d[i]  = WordType(del);
+                                }
+                            }
+
+                            for(size_t i=rnw;i<lnw;++i)
+                            {
+                                CIntType del = CIntType(lhs[i]) - carry;
+                                if(del<0)
+                                {
+                                    carry = 1;
+                                    d[i]  = WordType(del+Radix);
+                                }
+                                else
+                                {
+                                    carry = 0;
+                                    d[i]  = WordType(del);
+                                }
+                            }
+
+                            if(0!=carry)
+                            {
+                                delete D;
+                                throw Specific::Exception(CallSign,"invalid subtraction level-2");
+                            }
+                        }
+
+                        Coerce(D->words) = lnw;
+                        D->update();
+
+
+                        return D;
+                    }
+                }
+
+            }
+
+            static inline
+            Proto * Sub(const Proto &lhs,
+                        const Proto &rhs)
+            {
+                return Sub(lhs.block.entry,lhs.words,rhs.block.entry,rhs.words);
             }
 
 
