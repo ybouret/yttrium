@@ -15,6 +15,7 @@
 #include "y/system/exception.hpp"
 #include "y/random/bits.hpp"
 #include "y/type/signs.hpp"
+#include "y/memory/out-of-reach.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -69,7 +70,8 @@ namespace Yttrium
                                          const size_t nbits,
                                          const size_t bytes,
                                          const size_t words,
-                                         const size_t WordSize);
+                                         const size_t WordSize,
+                                         const size_t blockWords);
 
 
             private:
@@ -143,7 +145,16 @@ namespace Yttrium
             inline bool Check(const char *fn) const
             {
                 assert(0!=fn);
-                return CheckMetrics(fn,nbits,bytes,words,WordSize);
+                if( !CheckMetrics(fn,nbits,bytes,words,WordSize,block.words) )
+                    return false;
+
+                if( ! Memory::OutOfReach::Are0(block.entry+words,(block.words-words)*WordSize ) )
+                {
+                    std::cerr << fn << " dirty trailing bytes!" << std::endl;
+                    return false;
+                }
+
+                return true;
             }
 
             //__________________________________________________________________

@@ -22,22 +22,36 @@ namespace Yttrium
                                       const size_t nbits,
                                       const size_t bytes,
                                       const size_t words,
-                                      const size_t WordSize)
+                                      const size_t WordSize,
+                                      const size_t blockWords)
             {
-                const size_t numBytes = BitsToBytes(nbits);
-                if( numBytes != bytes )
                 {
-                    std::cerr << where << " bytes=" << bytes << " instead of " << numBytes << " for " << nbits << " bit" << Plural::s(nbits) << std::endl;
+                    const size_t numBytes = BitsToBytes(nbits);
+                    if( numBytes != bytes )
+                    {
+                        std::cerr << where << " bytes=" << bytes << " instead of " << numBytes << " for " << nbits << " bit" << Plural::s(nbits) << std::endl;
+                        return false;
+                    }
+                }
+
+                {
+                    size_t count = bytes;
+                    while(0!=(count%WordSize)) ++count;
+                    count /= WordSize;
+                    if(count!=words)
+                    {
+                        std::cerr << where << " words=" << words << " instead of " << count << " for " << bytes << " bytes" << Plural::s(bytes) << std::endl;
+                        return false;
+                    }
+                }
+
+                if(words>blockWords)
+                {
+                    std::cerr << where << " too many words=" << words << " instead or max " << blockWords << std::endl;
                     return false;
                 }
-                size_t count = bytes;
-                while(0!=(count%WordSize)) ++count;
-                count /= WordSize;
-                if(count!=words)
-                {
-                    std::cerr << where << " words=" << words << " instead of " << count << " for " << bytes << " bytes" << Plural::s(bytes) << std::endl;
-                    return false;
-                }
+
+
                 return true;
             }
 
