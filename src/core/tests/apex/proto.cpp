@@ -102,13 +102,15 @@ namespace
         std::cerr << HumanReadable(tmx.speed()) << "Op/s" << std::endl;
 
 
-        (std::cerr << "   (*) Addition performance @").flush();
+        (std::cerr << "   (*) Addition performance [").flush();
         tmx.reset();
         {
             for(unsigned i=8;i<=MaxBits;i += 8)
             {
+                std::cerr << '.';
                 for(unsigned j=8;j<=MaxBits;++j)
                 {
+
                     for(size_t loop=0;loop<Loops;++loop)
                     {
                         PROTO lhs(i,ran); Y_ASSERT(lhs.nbits==i);
@@ -120,7 +122,8 @@ namespace
                 }
             }
         }
-        std::cerr << HumanReadable(perf.addRate=tmx.speed()) << "Op/s" << std::endl;
+        std::cerr << "]" << std::endl;
+        std::cerr << "    @" << HumanReadable(perf.addRate=tmx.speed()) << "Op/s" << std::endl;
 
 
     }
@@ -131,8 +134,7 @@ namespace
 Y_UTEST(apex_proto)
 {
     Random::Rand ran;
-
-    Perf Table[6];
+    Perf         Table[6];
 
     TestProto<uint64_t,uint32_t>( ran, Table[0]);
     TestProto<uint64_t,uint16_t>( ran, Table[1]);
