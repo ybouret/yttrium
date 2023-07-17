@@ -338,6 +338,7 @@ namespace Yttrium
                 ztrim();
             }
 
+
             //__________________________________________________________________
             //
             //! Addition
@@ -351,7 +352,8 @@ namespace Yttrium
             //__________________________________________________________________
             static inline
             Proto * Add(const WordType * const lhs, const size_t lnw,
-                        const WordType * const rhs, const size_t rnw)
+                        const WordType * const rhs, const size_t rnw,
+                        uint64_t *ell = 0)
             {
                 assert(0!=lhs);
                 assert(0!=rhs);
@@ -396,7 +398,7 @@ namespace Yttrium
                         const size_t    ns = na+1;
                         Proto          *S  = new Proto(ns << WordLog2,AsCapacity); assert(S->block.words>=ns);
                         WordType       *s  = S->block.entry;
-
+                        const uint64_t  t  = ell ? WallTime::Ticks() : 0;
                         {
                             //--------------------------------------------------
                             // initialize algorithm
@@ -436,6 +438,7 @@ namespace Yttrium
                         //------------------------------------------------------
                         Coerce(S->words) = ns;
                         S->update();
+                        if(ell) (*ell) += WallTime::Ticks() - t;
                         return S;
                     }
 
@@ -448,9 +451,10 @@ namespace Yttrium
             //__________________________________________________________________
             static inline
             Proto * Add(const Proto &lhs,
-                        const Proto &rhs)
+                        const Proto &rhs,
+                        uint64_t    *ell=0)
             {
-                return Add(lhs.block.entry,lhs.words,rhs.block.entry,rhs.words);
+                return Add(lhs.block.entry,lhs.words,rhs.block.entry,rhs.words,ell);
             }
 
             //__________________________________________________________________
