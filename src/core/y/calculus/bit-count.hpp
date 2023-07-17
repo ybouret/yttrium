@@ -68,19 +68,6 @@ namespace Yttrium
         return 0;
     }
 
-    //! most_significant_bit of v>=0
-    template <typename T>
-    inline T MostSignificantBit(const T v) noexcept
-    {
-        T mask = Base2<T>::MaxPowerOfTwo;
-        while(mask)
-        {
-            if(0!=(v&mask)) return mask;
-            mask >>= 1;
-        }
-        return 0;
-    }
-
 }
 
 #endif

@@ -87,12 +87,12 @@ Y_UTEST(type_ints)
     {
         std::cerr << "uint8_t" << std::endl;
         std::cerr << "\tzero" << std::endl;
-        Y_CHECK(0==BytesFor<uint8_t>(0));
+        Y_CHECK(0==RequiredBytesFor<uint8_t>(0));
 
         std::cerr << "\tnext1" << std::endl;
         for(uint64_t i=1;i<=UnsignedInt<1>::Maxi1;++i)
         {
-            Y_ASSERT(1==BytesFor<uint8_t>( uint8_t(i) ));
+            Y_ASSERT(1==RequiredBytesFor<uint8_t>( uint8_t(i) ));
         }
 
 
@@ -101,18 +101,18 @@ Y_UTEST(type_ints)
     {
         std::cerr << "uint16_t" << std::endl;
         std::cerr << "\tzero" << std::endl;
-        Y_CHECK(0==BytesFor<uint16_t>(0));
+        Y_CHECK(0==RequiredBytesFor<uint16_t>(0));
 
         std::cerr << "\tnext1" << std::endl;
         for(uint64_t i=0x01;i<=UnsignedInt<2>::Maxi1;++i)
         {
-            Y_ASSERT(1==BytesFor<uint16_t>( uint16_t(i) ));
+            Y_ASSERT(1==RequiredBytesFor<uint16_t>( uint16_t(i) ));
         }
 
         std::cerr << "\tnext2" << std::endl;
         for(uint64_t i=UnsignedInt<1>::Maxi1+1;i<=UnsignedInt<2>::Maxi2;++i)
         {
-            Y_ASSERT(2==BytesFor<uint16_t>( uint16_t(i) ));
+            Y_ASSERT(2==RequiredBytesFor<uint16_t>( uint16_t(i) ));
         }
 
     }
@@ -120,90 +120,90 @@ Y_UTEST(type_ints)
     {
         std::cerr << "uint32_t" << std::endl;
         std::cerr << "\tzero" << std::endl;
-        Y_CHECK(0==BytesFor<uint32_t>(0));
+        Y_CHECK(0==RequiredBytesFor<uint32_t>(0));
 
         std::cerr << "\tnext1" << std::endl;
         for(uint64_t i=0x01;i<=UnsignedInt<4>::Maxi1;++i)
         {
-            Y_ASSERT(1==BytesFor<uint32_t>( uint32_t(i) ));
+            Y_ASSERT(1==RequiredBytesFor<uint32_t>( uint32_t(i) ));
         }
 
         std::cerr << "\tnext2" << std::endl;
         for(uint64_t i=UnsignedInt<4>::Maxi1+1;i<=UnsignedInt<4>::Maxi2;++i)
         {
-            Y_ASSERT(2==BytesFor<uint32_t>( uint32_t(i) ));
+            Y_ASSERT(2==RequiredBytesFor<uint32_t>( uint32_t(i) ));
         }
 
         std::cerr << "\tnext3" << std::endl;
         for(uint64_t i=UnsignedInt<4>::Maxi2+1;i<=UnsignedInt<4>::Maxi3;++i)
         {
-            Y_ASSERT(3==BytesFor<uint32_t>( uint32_t(i) ));
+            Y_ASSERT(3==RequiredBytesFor<uint32_t>( uint32_t(i) ));
         }
 
         std::cerr << "\tnext4" << std::endl;
         for(size_t iter=0;iter<LOOPS;++iter)
         {
             const uint32_t u = ran.in<uint32_t>(UnsignedInt<4>::Maxi3+1,UnsignedInt<4>::Maxi4);
-            Y_ASSERT(4==BytesFor<uint32_t>( u));
+            Y_ASSERT(4==RequiredBytesFor<uint32_t>( u));
         }
     }
 
     {
         std::cerr << "uint64_t" << std::endl;
         std::cerr << "\tzero" << std::endl;
-        Y_CHECK(0==BytesFor<uint64_t>(0));
+        Y_CHECK(0==RequiredBytesFor<uint64_t>(0));
 
         std::cerr << "\tnext1" << std::endl;
         for(uint64_t i=0x01;i<=UnsignedInt<8>::Maxi1;++i)
         {
-            Y_ASSERT(1==BytesFor<uint64_t>( i ));
+            Y_ASSERT(1==RequiredBytesFor<uint64_t>( i ));
         }
 
         std::cerr << "\tnext2" << std::endl;
         for(uint64_t i=UnsignedInt<8>::Maxi1+1;i<=UnsignedInt<8>::Maxi2;++i)
         {
-            Y_ASSERT(2==BytesFor<uint64_t>( i ));
+            Y_ASSERT(2==RequiredBytesFor<uint64_t>( i ));
         }
 
         std::cerr << "\tnext3" << std::endl;
         for(uint64_t i=UnsignedInt<8>::Maxi2+1;i<=UnsignedInt<8>::Maxi3;++i)
         {
-            Y_ASSERT(3==BytesFor<uint64_t>( i ));
+            Y_ASSERT(3==RequiredBytesFor<uint64_t>( i ));
         }
 
         std::cerr << "\tnext4" << std::endl;
         for(size_t iter=0;iter<LOOPS;++iter)
         {
             const uint64_t u = ran.in<uint32_t>(UnsignedInt<8>::Maxi3+1,UnsignedInt<8>::Maxi4);
-            Y_ASSERT(4==BytesFor<uint64_t>( u));
+            Y_ASSERT(4==RequiredBytesFor<uint64_t>( u));
         }
 
         std::cerr << "\tnext5" << std::endl;
         for(size_t iter=0;iter<LOOPS;++iter)
         {
             const uint64_t u = ran.in<uint64_t>(UnsignedInt<8>::Maxi4+1,UnsignedInt<8>::Maxi5);
-            Y_ASSERT(5==BytesFor<uint64_t>( u));
+            Y_ASSERT(5==RequiredBytesFor<uint64_t>( u));
         }
 
         std::cerr << "\tnext6" << std::endl;
         for(size_t iter=0;iter<LOOPS;++iter)
         {
             const uint64_t u = ran.in<uint64_t>(UnsignedInt<8>::Maxi5+1,UnsignedInt<8>::Maxi6);
-            Y_ASSERT(6==BytesFor<uint64_t>( u));
+            Y_ASSERT(6==RequiredBytesFor<uint64_t>( u));
         }
 
         std::cerr << "\tnext7" << std::endl;
         for(size_t iter=0;iter<LOOPS;++iter)
         {
             const uint64_t u = ran.in<uint64_t>(UnsignedInt<8>::Maxi6+1,UnsignedInt<8>::Maxi7);
-            Y_ASSERT(7==BytesFor<uint64_t>( u));
+            Y_ASSERT(7==RequiredBytesFor<uint64_t>( u));
         }
 
         std::cerr << "\tnext8" << std::endl;
         for(size_t iter=0;iter<LOOPS;++iter)
         {
             const uint64_t u = ran.in<uint64_t>(UnsignedInt<8>::Maxi7+1,UnsignedInt<8>::Maxi8);
-            Y_ASSERT(8==BytesFor<uint64_t>( u));
+            Y_ASSERT(8==RequiredBytesFor<uint64_t>( u));
         }
     }
 

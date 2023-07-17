@@ -45,9 +45,9 @@ namespace Yttrium
             typedef Block<WordType>                      DataType;                      //!< alias
             typedef Split64Into<WordType>                Splitter;                      //!< alias
 
-            static inline size_t GetBytesFor(const size_t numBits) noexcept
+            static inline size_t  BitsToBytes(const size_t numBits) noexcept
             {
-                return Y_ALIGN_ON(8,numBits)/8;
+                return Y_ALIGN_ON(8,numBits) >> 3;
             }
 
             //__________________________________________________________________
@@ -61,9 +61,9 @@ namespace Yttrium
             inline explicit Proto(const size_t       n,
                                   const AsCapacity_ &)  :
             Object(),
+            nbits(0),
             bytes(0),
             words(0),
-            nbits(0),
             block(n)
             {
                 Y_STATIC_CHECK(WordSize<CoreSize,InvalidMetrics);
@@ -71,9 +71,9 @@ namespace Yttrium
 
             inline explicit Proto(const uint64_t qword) :
             Object(),
-            bytes( BytesFor(qword)               ),
-            words( Splitter::GetWordsFor(bytes)  ),
             nbits( BitCount::For(qword)          ),
+            bytes( BitsToBytes(nbits)            ),
+            words( Splitter::BytesToWords(bytes) ),
             block( sizeof(qword)                 )
             {
                 assert(block.words>=Splitter::MaxWords);
@@ -82,18 +82,18 @@ namespace Yttrium
 
             inline Proto(const Proto &proto) :
             Object(),
+            nbits( proto.nbits ),
             bytes( proto.bytes ),
             words( proto.words ),
-            nbits( proto.nbits ),
             block( proto.block )
             {
             }
 
             inline Proto(const WordType *W, const size_t N) :
             Object(),
+            nbits(0),
             bytes(N*sizeof(words)),
             words(N),
-            nbits(0),
             block(bytes)
             {
                 assert(W);
@@ -123,9 +123,10 @@ namespace Yttrium
                     const WordType &msw = block.entry[msi];
                     if(msw<=0) { Coerce(words) = msi; continue; }
                     Coerce(nbits) = BitCount::For(msw) + msi * WordBits;
-                    Coerce(bytes) = GetBytesFor(nbits);
+                    Coerce(bytes) = RequiredBytesFor(nbits);
                     return;
                 }
+                assert(0==words);
                 Coerce(bytes) = 0;
                 Coerce(nbits) = 0;
             }
@@ -161,9 +162,9 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
+            const size_t nbits; //!< exact number of bits
             const size_t bytes; //!< exact number of bytes
             const size_t words; //!< aligned to bytes
-            const size_t nbits; //!< exact number of bits
             DataType     block; //!< resources
 
             //__________________________________________________________________
@@ -173,6 +174,18 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+
+
+            //__________________________________________________________________
+            //
+            //! Addition
+            /**
+             \param lhs left words
+             \param lnw left num words
+             \param rhs right words
+             \param rns right num words
+             */
+            //__________________________________________________________________
             static inline
             Proto * Add(const WordType *lhs, const size_t lnw,
                         const WordType *rhs, const size_t rnw)
@@ -183,18 +196,32 @@ namespace Yttrium
                 {
                     if(rnw<=0)
                     {
-
+                        return new Proto(0,AsCapacity);
                     }
                     else
                     {
-
+                        return new Proto(rhs,rnw);
                     }
                 }
                 else
                 {
                     assert(lnw>0);
+                    if(rnw<=0)
+                    {
+                        return new Proto(lhs,lnw);
+                    }
+                    else
+                    {
+                        const WordType *a  = lhs;
+                        const size_t    na = lnw;
+                        const WordType *b  = rhs;
+                        const size_t    nb = rnw;
+                        if(na<nb) { Swap(a,b); Swap(Coerce(na),Coerce(nb)); }
+
+                    }
 
                 }
+                return 0;
             }
 
         private:

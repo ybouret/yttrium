@@ -45,7 +45,7 @@ namespace Yttrium
             //
             //! words to wrap a given number of bytes
             //__________________________________________________________________
-            static inline size_t GetWordsFor(const size_t bytes) noexcept
+            static inline size_t BytesToWords(const size_t bytes) noexcept
             {
                 return Y_ALIGN_ON(WordSize,bytes)/WordSize;
             }
@@ -54,7 +54,7 @@ namespace Yttrium
             //
             //! words to wrap a given u64
             //__________________________________________________________________
-            static inline size_t ToWords(const uint64_t X) noexcept { return GetWordsFor( BytesFor(X) ); }
+            static inline size_t ToWords(const uint64_t X) noexcept { return BytesToWords( RequiredBytesFor(X) ); }
 
             //__________________________________________________________________
             //

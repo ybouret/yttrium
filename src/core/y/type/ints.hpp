@@ -237,7 +237,7 @@ namespace Yttrium
 
     //! computing bytes required for an integral type
     template <typename T>
-    static inline unsigned BytesFor(const T x) noexcept
+    static inline unsigned RequiredBytesFor(const T x) noexcept
     {
         return IntegerFor<T>::UInt::BytesFor(x);
     }

@@ -118,7 +118,7 @@ namespace Yttrium
                 break;
 
             case Compact: {
-                const unsigned n = BytesFor(qw); assert(n<=sz);
+                const unsigned n = RequiredBytesFor(qw); assert(n<=sz);
                 if(n<=0)
                 {
                     data[0] = ch[0]; return;
