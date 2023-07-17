@@ -65,6 +65,13 @@ namespace Yttrium
                 //______________________________________________________________
                 static size_t BitsToBytes(const size_t numBits) noexcept;
 
+                static bool CheckMetrics(const char  *where,
+                                         const size_t nbits,
+                                         const size_t bytes,
+                                         const size_t words,
+                                         const size_t WordSize);
+
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Proto);
             };
@@ -133,6 +140,12 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            inline bool Check(const char *fn) const
+            {
+                assert(0!=fn);
+                return CheckMetrics(fn,nbits,bytes,words,WordSize);
+            }
+
             //__________________________________________________________________
             //
             //! create a Proto with a given minimal BYTES capacity
@@ -161,6 +174,7 @@ namespace Yttrium
             {
                 assert(block.words>=Splitter::MaxWords);
                 Splitter::DoSplit(block.entry,words,qword);
+                assert(Check("Proto(uint64_t)"));
             }
 
             //__________________________________________________________________
@@ -175,6 +189,7 @@ namespace Yttrium
             block( proto.block )
             {
                 memcpy(block.entry,proto.block.entry,words*WordSize);
+                assert(Check("Proto(copy)"));
             }
 
             //__________________________________________________________________
@@ -188,19 +203,23 @@ namespace Yttrium
             words( Splitter::BytesToWords(bytes) ),
             block( bytes )
             {
-                size_t    remaining = nbits;
-                WordType *target    = block.entry;
-                while(remaining>=WordBits)
+                if(words>0)
                 {
-                    *(target++) = ran.to<WordType>();
-                    remaining  -= WordBits;
-                }
-                if(remaining>0)
-                {
-                    assert(remaining<WordBits);
-                    *target = ran.to<WordType>( static_cast<unsigned>(remaining) );
+                    const  size_t msi = words-1;
+                    size_t        num = nbits;
+
+                    for(size_t i=0;i<msi;++i)
+                    {
+                        block.entry[i] = ran.to<WordType>();
+                        assert(num>WordBits);
+                        num -= WordBits;
+                    }
+                    assert(num>0);
+                    block.entry[msi] = ran.to<WordType>(unsigned(num));
                 }
                 update();
+                assert(nbits==userBits);
+                assert(Check("Proto(rand)"));
             }
 
             //__________________________________________________________________
@@ -218,6 +237,7 @@ namespace Yttrium
                 assert(0!=W);
                 memcpy(block.entry,W,bytes);
                 update();
+                assert(Check("Proto(W,N)"));
             }
 
 
@@ -245,14 +265,10 @@ namespace Yttrium
             static inline bool AreEqual(const Proto &lhs, const Proto &rhs) noexcept
             {
                 const size_t lwords = lhs.words;
-                std::cerr << "Eq : LHS="; lhs.printHex(std::cerr);
-                std::cerr << " RHS="; rhs.printHex(std::cerr);
-                std::cerr << std::endl;
                 switch(SignOf(lwords,rhs.words))
                 {
                     case Negative:
                     case Positive:
-                        std::cerr << "different #words" << std::endl;
                         return false;
                     case __Zero__:
                         break;
@@ -274,7 +290,6 @@ namespace Yttrium
                     assert(words>0);
                     Coerce(nbits) = BitCount::For(msw) + msi * WordBits;
                     Coerce(bytes) = BitsToBytes(nbits);
-                    std::cerr << "msw=" << Hexadecimal(msw) << " => " << BitCount::For(msw) << " bits => " << nbits << std::endl;
                     return;
                 }
                 assert(0==words);

@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_Text_Plural_Included
-#define Y_Text_Plural_Included 1
+#ifndef Y_Text_Human_Readable_Included
+#define Y_Text_Human_Readable_Included 1
 
 #include "y/config/starting.hpp"
 #include "y/ostream-proto.hpp"

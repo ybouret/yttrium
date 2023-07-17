@@ -142,8 +142,6 @@ namespace
                     typename PROTO::Splitter rs(r);
                     typename PROTO::Pointer  pD( PROTO::Sub(ls.w,ls.n,rs.w,rs.n) );
                     const uint64_t D  = pD->ls64();
-                    //std::cerr << Hexadecimal(l) << "-" << Hexadecimal(r) << " = ";
-                    //std::cerr << Hexadecimal(D) << " / " << Hexadecimal(d) << std::endl;
                     Y_ASSERT(D==d);
                 }
             }
@@ -161,8 +159,21 @@ namespace
                     const PROTO  lhs(i,ran);
                     const PROTO  rhs(j,ran);
                     const hPROTO sum( PROTO::Add(lhs,rhs) );
-                    const hPROTO dif1( PROTO::Sub(*sum,lhs) );
-                    Y_ASSERT( PROTO::AreEqual(rhs,*dif1) );
+                    {
+                        const hPROTO dif( PROTO::Sub(*sum,lhs) );
+                        Y_ASSERT( PROTO::AreEqual(rhs,*dif)      );
+                        Y_ASSERT( PROTO::AreEqual(*dif,rhs)      );
+                        Y_ASSERT( !PROTO::AreDifferent(*dif,rhs) );
+                        Y_ASSERT( !PROTO::AreDifferent(rhs,*dif) );
+                    }
+
+                    {
+                        const hPROTO dif( PROTO::Sub(*sum,rhs) );
+                        Y_ASSERT( PROTO::AreEqual(lhs,*dif)      );
+                        Y_ASSERT( PROTO::AreEqual(*dif,lhs)      );
+                        Y_ASSERT( !PROTO::AreDifferent(*dif,lhs) );
+                        Y_ASSERT( !PROTO::AreDifferent(lhs,*dif) );
+                    }
                 }
 
             }
