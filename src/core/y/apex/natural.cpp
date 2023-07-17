@@ -6,6 +6,13 @@ namespace Yttrium
     namespace Apex
     {
 
+        //----------------------------------------------------------------------
+        //
+        //
+        // C++
+        //
+        //
+        //----------------------------------------------------------------------
 
         Y_SHALLOW_IMPL(AsImpl);
 
@@ -97,6 +104,19 @@ namespace Yttrium
             return os;
         }
 
+        Natural:: operator uint64_t() const noexcept
+        {
+            return CONST_PROTO(impl).ls64();
+        }
+
+
+        //----------------------------------------------------------------------
+        //
+        //
+        // Addition
+        //
+        //
+        //----------------------------------------------------------------------
         Natural operator+(const Natural &lhs, const Natural &rhs)
         {
             return Natural(Prototype::Add( CONST_PROTO(lhs.impl), CONST_PROTO(rhs.impl)),AsImpl);
@@ -142,12 +162,60 @@ namespace Yttrium
             }
             return old;
         }
-        
 
-        Natural:: operator uint64_t() const noexcept
+        //----------------------------------------------------------------------
+        //
+        //
+        // Subtraction
+        //
+        //
+        //----------------------------------------------------------------------
+        Natural operator-(const Natural &lhs, const Natural &rhs)
         {
-            return CONST_PROTO(impl).ls64();
+            return Natural(Prototype::Sub( CONST_PROTO(lhs.impl), CONST_PROTO(rhs.impl)),AsImpl);
         }
+
+        Natural operator-(const Natural &lhs, const uint64_t rhs)
+        {
+            return Natural(Prototype::Add(CONST_PROTO(lhs.impl),rhs),AsImpl);
+        }
+
+        Natural operator-(const uint64_t lhs, const Natural &rhs)
+        {
+            return Natural(Prototype::Sub(lhs,CONST_PROTO(rhs.impl)),AsImpl);
+        }
+
+        Natural & Natural:: operator-=(const uint64_t rhs)
+        {
+            Natural res( Prototype::Sub(CONST_PROTO(impl),rhs),AsImpl);
+            xch(res);
+            return *this;
+        }
+
+        Natural & Natural:: operator-=(const Natural &rhs)
+        {
+            Natural res( Prototype::Sub(CONST_PROTO(impl),CONST_PROTO(rhs.impl)), AsImpl);
+            xch(res);
+            return *this;
+        }
+
+        Natural & Natural:: operator--()
+        {
+            Natural res( Prototype::Sub1(CONST_PROTO(impl)), AsImpl);
+            xch(res);
+            return *this;
+        }
+
+        Natural   Natural:: operator--(int)
+        {
+            const Natural old(*this);
+            {
+                Natural res( Prototype::Sub1(CONST_PROTO(impl)), AsImpl);
+                xch(res);
+            }
+            return old;
+        }
+
 
 
 

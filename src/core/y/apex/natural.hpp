@@ -54,6 +54,15 @@ namespace Yttrium
             Natural & operator++();
             Natural   operator++(int);
 
+            // SUB
+            friend Natural operator-(const Natural &lhs, const Natural &rhs);
+            friend Natural operator-(const Natural &lhs, const uint64_t rhs);
+            friend Natural operator-(const uint64_t lhs, const Natural &rhs);
+            Natural & operator-=(const Natural&);
+            Natural & operator-=(const uint64_t);
+            Natural & operator--();
+            Natural   operator--(int);
+
         private:
             void *impl;
             Natural(void*,const AsImpl_&) noexcept;

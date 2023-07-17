@@ -384,11 +384,6 @@ namespace Yttrium
                     const uint8_t l = b>>4;
                     if(first)
                     {
-                        if(b<=0)
-                        {
-                            display(); std::cerr << std::endl;
-                            std::cerr << "Error Getting Byte[" << i << "] : Word" << WordBits << " = " << Hexadecimal(block.entry[i/WordSize]) << " +" << (i%WordSize) << ", nbits=" << nbits << " | " << BitCount::For(block.entry[i/WordSize]) << std::endl;
-                        }
                         assert(b>0);
                         if(l>0) os << Hexadecimal::Upper[l];
                         first = false;
@@ -414,6 +409,7 @@ namespace Yttrium
                     Coerce(nbits) = other.nbits;
                     memcpy(block.entry,other.block.entry,words*WordSize);
                     ztrim();
+                    assert(Check("couldSteal(other)"));
                     return true;
                 }
                 else
@@ -431,6 +427,7 @@ namespace Yttrium
                 Coerce(words) = Splitter::BytesToWords(bytes);
                 Splitter::DoSplit(block.entry,words,qword);
                 ztrim();
+                assert(Check("ld64(qword)"));
             }
 
 
@@ -630,7 +627,7 @@ namespace Yttrium
                         //------------------------------------------------------
                         // lhs  - rhs, generic case
                         //------------------------------------------------------
-                        if(rnw>lnw) throw Specific::Exception(CallSign,"invalid subtraction level-1");
+                        if(rnw>lnw) throw Specific::Exception(CallSign,"rhs>lhs level-1");
 
                         Proto    *D = new Proto(lnw*WordSize,AsCapacity);
                         WordType *d = D->block.entry;
@@ -671,7 +668,7 @@ namespace Yttrium
                             if(0!=carry)
                             {
                                 delete D;
-                                throw Specific::Exception(CallSign,"invalid subtraction level-2");
+                                throw Specific::Exception(CallSign,"rhs>lhs level-2");
                             }
                         }
 
@@ -690,6 +687,41 @@ namespace Yttrium
                         const Proto &rhs)
             {
                 return Sub(lhs.block.entry,lhs.words,rhs.block.entry,rhs.words);
+            }
+
+            //__________________________________________________________________
+            //
+            //! Subtraction for Proto - uint64_t
+            //__________________________________________________________________
+            static inline
+            Proto * Sub(const Proto    &lhs,
+                        const uint64_t &rhs)
+            {
+                const Splitter alias(rhs);
+                return Sub(lhs.block.entry,lhs.words,alias.w,alias.n);
+            }
+
+            //__________________________________________________________________
+            //
+            //! Subtraction for uint64_t - proto
+            //__________________________________________________________________
+            static inline
+            Proto * Sub(const uint64_t lhs,
+                        const Proto   &rhs)
+            {
+                const Splitter alias(lhs);
+                return Sub(alias.w,alias.n,rhs.block.entry,rhs.words);
+            }
+
+            //__________________________________________________________________
+            //
+            //! Subtract one
+            //__________________________________________________________________
+            static inline
+            Proto *Sub1(const Proto &lhs)
+            {
+                static const WordType One(1);
+                return Sub(lhs.block.entry,lhs.words,&One,1);
             }
 
 

@@ -32,6 +32,7 @@ Y_UTEST(apex_n)
             Y_ASSERT( uint64_t(M) == n);
         }
     }
+
     std::cerr << "-- Check Add64" << std::endl;
     for(unsigned i=0;i<=63;++i)
     {
@@ -70,6 +71,45 @@ Y_UTEST(apex_n)
     }
     std::cerr << std::endl;
 
+
+    std::cerr << "-- Check Sub64" << std::endl;
+    for(unsigned i=0;i<=64;++i)
+    {
+        for(unsigned j=0;j<=64;++j)
+        {
+            for(size_t loop=0;loop<16;++loop)
+            {
+                uint64_t       l = ran.to<uint64_t>(i);
+                uint64_t       r = ran.to<uint64_t>(j);
+                if(r>l) Swap(l,r);
+                const uint64_t d = l-r;
+                const APN      L = l;
+                const APN      R = r;
+                const APN      D = L-R;
+                Y_ASSERT(uint64_t(D)==d);
+                {
+                    APN dum = L; dum -= R;
+                    Y_ASSERT( uint64_t(dum)==d);
+                }
+                {
+                    APN dum = L; dum -= r;
+                    Y_ASSERT( uint64_t(dum)==d);
+                }
+            }
+        }
+    }
+
+    for(APN i=10;i>0;--i)
+    {
+        i.printHex(std::cerr << "0x") << ' ';
+    }
+    std::cerr << std::endl;
+
+    for(APN i=10;i>0;i--)
+    {
+        i.printHex(std::cerr << "0x") << ' ';
+    }
+    std::cerr << std::endl;
 
 
 }
