@@ -351,9 +351,11 @@ namespace Yttrium
              */
             //__________________________________________________________________
             static inline
-            Proto * Add(const WordType * const lhs, const size_t lnw,
-                        const WordType * const rhs, const size_t rnw,
-                        uint64_t *ell = 0)
+            Proto * Add(const WordType * const lhs,
+                        const size_t           lnw,
+                        const WordType * const rhs,
+                        const size_t           rnw,
+                        uint64_t *             ell = 0)
             {
                 assert(0!=lhs);
                 assert(0!=rhs);
@@ -481,6 +483,29 @@ namespace Yttrium
             }
 
 
+            //__________________________________________________________________
+            //
+            //! subtraction
+            /**
+             \param lhs left words
+             \param lnw left num words
+             \param rhs right words
+             \param rnw right num words
+             \param ell ellapsed ticks in computation
+             */
+            //__________________________________________________________________
+            static inline
+            Proto * Sub(const WordType * const lhs,
+                        const size_t           lnw,
+                        const WordType * const rhs,
+                        const size_t           rnw,
+                        uint64_t *             ell = 0)
+            {
+                assert(0!=lhs);
+                assert(0!=rhs);
+
+                return 0;
+            }
 
 
         private:
