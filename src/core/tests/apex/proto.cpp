@@ -129,16 +129,16 @@ namespace
         std::cerr << "]" << std::endl;
         std::cerr << "    @" << HumanReadable(perf.addRate=tmx.speed()) << "Op/s" << std::endl;
 
-
     }
 }
-
 
 
 Y_UTEST(apex_proto)
 {
     Random::Rand ran;
     Perf         Table[6];
+
+    if(argc>1) Loops = unsigned( atol(argv[1]) );
 
     TestProto<uint64_t,uint32_t>( ran, Table[0]);
     TestProto<uint64_t,uint16_t>( ran, Table[1]);
