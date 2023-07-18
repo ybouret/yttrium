@@ -11,6 +11,7 @@ using namespace Yttrium;
 Y_UTEST(type_conversion)
 {
     SHOW(Y_Is_SuperSubClass(Object,Apex::Number));
+    SHOW(Y_Is_SuperSubClass(Object,Apex::Natural));
     SHOW(Y_Is_SuperSubClass(Apex::Number,apn));
     SHOW(Y_Is_SuperSubClass_Strict(Apex::Number,apn));
     SHOW(Y_Is_SuperSubClass_Strict(apn,apn));

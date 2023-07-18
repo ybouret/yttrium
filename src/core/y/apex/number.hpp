@@ -18,7 +18,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Number
+        class Number : public Object
         {
 
         public:
