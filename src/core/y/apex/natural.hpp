@@ -15,6 +15,7 @@ namespace Yttrium
     namespace Apex
     {
 
+        //! helper
         Y_SHALLOW_DECL(AsImpl);
 
         //______________________________________________________________________
@@ -28,40 +29,61 @@ namespace Yttrium
         class Natural : public Number
         {
         public:
-            Natural();
-            Natural(const uint64_t);
-            Natural(const Natural &);
-            Natural(const size_t n, Random::Bits &);
-            Natural &operator=(const Natural &);
-            Natural &operator=(const uint64_t) noexcept;
-            virtual ~Natural() noexcept;
-            Y_OSTREAM_PROTO(Natural);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            Natural();                                   //!< default=0
+            Natural(const uint64_t);                     //!< default from uint
+            Natural(const Natural &);                    //!< copy
+            Natural(const size_t n, Random::Bits &);     //!< random with exactly n bits
+            Natural &operator=(const Natural &);         //!< assign another
+            Natural &operator=(const uint64_t) noexcept; //!< assign an uint
+            virtual ~Natural() noexcept;                 //!< cleannup
+            Y_OSTREAM_PROTO(Natural);                    //!< display
 
-            size_t         bytes() const noexcept;
-            size_t         bits()  const noexcept;
-            void           xch(Natural &) noexcept;
-            std::ostream & printHex(std::ostream &) const;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
-            operator uint64_t() const noexcept;
+            size_t         bytes() const noexcept;         //!< exact number of bytes
+            size_t         bits()  const noexcept;         //!< exact number of bit
+            void           xch(Natural &) noexcept;        //!< no-throw exchange
+            std::ostream & printHex(std::ostream &) const; //!< compact print hexa
+            operator uint64_t() const noexcept;            //!< get least significant bits
 
-
+            //__________________________________________________________________
+            //
+            //
             // ADD
-            friend Natural operator+(const Natural &lhs, const Natural &rhs);
-            friend Natural operator+(const Natural &lhs, const uint64_t rhs);
-            friend Natural operator+(const uint64_t lhs, const Natural &rhs);
-            Natural & operator+=(const Natural&);
-            Natural & operator+=(const uint64_t);
-            Natural & operator++();
-            Natural   operator++(int);
+            //
+            //__________________________________________________________________
+            friend Natural operator+(const Natural &lhs, const Natural &rhs); //!< lhs+rhs
+            friend Natural operator+(const Natural &lhs, const uint64_t rhs); //!< lhs+rhs
+            friend Natural operator+(const uint64_t lhs, const Natural &rhs); //!< lhs+rhs
+            Natural & operator+=(const Natural &rhs);                         //!< this += rhs
+            Natural & operator+=(const uint64_t rhs);                         //!< this += rhs
+            Natural & operator++();                                           //!< ++this
+            Natural   operator++(int);                                        //!< this++
 
+            //__________________________________________________________________
+            //
+            //
             // SUB
-            friend Natural operator-(const Natural &lhs, const Natural &rhs);
-            friend Natural operator-(const Natural &lhs, const uint64_t rhs);
-            friend Natural operator-(const uint64_t lhs, const Natural &rhs);
-            Natural & operator-=(const Natural&);
-            Natural & operator-=(const uint64_t);
-            Natural & operator--();
-            Natural   operator--(int);
+            //
+            //__________________________________________________________________
+            friend Natural operator-(const Natural &lhs, const Natural &rhs); //!< lhs-rhs
+            friend Natural operator-(const Natural &lhs, const uint64_t rhs); //!< lhs-rhs
+            friend Natural operator-(const uint64_t lhs, const Natural &rhs); //!< lhs-rhs
+            Natural & operator-=(const Natural &rhs);                         //!< this -= rhs
+            Natural & operator-=(const uint64_t rhs);                         //!< this -= rhs
+            Natural & operator--();                                           //!< --this
+            Natural   operator--(int);                                        //!< this--
 
         private:
             void *impl;

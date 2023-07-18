@@ -38,7 +38,7 @@ namespace Yttrium
             class Proto : public Object
             {
             public:
-                static const char CallSign[];
+                static const char CallSign[]; //!< "Apex::Natural"
 
                 //______________________________________________________________
                 //
@@ -66,12 +66,16 @@ namespace Yttrium
                 //______________________________________________________________
                 static size_t BitsToBytes(const size_t numBits) noexcept;
 
-                static bool CheckMetrics(const char  *where,
-                                         const size_t nbits,
-                                         const size_t bytes,
-                                         const size_t words,
-                                         const size_t WordSize,
-                                         const size_t blockWords);
+                //______________________________________________________________
+                //
+                //! Debug check
+                //______________________________________________________________
+                static bool   CheckMetrics(const char  *where,
+                                           const size_t nbits,
+                                           const size_t bytes,
+                                           const size_t words,
+                                          const size_t WordSize,
+                                           const size_t blockWords);
 
 
             private:
@@ -97,27 +101,29 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const unsigned                        CoreSize  = sizeof(CORE_TYPE);       //!< alias
-            static const unsigned                        WordSize  = sizeof(WORD_TYPE);       //!< alias
-            static const unsigned                        WordLog2  = iLog2<WordSize>::Value ; //!< alias
-            static const unsigned                        WordBits  = WordSize << 3;           //!< alias
-            static const unsigned                        CoreBits  = CoreSize << 3;           //!< alias
-            typedef typename UnsignedInt<CoreSize>::Type CoreType;                            //!< alias
-            typedef typename UnsignedInt<WordSize>::Type WordType;                            //!< alias
-            typedef Block<WordType>                      DataType;                            //!< alias
-            typedef Split64Into<WordType>                Splitter;                            //!< alias
-            typedef typename SignedInt<CoreSize>::Type   CIntType;                            //!< alias
-            static  const WordType                       WordMaxi = UnsignedInt<WordSize>::Maximum;
-            static  const CIntType                       Radix    = CIntType(WordMaxi) + 1;
+            static const unsigned                        CoreSize  = sizeof(CORE_TYPE);             //!< alias
+            static const unsigned                        WordSize  = sizeof(WORD_TYPE);             //!< alias
+            static const unsigned                        WordLog2  = iLog2<WordSize>::Value ;       //!< alias
+            static const unsigned                        WordBits  = WordSize << 3;                 //!< alias
+            static const unsigned                        CoreBits  = CoreSize << 3;                 //!< alias
+            typedef typename UnsignedInt<CoreSize>::Type CoreType;                                  //!< alias
+            typedef typename UnsignedInt<WordSize>::Type WordType;                                  //!< alias
+            typedef Block<WordType>                      DataType;                                  //!< alias
+            typedef Split64Into<WordType>                Splitter;                                  //!< alias
+            typedef typename SignedInt<CoreSize>::Type   CIntType;                                  //!< alias
+            static  const WordType                       WordMaxi = UnsignedInt<WordSize>::Maximum; //!< alias
+            static  const CIntType                       Radix    = CIntType(WordMaxi) + 1;         //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            //! smart pointer for operations
+            //
+            //__________________________________________________________________
             class Pointer
             {
             public:
-                inline Pointer(Proto *p) noexcept :
-                handle(p)
-                {
-                }
-
+                inline  Pointer(Proto *p) noexcept : handle(p) { }
                 inline ~Pointer() noexcept
                 {
                     if(handle) { delete handle; handle=0; }
@@ -142,6 +148,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //! debugging helper
             inline bool Check(const char *fn) const
             {
                 assert(0!=fn);
@@ -260,6 +267,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
+            //! check if lhs and rhs are different
             static inline bool AreDifferent(const Proto &lhs, const Proto &rhs) noexcept
             {
                 const size_t lwords = lhs.words;
@@ -273,6 +282,7 @@ namespace Yttrium
                 return 0 != memcmp(lhs.block.entry,rhs.block.entry,lwords*WordSize);
             }
 
+            //! check if lhs and rhs are equal
             static inline bool AreEqual(const Proto &lhs, const Proto &rhs) noexcept
             {
                 const size_t lwords = lhs.words;
@@ -363,6 +373,7 @@ namespace Yttrium
                 memset(block.entry+words,0,(block.words-words)*WordSize);
             }
 
+            //! get byte[0..bytes-1]
             uint8_t getByte(const size_t i) const noexcept
             {
                 assert(i<bytes);
@@ -372,6 +383,7 @@ namespace Yttrium
                 return uint8_t(w);
             }
 
+            //! Hexadecimal printing
             void printHex(std::ostream &os) const
             {
                 if(bytes<=0) { os << '0'; return; }
@@ -583,7 +595,6 @@ namespace Yttrium
              \param lnw left num words
              \param rhs right words
              \param rnw right num words
-             \param ell ellapsed ticks in computation
              */
             //__________________________________________________________________
             static inline
@@ -682,6 +693,10 @@ namespace Yttrium
 
             }
 
+            //__________________________________________________________________
+            //
+            //! Subtraction for Proto - Proto
+            //__________________________________________________________________
             static inline
             Proto * Sub(const Proto &lhs,
                         const Proto &rhs)
