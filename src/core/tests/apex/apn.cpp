@@ -113,6 +113,29 @@ Y_UTEST(apex_n)
     }
     std::cerr << std::endl;
 
+    std::cerr << "-- Check Comparison 64" << std::endl;
+    for(unsigned i=0;i<=64;++i)
+    {
+        for(unsigned j=0;j<=64;++j)
+        {
+            for(size_t loop=0;loop<16;++loop)
+            {
+                const uint64_t l = ran.to<uint64_t>(i);
+                const uint64_t r = ran.to<uint64_t>(j);
+                const apn      L = l;
+                const apn      R = r;
+                Y_ASSERT( SignOf(l,r) == apn::Compare(L,R));
+                if(l==r) { Y_ASSERT(L==R); Y_ASSERT(l==R); Y_ASSERT(L==r); }
+                if(l!=r) { Y_ASSERT(L!=R); Y_ASSERT(l!=R); Y_ASSERT(L!=r); }
+                if(l<r)  { Y_ASSERT(L<R);  Y_ASSERT(l<R);  Y_ASSERT(L<r);  }
+                if(l<=r) { Y_ASSERT(L<=R); Y_ASSERT(l<=R); Y_ASSERT(L<=r);  }
+                if(l>r)  { Y_ASSERT(L>R);  Y_ASSERT(l>R);  Y_ASSERT(L>r);  }
+                if(l>=r) { Y_ASSERT(L>=R); Y_ASSERT(l>=R); Y_ASSERT(L>=r);  }
+            }
+        }
+    }
+
+
 
 }
 Y_UDONE()

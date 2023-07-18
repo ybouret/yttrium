@@ -6,6 +6,7 @@
 #include "y/apex/number.hpp"
 #include "y/ostream-proto.hpp"
 #include "y/config/shallow.hpp"
+#include "y/type/signs.hpp"
 
 namespace Yttrium
 {
@@ -87,12 +88,36 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // comparison
+            // Comparisons
             //
             //__________________________________________________________________
-            friend bool operator==(const Natural &lhs, const Natural &rhs) noexcept;
-            friend bool operator!=(const Natural &lhs, const Natural &rhs) noexcept;
+            static SignType Compare(const Natural &lhs, const Natural &rhs) noexcept; //!< increasing order
 
+            friend bool operator==(const Natural &lhs, const Natural &rhs) noexcept; //!< lhs == rhs
+            friend bool operator==(const Natural &lhs, const uint64_t rhs) noexcept; //!< lhs == rhs
+            friend bool operator==(const uint64_t lhs, const Natural &rhs) noexcept; //!< lhs == rhs
+
+            friend bool operator!=(const Natural &lhs, const Natural &rhs) noexcept; //!< lhs != rhs
+            friend bool operator!=(const Natural &lhs, const uint64_t rhs) noexcept; //!< lhs != rhs
+            friend bool operator!=(const uint64_t lhs, const Natural &rhs) noexcept; //!< lhs != rhs
+
+            friend bool operator<(const Natural &lhs, const Natural &rhs) noexcept; //!< lhs < rhs
+            friend bool operator<(const Natural &lhs, const uint64_t rhs) noexcept; //!< lhs < rhs
+            friend bool operator<(const uint64_t lhs, const Natural &rhs) noexcept; //!< lhs < rhs
+
+            friend bool operator>(const Natural &lhs, const Natural &rhs) noexcept; //!< lhs > rhs
+            friend bool operator>(const Natural &lhs, const uint64_t rhs) noexcept; //!< lhs > rhs
+            friend bool operator>(const uint64_t lhs, const Natural &rhs) noexcept; //!< lhs > rhs
+
+
+            friend bool operator<=(const Natural &lhs, const Natural &rhs) noexcept; //!< lhs < rhs
+            friend bool operator<=(const Natural &lhs, const uint64_t rhs) noexcept; //!< lhs < rhs
+            friend bool operator<=(const uint64_t lhs, const Natural &rhs) noexcept; //!< lhs < rhs
+
+
+            friend bool operator>=(const Natural &lhs, const Natural &rhs) noexcept; //!< lhs > rhs
+            friend bool operator>=(const Natural &lhs, const uint64_t rhs) noexcept; //!< lhs > rhs
+            friend bool operator>=(const uint64_t lhs, const Natural &rhs) noexcept; //!< lhs > rhs
 
         private:
             void *impl;
