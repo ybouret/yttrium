@@ -58,6 +58,7 @@ add_test(memory:quarry    test-core memory_quarry)
 #type
 add_test(type:ints test-core type_ints)
 add_test(type:div    test-core type_div)
+add_test(type:list   test-core type_list)
 
 #data
 add_test(data:list test-core data_list)

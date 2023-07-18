@@ -33,6 +33,7 @@ Y_UTEST_DECL(256)
 
     Y_UTEST(type_ints);
     Y_UTEST(type_div);
+    Y_UTEST(type_list);
 
     Y_UTEST(text_plural);
     Y_UTEST(text_human_readable);
