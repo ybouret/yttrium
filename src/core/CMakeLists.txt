@@ -31,5 +31,5 @@ apex/n
 )
 
 source_group(concurrent FILES ${quark})
-
 add_subdirectory(tests)
+Y_Regression(core)

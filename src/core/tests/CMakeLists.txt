@@ -13,11 +13,6 @@ apex
 
 Y_LinkLibraries(test-core)
 
-add_custom_target(utest-core
-COMMAND ${CMAKE_CTEST_COMMAND} -C ${CMAKE_BUILD_TYPE}
-COMMENT "[Yttrium] Unit Tests on <core>"
-VERBATIM)
-
 enable_testing()
 
 #main
