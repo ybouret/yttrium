@@ -7,11 +7,41 @@
 
 namespace Yttrium
 {
+    //__________________________________________________________________________
+    //
+    //
+    //! default IsSameType
+    //
+    //__________________________________________________________________________
     template <class T, class U>
     struct IsSameType
     {
-        
+        enum { Value = false };  //!< general case
     };
+
+    //__________________________________________________________________________
+    //
+    //
+    //! specialized IsSameType
+    //
+    //__________________________________________________________________________
+    template <class T>
+    struct IsSameType<T,T>
+    {
+        enum { Value = true }; //!< in particular
+    };
+
+    namespace TL
+    {
+        typedef TL5(signed char, short, int, long, long long)                                       std_sints_list; //!< standard signed
+        typedef TL5(unsigned char, unsigned short, unsigned int, unsigned long, unsigned long long) std_uints_list; //!< standard unsigned
+        typedef TL4(uint8_t,uint16_t,uint32_t,uint64_t)                                             sys_uints_list; //!< system unsigned
+        typedef TL4(int8_t,int16_t,int32_t,int64_t)                                                 sys_sints_list; //!< system signed
+        typedef TL2(bool,char)                                                                      misc_ints_list; //!< misc. chart
+        typedef TL3(float,double,long double)                                                       std_reals_list; //!< floating point
+    }
+
+
 }
 
 #if 0
