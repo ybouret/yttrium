@@ -240,6 +240,17 @@ namespace
             }
         }
 
+        {
+            PROTO p(32,Apex::AsShift);
+            while(p.nbits>0)
+            {
+                p.printHex(std::cerr); std::cerr << "|";
+                p.shr();
+            }
+            std::cerr << std::endl;
+        }
+
+
         std::cerr << "   (*) Multiplication64" << std::endl;
         for(unsigned i=0;i<=32;++i)
         {
@@ -251,8 +262,8 @@ namespace
                 const PROTO    lhs(l);
                 const PROTO    rhs(r);
                 const hPROTO   prod( PROTO::Mul(lhs,rhs,PROTO::LongMul,0) );
-                std::cerr << "Prod = ";
-                prod->printHex(std::cerr);  std::cerr << " / " << Hexadecimal(p,Hexadecimal::Compact,Hexadecimal::UpperCase) << std::endl;
+                //std::cerr << "Prod = ";
+                //prod->printHex(std::cerr);  std::cerr << " / " << Hexadecimal(p,Hexadecimal::Compact,Hexadecimal::UpperCase) << std::endl;
                 Y_ASSERT( prod->ls64() == p );
             }
         }
@@ -269,6 +280,8 @@ namespace
                 Y_ASSERT( PROTO::AreEqual(*prod,theo) );
             }
         }
+
+        
 
 
     }

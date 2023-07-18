@@ -34,6 +34,8 @@ namespace Yttrium
         class Natural : public Number
         {
         public:
+            static const char * const CallSign;
+
             //__________________________________________________________________
             //
             //
@@ -131,7 +133,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             explicit Natural(const TwoToThe_ &, const size_t p); //!< 2^p
-
+            void shr() noexcept; //!< >>= 1
+            
             //__________________________________________________________________
             //
             //
@@ -143,6 +146,15 @@ namespace Yttrium
             friend Natural operator*(const uint64_t lhs, const Natural &rhs); //!< lhs*rhs
             Natural & operator*=(const Natural &rhs);                         //!< this * rhs
             Natural & operator*=(const uint64_t rhs);                         //!< this * rhs
+
+            //__________________________________________________________________
+            //
+            //
+            // Division
+            //
+            //__________________________________________________________________
+            friend Natural operator/(const Natural &numer, const Natural &denom); //!< lhs*rhs
+
 
         private:
             void *impl;

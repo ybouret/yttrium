@@ -168,8 +168,29 @@ Y_UTEST(apex_n)
             }
 
         }
-
     }
+
+    std::cerr << "-- Check Div64" << std::endl;
+    for(unsigned i=0;i<=64;++i)
+    {
+        for(unsigned j=1;j<=64;++j)
+        {
+            for(size_t loop=0;loop<16;++loop)
+            {
+                const uint64_t numer = ran.to<uint64_t>(i);
+                const uint64_t denom = ran.to<uint64_t>(j);
+                const apn Numer = numer;
+                const apn Denom = denom;
+                const apn Q     = Numer/Denom;
+
+                std::cerr << Q << std::endl;
+                exit(0);
+            }
+
+        }
+    }
+
+
 
 
 

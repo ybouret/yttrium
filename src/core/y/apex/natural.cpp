@@ -8,6 +8,7 @@ namespace Yttrium
     namespace Apex
     {
 
+        Y_SHALLOW_IMPL(AsImpl);
         //----------------------------------------------------------------------
         //
         //
@@ -15,8 +16,8 @@ namespace Yttrium
         //
         //
         //----------------------------------------------------------------------
+        const char * const Natural :: CallSign = Nexus::Proto::CallSign;
 
-        Y_SHALLOW_IMPL(AsImpl);
 
 
         typedef Proto<uint64_t,uint32_t> Prototype;
@@ -408,6 +409,34 @@ namespace Yttrium
             xch(temp);
             return *this;
         }
+
+        //----------------------------------------------------------------------
+        //
+        //
+        // Division
+        //
+        //
+        //----------------------------------------------------------------------
+        Natural operator/(const Natural &numer, const Natural &denom)
+        {
+            const Prototype &D = CONST_PROTO(denom.impl); if(D.nbits<=0) throw Specific::Exception(Natural::CallSign,"Division by Zero");
+            const Prototype &N = CONST_PROTO(numer.impl);
+            switch( Prototype::Compare(N,D) )
+            {
+                case Negative: return Natural(0);
+                case __Zero__: return Natural(1);
+                case Positive:
+                    break;
+            }
+            assert(N.nbits>=D.nbits);
+
+            Natural q(TwoToThe,N.nbits-D.nbits);
+            
+
+            return Natural();
+
+        }
+
     }
 
 }

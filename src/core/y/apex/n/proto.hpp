@@ -28,6 +28,10 @@ namespace Yttrium
         //! helper for power of two
         Y_SHALLOW_DECL(AsShift);
 
+        //! helper to create bytes
+        Y_SHALLOW_DECL(AsByte);
+
+        
         namespace Nexus
         {
             //__________________________________________________________________
@@ -79,7 +83,7 @@ namespace Yttrium
                                            const size_t words,
                                            const size_t WordSize,
                                            const size_t blockWords);
-
+                
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Proto);
@@ -182,6 +186,19 @@ namespace Yttrium
             {
                 Y_STATIC_CHECK(WordSize<CoreSize,InvalidMetrics);
             }
+
+            inline explicit Proto(const uint8_t b,
+                                  const AsByte_ &)  :
+            Nexus::Proto(),
+            nbits( BitCount::For(b) ),
+            bytes( nbits > 0 ? 1 : 0),
+            words( bytes > 0 ? 1 : 0),
+            block(1)
+            {
+                block.entry[0] = b;
+                assert(Check("Proto(AsByte)"));
+            }
+
 
             //__________________________________________________________________
             //
@@ -835,6 +852,23 @@ namespace Yttrium
                 assert(Check("Proto(AsShift)"));
             }
 
+            inline void shr() noexcept
+            {
+                if(words>0)
+                {
+                    WordType    *w   = block.entry;
+                    const size_t msi = words-1;
+                    for(size_t i=0;i<msi;++i)
+                    {
+                        WordType b1 = w[i+1] & 0x01;
+                        (w[i] >>=1 ) |= (b1<<(WordBits-1));
+                    }
+                    w[msi] >>= 1;
+                    update();
+                }
+                assert(Check("shr"));
+            }
+
 
             //__________________________________________________________________
             //
@@ -934,7 +968,9 @@ namespace Yttrium
                 return LongMul(lhs.block.entry,lhs.words,alias.w,alias.n,0);
             }
 
+
             
+
 
 
         private:

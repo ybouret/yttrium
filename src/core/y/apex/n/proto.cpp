@@ -6,6 +6,7 @@ namespace Yttrium
     namespace Apex
     {
         Y_SHALLOW_IMPL(AsShift);
+        Y_SHALLOW_IMPL(AsByte);
 
         namespace Nexus
         {
@@ -51,7 +52,6 @@ namespace Yttrium
                     std::cerr << where << " too many words=" << words << " instead or max " << blockWords << std::endl;
                     return false;
                 }
-
 
                 return true;
             }
