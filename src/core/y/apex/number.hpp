@@ -3,7 +3,7 @@
 #ifndef Y_Apex_Number_Included
 #define Y_Apex_Number_Included 1
 
-#include "y/apex/types.hpp"
+#include "y/object.hpp"
 
 namespace Yttrium
 {

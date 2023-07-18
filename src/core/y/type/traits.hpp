@@ -2,9 +2,19 @@
 #ifndef YACK_TYPE_TRAITS_INCLUDED
 #define YACK_TYPE_TRAITS_INCLUDED 1
 
-#include "yack/type/pick.hpp"
-#include "yack/type/list.hpp"
+#include "y/type/pick.hpp"
+#include "y/type/list.hpp"
 
+namespace Yttrium
+{
+    template <class T, class U>
+    struct IsSameType
+    {
+        
+    };
+}
+
+#if 0
 namespace yack
 {
     //__________________________________________________________________________
@@ -246,7 +256,10 @@ namespace yack
 
     };
 
+
+
 }
+#endif
 
 #endif
 
