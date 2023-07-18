@@ -34,7 +34,13 @@ namespace Yttrium
         class Natural : public Number
         {
         public:
-            static const char * const CallSign;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< "Apex::Natural"
 
             //__________________________________________________________________
             //

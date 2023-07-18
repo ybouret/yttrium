@@ -9,12 +9,14 @@ namespace Yttrium
 {
     namespace Apex
     {
-        typedef UnsignedInt<sizeof(void*)>::Type   SystemCore;
-        typedef UnsignedInt<sizeof(void*)/2>::Type SystemWord;
+        typedef UnsignedInt<sizeof(void*)>::Type   SystemCore; //!< alias
+        typedef UnsignedInt<sizeof(void*)/2>::Type SystemWord; //!< alias
+        typedef Proto<SystemCore,SystemWord>       Prototype;  //!< alias
 
-        typedef Proto<SystemCore,SystemWord> Prototype;
-
+        //! helper to convert impl to Prototype
 #define PROTO(ADDR)       (*static_cast<Prototype *>(ADDR))
+
+        //! helper to convert CONST impl to Prototype
 #define CONST_PROTO(ADDR) (*static_cast<const Prototype *>(ADDR))
     }
 }
