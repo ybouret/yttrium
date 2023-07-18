@@ -74,7 +74,7 @@ namespace Yttrium
                                            const size_t nbits,
                                            const size_t bytes,
                                            const size_t words,
-                                          const size_t WordSize,
+                                           const size_t WordSize,
                                            const size_t blockWords);
 
 
@@ -244,13 +244,8 @@ namespace Yttrium
             //
             //! create a Proto from W[N], then update
             //__________________________________________________________________
-            inline Proto(const WordType *W,
-                         const size_t    N) :
-            Nexus::Proto(),
-            nbits(0),
-            bytes(N*WordSize),
-            words(N),
-            block(bytes)
+            inline Proto(const WordType *W, const size_t    N) :
+            Nexus::Proto(), nbits(0), bytes(N*WordSize), words(N), block(bytes)
             {
                 assert(0!=W);
                 memcpy(block.entry,W,bytes);
@@ -268,7 +263,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //__________________________________________________________________
+            //
             //! check if lhs and rhs are different
+            //__________________________________________________________________
             static inline bool AreDifferent(const Proto &lhs, const Proto &rhs) noexcept
             {
                 const size_t lwords = lhs.words;
@@ -282,7 +280,10 @@ namespace Yttrium
                 return 0 != memcmp(lhs.block.entry,rhs.block.entry,lwords*WordSize);
             }
 
+            //__________________________________________________________________
+            //
             //! check if lhs and rhs are equal
+            //__________________________________________________________________
             static inline bool AreEqual(const Proto &lhs, const Proto &rhs) noexcept
             {
                 const size_t lwords = lhs.words;
@@ -368,12 +369,12 @@ namespace Yttrium
             //
             //! clean extraneous words
             //__________________________________________________________________
-            inline void ztrim() noexcept
-            {
-                memset(block.entry+words,0,(block.words-words)*WordSize);
-            }
+            inline void ztrim() noexcept { memset(block.entry+words,0,(block.words-words)*WordSize); }
 
+            //__________________________________________________________________
+            //
             //! get byte[0..bytes-1]
+            //__________________________________________________________________
             uint8_t getByte(const size_t i) const noexcept
             {
                 assert(i<bytes);
@@ -555,10 +556,7 @@ namespace Yttrium
             //
             //! Addition for two Proto
             //__________________________________________________________________
-            static inline
-            Proto * Add(const Proto &lhs,
-                        const Proto &rhs,
-                        uint64_t    *ell=0)
+            static inline Proto * Add(const Proto &lhs, const Proto &rhs, uint64_t    *ell=0)
             {
                 return Add(lhs.block.entry,lhs.words,rhs.block.entry,rhs.words,ell);
             }
@@ -567,9 +565,7 @@ namespace Yttrium
             //
             //! Addition for Proto + uint64_t
             //__________________________________________________________________
-            static inline
-            Proto * Add(const Proto    &lhs,
-                        const uint64_t &rhs )
+            static inline Proto * Add(const Proto &lhs, const uint64_t &rhs)
             {
                 const Splitter alias(rhs);
                 return Add(lhs.block.entry,lhs.words,alias.w,alias.n);
@@ -579,8 +575,7 @@ namespace Yttrium
             //
             //! Add one
             //__________________________________________________________________
-            static inline
-            Proto *Add1(const Proto &lhs)
+            static inline Proto *Add1(const Proto &lhs)
             {
                 static const WordType One(1);
                 return Add(lhs.block.entry,lhs.words,&One,1);
@@ -697,9 +692,7 @@ namespace Yttrium
             //
             //! Subtraction for Proto - Proto
             //__________________________________________________________________
-            static inline
-            Proto * Sub(const Proto &lhs,
-                        const Proto &rhs)
+            static inline Proto * Sub(const Proto &lhs, const Proto &rhs)
             {
                 return Sub(lhs.block.entry,lhs.words,rhs.block.entry,rhs.words);
             }
@@ -708,9 +701,7 @@ namespace Yttrium
             //
             //! Subtraction for Proto - uint64_t
             //__________________________________________________________________
-            static inline
-            Proto * Sub(const Proto    &lhs,
-                        const uint64_t &rhs)
+            static inline Proto * Sub(const Proto &lhs, const uint64_t &rhs)
             {
                 const Splitter alias(rhs);
                 return Sub(lhs.block.entry,lhs.words,alias.w,alias.n);
@@ -720,9 +711,7 @@ namespace Yttrium
             //
             //! Subtraction for uint64_t - proto
             //__________________________________________________________________
-            static inline
-            Proto * Sub(const uint64_t lhs,
-                        const Proto   &rhs)
+            static inline Proto * Sub(const uint64_t lhs, const Proto   &rhs)
             {
                 const Splitter alias(lhs);
                 return Sub(alias.w,alias.n,rhs.block.entry,rhs.words);
@@ -732,8 +721,7 @@ namespace Yttrium
             //
             //! Subtract one
             //__________________________________________________________________
-            static inline
-            Proto *Sub1(const Proto &lhs)
+            static inline Proto *Sub1(const Proto &lhs)
             {
                 static const WordType One(1);
                 return Sub(lhs.block.entry,lhs.words,&One,1);
@@ -791,9 +779,7 @@ namespace Yttrium
             //
             //! compare lhs,rhs
             //__________________________________________________________________
-            static inline
-            SignType Compare(const Proto &lhs,
-                             const Proto &rhs) noexcept
+            static inline SignType Compare(const Proto &lhs, const Proto &rhs) noexcept
             {
                 return Compare(lhs.block.entry,lhs.words,rhs.block.entry,rhs.words);
             }
@@ -802,9 +788,7 @@ namespace Yttrium
             //
             //! compare lhs, uint
             //__________________________________________________________________
-            static inline
-            SignType Compare(const Proto    &lhs,
-                             const uint64_t &rhs)
+            static inline SignType Compare(const Proto &lhs, const uint64_t &rhs)
             {
                 const Splitter alias(rhs);
                 return Compare(lhs.block.entry,lhs.words,alias.w,alias.n);
@@ -814,9 +798,7 @@ namespace Yttrium
             //
             //! compare uint, rhs
             //__________________________________________________________________
-            static inline
-            SignType Compare(const uint64_t lhs,
-                             const Proto   &rhs)
+            static inline SignType Compare(const uint64_t lhs, const Proto &rhs)
             {
                 const Splitter alias(lhs);
                 return Compare(alias.w,alias.n,rhs.block.entry,rhs.words);
