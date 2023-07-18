@@ -589,7 +589,7 @@ namespace Yttrium
 
             //__________________________________________________________________
             //
-            //! subtraction
+            //! Subtraction
             /**
              \param lhs left words
              \param lnw left num words
@@ -739,6 +739,88 @@ namespace Yttrium
                 return Sub(lhs.block.entry,lhs.words,&One,1);
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // Comparisons
+            //
+            //__________________________________________________________________
+
+            //__________________________________________________________________
+            //
+            //! default comparison
+            //__________________________________________________________________
+            static inline
+            SignType Compare(const WordType * const lhs, const size_t lnw,
+                             const WordType * const rhs, const size_t rnw) noexcept
+            {
+                assert(0!=lhs);
+                assert(0!=rhs);
+                if(lnw<rnw)
+                {
+                    assert(rhs[rnw-1]>0);
+                    return Negative;
+                }
+                else
+                {
+                    if(rnw<lnw)
+                    {
+                        assert(lhs[lnw-1]>0);
+                        return Positive;
+                    }
+                    else
+                    {
+                        assert(lnw==rnw);
+                        for(size_t i=lnw;i>0;)
+                        {
+                            const WordType L = lhs[--i];
+                            const WordType R = rhs[i];
+                            switch(SignOf(L,R))
+                            {
+                                case Negative: return Negative;
+                                case Positive: return Positive;
+                                case __Zero__: continue;;
+                            }
+                        }
+                        return __Zero__;
+                    }
+                }
+            }
+
+            //__________________________________________________________________
+            //
+            //! compare lhs,rhs
+            //__________________________________________________________________
+            static inline
+            SignType Compare(const Proto &lhs,
+                             const Proto &rhs) noexcept
+            {
+                return Compare(lhs.block.entry,lhs.words,rhs.block.entry,rhs.words);
+            }
+
+            //__________________________________________________________________
+            //
+            //! compare lhs, uint
+            //__________________________________________________________________
+            static inline
+            SignType Compare(const Proto    &lhs,
+                             const uint64_t &rhs)
+            {
+                const Splitter alias(rhs);
+                return Compare(lhs.block.entry,lhs.words,alias.w,alias.n);
+            }
+
+            //__________________________________________________________________
+            //
+            //! compare uint, rhs
+            //__________________________________________________________________
+            static inline
+            SignType Compare(const uint64_t lhs,
+                             const Proto   &rhs)
+            {
+                const Splitter alias(lhs);
+                return Compare(alias.w,alias.n,rhs.block.entry,rhs.words);
+            }
 
         private:
             Y_DISABLE_ASSIGN(Proto);

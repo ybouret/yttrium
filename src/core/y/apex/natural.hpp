@@ -55,8 +55,7 @@ namespace Yttrium
             size_t         bits()  const noexcept;         //!< exact number of bit
             void           xch(Natural &) noexcept;        //!< no-throw exchange
             std::ostream & printHex(std::ostream &) const; //!< compact print hexa
-            operator uint64_t() const noexcept;            //!< get least significant bits
-
+            uint64_t       u64() const noexcept;           //!< get least significant bits
             //__________________________________________________________________
             //
             //
@@ -85,6 +84,16 @@ namespace Yttrium
             Natural & operator--();                                           //!< --this
             Natural   operator--(int);                                        //!< this--
 
+            //__________________________________________________________________
+            //
+            //
+            // comparison
+            //
+            //__________________________________________________________________
+            friend bool operator==(const Natural &lhs, const Natural &rhs) noexcept;
+            friend bool operator!=(const Natural &lhs, const Natural &rhs) noexcept;
+
+
         private:
             void *impl;
             Natural(void*,const AsImpl_&) noexcept;
@@ -93,7 +102,7 @@ namespace Yttrium
 
     }
 
-    typedef Apex::Natural APN; //!< alias
+    typedef Apex::Natural apn; //!< alias
 
 }
 

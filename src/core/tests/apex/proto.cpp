@@ -17,8 +17,8 @@ namespace
         uint64_t    addRate;
     };
 
-    static unsigned MaxBits = 256;
-    static unsigned Loops   = 8;
+    static unsigned MaxBits = 512;
+    static unsigned Loops   = 1;
 
     template <typename Core, typename Word> static inline
     void TestProto(Random::Bits &ran, Perf &perf)
@@ -181,6 +181,46 @@ namespace
         std::cerr << "]" << std::endl;
 
 
+        (std::cerr << "   (*) Comparison 64-bits" << std::endl).flush();
+
+        for(unsigned i=0;i<=64;++i)
+        {
+            for(unsigned j=0;j<=64;++j)
+            {
+                for(unsigned loop=0;loop<Loops;++loop)
+                {
+                    uint64_t     l = ran.to<uint64_t>( i );
+                    uint64_t     r = ran.to<uint64_t>( j );
+                    const PROTO  lhs(l);
+                    const PROTO  rhs(r);
+                    Y_ASSERT(SignOf(l,r) == PROTO::Compare(lhs,rhs));
+                }
+            }
+        }
+
+        (std::cerr << "   (*) Comparison Checking" << std::endl).flush();
+        for(unsigned i=64;i<=MaxBits;i += 2)
+        {
+            for(unsigned j=64;j<=MaxBits; j += 2)
+            {
+                if(i==j) continue;;
+
+                for(size_t loop=0;loop<Loops;++loop)
+                {
+                    const PROTO  lhs(i,ran);
+                    const PROTO  rhs(j,ran);
+                    if(i<j)
+                    {
+                        Y_ASSERT( PROTO::Compare(lhs,rhs) == Negative ) ;
+                    }
+                    else
+                    {
+                        Y_ASSERT( PROTO::Compare(lhs,rhs) == Positive ) ;
+                    }
+                }
+
+            }
+        }
 
 
     }

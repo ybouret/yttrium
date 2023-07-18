@@ -104,7 +104,7 @@ namespace Yttrium
             return os;
         }
 
-        Natural:: operator uint64_t() const noexcept
+        uint64_t Natural:: u64() const noexcept
         {
             return CONST_PROTO(impl).ls64();
         }
@@ -216,8 +216,22 @@ namespace Yttrium
             return old;
         }
 
+        //----------------------------------------------------------------------
+        //
+        //
+        // comparison
+        //
+        //
+        //----------------------------------------------------------------------
+        bool operator==(const Natural &lhs, const Natural &rhs) noexcept
+        {
+            return Prototype::AreEqual(CONST_PROTO(lhs.impl),CONST_PROTO(rhs.impl));
+        }
 
-
+        bool operator!=(const Natural &lhs, const Natural &rhs) noexcept
+        {
+            return Prototype::AreDifferent(CONST_PROTO(lhs.impl),CONST_PROTO(rhs.impl));
+        }
 
     }
 
