@@ -18,7 +18,7 @@ namespace
                    const bool  expected)
     {
         const bool result = TypeTraits<T>::IsConst;
-        std::cerr << "IsConst(" << std::setw(16) << typeName << ")= " << Answer(result) << ", expecting " << Answer(expected) << std::endl;
+        std::cerr << "IsConst(" << std::setw(16) << typeName << ") => " << Answer(result) << ", expecting " << Answer(expected) << std::endl;
     }
 
 }
@@ -29,6 +29,10 @@ Y_UTEST(type_traits)
 {
     IS_CONST(int,false);
     IS_CONST(const int,true);
+    IS_CONST(const void *,true);
+    IS_CONST(void *,false);
+    IS_CONST(double &,false);
+    IS_CONST(const float &,true);
 
 }
 Y_UDONE()

@@ -59,7 +59,7 @@ namespace Yttrium
         template <class U> struct UnConst            { typedef U   Result; enum { Value = false }; };
         template <class U> struct UnConst<const U>   { typedef U   Result; enum { Value = true  }; };
         template <class U> struct UnConst<const U *> { typedef U * Result; enum { Value = true  }; };
-        template <class U> struct UnConst<const U &> { typedef U & Result; enum { value = true  }; };
+        template <class U> struct UnConst<const U &> { typedef U & Result; enum { Value = true  }; };
 
     public:
         typedef typename UnConst<T>::Result    mutable_type; /*!< non const 'T'      */
@@ -74,8 +74,8 @@ namespace Yttrium
     private:
         template <class U> struct UnVolatile               { typedef U   Result; enum { Value = false }; };
         template <class U> struct UnVolatile<volatile U>   { typedef U   Result; enum { Value = true  }; };
-        template <class U> struct UnVolatile<volatile U *> { typedef U * Result; enum { value = true  }; };
-        template <class U> struct UnVolatile<volatile U &> { typedef U & Result; enum { value = true  }; };
+        template <class U> struct UnVolatile<volatile U *> { typedef U * Result; enum { Value = true  }; };
+        template <class U> struct UnVolatile<volatile U &> { typedef U & Result; enum { Value = true  }; };
 
     public:
         typedef typename UnVolatile<T>::Result non_volatile_type; /*!< non volatile 'T'      */
