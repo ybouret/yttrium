@@ -61,7 +61,6 @@ namespace Yttrium
             size_t         bytes() const noexcept;         //!< exact number of bytes
             size_t         bits()  const noexcept;         //!< exact number of bit
             void           xch(Natural &) noexcept;        //!< no-throw exchange
-            std::ostream & printHex(std::ostream &) const; //!< compact print hexa
             uint64_t       u64() const noexcept;           //!< get least significant bits
             //__________________________________________________________________
             //

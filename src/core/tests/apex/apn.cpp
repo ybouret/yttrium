@@ -63,13 +63,13 @@ Y_UTEST(apex_n)
     const apn end = begin+10;
     for(apn i=begin;i!=end;++i)
     {
-        i.printHex(std::cerr) << std::endl;
+        std::cerr << i << std::endl;
     }
     std::cerr << std::endl;
 
     for(apn i=begin;i!=end;++i)
     {
-        i.printHex(std::cerr) << std::endl;
+       std::cerr << i << std::endl;
     }
     std::cerr << std::endl;
 
@@ -103,13 +103,13 @@ Y_UTEST(apex_n)
 
     for(apn i=end;i!=begin;--i)
     {
-        i.printHex(std::cerr << "0x") << std::endl;
+        std::cerr << i << std::endl;
     }
     std::cerr << std::endl;
 
     for(apn i=end;i!=begin;i--)
     {
-        i.printHex(std::cerr << "0x") << std::endl;
+        std::cerr << i << std::endl;
     }
     std::cerr << std::endl;
 
@@ -173,22 +173,22 @@ Y_UTEST(apex_n)
     std::cerr << "-- Check Div64" << std::endl;
     for(unsigned i=0;i<=64;++i)
     {
-        for(unsigned j=1;j<=64;++j)
+        for(unsigned j=1;j<=i;++j)
         {
-            for(size_t loop=0;loop<16;++loop)
+            for(size_t loop=0;loop<32;++loop)
             {
                 const uint64_t numer = ran.to<uint64_t>(i);
                 const uint64_t denom = ran.to<uint64_t>(j);
+                const uint64_t q     = numer/denom;
                 const apn Numer = numer;
                 const apn Denom = denom;
                 const apn Q     = Numer/Denom;
-
-                std::cerr << Q << std::endl;
-                exit(0);
+                //std::cerr << numer << "/" << denom << " = " << Q << "/" << Hexadecimal(q,Hexadecimal::Compact,Hexadecimal::UpperCase) << std::endl;
+                Y_ASSERT(Q==q);
             }
-
         }
     }
+    
 
 
 

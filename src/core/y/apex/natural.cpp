@@ -1,6 +1,6 @@
 
 #include "y/apex/natural.hpp"
-#include "y/apex/n/proto.hpp"
+#include "y/apex/n/cxx.hpp"
 namespace Yttrium
 {
     Y_SHALLOW_IMPL(TwoToThe);
@@ -18,12 +18,8 @@ namespace Yttrium
         //----------------------------------------------------------------------
         const char * const Natural :: CallSign = Nexus::Proto::CallSign;
 
-
-
-        typedef Proto<uint64_t,uint32_t> Prototype;
-
-#define PROTO(ADDR)       (*static_cast<Prototype *>(ADDR))
-#define CONST_PROTO(ADDR) (*static_cast<const Prototype *>(ADDR))
+        
+       
 
         Natural:: ~Natural() noexcept
         {
@@ -101,11 +97,7 @@ namespace Yttrium
             assert(0!=impl);
         }
 
-        std::ostream & Natural:: printHex(std::ostream &os) const
-        {
-            CONST_PROTO(impl).printHex(os);
-            return os;
-        }
+        
 
         uint64_t Natural:: u64() const noexcept
         {
@@ -118,248 +110,9 @@ namespace Yttrium
             return os;
         }
 
-        //----------------------------------------------------------------------
-        //
-        //
-        // Addition
-        //
-        //
-        //----------------------------------------------------------------------
-        Natural operator+(const Natural &lhs, const Natural &rhs)
-        {
-            return Natural(Prototype::Add( CONST_PROTO(lhs.impl), CONST_PROTO(rhs.impl)),AsImpl);
-        }
-
-        Natural operator+(const Natural &lhs, const uint64_t rhs)
-        {
-            return Natural(Prototype::Add(CONST_PROTO(lhs.impl),rhs),AsImpl);
-        }
-
-        Natural operator+(const uint64_t lhs, const Natural &rhs)
-        {
-            return Natural(Prototype::Add(CONST_PROTO(rhs.impl),lhs),AsImpl);
-        }
-
-        Natural & Natural:: operator+=(const uint64_t rhs)
-        {
-            Natural res( Prototype::Add(CONST_PROTO(impl),rhs),AsImpl);
-            xch(res);
-            return *this;
-        }
-
-        Natural & Natural:: operator+=(const Natural &rhs)
-        {
-            Natural res( Prototype::Add(CONST_PROTO(impl),CONST_PROTO(rhs.impl)), AsImpl);
-            xch(res);
-            return *this;
-        }
-
-        Natural & Natural:: operator++()
-        {
-            Natural res( Prototype::Add1(CONST_PROTO(impl)), AsImpl);
-            xch(res);
-            return *this;
-        }
-
-        Natural   Natural:: operator++(int)
-        {
-            const Natural old(*this);
-            {
-                Natural res( Prototype::Add1(CONST_PROTO(impl)), AsImpl);
-                xch(res);
-            }
-            return old;
-        }
-
-        //----------------------------------------------------------------------
-        //
-        //
-        // Subtraction
-        //
-        //
-        //----------------------------------------------------------------------
-        Natural operator-(const Natural &lhs, const Natural &rhs)
-        {
-            return Natural(Prototype::Sub( CONST_PROTO(lhs.impl), CONST_PROTO(rhs.impl)),AsImpl);
-        }
-
-        Natural operator-(const Natural &lhs, const uint64_t rhs)
-        {
-            return Natural(Prototype::Add(CONST_PROTO(lhs.impl),rhs),AsImpl);
-        }
-
-        Natural operator-(const uint64_t lhs, const Natural &rhs)
-        {
-            return Natural(Prototype::Sub(lhs,CONST_PROTO(rhs.impl)),AsImpl);
-        }
-
-        Natural & Natural:: operator-=(const uint64_t rhs)
-        {
-            Natural res( Prototype::Sub(CONST_PROTO(impl),rhs),AsImpl);
-            xch(res);
-            return *this;
-        }
-
-        Natural & Natural:: operator-=(const Natural &rhs)
-        {
-            Natural res( Prototype::Sub(CONST_PROTO(impl),CONST_PROTO(rhs.impl)), AsImpl);
-            xch(res);
-            return *this;
-        }
-
-        Natural & Natural:: operator--()
-        {
-            Natural res( Prototype::Sub1(CONST_PROTO(impl)), AsImpl);
-            xch(res);
-            return *this;
-        }
-
-        Natural   Natural:: operator--(int)
-        {
-            const Natural old(*this);
-            {
-                Natural res( Prototype::Sub1(CONST_PROTO(impl)), AsImpl);
-                xch(res);
-            }
-            return old;
-        }
-
-        //----------------------------------------------------------------------
-        //
-        //
-        // comparison
-        //
-        //
-        //----------------------------------------------------------------------
-
-        SignType Natural:: Compare(const Natural &lhs, const Natural &rhs) noexcept
-        {
-           return Prototype::Compare(CONST_PROTO(lhs.impl),CONST_PROTO(rhs.impl));
-        }
-
-        //----------------------------------------------------------------------
-        //
-        // equal
-        //
-        //----------------------------------------------------------------------
-        bool operator==(const Natural &lhs, const Natural &rhs) noexcept
-        {
-            return Prototype::AreEqual(CONST_PROTO(lhs.impl),CONST_PROTO(rhs.impl));
-        }
-
-        bool operator==(const Natural &lhs, const uint64_t rhs) noexcept
-        {
-            return __Zero__ == Prototype::Compare(CONST_PROTO(lhs.impl),rhs);
-        }
-
-        bool operator==(const uint64_t lhs, const Natural &rhs) noexcept
-        {
-            return __Zero__ == Prototype::Compare(lhs,CONST_PROTO(rhs.impl));
-        }
-
-        //----------------------------------------------------------------------
-        //
-        // different
-        //
-        //----------------------------------------------------------------------
-        bool operator!=(const Natural &lhs, const Natural &rhs) noexcept
-        {
-            return Prototype::AreDifferent(CONST_PROTO(lhs.impl),CONST_PROTO(rhs.impl));
-        }
-
-        bool operator!=(const Natural &lhs, const uint64_t rhs) noexcept
-        {
-            return __Zero__ != Prototype::Compare(CONST_PROTO(lhs.impl),rhs);
-        }
-
-        bool operator!=(const uint64_t lhs, const Natural &rhs) noexcept
-        {
-            return __Zero__ != Prototype::Compare(lhs,CONST_PROTO(rhs.impl));
-        }
         
-        //----------------------------------------------------------------------
-        //
-        // <
-        //
-        //----------------------------------------------------------------------
-        bool operator<(const Natural &lhs, const Natural &rhs) noexcept
-        {
-            return Negative == Prototype::Compare(CONST_PROTO(lhs.impl),CONST_PROTO(rhs.impl));
-        }
-
-        bool operator<(const Natural &lhs, const uint64_t rhs) noexcept
-        {
-            return Negative == Prototype::Compare(CONST_PROTO(lhs.impl),rhs);
-        }
-
-        bool operator<(const uint64_t lhs, const Natural &rhs) noexcept
-        {
-            return Negative == Prototype::Compare(lhs,CONST_PROTO(rhs.impl));
-        }
-
-
-        //----------------------------------------------------------------------
-        //
-        // >
-        //
-        //----------------------------------------------------------------------
-        bool operator>(const Natural &lhs, const Natural &rhs) noexcept
-        {
-            return Positive == Prototype::Compare(CONST_PROTO(lhs.impl),CONST_PROTO(rhs.impl));
-        }
-
-        bool operator>(const Natural &lhs, const uint64_t rhs) noexcept
-        {
-            return Positive == Prototype::Compare(CONST_PROTO(lhs.impl),rhs);
-        }
-
-        bool operator>(const uint64_t lhs, const Natural &rhs) noexcept
-        {
-            return Positive == Prototype::Compare(lhs,CONST_PROTO(rhs.impl));
-        }
-
-        //----------------------------------------------------------------------
-        //
-        // <=
-        //
-        //----------------------------------------------------------------------
-        bool operator<=(const Natural &lhs, const Natural &rhs) noexcept
-        {
-            return Positive != Prototype::Compare(CONST_PROTO(lhs.impl),CONST_PROTO(rhs.impl));
-        }
-
-        bool operator<=(const Natural &lhs, const uint64_t rhs) noexcept
-        {
-            return Positive != Prototype::Compare(CONST_PROTO(lhs.impl),rhs);
-        }
-
-        bool operator<=(const uint64_t lhs, const Natural &rhs) noexcept
-        {
-            return Positive != Prototype::Compare(lhs,CONST_PROTO(rhs.impl));
-        }
-
-
-        //----------------------------------------------------------------------
-        //
-        // >=
-        //
-        //----------------------------------------------------------------------
-        bool operator>=(const Natural &lhs, const Natural &rhs) noexcept
-        {
-            return Negative != Prototype::Compare(CONST_PROTO(lhs.impl),CONST_PROTO(rhs.impl));
-        }
-
-        bool operator>=(const Natural &lhs, const uint64_t rhs) noexcept
-        {
-            return Negative != Prototype::Compare(CONST_PROTO(lhs.impl),rhs);
-        }
-
-        bool operator>=(const uint64_t lhs, const Natural &rhs) noexcept
-        {
-            return Negative != Prototype::Compare(lhs,CONST_PROTO(rhs.impl));
-        }
-
-
+       
+      
         //----------------------------------------------------------------------
         //
         //
@@ -373,69 +126,12 @@ namespace Yttrium
         {
         }
 
-        //----------------------------------------------------------------------
-        //
-        //
-        // multiplication
-        //
-        //
-        //----------------------------------------------------------------------
-        Natural operator*(const Natural &lhs, const Natural &rhs)
+        void Natural:: shr() noexcept
         {
-            Prototype::MulProc mul = Prototype::LongMul;
-            return Natural( Prototype::Mul(CONST_PROTO(lhs.impl),CONST_PROTO(rhs.impl),mul,0), AsImpl);
+            PROTO(impl).shr();
         }
-
-        Natural operator*(const Natural &lhs, const uint64_t rhs)
-        {
-            return Natural( Prototype::Mul(CONST_PROTO(lhs.impl),rhs), AsImpl);
-        }
-
-        Natural operator*(const uint64_t lhs, const Natural &rhs)
-        {
-            return Natural( Prototype::Mul(CONST_PROTO(rhs.impl),lhs), AsImpl);
-        }
-
-        Natural & Natural:: operator*=(const Natural &rhs)
-        {
-            Natural temp = (*this) * rhs;
-            xch(temp);
-            return *this;
-        }
-
-        Natural & Natural:: operator*=(const uint64_t rhs)
-        {
-            Natural temp(Prototype::Mul(CONST_PROTO(impl),rhs), AsImpl);
-            xch(temp);
-            return *this;
-        }
-
-        //----------------------------------------------------------------------
-        //
-        //
-        // Division
-        //
-        //
-        //----------------------------------------------------------------------
-        Natural operator/(const Natural &numer, const Natural &denom)
-        {
-            const Prototype &D = CONST_PROTO(denom.impl); if(D.nbits<=0) throw Specific::Exception(Natural::CallSign,"Division by Zero");
-            const Prototype &N = CONST_PROTO(numer.impl);
-            switch( Prototype::Compare(N,D) )
-            {
-                case Negative: return Natural(0);
-                case __Zero__: return Natural(1);
-                case Positive:
-                    break;
-            }
-            assert(N.nbits>=D.nbits);
-
-            Natural q(TwoToThe,N.nbits-D.nbits);
-            
-
-            return Natural();
-
-        }
+       
+      
 
     }
 

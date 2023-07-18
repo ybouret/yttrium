@@ -840,18 +840,18 @@ namespace Yttrium
             words( Splitter::BytesToWords(bytes) ),
             block(bytes)
             {
-
                 assert(bytes>0);
                 assert(words>0);
+
                 const size_t  msi = words-1; assert(nbits>msi*WordBits);
                 WordType     &msw = block.entry[msi];
-                const size_t  msb = nbits - msi * WordBits;
-                assert(msb>0);
-                assert(msb<=WordBits);
+                const size_t  msb = nbits - msi * WordBits; assert(msb>0); assert(msb<=WordBits);
                 msw = WordType(1) << (msb-1);
+
                 assert(Check("Proto(AsShift)"));
             }
 
+            //! this >>= 1
             inline void shr() noexcept
             {
                 if(words>0)
