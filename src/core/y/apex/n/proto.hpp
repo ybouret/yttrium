@@ -25,6 +25,9 @@ namespace Yttrium
     namespace Apex
     {
 
+        //! helper for power of two
+        Y_SHALLOW_DECL(AsShift);
+
         namespace Nexus
         {
             //__________________________________________________________________
@@ -113,6 +116,7 @@ namespace Yttrium
             typedef typename SignedInt<CoreSize>::Type   CIntType;                                  //!< alias
             static  const WordType                       WordMaxi = UnsignedInt<WordSize>::Maximum; //!< alias
             static  const CIntType                       Radix    = CIntType(WordMaxi) + 1;         //!< alias
+            static  const CoreType                       WordMask = WordMaxi;                       //!< alias
 
             //__________________________________________________________________
             //
@@ -803,6 +807,136 @@ namespace Yttrium
                 const Splitter alias(lhs);
                 return Compare(alias.w,alias.n,rhs.block.entry,rhs.words);
             }
+
+            //__________________________________________________________________
+            //
+            //
+            // Bitwise ops
+            //
+            //__________________________________________________________________
+
+            //! construct 2^sh
+            inline Proto(const size_t sh, const AsShift_ &) :
+            Nexus::Proto(),
+            nbits( sh+1 ),
+            bytes( BitsToBytes(nbits)            ),
+            words( Splitter::BytesToWords(bytes) ),
+            block(bytes)
+            {
+
+                assert(bytes>0);
+                assert(words>0);
+                const size_t  msi = words-1; assert(nbits>msi*WordBits);
+                WordType     &msw = block.entry[msi];
+                const size_t  msb = nbits - msi * WordBits;
+                assert(msb>0);
+                assert(msb<=WordBits);
+                msw = WordType(1) << (msb-1);
+                assert(Check("Proto(AsShift)"));
+            }
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Multiplications
+            //
+            //__________________________________________________________________
+
+            //__________________________________________________________________
+            //
+            //! algorithm prototype
+            //__________________________________________________________________
+            typedef Proto * (*MulProc)(const WordType * const, const size_t,
+                                       const WordType * const, const size_t,
+                                       uint64_t *);
+
+            //__________________________________________________________________
+            //
+            //! long multiplication
+            //__________________________________________________________________
+            static inline
+            Proto * LongMul(const WordType * const a, const size_t p,
+                            const WordType * const b, const size_t q,
+                            uint64_t *ell)
+            {
+                assert(0!=a);
+                assert(0!=b);
+                if(p<=0)
+                {
+                    return new Proto(0,AsCapacity);
+                }
+                else
+                {
+                    if(q<=0)
+                    {
+                        return new Proto(0,AsCapacity);
+                    }
+                    else
+                    {
+                        assert(p>0);
+                        assert(q>0);
+                        const size_t w       = p+q;
+                        Proto       *P       = new Proto(w*WordSize,AsCapacity);
+                        WordType    *product = P->block.entry;
+
+                        const uint64_t t = ell ? WallTime::Ticks() : 0;
+                        for(size_t j=0;j<q;++j)
+                        {
+                            const CoreType bj    = b[j];
+                            CoreType       carry = 0;
+                            size_t         k     = j;
+                            for(size_t i=0;i<p;++i,++k)
+                            {
+                                WordType &prod = product[k];
+                                carry  += CoreType(prod) + CoreType(a[i]) * bj;
+                                prod    = WordType(carry&WordMask);
+                                carry >>= WordBits;
+                            }
+                            assert(j+p==k);
+                            product[k] = WordType(carry);
+                        }
+
+                        Coerce(P->words)  = w;
+                        P->update();
+                        if(ell) (*ell) += WallTime::Ticks() - t;
+                        return P;
+                    }
+                }
+                return 0;
+            }
+
+            //__________________________________________________________________
+            //
+            //! Mulitplication of two proto
+            //__________________________________________________________________
+            static inline Proto *Mul(const Proto &lhs,
+                                     const Proto &rhs,
+                                     MulProc      mul,
+                                     uint64_t    *ell)
+            {
+                assert(0!=mul);
+                return mul(lhs.block.entry,
+                           lhs.words,
+                           rhs.block.entry,
+                           rhs.words,
+                           ell);
+            }
+
+            //__________________________________________________________________
+            //
+            //! Multiplication of lhs by scalar rhs
+            //__________________________________________________________________
+            static inline Proto *Mul(const Proto   &lhs,
+                                     const uint64_t rhs,
+                                     MulProc        mul)
+            {
+                const Splitter alias(rhs);
+                return mul(lhs.block.entry,lhs.words,alias.w,alias.n,0);
+            }
+
+            
+
 
         private:
             Y_DISABLE_ASSIGN(Proto);

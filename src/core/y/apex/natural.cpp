@@ -3,6 +3,8 @@
 #include "y/apex/n/proto.hpp"
 namespace Yttrium
 {
+    Y_SHALLOW_IMPL(TwoToThe);
+
     namespace Apex
     {
 
@@ -109,6 +111,11 @@ namespace Yttrium
             return CONST_PROTO(impl).ls64();
         }
 
+        std::ostream & operator<<(std::ostream &os, const Natural &n)
+        {
+            CONST_PROTO(n.impl).printHex(os);
+            return os;
+        }
 
         //----------------------------------------------------------------------
         //
@@ -351,6 +358,19 @@ namespace Yttrium
             return Negative != Prototype::Compare(lhs,CONST_PROTO(rhs.impl));
         }
 
+
+        //----------------------------------------------------------------------
+        //
+        //
+        // Bitwirse
+        //
+        //
+        //----------------------------------------------------------------------
+        Natural:: Natural(const TwoToThe_ &, const size_t p) :
+        Number(),
+        impl( new Prototype(p,AsShift) )
+        {
+        }
     }
 
 }

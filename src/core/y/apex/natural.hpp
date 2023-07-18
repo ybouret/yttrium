@@ -12,12 +12,16 @@ namespace Yttrium
 {
     namespace Random { class Bits; }
 
-
+    //! helper
+    Y_SHALLOW_DECL(TwoToThe);
+    
     namespace Apex
     {
 
         //! helper
         Y_SHALLOW_DECL(AsImpl);
+
+
 
         //______________________________________________________________________
         //
@@ -118,6 +122,22 @@ namespace Yttrium
             friend bool operator>=(const Natural &lhs, const Natural &rhs) noexcept; //!< lhs > rhs
             friend bool operator>=(const Natural &lhs, const uint64_t rhs) noexcept; //!< lhs > rhs
             friend bool operator>=(const uint64_t lhs, const Natural &rhs) noexcept; //!< lhs > rhs
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Bitwise ops
+            //
+            //__________________________________________________________________
+            explicit Natural(const TwoToThe_ &, const size_t p); //!< 2^p
+
+            //__________________________________________________________________
+            //
+            //
+            // Multiplication
+            //
+            //__________________________________________________________________
 
         private:
             void *impl;

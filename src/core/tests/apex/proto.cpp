@@ -189,10 +189,10 @@ namespace
             {
                 for(unsigned loop=0;loop<Loops;++loop)
                 {
-                    uint64_t     l = ran.to<uint64_t>( i );
-                    uint64_t     r = ran.to<uint64_t>( j );
-                    const PROTO  lhs(l);
-                    const PROTO  rhs(r);
+                    const uint64_t  l = ran.to<uint64_t>( i );
+                    const uint64_t r = ran.to<uint64_t>( j );
+                    const PROTO    lhs(l);
+                    const PROTO    rhs(r);
                     Y_ASSERT(SignOf(l,r) == PROTO::Compare(lhs,rhs));
                 }
             }
@@ -219,6 +219,54 @@ namespace
                     }
                 }
 
+            }
+        }
+
+        std::cerr << "   (*) Powers Of Two" << std::endl;
+        {
+            for(unsigned i=0;i<64;++i)
+            {
+                const PROTO    p(i,Apex::AsShift);
+                const uint64_t u=uint64_t(1)<<i;
+                p.printHex(std::cerr << "2^" << i << " = "); std::cerr << "/" << Hexadecimal(u,Hexadecimal::Compact) << std::endl;
+            }
+        }
+
+        {
+            for(unsigned i=64;i<=257;++i)
+            {
+                const PROTO    p(i,Apex::AsShift);
+                Y_ASSERT(p.nbits==i+1);
+            }
+        }
+
+        std::cerr << "   (*) Multiplication64" << std::endl;
+        for(unsigned i=0;i<=32;++i)
+        {
+            for(unsigned j=0;j<=32;++j)
+            {
+                const uint64_t l = ran.to<uint64_t>( i );
+                const uint64_t r = ran.to<uint64_t>( j );
+                const uint64_t p =l*r;
+                const PROTO    lhs(l);
+                const PROTO    rhs(r);
+                const hPROTO   prod( PROTO::Mul(lhs,rhs,PROTO::LongMul,0) );
+                std::cerr << "Prod = ";
+                prod->printHex(std::cerr);  std::cerr << " / " << Hexadecimal(p,Hexadecimal::Compact,Hexadecimal::UpperCase) << std::endl;
+                Y_ASSERT( prod->ls64() == p );
+            }
+        }
+
+        std::cerr << "   (*) Mul power of two" << std::endl;
+        for(unsigned i=0;i<=1000;i+=1+ran.leq(10))
+        {
+            const PROTO lhs(i,Apex::AsShift);
+            for(unsigned j=0;j<=1000;j+=1+ran.leq(10))
+            {
+                const PROTO  rhs(j,Apex::AsShift);
+                const hPROTO prod( PROTO::Mul(lhs,rhs,PROTO::LongMul,0) );
+                const PROTO  theo(i+j,Apex::AsShift);
+                Y_ASSERT( PROTO::AreEqual(*prod,theo) );
             }
         }
 

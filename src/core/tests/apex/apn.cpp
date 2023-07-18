@@ -135,7 +135,14 @@ Y_UTEST(apex_n)
         }
     }
 
-
+    std::cerr << "-- Bitwise Ops" << std::endl;
+    for(unsigned i=0;i<64;++i)
+    {
+        const uint64_t u = uint64_t(1) << i;
+        const apn      p = apn(TwoToThe,i);
+        Y_ASSERT(p==u);
+        std::cerr << p << std::endl;
+    }
 
 }
 Y_UDONE()

@@ -5,6 +5,7 @@ namespace Yttrium
 {
     namespace Apex
     {
+        Y_SHALLOW_IMPL(AsShift);
 
         namespace Nexus
         {
