@@ -141,8 +141,37 @@ Y_UTEST(apex_n)
         const uint64_t u = uint64_t(1) << i;
         const apn      p = apn(TwoToThe,i);
         Y_ASSERT(p==u);
-        std::cerr << p << std::endl;
+        //std::cerr << p << std::endl;
     }
+
+    std::cerr << "-- Check Mul64" << std::endl;
+    for(unsigned i=0;i<=32;++i)
+    {
+        for(unsigned j=0;j<=32;++j)
+        {
+            for(size_t loop=0;loop<16;++loop)
+            {
+                const uint64_t l = ran.to<uint64_t>(i);
+                const uint64_t r = ran.to<uint64_t>(j);
+                const uint64_t p = l*r;
+                const apn      L = l;
+                const apn      R = r;
+                const apn      P = L*R;
+                Y_ASSERT(p==P);
+                {
+                    apn dum = L; dum *= R; Y_ASSERT(dum==P);
+                }
+
+                {
+                    apn dum = L; dum *= r; Y_ASSERT(dum==P);
+                }
+            }
+
+        }
+
+    }
+
+
 
 }
 Y_UDONE()
