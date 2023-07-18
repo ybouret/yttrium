@@ -128,9 +128,13 @@ namespace Yttrium
         };
 
 
-        //======================================================================
-        // index_of
-        //======================================================================
+        //______________________________________________________________________
+        //
+        //
+        // IndexOf
+        //
+        //______________________________________________________________________
+
         //! default index_of algorithm.
         template <class TList, class T> class IndexOf;
 
@@ -139,7 +143,7 @@ namespace Yttrium
         class IndexOf<NullType,T> {
         public:
             enum {
-                value = -1 //!< when not in type_list.
+                Value = -1 //!< when not in type_list.
             };
         };
 
@@ -148,16 +152,16 @@ namespace Yttrium
         class  IndexOf< TypeList<T, tail>, T>
         {
         public:
-            enum { value = 0 };
+            enum { Value = 0 };
         };
 
         //! recursive index_of algorithm.
         template <class head, class tail, class T>
         class IndexOf<TypeList<head, tail>, T> {
         private:
-            enum { temp = IndexOf<tail, T>::value };
+            enum { temp = IndexOf<tail, T>::Value };
         public:
-            enum { value = (temp == -1 ? -1 : 1 + temp) };
+            enum { Value = (temp == -1 ? -1 : 1 + temp) };
         };
 
         //======================================================================
