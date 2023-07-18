@@ -928,11 +928,10 @@ namespace Yttrium
             //! Multiplication of lhs by scalar rhs
             //__________________________________________________________________
             static inline Proto *Mul(const Proto   &lhs,
-                                     const uint64_t rhs,
-                                     MulProc        mul)
+                                     const uint64_t rhs)
             {
-                const Splitter alias(rhs);
-                return mul(lhs.block.entry,lhs.words,alias.w,alias.n,0);
+                const  Splitter alias(rhs);
+                return LongMul(lhs.block.entry,lhs.words,alias.w,alias.n,0);
             }
 
             
