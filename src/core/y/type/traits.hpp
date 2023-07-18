@@ -33,14 +33,57 @@ namespace Yttrium
 
     namespace TL
     {
-        typedef TL5(signed char, short, int, long, long long)                                       std_sints_list; //!< standard signed
-        typedef TL5(unsigned char, unsigned short, unsigned int, unsigned long, unsigned long long) std_uints_list; //!< standard unsigned
-        typedef TL4(uint8_t,uint16_t,uint32_t,uint64_t)                                             sys_uints_list; //!< system unsigned
-        typedef TL4(int8_t,int16_t,int32_t,int64_t)                                                 sys_sints_list; //!< system signed
-        typedef TL2(bool,char)                                                                      misc_ints_list; //!< misc. chart
-        typedef TL3(float,double,long double)                                                       std_reals_list; //!< floating point
+        typedef TL5(signed char, short, int, long, long long)                                       StandardIntegers; //!< standard signed
+        typedef TL5(unsigned char, unsigned short, unsigned int, unsigned long, unsigned long long) StandardUnsigned; //!< standard unsigned
+        typedef TL4(uint8_t,uint16_t,uint32_t,uint64_t)                                             PlatformIntegers; //!< system unsigned
+        typedef TL4(int8_t,int16_t,int32_t,int64_t)                                                 PlatformUnsigned; //!< system signed
+        typedef TL2(bool,char)                                                                      LanguageIntegers; //!< misc. chart
+        typedef TL3(float,double,long double)                                                       IsoFloatingPoint; //!< floating point
     }
 
+    template <typename T> class TypeTraits
+    {
+    public:
+        typedef  T Type; //!< original type
+
+    private:
+        TypeTraits(); ~TypeTraits(); Y_DISABLE_COPY_AND_ASSIGN(TypeTraits);
+
+        //______________________________________________________________________
+        //
+        //
+        // Constness
+        //
+        //______________________________________________________________________
+    private:
+        template <class U> struct UnConst            { typedef U   Result; enum { Value = false }; };
+        template <class U> struct UnConst<const U>   { typedef U   Result; enum { Value = true  }; };
+        template <class U> struct UnConst<const U *> { typedef U * Result; enum { Value = true  }; };
+        template <class U> struct UnConst<const U &> { typedef U & Result; enum { value = true  }; };
+
+    public:
+        typedef typename UnConst<T>::Result    mutable_type; /*!< non const 'T'      */
+        enum { IsConst = UnConst<T>::Value                   /*!< true if T is const */ };
+
+        //______________________________________________________________________
+        //
+        //
+        // Volatility
+        //
+        //______________________________________________________________________
+    private:
+        template <class U> struct UnVolatile               { typedef U   Result; enum { Value = false }; };
+        template <class U> struct UnVolatile<volatile U>   { typedef U   Result; enum { Value = true  }; };
+        template <class U> struct UnVolatile<volatile U *> { typedef U * Result; enum { value = true  }; };
+        template <class U> struct UnVolatile<volatile U &> { typedef U & Result; enum { value = true  }; };
+
+    public:
+        typedef typename UnVolatile<T>::Result non_volatile_type; /*!< non volatile 'T'      */
+        enum { IsVolatile = UnVolatile<T>::Value                  /*!< true if T is volatile */};
+
+        //typedef typename unvolatile< typename unconst<T>::result >::result non_qualified_type; //!< unqualified 'T'
+        //enum { is_qualified = is_const || is_volatile /*!< true if T is qualified */};
+    };
 
 }
 
