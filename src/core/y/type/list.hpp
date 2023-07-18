@@ -101,29 +101,32 @@ namespace Yttrium
         };
 
 
-        //======================================================================
-        // safe_type_at
-        //======================================================================
-        //! default safe_type_at algorithm.
-        template <class TList, size_t index,
-        typename default_type = NullType>
-        struct SafeTypeAt
-        {
-            typedef default_type result; //!< when bad index
+        //______________________________________________________________________
+        //
+        //
+        // SafeTypeAt
+        //
+        //______________________________________________________________________
+
+        //! declaration
+        template <class TList, size_t index, typename default_type = NullType>
+        struct SafeTypeAt {
+            typedef default_type Result; //!< when bad index
         };
 
-        //! specialized safe_type_at algorithm.
+        //! specialized SafeTypeAt algorithm.
         template <class head, class tail, typename default_type>
         struct SafeTypeAt< TypeList<head,tail>, 0, default_type> {
-            typedef head result; //!< initial case
+            typedef head Result; //!< initial case
         };
 
-        //! recursive safe_type_at algorithm.
+        //! recursive SafeTypeAt algorithm.
         template <class head, class tail, size_t i, typename default_type>
         struct SafeTypeAt< TypeList<head, tail>, i, default_type> {
             typedef typename
-            SafeTypeAt< tail, i-1, default_type>::result result; //!< recursive case
+            SafeTypeAt< tail, i-1, default_type>::Result Result; //!< recursive case
         };
+
 
         //======================================================================
         // index_of
