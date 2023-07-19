@@ -1,5 +1,7 @@
 
 #include "y/ptr/auto.hpp"
+#include "y/ptr/drill-down.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/object.hpp"
 

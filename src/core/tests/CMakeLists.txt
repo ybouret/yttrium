@@ -86,6 +86,7 @@ add_test(sort:merge    test-core sort_merge)
 
 #ptr
 add_test(ptr:auto test-core ptr_auto)
+add_test(ptr:arc  test-core ptr_arc)
 
 #apex
 add_test(apex:archon   test-core apex_archon)

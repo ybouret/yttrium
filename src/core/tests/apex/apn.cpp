@@ -200,9 +200,7 @@ Y_UTEST(apex_n)
         const apn rdv = prod/lhs;   Y_ASSERT(rdv==rhs);
     }
     std::cerr << "]" << std::endl;
-
-
-
+    
 
 }
 Y_UDONE()

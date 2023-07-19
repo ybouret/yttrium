@@ -65,6 +65,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(sort_merge);
 
     Y_UTEST(ptr_auto);
+    Y_UTEST(ptr_arc);
 
     Y_UTEST(apex_archon);
     Y_UTEST(apex_block);
