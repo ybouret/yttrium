@@ -32,6 +32,11 @@ namespace Yttrium
             inline virtual const void *ro_addr() const noexcept { return wksp;  }
             inline virtual size_t      measure() const noexcept { return bytes;  }
 
+            inline T &operator[](const size_t i) noexcept {
+                assert(i<items);
+                return wksp[i];
+            }
+
             const size_t       items;
             const size_t       bytes;
         private:

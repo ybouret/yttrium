@@ -224,7 +224,14 @@ Y_UTEST(apex_n)
         const apn rdv = prod/lhs;   Y_ASSERT(rdv==rhs);
     }
     std::cerr << "]" << std::endl;
-    
+
+    std::cerr << "-- Check Output" << std::endl;
+    for(size_t i=2;i<=64;++i)
+    {
+        const apn n(i,ran);
+        std::cerr << std::hex << n << " = " << std::dec << n << std::endl;
+    }
+
 
 }
 Y_UDONE()
