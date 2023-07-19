@@ -187,6 +187,10 @@ namespace Yttrium
                 Y_STATIC_CHECK(WordSize<CoreSize,InvalidMetrics);
             }
 
+            //__________________________________________________________________
+            //
+            //! create a Proto with one byte
+            //__________________________________________________________________
             inline explicit Proto(const uint8_t b,
                                   const AsByte_ &)  :
             Nexus::Proto(),
@@ -405,7 +409,10 @@ namespace Yttrium
                 return uint8_t(w);
             }
 
+            //__________________________________________________________________
+            //
             //! Hexadecimal printing
+            //__________________________________________________________________
             void printHex(std::ostream &os) const
             {
                 if(bytes<=0) { os << '0'; return; }
@@ -832,7 +839,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //__________________________________________________________________
+            //
             //! construct 2^sh
+            //__________________________________________________________________
             inline Proto(const size_t sh, const AsShift_ &) :
             Nexus::Proto(),
             nbits( sh+1 ),
@@ -851,7 +861,10 @@ namespace Yttrium
                 assert(Check("Proto(AsShift)"));
             }
 
+            //__________________________________________________________________
+            //
             //! this >>= 1
+            //__________________________________________________________________
             inline void shr() noexcept
             {
                 if(words>0)
@@ -968,8 +981,6 @@ namespace Yttrium
                 return LongMul(lhs.block.entry,lhs.words,alias.w,alias.n,0);
             }
 
-
-            
 
 
 

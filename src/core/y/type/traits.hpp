@@ -41,6 +41,15 @@ namespace Yttrium
         typedef TL3(float,double,long double)                                                       IsoFloatingPoint; //!< floating point
     }
 
+
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Computing Type Traits
+    //
+    //
+    //__________________________________________________________________________
     template <typename T> class TypeTraits
     {
     public:
@@ -140,7 +149,19 @@ namespace Yttrium
     public:
         enum { IsArray = ArrayTraits<T>::Value };
 
-        
+
+    public:
+        enum { InStandardIntegers   = ( TL::IndexOf<TL::StandardIntegers,T>::Value >= 0 ) };
+        enum { InStandardUnsigned   = ( TL::IndexOf<TL::StandardUnsigned,T>::Value >= 0 ) };
+        enum { InPlatformIntegers   = ( TL::IndexOf<TL::PlatformIntegers,T>::Value >= 0 ) };
+        enum { InPlatformUnsigned   = ( TL::IndexOf<TL::PlatformUnsigned,T>::Value >= 0 ) };
+        enum { InLanguageIntegers   = ( TL::IndexOf<TL::LanguageIntegers,T>::Value >= 0 ) };
+        enum { IsIsoFloatingPoint   = ( TL::IndexOf<TL::IsoFloatingPoint,T>::Value >= 0 ) };
+        enum { IsIntegral           = (InStandardIntegers || InStandardUnsigned || InPlatformIntegers ||InPlatformUnsigned || InLanguageIntegers) };
+        enum { IsArithmetic         = (IsIntegral || IsIsoFloatingPoint) };
+        enum { IsFundamental        = (IsArithmetic  || IsSameType<T,void>::Value) };
+        // enum { is_primitive     = ( is_fundamental || is_pointer || is_pointer_to_member ) };
+
     };
 
 }
@@ -161,19 +182,6 @@ namespace yack
     {
 
 
-
-
-        //______________________________________________________________________
-        //
-        // is array
-        //______________________________________________________________________
-    private:
-        template <typename U> struct array_traits                  { enum { value = false }; };
-        template <typename U> struct array_traits<U []>            { enum { value = true  }; };
-        template <typename U, size_t N> struct array_traits<U [N]> { enum { value = true  }; };
-
-    public:
-        enum { is_array = array_traits<T>::value };
 
 
     public:

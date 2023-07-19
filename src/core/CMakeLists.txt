@@ -25,6 +25,7 @@ utest
 memory
 memory/allocator
 memory/exclusive
+ptr
 apex
 apex/m
 apex/n
