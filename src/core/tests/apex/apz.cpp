@@ -12,6 +12,6 @@ using namespace Yttrium;
 Y_UTEST(apex_z)
 {
     Random::Rand ran;
-
+    apz z;
 }
 Y_UDONE()

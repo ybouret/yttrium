@@ -1,3 +1,4 @@
+
 #include "y/apex/natural.hpp"
 #include "y/apex/n/cxx.hpp"
 #include "y/type/utils.hpp"
@@ -9,12 +10,15 @@ namespace Yttrium
         //----------------------------------------------------------------------
         //
         //
-        // Division
+        // Modulo
         //
         //
         //----------------------------------------------------------------------
-        Natural operator/(const Natural &numer, const Natural &denom)
+        Natural operator%(const Natural &numer, const Natural &denom)
         {
+            return numer-(numer/denom)*denom;
+
+#if 0
             //------------------------------------------------------------------
             //
             // get proto Denom and Numer
@@ -81,29 +85,30 @@ namespace Yttrium
                     return lower;
 
             }
+#endif
         }
 
 
-        Natural operator/(const Natural &lhs, const uint64_t rhs)
+        Natural operator%(const Natural &lhs, const uint64_t rhs)
         {
             const Natural Denom(rhs);
-            return lhs/Denom;
+            return lhs%Denom;
         }
 
-        Natural operator/(const uint64_t lhs, const Natural &rhs)
+        Natural operator%(const uint64_t lhs, const Natural &rhs)
         {
             const Natural Numer(lhs);
-            return Numer/rhs;
+            return Numer%rhs;
         }
 
-        Natural & Natural :: operator/=(const Natural &rhs)
+        Natural & Natural :: operator %=(const Natural &rhs)
         {
             Natural q = *this / rhs;
             xch(q);
             return *this;
         }
 
-        Natural & Natural :: operator/=(const uint64_t rhs)
+        Natural & Natural :: operator %=(const uint64_t rhs)
         {
             Natural q = *this / rhs;
             xch(q);

@@ -159,8 +159,24 @@ namespace Yttrium
             // Division
             //
             //__________________________________________________________________
-            friend Natural operator/(const Natural &numer, const Natural &denom); //!< lhs*rhs
+            friend Natural operator/(const Natural &lhs, const Natural &rhs); //!< lhs*rhs
+            friend Natural operator/(const Natural &lhs, const uint64_t rhs); //!< lhs/rhs
+            friend Natural operator/(const uint64_t lhs, const Natural &rhs); //!< lhs/rhs
+            Natural & operator/=(const Natural &rhs);                         //!< this / rhs
+            Natural & operator/=(const uint64_t rhs);                         //!< this / rhs
 
+
+            //__________________________________________________________________
+            //
+            //
+            // modulo
+            //
+            //__________________________________________________________________
+            friend Natural operator%(const Natural &lhs, const Natural &rhs); //!< lhs%rhs
+            friend Natural operator%(const Natural &lhs, const uint64_t rhs); //!< lhs%rhs
+            friend Natural operator%(const uint64_t lhs, const Natural &rhs); //!< lhs%rhs
+            Natural & operator%=(const Natural &rhs);                         //!< this % rhs
+            Natural & operator%=(const uint64_t rhs);                         //!< this % rhs
 
         private:
             void *impl;

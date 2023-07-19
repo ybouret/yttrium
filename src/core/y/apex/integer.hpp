@@ -25,6 +25,8 @@ namespace Yttrium
             
         };
     }
+
+    typedef  Apex::Integer apz;
 }
 
 #endif
