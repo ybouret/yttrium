@@ -10,11 +10,20 @@ namespace Yttrium
 
     namespace Core
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Base class for smart pointers
+        //
+        //
+        //______________________________________________________________________
         class Ptr
         {
-        public:    static const char Nil[];
-        protected: explicit Ptr() noexcept;
-        public:    virtual ~Ptr() noexcept;
+        public:    static const char Nil[]; //!< "(nil)"
+        protected: explicit Ptr() noexcept; //!< setup
+        public:    virtual ~Ptr() noexcept; //!< cleanup
+            //! abort() is NULL handle
             static void Critical(const void *, const char * const) noexcept;
 
         private:
@@ -22,68 +31,146 @@ namespace Yttrium
         };
     }
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Immediate access with operator->
+    //
+    //
+    //__________________________________________________________________________
     template <class T> class Immediate
     {
     public:
-        Y_ARGS_EXPOSE(T);
-        typedef Type *      ReturnType;
-        typedef ConstType * ConstReturnType;
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        Y_ARGS_EXPOSE(T);                    //!< aliases
+        typedef Type *      ReturnType;      //!< alias
+        typedef ConstType * ConstReturnType; //!< alias
 
-        inline virtual ~Immediate() noexcept {}
-
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        inline virtual ~Immediate() noexcept {} //!< cleanup
     protected:
-        inline explicit Immediate() noexcept {}
-        inline ReturnType      fetch(Type       *ptr)       noexcept { assert(0!=ptr); return ptr; }
-        inline ConstReturnType fetch(const Type *ptr) const noexcept { assert(0!=ptr); return ptr; }
+        inline explicit Immediate() noexcept {} //!< setup
+
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        inline ReturnType      fetch(Type       *ptr)       noexcept { assert(0!=ptr); return ptr; } //!< proxy for operator->
+        inline ConstReturnType fetch(const Type *ptr) const noexcept { assert(0!=ptr); return ptr; } //!< proxy for operator->
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Immediate);
     };
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! DrillDown access with operator->
+    //
+    //
+    //__________________________________________________________________________
     template <class T> class DrillDown
     {
     public:
-        Y_ARGS_EXPOSE(T);
-        typedef Type &      ReturnType;
-        typedef ConstType & ConstReturnType;
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        Y_ARGS_EXPOSE(T);                    //!< aliases
+        typedef Type &      ReturnType;      //!< alias
+        typedef ConstType & ConstReturnType; //!< alias
 
-        inline virtual ~DrillDown() noexcept {}
-
-
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        inline virtual ~DrillDown() noexcept {} //!< cleanup
     protected:
-        inline explicit DrillDown() noexcept {}
-        inline ReturnType      fetch(Type      *ptr)       noexcept { assert(0!=ptr); return *ptr; }
-        inline ConstReturnType fetch(ConstType *ptr) const noexcept { assert(0!=ptr); return *ptr; }
+        inline explicit DrillDown() noexcept {} //!< setup
+
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        inline ReturnType      fetch(Type      *ptr)       noexcept { assert(0!=ptr); return *ptr; } //!< proxy for operator->
+        inline ConstReturnType fetch(ConstType *ptr) const noexcept { assert(0!=ptr); return *ptr; } //!< proxy for operator->
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(DrillDown);
     };
 
+
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Base class for smart pointers, holding handle
+    //
+    //
+    //__________________________________________________________________________
     template <typename T, template <class> class Policy>
     class Ptr : public Core::Ptr, public Policy<T>
     {
     public:
-        typedef typename Policy<T>::ReturnType      ReturnType;
-        typedef typename Policy<T>::ConstReturnType ConstReturnType;
-        Y_ARGS_EXPOSE(T);
-        
-    protected:
-        inline explicit Ptr(Type *ptr) noexcept : handle( (MutableType*)ptr ) {}
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        typedef typename Policy<T>::ReturnType      ReturnType;      //!< alias
+        typedef typename Policy<T>::ConstReturnType ConstReturnType; //!< alias
+        Y_ARGS_EXPOSE(T);                                            //!< aliases
 
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+    protected:
+        inline explicit Ptr(Type *ptr) noexcept : handle( (MutableType*)ptr ) {} //!< setup
     public:
-        inline virtual ~Ptr()     noexcept { assert(0==handle); }
+        inline virtual ~Ptr()           noexcept { assert(0==handle); }          //!< cleanup
 
-        inline bool     isValid() const noexcept { return 0!=handle;  }
-        inline bool     isEmpty() const noexcept { return 0==handle;  }
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        inline bool     isValid() const noexcept { return 0!=handle;  } //!< check validity
+        inline bool     isEmpty() const noexcept { return 0==handle;  } //!< check dangling
 
-        inline Type      &     operator*()        noexcept { assert(isValid()); return *handle; }
-        inline ConstType &     operator*()  const noexcept { assert(isValid()); return *handle; }
-        inline ReturnType      operator->()       noexcept { assert(isValid()); return this->fetch(handle); }
-        inline ConstReturnType operator->() const noexcept { assert(isValid()); return this->fetch(handle); }
+
+        inline Type      &     operator*()        noexcept { assert(isValid()); return *handle; }             //!< dereference
+        inline ConstType &     operator*()  const noexcept { assert(isValid()); return *handle; }             //!< dereference, const
+        inline ReturnType      operator->()       noexcept { assert(isValid()); return this->fetch(handle); } //!< access w.r.t. policy
+        inline ConstReturnType operator->() const noexcept { assert(isValid()); return this->fetch(handle); } //!< access w.r.t. policy, const
 
 
     protected:
-        MutableType *handle;
+        MutableType *handle; //!< handle for all smart pointers
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Ptr);
