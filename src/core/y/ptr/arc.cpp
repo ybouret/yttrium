@@ -9,7 +9,7 @@ namespace Yttrium
 
         const char * const ArcPtr::CallSign = "ArcPtr";
 
-        void ArcPtr:: Critical(void *handle) noexcept
+        void ArcPtr:: NoNull(void *handle) noexcept
         {
             Ptr::Critical(handle,CallSign);
         }

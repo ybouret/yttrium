@@ -22,7 +22,8 @@ namespace Yttrium
         protected: explicit ArcPtr() noexcept; //!< setup
         public:    virtual ~ArcPtr() noexcept; //!< cleanup
             static const char * const CallSign; //!< "ArcPtr"
-            static void Critical(void *) noexcept;
+            static void NoNull(void *) noexcept;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ArcPtr);
         };
@@ -63,7 +64,7 @@ namespace Yttrium
         //______________________________________________________________________
         inline          ArcPtr(Type *ptr) noexcept : Core::ArcPtr(), SelfType(ptr)
         {
-            Critical(handle);
+            NoNull(handle);
             assert(0!=handle);
             handle->withhold();
         }
