@@ -145,7 +145,6 @@ Y_UTEST(apex_n)
         const uint64_t u = uint64_t(1) << i;
         const apn      p = apn(TwoToThe,i);
         Y_ASSERT(p==u);
-        //std::cerr << p << std::endl;
     }
 
     std::cerr << "-- Check Mul64" << std::endl;
@@ -229,7 +228,7 @@ Y_UTEST(apex_n)
     for(size_t i=2;i<=64;++i)
     {
         const apn n(i,ran);
-        std::cerr << std::hex << n << " = " << std::dec << n << std::endl;
+        std::cerr << std::hex << std::setw(17) << n << " = " << std::dec << std::setw(22) << n << std::endl;
     }
 
 
