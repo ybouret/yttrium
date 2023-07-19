@@ -8,6 +8,7 @@ concurrent
 random
 hashing
 sort
+ptr
 apex
 )
 
@@ -51,11 +52,13 @@ add_test(memory:quarry    test-core memory_quarry)
 
 
 #type
-add_test(type:ints test-core type_ints)
-add_test(type:div    test-core type_div)
-add_test(type:list   test-core type_list)
-add_test(type:traits test-core type_traits)
+add_test(type:ints       test-core type_ints)
+add_test(type:div        test-core type_div)
+add_test(type:list       test-core type_list)
+add_test(type:traits     test-core type_traits)
 add_test(type:conversion test-core type_conversion)
+add_test(type:args       test-core type_args)
+
 #data
 add_test(data:list test-core data_list)
 add_test(data:pool test-core data_pool)
@@ -81,6 +84,8 @@ add_test(hashing:mix64 test-core hashing_mix64)
 add_test(sort:heap     test-core sort_heap)
 add_test(sort:merge    test-core sort_merge)
 
+#ptr
+add_test(ptr:auto test-core ptr_auto)
 
 #apex
 add_test(apex:archon   test-core apex_archon)

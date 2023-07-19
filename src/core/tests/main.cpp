@@ -36,6 +36,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(type_list);
     Y_UTEST(type_traits);
     Y_UTEST(type_conversion);
+    Y_UTEST(type_args);
 
     Y_UTEST(text_plural);
     Y_UTEST(text_human_readable);
@@ -62,6 +63,8 @@ Y_UTEST_DECL(256)
 
     Y_UTEST(sort_heap);
     Y_UTEST(sort_merge);
+
+    Y_UTEST(ptr_auto);
 
     Y_UTEST(apex_archon);
     Y_UTEST(apex_block);
