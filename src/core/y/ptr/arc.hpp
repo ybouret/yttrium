@@ -19,10 +19,10 @@ namespace Yttrium
         //______________________________________________________________________
         class ArcPtr
         {
-        protected: explicit ArcPtr() noexcept; //!< setup
-        public:    virtual ~ArcPtr() noexcept; //!< cleanup
-            static const char * const CallSign; //!< "ArcPtr"
-            static void NoNull(void *) noexcept;
+        protected: explicit ArcPtr() noexcept;   //!< setup
+        public:    virtual ~ArcPtr() noexcept;   //!< cleanup
+            static const char * const CallSign;  //!< "ArcPtr"
+            static void NoNull(void *) noexcept; //!< critical error
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ArcPtr);

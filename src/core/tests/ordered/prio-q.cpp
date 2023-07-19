@@ -18,14 +18,14 @@ Y_UTEST(ordered_prioQ)
     void               *wksp[ Y_WORDS_GEQ(wlen) ]; Y_ASSERT(sizeof(wksp)>=wlen);
     size_t count = 0;
     apn   *pq    = Memory::OutOfReach::Cast<apn>(wksp);
+    std::cerr << "Insertion" << std::endl;
     try {
         while(count<n)
         {
-            const apn temp(ran.leq(64),ran);
-            std::cerr << "+" << temp << std::endl;
+            const apn temp(ran.leq(16),ran);
 
             Core::PrioQ<apn>::Insert(pq,count,temp,Comparison::Increasing<apn>);
-
+            std::cerr << "(" << pq[0] << ") "; Core::Display(std::cerr,pq,count) << std::endl;
         }
     }
     catch(...)
@@ -33,8 +33,15 @@ Y_UTEST(ordered_prioQ)
         Core::PrioQ<apn>::Finish(pq,count);
         throw;
     }
+    std::cerr << "Insertion" << std::endl;
+    std::cerr << "Removal"   << std::endl;
+    while(count>0)
+    {
+        std::cerr << "(" << pq[0] << ") " << std::endl;
+        Core::PrioQ<apn>::Remove(pq,count,Comparison::Increasing<apn>);
+    }
 
-    Core::PrioQ<apn>::Finish(pq,count);
+
 
 }
 Y_UDONE()

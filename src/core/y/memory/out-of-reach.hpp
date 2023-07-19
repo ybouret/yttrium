@@ -56,6 +56,7 @@ namespace Yttrium
                 return static_cast<T*>( Haul(item,n*sz) );
             }
 
+            //! generic memory swap
             template <typename T> static inline
             void Swap(T &a, T &b) noexcept
             {

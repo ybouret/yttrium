@@ -12,11 +12,27 @@ namespace Yttrium
 
     namespace Core
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Priority Queue Operations on linear memory
+        //
+        //
+        //__________________________________________________________________________
         template <typename T>
         struct PrioQ
         {
-            Y_ARGS_EXPOSE(T);
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            Y_ARGS_EXPOSE(T); //!< aliases
 
+            //__________________________________________________________________
+            //
             //! insert with ENOUGH linear memory
             /**
              \param tree    linear space
@@ -24,6 +40,7 @@ namespace Yttrium
              \param args    for copy constructor
              \param compare comparison function, test only < 0
              */
+            //__________________________________________________________________
             template <typename COMPARE> static inline
             void Insert(MutableType  *tree,
                         size_t       &count,
@@ -32,16 +49,16 @@ namespace Yttrium
             {
                 assert(tree);
 
-                //------------------------------------------------------------------
+                //--------------------------------------------------------------
                 // insert at ipos=count
-                //------------------------------------------------------------------
+                //--------------------------------------------------------------
                 size_t ipos = count;
                 new ( &tree[ipos] ) MutableType(args);
                 ++count;
 
-                //------------------------------------------------------------------
+                //--------------------------------------------------------------
                 // repetitive promotion (no throw)
-                //------------------------------------------------------------------
+                //--------------------------------------------------------------
                 while(ipos>0)
                 {
                     const size_t  ppos   = (ipos-1)>>1;
@@ -56,13 +73,18 @@ namespace Yttrium
                         break;    // balanced
                 }
 
-                //------------------------------------------------------------------
+                //--------------------------------------------------------------
                 // done
-                //------------------------------------------------------------------
+                //--------------------------------------------------------------
             }
 
 
+            //__________________________________________________________________
+            //
+            //
             //! removing top element
+            //
+            //__________________________________________________________________
             template <typename COMPARE> static inline
             void Remove(MutableType  *tree,
                         size_t       &count,
@@ -70,16 +92,16 @@ namespace Yttrium
             {
                 assert(count>0);
 
-                //------------------------------------------------------------------
+                //--------------------------------------------------------------
                 // filter cases
-                //------------------------------------------------------------------
+                //--------------------------------------------------------------
                 switch(count)
                 {
                     case 0: // shouldn't get here..
                         return;
 
                     case 1: // last item
-                        Memory::OutOfReach::Naught( destructed( &tree[0]) );
+                        Memory::OutOfReach::Naught( &tree[0] );
                         count = 0;
                         return;
 
@@ -88,18 +110,18 @@ namespace Yttrium
                 }
                 assert(count>1);
 
-                //------------------------------------------------------------------
+                //--------------------------------------------------------------
                 // contract tree: put last item at top
-                //------------------------------------------------------------------
+                //--------------------------------------------------------------
                 {
                     void *target =  Memory::OutOfReach::Addr( Destructed( &tree[0]) );
                     void *source =  Memory::OutOfReach::Addr( &tree[--count] );
                     Memory::OutOfReach::Grab(target,source,sizeof(Type));
                 }
 
-                //------------------------------------------------------------------
+                //--------------------------------------------------------------
                 // then rearrange tree
-                //------------------------------------------------------------------
+                //--------------------------------------------------------------
                 size_t       ipos = 0;
             PROMOTE:
                 const size_t temp = ipos<<1;
@@ -116,14 +138,17 @@ namespace Yttrium
                 else
                 {
                     // promote
-                    mswap(tree[ipos],tree[mpos]);
+                    Memory::OutOfReach::Swap(tree[ipos],tree[mpos]);
                     ipos = mpos;
                     goto PROMOTE;
                 }
 
             }
 
+            //__________________________________________________________________
+            //
             //! helper to destruct all
+            //__________________________________________________________________
             static inline void Finish(MutableType *tree, size_t &count) noexcept
             {
                 while(count>0)
