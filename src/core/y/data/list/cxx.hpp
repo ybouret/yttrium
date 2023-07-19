@@ -64,7 +64,7 @@ namespace Yttrium
             try
             {
                 for(const NODE *node=other.head;node;node=node->next)
-                    pushBack( new NODE(*node) );
+                    pushTail( new NODE(*node) );
             }
             catch(...)
             {

@@ -12,7 +12,7 @@ check
 type
 system
 calculus
-ios
+io
 text
 data
 data/list

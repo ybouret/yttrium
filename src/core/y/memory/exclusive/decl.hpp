@@ -4,6 +4,7 @@
 #ifndef Y_Memory_Exclusive_Decl_Included
 #define Y_Memory_Exclusive_Decl_Included 1
 
+#include "y/config/starting.hpp"
 
 //______________________________________________________________________________
 //

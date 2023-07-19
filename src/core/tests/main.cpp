@@ -67,6 +67,8 @@ Y_UTEST_DECL(256)
     Y_UTEST(ptr_auto);
     Y_UTEST(ptr_arc);
 
+    Y_UTEST(io_char);
+
     Y_UTEST(fft_xbr);
     Y_UTEST(fft_1d);
 

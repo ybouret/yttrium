@@ -9,6 +9,7 @@ random
 hashing
 sort
 ptr
+io
 fft
 apex
 ordered
@@ -89,6 +90,9 @@ add_test(sort:merge    test-core sort_merge)
 #ptr
 add_test(ptr:auto test-core ptr_auto)
 add_test(ptr:arc  test-core ptr_arc)
+
+#io
+add_test(io::char test-core io_char)
 
 #fft
 add_test(fft:xbr test-core fft_xbr)
