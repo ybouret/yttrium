@@ -9,6 +9,7 @@ random
 hashing
 sort
 ptr
+fft
 apex
 ordered
 )
@@ -88,6 +89,9 @@ add_test(sort:merge    test-core sort_merge)
 #ptr
 add_test(ptr:auto test-core ptr_auto)
 add_test(ptr:arc  test-core ptr_arc)
+
+#fft
+add_test(fft:1d test-core fft_1d)
 
 #apex
 add_test(apex:archon   test-core apex_archon)

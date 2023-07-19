@@ -67,6 +67,8 @@ Y_UTEST_DECL(256)
     Y_UTEST(ptr_auto);
     Y_UTEST(ptr_arc);
 
+    Y_UTEST(fft_1d);
+
     Y_UTEST(apex_archon);
     Y_UTEST(apex_block);
     Y_UTEST(apex_proto);

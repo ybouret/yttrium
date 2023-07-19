@@ -26,6 +26,7 @@ memory
 memory/allocator
 memory/exclusive
 ptr
+fft
 apex
 apex/m
 apex/n
