@@ -41,12 +41,23 @@ namespace
         Y_ASSERT(result==expected);
     }
 
+    template <typename T>
+    static inline
+    void testArr(const char *typeName,
+                 const bool  expected)
+    {
+        const bool result = TypeTraits<T>::IsArray;;
+        std::cerr << "IsArray    (" << std::setw(16) << typeName << ") => " << Answer(result) << ", expecting " << Answer(expected) << std::endl;
+        Y_ASSERT(result==expected);
+    }
+
 
 }
 
 #define IS_CONST(TYPE,EXPECTED)   testConst<TYPE>(#TYPE,EXPECTED)
 #define IS_POINTER(TYPE,EXPECTED) testPointer<TYPE>(#TYPE,EXPECTED)
 #define IS_REF(TYPE,EXPECTED)     testRef<TYPE>(#TYPE,EXPECTED)
+#define IS_ARR(TYPE,EXPECTED)     testArr<TYPE>(#TYPE,EXPECTED)
 
 Y_UTEST(type_traits)
 {
@@ -65,5 +76,9 @@ Y_UTEST(type_traits)
     IS_REF(const int &,true);
     IS_REF(void *,false);
     IS_REF(void * &, true);
+
+    IS_ARR(int,false);
+    IS_ARR(int[],true);
+    IS_ARR(int[4],true);
 }
 Y_UDONE()
