@@ -195,7 +195,7 @@ Y_UTEST(apex_n)
     std::cerr << "-- Check Mod64" << std::endl;
     for(unsigned i=0;i<=64;++i)
     {
-        for(unsigned j=1;j<=i;++j)
+        for(unsigned j=1;j<=64;++j)
         {
             for(size_t loop=0;loop<8;++loop)
             {

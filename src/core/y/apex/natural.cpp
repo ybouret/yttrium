@@ -124,7 +124,17 @@ namespace Yttrium
         {
             PROTO(*this).shr();
         }
-       
+
+        bool Natural:: isEven() const noexcept
+        {
+            return 0 == (CONST_PROTO(*this).block.entry[0] & 0x1);
+        }
+
+        bool Natural:: isOdd() const noexcept
+        {
+            return 0 != (CONST_PROTO(*this).block.entry[0] & 0x1);
+        }
+
       
 
     }

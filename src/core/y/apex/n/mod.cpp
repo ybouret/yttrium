@@ -16,15 +16,16 @@ namespace Yttrium
         //----------------------------------------------------------------------
         Natural operator%(const Natural &numer, const Natural &denom)
         {
+#if 1
             return numer-(numer/denom)*denom;
 
-#if 0
+#else
             //------------------------------------------------------------------
             //
             // get proto Denom and Numer
             //
             //------------------------------------------------------------------
-            const Prototype &D = CONST_PROTO(denom); if(D.nbits<=0) throw Specific::Exception(Natural::CallSign,"Division by Zero");
+            const Prototype &D = CONST_PROTO(denom); if(D.nbits<=0) throw Specific::Exception(Natural::CallSign,"Modulo by Zero");
             const Prototype &N = CONST_PROTO(numer);
 
             //------------------------------------------------------------------
@@ -34,8 +35,8 @@ namespace Yttrium
             //------------------------------------------------------------------
             switch( Prototype::Compare(N,D) )
             {
-                case Negative: return Natural(0);
-                case __Zero__: return Natural(1);
+                case Negative: return numer;
+                case __Zero__: return Natural(0);
                 case Positive:
                     break;
             }

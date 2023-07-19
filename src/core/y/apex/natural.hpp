@@ -141,7 +141,9 @@ namespace Yttrium
             //__________________________________________________________________
             explicit Natural(const TwoToThe_ &, const size_t p); //!< 2^p
             void shr() noexcept; //!< >>= 1
-            
+            bool isEven() const noexcept;
+            bool isOdd()  const noexcept;
+
             //__________________________________________________________________
             //
             //
