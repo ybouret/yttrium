@@ -78,11 +78,25 @@ namespace Yttrium
         template <class U> struct UnVolatile<volatile U &> { typedef U & Result; enum { Value = true  }; };
 
     public:
-        typedef typename UnVolatile<T>::Result non_volatile_type; /*!< non volatile 'T'      */
-        enum { IsVolatile = UnVolatile<T>::Value                  /*!< true if T is volatile */};
+        typedef typename UnVolatile<T>::Result settled_type; /*!< non volatile 'T'      */
+        enum { IsVolatile = UnVolatile<T>::Value             /*!< true if T is volatile */};
 
-        //typedef typename unvolatile< typename unconst<T>::result >::result non_qualified_type; //!< unqualified 'T'
-        //enum { is_qualified = is_const || is_volatile /*!< true if T is qualified */};
+
+        //______________________________________________________________________
+        //
+        //
+        // Pointer
+        //
+        //______________________________________________________________________
+    private:
+        template <class U> struct PointerTraits      { enum { Value = false }; typedef NullType PointeeType; };
+        template <class U> struct PointerTraits<U *> { enum { Value = true };  typedef U        PointeeType; };
+
+    public:
+        enum { IsPointer = PointerTraits<T>::Value                    /*!< true if 'T' can be written as 'U *'.      */ };
+        typedef typename   PointerTraits<T>::PointeeType PointeeType; /*!< returns 'U' for 'U *', NullType otherwise.*/
+
+
     };
 
 }

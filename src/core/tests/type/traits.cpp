@@ -18,12 +18,25 @@ namespace
                    const bool  expected)
     {
         const bool result = TypeTraits<T>::IsConst;
-        std::cerr << "IsConst(" << std::setw(16) << typeName << ") => " << Answer(result) << ", expecting " << Answer(expected) << std::endl;
+        std::cerr << "IsConst    (" << std::setw(16) << typeName << ") => " << Answer(result) << ", expecting " << Answer(expected) << std::endl;
+        Y_ASSERT(result==expected);
     }
+
+    template <typename T>
+    static inline
+    void testPointer(const char *typeName,
+                     const bool  expected)
+    {
+        const bool result = TypeTraits<T>::IsPointer;
+        std::cerr << "IsPointer  (" << std::setw(16) << typeName << ") => " << Answer(result) << ", expecting " << Answer(expected) << std::endl;
+        Y_ASSERT(result==expected);
+    }
+
 
 }
 
-#define IS_CONST(TYPE,EXPECTED) testConst<TYPE>(#TYPE,EXPECTED)
+#define IS_CONST(TYPE,EXPECTED)   testConst<TYPE>(#TYPE,EXPECTED)
+#define IS_POINTER(TYPE,EXPECTED) testPointer<TYPE>(#TYPE,EXPECTED)
 
 Y_UTEST(type_traits)
 {
@@ -33,6 +46,9 @@ Y_UTEST(type_traits)
     IS_CONST(void *,false);
     IS_CONST(double &,false);
     IS_CONST(const float &,true);
+
+    IS_POINTER(void *,true);
+    IS_POINTER(const int,false);
 
 }
 Y_UDONE()
