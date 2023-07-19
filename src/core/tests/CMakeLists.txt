@@ -10,6 +10,7 @@ hashing
 sort
 ptr
 apex
+ordered
 )
 
 Y_LinkLibraries(test-core)
@@ -94,5 +95,7 @@ add_test(apex:block    test-core apex_block)
 add_test(apex:proto    test-core apex_proto)
 add_test(apex:n        test-core apex_n)
 
+#ordered
+add_test(ordered:prioQ test-core ordered_prioQ)
 
 

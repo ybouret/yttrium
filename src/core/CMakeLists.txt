@@ -29,6 +29,7 @@ ptr
 apex
 apex/m
 apex/n
+ordered
 )
 
 source_group(concurrent FILES ${quark})

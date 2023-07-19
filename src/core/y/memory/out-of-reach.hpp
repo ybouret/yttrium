@@ -56,6 +56,12 @@ namespace Yttrium
                 return static_cast<T*>( Haul(item,n*sz) );
             }
 
+            template <typename T> static inline
+            void Swap(T &a, T &b) noexcept
+            {
+                Swap(&a,&b,sizeof(T));
+            }
+
         };
     }
 

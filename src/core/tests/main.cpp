@@ -73,6 +73,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(apex_perf);
     Y_UTEST(apex_n);
 
+    Y_UTEST(ordered_prioQ);
 
     //std::cerr << "-------- Platform: " << Y_PLATFORM << std::endl;
     //std::cerr << "-------- Compiler: " << Y_COMPILER << std::endl;
