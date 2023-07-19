@@ -25,6 +25,7 @@ utest
 memory
 memory/allocator
 memory/exclusive
+memory/buffer
 ptr
 fft
 apex

@@ -3,6 +3,7 @@
 #include "y/apex/natural.hpp"
 #include "y/apex/n/cxx.hpp"
 #include "y/io/cache.hpp"
+#include "y/memory/buffer/of.hpp"
 
 namespace Yttrium
 {
@@ -34,7 +35,13 @@ namespace Yttrium
                         self.xch(q);
                     } while(self.bits());
                 }
-                while(cache.size) os << cache.pullTail();
+                Memory::BufferOf<char,Memory::Pooled> buffer(cache.size+1);
+                char *str = static_cast<char *>( buffer.rw_addr() );
+                {
+                    size_t i = 0;
+                    while(cache.size) str[i++] = cache.pullTail();
+                }
+                os << str;
             }
 
             return os;

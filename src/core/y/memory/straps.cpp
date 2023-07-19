@@ -174,7 +174,7 @@ namespace Yttrium
             assert(0!=cache);
             if(cache==empty)
             {
-                std::cerr << "cleaning empty!" << std::endl;
+                //std::cerr << "cleaning empty!" << std::endl;
                 assert(eshft>0);
                 empty = 0;
                 eshft = 0;
