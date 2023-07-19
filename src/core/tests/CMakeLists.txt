@@ -91,6 +91,7 @@ add_test(ptr:auto test-core ptr_auto)
 add_test(ptr:arc  test-core ptr_arc)
 
 #fft
+add_test(fft:xbr test-core fft_xbr)
 add_test(fft:1d test-core fft_1d)
 
 #apex

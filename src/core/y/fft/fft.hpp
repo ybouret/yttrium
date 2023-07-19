@@ -12,6 +12,8 @@ namespace Yttrium
     struct FFT
     {
 
+
+
         template <typename T>
         static inline size_t XBR(T data[], const size_t nn) noexcept
         {
