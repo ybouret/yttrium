@@ -5,7 +5,6 @@
 
 #include "y/apex/n/split64.hpp"
 #include "y/object.hpp"
-#include "y/apex/types.hpp"
 #include "y/apex/m/block.hpp"
 #include "y/check/static.hpp"
 #include "y/calculus/bit-count.hpp"

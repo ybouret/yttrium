@@ -63,7 +63,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-
+            std::ostream & outputHex(std::ostream &) const;
+            std::ostream & outputDec(std::ostream &) const;
             size_t         bytes() const noexcept;         //!< exact number of bytes
             size_t         bits()  const noexcept;         //!< exact number of bit
             void           xch(Natural &) noexcept;        //!< no-throw exchange

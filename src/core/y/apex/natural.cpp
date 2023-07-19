@@ -104,12 +104,6 @@ namespace Yttrium
             return CONST_PROTO(*this).ls64();
         }
 
-        std::ostream & operator<<(std::ostream &os, const Natural &n)
-        {
-            CONST_PROTO(n).printHex(os);
-            return os;
-        }
-
         
        
       
