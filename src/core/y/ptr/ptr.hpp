@@ -63,6 +63,8 @@ namespace Yttrium
     class Ptr : public Core::Ptr, public Policy<T>
     {
     public:
+        typedef typename Policy<T>::ReturnType      ReturnType;
+        typedef typename Policy<T>::ConstReturnType ConstReturnType;
         Y_ARGS_EXPOSE(T);
         
     protected:
@@ -71,12 +73,15 @@ namespace Yttrium
     public:
         inline virtual ~Ptr()     noexcept { assert(0==handle); }
 
-        inline bool     isValid() noexcept { return 0!=handle;  }
-        inline bool     isEmpty() noexcept { return 0==handle;  }
+        inline bool     isValid() const noexcept { return 0!=handle;  }
+        inline bool     isEmpty() const noexcept { return 0==handle;  }
 
-        inline Type      & operator*()       noexcept { assert(isValid()); return *handle; }
-        inline ConstType & operator*() const noexcept { assert(isValid()); return *handle; }
-        
+        inline Type      &     operator*()        noexcept { assert(isValid()); return *handle; }
+        inline ConstType &     operator*()  const noexcept { assert(isValid()); return *handle; }
+        inline ReturnType      operator->()       noexcept { assert(isValid()); return this->fetch(handle); }
+        inline ConstReturnType operator->() const noexcept { assert(isValid()); return this->fetch(handle); }
+
+
     protected:
         MutableType *handle;
 

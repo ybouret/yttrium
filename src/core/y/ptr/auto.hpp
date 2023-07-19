@@ -16,8 +16,7 @@ namespace Yttrium
         protected: explicit AutoPtr() noexcept;
         public:    virtual ~AutoPtr() noexcept;
             static const char * const CallSign;
-            void   Critical(const void *) noexcept;
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(AutoPtr);
         };

@@ -10,10 +10,7 @@ namespace Yttrium
 
         const char * const AutoPtr:: CallSign = "AutoPtr";
 
-        void AutoPtr:: Critical(const void *addr) noexcept
-        {
-            Ptr::Critical(addr,CallSign);
-        }
+         
     }
 
 }

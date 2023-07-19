@@ -52,6 +52,9 @@ Y_UTEST(ptr_auto)
         std::cerr << (*pDum).count << std::endl;
         pDum = new Dummy();
         std::cerr << (*pDum).count << std::endl;
+        std::cerr << pDum->count << std::endl;
+        const AutoPtr<Dummy> &cst = pDum;
+        std::cerr << cst->count << std::endl;
 
     }
 

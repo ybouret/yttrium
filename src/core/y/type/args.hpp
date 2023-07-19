@@ -13,7 +13,6 @@ typedef typename TypeTraits<T>::MutableType MutableType; \
 typedef const MutableType                   ConstType
 
 
-#define Y_ARGS_ECHO(FROM,TYPE) typedef FROM::TYPE TYPE
 
 #endif
 
