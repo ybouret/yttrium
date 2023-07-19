@@ -15,8 +15,19 @@ namespace Yttrium
         //----------------------------------------------------------------------
         Natural operator/(const Natural &numer, const Natural &denom)
         {
+            //------------------------------------------------------------------
+            //
+            // get proto Denom and Numer
+            //
+            //------------------------------------------------------------------
             const Prototype &D = CONST_PROTO(denom); if(D.nbits<=0) throw Specific::Exception(Natural::CallSign,"Division by Zero");
             const Prototype &N = CONST_PROTO(numer);
+
+            //------------------------------------------------------------------
+            //
+            // check relative values
+            //
+            //------------------------------------------------------------------
             switch( Prototype::Compare(N,D) )
             {
                 case Negative: return Natural(0);
@@ -27,14 +38,19 @@ namespace Yttrium
             assert(N.nbits>=D.nbits);
             assert(numer>denom);
 
+            //------------------------------------------------------------------
+            //
+            // find denom * 2^(p-1) < numer < denom * 2^p
+            //
+            //------------------------------------------------------------------
             size_t p = Max<size_t>(N.nbits-D.nbits,1);
-        FIND_UPPER:
+        PROBE:
             Natural upper(TwoToThe,p);
             {
-                Natural probe = upper * denom;
+                const Natural probe = upper * denom;
                 switch( Natural::Compare(probe,numer) )
                 {
-                    case Negative: ++p; goto FIND_UPPER;
+                    case Negative: ++p; goto PROBE;
                     case __Zero__: return upper;
                     case Positive: break;
                 }
@@ -42,13 +58,15 @@ namespace Yttrium
             Natural lower(TwoToThe,--p);
             assert(lower*denom<numer);
             assert(upper*denom>numer);
-            //std::cerr << "quotient between 2^" << p << " and 2^" << p+1 << std::endl;
 
+            //------------------------------------------------------------------
+            //
+            // Bisection
+            //
+            //------------------------------------------------------------------
             while(true)
             {
-                Natural mid = (lower+upper);
-                PROTO(mid).shr();
-                //std::cerr << "testing " << mid << " in " << lower << " : " << upper << std::endl;
+                Natural mid = (lower+upper); PROTO(mid).shr();
                 {
                     const Natural probe = mid * denom;
                     switch( Natural::Compare(probe,numer) )
@@ -58,9 +76,10 @@ namespace Yttrium
                         case __Zero__: return mid;
                     }
                 }
-                Natural limit = lower;
-                if(++limit>=upper)
+                const AutoProto limit( Prototype::Add1( PROTO(lower)) );
+                if( Negative != Prototype::Compare(*limit,CONST_PROTO(upper)))
                     return lower;
+
             }
 
 
