@@ -62,8 +62,8 @@ namespace Yttrium
         template <class U> struct UnConst<const U &> { typedef U & Result; enum { Value = true  }; };
 
     public:
-        typedef typename UnConst<T>::Result    mutable_type; /*!< non const 'T'      */
-        enum { IsConst = UnConst<T>::Value                   /*!< true if T is const */ };
+        typedef typename UnConst<T>::Result    MutableType; /*!< non const 'T'      */
+        enum { IsConst = UnConst<T>::Value                  /*!< true if T is const */ };
 
         //______________________________________________________________________
         //
@@ -78,8 +78,8 @@ namespace Yttrium
         template <class U> struct UnVolatile<volatile U &> { typedef U & Result; enum { Value = true  }; };
 
     public:
-        typedef typename UnVolatile<T>::Result settled_type; /*!< non volatile 'T'      */
-        enum { IsVolatile = UnVolatile<T>::Value             /*!< true if T is volatile */};
+        typedef typename UnVolatile<T>::Result SettledType; /*!< non volatile 'T'      */
+        enum { IsVolatile = UnVolatile<T>::Value            /*!< true if T is volatile */};
 
 
         //______________________________________________________________________
@@ -97,6 +97,50 @@ namespace Yttrium
         typedef typename   PointerTraits<T>::PointeeType PointeeType; /*!< returns 'U' for 'U *', NullType otherwise.*/
 
 
+        //______________________________________________________________________
+        //
+        //
+        // Pointer To Member
+        //
+        //______________________________________________________________________
+    private:
+        template <class U>         struct PointerToMemberTraits         { enum { Value = false }; };
+        template <class U,class V> struct PointerToMemberTraits<U V::*> { enum { Value = true  }; };
+
+    public:
+        enum { IsPointerToMember = PointerToMemberTraits<T>::Value /*!< true if 'T' is a pointer to member. */ };
+
+
+        //______________________________________________________________________
+        //
+        //
+        // Reference
+        //
+        //______________________________________________________________________
+    private:
+        template <class U> struct ReferenceTraits      { enum { Value = false }; typedef U ReferredType; };
+        template <class U> struct ReferenceTraits<U &> { enum { Value = true  }; typedef U ReferredType; };
+
+    public:
+        enum { IsReference = ReferenceTraits<T>::Value /*!< true if 'T' can be written as 'U &'. */ };
+        typedef typename ReferenceTraits<T>::ReferredType                  &ReferenceType;      //!< returns 'U' for 'U &' and 'U'.
+        typedef const typename ReferenceTraits<MutableType>::ReferredType  &ConstReferenceType; //!< returns 'const U'.
+
+        //______________________________________________________________________
+        //
+        //
+        // IsArray
+        //
+        //______________________________________________________________________
+    private:
+        template <typename U>           struct ArrayTraits        { enum { Value = false }; };
+        template <typename U>           struct ArrayTraits<U []>  { enum { Value = true  }; };
+        template <typename U, size_t N> struct ArrayTraits<U [N]> { enum { Value = true  }; };
+
+    public:
+        enum { IsArray = ArrayTraits<T>::Value };
+
+        
     };
 
 }
@@ -104,39 +148,7 @@ namespace Yttrium
 #if 0
 namespace yack
 {
-    //__________________________________________________________________________
-    //
-    //
-    //! default is_same_type helper
-    //
-    //__________________________________________________________________________
-    template <class T,class U>
-    struct is_same_type
-    {
-        enum { value = false }; //!< in general
-    };
 
-    //__________________________________________________________________________
-    //
-    //
-    //! specialized is_same_type
-    //
-    //__________________________________________________________________________
-    template <class T>
-    struct is_same_type<T,T>
-    {
-        enum { value = true }; //!< in particular
-    };
-
-    namespace tl
-    {
-        typedef TL5(signed char, short, int, long, long long)                                       std_sints_list; //!< standard signed
-        typedef TL5(unsigned char, unsigned short, unsigned int, unsigned long, unsigned long long) std_uints_list; //!< standard unsigned
-        typedef TL4(uint8_t,uint16_t,uint32_t,uint64_t)                                             sys_uints_list; //!< system unsigned
-        typedef TL4(int8_t,int16_t,int32_t,int64_t)                                                 sys_sints_list; //!< system signed
-        typedef TL2(bool,char)                                                                      misc_ints_list; //!< misc. chart
-        typedef TL3(float,double,long double)                                                       std_reals_list; //!< floating point
-    }
 
     //__________________________________________________________________________
     //
@@ -147,153 +159,9 @@ namespace yack
     template <class T>
     class type_traits
     {
-        //______________________________________________________________________
-        //
-        // changing qualifiers
-        //______________________________________________________________________
-    private:
-        template <class U>
-        struct unconst
-        {
-            typedef U result;
-            enum { value = false };
-        };
-
-        template <class U>
-        struct unconst<const U>
-        {
-            typedef U result;
-            enum { value = true };
-        };
-
-        template <class U>
-        struct unconst<const U *>
-        {
-            typedef U *result;
-            enum { value = true };
-        };
-
-        template <class U>
-        struct unconst<const U &>
-        {
-            typedef U &result;
-            enum { value = true };
-        };
 
 
 
-        template <class U>
-        struct unvolatile
-        {
-            typedef U result;
-            enum { value = false };
-        };
-
-        template <class U>
-        struct unvolatile<volatile U>
-        {
-            typedef U result;
-            enum { value = true };
-        };
-
-        template <class U>
-        struct unvolatile<volatile U *>
-        {
-            typedef U *result;
-            enum { value = true };
-        };
-
-        template <class U>
-        struct unvolatile<volatile U &>
-        {
-            typedef U &result;
-            enum { value = true };
-        };
-
-
-    public:
-        typedef typename unconst<T>::result    mutable_type; //!< non const 'T'
-        enum { is_const = unconst<T>::value /*!< true if T is const */ };
-
-        typedef T                   item_type; //!< raw type
-
-
-        typedef typename unvolatile<T>::result non_volatile_type; //!< non volatile 'T'
-        enum { is_volatile = unvolatile<T>::value /*!< true if T is volatile */};
-
-        typedef typename unvolatile< typename unconst<T>::result >::result non_qualified_type; //!< unqualified 'T'
-        enum { is_qualified = is_const || is_volatile /*!< true if T is qualified */};
-
-
-
-        //______________________________________________________________________
-        //
-        // is_pointer
-        //______________________________________________________________________
-    private:
-        template <class U>
-        struct pointer_traits
-        {
-            enum { value = false };
-            typedef null_type pointee_type;
-        };
-
-        template <class U>
-        struct pointer_traits<U *>
-        {
-            enum { value = true };
-            typedef U pointee_type;
-        };
-
-    public:
-        enum { is_pointer = pointer_traits<T>::value /*!< true if 'T' can be written as 'U *'. */ };
-        typedef typename pointer_traits<T>::pointee_type pointee_type; //!< returns 'U' for 'U *', null_type otherwise.
-
-        //______________________________________________________________________
-        //
-        // is_pointer_to_member
-        //______________________________________________________________________
-    private:
-        template <class U>
-        struct pointer_to_memberTraits
-        {
-            enum { value = false };
-        };
-
-        template <class U,class V>
-        struct pointer_to_memberTraits<U V::*>
-        {
-            enum { value = true };
-        };
-
-    public:
-        enum { is_pointer_to_member = pointer_to_memberTraits<T>::value /*!< true if 'T' is a pointer to member. */ };
-
-
-
-        //______________________________________________________________________
-        //
-        // is_reference
-        //______________________________________________________________________
-    private:
-        template <class U>
-        struct reference_traits
-        {
-            enum { value = false };
-            typedef U referred_type;
-        };
-
-        template <class U>
-        struct reference_traits<U &>
-        {
-            enum { value = true };
-            typedef U referred_type;
-        };
-
-    public:
-        enum { is_reference = reference_traits<T>::value /*!< true is 'T' can be written as 'U &'. */ };
-        typedef typename reference_traits<T>::referred_type                  &reference_type;      //!< returns 'U' for 'U &' and 'U'.
-        typedef const typename reference_traits<mutable_type>::referred_type &const_reference_type; //!< returns 'const U'.
 
         //______________________________________________________________________
         //
