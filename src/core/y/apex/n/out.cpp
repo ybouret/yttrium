@@ -2,6 +2,8 @@
 
 #include "y/apex/natural.hpp"
 #include "y/apex/n/cxx.hpp"
+#include "y/io/cache.hpp"
+
 namespace Yttrium
 {
 
@@ -16,7 +18,25 @@ namespace Yttrium
 
         std::ostream & Natural:: outputDec(std::ostream &os) const
         {
-            CONST_PROTO(*this).printHex(os);
+            if(bits()<=0)
+                os << '0';
+            else
+            {
+                IO::Cache     cache;
+                {
+                    const Natural ten(10);
+                    Natural       self = *this;
+                    Natural       q,r;
+                    do
+                    {
+                        Div(q,r,self,ten); assert(r<10); assert(r.u64()<10);
+                        cache << Hexadecimal::Lower[r.u64()];
+                        self.xch(q);
+                    } while(self.bits());
+                }
+                while(cache.size) os << cache.pullTail();
+            }
+
             return os;
         }
 

@@ -1,7 +1,7 @@
 #include "y/io/char.hpp"
 #include "y/memory/exclusive/impl.hpp"
 
-Y_Studio(Yttrium::IO::Char,AtExit::MaximumLongevity-5,128);
+Y_Studio(Yttrium::IO::Char,AtExit::MaximumLongevity-6,128);
 
 
 namespace Yttrium

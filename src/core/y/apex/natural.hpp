@@ -169,7 +169,7 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // modulo
+            // Modulo
             //
             //__________________________________________________________________
             friend Natural operator%(const Natural &lhs, const Natural &rhs); //!< lhs%rhs
@@ -177,6 +177,12 @@ namespace Yttrium
             friend Natural operator%(const uint64_t lhs, const Natural &rhs); //!< lhs%rhs
             Natural & operator%=(const Natural &rhs);                         //!< this % rhs
             Natural & operator%=(const uint64_t rhs);                         //!< this % rhs
+
+            static void Div(Natural &quot, Natural &rem, const Natural &numer, const Natural &denom)
+            {
+                quot = numer/denom; rem = numer - quot * denom;
+            }
+
 
         private:
             void *impl;
