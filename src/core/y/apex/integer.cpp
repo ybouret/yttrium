@@ -1,4 +1,5 @@
 #include "y/apex/integer.hpp"
+#include "y/io/cache.hpp"
 
 namespace Yttrium
 {
@@ -21,6 +22,52 @@ namespace Yttrium
         {
             Coerce(n).xch( Coerce(z.n) );
             CoerceSwap(s,z.s);
+        }
+
+        static uint64_t i2u(const SignType s, const int64_t i)
+        {
+            switch(s)
+            {
+                case Negative: return uint64_t(-i);
+                case __Zero__: return 0;
+                case Positive: return uint64_t(i);
+            }
+            return 0;
+        }
+
+        Integer:: Integer(const int64_t i) :
+        s( SignOf(i) ),
+        n( i2u(s,i)  )
+        {
+        }
+
+        Integer & Integer:: operator=(const int64_t i)
+        {
+            switch( Coerce(s) = SignOf(i) )
+            {
+                case Negative: Coerce(n) = uint64_t(-i); break;
+                case __Zero__: Coerce(n) = 0; break;
+                case Positive: Coerce(n) = uint64_t(i);  break;
+            }
+            return *this;
+        }
+
+        void Integer:: appendTo(IO::Cache &cache) const
+        {
+            switch(s)
+            {
+                case Negative: cache << '-'; n.appendDec(cache); break;
+                case __Zero__: cache << '0'; break;
+                case Positive: n.appendDec(cache); break;
+            }
+        }
+
+        std::ostream & operator<<(std::ostream &os, const Integer &z)
+        {
+            IO::Cache cache;
+            z.appendTo(cache);
+            Number::Display(os,cache);
+            return os;
         }
 
 

@@ -12,6 +12,25 @@ using namespace Yttrium;
 Y_UTEST(apex_z)
 {
     Random::Rand ran;
-    apz z;
+    {
+        apz z;
+        std::cerr << z << std::endl;
+    }
+
+    {
+        apz z = 92;
+        std::cerr << z << std::endl;
+    }
+
+    {
+        apz z = -719;
+        std::cerr << z << std::endl;
+        z =0;
+        std::cerr << z << std::endl;
+        z = 8001;
+        std::cerr << z << std::endl;
+        z = -899;
+        std::cerr << z << std::endl;
+    }
 }
 Y_UDONE()

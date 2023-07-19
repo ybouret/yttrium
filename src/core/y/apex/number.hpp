@@ -4,9 +4,12 @@
 #define Y_Apex_Number_Included 1
 
 #include "y/object.hpp"
+#include <iosfwd>
 
 namespace Yttrium
 {
+    namespace IO     { class Cache; }
+
     namespace Apex
     {
         
@@ -30,6 +33,8 @@ namespace Yttrium
         public:
             virtual ~Number() noexcept; //!< cleanup
 
+            //! transform a cache into a C-string and send it to output
+            static void Display(std::ostream &, IO::Cache &);
             
         private:
             Y_DISABLE_ASSIGN(Number);

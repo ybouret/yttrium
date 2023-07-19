@@ -3,7 +3,6 @@
 #include "y/apex/natural.hpp"
 #include "y/apex/n/cxx.hpp"
 #include "y/io/cache.hpp"
-#include "y/memory/buffer/of.hpp"
 
 namespace Yttrium
 {
@@ -11,80 +10,90 @@ namespace Yttrium
     namespace Apex
     {
 
-        std::ostream & Natural:: outputHex(std::ostream &os) const
+        void Natural:: appendHex(IO::Cache &cache) const
         {
             const Prototype &self = CONST_PROTO(*this);
-            if(self.nbits<=0) { os << '0'; return os; }
-
-            Memory::BufferOf<char,Memory::Pooled> buffer(2*self.bytes+1);
-            bool   first = true;
-            size_t i     = self.bytes;
-            size_t j     = 0;
-            while(i>0)
+            if(self.nbits<=0)
             {
-                const uint8_t b = self.getByte(--i);
-                const uint8_t l = b>>4;
-                if(first)
-                {
-                    assert(b>0);
-                    if(l>0) buffer[j++] = Hexadecimal::Upper[l];
-                    first = false;
-                }
-                else
-                {
-                    buffer[j++] = Hexadecimal::Upper[l];
-                }
-                buffer[j++] = Hexadecimal::Upper[b&0xf];
+                cache << '0';
             }
-            os << &buffer[0];
-            return os;
+            else
+            {
+                bool   first = true;
+                size_t i     = self.bytes;
+                while(i>0)
+                {
+                    const uint8_t b = self.getByte(--i);
+                    const uint8_t l = b>>4;
+                    if(first)
+                    {
+                        assert(b>0);
+                        if(l>0) cache << Hexadecimal::Upper[l];
+                        first = false;
+                    }
+                    else
+                    {
+                        cache << Hexadecimal::Upper[l];
+                    }
+                    cache << Hexadecimal::Upper[b&0xf];
+                }
+            }
         }
 
-        std::ostream & Natural:: outputDec(std::ostream &os) const
-        {
-            if(bits()<=0) { os << '0'; return os; }
 
-            //------------------------------------------------------------------
-            // IO cache since chars come in rever
-            //------------------------------------------------------------------
-            IO::Cache     cache;
+
+        void Natural:: appendDec(IO::Cache &cache) const
+        {
+            const Prototype &self = CONST_PROTO(*this);
+            if(self.nbits<=0)
             {
+                cache << '0';
+            }
+            else
+            {
+                IO::Cache     sto;
                 const Natural ten(10);
                 Natural       self = *this;
                 Natural       q,r;
                 do
                 {
                     Div(q,r,self,ten); assert(r<10); assert(r.u64()<10); // will use r
-                    cache << Hexadecimal::Lower[r.u64()];                // use existing chars
+                    sto << Hexadecimal::Lower[r.u64()];                  // use existing chars
                     self.xch(q);                                         // update
                 } while(self.bits());
+                sto.reverse();
+                cache.mergeTail(sto);
             }
-            //------------------------------------------------------------------
-            // construct C-string
-            //------------------------------------------------------------------
-            Memory::BufferOf<char,Memory::Pooled> buffer(cache.size+1);
-            {
-                size_t i = 0;
-                while(cache.size) buffer[i++] = cache.pullTail();
-            }
-
-            //------------------------------------------------------------------
-            // done
-            //------------------------------------------------------------------
-            os << &buffer[0];;
-            return os;
         }
 
+
+        
         std::ostream & operator<<(std::ostream &os, const Natural &n)
         {
+            //------------------------------------------------------------------
+            // init cache
+            //------------------------------------------------------------------
+            IO::Cache cache;
+
+            //------------------------------------------------------------------
+            // fill cache
+            //------------------------------------------------------------------
             if( os.flags() & std::ios_base::hex )
             {
-                return n.outputHex(os);
+                n.appendHex(cache);
             }
             else
             {
-                return n.outputDec(os);
+                n.appendDec(cache);
             }
+
+            //------------------------------------------------------------------
+            // Display
+            //------------------------------------------------------------------
+            Number::Display(os,cache);
+            return os;
+
+
         }
 
     }

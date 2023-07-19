@@ -17,8 +17,13 @@ namespace Yttrium
             virtual ~Integer() noexcept;
             Integer(const Integer &);
             Integer & operator=(const Integer &);
+            Integer(const int64_t);
+            Integer & operator=(const int64_t);
+            Y_OSTREAM_PROTO(Integer);
 
             void xch(Integer &) noexcept;
+
+            void appendTo(IO::Cache &) const;
 
             const SignType s;
             const Natural  n;

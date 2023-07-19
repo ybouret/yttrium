@@ -284,8 +284,8 @@ namespace Yttrium
             if(target.size<=0)
             {
                 Swap(target.head,source.head);
-                Swap(target.head,source.head);
-                Swap(Coerce(target.size),Coerce(source.size));
+                Swap(target.tail,source.tail);
+                CoerceSwap(target.size,source.size);
             }
             else
             {

@@ -22,12 +22,18 @@ namespace Yttrium
     };
 
 
-    //______________________________________________________________________
+    template <typename T> inline
+    SignType SignOf(T &value)
+    {
+        return value < 0 ? Negative : (0<value? Positive : __Zero__);
+    }
+
+    //__________________________________________________________________________
     //
     //
     //! natural comparison to sign
     //
-    //______________________________________________________________________
+    //__________________________________________________________________________
     template <typename LHS, typename RHS> inline
     SignType SignOf(LHS &lhs, RHS &rhs)
     {

@@ -225,10 +225,12 @@ Y_UTEST(apex_n)
     std::cerr << "]" << std::endl;
 
     std::cerr << "-- Check Output" << std::endl;
-    for(size_t i=2;i<=64;++i)
+    for(unsigned i=2;i<=64;++i)
     {
-        const apn n(i,ran);
-        std::cerr << std::hex << std::setw(17) << n << " = " << std::dec << std::setw(22) << n << std::endl;
+
+        const uint64_t u = ran.to<uint64_t>(i);
+        const apn      n = u;
+        std::cerr << std::hex << std::setw(17) << n << " = " << std::dec << std::setw(22) << n << " / " << u << std::endl;
     }
 
 

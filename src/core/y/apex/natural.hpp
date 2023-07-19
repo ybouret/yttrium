@@ -10,7 +10,7 @@
 
 namespace Yttrium
 {
-    namespace Random { class Bits; }
+    namespace Random { class Bits;  }
 
     //! helper
     Y_SHALLOW_DECL(TwoToThe);
@@ -63,12 +63,13 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            std::ostream & outputHex(std::ostream &) const;
-            std::ostream & outputDec(std::ostream &) const;
-            size_t         bytes() const noexcept;         //!< exact number of bytes
-            size_t         bits()  const noexcept;         //!< exact number of bit
+            void           appendHex( IO::Cache & ) const;
+            void           appendDec( IO::Cache & ) const;
+            size_t         bytes()  const noexcept;         //!< exact number of bytes
+            size_t         bits()   const noexcept;         //!< exact number of bit
             void           xch(Natural &) noexcept;        //!< no-throw exchange
-            uint64_t       u64() const noexcept;           //!< get least significant bits
+            uint64_t       u64()    const noexcept;           //!< get least significant bits
+
             //__________________________________________________________________
             //
             //
