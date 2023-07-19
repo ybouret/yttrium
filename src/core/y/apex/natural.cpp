@@ -44,7 +44,7 @@ namespace Yttrium
 
         Natural:: Natural(const Natural &other) :
         Number(),
-        impl( new Prototype( CONST_PROTO(other.impl) ) )
+        impl( new Prototype( CONST_PROTO(other) ) )
         {
         }
 
@@ -62,18 +62,18 @@ namespace Yttrium
 
         size_t Natural:: bytes() const noexcept
         {
-            return CONST_PROTO(impl).bytes;
+            return CONST_PROTO(*this).bytes;
         }
 
         size_t Natural:: bits() const noexcept
         {
-            return CONST_PROTO(impl).nbits;
+            return CONST_PROTO(*this).nbits;
         }
 
         Natural & Natural:: operator=(const Natural &other)
         {
-            Prototype       &me = PROTO(impl);
-            const Prototype &it = CONST_PROTO(other.impl);
+            Prototype       &me = PROTO(*this);
+            const Prototype &it = CONST_PROTO(other);
             if(!me.couldSteal(it))
             {
                 Prototype *clone = new Prototype(it);
@@ -86,7 +86,7 @@ namespace Yttrium
 
         Natural & Natural:: operator=(const uint64_t qword) noexcept
         {
-            PROTO(impl).ld64(qword);
+            PROTO(*this).ld64(qword);
             return *this;
         }
 
@@ -101,12 +101,12 @@ namespace Yttrium
 
         uint64_t Natural:: u64() const noexcept
         {
-            return CONST_PROTO(impl).ls64();
+            return CONST_PROTO(*this).ls64();
         }
 
         std::ostream & operator<<(std::ostream &os, const Natural &n)
         {
-            CONST_PROTO(n.impl).printHex(os);
+            CONST_PROTO(n).printHex(os);
             return os;
         }
 
@@ -128,7 +128,7 @@ namespace Yttrium
 
         void Natural:: shr() noexcept
         {
-            PROTO(impl).shr();
+            PROTO(*this).shr();
         }
        
       

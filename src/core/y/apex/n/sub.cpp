@@ -7,36 +7,36 @@ namespace Yttrium
     {
         Natural operator-(const Natural &lhs, const Natural &rhs)
         {
-            return Natural(Prototype::Sub( CONST_PROTO(lhs.impl), CONST_PROTO(rhs.impl)),AsImpl);
+            return Natural(Prototype::Sub( CONST_PROTO(lhs), CONST_PROTO(rhs)),AsImpl);
         }
 
         Natural operator-(const Natural &lhs, const uint64_t rhs)
         {
-            return Natural(Prototype::Add(CONST_PROTO(lhs.impl),rhs),AsImpl);
+            return Natural(Prototype::Add(CONST_PROTO(lhs),rhs),AsImpl);
         }
 
         Natural operator-(const uint64_t lhs, const Natural &rhs)
         {
-            return Natural(Prototype::Sub(lhs,CONST_PROTO(rhs.impl)),AsImpl);
+            return Natural(Prototype::Sub(lhs,CONST_PROTO(rhs)),AsImpl);
         }
 
         Natural & Natural:: operator-=(const uint64_t rhs)
         {
-            Natural res( Prototype::Sub(CONST_PROTO(impl),rhs),AsImpl);
+            Natural res( Prototype::Sub(CONST_PROTO(*this),rhs),AsImpl);
             xch(res);
             return *this;
         }
 
         Natural & Natural:: operator-=(const Natural &rhs)
         {
-            Natural res( Prototype::Sub(CONST_PROTO(impl),CONST_PROTO(rhs.impl)), AsImpl);
+            Natural res( Prototype::Sub(CONST_PROTO(*this),CONST_PROTO(rhs)), AsImpl);
             xch(res);
             return *this;
         }
 
         Natural & Natural:: operator--()
         {
-            Natural res( Prototype::Sub1(CONST_PROTO(impl)), AsImpl);
+            Natural res( Prototype::Sub1(CONST_PROTO(*this)), AsImpl);
             xch(res);
             return *this;
         }
@@ -45,7 +45,7 @@ namespace Yttrium
         {
             const Natural old(*this);
             {
-                Natural res( Prototype::Sub1(CONST_PROTO(impl)), AsImpl);
+                Natural res( Prototype::Sub1(CONST_PROTO(*this)), AsImpl);
                 xch(res);
             }
             return old;

@@ -7,17 +7,17 @@ namespace Yttrium
         Natural operator*(const Natural &lhs, const Natural &rhs)
         {
             Prototype::MulProc mul = Prototype::LongMul;
-            return Natural( Prototype::Mul(CONST_PROTO(lhs.impl),CONST_PROTO(rhs.impl),mul,0), AsImpl);
+            return Natural( Prototype::Mul(CONST_PROTO(lhs),CONST_PROTO(rhs),mul,0), AsImpl);
         }
 
         Natural operator*(const Natural &lhs, const uint64_t rhs)
         {
-            return Natural( Prototype::Mul(CONST_PROTO(lhs.impl),rhs), AsImpl);
+            return Natural( Prototype::Mul(CONST_PROTO(lhs),rhs), AsImpl);
         }
 
         Natural operator*(const uint64_t lhs, const Natural &rhs)
         {
-            return Natural( Prototype::Mul(CONST_PROTO(rhs.impl),lhs), AsImpl);
+            return Natural( Prototype::Mul(CONST_PROTO(rhs),lhs), AsImpl);
         }
 
         Natural & Natural:: operator*=(const Natural &rhs)
@@ -29,7 +29,7 @@ namespace Yttrium
 
         Natural & Natural:: operator*=(const uint64_t rhs)
         {
-            Natural temp(Prototype::Mul(CONST_PROTO(impl),rhs), AsImpl);
+            Natural temp(Prototype::Mul(CONST_PROTO(*this),rhs), AsImpl);
             xch(temp);
             return *this;
         }

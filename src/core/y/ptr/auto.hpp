@@ -17,11 +17,10 @@ namespace Yttrium
         //! Common behaviour for AutoPtr
         //
         //______________________________________________________________________
-
         class AutoPtr
         {
-        protected: explicit AutoPtr() noexcept;
-        public:    virtual ~AutoPtr() noexcept;
+        protected: explicit AutoPtr() noexcept; //!< setup
+        public:    virtual ~AutoPtr() noexcept; //!< cleanup
             static const char * const CallSign; //!< "AutoPtr"
             
         private:

@@ -15,8 +15,8 @@ namespace Yttrium
         //----------------------------------------------------------------------
         Natural operator/(const Natural &numer, const Natural &denom)
         {
-            const Prototype &D = CONST_PROTO(denom.impl); if(D.nbits<=0) throw Specific::Exception(Natural::CallSign,"Division by Zero");
-            const Prototype &N = CONST_PROTO(numer.impl);
+            const Prototype &D = CONST_PROTO(denom); if(D.nbits<=0) throw Specific::Exception(Natural::CallSign,"Division by Zero");
+            const Prototype &N = CONST_PROTO(numer);
             switch( Prototype::Compare(N,D) )
             {
                 case Negative: return Natural(0);
@@ -47,7 +47,7 @@ namespace Yttrium
             while(true)
             {
                 Natural mid = (lower+upper);
-                PROTO(mid.impl).shr();
+                PROTO(mid).shr();
                 //std::cerr << "testing " << mid << " in " << lower << " : " << upper << std::endl;
                 {
                     const Natural probe = mid * denom;

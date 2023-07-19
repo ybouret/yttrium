@@ -16,6 +16,7 @@
 #include "y/random/bits.hpp"
 #include "y/type/signs.hpp"
 #include "y/memory/out-of-reach.hpp"
+#include "y/ptr/auto.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -121,33 +122,8 @@ namespace Yttrium
             static  const WordType                       WordMaxi = UnsignedInt<WordSize>::Maximum; //!< alias
             static  const CIntType                       Radix    = CIntType(WordMaxi) + 1;         //!< alias
             static  const CoreType                       WordMask = WordMaxi;                       //!< alias
+            typedef AutoPtr<Proto>                       Pointer;                                   //!< alias
 
-            //__________________________________________________________________
-            //
-            //
-            //! smart pointer for operations
-            //
-            //__________________________________________________________________
-            class Pointer
-            {
-            public:
-                inline  Pointer(Proto *p) noexcept : handle(p) { }
-                inline ~Pointer() noexcept
-                {
-                    if(handle) { delete handle; handle=0; }
-                }
-
-                inline Proto &       operator*()        noexcept { assert(0!=handle); return *handle; }
-                inline const Proto & operator*()  const noexcept { assert(0!=handle); return *handle; }
-                inline Proto *       operator->()       noexcept { assert(0!=handle); return  handle; }
-                inline const Proto * operator->() const noexcept { assert(0!=handle); return  handle; }
-
-
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Pointer);
-                Proto *handle;
-            };
 
             //__________________________________________________________________
             //
