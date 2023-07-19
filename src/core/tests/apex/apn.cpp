@@ -189,7 +189,17 @@ Y_UTEST(apex_n)
         }
     }
     
-
+    std::cerr << "-- Check Mul/Div [";
+    for(size_t loop=0;loop<64;++loop)
+    {
+        (std::cerr << '.').flush();
+        const apn lhs(1+ran.leq(1000),ran);
+        const apn rhs(1+ran.leq(1000),ran);
+        const apn prod = lhs * rhs;
+        const apn ldv = prod/rhs;   Y_ASSERT(ldv==lhs);
+        const apn rdv = prod/lhs;   Y_ASSERT(rdv==rhs);
+    }
+    std::cerr << "]" << std::endl;
 
 
 
