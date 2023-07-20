@@ -54,6 +54,54 @@ namespace Yttrium
 
             return Integer();
         }
+
+
+        Integer operator+(const Integer &lhs, const int64_t rhs)
+        {
+            const Integer tmp(rhs);
+            return lhs + tmp;
+        }
+
+        Integer operator+(const int64_t lhs, const Integer &rhs)
+        {
+            const Integer tmp(lhs);
+            return tmp + rhs;
+        }
+
+        Integer operator+(const Integer &lhs, const Natural &rhs)
+        {
+            const Integer tmp(rhs);
+            return lhs+tmp;
+        }
+
+        Integer operator+(const Natural &lhs, const Integer &rhs)
+        {
+            const Integer tmp(lhs);
+            return tmp+rhs;
+        }
+
+
+        Integer & Integer :: operator+=(const Integer &rhs)
+        {
+            Integer tmp = (*this) + rhs;
+            xch(tmp);
+            return *this;
+        }
+
+        Integer & Integer :: operator+=(const int64_t rhs)
+        {
+            Integer tmp = (*this) + rhs;
+            xch(tmp);
+            return *this;
+        }
+
+        Integer & Integer :: operator+=(const Natural &rhs)
+        {
+            Integer tmp = (*this) + rhs;
+            xch(tmp);
+            return *this;
+        }
+
     }
 
 }

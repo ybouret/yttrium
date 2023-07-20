@@ -5,17 +5,12 @@ namespace Yttrium
 {
     namespace Apex
     {
-        bool operator==(const Integer &lhs, const Integer &rhs) noexcept
-        {
-            return (lhs.s==rhs.s) && (lhs.n == rhs.n);
-        }
 
-        bool operator!=(const Integer &lhs, const Integer &rhs) noexcept
-        {
-            return (lhs.s!=rhs.s) && (lhs.n != rhs.n);
-        }
-
-
+        //----------------------------------------------------------------------
+        //
+        // default comparasion
+        //
+        //----------------------------------------------------------------------
         SignType Integer:: Compare(const Integer &lhs, const Integer &rhs) noexcept
         {
 
@@ -36,12 +31,21 @@ namespace Yttrium
             return __Zero__;
         }
 
-
+        //----------------------------------------------------------------------
+        //
+        // alias
+        //
+        //----------------------------------------------------------------------
         SignType Integer:: Cmp(const Integer &lhs, const Integer &rhs) noexcept
         {
             return Compare(lhs,rhs);
         }
 
+        //----------------------------------------------------------------------
+        //
+        // comparisons with integral
+        //
+        //----------------------------------------------------------------------
         SignType Integer:: Cmp(const Integer &lhs, const int64_t rhs) noexcept
         {
             const SignType rs = Sign::Of(rhs);
@@ -63,6 +67,45 @@ namespace Yttrium
             }
             return __Zero__;
         }
+
+        SignType Integer:: Cmp(const uint64_t lhs, const Integer &rhs) noexcept
+        {
+            return  Sign::Opposite( Cmp(rhs,lhs) );
+        }
+
+        //----------------------------------------------------------------------
+        //
+        // comparison with Natural
+        //
+        //----------------------------------------------------------------------
+        SignType Integer:: Cmp(const Integer &lhs, const Natural &rhs) noexcept
+        {
+            if( __Zero__ == rhs.getSign() )
+            {
+                return lhs.s;
+            }
+            else
+            {
+                assert(rhs>0);
+                switch(lhs.s)
+                {
+                    case Negative: return Negative;
+                    case __Zero__: return Negative;
+                    case Positive:
+                        break;
+                }
+                return Natural::Compare(lhs.n,rhs);
+            }
+        }
+
+        SignType Integer:: Cmp(const Natural &lhs, const Integer &rhs) noexcept
+        {
+            return Sign::Opposite(Cmp(rhs,lhs));
+        }
+
+
+        
+        
 
 
 
