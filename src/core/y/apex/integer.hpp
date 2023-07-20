@@ -36,10 +36,16 @@ namespace Yttrium
             //__________________________________________________________________
             Integer();                             //!< zero
             virtual ~Integer() noexcept;           //!< cleanup
-            Integer(const Integer &);              //!< copy
-            Integer & operator=(const Integer &);  //!< assign
-            Integer(const int64_t);                //!< setup integer
-            Integer & operator=(const int64_t);    //!< assign integer
+
+            Integer(const Integer &);              //!< copy   integer
+            Integer & operator=(const Integer &);  //!< assign integer
+
+            Integer(const Natural &);              //!< setup natural
+            Integer & operator=(const Natural &);  //!< assign natural
+
+            Integer(const int64_t);                //!< setup integral
+            Integer & operator=(const int64_t);    //!< assign integral
+
             Y_OSTREAM_PROTO(Integer);              //!< display
 
             //__________________________________________________________________
@@ -55,6 +61,15 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
+            // Addition
+            //
+            //__________________________________________________________________
+            Integer operator+() const;
+            
+
+            //__________________________________________________________________
+            //
+            //
             // Multiplication
             //
             //__________________________________________________________________
@@ -66,6 +81,31 @@ namespace Yttrium
             Integer & operator*=(const Integer &);
             Integer & operator*=(const int64_t  );
             Integer & operator*=(const Natural &);
+
+            //__________________________________________________________________
+            //
+            //
+            // Division
+            //
+            //__________________________________________________________________
+            friend Integer operator/(const Integer &, const Integer &);
+            friend Integer operator/(const Integer &, const int64_t  );
+            friend Integer operator/(const int64_t  , const Integer &);
+            friend Integer operator/(const Integer &, const Natural &);
+            friend Integer operator/(const Natural &, const Integer &);
+            Integer & operator/=(const Integer &);
+            Integer & operator/=(const int64_t  );
+            Integer & operator/=(const Natural &);
+
+            //__________________________________________________________________
+            //
+            //
+            // comparison
+            //
+            //__________________________________________________________________
+            static SignType Compare(const Integer &lhs, const Integer &rhs) noexcept;
+            friend bool operator==(const Integer &lhs, const Integer &rhs) noexcept;
+            friend bool operator==(const Integer &lhs, const int64_t  rhs) noexcept;
 
 
 

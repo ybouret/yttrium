@@ -62,6 +62,19 @@ namespace Yttrium
             return *this;
         }
 
+        Integer:: Integer(const Natural &N) :
+        s( N.getSign() ),
+        n( N )
+        {
+        }
+
+        Integer & Integer:: operator=(const Natural &N)
+        {
+            Integer tmp(N);
+            xch(tmp);
+            return *this;
+        }
+
         void Integer:: appendTo(IO::Chars &cache) const
         {
             switch(s)
