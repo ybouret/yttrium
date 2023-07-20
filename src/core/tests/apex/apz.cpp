@@ -210,6 +210,27 @@ Y_UTEST(apex_z)
     }
 
 
+    std::cerr << "-- add/sub" << std::endl;
+    for(size_t i=0;i<1000;++i)
+    {
+        const apz lhs(ran.leq(1000),ran);
+        const apz rhs(ran.leq(1000),ran);
+        const apz sum = lhs + rhs;
+        { const apz dum = sum-rhs; Y_ASSERT(lhs==dum); }
+        { const apz dum = sum-lhs; Y_ASSERT(rhs==dum); }
+    }
+
+    std::cerr << "-- mul/div" << std::endl;
+    for(size_t i=0;i<100;++i)
+    {
+        const apz lhs(1+ran.leq(1000),ran);
+        const apz rhs(1+ran.leq(1000),ran);
+        const apz prod = lhs * rhs;
+        { const apz dum = prod/rhs; Y_ASSERT(lhs==dum); }
+        { const apz dum = prod/lhs; Y_ASSERT(rhs==dum); }
+    }
+
+
 
 
 
