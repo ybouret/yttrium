@@ -22,21 +22,33 @@ namespace Yttrium
         Positive =  1  //!< alias for positive sign
     };
 
+    //__________________________________________________________________________
+    //
+    //
+    //! system wide pair of signs
+    //
+    //__________________________________________________________________________
     enum PairOfSigns
     {
-        NN_Signs,
-        NZ_Signs,
-        NP_Signs,
+        NN_Signs, //!< Negative | Negative
+        NZ_Signs, //!< Negative | __Zero__
+        NP_Signs, //!< Negative | Positive
 
-        ZN_Signs,
-        ZZ_Signs,
-        ZP_Signs,
+        ZN_Signs, //!< __Zero__ | Negative
+        ZZ_Signs, //!< __Zero__ | __Zero__
+        ZP_Signs, //!< __Zero__ | Positive
 
-        PN_Signs,
-        PZ_Signs,
-        PP_Signs
+        PN_Signs, //!< Positive | Negative
+        PZ_Signs, //!< Positive | __Zero__
+        PP_Signs  //!< Positive | Positive
     };
 
+    //__________________________________________________________________________
+    //
+    //
+    //! Operations on signs
+    //
+    //__________________________________________________________________________
     struct Sign
     {
 

@@ -1,5 +1,6 @@
 #include "y/apex/integer.hpp"
 #include "y/io/chars.hpp"
+#include "y/random/bits.hpp"
 
 namespace Yttrium
 {
@@ -24,6 +25,13 @@ namespace Yttrium
         Integer:: Integer(const SignType _s, const Natural _n) : s(_s), n(_n)
         {
             assert(!( (__Zero__==s) && (n>0) ) );
+        }
+
+        Integer:: Integer(const size_t numBits, Random::Bits &ran) :
+        s( numBits <= 0 ? __Zero__ : ( ran.choice() ? Positive:Negative) ),
+        n(numBits,ran)
+        {
+
         }
 
 

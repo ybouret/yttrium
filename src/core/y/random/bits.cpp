@@ -266,6 +266,10 @@ namespace Yttrium
             return to<double>() >= 0.5;
         }
 
+        int Bits:: intSgn() noexcept
+        {
+            return choice() ? -1 : 1;
+        }
     }
 
 }

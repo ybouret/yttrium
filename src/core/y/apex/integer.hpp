@@ -37,6 +37,8 @@ namespace Yttrium
             Integer();                             //!< zero
             virtual ~Integer() noexcept;           //!< cleanup
 
+            Integer(const size_t, Random::Bits &);  //!< random
+
             Integer(const Integer &);              //!< copy   integer
             Integer & operator=(const Integer &);  //!< assign integer
 
@@ -65,15 +67,15 @@ namespace Yttrium
             // Addition
             //
             //__________________________________________________________________
-            Integer operator+() const; //!< unary plus
-            friend Integer operator+(const Integer &lhs, const Integer &rhs);
-            friend Integer operator+(const Integer &, const int64_t  );
-            friend Integer operator+(const int64_t  , const Integer &);
-            friend Integer operator+(const Integer &, const Natural &);
-            friend Integer operator+(const Natural &, const Integer &);
-            Integer & operator+=(const Integer &);
-            Integer & operator+=(const int64_t  );
-            Integer & operator+=(const Natural &);
+            Integer operator+() const;                                        //!< unary plus
+            friend Integer operator+(const Integer &lhs, const Integer &rhs); //!< lhs + rhs
+            friend Integer operator+(const Integer &, const int64_t  );       //!< lhs + rhs
+            friend Integer operator+(const int64_t  , const Integer &);       //!< lhs + rhs
+            friend Integer operator+(const Integer &, const Natural &);       //!< lhs + rhs
+            friend Integer operator+(const Natural &, const Integer &);       //!< lhs + rhs
+            Integer & operator+=(const Integer &);                            //!< this += rhs
+            Integer & operator+=(const int64_t  );                            //!< this += rhs
+            Integer & operator+=(const Natural &);                            //!< this += rhs
             Integer & operator++();                                           //!< ++this
             Integer   operator++(int);                                        //!< this++
 
@@ -83,17 +85,17 @@ namespace Yttrium
             // Subtraction
             //
             //__________________________________________________________________
-            Integer operator-() const; //! unary minus
-            friend Integer operator-(const Integer &lhs, const Integer &rhs);
-            friend Integer operator-(const Integer &, const int64_t  );
-            friend Integer operator-(const int64_t  , const Integer &);
-            friend Integer operator-(const Integer &, const Natural &);
-            friend Integer operator-(const Natural &, const Integer &);
-            Integer & operator-=(const Integer &);
-            Integer & operator-=(const int64_t  );
-            Integer & operator-=(const Natural &);
-            Integer & operator--();                                           //!< --this
-            Integer   operator--(int);                                        //!< this--
+            Integer operator-() const;                                         //!< unary minus
+            friend Integer operator-(const Integer &lhs, const Integer &rhs);  //!< lhs + rhs
+            friend Integer operator-(const Integer &, const int64_t  );        //!< lhs + rhs
+            friend Integer operator-(const int64_t  , const Integer &);        //!< lhs + rhs
+            friend Integer operator-(const Integer &, const Natural &);        //!< lhs + rhs
+            friend Integer operator-(const Natural &, const Integer &);        //!< lhs + rhs
+            Integer & operator-=(const Integer &);                             //!< this += rhs
+            Integer & operator-=(const int64_t  );                             //!< this += rhs
+            Integer & operator-=(const Natural &);                             //!< this += rhs
+            Integer & operator--();                                            //!< --this
+            Integer   operator--(int);                                         //!< this--
 
             //__________________________________________________________________
             //
@@ -101,14 +103,14 @@ namespace Yttrium
             // Multiplication
             //
             //__________________________________________________________________
-            friend Integer operator*(const Integer &, const Integer &);
-            friend Integer operator*(const Integer &, const int64_t  );
-            friend Integer operator*(const int64_t  , const Integer &);
-            friend Integer operator*(const Integer &, const Natural &);
-            friend Integer operator*(const Natural &, const Integer &);
-            Integer & operator*=(const Integer &);
-            Integer & operator*=(const int64_t  );
-            Integer & operator*=(const Natural &);
+            friend Integer operator*(const Integer &, const Integer &); //!< lhs * rhs
+            friend Integer operator*(const Integer &, const int64_t  ); //!< lhs * rhs
+            friend Integer operator*(const int64_t  , const Integer &); //!< lhs * rhs
+            friend Integer operator*(const Integer &, const Natural &); //!< lhs * rhs
+            friend Integer operator*(const Natural &, const Integer &); //!< lhs * rhs
+            Integer & operator*=(const Integer &);                      //!< this *= rhs
+            Integer & operator*=(const int64_t  );                      //!< this *= rhs
+            Integer & operator*=(const Natural &);                      //!< this *= rhs
 
             //__________________________________________________________________
             //
@@ -116,14 +118,14 @@ namespace Yttrium
             // Division
             //
             //__________________________________________________________________
-            friend Integer operator/(const Integer &, const Integer &);
-            friend Integer operator/(const Integer &, const int64_t  );
-            friend Integer operator/(const int64_t  , const Integer &);
-            friend Integer operator/(const Integer &, const Natural &);
-            friend Integer operator/(const Natural &, const Integer &);
-            Integer & operator/=(const Integer &);
-            Integer & operator/=(const int64_t  );
-            Integer & operator/=(const Natural &);
+            friend Integer operator/(const Integer &, const Integer &); //!< lhs / rhs
+            friend Integer operator/(const Integer &, const int64_t  ); //!< lhs / rhs
+            friend Integer operator/(const int64_t  , const Integer &); //!< lhs / rhs
+            friend Integer operator/(const Integer &, const Natural &); //!< lhs / rhs
+            friend Integer operator/(const Natural &, const Integer &); //!< lhs / rhs
+            Integer & operator/=(const Integer &);                      //!< this /= rhs
+            Integer & operator/=(const int64_t  );                      //!< this /= rhs
+            Integer & operator/=(const Natural &);                      //!< this /= rhs
 
             //__________________________________________________________________
             //
@@ -131,14 +133,24 @@ namespace Yttrium
             // comparison
             //
             //__________________________________________________________________
+
+            //! class comparison
             static SignType Compare(const Integer &lhs, const Integer &rhs) noexcept;
 
+            //! propagate 'friend bool operator OP (LHS,RHS) noexecept { return Cmp(LHS,RHS) RESULT; }'
 #define Y_APZ_OP(OP,RESULT) \
-inline friend bool operator OP (const Integer &lhs, const Integer rhs ) noexcept { return Cmp(lhs,rhs) RESULT; }
+inline friend bool operator OP (const Integer &lhs, const Integer &rhs ) noexcept { return Cmp(lhs,rhs) RESULT; }\
+inline friend bool operator OP (const Integer &lhs, const int64_t  rhs ) noexcept { return Cmp(lhs,rhs) RESULT; }\
+inline friend bool operator OP (const int64_t  lhs, const Integer &rhs ) noexcept { return Cmp(lhs,rhs) RESULT; }\
+inline friend bool operator OP (const Integer &lhs, const Natural &rhs ) noexcept { return Cmp(lhs,rhs) RESULT; }\
+inline friend bool operator OP (const Natural &lhs, const Integer &rhs ) noexcept { return Cmp(lhs,rhs) RESULT; }
 
-            Y_APZ_OP(==,== __Zero__)
-            Y_APZ_OP(!=,!= __Zero__)
-
+            Y_APZ_OP(==, == __Zero__)
+            Y_APZ_OP(!=, != __Zero__)
+            Y_APZ_OP(<,  == Negative)
+            Y_APZ_OP(>,  == Positive)
+            Y_APZ_OP(<=, != Positive)
+            Y_APZ_OP(>=, != Negative)
 
             //__________________________________________________________________
             //

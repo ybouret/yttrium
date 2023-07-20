@@ -72,7 +72,7 @@ namespace Yttrium
             return *this;
         }
 
-        Integer & Integer :: operator+=(const Natural &rhs)
+        Integer & Integer :: operator-=(const Natural &rhs)
         {
             Integer tmp = (*this) - rhs;
             xch(tmp);

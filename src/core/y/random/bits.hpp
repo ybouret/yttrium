@@ -73,6 +73,7 @@ namespace Yttrium
             size_t leq(size_t n)         noexcept; //!< in 0..n
             size_t lt(const size_t n)    noexcept; //!< in 0..n-1, n>0
             bool   choice()              noexcept; //!< 50/50 choice
+            int    intSgn()              noexcept; //!< {-1,1} 50/50
 
             //! integral type on exactly nbit
             template <typename T> inline T to(unsigned nbit) noexcept
