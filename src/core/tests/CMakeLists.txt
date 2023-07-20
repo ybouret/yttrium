@@ -11,6 +11,7 @@ sort
 ptr
 io
 fft
+string
 apex
 ordered
 )
@@ -98,6 +99,9 @@ add_test(io::char test-core io_char)
 #fft
 add_test(fft:xbr test-core fft_xbr)
 add_test(fft:1d test-core fft_1d)
+
+#string(s)
+add_test(strings test-core strings)
 
 #apex
 add_test(apex:archon   test-core apex_archon)

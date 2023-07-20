@@ -74,6 +74,8 @@ Y_UTEST_DECL(256)
     Y_UTEST(fft_xbr);
     Y_UTEST(fft_1d);
 
+    Y_UTEST(strings);
+
     Y_UTEST(apex_archon);
     Y_UTEST(apex_block);
     Y_UTEST(apex_proto);

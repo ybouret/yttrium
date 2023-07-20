@@ -27,6 +27,7 @@ memory/allocator
 memory/exclusive
 memory/buffer
 ptr
+container
 string
 fft
 apex
