@@ -1,5 +1,5 @@
 #include "y/apex/integer.hpp"
-#include "y/io/cache.hpp"
+#include "y/io/chars.hpp"
 
 namespace Yttrium
 {
@@ -56,7 +56,7 @@ namespace Yttrium
             return *this;
         }
 
-        void Integer:: appendTo(IO::Cache &cache) const
+        void Integer:: appendTo(IO::Chars &cache) const
         {
             switch(s)
             {
@@ -68,7 +68,7 @@ namespace Yttrium
 
         std::ostream & operator<<(std::ostream &os, const Integer &z)
         {
-            IO::Cache cache;
+            IO::Chars cache;
             z.appendTo(cache);
             Number::Display(os,cache);
             return os;

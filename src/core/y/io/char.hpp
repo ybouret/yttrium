@@ -36,7 +36,6 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            Y_EXCLUSIVE_DECL();                          //!< manager by a Memory::Studio
             uint8_t &       operator*()       noexcept;  //!< access
             const uint8_t & operator*() const noexcept;  //!< access, const
 
@@ -45,9 +44,16 @@ namespace Yttrium
             //
             // Members
             //
-            //______________________________________________________________________
+            //__________________________________________________________________
             Char *next; //!< for list/pool
             Char *prev; //!< for list
+
+
+            //__________________________________________________________________
+            //
+            //! managed by a Memory::Studio
+            //__________________________________________________________________
+            Y_EXCLUSIVE_DECL();
 
         private:
             Y_DISABLE_ASSIGN(Char);

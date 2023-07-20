@@ -8,7 +8,7 @@
 
 namespace Yttrium
 {
-    namespace IO     { class Cache; }
+    namespace IO     { class Chars; }
 
     namespace Apex
     {
@@ -34,7 +34,7 @@ namespace Yttrium
             virtual ~Number() noexcept; //!< cleanup
 
             //! transform a cache into a C-string and send it to output
-            static void Display(std::ostream &, IO::Cache &);
+            static void Display(std::ostream &, IO::Chars &);
             
         private:
             Y_DISABLE_ASSIGN(Number);

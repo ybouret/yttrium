@@ -49,7 +49,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             void xch(Integer &) noexcept;
-            void appendTo(IO::Cache &) const;
+            void appendTo(IO::Chars &) const;
 
 
 

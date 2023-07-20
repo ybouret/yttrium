@@ -1,29 +1,29 @@
-#include "y/io/cache.hpp"
+#include "y/io/chars.hpp"
 
 namespace Yttrium
 {
     namespace IO
     {
 
-        Cache:: Cache() noexcept : CxxListOf<Char>() {}
-        Cache:: ~Cache() noexcept {}
+        Chars:: Chars() noexcept : CxxListOf<Char>() {}
+        Chars:: ~Chars() noexcept {}
 
-        Cache & Cache:: operator<<(const uint8_t c)
+        Chars & Chars:: operator<<(const uint8_t c)
         {
             pushTail( new Char(c) );
             return *this;
         }
 
-        Cache & Cache:: operator>>(const uint8_t c)
+        Chars & Chars:: operator>>(const uint8_t c)
         {
             pushHead( new Char(c) );
             return *this;
         }
 
-        Cache:: Cache(const Cache &other) : CxxListOf<Char>(other) {}
+        Chars:: Chars(const Chars &other) : CxxListOf<Char>(other) {}
 
 
-        Cache & Cache:: operator<<(const char *msg)
+        Chars & Chars:: operator<<(const char *msg)
         {
             if(msg)
             {
@@ -37,7 +37,7 @@ namespace Yttrium
             return *this;
         }
 
-        uint8_t Cache:: pullTail() noexcept
+        uint8_t Chars:: pullTail() noexcept
         {
             assert(size>0);
             Char         *chr = popTail();
@@ -46,7 +46,7 @@ namespace Yttrium
             return res;
         }
 
-        uint8_t Cache:: pullHead() noexcept
+        uint8_t Chars:: pullHead() noexcept
         {
             assert(size>0);
             Char         *chr = popHead();

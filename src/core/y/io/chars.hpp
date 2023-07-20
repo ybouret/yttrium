@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_IO_Cache_Included
-#define Y_IO_Cache_Included 1
+#ifndef Y_IO_Chars_Included
+#define Y_IO_Chars_Included 1
 
 #include "y/io/char.hpp"
 #include "y/data/list/cxx.hpp"
@@ -15,26 +15,26 @@ namespace Yttrium
         //
         //
         //
-        //! Versatile cache of Chars
+        //! Versatile list of Chars
         //
         //
         //______________________________________________________________________
-        class Cache : public CxxListOf<Char>
+        class Chars : public CxxListOf<Char>
         {
         public:
-            explicit Cache() noexcept;
-            virtual ~Cache() noexcept;
-            Cache(const Cache &);
+            explicit Chars() noexcept;
+            virtual ~Chars() noexcept;
+            Chars(const Chars &);
             
-            Cache & operator<<(const uint8_t);
-            Cache & operator>>(const uint8_t);
-            Cache & operator<<(const char *);
+            Chars & operator<<(const uint8_t);
+            Chars & operator>>(const uint8_t);
+            Chars & operator<<(const char *);
 
             uint8_t pullTail() noexcept;
             uint8_t pullHead() noexcept;
 
         private:
-            Y_DISABLE_ASSIGN(Cache);
+            Y_DISABLE_ASSIGN(Chars);
         };
     }
 

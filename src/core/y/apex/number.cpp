@@ -1,6 +1,6 @@
 
 #include "y/apex/number.hpp"
-#include "y/io/cache.hpp"
+#include "y/io/chars.hpp"
 #include "y/memory/buffer/of.hpp"
 
 namespace Yttrium
@@ -16,7 +16,7 @@ namespace Yttrium
         {
         }
 
-        void Number:: Display(std::ostream &os, IO::Cache &cache)
+        void Number:: Display(std::ostream &os, IO::Chars &cache)
         {
             //------------------------------------------------------------------
             // make a C-style buffer

@@ -2,7 +2,7 @@
 
 #include "y/apex/natural.hpp"
 #include "y/apex/n/cxx.hpp"
-#include "y/io/cache.hpp"
+#include "y/io/chars.hpp"
 
 namespace Yttrium
 {
@@ -10,7 +10,7 @@ namespace Yttrium
     namespace Apex
     {
 
-        void Natural:: appendHex(IO::Cache &cache) const
+        void Natural:: appendHex(IO::Chars &cache) const
         {
             const Prototype &self = CONST_PROTO(*this);
             if(self.nbits<=0)
@@ -42,7 +42,7 @@ namespace Yttrium
 
 
 
-        void Natural:: appendDec(IO::Cache &cache) const
+        void Natural:: appendDec(IO::Chars &cache) const
         {
             const Prototype &self = CONST_PROTO(*this);
             if(self.nbits<=0)
@@ -51,7 +51,7 @@ namespace Yttrium
             }
             else
             {
-                IO::Cache     sto;
+                IO::Chars     sto;
                 const Natural ten(10);
                 Natural       self = *this;
                 Natural       q,r;
@@ -73,7 +73,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             // init cache
             //------------------------------------------------------------------
-            IO::Cache cache;
+            IO::Chars cache;
 
             //------------------------------------------------------------------
             // fill cache

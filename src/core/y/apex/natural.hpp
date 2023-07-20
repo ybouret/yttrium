@@ -63,8 +63,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void           appendHex( IO::Cache & ) const;
-            void           appendDec( IO::Cache & ) const;
+            void           appendHex( IO::Chars & ) const;
+            void           appendDec( IO::Chars & ) const;
             size_t         bytes()  const noexcept;         //!< exact number of bytes
             size_t         bits()   const noexcept;         //!< exact number of bit
             void           xch(Natural &) noexcept;        //!< no-throw exchange
