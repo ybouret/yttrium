@@ -93,6 +93,59 @@ namespace Yttrium
             return os;
         }
 
+        Integer Integer:: incr() const
+        {
+            switch(s)
+            {
+                case Negative:
+                    if(n==1)
+                    {
+                        return Integer();
+                    }
+                    else
+                    {
+                        Natural p=n; assert(p>1);
+                        return Integer(Negative,--p);
+                    }
+
+                case Positive: {
+                    Natural p = n; assert(p>0);
+                    return Integer(Positive,++p);
+                }
+
+                case __Zero__:
+                    break;
+            }
+            return Integer(1);
+        }
+
+
+        Integer Integer:: decr() const
+        {
+            switch(s)
+            {
+                case Negative: {
+                    Natural p = n; assert(p>0);
+                    return Integer(Negative,++p);
+                }
+
+                case Positive: {
+                    if(n==1)
+                    {
+                        return Integer();
+                    }
+                    else
+                    {
+                        Natural p = n; assert(p>1);
+                        return Integer(Positive,--p);
+                    }
+                }
+
+                case __Zero__:
+                    break;
+            }
+            return Integer(-1);
+        }
 
     }
 }

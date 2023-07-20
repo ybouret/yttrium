@@ -9,6 +9,21 @@ namespace Yttrium
             return Integer(*this);
         }
 
+        Integer & Integer:: operator++()
+        {
+            Integer tmp = incr();
+            xch(tmp);
+            return *this;
+        }
+
+        Integer Integer:: operator++(int)
+        {
+            const Integer res = *this;
+            Integer tmp = incr();
+            xch(tmp);
+            return res;
+        }
+
 
         Integer operator+(const Integer &lhs, const Integer &rhs)
         {
