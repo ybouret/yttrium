@@ -58,7 +58,65 @@ namespace Yttrium
             //__________________________________________________________________
             virtual const char *  variety()                             const noexcept = 0;
 
-            
+
+            //__________________________________________________________________
+            //
+            //
+            //! specialized allocator
+            /**
+             \param items positive of null items to get
+             \param bytes output allocated flat bytes
+             */
+            //
+            //__________________________________________________________________
+            template <typename T> inline
+            T * allocate(size_t &items,
+                         size_t &bytes)
+            {
+                assert(0==bytes);
+                size_t count = items <= 0 ? 1 : items;
+                try {
+                    void *wksp = acquire(count,sizeof(T));
+                    assert(0!=wksp);
+                    assert(count>0);
+                    bytes = count;
+                    items = count/sizeof(T);
+                    return static_cast<T*>(wksp);
+                }
+                catch(...)
+                {
+                    assert(0==bytes);
+                    items = 0;
+                    throw;
+                }
+            }
+
+
+
+            //__________________________________________________________________
+            //
+            //
+            //! specialized deallocator
+            /**
+             \param entry previously allocated
+             \param items positive of null items
+             \param bytes allocated flat bytes
+             */
+            //
+            //__________________________________________________________________
+            template <typename T> inline
+            void withdraw(T * &entry, size_t &items, size_t &bytes) noexcept
+            {
+                assert(NULL!=entry);
+                assert(items>0);
+                assert(bytes>=items*sizeof(T));
+                release(*(void**)&entry,bytes);
+                assert(0==entry);
+                assert(0==bytes);
+                items = 0;
+            }
+
+
             //__________________________________________________________________
             //
             //

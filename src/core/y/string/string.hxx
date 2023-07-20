@@ -1,0 +1,9 @@
+
+namespace Yttrium
+{
+    
+    namespace Core
+    {
+    }
+    
+}
