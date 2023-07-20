@@ -104,7 +104,10 @@ namespace Yttrium
             return CONST_PROTO(*this).ls64();
         }
 
-        
+        SignType Natural:: getSign() const noexcept
+        {
+            return (CONST_PROTO(*this).nbits>0) ? Positive : __Zero__;
+        }
        
       
         //----------------------------------------------------------------------

@@ -161,7 +161,7 @@ namespace
                     const uint64_t r = ran.to<uint64_t>( j );
                     const PROTO    lhs(l);
                     const PROTO    rhs(r);
-                    Y_ASSERT(SignOf(l,r) == PROTO::Compare(lhs,rhs));
+                    Y_ASSERT(Sign::Of(l,r) == PROTO::Compare(lhs,rhs));
                 }
             }
         }

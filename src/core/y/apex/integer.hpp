@@ -55,12 +55,27 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
+            // Multiplication
+            //
+            //__________________________________________________________________
+            friend Integer operator*(const Integer &, const Integer &);
+            friend Integer operator*(const Integer &, const int64_t  );
+            friend Integer operator*(const int64_t  , const Integer &);
+            friend Integer operator*(const Integer &, const Natural &);
+            friend Integer operator*(const Natural &, const Integer &);
+
+
+            //__________________________________________________________________
+            //
+            //
             // Members
             //
             //__________________________________________________________________
             const SignType s; //!< sign
             const Natural  n; //!< unsigned value
-            
+
+        private:
+            Integer(const SignType _s, const Natural _n);
         };
     }
 

@@ -524,7 +524,7 @@ namespace Yttrium
         template <typename NODE> static inline
         SignType IncreasingAddresses(const NODE *lhs, const NODE *rhs) noexcept
         {
-            return SignOf(lhs,rhs);
+            return Sign::Of(lhs,rhs);
         }
 
         //______________________________________________________________________

@@ -270,7 +270,7 @@ namespace Yttrium
             static inline bool AreDifferent(const Proto &lhs, const Proto &rhs) noexcept
             {
                 const size_t lwords = lhs.words;
-                switch(SignOf(lwords,rhs.words))
+                switch(Sign::Of(lwords,rhs.words))
                 {
                     case Negative:
                     case Positive: return true;
@@ -287,7 +287,7 @@ namespace Yttrium
             static inline bool AreEqual(const Proto &lhs, const Proto &rhs) noexcept
             {
                 const size_t lwords = lhs.words;
-                switch(SignOf(lwords,rhs.words))
+                switch(Sign::Of(lwords,rhs.words))
                 {
                     case Negative:
                     case Positive:
@@ -766,7 +766,7 @@ namespace Yttrium
                         {
                             const WordType L = lhs[--i];
                             const WordType R = rhs[i];
-                            switch(SignOf(L,R))
+                            switch(Sign::Of(L,R))
                             {
                                 case Negative: return Negative;
                                 case Positive: return Positive;

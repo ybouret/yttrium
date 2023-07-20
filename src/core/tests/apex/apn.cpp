@@ -128,7 +128,7 @@ Y_UTEST(apex_n)
                 const uint64_t r = ran.to<uint64_t>(j);
                 const apn      L = l;
                 const apn      R = r;
-                Y_ASSERT( SignOf(l,r) == apn::Compare(L,R));
+                Y_ASSERT( Sign::Of(l,r) == apn::Compare(L,R));
                 if(l==r) { Y_ASSERT(L==R); Y_ASSERT(l==R); Y_ASSERT(L==r); }
                 if(l!=r) { Y_ASSERT(L!=R); Y_ASSERT(l!=R); Y_ASSERT(L!=r); }
                 if(l<r)  { Y_ASSERT(L<R);  Y_ASSERT(l<R);  Y_ASSERT(L<r);  }

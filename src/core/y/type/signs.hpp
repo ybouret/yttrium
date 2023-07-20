@@ -8,12 +8,13 @@
 
 namespace Yttrium
 {
+
     //__________________________________________________________________________
     //
     //
     //! system wide signs
     //
-    //__________________________________________________________________________
+    //_________________________________________________________________________
     enum SignType
     {
         Negative = -1, //!< alias for negative sign
@@ -21,37 +22,93 @@ namespace Yttrium
         Positive =  1  //!< alias for positive sign
     };
 
-    //__________________________________________________________________________
-    //
-    //
-    //! single value sign
-    //
-    //__________________________________________________________________________
-    template <typename T> inline
-    SignType SignOf(T &value)
+    enum PairOfSigns
     {
-        return value < 0 ? Negative : (0<value? Positive : __Zero__);
-    }
+        NN_Signs,
+        NZ_Signs,
+        NP_Signs,
 
-    //__________________________________________________________________________
-    //
-    //
-    //! natural comparison to sign
-    //
-    //__________________________________________________________________________
-    template <typename LHS, typename RHS> inline
-    SignType SignOf(LHS &lhs, RHS &rhs)
+        ZN_Signs,
+        ZZ_Signs,
+        ZP_Signs,
+
+        PN_Signs,
+        PZ_Signs,
+        PP_Signs
+    };
+
+    struct Sign
     {
-        if(lhs<rhs)
-            return Negative;
-        else
+
+        //______________________________________________________________________
+        //
+        //
+        //! single value sign
+        //
+        //______________________________________________________________________
+        template <typename T> static inline
+        SignType Of(T &value)
         {
-            if(rhs<lhs)
-                return Positive;
-            else
-                return __Zero__;
+            return value < 0 ? Negative : (0<value? Positive : __Zero__);
         }
-    }
+
+        //______________________________________________________________________
+        //
+        //
+        //! natural comparison to sign
+        //
+        //______________________________________________________________________
+        template <typename LHS, typename RHS> static inline
+        SignType Of(LHS &lhs, RHS &rhs)
+        {
+            if(lhs<rhs)
+                return Negative;
+            else
+            {
+                if(rhs<lhs)
+                    return Positive;
+                else
+                    return __Zero__;
+            }
+        }
+
+
+        //______________________________________________________________________
+        //
+        //
+        //! opposite sign
+        //
+        //______________________________________________________________________
+        static SignType    Opposite(const SignType s) noexcept;
+
+        //______________________________________________________________________
+        //
+        //
+        //! Make Pair of Signs
+        //
+        //______________________________________________________________________
+        static PairOfSigns MakePair(const SignType lhs, const SignType rhs) noexcept;
+
+        //______________________________________________________________________
+        //
+        //
+        //! Make Pair From Signs of each argument
+        //
+        //______________________________________________________________________
+        template <typename LHS, typename RHS> static inline
+        PairOfSigns MakePairFrom( LHS &lhs, RHS &rhs ) noexcept
+        {
+            return MakePair( Of(lhs), Of(rhs) );
+        }
+
+    };
+
+
+
+
+
+
+
 
 
 }

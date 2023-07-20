@@ -31,6 +31,7 @@ fft
 apex
 apex/m
 apex/n
+apex/z
 ordered
 )
 

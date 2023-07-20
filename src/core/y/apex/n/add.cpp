@@ -5,6 +5,11 @@ namespace Yttrium
     namespace Apex
     {
 
+        Natural Natural:: operator+() const
+        {
+            return Natural(*this);
+        }
+
         Natural operator+(const Natural &lhs, const Natural &rhs)
         {
             return Natural(Prototype::Add( CONST_PROTO(lhs), CONST_PROTO(rhs)),AsImpl);

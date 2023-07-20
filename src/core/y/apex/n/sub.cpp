@@ -5,6 +5,13 @@ namespace Yttrium
 {
     namespace Apex
     {
+
+        Natural Natural:: operator-() const
+        {
+            if( bits() ) throw Specific::Exception(CallSign,"unary minus on positive natural");
+            return Natural();
+        }
+
         Natural operator-(const Natural &lhs, const Natural &rhs)
         {
             return Natural(Prototype::Sub( CONST_PROTO(lhs), CONST_PROTO(rhs)),AsImpl);

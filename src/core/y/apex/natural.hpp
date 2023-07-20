@@ -69,7 +69,8 @@ namespace Yttrium
             size_t         bits()          const noexcept; //!< exact number of bit
             void           xch(Natural &)        noexcept; //!< no-throw exchange
             uint64_t       u64()           const noexcept; //!< get least significant bits
-
+            SignType       getSign()       const noexcept; //!< __Zero__ of Positive
+            
             //__________________________________________________________________
             //
             //
@@ -83,7 +84,8 @@ namespace Yttrium
             Natural & operator+=(const uint64_t rhs);                         //!< this += rhs
             Natural & operator++();                                           //!< ++this
             Natural   operator++(int);                                        //!< this++
-
+            Natural   operator+() const;                                      //!< unary +
+            
             //__________________________________________________________________
             //
             //
@@ -97,6 +99,7 @@ namespace Yttrium
             Natural & operator-=(const uint64_t rhs);                         //!< this -= rhs
             Natural & operator--();                                           //!< --this
             Natural   operator--(int);                                        //!< this--
+            Natural   operator-() const;                                      //!< unary -, only if zero!
 
             //__________________________________________________________________
             //

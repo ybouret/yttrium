@@ -21,6 +21,12 @@ namespace Yttrium
             return *this;
         }
 
+        Integer:: Integer(const SignType _s, const Natural _n) : s(_s), n(_n)
+        {
+            assert(!( (__Zero__==s) && (n>0) ) );
+        }
+
+
 
         void Integer:: xch(Integer &z) noexcept
         {
@@ -40,14 +46,14 @@ namespace Yttrium
         }
 
         Integer:: Integer(const int64_t i) :
-        s( SignOf(i) ),
+        s( Sign::Of(i) ),
         n( i2u(s,i)  )
         {
         }
 
         Integer & Integer:: operator=(const int64_t i)
         {
-            switch( Coerce(s) = SignOf(i) )
+            switch( Coerce(s) = Sign::Of(i) )
             {
                 case Negative: Coerce(n) = uint64_t(-i); break;
                 case __Zero__: Coerce(n) = 0; break;
