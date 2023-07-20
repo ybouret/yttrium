@@ -65,7 +65,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             Integer operator+() const; //!< unary plus
-
+            friend Integer operator+(const Integer &lhs, const Integer &rhs);
 
             //__________________________________________________________________
             //
@@ -130,6 +130,9 @@ namespace Yttrium
 
         private:
             Integer(const SignType _s, const Natural _n);
+            static SignType Cmp(const Integer &lhs, const Integer &rhs) noexcept;
+            static SignType Cmp(const Integer &lhs, const int64_t  rhs) noexcept;
+
         };
     }
 
