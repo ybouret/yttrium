@@ -10,16 +10,35 @@ namespace Yttrium
     namespace Memory
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! Read-Only Buffer Interface
+        //
+        //______________________________________________________________________
         class ReadOnlyBuffer
         {
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
         protected:
-            explicit ReadOnlyBuffer() noexcept;
+            explicit ReadOnlyBuffer() noexcept; //!< setup
         public:
-            virtual ~ReadOnlyBuffer() noexcept;
+            virtual ~ReadOnlyBuffer() noexcept; //!< cleanup
 
-            virtual const void *ro_addr() const noexcept = 0;
-            virtual size_t      measure() const noexcept = 0;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            virtual const void *ro_addr() const noexcept = 0; //!< readable memory
+            virtual size_t      measure() const noexcept = 0; //!< number of readable bytes
 
+            //! compare byte-wise contents
             bool HasSameContentThan(const ReadOnlyBuffer &) const noexcept;
 
         private:

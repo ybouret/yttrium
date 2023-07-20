@@ -10,6 +10,12 @@ namespace Yttrium
 
     namespace Core
     {
+        //______________________________________________________________________
+        //
+        //
+        //! GCD(a>0,b>0)
+        //
+        //______________________________________________________________________
         template <typename T> inline
         T GreatestCommonDivisor(T a, T b) noexcept
         {
@@ -33,6 +39,12 @@ namespace Yttrium
         }
     }
 
+    //__________________________________________________________________________
+    //
+    //
+    //! GCD of integral types
+    //
+    //__________________________________________________________________________
     template <typename T> inline
     T GreatestCommonDivisor(const T a, const T b) noexcept
     {

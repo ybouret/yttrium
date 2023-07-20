@@ -11,15 +11,33 @@ namespace Yttrium
     namespace Memory
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! RW Buffer of fixed length
+        //
+        //______________________________________________________________________
         template <const size_t N>
         class FixedBuffer : public ReadWriteBuffer
         {
         public:
-            explicit FixedBuffer() noexcept : data() { Y_STATIC_ZARR(data); }
-            virtual ~FixedBuffer() noexcept { Y_STATIC_ZARR(data); }
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit FixedBuffer() noexcept : data() { Y_STATIC_ZARR(data); } //!< setup empty
+            virtual ~FixedBuffer() noexcept { Y_STATIC_ZARR(data); }          //!< cleanup
 
-            inline virtual const void *ro_addr() const noexcept { return data; }
-            inline virtual size_t      measure() const noexcept { return N;    }
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            inline virtual const void *ro_addr() const noexcept { return data; } //!< data
+            inline virtual size_t      measure() const noexcept { return N;    } //!< N
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(FixedBuffer);

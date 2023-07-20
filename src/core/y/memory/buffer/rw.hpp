@@ -10,15 +10,34 @@ namespace Yttrium
     namespace Memory
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Writable memory buffer
+        //
+        //
+        //______________________________________________________________________
         class ReadWriteBuffer : public ReadOnlyBuffer
-
         {
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
         protected:
-            explicit ReadWriteBuffer() noexcept;
+            explicit ReadWriteBuffer() noexcept; //!< setup
         public:
-            virtual ~ReadWriteBuffer() noexcept;
+            virtual ~ReadWriteBuffer() noexcept; //!< cleanup
 
-            void *rw_addr() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void *rw_addr() noexcept; //!< make writable ro_addr()
 
 
         private:

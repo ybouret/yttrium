@@ -63,12 +63,12 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void           appendHex( IO::Chars & ) const;
-            void           appendDec( IO::Chars & ) const;
-            size_t         bytes()  const noexcept;         //!< exact number of bytes
-            size_t         bits()   const noexcept;         //!< exact number of bit
-            void           xch(Natural &) noexcept;        //!< no-throw exchange
-            uint64_t       u64()    const noexcept;           //!< get least significant bits
+            void           appendHex( IO::Chars & ) const; //!< convert to hexadecimal chars
+            void           appendDec( IO::Chars & ) const; //!< convert to decimal chars
+            size_t         bytes()         const noexcept; //!< exact number of bytes
+            size_t         bits()          const noexcept; //!< exact number of bit
+            void           xch(Natural &)        noexcept; //!< no-throw exchange
+            uint64_t       u64()           const noexcept; //!< get least significant bits
 
             //__________________________________________________________________
             //
@@ -140,9 +140,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
             explicit Natural(const TwoToThe_ &, const size_t p); //!< 2^p
-            void shr() noexcept; //!< >>= 1
-            bool isEven() const noexcept;
-            bool isOdd()  const noexcept;
+            void shr()          noexcept; //!< >>= 1, in place, no-throw
+            bool isEven() const noexcept; //!< check
+            bool isOdd()  const noexcept; //!< check
 
             //__________________________________________________________________
             //
@@ -192,7 +192,7 @@ namespace Yttrium
             // Arithmetic
             //
             //__________________________________________________________________
-            static Natural GCD(const Natural &A, const Natural &B);
+            static Natural GCD(const Natural &, const Natural &); //!< Greatest Common Divider
 
 
         private:

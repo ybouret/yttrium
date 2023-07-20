@@ -34,13 +34,13 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            Integer();
-            virtual ~Integer() noexcept;
-            Integer(const Integer &);
-            Integer & operator=(const Integer &);
-            Integer(const int64_t);
-            Integer & operator=(const int64_t);
-            Y_OSTREAM_PROTO(Integer);
+            Integer();                             //!< zero
+            virtual ~Integer() noexcept;           //!< cleanup
+            Integer(const Integer &);              //!< copy
+            Integer & operator=(const Integer &);  //!< assign
+            Integer(const int64_t);                //!< setup integer
+            Integer & operator=(const int64_t);    //!< assign integer
+            Y_OSTREAM_PROTO(Integer);              //!< display
 
             //__________________________________________________________________
             //
@@ -48,18 +48,23 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void xch(Integer &) noexcept;
-            void appendTo(IO::Chars &) const;
+            void xch(Integer &)     noexcept;  //!< no-throw exchange
+            void appendTo(IO::Chars &) const;  //!< append to chars
 
 
-
-            const SignType s;
-            const Natural  n;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const SignType s; //!< sign
+            const Natural  n; //!< unsigned value
             
         };
     }
 
-    typedef  Apex::Integer apz;
+    typedef  Apex::Integer apz; //!< alias
 }
 
 #endif

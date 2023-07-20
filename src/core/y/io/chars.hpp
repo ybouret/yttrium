@@ -22,16 +22,28 @@ namespace Yttrium
         class Chars : public CxxListOf<Char>
         {
         public:
-            explicit Chars() noexcept;
-            virtual ~Chars() noexcept;
-            Chars(const Chars &);
-            
-            Chars & operator<<(const uint8_t);
-            Chars & operator>>(const uint8_t);
-            Chars & operator<<(const char *);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Chars() noexcept; //!< setup empty
+            virtual ~Chars() noexcept; //!< cleanup
+            Chars(const Chars &);      //!< copy
 
-            uint8_t pullTail() noexcept;
-            uint8_t pullHead() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            Chars & operator<<(const uint8_t); //!< pushTail
+            Chars & operator>>(const uint8_t); //!< pushHead
+            Chars & operator<<(const char *);  //!< pushTail
+            
+            uint8_t pullTail() noexcept; //!< extract and remove tail
+            uint8_t pullHead() noexcept; //!< extract and remove head
 
         private:
             Y_DISABLE_ASSIGN(Chars);
