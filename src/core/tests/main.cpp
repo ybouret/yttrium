@@ -53,6 +53,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(calculus_ilog2);
     Y_UTEST(calculus_align);
     Y_UTEST(calculus_base2);
+    Y_UTEST(calculus_gcd);
 
 
     Y_UTEST(concurrent_mutex);

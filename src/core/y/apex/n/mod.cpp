@@ -16,7 +16,7 @@ namespace Yttrium
         //----------------------------------------------------------------------
         Natural operator%(const Natural &numer, const Natural &denom)
         {
-#if 1
+#if 0
             return numer-(numer/denom)*denom;
 
 #else
@@ -35,9 +35,9 @@ namespace Yttrium
             //------------------------------------------------------------------
             switch( Prototype::Compare(N,D) )
             {
-                case Negative: return numer;
-                case __Zero__: return Natural(0);
-                case Positive:
+                case Negative: return numer;         // N < D,
+                case __Zero__: return Natural();     // N == D
+                case Positive:                       // N > D
                     break;
             }
             assert(N.nbits>=D.nbits);
@@ -56,7 +56,7 @@ namespace Yttrium
                 switch( Natural::Compare(probe,numer) )
                 {
                     case Negative: ++p; goto PROBE;
-                    case __Zero__: return upper;
+                    case __Zero__: return Natural(); // N = upper * D
                     case Positive: break;
                 }
             }
@@ -78,13 +78,14 @@ namespace Yttrium
                     {
                         case Negative: mid.xch(lower); break;
                         case Positive: mid.xch(upper); break;
-                        case __Zero__: return mid;
+                        case __Zero__: return Natural(); // N = upper * D
                     }
                 }
                 const AutoProto limit( Prototype::Add1( PROTO(lower)) );
                 if( Negative != Prototype::Compare(*limit,CONST_PROTO(upper)))
-                    return lower;
-
+                {
+                    return numer - lower*denom;
+                }
             }
 #endif
         }

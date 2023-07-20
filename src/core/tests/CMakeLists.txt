@@ -71,6 +71,7 @@ add_test(data:rework test-core data_rework)
 add_test(calculus:ilog2 test-core calculus_ilog2)
 add_test(calculus:align test-core calculus_align)
 add_test(calculus:base2 test-core calculus_base2)
+add_test(calculus:gcd   test-core calculus_gcd)
 
 #concurrent
 add_test(concurrent:mutex test-core concurrent_mutex)

@@ -5,7 +5,11 @@ namespace Yttrium
 {
     namespace Apex
     {
+
+        const char * const Integer :: CallSign = "Apex::Integer";
+
         Integer::  Integer() : s(__Zero__), n() {}
+        
         Integer:: ~Integer() noexcept {}
 
         Integer:: Integer(const Integer &z) : s(z.s), n(z.n) {}

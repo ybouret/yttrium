@@ -21,7 +21,7 @@ namespace Yttrium
         Positive =  1  //!< alias for positive sign
     };
 
-
+    
     template <typename T> inline
     SignType SignOf(T &value)
     {

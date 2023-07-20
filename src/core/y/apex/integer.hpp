@@ -9,10 +9,31 @@ namespace Yttrium
 {
     namespace Apex
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Drop-in Signed Type replacement
+        //
+        //
+        //______________________________________________________________________
         class Integer : public Number
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< "Apex::Natural"
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             Integer();
             virtual ~Integer() noexcept;
             Integer(const Integer &);
@@ -21,9 +42,16 @@ namespace Yttrium
             Integer & operator=(const int64_t);
             Y_OSTREAM_PROTO(Integer);
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
             void xch(Integer &) noexcept;
-
             void appendTo(IO::Cache &) const;
+
+
 
             const SignType s;
             const Natural  n;
