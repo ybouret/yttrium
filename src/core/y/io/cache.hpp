@@ -11,6 +11,14 @@ namespace Yttrium
 {
     namespace IO
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Versatile cache of Chars
+        //
+        //
+        //______________________________________________________________________
         class Cache : public CxxListOf<Char>
         {
         public:

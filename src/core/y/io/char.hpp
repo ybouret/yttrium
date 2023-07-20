@@ -9,20 +9,46 @@ namespace Yttrium
 {
     namespace IO
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Dedicated Char for dyamic Input/Output
+        //
+        //
+        //______________________________________________________________________
         class Char
         {
         public:
-            Char(const uint8_t) noexcept;
-            Char(const Char &)  noexcept;
-            ~Char()             noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            Char(const uint8_t) noexcept; //!< setup
+            Char(const Char &)  noexcept; //!< copy
+            ~Char()             noexcept; //!< cleanup
 
-            uint8_t &       operator*()       noexcept;
-            const uint8_t & operator*() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            Y_EXCLUSIVE_DECL();                          //!< manager by a Memory::Studio
+            uint8_t &       operator*()       noexcept;  //!< access
+            const uint8_t & operator*() const noexcept;  //!< access, const
 
-            Char *next;
-            Char *prev;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //______________________________________________________________________
+            Char *next; //!< for list/pool
+            Char *prev; //!< for list
 
-            Y_EXCLUSIVE_DECL();
         private:
             Y_DISABLE_ASSIGN(Char);
             uint8_t data;

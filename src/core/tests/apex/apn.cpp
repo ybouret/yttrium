@@ -224,6 +224,13 @@ Y_UTEST(apex_n)
     }
     std::cerr << "]" << std::endl;
 
+    {
+        apn a = 15;
+        apn b = 5;
+        apn g = apn::GCD(a,b);
+        std::cerr << "g=" << g << std::endl;
+    }
+
     std::cerr << "-- Check Output" << std::endl;
     for(unsigned i=2;i<=64;++i)
     {

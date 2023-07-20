@@ -186,6 +186,14 @@ namespace Yttrium
                 quot = numer/denom; rem = numer - quot * denom;
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // Arithmetic
+            //
+            //__________________________________________________________________
+            static Natural GCD(const Natural &A, const Natural &B);
+
 
         private:
             void *impl;

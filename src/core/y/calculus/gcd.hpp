@@ -15,7 +15,7 @@ namespace Yttrium
         {
             assert(a>0);
             assert(b>0);
-            if(a<=b)
+            if(a<b)
             {
                 const T t = a;
                 a = b;
