@@ -83,6 +83,28 @@ namespace Yttrium
         {
             return rhs * lhs;
         }
+
+
+        Integer & Integer :: operator*=(const Integer &rhs)
+        {
+            Integer tmp = (*this) * rhs;
+            xch(tmp);
+            return *this;
+        }
+
+        Integer & Integer :: operator*=(const int64_t rhs)
+        {
+            Integer tmp = (*this) * rhs;
+            xch(tmp);
+            return *this;
+        }
+
+        Integer & Integer :: operator*=(const Natural &rhs)
+        {
+            Integer tmp = (*this) * rhs;
+            xch(tmp);
+            return *this;
+        }
     }
 
 }

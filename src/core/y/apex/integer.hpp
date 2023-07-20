@@ -63,6 +63,10 @@ namespace Yttrium
             friend Integer operator*(const int64_t  , const Integer &);
             friend Integer operator*(const Integer &, const Natural &);
             friend Integer operator*(const Natural &, const Integer &);
+            Integer & operator*=(const Integer &);
+            Integer & operator*=(const int64_t  );
+            Integer & operator*=(const Natural &);
+
 
 
             //__________________________________________________________________
