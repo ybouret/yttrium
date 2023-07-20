@@ -3,6 +3,7 @@
 #include "y/memory/allocator/pooled.hpp"
 #include "y/memory/out-of-reach.hpp"
 #include "y/type/utils.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
@@ -28,6 +29,8 @@ namespace Yttrium
         static const size_t StringMinChars = 31;
     }
 }
+
+#define Y_STRING_PROLOG() Object(), Counted(), Writable<CH>()
 
 #define CH char
 #include "string.hxx"

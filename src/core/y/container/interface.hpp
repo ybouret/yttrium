@@ -8,19 +8,47 @@
 
 namespace Yttrium
 {
+
+
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Container interface
+    //
+    //
+    //__________________________________________________________________________
     class Container
     {
+
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
     protected:
-        explicit Container() noexcept;
+        explicit Container() noexcept; //!< setup
 
     public:
-        virtual ~Container() noexcept;
+        virtual ~Container() noexcept; //!< cleanup
 
 
-        virtual size_t size()      const noexcept = 0;
-        virtual size_t capacity()  const noexcept = 0;
-        virtual size_t available() const noexcept; //!< default to capacity() - size()
-        
+
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        virtual size_t size()      const noexcept = 0; //!< items in conatiner
+        virtual size_t capacity()  const noexcept = 0; //!< maximum items in container
+        virtual size_t available() const noexcept;     //!< default to capacity() - size(), can be overiden
+
+        static size_t NextCapacity(const size_t n);
+
+
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Container);
     };

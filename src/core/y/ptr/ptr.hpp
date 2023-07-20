@@ -4,6 +4,7 @@
 #define Y_Ptr_Included 1
 
 #include "y/ptr/immediate.hpp"
+#include <iostream>
 
 namespace Yttrium
 {
@@ -83,6 +84,13 @@ namespace Yttrium
         inline ReturnType      operator->()       noexcept { assert(isValid()); return this->fetch(handle); } //!< access w.r.t. policy
         inline ConstReturnType operator->() const noexcept { assert(isValid()); return this->fetch(handle); } //!< access w.r.t. policy, const
 
+        //! forwarding display function
+        inline friend std::ostream & operator<<(std::ostream &os, const Ptr &self)
+        {
+            if(self.handle) os << (*self.handle);
+            else            os << Nil;
+            return os;
+        }
 
     protected:
         MutableType *handle; //!< handle for all smart pointers

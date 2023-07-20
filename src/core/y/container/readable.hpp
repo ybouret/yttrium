@@ -9,21 +9,44 @@
 
 namespace Yttrium
 {
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Readable container
+    //
+    //
+    //__________________________________________________________________________
     template <typename T> class Readable : public Container
     {
     public:
-        Y_ARGS_EXPOSE(T);
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        Y_ARGS_EXPOSE(T); //!< alias
 
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
     protected:
-        inline explicit Readable() noexcept : Container() {}
-
+        inline explicit Readable() noexcept : Container() {} //!< setup
     public:
-        inline virtual ~Readable() noexcept {   }
+        inline virtual ~Readable() noexcept {}               //!< cleanup
 
-        virtual ConstType & operator[](const size_t) const noexcept = 0;
-
-
-
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        virtual ConstType & operator[](const size_t) const noexcept = 0; //!< access items in [1..size()]
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Readable);
     };
