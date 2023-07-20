@@ -35,7 +35,7 @@ Y_UTEST(apex_z)
         std::cerr << z << std::endl;
     }
 
-    std::cerr << "-- compare64" << std::endl;
+    std::cerr << "-- cmp64" << std::endl;
     {
         for(unsigned ibits=0;ibits<=60;++ibits)
         {
@@ -96,6 +96,8 @@ Y_UTEST(apex_z)
                     const apz     J = j;
                     const apz     S = I+J;
                     Y_ASSERT(S==s);
+                    Y_ASSERT(S==I+j);
+                    Y_ASSERT(S==i+J);
                     { apz dum = I; dum += J; Y_ASSERT(dum==S); }
                     { apz dum = I; dum += j; Y_ASSERT(dum==S); }
                     if(i>=0)
@@ -125,6 +127,8 @@ Y_UTEST(apex_z)
                     const apz     J = j;
                     const apz     S = I-J;
                     Y_ASSERT(S==s);
+                    Y_ASSERT(S==I-j);
+                    Y_ASSERT(S==i-J);
                     { apz dum = I; dum -= J; Y_ASSERT(dum==S); }
                     { apz dum = I; dum -= j; Y_ASSERT(dum==S); }
                     if(i>=0)
@@ -138,6 +142,73 @@ Y_UTEST(apex_z)
             }
         }
     }
+
+    std::cerr << "-- mul64" << std::endl;
+    {
+        for(unsigned ibits=0;ibits<=30;++ibits)
+        {
+            for(unsigned jbits=0;jbits<=30;++jbits)
+            {
+                for(size_t loop=0;loop<16;++loop)
+                {
+                    const int64_t i = int64_t( ran.to<uint64_t>(ibits) ) * ran.intSgn();
+                    const int64_t j = int64_t( ran.to<uint64_t>(jbits) ) * ran.intSgn();
+                    const int64_t p = i*j;
+                    const apz     I = i;
+                    const apz     J = j;
+                    const apz     P = I*J;
+                    Y_ASSERT(P==p);
+                    Y_ASSERT(I*j==P);
+                    Y_ASSERT(i*J==P);
+                    { apz dum = I; dum *= J; assert(P==dum); }
+                    { apz dum = I; dum *= j; assert(P==dum); }
+                    if(i>=0)
+                    {
+                        const apn U = uint64_t(i);
+                        assert(J*U==P);
+                        assert(U*J==P);
+                        { apz dum = J; dum *= U; assert(dum==P); }
+                    }
+                }
+            }
+        }
+    }
+
+    std::cerr << "-- div64" << std::endl;
+    {
+        for(unsigned ibits=0;ibits<=30;++ibits)
+        {
+            for(unsigned jbits=1;jbits<=30;++jbits)
+            {
+                for(size_t loop=0;loop<16;++loop)
+                {
+                    const int64_t i = int64_t( ran.to<uint64_t>(ibits) ) * ran.intSgn();
+                    const int64_t j = int64_t( ran.to<uint64_t>(jbits) ) * ran.intSgn();
+                    const int64_t q = i/j;
+                    const apz     I = i;
+                    const apz     J = j;
+                    const apz     Q = I/J;
+                    Y_ASSERT(Q==q);
+
+                    Y_ASSERT(I/j==Q);
+                    Y_ASSERT(i/J==Q);
+                    { apz dum = I; dum /= J; assert(Q==dum); }
+                    { apz dum = I; dum /= j; assert(Q==dum); }
+                    if(i>=0)
+                    {
+                        const apn U = uint64_t(i);
+                        assert(U/J == Q);
+                    }
+                    if(j>0)
+                    {
+                        const apn V = uint64_t(j);
+                        assert(I/V  == Q);
+                    }
+                }
+            }
+        }
+    }
+
 
 
 

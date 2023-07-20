@@ -33,7 +33,10 @@ namespace Yttrium
             assert(lhs.n>0);
             assert(rhs.n>0);
             const Natural N = lhs.n/rhs.n;
-            return Integer(S,N);
+            if(N.getSign()==__Zero__)
+                return Integer();
+            else
+                return Integer(S,N);
 
         }
 
