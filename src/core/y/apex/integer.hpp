@@ -105,6 +105,8 @@ namespace Yttrium
             //__________________________________________________________________
             static SignType Compare(const Integer &lhs, const Integer &rhs) noexcept;
             friend bool operator==(const Integer &lhs, const Integer &rhs) noexcept;
+            friend bool operator!=(const Integer &lhs, const Integer &rhs) noexcept;
+
             friend bool operator==(const Integer &lhs, const int64_t  rhs) noexcept;
 
 
