@@ -41,7 +41,8 @@ namespace Yttrium
             Chars & operator<<(const uint8_t); //!< pushTail
             Chars & operator>>(const uint8_t); //!< pushHead
             Chars & operator<<(const char *);  //!< pushTail
-            
+            Chars & operator>>(const char *);  //!< pushHead
+
             uint8_t pullTail() noexcept; //!< extract and remove tail
             uint8_t pullHead() noexcept; //!< extract and remove head
 

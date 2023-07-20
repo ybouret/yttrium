@@ -37,6 +37,25 @@ namespace Yttrium
             return *this;
         }
 
+        Chars & Chars:: operator>>(const char *msg)
+        {
+            if(msg)
+            {
+                Chars sto;
+                while(true)
+                {
+                    const uint8_t c = static_cast<uint8_t>(*(msg++));
+                    if(c<=0) break;
+                    sto.pushTail( new Char(c) );
+                }
+                mergeHead(sto);
+            }
+            return *this;
+        }
+
+
+
+
         uint8_t Chars:: pullTail() noexcept
         {
             assert(size>0);

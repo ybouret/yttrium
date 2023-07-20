@@ -14,6 +14,7 @@ Y_UTEST(io_char)
     cache << "Hello, World!";
     cache << '-';
     cache >> '+';
+    cache >> "Message: ";
     std::cerr << cache << std::endl;
     {
         const IO::Chars cpy(cache);
