@@ -132,8 +132,13 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static SignType Compare(const Integer &lhs, const Integer &rhs) noexcept;
-            
-            
+
+#define Y_APZ_OP(OP,RESULT) \
+inline friend bool operator OP (const Integer &lhs, const Integer rhs ) noexcept { return Cmp(lhs,rhs) RESULT; }
+
+            Y_APZ_OP(==,== __Zero__)
+            Y_APZ_OP(!=,!= __Zero__)
+
 
             //__________________________________________________________________
             //
