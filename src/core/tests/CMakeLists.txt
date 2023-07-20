@@ -107,6 +107,6 @@ add_test(apex:n        test-core apex_n)
 add_test(apex:z        test-core apex_z)
 
 #ordered
-add_test(ordered:prioQ test-core ordered_prioQ)
+add_test(ordered:PQ test-core ordered_PQ)
 
 

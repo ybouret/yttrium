@@ -81,7 +81,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(apex_n);
     Y_UTEST(apex_z);
 
-    Y_UTEST(ordered_prioQ);
+    Y_UTEST(ordered_PQ);
 
     //std::cerr << "-------- Platform: " << Y_PLATFORM << std::endl;
     //std::cerr << "-------- Compiler: " << Y_COMPILER << std::endl;

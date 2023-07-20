@@ -1,6 +1,6 @@
 
 
-#include "y/ordered/prio-q.hpp"
+#include "y/ordered/prio-queue.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/shuffle.hpp"
 #include "y/apex/natural.hpp"
@@ -9,7 +9,7 @@
 using namespace Yttrium;
 
 
-Y_UTEST(ordered_prioQ)
+Y_UTEST(ordered_PQ)
 {
 
     Random::Rand ran;
@@ -24,13 +24,13 @@ Y_UTEST(ordered_prioQ)
         {
             const apn temp(ran.leq(16),ran);
 
-            Core::PrioQ<apn>::Insert(pq,count,temp,Comparison::Increasing<apn>);
+            Core::PrioQueue<apn>::Insert(pq,count,temp,Comparison::Increasing<apn>);
             std::cerr << "(" << pq[0] << ") "; Core::Display(std::cerr,pq,count) << std::endl;
         }
     }
     catch(...)
     {
-        Core::PrioQ<apn>::Finish(pq,count);
+        Core::PrioQueue<apn>::Finish(pq,count);
         throw;
     }
     std::cerr << "Insertion" << std::endl;
@@ -38,7 +38,7 @@ Y_UTEST(ordered_prioQ)
     while(count>0)
     {
         std::cerr << "(" << pq[0] << ") " << std::endl;
-        Core::PrioQ<apn>::Remove(pq,count,Comparison::Increasing<apn>);
+        Core::PrioQueue<apn>::Remove(pq,count,Comparison::Increasing<apn>);
     }
 
 
