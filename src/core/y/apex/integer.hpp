@@ -152,6 +152,7 @@ inline friend bool operator OP (const Natural &lhs, const Integer &rhs ) noexcep
             Y_APZ_OP(<=, != Positive)
             Y_APZ_OP(>=, != Negative)
 
+            
             //__________________________________________________________________
             //
             //

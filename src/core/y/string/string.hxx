@@ -334,32 +334,36 @@ namespace Yttrium
 
     namespace Core
     {
-        String<CH> operator+(const String<CH> &lhs, const String<CH> &rhs)
+        template<>
+        String<CH> operator+<CH>(const String<CH> &lhs, const String<CH> &rhs)
         {
             return String<CH>(lhs.code->data,lhs.code->size,
                               rhs.code->data,rhs.code->size);
         }
 
-
-        String<CH> operator+(const String<CH> &lhs, const CH *rhs)
+        template <>
+        String<CH> operator+<CH>(const String<CH> &lhs, const CH *rhs)
         {
             return String<CH>(lhs.code->data,lhs.code->size,
                               rhs,StringLength(rhs));
         }
 
-        String<CH> operator+(const CH *lhs, const String<CH> &rhs)
+        template <>
+        String<CH> operator+<CH>(const CH *lhs, const String<CH> &rhs)
         {
             return String<CH>(lhs,StringLength(lhs),
                               rhs.code->data,rhs.code->size);
         }
 
-        String<CH> operator+(const String<CH> &lhs, const CH rhs)
+        template <>
+        String<CH> operator+<CH>(const String<CH> &lhs, const CH rhs)
         {
             return String<CH>(lhs.code->data,lhs.code->size,
                               &rhs,1);
         }
 
-        String<CH> operator+(const CH lhs, const String<CH> &rhs)
+        template <>
+        String<CH> operator+<CH>(const CH lhs, const String<CH> &rhs)
         {
             return String<CH>(&lhs,1,
                               rhs.code->data,rhs.code->size);

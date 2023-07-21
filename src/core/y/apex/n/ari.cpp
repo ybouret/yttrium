@@ -50,6 +50,25 @@ namespace Yttrium
                 }
             }
         }
+
+        void Natural:: Simplify(Natural &Numer, Natural &Denom)
+        {
+            if(Denom<=0) throw Specific::Exception(CallSign,"Simplify by Zero");
+            if(Numer==0)
+            {
+                Denom = 1;
+            }
+            else
+            {
+                const Natural g = __GCD(Numer,Denom);
+                assert(g>0);
+                if(1!=g)
+                {
+                    Numer /= g;
+                    Denom /= g;
+                }
+            }
+        }
     }
 
 }

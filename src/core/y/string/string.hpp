@@ -26,6 +26,15 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(StringCommon);
         };
 
+        template <typename> class String;
+
+        template <typename T> String<T> operator+(const String<T> &, const String<T> &);
+        template <typename T> String<T> operator+(const String<T> &, const T);
+        template <typename T> String<T> operator+(const String<T> &, const T *);
+        template <typename T> String<T> operator+(const T, const String<T> &);
+        template <typename T> String<T> operator+(const T*, const String<T> &);
+
+
         //______________________________________________________________________
         //
         //
@@ -108,11 +117,11 @@ namespace Yttrium
             // additions
             //
             //__________________________________________________________________
-            friend String operator+(const String &, const String &);
-            friend String operator+(const String &, const T      *);
-            friend String operator+(const T      *, const String &);
-            friend String operator+(const String &, const T       );
-            friend String operator+(const T       , const String &);
+            friend String<T> operator+<>(const String<T> &, const String<T> &);
+            friend String<T> operator+<>(const String &, const T      *);
+            friend String<T> operator+<>(const T      *, const String &);
+            friend String<T> operator+<>(const String &, const T       );
+            friend String<T> operator+<>(const T       , const String &);
 
             String & operator+=(const String &);
             String & operator+=(const T      *);

@@ -195,8 +195,8 @@ namespace Yttrium
             // Arithmetic
             //
             //__________________________________________________________________
-            static Natural GCD(const Natural &, const Natural &); //!< Greatest Common Divider
-
+            static Natural GCD(const Natural &, const Natural &);    //!< Greatest Common Divider
+            static void    Simplify(Natural &Numer, Natural &Denom); //!< Simplify
 
         private:
             void *impl;
