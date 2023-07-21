@@ -38,6 +38,8 @@ Y_UTEST(strings)
         s << '!';
         s << ' ';
         s << s;
+        s >> '+';
+        s >> " before ";
         std::cerr << s << std::endl;
     }
 
