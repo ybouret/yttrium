@@ -110,6 +110,7 @@ add_test(apex:block    test-core apex_block)
 add_test(apex:proto    test-core apex_proto)
 add_test(apex:n        test-core apex_n)
 add_test(apex:z        test-core apex_z)
+add_test(apex:q        test-core apex_q)
 
 #ordered
 add_test(ordered:PQ test-core ordered_PQ)
