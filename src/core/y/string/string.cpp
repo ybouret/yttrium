@@ -2,35 +2,33 @@
 
 #include "y/memory/allocator/pooled.hpp"
 #include "y/memory/out-of-reach.hpp"
+#include "y/memory/wad.hpp"
 #include "y/type/utils.hpp"
+#include "y/text/ops.hpp"
 #include <cstring>
 
 namespace Yttrium
 {
     namespace Core
     {
-        template <typename T> static inline
-        T *StringAcquire(size_t &items,
-                         size_t &bytes)
+        StringCommon:: ~StringCommon() noexcept {}
+        StringCommon::  StringCommon() noexcept {}
+
+        size_t StringCommon:: BlocksFor(const size_t numChars) noexcept
         {
-            static Memory::Allocator &mgr = Memory::Pooled::Instance();
-            return mgr.allocate<T>(items,bytes);
+            return 1 + Max(MinChars,numChars);
         }
 
-        template <typename T> static inline
-        void StringRelease(T *    &entry,
-                           size_t &items,
-                           size_t &bytes) noexcept
-        {
-            static Memory::Allocator &mgr = Memory::Pooled::Location();
-            mgr.withdraw(entry,items,bytes);
-        }
-
-        static const size_t StringMinChars = 31;
     }
 }
 
-#define Y_STRING_PROLOG() Object(), Counted(), Writable<CH>()
+#define Y_STRING_PROLOG() StringCommon(), Writable<CH>()
+
+#define Y_STRING_CODE(NUM_CHARS)               \
+Object(),                                      \
+WadType( StringCommon::BlocksFor(NUM_CHARS) ), \
+data(    static_cast<CH*>(workspace)        ), \
+item(data-1), size(0), maxi(maxBlocks-1)
 
 #define CH char
 #include "string.hxx"

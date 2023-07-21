@@ -7,43 +7,76 @@
 #include "y/memory/buffer/rw.hpp"
 #include "y/memory/out-of-reach.hpp"
 #include "y/memory/allocator/pooled.hpp"
+#include "y/memory/wad.hpp"
+#include "y/type/args.hpp"
 
 namespace Yttrium
 {
     namespace Memory
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! helper for local memory needs
+        //
+        //
+        //______________________________________________________________________
         template <typename T, typename ALLOCATOR = Pooled>
-        class BufferOf : public ReadWriteBuffer
+        class BufferOf : public ReadWriteBuffer, public Wad<T,ALLOCATOR>
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            Y_ARGS_EXPOSE(T);                 //!< aliases
+            typedef Wad<T,ALLOCATOR> WadType; //!< alias
+            using WadType::workspace;
+            using WadType::maxBlocks;
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
             //! enough memory for T[n]
-            explicit BufferOf(const size_t n) :
-            items(n),
-            bytes(items*sizeof(T)),
-            mgr( ALLOCATOR::Instance() ),
-            wlen( items ),
-            wksp( static_cast<T*>(mgr.acquire(wlen,sizeof(T)) ) )
-            {   }
+            explicit BufferOf(const size_t n):
+            ReadWriteBuffer(),
+            WadType(n),
+            wksp( static_cast<MutableType*>(workspace) ),
+            wlen( maxBlocks * sizeof(T)      )
+            {
+            }
 
-            virtual ~BufferOf() noexcept { mgr.release(*(void **)&wksp,wlen);   }
+            //! cleanup
+            virtual ~BufferOf() noexcept { }
 
+            //__________________________________________________________________
+            //
+            //
+            // methods
+            //
+            //__________________________________________________________________
             inline virtual const void *ro_addr() const noexcept { return wksp;  }
-            inline virtual size_t      measure() const noexcept { return bytes;  }
+            inline virtual size_t      measure() const noexcept { return wlen;  }
 
-            inline T &operator[](const size_t i) noexcept {
-                assert(i<items);
+            //! safe access
+            inline Type &operator[](const size_t i) noexcept {
+                assert(i<maxBlocks);
                 return wksp[i];
             }
 
-            const size_t       items;
-            const size_t       bytes;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(BufferOf);
-            Memory::Allocator &mgr;
-            size_t             wlen;
-            T                 *wksp;
+            MutableType       *wksp;
+            const size_t       wlen;
         };
     }
 

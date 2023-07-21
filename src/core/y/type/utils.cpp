@@ -3,9 +3,6 @@
 
 namespace Yttrium
 {
-    size_t LengthOf(const char *s) noexcept
-    {
-        return s ? strlen(s) : 0;
-    }
+    
 
 }

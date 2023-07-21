@@ -44,8 +44,7 @@ namespace Yttrium
         virtual size_t size()      const noexcept = 0; //!< items in conatiner
         virtual size_t capacity()  const noexcept = 0; //!< maximum items in container
         virtual size_t available() const noexcept;     //!< default to capacity() - size(), can be overiden
-
-        static size_t NextCapacity(const size_t n);
+        static size_t NextCapacity(const size_t n);    //!< evaluate next capacity
 
 
 

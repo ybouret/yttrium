@@ -6,12 +6,28 @@
 #include "y/counted.hpp"
 #include "y/object.hpp"
 #include "y/container/writable.hpp"
+#include "y/ostream-proto.hpp"
 
 namespace Yttrium
 {
 
     namespace Core
     {
+        class StringCommon : public Object, public Counted
+        {
+        public:
+            static const size_t MinChars = 31;
+            static size_t BlocksFor(const size_t numChars) noexcept;
+
+            virtual ~StringCommon() noexcept;
+
+        protected:
+            explicit StringCommon() noexcept;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(StringCommon);
+        };
+
         //______________________________________________________________________
         //
         //
@@ -21,7 +37,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename T>
-        class String : public Object, public Counted, public Writable<T>
+        class String : public StringCommon, public Writable<T>
         {
         public:
             //__________________________________________________________________
@@ -43,6 +59,16 @@ namespace Yttrium
             String(const String &);              //!< copy
             String & operator=( const String &); //!< assign
 
+            String(const T);
+            String(const T *, const size_t);
+            String(const T *);
+
+            friend inline std::ostream & operator<<(std::ostream &os,
+                                                    const String &s)
+            {
+                os << s();
+                return os;
+            }
 
             //__________________________________________________________________
             //
@@ -56,16 +82,11 @@ namespace Yttrium
             virtual size_t      capacity()                     const noexcept;
             ConstType         * operator()(void)               const noexcept;
 
-            void append(const T *arr, const size_t num);
-            
-            String & operator<<(const T);
-            String & operator<<(const T *);
-            String & operator<<(const String &);
 
 
         private:
-            class Impl;
-            Impl *impl;
+            class Code;
+            Code *code;
         };
     }
 }

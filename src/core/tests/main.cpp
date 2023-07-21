@@ -29,6 +29,8 @@ Y_UTEST_DECL(256)
     Y_UTEST(memory_studio);
     Y_UTEST(memory_quarry);
     Y_UTEST(memory_buffer);
+    Y_UTEST(memory_wad);
+
 
 
 
