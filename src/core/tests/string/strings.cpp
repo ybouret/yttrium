@@ -40,6 +40,7 @@ Y_UTEST(strings)
         s << s;
         s >> '+';
         s >> " before ";
+        s >> s;
         std::cerr << s << std::endl;
     }
 
