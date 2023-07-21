@@ -7,7 +7,7 @@ namespace Yttrium
     namespace Apex
     {
 
-        const char * const Rational:: CallSign = "Apex::Rational";
+        const char * const Rational:: CallSign = "apq";
 
         Rational:: Rational() :
         Number(),
@@ -16,6 +16,26 @@ namespace Yttrium
         {
         }
 
+        Rational:: Rational(const int64_t z) :
+        Number(),
+        numer(z),
+        denom(1)
+        {
+        }
+
+        Rational:: Rational(const Integer &z) :
+        Number(),
+        numer(z),
+        denom(1)
+        {
+        }
+
+        Rational:: Rational(const Natural &n) :
+        Number(),
+        numer(n),
+        denom(1)
+        {
+        }
 
         void Rational:: zDenom() const
         {
@@ -28,14 +48,18 @@ namespace Yttrium
             Natural::Simplify(Coerce(numer.n),Coerce(denom));
         }
 
-        Rational:: Rational(const int64_t n, const uint64_t d) :
-        Number(),
-        numer(n),
-        denom(d)
-        {
-            zDenom();
-            update();
-        }
+
+#define Y_RATIONAL_CTOR(LHS,RHS)                \
+Rational:: Rational(const LHS n, const RHS d) : \
+Number(), numer(n), denom(d)                    \
+{ zDenom(); update(); }
+
+        Y_RATIONAL_CTOR(int64_t  , uint64_t )
+        Y_RATIONAL_CTOR(int64_t  , Natural &)
+        Y_RATIONAL_CTOR(Integer &, uint64_t )
+        Y_RATIONAL_CTOR(Integer &, Natural &)
+
+
 
 
 
@@ -66,6 +90,46 @@ namespace Yttrium
             Number::Display(os,chars);
             return os;
         }
+
+        Rational:: Rational(const Rational &q) :
+        Number(),
+        numer(q.numer),
+        denom(q.denom)
+        {
+        }
+
+        void Rational:: xch(Rational &other) noexcept
+        {
+            Coerce(numer).xch( Coerce(other.numer) );
+            Coerce(denom).xch( Coerce(other.denom) );
+        }
+
+        Rational & Rational::operator=(const Rational &q)
+        {
+            { Rational tmp(q); xch(tmp); }
+            return *this;
+        }
+
+
+        Rational & Rational:: operator=(const int64_t z)
+        {
+            { Rational tmp(z); xch(tmp); }
+            return *this;
+        }
+
+        Rational & Rational:: operator=(const Integer &z)
+        {
+            { Rational tmp(z); xch(tmp); }
+            return *this;
+        }
+
+        Rational & Rational:: operator=(const Natural &z)
+        {
+            { Rational tmp(z); xch(tmp); }
+            return *this;
+        }
+
+
 
 
     }

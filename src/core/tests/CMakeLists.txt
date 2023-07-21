@@ -63,6 +63,7 @@ add_test(type:list       test-core type_list)
 add_test(type:traits     test-core type_traits)
 add_test(type:conversion test-core type_conversion)
 add_test(type:args       test-core type_args)
+add_test(type:complex    test-core type_complex)
 
 #data
 add_test(data:list test-core data_list)
