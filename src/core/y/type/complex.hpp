@@ -49,6 +49,7 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
+        inline void xch( Complex &z ) noexcept { Swap(re,z.re); Swap(im,z.im); }
 
         //! display
         friend std::ostream & operator<<(std::ostream &os, const Complex &z)

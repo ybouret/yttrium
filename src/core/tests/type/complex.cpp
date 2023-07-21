@@ -64,7 +64,7 @@ void testMul(Random::Bits &ran)
             }
             ++tmx.cycle;
         }
-    } while( tmx(Gauss64) < 0.5 );
+    } while( tmx(Gauss64) < 0.1 );
 
     (void) Memory::OutOfReach::Addr((void*)&z3);
 
@@ -76,6 +76,54 @@ void testMul(Random::Bits &ran)
     std::cerr << std::endl;
 }
 
+
+template <typename T>
+static inline
+void testSwap(Random::Bits &ran)
+{
+
+    const double D = 0.5;
+    Complex<T> z1,z2;
+    Timing tmx;
+
+    (std::cerr << "Swap" << std::setw(3) << sizeof(T)*8 << "-bits :").flush();
+
+    tmx.reset();
+    do
+    {
+        z1.re = bigReal<T>(ran);
+        z1.im = bigReal<T>(ran);
+        z2.re = bigReal<T>(ran);
+        z2.im = bigReal<T>(ran);
+        for(size_t i=0;i<1000;++i)
+        {
+            const uint64_t mark = WallTime::Ticks();
+            Swap(z1,z2);
+            tmx.ticks += WallTime::Ticks() - mark;
+            tmx.cycle++;
+        }
+    } while( tmx.probe() < D);
+    (std::cerr << " swp @" << HumanReadable( tmx.speed() )).flush();
+
+    tmx.reset();
+    do
+    {
+        z1.re = bigReal<T>(ran);
+        z1.im = bigReal<T>(ran);
+        z2.re = bigReal<T>(ran);
+        z2.im = bigReal<T>(ran);
+        for(size_t i=0;i<1000;++i)
+        {
+            const uint64_t mark = WallTime::Ticks();
+            z1.xch(z2);
+            tmx.ticks += WallTime::Ticks() - mark;
+            tmx.cycle++;
+        }
+    } while( tmx.probe() < D);
+    (std::cerr << " xch @" << HumanReadable( tmx.speed() )).flush();
+
+    std::cerr << std::endl;
+}
 
 Y_UTEST(type_complex)
 {
@@ -89,6 +137,9 @@ Y_UTEST(type_complex)
     std::cerr << Complex<float>::MultiAlgo( Complex<float>(1,2), Complex<float>(3,4) ) << std::endl;
     std::cerr << Complex<float>::GaussAlgo( Complex<float>(1,2), Complex<float>(3,4) ) << std::endl;
 
+    testSwap<float>(ran);
+    testSwap<double>(ran);
+    testSwap<long double>(ran);
 
     testMul<float>(ran);
     testMul<double>(ran);
