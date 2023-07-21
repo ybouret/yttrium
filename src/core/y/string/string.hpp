@@ -73,7 +73,7 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // Methods
+            // Access Methods
             //
             //__________________________________________________________________
             virtual ConstType & operator[](const size_t index) const noexcept;
@@ -82,6 +82,34 @@ namespace Yttrium
             virtual size_t      capacity()                     const noexcept;
             ConstType         * operator()(void)               const noexcept;
 
+            //__________________________________________________________________
+            //
+            //
+            // appending
+            //
+            //__________________________________________________________________
+            void pushTail(const T *, const size_t);
+            String & operator<<(const T       );
+            String & operator<<(const T      *);
+            String & operator<<(const String &);
+
+            //__________________________________________________________________
+            //
+            //
+            // prepending
+            //
+            //__________________________________________________________________
+            void pushHead(const T *, const size_t);
+            String & operator>>(const T       );
+            String & operator>>(const T      *);
+            String & operator>>(const String &);
+
+            //__________________________________________________________________
+            //
+            //
+            // additions
+            //
+            //__________________________________________________________________
 
 
         private:

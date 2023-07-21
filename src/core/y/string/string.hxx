@@ -73,6 +73,11 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
+            //__________________________________________________________________
+            //
+            //! push a block at tail
+            //__________________________________________________________________
             bool pushTail(const CH *arr, const size_t num) noexcept
             {
                 assert(Good(arr,num));
@@ -88,6 +93,28 @@ namespace Yttrium
                     return false;
                 }
             }
+
+            //__________________________________________________________________
+            //
+            //! push a block at head
+            //__________________________________________________________________
+            bool pushHead(const CH *arr, const size_t num) noexcept
+            {
+                assert(Good(arr,num));
+
+                if(num<=maxi-size)
+                {
+                    memmove(data+num,data,size*sizeof(CH));
+                    memmove(data,arr,num);
+                    size += num;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
 
 
             //__________________________________________________________________
@@ -202,49 +229,96 @@ namespace Yttrium
             return code->data;
         }
 
+    }
 
-#if 0
+}
 
 
+
+namespace Yttrium
+{
+
+    namespace Core
+    {
 
         template <>
-        void String<CH>:: append(const CH *arr, const size_t num)
+        void String<CH>:: pushTail(const CH *arr, const size_t num)
         {
             assert(Good(arr,num));
-            if(!impl->accepted(arr,num) )
+            if(! code->pushTail(arr,num) )
             {
-                Impl *temp = new Impl(*impl,num);
-                temp->catenate(arr,num);
-                Swap(impl,temp);
-                delete temp;
+                Code *temp = new Code(code->data,code->size,arr,num);
+                delete code;
+                code = temp;
             }
         }
 
         template <>
         String<CH> & String<CH>:: operator<<(const CH c)
         {
-            append(&c,1);
+            pushTail(&c,1);
             return *this;
         }
 
         template <>
         String<CH> & String<CH>:: operator<<(const CH *text)
         {
-            append(text,StringLength(text));
+            pushTail(text,StringLength(text));
             return *this;
         }
 
         template <>
         String<CH> & String<CH>:: operator<<(const String &other)
         {
-            append(other.impl->data, other.impl->size);
+            pushTail(other.code->data, other.code->size);
             return *this;
         }
-
-        
-#endif
-
 
     }
     
 }
+
+namespace Yttrium
+{
+
+    namespace Core
+    {
+
+        template <>
+        void String<CH>:: pushHead(const CH *arr, const size_t num)
+        {
+            assert(Good(arr,num));
+            if(! code->pushHead(arr,num) )
+            {
+                Code *temp = new Code(arr,num,code->data,code->size);
+                delete code;
+                code = temp;
+            }
+        }
+
+        template <>
+        String<CH> & String<CH>:: operator>>(const CH c)
+        {
+            pushHead(&c,1);
+            return *this;
+        }
+
+        template <>
+        String<CH> & String<CH>:: operator>>(const CH *text)
+        {
+            pushHead(text,StringLength(text));
+            return *this;
+        }
+
+        template <>
+        String<CH> & String<CH>:: operator>>(const String &other)
+        {
+            pushHead(other.code->data, other.code->size);
+            return *this;
+        }
+
+    }
+
+}
+
+
