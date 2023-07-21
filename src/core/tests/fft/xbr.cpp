@@ -42,7 +42,7 @@ namespace
 
 
     template <typename T>
-    static inline size_t myXBR(T data[], const size_t nn) noexcept
+    static inline size_t myXBR(Complex<T> data[], const size_t nn) noexcept
     {
         const size_t n = (nn<<1);
         size_t j=1;
@@ -50,9 +50,9 @@ namespace
         {
             if(j>i)
             {
-                
-                Swap(data[j],data[i]);
-                Swap(data[j+1],data[i+1]);
+                const size_t I = (i-1)>>1;
+                const size_t J = (j-1)>>1;
+                Swap(data[J],data[I]);
             }
             size_t m=nn;
             while (m >= 2 && j > m)
@@ -72,18 +72,16 @@ namespace
         const size_t nc = 1<<shift;
         const size_t nr = nc*2;
         Memory::BufferOf<T>            rbuf(nr);
-        Memory::BufferOf< Complex<T> > cbuf(nr);
+        Memory::BufferOf< Complex<T> > cbuf(nc);
+        Y_ASSERT(rbuf.measure() == cbuf.measure() );
 
         T *r = &rbuf[0];
         T *c = &cbuf[0].re;
         for(size_t i=0;i<nr;++i) r[i] = c[i] = static_cast<T>(i+1);
 
-        Core::Display(std::cerr,r,nr) << std::endl;
-        Core::Display(std::cerr,&cbuf[0],nc) << std::endl;
-
         scalarXBR(r-1,nc);
-        Core::Display(std::cerr,r,nr) << std::endl;
-
+        myXBR(&cbuf[0],nc);
+        Y_ASSERT(rbuf.HasSameContentThan(cbuf));
 
     }
 
@@ -116,13 +114,13 @@ namespace
         return count;
     }
 
+
+
+
+
+
+#if 0
     static double Duration = 1.0;
-
-
-
-
-
-
     template <typename T>
     static inline
     void  testXBR(const size_t n, uint64_t &fftRate, uint64_t &myRate)
@@ -147,6 +145,7 @@ namespace
 
         ram.release(data+1,bs);
     }
+#endif
 
 
     
@@ -155,11 +154,10 @@ namespace
 Y_UTEST(fft_xbr)
 {
 
-    checkXBR<float>(0);
-    checkXBR<float>(1);
-    checkXBR<float>(2);
-    checkXBR<float>(3);
-    checkXBR<float>(4);
+    for(size_t p=0;p<=20;++p)
+    {
+        checkXBR<float>(p);
+    }
 
     return 0;
 
@@ -183,6 +181,7 @@ Y_UTEST(fft_xbr)
 
     Y_SIZEOF(long double);
 
+#if 0
     for(size_t i=0;i<=12;++i)
     {
         const size_t n   = (1<<i);
@@ -213,6 +212,7 @@ Y_UTEST(fft_xbr)
 
         std::cerr << std::endl;
     }
+#endif
 
 }
 Y_UDONE()
