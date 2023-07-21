@@ -13,14 +13,20 @@ namespace Yttrium
 
     namespace Core
     {
+        //______________________________________________________________________
+        //
+        //
+        //! base class for strings
+        //
+        //______________________________________________________________________
         class StringCommon : public Object, public Counted
         {
         public:
-            static const size_t MinChars = 31;
-            static size_t BlocksFor(const size_t numChars) noexcept;
+            static const size_t MinChars = 31;                       //!< minimal Chars
+            static size_t BlocksFor(const size_t numChars) noexcept; //!< 1+Max(numChar,Minchar)
 
-            explicit StringCommon() noexcept;
-            virtual ~StringCommon() noexcept;
+            explicit StringCommon() noexcept; //!< setup
+            virtual ~StringCommon() noexcept; //!< cleanup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(StringCommon);
@@ -28,11 +34,11 @@ namespace Yttrium
 
         template <typename> class String;
 
-        template <typename T> String<T> operator+(const String<T> &, const String<T> &);
-        template <typename T> String<T> operator+(const String<T> &, const T);
-        template <typename T> String<T> operator+(const String<T> &, const T *);
-        template <typename T> String<T> operator+(const T, const String<T> &);
-        template <typename T> String<T> operator+(const T*, const String<T> &);
+        template <typename T> String<T> operator+(const String<T> &, const String<T> &); //!< forward declaration
+        template <typename T> String<T> operator+(const String<T> &, const T);           //!< forward declaration
+        template <typename T> String<T> operator+(const String<T> &, const T *);         //!< forward declaration
+        template <typename T> String<T> operator+(const T, const String<T> &);           //!< forward declaration
+        template <typename T> String<T> operator+(const T*, const String<T> &);          //!< forward declaration
 
 
         //______________________________________________________________________
@@ -65,11 +71,11 @@ namespace Yttrium
             virtual ~String() noexcept;          //!< cleanup
             String(const String &);              //!< copy
             String & operator=( const String &); //!< assign
+            String(const T);                     //!< setup from char
+            String(const T *, const size_t);     //!< setup from given chars
+            String(const T *);                   //!< setup from chars
 
-            String(const T);
-            String(const T *, const size_t);
-            String(const T *);
-
+            //! display, legacy style
             friend inline std::ostream & operator<<(std::ostream &os,
                                                     const String &s)
             {
@@ -83,11 +89,11 @@ namespace Yttrium
             // Access Methods
             //
             //__________________________________________________________________
-            virtual ConstType & operator[](const size_t index) const noexcept;
-            virtual Type      & operator[](const size_t index)       noexcept;
-            virtual size_t      size()                         const noexcept;
-            virtual size_t      capacity()                     const noexcept;
-            ConstType         * operator()(void)               const noexcept;
+            virtual ConstType & operator[](const size_t index) const noexcept; //!< const access
+            virtual Type      & operator[](const size_t index)       noexcept; //!< access
+            virtual size_t      size()                         const noexcept; //!< num of chars
+            virtual size_t      capacity()                     const noexcept; //!< maximal number of chars
+            ConstType         * operator()(void)               const noexcept; //!< legacy access
 
             //__________________________________________________________________
             //
@@ -95,10 +101,10 @@ namespace Yttrium
             // appending
             //
             //__________________________________________________________________
-            void pushTail(const T *, const size_t);
-            String & operator<<(const T       );
-            String & operator<<(const T      *);
-            String & operator<<(const String &);
+            void pushTail(const T *, const size_t); //!< push block at tail
+            String & operator<<(const T       );    //!< helper
+            String & operator<<(const T      *);    //!< helper
+            String & operator<<(const String &);    //!< helper
 
             //__________________________________________________________________
             //
@@ -106,10 +112,10 @@ namespace Yttrium
             // prepending
             //
             //__________________________________________________________________
-            void pushHead(const T *, const size_t);
-            String & operator>>(const T       );
-            String & operator>>(const T      *);
-            String & operator>>(const String &);
+            void pushHead(const T *, const size_t); //!< push block at head
+            String & operator>>(const T       );    //!< helper
+            String & operator>>(const T      *);    //!< helper
+            String & operator>>(const String &);    //!< helper
 
             //__________________________________________________________________
             //
@@ -117,15 +123,15 @@ namespace Yttrium
             // additions
             //
             //__________________________________________________________________
-            friend String<T> operator+<>(const String<T> &, const String<T> &);
-            friend String<T> operator+<>(const String &, const T      *);
-            friend String<T> operator+<>(const T      *, const String &);
-            friend String<T> operator+<>(const String &, const T       );
-            friend String<T> operator+<>(const T       , const String &);
+            friend String<T> operator+<>(const String<T> &, const String<T> &); //!< declaration
+            friend String<T> operator+<>(const String &, const T      *);       //!< declaration
+            friend String<T> operator+<>(const T      *, const String &);       //!< declaration
+            friend String<T> operator+<>(const String &, const T       );       //!< declaration
+            friend String<T> operator+<>(const T       , const String &);       //!< declaration
 
-            String & operator+=(const String &);
-            String & operator+=(const T      *);
-            String & operator+=(const T       );
+            String & operator+=(const String &); //!< in place addition
+            String & operator+=(const T      *); //!< in place addition
+            String & operator+=(const T       ); //!< in place addition
 
         private:
             class Code;

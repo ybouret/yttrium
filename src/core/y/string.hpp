@@ -9,7 +9,9 @@
 
 namespace Yttrium
 {
-    typedef Core::String<char> String;
+    typedef Core::String<char> String; //!< default string
+
+    //! C-style formating
     String FormatString(const char *fmt,...) Y_PRINTF_CHECK(1,2);
 }
 
