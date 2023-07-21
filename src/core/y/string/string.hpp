@@ -19,10 +19,8 @@ namespace Yttrium
             static const size_t MinChars = 31;
             static size_t BlocksFor(const size_t numChars) noexcept;
 
-            virtual ~StringCommon() noexcept;
-
-        protected:
             explicit StringCommon() noexcept;
+            virtual ~StringCommon() noexcept;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(StringCommon);
@@ -110,11 +108,20 @@ namespace Yttrium
             // additions
             //
             //__________________________________________________________________
+            friend String operator+(const String &, const String &);
+            friend String operator+(const String &, const T      *);
+            friend String operator+(const T      *, const String &);
+            friend String operator+(const String &, const T       );
+            friend String operator+(const T       , const String &);
 
+            String & operator+=(const String &);
+            String & operator+=(const T      *);
+            String & operator+=(const T       );
 
         private:
             class Code;
             Code *code;
+            String(const T *,const size_t, const T *, const size_t);
         };
     }
 }

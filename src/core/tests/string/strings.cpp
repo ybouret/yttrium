@@ -44,6 +44,13 @@ Y_UTEST(strings)
         std::cerr << s << std::endl;
     }
 
+    {
+        Core::String<char> a = "Hello ";
+        Core::String<char> b = " World";
+        Core::String<char> s = a+b;
+        std::cerr << s << std::endl;
+    }
+
 
 
 }

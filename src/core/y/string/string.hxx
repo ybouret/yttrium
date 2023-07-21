@@ -180,7 +180,15 @@ namespace Yttrium
         {
         }
 
-        
+        template <>
+        String<CH> ::
+        String(const CH *lhs, const size_t nl,
+               const CH *rhs, const size_t nr) :
+        Y_STRING_PROLOG(), code( new Code(lhs,nl,rhs,nr) )
+        {
+
+        }
+
 
 
     }
@@ -321,4 +329,67 @@ namespace Yttrium
 
 }
 
+namespace Yttrium
+{
 
+    namespace Core
+    {
+        String<CH> operator+(const String<CH> &lhs, const String<CH> &rhs)
+        {
+            return String<CH>(lhs.code->data,lhs.code->size,
+                              rhs.code->data,rhs.code->size);
+        }
+
+
+        String<CH> operator+(const String<CH> &lhs, const CH *rhs)
+        {
+            return String<CH>(lhs.code->data,lhs.code->size,
+                              rhs,StringLength(rhs));
+        }
+
+        String<CH> operator+(const CH *lhs, const String<CH> &rhs)
+        {
+            return String<CH>(lhs,StringLength(lhs),
+                              rhs.code->data,rhs.code->size);
+        }
+
+        String<CH> operator+(const String<CH> &lhs, const CH rhs)
+        {
+            return String<CH>(lhs.code->data,lhs.code->size,
+                              &rhs,1);
+        }
+
+        String<CH> operator+(const CH lhs, const String<CH> &rhs)
+        {
+            return String<CH>(&lhs,1,
+                              rhs.code->data,rhs.code->size);
+        }
+
+    }
+
+}
+
+namespace Yttrium
+{
+
+    namespace Core
+    {
+        template <>
+        String<CH> & String<CH>:: operator+=(const String &other)
+        {
+            return (*this) << other;
+        }
+
+        template <>
+        String<CH> & String<CH>:: operator+=(const CH *other)
+        {
+            return (*this) << other;
+        }
+
+        template <>
+        String<CH> & String<CH>:: operator+=(const CH c)
+        {
+            return (*this) << c;
+        }
+    }
+}
