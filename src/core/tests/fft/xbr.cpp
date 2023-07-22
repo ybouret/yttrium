@@ -42,110 +42,76 @@ namespace
 
 
     template <typename T>
-    static inline size_t myXBR(Complex<T> data[], const size_t nn) noexcept
-    {
-        const size_t n = (nn<<1);
-        size_t j=1;
-        for(size_t i=1;i<n;i+=2)
-        {
-            if(j>i)
-            {
-                const size_t I = (i-1)>>1;
-                const size_t J = (j-1)>>1;
-                Swap(data[J],data[I]);
-            }
-            size_t m=nn;
-            while (m >= 2 && j > m)
-            {
-                j -= m;
-                m >>= 1;
-            }
-            j += m;
-        }
-        return n;
-    }
-
-    template <typename T> static inline
-    void checkXBR(const size_t shift)
-    {
-        std::cerr << "Check XBR 2^" << shift << std::endl;
-        const size_t nc = 1<<shift;
-        const size_t nr = nc*2;
-        Memory::BufferOf<T>            rbuf(nr);
-        Memory::BufferOf< Complex<T> > cbuf(nc);
-        Y_ASSERT(rbuf.measure() == cbuf.measure() );
-
-        T *r = &rbuf[0];
-        T *c = &cbuf[0].re;
-        for(size_t i=0;i<nr;++i) r[i] = c[i] = static_cast<T>(i+1);
-
-        scalarXBR(r-1,nc);
-        myXBR(&cbuf[0],nc);
-        Y_ASSERT(rbuf.HasSameContentThan(cbuf));
-
-    }
-
-
-    static inline size_t CountXBR(const size_t nn, uint64_t &imx) noexcept
+    static inline size_t myXBR(Complex<T>   data[],
+                               const size_t size,
+                               size_t      &jmax) noexcept
     {
         size_t count = 0;
-        const size_t n = (nn<<1);
-        imx = 0;
-        size_t j=1;
-        for(size_t i=1;i<n;i+=2)
+        jmax = 0;
+
+        const size_t half = size>>1;
+        size_t j=0;
+        for(size_t i=0;i<size;++i)
         {
             if(j>i)
             {
-                //Swap(data[j],data[i]);
-                //Swap(data[j+1],data[i+1]);
-                //std::cerr << i << " <-> " << j << " AND " << (i+1) << " <-> " << (j+1) << std::endl;
-                imx = Max<uint64_t>(imx,j);
+                Swap(data[j],data[i]);
+                jmax = Max(jmax,j);
                 ++count;
             }
-            size_t m=nn;
-            while (m >= 2 && j > m)
+
+            size_t m=half;
+            while( (m>0) && j >= m)
             {
-                j -= m;
+                j  -= m;
                 m >>= 1;
             }
             j += m;
         }
-        std::cerr << "number = " << nn << ", #swaps=" << count << ", imx=" << imx << std::endl;
         return count;
     }
 
 
 
-
-
-
-#if 0
-    static double Duration = 1.0;
-    template <typename T>
-    static inline
-    void  testXBR(const size_t n, uint64_t &fftRate, uint64_t &myRate)
+    template <typename T> static inline
+    void checkXBR(const size_t shift)
     {
-        Memory::Legacy ram;
-        Timing         tmx;
-
-        const size_t nn  = n*2;
-        const size_t bs  = nn*sizeof(T);
-        T          *data = static_cast<T *>(ram.acquire(bs)) - 1;
-
-        for(size_t i=1;i<=nn;++i) data[i] = T(i);
-
-        tmx.reset();
-        Y_Timing(tmx, FFT::XBR(data,n), Duration);
-        fftRate = tmx.speed();
-
-        tmx.reset();
-        Y_Timing(tmx,myXBR(data,n), Duration);
-        myRate = tmx.speed();
+        const size_t nc = 1<<shift;
+        const size_t nr = nc*2;
+        std::cerr << "Check XBR 2^" << std::setw(2) << shift;
 
 
-        ram.release(data+1,bs);
+        Memory::BufferOf<T>            rbuf(nr);
+        Memory::BufferOf< Complex<T> > cbuf(nc);
+        Y_ASSERT(rbuf.measure() == cbuf.measure() );
+
+        std::cerr << " = " << std::setw(8) << nc << " complexes";
+        std::cerr << " = " << std::setw(8) << nr << " reals";
+        std::cerr << " " << HumanReadable(rbuf.measure());
+        std::cerr.flush();
+
+        T *r = &rbuf[0];
+        T *c = &cbuf[0].re;
+        for(size_t i=0;i<nr;++i) r[i] = c[i] = static_cast<T>(i+1);
+
+        size_t jmax = 0;
+        scalarXBR(r-1,nc);
+        const size_t nswp = myXBR(&cbuf[0],nc,jmax);
+        Y_ASSERT(rbuf.HasSameContentThan(cbuf));
+
+        if(sizeof(T)==sizeof(float))
+        {
+            std::cerr << " | #swap=" << std::setw(8) << nswp << ", jmax=" << std::setw(8) << jmax;
+        }
+        std::cerr << std::endl;
     }
-#endif
+
+
+
+
+
+
+
 
 
     
@@ -154,65 +120,16 @@ namespace
 Y_UTEST(fft_xbr)
 {
 
-    for(size_t p=0;p<=20;++p)
+    for(size_t p=0;p<=23;++p)
     {
         checkXBR<float>(p);
+        checkXBR<double>(p);
+        checkXBR<long double>(p);
+
     }
 
-    return 0;
 
-#if 0
-    if(true)
-    {
-        for(size_t i=0;i<=20;++i)
-        {
-            const size_t n   = (1<<i);
-            uint64_t     imx = 0;
-            const size_t ns  = CountXBR(n,imx);
-            const unsigned maxbits   = BitCount::For(imx);
-            const size_t   maxbytes  = Y_ALIGN_ON(8,maxbits)/8;
-            const size_t   wordSize  = NextPowerOfTwo(maxbytes);
-            const size_t   wordBits  = 8 * wordSize;
-            const size_t   tableSize = wordSize * ns;
-            std::cerr << "|_nswap=" << ns << ", coded on " << maxbits << " => uint" << wordBits << "_t" <<  " tableSize=" << HumanReadable(tableSize) << std::endl;
-        }
-    }
-#endif
 
-    Y_SIZEOF(long double);
-
-#if 0
-    for(size_t i=0;i<=12;++i)
-    {
-        const size_t n   = (1<<i);
-
-        std::cerr << "n= " << std::setw(6) << n << "|";
-        {
-            (std::cerr << " @F:").flush();
-            uint64_t fftRateF = 0, myRateF = 0;
-            testXBR<float>(n,fftRateF,myRateF);
-            (std::cerr << " fft = " << HumanReadable(fftRateF) << " | opt = " << HumanReadable(myRateF)).flush();
-        }
-
-#if 0
-        {
-            (std::cerr << " @D:").flush();
-            uint64_t fftRateD = 0, myRateD = 0;
-            testXBR<double>(n,fftRateD,myRateD);
-            (std::cerr << " fft = " << HumanReadable(fftRateD) << " | opt = " << HumanReadable(myRateD)).flush();
-        }
-
-        {
-            (std::cerr << " @L:").flush();
-            uint64_t fftRateL = 0, myRateL = 0;
-            testXBR<long double>(n,fftRateL,myRateL);
-            (std::cerr << " fft = " << HumanReadable(fftRateL) << " | opt = " << HumanReadable(myRateL)).flush();
-        }
-#endif
-
-        std::cerr << std::endl;
-    }
-#endif
 
 }
 Y_UDONE()
