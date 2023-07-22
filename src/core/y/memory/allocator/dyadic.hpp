@@ -44,6 +44,16 @@ namespace Yttrium
             virtual void         release(void * & entry, size_t &     count) noexcept; //!< release previously acquired
             virtual const char * variety()                             const noexcept; //!< CallSign
 
+            //__________________________________________________________________
+            //
+            //
+            // Specialized
+            //
+            //__________________________________________________________________
+            void * acquireBlock(unsigned &shift);
+            void   releaseBlock(void * &entry, unsigned &shift) noexcept;
+            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Dyadic);
             explicit Dyadic();

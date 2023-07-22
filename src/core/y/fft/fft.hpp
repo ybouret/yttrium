@@ -3,16 +3,18 @@
 #ifndef Y_FFT_Included
 #define Y_FFT_Included 1
 
-#include "y/config/starting.hpp"
+#include "y/singleton.hpp"
+
 #include <cmath>
 
 namespace Yttrium
 {
 
-    struct FFT
+    class FFT : public Singleton<FFT>
     {
-
-
+    public:
+        static const char * const      CallSign;
+        static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 6;
 
         template <typename T>
         static inline size_t XBR(T data[], const size_t nn) noexcept
@@ -75,6 +77,12 @@ namespace Yttrium
             }
             
         }
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(FFT);
+        friend class Singleton<FFT>;
+        explicit FFT();
+        virtual ~FFT() noexcept;
     };
 
 }

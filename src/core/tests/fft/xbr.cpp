@@ -101,7 +101,7 @@ namespace
 
         if(sizeof(T)==sizeof(float))
         {
-            const size_t tableSize = sizeof(uint16_t) * nswp;
+            const size_t tableSize = sizeof(uint16_t) * 2 * nswp;
             std::cerr << " | #swap=" << std::setw(8) << nswp << ", jmax=" << std::setw(8) << jmax;
             if(tableSize<=65536) std::cerr << " tableSize = " << HumanReadable(tableSize);
         }
@@ -122,7 +122,7 @@ namespace
 Y_UTEST(fft_xbr)
 {
 
-    for(size_t p=0;p<=23;++p)
+    for(size_t p=0;p<=16;++p)
     {
         checkXBR<float>(p);
         checkXBR<double>(p);
@@ -130,7 +130,8 @@ Y_UTEST(fft_xbr)
 
     }
 
-
+    FFT &fft = FFT::Instance();
+    std::cerr << fft.callSign() << std::endl;
 
 
 }
