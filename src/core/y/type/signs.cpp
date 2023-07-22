@@ -17,6 +17,12 @@ namespace Yttrium
     }
 
 
+    void Sign:: Change(SignType &s) noexcept
+    {
+        s = Opposite(s);
+    }
+
+
     PairOfSigns Sign:: MakePair(const SignType lhs, const SignType rhs) noexcept
     {
         switch(lhs)

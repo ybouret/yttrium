@@ -67,6 +67,59 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
+            // Comparison
+            //
+            //__________________________________________________________________
+            
+
+            //! declare all possible operators
+#define Y_APQ_BINARY_DECL(OP) \
+/**/  friend Rational   operator OP (const Rational &, const Rational &);\
+/**/  friend Rational   operator OP (const Rational &, const int64_t   );\
+/**/  friend Rational   operator OP (const int64_t   , const Rational &);\
+/**/  friend Rational   operator OP (const Integer  &, const Rational &);\
+/**/  friend Rational   operator OP (const Rational &, const Integer  &);\
+/**/  friend Rational   operator OP (const Natural  &, const Rational &);\
+/**/  friend Rational   operator OP (const Rational &, const Natural  &);\
+/**/         Rational & operator OP##=(const Rational &);                \
+/**/         Rational & operator OP##=(const int64_t   );                \
+/**/         Rational & operator OP##=(const Integer  &);                \
+/**/         Rational & operator OP##=(const Natural  &)
+
+
+            //! body of in-place operator
+#define Y_APQ_BINARY_BODY(OP) { { Rational tmp = (*this) OP lhs; xch(tmp); } return *this; }
+
+            //! implement all in-place operators
+#define Y_APQ_BINARY_IMPL(OP) \
+Rational & Rational:: operator OP##=(const Rational & lhs) Y_APQ_BINARY_BODY(OP)\
+Rational & Rational:: operator OP##=(const int64_t    lhs) Y_APQ_BINARY_BODY(OP)\
+Rational & Rational:: operator OP##=(const Integer  & lhs) Y_APQ_BINARY_BODY(OP)\
+Rational & Rational:: operator OP##=(const Natural  & lhs) Y_APQ_BINARY_BODY(OP)
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Add
+            //
+            //__________________________________________________________________
+            Rational operator+() const; //!< unary +
+            Y_APQ_BINARY_DECL(+);       //!< all operators
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Sub
+            //
+            //__________________________________________________________________
+            Rational operator-() const; //!< unary -
+            Y_APQ_BINARY_DECL(-);       //!< all operators
+
+            //__________________________________________________________________
+            //
+            //
             // Members
             //
             //__________________________________________________________________

@@ -49,6 +49,8 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
+
+        //! no-throw exchange
         inline void xch( Complex &z ) noexcept { Swap(re,z.re); Swap(im,z.im); }
 
         //! display
