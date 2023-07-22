@@ -47,7 +47,7 @@ namespace Yttrium
         void Pooled:: release(void *&entry, size_t &count) noexcept
         {
             Y_LOCK(Access);
-            assert(NULL!=entry);
+            assert(0!=entry);
             straps->release(entry);
             entry = 0;
             count = 0;
