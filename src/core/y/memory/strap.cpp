@@ -96,7 +96,9 @@ namespace Yttrium
 
         bool Strap:: isEmpty() const noexcept
         {
-            assert(head);
+            assert(0!=head);
+            assert(0!=tail);
+            assert(0!=tail->used);
             return (0 == head->used) && (tail == head->next);
         }
 

@@ -167,8 +167,8 @@ namespace Yttrium
             {
                 cache   = insertByIncreasingAddress(CreateStrapFor(blockSize,album)); // create new strap
                 void *p = cache->acquire(blockSize);                                  // get first block of a new Strap
-                assert(0!=p);
-                assert(cache!=empty);
+                assert(0!=p);          // strap was tailored for blockSize
+                assert(cache!=empty);  // this is a new strap
                 return p;
             }
 
@@ -177,7 +177,6 @@ namespace Yttrium
             assert(0!=cache);
             if(cache==empty)
             {
-                //std::cerr << "cleaning empty!" << std::endl;
                 assert(eshft>0);
                 empty = 0;
                 eshft = 0;
@@ -227,16 +226,18 @@ namespace Yttrium
             assert(0!=blockAddr);
             Strap *strap = Strap::Release(blockAddr);
             assert( owns(strap) );
+            assert(empty!=strap); // impossible
+            
             if(strap->isEmpty())
             {
                 if(0!=empty)
                 {
+
                     //----------------------------------------------------------
                     // detected a second empty strap
                     //----------------------------------------------------------
                     assert(eshft>0);           // previously computed
                     assert(empty->isEmpty());  // impossible
-                    assert(strap!=empty);      // impossible
 
                     //----------------------------------------------------------
                     // select strap/shift to release
@@ -246,6 +247,19 @@ namespace Yttrium
                     assert(shift<eshft||strap<empty);
                     assert(empty->isEmpty());
                     assert(empty->myShift() == eshft);
+
+                    if(cache == strap)
+                    {
+                        assert(0!=cache->prev||0!=cache->next);
+                        if(cache->prev)
+                        {
+                            cache = cache->prev;
+                        }
+                        else
+                        {
+                            cache = cache->next; assert(0!=cache);
+                        }
+                    }
 
                     //----------------------------------------------------------
                     // release strap. empty/eshft is already set

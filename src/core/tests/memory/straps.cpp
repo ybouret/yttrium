@@ -71,6 +71,8 @@ Y_UTEST(memory_straps)
                 straps.release(blk.addr);
             }
         }
+
+        straps.displayInfo(0);
     }
 
     album.displayInfo(0);
