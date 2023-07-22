@@ -27,8 +27,8 @@ namespace
         }
 
         block *next, *prev;
-        void        *addr;
-        const size_t size;
+        void         *addr;
+        const size_t  size;
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(block);
@@ -47,7 +47,8 @@ namespace
 
             blocks.pushTail( new block(blockAddr,blockSize) );
             strap->displayInfo(0);
-            Y_ASSERT( Memory::OutOfReach::Are0(blocks.tail->addr,blocks.tail->size));
+            Y_ASSERT( Memory::OutOfReach::Are0(blocks.tail->addr,blocks.tail->size) );
+
         }
     }
 

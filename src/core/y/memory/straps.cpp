@@ -45,13 +45,16 @@ namespace Yttrium
         }
 
         //! get minimal shift to acquire blockSize in a new strap
-        static inline unsigned ShiftFor(const size_t blockSize)
+        static inline
+        unsigned ShiftFor(const size_t blockSize)
         {
             return Max(Strap::ShiftToHold(blockSize),Page::DefaultShift);
         }
 
-        
-        static inline Strap *CreateStrapFor(const size_t blockSize, Album &album)
+
+        //! create a new strap
+        static inline
+        Strap *CreateStrapFor(const size_t blockSize, Album &album)
         {
             const unsigned shift = ShiftFor(blockSize);
             Pages         &pages = album[shift];
@@ -223,6 +226,7 @@ namespace Yttrium
         {
             assert(0!=blockAddr);
             Strap *strap = Strap::Release(blockAddr);
+            assert( owns(strap) );
             if(strap->isEmpty())
             {
                 if(0!=empty)

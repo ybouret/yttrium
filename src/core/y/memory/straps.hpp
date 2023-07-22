@@ -47,11 +47,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
             
-            void *acquire(size_t &blockSize);         //!< acquire and update blockSize bytes
-            void  release(void *blockAddr) noexcept;  //!< release previously acquired block
-
-            //! display statistics
-            void displayInfo(const size_t indent) const;
+            void * acquire(size_t &blockSize);             //!< acquire and update blockSize bytes
+            void   release(void   *blockAddr) noexcept;    //!< release previously acquired block
+            void   displayInfo(const size_t indent) const; //!< display statistics
             
         private:
             typedef void * (Straps:: *Acquire)(size_t &);

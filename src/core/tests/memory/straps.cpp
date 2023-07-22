@@ -41,7 +41,7 @@ Y_UTEST(memory_straps)
             for(size_t i=0;i<NB;++i)
             {
                 block_t &blk = blocks[i];
-                blk.size = ran.leq(100);
+                blk.size = ran.leq(10000);
                 blk.addr = straps.acquire(blk.size);
             }
 
@@ -57,7 +57,7 @@ Y_UTEST(memory_straps)
                 for(size_t i=NB/2;i<NB;++i)
                 {
                     block_t &blk = blocks[i];
-                    blk.size = ran.leq(100);
+                    blk.size = ran.leq(10000);
                     blk.addr = straps.acquire(blk.size);
                 }
             }

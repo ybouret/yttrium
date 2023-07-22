@@ -129,7 +129,8 @@ namespace Yttrium
             size_t bs = BlockSizeFor(blockSize);
             bs += 3*sizeof(Block); // Strap+Head+Tail
             if(bs>Base2<size_t>::MaxPowerOfTwo) throw Specific::Exception(CallSign,"blockSize exceeds capacity");
-            return Base2<size_t>::Log( NextPowerOfTwo(bs) );
+           //return Base2<size_t>::Log( NextPowerOfTwo(bs) );
+            return Base2<size_t>::LogFor(bs);
         }
 
 
@@ -288,7 +289,6 @@ namespace Yttrium
             }
 
 
-            //strap->displayInfo(0);
             return strap;
         }
 
