@@ -101,7 +101,9 @@ namespace
 
         if(sizeof(T)==sizeof(float))
         {
+            const size_t tableSize = sizeof(uint16_t) * nswp;
             std::cerr << " | #swap=" << std::setw(8) << nswp << ", jmax=" << std::setw(8) << jmax;
+            if(tableSize<=65536) std::cerr << " tableSize = " << HumanReadable(tableSize);
         }
         std::cerr << std::endl;
     }
