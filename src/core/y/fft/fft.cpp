@@ -37,16 +37,16 @@ namespace Yttrium
     {
         static const size_t one =  1;
         size_t maxShift = 0;
+        size_t maxSwaps = 0;
         while(true)
         {
             const size_t nswp = CountXBR(one<<maxShift);
-            if(nswp>=65536)
+            if(nswp*sizeof(uint16_t)>=4096)
                 break;
-
-            std::cerr
-
             ++maxShift;
+            maxSwaps = nswp;
         }
+        std::cerr << "up to " << maxSwaps << std::endl;
     }
 
 
