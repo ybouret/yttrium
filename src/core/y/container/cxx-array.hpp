@@ -73,11 +73,14 @@ namespace Yttrium
         inline Type *      legacy()       noexcept { return entry; } //!< legacy [1:size()] C-style array
         inline ConstType * legacy() const noexcept { return entry; } //!< legacy [1:size()] C-style array
 
+
+    protected:
+        MutableType * const entry; //!< memory for [1..count]
+        const size_t        count; //!< built objecct
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(CxxArray);
-        MutableType * const entry; //!< memory for [1..count]
-        const size_t        count; //!< built objecct
+
     };
 
 

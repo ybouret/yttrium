@@ -33,7 +33,12 @@ namespace Yttrium
         protected:
             //! setup
             /**
-
+             \param blockAddr flat memory
+             \param numBlocks objects to be setup in flat memory
+             \param blockSize sizeof(object)
+             \param build     constructor
+             \param param     constructor parameters
+             \param smash     destructor
              */
             explicit Operating(void *       blockAddr,
                                const size_t numBlocks,

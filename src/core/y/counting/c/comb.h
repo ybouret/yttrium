@@ -10,7 +10,7 @@ extern "C" {
 #endif
 
     /**! context for combinations */
-    struct yack_comb
+    struct Y_Comb
     {
         size_t n;        //!< width
         size_t k;        //!< space
@@ -18,13 +18,13 @@ extern "C" {
     };
 
     /**! setup */
-    void    yack_comb_init(struct yack_comb       *param, const size_t n, const size_t k);
+    void Y_Comb_Init(struct Y_Comb *       param, const size_t n, const size_t k);
 
     /**! comb[1..k]=[1..k]*/
-    void    yack_comb_boot(const struct yack_comb *param, size_t *comb);
+    void Y_Comb_Boot(const struct Y_Comb * param, size_t *comb);
 
     /**! next combination */
-    int    yack_comb_next(const struct yack_comb *param, size_t *comb);
+    int  Y_Comb_Next(const struct Y_Comb * param, size_t *comb);
 
 #if defined(__cplusplus)
 }
