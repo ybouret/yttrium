@@ -25,6 +25,7 @@ extern "C" {
     /**! next partition */
     int     Y_Part_Next(struct Y_Part *param, size_t *ints);
     
+
 #if defined(__cplusplus)
 }
 #endif

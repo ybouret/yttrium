@@ -70,7 +70,15 @@ namespace Yttrium
             // Comparison
             //
             //__________________________________________________________________
-            
+
+            friend bool operator==(const Rational &lhs, const Rational &rhs) noexcept;
+            friend bool operator==(const Rational &lhs, const int64_t   rhs) noexcept;
+            friend bool operator==(const int64_t   ls, const Rational &rhs) noexcept;
+            friend bool operator==(const Rational &lhs, const Integer &rhs) noexcept;
+            friend bool operator==(const Integer  &lhs, const Rational &rhs) noexcept;
+
+
+
 
             //! declare all possible operators
 #define Y_APQ_BINARY_DECL(OP) \

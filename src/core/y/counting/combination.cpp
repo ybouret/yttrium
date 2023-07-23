@@ -10,6 +10,9 @@ namespace Yttrium
 
     apn Combination:: Cardinal(const size_t n, const size_t k)
     {
+        assert(n>0);
+        assert(k>0);
+        assert(k<=n);
         return apn::Comb(n,k);
     }
 
