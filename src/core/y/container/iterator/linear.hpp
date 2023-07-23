@@ -114,11 +114,8 @@ namespace Yttrium
             { Linear tmp(lhs); tmp.decr(Way,n); return tmp; }
 
 
-            //! n - this
-            inline friend Linear operator-(const ptrdiff_t n, const Linear &lhs) noexcept
-            { Linear tmp(lhs); tmp.decr(Way,n); return tmp; }
 
-            //! this-+= n
+            //! this -= n
             inline Linear & operator-=(const ptrdiff_t n) noexcept
             { decr(Way,n); return *this; }
 

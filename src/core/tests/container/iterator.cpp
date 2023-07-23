@@ -21,7 +21,7 @@ namespace
         iNode    *next;
         iNode    *prev;
 
-        inline explicit iNode() noexcept : count(++Count) {}
+        inline explicit iNode() noexcept : count(++Count), next(0), prev(0) {}
         inline virtual ~iNode() noexcept { --Count; }
 
         int &       operator*()       noexcept { return count; }
