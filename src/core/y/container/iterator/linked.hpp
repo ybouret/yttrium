@@ -34,9 +34,9 @@ namespace Yttrium
             Y_ARGS_EXPOSE(NODE,Node); //!< aliases
             using Travel<WAY>::Way;
 
-            inline Linked(NODE *user) noexcept : node( (MutableNode *)user ) {}
+            inline Linked(NODE *user) noexcept : Travel<WAY>(), node( (MutableNode *)user ) {}
             inline virtual ~Linked() noexcept { node=0; }
-            inline Linked(const Linked &other) noexcept : node(other.node) {}
+            inline Linked(const Linked &other) noexcept : Travel<WAY>(), node(other.node) {}
             inline Linked & operator=(const Linked &other) noexcept
             {
                 node = other.node;
