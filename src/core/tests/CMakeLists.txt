@@ -121,6 +121,7 @@ add_test(ordered:PQ test-core ordered_PQ)
 
 #counting
 add_test(counting:perm test-core counting_perm)
+add_test(counting:permutation test-core count_permutation)
 
 add_test(container:cxx-array test-core container_cxx_array)
 

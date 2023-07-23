@@ -94,6 +94,7 @@ Y_UTEST_DECL(256)
 
 
     Y_UTEST(counting_perm);
+    Y_UTEST(counting_permutation);
     Y_UTEST(counting_comb);
     Y_UTEST(counting_part);
 
