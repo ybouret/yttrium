@@ -84,6 +84,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(apex_proto);
     Y_UTEST(apex_perf);
     Y_UTEST(apex_n);
+    Y_UTEST(apex_factorial);
     Y_UTEST(apex_z);
     Y_UTEST(apex_q);
 

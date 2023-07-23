@@ -69,7 +69,27 @@ namespace Yttrium
                 }
             }
         }
+
+        Natural Natural:: Factorial(size_t n)
+        {
+            if(n<=1)
+            {
+                return Natural(1);
+            }
+            else
+            {
+                assert(n>1);
+                Natural f(2);
+                for(size_t i=3;i<=n;++i)
+                {
+                    const Natural x(i);
+                    f *= x;
+                }
+                return f;
+            }
+        }
     }
+    
 
 }
 

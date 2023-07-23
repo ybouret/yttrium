@@ -197,6 +197,7 @@ namespace Yttrium
             //__________________________________________________________________
             static Natural GCD(const Natural &, const Natural &);    //!< Greatest Common Divider
             static void    Simplify(Natural &Numer, Natural &Denom); //!< Simplify
+            static Natural Factorial(size_t n);
 
         private:
             void *impl;
