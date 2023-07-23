@@ -88,6 +88,17 @@ namespace Yttrium
                 return f;
             }
         }
+
+        Natural Natural:: Comb(const size_t n, const size_t k)
+        {
+            assert(k<=n);
+            const Natural numer = Factorial(n);
+            const Natural lhs   = Factorial(k);
+            const Natural rhs   = Factorial(n-k);
+            const Natural denom = lhs*rhs;
+            return numer/denom;
+        }
+
     }
     
 

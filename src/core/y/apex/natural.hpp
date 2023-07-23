@@ -7,6 +7,7 @@
 #include "y/ostream-proto.hpp"
 #include "y/config/shallow.hpp"
 #include "y/type/signs.hpp"
+#include "y/type/ints.hpp"
 
 namespace Yttrium
 {
@@ -198,11 +199,40 @@ namespace Yttrium
             static Natural GCD(const Natural &, const Natural &);    //!< Greatest Common Divider
             static void    Simplify(Natural &Numer, Natural &Denom); //!< Simplify
             static Natural Factorial(size_t n);
+            static Natural Comb(const size_t n, const size_t k);
+
+            //__________________________________________________________________
+            //
+            //
+            // conversion
+            //
+            //__________________________________________________________________
+
+            //! no-throw try to cast to an integer type
+            template <typename T> inline
+            bool tryCast(T &target) const noexcept
+            {
+                static const size_t maxBits = sizeof(T)*8 - (IsSigned<T>::Value ? 1 : 0);
+                if(bits()>maxBits) return false;
+                target = static_cast<T>( u64() );
+                return true;
+            }
+
+            //! cast to an integer type, throw on overflow
+            template <typename T> inline
+            T cast(const char *which) const
+            {
+                T target(0);
+                if(!tryCast(target)) ThrowOverflow(which);
+                return target;
+            }
+
+
 
         private:
             void *impl;
             Natural(void*,const AsImpl_&) noexcept;
-            
+            static void ThrowOverflow(const char *which);
         };
 
     }

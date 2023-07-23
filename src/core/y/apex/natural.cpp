@@ -97,7 +97,13 @@ namespace Yttrium
             assert(0!=impl);
         }
 
-        
+        void Natural:: ThrowOverflow(const char *which)
+        {
+            if(which)
+                throw Specific::Exception(CallSign,"during cast to %s", which);
+            else
+                throw Specific::Exception(CallSign,"during cast");
+        }
 
         uint64_t Natural:: u64() const noexcept
         {
