@@ -33,7 +33,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            Y_ARGS_EXPOSE(T);                 //!< aliases
+            Y_ARGS_EXPOSE(T,Type);            //!< aliases
             typedef Wad<T,ALLOCATOR> WadType; //!< alias
             using WadType::workspace;
             using WadType::maxBlocks;

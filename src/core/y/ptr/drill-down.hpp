@@ -25,7 +25,7 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        Y_ARGS_EXPOSE(T);                    //!< aliases
+        Y_ARGS_EXPOSE(T,Type);               //!< aliases
         typedef Type &      ReturnType;      //!< alias
         typedef ConstType & ConstReturnType; //!< alias
 

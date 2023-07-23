@@ -29,7 +29,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            Y_ARGS_EXPOSE(T);
+            Y_ARGS_EXPOSE(T,Type); //!< aliases
             using Travel<WAY>::Way;
 
             //__________________________________________________________________

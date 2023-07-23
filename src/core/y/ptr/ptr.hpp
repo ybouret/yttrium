@@ -56,7 +56,7 @@ namespace Yttrium
         //______________________________________________________________________
         typedef typename Policy<T>::ReturnType      ReturnType;      //!< alias
         typedef typename Policy<T>::ConstReturnType ConstReturnType; //!< alias
-        Y_ARGS_EXPOSE(T);                                            //!< aliases
+        Y_ARGS_EXPOSE(T,Type);                                       //!< aliases
 
         //______________________________________________________________________
         //

@@ -7,10 +7,10 @@
 
 
 //! declare internal types
-#define Y_ARGS_EXPOSE(T)                                 \
-typedef T                                   Type;        \
-typedef typename TypeTraits<T>::MutableType MutableType; \
-typedef const MutableType                   ConstType
+#define Y_ARGS_EXPOSE(T,TYPE)                              \
+typedef T                                   TYPE;          \
+typedef typename TypeTraits<T>::MutableType Mutable##TYPE; \
+typedef const Mutable##TYPE                 Const##TYPE
 
 
 

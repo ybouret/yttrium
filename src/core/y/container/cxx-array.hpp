@@ -32,7 +32,7 @@ namespace Yttrium
         //______________________________________________________________________
         typedef Memory::Wad<T,ALLOCATOR> WadType; //!< alias
         typedef Operating<T>             OpsType; //!< alias
-        Y_ARGS_EXPOSE(T);                         //!< aliases
+        Y_ARGS_EXPOSE(T,Type);                    //!< aliases
 
         //______________________________________________________________________
         //

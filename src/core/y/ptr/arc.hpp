@@ -48,7 +48,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         typedef Ptr<T,Policy> SelfType; //!< alias
-        Y_ARGS_EXPOSE(T);               //!< aliases
+        Y_ARGS_EXPOSE(T,Type);          //!< aliases
         using SelfType::handle;         //!< alias
 
         //______________________________________________________________________
