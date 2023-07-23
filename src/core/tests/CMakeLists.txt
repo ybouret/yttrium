@@ -125,4 +125,5 @@ add_test(container:cxx-array test-core container_cxx_array)
 
 add_test(counting:perm test-core counting_perm)
 add_test(counting:comb test-core counting_comb)
+add_test(counting:part test-core counting_part)
 

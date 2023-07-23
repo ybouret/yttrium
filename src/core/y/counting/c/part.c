@@ -3,14 +3,14 @@
 #include <string.h>
 
 
-void    yack_part_init(struct yack_part *param, size_t n)
+void    Y_Part_Init(struct Y_Part *param, size_t n)
 {
     assert(param);
     param->n = n;
     param->k = 0; /** invalid */
 }
 
-void    yack_part_boot(struct yack_part *param, size_t *ints)
+void    Y_Part_Boot(struct Y_Part *param, size_t *ints)
 {
     assert(param);
     assert(ints);
@@ -19,7 +19,7 @@ void    yack_part_boot(struct yack_part *param, size_t *ints)
 }
 
 /**! next partition */
-int  yack_part_next(struct yack_part *param, size_t *ints)
+int  Y_Part_Next(struct Y_Part *param, size_t *ints)
 {
     size_t rem_val = 0;
     size_t k;

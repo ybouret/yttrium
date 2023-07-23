@@ -10,20 +10,20 @@ extern "C" {
 #endif
     
     /**! context for integer partitions */
-    struct yack_part
+    struct Y_Part
     {
         size_t   n; //!< the positive integer
         size_t   k; //!< current number of  parts
     };
 
     /**! intialize */
-    void    yack_part_init(struct yack_part *param, size_t n);
+    void    Y_Part_Init(struct Y_Part *param, size_t n);
    
     /**! ints[1] = [n], k=1 */
-    void    yack_part_boot(struct yack_part *param, size_t *ints);
+    void    Y_Part_Boot(struct Y_Part *param, size_t *ints);
     
     /**! next partition */
-    int     yack_part_next(struct yack_part *param, size_t *ints);
+    int     Y_Part_Next(struct Y_Part *param, size_t *ints);
     
 #if defined(__cplusplus)
 }
