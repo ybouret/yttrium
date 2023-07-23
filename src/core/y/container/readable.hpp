@@ -49,6 +49,7 @@ namespace Yttrium
 
         virtual ConstType & operator[](const size_t) const noexcept = 0; //!< access items in [1..size()]
 
+        //! default display
         inline friend std::ostream & operator<<(std::ostream &os, const Readable &self)
         {
             const size_t n = self.size();
@@ -65,6 +66,30 @@ namespace Yttrium
                 
             }
             return os;
+        }
+
+        //! object-wise comparison
+        inline friend bool operator==(const Readable<T> &lhs, const Readable<T> &rhs) noexcept
+        {
+            const size_t n = lhs.size();
+            if(n!=rhs.size()) return false;
+            for(size_t i=n;i>0;--i)
+            {
+                if(rhs[i]!=lhs[i]) return false;
+            }
+            return true;
+        }
+
+        //! object-wise comparison
+        inline friend bool operator!=(const Readable<T> &lhs, const Readable<T> &rhs) noexcept
+        {
+            const size_t n = lhs.size();
+            if(n!=rhs.size()) return true;
+            for(size_t i=n;i>0;--i)
+            {
+                if(rhs[i]!=lhs[i]) return true;
+            }
+            return false;
         }
 
 

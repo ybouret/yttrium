@@ -9,15 +9,32 @@ namespace Yttrium
 {
     namespace Core
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Anonymous operating objects
+        //
+        //
+        //______________________________________________________________________
         class Operating
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             class Code;
-            typedef void (*Build)(void *, void *);
-            typedef void (*Smash)(void *);
+            typedef void (*Build)(void *, void *); //!< constructor prototype
+            typedef void (*Smash)(void *);         //!< destructor  prototype
 
         protected:
+            //! setup
+            /**
+
+             */
             explicit Operating(void *       blockAddr,
                                const size_t numBlocks,
                                const size_t blockSize,
@@ -26,7 +43,7 @@ namespace Yttrium
                                Smash        smash);
 
         public:
-            virtual ~Operating() noexcept;
+            virtual ~Operating() noexcept; //!< cleanup, release all
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Operating);
@@ -34,20 +51,45 @@ namespace Yttrium
         };
     }
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Operating generic objects
+    //
+    //
+    //__________________________________________________________________________
     template <typename T> class Operating :
     public Core::Operating
     {
     public:
-        Y_ARGS_EXPOSE(T);
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        Y_ARGS_EXPOSE(T); //!< aliases
 
 
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+
+        //! release and cleanup
         inline virtual ~Operating() noexcept { }
+
+        //! setup numBlocks objects with default constructor
         inline explicit Operating(void        *workspace,
                                   const size_t numBlocks) :
         Core::Operating(workspace,numBlocks,sizeof(T),Build,0,Smash)
         {
         }
 
+        //! setupNumblocks with 1-argutment constructor
         template <typename U>
         inline explicit Operating(void        *workspace,
                                   const size_t numBlocks,

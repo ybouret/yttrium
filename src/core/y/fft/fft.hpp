@@ -13,8 +13,8 @@ namespace Yttrium
     class FFT : public Singleton<FFT>
     {
     public:
-        static const char * const      CallSign;
-        static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 6;
+        static const char * const      CallSign;                                //!< "FFT"
+        static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 6; //!< life time
 
         template <typename T>
         static inline size_t XBR(T data[], const size_t nn) noexcept

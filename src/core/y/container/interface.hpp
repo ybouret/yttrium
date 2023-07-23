@@ -27,9 +27,9 @@ namespace Yttrium
         // Defintions
         //
         //______________________________________________________________________
-        static const char LBrack = '[';
-        static const char RBrack = ']';
-        static const char SemiColon = ';';
+        static const char LBrack    = '['; //!< for display
+        static const char RBrack    = ']'; //!< for display
+        static const char SemiColon = ';'; //!< for display
 
         //______________________________________________________________________
         //
@@ -54,7 +54,7 @@ namespace Yttrium
         virtual size_t size()      const noexcept = 0; //!< items in conatiner
         virtual size_t capacity()  const noexcept = 0; //!< maximum items in container
         virtual size_t available() const noexcept;     //!< default to capacity() - size(), can be overiden
-        static size_t NextCapacity(const size_t n);    //!< evaluate next capacity
+        static  size_t NextCapacity(const size_t n);   //!< evaluate next capacity
 
 
 

@@ -50,8 +50,8 @@ namespace Yttrium
             // Specialized
             //
             //__________________________________________________________________
-            void * acquireBlock(unsigned &shift);
-            void   releaseBlock(void * &entry, unsigned &shift) noexcept;
+            void * acquireBlock(unsigned &shift);                         //!< using internal Corpus directly
+            void   releaseBlock(void * &entry, unsigned &shift) noexcept; //!< using internal Corpus directly
             
 
         private:
