@@ -19,7 +19,7 @@ namespace Yttrium
         //
         //
         //
-        //! helper for local memory needs
+        //! helper for local INTEGRAL memory needs
         //
         //
         //______________________________________________________________________

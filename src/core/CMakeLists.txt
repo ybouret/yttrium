@@ -35,6 +35,8 @@ apex/m
 apex/n
 apex/z
 apex/q
+counting
+counting/c
 ordered
 )
 

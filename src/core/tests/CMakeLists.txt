@@ -14,6 +14,7 @@ fft
 string
 apex
 ordered
+counting
 )
 
 Y_LinkLibraries(test-core)
@@ -115,5 +116,8 @@ add_test(apex:q        test-core apex_q)
 
 #ordered
 add_test(ordered:PQ test-core ordered_PQ)
+
+#counting
+add_test(counting:perm test-core counting_perm)
 
 
