@@ -119,13 +119,12 @@ add_test(apex:q         test-core apex_q)
 #ordered
 add_test(ordered:PQ test-core ordered_PQ)
 
-#counting
-add_test(counting:perm test-core counting_perm)
-add_test(counting:permutation test-core count_permutation)
-
+#container
 add_test(container:cxx-array test-core container_cxx_array)
 
+#counting
 add_test(counting:perm test-core counting_perm)
 add_test(counting:comb test-core counting_comb)
 add_test(counting:part test-core counting_part)
-
+add_test(counting:permutation test-core count_permutation)
+add_test(counting:combination test-core counting_combination)
