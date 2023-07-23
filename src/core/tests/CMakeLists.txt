@@ -121,6 +121,7 @@ add_test(ordered:PQ test-core ordered_PQ)
 
 #container
 add_test(container:cxx-array test-core container_cxx_array)
+add_test(container:iterator  test-core container_iterator)
 
 #counting
 add_test(counting:perm test-core counting_perm)

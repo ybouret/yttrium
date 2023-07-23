@@ -28,6 +28,7 @@ memory/exclusive
 memory/buffer
 ptr
 container
+container/iterator
 string
 fft
 apex
