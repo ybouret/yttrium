@@ -44,7 +44,7 @@ static  void   compute_from(size_t i, size_t *p,const size_t n)
     }
 }
 
-void    Yack_Perm_Boot(const struct Y_Perm *param, size_t *perm)
+void    Y_Perm_Boot(const struct Y_Perm *param, size_t *perm)
 {
     assert(param);
     if(param->n)
@@ -59,7 +59,7 @@ void    Yack_Perm_Boot(const struct Y_Perm *param, size_t *perm)
     }
 }
 
-int    Yack_Perm_Next(const struct Y_Perm *param, size_t *perm)
+int    Y_Perm_Next(const struct Y_Perm *param, size_t *perm)
 {
     assert(param!=NULL);
     assert(param->n>0);

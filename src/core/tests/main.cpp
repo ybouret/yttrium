@@ -89,6 +89,11 @@ Y_UTEST_DECL(256)
 
     Y_UTEST(ordered_PQ);
 
+    Y_UTEST(container_cxx_array);
+
+
+    Y_UTEST(counting_perm);
+
     //std::cerr << "-------- Platform: " << Y_PLATFORM << std::endl;
     //std::cerr << "-------- Compiler: " << Y_COMPILER << std::endl;
 }

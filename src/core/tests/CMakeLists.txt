@@ -15,6 +15,7 @@ string
 apex
 ordered
 counting
+container
 )
 
 Y_LinkLibraries(test-core)
@@ -118,6 +119,10 @@ add_test(apex:q        test-core apex_q)
 add_test(ordered:PQ test-core ordered_PQ)
 
 #counting
+add_test(counting:perm test-core counting_perm)
+
+add_test(container:cxx-array test-core container_cxx_array)
+
 add_test(counting:perm test-core counting_perm)
 
 
