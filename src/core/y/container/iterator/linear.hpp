@@ -41,7 +41,7 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! setup from user's address
-            inline          Linear(T *user) noexcept : addr( (MutableType *)user )
+            inline          Linear(T *user) noexcept : Travel<WAY>(), addr( (MutableType *)user )
             {}
 
             //! cleanup
@@ -49,7 +49,7 @@ namespace Yttrium
             { addr=0; }
 
             //! copy
-            inline Linear(const Linear &it) noexcept : addr(it.addr) {}
+            inline Linear(const Linear &it) noexcept : Travel<WAY>(), addr(it.addr) {}
 
             //! assign
             inline Linear & operator=(const Linear &it) noexcept
@@ -80,17 +80,17 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! ++this
-            inline Linear operator++() noexcept { incr(Way); return *this; }
+            inline Linear &operator++() noexcept { incr(Way); return *this; }
 
             //! this++
             inline Linear operator++(int) noexcept
             { Linear it(*this); incr(Way); return it; }
 
             //! --this
-            inline Linear operator--() noexcept
+            inline Linear &operator--() noexcept
             { decr(Way); return *this; }
 
-            //! ++this
+            //! this--
             inline Linear operator--(int) noexcept
             { Linear it(*this); decr(Way); return it; }
 
