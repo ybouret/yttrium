@@ -18,7 +18,7 @@ namespace Yttrium
     //
     //
     //__________________________________________________________________________
-    class Container : public Collection
+    class Container : public virtual Collection
     {
     public:
         //______________________________________________________________________
@@ -27,9 +27,7 @@ namespace Yttrium
         // Defintions
         //
         //______________________________________________________________________
-        static const char LBrack    = '['; //!< for display
-        static const char RBrack    = ']'; //!< for display
-        static const char SemiColon = ';'; //!< for display
+        
 
         //______________________________________________________________________
         //

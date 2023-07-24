@@ -4,6 +4,7 @@
 #define Y_Concurrent_Singulet_Included 1
 
 #include "y/system/at-exit.hpp"
+#include "y/type/identifiable.hpp"
 
 namespace Yttrium
 {
@@ -19,7 +20,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Singulet
+        class Singulet : public Identifiable
         {
             //__________________________________________________________________
             //
@@ -39,7 +40,6 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            virtual const char *      callSign() const noexcept = 0; //!< forward CallSign
             virtual AtExit::Longevity lifeTime() const noexcept = 0; //!< forward LifeTime
 
             //! show if Verbose

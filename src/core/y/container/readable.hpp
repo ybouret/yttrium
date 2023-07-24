@@ -4,7 +4,7 @@
 #ifndef Y_Container_Readable_Included
 #define Y_Container_Readable_Included 1
 
-#include "y/container/interface.hpp"
+#include "y/container/collection.hpp"
 #include "y/type/args.hpp"
 #include <iostream>
 
@@ -18,7 +18,7 @@ namespace Yttrium
     //
     //
     //__________________________________________________________________________
-    template <typename T> class Readable : public Container
+    template <typename T> class Readable : public virtual Collection
     {
     public:
         //______________________________________________________________________
@@ -36,7 +36,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
     protected:
-        inline explicit Readable() noexcept : Container() {} //!< setup
+        inline explicit Readable() noexcept : Collection() {} //!< setup
     public:
         inline virtual ~Readable() noexcept {}               //!< cleanup
 
