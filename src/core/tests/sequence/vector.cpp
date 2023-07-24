@@ -59,6 +59,10 @@ Y_UTEST(sequence_vector)
             }
         }
         std::cerr << "done growth" << std::endl;
+        {
+            const Vector<Dummy> tmp(v);
+            Y_CHECK(tmp.size()==v.size());
+        }
         v.release();
     }
     Y_CHECK(Dummy::Count==0);
@@ -85,6 +89,10 @@ Y_UTEST(sequence_vector)
                 if(ran.choice()) v.popHead(); else v.popTail();
                 std::cerr << v << std::endl;
             }
+            {
+                const Vector<float> tmp = v;
+                Y_CHECK(tmp.size()==v.size());
+            }
             v.release();
         }
     }
@@ -109,6 +117,10 @@ Y_UTEST(sequence_vector)
             {
                 if(ran.choice()) v.popHead(); else v.popTail();
                 std::cerr << v << std::endl;
+            }
+            {
+                const Vector<String> tmp = v;
+                Y_CHECK(tmp.size()==v.size());
             }
             v.release();
         }

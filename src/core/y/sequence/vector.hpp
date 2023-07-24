@@ -11,21 +11,36 @@
 #include "y/memory/wad.hpp"
 #include "y/memory/allocator/global.hpp"
 #include "y/memory/workspace.hpp"
+#include "y/type/capacity.hpp"
 
 namespace Yttrium
 {
 
     namespace Core
     {
+        //______________________________________________________________________
+        //
+        //
+        //! Base class to hold definitions
+        //
+        //______________________________________________________________________
         class Vector
         {
-        public: static const char * const CallSign; //!< "Vector"
-        protected: explicit Vector() noexcept;
-        public:    virtual ~Vector() noexcept;
+        public: static const char * const CallSign;  //!< "Vector"
+        protected: explicit Vector() noexcept;       //!< setup
+        public:    virtual ~Vector() noexcept;       //!< cleanup
         private:   Y_DISABLE_COPY_AND_ASSIGN(Vector);
         };
     }
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Vector of data
+    //
+    //
+    //__________________________________________________________________________
     template <typename T, typename ALLOCATOR = Memory::Global>
     class Vector :
     public Dynamic,
@@ -34,19 +49,46 @@ namespace Yttrium
     public Writable<T>
     {
     public:
-        Y_ARGS_DECL(T,Type);
-        typedef Memory::Workspace<MutableType> Workspace;
-        typedef Memory::OutOfReach             MemOps;
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        Y_ARGS_DECL(T,Type);                               //!< aliases
+        typedef Memory::Workspace<MutableType> Workspace;  //!< alias
+        typedef Memory::OutOfReach             MemOps;     //!< alias
 
-        explicit Vector() noexcept: code( 0 ) {}
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        Vector() noexcept: code( 0 ) {}   //!< setup empty
+        virtual ~Vector() noexcept { release_(); } //!< cleanup
 
-        virtual ~Vector() noexcept { release(); }
+        //! setup with a given capacity
+        Vector(const size_t n, const AsCapacity_&) : code( new Code(n) )
+        { assert( capacity() >= n ); }
 
+        //! copy
+        Vector(const Vector &other) : code( Duplicate(other) )
+        {
+        }
+
+
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
         inline virtual const char * callSign() const noexcept { return CallSign; }
         inline virtual size_t       size()     const noexcept { return code ? code->size     :  0; }
         inline virtual size_t       capacity() const noexcept { return code ? code->maxBlocks : 0; }
         inline virtual void         free()           noexcept { if(0!=code) code->free(); }
-        inline virtual void         release()        noexcept { if(0!=code) { delete code; code=0; } }
+        inline virtual void         release()        noexcept { release_(); }
         inline virtual void         reserve(const size_t n)
         {
             if(n<=0) return;
@@ -110,12 +152,14 @@ namespace Yttrium
         class Code;
         Code *code;
 
+        //! self releasing
+        inline void release_() noexcept { if(0!=code) { delete code; code=0; } }
+
+        //! ensure minical capacity
         inline void minimalCapacity(const size_t n)
         {
             if(0==code)
-            {
                 code = new Code( n );
-            }
             else
             {
                 assert(n>code->maxBlocks);
@@ -125,8 +169,11 @@ namespace Yttrium
                 delete code;
                 code = temp;
             }
+            assert(0!=code);
+            assert(code->maxBlocks>=n);
         }
 
+        //! check enough space to insert one item
         inline void checkSpace()
         {
             const size_t capa = capacity();
@@ -136,11 +183,51 @@ namespace Yttrium
             assert(code->size<code->maxBlocks);
         }
 
+        static inline Code *Duplicate(const Vector &other)
+        {
+            const size_t n = other.size();
+            if(n>0)
+            {
+                assert(0!=other.code);
+                Code        *myCode = new Code(n);
+                ConstType   *source = other.code->base;
+                MutableType *target = myCode->base;
+                size_t      &i      = myCode->size;
+                try {
+                    while(i<n)
+                    {
+                        new (target+i) MutableType(source[i]);
+                        ++i;
+                    }
+                    return myCode;
+                }
+                catch(...)
+                {
+                    delete myCode;
+                    throw;
+                }
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        //______________________________________________________________________
+        //
+        //
+        //! Internal Code
+        //
+        //______________________________________________________________________
         class Code : public Object, public Memory::Wad<Type,ALLOCATOR>
         {
         public:
-            typedef Memory::Wad<Type,ALLOCATOR> WadType;
+            typedef Memory::Wad<Type,ALLOCATOR> WadType; //!< alias
 
+            //__________________________________________________________________
+            //
+            //! get formated flat memory
+            //__________________________________________________________________
             inline explicit Code(const size_t n) : Object(), WadType(n),
             base(static_cast<MutableType*>(this->workspace)),
             item(base-1),
@@ -149,21 +236,48 @@ namespace Yttrium
                 assert(this->maxBlocks>=n);
             }
 
+
+            //__________________________________________________________________
+            //
+            //! cleanup before destruction
+            //__________________________________________________________________
             inline virtual ~Code() noexcept { free(); }
+
+            //__________________________________________________________________
+            //
+            //! free content
+            //__________________________________________________________________
             inline void     free() noexcept { while(size>0) popTail(); }
 
+            //__________________________________________________________________
+            //
+            //! pop tail
+            //__________________________________________________________________
             inline void     popTail() noexcept { assert(size>0); MemOps::Naught( &base[--size] ); }
+
+            //__________________________________________________________________
+            //
+            //! pop head
+            //__________________________________________________________________
             inline void     popHead() noexcept { assert(size>0);
                 MemOps::Move( MemOps::Naught(base),base+1,(--size)*sizeof(T));
                 MemOps::Zero(base+size,sizeof(T));
             }
 
+            //__________________________________________________________________
+            //
+            //! insert at tail with enough memory
+            //__________________________________________________________________
             inline void pushTail(ConstType &temp) noexcept
             {
                 assert(size<this->maxBlocks);
                 MemOps::Copy(&base[size++],&temp,sizeof(T));
             }
 
+            //__________________________________________________________________
+            //
+            //! insert at head with enough memory
+            //__________________________________________________________________
             inline void pushHead(ConstType &temp) noexcept
             {
                 assert(size<this->maxBlocks);
@@ -172,10 +286,15 @@ namespace Yttrium
                 ++size;
             }
 
-
-            MutableType * const base;
-            MutableType * const item;
-            size_t              size;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            MutableType * const base; //! [0..size-1]
+            MutableType * const item; //!< [1..size]
+            size_t              size; //!< 0..maxBlocks
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);

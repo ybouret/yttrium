@@ -26,7 +26,7 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        Y_ARGS_DECL(T,Type);
+        Y_ARGS_DECL(T,Type); //!< aliases
 
         //______________________________________________________________________
         //
@@ -46,10 +46,10 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        virtual void pushHead(ParamType) = 0;
-        virtual void pushTail(ParamType) = 0;
-        virtual void popTail() noexcept = 0; //!< remove tail object
-        virtual void popHead() noexcept = 0; //!< remove head object
+        virtual void pushHead(ParamType) = 0; //!< push object at head
+        virtual void pushTail(ParamType) = 0; //!< push object at tail
+        virtual void popTail()  noexcept = 0; //!< remove tail object
+        virtual void popHead()  noexcept = 0; //!< remove head object
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Sequence);

@@ -12,32 +12,52 @@ namespace Yttrium
     namespace Memory
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Local memory for single object
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class Workspace
         {
         public:
-            inline explicit Workspace() noexcept : data(0), wksp()
-            {
-                Y_STATIC_ZARR(wksp);
-            }
+            //__________________________________________________________________
+            //
+            //
+            // Modulo
+            //
+            //__________________________________________________________________
 
+            //! create empty
+            inline explicit Workspace() noexcept : data(0), wksp() { Y_STATIC_ZARR(wksp); }
+
+            //! cleanup
             inline virtual ~Workspace() noexcept { erase(); }
 
-            inline T & build()
-            {
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! build with default argument
+            inline T & build() {
                 erase();
-                data = new ( Memory::OutOfReach::Addr(wksp) ) T();
-                return *data;
+                return *( data = new ( Memory::OutOfReach::Addr(wksp) ) T() );
             }
 
+            //! build with one argument
             template <typename U>
-            inline T &build(U &args)
-            {
+            inline T &build(U &args) {
                 erase();
-                data = new ( Memory::OutOfReach::Addr(wksp) ) T(args);
-                return *data;
+                return *( data = new ( Memory::OutOfReach::Addr(wksp) ) T(args) );
             }
 
+            //! dismiss content, assuming it was copied elsewhere
             inline void dismiss() noexcept { data = 0; Y_STATIC_ZARR(wksp); }
 
 

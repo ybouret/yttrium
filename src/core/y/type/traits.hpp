@@ -171,7 +171,7 @@ namespace Yttrium
         typename Pick<IsPrimitive, //     T is primitive 'U' or 'const U'
         T,                         //     true => return T
         ConstReferenceType>:: Type //     false => return const reference
-        > :: Type ParamType;
+        > :: Type ParamType;       //!< this is the resulting type
 
         
     };

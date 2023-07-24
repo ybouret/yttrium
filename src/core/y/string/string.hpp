@@ -91,6 +91,7 @@ namespace Yttrium
                 return os;
             }
 
+            //! generate random little string
             explicit String(const size_t len, Random::Bits &ran, const T lower = 'a', const T upper='z');
 
             //__________________________________________________________________
