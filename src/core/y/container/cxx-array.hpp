@@ -6,7 +6,7 @@
 #include "y/container/operating.hpp"
 #include "y/memory/wad.hpp"
 
-#include "y/container/iterator/contiguous.hpp"
+#include "y/container/iterator/writable-contiguous.hpp"
 
 
 namespace Yttrium
@@ -42,7 +42,7 @@ namespace Yttrium
     public Memory::Wad<T,ALLOCATOR>,
     public Operating<T>,
     public Writable<T>,
-    public ContiguousWritable<T>,
+    public WritableContiguous<T>,
     public Core::CxxArray
     {
     public:
@@ -108,6 +108,9 @@ namespace Yttrium
         virtual ConstType *getBaseForward() const noexcept { return cdata; }
         virtual ConstType *getLastForward() const noexcept { return cdata+count; }
 
+        virtual ConstType *getBaseReverse() const noexcept { return entry+count; }
+        virtual ConstType *getLastReverse() const noexcept { return entry;       }
+        
     };
 
 

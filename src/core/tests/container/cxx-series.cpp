@@ -4,6 +4,7 @@
 #include "y/apex/natural.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/random/shuffle.hpp"
+#include "y/container/iterator/display-all.hpp"
 
 using namespace Yttrium;
 
@@ -31,6 +32,9 @@ Y_UTEST(container_cxx_series)
                 }
                 std::cerr << arr << std::endl;
             }
+
+            Iterating::DisplayAll::Of(arr);
+
             while(arr.size())
             {
                 if( ran.choice() )

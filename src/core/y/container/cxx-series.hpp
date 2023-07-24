@@ -8,7 +8,7 @@
 #include "y/container/writable.hpp"
 #include "y/sequence/interface.hpp"
 #include "y/container/recyclable.hpp"
-#include "y/container/iterator/contiguous.hpp"
+#include "y/container/iterator/writable-contiguous.hpp"
 
 namespace Yttrium
 {
@@ -45,7 +45,7 @@ namespace Yttrium
     public Writable<T>,
     public Sequence<T>,
     public Recyclable,
-    public ContiguousWritable<T>,
+    public WritableContiguous<T>,
     public Core::CxxSeries
     {
     public:
@@ -167,6 +167,9 @@ namespace Yttrium
         inline void free_() noexcept { while(count>0) trim_(); }
         virtual ConstType *getBaseForward() const noexcept { return cdata; }
         virtual ConstType *getLastForward() const noexcept { return cdata+count; }
+
+        virtual ConstType *getBaseReverse() const noexcept { return entry+count; }
+        virtual ConstType *getLastReverse() const noexcept { return entry;       }
     };
 
 
