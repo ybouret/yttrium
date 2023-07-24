@@ -10,17 +10,16 @@ void displayAll(CLASS &cls)
 {
     for(typename CLASS::Iterator it=cls.begin();it!=cls.end();++it)
     {
-        std::cerr << *it << std::endl;
+        std::cerr << ' ' << *it;
     }
+    std::cerr << std::endl;
 
-#if 0
     const CLASS &cst = cls;
     for(typename CLASS::ConstIterator it=cst.begin();it!=cst.end();++it)
     {
-        std::cerr << *it << std::endl;
+        std::cerr << ' ' << *it;
     }
-#endif
-
+    std::cerr << std::endl;
 }
 
 
