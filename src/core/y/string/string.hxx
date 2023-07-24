@@ -223,7 +223,7 @@ namespace Yttrium
         }
 
         template <>
-        typename String<CH>::ConstType & String<CH>::operator[](const size_t index) const noexcept
+        String<CH>::ConstType & String<CH>::operator[](const size_t index) const noexcept
         {
             assert(index>=1);
             assert(index<=size());
@@ -231,7 +231,7 @@ namespace Yttrium
         }
 
         template <>
-        typename String<CH>::Type & String<CH>::operator[](const size_t index)   noexcept
+        String<CH>::Type & String<CH>::operator[](const size_t index)   noexcept
         {
             assert(0!=code);
             assert(index>=1);
@@ -240,7 +240,7 @@ namespace Yttrium
         }
 
         template <>
-        typename String<CH>::ConstType * String<CH>:: operator()(void) const noexcept
+        String<CH>::ConstType * String<CH>:: operator()(void) const noexcept
         {
             assert(0!=code);
             return code->data;
