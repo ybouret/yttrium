@@ -1,11 +1,11 @@
 
+
 //! \file
 
-#ifndef Y_Container_Extensible_Included
-#define Y_Container_Extensible_Included 1
+#ifndef Y_Container_Recyclable_Included
+#define Y_Container_Recyclable_Included 1
 
-#include "y/container/recyclable.hpp"
-#include "y/type/releasable.hpp"
+#include "y/config/starting.hpp"
 
 namespace Yttrium
 {
@@ -14,11 +14,11 @@ namespace Yttrium
     //
     //
     //
-    //! Extensible class
+    //! Recyclable class
     //
     //
     //__________________________________________________________________________
-    class Extensible : public Recyclable, public Releasable
+    class Recyclable
     {
         //______________________________________________________________________
         //
@@ -27,10 +27,10 @@ namespace Yttrium
         //
         //______________________________________________________________________
     protected:
-        explicit Extensible() noexcept; //!< setup
+        explicit Recyclable() noexcept; //!< setup
 
     public:
-        virtual ~Extensible() noexcept; //!< cleanup
+        virtual ~Recyclable() noexcept; //!< cleanup
 
         //______________________________________________________________________
         //
@@ -38,10 +38,10 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        virtual void reserve(const size_t) = 0; //!< make room for extra objects
+        virtual void free()       noexcept = 0; //!< keep possible memory
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(Extensible);
+        Y_DISABLE_COPY_AND_ASSIGN(Recyclable);
     };
 
 }

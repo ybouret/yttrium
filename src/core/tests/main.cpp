@@ -93,6 +93,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(ordered_PQ);
 
     Y_UTEST(container_cxx_array);
+    Y_UTEST(container_cxx_series);
     Y_UTEST(container_iterator);
 
     Y_UTEST(sequence_vector);

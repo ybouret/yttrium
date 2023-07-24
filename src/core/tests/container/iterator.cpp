@@ -1,5 +1,5 @@
 
-#include "y/container/iterator/linear.hpp"
+#include "y/container/cxx-array.hpp"
 #include "y/container/iterator/linked.hpp"
 
 #include "y/utest/run.hpp"
@@ -62,6 +62,10 @@ Y_UTEST(container_iterator)
 
         Iterating::Linked<int,iNode,Iterating::Forward> fwd = L.head;
     }
+
+    CxxArray<double,Memory::Pooled> data(5);
+    CxxArray<double,Memory::Pooled>::Iterator begin = &data[1];
+
 }
 Y_UDONE()
 
