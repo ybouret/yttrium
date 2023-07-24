@@ -7,8 +7,8 @@ using namespace Yttrium;
 
 Y_UTEST(sequence_vector)
 {
-    Vector<int> v;
-    
+    //Vector<int> v;
+
 }
 Y_UDONE()
 

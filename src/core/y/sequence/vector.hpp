@@ -8,8 +8,8 @@
 #include "y/container/dynamic.hpp"
 #include "y/object.hpp"
 #include "y/memory/wad.hpp"
-#include "y/container/operating.hpp"
 #include "y/memory/allocator/global.hpp"
+#include "y/memory/workspace.hpp"
 
 namespace Yttrium
 {
@@ -70,6 +70,8 @@ namespace Yttrium
             assert(code->size>0);
             code->popHead();
         }
+
+        
 
 
     private:
