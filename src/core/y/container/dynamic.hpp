@@ -11,14 +11,36 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Extensible Container
+    //
+    //
+    //__________________________________________________________________________
     class Dynamic : public Container, public Extensible
     {
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
     protected:
-        explicit Dynamic() noexcept;
+        explicit Dynamic() noexcept; //!< setup
 
     public:
-        virtual ~Dynamic() noexcept;
+        virtual ~Dynamic() noexcept; //!< cleanup
 
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+
+        //! ensure minimal capacity
         void ensure(const size_t minCapacity);
 
     private:

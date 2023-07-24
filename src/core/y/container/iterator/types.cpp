@@ -9,8 +9,8 @@ namespace Yttrium
         {
             switch(d)
             {
-                case Forward : return "Forward";
-                case Reverse : return "Reverse";
+                case Forward : return "Iteraring::Forward";
+                case Reverse : return "Iterating::Reverse";
             }
             return Core::Unknown;
         }

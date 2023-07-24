@@ -26,6 +26,7 @@ namespace Yttrium
         typedef Int2Type<Forward> IsForward; //!< alias
         typedef Int2Type<Reverse> IsReverse; //!< alias
 
+        //! Human Readable Direction
         const char *DirectionText(const Direction) noexcept;
 
         //______________________________________________________________________
@@ -45,6 +46,7 @@ namespace Yttrium
             inline explicit Travel() noexcept {} //!< setup
             inline virtual ~Travel() noexcept {} //!< cleanup
 
+            //! return human readable direction
             inline const char     *directionText() const noexcept { return DirectionText(Way); }
 
         private:

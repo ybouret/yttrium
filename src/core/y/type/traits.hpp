@@ -133,7 +133,7 @@ namespace Yttrium
     public:
         enum { IsReference = ReferenceTraits<T>::Value /*!< true if 'T' can be written as 'U &'. */ };
         typedef typename ReferenceTraits<T>::ReferredType                  &ReferenceType;      //!< returns 'U' for 'U &' and 'U'.
-        typedef const typename ReferenceTraits<MutableType>::ReferredType  &ConstReferenceType; //!< returns 'const U'.
+        typedef const typename ReferenceTraits<MutableType>::ReferredType  &ConstReferenceType; //!< returns 'const U &'.
 
         //______________________________________________________________________
         //
@@ -160,8 +160,20 @@ namespace Yttrium
         enum { IsIntegral           = (InStandardIntegers || InStandardUnsigned || InPlatformIntegers ||InPlatformUnsigned || InLanguageIntegers) };
         enum { IsArithmetic         = (IsIntegral || IsIsoFloatingPoint) };
         enum { IsFundamental        = (IsArithmetic  || IsSameType<T,void>::Value) };
-        // enum { is_primitive     = ( is_fundamental || is_pointer || is_pointer_to_member ) };
+        enum { IsPointingTo         = (IsPointer     || IsPointerToMember) };
+        enum { IsPrimitive          = (IsFundamental || IsPointingTo) };
 
+        typedef typename
+        Pick<IsReference,          // T is 'U &' or 'const U &' ?
+        T                          // true => parameter is T
+        ,                          //
+                                   // false =>
+        typename Pick<IsPrimitive, //     T is primitive 'U' or 'const U'
+        T,                         //     true => return T
+        ConstReferenceType>:: Type //     false => return const reference
+        > :: Type ParamType;
+
+        
     };
 
 }

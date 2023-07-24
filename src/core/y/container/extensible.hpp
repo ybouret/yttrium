@@ -9,16 +9,36 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Extensible class
+    //
+    //
+    //__________________________________________________________________________
     class Extensible : public Releasable
     {
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
     protected:
-        explicit Extensible() noexcept;
+        explicit Extensible() noexcept; //!< setup
 
     public:
-        virtual ~Extensible() noexcept;
+        virtual ~Extensible() noexcept; //!< cleanup
 
-        virtual void free() noexcept = 0;
-        virtual void reserve(size_t) = 0;
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        virtual void free()       noexcept = 0; //!< keep possible memory
+        virtual void reserve(const size_t) = 0; //!< make room for extra objects
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Extensible);

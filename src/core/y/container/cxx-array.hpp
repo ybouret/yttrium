@@ -11,12 +11,18 @@ namespace Yttrium
 
     namespace Core
     {
+        //______________________________________________________________________
+        //
+        //
+        //! Base class for CxxArrays
+        //
+        //______________________________________________________________________
         class CxxArray
         {
         public:     static const char * const CallSign; //!< "CxxArray"
-        protected:  explicit CxxArray() noexcept;
-        public:     virtual ~CxxArray() noexcept;
-            Y_DISABLE_COPY_AND_ASSIGN(CxxArray);
+        protected:  explicit CxxArray() noexcept;       //!< setup
+        public:     virtual ~CxxArray() noexcept;       //!< cleanup
+        private: Y_DISABLE_COPY_AND_ASSIGN(CxxArray);
         };
     }
 

@@ -19,8 +19,8 @@ namespace Yttrium
     class Partition : public Schedule
     {
     public:
-        static const char * const CallSign; //!< "Partition"
-        static apn Cardinal(const size_t n);
+        static const char * const CallSign;  //!< "Partition"
+        static apn Cardinal(const size_t n); //!< from Euler's formula
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Partition);

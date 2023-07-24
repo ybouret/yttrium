@@ -8,15 +8,35 @@
 
 namespace Yttrium
 {
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Identifiable class
+    //
+    //
+    //__________________________________________________________________________
     class Identifiable
     {
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
     protected:
-        explicit Identifiable() noexcept;
+        explicit Identifiable() noexcept; //!< setup
         
     public:
-        virtual ~Identifiable() noexcept;
+        virtual ~Identifiable() noexcept; //!< cleanup
 
-        virtual const char * callSign() const noexcept = 0;
+        //______________________________________________________________________
+        //
+        //
+        // methods
+        //
+        //______________________________________________________________________
+        virtual const char * callSign() const noexcept = 0; //!< system wide call sign
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Identifiable);

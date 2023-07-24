@@ -8,7 +8,7 @@
 
 namespace Yttrium
 {
-    
+
     //__________________________________________________________________________
     //
     //
@@ -37,9 +37,9 @@ namespace Yttrium
         //
         //______________________________________________________________________
     protected:
-        explicit Collection() noexcept;
+        explicit Collection() noexcept; //!< setup
     public:
-        virtual ~Collection() noexcept;
+        virtual ~Collection() noexcept; //!< cleanup
 
         //______________________________________________________________________
         //
@@ -47,8 +47,8 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        virtual size_t size()  const noexcept = 0;
-        unit_t         ssize() const;
+        virtual size_t size()  const noexcept = 0; //!< objects in collection
+        unit_t         ssize() const;              //!< convert to signed type
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Collection);
