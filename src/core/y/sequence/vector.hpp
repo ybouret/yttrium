@@ -33,6 +33,9 @@ namespace Yttrium
         };
     }
 
+#define Y_Vector_Prolog() \
+Identifiable(), Collection(), Dynamic(),Sequence<T>(),Core::Vector(), Writable<T>()
+
     //__________________________________________________________________________
     //
     //
@@ -65,18 +68,24 @@ namespace Yttrium
         // C++
         //
         //______________________________________________________________________
-        Vector() noexcept: code( 0 ) {}   //!< setup empty
+        Vector() noexcept: Y_Vector_Prolog(), code( 0 ) {}   //!< setup empty
         virtual ~Vector() noexcept { release_(); } //!< cleanup
 
         //! setup with a given capacity
-        Vector(const size_t n, const AsCapacity_&) : code( new Code(n) )
+        Vector(const size_t n, const AsCapacity_&) : Y_Vector_Prolog(), code( new Code(n) )
         { assert( capacity() >= n ); }
 
         //! copy
-        Vector(const Vector &other) : code( Duplicate(other) )
+        Vector(const Vector &other) : Y_Vector_Prolog(), code( Duplicate(other) )
         {
         }
 
+        //! no-throw exchange
+        inline void swapWith(Vector &other) noexcept { Swap(code,other.code); }
+
+        //! assign
+        inline Vector & operator=(const Vector &other)
+        { Vector tmp(other); swapWith(tmp); return *this; }
 
         //______________________________________________________________________
         //
