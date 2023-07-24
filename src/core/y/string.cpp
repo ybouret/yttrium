@@ -4,6 +4,7 @@
 #include "y/system/exception.hpp"
 #include <cerrno>
 #include <cstdarg>
+#include <cstdio>
 
 namespace Yttrium
 {
