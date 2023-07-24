@@ -38,6 +38,8 @@ namespace Yttrium
                 return *data;
             }
 
+            inline void dismiss() noexcept { data = 0; Y_STATIC_ZARR(wksp); }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Workspace);

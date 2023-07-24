@@ -6,6 +6,7 @@
 
 #include "y/sequence/interface.hpp"
 #include "y/container/dynamic.hpp"
+#include "y/container/writable.hpp"
 #include "y/object.hpp"
 #include "y/memory/wad.hpp"
 #include "y/memory/allocator/global.hpp"
@@ -26,10 +27,16 @@ namespace Yttrium
     }
 
     template <typename T, typename ALLOCATOR = Memory::Global>
-    class Vector : public Dynamic, public Sequence<T>, public Core::Vector
+    class Vector :
+    public Dynamic,
+    public Sequence<T>,
+    public Core::Vector,
+    public Writable<T>
     {
     public:
         Y_ARGS_DECL(T,Type);
+        typedef Memory::Workspace<MutableType> Workspace;
+        typedef Memory::OutOfReach          MemOps;
 
         explicit Vector() noexcept: code( 0 ) {}
 
@@ -43,18 +50,7 @@ namespace Yttrium
         inline virtual void         reserve(const size_t n)
         {
             if(n<=0) return;
-            if(0!=code)
-            {
-                Code *temp = new Code(code->maxBlocks+n);
-                Memory::OutOfReach::Grab(temp->base,code->base,code->size*sizeof(T));
-                code->size = 0;
-                delete code;
-                code = temp;
-            }
-            else
-            {
-                code = new Code(n);
-            }
+            minimalCapacity(code->maxBlocks+n);
         }
 
         inline virtual void popTail() noexcept
@@ -71,18 +67,79 @@ namespace Yttrium
             code->popHead();
         }
 
-        
+        inline virtual void pushHead(ParamType args)
+        {
+            Workspace  data;
+            ConstType &temp = data.build(args);
+            checkSpace();
+            assert(0!=code);
+            code->pushHead(temp);
+            data.dismiss();
+        }
+
+        inline virtual void pushTail(ParamType args)
+        {
+            Workspace data;
+            ConstType &temp = data.build(args);
+            checkSpace();
+            assert(0!=code);
+            code->pushTail(temp);
+            data.dismiss();
+        }
+
+        inline virtual Type & operator[](const size_t indx) noexcept
+        {
+            assert(indx>=1);
+            assert(indx<=size());
+            assert(0!=code);
+            return code->item[indx];
+        }
+
+        inline virtual ConstType & operator[](const size_t indx) const noexcept
+        {
+            assert(indx>=1);
+            assert(indx<=size());
+            assert(0!=code);
+            return code->item[indx];
+        }
+
+
 
 
     private:
         class Code;
         Code *code;
 
+        inline void minimalCapacity(const size_t n)
+        {
+            if(0==code)
+            {
+                code = new Code( n );
+            }
+            else
+            {
+                assert(n>code->maxBlocks);
+                Code *temp = new Code(n);
+                Memory::OutOfReach::Grab(temp->base,code->base,code->size*sizeof(T));
+                code->size = 0;
+                delete code;
+                code = temp;
+            }
+        }
+
+        inline void checkSpace()
+        {
+            const size_t capa = capacity();
+            if(size()>=capa)
+                minimalCapacity( NextCapacity(capa) );
+            assert(0!=code);
+            assert(code->size<code->maxBlocks);
+        }
+
         class Code : public Object, public Memory::Wad<Type,ALLOCATOR>
         {
         public:
             typedef Memory::Wad<Type,ALLOCATOR> WadType;
-            typedef Memory::OutOfReach          MemOps;
 
             inline explicit Code(const size_t n) : Object(), WadType(n),
             base(static_cast<MutableType*>(this->workspace)),
@@ -95,9 +152,22 @@ namespace Yttrium
             inline virtual ~Code() noexcept {}
             inline void     free()    noexcept { while(size>0) popTail(); }
 
-            inline void     popTail() noexcept { assert(size>0); MemOps::Naught( base[--size] ); }
+            inline void     popTail() noexcept { assert(size>0); MemOps::Naught( &base[--size] ); }
             inline void     popHead() noexcept { assert(size>0); MemOps::Grab( MemOps::Naught(base),base+1,(--size)*sizeof(T)); }
 
+            inline void pushTail(ConstType &temp) noexcept
+            {
+                assert(size<this->maxBlocks);
+                MemOps::Copy(&base[size++],&temp,sizeof(T));
+            }
+
+            inline void pushHead(ConstType &temp) noexcept
+            {
+                assert(size<this->maxBlocks);
+                MemOps::Move(base+1,base,size*sizeof(T));
+                MemOps::Copy(base,&temp,sizeof(T));
+                ++size;
+            }
 
 
             MutableType *base;
