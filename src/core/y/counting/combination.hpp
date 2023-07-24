@@ -39,7 +39,7 @@ namespace Yttrium
         virtual size_t         size()                   const noexcept; //!< k
         virtual size_t         capacity()               const noexcept; //!< k
         virtual const size_t & operator[](const size_t) const noexcept; //!< [1..k]
-
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Combination);
         Code *code;

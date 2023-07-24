@@ -89,11 +89,11 @@ namespace Yttrium
             // Access Methods
             //
             //__________________________________________________________________
-            virtual ConstType & operator[](const size_t index) const noexcept; //!< const access
-            virtual Type      & operator[](const size_t index)       noexcept; //!< access
-            virtual size_t      size()                         const noexcept; //!< num of chars
-            virtual size_t      capacity()                     const noexcept; //!< maximal number of chars
-            ConstType         * operator()(void)               const noexcept; //!< legacy access
+            virtual ConstType &  operator[](const size_t index) const noexcept; //!< const access
+            virtual Type      &  operator[](const size_t index)       noexcept; //!< access
+            virtual size_t       size()                         const noexcept; //!< num of chars
+            virtual size_t       capacity()                     const noexcept; //!< maximal number of chars
+            ConstType         *  operator()(void)               const noexcept; //!< legacy access
 
             //__________________________________________________________________
             //

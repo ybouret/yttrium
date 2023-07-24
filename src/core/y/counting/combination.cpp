@@ -8,6 +8,7 @@
 namespace Yttrium
 {
 
+
     apn Combination:: Cardinal(const size_t n, const size_t k)
     {
         assert(n>0);

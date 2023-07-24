@@ -26,6 +26,8 @@ namespace Yttrium
         typedef Int2Type<Forward> IsForward; //!< alias
         typedef Int2Type<Reverse> IsReverse; //!< alias
 
+        const char *DirectionText(const Direction) noexcept;
+
         //______________________________________________________________________
         //
         //
@@ -42,6 +44,8 @@ namespace Yttrium
 
             inline explicit Travel() noexcept {} //!< setup
             inline virtual ~Travel() noexcept {} //!< cleanup
+
+            inline const char     *directionText() const noexcept { return DirectionText(Way); }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Travel);

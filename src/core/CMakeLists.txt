@@ -38,6 +38,7 @@ apex/z
 apex/q
 counting
 counting/c
+sequence
 ordered
 )
 

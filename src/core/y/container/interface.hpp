@@ -4,7 +4,7 @@
 #ifndef Y_Container_Interface_Included
 #define Y_Container_Interface_Included 1
 
-#include "y/config/starting.hpp"
+#include "y/container/collection.hpp"
 
 namespace Yttrium
 {
@@ -18,7 +18,7 @@ namespace Yttrium
     //
     //
     //__________________________________________________________________________
-    class Container
+    class Container : public Collection
     {
     public:
         //______________________________________________________________________
@@ -51,11 +51,10 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        virtual size_t size()      const noexcept = 0; //!< items in conatiner
-        virtual size_t capacity()  const noexcept = 0; //!< maximum items in container
-        virtual size_t available() const noexcept;     //!< default to capacity() - size(), can be overiden
-        static  size_t NextCapacity(const size_t n);   //!< evaluate next capacity
-
+        virtual size_t      capacity()  const noexcept = 0; //!< maximum items in container
+        virtual size_t      available() const noexcept;     //!< default to capacity() - size(), can be overiden
+        static  size_t      NextCapacity(const size_t n);   //!< evaluate next capacity
+        static  size_t      NextIncrease(const size_t n);   //!< evaluate next increaase
 
 
     private:

@@ -12,7 +12,7 @@ namespace Yttrium
     {
     }
 
-    Container:: Container() noexcept
+    Container:: Container() noexcept : Collection()
     {
         
     }
@@ -35,6 +35,11 @@ namespace Yttrium
         const size_t Increase    = Min(MaxIncrease,OptIncrease);
 
         return Max(n+Increase,MinCapacity);
+    }
+
+    size_t Container:: NextIncrease(const size_t n)
+    {
+        return NextCapacity(n) - n;
     }
 
 }

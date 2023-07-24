@@ -9,6 +9,7 @@
 namespace Yttrium
 {
 
+
     //__________________________________________________________________________
     //
     //
@@ -57,9 +58,9 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        inline virtual size_t size()     const noexcept { return count; } //!< fixed size
-        inline virtual size_t capacity() const noexcept { return count; } //!< fixed capacity
-
+        inline virtual size_t size()           const noexcept { return count; } //!< fixed size
+        inline virtual size_t capacity()       const noexcept { return count; } //!< fixed capacity
+        
         //! access
         inline virtual Type & operator[](const size_t i) noexcept {
             assert(i>0); assert(i<=size()); return entry[i];

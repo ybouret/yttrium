@@ -12,7 +12,7 @@ namespace Yttrium
     
     apn Partition:: Cardinal(const size_t n)
     {
-
+        
     }
 
 }
