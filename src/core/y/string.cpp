@@ -3,6 +3,7 @@
 #include "y/lockable.hpp"
 #include "y/system/exception.hpp"
 #include <cerrno>
+#include <cstdarg>
 
 namespace Yttrium
 {
