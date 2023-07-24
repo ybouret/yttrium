@@ -63,9 +63,7 @@ Y_UTEST(container_iterator)
         Iterating::Linked<int,iNode,Iterating::Forward> fwd = L.head;
     }
 
-    CxxArray<double,Memory::Pooled> data(5);
-    CxxArray<double,Memory::Pooled>::Iterator begin = &data[1];
-
+    
 }
 Y_UDONE()
 

@@ -12,37 +12,6 @@
 namespace Yttrium
 {
 
-    template <typename T>
-    class ContiguousMemory
-    {
-    public:
-        Y_ARGS_EXPOSE(T,Type); //!< aliases
-        typedef Iterating::Linear<Type,Iterating::Forward>      Iterator;
-        typedef Iterating::Linear<ConstType,Iterating::Forward> ConstIterator;
-
-        typedef Iterating::Linear<Type,Iterating::Reverse>       ReverseIterator;
-        typedef Iterating::Linear<ConstType,Iterating::Reverse>  ConstReverseIterator;
-
-        inline explicit ContiguousMemory() noexcept {}
-        inline virtual ~ContiguousMemory() noexcept {}
-
-
-    private:
-        Y_DISABLE_COPY_AND_ASSIGN(ContiguousMemory);
-    };
-
-    template <typename T>
-    class RandomizedMemory
-    {
-    public:
-        typedef NullType Iterator;
-        typedef NullType ConstIterator;
-        typedef NullType ReverseIterator;
-        typedef NullType ConstReverseIterator;
-
-    private:
-        Y_DISABLE_COPY_AND_ASSIGN(RandomizedMemory);
-    };
 
 
     //__________________________________________________________________________
@@ -53,9 +22,7 @@ namespace Yttrium
     //
     //
     //__________________________________________________________________________
-    template <typename T,
-    template <typename> class MemoryTopology = ContiguousMemory
-    > class Readable : public virtual Collection, public MemoryTopology<T>
+    template <typename T> class Readable : public virtual Collection
     {
     public:
         //______________________________________________________________________
@@ -65,7 +32,6 @@ namespace Yttrium
         //
         //______________________________________________________________________
         Y_ARGS_EXPOSE(T,Type); //!< aliases
-        typedef MemoryTopology<T> TopologyType; //!< lais
 
         //______________________________________________________________________
         //
@@ -74,9 +40,9 @@ namespace Yttrium
         //
         //______________________________________________________________________
     protected:
-        inline explicit Readable() noexcept : Collection(), TopologyType() {} //!< setup
+        inline explicit Readable() noexcept : Collection() {} //!< setup
     public:
-        inline virtual ~Readable() noexcept {}                                //!< cleanup
+        inline virtual ~Readable() noexcept {}                //!< cleanup
 
         //______________________________________________________________________
         //

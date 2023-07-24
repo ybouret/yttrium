@@ -6,6 +6,9 @@
 #include "y/container/operating.hpp"
 #include "y/memory/wad.hpp"
 
+#include "y/container/iterator/contiguous.hpp"
+
+
 namespace Yttrium
 {
 
@@ -39,6 +42,7 @@ namespace Yttrium
     public Memory::Wad<T,ALLOCATOR>,
     public Operating<T>,
     public Writable<T>,
+    public ContiguousWritable<T>,
     public Core::CxxArray
     {
     public:
@@ -62,7 +66,8 @@ namespace Yttrium
         //! setup with default [1:n] objects
         inline explicit CxxArray(const size_t n) :
         WadType(n), OpsType(this->workspace,n), Writable<T>(),
-        entry( static_cast<MutableType *>(this->workspace)-1 ),
+        cdata( static_cast<MutableType *>(this->workspace) ),
+        entry( cdata-1 ),
         count( n )
         {
         }
@@ -94,11 +99,14 @@ namespace Yttrium
 
 
     protected:
+        MutableType * const cdata; //!< memory or [0..count-1]
         MutableType * const entry; //!< memory for [1..count]
         const size_t        count; //!< built objecct
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(CxxArray);
+        virtual ConstType *getBaseForward() const noexcept { return cdata; }
+        virtual ConstType *getLastForward() const noexcept { return cdata+count; }
 
     };
 
