@@ -6,40 +6,51 @@
 
 namespace Yttrium
 {
-
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! base class to form linear iterators
+    //
+    //
+    //__________________________________________________________________________
     template <typename T>
     class WritableContiguous : public ReadableContiguous<T>
     {
     public:
-
-
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
         Y_ARGS_EXPOSE(T,Type); //!< aliases
-
-        typedef Iterating::Linear<Type,Iterating::Forward>      Iterator;
-        typedef Iterating::Linear<Type,Iterating::Reverse>      ReverseIterator;
-        typedef Iterating::Linear<ConstType,Iterating::Forward> ConstIterator;
-        typedef Iterating::Linear<ConstType,Iterating::Reverse> ConstReverseIterator;
+        typedef Iterating::Linear<Type,Iterating::Forward>      Iterator;             //!< alias
+        typedef Iterating::Linear<Type,Iterating::Reverse>      ReverseIterator;      //!< alias
+        typedef Iterating::Linear<ConstType,Iterating::Forward> ConstIterator;        //!< alias
+        typedef Iterating::Linear<ConstType,Iterating::Reverse> ConstReverseIterator; //!< alias
 
     protected:
-        inline explicit WritableContiguous() noexcept {}
+        inline explicit WritableContiguous() noexcept : ReadableContiguous<T>() {} //!< setup
         using ReadableContiguous<T>::getBaseForward;
         using ReadableContiguous<T>::getLastForward;
         using ReadableContiguous<T>::getBaseReverse;
         using ReadableContiguous<T>::getLastReverse;
 
     public:
-        inline virtual ~WritableContiguous() noexcept {}
+        inline virtual ~WritableContiguous() noexcept {} //!< cleanup
 
-        inline Iterator      begin()       noexcept { return Iterator( (MutableType *)(getBaseForward()) ); }
-        inline Iterator      end()         noexcept { return Iterator( (MutableType *)(getLastForward()) ); }
-        inline ConstIterator begin() const noexcept { return ConstIterator( getBaseForward() ); }
-        inline ConstIterator end()   const noexcept { return ConstIterator( getLastForward() ); }
+        inline Iterator      begin()       noexcept { return Iterator( (MutableType *)(getBaseForward()) ); } //!< begin forward
+        inline Iterator      end()         noexcept { return Iterator( (MutableType *)(getLastForward()) ); } //!< end forward
 
-        inline ReverseIterator rbegin()             noexcept { return ReverseIterator( (MutableType *)(getBaseReverse()) ); }
-        inline ReverseIterator rend()               noexcept { return ReverseIterator( (MutableType *)(getLastReverse()) ); }
+        inline ConstIterator begin() const noexcept { return ConstIterator( getBaseForward() ); } //!< begin forward, const
+        inline ConstIterator end()   const noexcept { return ConstIterator( getLastForward() ); } //!< end forward, const
 
-        inline ConstReverseIterator rbegin() const noexcept { return ConstReverseIterator( getBaseReverse() ); }
-        inline ConstReverseIterator rend()   const noexcept { return ConstReverseIterator( getLastReverse() ); }
+        inline ReverseIterator rbegin()             noexcept { return ReverseIterator( (MutableType *)(getBaseReverse()) ); } //!< begin reverse
+        inline ReverseIterator rend()               noexcept { return ReverseIterator( (MutableType *)(getLastReverse()) ); } //!< end reverse
+
+        inline ConstReverseIterator rbegin() const noexcept { return ConstReverseIterator( getBaseReverse() ); } //!< begin reverse, const
+        inline ConstReverseIterator rend()   const noexcept { return ConstReverseIterator( getLastReverse() ); } //!< end reverse, const
 
 
     private:

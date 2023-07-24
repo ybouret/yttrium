@@ -7,35 +7,62 @@
 
 namespace Yttrium
 {
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! base class to form linear const iterators
+    //
+    //
+    //__________________________________________________________________________
     template <typename T>
     class ReadableContiguous
     {
     public:
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
         Y_ARGS_EXPOSE(T,Type); //!< aliases
-        typedef Iterating::Linear<ConstType,Iterating::Forward> ConstIterator;
-        typedef Iterating::Linear<ConstType,Iterating::Reverse> ConstReverseIterator;
+        typedef Iterating::Linear<ConstType,Iterating::Forward> ConstIterator;        //!< alias
+        typedef Iterating::Linear<ConstType,Iterating::Reverse> ConstReverseIterator; //!< alias
 
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
     protected:
-        inline explicit ReadableContiguous() noexcept {}
+        inline explicit ReadableContiguous() noexcept {} //!< setup
 
     public:
-        inline virtual ~ReadableContiguous() noexcept {}
+        inline virtual ~ReadableContiguous() noexcept {} //!< cleanup
 
-        inline ConstIterator begin() const noexcept { return ConstIterator( getBaseForward() ); }
-        inline ConstIterator end()   const noexcept { return ConstIterator( getLastForward() ); }
 
-        inline ConstReverseIterator rbegin() const noexcept { return ConstReverseIterator( getBaseReverse() ); }
-        inline ConstReverseIterator rend()   const noexcept { return ConstReverseIterator( getLastReverse() ); }
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        inline ConstIterator begin() const noexcept { return ConstIterator( getBaseForward() ); } //!< begin forward, const
+        inline ConstIterator end()   const noexcept { return ConstIterator( getLastForward() ); } //!< end forward, const
+
+        inline ConstReverseIterator rbegin() const noexcept { return ConstReverseIterator( getBaseReverse() ); } //!< begin reverse, const
+        inline ConstReverseIterator rend()   const noexcept { return ConstReverseIterator( getLastReverse() ); } //!< end reverse, const
 
 
 
 
     protected:
-        virtual ConstType *getBaseForward() const noexcept = 0;
-        virtual ConstType *getLastForward() const noexcept = 0;
+        virtual ConstType *getBaseForward() const noexcept = 0; //!< base forward item
+        virtual ConstType *getLastForward() const noexcept = 0; //!< last forward item (invalid)
 
-        virtual ConstType *getBaseReverse() const noexcept = 0;
-        virtual ConstType *getLastReverse() const noexcept = 0;
+        virtual ConstType *getBaseReverse() const noexcept = 0; //!< base reverse item
+        virtual ConstType *getLastReverse() const noexcept = 0; //!< last reverse item (invalid)
 
 
     private:

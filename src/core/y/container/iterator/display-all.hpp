@@ -10,8 +10,10 @@ namespace Yttrium
 
     namespace Iterating
     {
+        //! helper to test iterators
         struct DisplayAll
         {
+            //! display const iterators
             template <typename CLASS>
             static inline void ConstOf(const CLASS &cls)
             {
@@ -30,6 +32,7 @@ namespace Yttrium
                 std::cerr << std::endl;
             }
 
+            //! display all iterators
             template <typename CLASS>
             static inline void Of(CLASS &cls)
             {
