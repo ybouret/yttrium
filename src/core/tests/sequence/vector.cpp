@@ -99,6 +99,8 @@ Y_UTEST(sequence_vector)
 
     {
         Vector<String> v;
+        Vector<String> u;
+
         for(size_t loop=0;loop<16;++loop)
         {
             for(size_t n=3+ran.leq(64);n>0;--n)
@@ -120,8 +122,11 @@ Y_UTEST(sequence_vector)
             }
             {
                 const Vector<String> tmp = v;
-                Y_CHECK(tmp.size()==v.size());
+                Y_CHECK(v==tmp);
             }
+            u.free();
+            u = v;
+            Y_CHECK(u==v);
             v.release();
         }
     }
