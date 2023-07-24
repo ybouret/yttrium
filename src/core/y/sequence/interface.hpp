@@ -43,13 +43,24 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        // Methods
+        // Interface
         //
         //______________________________________________________________________
         virtual void pushHead(ParamType) = 0; //!< push object at head
         virtual void pushTail(ParamType) = 0; //!< push object at tail
         virtual void popTail()  noexcept = 0; //!< remove tail object
         virtual void popHead()  noexcept = 0; //!< remove head object
+
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        Sequence & operator<<(ParamType args) { pushTail(args); return *this; }
+        Sequence & operator>>(ParamType args) { pushHead(args); return *this; }
+
+
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Sequence);
