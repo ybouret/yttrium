@@ -1,6 +1,6 @@
 //! \file
 
-#ifndef Y_Type_Identifiable_Incldued
+#ifndef Y_Type_Identifiable_Included
 #define Y_Type_Identifiable_Included 1
 
 #include "y/config/starting.hpp"
@@ -16,9 +16,10 @@ namespace Yttrium
     public:
         virtual ~Identifiable() noexcept;
 
-    private:
         virtual const char * callSign() const noexcept = 0;
 
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(Identifiable);
     };
 }
 

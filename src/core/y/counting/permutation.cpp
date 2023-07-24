@@ -14,6 +14,8 @@ namespace Yttrium
 
     const char * const Permutation::CallSign = "Permutation";
 
+    const char * Permutation:: callSign() const noexcept { return CallSign; }
+
     static inline size_t getCard(const size_t n)
     {
         if(n<1) throw Specific::Exception(Permutation::CallSign,"n<1");

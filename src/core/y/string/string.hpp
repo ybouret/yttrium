@@ -7,6 +7,7 @@
 #include "y/object.hpp"
 #include "y/container/writable.hpp"
 #include "y/ostream-proto.hpp"
+#include "y/type/capacity.hpp"
 
 namespace Yttrium
 {
@@ -75,6 +76,11 @@ namespace Yttrium
             String(const T *, const size_t);     //!< setup from given chars
             String(const T *);                   //!< setup from chars
 
+            //! make a (prefilled) String with minimal chars
+            explicit String(const size_t       minLength,
+                            const AsCapacity_ &,
+                            const bool         setLength);
+
             //! display, legacy style
             friend inline std::ostream & operator<<(std::ostream &os,
                                                     const String &s)
@@ -94,6 +100,8 @@ namespace Yttrium
             virtual size_t       size()                         const noexcept; //!< num of chars
             virtual size_t       capacity()                     const noexcept; //!< maximal number of chars
             ConstType         *  operator()(void)               const noexcept; //!< legacy access
+            virtual const char * callSign()                     const noexcept; //!< String<CH>
+            
 
             //__________________________________________________________________
             //

@@ -17,7 +17,7 @@ namespace Yttrium
     unit_t Collection:: ssize() const
     {
         const unit_t res = static_cast<unit_t>( size() );
-        if( res < 0 ) throw Specific::Exception( "Collection", "ssize overflow");
+        if( res < 0 ) throw Specific::Exception( callSign(), "ssize overflow");
         return res;
     }
 

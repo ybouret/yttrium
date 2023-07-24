@@ -19,7 +19,15 @@ namespace Yttrium
             return 1 + Max(MinChars,numChars);
         }
 
+        template <>
+        const char * String<char>:: callSign() const noexcept { return "String"; }
+
+        template <>
+        const char * String<uint32_t>:: callSign() const noexcept { return "String32"; }
     }
+
+
+
 }
 
 #define Y_STRING_PROLOG() StringCommon(), Writable<CH>()

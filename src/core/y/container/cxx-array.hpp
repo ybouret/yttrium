@@ -9,6 +9,16 @@
 namespace Yttrium
 {
 
+    namespace Core
+    {
+        class CxxArray
+        {
+        public:     static const char * const CallSign; //!< "CxxArray"
+        protected:  explicit CxxArray() noexcept;
+        public:     virtual ~CxxArray() noexcept;
+            Y_DISABLE_COPY_AND_ASSIGN(CxxArray);
+        };
+    }
 
     //__________________________________________________________________________
     //
@@ -22,7 +32,8 @@ namespace Yttrium
     class CxxArray :
     public Memory::Wad<T,ALLOCATOR>,
     public Operating<T>,
-    public Writable<T>
+    public Writable<T>,
+    public Core::CxxArray
     {
     public:
         //______________________________________________________________________
@@ -60,7 +71,8 @@ namespace Yttrium
         //______________________________________________________________________
         inline virtual size_t size()           const noexcept { return count; } //!< fixed size
         inline virtual size_t capacity()       const noexcept { return count; } //!< fixed capacity
-        
+        inline virtual const char * callSign() const noexcept { return CallSign; }
+
         //! access
         inline virtual Type & operator[](const size_t i) noexcept {
             assert(i>0); assert(i<=size()); return entry[i];

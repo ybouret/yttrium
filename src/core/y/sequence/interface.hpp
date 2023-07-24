@@ -18,7 +18,8 @@ namespace Yttrium
         inline explicit Sequence() noexcept {}
 
     public:
-        inline virtual ~Sequence()
+        inline virtual ~Sequence() {}
+        
         virtual void popTail() noexcept = 0;;
         virtual void popHead() noexcept = 0;
 

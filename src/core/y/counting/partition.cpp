@@ -10,9 +10,9 @@ namespace Yttrium
 
     const char * const Partition:: CallSign = "Partition";
     
-    apn Partition:: Cardinal(const size_t n)
+    apn Partition:: Cardinal(const size_t)
     {
-        
+        return 0;
     }
 
 }

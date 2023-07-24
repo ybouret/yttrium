@@ -4,12 +4,11 @@
 #ifndef Y_Container_Collection_Included
 #define Y_Container_Collection_Included 1
 
-#include "y/config/starting.hpp"
+#include "y/type/identifiable.hpp"
 
 namespace Yttrium
 {
-
-
+    
     //__________________________________________________________________________
     //
     //
@@ -18,7 +17,7 @@ namespace Yttrium
     //
     //
     //__________________________________________________________________________
-    class Collection
+    class Collection : public virtual Identifiable
     {
     public:
         //______________________________________________________________________

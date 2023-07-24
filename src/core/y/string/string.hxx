@@ -189,6 +189,15 @@ namespace Yttrium
 
         }
 
+        template <>
+        String<CH>:: String(const size_t minLength,
+                            const AsCapacity_ &,
+                            const bool  setLength) :
+        Y_STRING_PROLOG(), code( new Code(minLength) )
+        {
+            if(setLength)
+                code->size = setLength;
+        }
 
 
     }

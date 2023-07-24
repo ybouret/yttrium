@@ -19,6 +19,9 @@ namespace Yttrium
 
     const char * const Combination::CallSign = "Combination";
 
+    const char   * Combination:: callSign() const noexcept { return CallSign; }
+
+
     static inline size_t getCard(const size_t n, const size_t k)
     {
         if(n<1)   throw Specific::Exception(Combination::CallSign,"n<1");

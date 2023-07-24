@@ -40,7 +40,8 @@ namespace Yttrium
         virtual size_t         size()                   const noexcept; //!< n
         virtual size_t         capacity()               const noexcept; //!< n
         virtual const size_t & operator[](const size_t) const noexcept; //!< [1..n]
-
+        virtual const char    *callSign()               const noexcept; //!< CallSign
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Permutation);
         Code *code;
