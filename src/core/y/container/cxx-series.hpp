@@ -99,11 +99,13 @@ namespace Yttrium
         }
 
 
+        //! pop tail
         inline virtual void popTail() noexcept
         {
             assert(count>0); trim_();
         }
 
+        //! pop head
         inline virtual void popHead() noexcept
         {
             assert(count>0);
@@ -112,6 +114,7 @@ namespace Yttrium
             MemOps::Grab(MemOps::Naught(target),target+1,--Coerce(count)*sizeof(T));
         }
 
+        //! push args at tail
         inline virtual void pushTail(ParamType args)
         {
             assert(count<total);
@@ -120,6 +123,7 @@ namespace Yttrium
             ++Coerce(count);
         }
 
+        //! push args at head
         inline virtual void pushHead(ParamType args)
         {
             assert(count<total);
@@ -139,7 +143,7 @@ namespace Yttrium
             }
         }
 
-
+        //! free content
         virtual void free() noexcept { free_(); }
 
         inline Type *      legacy()       noexcept { return entry; } //!< legacy [1:size()] C-style array
@@ -151,12 +155,12 @@ namespace Yttrium
         const size_t        count; //!< built objecct
         const size_t        total; //!< initial capacity
 
-        inline void trim_() noexcept { assert(count>0); MemOps::Naught( &entry[ Coerce(count)-- ]); }
-        inline void free_() noexcept { while(count>0) trim_(); }
+
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(CxxSeries);
-
+        inline void trim_() noexcept { assert(count>0); MemOps::Naught( &entry[ Coerce(count)-- ]); }
+        inline void free_() noexcept { while(count>0) trim_(); }
     };
 
 

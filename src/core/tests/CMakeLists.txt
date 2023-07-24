@@ -73,6 +73,7 @@ add_test(type:complex    test-core type_complex)
 add_test(data:list test-core data_list)
 add_test(data:pool test-core data_pool)
 add_test(data:rework test-core data_rework)
+add_test(data:cxx_linked test-core data_cxx_linked)
 
 #calculus
 add_test(calculus:ilog2 test-core calculus_ilog2)

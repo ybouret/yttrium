@@ -54,6 +54,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(data_list);
     Y_UTEST(data_pool);
     Y_UTEST(data_rework);
+    Y_UTEST(data_cxx_linked);
 
     Y_UTEST(calculus_ilog2);
     Y_UTEST(calculus_align);

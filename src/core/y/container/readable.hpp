@@ -16,7 +16,7 @@ namespace Yttrium
     class ContiguousMemory
     {
     public:
-        Y_ARGS_EXPOSE(T,Type);
+        Y_ARGS_EXPOSE(T,Type); //!< aliases
         typedef Iterating::Linear<Type,Iterating::Forward>      Iterator;
         typedef Iterating::Linear<ConstType,Iterating::Forward> ConstIterator;
 
@@ -65,7 +65,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         Y_ARGS_EXPOSE(T,Type); //!< aliases
-        typedef MemoryTopology<T> TopologyType;
+        typedef MemoryTopology<T> TopologyType; //!< lais
 
         //______________________________________________________________________
         //
