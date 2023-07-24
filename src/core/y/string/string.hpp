@@ -12,6 +12,8 @@
 namespace Yttrium
 {
 
+    namespace Random { class Bits; }
+
     namespace Core
     {
         //______________________________________________________________________
@@ -68,7 +70,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit String();                   //!< setup emtpy
+            String();                            //!< setup emtpy
             virtual ~String() noexcept;          //!< cleanup
             String(const String &);              //!< copy
             String & operator=( const String &); //!< assign
@@ -88,6 +90,8 @@ namespace Yttrium
                 os << s();
                 return os;
             }
+
+            explicit String(const size_t len, Random::Bits &ran, const T lower = 'a', const T upper='z');
 
             //__________________________________________________________________
             //

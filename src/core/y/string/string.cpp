@@ -7,6 +7,8 @@
 #include "y/text/ops.hpp"
 #include <cstring>
 
+#include "y/random/bits.hpp"
+
 namespace Yttrium
 {
     namespace Core

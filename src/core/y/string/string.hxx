@@ -406,3 +406,22 @@ namespace Yttrium
         }
     }
 }
+
+
+namespace Yttrium
+{
+    namespace Core
+    {
+
+        template <>
+        String<CH>:: String(const size_t len, Random::Bits &ran, const CH lower, const CH upper) :
+        Y_STRING_PROLOG(), code( new Code(len) )
+        {
+            while(code->size<len)
+            {
+                code->data[code->size++] = ran.in<CH>(lower,upper);
+            }
+        }
+    }
+
+}

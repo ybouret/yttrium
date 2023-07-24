@@ -149,11 +149,14 @@ namespace Yttrium
                 assert(this->maxBlocks>=n);
             }
 
-            inline virtual ~Code() noexcept {}
-            inline void     free()    noexcept { while(size>0) popTail(); }
+            inline virtual ~Code() noexcept { free(); }
+            inline void     free() noexcept { while(size>0) popTail(); }
 
             inline void     popTail() noexcept { assert(size>0); MemOps::Naught( &base[--size] ); }
-            inline void     popHead() noexcept { assert(size>0); MemOps::Grab( MemOps::Naught(base),base+1,(--size)*sizeof(T)); }
+            inline void     popHead() noexcept { assert(size>0);
+                MemOps::Move( MemOps::Naught(base),base+1,(--size)*sizeof(T));
+                MemOps::Zero(base+size,sizeof(T));
+            }
 
             inline void pushTail(ConstType &temp) noexcept
             {
@@ -170,9 +173,9 @@ namespace Yttrium
             }
 
 
-            MutableType *base;
-            MutableType *item;
-            size_t       size;
+            MutableType * const base;
+            MutableType * const item;
+            size_t              size;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
