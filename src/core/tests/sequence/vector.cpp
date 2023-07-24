@@ -63,13 +63,12 @@ Y_UTEST(sequence_vector)
     }
     Y_CHECK(Dummy::Count==0);
 
-    return 0;
 
     {
         Vector<float> v;
         for(size_t loop=0;loop<16;++loop)
         {
-            for(size_t n=3+ran.leq(17);n>0;--n)
+            for(size_t n=3+ran.leq(64);n>0;--n)
             {
                 if(ran.choice())
                 {
@@ -94,7 +93,7 @@ Y_UTEST(sequence_vector)
         Vector<String> v;
         for(size_t loop=0;loop<16;++loop)
         {
-            for(size_t n=3+ran.leq(17);n>0;--n)
+            for(size_t n=3+ran.leq(64);n>0;--n)
             {
                 const String s(1+ran.leq(4),ran);
                 if(ran.choice())

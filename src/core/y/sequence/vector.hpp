@@ -36,7 +36,7 @@ namespace Yttrium
     public:
         Y_ARGS_DECL(T,Type);
         typedef Memory::Workspace<MutableType> Workspace;
-        typedef Memory::OutOfReach          MemOps;
+        typedef Memory::OutOfReach             MemOps;
 
         explicit Vector() noexcept: code( 0 ) {}
 
@@ -50,7 +50,7 @@ namespace Yttrium
         inline virtual void         reserve(const size_t n)
         {
             if(n<=0) return;
-            minimalCapacity(code->maxBlocks+n);
+            minimalCapacity(capacity()+n);
         }
 
         inline virtual void popTail() noexcept
@@ -120,7 +120,7 @@ namespace Yttrium
             {
                 assert(n>code->maxBlocks);
                 Code *temp = new Code(n);
-                Memory::OutOfReach::Grab(temp->base,code->base,code->size*sizeof(T));
+                Memory::OutOfReach::Grab(temp->base,code->base,(temp->size=code->size)*sizeof(T));
                 code->size = 0;
                 delete code;
                 code = temp;
