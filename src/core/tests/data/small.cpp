@@ -1,13 +1,12 @@
-#include "y/data/small/bare.hpp"
-#include "y/data/small/coop.hpp"
+#include "y/data/small/proxy/bare.hpp"
+#include "y/data/small/proxy/coop.hpp"
 
-#include "y/data/small/heavy-node.hpp"
-#include "y/data/small/light-node.hpp"
+#include "y/data/small/heavy/node.hpp"
+#include "y/data/small/light/node.hpp"
 
-#include "y/data/small/proto-list.hpp"
-#include "y/data/small/proto-pool.hpp"
+#include "y/data/small/proto/list.hpp"
+#include "y/data/small/proto/pool.hpp"
 
-#include "y/data/small/coop.hpp"
 
 #include "y/utest/run.hpp"
 

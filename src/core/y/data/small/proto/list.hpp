@@ -1,26 +1,26 @@
-
 //! \file
 
-#ifndef Y_Data_Small_Proto_Pool_Included
-#define Y_Data_Small_Proto_Pool_Included 1
+#ifndef Y_Data_Small_Proto_List_Included
+#define Y_Data_Small_Proto_List_Included 1
 
-#include "y/data/small/proto-linked.hpp"
+#include "y/data/small/proto/linked.hpp"
 
 namespace Yttrium
 {
 
     namespace Small
     {
+
         //______________________________________________________________________
         //
         //
         //
-        //! Prototype to handle pools with cache
+        //! Prototype to handle lists with cache
         //
         //
         //______________________________________________________________________
         template <typename NODE, template <typename> class PROXY>
-        class ProtoPool : public ProtoLinked<PoolOf,NODE,PROXY>
+        class ProtoList : public ProtoLinked<ListOf,NODE,PROXY>
         {
         public:
             //__________________________________________________________________
@@ -29,10 +29,10 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef ProtoLinked<PoolOf,NODE,PROXY> ProtoType; //!< alias
+            typedef ProtoLinked<ListOf,NODE,PROXY> ProtoType; //!< alias
             typedef typename ProtoType::ProxyType  ProxyType; //!< alias
             using ProtoType::proxy;
-            using ProtoType::store;
+            using ProtoType::pushTail;
             using ProtoType::release_;
 
             //__________________________________________________________________
@@ -43,28 +43,27 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! default constructor
-            inline explicit ProtoPool() : ProtoType() {}
+            inline explicit ProtoList() : ProtoType() {}
 
-            //! constructor for [automatic|manual] cache assignment
-            inline explicit ProtoPool(const ProxyType &_) noexcept : ProtoType(_) {}
+            //! constructor for [automatic|manual] proxy setup
+            inline explicit ProtoList(const ProxyType &_) noexcept : ProtoType(_) {}
 
             //! cleanup
-            inline virtual ~ProtoPool() noexcept {}
+            inline virtual ~ProtoList() noexcept {}
 
             //! copy constructor, using proxy
-            inline ProtoPool(const ProtoPool &other) : ProtoType(other.proxy)
+            inline ProtoList(const ProtoList &other) : ProtoType(other.proxy)
             {
                 try
                 {
                     for(const NODE *node=other.head;node;node=node->next)
-                        store( proxy->replica(node) );
-                    this->reverse();
+                        pushTail( proxy->replica(node) );
                 }
                 catch(...) { release_(); throw; }
             }
 
         private:
-            Y_DISABLE_ASSIGN(ProtoPool);
+            Y_DISABLE_ASSIGN(ProtoList);
         };
     }
 

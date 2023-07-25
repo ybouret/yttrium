@@ -18,6 +18,10 @@ data
 data/list
 data/pool
 data/small
+data/small/proxy
+data/small/proto
+data/small/light
+data/small/heavy
 concurrent
 random
 hashing

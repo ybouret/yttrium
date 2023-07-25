@@ -3,7 +3,7 @@
 #ifndef Y_Data_Small_Coop_Included
 #define Y_Data_Small_Coop_Included 1
 
-#include "y/data/small/solo.hpp"
+#include "y/data/small/proxy/solo.hpp"
 #include "y/object.hpp"
 #include "y/counted.hpp"
 #include "y/ptr/arc.hpp"
