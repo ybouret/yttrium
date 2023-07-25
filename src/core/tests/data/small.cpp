@@ -1,5 +1,6 @@
-#include "y/data/small/list-node.hpp"
-#include "y/data/small/repo-node.hpp"
+#include "y/data/small/supply.hpp"
+#include "y/data/small/heavy-node.hpp"
+#include "y/data/small/light-node.hpp"
 #include "y/data/small/inventory.hpp"
 #include "y/utest/run.hpp"
 
@@ -17,8 +18,11 @@ namespace Yttrium
 
     namespace Small
     {
+
+        
+
         template <typename T, template <typename> class NODE>
-        class BareCache
+        class BareCache : public Supply
         {
         public:
             Y_ARGS_EXPOSE(T,Type);
@@ -28,9 +32,9 @@ namespace Yttrium
             virtual ~BareCache() noexcept {}
 
 
-            inline size_t stowage() const noexcept { return 0; }
-
-            inline NodeType *acquire(Type &args)
+            inline virtual size_t stowage() const noexcept { return 0; }
+            
+            inline NodeType *produce(Type &args)
             {
                 NodeType *node = Object::zacquire<NodeType>();
                 try {
@@ -43,14 +47,14 @@ namespace Yttrium
                 }
             }
 
-            inline void release(NodeType *node) noexcept
-            {
-                Object::zrelease(Destructed(node));
-            }
+
+            inline virtual void release() noexcept {}
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(BareCache);
+            virtual void *getFlat() { return Object::zacquire<NodeType>(); }
+            virtual void  putFlat(void *blockAddr) noexcept { Object::operator delete(blockAddr,sizeof(NodeType)); }
         };
 
         template <typename T, template <typename> class NODE>
@@ -87,9 +91,10 @@ namespace Yttrium
             virtual ~SoloCache() noexcept  {}
 
 
+
             inline size_t stowage() const noexcept { return pool.inside(); }
 
-            inline NodeType *acquire(Type &args)
+            inline NodeType *produce(Type &args)
             {
                 NodeType *node = pool.inside() ? static_cast<NodeType*>(pool.zquery()) : Object::zacquire<NodeType>();
                 try {
@@ -102,7 +107,8 @@ namespace Yttrium
                 }
             }
 
-            inline void release(NodeType *node) noexcept
+
+            inline void destroy(NodeType *node) noexcept
             {
                 assert(0!=node);
                 pool.zstore( Destructed(node) );
@@ -144,6 +150,8 @@ namespace Yttrium
         {
         public:
             Y_ARGS_EXPOSE(T,Type);
+            explicit CoopCache() noexcept {}
+            virtual ~CoopCache() noexcept {}
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(CoopCache);
@@ -193,42 +201,61 @@ namespace Yttrium
 
 Y_UTEST(data_small)
 {
-
-    Small::BareProxy<int,Small::ListNode> ilBareProxy;
-    Small::BareProxy<int,Small::RepoNode> irBareProxy;
-
-    ListOf< Small::ListNode<int> > il;
-    ListOf< Small::RepoNode<int> > ir;
-
+    ListOf< Small::HeavyNode<int> > heavyList;
+    ListOf< Small::LightNode<int> > lightList;
     int i = 2;
 
-    for(size_t k=0;k<10;++k)
     {
-        il.pushTail( ilBareProxy->acquire(i) );
-        ir.pushTail( irBareProxy->acquire(i) );
+        Small::BareProxy<int,Small::HeavyNode> heavyBareProxy;
+        Small::BareProxy<int,Small::LightNode> lightBareProxy;
+
+        for(size_t k=0;k<10;++k)
+        {
+            heavyList.pushTail( heavyBareProxy->produce(i) );
+            lightList.pushTail( lightBareProxy->produce(i) );
+        }
+
+        while(heavyList.size) heavyBareProxy->destroy( heavyList.popTail() );
+        while(lightList.size) lightBareProxy->destroy( lightList.popTail() );
+
+
+        std::cerr << "stowage: " << heavyBareProxy->stowage() << " / " << lightBareProxy->stowage() << std::endl;
     }
 
-    while(il.size) ilBareProxy->release( il.popTail() );
-    while(ir.size) irBareProxy->release( ir.popTail() );
-
-
-    std::cerr << "stowage: " << ilBareProxy->stowage() << " / " << irBareProxy->stowage() << std::endl;
-
-    Small::SoloProxy<int,Small::ListNode> ilSoloProxy;
-    Small::SoloProxy<int,Small::RepoNode> irSoloProxy;
-
-    for(size_t k=0;k<10;++k)
     {
-        il.pushTail( ilSoloProxy->acquire(i) );
-        ir.pushTail( irSoloProxy->acquire(i) );
+        Small::SoloProxy<int,Small::HeavyNode> heavySoloProxy;
+        Small::SoloProxy<int,Small::LightNode> lightSoloProxy;
+
+        for(size_t k=0;k<10;++k)
+        {
+            heavyList.pushTail( heavySoloProxy->produce(i) );
+            lightList.pushTail( lightSoloProxy->produce(i) );
+        }
+
+        while(heavyList.size) heavySoloProxy->destroy( heavyList.popTail() );
+        while(lightList.size) lightSoloProxy->destroy( lightList.popTail() );
+
+        std::cerr << "stowage: " << heavySoloProxy->stowage() << " / " << lightSoloProxy->stowage() << std::endl;
     }
-
-    while(il.size) ilSoloProxy->release( il.popTail() );
-    while(ir.size) irSoloProxy->release( ir.popTail() );
-
-    std::cerr << "stowage: " << ilSoloProxy->stowage() << " / " << irSoloProxy->stowage() << std::endl;
-
     
+    //Small::CoopProxy<int,Small::HeavyNode>
+
+    {
+        Small::CoopProxy<int,Small::HeavyNode> heavyCoopProxy;
+        Small::CoopProxy<int,Small::LightNode> lightCoopProxy;
+
+        for(size_t k=0;k<10;++k)
+        {
+            heavyList.pushTail( heavyCoopProxy->produce(i) );
+            lightList.pushTail( lightCoopProxy->produce(i) );
+        }
+
+        while(heavyList.size) heavyCoopProxy->destroy( heavyList.popTail() );
+        while(lightList.size) lightCoopProxy->destroy( lightList.popTail() );
+
+        std::cerr << "stowage: " << heavyCoopProxy->stowage() << " / " << lightCoopProxy->stowage() << std::endl;
+    }
+
 
 }
 Y_UDONE()

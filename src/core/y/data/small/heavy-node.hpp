@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_Data_Small_List_Node_Included
-#define Y_Data_Small_List_Node_Included 1
+#ifndef Y_Data_Small_Heavy_Node_Included
+#define Y_Data_Small_Heavy_Node_Included 1
 
 #include "y/type/args.hpp"
 
@@ -11,14 +11,14 @@ namespace Yttrium
     {
         //! node with full inside object
         template <typename T>
-        class ListNode
+        class HeavyNode
         {
         public:
             Y_ARGS_EXPOSE(T,Type);
 
-            inline  ListNode(ConstType &args) : next(0), prev(0), data(args) { }
-            inline ~ListNode() noexcept { assert(0==next); assert(0==prev); }
-            inline  ListNode(const ListNode &other) :
+            inline  HeavyNode(ConstType &args) : next(0), prev(0), data(args) { }
+            inline ~HeavyNode() noexcept { assert(0==next); assert(0==prev); }
+            inline  HeavyNode(const HeavyNode &other) :
             next(0),
             prev(0),
             data(other.data)
@@ -29,11 +29,11 @@ namespace Yttrium
             inline ConstType & operator*() const noexcept { return data; }
 
 
-            ListNode *next;
-            ListNode *prev;
+            HeavyNode *next;
+            HeavyNode *prev;
         private:
             Type      data;
-            Y_DISABLE_ASSIGN(ListNode);
+            Y_DISABLE_ASSIGN(HeavyNode);
         };
     }
 }
