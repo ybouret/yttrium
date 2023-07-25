@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Data_Small_Inventory_Included
@@ -8,8 +7,10 @@
 
 namespace Yttrium
 {
+
     namespace Small
     {
+        
         //______________________________________________________________________
         //
         //

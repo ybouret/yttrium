@@ -27,7 +27,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename NODE> static inline
-        void PoolToList(ListOf<NODE> &L, PoolOf<NODE> &P)
+        void PoolToList(ListOf<NODE> &L, PoolOf<NODE> &P) noexcept
         {
             assert(0==L.size);
             assert(0==L.head);

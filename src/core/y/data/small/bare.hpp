@@ -40,10 +40,21 @@ namespace Yttrium
             //__________________________________________________________________
             inline virtual void   release()       noexcept {}             //!< do nothing
             inline virtual size_t stowage() const noexcept { return 0; }  //!< nothing to do
-            inline NODE *         produce(typename NODE::ParamType args)
-            {
-                return newNode<NODE>(args);
-            } //!< helper to produce a new node
+
+            //__________________________________________________________________
+            //
+            //
+            // helpers
+            //
+            //__________________________________________________________________
+
+            //! helper to produce a new node
+            inline NODE * produce(typename NODE::ParamType args)
+            { return newNode<NODE>(args);   }
+
+            //! helper to duplicate an existing node
+            inline NODE * replica(const NODE *source)
+            { assert(0!=source); return dupNode<NODE>(*source); } //!< helper to produce a new node
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(BareCache);

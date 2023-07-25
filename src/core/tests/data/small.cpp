@@ -3,14 +3,16 @@
 
 #include "y/data/small/heavy-node.hpp"
 #include "y/data/small/light-node.hpp"
+
+#include "y/data/small/proto-list.hpp"
+#include "y/data/small/proto-pool.hpp"
+
+#include "y/data/small/coop.hpp"
+
 #include "y/utest/run.hpp"
 
-#include "y/data/list.hpp"
-#include "y/data/pool.hpp"
 #include "y/memory/out-of-reach.hpp"
 
-#include "y/object.hpp"
-#include "y/counted.hpp"
 
 #include "y/string.hpp"
 
@@ -22,42 +24,11 @@ namespace Yttrium
     namespace Small
     {
 
-        template <
-        template <typename> class LINKED,
-        typename                  NODE,
-        template <typename> class PROXY>
-        class ProtoLinked : public LINKED<NODE>
-        {
-        public:
-            typedef PROXY<NODE> ProxyType;
-            typedef NODE        NodeType;
+      
 
-        protected:
-            explicit ProtoLinked() : LINKED<NODE>(), proxy() {}
-            explicit ProtoLinked(const ProxyType &_) noexcept : LINKED<NODE>(), proxy(_) {}
-        public:
-            virtual ~ProtoLinked() noexcept { proxy->destroy(*this); }
-
-            ProxyType proxy;
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(ProtoLinked);
-        };
+      
 
 
-        template <typename NODE, template <typename> class PROXY>
-        class ProtoList : public ProtoLinked<ListOf,NODE,PROXY>
-        {
-        public:
-            typedef ProtoLinked<ListOf,NODE,PROXY> ProtoType;
-            typedef typename ProtoType::ProxyType  ProxyType;
-
-            inline explicit ProtoList() : ProtoType() {}
-            inline explicit ProtoList(const ProxyType &_) noexcept : ProtoType(_) {}
-            inline virtual ~ProtoList() noexcept {}
-
-        private:
-            Y_DISABLE_ASSIGN(ProtoList);
-        };
         
 
     }
@@ -67,9 +38,36 @@ Y_UTEST(data_small)
 {
 
     typedef Small::LightNode<String> LightNode;
+    typedef Small::ProtoList<LightNode,Small::BareProxy> LightList;
+    typedef Small::ProtoPool<LightNode,Small::BareProxy> LightPool;
 
-    Small::ProtoList<LightNode,Small::BareProxy> baseList;
+    String       hello = "Hello";
+    String       world = "World";
 
+    {
+        LightList L;
+
+        L.pushTail(  L.proxy->produce(hello) );
+        L.pushTail(  L.proxy->produce(world) );
+
+        std::cerr << "L=" << L << std::endl;
+
+        {
+            const LightList tmp(L);
+            std::cerr << tmp << std::endl;
+        }
+    }
+
+    {
+        LightPool P;
+        P.store( P.proxy->produce(world) );
+        P.store( P.proxy->produce(hello) );
+        std::cerr << "P=" << P << std::endl;
+        {
+            const LightPool Q(P);
+            std::cerr << "Q=" << Q << std::endl;
+        }
+    }
 
 
 

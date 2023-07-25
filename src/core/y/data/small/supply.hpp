@@ -52,10 +52,22 @@ namespace Yttrium
             template <typename NODE> inline
             NODE * newNode(typename NODE::ParamType args)
             {
+                std::cerr << "newNode(" << args << "), size=" << sizeof(NODE) << std::endl;
                 NODE *node = static_cast<NODE *>(getFlat());
                 try { return new (node) NODE(args); }
                 catch(...)  { putFlat(node); throw; }
             }
+
+            //! protocol to duplicate a node
+            template <typename NODE> inline
+            NODE * dupNode(const NODE &source)
+            {
+                NODE *node = static_cast<NODE *>(getFlat());
+                try { return new (node) NODE(source); }
+                catch(...)  { putFlat(node); throw; }
+            }
+
+
             
         public:
             virtual size_t  stowage() const noexcept = 0; //!< flat nodes availability
