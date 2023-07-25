@@ -17,7 +17,7 @@ namespace Yttrium
         public:
             Y_ARGS_EXPOSE(T,Type);
 
-            inline  RepoNode(ConstType &args) noexcept: next(0), prev(0), data(args) { }
+            inline  RepoNode(Type &args) noexcept: next(0), prev(0), data(args) { }
             inline ~RepoNode() noexcept { assert(0==next); assert(0==prev); }
             inline  RepoNode(const RepoNode &other) noexcept :
             next(0),

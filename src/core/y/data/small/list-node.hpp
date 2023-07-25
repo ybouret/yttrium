@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Data_Small_List_Node_Included
