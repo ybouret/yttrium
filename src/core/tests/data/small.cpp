@@ -23,15 +23,6 @@
 
 using namespace Yttrium;
 
-namespace Yttrium
-{
-
-    namespace Small
-    {
-       
-
-    }
-}
 
 Y_UTEST(data_small)
 {

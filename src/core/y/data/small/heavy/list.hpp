@@ -12,21 +12,56 @@ namespace Yttrium
 
     namespace Small
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Heavy List API
+        //
+        //
+        //______________________________________________________________________
         template <typename T, template <typename> class PROXY>
         class HeavyList : public ProtoList< HeavyNode<T>, PROXY>
         {
         public:
-            typedef HeavyNode<T>              NodeType;
-            typedef ProtoList<NodeType,PROXY> ProtoType;
-            typedef PROXY<NodeType>           ProxyType;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            Y_ARGS_DECL(T,Type);                         //!< aliases
+            typedef HeavyNode<T>              NodeType;  //!< alias
+            typedef ProtoList<NodeType,PROXY> ProtoType; //!< alias
+            typedef PROXY<NodeType>           ProxyType; //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
         protected:
+            //! setup empty
             inline explicit HeavyList() : ProtoType() {}
+
+            //! setup from proxy
             inline explicit HeavyList(const ProxyType &_) noexcept : ProtoType(_) {}
+
+            //! copy
             inline explicit HeavyList(const HeavyList &_) : ProtoType(_) {}
 
         public:
+            //! cleanup
             inline virtual ~HeavyList() noexcept {}
+
+            //__________________________________________________________________
+            //
+            //
+            // API
+            //
+            //__________________________________________________________________
+
 
         private:
             Y_DISABLE_ASSIGN(HeavyList);

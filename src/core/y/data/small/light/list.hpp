@@ -29,7 +29,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            Y_ARGS_EXPOSE(T,Type);
+            Y_ARGS_EXPOSE(T,Type);                       //!< aliases
             typedef LightNode<T>              NodeType;  //!< alias
             typedef ProtoList<NodeType,PROXY> ProtoType; //!< alias
             typedef PROXY<NodeType>           ProxyType; //!< alias
@@ -61,12 +61,15 @@ namespace Yttrium
             // API
             //
             //__________________________________________________________________
+
+            //! pushTail
             LightList & operator<<( Type &args )
             {
                 this->pushTail(proxy->produce(args));
                 return *this;
             }
 
+            //! pushHead
             LightList & operator>>( Type &args )
             {
                 this->pushHead(proxy->produce(args));

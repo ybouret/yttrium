@@ -56,6 +56,9 @@ Y_UTEST_DECL(256)
     Y_UTEST(data_rework);
     Y_UTEST(data_cxx_linked);
     Y_UTEST(data_small);
+    Y_UTEST(data_bare_light_list);
+    Y_UTEST(data_solo_light_list);
+    Y_UTEST(data_coop_light_list);
 
     Y_UTEST(calculus_ilog2);
     Y_UTEST(calculus_align);

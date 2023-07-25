@@ -4,6 +4,7 @@
 #define Y_Data_Small_Proto_List_Included 1
 
 #include "y/data/small/proto/linked.hpp"
+#include "y/data/list.hpp"
 
 namespace Yttrium
 {
