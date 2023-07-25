@@ -37,11 +37,13 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! helper to create a new node
-            NODE * produce( typename NODE::ParamType args )
-            {
-                return newNode<NODE>(args);
-            }
+            //! helper to produce a new node
+            inline NODE * produce(typename NODE::ParamType args)
+            { return newNode<NODE>(args);   }
+
+            //! helper to duplicate an existing node
+            inline NODE * replica(const NODE *source)
+            { assert(0!=source); return dupNode<NODE>(*source); }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SoloCache);

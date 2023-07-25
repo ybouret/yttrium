@@ -54,7 +54,7 @@ namespace Yttrium
 
             //! helper to duplicate an existing node
             inline NODE * replica(const NODE *source)
-            { assert(0!=source); return dupNode<NODE>(*source); } //!< helper to produce a new node
+            { assert(0!=source); return dupNode<NODE>(*source); }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(BareCache);

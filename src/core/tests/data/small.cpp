@@ -7,7 +7,10 @@
 #include "y/data/small/proto/list.hpp"
 #include "y/data/small/proto/pool.hpp"
 
-#include "y/data/small/light/list.hpp"
+#include "y/data/small/light/bare-list.hpp"
+#include "y/data/small/light/solo-list.hpp"
+#include "y/data/small/light/coop-list.hpp"
+
 #include "y/data/small/heavy/list.hpp"
 
 
@@ -26,20 +29,6 @@ namespace Yttrium
     namespace Small
     {
        
-        template <typename T>
-        class BareHeavyList : public HeavyList<T,BareProxy>
-        {
-        public:
-            typedef HeavyList<T,BareProxy> ListType;
-            typedef HeavyNode<T>           NodeType;
-
-            inline explicit BareHeavyList() noexcept : ListType() {}
-            inline virtual ~BareHeavyList() noexcept {}
-            inline BareHeavyList(const BareHeavyList &_) : ListType(_) {}
-
-        private:
-            Y_DISABLE_ASSIGN(BareHeavyList);
-        };
 
     }
 }
@@ -47,8 +36,60 @@ namespace Yttrium
 Y_UTEST(data_small)
 {
 
- 
+    String hello = "Hello";
+    String world = "World";
 
+    {
+        Small::BareLightList<String> L;
+        L << hello << world << hello;
+        std::cerr << "L=" << L << std::endl;
+        {
+            const Small::BareLightList<String> tmp(L);
+            std::cerr << " =" << tmp << std::endl;
+        }
+        L.release();
+        std::cerr << L.proxy->stowage() << std::endl;
+    }
+
+    {
+        Small::BareLightList<const String> L;
+        L << hello << world << hello;
+        std::cerr << "L=" << L << std::endl;
+        {
+            const Small::BareLightList<const String> tmp(L);
+            std::cerr << " =" << tmp << std::endl;
+        }
+        L.release();
+        std::cerr << L.proxy->stowage() << std::endl;
+    }
+
+
+    {
+        Small::SoloLightList<String> L;
+        L << hello << world << hello;
+        std::cerr << "L=" << L << std::endl;
+        {
+            const Small::SoloLightList<String> tmp(L);
+            std::cerr << " =" << tmp << std::endl;
+        }
+        L.release();
+        std::cerr << L.proxy->stowage() << std::endl;
+    }
+
+    Small::CoopLightList<String>::ProxyType px;
+    {
+        Small::CoopLightList<String> L(px);
+        L << hello << world << hello;
+        std::cerr << "L=" << L << std::endl;
+        {
+            const Small::CoopLightList<String> tmp(L);
+            std::cerr << " =" << tmp << std::endl;
+        }
+        L.release();
+        std::cerr << L.proxy->stowage() << std::endl;
+    }
+    std::cerr << px->stowage() << std::endl;
+    
 }
 Y_UDONE()
 
