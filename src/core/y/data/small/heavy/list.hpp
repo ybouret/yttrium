@@ -34,6 +34,7 @@ namespace Yttrium
             typedef HeavyNode<T>              NodeType;  //!< alias
             typedef ProtoList<NodeType,PROXY> ProtoType; //!< alias
             typedef PROXY<NodeType>           ProxyType; //!< alias
+            using ProtoType::proxy;
 
             //__________________________________________________________________
             //
@@ -61,6 +62,18 @@ namespace Yttrium
             // API
             //
             //__________________________________________________________________
+            HeavyList & operator<<(ParamType args)
+            {
+                this->pushTail( proxy->produce(args) );
+                return *this;
+            }
+
+            HeavyList & operator>>(ParamType args)
+            {
+                this->pushHead( proxy->produce(args) );
+                return *this;
+            }
+
 
 
         private:

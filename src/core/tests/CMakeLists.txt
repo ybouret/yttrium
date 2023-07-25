@@ -78,6 +78,10 @@ add_test(data:small test-core data_small)
 add_test(data:bare-light-list test-core data_bare_light_list)
 add_test(data:solo-light-list test-core data_solo_light_list)
 add_test(data:coop-light-list test-core data_coop_light_list)
+add_test(data:bare-heavy-list test-core data_bare_heavy_list)
+add_test(data:solo-heavy-list test-core data_solo_heavy_list)
+add_test(data:coop-heavy-list test-core data_coop_heavy_list)
+
 
 #calculus
 add_test(calculus:ilog2 test-core calculus_ilog2)
@@ -138,5 +142,5 @@ add_test(sequence:vector test-core sequence_vector)
 add_test(counting:perm test-core counting_perm)
 add_test(counting:comb test-core counting_comb)
 add_test(counting:part test-core counting_part)
-add_test(counting:permutation test-core count_permutation)
+add_test(counting:permutation test-core counting_permutation)
 add_test(counting:combination test-core counting_combination)
