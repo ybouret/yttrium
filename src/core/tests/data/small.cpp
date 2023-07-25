@@ -1,5 +1,5 @@
 #include "y/data/small/bare.hpp"
-#include "y/data/small/solo.hpp"
+#include "y/data/small/coop.hpp"
 
 #include "y/data/small/heavy-node.hpp"
 #include "y/data/small/light-node.hpp"
@@ -16,65 +16,7 @@
 
 using namespace Yttrium;
 
-namespace Yttrium
-{
 
-    
-
-    namespace Small
-    {
-        template <typename NODE>
-        class CoopCache : public Object, public Counted, public SoloCache<NODE>
-        {
-        public:
-            explicit CoopCache() noexcept {}
-            virtual ~CoopCache() noexcept {}
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(CoopCache);
-        };
-
-        template <typename NODE>
-        class CoopProxy
-        {
-        public:
-            typedef CoopCache<NODE> CacheType;
-
-            explicit CoopProxy() noexcept :
-            cache( new CacheType() )
-            {
-                assert(cache);
-            }
-
-            explicit CoopProxy(const CoopProxy &proxy) noexcept : cache(proxy.cache)
-            {
-                assert(cache);
-                cache->withhold();
-            }
-
-            virtual ~CoopProxy() noexcept
-            {
-                if(cache->liberate()) delete cache;
-                cache = 0 ;
-            }
-
-            CacheType       * operator->() noexcept       { return cache; }
-            const CacheType * operator->() const noexcept { return cache; }
-
-        private:
-            Y_DISABLE_ASSIGN(CoopProxy);
-            CacheType *cache;
-
-        };
-
-
-    }
-
-
-
-
-
-}
 
 Y_UTEST(data_small)
 {
