@@ -61,7 +61,7 @@ namespace Yttrium
         public:
             typedef SoloCache<NODE> CacheType;                                 //!< alias
             explicit SoloProxy()                  noexcept : cache() {}        //!< setup
-            explicit SoloProxy(const SoloProxy &) noexcept : cache() {}        //!< copy, just create cache
+            explicit SoloProxy(const SoloProxy &) noexcept : cache() {}        //!< copy, just setup cache
             virtual ~SoloProxy()                  noexcept { }                 //!< cleanup
             CacheType       * operator->()        noexcept { return &cache; }  //!< access
             const CacheType * operator->()  const noexcept { return &cache; }  //!< access, const

@@ -77,7 +77,7 @@ namespace Yttrium
             typedef BareCache<NODE> CacheType;                                      //!< alias
             inline explicit BareProxy()                 noexcept : cache() {}       //!< setup
             inline virtual ~BareProxy()                 noexcept {}                 //!< cleanup
-            inline BareProxy(const BareProxy &)         noexcept {}                 //!< copy
+            inline BareProxy(const BareProxy &)         noexcept : cache() {}       //!< copy, setup cache
             inline CacheType       * operator->()       noexcept { return &cache; } //!< access
             inline const CacheType * operator->() const noexcept { return &cache; } //!< access, const
 
