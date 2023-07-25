@@ -171,6 +171,24 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(),Core::Vector(), Writable<
         class Code;
         Code *code;
 
+        inline virtual ConstType & getHead() const noexcept
+        {
+            assert(code!=0);
+            assert(code->size>0);
+            assert(0!=code->base);
+            return *(code->base);
+        }
+
+        inline virtual ConstType & getTail() const noexcept
+        {
+            assert(code!=0);
+            assert(code->size>0);
+            assert(0!=code->item);
+            return code->item[code->size];
+        }
+
+
+
         inline virtual ConstType * getBaseForward() const noexcept
         {
             return 0!=code ? code->base : 0;

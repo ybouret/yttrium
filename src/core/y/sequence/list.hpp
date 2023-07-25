@@ -129,6 +129,9 @@ namespace Yttrium
 
     private:
         Code code;
+        virtual ConstType & getHead() const noexcept { assert(0!=code.head); return **code.head; }
+        virtual ConstType & getTail() const noexcept { assert(0!=code.tail); return **code.tail; }
+
     };
 
 }

@@ -51,12 +51,17 @@ namespace Yttrium
         virtual void popTail()  noexcept = 0; //!< remove tail object
         virtual void popHead()  noexcept = 0; //!< remove head object
 
+
         //______________________________________________________________________
         //
         //
         // Methods
         //
         //______________________________________________________________________
+        inline ConstType &head() const noexcept { return getHead(); }
+        inline ConstType &tail() const noexcept { return getTail(); }
+        inline Type      &head()       noexcept { return Coerce(getHead()); }
+        inline Type      &tail()       noexcept { return Coerce(getTail()); }
 
         Sequence & operator<<(ParamType args) { pushTail(args); return *this; } //!< syntactic helper
         Sequence & operator>>(ParamType args) { pushHead(args); return *this; } //!< syntactic helper
@@ -65,6 +70,9 @@ namespace Yttrium
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Sequence);
+        virtual ConstType &getHead() const noexcept = 0;
+        virtual ConstType &getTail() const noexcept = 0;
+
     };
 
 }

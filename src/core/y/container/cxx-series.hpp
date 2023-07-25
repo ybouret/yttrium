@@ -170,6 +170,11 @@ namespace Yttrium
 
         virtual ConstType *getBaseReverse() const noexcept { return entry+count; }
         virtual ConstType *getLastReverse() const noexcept { return entry;       }
+
+        virtual ConstType & getHead() const noexcept { assert(count>0); return *cdata; }
+        virtual ConstType & getTail() const noexcept { assert(count>0); return entry[count]; }
+
+
     };
 
 
