@@ -3,6 +3,7 @@
 #include "y/utest/run.hpp"
 #include "y/random/shuffle.hpp"
 #include "y/string.hpp"
+#include "y/container/iterator/display-all.hpp"
 
 using namespace Yttrium;
 
@@ -63,6 +64,8 @@ Y_UTEST(sequence_vector)
             const Vector<Dummy> tmp(v);
             Y_CHECK(tmp.size()==v.size());
         }
+
+        Iterating::DisplayAll::Of(v);
         v.release();
     }
     Y_CHECK(Dummy::Count==0);

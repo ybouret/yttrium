@@ -68,7 +68,7 @@ namespace Yttrium
         {
             Swap(tail,other.tail);
             Swap(head,other.head);
-            Swap(Coerce(size),Coerce(other.size));
+            CoerceSwap(size,other.size);
         }
 
         //! reverse list order
@@ -111,8 +111,7 @@ namespace Yttrium
             return ListOps:: Fetch<const ListOf,const NODE>(*this,indx);
         }
 
-
-
+        
         //______________________________________________________________________
         //
         //

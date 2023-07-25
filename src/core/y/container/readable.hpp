@@ -6,7 +6,6 @@
 
 #include "y/container/collection.hpp"
 #include "y/type/args.hpp"
-#include "y/container/iterator/linear.hpp"
 #include <iostream>
 
 namespace Yttrium

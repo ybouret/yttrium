@@ -41,6 +41,14 @@ namespace Yttrium
             return pool.size;
         }
 
+        void Inventory:: reserve(size_t n)
+        {
+            while(n-- > 0)
+            {
+                pool.store( static_cast<Node*>( zacquire(blockSize)) );
+            }
+        }
+
     }
 
 }

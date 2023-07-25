@@ -53,7 +53,7 @@ namespace Yttrium
             //__________________________________________________________________
             virtual void release()       noexcept; //!< release all blocks
             size_t       stowage() const noexcept; //!< pool size
-            
+            void         reserve(size_t n);        //!< prepare n blocks
 
             //__________________________________________________________________
             //

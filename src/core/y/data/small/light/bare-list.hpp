@@ -50,8 +50,13 @@ namespace Yttrium
             //! cleanup
             inline virtual ~BareLightList() noexcept {}
 
-        private:
-            Y_DISABLE_ASSIGN(BareLightList);
+            //! assign 
+            BareLightList & operator=(const BareLightList &other)
+            {
+                BareLightList tmp(other);
+                tmp.swapWith(*this);
+                return *this;
+            }
         };
     }
 

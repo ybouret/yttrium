@@ -52,8 +52,13 @@ namespace Yttrium
             //! cleanup
             inline virtual ~CoopHeavyList() noexcept {}
 
-        private:
-            Y_DISABLE_ASSIGN(CoopHeavyList);
+            //! assign
+            CoopHeavyList & operator=(const CoopHeavyList &other)
+            {
+                CoopHeavyList tmp(other);
+                tmp.swapWith(*this);
+                return *this;
+            }
         };
     }
 

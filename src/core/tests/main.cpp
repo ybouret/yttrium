@@ -105,6 +105,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(container_iterator);
 
     Y_UTEST(sequence_vector);
+    Y_UTEST(sequence_list);
 
     Y_UTEST(counting_perm);
     Y_UTEST(counting_comb);

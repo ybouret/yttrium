@@ -62,12 +62,15 @@ namespace Yttrium
             // API
             //
             //__________________________________________________________________
+
+            //! push at tail
             HeavyList & operator<<(ParamType args)
             {
                 this->pushTail( proxy->produce(args) );
                 return *this;
             }
 
+            //! push at head
             HeavyList & operator>>(ParamType args)
             {
                 this->pushHead( proxy->produce(args) );

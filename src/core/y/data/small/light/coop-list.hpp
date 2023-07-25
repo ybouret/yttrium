@@ -52,8 +52,13 @@ namespace Yttrium
             //! cleanup
             inline virtual ~CoopLightList() noexcept {}
 
-        private:
-            Y_DISABLE_ASSIGN(CoopLightList);
+            CoopLightList & operator=(const CoopLightList &other)
+            {
+                CoopLightList tmp(other);
+                tmp.swapWith(*this);
+                return *this;
+            }
+
         };
     }
 

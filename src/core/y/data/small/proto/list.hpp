@@ -5,6 +5,7 @@
 
 #include "y/data/small/proto/linked.hpp"
 #include "y/data/list.hpp"
+#include "y/container/iterator/linked.hpp"
 
 namespace Yttrium
 {
@@ -62,6 +63,31 @@ namespace Yttrium
                 }
                 catch(...) { release_(); throw; }
             }
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void cutHead() noexcept { proxy->destroy( this->popHead() ); }
+            void cutTail() noexcept { proxy->destroy( this->popTail() ); }
+
+
+            typedef Iterating::Linked<typename NODE::Type,NODE,Iterating::Forward>            Iterator;      //!< alias
+            typedef Iterating::Linked<typename NODE::ConstType,const NODE,Iterating::Forward> ConstIterator; //!< alias
+            inline  Iterator      begin()       noexcept { return Iterator(this->head);      }               //!< begin
+            inline  Iterator      end()         noexcept { return Iterator(0);               }               //!< end
+            inline  ConstIterator begin() const noexcept { return ConstIterator(this->head); }               //!< begin, const
+            inline  ConstIterator end()   const noexcept { return ConstIterator(0);          }               //!< end, const
+
+            typedef Iterating::Linked<typename NODE::Type,NODE,Iterating::Reverse>            ReverseIterator;      //!< alias
+            typedef Iterating::Linked<typename NODE::ConstType,const NODE,Iterating::Reverse> ConstReverseIterator; //!< alias
+            inline  ReverseIterator      rbegin()       noexcept { return ReverseIterator(this->tail);      }       //!< rbegin
+            inline  ReverseIterator      rend()         noexcept { return ReverseIterator(0);               }       //!< rend
+            inline  ConstReverseIterator rbegin() const noexcept { return ConstReverseIterator(this->tail); }       //!< rbegin, const
+            inline  ConstReverseIterator rend()   const noexcept { return ConstReverseIterator(0);          }       //!< rend, const
+
 
         private:
             Y_DISABLE_ASSIGN(ProtoList);

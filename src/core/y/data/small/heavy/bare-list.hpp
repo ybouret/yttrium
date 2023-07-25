@@ -50,8 +50,13 @@ namespace Yttrium
             //! cleanup
             inline virtual ~BareHeavyList() noexcept {}
 
-        private:
-            Y_DISABLE_ASSIGN(BareHeavyList);
+            //! assign
+            BareHeavyList & operator=(const BareHeavyList &other)
+            {
+                BareHeavyList tmp(other);
+                tmp.swapWith(*this);
+                return *this;
+            }
         };
     }
 

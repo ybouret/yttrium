@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Sequence_Vector_Included
@@ -12,6 +11,7 @@
 #include "y/memory/allocator/global.hpp"
 #include "y/memory/workspace.hpp"
 #include "y/type/capacity.hpp"
+#include "y/container/iterator/writable-contiguous.hpp"
 
 namespace Yttrium
 {
@@ -53,7 +53,8 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(),Core::Vector(), Writable<
     public Dynamic,
     public Sequence<T>,
     public Core::Vector,
-    public Writable<T>
+    public Writable<T>,
+    public WritableContiguous<T>
     {
     public:
         //______________________________________________________________________
@@ -158,12 +159,39 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(),Core::Vector(), Writable<
             return code->item[indx];
         }
 
-
+        //______________________________________________________________________
+        //
+        //
+        // iterators
+        //
+        //______________________________________________________________________
 
 
     private:
         class Code;
         Code *code;
+
+        inline virtual ConstType * getBaseForward() const noexcept
+        {
+            return 0!=code ? code->base : 0;
+        }
+
+        inline virtual ConstType * getLastForward() const noexcept
+        {
+            return 0!=code ? code->base+code->size : 0;
+        }
+
+        inline virtual ConstType * getBaseReverse() const noexcept
+        {
+            return 0!=code ? code->item+code->size : 0;
+        }
+
+        inline virtual ConstType * getLastReverse() const noexcept
+        {
+            return 0!=code ? code->item : 0;
+        }
+
+
 
         //! self releasing
         inline void release_() noexcept { if(0!=code) { delete code; code=0; } }

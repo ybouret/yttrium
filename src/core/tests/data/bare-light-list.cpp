@@ -2,6 +2,8 @@
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
 
+#include "y/container/iterator/display-all.hpp"
+
 using namespace Yttrium;
 
 
@@ -19,6 +21,7 @@ Y_UTEST(data_bare_light_list)
             const Small::BareLightList<String> tmp(L);
             std::cerr << " =" << tmp << std::endl;
         }
+        Iterating::DisplayAll::Of(L);
         L.release();
         std::cerr << L.proxy->stowage() << std::endl;
     }

@@ -51,8 +51,23 @@ namespace Yttrium
             //! cleanup
             inline virtual ~SoloLightList() noexcept {}
 
-        private:
-            Y_DISABLE_ASSIGN(SoloLightList);
+            //! assign
+            inline SoloLightList & operator=(const SoloLightList &other)
+            {
+                SoloLightList tmp;
+                try {
+                    for(const NodeType *node=other.head;node;node=node->next)
+                    {
+                        tmp.pushTail( this->proxy->replica(node) );
+                    }
+                }
+                catch(...)
+                {
+                    this->proxy->destruct(tmp); throw;
+                }
+                swapWith(tmp);
+                return *this;
+            }
         };
     }
 

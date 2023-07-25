@@ -136,6 +136,7 @@ add_test(container:iterator  test-core container_iterator)
 
 #sequence
 add_test(sequence:vector test-core sequence_vector)
+add_test(sequence:list   test-core sequence_list)
 
 #counting
 add_test(counting:perm test-core counting_perm)

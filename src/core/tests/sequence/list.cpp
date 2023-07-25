@@ -1,0 +1,16 @@
+
+#include "y/sequence/list.hpp"
+#include "y/utest/run.hpp"
+#include "y/random/shuffle.hpp"
+#include "y/string.hpp"
+
+using namespace Yttrium;
+
+Y_UTEST(sequence_list)
+{
+    List<int> l;
+    
+}
+Y_UDONE()
+
+
