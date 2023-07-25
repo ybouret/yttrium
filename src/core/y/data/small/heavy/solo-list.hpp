@@ -51,6 +51,7 @@ namespace Yttrium
             //! cleanup
             inline virtual ~SoloHeavyList() noexcept {}
 
+            //! assign
             inline SoloHeavyList & operator=(const SoloHeavyList &other)
             {
                 SoloHeavyList tmp;

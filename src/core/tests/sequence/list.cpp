@@ -9,7 +9,12 @@ using namespace Yttrium;
 Y_UTEST(sequence_list)
 {
     List<int> l;
-    
+
+    l << 2;
+    l >> 3;
+
+    std::cerr << l << std::endl;
+
 }
 Y_UDONE()
 

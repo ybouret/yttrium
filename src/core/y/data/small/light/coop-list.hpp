@@ -52,6 +52,7 @@ namespace Yttrium
             //! cleanup
             inline virtual ~CoopLightList() noexcept {}
 
+            //! assign
             CoopLightList & operator=(const CoopLightList &other)
             {
                 CoopLightList tmp(other);

@@ -38,7 +38,7 @@ namespace Yttrium
     //! helper for constructor
     //______________________________________________________________________
 #define Y_Vector_Prolog() \
-Identifiable(), Collection(), Dynamic(), Sequence<T>(),Core::Vector(), Writable<T>()
+Identifiable(), Collection(), Dynamic(), Sequence<T>(),Core::Vector(), Writable<T>(), WritableContiguous<T>()
 
     //__________________________________________________________________________
     //

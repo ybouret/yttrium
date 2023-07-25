@@ -1,7 +1,7 @@
 //! \file
 
 #ifndef Y_Data_Small_Coop_Heavy_List_Included
-#define Y_Data_Small_Coop_Light_List_Included 1
+#define Y_Data_Small_Coop_Heavy_List_Included 1
 
 #include "y/data/small/heavy/list.hpp"
 #include "y/data/small/proxy/coop.hpp"

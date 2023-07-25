@@ -70,7 +70,11 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
+            //! destroy popHead
             void cutHead() noexcept { proxy->destroy( this->popHead() ); }
+
+            //! destroy popTail
             void cutTail() noexcept { proxy->destroy( this->popTail() ); }
 
 
