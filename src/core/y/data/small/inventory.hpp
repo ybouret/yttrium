@@ -4,7 +4,6 @@
 #ifndef Y_Data_Small_Inventory_Included
 #define Y_Data_Small_Inventory_Included 1
 
-#include "y/data/pool.hpp"
 #include "y/data/small/supply.hpp"
 
 namespace Yttrium

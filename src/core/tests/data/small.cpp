@@ -16,12 +16,64 @@
 
 using namespace Yttrium;
 
+namespace Yttrium
+{
 
+    namespace Small
+    {
+
+        template <
+        template <typename> class LINKED,
+        typename                  NODE,
+        template <typename> class PROXY>
+        class ProtoLinked : public LINKED<NODE>
+        {
+        public:
+            typedef PROXY<NODE> ProxyType;
+            typedef NODE        NodeType;
+
+        protected:
+            explicit ProtoLinked() : LINKED<NODE>(), proxy() {}
+            explicit ProtoLinked(const ProxyType &_) noexcept : LINKED<NODE>(), proxy(_) {}
+        public:
+            virtual ~ProtoLinked() noexcept { proxy->destroy(*this); }
+
+            ProxyType proxy;
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(ProtoLinked);
+        };
+
+
+        template <typename NODE, template <typename> class PROXY>
+        class ProtoList : public ProtoLinked<ListOf,NODE,PROXY>
+        {
+        public:
+            typedef ProtoLinked<ListOf,NODE,PROXY> ProtoType;
+            typedef typename ProtoType::ProxyType  ProxyType;
+
+            inline explicit ProtoList() : ProtoType() {}
+            inline explicit ProtoList(const ProxyType &_) noexcept : ProtoType(_) {}
+            inline virtual ~ProtoList() noexcept {}
+
+        private:
+            Y_DISABLE_ASSIGN(ProtoList);
+        };
+        
+
+    }
+}
 
 Y_UTEST(data_small)
 {
 
+    typedef Small::LightNode<String> LightNode;
 
+    Small::ProtoList<LightNode,Small::BareProxy> baseList;
+
+
+
+
+#if 0
     typedef Small::LightNode<String>       vLigthStringNode;
     typedef Small::LightNode<const String> cLigthStringNode;
 
@@ -87,7 +139,7 @@ Y_UTEST(data_small)
 
         std::cerr << "stowage: " << heavyCoopProxy->stowage() << " / " << lightCoopProxy->stowage() << std::endl;
     }
-
+#endif
 
 }
 Y_UDONE()

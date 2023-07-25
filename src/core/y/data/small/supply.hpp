@@ -5,6 +5,8 @@
 
 #include "y/type/releasable.hpp"
 #include "y/type/destruct.hpp"
+#include "y/data/list.hpp"
+#include "y/data/pool.hpp"
 
 namespace Yttrium
 {
@@ -62,6 +64,17 @@ namespace Yttrium
             template <typename NODE> inline
             void destroy(NODE *node) noexcept { putFlat( Destructed(node) ); }
 
+            //! helper to destroy of full live list
+            template <typename NODE> inline
+            void destroy(ListOf<NODE> &linked) noexcept {
+                while(linked.size>0) destroy( linked.popTail() );
+            }
+
+            //! helper to destroy a full live pool
+            template <typename NODE> inline
+            void destroy(PoolOf<NODE> &linked) noexcept {
+                while(linked.size>0) destroy( linked.query() );
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Supply);
