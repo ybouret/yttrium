@@ -1,7 +1,4 @@
-
 #include "y/data/small/inventory.hpp"
-#include "y/object.hpp"
-
 #include <cstring>
 
 namespace Yttrium
@@ -23,23 +20,23 @@ namespace Yttrium
         void Inventory:: release() noexcept
         {
             while(pool.size>0)
-                Object::operator delete( pool.query(), blockSize );
+                zrelease( pool.query(), blockSize );
         }
 
-        void * Inventory:: zquery() noexcept
+
+        void * Inventory:: getFlat()
         {
-            assert(pool.size>0);
-            return memset( pool.query(), 0, blockSize );
+            return (pool.size>0) ? memset( pool.query(), 0, blockSize ) : zacquire(blockSize);
         }
 
-        void Inventory:: zstore(void *blockAddr) noexcept
+        void Inventory:: putFlat(void *blockAddr) noexcept
         {
             assert(0!=blockAddr);
             pool.store( static_cast<Node*>( memset(blockAddr,0,sizeof(Node))) );
         }
 
 
-        size_t Inventory:: inside() const noexcept
+        size_t Inventory:: stowage() const noexcept
         {
             return pool.size;
         }

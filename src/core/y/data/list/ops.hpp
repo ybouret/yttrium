@@ -289,6 +289,8 @@ namespace Yttrium
             }
             else
             {
+                assert(0!=target.tail);
+                assert(0!=source.head);
                 target.tail->next    = source.head;
                 source.head->prev    = target.tail;
                 target.tail          = source.tail;

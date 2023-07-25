@@ -5,7 +5,7 @@
 #define Y_Data_Small_Inventory_Included 1
 
 #include "y/data/pool.hpp"
-#include "y/type/releasable.hpp"
+#include "y/data/small/supply.hpp"
 
 namespace Yttrium
 {
@@ -19,7 +19,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Inventory : public Releasable
+        class Inventory : public Supply
         {
         public:
             //__________________________________________________________________
@@ -51,10 +51,9 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            virtual void release()      noexcept; //!< release all blocks
-            size_t       inside() const noexcept; //!< pool size
-            void        *zquery()       noexcept; //!< zeroed block
-            void         zstore(void *) noexcept; //!< store as Node
+            virtual void release()       noexcept; //!< release all blocks
+            size_t       stowage() const noexcept; //!< pool size
+            
 
             //__________________________________________________________________
             //
@@ -63,9 +62,14 @@ namespace Yttrium
             //
             //__________________________________________________________________
             const size_t blockSize; //!< common block size
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Inventory);
             PoolOf<Node> pool;
+
+            virtual void *getFlat();
+            virtual void  putFlat(void *) noexcept;
+            
         };
 
     }

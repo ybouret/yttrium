@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Data_Small_Supply_Included
@@ -12,37 +11,56 @@ namespace Yttrium
     namespace Small
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Interface to NODEs supply
+        //
+        //
+        //______________________________________________________________________
         class Supply : public Releasable
         {
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
         protected:
-            explicit Supply() noexcept;
+            explicit Supply() noexcept; //!< setup
 
         public:
-            virtual ~Supply() noexcept;
+            virtual ~Supply() noexcept; //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
         protected:
-            virtual void   *getFlat()                = 0;
-            virtual void    putFlat(void *) noexcept = 0;
-        public:
-            virtual size_t  stowage() const noexcept = 0;
+            void *zacquire(const size_t blockSize);                           //!< helper, acquire [blockSize]
+            void  zrelease(void *blockAddr, const size_t blockSize) noexcept; //!< helper, release [blockSize] at blockAddr
 
+            virtual void   *getFlat()                = 0; //!< specialized data block acquire
+            virtual void    putFlat(void *) noexcept = 0; //!< specialized data block release
+
+            //! protocol to create a new node from its arguments
             template <typename NODE> inline
-            void destroy(NODE *node) noexcept
+            NODE * newNode(typename NODE::ParamType args)
             {
-                putFlat( Destructed(node) );
+                NODE *node = static_cast<NODE *>(getFlat());
+                try { return new (node) NODE(args); }
+                catch(...)  { putFlat(node); throw; }
             }
+            
+        public:
+            virtual size_t  stowage() const noexcept = 0; //!< flat nodes availability
 
-            template <typename NODE, typename ARGS> inline
-            NODE * produce(ARGS args)
-            {
-                NODE *node = getFlat();
-                try {
-                    return new (node) NODE(args);
-                }
-                catch(...) { putFlat(node); throw; }
-            }
-
-
+            //! protocol to destruct a live node
+            template <typename NODE> inline
+            void destroy(NODE *node) noexcept { putFlat( Destructed(node) ); }
 
 
         private:

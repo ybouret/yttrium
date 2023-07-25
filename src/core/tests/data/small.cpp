@@ -1,7 +1,8 @@
-#include "y/data/small/supply.hpp"
+#include "y/data/small/bare.hpp"
+#include "y/data/small/solo.hpp"
+
 #include "y/data/small/heavy-node.hpp"
 #include "y/data/small/light-node.hpp"
-#include "y/data/small/inventory.hpp"
 #include "y/utest/run.hpp"
 
 #include "y/data/list.hpp"
@@ -11,145 +12,21 @@
 #include "y/object.hpp"
 #include "y/counted.hpp"
 
+#include "y/string.hpp"
+
 using namespace Yttrium;
 
 namespace Yttrium
 {
 
-    namespace Small
-    {
-
-        
-
-        template <typename T, template <typename> class NODE>
-        class BareCache : public Supply
-        {
-        public:
-            Y_ARGS_EXPOSE(T,Type);
-            typedef NODE<T> NodeType;
-
-            explicit BareCache() noexcept {}
-            virtual ~BareCache() noexcept {}
-
-
-            inline virtual size_t stowage() const noexcept { return 0; }
-            
-            inline NodeType *produce(Type &args)
-            {
-                NodeType *node = Object::zacquire<NodeType>();
-                try {
-                    return new (node) NodeType(args);
-                }
-                catch(...)
-                {
-                    Object::zrelease(node);
-                    throw;
-                }
-            }
-
-
-            inline virtual void release() noexcept {}
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(BareCache);
-            virtual void *getFlat() { return Object::zacquire<NodeType>(); }
-            virtual void  putFlat(void *blockAddr) noexcept { Object::operator delete(blockAddr,sizeof(NodeType)); }
-        };
-
-        template <typename T, template <typename> class NODE>
-        class BareProxy
-        {
-        public:
-            explicit BareProxy() noexcept {}
-            virtual ~BareProxy() noexcept {}
-            BareProxy(const BareProxy &) noexcept {}
-
-            typedef BareCache<T,NODE> CacheType;
-            CacheType       * operator->() noexcept       { return &cache; }
-            const CacheType * operator->() const noexcept { return &cache; }
-        private:
-            Y_DISABLE_ASSIGN(BareProxy);
-            CacheType cache;
-        };
-
-
-    }
+    
 
     namespace Small
     {
-
-
-        template <typename T, template <typename> class NODE>
-        class SoloCache
+        template <typename NODE>
+        class CoopCache : public Object, public Counted, public SoloCache<NODE>
         {
         public:
-            Y_ARGS_EXPOSE(T,Type);
-            typedef NODE<T> NodeType;
-
-            explicit SoloCache() noexcept : pool(sizeof(NodeType)) {}
-            virtual ~SoloCache() noexcept  {}
-
-
-
-            inline size_t stowage() const noexcept { return pool.inside(); }
-
-            inline NodeType *produce(Type &args)
-            {
-                NodeType *node = pool.inside() ? static_cast<NodeType*>(pool.zquery()) : Object::zacquire<NodeType>();
-                try {
-                    return new (node) NodeType(args);
-                }
-                catch(...)
-                {
-                    pool.zstore(node);
-                    throw;
-                }
-            }
-
-
-            inline void destroy(NodeType *node) noexcept
-            {
-                assert(0!=node);
-                pool.zstore( Destructed(node) );
-            }
-
-            Inventory pool;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(SoloCache);
-        };
-
-        template <typename T, template <typename> class NODE>
-        class SoloProxy
-        {
-        public:
-            typedef SoloCache<T,NODE> CacheType;
-
-            explicit SoloProxy() noexcept : cache() {}
-            explicit SoloProxy(const SoloProxy &) noexcept : cache() {}
-            virtual ~SoloProxy() noexcept
-            {
-            }
-
-            CacheType       * operator->() noexcept       { return &cache; }
-            const CacheType * operator->() const noexcept { return &cache; }
-
-        private:
-            Y_DISABLE_ASSIGN(SoloProxy);
-            CacheType cache;
-
-        };
-
-    }
-
-    namespace Small
-    {
-        template <typename T, template <typename> class NODE>
-        class CoopCache : public Object, public Counted, public SoloCache<T,NODE>
-        {
-        public:
-            Y_ARGS_EXPOSE(T,Type);
             explicit CoopCache() noexcept {}
             virtual ~CoopCache() noexcept {}
 
@@ -157,11 +34,11 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(CoopCache);
         };
 
-        template <typename T, template <typename> class NODE>
+        template <typename NODE>
         class CoopProxy
         {
         public:
-            typedef CoopCache<T,NODE> CacheType;
+            typedef CoopCache<NODE> CacheType;
 
             explicit CoopProxy() noexcept :
             cache( new CacheType() )
@@ -201,13 +78,27 @@ namespace Yttrium
 
 Y_UTEST(data_small)
 {
+
+
+    typedef Small::LightNode<String>       vLigthStringNode;
+    typedef Small::LightNode<const String> cLigthStringNode;
+
+    String       var = "Hello";
+    const String cst = "World";
+
+    vLigthStringNode vsn(var);
+    cLigthStringNode csn1(var);
+    cLigthStringNode csn2(cst);
+
+
+
     ListOf< Small::HeavyNode<int> > heavyList;
     ListOf< Small::LightNode<int> > lightList;
     int i = 2;
 
     {
-        Small::BareProxy<int,Small::HeavyNode> heavyBareProxy;
-        Small::BareProxy<int,Small::LightNode> lightBareProxy;
+        Small::BareProxy< Small::HeavyNode<int> > heavyBareProxy;
+        Small::BareProxy< Small::LightNode<int> > lightBareProxy;
 
         for(size_t k=0;k<10;++k)
         {
@@ -223,8 +114,8 @@ Y_UTEST(data_small)
     }
 
     {
-        Small::SoloProxy<int,Small::HeavyNode> heavySoloProxy;
-        Small::SoloProxy<int,Small::LightNode> lightSoloProxy;
+        Small::SoloProxy< Small::HeavyNode<int> > heavySoloProxy;
+        Small::SoloProxy< Small::LightNode<int> > lightSoloProxy;
 
         for(size_t k=0;k<10;++k)
         {
@@ -238,11 +129,10 @@ Y_UTEST(data_small)
         std::cerr << "stowage: " << heavySoloProxy->stowage() << " / " << lightSoloProxy->stowage() << std::endl;
     }
     
-    //Small::CoopProxy<int,Small::HeavyNode>
 
     {
-        Small::CoopProxy<int,Small::HeavyNode> heavyCoopProxy;
-        Small::CoopProxy<int,Small::LightNode> lightCoopProxy;
+        Small::CoopProxy< Small::HeavyNode<int> > heavyCoopProxy;
+        Small::CoopProxy< Small::LightNode<int> > lightCoopProxy;
 
         for(size_t k=0;k<10;++k)
         {

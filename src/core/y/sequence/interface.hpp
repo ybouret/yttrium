@@ -57,8 +57,9 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        Sequence & operator<<(ParamType args) { pushTail(args); return *this; }
-        Sequence & operator>>(ParamType args) { pushHead(args); return *this; }
+
+        Sequence & operator<<(ParamType args) { pushTail(args); return *this; } //!< syntactic helper
+        Sequence & operator>>(ParamType args) { pushHead(args); return *this; } //!< syntactic helper
 
 
 
