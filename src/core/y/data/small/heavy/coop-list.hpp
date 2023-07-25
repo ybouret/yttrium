@@ -1,9 +1,9 @@
 //! \file
 
-#ifndef Y_Data_Small_Coop_Light_List_Included
+#ifndef Y_Data_Small_Coop_Heavy_List_Included
 #define Y_Data_Small_Coop_Light_List_Included 1
 
-#include "y/data/small/light/list.hpp"
+#include "y/data/small/heavy/list.hpp"
 #include "y/data/small/proxy/coop.hpp"
 
 namespace Yttrium
@@ -21,7 +21,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename T>
-        class CoopLightList : public LightList<T,CoopProxy>
+        class CoopHeavyList : public HeavyList<T,CoopProxy>
         {
         public:
             //__________________________________________________________________
@@ -30,8 +30,8 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef LightNode<T>                  NodeType;  //!< alias
-            typedef LightList<T,CoopProxy>        ListType;  //!< alias
+            typedef HeavyNode<T>                  NodeType;  //!< alias
+            typedef HeavyList<T,CoopProxy>        ListType;  //!< alias
             typedef CoopProxy<NodeType>           ProxyType; //!< alias
             typedef typename ProxyType::CacheType CacheType; //!< alias
 
@@ -43,17 +43,17 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! setup empty with shared cache
-            inline explicit CoopLightList(const ProxyType &sharedProxy) noexcept:
+            inline explicit CoopHeavyList(const ProxyType &sharedProxy) noexcept:
             ListType(sharedProxy) {}
 
             //! copy
-            inline explicit CoopLightList(const CoopLightList &_) : ListType(_) {}
+            inline explicit CoopHeavyList(const CoopHeavyList &_) : ListType(_) {}
 
             //! cleanup
-            inline virtual ~CoopLightList() noexcept {}
+            inline virtual ~CoopHeavyList() noexcept {}
 
         private:
-            Y_DISABLE_ASSIGN(CoopLightList);
+            Y_DISABLE_ASSIGN(CoopHeavyList);
         };
     }
 
