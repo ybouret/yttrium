@@ -10,19 +10,48 @@ namespace Yttrium
 
     namespace Small
     {
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Prototype to handle lists with cache
+        //
+        //
+        //______________________________________________________________________
         template <typename NODE, template <typename> class PROXY>
         class ProtoList : public ProtoLinked<ListOf,NODE,PROXY>
         {
         public:
-            typedef ProtoLinked<ListOf,NODE,PROXY> ProtoType;
-            typedef typename ProtoType::ProxyType  ProxyType;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef ProtoLinked<ListOf,NODE,PROXY> ProtoType; //!< alias
+            typedef typename ProtoType::ProxyType  ProxyType; //!< alias
             using ProtoType::proxy;
             using ProtoType::pushTail;
             using ProtoType::release_;
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! default constructor
             inline explicit ProtoList() : ProtoType() {}
+
+            //! constructor for [automatic|manual] proxy setup
             inline explicit ProtoList(const ProxyType &_) noexcept : ProtoType(_) {}
+
+            //! cleanup
             inline virtual ~ProtoList() noexcept {}
+
+            //! copy constructor, using proxy
             inline ProtoList(const ProtoList &other) : ProtoType(other.proxy)
             {
                 try

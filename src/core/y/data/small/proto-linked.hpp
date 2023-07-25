@@ -32,8 +32,7 @@ namespace Yttrium
             //__________________________________________________________________
         public:
             typedef PROXY<NODE> ProxyType; //!< alias
-            typedef NODE        NodeType;  //!< alias
-
+            
             //__________________________________________________________________
             //
             //

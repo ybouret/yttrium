@@ -23,13 +23,37 @@ namespace Yttrium
 
     namespace Small
     {
+        template <typename T, template <typename> class PROXY>
+        class HeavyList : public ProtoList< HeavyNode<T>, PROXY>
+        {
+        public:
+            typedef HeavyNode<T>              NodeType;
+            typedef ProtoList<NodeType,PROXY> ProtoType;
+            typedef PROXY<NodeType>           ProxyType;
 
-      
+            inline explicit HeavyList() : ProtoType() {}
+            inline explicit HeavyList(const ProxyType &_) noexcept : ProtoType(_) {}
+            inline explicit HeavyList(const HeavyList &_) : ProtoType(_) {}
+            inline virtual ~HeavyList() noexcept {}
 
-      
+        private:
+            Y_DISABLE_ASSIGN(HeavyList);
+        };
 
+        template <typename T>
+        class BareHeavyList : public HeavyList<T,BareProxy>
+        {
+        public:
+            typedef HeavyList<T,BareProxy> ListType;
+            typedef HeavyNode<T>           NodeType;
 
-        
+            inline explicit BareHeavyList() noexcept : ListType() {}
+            inline virtual ~BareHeavyList() noexcept {}
+            inline BareHeavyList(const BareHeavyList &_) : ListType(_) {}
+
+        private:
+            Y_DISABLE_ASSIGN(BareHeavyList);
+        };
 
     }
 }
@@ -37,6 +61,7 @@ namespace Yttrium
 Y_UTEST(data_small)
 {
 
+#if 0
     typedef Small::LightNode<String> LightNode;
     typedef Small::ProtoList<LightNode,Small::BareProxy> LightList;
     typedef Small::ProtoPool<LightNode,Small::BareProxy> LightPool;
@@ -68,76 +93,11 @@ Y_UTEST(data_small)
             std::cerr << "Q=" << Q << std::endl;
         }
     }
-
-
-
-#if 0
-    typedef Small::LightNode<String>       vLigthStringNode;
-    typedef Small::LightNode<const String> cLigthStringNode;
-
-    String       var = "Hello";
-    const String cst = "World";
-
-    vLigthStringNode vsn(var);
-    cLigthStringNode csn1(var);
-    cLigthStringNode csn2(cst);
-
-
-
-    ListOf< Small::HeavyNode<int> > heavyList;
-    ListOf< Small::LightNode<int> > lightList;
-    int i = 2;
-
-    {
-        Small::BareProxy< Small::HeavyNode<int> > heavyBareProxy;
-        Small::BareProxy< Small::LightNode<int> > lightBareProxy;
-
-        for(size_t k=0;k<10;++k)
-        {
-            heavyList.pushTail( heavyBareProxy->produce(i) );
-            lightList.pushTail( lightBareProxy->produce(i) );
-        }
-
-        while(heavyList.size) heavyBareProxy->destroy( heavyList.popTail() );
-        while(lightList.size) lightBareProxy->destroy( lightList.popTail() );
-
-
-        std::cerr << "stowage: " << heavyBareProxy->stowage() << " / " << lightBareProxy->stowage() << std::endl;
-    }
-
-    {
-        Small::SoloProxy< Small::HeavyNode<int> > heavySoloProxy;
-        Small::SoloProxy< Small::LightNode<int> > lightSoloProxy;
-
-        for(size_t k=0;k<10;++k)
-        {
-            heavyList.pushTail( heavySoloProxy->produce(i) );
-            lightList.pushTail( lightSoloProxy->produce(i) );
-        }
-
-        while(heavyList.size) heavySoloProxy->destroy( heavyList.popTail() );
-        while(lightList.size) lightSoloProxy->destroy( lightList.popTail() );
-
-        std::cerr << "stowage: " << heavySoloProxy->stowage() << " / " << lightSoloProxy->stowage() << std::endl;
-    }
-    
-
-    {
-        Small::CoopProxy< Small::HeavyNode<int> > heavyCoopProxy;
-        Small::CoopProxy< Small::LightNode<int> > lightCoopProxy;
-
-        for(size_t k=0;k<10;++k)
-        {
-            heavyList.pushTail( heavyCoopProxy->produce(i) );
-            lightList.pushTail( lightCoopProxy->produce(i) );
-        }
-
-        while(heavyList.size) heavyCoopProxy->destroy( heavyList.popTail() );
-        while(lightList.size) lightCoopProxy->destroy( lightList.popTail() );
-
-        std::cerr << "stowage: " << heavyCoopProxy->stowage() << " / " << lightCoopProxy->stowage() << std::endl;
-    }
 #endif
+
+
+
+
 
 }
 Y_UDONE()

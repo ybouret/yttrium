@@ -11,19 +11,47 @@ namespace Yttrium
 
     namespace Small
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Prototype to handle pools with cache
+        //
+        //
+        //______________________________________________________________________
         template <typename NODE, template <typename> class PROXY>
         class ProtoPool : public ProtoLinked<PoolOf,NODE,PROXY>
         {
         public:
-            typedef ProtoLinked<PoolOf,NODE,PROXY> ProtoType;
-            typedef typename ProtoType::ProxyType  ProxyType;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef ProtoLinked<PoolOf,NODE,PROXY> ProtoType; //!< alias
+            typedef typename ProtoType::ProxyType  ProxyType; //!< alias
             using ProtoType::proxy;
             using ProtoType::store;
             using ProtoType::release_;
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! default constructor
             inline explicit ProtoPool() : ProtoType() {}
+
+            //! constructor for [automatic|manual] cache assignment
             inline explicit ProtoPool(const ProxyType &_) noexcept : ProtoType(_) {}
+
+            //! cleanup
             inline virtual ~ProtoPool() noexcept {}
+
+            //! copy constructor, using proxy
             inline ProtoPool(const ProtoPool &other) : ProtoType(other.proxy)
             {
                 try
