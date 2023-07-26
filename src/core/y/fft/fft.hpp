@@ -40,7 +40,7 @@ namespace Yttrium
             return n;
         }
 
-#if 0
+#if 1
         template <typename T>
         static inline size_t MakeXBR(Complex<T>   data[],
                                      const size_t size) noexcept
