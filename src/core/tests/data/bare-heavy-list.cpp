@@ -1,5 +1,5 @@
 
-#include "y/data/small/heavy/bare-list.hpp"
+#include "y/data/small/heavy/list/bare.hpp"
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
 

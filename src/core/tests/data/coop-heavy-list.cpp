@@ -1,7 +1,7 @@
 
 
 
-#include "y/data/small/heavy/coop-list.hpp"
+#include "y/data/small/heavy/list/coop.hpp"
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
 

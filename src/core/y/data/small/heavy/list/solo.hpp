@@ -51,20 +51,15 @@ namespace Yttrium
             //! cleanup
             inline virtual ~SoloHeavyList() noexcept {}
 
-            //! assign
+            //! assign using own cache
             inline SoloHeavyList & operator=(const SoloHeavyList &other)
             {
                 SoloHeavyList tmp;
                 try {
                     for(const NodeType *node=other.head;node;node=node->next)
-                    {
                         tmp.pushTail( this->proxy->replica(node) );
-                    }
                 }
-                catch(...)
-                {
-                    this->proxy->destruct(tmp); throw;
-                }
+                catch(...) { this->proxy->destruct(tmp); throw; }
                 swapWith(tmp);
                 return *this;
             }

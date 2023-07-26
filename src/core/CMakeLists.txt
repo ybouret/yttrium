@@ -21,8 +21,9 @@ data/small
 data/small/proxy
 data/small/proto
 data/small/light
-data/samll/light/list
+data/small/light/list
 data/small/heavy
+data/small/heavy/list
 concurrent
 random
 hashing

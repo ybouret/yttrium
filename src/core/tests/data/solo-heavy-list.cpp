@@ -1,6 +1,6 @@
 
 
-#include "y/data/small/heavy/solo-list.hpp"
+#include "y/data/small/heavy/list/solo.hpp"
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
 

@@ -7,7 +7,7 @@
 #include "y/container/dynamic.hpp"
 #include "y/container/writable.hpp"
 #include "y/type/capacity.hpp"
-#include "y/data/small/heavy/solo-list.hpp"
+#include "y/data/small/heavy/list/solo.hpp"
 
 namespace Yttrium
 {
