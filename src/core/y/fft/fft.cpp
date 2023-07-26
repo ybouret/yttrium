@@ -1,4 +1,6 @@
 
+
+
 #include "y/fft/fft.hpp"
 #include "y/text/human-readable.hpp"
 #include "y/type/utils.hpp"
@@ -7,6 +9,16 @@
 
 namespace Yttrium
 {
+
+    template <typename T>
+    struct _FFT
+    {
+        static const T PI;
+    };
+
+
+    template <> const double       _FFT<double>::      PI = M_PI;
+    template <> const long double  _FFT<long double>:: PI = static_cast<long double>(M_PI);
 
     
     size_t FFT:: CountXBR(const size_t size) noexcept
@@ -32,9 +44,6 @@ namespace Yttrium
 
 
     const char * const FFT:: CallSign = "FFT";
-    //FFT::PTR32         FFT:: XBRP[];
-    //size_t             FFT:: XBRN[];
-
     static FFT::XBR  XBRT[FFT::AvailableXBR];
 
     static inline
@@ -102,8 +111,21 @@ namespace Yttrium
     {
 
     }
-    
+
+
 
 }
+
+#define Real float
+#include "fft.hxx"
+
+#undef Real
+#define Real double
+#include "fft.hxx"
+
+#undef Real
+#define Real long double
+#include "fft.hxx"
+
 
 

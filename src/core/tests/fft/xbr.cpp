@@ -62,7 +62,7 @@ namespace
     {
         Timing tmx;
         const size_t nc = 1<<shift;
-        std::cerr << "Timing XBR 2^" << std::setw(2) << shift << " = " << std::setw(8) << nc;
+        std::cerr << "Timing XBR-" << std::setw(3) << sizeof(T)*8 << " 2^" << std::setw(2) << shift << " = " << std::setw(8) << nc;
         std::cerr.flush();
 
         Memory::BufferOf< Complex<T> > cplx(nc);
@@ -134,6 +134,9 @@ Y_UTEST(fft_xbr)
     for(unsigned p=0;p<=20;++p)
     {
         perfXBR<float>(p,fft,ran);
+        perfXBR<double>(p,fft,ran);
+        perfXBR<long double>(p,fft,ran);
+
     }
     std::cerr << "-- Done!" << std::endl;
 

@@ -13,53 +13,17 @@ namespace
 
 
 
-    static double Duration = 0.5;
-
-    template <typename T> static inline
-    void testFFT(const unsigned shift, uint64_t &rate)
-    {
-        Memory::Legacy ram;
-        Timing         tmx;
-        rate = 0;
-
-        const size_t n   = 1 << shift;
-        const size_t nn  = n*2;
-        const size_t bs  = nn*sizeof(T);
-        T          *data = static_cast<T *>(ram.acquire(bs)) - 1;
-
-        for(size_t i=1;i<=nn;++i) data[i] = T(i);
-        //Core::Display(std::cerr,data+1,nn) << std::endl;
-        do
-        {
-            const uint64_t mark = WallTime::Ticks();
-            FFT::Run(data,n, 1);
-            FFT::Run(data,n,-1);
-            tmx.ticks += WallTime::Ticks() - mark;
-            ++tmx.cycle;
-            for(size_t i=2*n;i>0;--i) data[i] /= n;
-        } while( tmx.probe() < Duration);
-
-        //Core::Display(std::cerr,data+1,nn) << std::endl;
-        //std::cerr << "Speed: " << HumanReadable(tmx.speed()) << std::endl;
-
-        for(size_t i=1;i<=nn;++i)
-        {
-            const size_t ii = static_cast<size_t>(std::floor(data[i]+T(0.5)));
-            Y_ASSERT(ii==i);
-        }
-
-        rate = tmx.speed();
+    static double Duration = 0.1;
 
 
-
-        ram.release(data+1,bs);
-    }
 
 
 
     template <typename T> static inline
     void checkFFT( FFT &fft, const unsigned shift )
     {
+        std::cerr << "FFT-" << std::setw(3) << sizeof(T)*8 << " : 2^" << std::setw(2) << shift << " : ";
+
         const size_t size = 1 << shift;
         Memory::BufferOf<T>            rbuf(size*2);
         Memory::BufferOf< Complex<T> > cbuf(size);
@@ -83,6 +47,11 @@ namespace
         fft.run(&cbuf[0],size,shift,-1);
         Y_ASSERT(rbuf.HasSameContentThan(cbuf));
 
+        for(size_t i=0;i<size*2;++i)
+        {
+            Y_ASSERT(i == static_cast<size_t>(std::floor( (r[i]/size) + T(0.5) )));
+        }
+
         Timing tmx;
         Y_Timing(tmx,
                  FFT::Run(r-1,size,1);
@@ -95,37 +64,30 @@ namespace
                  fft.run(&cbuf[0],size,shift,-1),
                  Duration);
         std::cerr << " | run: @" << HumanReadable(tmx.speed());
+
+        std::cerr << std::endl;
+
     }
 
 }
 
 Y_UTEST(fft_1d)
 {
-    
+
+    if(argc>1) Duration = atof(argv[1]);
+
     FFT &fft = FFT::Instance();
+    Y_SIZEOF( LongTypeFor<float>::Type );
+    Y_SIZEOF( LongTypeFor<double>::Type );
+    Y_SIZEOF( LongTypeFor<long double>::Type );
 
     for(unsigned shift=1; shift<=10; ++shift)
     {
-        std::cerr << "FFT: 2^" << std::setw(2) << shift << " : ";
         checkFFT<float>(fft,shift);
-        std::cerr << std::endl;
+        checkFFT<double>(fft,shift);
+        checkFFT<long double>(fft,shift);
     }
 
-    return 0;
-
-    uint64_t rateF[32], rateD[32], rateL[32];
-    for(unsigned shift=0;shift<=16;++shift)
-    {
-        std::cerr << "FFT: 2^" << std::setw(2) << shift << " : ";
-        testFFT<float>(shift,rateF[shift]);
-        testFFT<double>(shift,rateD[shift]);
-        testFFT<long double>(shift,rateL[shift]);
-        std::cerr << " | float @"       << HumanReadable(rateF[shift]) << "Op/s";
-        std::cerr << " | double @"      << HumanReadable(rateD[shift]) << "Op/s";
-        std::cerr << " | long double @" << HumanReadable(rateL[shift]) << "Op/s";
-
-        std::cerr << std::endl;
-    }
 
 
 }

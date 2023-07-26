@@ -83,102 +83,34 @@ namespace Yttrium
         //
         //! generic real version data[1..2*size]
         //______________________________________________________________________
-        template <typename T>
-        static inline size_t MakeXBR(T data[], const size_t size) noexcept
-        {
-            const size_t n = (size<<1);
-            size_t j=1;
-            for(size_t i=1;i<n;i+=2)
-            {
-                if(j>i)
-                {
-                    Swap(data[j],data[i]);
-                    Swap(data[j+1],data[i+1]);
-                }
-                size_t m=size;
-                while (m >= 2 && j > m)
-                {
-                    j -= m;
-                    m >>= 1;
-                }
-                j += m;
-            }
-            return n;
-        }
+        template <typename T> static size_t MakeXBR(T data[], const size_t size) noexcept;
 
         //______________________________________________________________________
         //
         //! generic complex version, data[0..size-1]
         //______________________________________________________________________
-        template <typename T>
-        static inline size_t MakeXBR(Complex<T>   data[],
-                                     const size_t size) noexcept
-        {
-            const size_t half  = size>>1;
-            size_t j=0;
-            for(size_t i=0;i<size;++i)
-            {
-                if(j>i)
-                {
-                    Swap(data[j],data[i]);
-                }
-
-                size_t m=half;
-                while( (m>0) && j >= m)
-                {
-                    j  -= m;
-                    m >>= 1;
-                }
-                j += m;
-            }
-            return size << 1;
-        }
+        template <typename T> static   size_t MakeXBR(Complex<T> data[], const size_t size) noexcept;
 
         //______________________________________________________________________
         //
         //! specifice makeXBR for complex data[0..(size=2^shift)-1]
         //______________________________________________________________________
         template <typename T>
-        inline size_t makeXBR(Complex<T>     data[],
-                              const size_t   size,
-                              const unsigned shift) noexcept
-        {
-            assert( ( size_t(1) << shift) == size);
-            if(shift<MinShift)
-            {
-                return size<<1;
-            }
-            else
-            {
-                if(shift>MaxShift)
-                {
-                    return MakeXBR(data,size);
-                }
-                else
-                {
-                    const uint32_t *arr = xbrp[shift]; assert(0!=arr);
-                    for(size_t k=xbrn[shift];k>0;--k)
-                    {
-                        const XBR xbr = { arr[k] };
-                        Swap(data[xbr.i],data[xbr.j]);
-                    }
-                    return size<<1;
-                }
-            }
-        }
-
+        size_t makeXBR(Complex<T>     data[],
+                       const size_t   size,
+                       const unsigned shift) noexcept;
         
 
 
         //! data[1..2*nn]
         template <typename T> static inline
-        void Run(T data[], const size_t nn, const int isign) noexcept
+        void Run(T data[], const size_t size, const int isign) noexcept
         {
-            Raw(data,MakeXBR(data,nn),isign);
+            Raw(data,MakeXBR(data,size),isign);
         }
 
 
-        //! data[1..2*nn]
+        //! cplx[1..size]
         template <typename T> inline
         void run(Complex<T  >   cplx[],
                  const size_t   size,
@@ -187,7 +119,7 @@ namespace Yttrium
         {
 
             T    *       data = (&(cplx[0].re))-1;
-            Raw(data,makeXBR(cplx,size,shift),isign);
+            Opt(data,makeXBR(cplx,size,shift),isign);
         }
         
 
@@ -202,41 +134,9 @@ namespace Yttrium
         size_t          xbrn[MaxShift+1];  //!< number of swaps
 
 
-        template <typename T>
-        static inline void Raw(T data[], const size_t n, const int isign)
-        {
-            typedef double LongT;
-            LongT wtemp,wr,wpr,wpi,wi,theta;
-            T     tempr,tempi;
+        template <typename T> static void Raw(T data[], const size_t n, const int isign) noexcept;
+        template <typename T> static void Opt(T data[], const size_t n, const int isign) noexcept;
 
-            size_t mmax=2;
-            while(n>mmax)
-            {
-                const size_t istep = (mmax << 1);
-                theta=isign*(6.28318530717959/mmax);
-                wtemp=sin(0.5*theta);
-                wpr = -2.0*wtemp*wtemp;
-                wpi = sin(theta);
-                wr=1.0;
-                wi=0.0;
-                for(size_t m=1;m<mmax;m+=2)
-                {
-                    for(size_t i=m;i<=n;i+=istep)
-                    {
-                        const size_t j=i+mmax;
-                        tempr=wr*data[j]-wi*data[j+1];
-                        tempi=wr*data[j+1]+wi*data[j];
-                        data[j]=data[i]-tempr;
-                        data[j+1]=data[i+1]-tempi;
-                        data[i]   += tempr;
-                        data[i+1] += tempi;
-                    }
-                    wr=(wtemp=wr)*wpr-wi*wpi+wr;
-                    wi=wi*wpr+wtemp*wpi+wi;
-                }
-                mmax=istep;
-            }
-        }
     };
 
 }
