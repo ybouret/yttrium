@@ -109,6 +109,13 @@ Y_UTEST(fft_xbr)
 
     if(argc>1) Duration = atof(argv[1]);
 
+#if 0
+    for(unsigned p=0;p<=20;++p)
+    {
+        std::cerr << "#xbr(2^" << p << ") = " << FFT::CountXBR(1<<p) << std::endl;
+    }
+#endif
+    
     FFT::Verbose = 1;
     FFT &fft = FFT::Instance();
     std::cerr << fft.callSign() << std::endl;
