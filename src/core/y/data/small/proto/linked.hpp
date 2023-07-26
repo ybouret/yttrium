@@ -64,6 +64,12 @@ namespace Yttrium
             //! non-virtual release
             inline void release_() noexcept { proxy->destroy(*this); }
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
         public:
             ProxyType proxy; //!< proxy to cache
 

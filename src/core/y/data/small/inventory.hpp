@@ -15,7 +15,7 @@ namespace Yttrium
         //
         //
         //
-        //! Inventory of anonymous blocks
+        //! Inventory of is a cached Suppply of anonymous blocks
         //
         //
         //______________________________________________________________________
@@ -28,7 +28,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            //! Node prototyp
+            //! Node prototype
             struct Node {
                 Node *next; //!< for list/pool
                 Node *prev; //!< for list
@@ -40,10 +40,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-
-            //! initialize with bs >= sizeof(Node)
-            explicit Inventory(const size_t bs) noexcept;
-            virtual ~Inventory()                noexcept;
+            explicit Inventory(const size_t bs) noexcept; //!< initialize with bs >= sizeof(Node)
+            virtual ~Inventory()                noexcept; //!< cleanup
 
             //__________________________________________________________________
             //

@@ -17,7 +17,7 @@ namespace Yttrium
         //
         //
         //
-        //! Prototype to handle lists with cache
+        //! Prototype to handle lists with cache/proxy
         //
         //
         //______________________________________________________________________
@@ -53,7 +53,7 @@ namespace Yttrium
             //! cleanup
             inline virtual ~ProtoList() noexcept {}
 
-            //! copy constructor, using proxy
+            //! copy constructor, using proxy->replicat
             inline ProtoList(const ProtoList &other) : ProtoType(other.proxy)
             {
                 try
@@ -78,6 +78,12 @@ namespace Yttrium
             void cutTail() noexcept { proxy->destroy( this->popTail() ); }
 
 
+            //__________________________________________________________________
+            //
+            //
+            // Iterators
+            //
+            //__________________________________________________________________
             typedef Iterating::Linked<typename NODE::Type,NODE,Iterating::Forward>            Iterator;      //!< alias
             typedef Iterating::Linked<typename NODE::ConstType,const NODE,Iterating::Forward> ConstIterator; //!< alias
             inline  Iterator      begin()       noexcept { return Iterator(this->head);      }               //!< begin

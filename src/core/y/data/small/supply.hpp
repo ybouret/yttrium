@@ -35,18 +35,32 @@ namespace Yttrium
         public:
             virtual ~Supply() noexcept; //!< cleanup
 
-            //__________________________________________________________________
-            //
-            //
-            // Methods
-            //
-            //__________________________________________________________________
+
         protected:
+            //__________________________________________________________________
+            //
+            //
+            // helper zeroed block of memory
+            //
+            //__________________________________________________________________
             void *zacquire(const size_t blockSize);                           //!< helper, acquire [blockSize]
             void  zrelease(void *blockAddr, const size_t blockSize) noexcept; //!< helper, release [blockSize] at blockAddr
 
+            //__________________________________________________________________
+            //
+            //
+            // managing blocks of memory
+            //
+            //__________________________________________________________________
             virtual void   *getFlat()                = 0; //!< specialized data block acquire
             virtual void    putFlat(void *) noexcept = 0; //!< specialized data block release
+
+            //__________________________________________________________________
+            //
+            //
+            // NODE building helpers
+            //
+            //__________________________________________________________________
 
             //! protocol to create a new node from its arguments
             template <typename NODE> inline
@@ -69,6 +83,13 @@ namespace Yttrium
 
             
         public:
+            //__________________________________________________________________
+            //
+            //
+            // public interface
+            //
+            //__________________________________________________________________
+            
             virtual size_t  stowage() const noexcept = 0; //!< flat nodes availability
 
             //! protocol to destruct a live node
