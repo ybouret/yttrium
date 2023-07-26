@@ -73,17 +73,15 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(),Core::Vector(), Writable<
         // C++
         //
         //______________________________________________________________________
-        Vector() noexcept: Y_Vector_Prolog(), code( 0 ) {}   //!< setup empty
-        virtual ~Vector() noexcept { release_(); } //!< cleanup
+        inline   Vector() noexcept: Y_Vector_Prolog(), code( 0 ) {}   //!< setup empty
+        virtual ~Vector() noexcept { release_(); }                    //!< cleanup
 
         //! setup with a given capacity
-        Vector(const size_t n, const AsCapacity_&) : Y_Vector_Prolog(), code( new Code(n) )
+        inline Vector(const size_t n, const AsCapacity_&) : Y_Vector_Prolog(), code( new Code(n) )
         { assert( capacity() >= n ); }
 
         //! copy
-        Vector(const Vector &other) : Y_Vector_Prolog(), code( Duplicate(other) )
-        {
-        }
+        inline Vector(const Vector &other) : Y_Vector_Prolog(), code( Duplicate(other) ) {}
 
         //! no-throw exchange
         inline void swapWith(Vector &other) noexcept { Swap(code,other.code); }
@@ -91,6 +89,18 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(),Core::Vector(), Writable<
         //! assign
         inline Vector & operator=(const Vector &other)
         { Vector tmp(other); swapWith(tmp); return *this; }
+
+
+        //______________________________________________________________________
+        //
+        //
+        // specific constructor
+        //
+        //______________________________________________________________________
+
+        inline Vector(const size_t n, ParamType args) :
+        Y_Vector_Prolog(), code( (n>0) ? new Code(n,args) : 0) { assert(size()==n); }
+
 
         //______________________________________________________________________
         //
@@ -272,6 +282,11 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(),Core::Vector(), Writable<
             }
         }
 
+#define Y_Vector_Code_Prolog(NN)                  \
+Object(), WadType(n),                             \
+base(static_cast<MutableType*>(this->workspace)), \
+item(base-1), size(0)
+
         //______________________________________________________________________
         //
         //
@@ -287,10 +302,7 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(),Core::Vector(), Writable<
             //
             //! get formated flat memory
             //__________________________________________________________________
-            inline explicit Code(const size_t n) : Object(), WadType(n),
-            base(static_cast<MutableType*>(this->workspace)),
-            item(base-1),
-            size(0)
+            inline explicit Code(const size_t n) : Y_Vector_Code_Prolog(n)
             {
                 assert(this->maxBlocks>=n);
             }
@@ -301,6 +313,19 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(),Core::Vector(), Writable<
             //! cleanup before destruction
             //__________________________________________________________________
             inline virtual ~Code() noexcept { free(); }
+
+            //__________________________________________________________________
+            //
+            //! get formated memory with common args
+            //__________________________________________________________________
+            inline explicit Code(const size_t n, ConstType &args) : Y_Vector_Code_Prolog(n)
+            {
+                assert(this->maxBlocks>=n);
+                try {
+                    while(size<n) { new (base+size) MutableType(args); ++size; }
+                }
+                catch(...) { free(); throw; }
+            }
 
             //__________________________________________________________________
             //

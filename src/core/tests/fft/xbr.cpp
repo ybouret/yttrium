@@ -7,7 +7,6 @@
 #include "y/calculus/bit-count.hpp"
 #include "y/calculus/align.hpp"
 #include "y/memory/out-of-reach.hpp"
-#include "y/type/complex.hpp"
 #include "y/memory/buffer/of.hpp"
 
 using namespace Yttrium;
@@ -43,11 +42,9 @@ namespace
 
     template <typename T>
     static inline size_t myXBR(Complex<T>   data[],
-                               const size_t size,
-                               size_t      &jmax) noexcept
+                               const size_t size) noexcept
     {
         size_t count = 0;
-        jmax = 0;
 
         const size_t half = size>>1;
         size_t j=0;
@@ -56,7 +53,6 @@ namespace
             if(j>i)
             {
                 Swap(data[j],data[i]);
-                jmax = Max(jmax,j);
                 ++count;
             }
 
@@ -94,17 +90,11 @@ namespace
         T *c = &cbuf[0].re;
         for(size_t i=0;i<nr;++i) r[i] = c[i] = static_cast<T>(i+1);
 
-        size_t jmax = 0;
         scalarXBR(r-1,nc);
-        const size_t nswp = myXBR(&cbuf[0],nc,jmax);
+        const size_t nswp = myXBR(&cbuf[0],nc);
         Y_ASSERT(rbuf.HasSameContentThan(cbuf));
-
-        if(sizeof(T)==sizeof(float))
-        {
-            const size_t tableSize = sizeof(uint16_t) * 2 * nswp;
-            std::cerr << " | #swap=" << std::setw(8) << nswp << ", jmax=" << std::setw(8) << jmax;
-            if(tableSize<=65536) std::cerr << " tableSize = " << HumanReadable(tableSize);
-        }
+        std::cerr << " nswp = " << nswp;
+        
         std::cerr << std::endl;
     }
 

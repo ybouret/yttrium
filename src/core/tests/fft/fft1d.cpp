@@ -12,7 +12,7 @@ namespace
 
 
 
-    static double Duration = 1.0;
+    static double Duration = 0.1;
 
     template <typename T> static inline
     void testFFT(const unsigned shift, uint64_t &rate)
@@ -21,14 +21,13 @@ namespace
         Timing         tmx;
         rate = 0;
 
-        std::cerr << "FFT: 2^" << shift << std::endl;
         const size_t n   = 1 << shift;
         const size_t nn  = n*2;
         const size_t bs  = nn*sizeof(T);
         T          *data = static_cast<T *>(ram.acquire(bs)) - 1;
 
         for(size_t i=1;i<=nn;++i) data[i] = T(i);
-        Core::Display(std::cerr,data+1,nn) << std::endl;
+        //Core::Display(std::cerr,data+1,nn) << std::endl;
         do
         {
             const uint64_t mark = WallTime::Ticks();
@@ -39,8 +38,18 @@ namespace
             for(size_t i=2*n;i>0;--i) data[i] /= n;
         } while( tmx.probe() < Duration);
 
-        Core::Display(std::cerr,data+1,nn) << std::endl;
-        std::cerr << "Speed: " << HumanReadable(tmx.speed()) << std::endl;
+        //Core::Display(std::cerr,data+1,nn) << std::endl;
+        //std::cerr << "Speed: " << HumanReadable(tmx.speed()) << std::endl;
+
+        for(size_t i=1;i<=nn;++i)
+        {
+            const size_t ii = static_cast<size_t>(std::floor(data[i]+T(0.5)));
+            Y_ASSERT(ii==i);
+        }
+
+        rate = tmx.speed();
+
+
 
         ram.release(data+1,bs);
     }
@@ -50,10 +59,18 @@ Y_UTEST(fft_1d)
 {
     
 
-    uint64_t rate[6];
-    for(unsigned i=0;i<6;++i)
+    uint64_t rateF[32], rateD[32], rateL[32];
+    for(unsigned shift=0;shift<=8;++shift)
     {
-        testFFT<float>(i,rate[i]);
+        std::cerr << "FFT: 2^" << std::setw(2) << shift << " : ";
+        testFFT<float>(shift,rateF[shift]);
+        testFFT<double>(shift,rateD[shift]);
+        testFFT<long double>(shift,rateL[shift]);
+        std::cerr << " float: " << HumanReadable(rateF[shift]);
+        std::cerr << " double: " << HumanReadable(rateD[shift]);
+        std::cerr << " long double: " << HumanReadable(rateL[shift]);
+
+        std::cerr << std::endl;
     }
 
 

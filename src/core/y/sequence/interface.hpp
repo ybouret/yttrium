@@ -66,6 +66,10 @@ namespace Yttrium
         Sequence & operator<<(ParamType args) { pushTail(args); return *this; } //!< syntactic helper
         Sequence & operator>>(ParamType args) { pushHead(args); return *this; } //!< syntactic helper
 
+        inline Type pullHead() { ConstType tmp = head(); popHead(); return tmp; }
+        inline Type pullTail() { ConstType tmp = tail(); popTail(); return tmp; }
+
+
 
 
     private:

@@ -6,7 +6,7 @@
 
 #include "y/config/starting.hpp"
 #include <iostream>
-
+#include <cmath>
 
 namespace Yttrium
 {

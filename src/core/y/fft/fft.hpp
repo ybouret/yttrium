@@ -4,8 +4,8 @@
 #define Y_FFT_Included 1
 
 #include "y/singleton.hpp"
+#include "y/type/complex.hpp"
 
-#include <cmath>
 
 namespace Yttrium
 {
@@ -15,11 +15,12 @@ namespace Yttrium
     public:
         static const char * const      CallSign;                                //!< "FFT"
         static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 6; //!< life time
+        struct XBR { uint16_t i,j; };
 
         template <typename T>
-        static inline size_t XBR(T data[], const size_t nn) noexcept
+        static inline size_t MakeXBR(T data[], const size_t size) noexcept
         {
-            const size_t n = (nn<<1);
+            const size_t n = (size<<1);
             size_t j=1;
             for(size_t i=1;i<n;i+=2)
             {
@@ -28,7 +29,7 @@ namespace Yttrium
                     Swap(data[j],data[i]);
                     Swap(data[j+1],data[i+1]);
                 }
-                size_t m=nn;
+                size_t m=size;
                 while (m >= 2 && j > m)
                 {
                     j -= m;
@@ -39,6 +40,35 @@ namespace Yttrium
             return n;
         }
 
+#if 0
+        template <typename T>
+        static inline size_t MakeXBR(Complex<T>   data[],
+                                     const size_t size) noexcept
+        {
+            const size_t half  = size>>1;
+            size_t j=0;
+            for(size_t i=0;i<size;++i)
+            {
+                if(j>i)
+                {
+                    Swap(data[j],data[i]);
+                }
+
+                size_t m=half;
+                while( (m>0) && j >= m)
+                {
+                    j  -= m;
+                    m >>= 1;
+                }
+                j += m;
+            }
+            return size << 1;
+        }
+#endif
+
+        
+
+
         template <typename T> static inline
         void Run(T data[], const size_t nn, const int isign) noexcept
         {
@@ -46,7 +76,7 @@ namespace Yttrium
             LongT wtemp,wr,wpr,wpi,wi,theta;
             T     tempr,tempi;
 
-            const size_t n = XBR(data,nn);
+            const size_t n = MakeXBR(data,nn);
 
             size_t mmax=2;
             while(n>mmax)
