@@ -13,7 +13,7 @@ namespace Yttrium
     const HumanReadable:: Divider HumanReadable::Divide[] =
     {
 
-        { 'b', _1 << 0  },
+        { ' ', _1 << 0  },
         { 'k', _1 << 10 },
         { 'M', _1 << 20 },
         { 'G', _1 << 30 },

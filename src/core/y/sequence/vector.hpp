@@ -98,6 +98,7 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(),Core::Vector(), Writable<
         //
         //______________________________________________________________________
 
+        //! setup with the same value
         inline Vector(const size_t n, ParamType args) :
         Y_Vector_Prolog(), code( (n>0) ? new Code(n,args) : 0) { assert(size()==n); }
 
@@ -282,6 +283,7 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(),Core::Vector(), Writable<
             }
         }
 
+        //! setup vector code for at least NN objects
 #define Y_Vector_Code_Prolog(NN)                  \
 Object(), WadType(n),                             \
 base(static_cast<MutableType*>(this->workspace)), \

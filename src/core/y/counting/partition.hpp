@@ -19,15 +19,33 @@ namespace Yttrium
     class Partition : public Schedule
     {
     public:
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
         static const char * const CallSign;  //!< "Partition"
         static apn Cardinal(const size_t n); //!< from Euler's formula
 
-        explicit Partition(const size_t n);
-        virtual ~Partition() noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        explicit Partition(const size_t n); //!< integer to part
+        virtual ~Partition() noexcept;      //!< cleanup
 
-        virtual const char * callSign()               const noexcept;
-        virtual size_t       size()                   const noexcept;
-        ConstType &          operator[](const size_t) const noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        virtual const char * callSign()               const noexcept; //!< CallSign
+        virtual size_t       size()                   const noexcept; //!< current parts
+        ConstType &          operator[](const size_t) const noexcept; //!< access parts[1..size()]
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Partition);

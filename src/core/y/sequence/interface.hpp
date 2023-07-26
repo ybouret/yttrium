@@ -58,16 +58,16 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        inline ConstType &head() const noexcept { return getHead(); }
-        inline ConstType &tail() const noexcept { return getTail(); }
-        inline Type      &head()       noexcept { return Coerce(getHead()); }
-        inline Type      &tail()       noexcept { return Coerce(getTail()); }
+        inline ConstType &head() const noexcept { return getHead(); }           //!< head object, const
+        inline ConstType &tail() const noexcept { return getTail(); }           //!< tail object, const
+        inline Type      &head()       noexcept { return Coerce(getHead()); }   //!< head object
+        inline Type      &tail()       noexcept { return Coerce(getTail()); }   //!< tail object
 
         Sequence & operator<<(ParamType args) { pushTail(args); return *this; } //!< syntactic helper
         Sequence & operator>>(ParamType args) { pushHead(args); return *this; } //!< syntactic helper
 
-        inline Type pullHead() { ConstType tmp = head(); popHead(); return tmp; }
-        inline Type pullTail() { ConstType tmp = tail(); popTail(); return tmp; }
+        inline Type pullHead() { ConstType tmp = head(); popHead(); return tmp; } //!< get copy and remove head
+        inline Type pullTail() { ConstType tmp = tail(); popTail(); return tmp; } //!< get copy and remove tail
 
 
 
