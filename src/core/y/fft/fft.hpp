@@ -78,6 +78,9 @@ namespace Yttrium
             
         }
 
+        const size_t xbrMin; //!< min size requiring bit-reversal, should be 4
+        const size_t xbrMax; //!< max size with table driven bit-reversal, depends on memory
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(FFT);
         friend class Singleton<FFT>;

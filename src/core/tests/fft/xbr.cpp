@@ -127,7 +127,6 @@ Y_UTEST(fft_xbr)
         checkXBR<float>(p);
         checkXBR<double>(p);
         checkXBR<long double>(p);
-
     }
 
     FFT &fft = FFT::Instance();
