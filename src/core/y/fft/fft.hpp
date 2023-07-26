@@ -77,27 +77,7 @@ namespace Yttrium
         //
         //! counting number of exchanges for a given size
         //______________________________________________________________________
-        static inline size_t CountXBR(const size_t size) noexcept
-        {
-            assert(IsPowerOfTwo(size));
-            size_t       count = 0;
-            const size_t half = size>>1;
-            size_t j=0;
-            for(size_t i=0;i<size;++i)
-            {
-                if(j>i)
-                    ++count;
-                size_t m=half;
-                while( (m>0) && j >= m)
-                {
-                    j  -= m;
-                    m >>= 1;
-                }
-                j += m;
-            }
-            return count;
-        }
-
+        static size_t CountXBR(const size_t size) noexcept;
 
         //______________________________________________________________________
         //
