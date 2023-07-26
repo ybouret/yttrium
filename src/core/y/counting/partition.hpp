@@ -22,8 +22,21 @@ namespace Yttrium
         static const char * const CallSign;  //!< "Partition"
         static apn Cardinal(const size_t n); //!< from Euler's formula
 
+        explicit Partition(const size_t n);
+        virtual ~Partition() noexcept;
+
+        virtual const char * callSign()               const noexcept;
+        virtual size_t       size()                   const noexcept;
+        ConstType &          operator[](const size_t) const noexcept;
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Partition);
+        class Code;
+        Code *code;
+
+        virtual void doBoot() noexcept;
+        virtual bool doNext() noexcept;
+
     };
     
 

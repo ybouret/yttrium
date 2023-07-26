@@ -112,6 +112,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(counting_part);
     Y_UTEST(counting_permutation);
     Y_UTEST(counting_combination);
+    Y_UTEST(counting_partition);
 
     //std::cerr << "-------- Platform: " << Y_PLATFORM << std::endl;
     //std::cerr << "-------- Compiler: " << Y_COMPILER << std::endl;
