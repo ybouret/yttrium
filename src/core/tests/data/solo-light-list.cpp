@@ -1,5 +1,5 @@
 
-#include "y/data/small/light/solo-list.hpp"
+#include "y/data/small/light/list/solo.hpp"
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
 

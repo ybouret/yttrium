@@ -1,4 +1,4 @@
-#include "y/data/small/light/bare-list.hpp"
+#include "y/data/small/light/list/bare.hpp"
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
 

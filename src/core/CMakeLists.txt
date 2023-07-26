@@ -21,6 +21,7 @@ data/small
 data/small/proxy
 data/small/proto
 data/small/light
+data/samll/light/list
 data/small/heavy
 concurrent
 random

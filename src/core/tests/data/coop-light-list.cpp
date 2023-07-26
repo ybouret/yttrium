@@ -1,6 +1,6 @@
 
 
-#include "y/data/small/light/coop-list.hpp"
+#include "y/data/small/light/list/coop.hpp"
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
 
