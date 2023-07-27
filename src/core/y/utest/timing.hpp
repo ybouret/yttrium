@@ -36,9 +36,10 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        void        reset() noexcept;       //!< ticks=0, cycle=0
-        uint64_t    speed() const noexcept; //!< ops / s
-        long double probe() const noexcept; //!< ticks to seconds
+        void         reset() noexcept;           //!< ticks=0, cycle=0
+        uint64_t     speed() const noexcept;     //!< ops / s
+        long double  probe() const noexcept;     //!< ticks to seconds
+        Timing     & renew(const uint64_t mark); //!< updated ticks and cyle
 
         //______________________________________________________________________
         //

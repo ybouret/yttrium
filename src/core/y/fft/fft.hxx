@@ -141,12 +141,23 @@ namespace Yttrium
         static const LongReal one(1);
         static const LongReal zero(0);
 
+#if 0
+        std::cerr << "data=";
+        for(size_t i=1;i<=n;++i)
+        {
+            std::cerr << ' ' << data[i];
+        }
+        std::cerr << std::endl;
+        exit(0);
+#endif
+
         size_t   mmax=2;
+        size_t   step=4;
         unsigned curr=2;
         unsigned next=3;
         while(n>mmax)
         {
-            const size_t step  = FFT_Iter[curr];
+            //const size_t step  = FFT_Iter[curr];
             LongReal     wtemp = Sin[next];
             LongReal     wpr   = Aux[next];
             LongReal     wpi   = Sin[curr];
@@ -156,30 +167,19 @@ namespace Yttrium
             {
                 for(size_t i=m;i<n;i+=step)
                 {
-                    assert(i>=1);
-                    assert(i<n);
                     const size_t j=i+mmax;
-                    assert(j>=1);
-                    assert(j<n);
-                    //const Cplx   dj = *(const Cplx*)(&data[j]);
-                    //std::cerr << data[j] << "," << data[j+1] << " / " << dj << std::endl;
-                    //assert(dj.re==data[j]);
-                    //assert(dj.im==data[j+1]);
-                    const size_t ip=i+1;
-                    const size_t jp=j+1;
-                    const Real tempr=static_cast<Real>(wr*data[j]-wi*data[jp]);
-                    const Real tempi=static_cast<Real>(wr*data[jp]+wi*data[j]);
-                    data[j]   = data[i]  - tempr;
-                    data[jp]  = data[ip] - tempi;
-                    data[i]  += tempr;
-                    data[ip] += tempi;
+                    Cplx        &pj = *(Cplx *)&data[j];
+                    Cplx        &pi = *(Cplx *)&data[i];
+                    const Cplx   cj = pj;
+                    const Cplx   z( static_cast<Real>(wr*cj.re-wi*cj.im),static_cast<Real>(wr*cj.im+wi*cj.re) );
+                    pj  = pi - z;
+                    pi.in_place_add(z);
                 }
                 wr=(wtemp=wr)*wpr-wi*wpi+wr;
                 wi=wi*wpr+wtemp*wpi+wi;
             }
-            mmax=step;
-            curr=next;
-            ++next;
+            mmax=step; step <<= 1;
+            curr=next; ++next;
         }
     }
 

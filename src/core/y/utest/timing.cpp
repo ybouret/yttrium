@@ -31,5 +31,11 @@ namespace Yttrium
         return (*this)(ticks);
     }
 
+    Timing & Timing:: renew(const uint64_t mark)
+    {
+        ticks += WallTime::Ticks() - mark;
+        ++cycle;
+        return *this;
+    }
 }
 

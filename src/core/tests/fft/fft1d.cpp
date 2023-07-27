@@ -43,6 +43,7 @@ namespace
         {
             std::cerr << std::endl;
             fft.forward(&cbuf[0],size,shift);
+            fft.reverse(&cbuf[0],size,shift);
             return;
         }
         
@@ -69,16 +70,36 @@ namespace
         }
 
         Timing tmx;
-        Y_Timing(tmx,
-                 FFT::Forward(r-1,size);
-                 FFT::Reverse(r-1,size),
-                 Duration);
+        tmx.reset();
+        while(true)
+        {
+            for(size_t i=0;i<size*2;++i)
+            {
+                r[i] = T(i);
+            }
+            const uint64_t mark = WallTime::Ticks();
+            FFT::Forward(r-1,size);
+            FFT::Reverse(r-1,size);
+            if( tmx.renew(mark).probe() >= Duration)
+                break;
+        }
+        
         std::cerr << " | Run: @" << HumanReadable(tmx.speed());
 
-        Y_Timing(tmx,
-                 fft.forward(&cbuf[0],size,shift);
-                 fft.reverse(&cbuf[0],size,shift),
-                 Duration);
+        tmx.reset();
+        while(true)
+        {
+            for(size_t i=0;i<size*2;++i)
+            {
+                c[i] = T(i);
+            }
+            const uint64_t mark = WallTime::Ticks();
+            fft.forward(&cbuf[0],size,shift);
+            fft.reverse(&cbuf[0],size,shift);
+            if( tmx.renew(mark).probe() >= Duration)
+                break;
+        }
+
         std::cerr << " | run: @" << HumanReadable(tmx.speed());
 
         std::cerr << std::endl;
@@ -97,7 +118,7 @@ Y_UTEST(fft_1d)
     Y_SIZEOF( LongTypeFor<double>::Type );
     Y_SIZEOF( LongTypeFor<long double>::Type );
 
-    for(unsigned shift=1; shift<=20; ++shift)
+    for(unsigned shift=0; shift<=16; ++shift)
     {
         checkFFT<float>(fft,shift);
         checkFFT<double>(fft,shift);

@@ -94,6 +94,11 @@ namespace Yttrium
         inline Complex & operator+=(const T x) noexcept
         { re += x; return *this; }
 
+        //! in place add
+        inline void in_place_add(const Complex &z) noexcept
+        {re += z.re; im += z.im; }
+
+
         //______________________________________________________________________
         //
         //

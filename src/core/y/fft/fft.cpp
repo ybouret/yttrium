@@ -34,10 +34,6 @@ YFN(FN,40), YFN(FN,41), YFN(FN,42), YFN(FN,43), YFN(FN,44), YFN(FN,45), YFN(FN,4
 YFN(FN,50), YFN(FN,51), YFN(FN,52), YFN(FN,53), YFN(FN,54), YFN(FN,55), YFN(FN,56), YFN(FN,57), YFN(FN,58), YFN(FN,59), \
 YFN(FN,60), YFN(FN,61), YFN(FN,62), YFN(FN,63)
 
-    static const uint64_t FFT_Iter[] =
-    {
-        Y_FFT_REP(Y_FFT_ID)
-    };
 
 
     template <typename T>
@@ -135,7 +131,6 @@ YFN(FN,60), YFN(FN,61), YFN(FN,62), YFN(FN,63)
             std::cerr << "-- Initializing FFT Engine" << std::endl;
         }
 
-        assert(64==sizeof(FFT_Iter)/sizeof(FFT_Iter[0]));
         assert(64==sizeof(_FFT<double>::Fwd)/sizeof(double));
         assert(64==sizeof(_FFT<double>::Rev)/sizeof(double));
         assert(64==sizeof(_FFT<double>::Aux)/sizeof(double));
