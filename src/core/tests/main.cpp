@@ -32,10 +32,6 @@ Y_UTEST_DECL(256)
     Y_UTEST(memory_wad);
     Y_UTEST(memory_workspace);
 
-
-
-
-
     Y_UTEST(type_ints);
     Y_UTEST(type_div);
     Y_UTEST(type_list);
@@ -83,6 +79,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(ptr_arc);
 
     Y_UTEST(io_char);
+    Y_UTEST(io_ostream);
 
     Y_UTEST(fft1);
     Y_UTEST(fft2);

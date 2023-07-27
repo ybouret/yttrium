@@ -108,7 +108,8 @@ add_test(ptr:auto test-core ptr_auto)
 add_test(ptr:arc  test-core ptr_arc)
 
 #io
-add_test(io::char test-core io_char)
+add_test(io:char    test-core io_char)
+add_test(io:ostream test-core io_ostream)
 
 #fft
 add_test(fft:1   test-core fft1)

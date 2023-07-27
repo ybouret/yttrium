@@ -13,6 +13,7 @@ type
 system
 calculus
 io
+io/stream
 text
 data
 data/list

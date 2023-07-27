@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_IOS_Stream_Included
-#define Y_IOS_Stream_Included 1
+#ifndef Y_IO_Stream_Included
+#define Y_IO_Stream_Included 1
 
 
 #include "y/config/starting.hpp"
@@ -26,6 +26,7 @@ namespace Yttrium
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Stream);
     };
+    
 }
 
 #endif
