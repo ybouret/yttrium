@@ -83,6 +83,8 @@ namespace Yttrium
     void FFT:: Raw(Real data[], const size_t n, const int isign) noexcept
     {
         typedef typename LongTypeFor<Real>::Type LongReal;
+        static  const    LongReal PI = _FFT<LongReal>::PI;
+        static  const    LongReal half(0.5);
         LongReal wtemp,wr,wpr,wpi,wi,theta;
         Real     tempr,tempi;
 
@@ -91,10 +93,10 @@ namespace Yttrium
         {
             const size_t istep = (mmax << 1);
             //theta=isign*(6.28318530717959/mmax);
-            theta=isign*(M_PI/istep);
-            wtemp=sin(0.5*theta);
+            theta=isign*(PI/istep);
+            wtemp= std::sin(half*theta);
             wpr = -2.0*wtemp*wtemp;
-            wpi = sin(theta);
+            wpi = std::sin(theta);
             wr=1.0;
             wi=0.0;
             for(size_t m=1;m<mmax;m+=2)
@@ -121,22 +123,26 @@ namespace Yttrium
     void FFT:: Opt(Real data[], const size_t n, const int isign) noexcept
     {
         typedef typename LongTypeFor<Real>::Type LongReal;
-        LongReal  wr,wpr,wpi,wi,theta;
-        //Real     tempr,tempi;
+        //static  const    LongReal PI = _FFT<LongReal>::PI;
+        //static  const    LongReal half(0.5);
+        LongReal  wr,wpr,wpi,wi;//,theta;
 
-        size_t mmax=2;
+        size_t   mmax=2;
+        unsigned iln2=2;
         while(n>mmax)
         {
-            const size_t istep = (mmax << 1);
-            theta=isign*(M_PI/istep);
-            LongReal wtemp=sin(0.5*theta);
+            const size_t step = FFT_Iter[iln2];
+            //theta=isign*(PI/step);
+            //LongReal wtemp = std::sin(half*theta);
+            LongReal wtemp = isign * _FFT<LongReal>::Sin[iln2+1];
             wpr = -2.0*wtemp*wtemp;
-            wpi = sin(theta);
-            wr=1.0;
-            wi=0.0;
+           // wpi = std::sin(theta);
+            wpi = isign * _FFT<LongReal>::Sin[iln2];
+            wr=1;
+            wi=0;
             for(size_t m=1;m<mmax;m+=2)
             {
-                for(size_t i=m;i<=n;i+=istep)
+                for(size_t i=m;i<=n;i+=step)
                 {
                     const size_t j=i+mmax;
                     const size_t ip=i+1;
@@ -151,7 +157,9 @@ namespace Yttrium
                 wr=(wtemp=wr)*wpr-wi*wpi+wr;
                 wi=wi*wpr+wtemp*wpi+wi;
             }
-            mmax=istep;
+            mmax=step;
+            //step <<= 1;
+            ++iln2;
         }
     }
 

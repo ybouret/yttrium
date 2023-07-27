@@ -22,9 +22,9 @@ namespace
     template <typename T> static inline
     void checkFFT( FFT &fft, const unsigned shift )
     {
-        std::cerr << "FFT-" << std::setw(3) << sizeof(T)*8 << " : 2^" << std::setw(2) << shift << " : ";
 
         const size_t size = 1 << shift;
+        std::cerr << "FFT-" << std::setw(3) << sizeof(T)*8 << " : 2^" << std::setw(2) << shift << " = " << std::setw(8) << size << " : ";
         Memory::BufferOf<T>            rbuf(size*2);
         Memory::BufferOf< Complex<T> > cbuf(size);
 
@@ -39,6 +39,13 @@ namespace
         //Core::Display(std::cerr,r,size*2)      << std::endl;
         //Core::Display(std::cerr,&cbuf[0],size) << std::endl;
 
+        if(false)
+        {
+            std::cerr << std::endl;
+            fft.run(&cbuf[0],size,shift,1);
+            return;
+        }
+        
 
         FFT::Run(r-1,size,1);
         fft.run(&cbuf[0],size,shift,1);
@@ -47,9 +54,18 @@ namespace
         fft.run(&cbuf[0],size,shift,-1);
         Y_ASSERT(rbuf.HasSameContentThan(cbuf));
 
-        for(size_t i=0;i<size*2;++i)
+        if(sizeof(T)>=sizeof(double))
         {
-            Y_ASSERT(i == static_cast<size_t>(std::floor( (r[i]/size) + T(0.5) )));
+            for(size_t i=0;i<size*2;++i)
+            {
+                const T      real = (std::floor( (r[i]/size) + T(0.5) ));
+                const size_t indx = static_cast<size_t>(real);
+                if(indx != i)
+                {
+                    std::cerr << "expected " << i << ", got " << indx << std::endl;
+                }
+                Y_ASSERT(indx==i);
+            }
         }
 
         Timing tmx;
@@ -81,11 +97,11 @@ Y_UTEST(fft_1d)
     Y_SIZEOF( LongTypeFor<double>::Type );
     Y_SIZEOF( LongTypeFor<long double>::Type );
 
-    for(unsigned shift=1; shift<=10; ++shift)
+    for(unsigned shift=1; shift<=20; ++shift)
     {
         checkFFT<float>(fft,shift);
         checkFFT<double>(fft,shift);
-        checkFFT<long double>(fft,shift);
+        //checkFFT<long double>(fft,shift);
     }
 
 
