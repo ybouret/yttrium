@@ -14,6 +14,7 @@ system
 calculus
 io
 io/stream
+io/libc
 text
 data
 data/list
