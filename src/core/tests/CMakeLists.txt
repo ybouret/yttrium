@@ -111,7 +111,6 @@ add_test(ptr:arc  test-core ptr_arc)
 add_test(io::char test-core io_char)
 
 #fft
-add_test(fft:xbr test-core fft_xbr)
 add_test(fft:1   test-core fft1)
 add_test(fft:2   test-core fft2)
 

@@ -1032,7 +1032,6 @@ namespace Yttrium
                             const WordType * const b, const size_t q,
                             uint64_t * )
             {
-                static FFT &fft = FFT::Instance();
                 assert(0!=a);
                 assert(0!=b);
                 if(p<=0)
@@ -1050,27 +1049,7 @@ namespace Yttrium
                         assert(p>0);
                         assert(q>0);
                         const size_t   w = p+q; //! result width
-                        Block<cplx>    c1( w * (WordSize*sizeof(cplx) ) );
-                        cplx          *fft1     = c1.entry;
-                        const size_t   fftWords = c1.words;
-                        const unsigned fftShift = c1.shift - iLog2Of<cplx>::Value;
-                        assert(fftWords >= w*WordSize );
-                        FillRe(fft1,a,p);
-                        FillIm(fft1,b,q);
-                        Core::Display(std::cerr,fft1,fftWords) << std::endl;
-
-                        fft.forward(fft1,fftWords,fftShift);
-                        {
-                            Block<cplx>    c2(c1,NoMemoryCopy);
-                            cplx *fft2 = c2.entry;
-                            FFT::Unpack(&(fft1->re) -1, &(fft2->re) -1, fftWords);
-                            for(size_t i=0;i<fftWords;++i)
-                            {
-                                fft1[i] *= fft2[i];
-                            }
-                        }
-                        fft.reverse(fft1,fftWords,fftShift);
-                        Core::Display(std::cerr,fft1,fftWords) << std::endl;
+                        
                         return 0;
                     }
                 }

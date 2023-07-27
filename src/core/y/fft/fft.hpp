@@ -3,7 +3,6 @@
 #ifndef Y_FFT_Included
 #define Y_FFT_Included 1
 
-#include "y/singleton.hpp"
 #include "y/type/complex.hpp"
 #include "y/calculus/base2.hpp"
 
@@ -29,43 +28,9 @@ namespace Yttrium
     //! Computing FFT with precomputed metrics
     //
     //__________________________________________________________________________
-    class FFT : public Singleton<FFT>
+    class FFT
     {
     public:
-
-        //______________________________________________________________________
-        //
-        //
-        // Definitions
-        //
-        //______________________________________________________________________
-        static const char * const      CallSign;                                //!< "FFT"
-        static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 6; //!< life time
-
-        //______________________________________________________________________
-        //
-        //
-        //! eXtended Bits Reversal
-        //
-        //______________________________________________________________________
-        union XBR
-        {
-            uint32_t dw; //!< alias 32bits
-            struct {
-                uint16_t i;
-                uint16_t j;
-            };
-        };
-
-        static  const size_t    TableSizeXBR = 65536;                      //!< internal table bytes
-        static  const size_t    AvailableXBR = TableSizeXBR/sizeof(XBR);   //!< number of total swaps
-        static  const unsigned  MinShift     = iLog2<4>::Value;            //!< no swaps below 4 complexes
-        static  const unsigned  MaxShift     = iLog2<AvailableXBR>::Value; //!< cumulative swaps won't exceed this value
-
-
-
-    public:
-
         //______________________________________________________________________
         //
         //
@@ -75,76 +40,164 @@ namespace Yttrium
 
         //______________________________________________________________________
         //
-        //! counting number of exchanges for a given size
+        //! bit reversal of data[1..size*2]
         //______________________________________________________________________
-        static size_t CountXBR(const size_t size) noexcept;
+        template <typename T> static inline
+        size_t BitReversal(T data[], const size_t size) noexcept
+        {
+            assert(IsPowerOfTwo(size));
+            assert(0!=data);
+            const size_t n = (size<<1);
+            for(size_t j=1, i=1;i<n;i+=2)
+            {
+                if(j>i)
+                {
+                    Swap(data[j],data[i]);
+                    Swap(data[j+1],data[i+1]);
+                }
+                size_t m=size;
+                while (m >= 2 && j > m)
+                {
+                    j -= m;
+                    m >>= 1;
+                }
+                j += m;
+            }
+            return n;
+        }
+
+
+
+
+        template <typename T>
+        static inline void Forward(T            data[],
+                                   const size_t size) noexcept
+        {
+            static  const  typename LongTypeFor<T>::Type myPI(3.141592653589793238462643383279502884197);
+            Transform(data,size,myPI);
+        }
+
+
+        template <typename T>
+        static inline void Reverse(T            data[],
+                                   const size_t size) noexcept
+        {
+            static  const  typename LongTypeFor<T>::Type myPI(-3.141592653589793238462643383279502884197);
+            Transform(data,size,myPI);
+        }
 
         //______________________________________________________________________
         //
-        //! generic real version data[1..2*size]
+        //! computed fft1[1..2n] and fft2[1..2n] data[1..n] and data2[1..n]
         //______________________________________________________________________
-        template <typename T> static size_t MakeXBR(T data[], const size_t size) noexcept;
+        template <typename T>
+        static inline void Forward(T fft1[], T fft2[], const T data1[], const T data2[], const size_t size) noexcept
+        {
+            assert(0!=fft1);
+            assert(0!=fft2);
+            assert(0!=data1);
+            assert(0!=data2);
+
+            for(size_t j=1,jj=2;j<=size;j++,jj+=2)
+            {
+                fft1[jj-1] = data1[j];
+                fft1[jj]   = data2[j];
+            }
+            Core::Display(std::cerr << "pack = ", fft1+1, 2*size) << std::endl;
+            FFT::Forward(fft1,size);
+            Core::Display(std::cerr << "fft1  = ", fft1+1, 2*size) << std::endl;
+            Core::Display(std::cerr << "fft2  = ", fft2+1, 2*size) << std::endl;
+            Expand(fft1,fft2,size);
+            Core::Display(std::cerr << "fft1  = ", fft1+1, 2*size) << std::endl;
+            Core::Display(std::cerr << "fft2  = ", fft2+1, 2*size) << std::endl;
+        }
 
         //______________________________________________________________________
         //
-        //! generic complex version, data[0..size-1]
+        //! expand fft1[1..2n] and fft2[1..2n] from a dual--functions transform
         //______________________________________________________________________
-        template <typename T> static   size_t MakeXBR(Complex<T> data[], const size_t size) noexcept;
+        template <typename T> static
+        inline void Expand(T fft1[], T fft2[], const size_t n) noexcept
+        {
+            static const T half(0.5);
+            const size_t np1 = n+1;
+            const size_t nn2 = np1 << 1;
+            const size_t nn3 = 1+nn2;
+            fft2[1]=fft1[2];
+            fft1[2]=fft2[2]=0;
+            for(size_t j=np1;j>=3;j-=2)
+            {
+                const size_t j1 = j+1;
+                const size_t j2 = nn2-j;
+                const size_t j3 = nn3-j;
+                const T      A  = fft1[j];
+                const T      B  = fft1[j2];
+                const T      C  = fft1[j1];
+                const T      D  = fft1[j3];
+                const T      rep=half*(A+B);
+                const T      rem=half*(A-B);
+                const T      aip=half*(C+D);
+                const T      aim=half*(C-D);
 
-        //______________________________________________________________________
-        //
-        //! specifice makeXBR for complex data[0..(size=2^shift)-1]
-        //______________________________________________________________________
-        template <typename T>
-        size_t makeXBR(Complex<T>     data[],
-                       const size_t   size,
-                       const unsigned shift) noexcept;
-        
+                fft1[j]  =  rep;
+                fft1[j1] =  aim;
+                fft1[j2] =  rep;
+                fft1[j3] = -aim;
 
-
-        //! data[1..2*nn]
-        template <typename T> static void Forward(T data[], const size_t size) noexcept;
-
-        //! data[1..2*nn]
-        template <typename T> static void Reverse(T data[], const size_t size) noexcept;
-
-
-        //! fft1[1..2n], fft2[1..2n], data1[1..n], data1[1..n]
-        template <typename T>
-        static void Forward( T fft1[], T fft2[], const T data1[], const T data2[], const size_t n) noexcept;
-
-        //! unpacked transformed fft1[1..2n], fft2[1..2n]
-        template <typename T>
-        static void Unpack( T fft1[], T fft2[], const size_t n) noexcept;
-
-        
-        //! cplx[1..size]
-        template <typename T> void forward(Complex<T> cplx[], const size_t size, const unsigned shift) noexcept;
-
-        //! cplx[1..size]
-        template <typename T> void reverse(Complex<T> cplx[], const size_t size, const unsigned shift) noexcept;
-
-
-        //! fft1[1..size], fft2[1..size], data1[1..size], data2[1..size]
-        template <typename T> void forward(Complex<T>     fft1[],
-                                           Complex<T>     fft2[],
-                                           const T        data1[],
-                                           const T        data2[],
-                                           const size_t   size,
-                                           const unsigned shift) noexcept;
-
-
+                fft2[j]  =  aip;
+                fft2[j1] = -rem;
+                fft2[j2] =  aip;
+                fft2[j3] =  rem;
+            }
+        }
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(FFT);
-        friend class Singleton<FFT>;
-        explicit FFT();
-        virtual ~FFT() noexcept;
+        //______________________________________________________________________
+        //
+        //! Transform data[1..n=size*2]
+        //______________________________________________________________________
+        template <typename T>
+        static inline void Transform(T *                           data,
+                                     const size_t                  size,
+                                     typename LongTypeFor<T>::Type myPI) noexcept
+        {
+            assert(0!=data);
+            assert(IsPowerOfTwo(size));
+            typedef typename LongTypeFor<T>::Type REAL;
+            static  const    REAL half(0.5);
+            static  const    REAL two(2);
 
-        typedef const uint32_t *PTR32;     //!< alias
-        PTR32           xbrp[MaxShift+1];  //!< swap indices positions
-        size_t          xbrn[MaxShift+1];  //!< number of swaps
+            //REAL wtemp,wr,wpr,wpi,wi;
 
+            const size_t n = BitReversal(data,size);
+            size_t mmax=2;
+            while(n>mmax)
+            {
+                const size_t istep = (mmax << 1);
+                const REAL   theta = (myPI/istep);
+                REAL         wtemp = std::sin(half*theta);
+                REAL         wpr   = -two*wtemp*wtemp;
+                REAL         wpi   = std::sin(theta);
+                REAL         wr    = 1.0;
+                REAL         wi    = 0.0;
+                for(size_t m=1;m<mmax;m+=2)
+                {
+                    for(size_t i=m;i<=n;i+=istep)
+                    {
+                        const size_t j=i+mmax;
+                        const T tempr= wr*data[j]  -wi*data[j+1];
+                        const T tempi= wr*data[j+1]+wi*data[j];
+                        data[j]=data[i]-tempr;
+                        data[j+1]=data[i+1]-tempi;
+                        data[i]   += tempr;
+                        data[i+1] += tempi;
+                    }
+                    wr=(wtemp=wr)*wpr-wi*wpi+wr;
+                    wi=wi*wpr+wtemp*wpi+wi;
+                }
+                mmax=istep;
+            }
+        }
     };
 
 }

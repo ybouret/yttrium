@@ -84,7 +84,6 @@ Y_UTEST_DECL(256)
 
     Y_UTEST(io_char);
 
-    Y_UTEST(fft_xbr);
     Y_UTEST(fft1);
     Y_UTEST(fft2);
 

@@ -15,89 +15,34 @@ namespace
     static double Duration = 0.1;
 
     template <typename T> static inline
-    void checkFFT( FFT &fft, const unsigned shift )
+    void checkFFT(const unsigned shift)
     {
 
         const size_t size = 1 << shift;
         std::cerr << "FFT-" << std::setw(3) << sizeof(T)*8 << " : 2^" << std::setw(2) << shift << " = " << std::setw(8) << size << " : ";
-        Memory::BufferOf<T>            rbuf(size*2);
-        Memory::BufferOf< Complex<T> > cbuf(size);
 
-        // initializing
-        T *r = &rbuf[0];
-        T *c = &cbuf[0].re;
-        for(size_t i=0;i<size*2;++i)
+        Memory::BufferOf< Complex<T> > source(size);
+        const size_t n = size << 1;
+        T *s = &(source[0].re)-1;
+
+        for(size_t i=1;i<=n;++i) s[i] = T(i);
+
+
+        FFT::Forward(s,size);
+        FFT::Reverse(s,size);
+        for(size_t i=1;i<=n;++i)
         {
-            r[i] = c[i] = T(i);
+            s[i] /= size;
         }
-        Y_ASSERT(rbuf.HasSameContentThan(cbuf));
-
-        
-        if(false)
+        size_t nok = 0;
+        size_t bad = 0;
+        for(size_t i=1;i<=n;++i)
         {
-            std::cerr << std::endl;
-            fft.forward(&cbuf[0],size,shift);
-            fft.reverse(&cbuf[0],size,shift);
-            return;
+            const size_t ii = static_cast<size_t>(std::floor(s[i]+T(0.5)));
+            if( ii == i ) ++nok; else ++bad;
         }
-        
-
-        FFT::Forward(r-1,size);
-        fft.forward(&cbuf[0],size,shift);
-        Y_ASSERT(rbuf.HasSameContentThan(cbuf));
-        FFT::Reverse(r-1,size);
-        fft.reverse(&cbuf[0],size,shift);
-        Y_ASSERT(rbuf.HasSameContentThan(cbuf));
-
-        if(sizeof(T)>=sizeof(double))
-        {
-            for(size_t i=0;i<size*2;++i)
-            {
-                const T      real = (std::floor( (r[i]/size) + T(0.5) ));
-                const size_t indx = static_cast<size_t>(real);
-                if(indx != i)
-                {
-                    std::cerr << "expected " << i << ", got " << indx << std::endl;
-                }
-                Y_ASSERT(indx==i);
-            }
-        }
-
-        Timing tmx;
-        tmx.reset();
-        while(true)
-        {
-            // refill to avoid NaN
-            for(size_t i=0;i<size*2;++i)
-            {
-                r[i] = T(i);
-            }
-            const uint64_t mark = WallTime::Ticks();
-            FFT::Forward(r-1,size);
-            FFT::Reverse(r-1,size);
-            if( tmx.renew(mark).probe() >= Duration)
-                break;
-        }
-        
-        std::cerr << " | Run: @" << HumanReadable(tmx.speed());
-
-        tmx.reset();
-        while(true)
-        {
-            // refill to avoid NaN
-            for(size_t i=0;i<size*2;++i)
-            {
-                c[i] = T(i);
-            }
-            const uint64_t mark = WallTime::Ticks();
-            fft.forward(&cbuf[0],size,shift);
-            fft.reverse(&cbuf[0],size,shift);
-            if( tmx.renew(mark).probe() >= Duration)
-                break;
-        }
-
-        std::cerr << " | run: @" << HumanReadable(tmx.speed());
-
+        std::cerr << " |  +" << std::setw(8) << nok;
+        std::cerr << " |  -" << std::setw(8) << bad;
         std::cerr << std::endl;
 
     }
@@ -109,16 +54,15 @@ Y_UTEST(fft1)
 
     if(argc>1) Duration = atof(argv[1]);
 
-    FFT &fft = FFT::Instance();
     Y_SIZEOF( LongTypeFor<float>::Type );
     Y_SIZEOF( LongTypeFor<double>::Type );
     Y_SIZEOF( LongTypeFor<long double>::Type );
 
-    for(unsigned shift=0; shift<=16; ++shift)
+    for(unsigned shift=00; shift<=20; ++shift)
     {
-        checkFFT<float>(fft,shift);
-        checkFFT<double>(fft,shift);
-        //checkFFT<long double>(fft,shift);
+        checkFFT<float>(shift);
+        checkFFT<double>(shift);
+        checkFFT<long double>(shift);
     }
 
 

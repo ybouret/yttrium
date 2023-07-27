@@ -1,7 +1,7 @@
 
 namespace Yttrium
 {
-    
+#i f0
     template < >
     size_t FFT:: MakeXBR<Real>(Real data[], const size_t size) noexcept
     {
@@ -291,5 +291,6 @@ namespace Yttrium
         Unpack(c1,c2,size);
     }
 
-
+#endif
+    
 }
