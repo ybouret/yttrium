@@ -113,6 +113,10 @@ namespace Yttrium
         template <typename T>
         static void Forward( T fft1[], T fft2[], const T data1[], const T data2[], const size_t n) noexcept;
 
+        //! unpacked transformed fft1[1..2n], fft2[1..2n]
+        template <typename T>
+        static void Unpack( T fft1[], T fft2[], const size_t n) noexcept;
+
         
         //! cplx[1..size]
         template <typename T> void forward(Complex<T> cplx[], const size_t size, const unsigned shift) noexcept;

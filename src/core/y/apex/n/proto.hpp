@@ -957,6 +957,35 @@ namespace Yttrium
             }
 
 
+            static inline
+            Proto * FFT_Mul(const WordType * const a, const size_t p,
+                            const WordType * const b, const size_t q,
+                            uint64_t * )
+            {
+                assert(0!=a);
+                assert(0!=b);
+                if(p<=0)
+                {
+                    return new Proto(0,AsCapacity);
+                }
+                else
+                {
+                    if(q<=0)
+                    {
+                        return new Proto(0,AsCapacity);
+                    }
+                    else
+                    {
+                        assert(p>0);
+                        assert(q>0);
+                        const size_t   w = p+q;
+                        size_t         n = w*WordSize;               //! number of bytes
+                        const unsigned s = Base2<size_t>::LogFor(n); //! workspace
+                        
+                    }
+                }
+                return 0;
+            }
 
 
         private:

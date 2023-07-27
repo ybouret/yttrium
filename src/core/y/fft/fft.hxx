@@ -200,41 +200,37 @@ namespace Yttrium
     }
 
 
-    template <>
-    void FFT:: Forward(Real         fft1[],
-                       Real         fft2[],
-                       const Real   data1[],
-                       const Real   data2[],
-                       const size_t n) noexcept
+    static inline
+    void FFT_Pack(Real         fft1[],
+                  const Real   data1[],
+                  const Real   data2[],
+                  const size_t n) noexcept
     {
         assert(IsPowerOfTwo(n));
-        static const Real half(0.5);
-        Real rep,rem,aip,aim;
-
-        Core::Display(std::cerr << "data1=", data1+1, n) << std::endl;
-        Core::Display(std::cerr << "data2=", data2+1, n) << std::endl;
-
-
-        const size_t n1  = n+1;
-        const size_t nn2 = n1 << 1;
-        const size_t nn3 = 1+nn2;
+        assert(0!=fft1);
+        assert(0!=data1);
+        assert(0!=data2);
         for(size_t j=1,jj=2;j<=n;j++,jj+=2)
         {
             fft1[jj-1]= data1[j];
             fft1[jj]  = data2[j];
         }
-        Core::Display(std::cerr<<"pack1=",fft1+1,n*2) << std::endl;
+    }
 
-
-        Forward(fft1,n);
-
+    template < >
+    void FFT:: Unpack( Real fft1[], Real fft2[], const size_t n) noexcept
+    {
+        static const Real half(0.5);
+        const size_t n1  = n+1;
+        const size_t nn2 = n1 << 1;
+        const size_t nn3 = 1+nn2;
         fft2[1]=fft1[2];
         fft1[2]=fft2[2]=0;
         for(size_t j=3;j<=n1;j+=2) {
-            rep=half*(fft1[j]+fft1[nn2-j]);
-            rem=half*(fft1[j]-fft1[nn2-j]);
-            aip=half*(fft1[j+1]+fft1[nn3-j]);
-            aim=half*(fft1[j+1]-fft1[nn3-j]);
+            const Real rep=half*(fft1[j]+fft1[nn2-j]);
+            const Real rem=half*(fft1[j]-fft1[nn2-j]);
+            const Real aip=half*(fft1[j+1]+fft1[nn3-j]);
+            const Real aim=half*(fft1[j+1]-fft1[nn3-j]);
             fft1[j]=rep;
             fft1[j+1]=aim;
             fft1[nn2-j]=rep;
@@ -246,6 +242,54 @@ namespace Yttrium
         }
     }
 
+    template <>
+    void FFT:: Forward(Real         fft1[],
+                       Real         fft2[],
+                       const Real   data1[],
+                       const Real   data2[],
+                       const size_t n) noexcept
+    {
+        assert(IsPowerOfTwo(n));
+        assert(0!=fft1);
+        assert(0!=fft2);
+        assert(0!=data1);
+        assert(0!=data2);
+
+
+        Core::Display(std::cerr << "data1=", data1+1, n) << std::endl;
+        Core::Display(std::cerr << "data2=", data2+1, n) << std::endl;
+
+
+        FFT_Pack(fft1,data1,data2,n);
+        Core::Display(std::cerr<<"pack1=",fft1+1,n*2) << std::endl;
+        Forward(fft1,n);
+        Unpack(fft1,fft2,n);
+
+    }
+
+    template <>
+    void FFT:: forward(Complex<Real>     fft1[],
+                       Complex<Real>     fft2[],
+                       const Real        data1[],
+                       const Real        data2[],
+                       const size_t      size,
+                       const unsigned    shift) noexcept
+    {
+        assert(size_t(1)<<shift==size);
+        assert(0!=fft1);
+        assert(0!=fft2);
+        assert(0!=data1);
+        assert(0!=data2);
+
+        Real       *c1 = &(fft1[0].re) - 1;
+        Real       *c2 = &(fft2[0].re) - 1;
+        const Real *d1 = data1-1;
+        const Real *d2 = data2-1;
+
+        FFT_Pack(c1,d1,d2,size);
+        forward(fft1,size,shift);
+        Unpack(c1,c2,size);
+    }
 
 
 }
