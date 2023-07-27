@@ -104,10 +104,19 @@ namespace Yttrium
 
         //! data[1..2*nn]
         template <typename T> static inline
-        void Run(T data[], const size_t size, const int isign) noexcept
+        void Forward(T data[], const size_t size) noexcept
         {
-            Raw(data,MakeXBR(data,size),isign);
+            Raw(data,MakeXBR(data,size),1);
         }
+
+        //! data[1..2*nn]
+        template <typename T> static inline
+        void Reverse(T data[], const size_t size) noexcept
+        {
+            Raw(data,MakeXBR(data,size),-1);
+        }
+
+
 
 
         //! cplx[1..size]

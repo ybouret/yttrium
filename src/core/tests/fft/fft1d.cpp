@@ -47,10 +47,10 @@ namespace
         }
         
 
-        FFT::Run(r-1,size,1);
+        FFT::Forward(r-1,size);
         fft.run(&cbuf[0],size,shift,1);
         Y_ASSERT(rbuf.HasSameContentThan(cbuf));
-        FFT::Run(r-1,size,-1);
+        FFT::Reverse(r-1,size);
         fft.run(&cbuf[0],size,shift,-1);
         Y_ASSERT(rbuf.HasSameContentThan(cbuf));
 
@@ -70,8 +70,8 @@ namespace
 
         Timing tmx;
         Y_Timing(tmx,
-                 FFT::Run(r-1,size,1);
-                 FFT::Run(r-1,size,-1),
+                 FFT::Forward(r-1,size);
+                 FFT::Reverse(r-1,size),
                  Duration);
         std::cerr << " | Run: @" << HumanReadable(tmx.speed());
 
