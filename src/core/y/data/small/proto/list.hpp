@@ -22,7 +22,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename NODE, template <typename> class PROXY>
-        class ProtoList : public ProtoLinked<ListOf,NODE,PROXY>
+        class ProtoList : public ProtoLinked<ListOf<NODE>,NODE,PROXY>
         {
         public:
             //__________________________________________________________________
@@ -31,8 +31,8 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef ProtoLinked<ListOf,NODE,PROXY> ProtoType; //!< alias
-            typedef typename ProtoType::ProxyType  ProxyType; //!< alias
+            typedef ProtoLinked<ListOf<NODE>,NODE,PROXY> ProtoType; //!< alias
+            typedef typename ProtoType::ProxyType        ProxyType; //!< alias
             using ProtoType::proxy;
             using ProtoType::pushTail;
             using ProtoType::release_;

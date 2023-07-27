@@ -19,10 +19,10 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <
-        template <typename> class LINKED,
+        class                     LINKED,
         typename                  NODE,
         template <typename> class PROXY>
-        class ProtoLinked : public LINKED<NODE>, public Releasable
+        class ProtoLinked : public LINKED, public Releasable
         {
             //__________________________________________________________________
             //
@@ -41,10 +41,10 @@ namespace Yttrium
             //__________________________________________________________________
         protected:
             //! setup with [no|auto] proxy
-            explicit ProtoLinked() : LINKED<NODE>(), proxy() {}
+            explicit ProtoLinked() : LINKED(), proxy() {}
 
             //! setup with proxy (manual or copy)
-            explicit ProtoLinked(const ProxyType &_) noexcept : LINKED<NODE>(), proxy(_) {}
+            explicit ProtoLinked(const ProxyType &_) noexcept : LINKED(), proxy(_) {}
 
         public:
             //! cleanup
