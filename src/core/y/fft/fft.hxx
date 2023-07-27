@@ -79,8 +79,7 @@ namespace Yttrium
         }
     }
 
-    template <>
-    void FFT:: Raw(Real data[], const size_t n, const int isign) noexcept
+    static inline void Raw(Real data[], const size_t n, const int isign) noexcept
     {
         typedef typename LongTypeFor<Real>::Type LongReal;
         static  const    LongReal PI = _FFT<LongReal>::PI;
@@ -120,31 +119,52 @@ namespace Yttrium
 
 
     template <>
-    void FFT:: Opt(Real data[], const size_t n, const int isign) noexcept
+    void FFT:: Forward<Real>(Real data[], const size_t size) noexcept
+    {
+        Raw(data,MakeXBR(data,size),1);
+    }
+
+    template <>
+    void FFT:: Reverse<Real>(Real data[], const size_t size) noexcept
+    {
+        Raw(data,MakeXBR(data,size),-1);
+    }
+
+
+    static inline void Opt(Real         data[],
+                           const size_t n,
+                           const typename LongTypeFor<Real>::Type Sin[],
+                           const typename LongTypeFor<Real>::Type Aux[]) noexcept
     {
         typedef typename LongTypeFor<Real>::Type LongReal;
-        //static  const    LongReal PI = _FFT<LongReal>::PI;
-        //static  const    LongReal half(0.5);
-        LongReal  wr,wpr,wpi,wi;//,theta;
+        typedef Complex<Real> Cplx;
+        static const LongReal one(1);
+        static const LongReal zero(0);
 
         size_t   mmax=2;
-        unsigned iln2=2;
+        unsigned curr=2;
+        unsigned next=3;
         while(n>mmax)
         {
-            const size_t step = FFT_Iter[iln2];
-            //theta=isign*(PI/step);
-            //LongReal wtemp = std::sin(half*theta);
-            LongReal wtemp = isign * _FFT<LongReal>::Sin[iln2+1];
-            wpr = -2.0*wtemp*wtemp;
-           // wpi = std::sin(theta);
-            wpi = isign * _FFT<LongReal>::Sin[iln2];
-            wr=1;
-            wi=0;
+            const size_t step  = FFT_Iter[curr];
+            LongReal     wtemp = Sin[next];
+            LongReal     wpr   = Aux[next];
+            LongReal     wpi   = Sin[curr];
+            LongReal     wr    = one;
+            LongReal     wi    = zero;
             for(size_t m=1;m<mmax;m+=2)
             {
-                for(size_t i=m;i<=n;i+=step)
+                for(size_t i=m;i<n;i+=step)
                 {
+                    assert(i>=1);
+                    assert(i<n);
                     const size_t j=i+mmax;
+                    assert(j>=1);
+                    assert(j<n);
+                    //const Cplx   dj = *(const Cplx*)(&data[j]);
+                    //std::cerr << data[j] << "," << data[j+1] << " / " << dj << std::endl;
+                    //assert(dj.re==data[j]);
+                    //assert(dj.im==data[j+1]);
                     const size_t ip=i+1;
                     const size_t jp=j+1;
                     const Real tempr=static_cast<Real>(wr*data[j]-wi*data[jp]);
@@ -158,9 +178,33 @@ namespace Yttrium
                 wi=wi*wpr+wtemp*wpi+wi;
             }
             mmax=step;
-            //step <<= 1;
-            ++iln2;
+            curr=next;
+            ++next;
         }
+    }
+
+    template <>
+    void FFT:: forward(Complex<Real>   cplx[],
+                       const size_t    size,
+                       const unsigned  shift) noexcept
+    {
+        typedef typename LongTypeFor<Real>::Type LongReal;
+        Opt((&(cplx[0].re))-1,
+            makeXBR(cplx,size,shift),
+            _FFT<LongReal>::Fwd,
+            _FFT<LongReal>::Aux);
+    }
+
+    template <>
+    void FFT:: reverse(Complex<Real>   cplx[],
+                       const size_t    size,
+                       const unsigned  shift) noexcept
+    {
+        typedef typename LongTypeFor<Real>::Type LongReal;
+        Opt((&(cplx[0].re))-1,
+            makeXBR(cplx,size,shift),
+            _FFT<LongReal>::Rev,
+            _FFT<LongReal>::Aux);
     }
 
 

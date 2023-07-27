@@ -44,24 +44,28 @@ YFN(FN,60), YFN(FN,61), YFN(FN,62), YFN(FN,63)
     struct _FFT
     {
         static const T PI;
-        static const T Sin[];
+        static const T two;
+        static const T Fwd[];
+        static const T Rev[];
+        static const T Aux[];
     };
 
 
 #define Y_FFT_SIN(denom) std::sin(PI/denom)
+#define Y_FFT_AUX(denom) -two*Squared(std::sin(PI/denom) )
 
-    template <> const double       _FFT<double>::PI      =  M_PI;
-    template <> const double       _FFT<double>::Sin [] =
-    {
-        Y_FFT_REP(Y_FFT_SIN)
-    };
+    template <> const double      _FFT<double>::PI     =  M_PI;
+    template <> const double      _FFT<double>::two    =  2.0;
+    template <> const double      _FFT<double>::Fwd [] = { Y_FFT_REP(Y_FFT_SIN)  };
+    template <> const double      _FFT<double>::Rev [] = { Y_FFT_REP(-Y_FFT_SIN) };
+    template <> const double      _FFT<double>::Aux [] = { Y_FFT_REP(Y_FFT_AUX)  };
 
-    template <> const long double  _FFT<long double>::PI  = static_cast<long double>(M_PI);
-    template <> const long double  _FFT<long double>::Sin [] =
-    {
-        Y_FFT_REP(Y_FFT_SIN)
-    };
-    
+    template <> const long double _FFT<long double>::PI     = static_cast<long double>(M_PI);
+    template <> const long double _FFT<long double>::two    =  2.0l;
+    template <> const long double _FFT<long double>::Fwd [] = { Y_FFT_REP(Y_FFT_SIN)  };
+    template <> const long double _FFT<long double>::Rev [] = { Y_FFT_REP(-Y_FFT_SIN) };
+    template <> const long double _FFT<long double>::Aux [] = { Y_FFT_REP(Y_FFT_AUX)  };
+
     size_t FFT:: CountXBR(const size_t size) noexcept
     {
         assert(IsPowerOfTwo(size));
@@ -131,14 +135,14 @@ YFN(FN,60), YFN(FN,61), YFN(FN,62), YFN(FN,63)
             std::cerr << "-- Initializing FFT Engine" << std::endl;
         }
 
-        std::cerr << "#Iter=" << sizeof(FFT_Iter)/sizeof(FFT_Iter[0]) << std::endl;
-        Core::Display(std::cerr,FFT_Iter, sizeof(FFT_Iter)/sizeof(FFT_Iter[0])) << std::endl;
+        assert(64==sizeof(FFT_Iter)/sizeof(FFT_Iter[0]));
+        assert(64==sizeof(_FFT<double>::Fwd)/sizeof(double));
+        assert(64==sizeof(_FFT<double>::Rev)/sizeof(double));
+        assert(64==sizeof(_FFT<double>::Aux)/sizeof(double));
 
-        std::cerr << "#SinD=" << sizeof(_FFT<double>::Sin)/sizeof(double) << std::endl;
-        Core::Display(std::cerr,_FFT<double>::Sin,64) << std::endl;
-
-        std::cerr << "#SinL=" << sizeof(_FFT<long double>::Sin)/sizeof(long double) << std::endl;
-        Core::Display(std::cerr,_FFT<long double>::Sin,64) << std::endl;
+        assert(64==sizeof(_FFT<long double>::Fwd)/sizeof(long double));
+        assert(64==sizeof(_FFT<long double>::Rev)/sizeof(long double));
+        assert(64==sizeof(_FFT<long double>::Aux)/sizeof(long double));
 
         Y_STATIC_ZARR(XBRT);
         Y_STATIC_ZARR(xbrp);

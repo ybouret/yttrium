@@ -103,33 +103,21 @@ namespace Yttrium
 
 
         //! data[1..2*nn]
-        template <typename T> static inline
-        void Forward(T data[], const size_t size) noexcept
-        {
-            Raw(data,MakeXBR(data,size),1);
-        }
+        template <typename T> static void Forward(T data[], const size_t size) noexcept;
 
         //! data[1..2*nn]
-        template <typename T> static inline
-        void Reverse(T data[], const size_t size) noexcept
-        {
-            Raw(data,MakeXBR(data,size),-1);
-        }
+        template <typename T> static void Reverse(T data[], const size_t size) noexcept;
+
 
 
 
 
         //! cplx[1..size]
-        template <typename T> inline
-        void run(Complex<T  >   cplx[],
-                 const size_t   size,
-                 const unsigned shift,
-                 const int      isign) noexcept
-        {
+        template <typename T> void forward(Complex<T> cplx[], const size_t size, const unsigned shift) noexcept;
 
-            T    *       data = (&(cplx[0].re))-1;
-            Opt(data,makeXBR(cplx,size,shift),isign);
-        }
+        //! cplx[1..size]
+        template <typename T> void reverse(Complex<T> cplx[], const size_t size, const unsigned shift) noexcept;
+
         
 
     private:
@@ -141,10 +129,6 @@ namespace Yttrium
         typedef const uint32_t *PTR32;     //!< alias
         PTR32           xbrp[MaxShift+1];  //!< swap indices positions
         size_t          xbrn[MaxShift+1];  //!< number of swaps
-
-
-        template <typename T> static void Raw(T data[], const size_t n, const int isign) noexcept;
-        template <typename T> static void Opt(T data[], const size_t n, const int isign) noexcept;
 
     };
 

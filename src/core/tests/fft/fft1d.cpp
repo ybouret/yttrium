@@ -42,16 +42,16 @@ namespace
         if(false)
         {
             std::cerr << std::endl;
-            fft.run(&cbuf[0],size,shift,1);
+            fft.forward(&cbuf[0],size,shift);
             return;
         }
         
 
         FFT::Forward(r-1,size);
-        fft.run(&cbuf[0],size,shift,1);
+        fft.forward(&cbuf[0],size,shift);
         Y_ASSERT(rbuf.HasSameContentThan(cbuf));
         FFT::Reverse(r-1,size);
-        fft.run(&cbuf[0],size,shift,-1);
+        fft.reverse(&cbuf[0],size,shift);
         Y_ASSERT(rbuf.HasSameContentThan(cbuf));
 
         if(sizeof(T)>=sizeof(double))
@@ -76,8 +76,8 @@ namespace
         std::cerr << " | Run: @" << HumanReadable(tmx.speed());
 
         Y_Timing(tmx,
-                 fft.run(&cbuf[0],size,shift,1);
-                 fft.run(&cbuf[0],size,shift,-1),
+                 fft.forward(&cbuf[0],size,shift);
+                 fft.reverse(&cbuf[0],size,shift),
                  Duration);
         std::cerr << " | run: @" << HumanReadable(tmx.speed());
 
