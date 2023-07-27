@@ -59,7 +59,5 @@ Y_UTEST(apex_block)
     display< Apex::Block<uint32_t> >(ran);
     display< Apex::Block<uint64_t> >(ran);
 
-    //Y_SIZEOF(uint_fast64_t);
-
 }
 Y_UDONE()

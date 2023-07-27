@@ -84,7 +84,7 @@ words( bytes >> WordShift )
             //
             //__________________________________________________________________
 
-            //! setup for usrBytes
+            //! setup for usrBytes BYTES
             explicit Block(size_t usrBytes) :
             Y_APEX_BLOCK_CTOR(Nexus::Block::ShiftFor(usrBytes))
             {
