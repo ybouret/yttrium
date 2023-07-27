@@ -1,11 +1,20 @@
 
+#if defined(_MSC_VER)
+#define _USE_MATH_DEFINES
+#endif
 
+#if defined(__GNUC__)
+#define _GNU_SOURCE
+#endif
 
 #include "y/fft/fft.hpp"
 #include "y/text/human-readable.hpp"
 #include "y/type/utils.hpp"
 
+
+
 #include <iomanip>
+#include <cmath>
 
 namespace Yttrium
 {
@@ -17,8 +26,8 @@ namespace Yttrium
     };
 
 
-    template <> const double       _FFT<double>::      PI = M_PI;
-    template <> const long double  _FFT<long double>:: PI = static_cast<long double>(M_PI);
+    template <> const double       _FFT<double>::PI = 3.14; // M_PI;
+    template <> const long double  _FFT<long double>::PI = 3.14; // static_cast<long double>(M_PI);
 
     
     size_t FFT:: CountXBR(const size_t size) noexcept
