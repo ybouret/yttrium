@@ -112,7 +112,8 @@ add_test(io::char test-core io_char)
 
 #fft
 add_test(fft:xbr test-core fft_xbr)
-add_test(fft:1d test-core fft_1d)
+add_test(fft:1   test-core fft1)
+add_test(fft:2   test-core fft2)
 
 #string(s)
 add_test(strings test-core strings)

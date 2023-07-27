@@ -1,6 +1,5 @@
 #include "y/fft/fft.hpp"
 #include "y/utest/run.hpp"
-#include "y/memory/legacy.hpp"
 #include "y/utest/timing.hpp"
 #include "y/type/utils.hpp"
 #include "y/memory/buffer/of.hpp"
@@ -36,9 +35,7 @@ namespace
         }
         Y_ASSERT(rbuf.HasSameContentThan(cbuf));
 
-        //Core::Display(std::cerr,r,size*2)      << std::endl;
-        //Core::Display(std::cerr,&cbuf[0],size) << std::endl;
-
+        
         if(false)
         {
             std::cerr << std::endl;
@@ -108,7 +105,7 @@ namespace
 
 }
 
-Y_UTEST(fft_1d)
+Y_UTEST(fft1)
 {
 
     if(argc>1) Duration = atof(argv[1]);

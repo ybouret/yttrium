@@ -109,16 +109,27 @@ namespace Yttrium
         template <typename T> static void Reverse(T data[], const size_t size) noexcept;
 
 
+        //! fft1[1..2n], fft2[1..2n], data1[1..n], data1[1..n]
+        template <typename T>
+        static void Forward( T fft1[], T fft2[], const T data1[], const T data2[], const size_t n) noexcept;
 
-
-
+        
         //! cplx[1..size]
         template <typename T> void forward(Complex<T> cplx[], const size_t size, const unsigned shift) noexcept;
 
         //! cplx[1..size]
         template <typename T> void reverse(Complex<T> cplx[], const size_t size, const unsigned shift) noexcept;
 
-        
+
+        //! fft1[1..size], fft2[1..size], data1[1..size], data2[1..size]
+        template <typename T> void forward(Complex<T>     fft1[],
+                                           Complex<T>     fft2[],
+                                           const T        data1[],
+                                           const T        data2[],
+                                           const size_t   size,
+                                           const unsigned shift) noexcept;
+
+
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(FFT);
