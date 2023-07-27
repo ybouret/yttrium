@@ -248,12 +248,35 @@ namespace
             }
         }
 
-        
+        std::cerr << "   (*) FFT mul" << std::endl;
+        {
+            const PROTO lhs(30,ran);
+            const PROTO rhs(30,ran);
+            lhs.printHex(std::cerr << "\t"); std::cerr << std::endl;
+            rhs.printHex(std::cerr << "\t"); std::cerr << std::endl;
+
+            const hPROTO proto( PROTO::FFT_Mul(lhs.block.entry,lhs.words,
+                                               rhs.block.entry,rhs.words,0) );
+        }
+
 
 
     }
 }
 
+
+template <typename T>
+static inline void testMakeBytes(Random::Bits &ran)
+{
+    T w = ran.to<T>();
+    std::cerr << "-- Getting Bytes From " << Hexadecimal(w) << " =>";
+    const uint8_t *u = Apex::MakeBytes::From(w);
+    for(size_t i=0;i<sizeof(T);++i)
+    {
+        std::cerr << ' ' << Hexadecimal(u[i]);
+    }
+    std::cerr << std::endl;
+}
 
 Y_UTEST(apex_proto)
 {
@@ -263,6 +286,7 @@ Y_UTEST(apex_proto)
 
     TestProto<uint64_t,uint32_t>( ran );
     TestProto<uint64_t,uint16_t>( ran );
+
     TestProto<uint64_t,uint8_t>(  ran );
 
     TestProto<uint32_t,uint16_t>( ran );
@@ -270,7 +294,9 @@ Y_UTEST(apex_proto)
 
     TestProto<uint16_t,uint8_t>(  ran );
 
-
+    testMakeBytes<uint8_t>(ran);
+    testMakeBytes<uint16_t>(ran);
+    testMakeBytes<uint32_t>(ran);
 
 
 }

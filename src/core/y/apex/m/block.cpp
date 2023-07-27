@@ -8,7 +8,8 @@ namespace Yttrium
     namespace Apex
     {
         const IncreaseSize_ IncreaseSize = {};
-
+        const NoMemoryCopy_ NoMemoryCopy = {};
+        
         namespace Nexus
         {
 

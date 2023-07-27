@@ -43,6 +43,8 @@ namespace Yttrium
 
         typedef Int2Type<1>        IncreaseSize_; //!< alias
         extern const IncreaseSize_ IncreaseSize;  //!< alias
+        typedef Int2Type<0>        NoMemoryCopy_; //!< alias
+        extern const NoMemoryCopy_ NoMemoryCopy;  //!< alias
 
         //______________________________________________________________________
         //
@@ -90,7 +92,7 @@ words( bytes >> WordShift )
             {
             }
 
-            //! copy
+            //! copy with copy
             explicit Block(const Block &other) :
             Y_APEX_BLOCK_CTOR(other.shift)
             {
@@ -99,6 +101,16 @@ words( bytes >> WordShift )
                 assert(words>=other.words);
                 memcpy(entry,other.entry,other.bytes);
             }
+
+            //! copy WITHOUT data copu
+            explicit Block(const Block &other, const NoMemoryCopy_ &) :
+            Y_APEX_BLOCK_CTOR(other.shift)
+            {
+                assert(shift>=other.shift);
+                assert(bytes>=other.bytes);
+                assert(words>=other.words);
+            }
+
 
             //! copy with increasing capacity
             explicit Block(const Block &other, const IncreaseSize_ &) :

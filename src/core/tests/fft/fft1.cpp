@@ -14,10 +14,6 @@ namespace
 
     static double Duration = 0.1;
 
-
-
-
-
     template <typename T> static inline
     void checkFFT( FFT &fft, const unsigned shift )
     {
@@ -27,6 +23,7 @@ namespace
         Memory::BufferOf<T>            rbuf(size*2);
         Memory::BufferOf< Complex<T> > cbuf(size);
 
+        // initializing
         T *r = &rbuf[0];
         T *c = &cbuf[0].re;
         for(size_t i=0;i<size*2;++i)
@@ -70,6 +67,7 @@ namespace
         tmx.reset();
         while(true)
         {
+            // refill to avoid NaN
             for(size_t i=0;i<size*2;++i)
             {
                 r[i] = T(i);
@@ -86,6 +84,7 @@ namespace
         tmx.reset();
         while(true)
         {
+            // refill to avoid NaN
             for(size_t i=0;i<size*2;++i)
             {
                 c[i] = T(i);

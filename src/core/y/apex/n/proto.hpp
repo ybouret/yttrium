@@ -16,6 +16,7 @@
 #include "y/type/signs.hpp"
 #include "y/memory/out-of-reach.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/fft/fft.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -89,6 +90,40 @@ namespace Yttrium
                 Y_DISABLE_COPY_AND_ASSIGN(Proto);
             };
         }
+
+
+        struct MakeBytes
+        {
+            static inline const uint8_t *From( uint8_t &c ) noexcept
+            {
+                return &c;
+            }
+
+            static inline const uint8_t *From( uint16_t &c ) noexcept
+            {
+                const uint8_t b0 = uint8_t(c);
+                const uint8_t b1 = uint8_t(c>>8);
+                uint8_t      *p  = (uint8_t *)&c;
+                p[0] = b0;
+                p[1] = b1;
+                return p;
+            }
+
+            static inline const uint8_t *From( uint32_t &c ) noexcept
+            {
+                const uint8_t b0 = uint8_t(c);
+                const uint8_t b1 = uint8_t(c>>8);
+                const uint8_t b2 = uint8_t(c>>16);
+                const uint8_t b3 = uint8_t(c>>24);
+                uint8_t      *p  = (uint8_t *)&c;
+                p[0] = b0;
+                p[1] = b1;
+                p[2] = b2;
+                p[3] = b3;
+                return p;
+            }
+
+        };
 
         //______________________________________________________________________
         //
@@ -956,12 +991,48 @@ namespace Yttrium
                 return LongMul(lhs.block.entry,lhs.words,alias.w,alias.n,0);
             }
 
+            typedef Complex<double> cplx;
+
+            static inline
+            void FillRe(cplx           * fft,
+                        const WordType * w,
+                        const size_t     n) noexcept
+            {
+                size_t j = 0;
+                for(size_t i=0;i<n;++i)
+                {
+                    WordType       W = w[i];
+                    const uint8_t *B = MakeBytes::From(W);
+                    for(size_t k=0;k<WordSize;++k)
+                        fft[j++].re = B[k];
+                }
+            }
+
+            static inline
+            void FillIm(cplx           * fft,
+                        const WordType * w,
+                        const size_t     n) noexcept
+            {
+                size_t j = 0;
+                for(size_t i=0;i<n;++i)
+                {
+                    WordType       W = w[i];
+                    const uint8_t *B = MakeBytes::From(W);
+                    for(size_t k=0;k<WordSize;++k)
+                        fft[j++].im = B[k];
+                }
+            }
+
+
+
+
 
             static inline
             Proto * FFT_Mul(const WordType * const a, const size_t p,
                             const WordType * const b, const size_t q,
                             uint64_t * )
             {
+                static FFT &fft = FFT::Instance();
                 assert(0!=a);
                 assert(0!=b);
                 if(p<=0)
@@ -978,13 +1049,31 @@ namespace Yttrium
                     {
                         assert(p>0);
                         assert(q>0);
-                        const size_t   w = p+q;
-                        size_t         n = w*WordSize;               //! number of bytes
-                        const unsigned s = Base2<size_t>::LogFor(n); //! workspace
-                        
+                        const size_t   w = p+q; //! result width
+                        Block<cplx>    c1( w * (WordSize*sizeof(cplx) ) );
+                        cplx          *fft1     = c1.entry;
+                        const size_t   fftWords = c1.words;
+                        const unsigned fftShift = c1.shift - iLog2Of<cplx>::Value;
+                        assert(fftWords >= w*WordSize );
+                        FillRe(fft1,a,p);
+                        FillIm(fft1,b,q);
+                        Core::Display(std::cerr,fft1,fftWords) << std::endl;
+
+                        fft.forward(fft1,fftWords,fftShift);
+                        {
+                            Block<cplx>    c2(c1,NoMemoryCopy);
+                            cplx *fft2 = c2.entry;
+                            FFT::Unpack(&(fft1->re) -1, &(fft2->re) -1, fftWords);
+                            for(size_t i=0;i<fftWords;++i)
+                            {
+                                fft1[i] *= fft2[i];
+                            }
+                        }
+                        fft.reverse(fft1,fftWords,fftShift);
+                        Core::Display(std::cerr,fft1,fftWords) << std::endl;
+                        return 0;
                     }
                 }
-                return 0;
             }
 
 
