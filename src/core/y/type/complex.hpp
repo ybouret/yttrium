@@ -185,7 +185,7 @@ namespace Yttrium
         //! x/z
         inline friend Complex operator/(const T x, const Complex &z)
         {
-            retur (x*z.conj())/z.mod2();
+            return (x*z.conj())/z.mod2();
         }
 
         //! X/Y
