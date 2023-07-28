@@ -57,6 +57,26 @@ namespace Yttrium
             return Rational(N,b.denom);
         }
 
+        Rational   operator * (const Rational &a, const Natural &b)
+        {
+            if( Sign::ZeroIsFoundIn( Sign::MakePair(a.numer.s,b.getSign())))
+                return Rational(0);
+            assert(a.numer!=0);
+            assert(b!=0);
+            const Integer N = a.numer  * b;
+            return Rational(N,a.denom);
+        }
+
+        Rational   operator * (const Natural &a, const Rational &b)
+        {
+            if( Sign::ZeroIsFoundIn( Sign::MakePair(a.getSign(),b.numer.s)))
+                return Rational(0);
+            assert(a!=0);
+            assert(b.numer!=0);
+            const Integer N = a * b.numer;
+            return Rational(N,b.denom);
+        }
+
     }
 
 }
