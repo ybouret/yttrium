@@ -80,6 +80,7 @@ Y_UTEST_DECL(256)
 
     Y_UTEST(io_char);
     Y_UTEST(io_buffer);
+    Y_UTEST(io_istream);
     Y_UTEST(io_ostream);
 
     Y_UTEST(fft1);

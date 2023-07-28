@@ -11,7 +11,7 @@ namespace Yttrium
     
     namespace Libc
     {
-        class IOBuffer
+        class IOBuffer : public IO::Chars
         {
         public:
             explicit IOBuffer();
@@ -20,7 +20,6 @@ namespace Yttrium
             const size_t   bytes;
             const unsigned shift;
             char * const   entry;
-            IO::Chars      chars;
             IO::Stock      stock;
 
         private:

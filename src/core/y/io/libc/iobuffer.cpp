@@ -36,9 +36,11 @@ namespace Yttrium
         }
 
         IOBuffer:: IOBuffer() :
+        IO::Chars(),
         bytes( BUFSIZ ),
         shift( Base2<size_t>::LogFor( Coerce(bytes) )  ),
-        entry( MemAcquire(Coerce(bytes),Coerce(shift)) )
+        entry( MemAcquire(Coerce(bytes),Coerce(shift)) ),
+        stock()
         {
             std::cerr << "acquired " << bytes << " for " << BUFSIZ << std::endl;
             try {

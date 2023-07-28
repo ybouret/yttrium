@@ -28,7 +28,7 @@ namespace Yttrium
 
         protected:
             void      *handle;
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(File);
             const bool mustClose;

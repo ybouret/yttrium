@@ -9,12 +9,19 @@ namespace Yttrium
 
     namespace Libc
     {
+        File:: File(void *user, const bool flag) noexcept :
+        handle(user),
+        mustClose(flag)
+        {
+
+        }
+
         File:: ~File() noexcept
         {
             assert(0!=handle);
             if(mustClose)
             {
-                (void)fclose( (FILE*)handle );
+                (void)fclose( static_cast<FILE*>(handle) );
                 handle = 0;
             }
         }
