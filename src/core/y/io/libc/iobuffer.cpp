@@ -40,6 +40,7 @@ namespace Yttrium
         shift( Base2<size_t>::LogFor( Coerce(bytes) )  ),
         chars( MemAcquire(Coerce(bytes),Coerce(shift)) )
         {
+            std::cerr << "acquired " << bytes << " for " << BUFSIZ << std::endl;
         }
 
         IOBuffer:: ~IOBuffer() noexcept
