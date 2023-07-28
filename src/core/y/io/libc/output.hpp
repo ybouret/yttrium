@@ -7,7 +7,7 @@
 
 #include "y/io/stream/output.hpp"
 #include "y/io/libc/file.hpp"
-#include "y/io/libc/iobuffer.hpp"
+#include "y/io/libc/buffer/direct.hpp"
 
 namespace Yttrium
 {
@@ -59,7 +59,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(OutputFile);
-            IOBuffer buffer;
+            Libc::DirectBuffer buffer;
         };
 
 
