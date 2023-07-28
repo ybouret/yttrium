@@ -60,6 +60,16 @@ namespace Yttrium
 
             }
 
+            //! setup WITHOUT memory copy, just copy metrics
+            inline Batch(const Batch &other) :
+            count( other.count ),
+            shift( other.shift ),
+            dataShift( other.dataShift ),
+            addr( static_cast<T*>(Self::Acquire(Coerce(dataShift))) )
+            {
+
+            }
+
             //! cleanup
             inline ~Batch() noexcept
             {
@@ -99,7 +109,7 @@ namespace Yttrium
             const unsigned dataShift; //!< required bytes = 2^dataShift
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Batch);
+            Y_DISABLE_ASSIGN(Batch);
             T       *addr;
 
             static inline unsigned DataShiftFor( const size_t nobj )
