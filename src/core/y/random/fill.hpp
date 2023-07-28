@@ -5,6 +5,7 @@
 #define Y_Random_Fill_Included 1
 
 #include "y/random/bits.hpp"
+#include "y/memory/out-of-reach.hpp"
 
 namespace Yttrium
 {
@@ -24,6 +25,12 @@ namespace Yttrium
                               Bits &        ran,
                               const uint8_t lo=0x00,
                               const uint8_t hi=0xff) noexcept;
+
+            template <typename T> static inline
+            void Fuzzy(T &obj, Bits &ran) noexcept
+            {
+                Block(Memory::OutOfReach::Addr(&obj), sizeof(T), ran,0x01,0xff);
+            }
             
         };
 
