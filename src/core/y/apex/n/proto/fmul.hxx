@@ -72,6 +72,9 @@ Proto * FFT_Mul(const WordType * const a, const size_t p,
             FillIm(fft1(),b,q); std::cerr << std::endl;
 
             Core::Display(std::cerr << "pack=", fft1(), fft1.count) << std::endl;
+            cplx::Type *f1 = (&fft1()->re) - 1;
+            Core::Display(std::cerr << "real=", f1+1, fft1.count*2) << std::endl;
+            FFT::Forward(f1,fft1.count);
 
             
             return 0;
