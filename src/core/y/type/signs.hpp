@@ -121,6 +121,22 @@ namespace Yttrium
             return MakePair( Of(lhs), Of(rhs) );
         }
 
+        //______________________________________________________________________
+        //
+        //
+        //! return true for 5 pairs with Z
+        //
+        //______________________________________________________________________
+        static bool ZeroIsFoundIn(const PairOfSigns pair) noexcept;
+
+        //______________________________________________________________________
+        //
+        //
+        //! return true for 4 pairs without Z
+        //
+        //______________________________________________________________________
+        static bool ZeroIsMissing(const PairOfSigns pair) noexcept;
+
     };
 
 

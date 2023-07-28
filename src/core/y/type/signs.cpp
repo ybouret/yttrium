@@ -59,4 +59,44 @@ namespace Yttrium
         return ZZ_Signs;
 #endif
     }
+
+    bool Sign:: ZeroIsFoundIn(const PairOfSigns pair) noexcept
+    {
+        switch(pair)
+        {
+            case ZN_Signs:
+            case ZZ_Signs:
+            case ZP_Signs:
+            case NZ_Signs:
+            case PZ_Signs:
+                return true;
+
+            case NN_Signs:
+            case PP_Signs:
+            case NP_Signs:
+            case PN_Signs:
+                break;
+        }
+        return false;
+    }
+
+    bool Sign:: ZeroIsMissing(const PairOfSigns pair) noexcept
+    {
+        switch(pair)
+        {
+            case ZN_Signs:
+            case ZZ_Signs:
+            case ZP_Signs:
+            case NZ_Signs:
+            case PZ_Signs:
+                return false;
+
+            case NN_Signs:
+            case PP_Signs:
+            case NP_Signs:
+            case PN_Signs:
+                break;
+        }
+        return true;
+    }
 }

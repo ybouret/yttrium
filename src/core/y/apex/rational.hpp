@@ -113,7 +113,9 @@ Rational & Rational:: operator OP##=(const Natural  & lhs) Y_APQ_BINARY_BODY(OP)
             //
             //__________________________________________________________________
             Rational operator+() const; //!< unary +
-            Y_APQ_BINARY_DECL(+);       //!< all operators
+
+            //! all operators
+            Y_APQ_BINARY_DECL(+);
 
 
             //__________________________________________________________________
@@ -123,7 +125,20 @@ Rational & Rational:: operator OP##=(const Natural  & lhs) Y_APQ_BINARY_BODY(OP)
             //
             //__________________________________________________________________
             Rational operator-() const; //!< unary -
-            Y_APQ_BINARY_DECL(-);       //!< all operators
+            //! all operators
+            Y_APQ_BINARY_DECL(-);
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Mul
+            //
+            //__________________________________________________________________
+
+            //! all operators
+            Y_APQ_BINARY_DECL(*);
+
 
             //__________________________________________________________________
             //
