@@ -2,8 +2,8 @@
 
 //! \file
 
-#ifndef Y_IO_Libc_Input_Included
-#define Y_IO_Libc_Input_Included 1
+#ifndef Y_IO_Libc_Output_Included
+#define Y_IO_Libc_Output_Included 1
 
 #include "y/io/stream/output.hpp"
 #include "y/io/libc/file.hpp"
@@ -30,17 +30,21 @@ namespace Yttrium
     {
         class OutputGrasp
         {
-        public:
-            virtual ~OutputGrasp() noexcept;
 
         protected:
             explicit OutputGrasp(const StdErr_ &) noexcept;
             explicit OutputGrasp(const StdOut_ &) noexcept;
             explicit OutputGrasp(const char *   );
 
+        public:
+            virtual ~OutputGrasp() noexcept;
+
             const bool isErr;
             const bool isOut;
             const bool isReg;
+
+        protected:
+            void *openFile(const char *, const bool append);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(OutputGrasp);
@@ -54,7 +58,7 @@ namespace Yttrium
 
             explicit OutputFile(const StdErr_ &);
             explicit OutputFile(const StdOut_ &);
-            explicit OutputFile(const char *fileName);
+            explicit OutputFile(const char *fileName, const bool append=false);
             explicit OutputFile(const Core::String<char> &fileName);
 
 

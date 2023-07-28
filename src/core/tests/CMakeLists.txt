@@ -112,6 +112,7 @@ add_test(io:char    test-core io_char)
 add_test(io:buffers test-core io_buffers)
 add_test(io:istream test-core io_istream)
 add_test(io:ostream test-core io_ostream)
+add_test(io:copy    test-core io_copy)
 
 #fft
 add_test(fft:1   test-core fft1)

@@ -60,6 +60,7 @@ namespace Yttrium
         }
 
 
+
     }
 
     namespace Libc
@@ -87,6 +88,42 @@ namespace Yttrium
             return fp;
         }
 
+
+        void * OutputGrasp:: openFile(const char *fileName,
+                                      const bool append)
+        {
+            assert(0!=fileName);
+
+            if(isErr)
+            {
+                assert(!isOut);
+                assert(!isReg);
+                assert(0==strcmp(fileName,Y_STDERR));
+                return openErr();
+            }
+
+            if(isOut)
+            {
+                assert(!isErr);
+                assert(!isReg);
+                assert(0==strcmp(fileName,Y_STDOUT));
+                return openOut();
+            }
+
+            assert(isReg);
+            assert(!isErr);
+            assert(!isOut);
+
+            const char *mode = append ? "ab" : "wb";
+            Y_GIANT_LOCK();
+            FILE *fp = fopen(fileName,mode);
+            if(!fp)
+            {
+                throw Libc::Exception(errno,"fopen(%s)",fileName);
+            }
+            return fp;
+        }
+
         OutputFile:: OutputFile(const StdErr_ &_) :
         OutputStream(),
         OutputGrasp(_),
@@ -105,10 +142,10 @@ namespace Yttrium
         }
 
 
-        OutputFile:: OutputFile(const char *fileName) :
+        OutputFile:: OutputFile(const char *fileName, const bool append) :
         OutputStream(),
         OutputGrasp(fileName),
-        Libc::File( 0, 0),
+        Libc::File( openFile(fileName,append), isReg),
         buffer()
         {
         }
