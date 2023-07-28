@@ -43,6 +43,7 @@ fft
 apex
 apex/m
 apex/n
+apex/n/proto
 apex/z
 apex/q
 counting
