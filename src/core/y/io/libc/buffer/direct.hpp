@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_IO_Libc_Direct_Buffer_Included
@@ -12,14 +11,34 @@ namespace Yttrium
     namespace Libc
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! buffer with direct access for output file
+        //
+        //
+        //______________________________________________________________________
         class DirectBuffer : public SystemBuffer
         {
         public:
-            explicit DirectBuffer();
-            virtual ~DirectBuffer() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit DirectBuffer();           //!< setup
+            virtual ~DirectBuffer() noexcept;  //!< cleanup
 
-            char       *       curr;
-            const char * const last;
+            //__________________________________________________________________
+            //
+            //
+            // members
+            //
+            //__________________________________________________________________
+            char       *       curr; //!< in buffer.entry..last
+            const char * const last; //!< buffer.entry + buffer.bytes
 
 
         private:

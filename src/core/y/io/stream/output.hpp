@@ -7,6 +7,7 @@
 
 #include "y/io/stream.hpp"
 #include "y/memory/buffer/ro.hpp"
+#include "y/check/printf.hpp"
 
 namespace Yttrium
 {
@@ -20,22 +21,41 @@ namespace Yttrium
     //______________________________________________________________________
     class OutputStream : public virtual Stream
     {
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
     protected:
         explicit OutputStream() noexcept; //!< setup
 
     public:
         virtual ~OutputStream() noexcept; //!< cleanup
 
-        virtual void write(const char) = 0;
-        virtual void flush()           = 0;
+        //______________________________________________________________________
+        //
+        //
+        // Interface
+        //
+        //______________________________________________________________________
+        virtual void write(const char) = 0; //!< write one char
+        virtual void flush()           = 0; //!< flush cache is any
 
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+
+        //! write blocks of memory
         void write(const void *blockAddr, const size_t blockSize);
 
-        OutputStream & operator<<(const char );
-        OutputStream & operator<<(const char *);
-        OutputStream & operator<<(const Memory::ReadOnlyBuffer &);
-
-
+        OutputStream & operator<<(const char );                      //!< helper
+        OutputStream & operator<<(const char *);                     //!< helper
+        OutputStream & operator<<(const Memory::ReadOnlyBuffer &);   //!< helper
+        OutputStream & operator()(const char *fmt,...) Y_PRINTF_API; //!< helper
 
 
 

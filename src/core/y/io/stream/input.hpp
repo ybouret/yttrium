@@ -29,11 +29,11 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        // methods
+        // Interface
         //
         //______________________________________________________________________
-        virtual bool query(char & data) = 0;
-        virtual void store(const  char) = 0;
+        virtual bool query(char & data) = 0; //!< query a single char, false = EOS
+        virtual void store(const  char) = 0; //!< unread a char
 
 
     private:

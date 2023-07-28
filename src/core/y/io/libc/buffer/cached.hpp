@@ -16,16 +16,43 @@ namespace Yttrium
     namespace Libc
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! buffer with cached access for input file
+        //
+        //
+        //______________________________________________________________________
         class CachedBuffer : public SystemBuffer, public IO::Chars
         {
         public:
-            explicit CachedBuffer();
-            virtual ~CachedBuffer() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit CachedBuffer();           //!< setup
+            virtual ~CachedBuffer() noexcept;  //!< cleanup
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
             void     ready();           //!< stock.size>=bytes
             void     prune() noexcept;  //!< size+stock.size == bytes
-            void     unget(const char); //!< force new char
+            void     unget(const char); //!< force new char at head
 
-            IO::Stock stock;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            IO::Stock stock; //!< local memory
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(CachedBuffer);

@@ -77,8 +77,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             void         gc()     noexcept; //!< prune buffer
-            
-            bool         getLine(IO::Chars &line);
+            bool         getLine(IO::Chars &line); //!< get a line delimited by cr,lf, or crlf
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(InputFile);

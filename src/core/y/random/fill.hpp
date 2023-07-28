@@ -26,6 +26,7 @@ namespace Yttrium
                               const uint8_t lo=0x00,
                               const uint8_t hi=0xff) noexcept;
 
+            //! fill object with positive bytes
             template <typename T> static inline
             void Fuzzy(T &obj, Bits &ran) noexcept
             {

@@ -162,7 +162,7 @@ namespace Yttrium
             static  const CIntType                       Radix    = CIntType(WordMaxi) + 1;         //!< alias
             static  const CoreType                       WordMask = WordMaxi;                       //!< alias
             typedef AutoPtr<Proto>                       Pointer;                                   //!< alias
-            typedef Complex<double>                      cplx;
+            typedef Complex<double>                      cplx;                                      //!< alias
 
             //__________________________________________________________________
             //

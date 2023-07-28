@@ -11,16 +11,35 @@ namespace Yttrium
 
     namespace Libc
     {
-        
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! base class, adapted to BUFSIZ
+        //
+        //
+        //______________________________________________________________________
         class SystemBuffer
         {
         public:
-            explicit SystemBuffer();
-            virtual ~SystemBuffer() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit SystemBuffer();           //!< setup
+            virtual ~SystemBuffer() noexcept;  //!< cleanup
 
-            const size_t   bytes;
-            const unsigned shift;
-            char * const   entry;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const size_t   bytes; //!< bytes >= BUFSIZ
+            const unsigned shift; //!< bytes=2^shift
+            char * const   entry; //!< first valid char
 
 
         private:

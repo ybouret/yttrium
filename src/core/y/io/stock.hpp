@@ -31,7 +31,13 @@ namespace Yttrium
             explicit Stock() noexcept; //!< setup empty
             virtual ~Stock() noexcept; //!< cleanup
 
-            void     reserve(size_t);
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void     reserve(size_t); //!< reserve extra chars
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Stock);

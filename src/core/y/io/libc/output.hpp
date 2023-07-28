@@ -28,42 +28,90 @@ namespace Yttrium
 
     namespace Libc
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Grasp kind of output
+        //
+        //
+        //______________________________________________________________________
         class OutputGrasp
         {
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
         protected:
-            explicit OutputGrasp(const StdErr_ &) noexcept;
-            explicit OutputGrasp(const StdOut_ &) noexcept;
-            explicit OutputGrasp(const char *   );
+            explicit OutputGrasp(const StdErr_ &) noexcept; //!< StdErr
+            explicit OutputGrasp(const StdOut_ &) noexcept; //!< StdOut
+            explicit OutputGrasp(const char *   );          //!< check name
 
         public:
-            virtual ~OutputGrasp() noexcept;
+            virtual ~OutputGrasp() noexcept; //!< cleanup
 
-            const bool isErr;
-            const bool isOut;
-            const bool isReg;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const bool isErr; //!< -> stderr
+            const bool isOut; //!< -> stdout
+            const bool isReg; //!< -> fopen
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
         protected:
+            //! act according to flags
             void *openFile(const char *, const bool append);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(OutputGrasp);
         };
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! OutputStream based on a C FILE
+        //
+        //
+        //______________________________________________________________________
         class OutputFile : public OutputStream, public OutputGrasp, public File
         {
         public:
-            virtual ~OutputFile() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            virtual ~OutputFile() noexcept;       //!< cleanup
+            explicit OutputFile(const StdErr_ &); //!< stderr
+            explicit OutputFile(const StdOut_ &); //!< stdout
 
-            explicit OutputFile(const StdErr_ &);
-            explicit OutputFile(const StdOut_ &);
+            //! open regular files of Y_STDERR/Y_STDOUT
             explicit OutputFile(const char *fileName, const bool append=false);
-            explicit OutputFile(const Core::String<char> &fileName);
 
+            //! open regular files of Y_STDERR/Y_STDOUT
+            explicit OutputFile(const Core::String<char> &fileName, const bool append=false);
 
-            virtual void write(const char);
-            virtual void flush();
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            virtual void write(const char); //!< emit/write to buffer
+            virtual void flush();           //!< emit
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(OutputFile);
