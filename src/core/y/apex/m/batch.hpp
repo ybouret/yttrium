@@ -74,6 +74,12 @@ namespace Yttrium
                 return addr[i];
             }
 
+            //! access
+            inline T *operator()(void) noexcept
+            {
+                return addr;
+            }
+
 
             //__________________________________________________________________
             //

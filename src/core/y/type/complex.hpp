@@ -4,12 +4,22 @@
 #ifndef Y_Type_Complex_Included
 #define Y_Type_Complex_Included 1
 
-#include "y/config/starting.hpp"
+#include "y/type/signs.hpp"
 #include <iostream>
 #include <cmath>
 
 namespace Yttrium
 {
+    namespace Core
+    {
+        struct Complex
+        {
+            static const char LPAREN = '('; //!< alias
+            static const char RPAREN = ')'; //!< alias
+            static const char PLUS   = '+'; //!< alias
+            static const char IM[4];        //!< "im"
+        };
+    }
     //__________________________________________________________________________
     //
     //
@@ -26,7 +36,8 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        typedef T Type; //!< alias
+        typedef T             Type; //!< alias
+        typedef Core::Complex Self; //!< alias
 
         //______________________________________________________________________
         //
@@ -56,7 +67,12 @@ namespace Yttrium
         //! display
         friend std::ostream & operator<<(std::ostream &os, const Complex &z)
         {
-            os << '(' << z.re << ',' << z.im << ')';
+            switch( Sign::Of(z.im ))
+            {
+                case __Zero__: os << z.re; break;
+                case Positive: os << Self::LPAREN << z.re << Self::PLUS << z.im << Self::IM << Self::RPAREN; break;
+                case Negative: os << Self::LPAREN << z.re <<               z.im << Self::IM << Self::RPAREN; break;
+            }
             return os;
         }
 
@@ -94,9 +110,6 @@ namespace Yttrium
         inline Complex & operator+=(const T x) noexcept
         { re += x; return *this; }
 
-        //! in place add
-        inline void in_place_add(const Complex &z) noexcept
-        {re += z.re; im += z.im; }
 
 
         //______________________________________________________________________
