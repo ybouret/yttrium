@@ -30,17 +30,21 @@ namespace Yttrium
 
         void IOBuffer:: release() noexcept
         {
-            assert(0!=chars);
-            MemRelease(Coerce(chars),Coerce(shift));
+            assert(0!=entry);
+            MemRelease(Coerce(entry),Coerce(shift));
             Coerce(bytes) = 0;
         }
 
         IOBuffer:: IOBuffer() :
         bytes( BUFSIZ ),
         shift( Base2<size_t>::LogFor( Coerce(bytes) )  ),
-        chars( MemAcquire(Coerce(bytes),Coerce(shift)) )
+        entry( MemAcquire(Coerce(bytes),Coerce(shift)) )
         {
             std::cerr << "acquired " << bytes << " for " << BUFSIZ << std::endl;
+            try {
+                stock.reserve(bytes);
+            }
+            catch(...) { release(); throw; }
         }
 
         IOBuffer:: ~IOBuffer() noexcept

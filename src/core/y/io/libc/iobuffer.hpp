@@ -4,6 +4,7 @@
 #define Y_IO_Libc_IOBuff_Included 1
 
 #include "y/io/chars.hpp"
+#include "y/io/stock.hpp"
 
 namespace Yttrium
 {
@@ -18,7 +19,9 @@ namespace Yttrium
 
             const size_t   bytes;
             const unsigned shift;
-            char * const   chars;
+            char * const   entry;
+            IO::Chars      chars;
+            IO::Stock      stock;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(IOBuffer);

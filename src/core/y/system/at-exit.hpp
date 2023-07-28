@@ -25,7 +25,7 @@ namespace Yttrium
         static const char * const CallSign;               //!< "AtExit"
         typedef void *            Arguments;              //!< alias
         typedef void            (*Procedure)(Arguments);  //!< alias
-        typedef int               Longevity;              //!< alias
+        typedef int16_t           Longevity;              //!< alias
         static const size_t       MaxNumber =   64;       //!< internal stack size
         static const Longevity    MaximumLongevity = IntegerFor<Longevity>::Maximum; //!< for giant mutex
 

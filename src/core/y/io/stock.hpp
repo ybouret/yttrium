@@ -30,7 +30,8 @@ namespace Yttrium
             //__________________________________________________________________
             explicit Stock() noexcept; //!< setup empty
             virtual ~Stock() noexcept; //!< cleanup
-            
+
+            void     reserve(size_t);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Stock);
