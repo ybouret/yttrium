@@ -15,6 +15,7 @@ calculus
 io
 io/stream
 io/libc
+io/libc/buffer
 text
 data
 data/list
