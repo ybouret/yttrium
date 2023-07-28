@@ -31,7 +31,7 @@ namespace Yttrium
             explicit Chars() noexcept; //!< setup empty
             virtual ~Chars() noexcept; //!< cleanup
             Chars(const Chars &);      //!< copy
-            Y_OSTREAM_PROTO(Chars);
+            Y_OSTREAM_PROTO(Chars);    //!< display using memory block
             
             //__________________________________________________________________
             //

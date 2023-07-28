@@ -10,16 +10,28 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //! type for internal trigonometry
+    //
+    //__________________________________________________________________________
     template <typename T>
     struct LongTypeFor
     {
-        typedef T Type;
+        typedef T Type; //!< default
     };
 
+    //__________________________________________________________________________
+    //
+    //
+    //! use double precision trigonometry for float FFT
+    //
+    //__________________________________________________________________________
     template <>
     struct LongTypeFor<float>
     {
-        typedef double Type;
+        typedef double Type; //!< specific for float
     };
 
     //__________________________________________________________________________
@@ -67,8 +79,10 @@ namespace Yttrium
         }
 
 
-
-
+        //______________________________________________________________________
+        //
+        //! Forward FFT transform of data[1..2*size]
+        //______________________________________________________________________
         template <typename T>
         static inline void Forward(T            data[],
                                    const size_t size) noexcept
@@ -77,7 +91,10 @@ namespace Yttrium
             Transform(data,size,myPI);
         }
 
-
+        //______________________________________________________________________
+        //
+        //! Forward FFT transform of data[1..2*size]
+        //______________________________________________________________________
         template <typename T>
         static inline void Reverse(T            data[],
                                    const size_t size) noexcept

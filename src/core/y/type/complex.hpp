@@ -12,6 +12,7 @@ namespace Yttrium
 {
     namespace Core
     {
+        //! common data for complexes
         struct Complex
         {
             static const char LPAREN = '('; //!< alias
