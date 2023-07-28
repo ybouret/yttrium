@@ -1,5 +1,3 @@
-
-
 #include "y/apex/m/block.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/shuffle.hpp"

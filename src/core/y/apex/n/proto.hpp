@@ -92,13 +92,16 @@ namespace Yttrium
         }
 
 
+        //! in place data conversion
         struct MakeBytes
         {
+            //! return &c
             static inline const uint8_t *From( uint8_t &c ) noexcept
             {
                 return &c;
             }
 
+            //! return rewritten &c
             static inline const uint8_t *From( uint16_t &c ) noexcept
             {
                 const uint8_t b0 = uint8_t(c);
@@ -109,6 +112,7 @@ namespace Yttrium
                 return p;
             }
 
+            //! return rewritten &c
             static inline const uint8_t *From( uint32_t &c ) noexcept
             {
                 const uint8_t b0 = uint8_t(c);

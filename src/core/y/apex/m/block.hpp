@@ -1,4 +1,3 @@
-
 //! \file
 
 
@@ -62,7 +61,7 @@ words( bytes >> WordShift )
         //
         //
         //
-        //! Handling power-of-two sized blocks of power-of-to sized data
+        //! Handling blocks for Proto
         //
         //
         //______________________________________________________________________

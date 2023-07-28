@@ -10,18 +10,21 @@ namespace Yttrium
 
     namespace Core { template <typename> class String; }
 
-    Y_SHALLOW_DECL(StdIn);
-    Y_SHALLOW_DECL(StdErr);
-    Y_SHALLOW_DECL(StdOut);
+    Y_SHALLOW_DECL(StdIn);   //!< alias
+    Y_SHALLOW_DECL(StdErr);  //!< alias
+    Y_SHALLOW_DECL(StdOut);  //!< alias
 
     namespace Libc
     {
+        //! FILE wrapper
         class File
         {
         protected:
+            //! setup from FILE * and closing flag
             explicit File(void *, const bool) noexcept;
 
         public:
+            //! auto-close
             virtual ~File() noexcept;
 
         private:

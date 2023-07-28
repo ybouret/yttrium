@@ -88,6 +88,7 @@ Y_UTEST_DECL(256)
 
     Y_UTEST(apex_archon);
     Y_UTEST(apex_block);
+    Y_UTEST(apex_batch);
     Y_UTEST(apex_proto);
     Y_UTEST(apex_perf);
     Y_UTEST(apex_n);

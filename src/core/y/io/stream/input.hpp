@@ -26,6 +26,12 @@ namespace Yttrium
     public:
         virtual ~InputStream() noexcept; //!< cleanup
 
+        //______________________________________________________________________
+        //
+        //
+        // methods
+        //
+        //______________________________________________________________________
         virtual bool query(char &C) = 0;
 
 

@@ -29,7 +29,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef ProtoLinked<PoolOf<NODE>>,NODE,PROXY> ProtoType; //!< alias
+            typedef ProtoLinked<PoolOf<NODE>,NODE,PROXY>  ProtoType; //!< alias
             typedef typename ProtoType::ProxyType         ProxyType; //!< alias
             using ProtoType::proxy;
             using ProtoType::store;
