@@ -109,6 +109,7 @@ add_test(ptr:arc  test-core ptr_arc)
 
 #io
 add_test(io:char    test-core io_char)
+add_test(io:buffer  test-core io_buffer)
 add_test(io:ostream test-core io_ostream)
 
 #fft

@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_IO_Chars_Included

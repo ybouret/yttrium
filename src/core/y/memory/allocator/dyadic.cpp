@@ -28,6 +28,16 @@ namespace Yttrium
         {
         }
 
+        void * Dyadic:: acquireBlock(unsigned int &shift)
+        {
+            assert(0!=corpus);
+            static Corpus &mgr = *corpus;
+            if(shift>mgr.MaxShift) throw Specific::Exception(CallSign,"shift request is too high");
+
+            Y_LOCK(Access);
+            return mgr[shift].acquire();
+        }
+
         void * Dyadic:: acquire(size_t & count, const size_t blockSize)
         {
             assert(0!=corpus);
@@ -61,6 +71,8 @@ namespace Yttrium
             size_t         bytes = count;
             const unsigned shift = Base2<size_t>::LogFor(bytes);
             if(bytes!=count) Libc::CriticalError(EINVAL, "%s.release(bad count=%lu)", CallSign, (unsigned long)count );
+
+            Y_LOCK(Access);
             mgr[shift].release(entry);
             entry = 0;
             count = 0;
