@@ -6,6 +6,7 @@
 #include "y/apex/n/split64.hpp"
 #include "y/object.hpp"
 #include "y/apex/m/block.hpp"
+#include "y/apex/m/batch.hpp"
 #include "y/check/static.hpp"
 #include "y/calculus/bit-count.hpp"
 #include "y/type/capacity.hpp"
@@ -414,7 +415,7 @@ namespace Yttrium
             //
             //! get byte[0..bytes-1]
             //__________________________________________________________________
-            uint8_t getByte(const size_t i) const noexcept
+            inline uint8_t getByte(const size_t i) const noexcept
             {
                 assert(i<bytes);
                 WordType w = block.entry[i/WordSize];
@@ -427,9 +428,9 @@ namespace Yttrium
             //
             //! Hexadecimal printing
             //__________________________________________________________________
-            void printHex(std::ostream &os) const
+            inline std::ostream & printHex(std::ostream &os) const
             {
-                if(bytes<=0) { os << '0'; return; }
+                if(bytes<=0) { os << '0'; return os; }
 
                 bool   first = true;
                 size_t i     = bytes;
@@ -449,6 +450,7 @@ namespace Yttrium
                     }
                     os << Hexadecimal::Upper[b&0xf];
                 }
+                return os;
             }
 
             //__________________________________________________________________
@@ -1052,8 +1054,10 @@ namespace Yttrium
                     {
                         assert(p>0);
                         assert(q>0);
-                        const size_t   w = p+q; //! result width
-                        
+                        const size_t   w = p+q;          // result #words
+                        const size_t   n = w * WordSize; // result #bytes
+                        Batch<cplx>    fft1(n);          // as many cplx
+
                         return 0;
                     }
                 }

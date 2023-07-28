@@ -2,8 +2,8 @@
 //! \file
 
 
-#ifndef Y_Apex_Block_Included
-#define Y_Apex_Block_Included 1
+#ifndef Y_Apex_Batch_Included
+#define Y_Apex_Batch_Included 1
 
 #include "y/calculus/base2.hpp"
 #include "y/calculus/ilog2.hpp"
