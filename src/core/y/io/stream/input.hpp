@@ -32,8 +32,8 @@ namespace Yttrium
         // methods
         //
         //______________________________________________________________________
-        virtual bool query(char &C) = 0;
-
+        virtual bool query(char & data) = 0;
+        virtual void store(const  char) = 0;
 
 
     private:

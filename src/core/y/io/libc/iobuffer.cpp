@@ -54,6 +54,29 @@ namespace Yttrium
             release();
         }
 
+        void IOBuffer:: ready()
+        {
+            while(stock.size<bytes) stock.store( new IO::Char(0) );
+        }
+
+        void IOBuffer:: prune() noexcept
+        {
+            assert(size+stock.size>=bytes);
+
+            while(stock.size>0 && size+stock.size>bytes) delete stock.query();
+        }
+
+        void IOBuffer:: unget(const char c)
+        {
+            if(stock.size>0) {
+                **pushHead( stock.query() ) = c;
+            }
+            else
+            {
+                pushHead( new IO::Char(c) );
+            }
+        }
+
     }
 
 }

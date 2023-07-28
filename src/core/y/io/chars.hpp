@@ -45,6 +45,7 @@ namespace Yttrium
             uint8_t pullTail() noexcept; //!< extract and remove tail
             uint8_t pullHead() noexcept; //!< extract and remove head
 
+            
         private:
             Y_DISABLE_ASSIGN(Chars);
         };

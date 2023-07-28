@@ -35,7 +35,14 @@ namespace Yttrium
         class Batch
         {
         public:
-            typedef Nexus::Batch Self;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef Nexus::Batch Self; //!< alias
+
             //__________________________________________________________________
             //
             //
@@ -87,9 +94,9 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const size_t   count; //!< 2^shift object
-            const unsigned shift; //!< log2(count)
-            const unsigned dataShift;
+            const size_t   count;     //!< 2^shift object
+            const unsigned shift;     //!< log2(count)
+            const unsigned dataShift; //!< required bytes = 2^dataShift
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Batch);

@@ -2,6 +2,7 @@
 #include "y/io/libc/input.hpp"
 #include "y/system/exception.hpp"
 #include "y/lockable.hpp"
+#include "y/string.hpp"
 
 #include <cstdio>
 #include <cerrno>
@@ -80,7 +81,14 @@ namespace Yttrium
         File( flag ? openStdIn() : openCFILE(fileName), !flag ),
         buffer()
         {
+        }
 
+        InputFile:: InputFile(const String &fileName) :
+        InputStream(),
+        IsStdIn(fileName()),
+        File( flag ? openStdIn() : openCFILE(fileName()), !flag ),
+        buffer()
+        {
         }
 
 
@@ -93,6 +101,7 @@ namespace Yttrium
                 FILE  *fp = static_cast<FILE*>(handle);
                 if(feof(fp)) return false;
 
+                buffer.ready();
                 size_t nr = 0;
                 {
                     Y_GIANT_LOCK();;
@@ -126,6 +135,26 @@ namespace Yttrium
             }
         }
 
+        void InputFile:: store(const char c)
+        {
+            buffer.unget(c);
+        }
+
+        void InputFile:: gc() noexcept
+        {
+            buffer.prune();
+        }
+
+        bool InputFile:: getLine(IO::Chars &line)
+        {
+            static const char CR = '\r';
+            static const char LF = '\n';
+
+            line.release();
+            
+
+            return false;
+        }
 
     }
 

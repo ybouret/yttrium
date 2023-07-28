@@ -27,7 +27,7 @@ namespace Yttrium
             virtual ~File() noexcept;
 
         protected:
-            void      *handle;
+            void      *handle; //!< anonymous handle
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(File);

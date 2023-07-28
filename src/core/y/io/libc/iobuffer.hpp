@@ -16,11 +16,15 @@ namespace Yttrium
         public:
             explicit IOBuffer();
             virtual ~IOBuffer() noexcept;
+            void     ready();           //!< stock.size>=bytes
+            void     prune() noexcept;  //!< size+stock.size == bytes
+            void     unget(const char); //!< force new char
 
             const size_t   bytes;
             const unsigned shift;
             char * const   entry;
             IO::Stock      stock;
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(IOBuffer);
