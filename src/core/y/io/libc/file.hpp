@@ -8,7 +8,6 @@
 namespace Yttrium
 {
 
-    namespace Core { template <typename> class String; }
 
     Y_SHALLOW_DECL(StdIn);   //!< alias
     Y_SHALLOW_DECL(StdErr);  //!< alias
@@ -27,9 +26,11 @@ namespace Yttrium
             //! auto-close
             virtual ~File() noexcept;
 
+        protected:
+            void      *handle;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(File);
-            void      *handle;
             const bool mustClose;
         };
 

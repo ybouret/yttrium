@@ -14,7 +14,7 @@ namespace Yttrium
     //
     //
     //
-    //! Base class for input strean
+    //! Base class for input stream
     //
     //
     //______________________________________________________________________
@@ -37,7 +37,7 @@ namespace Yttrium
 
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(OutputStream);
+        Y_DISABLE_COPY_AND_ASSIGN(InputStream);
     };
 }
 
