@@ -77,6 +77,8 @@ namespace Yttrium
             return Rational(N,b.denom);
         }
 
+        Y_APQ_BINARY_IMPL(*)
+
     }
 
 }

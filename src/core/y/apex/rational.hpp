@@ -55,6 +55,8 @@ namespace Yttrium
             Rational & operator=( const Integer  &); //!< assign
             Rational & operator=( const Natural  &); //!< assign
 
+            Rational(const size_t numerBits,const size_t denomBits, Random::Bits &ran);
+
             //__________________________________________________________________
             //
             //
@@ -144,6 +146,16 @@ Rational & Rational:: operator OP##=(const Natural  & lhs) Y_APQ_BINARY_BODY(OP)
 
             //! all operators
             Y_APQ_BINARY_DECL(*);
+
+            //__________________________________________________________________
+            //
+            //
+            // Div
+            //
+            //__________________________________________________________________
+
+            //! all operators
+            Y_APQ_BINARY_DECL(/);
 
 
             //__________________________________________________________________

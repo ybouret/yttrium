@@ -60,6 +60,13 @@ Number(), numer(n), denom(d)                    \
         Y_RATIONAL_CTOR(Integer &, Natural &)
 
 
+        Rational:: Rational(const size_t numerBits,const size_t denomBits, Random::Bits &ran) :
+        Number(),
+        numer(numerBits,ran),
+        denom(denomBits,ran)
+        {
+            zDenom(); update();
+        }
 
 
 

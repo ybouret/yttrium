@@ -59,6 +59,7 @@ add_test(memory:quarry    test-core memory_quarry)
 add_test(memory:buffer    test-core memory_buffer)
 add_test(memory:wad       test-core memory_wad)
 add_test(memory:workspace test-core memory_workspace)
+add_test(memory:embed     test-core memory_embed)
 
 #type
 add_test(type:ints       test-core type_ints)

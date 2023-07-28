@@ -31,6 +31,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(memory_buffer);
     Y_UTEST(memory_wad);
     Y_UTEST(memory_workspace);
+    Y_UTEST(memory_embed);
 
     Y_UTEST(type_ints);
     Y_UTEST(type_div);
