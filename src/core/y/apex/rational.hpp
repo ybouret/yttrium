@@ -77,6 +77,12 @@ namespace Yttrium
             friend bool operator==(const Rational &lhs, const Integer  &rhs) noexcept; //!< compare
             friend bool operator==(const Integer  &lhs, const Rational &rhs) noexcept; //!< compare
 
+            friend bool operator!=(const Rational &lhs, const Rational &rhs) noexcept; //!< compare
+            friend bool operator!=(const Rational &lhs, const int64_t   rhs) noexcept; //!< compare
+            friend bool operator!=(const int64_t   lhs, const Rational &rhs) noexcept; //!< compare
+            friend bool operator!=(const Rational &lhs, const Integer  &rhs) noexcept; //!< compare
+            friend bool operator!=(const Integer  &lhs, const Rational &rhs) noexcept; //!< compare
+
 
 
 
