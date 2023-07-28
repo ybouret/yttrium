@@ -8,6 +8,7 @@
 #include "y/container/writable.hpp"
 #include "y/ostream-proto.hpp"
 #include "y/type/capacity.hpp"
+#include "y/memory/buffer/ro.hpp"
 
 namespace Yttrium
 {
@@ -22,7 +23,7 @@ namespace Yttrium
         //! base class for strings
         //
         //______________________________________________________________________
-        class StringCommon : public Object, public Counted
+        class StringCommon : public Object, public Counted, public Memory::ReadOnlyBuffer
         {
         public:
             static const size_t MinChars = 31;                       //!< minimal Chars
@@ -106,8 +107,9 @@ namespace Yttrium
             virtual size_t       capacity()                     const noexcept; //!< maximal number of chars
             ConstType         *  operator()(void)               const noexcept; //!< legacy access
             virtual const char * callSign()                     const noexcept; //!< String<CH>
+            virtual const void * ro_addr()                      const noexcept; //!< address of first char
+            virtual size_t       measure()                      const noexcept; //!< size() * sizeof(CH)
             
-
             //__________________________________________________________________
             //
             //

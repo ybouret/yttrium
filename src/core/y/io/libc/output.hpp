@@ -54,12 +54,17 @@ namespace Yttrium
 
             explicit OutputFile(const StdErr_ &);
             explicit OutputFile(const StdOut_ &);
+            explicit OutputFile(const char *fileName);
+            explicit OutputFile(const Core::String<char> &fileName);
 
 
+            virtual void write(const char);
+            virtual void flush();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(OutputFile);
             Libc::DirectBuffer buffer;
+            void emit();
         };
 
 

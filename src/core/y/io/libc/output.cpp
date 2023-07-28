@@ -67,7 +67,93 @@ namespace Yttrium
 
         OutputFile:: ~OutputFile() noexcept
         {
+            try { emit(); } catch(...) {}
         }
+
+
+        static inline void *openErr()
+        {
+            Y_GIANT_LOCK();
+            FILE *fp = stderr;
+            if(!fp) throw Libc::Exception(EIO,"closed stderr!");
+            return fp;
+        }
+
+        static inline void *openOut()
+        {
+            Y_GIANT_LOCK();
+            FILE *fp = stdout;
+            if(!fp) throw Libc::Exception(EIO,"closed stdout!");
+            return fp;
+        }
+
+        OutputFile:: OutputFile(const StdErr_ &_) :
+        OutputStream(),
+        OutputGrasp(_),
+        Libc::File( openErr(), false),
+        buffer()
+        {
+        }
+
+
+        OutputFile:: OutputFile(const StdOut_ &_) :
+        OutputStream(),
+        OutputGrasp(_),
+        Libc::File( openOut(), false),
+        buffer()
+        {
+        }
+
+
+        OutputFile:: OutputFile(const char *fileName) :
+        OutputStream(),
+        OutputGrasp(fileName),
+        Libc::File( 0, 0),
+        buffer()
+        {
+        }
+
+        
+
+
+        void OutputFile:: write(const char c)
+        {
+            assert(buffer.curr>=buffer.entry);
+            if(buffer.curr>=buffer.last)
+            {
+                emit();
+            }
+            assert(buffer.curr<buffer.last);
+            *(buffer.curr)++ = c;
+        }
+
+        void OutputFile:: flush()
+        {
+            emit();
+        }
+
+        void OutputFile:: emit()
+        {
+            const size_t toWrite = buffer.curr - buffer.entry;
+            if(toWrite>0)
+            {
+                
+                Y_GIANT_LOCK();
+                const size_t nw = fwrite(buffer.entry,1,toWrite, static_cast<FILE*>(handle));
+                if(nw<toWrite)
+                {
+                    const size_t remaining = toWrite-nw;
+                    memmove(buffer.entry,buffer.entry+nw,remaining);
+                    buffer.curr = buffer.entry + remaining;
+                    throw Libc::Exception(errno,"fwrite()");
+                }
+                else
+                {
+                    buffer.curr = buffer.entry;
+                }
+            }
+        }
+
 
     }
 

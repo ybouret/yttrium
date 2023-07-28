@@ -18,7 +18,7 @@ namespace Yttrium
             explicit DirectBuffer();
             virtual ~DirectBuffer() noexcept;
 
-            const char * curr;
+            char       *       curr;
             const char * const last;
 
 

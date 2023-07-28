@@ -6,6 +6,7 @@
 
 
 #include "y/io/stream.hpp"
+#include "y/memory/buffer/ro.hpp"
 
 namespace Yttrium
 {
@@ -25,9 +26,18 @@ namespace Yttrium
     public:
         virtual ~OutputStream() noexcept; //!< cleanup
 
-        virtual void write(char) = 0;
-        virtual void flush()     = 0;
-        
+        virtual void write(const char) = 0;
+        virtual void flush()           = 0;
+
+        void write(const void *blockAddr, const size_t blockSize);
+
+        OutputStream & operator<<(const char );
+        OutputStream & operator<<(const char *);
+        OutputStream & operator<<(const Memory::ReadOnlyBuffer &);
+
+
+
+
 
 
     private:

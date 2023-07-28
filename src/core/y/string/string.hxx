@@ -249,7 +249,27 @@ namespace Yttrium
     }
 
 }
+namespace Yttrium
+{
 
+    namespace Core
+    {
+
+        template <> size_t String<CH>:: measure() const noexcept
+        {
+            assert(0!=code);
+            return code->size * sizeof(CH);
+        }
+
+        template <> const void * String<CH>:: ro_addr() const noexcept
+        {
+            assert(0!=code);
+            return code->data;
+        }
+
+
+    }
+}
 
 
 namespace Yttrium
