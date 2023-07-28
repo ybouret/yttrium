@@ -36,6 +36,48 @@ namespace Yttrium
         return *this;
     }
 
+}
+
+#include "y/system/exception.hpp"
+#include "y/lockable.hpp"
+#include "y/memory/buffer/of.hpp"
+#include <cstdarg>
+#include <cstdio>
+#include <cerrno>
+
+namespace Yttrium
+{
+
+    OutputStream & OutputStream:: operator()(const char *fmt,...)
+    {
+        static const char fn[] = "OutputStream";
+
+        assert(fmt!=NULL);
+        Y_GIANT_LOCK();
+        int res = 0;
+        {
+            va_list ap;
+            va_start(ap,fmt);
+            res = vsnprintf(NULL,0,fmt,ap);
+            va_end(ap);
+            if(res<0) throw Libc::Exception(errno,"%s(...)",fn);
+        }
+        if(res>0)
+        {
+            const size_t           blockSize = res;
+            const size_t           bufLength = blockSize+1;
+            Memory::BufferOf<char> buf(bufLength);
+            char                  *blockAddr = &buf[0];
+            va_list ap;
+            va_start(ap,fmt);
+            const int chk = vsnprintf(blockAddr,bufLength,fmt,ap);
+            va_end(ap);
+            if(res!=chk) throw  Specific::Exception(fn,"lengths mismatch!");
+            write(blockAddr,blockSize);
+        }
+
+        return *this;
+    }
 
 }
 

@@ -145,15 +145,47 @@ namespace Yttrium
             buffer.prune();
         }
 
-        bool InputFile:: getLine(IO::Chars &line)
+        bool InputFile:: gets(IO::Chars &line)
         {
             static const char CR = '\r';
             static const char LF = '\n';
 
             line.release();
-            
+            char first = 0;
+            while(query(first))
+            {
+                switch(first)
+                {
+                    case LF:
+                        // single LF -> EOL
+                        return true;
 
-            return false;
+                    case CR:
+                    {
+                        char second = 0;
+                        if(!query(second))
+                            return true; // single final CR
+                        if(LF==second)
+                        {
+                            // found CRLF
+                            return true;
+                        }
+                        else
+                        {
+                            // unread
+                            store(second);
+                            return true; // it was single CR
+                        }
+                    }
+
+
+                    default:
+                        // append to line
+                        line << first;
+                }
+            }
+
+            return line.size>0;
         }
 
     }

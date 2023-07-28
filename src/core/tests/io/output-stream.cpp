@@ -35,6 +35,17 @@ Y_UTEST(io_ostream)
         fp << "Some more data...\n";
     }
 
+    {
+        Libc::OutputFile fp("out.dat",true);
+        fp << "Some more data...\n";
+    }
+
+    {
+        Libc::OutputFile fp("out.dat",true);
+        fp("Pi=%g\n",3.14);
+    }
+
+
 
 }
 Y_UDONE()

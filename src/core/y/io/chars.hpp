@@ -5,6 +5,7 @@
 
 #include "y/io/char.hpp"
 #include "y/data/list/cxx.hpp"
+#include "y/ostream-proto.hpp"
 
 namespace Yttrium
 {
@@ -30,7 +31,8 @@ namespace Yttrium
             explicit Chars() noexcept; //!< setup empty
             virtual ~Chars() noexcept; //!< cleanup
             Chars(const Chars &);      //!< copy
-
+            Y_OSTREAM_PROTO(Chars);
+            
             //__________________________________________________________________
             //
             //
@@ -45,6 +47,8 @@ namespace Yttrium
             uint8_t pullTail() noexcept; //!< extract and remove tail
             uint8_t pullHead() noexcept; //!< extract and remove head
             
+
+
             
         private:
             Y_DISABLE_ASSIGN(Chars);

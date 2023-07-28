@@ -76,4 +76,25 @@ namespace Yttrium
 
 
     }
+
+}
+
+#include "y/memory/buffer/of.hpp"
+
+namespace Yttrium
+{
+    namespace IO
+    {
+        std::ostream & operator<<(std::ostream &os, const Chars &chars)
+        {
+            Memory::BufferOf<char> buff(chars.size+1);
+            {
+                size_t i = 0;
+                for(const IO::Char *ch=chars.head;ch;ch=ch->next,++i)
+                    buff[i] = **ch;
+            }
+            return os << &buff[0];
+        }
+
+    }
 }
