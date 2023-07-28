@@ -20,6 +20,21 @@ namespace Yttrium
             return static_cast<char *>(res);
         }
 
+
+        static inline void MemRelease(char  * &blockAddr, unsigned blockShift) noexcept
+        {
+            static Memory::Dyadic &mgr = Memory::Dyadic::Location();
+            assert(0!=blockAddr);
+            mgr.releaseBlock(*(void **)&blockAddr,blockShift);
+        }
+
+        void IOBuffer:: release() noexcept
+        {
+            assert(0!=chars);
+            MemRelease(Coerce(chars),Coerce(shift));
+            Coerce(bytes) = 0;
+        }
+
         IOBuffer:: IOBuffer() :
         bytes( BUFSIZ ),
         shift( Base2<size_t>::LogFor( Coerce(bytes) )  ),
@@ -29,7 +44,7 @@ namespace Yttrium
 
         IOBuffer:: ~IOBuffer() noexcept
         {
-            
+            release();
         }
 
     }

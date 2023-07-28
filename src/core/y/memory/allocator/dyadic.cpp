@@ -32,10 +32,23 @@ namespace Yttrium
         {
             assert(0!=corpus);
             static Corpus &mgr = *corpus;
+
             if(shift>mgr.MaxShift) throw Specific::Exception(CallSign,"shift request is too high");
 
             Y_LOCK(Access);
             return mgr[shift].acquire();
+        }
+
+        void   Dyadic:: releaseBlock(void * &entry, unsigned &shift) noexcept
+        {
+            assert(0!=corpus);
+            static Corpus &mgr = *corpus;
+
+            assert(0!=entry);
+            assert(shift<=mgr.MaxShift);
+            mgr[shift].release(entry);
+            entry = 0;
+            shift = 0;
         }
 
         void * Dyadic:: acquire(size_t & count, const size_t blockSize)
