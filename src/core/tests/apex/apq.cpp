@@ -32,5 +32,33 @@ Y_UTEST(apex_q)
         std::cerr << n+a << std::endl;
     }
 
+    {
+        apq a(1,2);
+        apq b(1,3);
+        apq c = a/b;
+        std::cerr << c << std::endl;
+    }
+
+    {
+        apq a(1,2);
+        apq b(-1,3);
+        apq c = a/b;
+        std::cerr << c << std::endl;
+    }
+
+    {
+        apq a(-1,2);
+        apq b(1,3);
+        apq c = a/b;
+        std::cerr << c << std::endl;
+    }
+
+    {
+        apq a(-1,2);
+        apq b(-1,3);
+        apq c = a/b;
+        std::cerr << c << std::endl;
+    }
+
 }
 Y_UDONE()
