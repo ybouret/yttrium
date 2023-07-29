@@ -60,6 +60,33 @@ namespace Yttrium
 #endif
     }
 
+    SignType Sign::Product(const SignType lhs, const SignType rhs) noexcept
+    {
+        switch(lhs)
+        {
+            case __Zero__: break;
+
+            case Negative:
+                switch(rhs)
+                {
+                    case __Zero__: break;
+                    case Negative: return Positive;
+                    case Positive: return Negative;
+                }
+                break;
+
+            case Positive:
+                switch(rhs)
+                {
+                    case __Zero__: break;
+                    case Negative: return Negative;
+                    case Positive: return Positive;
+                }
+                break;
+        }
+        return __Zero__;
+    }
+
     bool Sign:: ZeroIsFoundIn(const PairOfSigns pair) noexcept
     {
         switch(pair)

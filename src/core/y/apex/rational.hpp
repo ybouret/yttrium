@@ -50,11 +50,12 @@ namespace Yttrium
             Rational(const Integer &, const uint64_t ); //!< frac
             Rational(const Integer &, const Natural &); //!< frac
 
-            Rational & operator=( const Rational &); //!< assign
-            Rational & operator=( const int64_t   ); //!< assign
-            Rational & operator=( const Integer  &); //!< assign
-            Rational & operator=( const Natural  &); //!< assign
+            Rational & operator=( const Rational &);    //!< assign
+            Rational & operator=( const int64_t   );    //!< assign
+            Rational & operator=( const Integer  &);    //!< assign
+            Rational & operator=( const Natural  &);    //!< assign
 
+            //! random
             Rational(const size_t numerBits,const size_t denomBits, Random::Bits &ran);
 
             //__________________________________________________________________
@@ -89,7 +90,7 @@ namespace Yttrium
 
 
             //! declare all possible operators
-#define Y_APQ_BINARY_DECL(OP) \
+#define Y_APQ_BINARY_DECL(OP)                                            \
 /**/  friend Rational   operator OP (const Rational &, const Rational &);\
 /**/  friend Rational   operator OP (const Rational &, const int64_t   );\
 /**/  friend Rational   operator OP (const int64_t   , const Rational &);\

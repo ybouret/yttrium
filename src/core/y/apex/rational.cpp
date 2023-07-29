@@ -69,6 +69,9 @@ Number(), numer(n), denom(d)                    \
         }
 
 
+        
+
+
 
         Rational:: ~Rational() noexcept
         {

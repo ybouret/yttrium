@@ -1,10 +1,12 @@
 
-#include "y/memory/embed.hpp"
+#include "y/memory/embedded.hpp"
 #include "y/utest/run.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/random/fill.hpp"
+#include "y/object.hpp"
 
 using namespace Yttrium;
+
 
 Y_UTEST(memory_embed)
 {
@@ -21,9 +23,8 @@ Y_UTEST(memory_embed)
         Memory::Embed(b,numB)
     };
 
-    Memory::Allocator &mgr = Memory::Pooled::Instance();
-    size_t bytes = 0;
-    void  *entry = Memory::Embed::Acquire(emb,sizeof(emb)/sizeof(emb[0]), mgr,bytes);
+
+    const Memory::Embedded resources(emb,sizeof(emb)/sizeof(emb[0]), Memory::Pooled::Instance() );
 
     for(size_t i=0;i<numA;++i)
     {
@@ -35,9 +36,9 @@ Y_UTEST(memory_embed)
         Random::Fill::Fuzzy(b[i],ran);
     }
 
+    Y_SIZEOF(Memory::Embedded);
 
 
-    mgr.release(entry,bytes);
 
 }
 Y_UDONE()
