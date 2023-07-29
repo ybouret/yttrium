@@ -39,6 +39,7 @@ memory/buffer
 ptr
 container
 container/iterator
+container/matrix
 string
 fft
 apex

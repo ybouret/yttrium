@@ -5,6 +5,8 @@
 #define Y_Memory_Embedded_Included 1
 
 #include "y/memory/embed.hpp"
+#include "y/object.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace Yttrium
 {
@@ -18,9 +20,11 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Embedded
+        class Embedded : public Object
         {
         public:
+            typedef AutoPtr<Embedded> Pointer;
+
             //! allocate and link
             explicit Embedded(Embed        emb[],
                               const size_t num,

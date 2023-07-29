@@ -140,6 +140,7 @@ add_test(ordered:PQ test-core ordered_PQ)
 add_test(container:cxx-array test-core container_cxx_array)
 add_test(container:cxx-series test-core container_cxx_series)
 add_test(container:iterator  test-core container_iterator)
+add_test(container:matrix    test-core container_matrix)
 
 #sequence
 add_test(sequence:vector test-core sequence_vector)
