@@ -28,11 +28,12 @@ namespace Yttrium
             //
             //__________________________________________________________________
             class Code;
-            typedef void (*Build)(void *, void *); //!< constructor prototype
-            typedef void (*Smash)(void *);         //!< destructor  prototype
+            typedef void (*Build)(void *, void *);       //!< constructor prototype
+            typedef void (*XCopy)(void *, const void *); //!< copy prototype
+            typedef void (*Smash)(void *);               //!< destructor  prototype
 
         protected:
-            //! setup
+            //! setup with build
             /**
              \param blockAddr flat memory
              \param numBlocks objects to be setup in flat memory
@@ -48,8 +49,18 @@ namespace Yttrium
                                void        *param,
                                Smash        smash);
 
+            //! setup with copy
+            explicit Operating(void            *blockAddr,
+                               const size_t     blockSize,
+                               const Operating &source,
+                               XCopy            xcopy,
+                               Smash            smash);
+
         public:
             virtual ~Operating() noexcept; //!< cleanup, release all
+
+            const void *entry()  const noexcept;
+            size_t      blocks() const noexcept;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Operating);
@@ -91,9 +102,8 @@ namespace Yttrium
         //! setup numBlocks objects with default constructor
         inline explicit Operating(void        *workspace,
                                   const size_t numBlocks) :
-        Core::Operating(workspace,numBlocks,sizeof(T),Build,0,Smash)
+        Core::Operating(workspace,numBlocks,sizeof(T),SelfBuild,0,SelfSmash)
         {
-            std::cerr << "building " << numBlocks << " @ItemSize=" << sizeof(T) << std::endl;
         }
 
         //! setup numblocks with 1-argument constructor
@@ -101,32 +111,56 @@ namespace Yttrium
         inline explicit Operating(void        *workspace,
                                   const size_t numBlocks,
                                   U           &arguments) :
-        Core::Operating(workspace,numBlocks,sizeof(T),Build1<U>,(void*)&arguments,Smash)
+        Core::Operating(workspace,numBlocks,sizeof(T),SelfBuild1<U>,(void*)&arguments,SelfSmash)
         {
-            std::cerr << "building " << numBlocks << " @ItemSize=" << sizeof(T) << " with args" << std::endl;
         }
+
+        //! copy objects with [copy|manual] constructor
+        template <typename U>
+        inline explicit Operating(void *target, const Operating<U> &source) :
+        Core::Operating(target,sizeof(T),source,XCopyAny<U>,SelfSmash)
+        {
+        }
+
+
+        inline Type      * operator()(void)       noexcept { return (Type *     )(entry()); }
+        inline ConstType * operator()(void) const noexcept { return (ConstType *)(entry()); }
+
+
 
 
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Operating);
 
-        static inline void Build(void *addr, void *)  { assert(0!=addr); new (addr) MutableType(); }
-        static inline void Smash(void *addr) noexcept { assert(0!=addr); Destruct(static_cast<MutableType *>(addr)); }
+        static inline void SelfBuild(void *addr, void *)
+        {
+            assert(0!=addr);
+            new (addr) MutableType();
+        }
+
+        static inline void SelfSmash(void *addr) noexcept
+        {
+            assert(0!=addr);
+            Destruct(static_cast<MutableType *>(addr));
+        }
 
         template <typename U>
-        static inline void Build1(void *addr, void *args)
+        static inline void SelfBuild1(void *addr, void *args)
         {
             assert(0!=addr);
             assert(0!=args);
             new (addr) MutableType( *static_cast<U*>(args) );
         }
 
+        template <typename U>
+        static inline void XCopyAny(void *addr, const void *from)
+        {
+            assert(0!=addr);
+            assert(0!=from);
+            new (addr) MutableType( *static_cast<const typename TypeTraits<U>::MutableType *>(from) );
+        }
         
-
-       
-
-
     };
 }
 

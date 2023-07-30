@@ -36,7 +36,7 @@ namespace Yttrium
         Y_ARGS_DECL(T,Type);                //!< aliases
         typedef MatrixRow<T>      RowType;  //!< alias
         typedef Writable<RowType> RowsType; //!< aluas
-
+        
 
         //______________________________________________________________________
         //
@@ -95,16 +95,13 @@ namespace Yttrium
         public:
             explicit Code(Memory::Embed emb[], const size_t nc) :
             Memory::Embedded(emb,2,ALLOCATOR::Instance()),
-            dataOps(emb[0]),
-            rowInfo(emb[0].address(),nc),
-            rowsOps(emb[1],rowInfo)
+            dataOps(emb[DATA_INDEX]),
+            rowInfo(emb[DATA_INDEX].address(),nc),
+            rowsOps(emb[ROWS_INDEX],rowInfo)
             {
             }
 
-            inline virtual ~Code() noexcept
-            {
-                std::cerr << "Cleaning Code" << std::endl;
-            }
+            inline virtual ~Code() noexcept { }
 
             Implanted<T>             dataOps;
             Core::MatrixRow::Info    rowInfo;
@@ -118,16 +115,11 @@ namespace Yttrium
         {
             if(items<=0) return;
             Memory::Embed emb[] = {
-                Memory::Embed(row,rows),
-                Memory::Embed(base,items)
+                Memory::Embed(base,items),
+                Memory::Embed(row,rows)
             };
             code = new Code(emb,cols);
-            std::cerr << emb[0] << std::endl;
-            std::cerr << emb[1] << std::endl;
-
-            std::cerr << "bytes = " << code->bytes << std::endl;
             --row;
-
         }
     };
 

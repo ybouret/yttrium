@@ -47,6 +47,43 @@ namespace Yttrium
                 }
             }
 
+
+
+            inline explicit Code(void        *blockAddr,
+                                 const size_t blockSize,
+                                 const Code  *source,
+                                 XCopy        xcopy,
+                                 Smash        smash) :
+            Object(),
+            entry(blockAddr),
+            width(blockSize),
+            built(0),
+            erase(smash)
+            {
+                assert(0!=entry);
+                assert(0!=erase);
+                assert(0!=xcopy);
+                assert(width>0);
+
+                try {
+                    uint8_t       *tgt = static_cast<uint8_t       *>(entry);
+                    const uint8_t *src = static_cast<const uint8_t *>(source->entry);
+                    while(built<source->built) {
+                        xcopy(tgt,src);
+                        tgt += width;
+                        src += source->width;
+                        ++built;
+                    }
+
+                }
+                catch(...)
+                {
+                    release();
+                    throw;
+                }
+            }
+
+
             inline virtual ~Code() noexcept { release(); }
 
             inline void release() noexcept
@@ -79,12 +116,35 @@ namespace Yttrium
 
         }
 
+        Operating:: Operating(void *           blockAddr,
+                              const size_t     blockSize,
+                              const Operating &source,
+                              XCopy            xcopy,
+                              Smash            smash) :
+        code( new Code(blockAddr,blockSize,source.code,xcopy,smash) )
+        {
+        }
+
+
         Operating:: ~Operating() noexcept
         {
             assert(code);
             delete code;
             code=0;
         }
+
+        const void * Operating:: entry() const noexcept
+        {
+            assert(0!=code);
+            return code->entry;
+        }
+
+        size_t Operating:: blocks() const noexcept
+        {
+            assert(0!=code);
+            return code->built;
+        }
+
     }
 }
 

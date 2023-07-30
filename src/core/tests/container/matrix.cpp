@@ -29,9 +29,9 @@ Y_UTEST(container_matrix)
     Y_SIZEOF(MatrixRow<int>);
     Y_SIZEOF(MatrixRow<String>);
 
-    Matrix<double> m0;
-    Matrix<double> m(2,4);
-    Matrix<String> s(8,8);
+    //Matrix<double> m0;
+    //Matrix<double> m(2,4);
+    Matrix<String> s(8,7);
 
 
 

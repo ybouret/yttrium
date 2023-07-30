@@ -25,7 +25,9 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        static const char * const CallSign; //!< "Matrix"
+        static const char * const CallSign;       //!< "Matrix"
+        static const unsigned     DATA_INDEX = 0; //!< in embedded
+        static const unsigned     ROWS_INDEX = 1; //!< in embedded
 
         //______________________________________________________________________
         //
