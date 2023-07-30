@@ -15,41 +15,67 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Matrix of objects
+    //
+    //
+    //__________________________________________________________________________
     template <class T, typename ALLOCATOR = Memory::Dyadic>
     class Matrix : public MatrixMetrics, public Writable< MatrixRow<T> >
     {
     public:
-        Y_ARGS_DECL(T,Type);
-        typedef MatrixRow<T>      RowType;
-        typedef Writable<RowType> RowsType;
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        Y_ARGS_DECL(T,Type);                //!< aliases
+        typedef MatrixRow<T>      RowType;  //!< alias
+        typedef Writable<RowType> RowsType; //!< aluas
 
 
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
 
+        //! setup empty
         inline explicit Matrix() noexcept :
-        MatrixMetrics(0,0),
-        RowsType(),
-        code(0) {}
+        MatrixMetrics(0,0), RowsType(), row(0), base(0), code(0) {}
 
+        //! setup with (possible) data
         inline explicit Matrix(const size_t nr, const size_t nc) :
-        MatrixMetrics(nr,nc),
-        RowsType(),
-        code(0)
+        MatrixMetrics(nr,nc), RowsType(), row(0), base(0), code(0)
         {
-            std::cerr << "sizeof(CODE)=" << sizeof(Code) << std::endl;
             create();
         }
 
+        //! cleanup
         inline virtual ~Matrix() noexcept {
         }
 
-        inline virtual size_t       size()     const noexcept { return rows; }
-        inline virtual const char * callSign() const noexcept { return CallSign; }
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        inline virtual size_t       size()     const noexcept { return rows;     } //!< rows
+        inline virtual const char * callSign() const noexcept { return CallSign; } //!< CallSign
 
+        //! access row
         inline RowType & operator[](const size_t r) noexcept {
             assert(r>=1); assert(r<=rows);
             return row[r];
         }
 
+        //! access const row
         inline const RowType & operator[](const size_t r) const noexcept {
             assert(r>=1); assert(r<=rows);
             return row[r];

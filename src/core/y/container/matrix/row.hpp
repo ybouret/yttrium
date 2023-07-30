@@ -4,94 +4,116 @@
 #ifndef Y_Matrix_Row_Included
 #define Y_Matrix_Row_Included 1
 
-#include "y/container/writable.hpp"
-#include "y/container/iterator/writable-contiguous.hpp"
+#include "y/container/light-array.hpp"
 
 namespace Yttrium
 {
 
     namespace Core
     {
+        //______________________________________________________________________
+        //
+        //
+        //! base class for MatrixRow
+        //
+        //______________________________________________________________________
         class MatrixRow
         {
         public:
-            static const char * const CallSign;
-            virtual ~MatrixRow() noexcept;
+            static const char * const CallSign; //!< "MatrixRow"
+            explicit MatrixRow() noexcept;      //!< setup
+            virtual ~MatrixRow() noexcept;      //!< cleanup
 
-        protected:
-            explicit MatrixRow(const size_t nc) noexcept; //!< nc>0
-            const size_t cols;
-            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MatrixRow);
 
         public:
+            //__________________________________________________________________
+            //
+            //
+            //! Info to setup multiple rows
+            //
+            //__________________________________________________________________
             class Info
             {
             public:
-                Info(void *,const size_t nc) noexcept;
-                ~Info() noexcept;
+                Info(void *,const size_t nc) noexcept; //!< initialize row/cols
+                ~Info() noexcept;                      //!< cleanup
+                void  move(const size_t bs) noexcept;  //!< move address blockSize*cols
 
-                void  move(const size_t blockSize) noexcept;
-
-                void *       addr;
-                const size_t cols;
+                void *       addr; //!< current row entry
+                const size_t cols; //!< columns
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Info);
             };
         };
 
-
     }
 
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Matrix Row
+    //
+    //
+    //__________________________________________________________________________
     template <typename T>
-    class MatrixRow : public Core::MatrixRow, Writable<T>, public WritableContiguous<T>
+    class MatrixRow : public Core::MatrixRow, public LightArray<T>
     {
     public:
-        Y_ARGS_DECL(T,Type);
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        Y_ARGS_DECL(T,Type);       //!< aliases
+        using LightArray<T>::room;
 
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+
+        //! setup as a LighArray
         inline explicit MatrixRow(MutableType *entry, const size_t count) noexcept :
-        Core::MatrixRow(count),
-        item(entry-1),
-        data(entry)
+        Core::MatrixRow(),
+        LightArray<T>(entry,count)
         {
         }
 
+        //! setup from Info, updated
         inline explicit MatrixRow(Core::MatrixRow::Info &info) noexcept :
-        Core::MatrixRow(info.cols),
-        item(static_cast<MutableType *>(info.addr)-1),
-        data(item+1)
+        Core::MatrixRow(),
+        LightArray<T>(static_cast<MutableType*>(info.addr),info.cols)
         {
-            assert(0!=data);
+            assert(0!=this->data);
             info.move( sizeof(T) );
         }
 
+        //! cleanup
+        inline virtual ~MatrixRow() noexcept {}
 
-        inline virtual ~MatrixRow() noexcept
-        { Coerce(item) = 0; Coerce(data) = 0; }
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
 
-        inline virtual const char * callSign() const noexcept { return CallSign; }
-        inline virtual size_t       size()     const noexcept { return cols; }
+        //! overrides callSign
+        inline virtual const char * callSign() const noexcept { return Core::MatrixRow::CallSign; }
 
-        inline virtual Type & operator[](const size_t c) noexcept
-        { assert(c>=1); assert(c<=cols); return item[c]; }
-
-        inline virtual ConstType & operator[](const size_t c) const noexcept
-        { assert(c>=1); assert(c<=cols); return item[c]; }
 
 
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(MatrixRow);
-        MutableType * const item;
-        ConstType   * const data;
-
-        virtual ConstType * getBaseForward() const noexcept { return data;      }
-        virtual ConstType * getLastForward() const noexcept { return data+cols; }
-        virtual ConstType * getBaseReverse() const noexcept { return item+cols; }
-        virtual ConstType * getLastReverse() const noexcept { return item;      }
 
 
     };

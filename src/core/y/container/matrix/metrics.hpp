@@ -8,22 +8,54 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Common metrics for Matrices
+    //
+    //
+    //__________________________________________________________________________
     class MatrixMetrics
     {
     public:
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
         static const char * const CallSign; //!< "Matrix"
 
-        explicit MatrixMetrics(const size_t nr, const size_t nc);
-        virtual ~MatrixMetrics() noexcept;
-        explicit MatrixMetrics(const MatrixMetrics &) noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        explicit MatrixMetrics(const size_t nr, const size_t nc); //!< setup
+        virtual ~MatrixMetrics() noexcept;                        //!< setup empty
+        explicit MatrixMetrics(const MatrixMetrics &) noexcept;   //!< copy parameters
 
-        bool isSquare() const noexcept;
-        bool isValid()  const noexcept;
-        bool isEmpty()  const noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        bool isSquare() const noexcept; //!< rows == cols
+        bool isValid()  const noexcept; //!< rows>0  ( => cols>0 )
+        bool isEmpty()  const noexcept; //!< rows<=0 ( => cols<=0 )
 
-        const size_t rows;
-        const size_t cols;
-        const size_t items;
+        //______________________________________________________________________
+        //
+        //
+        // Members
+        //
+        //______________________________________________________________________
+        const size_t rows; //!< rows
+        const size_t cols; //!< columns
+        const size_t items; //!< rows*cols
 
     private:
         Y_DISABLE_ASSIGN(MatrixMetrics);

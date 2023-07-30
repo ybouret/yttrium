@@ -9,14 +9,9 @@ namespace Yttrium
         
         MatrixRow:: ~MatrixRow() noexcept
         {
-            Coerce(cols) = 0;
         }
 
-        MatrixRow:: MatrixRow(const size_t nc) noexcept :
-        cols(nc)
-        {
-            assert(cols>0);
-        }
+        MatrixRow:: MatrixRow() noexcept {}
 
         MatrixRow::Info::Info(void *rp,const size_t nc) noexcept :
         addr(rp),

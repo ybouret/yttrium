@@ -22,7 +22,13 @@ namespace Yttrium
         class Embedded : public Object
         {
         public:
-            
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
             //! allocate and link
             explicit Embedded(Embed        emb[],
                               const size_t num,
@@ -33,9 +39,16 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Embedded);
-        private: Allocator &   alloc;
-        public:  const  size_t bytes;
-        private: void      *   entry;
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+        private: Allocator &   alloc; //!< persistent allocator
+        public:  const  size_t bytes; //!< flat memory bytes
+        private: void      *   entry; //!< flat memory entry
 
         };
     }

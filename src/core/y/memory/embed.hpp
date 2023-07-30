@@ -40,9 +40,9 @@ namespace Yttrium
             {
             }
 
-
             Embed(const Embed &) noexcept; //!< copy
             ~Embed()             noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Embed);        //!< dislplay
 
             //__________________________________________________________________
             //
@@ -61,9 +61,9 @@ namespace Yttrium
                                   Allocator   &alloc,
                                   size_t      &bytes);
 
+            //! (check and) get allocated address
             void * address() noexcept;
 
-            Y_OSTREAM_PROTO(Embed);
 
         private:
             Y_DISABLE_ASSIGN(Embed);
@@ -72,8 +72,8 @@ namespace Yttrium
             void **      handle;
             size_t       offset;
         public:
-            const size_t length;
-            const size_t blocks;
+            const size_t length; //!< allocated bytes
+            const size_t blocks; //!< allocated blocks
         };
 
     }
