@@ -93,15 +93,17 @@ namespace Yttrium
                                   const size_t numBlocks) :
         Core::Operating(workspace,numBlocks,sizeof(T),Build,0,Smash)
         {
+            std::cerr << "building " << numBlocks << " @ItemSize=" << sizeof(T) << std::endl;
         }
 
-        //! setup numblocks with 1-argutment constructor
+        //! setup numblocks with 1-argument constructor
         template <typename U>
         inline explicit Operating(void        *workspace,
                                   const size_t numBlocks,
                                   U           &arguments) :
         Core::Operating(workspace,numBlocks,sizeof(T),Build1<U>,(void*)&arguments,Smash)
         {
+            std::cerr << "building " << numBlocks << " @ItemSize=" << sizeof(T) << " with args" << std::endl;
         }
 
 

@@ -150,7 +150,6 @@ namespace Yttrium
         template <> String<CH>:: String() :
         Y_STRING_PROLOG(), code( new Code(0) )
         {
-            std::cerr << "sizeof(String::Impl) = " << sizeof(Code) << std::endl;
         }
 
         template <> String<CH>:: ~String() noexcept

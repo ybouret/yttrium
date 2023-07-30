@@ -101,7 +101,10 @@ namespace Yttrium
             {
             }
 
-            inline virtual ~Code() noexcept {}
+            inline virtual ~Code() noexcept
+            {
+                std::cerr << "Cleaning Code" << std::endl;
+            }
 
             Implanted<T>             dataOps;
             Core::MatrixRow::Info    rowInfo;

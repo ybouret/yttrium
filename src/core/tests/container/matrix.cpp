@@ -31,6 +31,9 @@ Y_UTEST(container_matrix)
 
     Matrix<double> m0;
     Matrix<double> m(2,4);
+    Matrix<String> s(8,8);
+
+
 
 
 }

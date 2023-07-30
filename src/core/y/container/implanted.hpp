@@ -42,7 +42,9 @@ namespace Yttrium
         }
 
         //! cleanup
-        inline virtual ~Implanted() noexcept {}
+        inline virtual ~Implanted() noexcept
+        {
+        }
 
 
     private:
