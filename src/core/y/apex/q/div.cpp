@@ -31,6 +31,15 @@ namespace Yttrium
             return Rational(N,D.n);
         }
 
+        Rational   operator / (const int64_t a, const Rational &b)
+        {
+            if(b.numer.s == __Zero__) throw Specific::Exception(Rational::CallSign,DivBy0);
+            const SignType s = Sign::Of(a);
+            if(__Zero__==s) return Rational();
+            
+
+        }
+
        // Y_APQ_BINARY_IMPL(/)
 
 
