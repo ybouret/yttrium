@@ -28,7 +28,13 @@ namespace Yttrium
         MatrixRow::Info:: ~Info() noexcept
         {
         }
-        
+
+        void MatrixRow::Info:: move(const size_t blockSize) noexcept
+        {
+            assert(0!=addr);
+            assert(blockSize>0);
+            addr = static_cast<char *>(addr)+(cols*blockSize);
+        }
     }
 
 }

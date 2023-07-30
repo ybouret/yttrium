@@ -4,6 +4,7 @@
 #define Y_Memory_Embed_Included 1
 
 #include "y/config/starting.hpp"
+#include "y/ostream-proto.hpp"
 
 namespace Yttrium
 {
@@ -61,15 +62,17 @@ namespace Yttrium
                                   size_t      &bytes);
 
             void * address() noexcept;
-            
+
+            Y_OSTREAM_PROTO(Embed);
+
         private:
             Y_DISABLE_ASSIGN(Embed);
-            size_t nextOffset()     noexcept;
-            void   link(void *base) noexcept;
+            size_t nextOffset()     noexcept; //!< compute
+            void   link(void *base) noexcept; //!< transfer
             void **      handle;
             size_t       offset;
-            const size_t length;
         public:
+            const size_t length;
             const size_t blocks;
         };
 

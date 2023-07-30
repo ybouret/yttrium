@@ -16,25 +16,43 @@ namespace Yttrium
 {
 
     template <class T, typename ALLOCATOR = Memory::Dyadic>
-    class Matrix : public MatrixMetrics
+    class Matrix : public MatrixMetrics, public Writable< MatrixRow<T> >
     {
     public:
         Y_ARGS_DECL(T,Type);
-        typedef MatrixRow<T>     RowType;
+        typedef MatrixRow<T>      RowType;
+        typedef Writable<RowType> RowsType;
 
 
 
-
-        inline explicit Matrix() noexcept : MatrixMetrics(0,0), code(0) {}
+        inline explicit Matrix() noexcept :
+        MatrixMetrics(0,0),
+        RowsType(),
+        code(0) {}
 
         inline explicit Matrix(const size_t nr, const size_t nc) :
         MatrixMetrics(nr,nc),
+        RowsType(),
         code(0)
         {
+            std::cerr << "sizeof(CODE)=" << sizeof(Code) << std::endl;
             create();
         }
 
         inline virtual ~Matrix() noexcept {
+        }
+
+        inline virtual size_t       size()     const noexcept { return rows; }
+        inline virtual const char * callSign() const noexcept { return CallSign; }
+
+        inline RowType & operator[](const size_t r) noexcept {
+            assert(r>=1); assert(r<=rows);
+            return row[r];
+        }
+
+        inline const RowType & operator[](const size_t r) const noexcept {
+            assert(r>=1); assert(r<=rows);
+            return row[r];
         }
 
     private:
@@ -52,7 +70,8 @@ namespace Yttrium
             explicit Code(Memory::Embed emb[], const size_t nc) :
             Memory::Embedded(emb,2,ALLOCATOR::Instance()),
             dataOps(emb[0]),
-            rowInfo(emb[0].address(),nc) //,rowsOps(emb[1],rowInfo)
+            rowInfo(emb[0].address(),nc),
+            rowsOps(emb[1],rowInfo)
             {
             }
 
@@ -60,7 +79,7 @@ namespace Yttrium
 
             Implanted<T>             dataOps;
             Core::MatrixRow::Info    rowInfo;
-            //Implanted<RowType>       rowsOps;
+            Implanted<RowType>       rowsOps;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
@@ -74,6 +93,12 @@ namespace Yttrium
                 Memory::Embed(base,items)
             };
             code = new Code(emb,cols);
+            std::cerr << emb[0] << std::endl;
+            std::cerr << emb[1] << std::endl;
+
+            std::cerr << "bytes = " << code->bytes << std::endl;
+            --row;
+
         }
     };
 

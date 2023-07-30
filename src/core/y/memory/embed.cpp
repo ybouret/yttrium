@@ -2,6 +2,8 @@
 #include "y/calculus/align.hpp"
 #include "y/memory/allocator.hpp"
 
+#include <iostream>
+
 namespace Yttrium
 {
     namespace Memory
@@ -73,6 +75,12 @@ namespace Yttrium
             assert(0!=handle);
             void *addr = *handle; assert(0!=addr);
             return addr;
+        }
+
+        std::ostream & operator<<(std::ostream &os, const Embed &emb)
+        {
+            os << "@" << *emb.handle << " #blocks=" << emb.blocks << " #bytes=" << emb.length;
+            return os;
         }
         
     }

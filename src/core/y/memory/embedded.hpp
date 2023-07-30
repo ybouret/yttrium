@@ -33,9 +33,9 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Embedded);
-            Allocator &alloc;
-            size_t     bytes;
-            void      *entry;
+        private: Allocator &   alloc;
+        public:  const  size_t bytes;
+        private: void      *   entry;
 
         };
     }

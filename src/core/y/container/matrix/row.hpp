@@ -70,9 +70,7 @@ namespace Yttrium
 
 
         inline virtual ~MatrixRow() noexcept
-        {
-            Coerce(item) = 0;
-        }
+        { Coerce(item) = 0; Coerce(data) = 0; }
 
         inline virtual const char * callSign() const noexcept { return CallSign; }
         inline virtual size_t       size()     const noexcept { return cols; }
