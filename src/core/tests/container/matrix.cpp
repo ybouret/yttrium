@@ -16,11 +16,14 @@ Y_UTEST(container_matrix)
     int arr[4] = {1,2,3,4};
 
     MatrixRow<int> row(arr,4);
-
     Iterating::DisplayAll::Of(row);
 
     Y_SIZEOF(MatrixRow<int>);
     Y_SIZEOF(MatrixRow<String>);
+
+    Matrix<double> m0;
+    Matrix<double> m(2,4);
+
 
 }
 Y_UDONE()

@@ -33,8 +33,9 @@ namespace Yttrium
             template <typename T>
             inline Embed( T * &entry, const size_t count) noexcept :
             handle( (void **)&entry   ),
+            offset( 0 ),
             length( Align(count * sizeof(T)) ),
-            offset( 0 )
+            blocks( count )
             {
             }
 
@@ -59,14 +60,17 @@ namespace Yttrium
                                   Allocator   &alloc,
                                   size_t      &bytes);
 
+            void * address() noexcept;
+            
         private:
             Y_DISABLE_ASSIGN(Embed);
             size_t nextOffset()     noexcept;
             void   link(void *base) noexcept;
-
             void **      handle;
-            const size_t length;
             size_t       offset;
+            const size_t length;
+        public:
+            const size_t blocks;
         };
 
     }

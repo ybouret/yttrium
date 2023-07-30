@@ -14,8 +14,9 @@ namespace Yttrium
 
         Embed:: Embed(const Embed &other) noexcept :
         handle(other.handle),
+        offset(other.offset),
         length(other.length),
-        offset(other.offset)
+        blocks(other.blocks)
         {
             assert(0!=handle);
         }
@@ -65,6 +66,13 @@ namespace Yttrium
                 embed[i].link(entry);
             }
             return entry;
+        }
+
+        void * Embed:: address() noexcept
+        {
+            assert(0!=handle);
+            void *addr = *handle; assert(0!=addr);
+            return addr;
         }
         
     }

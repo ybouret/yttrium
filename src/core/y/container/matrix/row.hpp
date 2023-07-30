@@ -24,7 +24,25 @@ namespace Yttrium
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MatrixRow);
+
+        public:
+            class Info
+            {
+            public:
+                Info(void *,const size_t nc) noexcept;
+                ~Info() noexcept;
+
+                void  move(const size_t blockSize) noexcept;
+
+                void *       addr;
+                const size_t cols;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Info);
+            };
         };
+
+
     }
 
 
@@ -40,6 +58,16 @@ namespace Yttrium
         data(entry)
         {
         }
+
+        inline explicit MatrixRow(Core::MatrixRow::Info &info) noexcept :
+        Core::MatrixRow(info.cols),
+        item(static_cast<MutableType *>(info.addr)-1),
+        data(item+1)
+        {
+            assert(0!=data);
+            info.move( sizeof(T) );
+        }
+
 
         inline virtual ~MatrixRow() noexcept
         {

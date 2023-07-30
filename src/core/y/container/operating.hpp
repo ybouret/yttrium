@@ -7,6 +7,7 @@
 
 namespace Yttrium
 {
+    
     namespace Core
     {
         //______________________________________________________________________
@@ -94,7 +95,7 @@ namespace Yttrium
         {
         }
 
-        //! setupNumblocks with 1-argutment constructor
+        //! setup numblocks with 1-argutment constructor
         template <typename U>
         inline explicit Operating(void        *workspace,
                                   const size_t numBlocks,
@@ -102,7 +103,8 @@ namespace Yttrium
         Core::Operating(workspace,numBlocks,sizeof(T),Build1<U>,(void*)&arguments,Smash)
         {
         }
-        
+
+
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Operating);
@@ -118,6 +120,9 @@ namespace Yttrium
             new (addr) MutableType( *static_cast<U*>(args) );
         }
 
+        
+
+       
 
 
     };
