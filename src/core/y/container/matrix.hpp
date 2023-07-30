@@ -94,7 +94,7 @@ namespace Yttrium
         {
         public:
             explicit Code(Memory::Embed emb[], const size_t nc) :
-            Memory::Embedded(emb,2,ALLOCATOR::Instance()),
+            Memory::Embedded(emb,NUM_FIELDS,ALLOCATOR::Instance()),
             dataOps(emb[DATA_INDEX]),
             rowInfo(emb[DATA_INDEX].address(),nc),
             rowsOps(emb[ROWS_INDEX],rowInfo)

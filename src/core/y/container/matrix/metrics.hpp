@@ -28,6 +28,7 @@ namespace Yttrium
         static const char * const CallSign;       //!< "Matrix"
         static const unsigned     DATA_INDEX = 0; //!< in embedded
         static const unsigned     ROWS_INDEX = 1; //!< in embedded
+        static const unsigned     NUM_FIELDS = 2; //!< in embedded
 
         //______________________________________________________________________
         //

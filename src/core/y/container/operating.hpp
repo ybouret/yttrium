@@ -32,6 +32,12 @@ namespace Yttrium
             typedef void (*XCopy)(void *, const void *); //!< copy prototype
             typedef void (*Smash)(void *);               //!< destructor  prototype
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
         protected:
             //! setup with build
             /**
@@ -59,8 +65,14 @@ namespace Yttrium
         public:
             virtual ~Operating() noexcept; //!< cleanup, release all
 
-            const void *entry()  const noexcept;
-            size_t      blocks() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            const void *entry()  const noexcept; //!< recall entry point
+            size_t      blocks() const noexcept; //!< recall built blocks
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Operating);
@@ -122,12 +134,14 @@ namespace Yttrium
         {
         }
 
-
-        inline Type      * operator()(void)       noexcept { return (Type *     )(entry()); }
-        inline ConstType * operator()(void) const noexcept { return (ConstType *)(entry()); }
-
-
-
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        inline Type      * operator()(void)       noexcept { return (Type *     )(entry()); } //!< recall access
+        inline ConstType * operator()(void) const noexcept { return (ConstType *)(entry()); } //!< recall access, const
 
 
     private:

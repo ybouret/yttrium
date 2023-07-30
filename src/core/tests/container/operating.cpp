@@ -52,6 +52,12 @@ Y_UTEST(container_operating)
     }
     std::cerr << a3 << std::endl;
 
+    Operating<apn>  op4(wksp4,op3);
+    LightArray<apn> a4( op4(), op4.blocks() );
+    std::cerr << a4 << std::endl;
+
+
+
 
 }
 Y_UDONE()
