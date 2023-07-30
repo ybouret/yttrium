@@ -3,6 +3,8 @@
 
 namespace Yttrium
 {
+    Y_SHALLOW_IMPL(TransposeOf);
+
     const char * const MatrixMetrics:: CallSign = "Matrix";
 
     MatrixMetrics:: MatrixMetrics(const size_t nr, const size_t nc) :
@@ -29,6 +31,14 @@ namespace Yttrium
     {
     }
 
+    MatrixMetrics:: MatrixMetrics(const MatrixMetrics &other, const TransposeOf_ &) noexcept :
+    rows(other.cols),
+    cols(other.rows),
+    items(other.items)
+    {
+
+    }
+
     bool MatrixMetrics:: isSquare() const noexcept
     {
         return cols == rows;
@@ -44,7 +54,15 @@ namespace Yttrium
         return rows>0;
     }
 
+    bool MatrixMetrics :: hasSameMetricsThan(const MatrixMetrics &other) const noexcept
+    {
+        return (rows==other.rows) && (cols==other.cols);
+    }
 
+    bool MatrixMetrics :: hasSameMetricsThanTransposeOf(const MatrixMetrics &other) const noexcept
+    {
+        return (rows==other.cols) && (cols==other.rows);
+    }
     
 
 }

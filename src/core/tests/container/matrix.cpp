@@ -5,6 +5,7 @@
 #include "y/memory/allocator/pooled.hpp"
 #include "y/container/iterator/display-all.hpp"
 #include "y/string.hpp"
+#include "y/apex/natural.hpp"
 #include <cstring>
 
 using namespace Yttrium;
@@ -33,7 +34,16 @@ Y_UTEST(container_matrix)
     //Matrix<double> m(2,4);
     Matrix<String> s(8,7);
 
+    {
+        Matrix<apn,Memory::Dyadic>      I(5,3);
+        Matrix<apn,Memory::Dyadic>      A(I);
+    }
 
+    {
+        Matrix<unsigned,Memory::Dyadic> u(5,3);
+        Matrix<apn,Memory::Pooled>      A(u,Identity<unsigned>);
+        std::cerr << A << std::endl;
+    }
 
 
 }

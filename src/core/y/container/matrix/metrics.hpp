@@ -3,10 +3,11 @@
 #ifndef Y_Matrix_Metrics_Included
 #define Y_Matrix_Metrics_Included 1
 
-#include "y/config/starting.hpp"
+#include "y/config/shallow.hpp"
 
 namespace Yttrium
 {
+    Y_SHALLOW_DECL(TransposeOf);
 
     //__________________________________________________________________________
     //
@@ -39,6 +40,7 @@ namespace Yttrium
         explicit MatrixMetrics(const size_t nr, const size_t nc); //!< setup
         virtual ~MatrixMetrics() noexcept;                        //!< setup empty
         explicit MatrixMetrics(const MatrixMetrics &) noexcept;   //!< copy parameters
+        explicit MatrixMetrics(const MatrixMetrics &, const TransposeOf_ &) noexcept;   //!< copy parameters
 
         //______________________________________________________________________
         //
@@ -49,7 +51,8 @@ namespace Yttrium
         bool isSquare() const noexcept; //!< rows == cols
         bool isValid()  const noexcept; //!< rows>0  ( => cols>0 )
         bool isEmpty()  const noexcept; //!< rows<=0 ( => cols<=0 )
-
+        bool hasSameMetricsThan(const MatrixMetrics &other)            const noexcept;
+        bool hasSameMetricsThanTransposeOf(const MatrixMetrics &other) const noexcept;
         //______________________________________________________________________
         //
         //

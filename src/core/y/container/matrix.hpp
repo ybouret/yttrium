@@ -11,10 +11,13 @@
 #include "y/memory/embedded.hpp"
 #include "y/container/implanted.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/type/utils.hpp"
 
 namespace Yttrium
 {
 
+
+#define Y_MATRIX_EPILOG() RowsType(), row(0), base(0), code(0)
     //__________________________________________________________________________
     //
     //
@@ -35,9 +38,8 @@ namespace Yttrium
         //______________________________________________________________________
         Y_ARGS_DECL(T,Type);                //!< aliases
         typedef MatrixRow<T>      RowType;  //!< alias
-        typedef Writable<RowType> RowsType; //!< aluas
+        typedef Writable<RowType> RowsType; //!< alias
         
-
         //______________________________________________________________________
         //
         //
@@ -47,17 +49,63 @@ namespace Yttrium
 
         //! setup empty
         inline explicit Matrix() noexcept :
-        MatrixMetrics(0,0), RowsType(), row(0), base(0), code(0) {}
+        MatrixMetrics(0,0), Y_MATRIX_EPILOG() {}
 
         //! setup with (possible) data
         inline explicit Matrix(const size_t nr, const size_t nc) :
-        MatrixMetrics(nr,nc), RowsType(), row(0), base(0), code(0)
+        MatrixMetrics(nr,nc), Y_MATRIX_EPILOG()
         {
             create();
         }
 
+        inline Matrix(const Matrix &other) :
+        MatrixMetrics(other), Y_MATRIX_EPILOG()
+        {
+            duplicate(other,Identity<T>);
+        }
+
+        template <typename U,typename ALLOC, typename TRANSFORM> inline
+        Matrix(const Matrix<U,ALLOC> &other, TRANSFORM &transform) :
+        MatrixMetrics(other), Y_MATRIX_EPILOG()
+        {
+            duplicate(other,transform);
+        }
+
+        template <typename U,typename ALLOC> inline
+        Matrix(const Matrix<U,ALLOC> &other, const TransposeOf_ &_) :
+        MatrixMetrics(other,_), Y_MATRIX_EPILOG()
+        {
+            duplicateTransposeOf(other,Identity<U>);
+        }
+
+
+
         //! cleanup
         inline virtual ~Matrix() noexcept {
+        }
+
+        inline friend std::ostream & operator<<(std::ostream &os, const Matrix &M)
+        {
+            switch(M.rows)
+            {
+                case 0: os << "[]"; break;
+                case 1:
+                    if(1==M.cols) M.output_1x1(os);
+                    else          M.output_1xn(os);
+                    break;
+                default:
+                    if(1==M.cols) M.output_nx1(os);
+                    else
+                    {
+                        os << '[';
+                        os << M[1];
+                        for(size_t r=2;r<=M.rows;++r)
+                            os << ';' << M[r];
+                        os << ']';
+                    }
+                    break;
+            }
+            return os;
         }
 
         //______________________________________________________________________
@@ -81,15 +129,39 @@ namespace Yttrium
             return row[r];
         }
 
+        inline LightArray<T> asArray() const noexcept
+        {
+            return LightArray<T>(base,items);
+        }
+
+
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(Matrix);
+        Y_DISABLE_ASSIGN(Matrix);
         class Code;
 
         RowType      *row;
         MutableType  *base;
         AutoPtr<Code> code;
 
+        void output_1x1(std::ostream &os) const
+        {
+            assert(1==rows); assert(1==cols); assert(0!=base);
+            os << "hcat(" << base[0] << ")";
+        }
 
+        void output_1xn(std::ostream &os) const
+        {
+            assert(1==rows); assert(1<cols);  assert(0!=row);
+            os << "[" << row[1] << "]";
+        }
+
+        void output_nx1(std::ostream &os) const
+        {
+            assert(1<rows); assert(1==cols); assert(0!=row);
+            os << "hcat(" << row[1] << "')";
+        }
+
+        // Code for Matrix
         class Code : public Memory::Embedded
         {
         public:
@@ -111,6 +183,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Code);
         };
 
+        // create with default objects
         inline void create()
         {
             if(items<=0) return;
@@ -120,6 +193,18 @@ namespace Yttrium
             };
             code = new Code(emb,cols);
             --row;
+        }
+
+        template <typename U, typename ALLOC, typename TRANSFORM>
+        inline void duplicate(const Matrix<U,ALLOC> &M, TRANSFORM &transform)
+        {
+            assert(hasSameMetricsThan(M));
+            create();
+            const LightArray<U> source = M.asArray(); assert(source.size()==items);
+            LightArray<T>       target = asArray();   assert(target.size()==items);
+            for(size_t i=items;i>0;--i)
+                target[i] = transform(source[i]);
+
         }
     };
 
