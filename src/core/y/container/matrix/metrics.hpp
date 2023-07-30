@@ -7,6 +7,7 @@
 
 namespace Yttrium
 {
+    //! alias
     Y_SHALLOW_DECL(TransposeOf);
 
     //__________________________________________________________________________
@@ -51,8 +52,8 @@ namespace Yttrium
         bool isSquare() const noexcept; //!< rows == cols
         bool isValid()  const noexcept; //!< rows>0  ( => cols>0 )
         bool isEmpty()  const noexcept; //!< rows<=0 ( => cols<=0 )
-        bool hasSameMetricsThan(const MatrixMetrics &other)            const noexcept;
-        bool hasSameMetricsThanTransposeOf(const MatrixMetrics &other) const noexcept;
+        bool hasSameMetricsThan(const MatrixMetrics &other)            const noexcept; //!< check
+        bool hasSameMetricsThanTransposeOf(const MatrixMetrics &other) const noexcept; //!< check
         //______________________________________________________________________
         //
         //

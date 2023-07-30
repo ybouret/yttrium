@@ -58,12 +58,14 @@ namespace Yttrium
             create();
         }
 
+        //! copy
         inline Matrix(const Matrix &other) :
         MatrixMetrics(other), Y_MATRIX_EPILOG()
         {
             duplicate(other,Identity<T>);
         }
 
+        //! copy transform
         template <typename U,typename ALLOC, typename TRANSFORM> inline
         Matrix(const Matrix<U,ALLOC> &other, TRANSFORM &transform) :
         MatrixMetrics(other), Y_MATRIX_EPILOG()
@@ -71,6 +73,7 @@ namespace Yttrium
             duplicate(other,transform);
         }
 
+        //! copy transposed, using identity
         template <typename U,typename ALLOC> inline
         Matrix(const Matrix<U,ALLOC> &other, const TransposeOf_ &_) :
         MatrixMetrics(other,_), Y_MATRIX_EPILOG()
@@ -84,6 +87,7 @@ namespace Yttrium
         inline virtual ~Matrix() noexcept {
         }
 
+        //! display Julia style
         inline friend std::ostream & operator<<(std::ostream &os, const Matrix &M)
         {
             switch(M.rows)
@@ -129,10 +133,9 @@ namespace Yttrium
             return row[r];
         }
 
+        //! convert to linear array
         inline LightArray<T> asArray() const noexcept
-        {
-            return LightArray<T>(base,items);
-        }
+        { return LightArray<T>(base,items); }
 
 
     private:
@@ -158,7 +161,10 @@ namespace Yttrium
         void output_nx1(std::ostream &os) const
         {
             assert(1<rows); assert(1==cols); assert(0!=row);
-            os << "hcat(" << row[1] << "')";
+            os << "hcat([" << row[1][1];
+            for(size_t r=2;r<=rows;++r)
+                os << ' ' << row[r][1];
+            os << "]')";
         }
 
         // Code for Matrix

@@ -30,6 +30,22 @@ Y_UTEST(container_matrix)
     Y_SIZEOF(MatrixRow<int>);
     Y_SIZEOF(MatrixRow<String>);
 
+    for(size_t r=1;r<=3;++r)
+    {
+        for(size_t c=1;c<=3;++c)
+        {
+            Matrix<int> M(r,c);
+            for(size_t i=1;i<=r;++i)
+            {
+                for(size_t j=1;j<=c;++j)
+                {
+                    M[i][j] = int(i+j);
+                }
+            }
+            std::cerr << "M" << r << "x" << c << " = " << M << std::endl;
+        }
+    }
+
     //Matrix<double> m0;
     //Matrix<double> m(2,4);
     Matrix<String> s(8,7);
