@@ -20,6 +20,20 @@ namespace Yttrium
             return Rational(N,D.n);
         }
 
+        Rational   operator / (const Rational &a, const int64_t b)
+        {
+            const SignType s = Sign::Of(b);
+            if(__Zero__  ==s) throw Specific::Exception(Rational::CallSign,DivBy0);
+            if(__Zero__ == a.numer.s) return Rational();
+            const Integer N = a.numer;     assert(0!=N);
+            const Integer D = a.denom * b; assert(0!=D); assert(D.s == s);
+            Coerce(N.s) = Sign::Product(N.s,s);
+            return Rational(N,D.n);
+        }
+
+       // Y_APQ_BINARY_IMPL(/)
+
+
     }
 
 }
