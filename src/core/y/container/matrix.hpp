@@ -16,8 +16,9 @@
 namespace Yttrium
 {
 
+    //! constructor helper for Matrices
+#define Y_MATRIX(TOPO) Identifiable(), Collection(), MatrixMetrics TOPO, RowsType(), row(0), base(0), code(0)
 
-#define Y_MATRIX_EPILOG() RowsType(), row(0), base(0), code(0)
     //__________________________________________________________________________
     //
     //
@@ -49,18 +50,18 @@ namespace Yttrium
 
         //! setup empty
         inline explicit Matrix() noexcept :
-        MatrixMetrics(0,0), Y_MATRIX_EPILOG() {}
+        Y_MATRIX( (0,0) ) {}
 
         //! setup with (possible) data
         inline explicit Matrix(const size_t nr, const size_t nc) :
-        MatrixMetrics(nr,nc), Y_MATRIX_EPILOG()
+        Y_MATRIX( (nr,nc) )
         {
             create();
         }
 
         //! copy
         inline Matrix(const Matrix &other) :
-        MatrixMetrics(other), Y_MATRIX_EPILOG()
+        Y_MATRIX( (other) )
         {
             duplicate(other,Identity<T>);
         }
@@ -68,7 +69,7 @@ namespace Yttrium
         //! copy transform
         template <typename U,typename ALLOC, typename TRANSFORM> inline
         Matrix(const Matrix<U,ALLOC> &other, TRANSFORM &transform) :
-        MatrixMetrics(other), Y_MATRIX_EPILOG()
+        Y_MATRIX( (other) )
         {
             duplicate(other,transform);
         }
@@ -76,7 +77,7 @@ namespace Yttrium
         //! copy transposed, using identity
         template <typename U,typename ALLOC> inline
         Matrix(const Matrix<U,ALLOC> &other, const TransposeOf_ &_) :
-        MatrixMetrics(other,_), Y_MATRIX_EPILOG()
+        Y_MATRIX( (other,_) )
         {
             duplicateTransposeOf(other,Identity<U>);
         }
@@ -101,10 +102,9 @@ namespace Yttrium
                     if(1==M.cols) M.output_nx1(os);
                     else
                     {
-                        os << '[';
-                        os << M[1];
+                        M[1].Julia(os << '[');
                         for(size_t r=2;r<=M.rows;++r)
-                            os << ';' << M[r];
+                            M[r].Julia(os << ';');
                         os << ']';
                     }
                     break;
@@ -155,7 +155,7 @@ namespace Yttrium
         void output_1xn(std::ostream &os) const
         {
             assert(1==rows); assert(1<cols);  assert(0!=row);
-            os << "[" << row[1] << "]";
+            row[1].Julia(os << "[") << "]";
         }
 
         void output_nx1(std::ostream &os) const

@@ -76,6 +76,8 @@ namespace Yttrium
         //! setup boundaries
         inline explicit LightArray(T *entry, const size_t count) noexcept :
         Core::LightArray(count),
+        Writable<T>(),
+        WritableContiguous<T>(),
         data( Memory::OutOfReach::Cast<MutableType>( (void *)entry ) ),
         item( data-1 ),
         lastData(data+room),
@@ -85,9 +87,12 @@ namespace Yttrium
         }
 
 
-        //! copy boudnaries
+        //! copy boundaries
         inline LightArray(const LightArray &other) noexcept :
+        Identifiable(), Collection(),
         Core::LightArray(other.room),
+        Writable<T>(),
+        WritableContiguous<T>(),
         data(other.data),
         item(other.item),
         lastData(other.lastData),

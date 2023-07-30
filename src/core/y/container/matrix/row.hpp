@@ -99,6 +99,7 @@ namespace Yttrium
         //! cleanup
         inline virtual ~MatrixRow() noexcept {}
 
+        //! helper for Julia
         inline std::ostream &Julia(std::ostream &os) const
         {
             assert(room>0);
@@ -107,15 +108,6 @@ namespace Yttrium
             return os;
         }
 
-#if 0
-        inline friend std::ostream & operator<<(std::ostream &os, const MatrixRow &row)
-        {
-            assert(row.room>0);
-            os << row[1];
-            for(size_t c=2;c<=row.room;++c) os << ' ' << row[c];
-            return os;
-        }
-#endif
 
         //______________________________________________________________________
         //
