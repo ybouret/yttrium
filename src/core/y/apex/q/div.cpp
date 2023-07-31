@@ -57,6 +57,16 @@ namespace Yttrium
             return Rational(N,D);
         }
 
+        Rational   operator / (const Integer &a, const Rational &b)
+        {
+            if( __Zero__ == b.numer.s ) throw Specific::Exception(Rational::CallSign,DivBy0);
+            if( __Zero__ == a.s )       return Rational(0);
+
+            const Natural AN = a.n * b.denom;
+            const Integer N( Sign::Product(b.numer.s,a.s), AN);
+            return Rational(N,b.numer.n);
+        }
+
 
 
        // Y_APQ_BINARY_IMPL(/)
