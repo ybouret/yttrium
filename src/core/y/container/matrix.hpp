@@ -147,6 +147,7 @@ namespace Yttrium
         inline LightArray<T> asArray() const noexcept
         { return LightArray<T>(base,items); }
 
+        //! load all items with args
         inline void ld(ParamType args)
         {
             for(size_t i=0;i<items;++i) base[i] = args;
