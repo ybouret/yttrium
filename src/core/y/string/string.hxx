@@ -278,7 +278,7 @@ namespace Yttrium
     {
 
         template <>
-        void String<CH>:: pushTail(const CH *arr, const size_t num)
+        void String<CH>:: pushAtTail(const CH *arr, const size_t num)
         {
             assert(Good(arr,num));
             if(! code->pushTail(arr,num) )
@@ -292,21 +292,21 @@ namespace Yttrium
         template <>
         String<CH> & String<CH>:: operator<<(const CH c)
         {
-            pushTail(&c,1);
+            pushAtTail(&c,1);
             return *this;
         }
 
         template <>
         String<CH> & String<CH>:: operator<<(const CH *text)
         {
-            pushTail(text,StringLength(text));
+            pushAtTail(text,StringLength(text));
             return *this;
         }
 
         template <>
         String<CH> & String<CH>:: operator<<(const String &other)
         {
-            pushTail(other.code->data, other.code->size);
+            pushAtTail(other.code->data, other.code->size);
             return *this;
         }
 
@@ -321,7 +321,7 @@ namespace Yttrium
     {
 
         template <>
-        void String<CH>:: pushHead(const CH *arr, const size_t num)
+        void String<CH>:: pushAtHead(const CH *arr, const size_t num)
         {
             assert(Good(arr,num));
             if(! code->pushHead(arr,num) )
@@ -335,21 +335,21 @@ namespace Yttrium
         template <>
         String<CH> & String<CH>:: operator>>(const CH c)
         {
-            pushHead(&c,1);
+            pushAtHead(&c,1);
             return *this;
         }
 
         template <>
         String<CH> & String<CH>:: operator>>(const CH *text)
         {
-            pushHead(text,StringLength(text));
+            pushAtHead(text,StringLength(text));
             return *this;
         }
 
         template <>
         String<CH> & String<CH>:: operator>>(const String &other)
         {
-            pushHead(other.code->data, other.code->size);
+            pushAtHead(other.code->data, other.code->size);
             return *this;
         }
 
@@ -440,6 +440,42 @@ namespace Yttrium
             {
                 code->data[code->size++] = ran.in<CH>(lower,upper);
             }
+        }
+    }
+
+}
+
+namespace Yttrium
+{
+
+    namespace Core
+    {
+        template <>
+        const CH * String<CH>:: getBaseForward() const noexcept
+        {
+            assert(0!=code);
+            return code->data;
+        }
+
+        template <>
+        const CH * String<CH>:: getLastForward() const noexcept
+        {
+            assert(0!=code);
+            return code->data+code->size;
+        }
+
+        template <>
+        const CH * String<CH>:: getBaseReverse() const noexcept
+        {
+            assert(0!=code);
+            return code->item+code->size;
+        }
+
+        template <>
+        const CH * String<CH>:: getLastReverse() const noexcept
+        {
+            assert(0!=code);
+            return code->item;
         }
     }
 

@@ -83,13 +83,30 @@ namespace Yttrium
         return nr;
     }
 
-    void InputStream:: MissingBytes(const size_t n, const char *ctx) const
+    void InputStream:: missingBytes(const size_t n, const char *ctx) const
     {
         assert(n>0);
         throw Specific::Exception( callSign(), "missing %u byte%s for %s", unsigned(n), Plural::s(n), From(ctx) );
     }
 
+    void InputStream:: overflowing(const char *ctx) const
+    {
+        throw Specific::Exception( callSign(), "overflowing read for %s", From(ctx));
+    }
+
+
 
 }
 
+#include "y/io/stream/pack64.hpp"
+#include "y/calculus/bit-count.hpp"
 
+namespace Yttrium
+{
+    uint64_t InputStream:: read64(const char *ctx)
+    {
+        return IO::Pack64::Read(*this,ctx);
+
+    }
+
+}

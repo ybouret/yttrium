@@ -64,6 +64,7 @@ namespace Yttrium
         void issue(const uint64_t &); //!< fixed size issue
 
 
+        //! emit Constant Byte Rate integer
         template <typename T> inline
         size_t emitCBR(const T &x) {
             union
@@ -75,6 +76,7 @@ namespace Yttrium
             return sizeof(T);
         }
 
+        //! emit Variable Byte Rate integer
         template <typename T> inline
         size_t emitVBR(const T &x) {
             union

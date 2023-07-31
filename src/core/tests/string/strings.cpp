@@ -1,5 +1,6 @@
 #include "y/string/string.hpp"
 #include "y/utest/run.hpp"
+#include "y/container/iterator/display-all.hpp"
 
 using namespace Yttrium;
 
@@ -49,6 +50,7 @@ Y_UTEST(strings)
         Core::String<char> b = " World";
         Core::String<char> s = a+b;
         std::cerr << s << std::endl;
+        Iterating::DisplayAll::Of(s);
     }
 
 

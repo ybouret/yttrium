@@ -82,11 +82,21 @@ namespace Yttrium
             duplicateTransposeOf(other,Identity<U>);
         }
 
+        //! copy transposed, using transform
+        template <typename U,typename ALLOC,typename TRANSFORM> inline
+        Matrix(const Matrix<U,ALLOC> &other, const TransposeOf_ &_, TRANSFORM &transform) :
+        Y_MATRIX( (other,_) )
+        {
+            duplicateTransposeOf(other,transform);
+        }
+
+
 
 
         //! cleanup
         inline virtual ~Matrix() noexcept {
         }
+
 
         //! display Julia style
         inline friend std::ostream & operator<<(std::ostream &os, const Matrix &M)
@@ -95,11 +105,11 @@ namespace Yttrium
             {
                 case 0: os << "[]"; break;
                 case 1:
-                    if(1==M.cols) M.output_1x1(os);
-                    else          M.output_1xn(os);
+                    if(1==M.cols) M.julia_1x1(os);
+                    else          M.julia_1xn(os);
                     break;
                 default:
-                    if(1==M.cols) M.output_nx1(os);
+                    if(1==M.cols) M.julia_nx1(os);
                     else
                     {
                         M[1].Julia(os << '[');
@@ -137,6 +147,11 @@ namespace Yttrium
         inline LightArray<T> asArray() const noexcept
         { return LightArray<T>(base,items); }
 
+        inline void ld(ParamType args)
+        {
+            for(size_t i=0;i<items;++i) base[i] = args;
+        }
+
 
     private:
         Y_DISABLE_ASSIGN(Matrix);
@@ -146,19 +161,19 @@ namespace Yttrium
         MutableType  *base;
         AutoPtr<Code> code;
 
-        void output_1x1(std::ostream &os) const
+        inline void julia_1x1(std::ostream &os) const
         {
             assert(1==rows); assert(1==cols); assert(0!=base);
             os << "hcat(" << base[0] << ")";
         }
 
-        void output_1xn(std::ostream &os) const
+        inline void julia_1xn(std::ostream &os) const
         {
             assert(1==rows); assert(1<cols);  assert(0!=row);
             row[1].Julia(os << "[") << "]";
         }
 
-        void output_nx1(std::ostream &os) const
+        inline void julia_nx1(std::ostream &os) const
         {
             assert(1<rows); assert(1==cols); assert(0!=row);
             os << "hcat([" << row[1][1];
@@ -167,7 +182,12 @@ namespace Yttrium
             os << "]')";
         }
 
-        // Code for Matrix
+        //______________________________________________________________________
+        //
+        //
+        //! Code for Matrix
+        //
+        //______________________________________________________________________
         class Code : public Memory::Embedded
         {
         public:
@@ -181,11 +201,10 @@ namespace Yttrium
 
             inline virtual ~Code() noexcept { }
 
+        private:
             Implanted<T>             dataOps;
             Core::MatrixRow::Info    rowInfo;
             Implanted<RowType>       rowsOps;
-
-        private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
         };
 
@@ -201,6 +220,7 @@ namespace Yttrium
             --row;
         }
 
+        // duplicate
         template <typename U, typename ALLOC, typename TRANSFORM>
         inline void duplicate(const Matrix<U,ALLOC> &M, TRANSFORM &transform)
         {

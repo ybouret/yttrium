@@ -50,6 +50,7 @@ Y_UTEST(io_ints)
             Y_CHECK(u16 == fp.readCBR<uint16_t>("u16") );
             Y_CHECK(u32 == fp.readCBR<uint32_t>("u32") );
             Y_CHECK(u64 == fp.readCBR<uint64_t>("u64") );
+            Y_CHECK(sz  == fp.readVBR<size_t>("sz"));
         }
     }
     
