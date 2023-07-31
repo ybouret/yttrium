@@ -32,7 +32,14 @@ namespace Yttrium
 
 }
 
-#define Y_STRING_PROLOG() Identifiable(), Collection(), StringCommon(), Writable<CH>()
+#define Y_STRING_PROLOG() \
+Identifiable(),           \
+Collection(),             \
+StringCommon(),           \
+Writable<CH>(),           \
+WritableContiguous<CH>(), \
+Sequence<CH>()
+
 
 #define Y_STRING_CODE(NUM_CHARS)               \
 Object(),                                      \
