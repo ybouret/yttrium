@@ -75,12 +75,22 @@ namespace Yttrium
             if(b.bits()<=0)            throw  Specific::Exception(Rational::CallSign,DivBy0);
             if( __Zero__ == a.numer.s) return Rational();
 
-            const Natural D = b * a.denom;
+            const Natural D = b * a.denom; assert(D>0);
             return Rational(a.numer,D);
         }
 
+        Rational   operator / (const Natural &a, const Rational &b)
+        {
+            if(__Zero__ == b.numer.s) throw  Specific::Exception(Rational::CallSign,DivBy0);
+            if(a.bits()<=0)           return Rational();
 
-       // Y_APQ_BINARY_IMPL(/)
+            const Natural AN = a * b.denom;
+            const Integer  N(b.numer.s,AN);
+            return Rational(N,b.numer.n);
+        }
+
+
+        Y_APQ_BINARY_IMPL(/)
 
 
     }
