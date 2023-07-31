@@ -8,6 +8,7 @@
 #include "y/io/stream.hpp"
 #include "y/memory/buffer/ro.hpp"
 #include "y/check/printf.hpp"
+#include "y/type/ints.hpp"
 
 namespace Yttrium
 {
@@ -57,8 +58,23 @@ namespace Yttrium
         OutputStream & operator<<(const Memory::ReadOnlyBuffer &);   //!< helper
         OutputStream & operator()(const char *fmt,...) Y_PRINTF_API; //!< helper
 
+        void issue(const uint8_t  &); //!< fixed size issue
+        void issue(const uint16_t &); //!< fixed size issue
+        void issue(const uint32_t &); //!< fixed size issue
+        void issue(const uint64_t &); //!< fixed size issue
 
-        
+        template <typename T> inline
+        size_t emitCBR(const T &x) {
+            union
+            {
+                T                                     user;
+                typename UnsignedInt<sizeof(T)>::Type word;
+            } alias = { x };
+            issue(alias.word);
+            return sizeof(T);
+        }
+
+
 
 
     private:

@@ -1,6 +1,7 @@
 
 #include "y/io/stream/input.hpp"
 #include "y/system/exception.hpp"
+#include "y/text/plural.hpp"
 
 namespace Yttrium
 {
@@ -18,64 +19,75 @@ namespace Yttrium
     }
 
 
-
-    template <typename T>
-    static inline
-    bool fetchInit(InputStream &os, T &x)
+    size_t InputStream:: query(void *blockAddr, const size_t blockSize)
     {
-        char c = 0;
-        if(!os.query(c)) return false;
-        x = uint8_t(c);
-        return true;
+        assert(Good(blockAddr,blockSize));
+        size_t num = 0;
+        char  *ptr = static_cast<char *>(blockAddr);
+        for(num=0;num<blockSize;++num)
+        {
+            if(!query(ptr[num])) break;
+        }
+        return num;
     }
 
-    template <typename T>
-    static inline
-    bool fetchNext(InputStream &os, T &x)
-    {
-        char c = 0;
-        if(!os.query(c)) return false;
-        x <<= 8;
-        x |= uint8_t(c);
-        return true;
-    }
 
 
     size_t InputStream:: fetch(uint8_t  &x)
     {
-        return fetchInit(*this,x) ? 1 : 0;
+        return query(&x,1);
     }
 
 
     size_t InputStream:: fetch(uint16_t  &x)
     {
-        if(!fetchInit(*this,x)) return 0;
-        if(!fetchNext(*this,x)) return 1;
-        return 2;
+        uint8_t u[2] = { 0,0 };
+        const size_t  nr = query(u,2);
+        if(2==nr)
+        {
+            x = uint16_t(u[0]) + (uint16_t(u[1]) << 8);
+        }
+        return nr;
+
     }
 
     size_t InputStream:: fetch(uint32_t  &x)
     {
-        if(!fetchInit(*this,x)) return 0;
-        if(!fetchNext(*this,x)) return 1;
-        if(!fetchNext(*this,x)) return 2;
-        if(!fetchNext(*this,x)) return 3;
-        return 4;
+        uint8_t       u[4] = { 0,0,0,0 };
+        const size_t  nr   = query(u,4);
+        if(4==nr)
+        {
+            x = uint32_t(u[0])
+            +  (uint32_t(u[1]) << 8)
+            +  (uint32_t(u[2]) << 16)
+            +  (uint32_t(u[3]) << 24);
+        }
+        return nr;
     }
 
     size_t InputStream:: fetch(uint64_t  &x)
     {
-        if(!fetchInit(*this,x)) return 0;
-        if(!fetchNext(*this,x)) return 1;
-        if(!fetchNext(*this,x)) return 2;
-        if(!fetchNext(*this,x)) return 3;
-        if(!fetchNext(*this,x)) return 4;
-        if(!fetchNext(*this,x)) return 5;
-        if(!fetchNext(*this,x)) return 6;
-        if(!fetchNext(*this,x)) return 7;
-        return 8;
+        uint8_t       u[8] = { 0,0,0,0,0,0,0,0 };
+        const size_t  nr   = query(u,8);
+        if(8==nr)
+        {
+            x = uint64_t(u[0])
+            +  (uint64_t(u[1]) << 8)
+            +  (uint64_t(u[2]) << 16)
+            +  (uint64_t(u[3]) << 24)
+            +  (uint64_t(u[4]) << 32)
+            +  (uint64_t(u[5]) << 40)
+            +  (uint64_t(u[6]) << 48)
+            +  (uint64_t(u[7]) << 56);
+        }
+        return nr;
     }
 
+    void InputStream:: MissingBytes(const size_t n, const char *ctx) const
+    {
+        assert(n>0);
+        throw Specific::Exception( callSign(), "missing %u byte%s for %s", unsigned(n), Plural::s(n), From(ctx) );
+    }
 
 
 }

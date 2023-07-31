@@ -36,6 +36,39 @@ namespace Yttrium
         return *this;
     }
 
+
+    void OutputStream :: issue(const uint8_t  &x)
+    {
+        write(x);
+    }
+
+    void OutputStream :: issue(const uint16_t  &x)
+    {
+        write( uint8_t(x)    );
+        write( uint8_t(x>>8) );
+    }
+
+    void OutputStream :: issue(const uint32_t  &x)
+    {
+        write( uint8_t(x)    );
+        write( uint8_t(x>>8) );
+        write( uint8_t(x>>16) );
+        write( uint8_t(x>>24) );
+    }
+
+    void OutputStream :: issue(const uint64_t  &x)
+    {
+        write( uint8_t(x)    );
+        write( uint8_t(x>>8) );
+        write( uint8_t(x>>16) );
+        write( uint8_t(x>>24) );
+        write( uint8_t(x>>32) );
+        write( uint8_t(x>>40) );
+        write( uint8_t(x>>48) );
+        write( uint8_t(x>>56) );
+
+    }
+
 }
 
 #include "y/system/exception.hpp"

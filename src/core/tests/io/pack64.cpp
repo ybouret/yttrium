@@ -39,7 +39,6 @@ Y_UTEST(io_pack64)
         }
 
     }
-
 #endif
 
 
