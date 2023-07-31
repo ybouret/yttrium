@@ -480,3 +480,61 @@ namespace Yttrium
     }
 
 }
+
+namespace Yttrium
+{
+
+    namespace Core
+    {
+        template <>
+        void String<CH>:: popTail() noexcept
+        {
+            assert(0!=code);
+            assert(code->size>0);
+            assert(0!=code->data);
+            code->data[--(code->size)] = 0;
+        }
+
+        template <>
+        void String<CH>:: popHead() noexcept
+        {
+            assert(0!=code);
+            assert(code->size>0);
+            assert(0!=code->data);
+            memmove(code->data,code->data+1,--(code->size)*sizeof(CH));
+            code->data[code->size] = 0;
+        }
+
+        template <>
+        void String<CH>:: pushTail(ParamType c)
+        {
+            pushAtTail(&c,1);
+        }
+
+        template <>
+        void String<CH>:: pushHead(ParamType c)
+        {
+            pushAtHead(&c,1);
+        }
+
+        template <>
+        const CH & String<CH>:: getHead() const noexcept
+        {
+            assert(0!=code);
+            assert(0!=code->data);
+            assert(code->size>0);
+            return code->data[0];
+        }
+
+        template <>
+        const CH & String<CH>:: getTail() const noexcept
+        {
+            assert(0!=code);
+            assert(0!=code->data);
+            assert(code->size>0);
+            return code->item[code->size];
+        }
+
+    }
+
+}

@@ -7,6 +7,7 @@
 #include "y/object.hpp"
 #include "y/container/writable.hpp"
 #include "y/container/iterator/writable-contiguous.hpp"
+#include "y/sequence/interface.hpp"
 #include "y/ostream-proto.hpp"
 #include "y/type/capacity.hpp"
 #include "y/memory/buffer/ro.hpp"
@@ -58,7 +59,7 @@ namespace Yttrium
         class String :
         public StringCommon,
         public Writable<T>,
-        public WritableContiguous<T>
+        public WritableContiguous<T>, public Sequence<T>
         {
         public:
             //__________________________________________________________________
@@ -67,7 +68,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            Y_ARGS_EXPOSE(T,Type); //!< aliases
+            Y_ARGS_DECL(T,Type); //!< aliases
 
             //__________________________________________________________________
             //
@@ -113,7 +114,13 @@ namespace Yttrium
             virtual const char * callSign()                     const noexcept; //!< String<CH>
             virtual const void * ro_addr()                      const noexcept; //!< address of first char
             virtual size_t       measure()                      const noexcept; //!< size() * sizeof(CH)
+
             
+            virtual void pushHead(ParamType);
+            virtual void pushTail(ParamType);
+            virtual void popTail()  noexcept;
+            virtual void popHead()  noexcept;
+            //!
             //__________________________________________________________________
             //
             //
@@ -156,10 +163,12 @@ namespace Yttrium
             class Code;
             Code *code;
             String(const T *,const size_t, const T *, const size_t);
-            virtual const T *getBaseForward() const noexcept;
-            virtual const T *getLastForward() const noexcept;
-            virtual const T *getBaseReverse() const noexcept;
-            virtual const T *getLastReverse() const noexcept;
+            virtual const T *   getBaseForward() const noexcept;
+            virtual const T *   getLastForward() const noexcept;
+            virtual const T *   getBaseReverse() const noexcept;
+            virtual const T *   getLastReverse() const noexcept;
+            virtual ConstType & getHead()        const noexcept;
+            virtual ConstType & getTail()        const noexcept;
         };
     }
 }
