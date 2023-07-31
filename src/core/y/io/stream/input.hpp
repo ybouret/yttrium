@@ -36,12 +36,18 @@ namespace Yttrium
         virtual void store(const  char) = 0; //!< unread a char
         virtual bool ready()            = 0; //!< next char ?
 
-        static const char *From(const char *ctx) noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        static const char *From(const char *ctx) noexcept; //!< ctx/Unknown
 
-        bool fetch(uint8_t  &);
-        bool fetch(uint16_t &);
-        bool fetch(uint32_t &);
-        bool fetch(uint64_t &);
+        size_t fetch(uint8_t  &); //!< try to read 1 byte
+        size_t fetch(uint16_t &); //!< try to read 2 bytes
+        size_t fetch(uint32_t &); //!< try to read 4 bytes
+        size_t fetch(uint64_t &); //!< try to read 8 bytes
 
 
 

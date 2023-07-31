@@ -41,39 +41,39 @@ namespace Yttrium
     }
 
 
-    bool InputStream:: fetch(uint8_t  &x)
+    size_t InputStream:: fetch(uint8_t  &x)
     {
-        return fetchInit(*this,x);
+        return fetchInit(*this,x) ? 1 : 0;
     }
 
 
-    bool InputStream:: fetch(uint16_t  &x)
+    size_t InputStream:: fetch(uint16_t  &x)
     {
-        if(!fetchInit(*this,x)) return false;
-        if(!fetchNext(*this,x)) return false;
-        return true;
+        if(!fetchInit(*this,x)) return 0;
+        if(!fetchNext(*this,x)) return 1;
+        return 2;
     }
 
-    bool InputStream:: fetch(uint32_t  &x)
+    size_t InputStream:: fetch(uint32_t  &x)
     {
-        if(!fetchInit(*this,x)) return false;
-        if(!fetchNext(*this,x)) return false;
-        if(!fetchNext(*this,x)) return false;
-        if(!fetchNext(*this,x)) return false;
-        return true;
+        if(!fetchInit(*this,x)) return 0;
+        if(!fetchNext(*this,x)) return 1;
+        if(!fetchNext(*this,x)) return 2;
+        if(!fetchNext(*this,x)) return 3;
+        return 4;
     }
 
-    bool InputStream:: fetch(uint64_t  &x)
+    size_t InputStream:: fetch(uint64_t  &x)
     {
-        if(!fetchInit(*this,x)) return false;
-        if(!fetchNext(*this,x)) return false;
-        if(!fetchNext(*this,x)) return false;
-        if(!fetchNext(*this,x)) return false;
-        if(!fetchNext(*this,x)) return false;
-        if(!fetchNext(*this,x)) return false;
-        if(!fetchNext(*this,x)) return false;
-        if(!fetchNext(*this,x)) return false;
-        return true;
+        if(!fetchInit(*this,x)) return 0;
+        if(!fetchNext(*this,x)) return 1;
+        if(!fetchNext(*this,x)) return 2;
+        if(!fetchNext(*this,x)) return 3;
+        if(!fetchNext(*this,x)) return 4;
+        if(!fetchNext(*this,x)) return 5;
+        if(!fetchNext(*this,x)) return 6;
+        if(!fetchNext(*this,x)) return 7;
+        return 8;
     }
 
 

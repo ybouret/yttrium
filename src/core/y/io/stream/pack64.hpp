@@ -13,6 +13,7 @@ namespace Yttrium
 
     namespace IO
     {
+        //! [Un]Pack64 bits to/from streams
         class Pack64
         {
         public:
@@ -20,12 +21,14 @@ namespace Yttrium
             ~Pack64() noexcept;
 
             static size_t   Emit(OutputStream &, const uint64_t);
-            static uint64_t Read(InputStream &, const char *ctx);
+            static uint64_t Read(InputStream  &, const char *ctx);
 
-            const uint16_t size;     
-            const uint8_t  data[14];
+
         private:
             Y_DISABLE_ASSIGN(Pack64);
+            uint16_t size;      //!< encoded
+            uint8_t  data[14];  //!< data
+
             void emit(uint8_t &code, unsigned &bits) noexcept;
         };
     }

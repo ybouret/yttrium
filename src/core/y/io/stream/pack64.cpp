@@ -23,52 +23,49 @@ namespace Yttrium
 
 
         static const unsigned InfoBits = 4;
-        static const unsigned InfoLoss = 8-InfoBits;
+        static const unsigned InfoRoom = 8-InfoBits;
 
         Pack64:: Pack64(const uint64_t word) noexcept:
         size(0),
         data()
         {
             // prepare
-            memset( &Coerce(data[0]),0,sizeof(data));
-#if 0
+            memset(data,0,sizeof(data));
+
             // counting bits to append
             const unsigned wordBits = BitCount::For(word);
             const unsigned dataBits = InfoBits + wordBits;
             const unsigned outBytes = unsigned( Y_ALIGN_ON(8,dataBits) ) / 8; assert(outBytes>0);
             const unsigned addBytes = outBytes-1; assert(BitCount::For(addBytes) <= InfoBits );
 
-            std::cerr << Hexadecimal(word) << "[";
-
             uint8_t  code = uint8_t(addBytes);
             unsigned bits = InfoBits;
-            uint64_t mask = 0x1;
+            uint64_t mask = 1;
             for(size_t i=wordBits;i>0;--i,mask <<= 1)
             {
                 assert(bits<8);
-                code <<= 1;
-                ++bits;
-                if(0!=(mask&word)) code |= 1;
+                code <<= 1; ++bits;
+                if(mask&word) code |=1 ;
                 if(bits>=8) emit(code,bits);
             }
-            if(bits>0)
-            {
+            assert(bits==dataBits%8);
+            if(bits)
                 emit(code,bits);
-            }
-            std::cerr << " ] size=" << size << std::endl;
-#endif
+
+            std::cerr << "qw:" << Hexadecimal(word) << " [ "; for(size_t i=0;i<size;++i) std::cerr << ' ' << Hexadecimal(data[i]);
+            std::cerr << " ] #" << size << " / " << ByteCount::For(word) <<  std::endl;
         }
 
         void Pack64:: emit(uint8_t &code, unsigned &bits) noexcept
         {
-            assert(size<=8);
             assert(bits>0);
             assert(bits<=8);
-            Coerce(data[ Coerce(size)++ ]) = (code << (8-bits));
-            std::cerr << ' ' << Hexadecimal( data[size-1]);
+            assert(size<=8);
+            data[size++] = code << (8-bits);
             code = 0;
             bits = 0;
         }
+
 
 
     }
@@ -103,6 +100,31 @@ namespace Yttrium
             uint64_t qw   = 0;
             uint8_t  code = 0;
             if(!os.fetch(code)) throw Specific::Exception(os.callSign(),"missing first byte for %s", os.From(ctx));
+
+            unsigned addBytes = (code >> InfoRoom);
+
+            //std::cerr << "addBytes=" << addBytes << std::endl;
+
+            code <<= InfoBits;
+            unsigned bits   = InfoRoom;
+            uint64_t mask   = 1;
+
+            //std::cerr << "parsing " << Hexadecimal(code) << std::endl;
+            while(true)
+            {
+                while(bits-- > 0 )
+                {
+                    if(code & 0x80)
+                    {
+                        qw |= mask;
+                    }
+                    code <<= 1;
+                    mask <<= 1;
+                }
+                if(addBytes-- <= 0) break;
+                if(!os.fetch(code) )throw Specific::Exception(os.callSign(),"missing extra byte for %s", os.From(ctx));
+                bits = 8;
+            }
 
 
             return qw;

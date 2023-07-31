@@ -88,7 +88,13 @@ namespace Yttrium
         class OutputFile : public OutputStream, public OutputGrasp, public File
         {
         public:
-            static const char * const CallSign;
+            //__________________________________________________________________
+            //
+            //
+            // Definition
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< "Libc::OutputFile"
 
             //__________________________________________________________________
             //
