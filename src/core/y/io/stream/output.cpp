@@ -114,4 +114,14 @@ namespace Yttrium
 
 }
 
+#include "y/io/stream/pack64.hpp"
 
+
+namespace Yttrium
+{
+
+    size_t OutputStream:: emit64(const uint64_t u)
+    {
+        return IO::Pack64::Emit(*this,u);
+    }
+}

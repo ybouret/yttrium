@@ -63,6 +63,7 @@ namespace Yttrium
         void issue(const uint32_t &); //!< fixed size issue
         void issue(const uint64_t &); //!< fixed size issue
 
+
         template <typename T> inline
         size_t emitCBR(const T &x) {
             union
@@ -74,11 +75,22 @@ namespace Yttrium
             return sizeof(T);
         }
 
+        template <typename T> inline
+        size_t emitVBR(const T &x) {
+            union
+            {
+                T                                     user;
+                typename UnsignedInt<sizeof(T)>::Type word;
+            } alias = { x };
+            return emit64( alias.word );
+        }
 
 
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(OutputStream);
+        size_t emit64(const uint64_t);
+
     };
 }
 

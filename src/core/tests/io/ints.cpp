@@ -29,6 +29,9 @@ Y_UTEST(io_ints)
         std::cerr << Hexadecimal(u32,Hexadecimal::Compact);
         std::cerr << Hexadecimal(u64,Hexadecimal::Compact);
         std::cerr << std::endl;
+
+        const size_t sz = ran.leq(10000);
+
         {
             Libc::OutputFile fp("ints.dat");
             size_t written = 0;
@@ -36,6 +39,7 @@ Y_UTEST(io_ints)
             written += fp.emitCBR(u16);
             written += fp.emitCBR(u32);
             written += fp.emitCBR(u64);
+            written += fp.emitVBR(sz);
             std::cerr << "written=" << written << std::endl;
         }
 
@@ -46,7 +50,6 @@ Y_UTEST(io_ints)
             Y_CHECK(u16 == fp.readCBR<uint16_t>("u16") );
             Y_CHECK(u32 == fp.readCBR<uint32_t>("u32") );
             Y_CHECK(u64 == fp.readCBR<uint64_t>("u64") );
-
         }
     }
     
