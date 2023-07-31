@@ -36,8 +36,11 @@ namespace Yttrium
             if(b.numer.s == __Zero__) throw Specific::Exception(Rational::CallSign,DivBy0);
             const SignType s = Sign::Of(a);
             if(__Zero__==s) return Rational();
-            
 
+            const Integer N = b.denom * a; assert(N!=0);
+            const Integer D = b.numer;     assert(D!=0);
+            Coerce(N.s) = Sign::Product(N.s,s);
+            return Rational(N,D.n);
         }
 
        // Y_APQ_BINARY_IMPL(/)
