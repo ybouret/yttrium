@@ -84,10 +84,11 @@ add_test(data:coop-heavy-list test-core data_coop_heavy_list)
 
 
 #calculus
-add_test(calculus:ilog2 test-core calculus_ilog2)
-add_test(calculus:align test-core calculus_align)
-add_test(calculus:base2 test-core calculus_base2)
-add_test(calculus:gcd   test-core calculus_gcd)
+add_test(calculus:ilog2  test-core calculus_ilog2)
+add_test(calculus:align  test-core calculus_align)
+add_test(calculus:base2  test-core calculus_base2)
+add_test(calculus:gcd    test-core calculus_gcd)
+add_test(calculus:bcount test-core calculus_bcount)
 
 #concurrent
 add_test(concurrent:mutex test-core concurrent_mutex)

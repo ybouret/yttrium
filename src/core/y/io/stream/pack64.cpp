@@ -1,6 +1,7 @@
 
 #include "y/io/stream/pack64.hpp"
 #include "y/calculus/bit-count.hpp"
+#include "y/calculus/byte-count.hpp"
 #include "y/calculus/align.hpp"
 #include <cstring>
 
@@ -15,6 +16,8 @@ namespace Yttrium
             
         }
 
+        static const uint16_t InfoBits = 4;
+
         uint16_t Pack64:: BytesFor(const uint64_t qw) noexcept
         {
             const  uint16_t bits = 4 + BitCount::For(qw);
@@ -25,8 +28,11 @@ namespace Yttrium
         size(0),
         data()
         {
+
             memset(data,0,sizeof(data));
             const uint16_t dataBits = uint16_t(BitCount::For(qw));
+            assert(dataBits<=64);
+            assert(BitCount::For(dataBits)<=InfoBits);
             
         }
 

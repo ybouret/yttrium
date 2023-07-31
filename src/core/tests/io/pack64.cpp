@@ -17,7 +17,7 @@ Y_UTEST(io_pack64)
         std::cerr << Hexadecimal(qw);
         std::cerr << " => bytes=" << IO::Pack64::BytesFor(qw);
         std::cerr << std::endl;
-
+        const IO::Pack64 p(qw);
     }
 
     Y_SIZEOF(IO::Pack64);
