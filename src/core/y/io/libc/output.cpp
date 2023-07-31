@@ -66,6 +66,10 @@ namespace Yttrium
     namespace Libc
     {
 
+        const char * const OutputFile::CallSign = "Libc::OutputFile";
+
+        const char * OutputFile:: callSign() const noexcept { return CallSign; }
+
         OutputFile:: ~OutputFile() noexcept
         {
             try { emit(); } catch(...) {}

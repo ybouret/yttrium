@@ -4,7 +4,7 @@
 #define Y_IO_Stream_Included 1
 
 
-#include "y/config/starting.hpp"
+#include "y/type/identifiable.hpp"
 
 namespace Yttrium
 {
@@ -16,7 +16,7 @@ namespace Yttrium
     //
     //
     //______________________________________________________________________
-    class Stream
+    class Stream : public Identifiable
     {
     protected:
         explicit Stream() noexcept; //!< setup

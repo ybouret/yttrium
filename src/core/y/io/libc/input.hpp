@@ -50,6 +50,8 @@ namespace Yttrium
         class InputFile : public InputStream, public IsStdIn, public File
         {
         public:
+            static const char * const CallSign;
+
             //__________________________________________________________________
             //
             //
@@ -69,6 +71,9 @@ namespace Yttrium
             //__________________________________________________________________
             virtual bool query(char &);     //!< query new char
             virtual void store(const char); //!< store read char
+            virtual bool ready();           //!< char in buffer or try to read
+            
+            virtual const char *callSign() const noexcept; 
 
             //__________________________________________________________________
             //

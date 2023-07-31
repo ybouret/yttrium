@@ -34,8 +34,19 @@ namespace Yttrium
         //______________________________________________________________________
         virtual bool query(char & data) = 0; //!< query a single char, false = EOS
         virtual void store(const  char) = 0; //!< unread a char
+        virtual bool ready()            = 0; //!< next char ?
+
+        static const char *From(const char *ctx) noexcept;
+
+        bool fetch(uint8_t  &, const char * = 0);
+        bool fetch(uint16_t &, const char * = 0);
+        bool fetch(uint32_t &, const char * = 0);
+        bool fetch(uint64_t &, const char * = 0);
 
 
+
+
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(InputStream);
     };

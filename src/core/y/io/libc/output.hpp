@@ -88,6 +88,8 @@ namespace Yttrium
         class OutputFile : public OutputStream, public OutputGrasp, public File
         {
         public:
+            static const char * const CallSign;
+
             //__________________________________________________________________
             //
             //
@@ -112,7 +114,8 @@ namespace Yttrium
             //__________________________________________________________________
             virtual void write(const char); //!< emit/write to buffer
             virtual void flush();           //!< emit
-
+            virtual const char * callSign() const throw();
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(OutputFile);
             Libc::DirectBuffer buffer;

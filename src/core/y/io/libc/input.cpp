@@ -40,6 +40,9 @@ namespace Yttrium
 
     namespace Libc
     {
+        const char * const InputFile::CallSign = "Libc::InputFile";
+
+        const char * InputFile:: callSign() const noexcept { return CallSign; }
 
         InputFile:: ~InputFile() noexcept
         {
@@ -67,7 +70,7 @@ namespace Yttrium
             assert(0!=fileName);
             assert(0!=strcmp(fileName,Y_STDIN));
 
-            std::cerr << "openCFILE(" << fileName << ")" << std::endl;
+            //std::cerr << "openCFILE(" << fileName << ")" << std::endl;
             Y_GIANT_LOCK();
             FILE *fp = fopen(fileName,"rb");
             if(!fp) throw Libc::Exception(errno,"fopen(%s)",fileName);
@@ -138,6 +141,16 @@ namespace Yttrium
         void InputFile:: store(const char c)
         {
             buffer.unget(c);
+        }
+
+        bool InputFile:: ready()
+        {
+            if(buffer.size) return true;
+            assert(buffer.size<=0);
+            char C = 0;
+            if(!query(C)) return false;
+            buffer.unget(C);
+            return true;
         }
 
         void InputFile:: gc() noexcept
