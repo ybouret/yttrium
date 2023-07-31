@@ -2,7 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/random/shuffle.hpp"
 #include "y/random/fill.hpp"
-#include "y/type/complex.hpp"
+#include "y/mkl/complex.hpp"
 
 using namespace Yttrium;
 

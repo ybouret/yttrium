@@ -1,4 +1,4 @@
-#include "y/type/complex.hpp"
+#include "y/mkl/complex.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/timing.hpp"
 #include "y/random/bits.hpp"
@@ -125,7 +125,7 @@ void testSwap(Random::Bits &ran)
     std::cerr << std::endl;
 }
 
-Y_UTEST(type_complex)
+Y_UTEST(mkl_complex)
 {
     Random::Rand ran;
 

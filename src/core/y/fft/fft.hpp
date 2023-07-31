@@ -3,7 +3,7 @@
 #ifndef Y_FFT_Included
 #define Y_FFT_Included 1
 
-#include "y/type/complex.hpp"
+#include "y/mkl/complex.hpp"
 #include "y/calculus/base2.hpp"
 
 

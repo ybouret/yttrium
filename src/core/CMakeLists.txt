@@ -52,6 +52,7 @@ counting
 counting/c
 sequence
 ordered
+mkl
 )
 
 source_group(concurrent FILES ${quark})

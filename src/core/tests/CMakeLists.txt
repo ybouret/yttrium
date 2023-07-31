@@ -17,6 +17,7 @@ ordered
 counting
 container
 sequence
+mkl
 )
 
 Y_LinkLibraries(test-core)
@@ -68,7 +69,6 @@ add_test(type:list       test-core type_list)
 add_test(type:traits     test-core type_traits)
 add_test(type:conversion test-core type_conversion)
 add_test(type:args       test-core type_args)
-add_test(type:complex    test-core type_complex)
 
 #data
 add_test(data:list test-core data_list)
@@ -157,3 +157,8 @@ add_test(counting:part test-core counting_part)
 add_test(counting:partition   test-core counting_partition)
 add_test(counting:permutation test-core counting_permutation)
 add_test(counting:combination test-core counting_combination)
+
+#mkl
+add_test(mkl:complex test-core mkl_complex)
+add_test(mkl:vtx     test-core mkl_vtx)
+
