@@ -11,37 +11,93 @@
 
 namespace Yttrium
 {
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! 3D Vertex
+    //
+    //
+    //__________________________________________________________________________
     template <typename T>
     class V3D
     {
     public:
-
+        //______________________________________________________________________
+        //
+        //
         // C++
-        inline  V3D(const T X, const T Y, const T Z) noexcept : x(X), y(Y), z(Z) {}
-        inline ~V3D()                                noexcept {}
-        inline  V3D(const V3D &v)                    noexcept : x(v.x), y(v.y), z(v.z) {}
-        inline  V3D & operator=(const V3D &v)        noexcept { x=v.x; y=v.y; z=v.z; return *this; }
+        //
+        //______________________________________________________________________
+        inline  V3D(const T X, const T Y, const T Z) noexcept : x(X), y(Y), z(Z) {}                  //!< setup
+        inline ~V3D()                                noexcept {}                                     //!< cleanup
+        inline  V3D(const V3D &v)                    noexcept : x(v.x), y(v.y), z(v.z) {}            //!< copy
+        inline  V3D & operator=(const V3D &v)        noexcept { x=v.x; y=v.y; z=v.z; return *this; } //!< assign
 
-        inline T &       operator[](const size_t i)       noexcept { assert(i==1||i==2||i==3); return (&x)+i-1; }
-        inline const T & operator[](const size_t i) const noexcept { assert(i==1||i==2||i==3); return (&x)+i-1; }
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
 
+        //______________________________________________________________________
+        //
+        // access
+        //______________________________________________________________________
+        inline T &       operator[](const size_t i)       noexcept { assert(i==1||i==2||i==3); return (&x)+i-1; } //!< access
+        inline const T & operator[](const size_t i) const noexcept { assert(i==1||i==2||i==3); return (&x)+i-1; } //!< access
+
+        //______________________________________________________________________
+        //
         // addition
-        inline V3D        operator+()                          const noexcept { return V3D(x,y,z); }
-        inline friend V3D operator+(const V3D  &lhs, const V3D &rhs) noexcept { return V3D(lhs.x+rhs.x,lhs.y+rhs.y,lhs.z+rhs.z); }
-        inline V3D &      operator+=(const V3D &rhs)                 noexcept { x+=rhs.x; y+=rhs.y; z+=rhs.z; return *this; }
+        //______________________________________________________________________
+        inline V3D        operator+()                          const noexcept { return V3D(x,y,z); }                               //!< unary +
+        inline friend V3D operator+(const V3D  &lhs, const V3D &rhs) noexcept { return V3D(lhs.x+rhs.x,lhs.y+rhs.y,lhs.z+rhs.z); } //!< binary +
+        inline V3D &      operator+=(const V3D &rhs)                 noexcept { x+=rhs.x; y+=rhs.y; z+=rhs.z; return *this; }      //!< in place +
 
+        //______________________________________________________________________
+        //
         // subtraction
-        inline V3D        operator-()                          const noexcept { return V3D(-x,-y,-z); }
-        inline friend V3D operator-(const V3D  &lhs, const V3D &rhs) noexcept { return V3D(lhs.x-rhs.x,lhs.y-rhs.y,lhs.z-rhs.z); }
-        inline V3D &      operator-=(const V3D &rhs)                 noexcept { x-=rhs.x; y-=rhs.y; z-=rhs.z; return *this; }
+        //______________________________________________________________________
+        inline V3D        operator-()                          const noexcept { return V3D(-x,-y,-z); }                            //!< unary minus
+        inline friend V3D operator-(const V3D  &lhs, const V3D &rhs) noexcept { return V3D(lhs.x-rhs.x,lhs.y-rhs.y,lhs.z-rhs.z); } //!< binary -
+        inline V3D &      operator-=(const V3D &rhs)                 noexcept { x-=rhs.x; y-=rhs.y; z-=rhs.z; return *this; }      //!< in place -
 
-        // display
+        //______________________________________________________________________
+        //
+        // multiplication
+        //______________________________________________________________________
+        inline friend V3D operator*(const T u, const V3D &v)    noexcept { return V3D(v.x*u,v.y*u,v.z*u);      } //!< left multiplication
+        inline V3D &      operator*=(const T u)                 noexcept { x*=u; y*=u; z*=u; return *this;     } //!< in place multiplication
+        inline friend T   operator*(const V3D &a, const V3D &b) noexcept { return a.x*b.x + a.y*b.y + a.z*b.z; } //!< dot product
+
+        //______________________________________________________________________
+        //
+        // division
+        //______________________________________________________________________
+        inline friend V3D operator/( const V3D &v, const T u)   noexcept { return V3D(v.x/u,v.y/u,v.z/u);  } //!< right division
+        inline V3D &      operator/=(const T u)                 noexcept { x/=u; y/=u; z/=u; return *this; } //!< in place division
+
+
+        //______________________________________________________________________
+        //
+        //! display
+        //______________________________________________________________________
+
         inline friend std::ostream & operator<<(std::ostream &os, const V3D &v)
         { return os << '[' << v.x << ';' << v.y << ';' << v.z << ']'; }
 
-        T x;
-        T y;
-        T z;
+        //______________________________________________________________________
+        //
+        //
+        // Members
+        //
+        //______________________________________________________________________
+
+        T x; //!< first
+        T y; //!< second
+        T z; //!< third
     };
 
 

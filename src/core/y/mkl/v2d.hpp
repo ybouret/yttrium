@@ -11,37 +11,94 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! 2D Vertex
+    //
+    //
+    //__________________________________________________________________________
     template <typename T>
     class V2D
     {
     public:
 
+        //______________________________________________________________________
+        //
+        //
         // C++
-        inline  V2D(const T X, const T Y)     noexcept : x(X), y(Y) {}
-        inline ~V2D()                         noexcept {}
-        inline  V2D(const V2D &v)             noexcept : x(v.x), y(v.y) {}
-        inline  V2D & operator=(const V2D &v) noexcept { x=v.x; y=v.y; return *this; }
+        //
+        //
+        //______________________________________________________________________
+        inline  V2D(const T X, const T Y)     noexcept : x(X), y(Y) {}                 //!< setup
+        inline ~V2D()                         noexcept {}                              //!< cleanup
+        inline  V2D(const V2D &v)             noexcept : x(v.x), y(v.y) {}             //!< copy
+        inline  V2D & operator=(const V2D &v) noexcept { x=v.x; y=v.y; return *this; } //!< assign
 
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //
+        //______________________________________________________________________
+
+
+        //______________________________________________________________________
+        //
         // access
-        inline T &       operator[](const size_t i)       noexcept { assert(i==1||i==2); return (&x)+i-1; }
-        inline const T & operator[](const size_t i) const noexcept { assert(i==1||i==2); return (&x)+i-1; }
+        //______________________________________________________________________
+        inline T &       operator[](const size_t i)       noexcept { assert(i==1||i==2); return (&x)+i-1; } //!< access
+        inline const T & operator[](const size_t i) const noexcept { assert(i==1||i==2); return (&x)+i-1; } //!< access
 
+        //______________________________________________________________________
+        //
         // addition
-        inline V2D        operator+()                         const noexcept { return V2D(x,y); }
-        inline friend V2D operator+(const V2D &lhs, const V2D &rhs) noexcept { return V2D(lhs.x+rhs.x,lhs.y+rhs.y); }
-        inline V2D & operator+=(const V2D &rhs)                     noexcept { x+=rhs.x; y+=rhs.y; return *this; }
+        //______________________________________________________________________
+        inline V2D        operator+()                         const noexcept { return V2D(x,y); }                     //!< unary +
+        inline friend V2D operator+(const V2D &lhs, const V2D &rhs) noexcept { return V2D(lhs.x+rhs.x,lhs.y+rhs.y); } //!< binary +
+        inline V2D & operator+=(const V2D &rhs)                     noexcept { x+=rhs.x; y+=rhs.y; return *this; }    //!< in place +
 
+        //______________________________________________________________________
+        //
         // subtraction
-        inline V2D        operator-()                         const noexcept { return V2D(-x,-y); }
-        inline friend V2D operator-(const V2D &lhs, const V2D &rhs) noexcept { return V2D(lhs.x-rhs.x,lhs.y-rhs.y); }
-        inline V2D & operator-=(const V2D &rhs)                     noexcept { x-=rhs.x; y-=rhs.y; return *this; }
+        //______________________________________________________________________
+        inline V2D        operator-()                         const noexcept { return V2D(-x,-y); }                   //!< unary -
+        inline friend V2D operator-(const V2D &lhs, const V2D &rhs) noexcept { return V2D(lhs.x-rhs.x,lhs.y-rhs.y); } //!< binary -
+        inline V2D & operator-=(const V2D &rhs)                     noexcept { x-=rhs.x; y-=rhs.y; return *this; }    //!< in place -
 
+        //______________________________________________________________________
+        //
+        // multiplication
+        //______________________________________________________________________
+        inline friend V2D operator*(const T u, const V2D &v)    noexcept { return V2D(v.x*u,v.y*u);  } //!< left multiplication
+        inline V2D &      operator*=(const T u)                 noexcept { x*=u; y*=u; return *this; } //!< in place multiplication
+        inline friend T   operator*(const V2D &a, const V2D &b) noexcept { return a.x*b.x + a.y*b.y; } //!< dot product
+
+        //______________________________________________________________________
+        //
+        // division
+        //______________________________________________________________________
+        inline friend V2D operator/( const V2D &v, const T u)   noexcept { return V2D(v.x/u,v.y/u);  } //!< right division
+        inline V2D &      operator/=(const T u)                 noexcept { x/=u; y/=u; return *this; } //!< in place division
+
+
+        //______________________________________________________________________
+        //
+        //! display
+        //______________________________________________________________________
         inline friend std::ostream & operator<<(std::ostream &os, const V2D &v)
         { return os << '[' << v.x << ';' << v.y << ']';         }
 
+        //______________________________________________________________________
+        //
+        //
         // members
-        T x;
-        T y;
+        //
+        //______________________________________________________________________
+        T x; //!< first
+        T y; //!< second
     };
 
 }
