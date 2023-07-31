@@ -58,6 +58,7 @@ namespace Yttrium
         OutputStream & operator()(const char *fmt,...) Y_PRINTF_API; //!< helper
 
 
+        
 
 
     private:

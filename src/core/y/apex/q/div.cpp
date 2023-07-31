@@ -37,10 +37,10 @@ namespace Yttrium
             const SignType s = Sign::Of(a);
             if(__Zero__==s) return Rational();
 
-            const Integer N = b.denom * a; assert(N!=0);
-            const Integer D = b.numer;     assert(D!=0);
-            Coerce(N.s) = Sign::Product(N.s,s);
-            return Rational(N,D.n);
+            const uint64_t A  = (a<0) ? -a : a;
+            const Natural  AN = b.denom * A;   assert(AN>0);
+            const Integer  N( Sign::Product(s,b.numer.s), AN);
+            return Rational(N,b.numer.n);
         }
 
        // Y_APQ_BINARY_IMPL(/)

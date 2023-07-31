@@ -48,6 +48,8 @@ namespace Yttrium
             Integer(const int64_t);                //!< setup integral
             Integer & operator=(const int64_t);    //!< assign integral
 
+            Integer(const SignType _s, const Natural _n); //!< build from sign+natural
+            
             Y_OSTREAM_PROTO(Integer);              //!< display
 
             //__________________________________________________________________
@@ -163,7 +165,6 @@ inline friend bool operator OP (const Natural &lhs, const Integer &rhs ) noexcep
             const Natural  n; //!< unsigned value
 
         private:
-            Integer(const SignType _s, const Natural _n);
             static SignType Cmp(const Integer &lhs, const Integer &rhs) noexcept;
 
             static SignType Cmp(const Integer &lhs, const int64_t  rhs) noexcept;

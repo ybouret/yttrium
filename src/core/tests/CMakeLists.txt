@@ -115,6 +115,7 @@ add_test(io:istream test-core io_istream)
 add_test(io:ostream test-core io_ostream)
 add_test(io:copy    test-core io_copy)
 add_test(io:lines   test-core io_lines)
+add_test(io:pack64  test-core io_pack64)
 
 #fft
 add_test(fft:1   test-core fft1)
