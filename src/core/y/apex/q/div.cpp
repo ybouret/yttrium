@@ -9,6 +9,7 @@ namespace Yttrium
 
         static const char DivBy0[] = "Division by zero";
 
+        //----------------------------------------------------------------------
         Rational   operator / (const Rational &a, const Rational &b)
         {
             if(b.numer.s == __Zero__) throw Specific::Exception(Rational::CallSign,DivBy0);
@@ -20,6 +21,7 @@ namespace Yttrium
             return Rational(N,D.n);
         }
 
+        //----------------------------------------------------------------------
         Rational   operator / (const Rational &a, const int64_t b)
         {
             const SignType s = Sign::Of(b);
@@ -45,7 +47,7 @@ namespace Yttrium
             return Rational(N,b.numer.n);
         }
 
-
+        //----------------------------------------------------------------------
         Rational   operator / (const Rational &a, const Integer &b)
         {
             if( __Zero__ == b.s )      throw Specific::Exception(Rational::CallSign,DivBy0);
@@ -59,7 +61,7 @@ namespace Yttrium
 
         Rational   operator / (const Integer &a, const Rational &b)
         {
-            if( __Zero__ == b.numer.s ) throw Specific::Exception(Rational::CallSign,DivBy0);
+            if( __Zero__ == b.numer.s ) throw  Specific::Exception(Rational::CallSign,DivBy0);
             if( __Zero__ == a.s )       return Rational(0);
 
             const Natural AN = a.n * b.denom;
@@ -67,6 +69,15 @@ namespace Yttrium
             return Rational(N,b.numer.n);
         }
 
+        //----------------------------------------------------------------------
+        Rational   operator / (const Rational &a, const Natural &b)
+        {
+            if(b.bits()<=0)            throw  Specific::Exception(Rational::CallSign,DivBy0);
+            if( __Zero__ == a.numer.s) return Rational();
+
+            const Natural D = b * a.denom;
+            return Rational(a.numer,D);
+        }
 
 
        // Y_APQ_BINARY_IMPL(/)
