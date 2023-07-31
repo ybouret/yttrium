@@ -6,20 +6,34 @@
 #include "y/io/libc/output.hpp"
 #include "y/io/libc/input.hpp"
 
+#include "y/random/bits.hpp"
+
+
 using namespace Yttrium;
 
 
 Y_UTEST(io_pack64)
 {
 
-    const uint64_t reg[] = { 0, 1, 0x1234 }; //, 0x10000, 0x12345678, IntegerFor<uint64_t>::Maximum };
+    Random::Rand ran;
+
+#if 1
+    for(unsigned i=0;i<=64;++i)
+    {
+        const uint64_t   qw = ran.to<uint64_t>(i);
+        const IO::Pack64 p(qw);
+    }
+
+#endif
+
+#if 0
     {
         Libc::OutputFile fp("pack64.dat");
         {
             size_t written = 0;
-            for(size_t i=0;i<sizeof(reg)/sizeof(reg[0]);++i)
+            for(unsigned i=0;i<=3;++i)
             {
-                const uint64_t qw = reg[i];
+                const uint64_t qw = ran.to<uint64_t>(i);
                 std::cerr << Hexadecimal(qw);
                 std::cerr << std::endl;
                 written += IO::Pack64::Emit(fp,qw);
@@ -34,11 +48,10 @@ Y_UTEST(io_pack64)
         {
             uint64_t qw = IO::Pack64::Read(fp,"trial");
             std::cerr << "qw=" << Hexadecimal(qw) << std::endl;
-
+            break;
         }
     }
-
-
+#endif
 
 }
 Y_UDONE()

@@ -38,10 +38,10 @@ namespace Yttrium
 
         static const char *From(const char *ctx) noexcept;
 
-        bool fetch(uint8_t  &, const char * = 0);
-        bool fetch(uint16_t &, const char * = 0);
-        bool fetch(uint32_t &, const char * = 0);
-        bool fetch(uint64_t &, const char * = 0);
+        bool fetch(uint8_t  &);
+        bool fetch(uint16_t &);
+        bool fetch(uint32_t &);
+        bool fetch(uint64_t &);
 
 
 
