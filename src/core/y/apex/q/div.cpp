@@ -23,23 +23,25 @@ namespace Yttrium
         Rational   operator / (const Rational &a, const int64_t b)
         {
             const SignType s = Sign::Of(b);
-            if(__Zero__  ==s) throw Specific::Exception(Rational::CallSign,DivBy0);
+            if(__Zero__ == s)         throw Specific::Exception(Rational::CallSign,DivBy0);
             if(__Zero__ == a.numer.s) return Rational();
-            const Integer N = a.numer;     assert(0!=N);
-            const Integer D = a.denom * b; assert(0!=D); assert(D.s == s);
-            Coerce(N.s) = Sign::Product(N.s,s);
-            return Rational(N,D.n);
+
+            const uint64_t absb = b<0 ? -b : b;
+            const Natural  D    = absb * a.denom;                      assert(0!=D);
+            const Integer  N( Sign::Product(s,a.numer.s), a.numer.n ); assert(0!=N);
+
+            return Rational(N,D);
         }
 
         Rational   operator / (const int64_t a, const Rational &b)
         {
-            if(b.numer.s == __Zero__) throw Specific::Exception(Rational::CallSign,DivBy0);
+            if(__Zero__ == b.numer.s) throw Specific::Exception(Rational::CallSign,DivBy0);
             const SignType s = Sign::Of(a);
-            if(__Zero__==s) return Rational();
+            if(__Zero__ == s ) return Rational();
 
-            const uint64_t A  = (a<0) ? -a : a;
-            const Natural  AN = b.denom * A;   assert(AN>0);
-            const Integer  N( Sign::Product(s,b.numer.s), AN);
+            const uint64_t absa = a < 0 ? -a : a;
+            const Natural  absN = absa * b.denom;
+            const Integer  N( Sign::Product(s,b.numer.s), absN);
             return Rational(N,b.numer.n);
         }
 
