@@ -50,8 +50,7 @@ namespace Yttrium
         virtual void pushTail(ParamType) = 0; //!< push object at tail
         virtual void popTail()  noexcept = 0; //!< remove tail object
         virtual void popHead()  noexcept = 0; //!< remove head object
-
-
+        
         //______________________________________________________________________
         //
         //
@@ -68,6 +67,7 @@ namespace Yttrium
 
         inline Type pullHead() { ConstType tmp = head(); popHead(); return tmp; } //!< get copy and remove head
         inline Type pullTail() { ConstType tmp = tail(); popTail(); return tmp; } //!< get copy and remove tail
+
 
 
 

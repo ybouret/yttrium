@@ -30,6 +30,12 @@ namespace Yttrium
         typedef Iterating::Linear<ConstType,Iterating::Forward> ConstIterator;        //!< alias
         typedef Iterating::Linear<ConstType,Iterating::Reverse> ConstReverseIterator; //!< alias
 
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
     protected:
         inline explicit WritableContiguous() noexcept : ReadableContiguous<T>() {} //!< setup
         using ReadableContiguous<T>::getBaseForward;
@@ -40,6 +46,12 @@ namespace Yttrium
     public:
         inline virtual ~WritableContiguous() noexcept {} //!< cleanup
 
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
         inline Iterator      begin()       noexcept { return Iterator( (MutableType *)(getBaseForward()) ); } //!< begin forward
         inline Iterator      end()         noexcept { return Iterator( (MutableType *)(getLastForward()) ); } //!< end forward
 

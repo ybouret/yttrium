@@ -120,7 +120,7 @@ namespace Yttrium
             virtual void pushTail(ParamType);
             virtual void popTail()  noexcept;
             virtual void popHead()  noexcept;
-
+            virtual void reverse()  noexcept;
 
             //__________________________________________________________________
             //

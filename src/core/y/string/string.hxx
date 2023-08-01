@@ -275,6 +275,13 @@ namespace Yttrium
             return code->data;
         }
 
+        template <>
+        void String<CH>:: reverse() noexcept
+        {
+            assert(0!=code);
+            Algo::Reverse(code->data, code->size);
+        }
+
     }
 
 }

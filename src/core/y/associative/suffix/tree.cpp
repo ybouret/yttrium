@@ -10,6 +10,7 @@ namespace Yttrium
 {
     namespace
     {
+        //! SuffixNode, holding information for SuffixTree
         class SuffixNode
         {
         public:
@@ -17,17 +18,16 @@ namespace Yttrium
                               const uint8_t encode) noexcept :
             code(encode), data(0), from(parent), next(0), prev(0), chld()
             {
-                std::cerr << "create node @" << Hexadecimal(code) << std::endl;
             }
 
             inline ~SuffixNode() noexcept {}
 
-            const uint8_t      code;
-            void              *data;
-            SuffixNode *       from;
-            SuffixNode *       next;
-            SuffixNode *       prev;
-            ListOf<SuffixNode> chld;
+            const uint8_t      code; //!< local code
+            void              *data; //!< local data, NULL <=> free
+            SuffixNode *       from; //!< for link
+            SuffixNode *       next; //!< for list
+            SuffixNode *       prev; //!< for list
+            ListOf<SuffixNode> chld; //!< for list
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SuffixNode);
@@ -70,9 +70,9 @@ namespace Yttrium
                     assert(0!=chld.head);
                     switch( Sign::Of(code,chld.head->code))
                     {
-                        case Negative: return (curr = chld.pushHead( new (pool.zacquire()) SuffixNode(curr,code) ));
-                        case __Zero__: return (curr = chld.head);
-                        case Positive: return (curr = chld.pushTail( new (pool.zacquire()) SuffixNode(curr,code) ) );
+                        case Negative: return (chld.pushHead( new (pool.zacquire()) SuffixNode(curr,code) ));
+                        case __Zero__: return (chld.head);
+                        case Positive: return (chld.pushTail( new (pool.zacquire()) SuffixNode(curr,code) ) );
                     }
                     // never get here
                     break;
@@ -84,21 +84,41 @@ namespace Yttrium
             SuffixNode *lower = chld.head; assert(0!=lower);
             switch( Sign::Of(code,lower->code) )
             {
-                case Negative: return (curr = chld.pushHead( new (pool.zacquire()) SuffixNode(curr,code) ));
-                case __Zero__: return (curr = lower);
+                case Negative: return (chld.pushHead( new (pool.zacquire()) SuffixNode(curr,code) ));
+                case __Zero__: return (lower);
                 case Positive: break;
             }
 
-            SuffixNode *upper = chld.tail;
+            SuffixNode * const upper = chld.tail;
             switch ( Sign::Of(code,upper->code)) {
                 case Negative: break;
-                case __Zero__: return (curr = lower);
-                case Positive: return (curr = chld.pushTail( new (pool.zacquire()) SuffixNode(curr,code) ) );
+                case __Zero__: return (upper);
+                case Positive: return (chld.pushTail( new (pool.zacquire()) SuffixNode(curr,code) ) );
             }
 
+            assert(0!=lower);
+            assert(0!=upper);
             assert(code>lower->code);
             assert(code<upper->code);
 
+            while(lower->next!=upper)
+            {
+                SuffixNode * const probe = lower->next;
+
+                switch( Sign::Of(code,probe->code))
+                {
+                    case Negative: goto DONE;
+                    case __Zero__: return (probe);
+                    case Positive: break;
+                }
+                lower=probe;
+            }
+        DONE:
+            assert(0!=lower);
+            assert(code>lower->code);
+            assert(0!=lower->next);
+            assert(code<lower->next->code);
+            return chld.insertAfter(lower, new (pool.zacquire()) SuffixNode(curr,code) );
             throw Exception("not implemented");
         }
 
@@ -156,6 +176,21 @@ namespace Yttrium
     void * SuffixTree:: insert(const Memory::ReadOnlyBuffer &buff, void *data)
     {
         return insert( buff.ro_addr(), buff.measure(), data);
+    }
+
+    String SuffixTree:: pathOf(const void *nodeAddr) const
+    {
+        assert(0!=nodeAddr);
+        const SuffixNode *node = static_cast<const SuffixNode *>( nodeAddr );
+        String            path;
+        while(0!=node->from)
+        {
+            path << node->code;
+            node=node->from;
+        }
+        //std::cerr << "[path=" << path << "]" << std::endl;
+        path.reverse();
+        return path;
     }
 
 

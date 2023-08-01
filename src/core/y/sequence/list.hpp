@@ -94,7 +94,7 @@ namespace Yttrium
         inline virtual void         pushHead(ParamType args)              { code >> args; }
         inline virtual void         popHead()                    noexcept { code.cutHead(); }
         inline virtual void         popTail()                    noexcept { code.cutTail(); }
-
+        
         inline Type & operator[](const size_t i) noexcept
         { return **code.fetch(i); }
 

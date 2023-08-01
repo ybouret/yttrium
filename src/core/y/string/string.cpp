@@ -1,7 +1,7 @@
 #include "string.hpp"
 
 #include "y/memory/allocator/pooled.hpp"
-#include "y/memory/out-of-reach.hpp"
+#include "y/container/algo/reverse.hpp"
 #include "y/memory/wad.hpp"
 #include "y/type/utils.hpp"
 #include "y/text/ops.hpp"

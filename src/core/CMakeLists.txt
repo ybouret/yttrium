@@ -40,6 +40,7 @@ ptr
 container
 container/iterator
 container/matrix
+container/algo
 string
 fft
 apex
