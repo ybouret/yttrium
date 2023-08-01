@@ -123,8 +123,8 @@ namespace Yttrium
         inline ConstIterator        end()    const noexcept { return code.end();    } //!< end, const forward
         inline ReverseIterator      rbegin()       noexcept { return code.rbegin(); } //!< begin, reverse
         inline ReverseIterator      rend()         noexcept { return code.rend();   } //!< end, reverse
-        inline ConstReverseIterator rbegin() const noexcept { return code.begin();  } //!< begin, const reverse
-        inline ConstReverseIterator rend()   const noexcept { return code.end();    } //!< end, const reverse
+        inline ConstReverseIterator rbegin() const noexcept { return code.rbegin(); } //!< begin, const reverse
+        inline ConstReverseIterator rend()   const noexcept { return code.rend();   } //!< end, const reverse
 
 
     private:
