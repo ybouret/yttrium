@@ -124,10 +124,11 @@ namespace Yttrium
             virtual void pushTail(ParamType);
             virtual void popTail()  noexcept;
             virtual void popHead()  noexcept;
-            void reverse()  noexcept;
 
             virtual void release() noexcept;
             virtual void reserve(const size_t n);
+
+            void reverse() noexcept; //!< reverse string
 
             //__________________________________________________________________
             //

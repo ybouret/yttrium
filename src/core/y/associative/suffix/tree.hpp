@@ -9,17 +9,53 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Anonymous SuffixTree
+    //
+    //
+    //__________________________________________________________________________
     class SuffixTree
     {
     public:
-        explicit SuffixTree();
-        virtual ~SuffixTree() noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        explicit SuffixTree();          //!< setup with root
+        virtual ~SuffixTree() noexcept; //!< cleanup
 
-        void  *     insert(const void *path, const size_t size, void *);
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+
+        //! insertion
+        /**
+         \param path [0..size-1]
+         \param size length of path, 0 means root
+         \param data address to set in tree
+         \return address of node if inserted, null otherwise
+         */
+        void  *      insert(const void *path, const size_t size, void *data);
+
+        //! insertion wrapper
         void  *      insert(const Memory::ReadOnlyBuffer &, void *);
+
+        //! reconstruct path as a String
         String       pathOf(const void *nodeAddr) const;
-        const void  *search(const void *path, const size_t) const noexcept;
-        const void  *search(const Memory::ReadOnlyBuffer &) const noexcept;
+
+        //! search for data within tree
+        const void  *search(const void *path, const size_t size) const noexcept;
+
+        //! search wrapper
+        const void  *search(const Memory::ReadOnlyBuffer & path) const noexcept;
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(SuffixTree);
