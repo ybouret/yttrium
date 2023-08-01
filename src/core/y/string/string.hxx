@@ -41,10 +41,18 @@ namespace Yttrium
             {
                 assert(Memory::OutOfReach::Are0(data,maxBlocks*sizeof(CH)));
             }
+            
 
             //! copy
             inline explicit Code(const Code &other) :
             Y_STRING_CODE(other.size)
+            {
+                memcpy(data,other.data,(size=other.size)*sizeof(CH));
+            }
+
+            //! copy with extra
+            inline explicit Code(const Code &other, const size_t extra) :
+            Y_STRING_CODE(other.maxi+extra)
             {
                 memcpy(data,other.data,(size=other.size)*sizeof(CH));
             }
@@ -204,14 +212,27 @@ namespace Yttrium
             }
         }
 
+        template <>
+        String<CH>:: String(const String &other, const size_t extra) :
+        Y_STRING_PROLOG(), code( new Code(*other.code,extra) )
+        {
 
+        }
 
         template <>
         void String<CH>:: free() noexcept
         {
-            assert(code);
+            assert(0!=code);
             code->free();
         }
+
+        template <>
+        void String<CH>:: release() noexcept
+        {
+            assert(0!=code);
+            code->free();
+        }
+
 
         template <>
         void String<CH>:: swapWith(String &s) noexcept
@@ -229,6 +250,17 @@ namespace Yttrium
             return *this;
         }
 
+        template <>
+        void String<CH>:: reserve(const size_t n)
+        {
+            assert(0!=code);
+            if(n>0)
+            {
+                String tmp(*this,n);
+                swapWith(tmp);
+            }
+        }
+        
     }
 
 }

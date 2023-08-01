@@ -49,6 +49,7 @@ Y_UTEST(associative_suffix_tree)
             std::cerr << "path = " << path << std::endl;
             Y_ASSERT(&data == tree.search(path) );
         }
+        String toto = "toto";
     }
 
 }

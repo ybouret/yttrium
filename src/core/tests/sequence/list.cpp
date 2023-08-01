@@ -15,6 +15,9 @@ Y_UTEST(sequence_list)
 
     std::cerr << l << std::endl;
 
+    List<int> lcp = l;
+    std::cerr << lcp << std::endl;
+
 }
 Y_UDONE()
 

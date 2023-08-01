@@ -3,8 +3,7 @@
 #ifndef Y_Sequence_Vector_Included
 #define Y_Sequence_Vector_Included 1
 
-#include "y/sequence/interface.hpp"
-#include "y/container/dynamic.hpp"
+#include "y/sequence/dynamic.hpp"
 #include "y/container/writable.hpp"
 #include "y/object.hpp"
 #include "y/memory/wad.hpp"
@@ -38,7 +37,7 @@ namespace Yttrium
     //! helper for constructor
     //______________________________________________________________________
 #define Y_Vector_Prolog() \
-Identifiable(), Collection(), Dynamic(), Sequence<T>(),Core::Vector(), Writable<T>(), WritableContiguous<T>()
+Identifiable(), Collection(), DynamicSequence<T>(), Core::Vector(), Writable<T>(), WritableContiguous<T>()
 
     //__________________________________________________________________________
     //
@@ -50,8 +49,7 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(),Core::Vector(), Writable<
     //__________________________________________________________________________
     template <typename T, typename ALLOCATOR = Memory::Global>
     class Vector :
-    public Dynamic,
-    public Sequence<T>,
+    public DynamicSequence<T>,
     public Core::Vector,
     public Writable<T>,
     public WritableContiguous<T>
@@ -248,7 +246,7 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(),Core::Vector(), Writable<
         {
             const size_t capa = capacity();
             if(size()>=capa)
-                minimalCapacity( NextCapacity(capa) );
+                minimalCapacity( this->NextCapacity(capa) );
             assert(0!=code);
             assert(code->size<code->maxBlocks);
         }

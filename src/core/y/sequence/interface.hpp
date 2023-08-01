@@ -68,7 +68,7 @@ namespace Yttrium
         inline Type pullHead() { ConstType tmp = head(); popHead(); return tmp; } //!< get copy and remove head
         inline Type pullTail() { ConstType tmp = tail(); popTail(); return tmp; } //!< get copy and remove tail
 
-
+        
 
 
 

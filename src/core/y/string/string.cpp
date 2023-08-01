@@ -36,9 +36,9 @@ namespace Yttrium
 Identifiable(),           \
 Collection(),             \
 StringCommon(),           \
+DynamicSequence<CH>(),    \
 Writable<CH>(),           \
-WritableContiguous<CH>(), \
-Sequence<CH>()
+WritableContiguous<CH>() 
 
 
 #define Y_STRING_CODE(NUM_CHARS)               \

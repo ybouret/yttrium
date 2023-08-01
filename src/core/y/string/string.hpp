@@ -7,7 +7,7 @@
 #include "y/object.hpp"
 #include "y/container/writable.hpp"
 #include "y/container/iterator/writable-contiguous.hpp"
-#include "y/sequence/interface.hpp"
+#include "y/sequence/dynamic.hpp"
 #include "y/ostream-proto.hpp"
 #include "y/type/capacity.hpp"
 #include "y/memory/buffer/ro.hpp"
@@ -58,8 +58,9 @@ namespace Yttrium
         template <typename T>
         class String :
         public StringCommon,
+        public DynamicSequence<T>,
         public Writable<T>,
-        public WritableContiguous<T>, public Sequence<T>
+        public WritableContiguous<T>
         {
         public:
             //__________________________________________________________________
@@ -83,11 +84,14 @@ namespace Yttrium
             String(const T);                           //!< setup from char
             String(const T *, const size_t);           //!< setup from given chars
             String(const T *);                         //!< setup from chars
-            
+            String(const String &, const size_t);      //!< copy with extra capacity
+
+
             //! make a (prefilled) String with minimal chars
             explicit String(const size_t       minLength,
                             const AsCapacity_ &,
                             const bool         setLength);
+
 
             //! display, legacy style
             friend inline std::ostream & operator<<(std::ostream &os,
@@ -120,7 +124,10 @@ namespace Yttrium
             virtual void pushTail(ParamType);
             virtual void popTail()  noexcept;
             virtual void popHead()  noexcept;
-            virtual void reverse()  noexcept;
+            void reverse()  noexcept;
+
+            virtual void release() noexcept;
+            virtual void reserve(const size_t n);
 
             //__________________________________________________________________
             //

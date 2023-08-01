@@ -3,8 +3,7 @@
 #ifndef Y_Sequence_List_Included
 #define Y_Sequence_List_Included 1
 
-#include "y/sequence/interface.hpp"
-#include "y/container/dynamic.hpp"
+#include "y/sequence/dynamic.hpp"
 #include "y/container/writable.hpp"
 #include "y/type/capacity.hpp"
 #include "y/data/small/heavy/list/solo.hpp"
@@ -29,6 +28,13 @@ namespace Yttrium
         };
     }
 
+    //______________________________________________________________________
+    //
+    //! helper for constructor
+    //______________________________________________________________________
+#define Y_List_Prolog() \
+Identifiable(), Collection(), DynamicSequence<T>(), Core::List(), Writable<T>()
+
 
     //__________________________________________________________________________
     //
@@ -40,8 +46,7 @@ namespace Yttrium
     //__________________________________________________________________________
     template <typename T>
     class List :
-    public Dynamic,
-    public Sequence<T>,
+    public DynamicSequence<T>,
     public Core::List,
     public Writable<T>
     {
@@ -61,14 +66,16 @@ namespace Yttrium
         // C++
         //
         //______________________________________________________________________
-        inline explicit List() noexcept:  code() {}   //!< setup empty
+        inline explicit List() noexcept:  Y_List_Prolog(), code() {}   //!< setup empty
         inline virtual ~List() noexcept          {}   //!< cleanup
 
         //! setup with capacity
-        inline explicit List(const size_t n, const AsCapacity_ &) : code() { code.proxy->reserve(n); }
+        inline explicit List(const size_t n, const AsCapacity_ &) :
+        Y_List_Prolog(), code() { code.proxy->reserve(n); }
 
         //! copy
-        inline          List(const List &other) : code(other.code) {}
+        inline          List(const List &other) :
+        Y_List_Prolog(), code(other.code) {}
 
         //! assign
         inline List &    operator=(const List &other)
