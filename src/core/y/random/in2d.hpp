@@ -21,7 +21,19 @@ namespace Yttrium
             template <typename T>
             static void Circle(T &x, T &y, Random::Bits &ran) noexcept
             {
-                
+                const T theta = MKL::Numeric<T>::PI * ran.symm<float>();
+                x = std::cos(theta);
+                y = std::sin(theta);
+            }
+
+            template <typename T>
+            static void Disk(T &x, T &y, Random::Bits &ran) noexcept
+            {
+                static const T one(1);
+                do {
+                    x = ran.symm<T>();
+                    y = ran.symm<T>();
+                } while( x*x + y*y > one);
             }
         };
 

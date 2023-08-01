@@ -84,7 +84,7 @@ namespace Yttrium
         public:
             inline virtual ~Engine() noexcept {}
 
-            virtual T compute(const uint32_t u) const noexcept = 0;
+            virtual T uniform(const uint32_t u) const noexcept = 0;
 
             const uint64_t range;
             const uint64_t umask;
@@ -109,12 +109,15 @@ namespace Yttrium
 
             inline virtual ~FullEngine() noexcept {}
 
-            inline virtual T compute(const uint32_t u) const noexcept
+
+            inline virtual T uniform(const uint32_t u) const noexcept
             {
                 static const T half(0.5);
                 assert(u<=range);
                 return (static_cast<T>(u)+half)/denom;
             }
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(FullEngine);
@@ -137,7 +140,7 @@ namespace Yttrium
 
             inline virtual ~PackEngine() noexcept {}
 
-            inline virtual T compute(const uint32_t u) const noexcept
+            inline virtual T uniform(const uint32_t u) const noexcept
             {
                 static const T half(0.5);
                 assert(u<=range);
@@ -185,7 +188,6 @@ namespace Yttrium
         wkspD(),
         wkspL()
         {
-
             Coerce(F) = BuildEngine<float>(       umax ,Y_STATIC_ZARR(wkspF));
             Coerce(D) = BuildEngine<double>(      umax, Y_STATIC_ZARR(wkspD));
             Coerce(L) = BuildEngine<long double>( umax, Y_STATIC_ZARR(wkspL));
@@ -197,17 +199,17 @@ namespace Yttrium
         
         template <> float Bits:: to<float>() noexcept
         {
-            return F->compute( next32() );
+            return F->uniform( next32() );
         }
 
         template <> double Bits:: to<double>() noexcept
         {
-            return D->compute( next32() );
+            return D->uniform( next32() );
         }
 
         template <> long double Bits:: to<long double>() noexcept
         {
-            return L->compute( next32() );
+            return L->uniform( next32() );
         }
 
         template <> uint8_t Bits:: to<uint8_t>() noexcept
@@ -235,6 +237,25 @@ namespace Yttrium
             alias.dw[1] = to<uint32_t>();
             return alias.qw;
         }
+
+        template <> float Bits:: symm<float>() noexcept
+        {
+            const float x = F->uniform( next32() ) - 0.5f;
+            return x+x;
+        }
+
+        template <> double Bits:: symm<double>() noexcept
+        {
+            const double x = D->uniform( next32() ) - 0.5;
+            return x+x;
+        }
+
+        template <> long double Bits:: symm<long double>() noexcept
+        {
+            const long double x = L->uniform( next32() ) - 0.5l;
+            return x+x;
+        }
+
 
         size_t Bits:: leq(size_t n) noexcept
         {
