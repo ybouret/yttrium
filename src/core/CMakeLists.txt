@@ -52,6 +52,8 @@ counting
 counting/c
 sequence
 ordered
+associative
+associative/suffix
 mkl
 )
 

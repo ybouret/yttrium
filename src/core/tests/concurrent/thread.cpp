@@ -9,7 +9,6 @@
 
 #if defined(Y_BSD)
 #include <pthread.h>
-#endif
 
 using namespace Yttrium;
 
@@ -20,7 +19,6 @@ public:
 
 
 
-#if defined Y_BSD
 
     Thread(Proc userProc, void *userArgs) :
     Concurrent::NucleusMutex(),
@@ -55,7 +53,6 @@ public:
         static_cast<Thread *>(param)->call();
         return 0;
     }
-#endif
 
     Proc               proc;
     void              *args;
@@ -74,6 +71,8 @@ public:
     }
 };
 
+#endif
+
 
 using namespace Yttrium;
 
@@ -86,8 +85,6 @@ static inline void myProc(void *args)
 
     Y_LOCK(access);
     std::cerr << "in thread..." << std::endl;
-
-
 }
 
 
@@ -96,8 +93,9 @@ Y_UTEST(concurrent_thread)
 
     Lockable &access = Lockable::Giant();
 
+#if defined(Y_BSD)
     Thread thr(myProc,&access);
-    
+#endif
 
 }
 Y_UDONE()

@@ -17,6 +17,7 @@ ordered
 counting
 container
 sequence
+associative
 mkl
 )
 
@@ -160,6 +161,9 @@ add_test(counting:part test-core counting_part)
 add_test(counting:partition   test-core counting_partition)
 add_test(counting:permutation test-core counting_permutation)
 add_test(counting:combination test-core counting_combination)
+
+#associatvie
+add_test(associative:suffix-tree test-core associative_suffix_tree)
 
 #mkl
 add_test(mkl:complex test-core mkl_complex)
