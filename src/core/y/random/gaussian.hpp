@@ -12,40 +12,64 @@ namespace Yttrium
 {
     namespace Random
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Guassian Random values
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class Gaussian : public SharedBits
         {
         public:
-            inline explicit Gaussian(const SharedBits &sharedBits) noexcept :
-            SharedBits(sharedBits),
-            indx(0),
-            g0(0),
-            g1(0)
-            {
-                BoxMuller();
-            }
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
+            //! setup
+            inline explicit Gaussian(const SharedBits &sharedBits) noexcept :
+            SharedBits(sharedBits), i0(true), g0(0), g1(0)
+            { BoxMuller(); }
+
+            //! cleanup
+            inline virtual ~Gaussian() noexcept {}
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! return next Gaussian value
             inline T operator()(void) noexcept
             {
-                switch(indx)
+                if(i0)
                 {
-                    case 0: indx=1; return g0;
-                    default:
-                        break;
+                    i0 = false;
+                    return g0;
                 }
-                indx = 0;
-                const T g = g1;
-                BoxMuller();
-                return g;
+                else
+                {
+                    i0 = true;
+                    const T g = g1;
+                    BoxMuller();
+                    return g;
+                }
             }
 
-            inline virtual ~Gaussian() noexcept {}
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Gaussian);
-            unsigned indx;
-            T        g0,g1;
+            bool i0;
+            T    g0,g1;
 
+            //! compute two succesive values
             inline void BoxMuller() noexcept
             {
                 Random::Bits &ran = **this;

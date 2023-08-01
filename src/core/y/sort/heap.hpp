@@ -91,7 +91,7 @@ namespace Yttrium
         }
 
 
-
+        //! call on Writable like objects
         template <
         typename WRITABLE,
         typename COMPARE> static inline

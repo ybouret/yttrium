@@ -23,13 +23,14 @@ namespace Yttrium
             static const T EPSILON; //!< epsilon
         };
 
+        //! helper to declare existence of values
 #define Y_MKL_NUMERIC(VAR) \
 template <> const float       Numeric<float>      :: VAR;\
 template <> const double      Numeric<double>     :: VAR;\
 template <> const long double Numeric<long double>:: VAR
 
-        Y_MKL_NUMERIC(PI);
-        Y_MKL_NUMERIC(EPSILON);
+        Y_MKL_NUMERIC(PI);         //!< declare PI
+        Y_MKL_NUMERIC(EPSILON);    //!< declare EPSILON
 
     }
 }

@@ -23,14 +23,21 @@ namespace Yttrium
     class V2D
     {
     public:
+        //______________________________________________________________________
+        //
+        //
+        // Definition
+        //
+        //______________________________________________________________________
+        typedef T             Type; //!< alias
 
         //______________________________________________________________________
         //
         //
         // C++
         //
-        //
         //______________________________________________________________________
+        inline  V2D()                         noexcept : x(0), y(0) {}                 //!< setup 0
         inline  V2D(const T X, const T Y)     noexcept : x(X), y(Y) {}                 //!< setup
         inline ~V2D()                         noexcept {}                              //!< cleanup
         inline  V2D(const V2D &v)             noexcept : x(v.x), y(v.y) {}             //!< copy
@@ -41,7 +48,6 @@ namespace Yttrium
         //
         // Methods
         //
-        //
         //______________________________________________________________________
 
 
@@ -49,8 +55,8 @@ namespace Yttrium
         //
         // access
         //______________________________________________________________________
-        inline T &       operator[](const size_t i)       noexcept { assert(i==1||i==2); return (&x)+i-1; } //!< access
-        inline const T & operator[](const size_t i) const noexcept { assert(i==1||i==2); return (&x)+i-1; } //!< access
+        inline T &       operator[](const size_t i)       noexcept { assert(i==1||i==2); return *((&x)+i-1); } //!< access
+        inline const T & operator[](const size_t i) const noexcept { assert(i==1||i==2); return *((&x)+i-1); } //!< access
 
         //______________________________________________________________________
         //
@@ -94,7 +100,7 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        // members
+        // Members
         //
         //______________________________________________________________________
         T x; //!< first

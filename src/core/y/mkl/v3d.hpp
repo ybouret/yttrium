@@ -26,9 +26,18 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
+        // Definition
+        //
+        //______________________________________________________________________
+        typedef T             Type; //!< alias
+
+        //______________________________________________________________________
+        //
+        //
         // C++
         //
         //______________________________________________________________________
+        inline  V3D()                                noexcept : x(0), y(0), z(0) {}                  //!< setup 0
         inline  V3D(const T X, const T Y, const T Z) noexcept : x(X), y(Y), z(Z) {}                  //!< setup
         inline ~V3D()                                noexcept {}                                     //!< cleanup
         inline  V3D(const V3D &v)                    noexcept : x(v.x), y(v.y), z(v.z) {}            //!< copy
@@ -45,8 +54,8 @@ namespace Yttrium
         //
         // access
         //______________________________________________________________________
-        inline T &       operator[](const size_t i)       noexcept { assert(i==1||i==2||i==3); return (&x)+i-1; } //!< access
-        inline const T & operator[](const size_t i) const noexcept { assert(i==1||i==2||i==3); return (&x)+i-1; } //!< access
+        inline T &       operator[](const size_t i)       noexcept { assert(i==1||i==2||i==3); return *((&x)+i-1); } //!< access
+        inline const T & operator[](const size_t i) const noexcept { assert(i==1||i==2||i==3); return *((&x)+i-1); } //!< access
 
         //______________________________________________________________________
         //
