@@ -94,8 +94,9 @@ add_test(calculus:bcount test-core calculus_bcount)
 add_test(concurrent:mutex test-core concurrent_mutex)
 
 #random
-add_test(random:bits test-core random_bits)
-add_test(random:shuffle test-core random_shuffle)
+add_test(random:bits     test-core random_bits)
+add_test(random:shuffle  test-core random_shuffle)
+add_test(random:gaussian test-core random_gaussian)
 
 
 #hashing

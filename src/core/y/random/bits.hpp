@@ -4,6 +4,9 @@
 #define Y_Random_Bits_Included 1
 
 #include "y/calculus/align.hpp"
+#include "y/object.hpp"
+#include "y/counted.hpp"
+#include "y/ptr/arc.hpp"
 #include <cmath>
 
 namespace Yttrium
@@ -19,7 +22,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Bits
+        class Bits : public Object, public Counted
         {
         public:
             //__________________________________________________________________
@@ -30,7 +33,7 @@ namespace Yttrium
             //__________________________________________________________________
             template <typename T> class Engine;
             static const size_t         EngineBytes = 48; //!< max system size
-
+            
             //__________________________________________________________________
             //
             //
@@ -115,7 +118,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Rand);
         };
 
-
+        typedef ArcPtr<Bits> SharedBits;
     }
 
 }

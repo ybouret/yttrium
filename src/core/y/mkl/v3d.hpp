@@ -84,7 +84,6 @@ namespace Yttrium
         //
         //! display
         //______________________________________________________________________
-
         inline friend std::ostream & operator<<(std::ostream &os, const V3D &v)
         { return os << '[' << v.x << ';' << v.y << ';' << v.z << ']'; }
 

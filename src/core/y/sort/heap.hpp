@@ -27,7 +27,8 @@ namespace Yttrium
         template <typename T, typename COMPARE> static inline
         void Tableau(T arr[], size_t num, COMPARE &proc)
         {
-            Call<T,T*,COMPARE>( Memory::OutOfReach::Shift(arr,-1),num,proc);
+            T *tab =Memory::OutOfReach::Shift(arr,-1);
+            Call<T,T*,COMPARE>(tab,num,proc);
         }
 
 
@@ -39,33 +40,32 @@ namespace Yttrium
         //______________________________________________________________________
         template <
         typename T,
-        typename ARRAY,
+        typename WRITABLE,
         typename COMPARE>
         static inline
-        void Call(T            arr[],
+        void Call(WRITABLE    &arr,
                   const size_t num,
                   COMPARE     &proc)
         {
             if(num<2) return;
 
-            void *          _[ Y_WORDS_FOR(T) ];                                 // temporary
-            size_t          il  = (num>>1)+1;                                    // left index
-            size_t          ir  = num;                                           // right index
-            T       &       __  = *static_cast<T*>(Memory::OutOfReach::Addr(_)); // alias
-            T       * const a1  = &arr[1];                                       // alias
+            void *          wa[ Y_WORDS_FOR(T) ];                                 // temporary
+            size_t          il  = (num>>1)+1;                                     // left index
+            size_t          ir  = num;                                            // right index
+            T       &       ta  = *static_cast<T*>(Memory::OutOfReach::Addr(wa)); // alias
+            T       * const a1  = &arr[1];                                        // alias
 
-            while(true)
-            {
+            while(true) {
                 if(il>1)
                 {
-                    Memory::OutOfReach::Copy(_,&arr[--il],sizeof(T));
+                    Memory::OutOfReach::Copy(wa,&arr[--il],sizeof(T));
                 }
                 else
                 {
-                    Memory::OutOfReach::Move(_,&arr[ir],a1,sizeof(T));
+                    Memory::OutOfReach::Move(wa,&arr[ir],a1,sizeof(T));
                     if(--ir == 1)
                     {
-                        Memory::OutOfReach::Copy(a1,_,sizeof(T));
+                        Memory::OutOfReach::Copy(a1,wa,sizeof(T));
                         break;
                     }
                 }
@@ -77,7 +77,7 @@ namespace Yttrium
                     if( (j<ir) && proc(arr[j],arr[j+1]) < 0 )
                             ++j;
 
-                    if( proc(__,arr[j]) < 0 )
+                    if( proc(ta,arr[j]) < 0 )
                     {
                         Memory::OutOfReach::Copy(&arr[i],&arr[j],sizeof(T));
                         i   = j;
@@ -86,11 +86,20 @@ namespace Yttrium
                     else
                         break;
                 }
-
-                Memory::OutOfReach::Copy(&arr[i],_,sizeof(T));
+                Memory::OutOfReach::Copy(&arr[i],wa,sizeof(T));
             }
         }
 
+
+
+        template <
+        typename WRITABLE,
+        typename COMPARE> static inline
+        void Call(WRITABLE &arr,
+                  COMPARE  &proc)
+        {
+            Call<typename WRITABLE::Type,WRITABLE,COMPARE>(arr,arr.size(),proc);
+        }
 
         
         

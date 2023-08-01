@@ -27,6 +27,14 @@ namespace Yttrium
             return lhs < rhs ? -1 : ( rhs < lhs ? 1 : 0);
         }
 
+        template <typename T> static inline
+        int IncreasingAbs(const T &lhs, const T &rhs)
+        {
+            const T l = lhs <= 0 ? -lhs : lhs;
+            const T r = rhs <= 0 ? -rhs : rhs;
+            return Increasing(l,r);
+        }
+
         //______________________________________________________________________
         //
         //! C style decreasing
