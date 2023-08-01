@@ -28,22 +28,26 @@ Y_UTEST(associative_suffix_tree)
         SuffixTree tree;
         if(argc>1)
         {
+            std::cerr << "loading " << argv[1] << std::endl;
             Libc::InputFile fp(argv[1]);
             String line;
             addr.free();
 
             while(fp.gets(line))
             {
-                //std::cerr << line << std::endl;
                 void *ptr = tree.insert(line,&data);
                 if(!ptr) std::cerr << "Multiple '" << line << "'" << std::endl;
                 else
                     addr << ptr;
             }
         }
+
+        std::cerr << "got " << addr.size() << " item" << std::endl;
         for(size_t i=1;i<=addr.size();++i)
         {
-            std::cerr << "path = " << tree.pathOf(addr[i]) << std::endl;
+            const String path = tree.pathOf(addr[i]);
+            std::cerr << "path = " << path << std::endl;
+            Y_ASSERT(&data == tree.search(path) );
         }
     }
 

@@ -15,9 +15,11 @@ namespace Yttrium
         explicit SuffixTree();
         virtual ~SuffixTree() noexcept;
 
-        void  *insert(const void *path, const size_t size, void *);
-        void  *insert(const Memory::ReadOnlyBuffer &, void *);
-        String pathOf(const void *nodeAddr) const;
+        void  *     insert(const void *path, const size_t size, void *);
+        void  *      insert(const Memory::ReadOnlyBuffer &, void *);
+        String       pathOf(const void *nodeAddr) const;
+        const void  *search(const void *path, const size_t) const noexcept;
+        const void  *search(const Memory::ReadOnlyBuffer &) const noexcept;
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(SuffixTree);

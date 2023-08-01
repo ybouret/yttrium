@@ -10,10 +10,14 @@ namespace Yttrium
 {
     namespace
     {
+        class                      SuffixNode;
+        typedef ListOf<SuffixNode> SuffixList;
+
         //! SuffixNode, holding information for SuffixTree
         class SuffixNode
         {
         public:
+
             inline SuffixNode(SuffixNode *  parent,
                               const uint8_t encode) noexcept :
             code(encode), data(0), from(parent), next(0), prev(0), chld()
@@ -22,12 +26,12 @@ namespace Yttrium
 
             inline ~SuffixNode() noexcept {}
 
-            const uint8_t      code; //!< local code
-            void              *data; //!< local data, NULL <=> free
-            SuffixNode *       from; //!< for link
-            SuffixNode *       next; //!< for list
-            SuffixNode *       prev; //!< for list
-            ListOf<SuffixNode> chld; //!< for list
+            const uint8_t code; //!< local code
+            void *        data; //!< local data, NULL <=> free
+            SuffixNode *  from; //!< for link
+            SuffixNode *  next; //!< for list
+            SuffixNode *  prev; //!< for list
+            SuffixList    chld; //!< for list
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SuffixNode);
@@ -141,9 +145,31 @@ namespace Yttrium
             }
             else
             {
-                // occupied
-                return 0;
+                return 0; // occupied
             }
+        }
+
+        const void *search(const uint8_t *path, const size_t size) const noexcept
+        {
+            assert(Good(path,size));
+            const SuffixNode *curr = root;
+            for(size_t i=0;i<size;++i)
+            {
+                assert(0!=curr);
+                const SuffixList &chld = curr->chld; if(chld.size<=0) return 0;
+                const uint8_t     code = path[i];
+                assert(chld.head!=0); if(code<chld.head->code) return 0;
+                assert(chld.tail!=0); if(code>chld.tail->code) return 0;
+                curr = chld.head;
+
+            LOOP:
+                if(code==curr->code)
+                    continue;
+                curr = curr->next;
+                if(!curr) return 0;
+                goto LOOP;
+            }
+            return curr->data;
         }
 
         SuffixNode        *root;
@@ -155,9 +181,6 @@ namespace Yttrium
 
     SuffixTree:: SuffixTree() : code( new Code() )
     {
-        std::cerr << "sizeof(SuffixNode)=" << sizeof(SuffixNode) << std::endl;
-        std::cerr << "sizeof(Code)=" << sizeof(Code) << std::endl;
-
     }
 
     SuffixTree:: ~SuffixTree() noexcept
@@ -170,6 +193,7 @@ namespace Yttrium
     void * SuffixTree:: insert(const void *path, const size_t size, void *data)
     {
         assert(Good(path,size));
+        assert(0!=data);
         return code->insert( static_cast<const uint8_t*>(path),size, data);
     }
 
@@ -192,6 +216,20 @@ namespace Yttrium
         path.reverse();
         return path;
     }
+
+    const void  * SuffixTree:: search(const void *path, const size_t size) const noexcept
+    {
+        assert(Good(path,size));
+        assert(0!=code);
+        return code->search(static_cast<const uint8_t*>(path),size);
+    }
+
+    const void  *SuffixTree:: search(const Memory::ReadOnlyBuffer &buff) const noexcept
+    {
+        return search( buff.ro_addr(), buff.measure() );
+
+    }
+
 
 
 }
