@@ -11,7 +11,7 @@ using namespace Yttrium;
 Y_UTEST(concurrent_mutex)
 {
 
-#if 0
+#if 1
     Lockable &giant = Concurrent::Mutex::Giant();
     std::cerr << giant.uuid << std::endl;
 
