@@ -96,6 +96,9 @@ namespace Yttrium
                 case Positive: return (curr = chld.pushTail( new (pool.zacquire()) SuffixNode(curr,code) ) );
             }
 
+            assert(code>lower->code);
+            assert(code<upper->code);
+
             throw Exception("not implemented");
         }
 
