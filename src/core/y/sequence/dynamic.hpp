@@ -18,7 +18,7 @@ namespace Yttrium
     public:
         inline virtual ~DynamicSequence() noexcept {}
 
-
+        
         inline void trim(size_t n) noexcept
         {
             while(n-- > 0 && this->size() > 0) this->popTail();
@@ -28,7 +28,7 @@ namespace Yttrium
         {
             while(n-- > 0 && this->size() > 0) this->popHead();
         }
-        
+
 
 
     private:
