@@ -76,14 +76,14 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            String();                            //!< setup emtpy
-            virtual ~String() noexcept;          //!< cleanup
-            String(const String &);              //!< copy
-            String & operator=( const String &); //!< assign
-            String(const T);                     //!< setup from char
-            String(const T *, const size_t);     //!< setup from given chars
-            String(const T *);                   //!< setup from chars
-
+            String();                                  //!< setup emtpy
+            virtual ~String() noexcept;                //!< cleanup
+            String(const String &);                    //!< copy
+            String & operator=( const String &);       //!< assign
+            String(const T);                           //!< setup from char
+            String(const T *, const size_t);           //!< setup from given chars
+            String(const T *);                         //!< setup from chars
+            
             //! make a (prefilled) String with minimal chars
             explicit String(const size_t       minLength,
                             const AsCapacity_ &,
@@ -120,7 +120,8 @@ namespace Yttrium
             virtual void pushTail(ParamType);
             virtual void popTail()  noexcept;
             virtual void popHead()  noexcept;
-            //!
+
+
             //__________________________________________________________________
             //
             //
@@ -128,9 +129,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
             void pushAtTail(const T *, const size_t); //!< push block at tail
-            String & operator<<(const T       );    //!< helper
-            String & operator<<(const T      *);    //!< helper
-            String & operator<<(const String &);    //!< helper
+            String & operator<<(const T       );      //!< helper
+            String & operator<<(const T      *);      //!< helper
+            String & operator<<(const String &);      //!< helper
 
             //__________________________________________________________________
             //
@@ -158,6 +159,19 @@ namespace Yttrium
             String & operator+=(const String &); //!< in place addition
             String & operator+=(const T      *); //!< in place addition
             String & operator+=(const T       ); //!< in place addition
+
+            //__________________________________________________________________
+            //
+            //! clear
+            //__________________________________________________________________
+            void free() noexcept;
+
+            //__________________________________________________________________
+            //
+            //! no-throw swap
+            //__________________________________________________________________
+            void swapWith(String &s) noexcept;
+
 
         private:
             class Code;

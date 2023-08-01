@@ -94,7 +94,48 @@ namespace Yttrium
         throw Specific::Exception( callSign(), "overflowing read for %s", From(ctx));
     }
 
+    bool InputStream:: gets(IO::Chars &line)
+    {
+        static const char CR = '\r';
+        static const char LF = '\n';
 
+        line.release();
+        char first = 0;
+        while(query(first))
+        {
+            switch(first)
+            {
+                case LF:
+                    // single LF -> EOL
+                    return true;
+
+                case CR:
+                {
+                    char second = 0;
+                    if(!query(second))
+                        return true; // single final CR
+                    if(LF==second)
+                    {
+                        // found CRLF
+                        return true;
+                    }
+                    else
+                    {
+                        // unread
+                        store(second);
+                        return true; // it was single CR
+                    }
+                }
+
+
+                default:
+                    // append to line
+                    line << first;
+            }
+        }
+
+        return line.size>0;
+    }
 
 }
 
@@ -107,6 +148,29 @@ namespace Yttrium
     {
         return IO::Pack64::Read(*this,ctx);
 
+    }
+
+}
+
+#include "y/string.hpp"
+namespace Yttrium
+{
+    bool InputStream:: gets(Core::String<char> &line)
+    {
+        IO::Chars temp;
+        if( gets(temp) )
+        {
+            const size_t n = temp.size;
+            Core::String<char> s(n,AsCapacity,true);
+            for(size_t i=n;i>0;--i)
+            {
+                s[i] = temp.pullTail();
+            }
+            line.swapWith(s);
+            return true;
+        }
+        else
+            return false;
     }
 
 }

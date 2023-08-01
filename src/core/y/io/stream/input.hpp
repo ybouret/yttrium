@@ -8,9 +8,13 @@
 
 #include "y/io/stream.hpp"
 #include "y/type/ints.hpp"
+#include "y/io/chars.hpp"
 
 namespace Yttrium
 {
+
+    namespace Core { template <typename> class String; }
+
     //______________________________________________________________________
     //
     //
@@ -52,7 +56,10 @@ namespace Yttrium
         size_t fetch(uint64_t &);           //!< try to read 8 bytes
 
 
+        //______________________________________________________________________
+        //
         //! read any Constant Byte Rate integer
+        //______________________________________________________________________
         template <typename T> inline
         T readCBR(const char *ctx=0)
         {
@@ -66,7 +73,10 @@ namespace Yttrium
             return alias.user;
         }
 
+        //______________________________________________________________________
+        //
         //! read any Variable Byte Rate integer
+        //______________________________________________________________________
         template <typename T> inline
         T readVBR(const char *ctx=0)
         {
@@ -76,7 +86,19 @@ namespace Yttrium
             return T(u64);
         }
 
-        
+        //______________________________________________________________________
+        //
+        //! get a line delimited by cr,lf, or crlf
+        //______________________________________________________________________
+        bool         gets(IO::Chars &line);
+
+        //______________________________________________________________________
+        //
+        //! get a line as String of chars
+        //______________________________________________________________________
+        bool         gets(Core::String<char> &line);
+
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(InputStream);
         void missingBytes(const size_t, const char *) const;

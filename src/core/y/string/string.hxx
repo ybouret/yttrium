@@ -115,7 +115,11 @@ namespace Yttrium
                 }
             }
 
-
+            inline void free() noexcept
+            {
+                memset(data,0,size*sizeof(CH)); assert( Memory::OutOfReach::Are0(data+size, (maxBlocks-size)*sizeof(CH)));
+                size = 0;
+            }
 
             //__________________________________________________________________
             //
@@ -195,9 +199,35 @@ namespace Yttrium
         Y_STRING_PROLOG(), code( new Code(minLength) )
         {
             if(setLength)
-                code->size = setLength;
+            {
+                code->size = minLength;
+            }
         }
 
+
+
+        template <>
+        void String<CH>:: free() noexcept
+        {
+            assert(code);
+            code->free();
+        }
+
+        template <>
+        void String<CH>:: swapWith(String &s) noexcept
+        {
+            assert(code);
+            assert(s.code);
+            Swap(code,s.code);
+        }
+
+        template <>
+        String<CH> & String<CH> :: operator=(const String<CH> &s)
+        {
+            String<CH> tmp(s);
+            swapWith(tmp);
+            return *this;
+        }
 
     }
 
