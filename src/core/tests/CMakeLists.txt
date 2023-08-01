@@ -92,6 +92,7 @@ add_test(calculus:bcount test-core calculus_bcount)
 
 #concurrent
 add_test(concurrent:mutex test-core concurrent_mutex)
+add_test(concurrent:thread test-core concurrent_thread)
 
 #random
 add_test(random:bits     test-core random_bits)
