@@ -55,6 +55,9 @@ sequence
 ordered
 associative
 associative/suffix
+associative/suffix/core
+associative/suffix/map
+associative/suffix/set
 mkl
 )
 

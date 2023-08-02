@@ -1,4 +1,4 @@
-#include "y/associative/suffix/tree.hpp"
+#include "y/associative/suffix/core/tree.hpp"
 #include "y/data/list.hpp"
 #include "y/memory/blanks.hpp"
 #include "y/object.hpp"

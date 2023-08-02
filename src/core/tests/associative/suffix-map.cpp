@@ -1,5 +1,5 @@
 
-#include "y/associative/suffix/tree.hpp"
+#include "y/associative/suffix/core/tree.hpp"
 #include "y/associative/suffix/pool.hpp"
 
 #include "y/io/libc/input.hpp"
