@@ -110,13 +110,18 @@ namespace Yttrium
             static SignType Cmp(const Rational &lhs, const Integer  &rhs);
             static SignType Cmp(const Integer  &lhs, const Rational &rhs);
 
+            static SignType Cmp(const Rational &lhs, const Natural  &rhs);
+            static SignType Cmp(const Natural  &lhs, const Rational &rhs);
+
             //! propagate 'friend bool operator OP (LHS,RHS) noexecept { return Cmp(LHS,RHS) RESULT; }'
 #define Y_APQ_OP(OP,RESULT) \
 inline friend bool operator OP (const Rational &lhs, const Rational &rhs ) noexcept { return Rational::Cmp(lhs,rhs) RESULT; }\
 inline friend bool operator OP (const Rational &lhs, const int64_t   rhs ) noexcept { return Rational::Cmp(lhs,rhs) RESULT; }\
 inline friend bool operator OP (const int64_t   lhs, const Rational &rhs ) noexcept { return Rational::Cmp(lhs,rhs) RESULT; }\
 inline friend bool operator OP (const Rational &lhs, const Integer  &rhs ) noexcept { return Rational::Cmp(lhs,rhs) RESULT; }\
-inline friend bool operator OP (const Integer  &lhs, const Rational &rhs ) noexcept { return Rational::Cmp(lhs,rhs) RESULT; }
+inline friend bool operator OP (const Integer  &lhs, const Rational &rhs ) noexcept { return Rational::Cmp(lhs,rhs) RESULT; }\
+inline friend bool operator OP (const Rational &lhs, const Natural  &rhs ) noexcept { return Rational::Cmp(lhs,rhs) RESULT; }\
+inline friend bool operator OP (const Natural  &lhs, const Rational &rhs ) noexcept { return Rational::Cmp(lhs,rhs) RESULT; }
 
             Y_APQ_OP(<,  == Negative)
             Y_APQ_OP(>,  == Positive)
