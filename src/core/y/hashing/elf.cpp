@@ -1,28 +1,28 @@
-#include "yack/hashing/elf.hpp"
+#include "y/hashing/elf.hpp"
 
-namespace yack
+namespace Yttrium
 {
-	namespace hashing
+	namespace Hashing
 	{
 		
-		elf:: elf() noexcept : function( __length, __window ), hash(0)
+        ELF:: ELF() noexcept : Function( __length, __window ), hash(0)
 		{
 		}
 		
-		elf:: ~elf() noexcept
+        ELF:: ~ELF() noexcept
 		{
 			hash = 0;
 		}
 		
         
-        const char elf::clid[] = "elf";
+        const char ELF::clid[] = "elf";
 
-		void elf:: set() noexcept
+		void ELF:: set() noexcept
 		{
 			hash = 0;
 		}
 		
-		void elf:: run( const void *buffer, size_t buflen ) noexcept
+		void ELF:: run( const void *buffer, size_t buflen ) noexcept
 		{
 			assert( !(buffer==NULL&&buflen>0) );
 			const uint8_t *str   = (const uint8_t *)buffer;
@@ -38,7 +38,7 @@ namespace yack
 			}		
 		}
 		
-		void elf:: get( void *output, size_t outlen ) noexcept
+		void ELF:: get( void *output, size_t outlen ) noexcept
 		{
 			fill(output, outlen, &hash, sizeof(hash) );
 		}

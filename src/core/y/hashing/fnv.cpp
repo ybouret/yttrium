@@ -1,29 +1,29 @@
-#include "yack/hashing/fnv.hpp"
+#include "y/hashing/fnv.hpp"
 
-namespace yack
+namespace Yttrium
 {
-	namespace hashing
+	namespace Hashing
 	{
 		
-		fnv:: fnv() noexcept : function( __length, __window ), hash(0)
+        FNV:: FNV() noexcept : Function( __length, __window ), hash(0)
 		{
 		}
 		
-		fnv:: ~fnv() noexcept
+        FNV:: ~FNV() noexcept
 		{
 			hash = 0;
 		}
 		
-		const char fnv::clid[] = "fnv";
+		const char FNV::clid[] = "fnv";
 		
-		void fnv:: set() noexcept
+		void FNV:: set() noexcept
 		{
 			hash = 0;
 		}
         
         static const uint32_t fnv_prime = 0x811C9DC5;
 
-		void fnv:: run(const void *buffer, size_t buflen) noexcept
+		void FNV:: run(const void *buffer, size_t buflen) noexcept
 		{
 			assert( !(buffer==NULL&&buflen>0) );
 			const uint8_t *str = (const uint8_t *)buffer;
@@ -38,7 +38,7 @@ namespace yack
 		
         
         
-		void fnv:: get( void *output, size_t outlen ) noexcept
+		void FNV:: get( void *output, size_t outlen ) noexcept
 		{
 			fill(output, outlen, &hash, sizeof(hash) );
 		}
