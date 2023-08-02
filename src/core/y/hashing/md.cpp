@@ -1,43 +1,42 @@
 
 #include "y/hashing/md.hpp"
 
-#if 0
-#include "yack/hashing/function.hpp"
-#include "yack/kr/digest.hpp"
+#include "y/hashing/function.hpp"
+#include "y/memory/digest.hpp"
 
-namespace yack
+namespace Yttrium
 {
 
-    namespace hashing
+    namespace Hashing
     {
-        digest md:: of(function &H)
+        Digest MD::Of(Function &H)
         {
             const size_t n = H.length;
-            digest       d(n);
+            Digest       d(n);
             H.get(&d[1],n);
             return d;
         }
 
-        digest md:: of(function &H, const void *block_addr, const size_t block_size)
+        Digest MD::Of(Function &H, const void *block_addr, const size_t block_size)
         {
             const size_t n = H.length;
-            digest       d(n);
+            Digest       d(n);
             H.block(&d[1],n,block_addr,block_size);
             return d;
         }
 
-        digest md:: of(function &H, const char *msg)
+        Digest MD::Of(Function &H, const char *msg)
         {
             const size_t n = H.length;
-            digest       d(n);
+            Digest       d(n);
             H.block(&d[1],n,msg);
             return d;
         }
 
-        digest md:: of(function &H, const memory::ro_buffer &buf)
+        Digest MD::Of(Function &H, const Memory::ReadOnlyBuffer &buf)
         {
             const size_t n = H.length;
-            digest       d(n);
+            Digest       d(n);
             H.block(&d[1],n,buf);
             return d;
         }
@@ -45,5 +44,3 @@ namespace yack
     }
 
 }
-
-#endif

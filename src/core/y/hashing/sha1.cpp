@@ -310,16 +310,15 @@ e += S(a,5) + F(b,c,d) + K + x; b = S(b,30);        \
     }
 }
 
-#if 0
 #include "y/hashing/testing.hpp"
 #include "y/hashing/md.hpp"
+#include "y/memory/digest.hpp"
+#include "y/system/exception.hpp"
 
-#include "yack/kr/digest.hpp"
-#include "yack/exception.hpp"
 
-namespace yack
+namespace Yttrium
 {
-    namespace hashing
+    namespace Hashing
     {
         
         
@@ -362,10 +361,10 @@ namespace yack
             return txt;
         }
         
-        void SHA1:: tests()
+        void SHA1:: Tests()
         {
-            std::cerr << "<hashing::test sha1>" << std::endl;
-            sha1 H;
+            std::cerr << "<Hashing::Tests SHA1>" << std::endl;
+            SHA1 H;
             for(size_t itest=0;itest<4;++itest)
             {
                 H.set();
@@ -374,15 +373,14 @@ namespace yack
                     H(testarray[itest]);
                 }
                 
-                const digest md = md::of(H);
-                const digest tx = arr2txt(resultarray[itest]);
+                const Digest md = MD::Of(H);
+                const Digest tx = arr2txt(resultarray[itest]);
                 
                 std::cerr << "\t" << md << " <=> " << tx << std::endl;
-                if(md!=tx) throw exception("sha1 tests failure");
+                if(md!=tx) throw Specific::Exception("SHA1","tests failure");
             }
-            std::cerr << "<hashing::test sha1/>" << std::endl;
+            std::cerr << "<Hashing::Tests SHA1/>" << std::endl;
         }
     }
 }
-#endif
 

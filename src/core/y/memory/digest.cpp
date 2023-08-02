@@ -16,18 +16,29 @@ namespace  Yttrium
 {
     const char * const Digest:: CallSign = "Digest";
 
-#define Y_DIGEST_CTOR(N) WadType(N), data( static_cast<uint8_t *>(workspace) ), item(data-1)
+#define Y_DIGEST_CODE_CTOR(N) Object(), Reserved(), WadType(N), data( static_cast<uint8_t *>(workspace) ), item(data-1)
 
-    class Digest:: Code : public Object, public Memory::Wad<uint8_t,Memory::Dyadic>
+    class Reserved
+    {
+    public:
+        explicit Reserved() noexcept : xlen(0) {}
+        virtual ~Reserved() noexcept {}
+        size_t   xlen;
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(Reserved);
+    };
+
+    class Digest:: Code : public Object, public Reserved, public Memory::Wad<uint8_t,Memory::Dyadic>
     {
     public:
         typedef Memory::Wad<uint8_t,Memory::Dyadic> WadType;
 
-        inline explicit Code(const size_t n) :Y_DIGEST_CTOR(n)
+        inline explicit Code(const size_t n) :Y_DIGEST_CODE_CTOR(n)
         {
         }
 
-        inline explicit Code(const Code &D) : Y_DIGEST_CTOR(D.maxBlocks)
+        inline explicit Code(const Code &D) : Y_DIGEST_CODE_CTOR(D.maxBlocks)
         {
             memcpy(workspace,D.workspace,maxBlocks);
         }
@@ -35,23 +46,37 @@ namespace  Yttrium
         inline virtual ~Code() noexcept
         { memset(workspace,0,allocated); }
 
-        static inline size_t hexaLen(const char *hexa) noexcept
+
+        //! get memory to hold value
+        static inline size_t SizeFor(const char *hexa, size_t &rlen) noexcept
         {
-            const size_t len  = Max<size_t>( StringLength(hexa), 1);
+            const size_t len  = Max<size_t>( rlen = StringLength(hexa), 1);
             const size_t alen = Y_ALIGN_ON(2,len);
             return alen >> 1;
         }
 
         inline explicit Code(const char *hexa) :
-        Y_DIGEST_CTOR(hexaLen(hexa))
+        Y_DIGEST_CODE_CTOR(SizeFor(hexa,xlen))
         {
-            if(0!=hexa)
+            size_t ii = 0;
+            bool   lo = true;
+            while(xlen>0)
             {
-                
+                const char c = hexa[--xlen];
+                const int  h = Hexadecimal::ToDecimal(c);
+                if(h<0) throw Specific::Exception(Digest::CallSign,"invalid hexa char '%c'",c);
+                if(lo)
+                {
+                    data[ii] = uint8_t(h);
+                    lo = false;
+                }
+                else
+                {
+                    data[ii++] |= uint8_t(h) << 4;
+                    lo = true;
+                }
             }
         }
-
-
 
 
         uint8_t * const data;

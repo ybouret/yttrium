@@ -4,18 +4,17 @@
 #define Y_HASHING_MD_INCLUDED 1
 
 
-#if 0
-#include "yack/setup.hpp"
+#include "y/config/starting.hpp"
 
-namespace yack
+namespace Yttrium
 {
 
-    namespace memory { class ro_buffer; }
-    class digest;
+    namespace Memory { class ReadOnlyBuffer; }
+    class Digest;
 
-    namespace hashing
+    namespace Hashing
     {
-        class function;
+        class Function;
 
         //______________________________________________________________________
         //
@@ -23,12 +22,12 @@ namespace yack
         //! message digests
         //
         //______________________________________________________________________
-        struct md
+        struct MD
         {
-            static digest of(function &H);                               //!< H content to digest
-            static digest of(function &H, const void * ,const size_t  ); //!< block to digest
-            static digest of(function &H, const char *);                 //!< text to digest
-            static digest of(function &H, const memory::ro_buffer &);    //!< buffer to digest
+            static Digest Of(Function &H);                                 //!< H content to digest
+            static Digest Of(Function &H, const void * ,const size_t  );   //!< block to digest
+            static Digest Of(Function &H, const char *);                   //!< text to digest
+            static Digest Of(Function &H, const Memory::ReadOnlyBuffer &); //!< buffer to digest
 
         };
 
@@ -37,5 +36,4 @@ namespace yack
 
 }
 
-#endif
 #endif
