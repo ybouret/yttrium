@@ -1,9 +1,9 @@
-#include "yack/hashing/rmd160.hpp"
+#include "y/hashing/rmd160.hpp"
 #include <cstring>
 
-namespace yack
+namespace Yttrium
 {
-    namespace hashing
+    namespace Hashing
     {
         
         /* ROL(x, n) cyclically rotates x over n bits to the left */
@@ -321,45 +321,45 @@ namespace yack
         }
         
 #if defined(_MSC_VER)
-		// init MDbuf
+        // init MDbuf
 #pragma warning ( disable : 4351 )
 #endif
-        rmd160 :: rmd160()  noexcept :
-        function(__length,__window),
-        RMD(),
+        RMD160 :: RMD160()  noexcept :
+        Function(__length,__window),
+        RMD_(),
         MDbuf()
         {
             memset(MDbuf,0,sizeof(MDbuf));
         }
         
-        rmd160:: ~rmd160() noexcept
+        RMD160:: ~RMD160() noexcept
         {
             memset(MDbuf,0,sizeof(MDbuf));
         }
         
         
-        const char rmd160:: clid[] = "rmd160";
+        const char RMD160:: clid[] = "rmd160";
         
         
-        void rmd160:: set() noexcept
+        void RMD160:: set() noexcept
         {
-            RMD.reset();
+            RMD_.reset();
             MDinit(MDbuf);
         }
         
-        void rmd160:: run(const void *buf, size_t len) noexcept
+        void RMD160:: run(const void *buf, size_t len) noexcept
         {
             const uint8_t *p = (const uint8_t *)buf;
             for( size_t i=len;i>0;--i,++p)
             {
-                if( RMD.store( *p ) )
-                    compress(MDbuf, RMD.block());
+                if( RMD_.store( *p ) )
+                    compress(MDbuf, RMD_.block());
             }
         }
         
-        void rmd160::get(void *output, size_t outlen) noexcept
+        void RMD160::get(void *output, size_t outlen) noexcept
         {
-            MDfinish(MDbuf, RMD.flush(), RMD.lswlen(), RMD.mswlen() );
+            MDfinish(MDbuf, RMD_.flush(), RMD_.lswlen(), RMD_.mswlen() );
             uint8_t hashcode[RMDsize/8];
             for(size_t i=0; i<RMDsize/8; i+=4)
             {
