@@ -27,7 +27,7 @@ namespace Yttrium
 
         ~Dummy() noexcept {}
 
-        Dummy(const Dummy &other) : name(other.name), indx(other.indx) {}
+        Dummy(const Dummy &other) : Object(), Counted(), name(other.name), indx(other.indx) {}
 
         const String &key() const noexcept { return name; }
 
