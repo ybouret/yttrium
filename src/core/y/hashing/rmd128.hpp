@@ -8,19 +8,19 @@
 
 namespace Yttrium
 {
-    namespace hashing
+    namespace Hashing
     {
         //! RipeMD-128
-        class rmd128 : public function
+        class RMD128 : public Function
 		{
 		public:
-			YACK_HASHING_FUNCTION_DECL(rmd128,16,64); //!< specs
+			Y_HASHING_FUNCTION_DECL(RMD128,16,64); //!< specs
 			static const size_t RMDsize=128;       //!< 128 bits
             
             
 		private:
-			YACK_DISABLE_COPY_AND_ASSIGN(rmd128);
-            rmd      RMD;
+			Y_DISABLE_COPY_AND_ASSIGN(RMD128);
+            RMD      RMD_;
             uint32_t MDbuf[RMDsize/32];
 		};
     }

@@ -1,9 +1,9 @@
-#include "yack/hashing/rmd128.hpp"
+#include "y/hashing/rmd128.hpp"
 #include <cstring>
 
-namespace yack
+namespace Yttrium
 {
-    namespace hashing
+    namespace Hashing
     {
         
         namespace {
@@ -267,40 +267,40 @@ namespace yack
 		// init MDbuf
 #pragma warning ( disable : 4351 )
 #endif
-        rmd128 :: rmd128()  noexcept :
-        function(__length,__window),
-        RMD(),
+        RMD128 :: RMD128()  noexcept :
+        Function(__length,__window),
+        RMD_(),
         MDbuf()
         {
             memset(MDbuf,0,sizeof(MDbuf));
         }
         
-        rmd128:: ~rmd128() noexcept
+        RMD128:: ~RMD128() noexcept
         {
             memset(MDbuf,0,sizeof(MDbuf));
         }
         
-        const char rmd128:: clid[] = "rmd128";
+        const char RMD128:: clid[] = "rmd128";
         
-        void rmd128:: set() noexcept
+        void RMD128:: set() noexcept
         {
-            RMD.reset();
+            RMD_.reset();
             MDinit(MDbuf);
         }
         
-        void rmd128:: run(const void *buf, size_t len) noexcept
+        void RMD128:: run(const void *buf, size_t len) noexcept
         {
             const uint8_t *p = (const uint8_t *)buf;
             for( size_t i=len;i>0;--i,++p)
             {
-                if( RMD.store( *p ) )
-                    compress(MDbuf, RMD.block());
+                if( RMD_.store( *p ) )
+                    compress(MDbuf, RMD_.block());
             }
         }
         
-        void rmd128::get(void *output, size_t outlen) noexcept
+        void RMD128::get(void *output, size_t outlen) noexcept
         {
-            MDfinish(MDbuf, RMD.flush(), RMD.lswlen(), RMD.mswlen() );
+            MDfinish(MDbuf, RMD_.flush(), RMD_.lswlen(), RMD_.mswlen() );
             uint8_t hashcode[RMDsize/8];
             for(size_t i=0; i<RMDsize/8; i+=4)
             {
