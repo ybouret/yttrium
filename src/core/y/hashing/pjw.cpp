@@ -1,28 +1,28 @@
-#include "yack/hashing/pjw.hpp"
+#include "y/hashing/pjw.hpp"
 
-namespace yack
+namespace Yttrium
 {
-	namespace hashing
+	namespace Hashing
 	{
 		
-		pjw:: pjw() noexcept : function( __length, __window ), hash(0)
+        PJW:: PJW() noexcept : Function( __length, __window ), hash(0)
 		{
 		}
 		
-		pjw:: ~pjw() noexcept
+        PJW:: ~PJW() noexcept
 		{
 			hash = 0;
 		}
 		
         
-        const char pjw::clid[] = "pjw";
+        const char PJW::clid[] = "pjw";
 
-		void pjw:: set() noexcept
+		void PJW:: set() noexcept
 		{
 			hash = 0;
 		}
 		
-		void pjw:: run( const void *buffer, size_t buflen ) noexcept
+		void PJW:: run( const void *buffer, size_t buflen ) noexcept
 		{
 			assert( !(buffer==NULL&&buflen>0) );
 #	define BitsInUnsignedInt   ( (uint32_t)(sizeof(uint32_t) * 8) )
@@ -47,7 +47,7 @@ namespace yack
 			
 		}
 		
-		void pjw:: get( void *output, size_t outlen ) noexcept
+		void PJW:: get( void *output, size_t outlen ) noexcept
 		{
 			fill(output, outlen, &hash, sizeof(hash) );
 		}

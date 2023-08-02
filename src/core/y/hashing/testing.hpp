@@ -1,17 +1,17 @@
 
 //! \file
-#ifndef YACK_HASHING_TESTING_INCLUDED
-#define YACK_HASHING_TESTING_INCLUDED 1
+#ifndef Y_HASHING_TESTING_INCLUDED
+#define Y_HASHING_TESTING_INCLUDED 1
 
 
-#include "yack/setup.hpp"
+#include "y/config/starting.hpp"
 
-namespace yack
+namespace Yttrium
 {
 
-    namespace hashing
+    namespace Hashing
     {
-        class function;
+        class Function;
         
         //______________________________________________________________________
         //
@@ -19,19 +19,19 @@ namespace yack
         //! making tests for hashing functions
         //
         //______________________________________________________________________
-        struct testing
+        struct Testing
         {
             const char *text; //!< to process
             const char *hash; //!< hexadecimal result
                             
             //! run tests
-            static void run( function &H, const testing tests[], const size_t count );
+            static void Run( Function &H, const Testing tests[], const size_t count );
         };
         
         //! helper to run tests
-#define YACK_HASHING_TEST(FUNCTION,TESTS) do { \
+#define Y_HASHING_TEST(FUNCTION,TESTS) do { \
 /**/    FUNCTION H;\
-/**/    testing::run(H,TESTS,sizeof(TESTS)/sizeof(TESTS[0]));\
+/**/    Testing::Run(H,TESTS,sizeof(TESTS)/sizeof(TESTS[0]));\
 /**/  } while(false)
 
     }

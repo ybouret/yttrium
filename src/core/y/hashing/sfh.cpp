@@ -1,23 +1,23 @@
-#include "yack/hashing/sfh.hpp"
+#include "y/hashing/sfh.hpp"
 
-namespace yack
+namespace Yttrium
 {
-	namespace hashing
+	namespace Hashing
 	{
 		
-		sfh:: sfh() noexcept : function( __length, __window ), hash(0)
+        SFH:: SFH() noexcept : Function( __length, __window ), hash(0)
 		{
 		}
 		
-		sfh:: ~sfh() noexcept
+        SFH:: ~SFH() noexcept
 		{
 			hash = 0;
 		}
 		
         
-        const char sfh::clid[] = "sfh";
+        const char SFH::clid[] = "sfh";
 
-		void sfh:: set() noexcept
+		void SFH:: set() noexcept
 		{
 			hash = 0;
 		}
@@ -31,7 +31,7 @@ namespace yack
 		}
 		
 		
-		void sfh:: run( const void *buffer, size_t buflen ) noexcept
+		void SFH:: run( const void *buffer, size_t buflen ) noexcept
 		{
 			assert( !(buffer==NULL&&buflen>0) );
 			const uint8_t *data  = (const uint8_t *) buffer;
@@ -71,7 +71,7 @@ namespace yack
 			
 		}
 		
-		void sfh:: get( void *output, size_t outlen ) noexcept
+		void SFH:: get( void *output, size_t outlen ) noexcept
 		{
 			/* Force "avalanching" of final 127 bits */
 			hash ^= hash << 3;

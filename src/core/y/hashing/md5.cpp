@@ -1,10 +1,10 @@
-#include "yack/hashing/md5.hpp"
+#include "y/hashing/md5.hpp"
 #include <cstring>
 
-namespace yack
+namespace Yttrium
 {
 
-	namespace hashing
+	namespace Hashing
 	{
 		namespace RFC1321
 		{
@@ -286,26 +286,26 @@ namespace yack
 
 		} // RFC1321
 
-		md5::md5() noexcept : function(__length, __window), ctx()
+        MD5::MD5() noexcept : Function(__length, __window), ctx()
 		{
 		}
 
-        const char md5:: clid[] = "md5";
+        const char MD5:: clid[] = "md5";
         
 
 
-		void md5:: set() noexcept
+		void MD5:: set() noexcept
 		{
 			RFC1321::MD5Init( &ctx );
 		}
 
-		void md5:: run( const void *buffer, size_t buflen ) noexcept
+		void MD5:: run( const void *buffer, size_t buflen ) noexcept
 		{
 			assert( !(buflen>0&&NULL==buffer) );
 			RFC1321::MD5Update( &ctx, (const uint8_t *)buffer, buflen );
 		}
 
-		void md5::get(void *output, size_t outlen ) noexcept
+		void MD5::get(void *output, size_t outlen ) noexcept
 		{
 			assert( !(output==NULL&&outlen>0) );
 			uint8_t  digest[16];
@@ -313,7 +313,7 @@ namespace yack
 			fill( output, outlen, digest, sizeof(digest) );
 		}
 
-		md5:: ~md5() noexcept
+        MD5:: ~MD5() noexcept
 		{
 			memset( &ctx, 0 , sizeof(ctx) );
 		}
@@ -321,15 +321,15 @@ namespace yack
 
 }
 
-#include "yack/hashing/testing.hpp"
+#include "y/hashing/testing.hpp"
 
 
-namespace yack
+namespace Yttrium
 {
 
-    namespace hashing
+    namespace Hashing
     {
-        static const testing md5_vec[] =
+        static const Testing md5_vec[] =
         {
             { "", "d41d8cd98f00b204e9800998ecf8427e" },
             { "a", "0cc175b9c0f1b6a831c399e269772661" },
@@ -340,9 +340,9 @@ namespace yack
             { "12345678901234567890123456789012345678901234567890123456789012345678901234567890", "57edf4a22be3c955ac49da2e2107b67a" }
         };
 
-        void md5:: tests()
+        void MD5:: Tests()
         {
-            YACK_HASHING_TEST(md5,md5_vec);
+            Y_HASHING_TEST(MD5,md5_vec);
         }
     }
 }

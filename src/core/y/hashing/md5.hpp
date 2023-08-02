@@ -1,12 +1,12 @@
 //! \file
-#ifndef YACK_HASHING_MD5_INCLUDED
-#define YACK_HASHING_MD5_INCLUDED 1
+#ifndef Y_HASHING_MD5_INCLUDED
+#define Y_HASHING_MD5_INCLUDED 1
 
-#include "yack/hashing/function.hpp"
+#include "y/hashing/function.hpp"
 
-namespace yack
+namespace Yttrium
 {
-	namespace hashing
+	namespace Hashing
 	{
 		/* RFC 1321 */
 		namespace RFC1321
@@ -21,15 +21,15 @@ namespace yack
 		}
 
         //! MD5
-		class md5 : public function
+		class MD5 : public Function
 		{
 		public:
-			YACK_HASHING_FUNCTION_DECL(md5,16,64); //!< specs
-            static void tests(); //!< tests from RFC
+			Y_HASHING_FUNCTION_DECL(MD5,16,64); //!< specs
+            static void Tests();                //!< tests from RFC
             
 		private:
 			RFC1321::MD5_CTX ctx;
-			YACK_DISABLE_COPY_AND_ASSIGN(md5);
+			Y_DISABLE_COPY_AND_ASSIGN(MD5);
 		};
 
 	}

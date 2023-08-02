@@ -1,24 +1,24 @@
 //! \file
-#ifndef YACK_HASHING_PJW_INCLUDED
-#define YACK_HASHING_PJW_INCLUDED 1
+#ifndef Y_HASHING_PJW_INCLUDED
+#define Y_HASHING_PJW_INCLUDED 1
 
-#include "yack/hashing/function.hpp"
+#include "y/hashing/function.hpp"
 
-namespace yack
+namespace Yttrium
 {
-	namespace hashing
+	namespace Hashing
 	{
 
         //! PJW
-		class pjw : public function
+		class PJW : public Function
 		{
 		public:
             //! prototype
-			YACK_HASHING_FUNCTION_DECL(pjw,4,4);
+			Y_HASHING_FUNCTION_DECL(PJW,4,4);
 			
 		private:
 			uint32_t hash;
-			YACK_DISABLE_COPY_AND_ASSIGN(pjw);
+			Y_DISABLE_COPY_AND_ASSIGN(PJW);
 		};
 		
 	}
