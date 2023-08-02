@@ -3,7 +3,9 @@
 #ifndef Y_Sequence_Interface_Included
 #define Y_Sequence_Interface_Included 1
 
+#include "y/container/collection.hpp"
 #include "y/type/args.hpp"
+
 
 namespace Yttrium
 {
@@ -17,7 +19,7 @@ namespace Yttrium
     //
     //__________________________________________________________________________
     template <typename T>
-    class Sequence
+    class Sequence : public virtual Collection
     {
     public:
         //______________________________________________________________________
@@ -69,7 +71,17 @@ namespace Yttrium
         inline Type pullTail() { ConstType tmp = tail(); popTail(); return tmp; } //!< get copy and remove tail
 
         
+        //! trim tail items
+        inline void trim(size_t n) noexcept
+        {
+            while(n-- > 0 && this->size() > 0) this->popTail();
+        }
 
+        //! skip head items
+        inline void skip(size_t n) noexcept
+        {
+            while(n-- > 0 && this->size() > 0) this->popHead();
+        }
 
 
     private:

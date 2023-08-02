@@ -3,7 +3,8 @@
 #ifndef Y_Sequence_List_Included
 #define Y_Sequence_List_Included 1
 
-#include "y/sequence/dynamic.hpp"
+#include "y/sequence/interface.hpp"
+#include "y/container/dynamic.hpp"
 #include "y/container/writable.hpp"
 #include "y/type/capacity.hpp"
 #include "y/data/small/heavy/list/solo.hpp"
@@ -33,7 +34,7 @@ namespace Yttrium
     //! helper for constructor
     //______________________________________________________________________
 #define Y_List_Prolog() \
-Identifiable(), Collection(), DynamicSequence<T>(), Core::List(), Writable<T>()
+Identifiable(), Collection(), Dynamic(), Sequence<T>(), Core::List(), Writable<T>()
 
 
     //__________________________________________________________________________
@@ -46,7 +47,8 @@ Identifiable(), Collection(), DynamicSequence<T>(), Core::List(), Writable<T>()
     //__________________________________________________________________________
     template <typename T>
     class List :
-    public DynamicSequence<T>,
+    public Dynamic,
+    public Sequence<T>,
     public Core::List,
     public Writable<T>
     {

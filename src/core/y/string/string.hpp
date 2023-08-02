@@ -7,7 +7,7 @@
 #include "y/object.hpp"
 #include "y/container/writable.hpp"
 #include "y/container/iterator/writable-contiguous.hpp"
-#include "y/sequence/dynamic.hpp"
+#include "y/sequence/interface.hpp"
 #include "y/ostream-proto.hpp"
 #include "y/type/capacity.hpp"
 #include "y/memory/buffer/ro.hpp"
@@ -58,7 +58,7 @@ namespace Yttrium
         template <typename T>
         class String :
         public StringCommon,
-        public DynamicSequence<T>,
+        public Sequence<T>,
         public Writable<T>,
         public WritableContiguous<T>
         {
@@ -125,10 +125,7 @@ namespace Yttrium
             virtual void popTail()  noexcept;
             virtual void popHead()  noexcept;
 
-            virtual void release() noexcept;
-            virtual void reserve(const size_t n);
-
-            void reverse() noexcept; //!< reverse string
+            void         reverse() noexcept; //!< reverse string
 
             //__________________________________________________________________
             //

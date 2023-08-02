@@ -36,7 +36,7 @@ namespace Yttrium
 Identifiable(),           \
 Collection(),             \
 StringCommon(),           \
-DynamicSequence<CH>(),    \
+Sequence<CH>(),           \
 Writable<CH>(),           \
 WritableContiguous<CH>() 
 

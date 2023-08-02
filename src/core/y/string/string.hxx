@@ -225,15 +225,7 @@ namespace Yttrium
             assert(0!=code);
             code->free();
         }
-
-        template <>
-        void String<CH>:: release() noexcept
-        {
-            assert(0!=code);
-            code->free();
-        }
-
-
+        
         template <>
         void String<CH>:: swapWith(String &s) noexcept
         {
@@ -250,6 +242,14 @@ namespace Yttrium
             return *this;
         }
 
+#if 0
+        template <>
+        void String<CH>:: release() noexcept
+        {
+            assert(0!=code);
+            code->free();
+        }
+
         template <>
         void String<CH>:: reserve(const size_t n)
         {
@@ -260,6 +260,7 @@ namespace Yttrium
                 swapWith(tmp);
             }
         }
+#endif
         
     }
 
