@@ -4,9 +4,9 @@
 
 #include "y/hashing/function.hpp"
 
-namespace yack
+namespace Yttrium
 {
-	namespace hashing
+	namespace Hashing
 	{
         //! context for sha384/sha512
 		struct SHA512_CTX
@@ -19,25 +19,25 @@ namespace yack
 		
 
         //! SHA-512
-		class sha512 : public function
+		class SHA512 : public Function
 		{
 		public:
-			YACK_HASHING_FUNCTION_DECL(sha512,64,128); //!< specs
+			Y_HASHING_FUNCTION_DECL(SHA512,64,128); //!< specs
 			
 		private:
 			SHA512_CTX ctx;
-			YACK_DISABLE_COPY_AND_ASSIGN(sha512);
+			Y_DISABLE_COPY_AND_ASSIGN(SHA512);
 		};
 
         //! SHA-384
-		class sha384 : public function
+		class SHA384 : public Function
 		{
 		public:
-			YACK_HASHING_FUNCTION_DECL(sha384,48,128); //!< specs
+			Y_HASHING_FUNCTION_DECL(SHA384,48,128); //!< specs
 			
 		private:
 			SHA512_CTX ctx;
-			YACK_DISABLE_COPY_AND_ASSIGN(sha384);
+			Y_DISABLE_COPY_AND_ASSIGN(SHA384);
 		};
 		
 	}

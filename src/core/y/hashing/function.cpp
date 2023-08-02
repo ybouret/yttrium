@@ -66,7 +66,7 @@ namespace Yttrium
 
 
         
-        void Function:: Flock(void *output, size_t outlen, const char *msg) noexcept
+        void Function:: block(void *output, size_t outlen, const char *msg) noexcept
         {
             set();
             if(msg)
