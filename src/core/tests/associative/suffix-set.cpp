@@ -7,6 +7,7 @@
 #include "y/string.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/ptr/ark.hpp"
 
 
 using namespace Yttrium;
@@ -16,9 +17,10 @@ namespace Yttrium
 
 
 
-    class Dummy
+    class Dummy : public Object, public Counted
     {
     public:
+
         Dummy(const char *id, const int i) : name(id), indx(i)
         {
         }
@@ -36,6 +38,7 @@ namespace Yttrium
         Y_DISABLE_ASSIGN(Dummy);
     };
 
+    typedef ArkPtr<String,Dummy> DumPtr;
 
 
 }
@@ -43,8 +46,9 @@ namespace Yttrium
 Y_UTEST(associative_suffix_set)
 {
 
-    SuffixSet<String,Dummy> mySet;
-    Vector<const String>    keys;
+    SuffixSet<String,Dummy>  mySet;
+    SuffixSet<String,DumPtr> mySetOfPtr;
+    Vector<const String>     keys;
 
     if(argc>1)
     {
@@ -59,6 +63,12 @@ Y_UTEST(associative_suffix_set)
             {
                 ++indx;
                 keys << line;
+                const DumPtr ptr = new Dummy(dum);
+                if(!mySetOfPtr.insert(ptr))
+                {
+                    throw Exception("corrupted insertion!!");
+                }
+
             }
         }
         std::cerr << "found #key=" << keys.size() << "/" << mySet.size() << std::endl;

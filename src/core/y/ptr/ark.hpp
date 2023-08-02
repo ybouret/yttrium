@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_Arc_Ptr_Included
-#define Y_Arc_Ptr_Included 1
+#ifndef Y_Ark_Ptr_Included
+#define Y_Ark_Ptr_Included 1
 
 #include "y/ptr/ptr.hpp"
 
@@ -14,18 +14,18 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        //! Common behaviour for ArcPtr
+        //! Common behaviour for ArkPtr
         //
         //______________________________________________________________________
-        class ArcPtr
+        class ArkPtr
         {
-        protected: explicit ArcPtr() noexcept;   //!< setup
-        public:    virtual ~ArcPtr() noexcept;   //!< cleanup
+        protected: explicit ArkPtr() noexcept;   //!< setup
+        public:    virtual ~ArkPtr() noexcept;   //!< cleanup
             static const char * const CallSign;  //!< "ArcPtr"
             static void NoNull(void *) noexcept; //!< critical error
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(ArcPtr);
+            Y_DISABLE_COPY_AND_ASSIGN(ArkPtr);
         };
     }
 
@@ -33,12 +33,12 @@ namespace Yttrium
     //
     //
     //
-    //! ArcPtr with a Counted API
+    //! ArkPtr with a Counted API
     //
     //
     //__________________________________________________________________________
-    template <typename T, template <typename> class Policy = Immediate >
-    class ArcPtr : public Core::ArcPtr, public Ptr<T,Policy>
+    template <typename KEY, typename T, template <typename> class Policy = Immediate >
+    class ArkPtr : public Core::ArkPtr, public Ptr<T,Policy>
     {
     public:
         //______________________________________________________________________
@@ -49,6 +49,7 @@ namespace Yttrium
         //______________________________________________________________________
         typedef Ptr<T,Policy> SelfType; //!< alias
         Y_ARGS_EXPOSE(T,Type);          //!< aliases
+        Y_ARGS_EXPOSE(KEY,Key);         //!< aliases
         using SelfType::handle;         //!< alias
 
         //______________________________________________________________________
@@ -62,7 +63,7 @@ namespace Yttrium
         //
         //! setup with a valid pointer, increasing refcount
         //______________________________________________________________________
-        inline          ArcPtr(Type *ptr) noexcept : Core::ArcPtr(), SelfType(ptr)
+        inline ArkPtr(Type *ptr) noexcept : Core::ArkPtr(), SelfType(ptr)
         {
             NoNull(handle);
             assert(0!=handle);
@@ -73,7 +74,7 @@ namespace Yttrium
         //
         //! cleanup
         //______________________________________________________________________
-        inline virtual ~ArcPtr() noexcept
+        inline virtual ~ArkPtr() noexcept
         {
             assert(handle);
             if(handle->liberate()) { delete handle;}
@@ -84,8 +85,8 @@ namespace Yttrium
         //
         //! copy handle and increase refcount
         //______________________________________________________________________
-        inline ArcPtr(const ArcPtr &other) noexcept :
-        Core::ArcPtr(),
+        inline ArkPtr(const ArkPtr &other) noexcept :
+        Core::ArkPtr(),
         SelfType(other.handle)
         {
             assert(0!=handle || Die("invalid other"));
@@ -96,12 +97,25 @@ namespace Yttrium
         //
         //! assign another
         //______________________________________________________________________
-        ArcPtr & operator=(const ArcPtr &other) noexcept
+        ArkPtr & operator=(const ArkPtr &other) noexcept
         {
-            ArcPtr temp(other);
+            ArkPtr temp(other);
             if(handle->liberate()) delete handle;
             (handle = temp.handle)->withhold();
             return *this;
+        }
+
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+
+        //! forward key()
+        inline ConstKey & key() const noexcept
+        {
+            return handle->key();
         }
 
     };
