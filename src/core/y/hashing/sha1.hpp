@@ -1,12 +1,12 @@
 //! \file
-#ifndef YACK_HASHING_SHA1_INCLUDED
-#define YACK_HASHING_SHA1_INCLUDED 1
+#ifndef Y_HASHING_SHA1_INCLUDED
+#define Y_HASHING_SHA1_INCLUDED 1
 
-#include "yack/hashing/function.hpp"
+#include "y/hashing/function.hpp"
 
-namespace yack
+namespace Yttrium
 {
-	namespace hashing
+	namespace Hashing
 	{
 		
 		namespace RFC3174
@@ -21,17 +21,17 @@ namespace yack
 		}
 
         //! SHA1
-		class sha1 : public function
+		class SHA1 : public Function
 		{
 		public:
             //! prototype
-			YACK_HASHING_FUNCTION_DECL(sha1,20,64);
+			Y_HASHING_FUNCTION_DECL(SHA1,20,64);
 			
-            static void tests(); //!< tests from RFC
+            static void Tests(); //!< tests from RFC
             
 		private:
 			RFC3174::SHA1_CTX ctx;
-			YACK_DISABLE_COPY_AND_ASSIGN(sha1);
+			Y_DISABLE_COPY_AND_ASSIGN(SHA1);
 		};
 		
 	}

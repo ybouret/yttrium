@@ -1,10 +1,10 @@
-#include "yack/hashing/sha1.hpp"
+#include "y/hashing/sha1.hpp"
 #include <cstring>
 
-namespace yack
+namespace Yttrium
 {
     
-    namespace hashing
+    namespace Hashing
     {
         
         namespace RFC3174
@@ -276,25 +276,25 @@ e += S(a,5) + F(b,c,d) + K + x; b = S(b,30);        \
         } // RFC1321
         
         
-        sha1::sha1() noexcept : function(__length, __window), ctx()
+        SHA1::SHA1() noexcept : Function(__length, __window), ctx()
         {
         }
         
-        const char sha1:: clid[] = "sha1";
+        const char SHA1:: clid[] = "sha1";
         
         
-        void sha1:: set() noexcept
+        void SHA1:: set() noexcept
         {
             RFC3174::sha1_set( &ctx );
         }
         
-        void sha1:: run( const void *buffer, size_t buflen ) noexcept
+        void SHA1:: run( const void *buffer, size_t buflen ) noexcept
         {
             assert( !(buflen>0&&NULL==buffer) );
             RFC3174::sha1_run( &ctx, (const uint8_t *)buffer, buflen );
         }
         
-        void sha1::get(void *output, size_t outlen ) noexcept
+        void SHA1::get(void *output, size_t outlen ) noexcept
         {
             assert( !(output==NULL&&outlen>0) );
             uint8_t  digest[20];
@@ -302,7 +302,7 @@ e += S(a,5) + F(b,c,d) + K + x; b = S(b,30);        \
             fill( output, outlen, digest, sizeof(digest) );
         }
         
-        sha1:: ~sha1() noexcept
+        SHA1:: ~SHA1() noexcept
         {
             memset( &ctx, 0 , sizeof(ctx) );
         }
@@ -310,8 +310,9 @@ e += S(a,5) + F(b,c,d) + K + x; b = S(b,30);        \
     }
 }
 
-#include "yack/hashing/testing.hpp"
-#include "yack/hashing/md.hpp"
+#if 0
+#include "y/hashing/testing.hpp"
+#include "y/hashing/md.hpp"
 
 #include "yack/kr/digest.hpp"
 #include "yack/exception.hpp"
@@ -361,7 +362,7 @@ namespace yack
             return txt;
         }
         
-        void sha1:: tests()
+        void SHA1:: tests()
         {
             std::cerr << "<hashing::test sha1>" << std::endl;
             sha1 H;
@@ -383,3 +384,5 @@ namespace yack
         }
     }
 }
+#endif
+
