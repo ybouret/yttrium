@@ -60,8 +60,8 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        inline Type      & operator*()       noexcept { return data; }
-        inline ConstType & operator*() const noexcept { return data; }
+        inline Type      & operator*()       noexcept { return data; } //!< access
+        inline ConstType & operator*() const noexcept { return data; } //!< access
 
         //______________________________________________________________________
         //

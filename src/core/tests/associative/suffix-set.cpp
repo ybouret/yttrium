@@ -71,13 +71,20 @@ Y_UTEST(associative_suffix_set)
                 {
                     throw Exception("corrupted insertion!!");
                 }
-
+                if(0==(indx%16))
+                    (std::cerr << '.').flush();
             }
         }
+        std::cerr << std::endl;
         std::cerr << "found #key=" << keys.size() << "/" << mySet.size() << std::endl;
-        SuffixSet<String,Dummy> myCpy(mySet);
-        std::cerr << "copy  #key=" << myCpy.size() << std::endl;
 
+        {
+            std::cerr << "performing copy..." << std::endl;
+            SuffixSet<String,Dummy> myCpy(mySet);
+            std::cerr << "copy  #key=" << myCpy.size() << std::endl;
+        }
+
+        std::cerr << "Checking Keys" << std::endl;
         if(keys.size()>0)
         {
             Random::Shuffle::Range(&keys[1], keys.size(), ran);
@@ -90,7 +97,7 @@ Y_UTEST(associative_suffix_set)
                 Y_ASSERT(mySet.remove(keys[i]));
             }
         }
-
+        std::cerr << "Done" << std::endl;
     }
     
 

@@ -21,16 +21,16 @@ namespace Yttrium
     class Associative : public Dynamic
     {
     public:
-        Y_ARGS_DECL(T,Type);
-        Y_ARGS_DECL(KEY,Key);
+        Y_ARGS_DECL(T,Type);  //!< aliases
+        Y_ARGS_DECL(KEY,Key); //!< aliases
 
     protected:
         inline explicit Associative() noexcept {}
     public:
         inline virtual ~Associative() noexcept {}
 
-        virtual ConstType *search(const ParamKey key) const noexcept = 0;
-       
+        virtual ConstType *search(ParamKey) const noexcept = 0; //!< search object by its key
+        virtual bool       remove(ParamKey)       noexcept = 0; //!< remove object by its key
 
 
     private:

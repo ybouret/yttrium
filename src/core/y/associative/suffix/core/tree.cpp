@@ -364,7 +364,7 @@ namespace Yttrium
             assert(owns(nodeAddr));
             SuffixNode *node = static_cast<SuffixNode *>( nodeAddr );
             node->data = 0;
-            code->prune(node);
+            //code->prune(node);
         }
 
         void SuffixTree:: free() noexcept
