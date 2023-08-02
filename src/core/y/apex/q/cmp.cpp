@@ -94,13 +94,24 @@ namespace Yttrium
 {
     namespace Apex
     {
-        SignType Cmp(const Rational &lhs, const Rational &rhs)
+        SignType Rational:: Cmp(const Rational &lhs, const Rational &rhs)
         {
             const Integer L = lhs.numer * rhs.denom;
             const Integer R = rhs.numer * lhs.denom;
             return Integer::Cmp(L,R);
         }
 
+        SignType Rational::Cmp(const Rational &lhs, const int64_t rhs)
+        {
+            Integer R = lhs.denom; R *= rhs;
+            return Integer::Cmp(lhs.numer,R);
+        }
+
+        SignType Rational:: Cmp(const int64_t lhs, const Rational &rhs)
+        {
+            Integer L = lhs; L *= rhs.denom;
+            return Integer::Cmp(L,rhs.numer);
+        }
 
     }
 
