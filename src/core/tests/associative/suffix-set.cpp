@@ -8,6 +8,7 @@
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/ptr/ark.hpp"
+#include "y/random/shuffle.hpp"
 
 
 using namespace Yttrium;
@@ -46,6 +47,8 @@ namespace Yttrium
 Y_UTEST(associative_suffix_set)
 {
 
+    Random::Rand ran;
+
     SuffixSet<String,Dummy>  mySet;
     SuffixSet<String,DumPtr> mySetOfPtr;
     Vector<const String>     keys;
@@ -74,6 +77,19 @@ Y_UTEST(associative_suffix_set)
         std::cerr << "found #key=" << keys.size() << "/" << mySet.size() << std::endl;
         SuffixSet<String,Dummy> myCpy(mySet);
         std::cerr << "copy  #key=" << myCpy.size() << std::endl;
+
+        if(keys.size()>0)
+        {
+            Random::Shuffle::Range(&keys[1], keys.size(), ran);
+            for(size_t i=1;i<=keys.size();++i)
+            {
+                std::cerr << "- " << keys[i] << std::endl;
+                const Dummy *pDum = mySet.search(keys[i]);
+                Y_ASSERT(0!=pDum);
+                std::cerr << "|_" << pDum->name << std::endl;
+                Y_ASSERT(mySet.remove(keys[i]));
+            }
+        }
 
     }
     

@@ -31,6 +31,9 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
+        Y_ARGS_DECL(T,Type);
+        Y_ARGS_DECL(KEY,Key);
+
         typedef SuffixTree<KEY,T,NODE> TreeType; //!< alias
         using TreeType::list;
         using TreeType::pool;
@@ -49,6 +52,24 @@ namespace Yttrium
         inline virtual void         free()            noexcept { this->softReset(); }          //!< free content, keep memory
         inline virtual void         release()         noexcept { this->hardReset(); }          //!< release all possible memory
         inline virtual void         reserve(size_t n) noexcept { pool.reserve(n); }            //!< reserve blocks
+
+        inline virtual ConstType *search(const ParamKey key) const noexcept
+        {
+            const void *nodeAddr = tree.search(key);
+            if(!nodeAddr) return 0;
+            return & (**static_cast<const NODE *>(nodeAddr));
+        }
+
+        inline virtual bool remove(const ParamKey key) noexcept
+        {
+            const void *nodeAddr = tree.search(key);
+            if(!nodeAddr) return false;
+            NODE *node = (NODE *)nodeAddr; assert(0!=node->knot);
+            tree.loosen(node->knot);
+            pool.destruct( list.pop(node) );
+            return true;
+        }
+
 
         //______________________________________________________________________
         //

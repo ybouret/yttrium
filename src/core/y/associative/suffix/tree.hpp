@@ -73,6 +73,7 @@ namespace Yttrium
         PoolType         pool; //!< memory pool
         Core::SuffixTree tree; //!< internal tree
 
+        
         //______________________________________________________________________
         //
         //! release all possible memory

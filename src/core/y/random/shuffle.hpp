@@ -28,7 +28,7 @@ namespace Yttrium
             //__________________________________________________________________
             template <typename T> static inline
             void Exchange(T &lhs, T &rhs) noexcept {
-                if(&lhs!=&rhs) Memory::OutOfReach::Swap(&lhs,&rhs,sizeof(T));
+                if(&lhs!=&rhs) Memory::OutOfReach::Swap(Coerce(lhs),Coerce(rhs));
             }
 
             //__________________________________________________________________

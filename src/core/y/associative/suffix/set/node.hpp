@@ -54,6 +54,14 @@ namespace Yttrium
         //! cleanup
         inline ~SuffixSetNode() noexcept {}
 
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        inline Type      & operator*()       noexcept { return data; }
+        inline ConstType & operator*() const noexcept { return data; }
 
         //______________________________________________________________________
         //
