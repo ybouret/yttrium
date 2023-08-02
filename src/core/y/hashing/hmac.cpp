@@ -1,7 +1,8 @@
 
-#include "yack/hashing/hmac.hpp"
+#include "y/hashing/hmac.hpp"
 #include <cstring>
 
+#if 0
 namespace yack
 {
     namespace hashing
@@ -83,3 +84,4 @@ tmp(L)
 
 }
 
+#endif

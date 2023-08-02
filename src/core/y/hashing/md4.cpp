@@ -1,10 +1,10 @@
-#include "yack/hashing/md4.hpp"
+#include "y/hashing/md4.hpp"
 #include <cstring>
 
-namespace yack
+namespace Yttrium
 {
 	
-	namespace hashing
+	namespace Hashing
 	{
 		
 		namespace RFC1320
@@ -235,26 +235,26 @@ namespace yack
 			
 		} // RFC 1320
 		
-		md4::md4() noexcept : function(__length, __window), ctx()
+        MD4::MD4() noexcept : Function(__length, __window), ctx()
 		{
 		}
 		
-        const char md4:: clid[] = "md4";
+        const char MD4:: clid[] = "md4";
 
 		
 		
-		void md4:: set() noexcept
+		void MD4:: set() noexcept
 		{
 			RFC1320::MD4Init( &ctx );
 		}
 		
-		void md4:: run( const void *buffer, size_t buflen ) noexcept
+		void MD4:: run( const void *buffer, size_t buflen ) noexcept
 		{
 			assert( !(buflen>0&&NULL==buffer) );
 			RFC1320::MD4Update( &ctx, (const uint8_t *)buffer, buflen );
 		}
 		
-		void md4::get(void *output, size_t outlen ) noexcept
+		void MD4::get(void *output, size_t outlen ) noexcept
 		{
 			assert( !(output==NULL&&outlen>0) );
 			uint8_t  digest[16];
@@ -262,7 +262,7 @@ namespace yack
 			fill( output, outlen, digest, sizeof(digest) );
 		}
 		
-		md4:: ~md4() noexcept
+        MD4:: ~MD4() noexcept
 		{
 			memset( &ctx, 0 , sizeof(ctx) );
 		}

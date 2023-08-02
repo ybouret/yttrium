@@ -1,9 +1,10 @@
 
 //! \file
-#ifndef YACK_HASHING_MD_INCLUDED
-#define YACK_HASHING_MD_INCLUDED 1
+#ifndef Y_HASHING_MD_INCLUDED
+#define Y_HASHING_MD_INCLUDED 1
 
 
+#if 0
 #include "yack/setup.hpp"
 
 namespace yack
@@ -37,4 +38,4 @@ namespace yack
 }
 
 #endif
-
+#endif

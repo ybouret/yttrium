@@ -1,9 +1,9 @@
 //! \file
 
-#ifndef YACK_HASHING_HMAC_INCLUDED
+#ifndef Y_HASHING_HMAC_INCLUDED
 #define YACK_HASHING_HMAC_INCLUDED 1
 
-
+#if 0
 #include "yack/kr/digest.hpp"
 #include "yack/hashing/function.hpp"
 
@@ -62,4 +62,5 @@ namespace yack
 
 }
 
+#endif
 #endif

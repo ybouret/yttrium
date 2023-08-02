@@ -1,5 +1,7 @@
 
-#include "yack/hashing/md.hpp"
+#include "y/hashing/md.hpp"
+
+#if 0
 #include "yack/hashing/function.hpp"
 #include "yack/kr/digest.hpp"
 
@@ -44,3 +46,4 @@ namespace yack
 
 }
 
+#endif

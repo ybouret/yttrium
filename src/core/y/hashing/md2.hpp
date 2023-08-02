@@ -1,12 +1,12 @@
 //! \file
-#ifndef YACK_HASHING_MD2_INCLUDED
-#define YACK_HASHING_MD2_INCLUDED 1
+#ifndef Y_HASHING_MD2_INCLUDED
+#define Y_HASHING_MD2_INCLUDED 1
 
-#include "yack/hashing/function.hpp"
+#include "y/hashing/function.hpp"
 
-namespace yack
+namespace Yttrium
 {
-    namespace hashing
+    namespace Hashing
     {
         /* RFC 1319 */
         namespace RFC1319
@@ -22,14 +22,14 @@ namespace yack
         }
 
         //! MD2
-        class md2 : public function
+        class MD2 : public Function
         {
         public:
-            YACK_HASHING_FUNCTION_DECL(md2,16,48); //!< specs
+            Y_HASHING_FUNCTION_DECL(MD2,16,48); //!< specs
 
         private:
             RFC1319::MD2_CTX ctx;
-            YACK_DISABLE_COPY_AND_ASSIGN(md2);
+            Y_DISABLE_COPY_AND_ASSIGN(MD2);
         };
 
     }

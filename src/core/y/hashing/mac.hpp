@@ -1,11 +1,12 @@
 
 //! \file
 
-#ifndef YACK_HASHING_MAC_INCLUDED
-#define YACK_HASHING_MAC_INCLUDED 1
+#ifndef Y_HASHING_MAC_INCLUDED
+#define Y_HASHING_MAC_INCLUDED 1
 
 
-#include "yack/hashing/hmac.hpp"
+#include "y/hashing/hmac.hpp"
+#if 0
 #include "yack/ptr/cstr.hpp"
 
 namespace yack
@@ -86,4 +87,5 @@ function( FUNCTION::__length, FUNCTION::__window), H(), M(H,
 
 }
 
+#endif
 #endif
