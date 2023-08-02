@@ -154,7 +154,14 @@ inline friend bool operator OP (const Natural &lhs, const Integer &rhs ) noexcep
             Y_APZ_OP(<=, != Positive)
             Y_APZ_OP(>=, != Negative)
 
-            
+            static SignType Cmp(const Integer &lhs, const Integer &rhs) noexcept; //!< comparison helper
+
+            static SignType Cmp(const Integer &lhs, const int64_t  rhs) noexcept; //!< comparison helper
+            static SignType Cmp(const uint64_t lhs, const Integer &rhs) noexcept; //!< comparison helper
+
+            static SignType Cmp(const Integer &lhs, const Natural &rhs) noexcept; //!< comparison helper
+            static SignType Cmp(const Natural &lhs, const Integer &rhs) noexcept; //!< comparison helper
+
             //__________________________________________________________________
             //
             //
@@ -164,14 +171,7 @@ inline friend bool operator OP (const Natural &lhs, const Integer &rhs ) noexcep
             const SignType s; //!< sign
             const Natural  n; //!< unsigned value
 
-        private:
-            static SignType Cmp(const Integer &lhs, const Integer &rhs) noexcept;
 
-            static SignType Cmp(const Integer &lhs, const int64_t  rhs) noexcept;
-            static SignType Cmp(const uint64_t lhs, const Integer &rhs) noexcept;
-
-            static SignType Cmp(const Integer &lhs, const Natural &rhs) noexcept;
-            static SignType Cmp(const Natural &lhs, const Integer &rhs) noexcept;
 
         };
     }

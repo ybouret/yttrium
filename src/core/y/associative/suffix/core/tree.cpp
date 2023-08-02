@@ -272,7 +272,7 @@ namespace Yttrium
             //
             //! prune
             //__________________________________________________________________
-            void prune(SuffixNode *node) noexcept
+            inline void prune(SuffixNode *node) noexcept
             {
                 assert(0!=node);
                 if(0==node->data && 0!=node->from && node->chld.size<=0)

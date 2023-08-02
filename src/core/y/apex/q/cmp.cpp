@@ -90,3 +90,19 @@ namespace Yttrium
 
 }
 
+namespace Yttrium
+{
+    namespace Apex
+    {
+        SignType Cmp(const Rational &lhs, const Rational &rhs)
+        {
+            const Integer L = lhs.numer * rhs.denom;
+            const Integer R = rhs.numer * lhs.denom;
+            return Integer::Cmp(L,R);
+        }
+
+
+    }
+
+}
+

@@ -70,21 +70,27 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // Comparison
+            // Equality
             //
             //__________________________________________________________________
-
             friend bool operator==(const Rational &lhs, const Rational &rhs) noexcept; //!< compare
             friend bool operator==(const Rational &lhs, const int64_t   rhs) noexcept; //!< compare
             friend bool operator==(const int64_t   lhs, const Rational &rhs) noexcept; //!< compare
             friend bool operator==(const Rational &lhs, const Integer  &rhs) noexcept; //!< compare
             friend bool operator==(const Integer  &lhs, const Rational &rhs) noexcept; //!< compare
 
+            //__________________________________________________________________
+            //
+            //
+            // Difference
+            //
+            //__________________________________________________________________
             friend bool operator!=(const Rational &lhs, const Rational &rhs) noexcept; //!< compare
             friend bool operator!=(const Rational &lhs, const int64_t   rhs) noexcept; //!< compare
             friend bool operator!=(const int64_t   lhs, const Rational &rhs) noexcept; //!< compare
             friend bool operator!=(const Rational &lhs, const Integer  &rhs) noexcept; //!< compare
             friend bool operator!=(const Integer  &lhs, const Rational &rhs) noexcept; //!< compare
+
 
 
 
@@ -171,6 +177,8 @@ Rational & Rational:: operator OP##=(const Natural  & lhs) Y_APQ_BINARY_BODY(OP)
         private:
             void zDenom() const;
             void update();
+
+            static SignType Cmp(const Rational &lhs, const Rational &rhs);
         };
 
 
