@@ -113,6 +113,18 @@ namespace Yttrium
             return Integer::Cmp(L,rhs.numer);
         }
 
+        SignType Rational::Cmp(const Rational &lhs, const Integer &rhs)
+        {
+            const Integer R = lhs.denom * rhs;
+            return Integer::Cmp(lhs.numer,R);
+        }
+
+        SignType Rational:: Cmp(const Integer &lhs, const Rational &rhs)
+        {
+            const Integer L = lhs * rhs.denom;
+            return Integer::Cmp(L,rhs.numer);
+        }
+
     }
 
 }
