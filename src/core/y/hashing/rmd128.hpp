@@ -1,12 +1,12 @@
 //! \file
-#ifndef YACK_HASHING_RMD128_INCLUDED
-#define YACK_HASHING_RMD128_INCLUDED 1
+#ifndef Y_HASHING_RMD128_INCLUDED
+#define Y_HASHING_RMD128_INCLUDED 1
 
 
-#include "yack/hashing/function.hpp"
-#include "yack/hashing/rmd.hpp"
+#include "y/hashing/function.hpp"
+#include "y/hashing/rmd.hpp"
 
-namespace yack
+namespace Yttrium
 {
     namespace hashing
     {

@@ -1,22 +1,22 @@
 //! \file
-#ifndef YACK_HASHING_RMD_INCLUDED
-#define YACK_HASHING_RMD_INCLUDED 1
+#ifndef Y_HASHING_RMD_INCLUDED
+#define Y_HASHING_RMD_INCLUDED 1
 
 
-#include "yack/setup.hpp"
+#include "y/config/starting.hpp"
 
-namespace yack
+namespace Yttrium
 {
     
-    namespace hashing
+    namespace Hashing
     {
      
         //! input class for rmd
-        class rmd
+        class RMD
         {
         public:
-            rmd() noexcept;  //!< setup
-            ~rmd() noexcept; //!< destructor
+            RMD() noexcept;  //!< setup
+            ~RMD() noexcept; //!< destructor
             
           
             //! reset all fields
@@ -45,7 +45,7 @@ namespace yack
             size_t   nb;
             uint32_t X[16];  //!< words store
             uint8_t  B[4];   //!< bytes store
-            YACK_DISABLE_COPY_AND_ASSIGN(rmd);
+            Y_DISABLE_COPY_AND_ASSIGN(RMD);
             
         };
         
