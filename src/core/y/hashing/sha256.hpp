@@ -1,12 +1,12 @@
 //! \file
-#ifndef YACK_HASHING_SHA256_INCLUDED
-#define YACK_HASHING_SHA256_INCLUDED 1
+#ifndef Y_HASHING_SHA256_INCLUDED
+#define Y_HASHING_SHA256_INCLUDED 1
 
-#include "yack/hashing/function.hpp"
+#include "y/hashing/function.hpp"
 
-namespace yack
+namespace Yttrium
 {
-	namespace hashing
+	namespace Hashing
 	{
         //! context for sha256/224
 		typedef struct 
@@ -19,29 +19,29 @@ namespace yack
 		
 
         //! SHA-256
-		class sha256 : public function
+		class SHA256 : public Function
 		{
 		public:
-			YACK_HASHING_FUNCTION_DECL(sha256,32,64); //!< specs
+			Y_HASHING_FUNCTION_DECL(SHA256,32,64); //!< specs
 
-            static void tests(); //!< tests
+            static void Tests(); //!< tests
             
 		private:
 			SHA256_CTX ctx;
-			YACK_DISABLE_COPY_AND_ASSIGN(sha256);
+			Y_DISABLE_COPY_AND_ASSIGN(SHA256);
 		};
 
         //! SHA-224
-		class sha224 : public function
+		class SHA224 : public Function
 		{
 		public:
-			YACK_HASHING_FUNCTION_DECL(sha224,28,64); //!< specs
+			Y_HASHING_FUNCTION_DECL(SHA224,28,64); //!< specs
 
-            static void tests(); //!< tests
+            static void Tests(); //!< tests
 
 		private:
 			SHA256_CTX ctx;
-			YACK_DISABLE_COPY_AND_ASSIGN(sha224);
+			Y_DISABLE_COPY_AND_ASSIGN(SHA224);
 		};
 		
 		

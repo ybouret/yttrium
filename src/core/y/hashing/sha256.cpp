@@ -1,11 +1,11 @@
-#include "yack/hashing/sha256.hpp"
+#include "y/hashing/sha256.hpp"
 
 #include <cstring>
 
-namespace yack
+namespace Yttrium
 {
 	
-	namespace hashing
+	namespace Hashing
 	{
 		
 #define GET_ULONG_BE(n,b,i)                             \
@@ -293,25 +293,25 @@ d += temp1; h = temp1 + temp2;              \
 		}
 		
 		
-		sha256::sha256() noexcept : function(__length, __window), ctx()
+		SHA256::SHA256() noexcept : Function(__length, __window), ctx()
 		{
 		}
 		
-		const char sha256:: clid[] ="sha256";
+		const char SHA256:: clid[] ="sha256";
 
 		
-		void sha256:: set() noexcept
+		void SHA256:: set() noexcept
 		{
 			sha256_set( &ctx );
 		}
 		
-		void sha256:: run( const void *buffer, size_t buflen ) noexcept
+		void SHA256:: run( const void *buffer, size_t buflen ) noexcept
 		{
 			assert( !(buflen>0&&NULL==buffer) );
 			sha256_run( &ctx, (const uint8_t *)buffer, buflen );
 		}
 		
-		void sha256::get(void *output, size_t outlen ) noexcept
+		void SHA256::get(void *output, size_t outlen ) noexcept
 		{
 			assert( !(output==NULL&&outlen>0) );
 			uint8_t  digest[32];
@@ -319,7 +319,7 @@ d += temp1; h = temp1 + temp2;              \
 			fill( output, outlen, digest, sizeof(digest) );
 		}
 		
-		sha256:: ~sha256() noexcept
+        SHA256:: ~SHA256() noexcept
 		{
 			memset( &ctx, 0 , sizeof(ctx) );
 		}
@@ -328,26 +328,26 @@ d += temp1; h = temp1 + temp2;              \
 		
 		////////////////////////////////////////////////////////////////////////
 		
-		sha224::sha224() noexcept : function(__length, __window), ctx()
+        SHA224::SHA224() noexcept : Function(__length, __window), ctx()
 		{
 		}
 		
-		const char sha224:: clid[] = "sha224";
+		const char SHA224:: clid[] = "sha224";
         
 		
 		
-		void sha224:: set() noexcept
+		void SHA224:: set() noexcept
 		{
 			sha224_set( &ctx );
 		}
 		
-		void sha224:: run( const void *buffer, size_t buflen ) noexcept
+		void SHA224:: run( const void *buffer, size_t buflen ) noexcept
 		{
 			assert( !(buflen>0&&NULL==buffer) );
 			sha256_run( &ctx, (const uint8_t *)buffer, buflen );
 		}
 		
-		void sha224::get(void *output, size_t outlen ) noexcept
+		void SHA224::get(void *output, size_t outlen ) noexcept
 		{
 			assert( !(output==NULL&&outlen>0) );
 			uint8_t  digest[28];
@@ -355,7 +355,7 @@ d += temp1; h = temp1 + temp2;              \
 			fill( output, outlen, digest, sizeof(digest) );
 		}
 		
-		sha224:: ~sha224() noexcept
+        SHA224:: ~SHA224() noexcept
 		{
 			memset( &ctx, 0 , sizeof(ctx) );
 		}
@@ -364,26 +364,26 @@ d += temp1; h = temp1 + temp2;              \
 	}
 	
 }
-#include "yack/hashing/testing.hpp"
+#include "y/hashing/testing.hpp"
 
 
-namespace yack
+namespace Yttrium
 {
 
-    namespace hashing
+    namespace Hashing
     {
-        static const testing sha256_vec[] =
+        static const Testing sha256_vec[] =
         {
             { "", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" },
             { "The quick brown fox jumps over the lazy dog", "d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592" }
         };
 
-        void sha256:: tests()
+        void SHA256:: Tests()
         {
-            YACK_HASHING_TEST(sha256,sha256_vec);
+            Y_HASHING_TEST(SHA256,sha256_vec);
         }
 
-        static const testing sha224_vec[] =
+        static const Testing sha224_vec[] =
         {
             { "", "d14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f" },
             { "The quick brown fox jumps over the lazy dog",
@@ -392,9 +392,9 @@ namespace yack
                 "619cba8e8e05826e9b8c519c0a5c68f4fb653e8a3d8aa04bb2c8cd4c"}
         };
 
-        void sha224:: tests()
+        void SHA224:: Tests()
         {
-            YACK_HASHING_TEST(sha224,sha224_vec);
+            Y_HASHING_TEST(SHA224,sha224_vec);
         }
 
 
