@@ -275,7 +275,7 @@ namespace Yttrium
             void prune(SuffixNode *node) noexcept
             {
                 assert(0!=node);
-                if(0!=node->from && node->chld.size<=0)
+                if(0==node->data && 0!=node->from && node->chld.size<=0)
                 {
                     destroy(node->from->chld.pop(node));
                     prune(node->from);
@@ -364,7 +364,7 @@ namespace Yttrium
             assert(owns(nodeAddr));
             SuffixNode *node = static_cast<SuffixNode *>( nodeAddr );
             node->data = 0;
-            //code->prune(node);
+            code->prune(node);
         }
 
         void SuffixTree:: free() noexcept
