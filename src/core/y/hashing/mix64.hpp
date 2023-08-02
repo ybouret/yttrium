@@ -6,6 +6,7 @@
 
 #include "y/config/starting.hpp"
 #include "y/check/static.hpp"
+#include "y/type/identifiable.hpp"
 
 namespace Yttrium
 {
@@ -37,7 +38,7 @@ namespace Yttrium
             // Interface
             //
             //__________________________________________________________________
-            virtual const char * protocol()                         const noexcept = 0; //!< identifier
+            virtual const char * callSign()                         const noexcept = 0; //!< identifier
             virtual void         operator()(uint32_t &, uint32_t &) const noexcept = 0; //!< mix left/right words
 
             //__________________________________________________________________

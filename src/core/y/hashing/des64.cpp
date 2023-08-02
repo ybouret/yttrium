@@ -12,7 +12,7 @@ namespace Yttrium
         DES64::  DES64() noexcept {}
         DES64:: ~DES64() noexcept {}
 
-        const char * DES64:: protocol() const noexcept { return CallSign; }
+        const char * DES64:: callSign() const noexcept { return CallSign; }
 
 #define Y_DES64(i) \
 {\
@@ -58,7 +58,7 @@ lword = it;\
                 {0xD7F376F0, 0x59BA89EB}
             };
 
-            printf("Testing %s\n", protocol());
+            printf("Testing %s\n", callSign());
             for(size_t i=0;i<4;++i)
             {
                 uint32_t lo = input[i][0];

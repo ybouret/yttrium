@@ -23,7 +23,7 @@ namespace Yttrium
         IBJ64::  IBJ64() noexcept {}
         IBJ64:: ~IBJ64() noexcept {}
 
-        const char * IBJ64:: protocol() const noexcept { return CallSign; }
+        const char * IBJ64:: callSign() const noexcept { return CallSign; }
 
         void    IBJ64::operator()(uint32_t &lword, uint32_t &rword) const noexcept
         {

@@ -44,7 +44,7 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            virtual const char * protocol()                         const noexcept; //!< CallSign
+            virtual const char * callSign()                         const noexcept; //!< CallSign
             virtual void         operator()(uint32_t &, uint32_t &) const noexcept; //!< compute
             bool                 test()                             const noexcept; //!< test challenge
             
