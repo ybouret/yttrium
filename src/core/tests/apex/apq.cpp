@@ -17,7 +17,7 @@ Y_UTEST(apex_q)
         const apq     q(2);
         const int64_t i = 2;
         const apz     z = 2;
-        const apz     n = 2;
+        const apn     n = 2;
         Y_CHECK(q==q);
         Y_CHECK(q==i);
         Y_CHECK(i==q);
@@ -26,6 +26,23 @@ Y_UTEST(apex_q)
         Y_CHECK(q==n);
         Y_CHECK(n==q);
     }
+
+    // differece
+    {
+        const apq     q(-2);
+        const int64_t i = -2;
+        const apz     z = -2;
+        const apn     n =  1;
+        Y_CHECK(q!=q);
+        Y_CHECK(q!=i);
+        Y_CHECK(i!=q);
+        Y_CHECK(q!=z);
+        Y_CHECK(z!=q);
+        Y_CHECK(q!=n);
+        Y_CHECK(n!=q);
+    }
+
+
 
     return 0;
     
