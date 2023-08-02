@@ -61,7 +61,10 @@ Y_UTEST(associative_suffix_set)
                 keys << line;
             }
         }
-        std::cerr << "found #key=" << keys.size() << std::endl;
+        std::cerr << "found #key=" << keys.size() << "/" << mySet.size() << std::endl;
+        SuffixSet<String,Dummy> myCpy(mySet);
+        std::cerr << "copy  #key=" << myCpy.size() << std::endl;
+
     }
     
 

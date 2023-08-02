@@ -74,6 +74,9 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(SuffixTree);
             class Code;
             Code *code;
+
+        public:
+            void unexpectedCopyException() const; //!< shouldn't happen un duplicate
         };
 
     }

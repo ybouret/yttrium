@@ -13,32 +13,61 @@ namespace Yttrium
 
     namespace Core
     {
+        //______________________________________________________________________
+        //
+        //
+        //! base class for SuffixMap
+        //
+        //______________________________________________________________________
         class SuffixMap
         {
         public:
-            static const char * const CallSign;
-
-            explicit SuffixMap() noexcept;
-            virtual ~SuffixMap() noexcept;
-
-
+            static const char * const CallSign; //!< "SuffixMap
+            explicit SuffixMap() noexcept;      //!< setup
+            virtual ~SuffixMap() noexcept;      //!< cleanup
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SuffixMap);
         };
     }
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Map of key/objects
+    //
+    //
+    //__________________________________________________________________________
     template <typename KEY, typename T>
     class SuffixMap :
     public SuffixAlloy<KEY,T, SuffixMapNode<KEY,T>, Core::SuffixMap>
     {
     public:
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        typedef SuffixAlloy<KEY,T, SuffixMapNode<KEY,T>, Core::SuffixMap> BaseType; //!< alias
 
-        inline explicit SuffixMap() noexcept {}
-        inline virtual ~SuffixMap() noexcept {}
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        inline explicit SuffixMap() noexcept : BaseType() {} //!< setup
+        inline virtual ~SuffixMap() noexcept {}              //!< cleanup
 
+        //! copy
+        inline SuffixMap(const SuffixMap &other) :
+        Identifiable(), Collection(),
+        BaseType(other)         {}
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(SuffixMap);
+        Y_DISABLE_ASSIGN(SuffixMap);
     };
 
 }

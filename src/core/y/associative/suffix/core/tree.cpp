@@ -3,8 +3,7 @@
 #include "y/memory/blanks.hpp"
 #include "y/object.hpp"
 #include "y/type/destruct.hpp"
-#include "y/exception.hpp"
-#include "y/text/hexadecimal.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -385,6 +384,11 @@ namespace Yttrium
         {
             assert(0!=code);
             code->release();
+        }
+
+        void SuffixTree:: unexpectedCopyException() const
+        {
+            throw Specific::Exception("SuffixTree(copy)","unexpected insertion failure!");
         }
 
     }

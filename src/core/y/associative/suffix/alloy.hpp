@@ -11,35 +11,75 @@
 namespace Yttrium
 {
 
-
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Alloy from a SuffixTree
+    //
+    //
+    //__________________________________________________________________________
     template <typename KEY, typename T, typename NODE, typename BASE>
     class SuffixAlloy :
     public Associative<KEY,T>,
     public SuffixTree<KEY,T,NODE>, public BASE
     {
     public:
-        typedef SuffixTree<KEY,T,NODE> TreeType;
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        typedef SuffixTree<KEY,T,NODE> TreeType; //!< alias
         using TreeType::list;
         using TreeType::pool;
         using TreeType::tree;
 
-        virtual ~SuffixAlloy() noexcept {}
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        inline virtual const char * callSign()  const noexcept { return BASE::CallSign; }      //!< callSign
+        inline virtual size_t       size()      const noexcept { return list.size; }           //!< list size
+        inline virtual size_t       capacity()  const noexcept { return list.size+pool.size; } //!< capacity
+        inline virtual size_t       available() const noexcept { return pool.size; }           //!< available
+        inline virtual void         free()            noexcept { this->softReset(); }          //!< free content, keep memory
+        inline virtual void         release()         noexcept { this->hardReset(); }          //!< release all possible memory
+        inline virtual void         reserve(size_t n) noexcept { pool.reserve(n); }            //!< reserve blocks
 
-        inline virtual const char * callSign()  const noexcept { return BASE::CallSign;  }
-        inline virtual size_t       size()      const noexcept { return list.size; }
-        inline virtual size_t       capacity()  const noexcept { return list.size+pool.size; }
-        inline virtual size_t       available() const noexcept { return pool.size; }
-        inline virtual void         free()            noexcept { this->softReset(); }
-        inline virtual void         release()         noexcept { this->hardReset(); }
-        inline virtual void         reserve(size_t n) noexcept { pool.reserve(n);   }
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
 
+        //! cleanup
+        inline virtual ~SuffixAlloy() noexcept {}
 
     protected:
-        explicit SuffixAlloy() noexcept :
+
+        //! setup empty
+        inline explicit SuffixAlloy() noexcept :
         Associative<KEY,T>(),
-        TreeType()
+        TreeType(),
+        BASE()
         {
         }
+
+        //! copy
+        inline SuffixAlloy(const SuffixAlloy &other) noexcept :
+        Identifiable(), Collection(),
+        Associative<KEY,T>(),
+        TreeType(other),
+        BASE()
+        {
+        }
+
+
 
 
     private:

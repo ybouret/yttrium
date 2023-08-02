@@ -10,42 +10,84 @@
 
 namespace Yttrium
 {
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Generic SuffixTree for Map/Set
+    //
+    //
+    //__________________________________________________________________________
     template <class KEY, class T, class NODE>
     class SuffixTree
     {
     public:
-        Y_ARGS_DECL(T,Type);
-        Y_ARGS_DECL(KEY,Key);
-        typedef NODE                   NodeType;
-        typedef ListOf<NODE>           ListType;
-        typedef SuffixPool<NODE>       PoolType;
-        typedef Memory::ReadOnlyBuffer PathType;
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        Y_ARGS_DECL(T,Type);                     //!< aliases
+        Y_ARGS_DECL(KEY,Key);                    //!< aliases
+        typedef NODE                   NodeType; //!< aliases
+        typedef ListOf<NODE>           ListType; //!< aliases
+        typedef SuffixPool<NODE>       PoolType; //!< aliases
+        typedef Memory::ReadOnlyBuffer PathType; //!< aliases
 
-        explicit SuffixTree() : list(), pool(), tree() {}
-        virtual ~SuffixTree() noexcept { hardReset(); }
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        inline explicit SuffixTree() : list(), pool(), tree() {} //!< setup empty
+        inline virtual ~SuffixTree() noexcept { hardReset(); }   //!< cleanup
+        inline          SuffixTree(const SuffixTree &other) :
+        list(), pool(), tree() { duplicate_(other); }            //!< copy
 
-        bool insert(ParamKey key, ParamType t)
-        {
-            return insert_( pool.template create<KEY,T>(key,t) );
-        }
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
 
+        //______________________________________________________________________
+        //
+        //! insertion for Map
+        //______________________________________________________________________
+        inline bool insert(ParamKey key, ParamType t)
+        { return insert_( pool.template create<KEY,T>(key,t) ); }
+
+        //______________________________________________________________________
+        //
+        //! insertion for Setp
+        //______________________________________________________________________
         bool insert(ParamType t)
-        {
-            return insert_( pool.template create<T>(t) );
-        }
+        { return insert_( pool.template create<T>(t) ); }
 
 
     protected:
-        ListType         list;
-        PoolType         pool;
-        Core::SuffixTree tree;
+        ListType         list; //!< managed list of Nodes
+        PoolType         pool; //!< memory pool
+        Core::SuffixTree tree; //!< internal tree
 
+        //______________________________________________________________________
+        //
+        //! release all possible memory
+        //______________________________________________________________________
         inline void hardReset() noexcept {
-            tree.free();
+            tree.release();
             while(list.size>0)
                 pool.vaporize(list.popTail());
+            pool.release();
         }
 
+        //______________________________________________________________________
+        //
+        //! reset content, keep memory
+        //______________________________________________________________________
         inline void softReset() noexcept {
             tree.free();
             while(list.size>0)
@@ -54,8 +96,6 @@ namespace Yttrium
 
     private:
         Y_DISABLE_ASSIGN(SuffixTree);
-
-
 
         inline bool insert_(NODE *node)
         {
@@ -71,6 +111,15 @@ namespace Yttrium
                 return true;
             }
             catch(...) { pool.destruct(node); throw; }
+        }
+
+        inline void duplicate_(const SuffixTree &other)
+        {
+            for(const NodeType *node=other.list.head;node;node=node->next)
+            {
+                if(!insert_( pool.duplicate(node) ) )
+                    tree.unexpectedCopyException();
+            }
         }
 
     };

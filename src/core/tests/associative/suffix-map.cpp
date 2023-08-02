@@ -28,8 +28,9 @@ Y_UTEST(associative_suffix_map)
                 keys << line;
             }
         }
-        std::cerr << "found #key=" << keys.size() << std::endl;
-    }
+        std::cerr << "found #key=" << keys.size() << "/" << myMap.size() << std::endl;
+        SuffixMap<String,int> myCpy(myMap);
+        std::cerr << "copy  #key=" << myCpy.size() << std::endl;    }
 
 
 }
