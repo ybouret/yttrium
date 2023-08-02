@@ -164,6 +164,9 @@ add_test(counting:combination test-core counting_combination)
 
 #associatvie
 add_test(associative:suffix-tree test-core associative_suffix_tree)
+add_test(associative:suffix-map  test-core associative_suffix_map)
+add_test(associative:suffix-set  test-core associative_suffix_set)
+
 
 #mkl
 add_test(mkl:complex test-core mkl_complex)

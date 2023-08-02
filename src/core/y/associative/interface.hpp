@@ -19,7 +19,10 @@ namespace Yttrium
     template <typename KEY, typename T>
     class Associative
     {
+    protected:
+        inline explicit Associative() noexcept {}
     public:
+        inline virtual ~Associative() noexcept;
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Associative);

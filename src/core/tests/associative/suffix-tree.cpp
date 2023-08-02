@@ -13,7 +13,7 @@ Y_UTEST(associative_suffix_tree)
     Vector<void *> addr;
 
     {
-        SuffixTree tree;
+        Core::SuffixTree tree;
         addr << tree.insert("hello",5, &data);
         addr << tree.insert("hello",1, &data);
         addr << tree.insert("hello",2, &data);
@@ -25,7 +25,7 @@ Y_UTEST(associative_suffix_tree)
     }
 
     {
-        SuffixTree tree;
+        Core::SuffixTree tree;
         if(argc>1)
         {
             std::cerr << "loading " << argv[1] << std::endl;

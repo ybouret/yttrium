@@ -14,7 +14,7 @@ typedef const Mutable##TYPE                 Const##TYPE
 
 //! declare internal types and parameter type
 #define Y_ARGS_DECL(T,TYPE)                           \
-Y_ARGS_EXPOSE(T,Type);                                \
+Y_ARGS_EXPOSE(T,TYPE);                                \
 typedef typename TypeTraits<T>::ParamType Param##TYPE
 
 #endif
