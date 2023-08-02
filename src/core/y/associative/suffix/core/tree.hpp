@@ -1,8 +1,8 @@
 //! \file
 
 
-#ifndef Y_Associative_Suffix_Tree_Included
-#define Y_Associative_Suffix_Tree_Included 1
+#ifndef Y_Associative_Suffix_Core_Tree_Included
+#define Y_Associative_Suffix_Core_Tree_Included 1
 
 #include "y/string.hpp"
 
@@ -54,8 +54,8 @@ namespace Yttrium
             //! reconstruct path as a String
             Yttrium::String pathOf(const void *nodeAddr) const;
 
-            //! reassign data!=0
-            void        assign(void *nodeAddr, void *data) noexcept;
+            //! check ownership
+            bool owns(const void *nodeAddr) const noexcept;
 
             //! remove data
             void        loosen(void *nodeAddr) noexcept;
@@ -63,6 +63,9 @@ namespace Yttrium
             //! search for data within tree
             const void *search(const void *path, const size_t size) const noexcept;
 
+            void free()    noexcept; //!< empty structure
+            void trim()    noexcept; //!< release unused memory
+            void release() noexcept; //!< emptyy and keep only root
 
             //! search wrapper
             const void  *search(const Memory::ReadOnlyBuffer & path) const noexcept;

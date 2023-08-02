@@ -97,6 +97,16 @@ namespace Yttrium
             store( static_cast<BlankNode *>( OutOfReach::Zero(blockAddr,sizeof(BlankNode))) );
         }
 
+        void Blanks:: zdiscard(void *blockAddr) noexcept
+        {
+            assert(0!=blockAddr);
+            assert(allocated>0);
+            --Coerce(allocated);
+            Y_GIANT_LOCK();
+            coreArena.releaseBlock(blockAddr);
+        }
+
+
         size_t Blanks:: blockSize() const noexcept
         {
             return coreArena.blockSize;
@@ -120,9 +130,13 @@ namespace Yttrium
             ListOf<BlankNode> data;
             Rework::PoolToList(data,*this);               // get data
             MergeSort::ByIncreasingAddress(data);         // sort by increasing address
-            while(data.size>maxCount)
-                coreArena.releaseBlock( data.popTail() ); // return highest
-            while(data.size) store( data.popHead() );     // will use highest firts
+
+            {
+                Y_GIANT_LOCK();
+                while(data.size>maxCount)
+                    coreArena.releaseBlock( data.popTail() ); // return highest
+            }
+            while(data.size) store( data.popHead() );     // will use highest first
         }
 
 

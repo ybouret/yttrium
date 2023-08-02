@@ -81,7 +81,7 @@ namespace Yttrium
             virtual ~Code() noexcept
             {
                 assert(0!=root);
-                destroy(root);
+                expunge(root);
                 root = 0;
             }
 
@@ -95,7 +95,7 @@ namespace Yttrium
 
             //__________________________________________________________________
             //
-            //! recursive destruction
+            //! recursive destruct, keep memory in pool
             //__________________________________________________________________
             inline void destroy(SuffixNode *node) noexcept
             {
@@ -106,6 +106,48 @@ namespace Yttrium
                 }
                 pool.zrelease( Destructed(node) );
             }
+
+            //__________________________________________________________________
+            //
+            //! reset to empty, keep memory in pool
+            //__________________________________________________________________
+            inline void free() noexcept
+            {
+                assert(0!=root);
+                root->data = 0;
+                while(root->chld.size)
+                {
+                    destroy(root->chld.popTail());
+                }
+            }
+
+            //__________________________________________________________________
+            //
+            //! recursive expunge
+            //__________________________________________________________________
+            inline void expunge(SuffixNode *node) noexcept
+            {
+                assert(0!=node);
+                while(node->chld.size>0)
+                {
+                    expunge(node->chld.popTail());
+                }
+                pool.zdiscard( Destructed(node) );
+            }
+
+            //__________________________________________________________________
+            //
+            //! reset to empty, discard memory
+            //__________________________________________________________________
+            inline void release() noexcept
+            {
+                root->data = 0;
+                while(root->chld.size)
+                {
+                    expunge(root->chld.popTail());
+                }
+            }
+
 
             //__________________________________________________________________
             //
@@ -291,6 +333,18 @@ namespace Yttrium
             return path;
         }
 
+        bool SuffixTree:: owns(const void *nodeAddr) const noexcept
+        {
+            assert(0!=nodeAddr);
+            const SuffixNode *node = static_cast<const SuffixNode *>( nodeAddr );
+            while(0!=node->from)
+            {
+                node = node->from;
+            }
+            assert(0!=code);
+            return node == code->root;
+        }
+
         const void  * SuffixTree:: search(const void *path, const size_t size) const noexcept
         {
             assert(Good(path,size));
@@ -304,24 +358,34 @@ namespace Yttrium
 
         }
 
-        void SuffixTree:: assign(void *nodeAddr, void *data) noexcept
-        {
-            assert(0!=nodeAddr);
-            assert(0!=data);
-            SuffixNode *node = static_cast<SuffixNode *>( nodeAddr );
-            node->data = data;
-        }
-
         void SuffixTree:: loosen(void *nodeAddr) noexcept
         {
             assert(0!=nodeAddr);
             assert(0!=code);
+            assert(owns(nodeAddr));
             SuffixNode *node = static_cast<SuffixNode *>( nodeAddr );
             node->data = 0;
             code->prune(node);
         }
 
+        void SuffixTree:: free() noexcept
+        {
+            assert(0!=code);
+            code->free();
+        }
 
+        void SuffixTree:: trim() noexcept
+        {
+            assert(0!=code);
+            code->pool.release();
+            assert(0==code->pool.size);
+        }
+
+        void SuffixTree:: release() noexcept
+        {
+            assert(0!=code);
+            code->release();
+        }
 
     }
 

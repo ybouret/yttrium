@@ -5,6 +5,7 @@
 #define Y_Associative_Suffix_Pool_Included 1
 
 #include "y/memory/blanks.hpp"
+#include "y/type/traits.hpp"
 
 namespace Yttrium
 {
@@ -15,6 +16,7 @@ namespace Yttrium
 
         using Blanks<NODE>::zacquire;
         using Blanks<NODE>::zrelease;
+        using Blanks<NODE>::zdiscard;
 
         inline explicit SuffixPool() noexcept : Blanks<NODE>(0) {}
         inline virtual ~SuffixPool() noexcept {}
@@ -43,8 +45,15 @@ namespace Yttrium
             catch(...) { zrelease(node); throw; }
         }
 
+        //! destruct and store block
         inline void destruct( NODE *node ) noexcept
         { assert(0!=node); zrelease( Destructed(node) ); }
+
+        //! destruct and release block
+        inline void vaporize( NODE *node ) noexcept
+        { assert(0!=node); zdiscard( Destructed(node) ); }
+
+
 
 
     private:

@@ -66,7 +66,8 @@ namespace Yttrium
         public:
             virtual void release()                 noexcept; //!< [Releasable] empty
             virtual void gc(const size_t maxCount) noexcept; //!< [Cache] keep no more than maxCount blocks
-            void         zrelease(void *)          noexcept; //!< release a previously acquired
+            void         zrelease(void *)          noexcept; //!< store a previously acquired
+            void         zdiscard(void *)          noexcept; //!< directly sent to arena
             size_t       blockSize()         const noexcept; //!< coreArena.blockSize
             void         reserve(size_t n);                  //!< populate cache with more blocks
 
