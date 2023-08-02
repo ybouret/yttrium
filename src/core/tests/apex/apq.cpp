@@ -53,6 +53,23 @@ Y_UTEST(apex_q)
         Y_CHECK(!(n!=q));
     }
 
+    // comparison
+    {
+        const apq q1_2(1,2);
+        const apq q4_3(4,3);
+        const int64_t i1(1);
+        Y_CHECK(q1_2<q4_3);
+        Y_CHECK(q1_2<=q4_3);
+        Y_CHECK(q4_3>q1_2);
+        Y_CHECK(q4_3>=q1_2);
+        Y_CHECK(q1_2<i1);
+        Y_CHECK(q1_2<=i1);
+        Y_CHECK(i1<q4_3);
+        Y_CHECK(i1<=q4_3);
+
+
+    }
+
 
 
     return 0;
