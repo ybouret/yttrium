@@ -51,7 +51,6 @@ Y_UTEST(apex_q)
         Y_CHECK(!(z!=q));
         Y_CHECK(!(q!=n));
         Y_CHECK(!(n!=q));
-
     }
 
 

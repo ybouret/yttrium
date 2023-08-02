@@ -56,10 +56,14 @@ namespace Yttrium
             void AppendTo(SEQUENCE        &seq,
                           const String<T> &src,
                           const T * const  sep,
-                          const size_t     num )
+                          const size_t     num,
+                          const int        imax=-1)
             {
                 Tokenizer _(src);
+                int       i=0;
                 while( _.next(sep,num) ) {
+                    ++i;
+                    if(imax>=0 && i>imax) return;
                     const String<T> s(_.token(),_.units());
                     seq << s;
                 }
