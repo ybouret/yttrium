@@ -12,6 +12,23 @@ using namespace Yttrium;
 
 Y_UTEST(apex_q)
 {
+    // equality
+    {
+        const apq     q(2);
+        const int64_t i = 2;
+        const apz     z = 2;
+        const apz     n = 2;
+        Y_CHECK(q==q);
+        Y_CHECK(q==i);
+        Y_CHECK(i==q);
+        Y_CHECK(q==z);
+        Y_CHECK(z==q);
+        Y_CHECK(q==n);
+        Y_CHECK(n==q);
+    }
+
+    return 0;
+    
     { apq q;      std::cerr << q << std::endl; }
     { apq q(5,2); std::cerr << q << std::endl; }
     { apq q(-6,14); std::cerr << q << std::endl; }
