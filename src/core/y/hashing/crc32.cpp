@@ -1,22 +1,22 @@
-#include "yack/hashing/crc32.hpp"
+#include "y/hashing/crc32.hpp"
  
-namespace yack
+namespace Yttrium
 {
-	namespace hashing
+	namespace Hashing
 	{
         
-        const char crc32:: clid[] = "crc32";
+        const char CRC32:: clid[] = "crc32";
 
-		crc32:: crc32() noexcept : function( __length , __window ), hash(0)
+        CRC32:: CRC32() noexcept : Function( __length , __window ), hash(0)
 		{
 		}
 		
-		crc32:: ~crc32() noexcept
+        CRC32:: ~CRC32() noexcept
 		{
 			hash = 0;
 		}
 		
-		void crc32:: set() noexcept
+		void CRC32:: set() noexcept
 		{
 			hash = 0;
 		}
@@ -92,7 +92,7 @@ namespace yack
         
 
         
-		void crc32:: run( const void *buffer, size_t buflen ) noexcept
+		void CRC32:: run( const void *buffer, size_t buflen ) noexcept
 		{
 			assert( !(buffer==NULL&&buflen>0) );
 			
@@ -101,11 +101,10 @@ namespace yack
             {
                 hash = ( hash >> 8 ) ^ crc32tab[ ( *(p++) ) ^ ( hash & 0x000000FF ) ];
             }
-            //Y_LOOP(buflen, hash = ( hash >> 8 ) ^ crc32tab[ ( *(p++) ) ^ ( hash & 0x000000FF ) ] );
-		}
+        }
 		
 		
-		void crc32:: get( void *output, size_t outlen ) noexcept
+		void CRC32:: get( void *output, size_t outlen ) noexcept
 		{
 			fill( output, outlen, &hash, sizeof(hash) );
 		}

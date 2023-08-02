@@ -1,24 +1,24 @@
 //! \file
-#ifndef YACK_HASHING_CRC32_INCLUDED
-#define YACK_HASHING_CRC32_INCLUDED 1
+#ifndef Y_HASHING_CRC32_INCLUDED
+#define Y_HASHING_CRC32_INCLUDED 1
 
-#include "yack/hashing/function.hpp"
+#include "y/hashing/function.hpp"
 
-namespace yack
+namespace Yttrium
 {
-	namespace hashing
+	namespace Hashing
 	{
         //! crc32
-		class crc32 : public function
+		class CRC32 : public Function
 		{
 		public:
             //! prototype
-			YACK_HASHING_FUNCTION_DECL(crc32,4,4);
+			Y_HASHING_FUNCTION_DECL(CRC32,4,4);
             
             
 		private:
 			uint32_t    hash;
-			YACK_DISABLE_COPY_AND_ASSIGN(crc32);
+			Y_DISABLE_COPY_AND_ASSIGN(CRC32);
 		};
 		
 	}
