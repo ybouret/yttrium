@@ -21,15 +21,37 @@ namespace Yttrium
     class Glossary : public Associative<KEY,T>
     {
     public:
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
         Y_ARGS_DECL(T,Type);  //!< aliases
         Y_ARGS_DECL(KEY,Key); //!< aliases
+
+        
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
     protected:
         inline explicit Glossary() noexcept {} //!< setup
 
     public:
         inline virtual ~Glossary() noexcept {} //!< cleanup
 
-        virtual bool insert(ParamKey,ParamType) = 0;
+
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+
+        virtual bool insert(ParamKey,ParamType) = 0; //!< insert key/value pair
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Glossary);

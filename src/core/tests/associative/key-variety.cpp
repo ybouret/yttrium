@@ -41,5 +41,8 @@ Y_UTEST(associative_key_variety)
     Y_KV(const char *);
     Y_KV(const char []);
 
+    
+
+
 }
 Y_UDONE()

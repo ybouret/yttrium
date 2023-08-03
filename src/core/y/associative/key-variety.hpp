@@ -56,7 +56,7 @@ namespace Yttrium
             typedef typename TypeTraits<KEY>::MutableType MutableKey; //!< alias
             static const bool _IsMemoryBuffer = Y_Is_SuperSubClass(Memory::ReadOnlyBuffer,MutableKey); //!< inheritance
             static const bool _IsCharPointer_ = IsSameType<MutableKey,char *>::Value;                  //!< partial test
-            static const bool _IsCharTableau_ = IsSameType<MutableKey,char []>::Value;                 //!< parital test
+            static const bool _IsCharTableau_ = TypeTraits<MutableKey>::template IsArrayOf<char>::Value; //!< partial test
             static const bool _IsLegacyString = _IsCharPointer_ || _IsCharTableau_;                    //!< test for C-string
             static const bool _IsIntegralType = TypeTraits<MutableKey>::IsPrimitive;                   //!< other acceptabe
 

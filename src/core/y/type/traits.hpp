@@ -142,13 +142,17 @@ namespace Yttrium
         //
         //______________________________________________________________________
     private:
-        template <typename U>           struct ArrayTraits        { enum { Value = false }; };
-        template <typename U>           struct ArrayTraits<U []>  { enum { Value = true  }; };
-        template <typename U, size_t N> struct ArrayTraits<U [N]> { enum { Value = true  }; };
+        template <typename U>           struct ArrayTraits        { enum { Value = false }; typedef NullType Type; };
+        template <typename U>           struct ArrayTraits<U []>  { enum { Value = true  }; typedef U        Type; };
+        template <typename U, size_t N> struct ArrayTraits<U [N]> { enum { Value = true  }; typedef U        Type; };
 
     public:
         enum { IsArray = ArrayTraits<T>::Value };
 
+        //! true if T if ITEM [] of ITEM[N]
+        template <typename ITEM> struct IsArrayOf {
+            enum { Value = IsArray && IsSameType<ITEM, typename ArrayTraits<T>::Type>::Value } ;
+        };
 
     public:
         enum { InStandardIntegers   = ( TL::IndexOf<TL::StandardIntegers,T>::Value >= 0 ) };

@@ -49,9 +49,12 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        typedef SuffixAlloy<KEY,T, SuffixSetNode<KEY,T>, Registry<KEY,T>, Core::SuffixSet> SelfType; //!< alias
-        Y_ARGS_DECL(T,Type);
-        Y_ARGS_DECL(KEY,Key);
+        typedef SuffixSetNode<KEY,T> NodeType;                          //!< alias
+        typedef Registry<KEY,T>      KindType;                          //!< alias
+        typedef Core::SuffixSet      BaseType;                          //!< alias
+        typedef SuffixAlloy<KEY,T,NodeType,KindType,BaseType> SelfType; //!< alias
+        Y_ARGS_DECL(T,Type);                                            //!< aliases
+        Y_ARGS_DECL(KEY,Key);                                           //!< aliases
         
         //______________________________________________________________________
         //

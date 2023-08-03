@@ -20,7 +20,6 @@
 #include "y/hashing/md.hpp"
 #include "y/memory/digest.hpp"
 
-
 #include "y/associative/suffix/map.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/memory/allocator/dyadic.hpp"

@@ -105,6 +105,7 @@ add_test(random:gaussian test-core random_gaussian)
 #hashing
 add_test(hashing:mix64 test-core hashing_mix64)
 add_test(hashing:functions test-core hashing_functions)
+add_test(hashing:to        test-core hashing_to)
 
 #sort
 add_test(sort:heap     test-core sort_heap)

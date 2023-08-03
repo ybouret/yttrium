@@ -83,6 +83,12 @@ namespace Yttrium
             while(n-- > 0 && this->size() > 0) this->popHead();
         }
 
+        //! adjust size with padding if necessary
+        inline void adjust(const size_t n, ParamType pad) {
+            while(this->size()>n) this->popTail();
+            while(this->size()<n) this->pushTail(pad);
+        }
+
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Sequence);

@@ -50,9 +50,12 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        typedef SuffixAlloy<KEY,T, SuffixMapNode<KEY,T>, Glossary<KEY,T>, Core::SuffixMap> SelfType; //!< alias
-        Y_ARGS_DECL(T,Type);
-        Y_ARGS_DECL(KEY,Key);
+        typedef SuffixMapNode<KEY,T> NodeType;                          //!< alias
+        typedef Glossary<KEY,T>      KindType;                          //!< alias
+        typedef Core::SuffixMap      BaseType;                          //!< alias
+        typedef SuffixAlloy<KEY,T,NodeType,KindType,BaseType> SelfType; //!< alias
+        Y_ARGS_DECL(T,Type);                                            //!< aliases
+        Y_ARGS_DECL(KEY,Key);                                           //!< aliases
 
         //______________________________________________________________________
         //
@@ -74,10 +77,10 @@ namespace Yttrium
         // Interface
         //
         //______________________________________________________________________
+
+        //! insert pair into tree
         virtual bool insert(ParamKey k, ParamType t)
-        {
-            return  this->insert_(k,t);
-        }
+        { return  this->insert_(k,t); }
 
     private:
         Y_DISABLE_ASSIGN(SuffixMap);

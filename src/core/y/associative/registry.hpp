@@ -8,19 +8,46 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Associative for keyed object with key() method
+    //
+    //
+    //__________________________________________________________________________
     template <typename KEY, typename T>
     class Registry : public Associative<KEY,T>
     {
     public:
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
         Y_ARGS_DECL(T,Type);  //!< aliases
+
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
     protected:
-        inline explicit Registry() noexcept {}
+        inline explicit Registry() noexcept {} //!< setup
 
     public:
-        inline virtual ~Registry() noexcept {}
+        inline virtual ~Registry() noexcept {} //!< cleanup
 
-
-        virtual bool insert(ParamType) = 0;
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        
+        virtual bool insert(ParamType) = 0; //!< insert keyed object
 
 
     private:
