@@ -28,7 +28,6 @@ namespace Yttrium
             static Digest Of(Function &H, const void * ,const size_t  );   //!< block to digest
             static Digest Of(Function &H, const char *);                   //!< text to digest
             static Digest Of(Function &H, const Memory::ReadOnlyBuffer &); //!< buffer to digest
-
         };
 
 
