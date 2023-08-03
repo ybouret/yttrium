@@ -16,7 +16,7 @@
 #include "y/hashing/sha256.hpp"
 #include "y/hashing/sha512.hpp"
 
-#include "y/hashing/to.hpp"
+#include "y/hashing/to/hash-key.hpp"
 
 #include "y/associative/suffix/map.hpp"
 #include "y/sequence/vector.hpp"
@@ -92,6 +92,7 @@ Y_UTEST(hashing_to)
     {
         Vector<String,Memory::Dyadic> strings(100000,AsCapacity);
         {
+            std::cerr << "loading keys..." << std::endl;
             Libc::InputFile fp(argv[1]);
             String line;
             while(fp.gets(line))
@@ -116,16 +117,17 @@ Y_UTEST(hashing_to)
         for(HFNmap::Iterator it=hmap.begin();it!=hmap.end();++it)
         {
             Hashing::Function &H = **it;
-            std::cerr << "Using " << H.callSign() << std::endl;
+            (std::cerr  << std::setw(12) <<  H.callSign() << '[').flush();
             for(size_t i=1;i<=keys;++i)
             {
                 const uint32_t h32 = hkey[i] = Hashing::To<uint32_t>(H,strings[i]);
                 for(size_t j=1;j<i;++j)
                 {
                     if(h32==hkey[j])
-                        std::cerr << "collision: " << strings[i] << " / " << strings[j] << std::endl;
+                        (std::cerr << '.').flush();
                 }
             }
+            std::cerr << ']' << std::endl;
         }
 
 

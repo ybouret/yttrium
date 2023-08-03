@@ -45,80 +45,8 @@ namespace Yttrium
         { T res(0); H.block(&res,sizeof(T),buf); return res; }
 
 
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! convert a hashing::function to a key hasher
-        //
-        //
-        //______________________________________________________________________
-        template <typename T, typename FUNCTION>
-        class ToKey : public FUNCTION
-        {
-        public:
-            //__________________________________________________________________
-            //
-            //
-            // C++
-            //
-            //__________________________________________________________________
-            inline explicit ToKey() noexcept : FUNCTION() {} //!< setup
-            inline virtual ~ToKey() noexcept {}              //!< cleanup
+      
 
-            //__________________________________________________________________
-            //
-            //
-            // methods
-            //
-            //__________________________________________________________________
-            
-
-            //! type dependent convertion
-            template <typename U> inline
-            T operator()(U &obj) noexcept
-            {
-                static const Int2Type< KeyVariety::Cull<U>::Kind > which = {};
-                return compute<U>(obj,which);
-            }
-            
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(ToKey);
-            template <typename U>
-            inline T compute( const U &buf, const KeyVariety::MemoryBuffer & ) noexcept
-            { return To<T>(*this,buf); }
-
-            template <typename U>
-            inline T compute( const U &buf, const KeyVariety::IntegralType &) noexcept
-            { return To<T>(*this,&buf,sizeof(U)); }
-            
-            template <typename U>
-            inline T compute(const U &buf, const KeyVariety::LegacyString &) noexcept
-            { return To<T>(*this,buf); }
-        };
-
-#if 0
-        //______________________________________________________________________
-        //
-        //
-        //! key hasher prototype
-        //
-        //______________________________________________________________________
-        template <typename FUNCTION>
-        class to_hkey : public to_key<size_t,FUNCTION>
-        {
-        public:
-            //__________________________________________________________________
-            //
-            // C++
-            //__________________________________________________________________
-            inline explicit to_hkey() noexcept : to_key<size_t,FUNCTION>() {} //!< setup
-            inline virtual ~to_hkey() noexcept {}                             //!< cleanup
-
-        private:
-            YACK_DISABLE_COPY_AND_ASSIGN(to_hkey);
-        };
-#endif
 
     }
 

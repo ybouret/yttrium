@@ -30,6 +30,7 @@ data/small/heavy/list
 concurrent
 random
 hashing
+hashing/to
 sort
 utest 
 memory
