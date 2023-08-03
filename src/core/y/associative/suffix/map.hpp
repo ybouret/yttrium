@@ -41,8 +41,7 @@ namespace Yttrium
     //
     //__________________________________________________________________________
     template <typename KEY, typename T>
-    class SuffixMap :
-    public SuffixAlloy<KEY,T, SuffixMapNode<KEY,T>, Glossary<KEY,T>, Core::SuffixMap>
+    class SuffixMap : public SuffixAlloy<KEY,T, SuffixMapNode<KEY,T>, Glossary<KEY,T>, Core::SuffixMap>
     {
     public:
         //______________________________________________________________________
@@ -51,7 +50,9 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        typedef SuffixAlloy<KEY,T, SuffixMapNode<KEY,T>, Glossary<KEY,T>, Core::SuffixMap> BaseType; //!< alias
+        typedef SuffixAlloy<KEY,T, SuffixMapNode<KEY,T>, Glossary<KEY,T>, Core::SuffixMap> SelfType; //!< alias
+        Y_ARGS_DECL(T,Type);
+        Y_ARGS_DECL(KEY,Key);
 
         //______________________________________________________________________
         //
@@ -59,13 +60,24 @@ namespace Yttrium
         // C++
         //
         //______________________________________________________________________
-        inline explicit SuffixMap() noexcept : BaseType() {} //!< setup
+        inline explicit SuffixMap() noexcept : SelfType() {} //!< setup
         inline virtual ~SuffixMap() noexcept {}              //!< cleanup
 
         //! copy
         inline SuffixMap(const SuffixMap &other) :
         Identifiable(), Collection(),
-        BaseType(other)         {}
+        SelfType(other)         {}
+
+        //______________________________________________________________________
+        //
+        //
+        // Interface
+        //
+        //______________________________________________________________________
+        virtual bool insert(ParamKey k, ParamType t)
+        {
+            return  this->insert_(k,t);
+        }
 
     private:
         Y_DISABLE_ASSIGN(SuffixMap);

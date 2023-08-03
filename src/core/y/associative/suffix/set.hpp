@@ -49,21 +49,34 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        typedef SuffixAlloy<KEY,T, SuffixSetNode<KEY,T>, Registry<KEY,T>, Core::SuffixSet> BaseType; //!< alias
-
+        typedef SuffixAlloy<KEY,T, SuffixSetNode<KEY,T>, Registry<KEY,T>, Core::SuffixSet> SelfType; //!< alias
+        Y_ARGS_DECL(T,Type);
+        Y_ARGS_DECL(KEY,Key);
+        
         //______________________________________________________________________
         //
         //
         // C++
         //
         //______________________________________________________________________
-        inline explicit SuffixSet() noexcept : BaseType() {} //!< setup
+        inline explicit SuffixSet() noexcept : SelfType() {} //!< setup
         inline virtual ~SuffixSet() noexcept {}              //!< cleanup
 
         //! copy
         inline SuffixSet(const SuffixSet &other) :
         Identifiable(), Collection(),
-        BaseType(other) {}
+        SelfType(other) {}
+
+        //______________________________________________________________________
+        //
+        //
+        // Interface
+        //
+        //______________________________________________________________________
+        virtual bool insert(ParamType t)
+        {
+            return  this->insert_(t);
+        }
 
     private:
         Y_DISABLE_ASSIGN(SuffixSet);

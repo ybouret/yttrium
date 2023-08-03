@@ -130,6 +130,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(associative_suffix_tree);
     Y_UTEST(associative_suffix_map);
     Y_UTEST(associative_suffix_set);
+    Y_UTEST(associative_key_variety);
 
     Y_UTEST(mkl_complex);
     Y_UTEST(mkl_vtx);

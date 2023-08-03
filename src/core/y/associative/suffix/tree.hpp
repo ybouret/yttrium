@@ -58,15 +58,15 @@ namespace Yttrium
         //
         //! insertion for Map
         //______________________________________________________________________
-        inline bool insert(ParamKey key, ParamType t)
-        { return insert_( pool.template create<KEY,T>(key,t) ); }
+        inline bool insert_(ParamKey key, ParamType t)
+        { return insert__( pool.template create<KEY,T>(key,t) ); }
 
         //______________________________________________________________________
         //
         //! insertion for Setp
         //______________________________________________________________________
-        bool insert(ParamType t)
-        { return insert_( pool.template create<T>(t) ); }
+        bool insert_(ParamType t)
+        { return insert__( pool.template create<T>(t) ); }
 
 
         //______________________________________________________________________
@@ -114,7 +114,7 @@ namespace Yttrium
     private:
         Y_DISABLE_ASSIGN(SuffixTree);
 
-        inline bool insert_(NODE *node)
+        inline bool insert__(NODE *node)
         {
             assert(0!=node);
             const PathType &path = node->key;
@@ -134,7 +134,7 @@ namespace Yttrium
         {
             for(const NodeType *node=other.list.head;node;node=node->next)
             {
-                if(!insert_( pool.duplicate(node) ) )
+                if(!insert__( pool.duplicate(node) ) )
                     tree.unexpectedCopyException();
             }
         }
