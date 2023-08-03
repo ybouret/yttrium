@@ -113,6 +113,7 @@ add_test(sort:merge    test-core sort_merge)
 #ptr
 add_test(ptr:auto test-core ptr_auto)
 add_test(ptr:arc  test-core ptr_arc)
+add_test(ptr:cstr test-core ptr_cstr)
 
 #io
 add_test(io:char    test-core io_char)
