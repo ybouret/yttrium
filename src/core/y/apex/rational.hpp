@@ -102,16 +102,16 @@ namespace Yttrium
             // helpers operators
             //
             //__________________________________________________________________
-            static SignType Cmp(const Rational &lhs, const Rational &rhs);
+            static SignType Cmp(const Rational &lhs, const Rational &rhs); //!< compare
 
-            static SignType Cmp(const Rational &lhs, const int64_t   rhs);
-            static SignType Cmp(const int64_t   lhs, const Rational &rhs);
+            static SignType Cmp(const Rational &lhs, const int64_t   rhs); //!< compare
+            static SignType Cmp(const int64_t   lhs, const Rational &rhs); //!< compare
 
-            static SignType Cmp(const Rational &lhs, const Integer  &rhs);
-            static SignType Cmp(const Integer  &lhs, const Rational &rhs);
+            static SignType Cmp(const Rational &lhs, const Integer  &rhs); //!< compare
+            static SignType Cmp(const Integer  &lhs, const Rational &rhs); //!< compare
 
-            static SignType Cmp(const Rational &lhs, const Natural  &rhs);
-            static SignType Cmp(const Natural  &lhs, const Rational &rhs);
+            static SignType Cmp(const Rational &lhs, const Natural  &rhs); //!< compare
+            static SignType Cmp(const Natural  &lhs, const Rational &rhs); //!< compare
 
             //! propagate 'friend bool operator OP (LHS,RHS) noexecept { return Cmp(LHS,RHS) RESULT; }'
 #define Y_APQ_OP(OP,RESULT) \

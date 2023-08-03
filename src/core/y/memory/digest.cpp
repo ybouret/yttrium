@@ -78,7 +78,7 @@ namespace  Yttrium
 
         //! cleanup
         inline virtual ~Code() noexcept
-        { memset(workspace,0,allocated); }
+        { memset(workspace,0,size); }
 
 
         //! setup from hexa string
@@ -90,11 +90,18 @@ namespace  Yttrium
             if(0x1&xlen) push('0',hi,ii);
             for(size_t i=0;i<xlen;++i) push(hexa[i],hi,ii);
         }
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        inline void ldz() noexcept { memset(workspace,0,size); }
 
         //______________________________________________________________________
         //
         //
-        // members
+        // Members
         //
         //______________________________________________________________________
 
@@ -150,7 +157,11 @@ namespace  Yttrium
     {
     }
 
-
+    void Digest:: ldz() noexcept
+    {
+        assert(0!=code);
+        code->ldz();
+    }
 
     const char * Digest:: callSign() const noexcept
     {
@@ -193,7 +204,6 @@ namespace  Yttrium
 
     std::ostream & operator<<(std::ostream &os, const Digest &D)
     {
-        //std::cerr << "Writing Digest:";
         const size_t n = D.size();
         for(size_t i=1;i<=n;++i)
         {
@@ -203,6 +213,18 @@ namespace  Yttrium
     }
 
 
+    uint8_t * Digest::operator()(void) noexcept
+    {
+        assert(0!=code);
+        return code->data;
+    }
+
+    const uint8_t * Digest::operator()(void) const noexcept
+    {
+        assert(0!=code);
+        return code->data;
+    }
+    
 
 
 

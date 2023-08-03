@@ -1,15 +1,14 @@
 //! \file
 
 #ifndef Y_HASHING_HMAC_INCLUDED
-#define YACK_HASHING_HMAC_INCLUDED 1
+#define Y_HASHING_HMAC_INCLUDED 1
 
-#if 0
-#include "yack/kr/digest.hpp"
-#include "yack/hashing/function.hpp"
+#include "y/memory/digest.hpp"
+#include "y/hashing/function.hpp"
 
-namespace yack
+namespace Yttrium
 {
-    namespace hashing
+    namespace Hashing
     {
         //______________________________________________________________________
         //
@@ -17,7 +16,7 @@ namespace yack
         //! RFC 2104 HMAC
         //
         //______________________________________________________________________
-        class hmac
+        class HMAC
         {
         public:
             //__________________________________________________________________
@@ -30,16 +29,16 @@ namespace yack
             //
             // C++
             //__________________________________________________________________
-            virtual ~hmac() noexcept; //!< cleanup
-            explicit hmac(function &H, const void *key_addr, const size_t key_size); //!< setup
-            explicit hmac(function &H, const memory::ro_buffer &);                   //!< setup
+            virtual ~HMAC() noexcept; //!< cleanup
+            explicit HMAC(Function &H, const void *key_addr, const size_t key_size); //!< setup
+            explicit HMAC(Function &H, const Memory::ReadOnlyBuffer &);              //!< setup
 
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
-            void                     set(function &H) noexcept; //!< initialize H function
-            const memory::ro_buffer &get(function &H) noexcept; //!< finalize
+            void                          set(Function &H) noexcept; //!< initialize H function
+            const Memory::ReadOnlyBuffer &get(Function &H) noexcept; //!< finalize
 
             //__________________________________________________________________
             //
@@ -49,18 +48,17 @@ namespace yack
             const size_t B; //!< hash function window
 
         private:
-            YACK_DISABLE_COPY_AND_ASSIGN(hmac);
-            void setup(function &H, const void *key_addr, const size_t key_size) noexcept;
+            Y_DISABLE_COPY_AND_ASSIGN(HMAC);
+            void setup(Function &H, const void *key_addr, const size_t key_size) noexcept;
 
-            const digest key; //!< precomputed key
-            const digest ikp; //!< input  key pad
-            const digest okp; //!< output key pad
-            digest       tmp; //!< store H(ikp|message)
+            const Digest key; //!< precomputed key
+            const Digest ikp; //!< input  key pad
+            const Digest okp; //!< output key pad
+            Digest       tmp; //!< store H(ikp|message)
         };
 
     }
 
 }
 
-#endif
 #endif

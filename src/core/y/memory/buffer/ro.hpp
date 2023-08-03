@@ -42,6 +42,7 @@ namespace Yttrium
             //! compare byte-wise contents
             bool HasSameContentThan(const ReadOnlyBuffer &) const noexcept;
 
+            //! helper
             std::ostream & displayHexadecimal(std::ostream &) const;
 
         private:
