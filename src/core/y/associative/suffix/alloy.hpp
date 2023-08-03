@@ -6,7 +6,6 @@
 #define Y_Associative_Suffix_Alloy_Included 1
 
 #include "y/associative/suffix/tree.hpp"
-#include "y/associative/interface.hpp"
 
 namespace Yttrium
 {
@@ -19,10 +18,16 @@ namespace Yttrium
     //
     //
     //__________________________________________________________________________
-    template <typename KEY, typename T, typename NODE, typename BASE>
+    template <
+    typename KEY,
+    typename T,
+    typename NODE,
+    template <typename,typename> class INTERFACE,
+    typename BASE>
     class SuffixAlloy :
-    public Associative<KEY,T>,
-    public SuffixTree<KEY,T,NODE>, public BASE
+    public INTERFACE<KEY,T>,
+    public SuffixTree<KEY,T,NODE>,
+    public BASE
     {
     public:
         //______________________________________________________________________
@@ -102,7 +107,7 @@ namespace Yttrium
 
         //! setup empty
         inline explicit SuffixAlloy() noexcept :
-        Associative<KEY,T>(),
+        INTERFACE<KEY,T>(),
         TreeType(),
         BASE()
         {
@@ -111,7 +116,7 @@ namespace Yttrium
         //! copy
         inline SuffixAlloy(const SuffixAlloy &other) noexcept :
         Identifiable(), Collection(),
-        Associative<KEY,T>(),
+        INTERFACE<KEY,T>(),
         TreeType(other),
         BASE()
         {

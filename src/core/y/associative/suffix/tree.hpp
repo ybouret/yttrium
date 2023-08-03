@@ -75,13 +75,14 @@ namespace Yttrium
         // Iterators
         //
         //______________________________________________________________________
-        typedef Iterating::Linked<Type,NODE,Iterating::Forward>            Iterator;
-        typedef Iterating::Linked<ConstType,const NODE,Iterating::Forward> ConstIterator;
 
-        inline Iterator      begin()       noexcept { return Iterator(list.head); }
-        inline Iterator      end()         noexcept { return Iterator(0);         }
-        inline ConstIterator begin() const noexcept { return ConstIterator(list.head); }
-        inline ConstIterator end()   const noexcept { return ConstIterator(0);         }
+        typedef Iterating::Linked<Type,NODE,Iterating::Forward>            Iterator;      //!< forward
+        typedef Iterating::Linked<ConstType,const NODE,Iterating::Forward> ConstIterator; //!< forward const
+
+        inline Iterator      begin()       noexcept { return Iterator(list.head); }       //!< begin forward
+        inline Iterator      end()         noexcept { return Iterator(0);         }       //!< end   forward
+        inline ConstIterator begin() const noexcept { return ConstIterator(list.head); }  //!< begin const forward
+        inline ConstIterator end()   const noexcept { return ConstIterator(0);         }  //!< end   const forward
 
     protected:
         ListType         list; //!< managed list of Nodes

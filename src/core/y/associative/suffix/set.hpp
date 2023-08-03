@@ -3,6 +3,7 @@
 #ifndef Y_Associative_Suffix_Set_Included
 #define Y_Associative_Suffix_Set_Included 1
 
+#include "y/associative/registry.hpp"
 #include "y/associative/suffix/alloy.hpp"
 #include "y/associative/suffix/set/node.hpp"
 
@@ -39,7 +40,7 @@ namespace Yttrium
     //__________________________________________________________________________
     template <typename KEY, typename T>
     class SuffixSet :
-    public SuffixAlloy<KEY,T, SuffixSetNode<KEY,T>, Core::SuffixSet>
+    public SuffixAlloy<KEY,T, SuffixSetNode<KEY,T>, Registry, Core::SuffixSet>
     {
     public:
         //______________________________________________________________________
@@ -48,7 +49,7 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        typedef SuffixAlloy<KEY,T, SuffixSetNode<KEY,T>, Core::SuffixSet> BaseType; //!< alias
+        typedef SuffixAlloy<KEY,T, SuffixSetNode<KEY,T>, Registry, Core::SuffixSet> BaseType; //!< alias
 
         //______________________________________________________________________
         //

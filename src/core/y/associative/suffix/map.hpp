@@ -5,6 +5,7 @@
 #ifndef Y_Associative_Suffix_Map_Included
 #define Y_Associative_Suffix_Map_Included 1
 
+#include "y/associative/glossary.hpp"
 #include "y/associative/suffix/alloy.hpp"
 #include "y/associative/suffix/map/node.hpp"
 
@@ -41,7 +42,7 @@ namespace Yttrium
     //__________________________________________________________________________
     template <typename KEY, typename T>
     class SuffixMap :
-    public SuffixAlloy<KEY,T, SuffixMapNode<KEY,T>, Core::SuffixMap>
+    public SuffixAlloy<KEY,T, SuffixMapNode<KEY,T>, Glossary, Core::SuffixMap>
     {
     public:
         //______________________________________________________________________
@@ -50,7 +51,7 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        typedef SuffixAlloy<KEY,T, SuffixMapNode<KEY,T>, Core::SuffixMap> BaseType; //!< alias
+        typedef SuffixAlloy<KEY,T, SuffixMapNode<KEY,T>, Glossary, Core::SuffixMap> BaseType; //!< alias
 
         //______________________________________________________________________
         //

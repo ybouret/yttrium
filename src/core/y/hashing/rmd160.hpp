@@ -17,7 +17,7 @@ namespace Yttrium
 			Y_HASHING_FUNCTION_DECL(RMD160,20,64); //!< specs
 			static const size_t RMDsize=160;       //!< bits
             
-            static void Tests();
+            static void Tests(); //!< testing
             
 		private:
 			Y_DISABLE_COPY_AND_ASSIGN(RMD160);
