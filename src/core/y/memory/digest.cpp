@@ -136,15 +136,17 @@ namespace  Yttrium
         code = 0;
     }
 
-    Digest:: Digest(const size_t n) : code( new Code(n) )
+#define Y_DIGEST_CTOR(CODE) Identifiable(), Collection(), Writable<uint8_t>(), Memory::ReadWriteBuffer(), code( CODE )
+
+    Digest:: Digest(const size_t n) : Y_DIGEST_CTOR( new Code(n) )
     {
     }
 
-    Digest:: Digest(const Digest &D) : code( new Code(*D.code) )
+    Digest:: Digest(const Digest &D) : Y_DIGEST_CTOR( new Code(*D.code) )
     {}
 
 
-    Digest:: Digest(const char *hexa) : code( new Code(hexa) )
+    Digest:: Digest(const char *hexa) : Y_DIGEST_CTOR( new Code(hexa) )
     {
     }
 
