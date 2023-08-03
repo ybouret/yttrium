@@ -24,6 +24,8 @@ Y_UTEST(associative_suffix_tree)
         }
     }
 
+    addr.free();
+
     {
         Core::SuffixTree tree;
         if(argc>1)
@@ -31,7 +33,6 @@ Y_UTEST(associative_suffix_tree)
             std::cerr << "loading " << argv[1] << std::endl;
             Libc::InputFile fp(argv[1]);
             String line;
-            addr.free();
 
             while(fp.gets(line))
             {
