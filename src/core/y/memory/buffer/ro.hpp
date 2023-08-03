@@ -4,6 +4,7 @@
 #define Y_Memory_RO_Buffer_Included 1
 
 #include "y/config/starting.hpp"
+#include <iosfwd>
 
 namespace Yttrium
 {
@@ -40,6 +41,8 @@ namespace Yttrium
 
             //! compare byte-wise contents
             bool HasSameContentThan(const ReadOnlyBuffer &) const noexcept;
+
+            std::ostream & displayHexadecimal(std::ostream &) const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ReadOnlyBuffer);

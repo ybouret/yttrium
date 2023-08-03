@@ -21,6 +21,7 @@ namespace Yttrium
                 assert(0!=the_test.hash);
                 const Digest hash = the_test.hash;
                 const Digest hrun = MD::Of(H,the_test.text);
+                std::cerr << "hrun.hexa="; hrun.displayHexadecimal(std::cerr) << std::endl;
                 std::cerr << "  " << hrun << '/' << hash << " <== '" << the_test.text << "'" << std::endl;
                 if(hrun!=hash) throw Specific::Exception(H.name(),"failure test #%u",i+1);
             }

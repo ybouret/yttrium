@@ -1,4 +1,7 @@
 #include "y/memory/buffer/ro.hpp"
+#include "y/text/hexadecimal.hpp"
+#include <iostream>
+
 #include <cstring>
 
 namespace Yttrium
@@ -19,6 +22,17 @@ namespace Yttrium
             const size_t n = measure();
             if(n!=other.measure()) return false;
             return 0 == memcmp( ro_addr(), other.ro_addr(), n);
+        }
+
+        std::ostream & ReadOnlyBuffer:: displayHexadecimal(std::ostream &os) const
+        {
+            const uint8_t *p = static_cast<const uint8_t *>( ro_addr() );
+            const size_t   n = measure();
+            for(size_t i=0;i<n;++i)
+            {
+                os << Hexadecimal::Text[p[i]];
+            }
+            return os;
         }
 
     }
