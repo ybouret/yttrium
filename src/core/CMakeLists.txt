@@ -59,6 +59,7 @@ associative/suffix
 associative/suffix/core
 associative/suffix/map
 associative/suffix/set
+associative/hash
 mkl
 )
 

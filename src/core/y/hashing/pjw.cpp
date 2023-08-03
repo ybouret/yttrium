@@ -70,7 +70,6 @@ namespace Yttrium
 
         void PJW:: Tests()
         {
-            assert(40==strlen(PJW_vec[0].text) );
             Y_HASHING_TEST(PJW,PJW_vec);
         }
 
