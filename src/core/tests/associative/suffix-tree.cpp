@@ -30,7 +30,7 @@ Y_UTEST(associative_suffix_tree)
         Core::SuffixTree tree;
         if(argc>1)
         {
-            std::cerr << "loading " << argv[1] << std::endl;
+            std::cerr << "Loading " << argv[1] << std::endl;
             Libc::InputFile fp(argv[1]);
             String line;
 
