@@ -152,7 +152,6 @@ namespace  Yttrium
         //std::cerr << "Writing Digest:";
         const size_t n = D.size();
         for(size_t i=1;i<=n;++i)
-        //for(size_t i=n;i>0;--i)
         {
             os << Hexadecimal::Text[D[i]];
         }
