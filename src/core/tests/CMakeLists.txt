@@ -106,6 +106,7 @@ add_test(random:gaussian test-core random_gaussian)
 add_test(hashing:mix64 test-core hashing_mix64)
 add_test(hashing:functions test-core hashing_functions)
 add_test(hashing:to        test-core hashing_to)
+add_test(hashing:mac       test-core hashing_mac)
 
 #sort
 add_test(sort:heap     test-core sort_heap)
@@ -170,7 +171,7 @@ add_test(counting:combination test-core counting_combination)
 add_test(associative:suffix-tree test-core associative_suffix_tree)
 add_test(associative:suffix-map  test-core associative_suffix_map)
 add_test(associative:suffix-set  test-core associative_suffix_set)
-add_test(associative:key-variety test-core associstive_key_variety)
+add_test(associative:key-variety test-core associative_key_variety)
 
 
 #mkl

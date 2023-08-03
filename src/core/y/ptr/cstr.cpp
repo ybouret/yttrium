@@ -21,7 +21,8 @@ namespace Yttrium
         public:
             inline Metrics(const size_t l, const size_t r) noexcept :
             lsize(l),
-            rsize(r)
+            rsize(r),
+            size(lsize+rsize)
             {
             }
 
@@ -31,6 +32,7 @@ namespace Yttrium
 
             const size_t lsize;
             const size_t rsize;
+            const size_t size;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Metrics);
@@ -45,7 +47,7 @@ namespace Yttrium
         Object(),
         Counted(),
         Metrics( StringLength(lhs), 0),
-        WadType( lsize+1 ),
+        WadType( size+1 ),
         data( static_cast<char *>(workspace) )
         {
             memcpy(workspace,lhs,lsize);
@@ -55,7 +57,7 @@ namespace Yttrium
         Object(),
         Counted(),
         Metrics( StringLength(lhs), StringLength(rhs) ),
-        WadType( lsize+rsize+1 ),
+        WadType( size+1 ),
         data( static_cast<char *>(workspace) )
         {
             memcpy(workspace,lhs,lsize);
@@ -74,13 +76,14 @@ namespace Yttrium
     };
 
 
+    const char * const CStrPtr:: CallSign = "CStrPtr";
 
-    CStrPtr:: CStrPtr(const char *lhs) : code( new Code(lhs) )
+    CStrPtr:: CStrPtr(const char *lhs) : Identifiable(), Collection(), Readable<char>(), code( new Code(lhs) )
     {
         code->withhold();
     }
 
-    CStrPtr:: CStrPtr(const char *lhs, const char *rhs) : code( new Code(lhs,rhs) )
+    CStrPtr:: CStrPtr(const char *lhs, const char *rhs) : Identifiable(), Collection(), Readable<char>(), code( new Code(lhs,rhs) )
     {
         code->withhold();
     }
@@ -93,15 +96,35 @@ namespace Yttrium
         code = 0;
     }
 
-    CStrPtr:: CStrPtr(const CStrPtr &other) noexcept : code( other.code )
-    {
-        code->withhold();
-    }
-
     const char * CStrPtr:: operator()(void) const noexcept
     {
         assert(0!=code);
         return code->data;
+    }
+
+
+    CStrPtr:: CStrPtr(const CStrPtr &other) noexcept : Identifiable(), Collection(), Readable<char>(), code( other.code )
+    {
+        code->withhold();
+    }
+
+    size_t CStrPtr:: size() const noexcept
+    {
+        assert(0!=code);
+        return code->size;
+    }
+
+    const char * CStrPtr:: callSign() const noexcept
+    {
+        return CallSign;
+    }
+
+    const char & CStrPtr:: operator[](const size_t indx) const noexcept
+    {
+        assert(0!=code);
+        assert(indx>0);
+        assert(indx<=code->size+1);
+        return code->data[indx-1];
     }
 
     std::ostream & operator<<(std::ostream &os, const CStrPtr &p)

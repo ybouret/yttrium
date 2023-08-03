@@ -6,9 +6,9 @@ namespace Yttrium
 {
     namespace Hashing
     {
-        const char HMAC:: prefix[] = "hmac-";
+        const char HashMAC:: Prefix[] = "HMAC_";
 
-        HMAC:: ~HMAC() noexcept
+        HashMAC:: ~HashMAC() noexcept
         {
             Coerce(L) = 0;
             Coerce(B) = 0;
@@ -23,9 +23,9 @@ ikp(B),               \
 okp(B),               \
 tmp(L)
 
-        HMAC:: HMAC(Function       &H,
-                    const void     *key_addr,
-                    const size_t    key_size) :
+        HashMAC:: HashMAC(Function       &H,
+                          const void     *key_addr,
+                          const size_t    key_size) :
         Y_HMAC_CTOR()
         {
             assert(!(NULL==key_addr&&key_size>0));
@@ -33,15 +33,15 @@ tmp(L)
         }
 
 
-        HMAC:: HMAC(Function &H, const Memory::ReadOnlyBuffer &usr) :
+        HashMAC:: HashMAC(Function &H, const Memory::ReadOnlyBuffer &usr) :
         Y_HMAC_CTOR()
         {
             setup(H,usr.ro_addr(),usr.measure());
         }
 
-        void HMAC:: setup(Function    &H,
-                          const void  *key_addr,
-                          const size_t key_size) noexcept
+        void HashMAC:: setup(Function    &H,
+                             const void  *key_addr,
+                             const size_t key_size) noexcept
         {
             assert(!(NULL==key_addr&&key_size>0));
             Coerce(key).ldz();
@@ -64,13 +64,13 @@ tmp(L)
 
         }
 
-        void HMAC:: set(Function &H) noexcept
+        void HashMAC:: set(Function &H) noexcept
         {
             H.set();
             H(ikp);
         }
 
-        const Memory::ReadOnlyBuffer  & HMAC:: get(Function &H) noexcept
+        const Memory::ReadOnlyBuffer  & HashMAC:: get(Function &H) noexcept
         {
             H.get(tmp(),L);
             H.set();

@@ -16,22 +16,22 @@ namespace Yttrium
         //! RFC 2104 HMAC
         //
         //______________________________________________________________________
-        class HMAC
+        class HashMAC
         {
         public:
             //__________________________________________________________________
             //
             // types and definitions
             //__________________________________________________________________
-            static const char prefix[]; //!< "HMAC-";
+            static const char Prefix[]; //!< "HMAC_";
 
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            virtual ~HMAC() noexcept; //!< cleanup
-            explicit HMAC(Function &H, const void *key_addr, const size_t key_size); //!< setup
-            explicit HMAC(Function &H, const Memory::ReadOnlyBuffer &);              //!< setup
+            virtual ~HashMAC() noexcept; //!< cleanup
+            explicit HashMAC(Function &H, const void *key_addr, const size_t key_size); //!< setup
+            explicit HashMAC(Function &H, const Memory::ReadOnlyBuffer &);              //!< setup
 
             //__________________________________________________________________
             //
@@ -48,7 +48,7 @@ namespace Yttrium
             const size_t B; //!< hash function window
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(HMAC);
+            Y_DISABLE_COPY_AND_ASSIGN(HashMAC);
             void setup(Function &H, const void *key_addr, const size_t key_size) noexcept;
 
             const Digest key; //!< precomputed key

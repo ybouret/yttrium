@@ -6,20 +6,20 @@
 
 
 #include "y/hashing/hmac.hpp"
-#if 0
-#include "yack/ptr/cstr.hpp"
+#include "y/ptr/cstr.hpp"
+#include "y/text/ops.hpp"
 
-namespace yack
+namespace Yttrium
 {
-    namespace hashing
+    namespace Hashing
     {
         //! helper for constructor
 #define YACK_HMAC_ON_PROLOG() \
-function( FUNCTION::__length, FUNCTION::__window), H(), M(H,
+Function( FUNCTION::__length, FUNCTION::__window), H(), M(H,
 
         //! helper for constructor
 #define YACK_HMAC_ON_EPILOG() \
-), id(hmac::prefix,H.name())
+), id(HashMAC::Prefix,H.callSign())
         
         //______________________________________________________________________
         //
@@ -28,7 +28,7 @@ function( FUNCTION::__length, FUNCTION::__window), H(), M(H,
         //
         //______________________________________________________________________
         template <typename FUNCTION>
-        class hmac_on : public function
+        class HMAC : public Function
         {
         public:
             //__________________________________________________________________
@@ -37,15 +37,19 @@ function( FUNCTION::__length, FUNCTION::__window), H(), M(H,
             //__________________________________________________________________
 
             //! setup
-            inline explicit hmac_on(const void *key_addr, const size_t key_size) :
+            inline explicit HMAC(const void *key_addr, const size_t key_size) :
             YACK_HMAC_ON_PROLOG() key_addr,key_size YACK_HMAC_ON_EPILOG() {}
 
             //! setup
-            inline explicit hmac_on(const memory::ro_buffer &usr) :
+            inline explicit HMAC(const Memory::ReadOnlyBuffer &usr) :
             YACK_HMAC_ON_PROLOG() usr  YACK_HMAC_ON_EPILOG() {}
 
+            //! setup
+            inline explicit HMAC(const char *k) :
+            YACK_HMAC_ON_PROLOG() k,StringLength(k) YACK_HMAC_ON_EPILOG() {}
+
             //! cleanup
-            inline virtual ~hmac_on() noexcept {}
+            inline virtual ~HMAC() noexcept {}
 
             //__________________________________________________________________
             //
@@ -64,28 +68,27 @@ function( FUNCTION::__length, FUNCTION::__window), H(), M(H,
             //! get function from hmac
             inline virtual void get(void *output, const size_t outlen) noexcept
             {
-                const memory::ro_buffer &md = M.get(H);
+                const Memory::ReadOnlyBuffer &md = M.get(H);
                 fill(output,outlen,md.ro_addr(),md.measure());
             }
 
             //! compound name
-            virtual const char *name() const noexcept { return &id[0]; }
+            virtual const char *callSign() const noexcept { return id(); }
 
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
             FUNCTION H; //!< base hashing function
-            hmac     M; //!< base hash mac creator
+            HashMAC  M; //!< base hash mac creator
             
         private:
-            YACK_DISABLE_COPY_AND_ASSIGN(hmac_on);
-            const cstr_ptr id;
+            Y_DISABLE_COPY_AND_ASSIGN(HMAC);
+            const CStrPtr id;
         };
 
     }
 
 }
 
-#endif
 #endif
