@@ -10,16 +10,21 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //! helper to produce legacy C strings
+    //
+    //__________________________________________________________________________
     class CStrPtr
     {
     public:
-        CStrPtr(const char *);
-        CStrPtr(const char *, const char *);
-        CStrPtr(const CStrPtr &) noexcept;
-        virtual ~CStrPtr() noexcept;
-        Y_OSTREAM_PROTO(CStrPtr);
-
-        const char * operator()(void) const noexcept;
+        CStrPtr(const char *);                        //!< strcpy
+        CStrPtr(const char *, const char *);          //!< strcat
+        CStrPtr(const CStrPtr &) noexcept;            //!< no-throw copy
+        virtual ~CStrPtr() noexcept;                  //!< cleanup
+        Y_OSTREAM_PROTO(CStrPtr);                     //!< display
+        const char * operator()(void) const noexcept; //!< R/O access
         
 
     private:

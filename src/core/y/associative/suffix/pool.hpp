@@ -6,6 +6,7 @@
 
 #include "y/memory/blanks.hpp"
 #include "y/type/traits.hpp"
+#include "y/type/destruct.hpp"
 
 namespace Yttrium
 {

@@ -6,6 +6,7 @@
 #include "y/object.hpp"
 #include "y/counted.hpp"
 #include "y/type/identifiable.hpp"
+#include "y/ptr/arc.hpp"
 
 namespace Yttrium
 {
@@ -28,8 +29,8 @@ namespace Yttrium
             //
             // types and definitions
             //__________________________________________________________________
-
-			const size_t length; //!< output generation
+            typedef ArcPtr<Function> Pointer; //!< alias
+            const size_t length; //!< output generation
 			const size_t window; //!< internal window size
 
             //__________________________________________________________________
@@ -39,8 +40,8 @@ namespace Yttrium
             virtual            ~Function()                             noexcept;     //!< destructor
             virtual void        set()                                  noexcept = 0; //!< initialize
 			virtual void        run(const void *buffer, size_t buflen) noexcept = 0; //!< process bytes
-			virtual void        get(void *output, size_t outlen)       noexcept = 0; //!< finalize/fill array
-            
+            virtual void        get(void *output, size_t outlen)       noexcept = 0; //!< finalize/fill array
+
             //__________________________________________________________________
             //
             // non virtual interface
