@@ -14,8 +14,8 @@ using namespace Yttrium;
 Y_UTEST(hashing_functions)
 {
 
-    //Hashing::SHA1::Tests();
-    Hashing::MD5::Tests();
+    Hashing::MD5::  Tests();
+    Hashing::SHA1:: Tests();
 
 }
 Y_UDONE()

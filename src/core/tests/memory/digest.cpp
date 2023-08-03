@@ -11,6 +11,7 @@ Y_UTEST(memory_digest)
         std::cerr << d << std::endl;
     }
 
+#if 1
     {
         Digest d = "";
         std::cerr << d << std::endl;
@@ -30,7 +31,8 @@ Y_UTEST(memory_digest)
         Digest d = "abc";
         std::cerr << d << std::endl;
     }
-
+#endif
+    
     if(argc>1)
     {
         Digest d = argv[1];

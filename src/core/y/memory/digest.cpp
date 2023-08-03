@@ -55,27 +55,33 @@ namespace  Yttrium
             return alen >> 1;
         }
 
+        void push(const char cc, bool &hi, size_t &ii)
+        {
+            const int h = Hexadecimal::ToDecimal(cc);
+            if(h<0) throw Specific::Exception(Digest::CallSign,"invalid hexa '%c'",h);
+            if(hi)
+            {
+                data[ii] = uint8_t(h) << 4;
+                hi = false;
+            }
+            else
+            {
+                data[ii++] |= uint8_t(h);
+                hi = true;
+            }
+        }
+
         inline explicit Code(const char *hexa) :
         Y_DIGEST_CODE_CTOR(SizeFor(hexa,xlen))
         {
-            size_t ii = 0;
-            bool   lo = true;
-            while(xlen>0)
+            if(hexa)
             {
-                const char c = hexa[--xlen];
-                const int  h = Hexadecimal::ToDecimal(c);
-                if(h<0) throw Specific::Exception(Digest::CallSign,"invalid hexa char '%c'",c);
-                if(lo)
-                {
-                    data[ii] = uint8_t(h);
-                    lo = false;
-                }
-                else
-                {
-                    data[ii++] |= uint8_t(h) << 4;
-                    lo = true;
-                }
+                bool   hi = true;
+                size_t ii = 0;
+                if(0x1&xlen) push('0',hi,ii);
+                for(size_t i=0;i<xlen;++i) push(hexa[i],hi,ii);
             }
+
         }
 
 
@@ -103,7 +109,6 @@ namespace  Yttrium
 
     Digest:: Digest(const char *hexa) : code( new Code(hexa) )
     {
-
     }
 
 
