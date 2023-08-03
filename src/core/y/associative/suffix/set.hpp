@@ -40,7 +40,7 @@ namespace Yttrium
     //__________________________________________________________________________
     template <typename KEY, typename T>
     class SuffixSet :
-    public SuffixAlloy<KEY,T, SuffixSetNode<KEY,T>, Registry, Core::SuffixSet>
+    public SuffixAlloy<KEY,T, SuffixSetNode<KEY,T>, Registry<KEY,T>, Core::SuffixSet>
     {
     public:
         //______________________________________________________________________
@@ -49,7 +49,7 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        typedef SuffixAlloy<KEY,T, SuffixSetNode<KEY,T>, Registry, Core::SuffixSet> BaseType; //!< alias
+        typedef SuffixAlloy<KEY,T, SuffixSetNode<KEY,T>, Registry<KEY,T>, Core::SuffixSet> BaseType; //!< alias
 
         //______________________________________________________________________
         //

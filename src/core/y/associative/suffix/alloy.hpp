@@ -22,10 +22,10 @@ namespace Yttrium
     typename KEY,
     typename T,
     typename NODE,
-    template <typename,typename> class INTERFACE,
+    class    INTERFACE,
     typename BASE>
     class SuffixAlloy :
-    public INTERFACE<KEY,T>,
+    public INTERFACE,
     public SuffixTree<KEY,T,NODE>,
     public BASE
     {
@@ -107,7 +107,7 @@ namespace Yttrium
 
         //! setup empty
         inline explicit SuffixAlloy() noexcept :
-        INTERFACE<KEY,T>(),
+        INTERFACE(),
         TreeType(),
         BASE()
         {
@@ -116,7 +116,7 @@ namespace Yttrium
         //! copy
         inline SuffixAlloy(const SuffixAlloy &other) noexcept :
         Identifiable(), Collection(),
-        INTERFACE<KEY,T>(),
+        INTERFACE(),
         TreeType(other),
         BASE()
         {
