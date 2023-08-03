@@ -31,5 +31,11 @@ Y_UTEST(memory_digest)
         std::cerr << d << std::endl;
     }
 
+    if(argc>1)
+    {
+        Digest d = argv[1];
+        std::cerr << argv[1] << " -> " << d << std::endl;
+    }
+
 }
 Y_UDONE()
