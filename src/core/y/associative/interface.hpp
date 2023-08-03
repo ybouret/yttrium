@@ -30,6 +30,7 @@ namespace Yttrium
         inline virtual ~Associative() noexcept {}
 
         virtual ConstType *search(ParamKey) const noexcept = 0; //!< search object by its key
+        virtual Type *     search(ParamKey)       noexcept = 0; //!< search object by its key, may optimize for next search
         virtual bool       remove(ParamKey)       noexcept = 0; //!< remove object by its key
 
 

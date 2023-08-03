@@ -7,6 +7,7 @@
 #include "y/associative/suffix/pool.hpp"
 #include "y/associative/suffix/core/tree.hpp"
 #include "y/data/list.hpp"
+#include "y/container/iterator/linked.hpp"
 
 namespace Yttrium
 {
@@ -67,6 +68,20 @@ namespace Yttrium
         bool insert(ParamType t)
         { return insert_( pool.template create<T>(t) ); }
 
+
+        //______________________________________________________________________
+        //
+        //
+        // Iterators
+        //
+        //______________________________________________________________________
+        typedef Iterating::Linked<Type,NODE,Iterating::Forward>            Iterator;
+        typedef Iterating::Linked<ConstType,const NODE,Iterating::Forward> ConstIterator;
+
+        inline Iterator      begin()       noexcept { return Iterator(list.head); }
+        inline Iterator      end()         noexcept { return Iterator(0);         }
+        inline ConstIterator begin() const noexcept { return ConstIterator(list.head); }
+        inline ConstIterator end()   const noexcept { return ConstIterator(0);         }
 
     protected:
         ListType         list; //!< managed list of Nodes

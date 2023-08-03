@@ -170,12 +170,8 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(), Core::Vector(), Writable
             return code->item[indx];
         }
 
-        //______________________________________________________________________
-        //
-        //
-        // iterators
-        //
-        //______________________________________________________________________
+        inline Type *      operator()(void)       noexcept { return 0!=code ? code->base : 0; }
+        inline ConstType * operator()(void) const noexcept { return 0!=code ? code->base : 0; }
 
 
     private:

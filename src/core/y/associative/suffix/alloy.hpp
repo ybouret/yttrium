@@ -53,12 +53,20 @@ namespace Yttrium
         inline virtual void         release()         noexcept { this->hardReset(); }          //!< release all possible memory
         inline virtual void         reserve(size_t n) noexcept { pool.reserve(n); }            //!< reserve blocks
 
-        //! search object address by its key
+        //! search CONST object address by its key
         inline virtual ConstType *search(ParamKey key) const noexcept
         {
             const void *nodeAddr = tree.search(key);
             if(!nodeAddr) return 0;
             return & (**static_cast<const NODE *>(nodeAddr));
+        }
+
+        //! search object address by its key
+        inline virtual Type *search(ParamKey key) noexcept
+        {
+            void *nodeAddr = (void*) tree.search(key);
+            if(!nodeAddr) return 0;
+            return & (**static_cast<NODE *>(nodeAddr));
         }
 
         //! try to remove an object by its key
@@ -72,6 +80,13 @@ namespace Yttrium
             return true;
         }
 
+        //______________________________________________________________________
+        //
+        //
+        // Iterators
+        //
+        //______________________________________________________________________
+        
 
         //______________________________________________________________________
         //

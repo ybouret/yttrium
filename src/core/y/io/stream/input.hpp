@@ -98,6 +98,15 @@ namespace Yttrium
         //______________________________________________________________________
         bool         gets(Core::String<char> &line);
 
+        //______________________________________________________________________
+        //
+        //! load content
+        //______________________________________________________________________
+        template <typename SEQUENCE> inline
+        void loadInto(SEQUENCE &seq)
+        {
+            char c=0; while(query(c)) seq << c;
+        }
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(InputStream);

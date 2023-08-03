@@ -15,7 +15,10 @@ namespace Yttrium
 		public:
             //! prototype
 			Y_HASHING_FUNCTION_DECL(PJW,4,4);
-			
+
+            //! testing
+            static void Tests();
+            
 		private:
 			uint32_t hash;
 			Y_DISABLE_COPY_AND_ASSIGN(PJW);
