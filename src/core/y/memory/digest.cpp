@@ -16,37 +16,93 @@ namespace  Yttrium
 {
     const char * const Digest:: CallSign = "Digest";
 
-#define Y_DIGEST_CODE_CTOR(N) Object(), Reserved(), WadType(N), data( static_cast<uint8_t *>(workspace) ), item(data-1)
 
-    class Reserved
+
+    namespace
     {
-    public:
-        explicit Reserved() noexcept : xlen(0) {}
-        virtual ~Reserved() noexcept {}
-        size_t   xlen;
+        //! used to fetch hexa length
+        class HexaLen
+        {
+        public:
+            explicit HexaLen() noexcept :  xlen(0) {}
+            virtual ~HexaLen() noexcept {}
 
-    private:
-        Y_DISABLE_COPY_AND_ASSIGN(Reserved);
-    };
+            size_t       xlen; //!< hexa len if needed
 
-    class Digest:: Code : public Object, public Reserved, public Memory::Wad<uint8_t,Memory::Dyadic>
-    {
-    public:
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(HexaLen);
+        };
+
+        //! used to store exact size
+        class Metrics
+        {
+        public:
+            explicit Metrics(const size_t n) noexcept : size(n) {}
+            virtual ~Metrics()               noexcept {}
+
+            const size_t size; //!< requested size
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Metrics);
+        };
+
         typedef Memory::Wad<uint8_t,Memory::Dyadic> WadType;
+    }
 
-        inline explicit Code(const size_t n) :Y_DIGEST_CODE_CTOR(n)
+#define Y_DIGEST_CODE_CTOR(N) Object(), HexaLen(), Metrics(N), WadType(size), data( static_cast<uint8_t *>(workspace) ), item(data-1)
+
+    class Digest:: Code :
+    public Object,
+    public HexaLen,
+    public Metrics,
+    public WadType
+    {
+    public:
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+
+        //! setup with size=n
+        inline explicit Code(const size_t n) : Y_DIGEST_CODE_CTOR(n)
         {
         }
 
-        inline explicit Code(const Code &D) : Y_DIGEST_CODE_CTOR(D.maxBlocks)
+        //! copy
+        inline explicit Code(const Code &D) : Y_DIGEST_CODE_CTOR(D.size)
         {
-            memcpy(workspace,D.workspace,maxBlocks);
+            memcpy(workspace,D.workspace,size);
         }
 
+        //! cleanup
         inline virtual ~Code() noexcept
         { memset(workspace,0,allocated); }
 
 
+        //! setup from hexa string
+        inline explicit Code(const char *hexa) :
+        Y_DIGEST_CODE_CTOR(SizeFor(hexa,xlen))
+        {
+            bool   hi = true;
+            size_t ii = 0;
+            if(0x1&xlen) push('0',hi,ii);
+            for(size_t i=0;i<xlen;++i) push(hexa[i],hi,ii);
+        }
+
+        //______________________________________________________________________
+        //
+        //
+        // members
+        //
+        //______________________________________________________________________
+
+        uint8_t * const data;
+        uint8_t * const item;
+
+    private:
+        Y_DISABLE_ASSIGN(Code);
         //! get memory to hold value
         static inline size_t SizeFor(const char *hexa, size_t &rlen) noexcept
         {
@@ -55,6 +111,7 @@ namespace  Yttrium
             return alen >> 1;
         }
 
+        //! feed data
         void push(const char cc, bool &hi, size_t &ii)
         {
             const int h = Hexadecimal::ToDecimal(cc);
@@ -70,26 +127,6 @@ namespace  Yttrium
                 hi = true;
             }
         }
-
-        inline explicit Code(const char *hexa) :
-        Y_DIGEST_CODE_CTOR(SizeFor(hexa,xlen))
-        {
-            if(hexa)
-            {
-                bool   hi = true;
-                size_t ii = 0;
-                if(0x1&xlen) push('0',hi,ii);
-                for(size_t i=0;i<xlen;++i) push(hexa[i],hi,ii);
-            }
-
-        }
-
-
-        uint8_t * const data;
-        uint8_t * const item;
-
-    private:
-        Y_DISABLE_ASSIGN(Code);
     };
 
     Digest:: ~Digest() noexcept
@@ -121,13 +158,13 @@ namespace  Yttrium
     size_t Digest:: size() const noexcept
     {
         assert(0!=code);
-        return code->maxBlocks;
+        return code->size;
     }
 
     size_t Digest:: measure() const noexcept
     {
         assert(0!=code);
-        return code->maxBlocks;
+        return code->size;
     }
 
     const void * Digest :: ro_addr() const noexcept
