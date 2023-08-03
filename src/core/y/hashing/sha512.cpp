@@ -302,7 +302,7 @@ d += temp1; h = temp1 + temp2;              \
 		{
 		}
 		
-		const char SHA512:: clid[] = "sha512";
+		const char * const SHA512:: CallSign = "SHA512";
 
         void SHA512:: set() noexcept
 		{
@@ -333,7 +333,7 @@ d += temp1; h = temp1 + temp2;              \
 		{
 		}
 		
-        const char SHA384:: clid[] = "sha384";
+        const char * const SHA384:: CallSign = "SHA384";
 		
 		
 		void SHA384:: set() noexcept

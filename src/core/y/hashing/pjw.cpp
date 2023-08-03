@@ -15,7 +15,7 @@ namespace Yttrium
 		}
 		
         
-        const char PJW::clid[] = "pjw";
+        const char * const PJW:: CallSign = "PJW";
 
 		void PJW:: set() noexcept
 		{

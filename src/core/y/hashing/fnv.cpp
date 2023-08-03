@@ -14,7 +14,7 @@ namespace Yttrium
 			hash = 0;
 		}
 		
-		const char FNV::clid[] = "fnv";
+		const char * const FNV:: CallSign = "FNV";
 		
 		void FNV:: set() noexcept
 		{

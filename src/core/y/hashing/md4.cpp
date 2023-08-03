@@ -239,7 +239,7 @@ namespace Yttrium
 		{
 		}
 		
-        const char MD4:: clid[] = "md4";
+        const char * const MD4:: CallSign = "MD4";
 
 		
 		

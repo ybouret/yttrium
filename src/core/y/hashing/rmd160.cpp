@@ -338,7 +338,7 @@ namespace Yttrium
         }
         
         
-        const char RMD160:: clid[] = "rmd160";
+        const char * const RMD160:: CallSign = "RMD160";
         
         
         void RMD160:: set() noexcept

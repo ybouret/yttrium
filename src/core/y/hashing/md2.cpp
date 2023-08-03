@@ -187,7 +187,7 @@ namespace Yttrium
 		{
 		}
 		
-		const char MD2:: clid[]= "md2";
+		const char * const MD2:: CallSign= "MD2";
 		
 		void MD2:: set() noexcept
 		{

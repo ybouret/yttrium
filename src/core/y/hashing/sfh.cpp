@@ -15,7 +15,7 @@ namespace Yttrium
 		}
 		
         
-        const char SFH::clid[] = "sfh";
+        const char * const SFH:: CallSign = "SFH";
 
 		void SFH:: set() noexcept
 		{

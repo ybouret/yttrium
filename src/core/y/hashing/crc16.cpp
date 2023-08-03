@@ -5,7 +5,7 @@ namespace Yttrium
 	namespace Hashing
 	{
 		
-		const char CRC16::clid[] = "crc16";
+		const char * const CRC16:: CallSign = "CRC16";
 		
         CRC16:: CRC16() noexcept : Function( __length , __window ), hash(0)
 		{

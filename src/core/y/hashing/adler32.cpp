@@ -14,8 +14,8 @@ namespace Yttrium
 			a = 0;
 		}
         
-        const char Adler32::clid[] = "adler32";
-
+        const char * const  Adler32:: CallSign = "Adler32";
+        
 		void Adler32:: set() noexcept
 		{
 			a = 1;

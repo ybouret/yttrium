@@ -5,15 +5,12 @@
 
 #include "y/object.hpp"
 #include "y/counted.hpp"
-#include "y/ptr/arc.hpp"
+#include "y/type/identifiable.hpp"
 
 namespace Yttrium
 {
     
-    namespace Memory
-    {
-        class ReadOnlyBuffer;
-    }
+    namespace Memory { class ReadOnlyBuffer; }
 
 	namespace Hashing
     {
@@ -24,14 +21,13 @@ namespace Yttrium
         //! base class for hashing function
         //
         //______________________________________________________________________
-		class Function : public Object, public Counted
+		class Function : public Object, public Counted, public Identifiable
 		{
 		public:
             //__________________________________________________________________
             //
             // types and definitions
             //__________________________________________________________________
-            typedef ArcPtr<Function> Pointer; //!< pointer type
 
 			const size_t length; //!< output generation
 			const size_t window; //!< internal window size
@@ -41,8 +37,7 @@ namespace Yttrium
             // virtual interface
             //__________________________________________________________________
             virtual            ~Function()                             noexcept;     //!< destructor
-			virtual const char *name()                           const noexcept = 0; //!< get a name
-			virtual void        set()                                  noexcept = 0; //!< initialize
+            virtual void        set()                                  noexcept = 0; //!< initialize
 			virtual void        run(const void *buffer, size_t buflen) noexcept = 0; //!< process bytes
 			virtual void        get(void *output, size_t outlen)       noexcept = 0; //!< finalize/fill array
             
@@ -83,18 +78,18 @@ namespace Yttrium
 		};
 		
         //! format hashing function prototype
-#define Y_HASHING_FUNCTION_DECL(NAME,L,W)                       \
-static const char clid[];                                       \
-explicit NAME() noexcept;                                        \
-virtual ~NAME() noexcept;                                        \
-static inline Function * create() { return new NAME(); }        \
-static const size_t __length = L ;                              \
-static const size_t __window = W ;                              \
-inline virtual const char *name() const noexcept { return clid;} \
-virtual void set() noexcept;                                     \
-virtual void run( const void *buf, size_t len ) noexcept;        \
+#define Y_HASHING_FUNCTION_DECL(NAME,L,W)                                \
+static const char * const CallSign;                                      \
+explicit NAME() noexcept;                                                \
+virtual ~NAME() noexcept;                                                \
+static inline Function * Create() { return new NAME(); }                 \
+static const size_t __length = L ;                                       \
+static const size_t __window = W ;                                       \
+inline virtual const char *callSign() const noexcept { return CallSign;} \
+virtual void set() noexcept;                                             \
+virtual void run( const void *buf, size_t len ) noexcept;                \
 virtual void get( void *output, size_t outlen ) noexcept 
-
+        
 	}
 
     

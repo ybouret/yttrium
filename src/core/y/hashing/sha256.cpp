@@ -297,7 +297,7 @@ d += temp1; h = temp1 + temp2;              \
 		{
 		}
 		
-		const char SHA256:: clid[] ="sha256";
+		const char * const SHA256:: CallSign = "SHA256";
 
 		
 		void SHA256:: set() noexcept
@@ -332,7 +332,7 @@ d += temp1; h = temp1 + temp2;              \
 		{
 		}
 		
-		const char SHA224:: clid[] = "sha224";
+		const char * const SHA224:: CallSign = "SHA224";
         
 		
 		

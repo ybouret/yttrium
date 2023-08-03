@@ -280,7 +280,7 @@ e += S(a,5) + F(b,c,d) + K + x; b = S(b,30);        \
         {
         }
         
-        const char SHA1:: clid[] = "sha1";
+        const char * const SHA1:: CallSign = "SHA1";
         
         
         void SHA1:: set() noexcept

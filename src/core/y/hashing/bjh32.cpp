@@ -14,7 +14,7 @@ namespace Yttrium
 			hash = 0;
 		}
 		
-        const char  BJH32:: clid[] =  "bjh32";
+        const char * const BJH32:: CallSign =  "BJH32";
 		
 		void BJH32:: set() noexcept
 		{

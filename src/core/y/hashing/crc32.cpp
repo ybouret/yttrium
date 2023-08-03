@@ -5,7 +5,7 @@ namespace Yttrium
 	namespace Hashing
 	{
         
-        const char CRC32:: clid[] = "crc32";
+        const char * const CRC32:: CallSign = "CRC32";
 
         CRC32:: CRC32() noexcept : Function( __length , __window ), hash(0)
 		{

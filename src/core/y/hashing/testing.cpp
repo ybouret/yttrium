@@ -13,7 +13,7 @@ namespace Yttrium
         void Testing:: Run(Function &H, const Testing tests[], const unsigned count)
         {
             assert(0!=tests);
-            std::cerr << "<Hashing::Test " << H.name() << ">" <<std::endl;
+            std::cerr << "<Hashing::Test " << H.callSign() << ">" <<std::endl;
             for(unsigned i=0;i<count;++i)
             {
                 const Testing &the_test = tests[i];
@@ -22,9 +22,9 @@ namespace Yttrium
                 const Digest hash = the_test.hash;
                 const Digest hrun = MD::Of(H,the_test.text);
                 std::cerr << "  " << hrun << '/' << hash << " <== '" << the_test.text << "'" << std::endl;
-                if(hrun!=hash) throw Specific::Exception(H.name(),"failure test #%u",i+1);
+                if(hrun!=hash) throw Specific::Exception(H.callSign(),"failure test #%u",i+1);
             }
-            std::cerr << "<Hashing::Test " << H.name() << "/>" <<std::endl;
+            std::cerr << "<Hashing::Test " << H.callSign() << "/>" <<std::endl;
 
         }
 

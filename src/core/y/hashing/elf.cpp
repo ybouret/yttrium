@@ -15,7 +15,7 @@ namespace Yttrium
 		}
 		
         
-        const char ELF::clid[] = "elf";
+        const char * const ELF:: CallSign = "ELF";
 
 		void ELF:: set() noexcept
 		{

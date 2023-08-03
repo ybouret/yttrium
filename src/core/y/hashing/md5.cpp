@@ -290,7 +290,7 @@ namespace Yttrium
 		{
 		}
 
-        const char MD5:: clid[] = "md5";
+        const char * const MD5:: CallSign = "MD5";
         
 
 

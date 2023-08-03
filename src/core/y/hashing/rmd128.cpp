@@ -280,7 +280,7 @@ namespace Yttrium
             memset(MDbuf,0,sizeof(MDbuf));
         }
         
-        const char RMD128:: clid[] = "rmd128";
+        const char * const RMD128:: CallSign = "RMD128";
         
         void RMD128:: set() noexcept
         {
