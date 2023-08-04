@@ -5,7 +5,7 @@ using namespace Yttrium;
 
 Y_UTEST(associative_hash_table)
 {
-    HashTable t(10);
+    HashTable t(0);
 
 }
 Y_UDONE()
