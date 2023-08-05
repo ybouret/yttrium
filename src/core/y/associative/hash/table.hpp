@@ -6,6 +6,7 @@
 
 #include "y/container/dynamic.hpp"
 #include "y/type/args.hpp"
+#include "y/data/list.hpp"
 
 namespace Yttrium
 {
@@ -24,14 +25,19 @@ namespace Yttrium
         Y_DISABLE_COPY_AND_ASSIGN(HashTableKnot);
     };
 
+    typedef ListOf<HashTableKnot> HashTableSlot;
+
+
     class HashTable
     {
     public:
         explicit HashTable(const size_t);
         virtual ~HashTable() noexcept;
 
-        void   insert(HashTableKnot *knot) noexcept;
+        HashTableSlot &       operator[](const size_t hkey) noexcept;
+        const HashTableSlot & operator[](const size_t hkey) const noexcept;
 
+        void    grow();
         size_t  size() const noexcept;
         
     private:

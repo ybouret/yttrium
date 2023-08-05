@@ -26,7 +26,6 @@ namespace Yttrium
 
 
 
-        typedef ListOf<HashTableKnot> HashTableSlot;
 
 
 
@@ -112,18 +111,32 @@ namespace Yttrium
 
 
     
-    void HashTable:: insert(HashTableKnot *knot) noexcept
+    HashTableSlot & HashTable:: operator[](const size_t hkey) noexcept
     {
         assert(0!=code);
-        assert(0!=knot);
         assert(0!=code->slot);
-        code->slot[knot->hkey&code->mask].pushHead(knot);
+        return code->slot[hkey&code->mask];
     }
+
+    const HashTableSlot & HashTable:: operator[](const size_t hkey) const noexcept
+    {
+        assert(0!=code);
+        assert(0!=code->slot);
+        return code->slot[hkey&code->mask];
+    }
+
 
     size_t HashTable:: size() const noexcept
     {
         assert(code!=0);
         return code->size;
     }
+
+    void HashTable:: grow()
+    {
+        assert(code!=0);
+        
+    }
+
 
 };
