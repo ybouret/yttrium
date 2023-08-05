@@ -35,19 +35,18 @@ namespace Yttrium
             typedef HashTableKnot Knot;
             typedef HashTableSlot Slot;
 
-            static const size_t   MinSlots   = 16;
-            static const size_t   LoadFactor = 4;
-            static const size_t   MaxItems   = Base2<size_t>::MaxPowerOfTwo;
-            static const size_t   MinItems   = MinSlots * LoadFactor;
+            static const unsigned MinSlotsLn2 = 4;
+            static const size_t   MinSlots    = 1 << MinSlotsLn2;
+            static const size_t   MaxSlots    = (Base2<size_t>::MaxPowerOfTwo / sizeof(Slot))/HashTable::LoadFactor;
 
-            static inline size_t CheckItems(const size_t n)
+            static inline size_t CheckSize(const size_t n)
             {
-                if(n>MaxItems) throw Exception("Too many items");
-                return Max(MinItems,NextPowerOfTwo(n));
+                if(n>MaxSlots) throw Exception("too big");
+                return Max(MinSlots,NextPowerOfTwo(n));
             }
 
-            inline explicit Metrics(const size_t n) :
-            size( CheckItems(n)/LoadFactor ),
+            inline explicit Metrics(const size_t sz) :
+            size(  CheckSize(sz) ),
             mask( size-1 )
             {
                 assert(size>=MinSlots);
@@ -64,6 +63,8 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Metrics);
         };
 
+
+
     }
 
     class HashTable::Code :
@@ -77,26 +78,56 @@ namespace Yttrium
 
 
 
-        explicit Code(const size_t n) :
-        Metrics(n),
-        WadType(size),
-        slot( static_cast<Slot *>(workspace) )
+        explicit Code(const size_t sz ) :
+        Metrics(sz), WadType(size), slot( static_cast<Slot *>(workspace) )
+        { setup(); }
+
+
+        virtual ~Code() noexcept { clear(); }
+
+        void steal(Code *source) noexcept
         {
-            for(size_t i=0;i<size;++i) new (slot+i) Slot();
+            assert(0!=source);
+            for(size_t i=0;i<source->size;++i)
+            {
+                Slot &src = source->slot[i];
+                while(src.size) {
+                    Knot        *knot = src.popHead();
+                    const size_t hkey = knot->hkey;
+                    slot[hkey&mask].pushTail(knot);
+                }
+            }
+
         }
 
-        virtual ~Code() noexcept
+        inline void freeWith(HashTablePool &pool) noexcept
         {
+            for(size_t i=0;i<size;++i)
+            {
+                Slot &s =  slot[i];
+                while(s.size>0) pool.zrelease( Destructed(s.popTail()) );
+            }
+        }
+
+        inline void releaseWith(HashTablePool &pool) noexcept
+        {
+            for(size_t i=0;i<size;++i)
+            {
+                Slot &s =  slot[i];
+                while(s.size>0) pool.zdiscard( Destructed(s.popTail()) );
+            }
         }
 
         Slot        *slot;
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Code);
-
+        inline void setup() noexcept { for(size_t i=0;i<size;++i) new (slot+i) Slot(); }
+        inline void clear() noexcept { for(size_t i=0;i<size;++i) Destruct(slot+i);    }
     };
 
-    HashTable:: HashTable(const size_t n) : code( new Code(n) )
+
+    HashTable:: HashTable(const size_t sz) : code( new Code(sz) )
     {
 
 
@@ -135,8 +166,27 @@ namespace Yttrium
     void HashTable:: grow()
     {
         assert(code!=0);
-        
+        const size_t curr = code->size;
+        if(curr>=Code::MaxSlots) Exception("Already got maximum slots");
+
+        Code *temp = new Code(curr*2);
+        temp->steal(code);
+        delete code;
+        code = temp;
     }
+
+    void HashTable:: freeWith(HashTablePool &pool) noexcept
+    {
+        assert(code!=0);
+        code->freeWith(pool);
+    }
+
+    void HashTable:: releaseWith(HashTablePool &pool) noexcept
+    {
+        assert(code!=0);
+        code->releaseWith(pool);
+    }
+
 
 
 };

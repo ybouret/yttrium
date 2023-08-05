@@ -7,6 +7,7 @@
 #include "y/container/dynamic.hpp"
 #include "y/type/args.hpp"
 #include "y/data/list.hpp"
+#include "y/memory/blanks.hpp"
 
 namespace Yttrium
 {
@@ -26,12 +27,15 @@ namespace Yttrium
     };
 
     typedef ListOf<HashTableKnot> HashTableSlot;
-
+    typedef Blanks<HashTableKnot> HashTablePool;
 
     class HashTable
     {
     public:
-        explicit HashTable(const size_t);
+        static const unsigned LoadFactorLn2 = 2;
+        static const size_t   LoadFactor    = 1 << LoadFactorLn2;
+
+        explicit HashTable(const size_t sz);
         virtual ~HashTable() noexcept;
 
         HashTableSlot &       operator[](const size_t hkey) noexcept;
@@ -39,7 +43,9 @@ namespace Yttrium
 
         void    grow();
         size_t  size() const noexcept;
-        
+        void    freeWith(HashTablePool    &) noexcept;
+        void    releaseWith(HashTablePool &) noexcept;
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(HashTable);
         class Code;
