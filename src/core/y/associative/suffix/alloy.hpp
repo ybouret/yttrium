@@ -100,7 +100,7 @@ namespace Yttrium
     protected:
 
         //! setup empty
-        inline explicit SuffixAlloy() noexcept :
+        inline explicit SuffixAlloy() :
         INTERFACE(),
         TreeType(),
         BASE()
