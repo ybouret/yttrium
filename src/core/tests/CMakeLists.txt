@@ -178,4 +178,6 @@ add_test(associative:hash-table  test-core associative_hash_table)
 #mkl
 add_test(mkl:complex test-core mkl_complex)
 add_test(mkl:vtx     test-core mkl_vtx)
+add_test(mkl:xreal   test-core mkl_xreal)
+
 

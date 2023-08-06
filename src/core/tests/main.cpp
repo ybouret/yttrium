@@ -137,6 +137,7 @@ Y_UTEST_DECL(256)
 
     Y_UTEST(mkl_complex);
     Y_UTEST(mkl_vtx);
+    Y_UTEST(mkl_xreal);
 
 }
 Y_UTEST_EXEC()
