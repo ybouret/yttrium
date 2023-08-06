@@ -3,6 +3,11 @@
 
 using namespace Yttrium;
 
+namespace Yttrium
+{
+    
+}
+
 Y_UTEST(associative_hash_table)
 {
     HashTable t(0);
