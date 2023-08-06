@@ -1,4 +1,4 @@
-#include "y/associative/hash/table.hpp"
+#include "y/associative/hash/linked.hpp"
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;

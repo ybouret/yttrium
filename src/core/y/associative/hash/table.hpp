@@ -1,8 +1,7 @@
-
 //! \file
 
-#ifndef Y_Associative_Included
-#define Y_Associative_Included 1
+#ifndef Y_Associative_Hash_Table_Included
+#define Y_Associative_Hash_Table_Included 1
 
 #include "y/container/dynamic.hpp"
 #include "y/type/args.hpp"
