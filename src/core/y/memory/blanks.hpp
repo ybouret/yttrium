@@ -21,7 +21,13 @@ namespace Yttrium
         class Blanks : public Cache
         {
         public:
-            static const char * const CallSign;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< "Memory::Blanks"
             
             //__________________________________________________________________
             //
@@ -54,7 +60,7 @@ namespace Yttrium
             size_t       blockSize()         const noexcept; //!< internal arena blockSize
             size_t       allocated()         const noexcept; //!< bookkept allocated blocks
             size_t       available()         const noexcept; //!< available blocks
-            void         displayInfo(const size_t)    const; //! display statistics
+            void         displayInfo(const size_t)    const; //!< display statistics
             void         reserve(const size_t);              //!< populate cache with more blocks
 
             //__________________________________________________________________

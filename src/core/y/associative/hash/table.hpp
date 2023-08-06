@@ -12,6 +12,7 @@
 namespace Yttrium
 {
 
+    //! anonymous knot
     class HashTableKnot
     {
     public:

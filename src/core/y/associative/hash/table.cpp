@@ -24,7 +24,6 @@ namespace Yttrium
     namespace
     {
 
-
         class Metrics
         {
         public:
@@ -75,7 +74,9 @@ namespace Yttrium
 
 
         explicit Code(const size_t sz ) :
-        Metrics(sz), WadType(size), slot( static_cast<Slot *>(workspace) )
+        Metrics(sz),
+        WadType(size),
+        slot( static_cast<Slot *>(workspace) )
         { setup(); }
 
 
