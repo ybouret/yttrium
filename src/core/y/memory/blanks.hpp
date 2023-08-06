@@ -65,7 +65,7 @@ namespace Yttrium
 
 
         public:
-            virtual void release()                 noexcept; //!< [Releasable] empty
+            virtual void release()                 noexcept; //!< [Releasable] empty available memory
             virtual void gc(const size_t maxCount) noexcept; //!< [Cache] keep no more than maxCount blocks
             void         storeBlank(void *)        noexcept; //!< store a previously acquired
             void         eraseBlank(void *)        noexcept; //!< [locked] directly sent to arena
@@ -85,12 +85,10 @@ namespace Yttrium
             const size_t allocated; //!< bookeeping of allocated blocks
             
         private:
+            Y_DISABLE_COPY_AND_ASSIGN(Blanks);
+            void empty() noexcept;  //!< return to locked internal arena
             Lockable    &giantLock; //!< to access coreArena
             Arena       &coreArena; //!< Quark's arena
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Blanks);
-            void empty() noexcept; //!< return to locked arena
         };
 
     }

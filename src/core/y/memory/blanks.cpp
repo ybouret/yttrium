@@ -30,6 +30,7 @@ namespace Yttrium
             return Concurrent::Mem::BlocksInstance()[blockSize];
         }
 
+
         Blanks:: Blanks(const size_t userBlockSize,
                         const size_t startCapacity) :
         BlankNode::Pool(),
