@@ -52,8 +52,8 @@ namespace Yttrium
         //______________________________________________________________________
         inline virtual const char * callSign()  const noexcept { return BASE::CallSign; }      //!< callSign
         inline virtual size_t       size()      const noexcept { return list.size; }           //!< list size
-        inline virtual size_t       capacity()  const noexcept { return list.size+pool.size; } //!< capacity
-        inline virtual size_t       available() const noexcept { return pool.size; }           //!< available
+        inline virtual size_t       capacity()  const noexcept { return list.size+pool.available(); } //!< capacity
+        inline virtual size_t       available() const noexcept { return pool.available(); }           //!< available
         inline virtual void         free()            noexcept { this->softReset(); }          //!< free content, keep memory
         inline virtual void         release()         noexcept { this->hardReset(); }          //!< release all possible memory
         inline virtual void         reserve(size_t n) noexcept { pool.reserve(n); }            //!< reserve blocks

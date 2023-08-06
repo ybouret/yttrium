@@ -8,6 +8,7 @@
 
 namespace Yttrium
 {
+    
     namespace Memory
     {
         class Straps;

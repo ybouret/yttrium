@@ -3,8 +3,6 @@
 #ifndef Y_Memory_Blanks_Included
 #define Y_Memory_Blanks_Included 1
 
-#include "y/lockable.hpp"
-#include "y/data/pool.hpp"
 #include "y/type/cache.hpp"
 #include "y/type/destruct.hpp"
 
@@ -12,23 +10,6 @@ namespace Yttrium
 {
     namespace Memory
     {
-
-        class Arena;
-
-        //______________________________________________________________________
-        //
-        //
-        //! alias to internally handled data blocks
-        //
-        //______________________________________________________________________
-        struct BlankNode
-        {
-            typedef PoolOf<BlankNode> Pool; //!< alias
-            BlankNode *next;                //!< for pool/list
-            BlankNode *prev;                //!< for list
-        };
-
-        
         //______________________________________________________________________
         //
         //
@@ -37,8 +18,11 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Blanks : public BlankNode::Pool, public Cache
+        class Blanks : public Cache
         {
+        public:
+            static const char * const CallSign;
+            
             //__________________________________________________________________
             //
             //
@@ -61,20 +45,17 @@ namespace Yttrium
             //
             //__________________________________________________________________
         protected:
-            void       *fetchBlank();                     //!< [locked acquire new|query a blank]
-
-
+            void       *fetchBlank();                        //!< (locked) [acquire new|query a] blank block
         public:
             virtual void release()                 noexcept; //!< [Releasable] empty available memory
             virtual void gc(const size_t maxCount) noexcept; //!< [Cache] keep no more than maxCount blocks
             void         storeBlank(void *)        noexcept; //!< store a previously acquired
-            void         eraseBlank(void *)        noexcept; //!< [locked] directly sent to arena
-            size_t       blockSize()         const noexcept; //!< coreArena.blockSize
-            void         reserve(size_t n);                  //!< populate cache with more blocks
-
-            
-            //! display statistics
-            void         displayInfo(const size_t indent) const;
+            void         eraseBlank(void *)        noexcept; //!< (locked) directly sent to arena
+            size_t       blockSize()         const noexcept; //!< internal arena blockSize
+            size_t       allocated()         const noexcept; //!< bookkept allocated blocks
+            size_t       available()         const noexcept; //!< available blocks
+            void         displayInfo(const size_t)    const; //! display statistics
+            void         reserve(const size_t);              //!< populate cache with more blocks
 
             //__________________________________________________________________
             //
@@ -82,15 +63,11 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const size_t allocated; //!< bookeeping of allocated blocks
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Blanks);
             class Code;
-            void empty() noexcept;  //!< return to locked internal arena
-            Lockable    &giantLock; //!< to access coreArena
-            Arena       &coreArena; //!< Quark's arena
-            Code        *code;
+            Code *code;
 
         };
 

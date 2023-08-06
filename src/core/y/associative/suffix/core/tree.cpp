@@ -376,7 +376,7 @@ namespace Yttrium
         {
             assert(0!=code);
             code->pool.release();
-            assert(0==code->pool.size);
+            assert(0==code->pool.available());
         }
 
         void SuffixTree:: release() noexcept
