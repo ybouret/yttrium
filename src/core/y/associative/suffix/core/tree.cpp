@@ -73,7 +73,7 @@ namespace Yttrium
             //! create a root from the pool
             inline explicit Code() : root(0), pool(0)
             {
-                root = new (pool.zacquire()) SuffixNode(0,0);
+                root = new (pool.queryBlank()) SuffixNode(0,0);
             }
 
             //! destroy the root
@@ -103,7 +103,7 @@ namespace Yttrium
                 {
                     destroy(node->chld.popTail());
                 }
-                pool.zrelease( Destructed(node) );
+                pool.storeBuilt( node );
             }
 
             //__________________________________________________________________
@@ -131,7 +131,7 @@ namespace Yttrium
                 {
                     expunge(node->chld.popTail());
                 }
-                pool.zdiscard( Destructed(node) );
+                pool.eraseBuilt( node );
             }
 
             //__________________________________________________________________
@@ -157,14 +157,14 @@ namespace Yttrium
                 ListOf<SuffixNode> &chld = curr->chld;
                 switch(curr->chld.size)
                 {
-                    case 0: return (curr = chld.pushTail( new (pool.zacquire()) SuffixNode(curr,code) ));
+                    case 0: return (curr = chld.pushTail( new (pool.queryBlank()) SuffixNode(curr,code) ));
                     case 1:
                         assert(0!=chld.head);
                         switch( Sign::Of(code,chld.head->code))
                         {
-                            case Negative: return (chld.pushHead( new (pool.zacquire()) SuffixNode(curr,code) ));
+                            case Negative: return (chld.pushHead( new (pool.queryBlank()) SuffixNode(curr,code) ));
                             case __Zero__: return (chld.head);
-                            case Positive: return (chld.pushTail( new (pool.zacquire()) SuffixNode(curr,code) ) );
+                            case Positive: return (chld.pushTail( new (pool.queryBlank()) SuffixNode(curr,code) ) );
                         }
                         // never get here
                         break;
@@ -176,7 +176,7 @@ namespace Yttrium
                 SuffixNode *lower = chld.head; assert(0!=lower);
                 switch( Sign::Of(code,lower->code) )
                 {
-                    case Negative: return (chld.pushHead( new (pool.zacquire()) SuffixNode(curr,code) ));
+                    case Negative: return (chld.pushHead( new (pool.queryBlank()) SuffixNode(curr,code) ));
                     case __Zero__: return (lower);
                     case Positive: break;
                 }
@@ -185,7 +185,7 @@ namespace Yttrium
                 switch ( Sign::Of(code,upper->code)) {
                     case Negative: break;
                     case __Zero__: return (upper);
-                    case Positive: return (chld.pushTail( new (pool.zacquire()) SuffixNode(curr,code) ) );
+                    case Positive: return (chld.pushTail( new (pool.queryBlank()) SuffixNode(curr,code) ) );
                 }
 
                 assert(0!=lower);
@@ -210,8 +210,7 @@ namespace Yttrium
                 assert(code>lower->code);
                 assert(0!=lower->next);
                 assert(code<lower->next->code);
-                return chld.insertAfter(lower, new (pool.zacquire()) SuffixNode(curr,code) );
-                throw Exception("not implemented");
+                return chld.insertAfter(lower, new (pool.queryBlank()) SuffixNode(curr,code) );
             }
 
             //__________________________________________________________________

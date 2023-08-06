@@ -101,7 +101,7 @@ namespace Yttrium
             for(size_t i=0;i<size;++i)
             {
                 Slot &s =  slot[i];
-                while(s.size>0) pool.zrelease( Destructed(s.popTail()) );
+                while(s.size>0) pool.storeBuilt(s.popTail());
             }
         }
 
@@ -110,7 +110,7 @@ namespace Yttrium
             for(size_t i=0;i<size;++i)
             {
                 Slot &s =  slot[i];
-                while(s.size>0) pool.zdiscard( Destructed(s.popTail()) );
+                while(s.size>0) pool.eraseBuilt(s.popTail());
             }
         }
 

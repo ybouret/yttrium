@@ -73,7 +73,7 @@ namespace Yttrium
         }
 
 
-        void * Blanks:: acquireBlock()
+        void * Blanks:: fetchBlank()
         {
             if(size>0)
             {
@@ -89,7 +89,7 @@ namespace Yttrium
             }
         }
 
-        void Blanks:: zrelease(void *blockAddr) noexcept
+        void Blanks:: storeBlank(void *blockAddr) noexcept
         {
             assert(0!=blockAddr);
             assert(allocated>0);
@@ -97,7 +97,7 @@ namespace Yttrium
             store( static_cast<BlankNode *>( OutOfReach::Zero(blockAddr,sizeof(BlankNode))) );
         }
 
-        void Blanks:: zdiscard(void *blockAddr) noexcept
+        void Blanks:: eraseBlank(void *blockAddr) noexcept
         {
             assert(0!=blockAddr);
             assert(allocated>0);

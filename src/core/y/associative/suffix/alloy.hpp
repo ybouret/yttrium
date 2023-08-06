@@ -81,7 +81,7 @@ namespace Yttrium
             if(!nodeAddr) return false;
             NODE *node = (NODE *)nodeAddr; assert(0!=node->knot);
             tree.loosen(node->knot);
-            pool.destruct( list.pop(node) );
+            pool.free( list.pop(node) );
             return true;
         }
         

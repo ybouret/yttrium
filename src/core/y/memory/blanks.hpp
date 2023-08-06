@@ -6,6 +6,7 @@
 #include "y/lockable.hpp"
 #include "y/data/pool.hpp"
 #include "y/type/cache.hpp"
+#include "y/type/destruct.hpp"
 
 namespace Yttrium
 {
@@ -27,8 +28,7 @@ namespace Yttrium
             BlankNode *prev;                //!< for list
         };
 
-
-
+        
         //______________________________________________________________________
         //
         //
@@ -61,13 +61,14 @@ namespace Yttrium
             //
             //__________________________________________________________________
         protected:
-            void       *acquireBlock();    //!< [locked acquire new|query a block]
+            void       *fetchBlank();                     //!< [locked acquire new|query a blank]
+
 
         public:
             virtual void release()                 noexcept; //!< [Releasable] empty
             virtual void gc(const size_t maxCount) noexcept; //!< [Cache] keep no more than maxCount blocks
-            void         zrelease(void *)          noexcept; //!< store a previously acquired
-            void         zdiscard(void *)          noexcept; //!< [locked] directly sent to arena
+            void         storeBlank(void *)        noexcept; //!< store a previously acquired
+            void         eraseBlank(void *)        noexcept; //!< [locked] directly sent to arena
             size_t       blockSize()         const noexcept; //!< coreArena.blockSize
             void         reserve(size_t n);                  //!< populate cache with more blocks
 
@@ -128,8 +129,13 @@ namespace Yttrium
         //______________________________________________________________________
 
         //! acquire a zombie object
-        inline T *  zacquire() { return static_cast<T*>(acquireBlock()); }
+        inline T *  queryBlank() { return static_cast<T*>(fetchBlank()); }
+        
+        //! store a built object, keeping memory in cache
+        inline void storeBuilt(T *obj) noexcept { assert(0!=obj); storeBlank( Destructed(obj) ); }
 
+        //! erase a built object, returning memory to system
+        inline void eraseBuilt(T *obj) noexcept { assert(0!=obj); eraseBlank( Destructed(obj) ); }
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Blanks);
     };

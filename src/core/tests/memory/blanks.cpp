@@ -11,9 +11,9 @@ Y_UTEST(memory_blanks)
 
     Blanks<int> icache(32);
 
-    int *a = icache.zacquire();
+    int *a = icache.queryBlank();
 
-    icache.zrelease(a);
+    icache.storeBlank(a);
 
     icache.displayInfo(0);
     icache.gc(10);

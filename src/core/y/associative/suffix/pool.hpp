@@ -22,10 +22,6 @@ namespace Yttrium
     class SuffixPool : public Blanks<NODE>
     {
     public:
-        using Blanks<NODE>::zacquire;
-        using Blanks<NODE>::zrelease;
-        using Blanks<NODE>::zdiscard;
-
         //______________________________________________________________________
         //
         //
@@ -42,17 +38,19 @@ namespace Yttrium
         //
         //______________________________________________________________________
 
+
+
         //______________________________________________________________________
         //
         //! construct NODE for a Map
         //______________________________________________________________________
         template <typename KEY, typename T> inline
-        NODE * create(typename TypeTraits<KEY>::ParamType k,
-                      typename TypeTraits<T>::  ParamType t)
+        NODE * produce(typename TypeTraits<KEY>::ParamType k,
+                       typename TypeTraits<T>::  ParamType t)
         {
-            void *node = zacquire();
+            void *node = this->queryBlank();
             try  { return new (node) NODE(k,t); }
-            catch(...) { zrelease(node); throw; }
+            catch(...) { this->storeBlank(node); throw; }
         }
 
         //______________________________________________________________________
@@ -60,11 +58,11 @@ namespace Yttrium
         //! construct NODE for a Set
         //______________________________________________________________________
         template <typename T> inline
-        NODE * create(typename TypeTraits<T>:: ParamType t)
+        NODE * produce(typename TypeTraits<T>:: ParamType t)
         {
-            void *node = zacquire();
+            void *node = this->queryBlank();
             try    { return new (node) NODE(t); }
-            catch(...) { zrelease(node); throw; }
+            catch(...) { this->storeBlank(node); throw; }
         }
 
 
@@ -72,26 +70,26 @@ namespace Yttrium
         //
         //! duplicate NODE based on NODE copy constructor
         //______________________________________________________________________
-        inline NODE *duplicate(const NODE *user)
+        inline NODE *replica(const NODE *user)
         {
-            assert(0!=user); void *node = zacquire();
+            assert(0!=user); void *node = this->queryBlank();
             try { return new (node) NODE(*user); }
-            catch(...) { zrelease(node); throw; }
+            catch(...) { this->storeBlank(node); throw; }
         }
 
         //______________________________________________________________________
         //
         //! destruct and store block inside pool
         //______________________________________________________________________
-        inline void destruct( NODE *node ) noexcept
-        { assert(0!=node); zrelease( Destructed(node) ); }
+        inline void free( NODE *node ) noexcept
+        { assert(0!=node); this->storeBuilt(node); }
 
         //______________________________________________________________________
         //
         //! destruct and release block to system's memory
         //______________________________________________________________________
-        inline void vaporize( NODE *node ) noexcept
-        { assert(0!=node); zdiscard( Destructed(node) ); }
+        inline void quit( NODE *node ) noexcept
+        { assert(0!=node); this->eraseBuilt(node); }
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(SuffixPool);

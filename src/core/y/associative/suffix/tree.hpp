@@ -59,14 +59,14 @@ namespace Yttrium
         //! insertion for Map
         //______________________________________________________________________
         inline bool insert_(ParamKey key, ParamType t)
-        { return insert__( pool.template create<KEY,T>(key,t) ); }
+        { return insert__( pool.template produce<KEY,T>(key,t) ); }
 
         //______________________________________________________________________
         //
         //! insertion for Setp
         //______________________________________________________________________
         bool insert_(ParamType t)
-        { return insert__( pool.template create<T>(t) ); }
+        { return insert__( pool.template produce<T>(t) ); }
 
 
         //______________________________________________________________________
@@ -97,7 +97,7 @@ namespace Yttrium
         inline void hardReset() noexcept {
             tree.release();
             while(list.size>0)
-                pool.vaporize(list.popTail());
+                pool.quit(list.popTail());
             pool.release();
         }
 
@@ -108,7 +108,7 @@ namespace Yttrium
         inline void softReset() noexcept {
             tree.free();
             while(list.size>0)
-                pool.destruct(list.popTail());
+                pool.free(list.popTail());
         }
 
     private:
@@ -121,20 +121,20 @@ namespace Yttrium
             try {
                 if( 0 == (node->knot = tree.insert(path,node)) )
                 {
-                    pool.destruct(node);
+                    pool.free(node);
                     return false;
                 }
                 list.pushTail(node);
                 return true;
             }
-            catch(...) { pool.destruct(node); throw; }
+            catch(...) { pool.free(node); throw; }
         }
 
         inline void duplicate_(const SuffixTree &other)
         {
             for(const NodeType *node=other.list.head;node;node=node->next)
             {
-                if(!insert__( pool.duplicate(node) ) )
+                if(!insert__( pool.replica(node) ) )
                     tree.unexpectedCopyException();
             }
         }
