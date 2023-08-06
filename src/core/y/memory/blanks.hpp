@@ -86,9 +86,12 @@ namespace Yttrium
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Blanks);
+            class Code;
             void empty() noexcept;  //!< return to locked internal arena
             Lockable    &giantLock; //!< to access coreArena
             Arena       &coreArena; //!< Quark's arena
+            Code        *code;
+
         };
 
     }
