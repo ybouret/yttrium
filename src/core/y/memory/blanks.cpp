@@ -6,6 +6,7 @@
 #include "y/memory/out-of-reach.hpp"
 #include "y/data/rework.hpp"
 #include "y/sort/merge.hpp"
+#include "y/object.hpp"
 
 namespace Yttrium
 {
@@ -29,6 +30,45 @@ namespace Yttrium
             Y_LOCK(giantLock);
             return Concurrent::Mem::BlocksInstance()[blockSize];
         }
+
+        class Blanks:: Code : public BlankNode::Pool
+        {
+        public:
+            explicit Code(const size_t userBlockSize,
+                          const size_t startCapacity) :
+            allocated(0),
+            giantLock( Lockable::Giant() ),
+            coreArena( GetArena(BlockSizeFor(userBlockSize),giantLock) )
+            {
+                try { reserve(startCapacity); }
+                catch(...) { empty(); throw;  }
+            }
+
+            inline virtual ~Code() noexcept
+            {
+            }
+
+            inline void reserve(size_t n)
+            {
+                Y_LOCK(giantLock);
+                while(n-- > 0) store( static_cast<BlankNode *>( coreArena.acquireBlock()) );
+            }
+
+            //! lock and empty pool
+            inline void empty() noexcept
+            {
+                Y_LOCK(giantLock);
+                while(size>0)
+                    coreArena.releaseBlock( query() );
+            }
+
+            size_t       allocated; //!< bookkeeping
+            Lockable    &giantLock; //!< to access coreArena
+            Arena       &coreArena; //!< Quark's arena
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Code);
+        };
 
 
         Blanks:: Blanks(const size_t userBlockSize,
