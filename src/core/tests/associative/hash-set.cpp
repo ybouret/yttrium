@@ -89,6 +89,10 @@ Y_UTEST(associative_hash_set)
                 const String &key = keys.tail();
                 Y_ASSERT(hset.search(key));
                 Y_ASSERT(pset.search(key));
+                Y_ASSERT(hset.remove(key));
+                Y_ASSERT(pset.remove(key));
+                Y_ASSERT(!hset.search(key));
+                Y_ASSERT(!pset.search(key));
                 keys.popTail();
             }
 
