@@ -1,5 +1,5 @@
 
-#include "y/ptr/cstr.hpp"
+#include "y/ptr/light-string.hpp"
 #include "y/object.hpp"
 #include "y/counted.hpp"
 #include "y/text/ops.hpp"

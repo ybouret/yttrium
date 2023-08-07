@@ -6,7 +6,7 @@
 
 
 #include "y/hashing/hmac.hpp"
-#include "y/ptr/cstr.hpp"
+#include "y/ptr/light-string.hpp"
 #include "y/text/ops.hpp"
 
 namespace Yttrium
