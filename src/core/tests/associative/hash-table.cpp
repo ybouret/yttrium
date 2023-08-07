@@ -1,6 +1,6 @@
 #include "y/associative/hash/linked.hpp"
 #include "y/associative/suffix/map/node.hpp"
-#include "y/associative/suffix/set/node.hpp"
+#include "y/associative/hash/set/node.hpp"
 #include "y/hashing/to/hash-key.hpp"
 #include "y/hashing/fnv.hpp"
 #include "y/hashing/sha1.hpp"
@@ -76,7 +76,7 @@ Y_UTEST(associative_hash_table)
 
 
 
-    HashLinked<String,Dummy,SuffixSetNode<String,Dummy>, Hashing::ToHashKey<Hashing::SHA1> > hs;
+    HashLinked<String,Dummy,HashSetNode<String,Dummy>, Hashing::ToHashKey<Hashing::SHA1> > hs;
     {
         const Dummy dum("World",3);
         Y_CHECK(hs.insert_(dum));

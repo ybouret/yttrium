@@ -60,6 +60,8 @@ associative/suffix/core
 associative/suffix/map
 associative/suffix/set
 associative/hash
+associative/hash/map
+associative/hash/set
 mkl
 )
 
