@@ -40,7 +40,7 @@ namespace Yttrium
 
     }
 
-    class CStrPtr:: Code : public Object, public Counted, public Metrics, public WadType
+    class LightString:: Code : public Object, public Counted, public Metrics, public WadType
     {
     public:
         explicit Code(const char *lhs) :
@@ -76,50 +76,50 @@ namespace Yttrium
     };
 
 
-    const char * const CStrPtr:: CallSign = "CStrPtr";
+    const char * const LightString:: CallSign = "CStrPtr";
 
-    CStrPtr:: CStrPtr(const char *lhs) : Identifiable(), Collection(), Readable<char>(), code( new Code(lhs) )
+    LightString:: LightString(const char *lhs) : Identifiable(), Collection(), Readable<char>(), code( new Code(lhs) )
     {
         code->withhold();
     }
 
-    CStrPtr:: CStrPtr(const char *lhs, const char *rhs) : Identifiable(), Collection(), Readable<char>(), code( new Code(lhs,rhs) )
+    LightString:: LightString(const char *lhs, const char *rhs) : Identifiable(), Collection(), Readable<char>(), code( new Code(lhs,rhs) )
     {
         code->withhold();
     }
 
 
-    CStrPtr:: ~CStrPtr() noexcept
+    LightString:: ~LightString() noexcept
     {
         assert(0!=code);
         if(code->liberate()) delete code;
         code = 0;
     }
 
-    const char * CStrPtr:: operator()(void) const noexcept
+    const char * LightString:: operator()(void) const noexcept
     {
         assert(0!=code);
         return code->data;
     }
 
 
-    CStrPtr:: CStrPtr(const CStrPtr &other) noexcept : Identifiable(), Collection(), Readable<char>(), code( other.code )
+    LightString:: LightString(const LightString &other) noexcept : Identifiable(), Collection(), Readable<char>(), code( other.code )
     {
         code->withhold();
     }
 
-    size_t CStrPtr:: size() const noexcept
+    size_t LightString:: size() const noexcept
     {
         assert(0!=code);
         return code->size;
     }
 
-    const char * CStrPtr:: callSign() const noexcept
+    const char * LightString:: callSign() const noexcept
     {
         return CallSign;
     }
 
-    const char & CStrPtr:: operator[](const size_t indx) const noexcept
+    const char & LightString:: operator[](const size_t indx) const noexcept
     {
         assert(0!=code);
         assert(indx>0);
@@ -127,7 +127,7 @@ namespace Yttrium
         return code->data[indx-1];
     }
 
-    std::ostream & operator<<(std::ostream &os, const CStrPtr &p)
+    std::ostream & operator<<(std::ostream &os, const LightString &p)
     {
         assert(0!=p.code);
         assert(0!=p.code->data);

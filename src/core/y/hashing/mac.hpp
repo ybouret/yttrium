@@ -84,7 +84,7 @@ Function( FUNCTION::__length, FUNCTION::__window), H(), M(H,
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(HMAC);
-            const CStrPtr id;
+            const LightString id;
         };
 
     }

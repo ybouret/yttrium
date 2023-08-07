@@ -16,15 +16,15 @@ namespace Yttrium
     //! helper to produce legacy C strings
     //
     //__________________________________________________________________________
-    class CStrPtr : public Readable<char>
+    class LightString : public Readable<char>
     {
     public:
         static const char * const CallSign;           //!< "CStrPtr"
-        CStrPtr(const char *);                        //!< strcpy
-        CStrPtr(const char *, const char *);          //!< strcat
-        CStrPtr(const CStrPtr &) noexcept;            //!< no-throw copy
-        virtual ~CStrPtr() noexcept;                  //!< cleanup
-        Y_OSTREAM_PROTO(CStrPtr);                     //!< display
+        LightString(const char *);                        //!< strcpy
+        LightString(const char *, const char *);          //!< strcat
+        LightString(const LightString &) noexcept;            //!< no-throw copy
+        virtual ~LightString() noexcept;                  //!< cleanup
+        Y_OSTREAM_PROTO(LightString);                     //!< display
 
         virtual size_t       size()                    const noexcept; //!< [Collection]  strlen
         virtual const char * callSign()                const noexcept; //!< [Identfiable] CallSign;
@@ -32,7 +32,7 @@ namespace Yttrium
         const char          *operator()(void)          const noexcept; //!< access c-string
         
     private:
-        Y_DISABLE_ASSIGN(CStrPtr);
+        Y_DISABLE_ASSIGN(LightString);
         class  Code;
         Code  *code;
     };

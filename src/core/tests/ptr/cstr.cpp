@@ -7,11 +7,11 @@ using namespace Yttrium;
 
 Y_UTEST(ptr_cstr)
 {
-    CStrPtr p = "Hello";
+    LightString p = "Hello";
 
     std::cerr << p << std::endl;
 
-    const CStrPtr q("Hello"," World");
+    const LightString q("Hello"," World");
 
     std::cerr << q << " / " << q() << std::endl;
 
