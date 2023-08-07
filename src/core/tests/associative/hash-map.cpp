@@ -44,6 +44,8 @@ Y_UTEST(associative_hash_map)
         {
             const HashMap<String,apn> tmp(hmap);
             Y_CHECK(tmp.size()==hmap.size());
+            std::cerr << hmap << std::endl;
+            std::cerr << tmp << std::endl;
         }
 
         if(keys.size())

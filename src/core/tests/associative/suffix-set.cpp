@@ -32,6 +32,13 @@ namespace
 
         const String &key() const noexcept { return name; }
 
+
+        inline friend std::ostream & operator<<(std::ostream &os, const Dummy &d)
+        {
+            os << d.indx;
+            return os;
+        }
+
         const String name;
         const int    indx;
 
@@ -82,6 +89,8 @@ Y_UTEST(associative_suffix_set)
             std::cerr << "performing copy..." << std::endl;
             SuffixSet<String,Dummy> myCpy(mySet);
             std::cerr << "copy  #key=" << myCpy.size() << std::endl;
+            std::cerr << mySet << std::endl;
+            std::cerr << myCpy << std::endl;
         }
 
         std::cerr << "Checking Keys" << std::endl;

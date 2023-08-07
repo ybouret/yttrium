@@ -84,7 +84,22 @@ namespace Yttrium
             pool.free( list.pop(node) );
             return true;
         }
-        
+
+        //! display
+        friend inline std::ostream & operator<<(std::ostream &os, const SuffixAlloy &self)
+        {
+            os << '{';
+            const NODE *node = self.list.head;
+            if(node)
+            {
+                INTERFACE::ShowNode(os,node);
+                while( 0 != (node=node->next) )
+                    INTERFACE::ShowNode(os<<',',node);
+                os << ' ';
+            }
+            os << '}';
+            return os;
+        }
 
 
         //______________________________________________________________________

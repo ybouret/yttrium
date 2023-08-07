@@ -5,6 +5,7 @@
 
 #include "y/container/dynamic.hpp"
 #include "y/type/args.hpp"
+#include <iostream>
 
 namespace Yttrium
 {
@@ -33,6 +34,13 @@ namespace Yttrium
         virtual Type *     search(ParamKey)       noexcept = 0; //!< search object by its key, may optimize for next search
         virtual bool       remove(ParamKey)       noexcept = 0; //!< remove object by its key
 
+        //! helper to display one NODE
+        template <typename NODE>
+        static inline void ShowNode(std::ostream &os, const NODE *node)
+        {
+            assert(0!=node);
+            os << ' ' << node->key << ':' << **node;
+        }
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Associative);

@@ -36,11 +36,13 @@ Y_UTEST(associative_suffix_map)
         std::cerr << std::endl;
         std::cerr << "found #key=" << keys.size() << "/" << myMap.size() << std::endl;
 
-        if(false)
+        if(true)
         {
             std::cerr << "performing copy..." << std::endl;
             SuffixMap<String,int> myCpy(myMap);
             std::cerr << "copy  #key=" << myCpy.size() << std::endl;
+            std::cerr << myMap << std::endl;
+            std::cerr << myCpy << std::endl;
         }
 
         std::cerr << "Checking Keys" << std::endl;

@@ -95,15 +95,16 @@ namespace Yttrium
         inline virtual ConstType *  search(ParamKey key) const noexcept { return search_(key); }         //!< search by key
         inline virtual Type *       search(ParamKey key)       noexcept { return (Type *)search_(key); } //!< search by key
 
+        //! display
         friend inline std::ostream & operator<<(std::ostream &os, const HashLinked &self)
         {
             os << '{';
             const NODE *node = self.nodes.head;
             if(node)
             {
-                ShowNode(os,node);
+                INTERFACE::ShowNode(os,node);
                 while( 0 != (node=node->next) )
-                    ShowNode(os<<',',node);
+                    INTERFACE::ShowNode(os<<',',node);
                 os << ' ';
             }
             os << '}';
@@ -141,12 +142,7 @@ namespace Yttrium
         NodePool           npool; //!< pool of nodes
         mutable KEY_HASHER hashr; //!< key hasher
 
-        static inline void ShowNode(std::ostream &os, const NODE *node)
-        {
-            assert(0!=node);
-            os << ' ' << node->key << ':' << **node;
-        }
-
+       
         //! insert for map
         inline bool insert_(ParamKey k, ParamType t)
         {
