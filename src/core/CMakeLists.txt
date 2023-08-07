@@ -1,4 +1,3 @@
-
 include_directories(.)
 
 file(GLOB quark y/concurrent/*.hxx)

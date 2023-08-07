@@ -54,6 +54,7 @@ endmacro()
 
 # all subdirectory
 add_subdirectory(core)
+add_subdirectory(jive)
 
 message( STATUS "[yttrium] Regressions: ${Y_Regressions}")
 

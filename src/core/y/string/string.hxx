@@ -123,7 +123,7 @@ namespace Yttrium
                 }
             }
 
-            inline void free() noexcept
+            inline void clear() noexcept
             {
                 memset(data,0,size*sizeof(CH)); assert( Memory::OutOfReach::Are0(data+size, (maxBlocks-size)*sizeof(CH)));
                 size = 0;
@@ -220,10 +220,10 @@ namespace Yttrium
         }
 
         template <>
-        void String<CH>:: free() noexcept
+        void String<CH>:: clear() noexcept
         {
             assert(0!=code);
-            code->free();
+            code->clear();
         }
         
         template <>
