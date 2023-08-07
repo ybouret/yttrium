@@ -12,22 +12,24 @@ namespace Yttrium
 {
 
     //! anonymous knot
-    class HashTableKnot
+    class HashKnot
     {
     public:
-        HashTableKnot(const size_t,void *) noexcept;
-        ~HashTableKnot()                   noexcept;
+        HashKnot(const size_t,void *) noexcept;
+        ~HashKnot()                   noexcept;
 
-        HashTableKnot *next;
-        HashTableKnot *prev;
+        HashKnot      *next;
+        HashKnot      *prev;
         const size_t   hkey;
         void * const   node;
+
+        typedef ListOf<HashKnot> List;
+        typedef Blanks<HashKnot> Pool;
+
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(HashTableKnot);
+        Y_DISABLE_COPY_AND_ASSIGN(HashKnot);
     };
 
-    typedef ListOf<HashTableKnot> HashTableSlot;
-    typedef Blanks<HashTableKnot> HashTablePool;
 
     class HashTable
     {
@@ -38,13 +40,13 @@ namespace Yttrium
         explicit HashTable(const size_t sz);
         virtual ~HashTable() noexcept;
 
-        HashTableSlot &       operator[](const size_t hkey) noexcept;
-        const HashTableSlot & operator[](const size_t hkey) const noexcept;
+        HashKnot::List &       operator[](const size_t hkey) noexcept;
+        const HashKnot::List & operator[](const size_t hkey) const noexcept;
 
         void    grow();
         size_t  size() const noexcept;
-        void    freeWith(HashTablePool    &) noexcept;
-        void    releaseWith(HashTablePool &) noexcept;
+        void    freeWith(HashKnot::Pool    &) noexcept;
+        void    releaseWith(HashKnot::Pool &) noexcept;
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(HashTable);

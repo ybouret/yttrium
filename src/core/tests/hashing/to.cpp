@@ -114,20 +114,31 @@ Y_UTEST(hashing_to)
         Vector<uint32_t,Memory::Dyadic> hkey(keys,AsCapacity);
         hkey.adjust(keys,0);
 
+        Timing tmx;
         for(HFNmap::Iterator it=hmap.begin();it!=hmap.end();++it)
         {
             Hashing::Function &H = **it;
+            size_t             collision = 0;
+            tmx.reset();
             (std::cerr  << std::setw(12) <<  H.callSign() << '[').flush();
+
             for(size_t i=1;i<=keys;++i)
             {
+                const uint64_t mark = WallTime::Ticks();
                 const uint32_t h32 = hkey[i] = Hashing::To<uint32_t>(H,strings[i]);
+                tmx.ticks += WallTime::Ticks() - mark;
+                tmx.cycle += strings[i].measure();
                 for(size_t j=1;j<i;++j)
                 {
                     if(h32==hkey[j])
+                    {
                         (std::cerr << '.').flush();
+                        ++collision;
+                    }
                 }
             }
-            std::cerr << ']' << std::endl;
+
+            std::cerr << ']' << " #collision=" << collision << " @" << HumanReadable(tmx.speed()) <<  std::endl;
         }
 
 

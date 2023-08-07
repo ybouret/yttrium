@@ -11,12 +11,12 @@
 
 namespace Yttrium
 {
-    HashTableKnot:: HashTableKnot(const size_t h, void *p) noexcept :
+    HashKnot:: HashKnot(const size_t h, void *p) noexcept :
     next(0), prev(0), hkey(h), node(p)
     {
     }
 
-    HashTableKnot:: ~HashTableKnot() noexcept
+    HashKnot:: ~HashKnot() noexcept
     {
     }
 
@@ -27,8 +27,7 @@ namespace Yttrium
         class Metrics
         {
         public:
-            typedef HashTableKnot Knot;
-            typedef HashTableSlot Slot;
+            typedef HashKnot::List Slot;
 
             static const unsigned MinSlotsLn2 = 4;
             static const size_t   MinSlots    = 1 << MinSlotsLn2;
@@ -65,31 +64,30 @@ namespace Yttrium
     class HashTable::Code :
     public Object,
     public Metrics,
-    public Memory::Wad<HashTableSlot,Memory::Dyadic>
+    public Memory::Wad<Metrics::Slot,Memory::Dyadic>
     {
     public:
 
         typedef Memory::Wad<Slot,Memory::Dyadic> WadType;
 
 
-
-        explicit Code(const size_t sz ) :
+        inline explicit Code(const size_t sz ) :
         Metrics(sz),
         WadType(size),
         slot( static_cast<Slot *>(workspace) )
         { setup(); }
 
 
-        virtual ~Code() noexcept { clear(); }
+        inline virtual ~Code() noexcept { clear(); }
 
-        void steal(Code *source) noexcept
+        inline void steal(Code *source) noexcept
         {
             assert(0!=source);
             for(size_t i=0;i<source->size;++i)
             {
                 Slot &src = source->slot[i];
                 while(src.size) {
-                    Knot        *knot = src.popHead();
+                    HashKnot    *knot = src.popHead();
                     const size_t hkey = knot->hkey;
                     slot[hkey&mask].pushTail(knot);
                 }
@@ -97,7 +95,7 @@ namespace Yttrium
 
         }
 
-        inline void freeWith(HashTablePool &pool) noexcept
+        inline void freeWith(HashKnot::Pool &pool) noexcept
         {
             for(size_t i=0;i<size;++i)
             {
@@ -106,7 +104,7 @@ namespace Yttrium
             }
         }
 
-        inline void releaseWith(HashTablePool &pool) noexcept
+        inline void releaseWith(HashKnot::Pool &pool) noexcept
         {
             for(size_t i=0;i<size;++i)
             {
@@ -126,8 +124,7 @@ namespace Yttrium
 
     HashTable:: HashTable(const size_t sz) : code( new Code(sz) )
     {
-
-
+        
     }
 
     HashTable:: ~HashTable() noexcept
@@ -139,14 +136,14 @@ namespace Yttrium
 
 
     
-    HashTableSlot & HashTable:: operator[](const size_t hkey) noexcept
+    HashKnot::List & HashTable:: operator[](const size_t hkey) noexcept
     {
         assert(0!=code);
         assert(0!=code->slot);
         return code->slot[hkey&code->mask];
     }
 
-    const HashTableSlot & HashTable:: operator[](const size_t hkey) const noexcept
+    const HashKnot::List & HashTable:: operator[](const size_t hkey) const noexcept
     {
         assert(0!=code);
         assert(0!=code->slot);
@@ -172,13 +169,13 @@ namespace Yttrium
         code = temp;
     }
 
-    void HashTable:: freeWith(HashTablePool &pool) noexcept
+    void HashTable:: freeWith(HashKnot::Pool &pool) noexcept
     {
         assert(code!=0);
         code->freeWith(pool);
     }
 
-    void HashTable:: releaseWith(HashTablePool &pool) noexcept
+    void HashTable:: releaseWith(HashKnot::Pool &pool) noexcept
     {
         assert(code!=0);
         code->releaseWith(pool);
