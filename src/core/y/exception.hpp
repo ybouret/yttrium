@@ -52,6 +52,7 @@ namespace Yttrium
         Exception &         operator<< (const char *) noexcept;              //!< append text
         Exception &         operator<< (const char  ) noexcept;              //!< append char
         Exception &         add(const char *fmt,...)  noexcept Y_PRINTF_API; //!< append formated
+        Exception &         pre(const char *fmt,...)  noexcept Y_PRINTF_API; //!< prepend formated
         void                display() const;                                 //!< helper
 
     protected:

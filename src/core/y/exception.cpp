@@ -110,11 +110,27 @@ namespace Yttrium
     Exception & Exception::add(const char *fmt, ...) noexcept
     {
         Exception excp;
-        va_list ap;
-        va_start(ap,fmt);
-        excp.format(fmt,&ap);
-        va_end(ap);
+        {
+            va_list ap;
+            va_start(ap,fmt);
+            excp.format(fmt,&ap);
+            va_end(ap);
+        }
         return (*this) << excp.story;
+    }
+
+    Exception & Exception:: pre(const char *fmt, ...) noexcept
+    {
+        Exception excp;
+        {
+            va_list ap;
+            va_start(ap,fmt);
+            excp.format(fmt,&ap);
+            va_end(ap);
+        }
+        excp << story;
+        memcpy(story,excp.story, sizeof(story) );
+        return (*this);
     }
 
 }

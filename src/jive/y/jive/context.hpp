@@ -13,7 +13,9 @@ namespace Yttrium
         class Context
         {
         public:
-            explicit Context(const Tag &) noexcept;
+            template <typename TAG>
+            inline Context( TAG &usr ) : tag(usr), line(1), column(1) {}
+
             Context(const Context &) noexcept;
             virtual ~Context() noexcept;
 
