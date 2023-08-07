@@ -26,15 +26,23 @@ namespace Yttrium
         class HashSet
         {
         public:
-            static const char * const CallSign; //!< "SuffixMap
-            explicit HashSet() noexcept;      //!< setup
-            virtual ~HashSet() noexcept;      //!< cleanup
+            static const char * const CallSign; //!< "HasSet"
+            explicit HashSet() noexcept;        //!< setup
+            virtual ~HashSet() noexcept;        //!< cleanup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(HashSet);
         };
     }
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! HashSet
+    //
+    //
+    //__________________________________________________________________________
     template <
     typename KEY,
     typename T,
@@ -43,18 +51,40 @@ namespace Yttrium
     class HashSet : public HashLinked<KEY,T, Registry<KEY,T>, HashSetNode<KEY,T>,KEY_HASHER,Core::HashSet>
     {
     public:
-        Y_ARGS_DECL(T,Type);
-        Y_ARGS_DECL(KEY,Key);
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        Y_ARGS_DECL(T,Type);                                                           //!< aliases
+        Y_ARGS_DECL(KEY,Key);                                                          //!< aliases
+        typedef HashSetNode<KEY,T> NodeType;                                           //!< alias
+        typedef Registry<KEY,T>    API_Type;                                           //!< alias
+        typedef HashLinked<KEY,T,API_Type,NodeType,KEY_HASHER,Core::HashSet> SelfType; //!< alis
 
-        typedef HashSetNode<KEY,T> NodeType;
-        typedef Registry<KEY,T>    API_Type;
-        typedef HashLinked<KEY,T,API_Type,NodeType,KEY_HASHER,Core::HashSet> SelfType;
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        inline explicit     HashSet() : SelfType(0) { }                                    //!< setup with minimal memory
+        inline explicit     HashSet(const size_t n, const AsCapacity_ &) : SelfType(n) {}  //!< setup with capacity
+        inline virtual     ~HashSet() noexcept { }                                         //!< cleanup
 
-        inline explicit     HashSet() : SelfType(0) { }
-        inline explicit     HashSet(const size_t n, const AsCapacity_ &) : SelfType(n) {}
-        inline virtual     ~HashSet() noexcept { }
-        inline              HashSet(const HashSet &other) : SelfType(other) {}
+        //! copy
+        inline HashSet(const HashSet &other) :
+        Identifiable(), Collection(), SelfType(other) {}
 
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+
+        //! insert type using type.key()
         inline virtual bool insert(ParamType t) { return this->insert_(t); }
 
 

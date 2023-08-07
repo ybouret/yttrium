@@ -9,19 +9,24 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //! Extended Real
+    //
+    //__________________________________________________________________________
     template <typename T>
     class XReal
     {
     public:
-        const int exponent;
-        const T   mantissa;
+        XReal() noexcept;                          //!< zero
+        XReal(const T x);                          //!< decompose
+        XReal(const XReal &) noexcept;             //!< copy
+        XReal & operator=(const XReal &) noexcept; //!< assign
+        ~XReal() noexcept;                         //!< cleanup
 
-        XReal() noexcept;
-        XReal(const T x);
-        XReal(const XReal &) noexcept;
-        XReal & operator=(const XReal &) noexcept;
-        ~XReal() noexcept;
-        
+        const int exponent; //!< exponent
+        const T   mantissa; //!< mantissa
     };
 
 }

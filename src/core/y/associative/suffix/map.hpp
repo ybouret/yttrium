@@ -22,7 +22,7 @@ namespace Yttrium
         class SuffixMap
         {
         public:
-            static const char * const CallSign; //!< "SuffixMap
+            static const char * const CallSign; //!< "SuffixMap"
             explicit SuffixMap() noexcept;      //!< setup
             virtual ~SuffixMap() noexcept;      //!< cleanup
             

@@ -20,21 +20,29 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        //! base class for SuffixMap
+        //! base class for hashMap
         //
         //______________________________________________________________________
         class HashMap
         {
         public:
-            static const char * const CallSign; //!< "SuffixMap
-            explicit HashMap() noexcept;      //!< setup
-            virtual ~HashMap() noexcept;      //!< cleanup
+            static const char * const CallSign; //!< "HasMap"
+            explicit HashMap() noexcept;        //!< setup
+            virtual ~HashMap() noexcept;        //!< cleanup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(HashMap);
         };
     }
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! HashMap
+    //
+    //
+    //__________________________________________________________________________
     template <
     typename KEY,
     typename T,
@@ -43,19 +51,33 @@ namespace Yttrium
     class HashMap : public HashLinked<KEY,T, Glossary<KEY,T>, HashMapNode<KEY,T>,KEY_HASHER,Core::HashMap>
     {
     public:
-        Y_ARGS_DECL(T,Type);
-        Y_ARGS_DECL(KEY,Key);
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        Y_ARGS_DECL(T,Type);                                                           //!< aliases
+        Y_ARGS_DECL(KEY,Key);                                                          //!< aliases
+        typedef HashMapNode<KEY,T> NodeType;                                           //!< alias
+        typedef Glossary<KEY,T>    API_Type;                                           //!< alias
+        typedef HashLinked<KEY,T,API_Type,NodeType,KEY_HASHER,Core::HashMap> SelfType; //!< alias
 
-        typedef HashMapNode<KEY,T> NodeType;
-        typedef Glossary<KEY,T>    API_Type;
-        typedef HashLinked<KEY,T,API_Type,NodeType,KEY_HASHER,Core::HashMap> SelfType;
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        inline explicit HashMap() : SelfType(0) { }                                    //!< setup with minimal memory
+        inline explicit HashMap(const size_t n, const AsCapacity_ &) : SelfType(n) {}  //!< setup with capacity
+        inline virtual ~HashMap() noexcept { }                                         //!< cleanup
 
-        inline explicit HashMap() : SelfType(0) { }
-        inline explicit HashMap(const size_t n, const AsCapacity_ &) : SelfType(n) {}
-        inline          HashMap(const HashMap &other) : SelfType(other) {}
-        inline virtual ~HashMap() noexcept { }
+        //! copy
+        inline          HashMap(const HashMap &other) :
+        Identifiable(), Collection(), SelfType(other) {}
         
-
+        //! insert (key,value)
         inline virtual bool insert(ParamKey k, ParamType t)
         {
             return this->insert_(k,t);

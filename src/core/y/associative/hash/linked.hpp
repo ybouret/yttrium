@@ -13,11 +13,17 @@ namespace Yttrium
 
     namespace Core
     {
+        //______________________________________________________________________
+        //
+        //! helper for HashLinked
+        //______________________________________________________________________
         struct HashLinked
         {
+            //! raise exception
             static void UnexpectedInsertFailure(const char *);
         };
     }
+
     //__________________________________________________________________________
     //
     //
@@ -42,10 +48,10 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        Y_ARGS_DECL(T,Type);
-        Y_ARGS_DECL(KEY,Key);
-        typedef Blanks<NODE> NodePool;
-        static const size_t  LoadFactor = HashTable::LoadFactor;
+        Y_ARGS_DECL(T,Type);                                     //!< aliases
+        Y_ARGS_DECL(KEY,Key);                                    //!< aliases
+        typedef Blanks<NODE> NodePool;                           //!< alias
+        static const size_t  LoadFactor = HashTable::LoadFactor; //!< alias
 
         //______________________________________________________________________
         //
@@ -62,7 +68,7 @@ namespace Yttrium
 
         //! duplicate
         inline HashLinked(const HashLinked &other) :
-        BASE(),
+        Identifiable(), Collection(), INTERFACE(), BASE(),
         nodes(),
         table(other.nodes.size/LoadFactor),
         kpool(other.nodes.size),
@@ -78,38 +84,18 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        inline bool insert_(ParamKey k, ParamType t)
-        {
-            // create a built node
-            NODE *node = npool.queryBlank();
-            try { node = new (node) NODE(k,t); }
-            catch(...) { npool.storeBlank(node); throw; }
 
-            // insert it
-            return insert__(node);
-        }
 
-        inline bool insert_(ParamType t)
-        {
-            // create a built node
-            NODE *node = npool.queryBlank();
-            try { node = new (node) NODE(t); }
-            catch(...) { npool.storeBlank(node); throw; }
-
-            // insert it
-            return insert__(node);
-        }
-
-        inline virtual size_t       size()      const noexcept { return nodes.size;                   }
-        inline virtual const char * callSign()  const noexcept { return BASE::CallSign;               }
-        inline virtual size_t       capacity()  const noexcept { return kpool.available()+nodes.size; }
-        inline virtual size_t       available() const noexcept { return kpool.available();            }
-        inline virtual void         free()            noexcept { free_(); }
-        inline virtual void         release()         noexcept { release_(); }
-        inline virtual void         reserve(size_t n)          { reserve_(n); }
-        inline virtual bool         remove(ParamKey key)       noexcept { return remove_(key); }
-        inline virtual ConstType *  search(ParamKey key) const noexcept { return search_(key); }
-        inline virtual Type *       search(ParamKey key)       noexcept { return (Type *)search_(key); }
+        inline virtual size_t       size()      const noexcept { return nodes.size;                   }  //!< size
+        inline virtual const char * callSign()  const noexcept { return BASE::CallSign;               }  //!< CallSign
+        inline virtual size_t       capacity()  const noexcept { return kpool.available()+nodes.size; }  //!< capacity
+        inline virtual size_t       available() const noexcept { return kpool.available();            }  //!< available
+        inline virtual void         free()            noexcept { free_(); }                              //!< free, keep memory
+        inline virtual void         release()         noexcept { release_(); }                           //!< free, release memory
+        inline virtual void         reserve(size_t n)          { reserve_(n); }                          //!< reserve nodes/knots
+        inline virtual bool         remove(ParamKey key)       noexcept { return remove_(key); }         //!< remove by key
+        inline virtual ConstType *  search(ParamKey key) const noexcept { return search_(key); }         //!< search by key
+        inline virtual Type *       search(ParamKey key)       noexcept { return (Type *)search_(key); } //!< search by key
 
 
         //______________________________________________________________________
@@ -144,9 +130,33 @@ namespace Yttrium
         mutable KEY_HASHER hashr; //!< key hasher
 
 
+        //! insert for map
+        inline bool insert_(ParamKey k, ParamType t)
+        {
+            // create a built node
+            NODE *node = npool.queryBlank();
+            try { node = new (node) NODE(k,t); }
+            catch(...) { npool.storeBlank(node); throw; }
+
+            // insert it
+            return insert__(node);
+        }
+
+        //! insert for set
+        inline bool insert_(ParamType t)
+        {
+            // create a built node
+            NODE *node = npool.queryBlank();
+            try { node = new (node) NODE(t); }
+            catch(...) { npool.storeBlank(node); throw; }
+
+            // insert it
+            return insert__(node);
+        }
 
     private:
         Y_DISABLE_ASSIGN(HashLinked);
+
 
         //! free content, keep memory
         inline void free_() noexcept
@@ -219,7 +229,7 @@ namespace Yttrium
                 try { node = new (node) NODE(*scan); }
                 catch(...) { npool.storeBlank(node); throw; }
                 if(!insert__(node))
-                    ;
+                    Core::HashLinked::UnexpectedInsertFailure(callSign());
             }
         }
 
