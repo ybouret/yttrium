@@ -134,6 +134,8 @@ Y_UTEST_DECL(256)
     Y_UTEST(associative_suffix_set);
     Y_UTEST(associative_key_variety);
     Y_UTEST(associative_hash_table);
+    Y_UTEST(associative_hash_map);
+    Y_UTEST(associative_hash_set);
 
     Y_UTEST(mkl_complex);
     Y_UTEST(mkl_vtx);

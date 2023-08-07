@@ -173,6 +173,8 @@ add_test(associative:suffix-map  test-core associative_suffix_map)
 add_test(associative:suffix-set  test-core associative_suffix_set)
 add_test(associative:key-variety test-core associative_key_variety)
 add_test(associative:hash-table  test-core associative_hash_table)
+add_test(associative:hash-map    test-core associative_hash_map)
+add_test(associative:hash-set    test-core associative_hash_set)
 
 
 #mkl
