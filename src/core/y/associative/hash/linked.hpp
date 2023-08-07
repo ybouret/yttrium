@@ -84,8 +84,6 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-
-
         inline virtual size_t       size()      const noexcept { return nodes.size;                   }  //!< size
         inline virtual const char * callSign()  const noexcept { return BASE::CallSign;               }  //!< CallSign
         inline virtual size_t       capacity()  const noexcept { return kpool.available()+nodes.size; }  //!< capacity
@@ -97,6 +95,20 @@ namespace Yttrium
         inline virtual ConstType *  search(ParamKey key) const noexcept { return search_(key); }         //!< search by key
         inline virtual Type *       search(ParamKey key)       noexcept { return (Type *)search_(key); } //!< search by key
 
+        friend inline std::ostream & operator<<(std::ostream &os, const HashLinked &self)
+        {
+            os << '{';
+            const NODE *node = self.nodes.head;
+            if(node)
+            {
+                ShowNode(os,node);
+                while( 0 != (node=node->next) )
+                    ShowNode(os<<',',node);
+                os << ' ';
+            }
+            os << '}';
+            return os;
+        }
 
         //______________________________________________________________________
         //
@@ -129,6 +141,11 @@ namespace Yttrium
         NodePool           npool; //!< pool of nodes
         mutable KEY_HASHER hashr; //!< key hasher
 
+        static inline void ShowNode(std::ostream &os, const NODE *node)
+        {
+            assert(0!=node);
+            os << ' ' << node->key << ':' << **node;
+        }
 
         //! insert for map
         inline bool insert_(ParamKey k, ParamType t)

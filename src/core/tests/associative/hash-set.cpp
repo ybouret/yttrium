@@ -27,6 +27,12 @@ namespace
 
         const String &key() const noexcept { return name; }
 
+        inline friend std::ostream & operator<<(std::ostream &os, const Dummy &d)
+        {
+            os << d.indx;
+            return os;
+        }
+
         const String name;
         const int    indx;
 
@@ -79,6 +85,8 @@ Y_UTEST(associative_hash_set)
         {
             HashSet<String,DumPtr>  pcpy(pset);
             Y_CHECK(pcpy.size()==pset.size());
+            std::cerr << hset << std::endl;
+            std::cerr << pset << std::endl;
         }
 
         if(keys.size())
@@ -95,7 +103,6 @@ Y_UTEST(associative_hash_set)
                 Y_ASSERT(!pset.search(key));
                 keys.popTail();
             }
-
         }
     }
 }
