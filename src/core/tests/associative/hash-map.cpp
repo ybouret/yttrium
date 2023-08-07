@@ -48,6 +48,13 @@ Y_UTEST(associative_hash_map)
             std::cerr << tmp << std::endl;
         }
 
+        std::cerr << "Iterator:" << std::endl;
+        for(HashMap<String,apn>::Iterator it=hmap.begin();it!=hmap.end();++it)
+        {
+            std::cerr << *it << " <- " << it->key << std::endl;
+        }
+
+
         if(keys.size())
         {
             Random::Shuffle::Range(keys(),keys.size(),ran);

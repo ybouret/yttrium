@@ -21,7 +21,10 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        template <typename T, typename NODE, Direction WAY>
+        template <
+        typename  T,
+        typename  NODE,
+        Direction WAY>
         class Linked : public Travel<WAY>
         {
         public:
@@ -33,6 +36,7 @@ namespace Yttrium
             //__________________________________________________________________
             Y_ARGS_EXPOSE(T,Type);    //!< aliases
             Y_ARGS_EXPOSE(NODE,Node); //!< aliases
+
             using Travel<WAY>::Way;
 
             //__________________________________________________________________
@@ -69,11 +73,21 @@ namespace Yttrium
 
             //! access
             inline Type & operator*() noexcept
-            { assert(node); return **node; }
+            { assert(0!=node); return **node; }
 
             //! access, const
             inline ConstType & operator*() const noexcept
-            { assert(node); return **node; }
+            { assert(0!=node); return **node; }
+
+            //! access node
+            inline Node * operator->() noexcept {
+                assert(0!=node); return node;
+            }
+            
+            //! access node, const
+            inline ConstNode * operator->() const noexcept {
+                assert(0!=node); return node;
+            }
 
             //__________________________________________________________________
             //
@@ -136,6 +150,8 @@ namespace Yttrium
             //! this -= n
             inline Linked & operator-=(const ptrdiff_t n) noexcept
             { decr(Way,n); return *this; }
+
+
 
 
 #if 0
