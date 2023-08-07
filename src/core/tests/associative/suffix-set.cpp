@@ -13,7 +13,7 @@
 
 using namespace Yttrium;
 
-namespace Yttrium
+namespace  
 {
 
 

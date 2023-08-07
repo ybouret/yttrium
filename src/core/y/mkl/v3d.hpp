@@ -98,6 +98,24 @@ namespace Yttrium
 
         //______________________________________________________________________
         //
+        //! equality
+        //______________________________________________________________________
+        inline friend bool operator==(const V3D &lhs, const V3D &rhs) noexcept
+        {
+            return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z;
+        }
+
+        //______________________________________________________________________
+        //
+        //! difference
+        //______________________________________________________________________
+        inline friend bool operator!=(const V3D &lhs, const V3D &rhs) noexcept
+        {
+            return lhs.x != rhs.x || lhs.y != rhs.y || lhs.z != rhs.z;
+        }
+
+        //______________________________________________________________________
+        //
         //
         // Members
         //

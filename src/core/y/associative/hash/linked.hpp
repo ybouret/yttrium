@@ -21,22 +21,30 @@ namespace Yttrium
         Y_ARGS_DECL(KEY,Key);
         typedef Blanks<NODE> NodePool;
 
-        explicit HashLinked() : nodes(), table(0), kpool(0), npool(0) {}
-        virtual ~HashLinked() noexcept { release_(); }
+        inline explicit HashLinked() : nodes(), table(0), kpool(0), npool(0) {}
+        inline virtual ~HashLinked() noexcept { release_(); }
 
-        bool insert_(ParamKey k, ParamType t)
+        inline bool insert_(ParamKey k, ParamType t)
         {
             // create a built node
             NODE *node = npool.queryBlank();
-            try {
-                node = new (node) NODE(k,t);
-            } catch(...) { npool.storeBlank(node); throw; }
+            try { node = new (node) NODE(k,t); }
+            catch(...) { npool.storeBlank(node); throw; }
 
             // insert it
             return insert__(node);
         }
 
+        inline bool insert_(ParamType t)
+        {
+            // create a built node
+            NODE *node = npool.queryBlank();
+            try { node = new (node) NODE(t); }
+            catch(...) { npool.storeBlank(node); throw; }
 
+            // insert it
+            return insert__(node);
+        }
 
 
 

@@ -6,6 +6,9 @@
 #include "y/type/traits.hpp"
 #include "y/type/conversion.hpp"
 #include "y/memory/buffer/ro.hpp"
+#include "y/mkl/v3d.hpp"
+#include "y/mkl/complex.hpp"
+
 namespace Yttrium
 {
     //__________________________________________________________________________
@@ -47,6 +50,13 @@ namespace Yttrium
         template <typename KEY>
         struct Cull
         {
+        private:
+            template <class U>    struct IsCompoundTrait               { enum { Value = false }; };
+            template <typename Z> struct IsCompoundTrait< V2D<Z> >     { enum { Value = true };  };
+            template <typename Z> struct IsCompoundTrait< V3D<Z> >     { enum { Value = true };  };
+            template <typename Z> struct IsCompoundTrait< Complex<Z> > { enum { Value = true };  };
+
+        public:
             //__________________________________________________________________
             //
             //
@@ -54,11 +64,12 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef typename TypeTraits<KEY>::MutableType MutableKey; //!< alias
-            static const bool _IsMemoryBuffer = Y_Is_SuperSubClass(Memory::ReadOnlyBuffer,MutableKey); //!< inheritance
-            static const bool _IsCharPointer_ = IsSameType<MutableKey,char *>::Value;                  //!< partial test
+            enum { IsCompound = IsCompoundTrait<MutableKey>::Value };
+            static const bool _IsMemoryBuffer = Y_Is_SuperSubClass(Memory::ReadOnlyBuffer,MutableKey);   //!< inheritance
+            static const bool _IsCharPointer_ = IsSameType<MutableKey,char *>::Value;                    //!< partial test
             static const bool _IsCharTableau_ = TypeTraits<MutableKey>::template IsArrayOf<char>::Value; //!< partial test
-            static const bool _IsLegacyString = _IsCharPointer_ || _IsCharTableau_;                    //!< test for C-string
-            static const bool _IsIntegralType = TypeTraits<MutableKey>::IsPrimitive;                   //!< other acceptabe
+            static const bool _IsLegacyString = _IsCharPointer_ || _IsCharTableau_;                      //!< test for C-string
+            static const bool _IsIntegralType = TypeTraits<MutableKey>::IsPrimitive || IsCompound;       //!< other acceptabe
 
             //__________________________________________________________________
             //
