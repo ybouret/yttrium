@@ -11,42 +11,95 @@
 namespace Yttrium
 {
 
-    //! anonymous knot
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Anonymous knot to point to data within table
+    //
+    //
+    //__________________________________________________________________________
     class HashKnot
     {
     public:
-        HashKnot(const size_t,void *) noexcept;
-        ~HashKnot()                   noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        typedef ListOf<HashKnot> List; //!< internal list
+        typedef Blanks<HashKnot> Pool; //!< memory management
 
-        HashKnot      *next;
-        HashKnot      *prev;
-        const size_t   hkey;
-        void * const   node;
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        HashKnot(const size_t,void *) noexcept; //!< setup with hkey and user's node
+        ~HashKnot()                   noexcept; //!< cleanup
 
-        typedef ListOf<HashKnot> List;
-        typedef Blanks<HashKnot> Pool;
+        //______________________________________________________________________
+        //
+        //
+        // Members
+        //
+        //______________________________________________________________________
+        HashKnot      *next; //!< for list
+        HashKnot      *prev; //!< for list
+        const size_t   hkey; //!< hash key
+        void * const   node; //!< user's node
+
+
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(HashKnot);
     };
 
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Table of Knots for hash-based lookup
+    //
+    //
+    //__________________________________________________________________________
     class HashTable
     {
     public:
-        static const unsigned LoadFactorLn2 = 2;
-        static const size_t   LoadFactor    = 1 << LoadFactorLn2;
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        static const unsigned LoadFactorLn2 = 2;                   //!< log2(LoadFactor)
+        static const size_t   LoadFactor    = 1 << LoadFactorLn2;  //!< LoadFactor
 
-        explicit HashTable(const size_t sz);
-        virtual ~HashTable() noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        explicit HashTable(const size_t sz); //!< table with minimal size
+        virtual ~HashTable() noexcept;       //!< cleanup (must be empty)
 
-        HashKnot::List &       operator[](const size_t hkey) noexcept;
-        const HashKnot::List & operator[](const size_t hkey) const noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // Members
+        //
+        //______________________________________________________________________
+        HashKnot::List &       operator[](const size_t hkey) noexcept;        //!< internal slot for hkey
+        const HashKnot::List & operator[](const size_t hkey) const noexcept;  //!< internal slot for hkey
 
-        void    grow();
-        size_t  size() const noexcept;
-        void    freeWith(HashKnot::Pool    &) noexcept;
-        void    releaseWith(HashKnot::Pool &) noexcept;
+        void    freeWith(HashKnot::Pool    &) noexcept; //!< free all knots, keep memory
+        void    releaseWith(HashKnot::Pool &) noexcept; //!< free all knots, release memory
+        size_t  size()                  const noexcept; //!< current size
+        void    grow();                                 //!< double size
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(HashTable);

@@ -9,6 +9,14 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Composite class for Hash[Map|Set]
+    //
+    //
+    //__________________________________________________________________________
     template <
     typename KEY,
     typename T,
@@ -17,14 +25,47 @@ namespace Yttrium
     class HashLinked
     {
     public:
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
         Y_ARGS_DECL(T,Type);
         Y_ARGS_DECL(KEY,Key);
         typedef Blanks<NODE> NodePool;
         static const size_t  LoadFactor = HashTable::LoadFactor;
 
-        inline explicit HashLinked(const size_t nmin) : nodes(), table(nmin/LoadFactor), kpool(nmin), npool(nmin) {}
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        //! cleanup
         inline virtual ~HashLinked() noexcept { release_(); }
 
+        //! create with initial capacituy
+        inline explicit HashLinked(const size_t nmin) :
+        nodes(), table(nmin/LoadFactor), kpool(nmin), npool(nmin), hashr() {}
+
+        //! duplicate
+        inline HashLinked(const HashLinked &other) :
+        nodes(),
+        table(other.nodes.size/LoadFactor),
+        kpool(other.nodes.size),
+        npool(other.nodes.size),
+        hashr()
+        {
+
+        }
+
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
         inline bool insert_(ParamKey k, ParamType t)
         {
             // create a built node
@@ -47,6 +88,12 @@ namespace Yttrium
             return insert__(node);
         }
 
+        //______________________________________________________________________
+        //
+        //
+        // Members
+        //
+        //______________________________________________________________________
 
 
     protected:
@@ -72,7 +119,9 @@ namespace Yttrium
         }
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(HashLinked);
+        Y_DISABLE_ASSIGN(HashLinked);
+
+
         inline bool insert__(NODE *node)
         {
             try {
@@ -102,6 +151,9 @@ namespace Yttrium
             }
             catch(...) { npool.storeBuilt(node); throw; }
         }
+
+
+
     };
 
 }
