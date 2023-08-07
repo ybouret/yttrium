@@ -63,8 +63,11 @@ namespace Yttrium
         // C++
         //
         //______________________________________________________________________
-        inline explicit SuffixMap()  : SelfType() {} //!< setup
-        inline virtual ~SuffixMap() noexcept {}      //!< cleanup
+        inline explicit SuffixMap()  : SelfType(0) {} //!< setup with minimal memory
+        inline virtual ~SuffixMap() noexcept {}       //!< cleanup
+
+        //! setup with extra memory
+        inline explicit SuffixMap(const size_t n, const AsCapacity_ &) : SelfType(n) {}
 
         //! copy
         inline SuffixMap(const SuffixMap &other) :

@@ -50,13 +50,13 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        inline virtual const char * callSign()  const noexcept { return BASE::CallSign; }      //!< callSign
-        inline virtual size_t       size()      const noexcept { return list.size; }           //!< list size
+        inline virtual const char * callSign()  const noexcept { return BASE::CallSign; }             //!< callSign
+        inline virtual size_t       size()      const noexcept { return list.size; }                  //!< list size
         inline virtual size_t       capacity()  const noexcept { return list.size+pool.available(); } //!< capacity
         inline virtual size_t       available() const noexcept { return pool.available(); }           //!< available
-        inline virtual void         free()            noexcept { this->softReset(); }          //!< free content, keep memory
-        inline virtual void         release()         noexcept { this->hardReset(); }          //!< release all possible memory
-        inline virtual void         reserve(size_t n) noexcept { pool.reserve(n); }            //!< reserve blocks
+        inline virtual void         free()            noexcept { this->softReset(); }                 //!< free content, keep memory
+        inline virtual void         release()         noexcept { this->hardReset(); }                 //!< release all possible memory
+        inline virtual void         reserve(size_t n) noexcept { pool.reserve(n); }                   //!< reserve blocks
 
         //! search CONST object address by its key
         inline virtual ConstType *search(ParamKey key) const noexcept
@@ -100,11 +100,12 @@ namespace Yttrium
     protected:
 
         //! setup empty
-        inline explicit SuffixAlloy() :
+        inline explicit SuffixAlloy(const size_t nmin) :
         INTERFACE(),
         TreeType(),
         BASE()
         {
+            pool.reserve(nmin);
         }
 
         //! copy

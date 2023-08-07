@@ -62,8 +62,11 @@ namespace Yttrium
         // C++
         //
         //______________________________________________________________________
-        inline explicit SuffixSet() : SelfType() {} //!< setup
-        inline virtual ~SuffixSet() noexcept {}              //!< cleanup
+        inline explicit SuffixSet() : SelfType(0) {} //!< setup with minimal memory
+        inline virtual ~SuffixSet() noexcept {}      //!< cleanup
+
+        //! setup with extra memory
+        inline explicit SuffixSet(const size_t n, const AsCapacity_ &) : SelfType(n) {}
 
         //! copy
         inline SuffixSet(const SuffixSet &other) :

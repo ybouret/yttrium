@@ -20,8 +20,9 @@ namespace Yttrium
         Y_ARGS_DECL(T,Type);
         Y_ARGS_DECL(KEY,Key);
         typedef Blanks<NODE> NodePool;
+        static const size_t  LoadFactor = HashTable::LoadFactor;
 
-        inline explicit HashLinked() : nodes(), table(0), kpool(0), npool(0) {}
+        inline explicit HashLinked(const size_t nmin) : nodes(), table(nmin/LoadFactor), kpool(nmin), npool(nmin) {}
         inline virtual ~HashLinked() noexcept { release_(); }
 
         inline bool insert_(ParamKey k, ParamType t)
@@ -55,10 +56,19 @@ namespace Yttrium
         NodePool       npool; //!< pool of nodes
         KEY_HASHER     hashr; //!< key hasher
 
+        //! free content, keep memory
+        inline void free_() noexcept
+        {
+            table.freeWith(kpool);
+            while(nodes.size>0)
+                npool.storeBuilt(nodes.popTail());
+        }
+
+        //! free content, release memory
         inline void release_() noexcept {
             table.releaseWith(kpool);
             while(nodes.size>0)
-                npool.storeBuilt(nodes.popTail());
+                npool.eraseBuilt(nodes.popTail());
         }
 
     private:

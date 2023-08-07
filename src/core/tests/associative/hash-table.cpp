@@ -1,5 +1,5 @@
 #include "y/associative/hash/linked.hpp"
-#include "y/associative/suffix/map/node.hpp"
+#include "y/associative/hash/map/node.hpp"
 #include "y/associative/hash/set/node.hpp"
 #include "y/hashing/to/hash-key.hpp"
 #include "y/hashing/fnv.hpp"
@@ -59,7 +59,7 @@ Y_UTEST(associative_hash_table)
     }
 
     {
-        HashLinked<String,int,SuffixMapNode<String,int>, Hashing::ToHashKey<Hashing::FNV> > hm;
+        HashLinked<String,int,HashMapNode<String,int>, Hashing::ToHashKey<Hashing::FNV> > hm(0);
         const String key = "Hello";
         Y_CHECK(hm.insert_(key, 2));
     }
@@ -67,7 +67,7 @@ Y_UTEST(associative_hash_table)
 #if 1
     {
         typedef V2D<int> key2d_t;
-        HashLinked<key2d_t,String,SuffixMapNode<key2d_t,String>,Hashing::ToHashKey<Hashing::FNV> > hm;
+        HashLinked<key2d_t,String,HashMapNode<key2d_t,String>,Hashing::ToHashKey<Hashing::FNV> > hm(0);
         key2d_t k(1,2);
         const String s = "toto";
         Y_CHECK(hm.insert_(k,s));
@@ -76,7 +76,7 @@ Y_UTEST(associative_hash_table)
 
 
 
-    HashLinked<String,Dummy,HashSetNode<String,Dummy>, Hashing::ToHashKey<Hashing::SHA1> > hs;
+    HashLinked<String,Dummy,HashSetNode<String,Dummy>, Hashing::ToHashKey<Hashing::SHA1> > hs(0);
     {
         const Dummy dum("World",3);
         Y_CHECK(hs.insert_(dum));
