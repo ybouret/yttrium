@@ -235,6 +235,13 @@ namespace Yttrium
         }
 
         template <>
+        const String<CH> & String<CH>:: key() const noexcept
+        {
+            return *this;
+        }
+
+
+        template <>
         String<CH> & String<CH> :: operator=(const String<CH> &s)
         {
             String<CH> tmp(s);
