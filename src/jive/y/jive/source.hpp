@@ -12,22 +12,41 @@ namespace Yttrium
     namespace Jive
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Buffered Source of Chars
+        //
+        //
+        //______________________________________________________________________
         class Source
         {
         public:
-            explicit Source(Module *);
-            virtual ~Source() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Source(Module *);  //!< setup from module
+            virtual ~Source() noexcept; //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
             Char *get();                        //!< query a new char
             void  put(Char  *)       noexcept;  //!< unread a char
             void  put(Token &)       noexcept;  //!< unread a token
             void  dup(const Token &);           //!< unread a copy
 
-            void  newLine() noexcept; //!< propagate newLine
-            const Module & operator*() const noexcept;
+            void  newLine()   noexcept; //!< propagate newLine
+            bool  guess(Token &token);  //!< guess next blank-separated token
 
-            bool  guess(Token &token);
-
+            //! read-only inner module access
             const Module * operator->() const noexcept;
 
 

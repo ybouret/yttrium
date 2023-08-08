@@ -70,3 +70,21 @@ namespace Yttrium
 
 }
 
+#include "y/io/data/input.hpp"
+
+
+namespace Yttrium
+{
+    namespace Jive
+    {
+        Module * OpenData_(const Context &ctx, const void *addr, const size_t size)
+        {
+            const Input   inp = new InputDataStream(addr,size);
+            return new Module(ctx,inp);
+        }
+
+    }
+
+}
+
+

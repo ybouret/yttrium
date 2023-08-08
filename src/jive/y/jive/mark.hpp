@@ -11,8 +11,7 @@ namespace Yttrium
 {
     namespace Jive
     {
-        typedef ArkPtr<String,const String> Mark;
-
+        typedef ArkPtr<String,const String> Mark; //!< alias
     }
 }
 

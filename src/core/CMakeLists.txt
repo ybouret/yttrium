@@ -15,6 +15,7 @@ io
 io/stream
 io/libc
 io/libc/buffer
+io/data
 text
 data
 data/list

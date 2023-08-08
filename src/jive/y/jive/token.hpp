@@ -11,15 +11,36 @@ namespace Yttrium
     namespace Jive
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! List of Chars
+        //
+        //
+        //______________________________________________________________________
         class Token : public Char::List
         {
         public:
-            explicit Token() noexcept;
-            virtual ~Token() noexcept;
-            Token(const Token &);
-            Y_OSTREAM_PROTO(Token);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Token() noexcept; //!< setup
+            virtual ~Token() noexcept; //!< cleanup
+            Token(const Token &);      //!< copy
+            Y_OSTREAM_PROTO(Token);    //!< display
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! convert to string with optional clipping
             String toString(const size_t skip=0,const size_t trim=0) const;
 
 

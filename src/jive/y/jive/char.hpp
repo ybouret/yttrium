@@ -11,21 +11,52 @@ namespace Yttrium
 {
     namespace Jive
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Char with full Context
+        //
+        //
+        //______________________________________________________________________
         class Char : public Context
         {
         public:
-            typedef CxxListOf<Char> List;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef CxxListOf<Char> List; //!< alias
 
-            explicit Char(const Context &, const uint8_t) noexcept;
-            virtual ~Char()    noexcept;
-            Char(const Char &) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Char(const Context &, const uint8_t) noexcept; //!< setup
+            virtual ~Char()                               noexcept; //!< cleanup
+            Char(const Char &)                            noexcept; //!< copy
 
-            uint8_t &       operator*()       noexcept;
-            const uint8_t & operator*() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            uint8_t &       operator*()       noexcept; //!< access
+            const uint8_t & operator*() const noexcept; //!< access
 
-            Char *  next;
-            Char *  prev;
+            //__________________________________________________________________
+            //
+            //
+            //  Members
+            //
+            //__________________________________________________________________
+            Char *  next; //!< for token
+            Char *  prev; //!< for token
 
             //__________________________________________________________________
             //
