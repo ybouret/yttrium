@@ -38,6 +38,17 @@ namespace Yttrium
             return excp;
         }
 
+        void Context:: newChar() noexcept
+        {
+            ++Coerce(ncol);
+
+        }
+
+        void Context:: newLine() noexcept
+        {
+            Coerce(line)++;
+            Coerce(ncol)=1;
+        }
 
         
     }

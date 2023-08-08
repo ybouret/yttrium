@@ -5,6 +5,8 @@
 
 
 #include "y/type/identifiable.hpp"
+#include "y/object.hpp"
+#include "y/counted.hpp"
 
 namespace Yttrium
 {
@@ -16,7 +18,7 @@ namespace Yttrium
     //
     //
     //______________________________________________________________________
-    class Stream : public Identifiable
+    class Stream : public Object, public Counted, public Identifiable
     {
     protected:
         explicit Stream() noexcept; //!< setup

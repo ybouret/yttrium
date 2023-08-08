@@ -7,7 +7,7 @@ namespace Yttrium
     {
     }
 
-    Stream:: Stream() noexcept
+    Stream:: Stream() noexcept : Object(), Counted()
     {
         
     }

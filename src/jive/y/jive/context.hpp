@@ -22,6 +22,9 @@ namespace Yttrium
             Exception & stamp(Exception &) const noexcept;
 
 
+            void newChar() noexcept;
+            void newLine() noexcept;
+
             const Mark     mark;
             const unsigned line;
             const unsigned ncol;

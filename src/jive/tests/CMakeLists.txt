@@ -6,3 +6,4 @@ enable_testing()
 
 add_test(context test-jive context)
 add_test(char    test-jive char)
+add_test(module  test-jive module)
