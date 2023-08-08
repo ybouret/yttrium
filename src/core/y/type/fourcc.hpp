@@ -16,6 +16,11 @@ namespace Yttrium
 
 #define Y_FOURCC(a,b,c,d) (Y_FourCC3(a)|Y_FourCC2(b)|Y_FourCC1(c)|Y_FourCC0(d))
 
+    struct FourCC
+    {
+        static const char * ToText(const uint32_t uuid) noexcept;
+    };
+
 }
 
 #endif
