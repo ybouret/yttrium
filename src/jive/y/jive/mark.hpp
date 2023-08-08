@@ -11,7 +11,7 @@ namespace Yttrium
 {
     namespace Jive
     {
-        typedef ArkPtr<String,String> Tag;
+        typedef ArkPtr<String,String> Mark;
 
 
 

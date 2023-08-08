@@ -10,15 +10,15 @@ namespace Yttrium
         }
 
         Context:: Context(const Context &ctx) noexcept :
-        tag( ctx.tag ),
+        mark( ctx.mark ),
         line( ctx.line ),
         column( ctx.column )
         {
         }
 
-#define Y_JIVE_CTX(args) tag(args), line(1), column(1)
+#define Y_JIVE_CTX(args) mark(args), line(1), column(1)
 
-        Context:: Context(const Tag &usr) noexcept :
+        Context:: Context(const Mark &usr) noexcept :
         Y_JIVE_CTX(usr)
         {
         }
@@ -32,7 +32,7 @@ namespace Yttrium
         Exception & Context::stamp(Exception &excp) const noexcept
         {
             excp.pre("%s:%lu:%lu: ",
-                     (*tag)(),
+                     (*mark)(),
                      static_cast<unsigned long>(line),
                      static_cast<unsigned long>(column));
             return excp;

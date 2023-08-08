@@ -6,10 +6,10 @@
 using namespace Yttrium;
 
 
-Y_UTEST(tags)
+Y_UTEST(context)
 {
     
-    Y_SIZEOF(Jive::Tag);
+    Y_SIZEOF(Jive::Mark);
     Y_SIZEOF(Jive::Context);
 
 }
