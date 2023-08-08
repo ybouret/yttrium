@@ -1,5 +1,3 @@
-
-
 //! \file
 
 #ifndef Y_Type_Destruct_Included

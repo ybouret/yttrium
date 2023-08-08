@@ -40,6 +40,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(type_traits);
     Y_UTEST(type_conversion);
     Y_UTEST(type_args);
+    Y_UTEST(type_fourcc);
 
     Y_UTEST(text_plural);
     Y_UTEST(text_human_readable);

@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Jive_Source_Included
