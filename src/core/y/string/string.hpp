@@ -114,11 +114,11 @@ namespace Yttrium
             virtual Type      &  operator[](const size_t index)       noexcept; //!< access
             virtual size_t       size()                         const noexcept; //!< num of chars
             virtual size_t       capacity()                     const noexcept; //!< maximal number of chars
-            ConstType         *  operator()(void)               const noexcept; //!< legacy access
             virtual const char * callSign()                     const noexcept; //!< String<CH>
             virtual const void * ro_addr()                      const noexcept; //!< address of first char
             virtual size_t       measure()                      const noexcept; //!< size() * sizeof(CH)
-
+            ConstType         *  operator()(void)               const noexcept; //!< legacy access
+            ConstType         *  c_str()                        const noexcept; //!< legacy access
             
             virtual void pushHead(ParamType);
             virtual void pushTail(ParamType);

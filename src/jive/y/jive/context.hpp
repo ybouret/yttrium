@@ -24,7 +24,7 @@ namespace Yttrium
 
             const Mark     mark;
             const unsigned line;
-            const unsigned column;
+            const unsigned ncol;
 
 
         private:

@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_Jive_Tags_Included
-#define Y_Jive_Tags_Included 1
+#ifndef Y_Jive_Mark_Included
+#define Y_Jive_Mark_Included 1
 
 #include "y/string.hpp"
 #include "y/ptr/ark.hpp"

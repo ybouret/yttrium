@@ -12,6 +12,9 @@ Y_UTEST(context)
     Y_SIZEOF(Jive::Mark);
     Y_SIZEOF(Jive::Context);
 
+    Jive::Context ctx = new String("hello");
+
+
 }
 Y_UDONE()
 

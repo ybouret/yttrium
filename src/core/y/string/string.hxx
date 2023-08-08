@@ -316,6 +316,13 @@ namespace Yttrium
         }
 
         template <>
+        String<CH>::ConstType * String<CH>:: c_str() const noexcept
+        {
+            assert(0!=code);
+            return code->data;
+        }
+
+        template <>
         void String<CH>:: reverse() noexcept
         {
             assert(0!=code);

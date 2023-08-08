@@ -5,6 +5,7 @@
 Y_UTEST_DECL(32)
 {
     Y_UTEST(context);
+    Y_UTEST(char);
 
 }
 Y_UTEST_EXEC()
