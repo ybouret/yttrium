@@ -622,3 +622,34 @@ namespace Yttrium
     }
 
 }
+
+#include "y/io/stream/output.hpp"
+#include "y/io/stream/input.hpp"
+
+namespace Yttrium
+{
+
+    namespace Core
+    {
+        template <>
+        size_t  String<CH>:: serialize(OutputStream &fp) const
+        {
+            assert(0!=code);
+            assert(0!=code->data);
+            const size_t sz = fp.emitVBR(code->size);
+
+            return sz;
+        }
+
+        template <>
+        String<CH> String<CH>:: ReadFrom(InputStream &fp)
+        {
+            const size_t  nc = fp.readVBR<size_t>("String.size");
+            String<CH>    res(nc,AsCapacity,false);
+            return res;
+        }
+    }
+
+}
+
+

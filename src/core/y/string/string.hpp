@@ -11,11 +11,13 @@
 #include "y/ostream-proto.hpp"
 #include "y/type/capacity.hpp"
 #include "y/memory/buffer/ro.hpp"
+#include "y/io/serializable.hpp"
 
 namespace Yttrium
 {
 
     namespace Random { class Bits; }
+    class InputStream;
 
     namespace Core
     {
@@ -60,7 +62,8 @@ namespace Yttrium
         public StringCommon,
         public Sequence<T>,
         public Writable<T>,
-        public WritableContiguous<T>
+        public WritableContiguous<T>,
+        public Serializable
         {
         public:
             //__________________________________________________________________
@@ -169,10 +172,12 @@ namespace Yttrium
             //
             // other methods
             //__________________________________________________________________
-            void          clear()             noexcept; //!< clear content
-            void          swapWith(String &s) noexcept; //!< no-throw swap
-            const String &key()         const noexcept; //!< self-keyed
+            void           clear()                noexcept; //!< clear content
+            void           swapWith(String &s)    noexcept; //!< no-throw swap
+            const String & key()            const noexcept; //!< self-keyed
 
+            virtual size_t serialize(OutputStream &) const; //!< size+data
+            static  String ReadFrom(InputStream&);          //!< from serialize
 
         private:
             class Code;
