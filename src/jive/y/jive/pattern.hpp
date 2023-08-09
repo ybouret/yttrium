@@ -4,11 +4,16 @@
 #define Y_Jive_Pattern_Included 1
 
 #include "y/jive/source.hpp"
+#include "y/type/fourcc.hpp"
 
 namespace Yttrium
 {
     namespace Jive
     {
+
+        //! helper to declare internal pattern type
+#define Y_PATTERN(TYPE) self = static_cast<TYPE*>(this)
+
         //______________________________________________________________________
         //
         //
@@ -26,7 +31,37 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
             virtual Pattern * clone() const = 0; //!< perform deep copy
+
+            //__________________________________________________________________
+            //
+            //! try to accept next source content
+            /**
+             - token must be empty on call
+             - token must be left empty on failure
+             */
+            //__________________________________________________________________
+            virtual bool      accepts(Source &source) = 0;
+
+
+            //! conversion
+            template <typename T> inline
+            T *as() noexcept
+            {
+                assert(T::UUID==uuid);
+                assert(0!=self);
+                return static_cast<T*>(self);
+            }
+
+            //! conversion
+            template <typename T> inline
+            const T *as() const noexcept
+            {
+                assert(T::UUID==uuid);
+                assert(0!=self);
+                return static_cast<const T*>(self);
+            }
 
             //__________________________________________________________________
             //
@@ -34,10 +69,10 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-        public:  Pattern       *next; //!< for list
-        public:  Pattern       *prev; //!< for list
-        private: void          *self; //!< pointer to base class
-        public:  const uint32_t uuid; //!< identifier
+        public:    Pattern       *next; //!< for list
+        public:    Pattern       *prev; //!< for list
+        protected: void          *self; //!< pointer to base class
+        public:    const uint32_t uuid; //!< identifier
 
             //__________________________________________________________________
             //
@@ -48,10 +83,9 @@ namespace Yttrium
             virtual ~Pattern() noexcept; //!< cleanup
         protected:
             explicit Pattern(const uint32_t ) noexcept; //!< setup
-            explicit Pattern(const Pattern &) noexcept; //!< copy
 
         private:
-            Y_DISABLE_ASSIGN(Pattern);
+            Y_DISABLE_COPY_AND_ASSIGN(Pattern);
         };
 
     }

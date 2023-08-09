@@ -20,16 +20,7 @@ namespace Yttrium
         {
         }
 
-        Pattern:: Pattern(const Pattern &p) noexcept :
-        Object(),
-        Token(),
-        next(0),
-        prev(0),
-        self(0),
-        uuid(p.uuid)
-        {
-
-        }
+        
         
     }
 
