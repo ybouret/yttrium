@@ -17,6 +17,7 @@ io/libc
 io/libc/buffer
 io/data
 text
+text/ascii
 data
 data/list
 data/pool

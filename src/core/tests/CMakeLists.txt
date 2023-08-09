@@ -34,11 +34,11 @@ add_test(main:singleton test-core singleton)
 add_test(main:object    test-core object)
 
 #text
-add_test(text:plural test-core text_plural)
+add_test(text:plural         test-core text_plural)
 add_test(text:human-readable test-core text_human_readable)
-add_test(text:ops test-core text_ops)
-add_test(text:hexa test-core text_hexa)
-
+add_test(text:ops            test-core text_ops)
+add_test(text:hexa           test-core text_hexa)
+add_test(text:printable      test-core text_printable)
 
 
 #memory
