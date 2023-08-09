@@ -11,10 +11,17 @@ namespace Yttrium
 {
     namespace ASCII
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! escaped chars to write labels for Doxygen of C code
+        //
+        //
+        //______________________________________________________________________
         struct Embedding
         {
-            static const char * const Char[256];
+            static const char * const Char[256]; //!< table of substitution
         };
 
     }

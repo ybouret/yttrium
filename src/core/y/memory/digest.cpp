@@ -9,6 +9,7 @@
 #include "y/text/ops.hpp"
 #include "y/calculus/align.hpp"
 #include "y/system/exception.hpp"
+#include "y/text/ascii/printable.hpp"
 
 #include <cstring>
 
@@ -122,7 +123,7 @@ namespace  Yttrium
         void push(const char cc, bool &hi, size_t &ii)
         {
             const int h = Hexadecimal::ToDecimal(cc);
-            if(h<0) throw Specific::Exception(Digest::CallSign,"invalid hexa '%c'",h);
+            if(h<0) throw Specific::Exception(Digest::CallSign,"invalid hexa '%s'", ASCII::Printable::Char[ uint8_t(cc) ]);
             if(hi)
             {
                 data[ii] = uint8_t(h) << 4;

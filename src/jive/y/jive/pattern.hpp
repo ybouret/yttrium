@@ -3,27 +3,52 @@
 #ifndef Y_Jive_Pattern_Included
 #define Y_Jive_Pattern_Included 1
 
-#include "y/jive/token.hpp"
+#include "y/jive/source.hpp"
 
 namespace Yttrium
 {
     namespace Jive
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Pattern recognition
+        //
+        //
+        //______________________________________________________________________
         class Pattern : public Object, public Token
         {
         public:
-            Pattern       *next;
-            Pattern       *prev;
-            void          *self;
-            const uint32_t uuid;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            virtual Pattern * clone() const = 0; //!< perform deep copy
 
-            virtual Pattern * clone() const = 0;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+        public:  Pattern       *next; //!< for list
+        public:  Pattern       *prev; //!< for list
+        private: void          *self; //!< pointer to base class
+        public:  const uint32_t uuid; //!< identifier
 
-            virtual ~Pattern() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            virtual ~Pattern() noexcept; //!< cleanup
         protected:
-            explicit Pattern(const uint32_t ) noexcept;
-            explicit Pattern(const Pattern &) noexcept;
+            explicit Pattern(const uint32_t ) noexcept; //!< setup
+            explicit Pattern(const Pattern &) noexcept; //!< copy
 
         private:
             Y_DISABLE_ASSIGN(Pattern);

@@ -10,10 +10,17 @@ namespace Yttrium
 {
     namespace ASCII
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! escaped chars to display output
+        //
+        //
+        //______________________________________________________________________
         struct Printable
         {
-            static const char * const Char[256];
+            static const char * const Char[256]; //!< table of substitutions
         };
 
     }
