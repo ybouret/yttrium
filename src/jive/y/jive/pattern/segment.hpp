@@ -22,12 +22,21 @@ namespace Yttrium
             const uint32_t uuid;
 
             virtual bool contains(const uint8_t code) const noexcept = 0;
+            virtual void display(std::ostream &)      const          = 0;
 
-
-            virtual ~Segment() noexcept;
 
             static Segment * Optimize(Segment *seg);
-            
+            static Segment * TryMerge(Segment *lhs, Segment *rhs);
+
+            template <typename T>
+            T *as() noexcept {
+                assert(0!=self);
+                assert(T::UUID==uuid);
+                return static_cast<T*>(self);
+            }
+
+            Y_OSTREAM_PROTO(Segment);
+            virtual ~Segment() noexcept;
 
         protected:
             explicit Segment(const uint32_t)  noexcept;
@@ -36,35 +45,38 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Segment);
         };
 
-        class Single : public Segment
+
+        class Ponctual : public Segment
         {
         public:
-            static const uint32_t UUID = Y_FOURCC('s', 'i', 'n', 'g');
+            static const uint32_t UUID = Y_FOURCC('_', 'o', 'n', 'e');
 
-            explicit Single(const uint8_t code) noexcept;
-            virtual ~Single() noexcept;
-            virtual bool contains(const uint8_t code) const noexcept;
+            explicit Ponctual(const uint8_t code) noexcept;
+            virtual ~Ponctual() noexcept;
+            virtual bool contains(const uint8_t) const noexcept;
+            virtual void display(std::ostream &)          const;
 
             const uint8_t value;
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Single);
+            Y_DISABLE_COPY_AND_ASSIGN(Ponctual);
         };
 
-        class Couple : public Segment
+        class Interval : public Segment
         {
         public:
             static const uint32_t UUID = Y_FOURCC('d', 'u', 'a', 'l');
-            explicit Couple(const uint8_t lo, const uint8_t hi) noexcept;
-            virtual ~Couple() noexcept;
+            explicit Interval(const uint8_t lo, const uint8_t hi) noexcept;
+            virtual ~Interval() noexcept;
 
-            virtual bool contains(const uint8_t code) const noexcept;
+            virtual bool contains(const uint8_t) const noexcept;
+            virtual void display(std::ostream &)          const;
 
             const uint8_t lower;
             const uint8_t upper;
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Couple);
+            Y_DISABLE_COPY_AND_ASSIGN(Interval);
         };
 
         class Segments
