@@ -47,6 +47,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(text_ops);
     Y_UTEST(text_hexa);
     Y_UTEST(text_printable);
+    Y_UTEST(text_embedding);
 
 
 

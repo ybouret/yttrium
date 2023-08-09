@@ -39,6 +39,7 @@ add_test(text:human-readable test-core text_human_readable)
 add_test(text:ops            test-core text_ops)
 add_test(text:hexa           test-core text_hexa)
 add_test(text:printable      test-core text_printable)
+add_test(text:embedding      test-core text_embedding)
 
 
 #memory

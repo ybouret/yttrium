@@ -173,6 +173,15 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(), Core::Vector(), Writable
         inline Type *      operator()(void)       noexcept { return 0!=code ? code->base : 0; } //!< access
         inline ConstType * operator()(void) const noexcept { return 0!=code ? code->base : 0; } //!< access, const
 
+        //! access C-style
+        inline Type &      operator()(const size_t indx) noexcept
+        { assert(0!=code); assert(indx<size()); return code->base[indx]; }
+
+        //! access C-style, const
+        inline ConstType & operator()(const size_t indx) const noexcept
+        { assert(0!=code); assert(indx<size()); return code->base[indx]; }
+
+
 
     private:
         class Code;
