@@ -35,6 +35,17 @@ namespace Yttrium
 
         //______________________________________________________________________
         //
+        //! encode call sign, serialize
+        //______________________________________________________________________
+        template <typename T> inline
+        size_t marshall(OutputStream &fp, const T &identifiable) const
+        {
+            size_t written = emitMessage(fp,identifiable.callSign());
+            return written + serialize(fp);
+        }
+
+        //______________________________________________________________________
+        //
         //
         // C++
         //
@@ -45,6 +56,8 @@ namespace Yttrium
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Serializable);
+        size_t emitMessage(OutputStream &,const char *) const;
+
     };
 }
 

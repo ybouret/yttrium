@@ -209,6 +209,15 @@ Rational & Rational:: operator OP##=(const Natural  & lhs) Y_APQ_BINARY_BODY(OP)
             //__________________________________________________________________
             //
             //
+            // I/O
+            //
+            //__________________________________________________________________
+            virtual size_t   serialize(OutputStream &) const; //!< numer+denom
+            static  Rational ReadFrom(InputStream &);         //!< load serialized
+
+            //__________________________________________________________________
+            //
+            //
             // Members
             //
             //__________________________________________________________________

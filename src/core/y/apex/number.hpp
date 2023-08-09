@@ -4,6 +4,8 @@
 #define Y_Apex_Number_Included 1
 
 #include "y/object.hpp"
+#include "y/io/serializable.hpp"
+
 #include <iosfwd>
 
 namespace Yttrium
@@ -21,12 +23,8 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Number : public Object
+        class Number : public Object, public Serializable
         {
-
-        public:
-            
-
         protected:
             explicit Number() noexcept;
             

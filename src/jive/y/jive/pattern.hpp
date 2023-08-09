@@ -4,6 +4,7 @@
 #define Y_Jive_Pattern_Included 1
 
 #include "y/jive/token.hpp"
+#include "y/io/serializable.hpp"
 
 namespace Yttrium
 {
@@ -24,7 +25,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Pattern : public Object, public Token
+        class Pattern : public Object, public Token, public Serializable
         {
         public:
             //__________________________________________________________________
@@ -69,6 +70,15 @@ namespace Yttrium
                 assert(0!=self);
                 return static_cast<const T*>(self);
             }
+
+            //__________________________________________________________________
+            //
+            //
+            // IO
+            //
+            //__________________________________________________________________
+            size_t emitUUID(OutputStream&) const;
+
 
             //__________________________________________________________________
             //

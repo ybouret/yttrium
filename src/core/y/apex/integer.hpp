@@ -165,6 +165,15 @@ inline friend bool operator OP (const Natural &lhs, const Integer &rhs ) noexcep
             //__________________________________________________________________
             //
             //
+            // I/O
+            //
+            //__________________________________________________________________
+            virtual size_t  serialize(OutputStream &) const; //!< s+n
+            static  Integer ReadFrom(InputStream &);         //!< load serialized
+
+            //__________________________________________________________________
+            //
+            //
             // Members
             //
             //__________________________________________________________________

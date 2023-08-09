@@ -11,18 +11,15 @@
 
 namespace Yttrium
 {
+    class InputStream;
     namespace Random { class Bits;  }
-
-    //! helper
-    Y_SHALLOW_DECL(TwoToThe);
+    Y_SHALLOW_DECL(TwoToThe); //!< helper
     
     namespace Apex
     {
 
         //! helper
         Y_SHALLOW_DECL(AsImpl);
-
-
 
         //______________________________________________________________________
         //
@@ -228,7 +225,14 @@ namespace Yttrium
                 return target;
             }
 
-
+            //__________________________________________________________________
+            //
+            //
+            // I/O
+            //
+            //__________________________________________________________________
+            virtual size_t  serialize(OutputStream &) const; //!< size+data
+            static  Natural ReadFrom(InputStream&);          //!< load serialized
 
         private:
             void *impl;

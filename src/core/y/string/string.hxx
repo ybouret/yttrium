@@ -636,9 +636,10 @@ namespace Yttrium
         {
             assert(0!=code);
             assert(0!=code->data);
-            const size_t sz = fp.emitVBR(code->size);
-
-            return sz;
+            size_t written = fp.emitVBR(code->size);
+            for(size_t i=0;i<code->size;++i)
+                written += fp.emitCBR(code->data[i]);
+            return written;
         }
 
         template <>
@@ -646,6 +647,10 @@ namespace Yttrium
         {
             const size_t  nc = fp.readVBR<size_t>("String.size");
             String<CH>    res(nc,AsCapacity,false);
+            for(size_t i=0;i<nc;++i)
+            {
+                res << fp.readCBR<CH>("String.char");
+            }
             return res;
         }
     }

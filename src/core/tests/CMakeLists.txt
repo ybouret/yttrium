@@ -128,6 +128,7 @@ add_test(io:copy    test-core io_copy)
 add_test(io:lines   test-core io_lines)
 add_test(io:pack64  test-core io_pack64)
 add_test(io:ints    test-core io_ints)
+add_test(io:ser     test-core io_ser)
 
 #fft
 add_test(fft:1   test-core fft1)

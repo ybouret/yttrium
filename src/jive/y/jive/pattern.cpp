@@ -1,5 +1,6 @@
 
 #include "y/jive/pattern.hpp"
+#include "y/io/stream/output.hpp"
 
 namespace Yttrium
 {
@@ -18,6 +19,11 @@ namespace Yttrium
         self(0),
         uuid(t)
         {
+        }
+
+        size_t Pattern:: emitUUID(OutputStream &fp) const
+        {
+            return fp.emitCBR(uuid);
         }
 
         

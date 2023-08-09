@@ -50,7 +50,7 @@ namespace Yttrium
             ReadWriteBuffer(),
             WadType(n),
             wksp( static_cast<MutableType*>(workspace) ),
-            wlen( maxBlocks * sizeof(T)      )
+            wlen( n * sizeof(T)      )
             {
             }
 
