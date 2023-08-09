@@ -1,4 +1,4 @@
-#include "y/jive/pattern/segment.hpp"
+#include "y/jive/pattern/first-chars.hpp"
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
 
@@ -7,9 +7,16 @@ using namespace Jive;
 
 Y_UTEST(fc)
 {
-    Segment::List fc;
-    Segment::AppendTo(fc, new Segment('a') );
-    Segment::AppendTo(fc, new Segment('k') );
+    FirstChars fc;
+
+    std::cerr << fc << std::endl;
+    fc.include('a');     std::cerr << fc << std::endl;
+    fc.include('a','z'); std::cerr << fc << std::endl;
+    fc.include('0','9'); std::cerr << fc << std::endl;
+    fc.exclude('6');     std::cerr << fc << std::endl;
+    fc.exclude('j','q'); std::cerr << fc << std::endl;
+
+
 
 }
 Y_UDONE()
