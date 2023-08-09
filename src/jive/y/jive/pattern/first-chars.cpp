@@ -2,7 +2,8 @@
 #include "y/jive/pattern/first-chars.hpp"
 #include "y/memory/out-of-reach.hpp"
 #include "y/text/ascii/printable.hpp"
-
+#include "y/object.hpp"
+#include <iostream>
 #include <cstring>
 
 namespace Yttrium

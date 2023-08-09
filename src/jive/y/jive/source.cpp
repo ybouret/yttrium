@@ -20,6 +20,19 @@ namespace Yttrium
 
             inline Char *get() { return cache.size>0 ? cache.popHead() : handle->get(); }
 
+            inline bool ready()
+            {
+                if(cache.size>0)
+                    return true;
+
+                Char *ch = handle->get();
+                if(!ch)
+                    return false;
+                
+                cache.pushHead(ch);
+                return true;
+            }
+
 
             AutoPtr<Module> handle;
             Token           cache;
@@ -67,6 +80,13 @@ namespace Yttrium
             code->cache.mergeHead(token);
         }
 
+        bool  Source:: ready()
+        {
+            assert(0!=code);
+            return code->ready();
+        }
+
+
         void Source:: dup(const Token &token)
         {
             Token cpy(token);
@@ -96,6 +116,7 @@ namespace Yttrium
             static const char sep[] = " \t\r\n";
             return 0 != strchr(sep,**ch);
         }
+
 
         bool Source:: guess(Token &token)
         {

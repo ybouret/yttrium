@@ -1,9 +1,10 @@
 //! \file
 
-#ifndef Y_Jive_Pattern_Included
-#define Y_Jive_Pattern_Included 1
+#ifndef Y_Jive_Pattern_First_Chars_Included
+#define Y_Jive_Pattern_First_Chars_Included 1
 
-#include "y/jive/token.hpp"
+#include "y/config/starting.hpp"
+#include "y/ostream-proto.hpp"
 
 namespace Yttrium
 {

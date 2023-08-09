@@ -1,7 +1,9 @@
+
+
 //! \file
 
-#ifndef Y_Jive_Pattern_Single_Included
-#define Y_Jive_Pattern_Single_Included 1
+#ifndef Y_Jive_Pattern_Any1_Included
+#define Y_Jive_Pattern_Any1_Included 1
 
 #include "y/jive/pattern.hpp"
 #include "y/type/fourcc.hpp"
@@ -14,42 +16,36 @@ namespace Yttrium
         //
         //
         //
-        //! Single char recognition
+        //! Any ONE char recognition
         //
         //
         //______________________________________________________________________
-        class Single : public Pattern
+        class Any1 : public Pattern
         {
         public:
             //__________________________________________________________________
             //
             //! UUID
             //_________________________________________________________________
-            static const uint32_t UUID = Y_FOURCC('S', 'N', 'G', 'L');
+            static const uint32_t UUID = Y_FOURCC('A', 'N', 'Y', '1');
 
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            explicit Single(const uint8_t) noexcept; //!< setup
-            virtual ~Single()              noexcept; //!< cleanup
+            explicit Any1() noexcept; //!< setup
+            virtual ~Any1() noexcept; //!< cleanup
 
             //__________________________________________________________________
             //
             // Interface
             //__________________________________________________________________
-            virtual Pattern *clone() const;           
+            virtual Pattern *clone() const;
             virtual bool     takes(Source &);
             virtual void     query(FirstChars &) const;
 
-            //__________________________________________________________________
-            //
-            // Members
-            //__________________________________________________________________
-            const uint8_t code; //!< code to match
-
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Single);
+            Y_DISABLE_COPY_AND_ASSIGN(Any1);
         };
     }
 

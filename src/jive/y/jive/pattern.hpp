@@ -3,14 +3,16 @@
 #ifndef Y_Jive_Pattern_Included
 #define Y_Jive_Pattern_Included 1
 
-#include "y/jive/source.hpp"
-#include "y/type/fourcc.hpp"
+#include "y/jive/token.hpp"
 
 namespace Yttrium
 {
     namespace Jive
     {
 
+        class Source;
+        class FirstChars;
+        
         //! helper to declare internal pattern type
 #define Y_PATTERN(TYPE) self = static_cast<TYPE*>(this)
 
@@ -32,8 +34,6 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            virtual Pattern * clone() const = 0; //!< perform deep copy
-
             //__________________________________________________________________
             //
             //! try to accept next source content
@@ -42,10 +42,14 @@ namespace Yttrium
              - token must be left empty on failure
              */
             //__________________________________________________________________
-            virtual bool      accepts(Source &source) = 0;
+            virtual bool      takes(Source &)           = 0;
+            virtual void      query(FirstChars &) const = 0; //!< query first chars
+            virtual Pattern * clone()        const = 0; //!< perform deep copy
 
-
+            //__________________________________________________________________
+            //
             //! conversion
+            //__________________________________________________________________
             template <typename T> inline
             T *as() noexcept
             {
@@ -54,7 +58,10 @@ namespace Yttrium
                 return static_cast<T*>(self);
             }
 
+            //__________________________________________________________________
+            //
             //! conversion
+            //__________________________________________________________________
             template <typename T> inline
             const T *as() const noexcept
             {
