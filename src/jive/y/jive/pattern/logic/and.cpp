@@ -47,6 +47,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             for(Pattern *p=patterns.head;p;p=p->next)
             {
+                assert(0==p->size);
                 if(p->takes(source))
                 {
                     mergeTail(*p); assert(0==p->size);
