@@ -30,9 +30,12 @@ namespace Yttrium
 
     String Serializable:: toBinary() const
     {
-        OutputDataStream<String> fp;
-        const size_t nw = serialize(fp);
-        if(fp.size()!=nw) throw Specific::Exception("Serialize.toBinary","sizes mismatch");
-        return fp;
+        String bin;
+        {
+            OutputDataStream<String> fp(bin);
+            const size_t nw = serialize(fp);
+            if(bin.size()!=nw) throw Specific::Exception("Serialize.toBinary","sizes mismatch");
+        }
+        return bin;
     }
 }

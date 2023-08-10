@@ -23,6 +23,7 @@ namespace Yttrium
             explicit OutputDataStream()          noexcept;  //!< setup
             virtual ~OutputDataStream()          noexcept;  //!< cleanup
             virtual const char *callSign() const noexcept;  //!< CallSign
+            virtual void        flush();                    //!< do nothing
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(OutputDataStream);
@@ -33,12 +34,12 @@ namespace Yttrium
     //
     //
     //
-    //! OutputStream on a SEQUENCE
+    //! OutputStream on a persistent SEQUENCE
     //
     //
     //__________________________________________________________________________
     template <typename SEQUENCE>
-    class OutputDataStream : public Core::OutputDataStream, public SEQUENCE
+    class OutputDataStream : public Core::OutputDataStream
     {
     public:
         //______________________________________________________________________
@@ -47,8 +48,8 @@ namespace Yttrium
         // C++
         //
         //______________________________________________________________________
-        inline explicit OutputDataStream() : Core::OutputDataStream(), SEQUENCE() {} //!< setup
-        inline virtual ~OutputDataStream() noexcept {}                               //!< cleanup
+        inline explicit OutputDataStream(SEQUENCE &seq) : Core::OutputDataStream(), host(seq) {} //!< setup
+        inline virtual ~OutputDataStream() noexcept {}                                           //!< cleanup
 
         //______________________________________________________________________
         //
@@ -56,11 +57,11 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        inline virtual void write(const char c) { SEQUENCE &self = *this; self << c; } //!< write by appending
-        inline virtual void flush()  {}                                                //!< do nothing
+        inline virtual void write(const char c) { host << c; } //!< write by appending
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(OutputDataStream);
+        SEQUENCE &host;
     };
 
 

@@ -19,6 +19,8 @@ namespace Yttrium
         {
             return CallSign;
         }
+
+        void OutputDataStream:: flush() {}
     }
 
 }

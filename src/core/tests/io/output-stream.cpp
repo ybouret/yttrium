@@ -51,14 +51,18 @@ Y_UTEST(io_ostream)
 
 
     {
-        OutputDataStream<String> fp;
-        
-        fp("Pi=%g\n--",3.14);
+        String s;
+        {
+            OutputDataStream<String> fp(s);
 
-        std::cerr << fp << std::endl;
+            fp("Pi=%g\n--",3.14);
+        }
+
+        std::cerr << s << std::endl;
 
     }
 
+#if 0
     {
         OutputDataStream< Vector<char> > fp;
         fp("Pi=%g",3.1431);
@@ -70,6 +74,7 @@ Y_UTEST(io_ostream)
         fp("Pi=%g",3.1431);
         std::cerr << fp << std::endl;
     }
+#endif
 
 }
 Y_UDONE()

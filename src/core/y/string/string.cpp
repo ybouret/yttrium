@@ -38,7 +38,8 @@ Collection(),             \
 StringCommon(),           \
 Sequence<CH>(),           \
 Writable<CH>(),           \
-WritableContiguous<CH>() 
+WritableContiguous<CH>(), \
+Serializable()
 
 
 #define Y_STRING_CODE(NUM_CHARS)               \
