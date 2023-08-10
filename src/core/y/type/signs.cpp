@@ -11,7 +11,7 @@ namespace Yttrium
             case __Zero__: return __Zero__;
         }
         // never get here
-#if defined(Y_GNU) || defined(Y_MICROSOFT)
+#if defined(Y_GNU) || defined(Y_MICROSOFT) || defined(Y_INTEL)
         return __Zero__;
 #endif
     }
@@ -55,7 +55,7 @@ namespace Yttrium
                 break;
         }
         // never get here
-#if defined(Y_GNU) || defined(Y_MICROSOFT)
+#if defined(Y_GNU) || defined(Y_MICROSOFT) || defined(Y_INTEL)
         return ZZ_Signs;
 #endif
     }

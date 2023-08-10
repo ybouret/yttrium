@@ -5,6 +5,7 @@
 
 #include <assert.h>
 #include "y/config/platform.h"
+#include "y/config/compiler.h"
 
 
 #include <stdlib.h>
