@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_IO_GZIP_FILE_INCLUDED
@@ -14,10 +13,12 @@ namespace Yttrium
         {
         public:
             virtual ~File() noexcept;
-
-        protected:
             explicit File(const char *filename, const char *options);
+
             void *handle;
+
+            unsigned read(void *buff, const unsigned size);
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(File);
 

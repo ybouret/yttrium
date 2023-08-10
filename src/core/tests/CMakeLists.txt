@@ -21,7 +21,7 @@ associative
 mkl
 )
 
-Y_LinkLibraries(test-core)
+Y_LinkLibraries(test-core y-z)
 
 enable_testing()
 
@@ -129,6 +129,7 @@ add_test(io:lines   test-core io_lines)
 add_test(io:pack64  test-core io_pack64)
 add_test(io:ints    test-core io_ints)
 add_test(io:ser     test-core io_ser)
+add_test(io:gzip-read test-core io_gzip_read)
 
 #fft
 add_test(fft:1   test-core fft1)
