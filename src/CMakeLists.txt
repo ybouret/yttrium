@@ -58,7 +58,7 @@ add_subdirectory(jive)
 
 message( STATUS "[yttrium] Regressions: ${Y_Regressions}")
 
-# thid party
+# third party
 add_subdirectory(y)
 
 # looking for Doxygen to generate documentation
