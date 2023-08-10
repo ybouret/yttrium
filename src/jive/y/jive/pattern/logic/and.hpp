@@ -12,18 +12,49 @@ namespace Yttrium
     namespace Jive
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Logical AND: must match all patterns
+        //
+        //
+        //______________________________________________________________________
         class And : public Compound
         {
         public:
-            static const uint32_t UUID = Y_FOURCC('_','&','&','_');
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const uint32_t UUID = Y_FOURCC('_','&','&','_'); //!< UUID
 
-            explicit And() noexcept;
-            explicit And(const And &);
-            virtual ~And() noexcept;
-            
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit And()   noexcept; //!< setup empty
+            explicit And(const And &); //!< copy
+            virtual ~And()   noexcept; //!< cleanup
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
             virtual Pattern *clone() const;
             virtual bool     takes(Source &);
             virtual void     query(FirstChars &) const;
+
+            //! checking isFragile
+            /**
+             isFragile iff is empty or all patterns are fragile
+             */
             virtual bool     isFragile() const noexcept;  
 
         private:

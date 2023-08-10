@@ -48,8 +48,8 @@ namespace Yttrium
             virtual Pattern * clone()              const = 0; //!< perform deep copy
             virtual void      reset()           noexcept = 0; //!< reset content
             virtual bool      isFragile() const noexcept = 0; //!< accept empty token
-            bool              isRegular() const noexcept;
-            
+            bool              isRegular() const noexcept;     //!< !isFragile()
+
             //__________________________________________________________________
             //
             //! conversion

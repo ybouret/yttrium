@@ -10,25 +10,56 @@ namespace Yttrium
 {
     namespace Jive
     {
+        //______________________________________________________________________
+        //
+        //
+        //! list of cloneable patterns
+        //
+        //______________________________________________________________________
         typedef ListOfCloneable<Pattern> Patterns;
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! a Compound is a Pattern with a list of patterns
+        //
+        //
+        //______________________________________________________________________
         class Compound : public Pattern
         {
         public:
-            virtual ~Compound() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            virtual void   reset()                noexcept;  //!< recursive reset
+            virtual size_t serialize(OutputStream &) const;  //!< uuid+size+pattern
+            void           retrieve(InputStream &);          //!< load size+pattersn
 
-            virtual void   reset() noexcept;
-            virtual size_t serialize(OutputStream &) const;
-            void           retrieve(InputStream &);
+            Compound & operator<<( const Pattern & ); //!< append clone of argument
+            Compound & operator<<( Pattern *);        //!< append argument
 
-            Compound & operator<<( const Pattern & );
-            Compound & operator<<( Pattern *);
-            
-            const Patterns patterns;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const Patterns patterns; //!< operands
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            virtual ~Compound() noexcept;  //!< cleanup
         protected:
-            explicit Compound(const uint32_t  ) noexcept;
-            explicit Compound(const Compound &);
+            explicit Compound(const uint32_t  ) noexcept; //!< setup empty
+            explicit Compound(const Compound &);          //!< copy pattern+patterns
             
         private:
             Y_DISABLE_ASSIGN(Compound);

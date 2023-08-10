@@ -172,7 +172,7 @@ namespace Yttrium
             //
             // other methods
             //__________________________________________________________________
-            void           clear()                noexcept; //!< clear content
+            void           free()                 noexcept; //!< clear content
             void           swapWith(String &s)    noexcept; //!< no-throw swap
             const String & key()            const noexcept; //!< self-keyed
 

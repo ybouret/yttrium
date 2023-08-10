@@ -1,7 +1,11 @@
 
 #include "y/io/libc/output.hpp"
+#include "y/io/data/output.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
+#include "y/sequence/vector.hpp"
+#include "y/sequence/list.hpp"
 
 using namespace Yttrium;
 
@@ -46,6 +50,26 @@ Y_UTEST(io_ostream)
     }
 
 
+    {
+        OutputDataStream<String> fp;
+        
+        fp("Pi=%g\n--",3.14);
+
+        std::cerr << fp << std::endl;
+
+    }
+
+    {
+        OutputDataStream< Vector<char> > fp;
+        fp("Pi=%g",3.1431);
+        std::cerr << fp << std::endl;
+    }
+
+    {
+        OutputDataStream< List<char> > fp;
+        fp("Pi=%g",3.1431);
+        std::cerr << fp << std::endl;
+    }
 
 }
 Y_UDONE()

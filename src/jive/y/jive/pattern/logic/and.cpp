@@ -1,4 +1,5 @@
 #include "y/jive/pattern/logic/and.hpp"
+#include "y/jive/source.hpp"
 
 namespace Yttrium
 {
@@ -30,21 +31,35 @@ namespace Yttrium
 
         bool And:: isFragile() const noexcept
         {
-
-            return false;
+            for(const Pattern *p=patterns.head;p;p=p->next)
+            {
+                if(p->isRegular()) return false;
+            }
+            return true;
         }
 
         bool And:: takes(Source &source)
         {
             assert(0==size);
 
+            //------------------------------------------------------------------
+            // try to accept all patterns
+            //------------------------------------------------------------------
             for(Pattern *p=patterns.head;p;p=p->next)
             {
-
+                if(p->takes(source))
+                {
+                    mergeTail(*p); assert(0==p->size);
+                }
+                else
+                {
+                    assert(0==p->size);
+                    source.put(*this); assert(0==size);
+                    return false;
+                }
             }
 
-
-            return false;
+            return true;
         }
 
 
