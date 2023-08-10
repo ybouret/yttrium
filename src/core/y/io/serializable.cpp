@@ -21,3 +21,18 @@ namespace Yttrium
     }
 }
 
+#include "y/string.hpp"
+#include "y/io/data/output.hpp"
+#include "y/system/exception.hpp"
+
+namespace Yttrium
+{
+
+    String Serializable:: toBinary() const
+    {
+        OutputDataStream<String> fp;
+        const size_t nw = serialize(fp);
+        if(fp.size()!=nw) throw Specific::Exception("Serialize.toBinary","sizes mismatch");
+        return fp;
+    }
+}

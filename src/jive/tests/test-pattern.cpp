@@ -21,6 +21,9 @@ Y_UTEST(pattern)
         AutoPtr<Pattern> r1 = r->clone(); std::cerr << char(r1->as<Range>()->lower) << "," <<  char(r1->as<Range>()->upper) << std::endl;
         AutoPtr<Pattern> a1 = a->clone(); std::cerr << FourCC::ToText( a1->as<Any1>()->UUID ) << std::endl;
         AutoPtr<Pattern> A1 = A->clone();
+        const String     Abin = A->toBinary();
+        const String     A1bin = A1->toBinary();
+        Y_CHECK(Abin == A1bin);
     }
 
 

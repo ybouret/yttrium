@@ -7,6 +7,8 @@
 
 namespace Yttrium
 {
+    namespace Core { template <typename> class String; }
+
     class OutputStream;
 
     //__________________________________________________________________________
@@ -43,6 +45,12 @@ namespace Yttrium
             size_t written = emitMessage(fp,identifiable.callSign());
             return written + serialize(fp);
         }
+        
+        //______________________________________________________________________
+        //
+        //! write to string
+        //______________________________________________________________________
+        Core::String<char> toBinary() const;
 
         //______________________________________________________________________
         //
