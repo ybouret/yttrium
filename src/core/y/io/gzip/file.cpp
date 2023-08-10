@@ -4,6 +4,8 @@
 #include "y/lockable.hpp"
 #include <cerrno>
 #include "y/system/exception.hpp"
+#include "y/type/ints.hpp"
+#include "y/type/utils.hpp"
 
 namespace Yttrium
 {
@@ -45,8 +47,21 @@ namespace Yttrium
         {
             assert(Good(buff,size));
             gzFile gz = static_cast<gzFile>(handle);
-            const int nr = gzread(gz,buff,size);
-            return 0;
+            const  unsigned todo  = Min<unsigned>(size, IntegerFor<int>::Maximum );
+            const  int      nr    = gzread(gz,buff,todo);
+            if( nr < int(todo) )
+            {
+                if( gzeof(gz) )
+                {
+                    return nr;
+                }
+                else
+                {
+                    throw Specific::Exception("gzread","%s",RetrieveError(gz));
+                }
+            }
+            else
+                return nr;
         }
 
 
