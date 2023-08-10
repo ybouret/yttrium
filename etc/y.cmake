@@ -252,3 +252,23 @@ macro(Y_LinkLibraries target)
     
     target_link_libraries(${target} ${ARGN} ${libs} )
 endmacro()
+
+set(Y_NeedsMath OFF)
+
+if(Y_SUNOS)
+	set(Y_NeedsMath ON)
+endif()
+
+if(Y_NeedsMath)
+	macro(Y_LinkMath target)
+		message( STATUS "[yttrium] ${target} requires libm (EXPLICIT)" )
+		target_link_libraries(${target} m)
+	endmacro()
+else()
+	macro(Y_LinkMath target)
+		message( STATUS "[yttrium] ${target} requires libm (IMPLICIT)" )
+	endmacro()
+endif()
+
+
+

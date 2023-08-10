@@ -12,6 +12,8 @@ add_library(y-lua STATIC ${srcs})
 MESSAGE( STATUS "[yttrium] interpreter: y_lua" )
 add_executable(y_lua lua.c)
 target_link_libraries(y_lua y-lua)
+Y_LinkMath(y_lua)
+
 
 add_custom_command(TARGET y_lua POST_BUILD
 COMMAND y_lua ${DEMO}/hello.lua
