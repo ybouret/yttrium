@@ -250,5 +250,5 @@ macro(Y_LinkLibraries target)
 		endif()
 	endif()
     
-    target_link_libraries(${target} ${libs} ${ARGN})
+    target_link_libraries(${target} ${ARGN} ${libs} )
 endmacro()
