@@ -114,7 +114,11 @@ namespace Yttrium
                 case None:: UUID: return OptimizeNone( p->as<None>() );
 
                     // joker
-                case Optional:: UUID: return OptimizeGuest( p->as<Optional>() );
+                case Optional::  UUID: return OptimizeGuest( p->as<Optional>() );
+                case Repeating:: UUID:
+                case Repeating:: ZOM:
+                case Repeating:: OOM:
+                    return OptimizeGuest( p->as<Repeating>() );
 
                 default:
                     break;

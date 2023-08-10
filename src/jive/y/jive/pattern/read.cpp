@@ -36,7 +36,15 @@ namespace Yttrium
                 case None:: UUID:  return ReadCompound( new None(), fp);
 
                     // Joker
-                case Optional:: UUID: return new Optional( Pattern::ReadFrom(fp) );
+                case Optional::  UUID: return new Optional( Pattern::ReadFrom(fp) );
+                case Repeating:: UUID: {
+                    const size_t nmin = fp.readVBR<size_t>("Repeating.atLeast");
+                    return new Repeating( nmin, Pattern::ReadFrom(fp) );
+                }
+
+                case Repeating:: ZOM: return new ZeroOrMore( Pattern::ReadFrom(fp) );
+                case Repeating:: OOM: return new OneOrMore(  Pattern::ReadFrom(fp)  );
+
 
                 default:
                     break;
