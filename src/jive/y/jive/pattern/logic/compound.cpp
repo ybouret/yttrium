@@ -44,6 +44,19 @@ namespace Yttrium
                 Coerce(patterns).pushTail( Pattern::ReadFrom(fp) );
         }
 
+        Compound & Compound:: operator<<( const Pattern &p )
+        {
+            Coerce(patterns).pushTail( p.clone() );
+            return *this;
+        }
+
+        Compound & Compound:: operator<<( Pattern *p )
+        {
+            assert(0!=p);
+            Coerce(patterns).pushTail(p);
+            return *this;
+        }
+
 
     }
 

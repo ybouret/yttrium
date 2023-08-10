@@ -21,6 +21,9 @@ namespace Yttrium
             virtual size_t serialize(OutputStream &) const;
             void           retrieve(InputStream &);
 
+            Compound & operator<<( const Pattern & );
+            Compound & operator<<( Pattern *);
+            
             const Patterns patterns;
 
         protected:

@@ -28,10 +28,21 @@ namespace Yttrium
             }
         }
 
+        bool And:: isFragile() const noexcept
+        {
+
+            return false;
+        }
 
         bool And:: takes(Source &source)
         {
             assert(0==size);
+
+            for(Pattern *p=patterns.head;p;p=p->next)
+            {
+
+            }
+
 
             return false;
         }
