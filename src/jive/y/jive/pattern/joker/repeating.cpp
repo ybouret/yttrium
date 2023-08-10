@@ -77,9 +77,11 @@ namespace Yttrium
             assert(0==size);
             assert(0==motif->size);
 
-            
+            size_t count = 0;
+            while(true)
+            {
 
-
+            }
             return false;
         }
 
