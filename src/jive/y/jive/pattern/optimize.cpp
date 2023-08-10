@@ -56,7 +56,11 @@ namespace Yttrium
             return guard.yield();
         }
 
-        
+        //----------------------------------------------------------------------
+        //
+        // optimize And
+        //
+        //----------------------------------------------------------------------
         static inline Pattern * OptimizeAnd(And *p)
         {
             AutoPtr<And> motif = OptimizeCompound(p);
@@ -67,9 +71,22 @@ namespace Yttrium
             return motif.yield();
         }
 
+        //----------------------------------------------------------------------
+        //
+        // optimize Or
+        //
+        //----------------------------------------------------------------------
         static inline Pattern * OptimizeOr(Or *p)
         {
-            AutoPtr<Or> motif = OptimizeCompound(p);
+            AutoPtr<Or> motif    = OptimizeCompound(p);
+            Patterns   &patterns = motif->patterns;
+            switch(patterns.size)
+            {
+                case 0: return motif.yield();
+                case 1: return patterns.popTail();
+                default:
+                    break;
+            }
 
             return motif.yield();
         }

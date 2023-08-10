@@ -10,6 +10,8 @@ namespace Yttrium
 {
     namespace Jive
     {
+        class Pattern;
+
         //______________________________________________________________________
         //
         //
@@ -59,6 +61,8 @@ namespace Yttrium
             void sub(const FirstChars &fc) noexcept; //!< exclide active fc
 
             bool   operator[](const uint8_t) const noexcept; //!< query status
+
+            Pattern *compile() const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(FirstChars);

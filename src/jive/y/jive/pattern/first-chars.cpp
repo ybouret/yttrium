@@ -133,3 +133,41 @@ namespace Yttrium
 
 }
 
+#include "y/jive/pattern/basic/single.hpp"
+#include "y/jive/pattern/basic/range.hpp"
+#include "y/jive/pattern/logic/or.hpp"
+#include "y/ptr/auto.hpp"
+
+namespace Yttrium
+{
+    namespace Jive
+    {
+        Pattern * FirstChars:: compile() const
+        {
+            AutoPtr<Compound> guard = new Or();
+            Compound         &p     = *guard;
+
+            unsigned i = 0;
+            unsigned j = 0;
+            while( NextBlock(i,j,*this) )
+            {
+
+                const unsigned jm = j-1;
+                if(jm>i)
+                {
+                    // range
+                    p << new Range(i,jm);
+                }
+                else
+                {
+                    // single
+                    p << new Single(i);
+                }
+                i=j;
+            }
+
+            return guard.yield();
+        }
+    }
+
+}

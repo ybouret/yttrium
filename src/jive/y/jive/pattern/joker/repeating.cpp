@@ -57,7 +57,9 @@ namespace Yttrium
                 case ZOM:
                 case OOM:
                     break;
+
                 default:
+                    // write atLeast
                     assert(UUID==uuid);
                     nw += fp.emitVBR(atLeast);
             }

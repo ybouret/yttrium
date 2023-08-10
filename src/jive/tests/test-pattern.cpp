@@ -13,7 +13,7 @@ Y_UTEST(pattern)
     AutoPtr<Pattern>  a = new Any1();
     AutoPtr<Pattern>  r = new Range('0','9');
     AutoPtr<Compound> A = new And();
-
+    AutoPtr<Optional> O = new Optional( *r );
     *A << *a << *r << new Exclude('k');
 
     {
