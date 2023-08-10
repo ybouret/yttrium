@@ -1,4 +1,4 @@
-include_directories(.)
+include_directories(. ..)
 
 file(GLOB quark y/concurrent/*.hxx)
 set(srcs ${quark})
@@ -16,6 +16,7 @@ io/stream
 io/libc
 io/libc/buffer
 io/data
+io/gzip
 text
 text/ascii
 data
