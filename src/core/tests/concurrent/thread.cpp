@@ -6,6 +6,7 @@
 #include "y/utest/run.hpp"
 #include "y/system/exception.hpp"
 #include "y/system/error.hpp"
+#include <cerrno>
 
 #if defined(Y_BSD)
 #include <pthread.h>
