@@ -129,8 +129,8 @@ COMMAND z-example
 COMMENT "[yttrium] Testing zlib"
 VERBATIM)
 
-add_executable(minigzip test/minigzip.c)
-target_link_libraries(minigzip y-z)
+#add_executable(minigzip test/minigzip.c)
+#target_link_libraries(minigzip y-z)
 
 if(FALSE)
 

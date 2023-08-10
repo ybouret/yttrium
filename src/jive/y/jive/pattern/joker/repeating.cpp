@@ -80,7 +80,10 @@ namespace Yttrium
             size_t count = 0;
             while(true)
             {
-
+                if(motif->takes(source))
+                {
+                    
+                }
             }
             return false;
         }
