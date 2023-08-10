@@ -32,7 +32,7 @@ namespace Yttrium
             // C++
             //__________________________________________________________________
             explicit Range(const uint8_t, const uint8_t) noexcept; //!< setup
-            virtual ~Range()              noexcept; //!< cleanup
+            virtual ~Range()                             noexcept; //!< cleanup
 
             //__________________________________________________________________
             //
@@ -41,6 +41,7 @@ namespace Yttrium
             virtual Pattern *clone() const;
             virtual bool     takes(Source &);
             virtual void     query(FirstChars &) const;
+            virtual size_t   serialize(OutputStream&) const;
 
             //__________________________________________________________________
             //

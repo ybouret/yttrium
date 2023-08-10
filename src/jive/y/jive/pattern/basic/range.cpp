@@ -3,7 +3,7 @@
 #include "y/jive/pattern/basic/range.hpp"
 #include "y/jive/source.hpp"
 #include "y/jive/pattern/first-chars.hpp"
-
+#include "y/io/stream/output.hpp"
 
 namespace Yttrium
 {
@@ -41,6 +41,13 @@ namespace Yttrium
             fc.include(lower,upper);
         }
 
+        size_t Range:: serialize(OutputStream &fp) const
+        {
+            size_t nw = fp.emitCBR(uuid);
+            nw += fp.emitCBR(lower);
+            nw += fp.emitCBR(upper);
+            return nw;
+        }
 
     }
 

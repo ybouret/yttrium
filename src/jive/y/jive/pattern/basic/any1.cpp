@@ -3,7 +3,7 @@
 #include "y/jive/pattern/basic/any1.hpp"
 #include "y/jive/source.hpp"
 #include "y/jive/pattern/first-chars.hpp"
-
+#include "y/io/stream/output.hpp"
 
 namespace Yttrium
 {
@@ -45,6 +45,10 @@ namespace Yttrium
             fc.includeAll();
         }
 
+        size_t Any1:: serialize(OutputStream &fp) const
+        {
+            return fp.emitCBR(uuid);
+        }
 
     }
 

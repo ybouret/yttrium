@@ -20,12 +20,6 @@ namespace Yttrium
         uuid(t)
         {
         }
-
-        size_t Pattern:: emitUUID(OutputStream &fp) const
-        {
-            return fp.emitCBR(uuid);
-        }
-
         
         
     }

@@ -2,7 +2,7 @@
 #include "y/jive/pattern/basic/single.hpp"
 #include "y/jive/source.hpp"
 #include "y/jive/pattern/first-chars.hpp"
-
+#include "y/io/stream/output.hpp"
 
 namespace Yttrium
 {
@@ -35,6 +35,12 @@ namespace Yttrium
         void Single::query(FirstChars &fc) const
         {
             fc.include(code);
+        }
+
+        size_t Single:: serialize(OutputStream &fp) const
+        {
+            const size_t nw = fp.emitCBR(uuid);
+            return nw + fp.emitCBR(code);
         }
 
 
