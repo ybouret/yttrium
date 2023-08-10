@@ -1,6 +1,7 @@
 
 #include "y/jive/pattern/logic/or.hpp"
 #include "y/jive/source.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace Yttrium
 {
@@ -25,8 +26,6 @@ namespace Yttrium
             for(const Pattern *p = patterns.head; p; p=p->next)
             {
                 p->query(fc);
-                if(p->isRegular())
-                    break;
             }
         }
 
@@ -65,13 +64,26 @@ namespace Yttrium
                         continue; // possible not-empty pattern
                     }
                 }
-                
+
             }
 
             return success;
         }
 
+        Pattern * Pattern:: Among(const char *text)
+        {
+            AutoPtr<Compound> p = new Or();
+            p->feed(text);
+            return p.yield();
+        }
 
+
+        Pattern * Pattern:: Among(const String &text)
+        {
+            AutoPtr<Compound> p = new Or();
+            p->feed(text);
+            return p.yield();
+        }
     }
 
 }

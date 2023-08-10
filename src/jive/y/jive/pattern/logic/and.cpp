@@ -1,5 +1,6 @@
 #include "y/jive/pattern/logic/and.hpp"
 #include "y/jive/source.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace Yttrium
 {
@@ -63,7 +64,20 @@ namespace Yttrium
             return true;
         }
 
+        Pattern * Pattern:: Exact(const char *text)
+        {
+            AutoPtr<Compound> p = new And();
+            p->feed(text);
+            return p.yield();
+        }
 
+
+        Pattern * Pattern:: Exact(const String &text)
+        {
+            AutoPtr<Compound> p = new And();
+            p->feed(text);
+            return p.yield();
+        }
     }
 
 }

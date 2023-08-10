@@ -49,7 +49,7 @@ namespace Yttrium
             //__________________________________________________________________
             virtual Pattern *clone() const;
             virtual bool     takes(Source &);
-            virtual void     query(FirstChars &) const;
+            virtual void     query(FirstChars &) const; //! first chars up to first regular
 
             //! checking isFragile
             /**
@@ -57,6 +57,7 @@ namespace Yttrium
              */
             virtual bool     isFragile() const noexcept;  
 
+            
         private:
             Y_DISABLE_ASSIGN(And);
         };

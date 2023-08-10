@@ -85,8 +85,22 @@ namespace Yttrium
             //! perform various optimization
             //__________________________________________________________________
             static Pattern * Optimize(Pattern *);
+
+            //__________________________________________________________________
+            //
+            //! transform into case ignorinc pattern
+            //__________________________________________________________________
             static Pattern * IgnoreCase(Pattern *);
-            
+
+            //__________________________________________________________________
+            //
+            // create logical patterns
+            //__________________________________________________________________
+            static Pattern *Exact(const char *);
+            static Pattern *Exact(const String &);
+            static Pattern *Among(const char *);
+            static Pattern *Among(const String &);
+
             //__________________________________________________________________
             //
             //

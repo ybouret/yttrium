@@ -42,13 +42,17 @@ namespace Yttrium
             Compound & operator<<( const Pattern & ); //!< append clone of argument
             Compound & operator<<( Pattern *);        //!< append argument
 
+            void feed(const char *, const size_t);
+            void feed(const char *);
+            void feed(const String &);
+
             //__________________________________________________________________
             //
             //
             // Members
             //
             //__________________________________________________________________
-            const Patterns patterns; //!< operands
+            Patterns patterns; //!< operands
 
             //__________________________________________________________________
             //

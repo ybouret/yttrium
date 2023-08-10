@@ -55,6 +55,9 @@ namespace Yttrium
             void includeAll() noexcept; //!< all bits to true
             void excludeAll() noexcept; //!< all bits to false
 
+            void add(const FirstChars &fc) noexcept;
+            void sub(const FirstChars &fc) noexcept;
+
             bool   operator[](const uint8_t) const noexcept; //!< query status
 
         private:

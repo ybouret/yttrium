@@ -112,6 +112,23 @@ namespace Yttrium
 
             return os;
         }
+
+        void FirstChars:: add(const FirstChars &fc) noexcept
+        {
+            for(unsigned i=0;i<Bits;++i)
+            {
+                if(fc[i]) include(i);
+            }
+        }
+
+        void FirstChars:: sub(const FirstChars &fc) noexcept
+        {
+            for(unsigned i=0;i<Bits;++i)
+            {
+                if(fc[i]) exclude(i);
+            }
+        }
+
     }
 
 }

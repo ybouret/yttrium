@@ -6,6 +6,13 @@ namespace Yttrium
 {
     namespace Jive
     {
+        //----------------------------------------------------------------------
+        //
+        //
+        // Basic
+        //
+        //
+        //----------------------------------------------------------------------
         static inline
         Pattern *OptimizeRange(Range *p)
         {
@@ -21,13 +28,74 @@ namespace Yttrium
             }
         }
 
+        //----------------------------------------------------------------------
+        //
+        //
+        // Logic
+        //
+        //
+        //----------------------------------------------------------------------
+
+        //----------------------------------------------------------------------
+        //
+        // propagate optimize to inner patterns
+        //
+        //----------------------------------------------------------------------
+        template <typename T>
+        static inline T *OptimizeCompound(T *p)
+        {
+            assert(0!=p);
+            AutoPtr<T> guard(p);
+            {
+                Patterns   target;
+                Patterns  &source = p->patterns;
+                while(source.size)
+                    target.pushTail( Pattern::Optimize(source.popHead()) );
+                source.swapWith(target);
+            }
+            return guard.yield();
+        }
+
+        
+        static inline Pattern * OptimizeAnd(And *p)
+        {
+            AutoPtr<And> motif = OptimizeCompound(p);
+            if(1==motif->patterns.size)
+            {
+                return motif->patterns.popTail();
+            }
+            return motif.yield();
+        }
+
+        static inline Pattern * OptimizeOr(Or *p)
+        {
+            AutoPtr<Or> motif = OptimizeCompound(p);
+
+            return motif.yield();
+        }
+
+
+        static inline Pattern * OptimizeNone(None *p)
+        {
+            AutoPtr<None> motif = OptimizeCompound(p);
+
+            return motif.yield();
+        }
+
 
         Pattern *Pattern:: Optimize(Pattern *p)
         {
             assert(0!=p);
             switch(p->uuid)
             {
+                    // basic
                 case Range::UUID: return OptimizeRange(p->as<Range>());
+
+                    // logic
+                case And::  UUID: return OptimizeAnd(  p->as<And>()  );
+                case Or::   UUID: return OptimizeOr(   p->as<Or>()   );
+                case None:: UUID: return OptimizeNone( p->as<None>() );
+
                 default:
                     break;
             }

@@ -48,7 +48,7 @@ namespace Yttrium
             //__________________________________________________________________
             virtual Pattern *clone() const;
             virtual bool     takes(Source &);
-            virtual void     query(FirstChars &) const;
+            virtual void     query(FirstChars &) const; //!< all first chars
 
             //! checking isFragile
             /**

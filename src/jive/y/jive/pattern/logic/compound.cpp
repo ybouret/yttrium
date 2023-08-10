@@ -1,7 +1,6 @@
 #include "y/jive/pattern/logic/compound.hpp"
 #include "y/io/stream/output.hpp"
 #include "y/io/stream/input.hpp"
-//#include "y/type/fourcc.hpp"
 
 namespace Yttrium
 {
@@ -41,23 +40,53 @@ namespace Yttrium
         {
             const size_t n = fp.readVBR<size_t>("Compound.patterns");
             for(size_t i=1;i<=n;++i)
-                Coerce(patterns).pushTail( Pattern::ReadFrom(fp) );
+                patterns.pushTail( Pattern::ReadFrom(fp) );
         }
 
         Compound & Compound:: operator<<( const Pattern &p )
         {
-            Coerce(patterns).pushTail( p.clone() );
+            patterns.pushTail( p.clone() );
             return *this;
         }
 
         Compound & Compound:: operator<<( Pattern *p )
         {
             assert(0!=p);
-            Coerce(patterns).pushTail(p);
+            patterns.pushTail(p);
             return *this;
         }
 
+    }
 
+}
+
+#include "y/jive/pattern/basic/single.hpp"
+#include "y/text/ops.hpp"
+
+namespace Yttrium
+{
+    namespace Jive
+    {
+
+        void Compound:: feed(const char *buf, const size_t len)
+        {
+            assert( Good(buf,len) );
+            for(size_t i=0;i<len;++i)
+            {
+                patterns.pushTail( new Single(buf[i]) );
+            }
+        }
+
+        void Compound:: feed(const char *buf)
+        {
+            feed(buf, StringLength(buf) );
+        }
+
+
+        void Compound:: feed(const String &s)
+        {
+            feed( s(), s.size() );
+        }
     }
 
 }
