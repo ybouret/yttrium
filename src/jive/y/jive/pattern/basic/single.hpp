@@ -31,8 +31,9 @@ namespace Yttrium
             //
             // C++
             //__________________________________________________________________
-            explicit Single(const uint8_t) noexcept; //!< setup
-            virtual ~Single()              noexcept; //!< cleanup
+            explicit Single(const uint8_t)  noexcept; //!< setup
+            virtual ~Single()               noexcept; //!< cleanup
+            explicit Single(const Single &) noexcept; //!< copy
 
             //__________________________________________________________________
             //
@@ -41,7 +42,9 @@ namespace Yttrium
             virtual Pattern *clone() const;           
             virtual bool     takes(Source &);
             virtual void     query(FirstChars &) const;
+            virtual void     reset() noexcept;
             virtual size_t   serialize(OutputStream&) const;
+            virtual bool     isFragile() const noexcept; //!< false
             
             //__________________________________________________________________
             //
@@ -50,7 +53,7 @@ namespace Yttrium
             const uint8_t code; //!< code to match
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Single);
+            Y_DISABLE_ASSIGN(Single);
         };
     }
 

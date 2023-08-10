@@ -50,6 +50,14 @@ namespace Yttrium
             return fp.emitCBR(uuid);
         }
 
+        void Any1:: reset() noexcept { release(); }
+
+        bool Any1:: isFragile() const noexcept
+        {
+            return false;
+        }
+
+        
     }
 
 }

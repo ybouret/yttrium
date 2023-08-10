@@ -43,10 +43,13 @@ namespace Yttrium
              - token must be left empty on failure
              */
             //__________________________________________________________________
-            virtual bool      takes(Source &)           = 0;
-            virtual void      query(FirstChars &) const = 0; //!< query first chars
-            virtual Pattern * clone()        const = 0; //!< perform deep copy
-
+            virtual bool      takes(Source &)            = 0;
+            virtual void      query(FirstChars &)  const = 0; //!< query first chars
+            virtual Pattern * clone()              const = 0; //!< perform deep copy
+            virtual void      reset()           noexcept = 0; //!< reset content
+            virtual bool      isFragile() const noexcept = 0; //!< accept empty token
+            bool              isRegular() const noexcept;
+            
             //__________________________________________________________________
             //
             //! conversion
@@ -97,9 +100,10 @@ namespace Yttrium
             virtual ~Pattern() noexcept; //!< cleanup
         protected:
             explicit Pattern(const uint32_t ) noexcept; //!< setup
-
+            explicit Pattern(const Pattern &) noexcept; //!< copy uuid
+            
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Pattern);
+            Y_DISABLE_ASSIGN(Pattern);
         };
 
     }

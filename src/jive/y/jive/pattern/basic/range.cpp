@@ -22,9 +22,16 @@ namespace Yttrium
                 CoerceSwap(lower,upper);
         }
 
+        Range:: Range(const Range &other) noexcept :
+        Pattern(other), lower(other.lower), upper(other.upper)
+        {
+            Y_PATTERN(Range);
+        }
+
+
         Pattern * Range:: clone() const
         {
-            return new Range(lower,upper);
+            return new Range(*this);
         }
 
         bool Range:: takes(Source &source)
@@ -33,6 +40,7 @@ namespace Yttrium
             Char *ch = source.get(); if(!ch)   return false;
             const uint8_t code = **ch;
             if(code<lower||code>upper) { source.put(ch); return false; }
+            pushTail(ch);
             return true;
         }
 
@@ -47,6 +55,13 @@ namespace Yttrium
             nw += fp.emitCBR(lower);
             nw += fp.emitCBR(upper);
             return nw;
+        }
+
+        void Range:: reset() noexcept { release(); }
+
+        bool Range:: isFragile() const noexcept
+        {
+            return false;
         }
 
     }

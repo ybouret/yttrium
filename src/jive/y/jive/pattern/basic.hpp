@@ -6,5 +6,6 @@
 
 #include "y/jive/pattern/basic/single.hpp"
 #include "y/jive/pattern/basic/range.hpp"
+#include "y/jive/pattern/basic/exclude.hpp"
 
 #endif

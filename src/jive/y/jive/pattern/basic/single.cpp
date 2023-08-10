@@ -19,16 +19,26 @@ namespace Yttrium
             Y_PATTERN(Single);
         }
 
+        Single:: Single(const Single &other) noexcept :
+        Pattern(other), code(other.code)
+        {
+            Y_PATTERN(Single);
+        }
+
+
+
         Pattern * Single:: clone() const
         {
-            return new Single(code);
+            return new Single(*this);
         }
+        
 
         bool Single:: takes(Source &source)
         {
             assert(0==size);
             Char *ch = source.get(); if(!ch)   return false;
             if(code != **ch) { source.put(ch); return false; }
+            pushTail(ch);
             return true;
         }
 
@@ -41,6 +51,14 @@ namespace Yttrium
         {
             const size_t nw = fp.emitCBR(uuid);
             return nw + fp.emitCBR(code);
+        }
+
+        void Single:: reset() noexcept { release(); }
+
+
+        bool Single:: isFragile() const noexcept
+        {
+            return false;
         }
 
 

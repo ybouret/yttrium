@@ -43,7 +43,9 @@ namespace Yttrium
             virtual Pattern *clone() const;
             virtual bool     takes(Source &);
             virtual void     query(FirstChars &) const;
+            virtual void     reset() noexcept;
             virtual size_t   serialize(OutputStream&) const;
+            virtual bool     isFragile() const noexcept; //!< false
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Any1);
