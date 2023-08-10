@@ -22,6 +22,7 @@ COMMAND y_lua ${DEMO}/account.lua
 COMMENT "[yttrium] Testing Lua"
 VERBATIM)
 
+
 MESSAGE( STATUS "[yttrium] compiler   : y_luac" )
 add_executable(y_luac luac.c)
 target_link_libraries(y_luac y-lua)

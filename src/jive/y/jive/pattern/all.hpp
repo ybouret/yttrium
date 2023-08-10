@@ -6,5 +6,6 @@
 
 #include "y/jive/pattern/basic.hpp"
 #include "y/jive/pattern/logic.hpp"
+#include "y/jive/pattern/joker.hpp"
 
 #endif

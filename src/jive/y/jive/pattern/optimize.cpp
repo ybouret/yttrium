@@ -83,6 +83,23 @@ namespace Yttrium
         }
 
 
+        //----------------------------------------------------------------------
+        //
+        //
+        // Joker
+        //
+        //
+        //----------------------------------------------------------------------
+
+        template <typename T>
+        T *OptimizeGuest(T *p)
+        {
+            assert(0!=p);
+            AutoPtr<T> guard(p);
+            p->optimize();
+            return guard.yield();
+        }
+
         Pattern *Pattern:: Optimize(Pattern *p)
         {
             assert(0!=p);
@@ -95,6 +112,9 @@ namespace Yttrium
                 case And::  UUID: return OptimizeAnd(  p->as<And>()  );
                 case Or::   UUID: return OptimizeOr(   p->as<Or>()   );
                 case None:: UUID: return OptimizeNone( p->as<None>() );
+
+                    // joker
+                case Optional:: UUID: return OptimizeGuest( p->as<Optional>() );
 
                 default:
                     break;

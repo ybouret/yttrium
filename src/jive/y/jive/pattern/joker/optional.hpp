@@ -1,0 +1,64 @@
+
+//! \file
+
+#ifndef Y_Jive_Pattern_Optional_Included
+#define Y_Jive_Pattern_Optional_Included 1
+
+#include "y/jive/pattern/joker/guest.hpp"
+#include "y/type/fourcc.hpp"
+
+namespace Yttrium
+{
+    namespace Jive
+    {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Optional pattern recognition
+        //
+        //
+        //______________________________________________________________________
+        class Optional : public Guest
+        {
+        public:
+            //__________________________________________________________________
+            //
+            //
+            // Definition
+            //
+            //__________________________________________________________________
+            static const uint32_t UUID = Y_FOURCC('O','P','T',':'); //!< UUID
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Optional(const Pattern &); //!< setup from clone
+            explicit Optional(Pattern       *); //!< setup directly
+            explicit Optional(const Optional&); //!< duplicate
+            virtual ~Optional() noexcept;       //!< cleanup
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            virtual Pattern *clone() const;                   //!< clone
+            virtual bool     takes(Source &);                 //!< try guest, return true
+            virtual bool     isFragile() const noexcept;      //!< true
+            virtual size_t   serialize(OutputStream&) const;  //!< uuid+guest
+            
+        private:
+            Y_DISABLE_ASSIGN(Optional);
+        };
+
+
+    }
+
+}
+
+#endif

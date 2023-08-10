@@ -31,8 +31,12 @@ namespace Yttrium
                 case Exclude::UUID: return new Exclude( fp.readCBR<uint8_t>("Exclude.code") );
 
                     // Logic
+                case And::  UUID:  return ReadCompound( new And(),  fp);
+                case Or::   UUID:  return ReadCompound( new Or(),   fp);
+                case None:: UUID:  return ReadCompound( new None(), fp);
 
-                case And::UUID:  return ReadCompound( new And(), fp);
+                    // Joker
+                case Optional:: UUID: return new Optional( Pattern::ReadFrom(fp) );
 
                 default:
                     break;

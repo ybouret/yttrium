@@ -6,6 +6,7 @@ jive
 jive/pattern
 jive/pattern/basic
 jive/pattern/logic
+jive/pattern/joker
 )
 
 add_subdirectory(tests)

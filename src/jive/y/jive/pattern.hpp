@@ -25,7 +25,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Pattern : public Object, public Token, public Serializable
+        class Pattern : public Object, public Counted, public Token, public Serializable
         {
         public:
             //__________________________________________________________________
@@ -96,10 +96,10 @@ namespace Yttrium
             //
             // create logical patterns
             //__________________________________________________________________
-            static Pattern *Exact(const char *);
-            static Pattern *Exact(const String &);
-            static Pattern *Among(const char *);
-            static Pattern *Among(const String &);
+            static Pattern *Exact(const char *);   //!< And[text]
+            static Pattern *Exact(const String &); //!< And[text]
+            static Pattern *Among(const char *);   //!< Or[text]
+            static Pattern *Among(const String &); //!< Or[text]
 
             //__________________________________________________________________
             //
@@ -126,6 +126,7 @@ namespace Yttrium
         private:
             Y_DISABLE_ASSIGN(Pattern);
         };
+
 
     }
 
