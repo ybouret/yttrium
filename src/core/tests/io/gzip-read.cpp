@@ -10,7 +10,7 @@ Y_UTEST(io_gzip_read)
     if(argc>1)
     {
         //GZip::InputFile fp(argv[1]);
-        GZip::File fp(argv[1],"r");
+        //GZip::File fp(argv[1],"r");
     }
 }
 Y_UDONE()

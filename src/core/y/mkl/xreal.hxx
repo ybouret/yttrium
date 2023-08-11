@@ -26,4 +26,29 @@ namespace Yttrium
 
     }
 
+    template <>
+    XReal<real_t> XReal<real_t>::Mul(const XReal &lhs, const XReal &rhs) noexcept
+    {
+        const real_t lm = lhs.mantissa;
+        if( std::fabs(lm) <= 0)
+        {
+            return XReal();
+        }
+        else
+        {
+            const real_t rm = rhs.mantissa;
+            if( std::fabs(rm) <= 0 )
+            {
+                return XReal();
+            }
+            else
+            {
+                const int   xp = lhs.exponent + rhs.exponent;
+                const XReal xr(lm*rm);
+                Coerce(xr.exponent) += xp;
+                return xr;
+            }
+        }
+    }
+
 }
