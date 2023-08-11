@@ -68,6 +68,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(calculus_base2);
     Y_UTEST(calculus_gcd);
     Y_UTEST(calculus_bcount);
+    Y_UTEST(calculus_isqrt);
 
 
     Y_UTEST(concurrent_mutex);

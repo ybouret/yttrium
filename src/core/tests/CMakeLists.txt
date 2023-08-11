@@ -93,6 +93,7 @@ add_test(calculus:align  test-core calculus_align)
 add_test(calculus:base2  test-core calculus_base2)
 add_test(calculus:gcd    test-core calculus_gcd)
 add_test(calculus:bcount test-core calculus_bcount)
+add_test(calculus:isqrt  test-core calculus_isqrt)
 
 #concurrent
 add_test(concurrent:mutex test-core concurrent_mutex)
