@@ -99,6 +99,25 @@ namespace Yttrium
             return numer/denom;
         }
 
+        Natural Natural:: Sqrt(const Natural &s)
+        {
+            if(s<=1) return s;
+            Natural x0 = s; x0.shr();
+            while(true) {
+                Natural x1 = (x0+s/x0);
+                x1.shr();
+                if(x1>=x0) break;
+                x0.xch(x1);
+            }
+            return x0;
+        }
+
+        Natural Natural:: sqrt() const
+        {
+            return Sqrt(*this);
+        }
+
+
     }
     
 

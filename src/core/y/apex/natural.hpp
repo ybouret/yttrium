@@ -198,7 +198,9 @@ namespace Yttrium
             static void    Simplify(Natural &Numer, Natural &Denom); //!< Simplify
             static Natural Factorial(size_t n);                      //!< factorial
             static Natural Comb(const size_t n, const size_t k);     //!< (n,k)
-
+            static Natural Sqrt(const Natural &s);
+            Natural        sqrt() const;
+            
             //__________________________________________________________________
             //
             //

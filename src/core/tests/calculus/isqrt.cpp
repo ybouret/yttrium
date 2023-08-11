@@ -1,4 +1,5 @@
 #include "y/calculus/isqrt.hpp"
+#include "y/apex/natural.hpp"
 #include "y/utest/run.hpp"
 
 #include "y/io/libc/output.hpp"
@@ -9,9 +10,14 @@ Y_UTEST(calculus_isqrt)
 {
 
     Libc::OutputFile fp("isqrt.dat");
-    for(int i=0;i<=65536;++i)
+    for(unsigned i=0;i<=65536;++i)
     {
+        const unsigned s = IntegerSquareRoot(i);
+        std::cerr << i << " -> " << s << std::endl;
         fp("%d %d\n", i, IntegerSquareRoot(i));
+        const apn I = i;
+        const apn S = I.sqrt();
+        Y_ASSERT(S==s);
     }
 
 
