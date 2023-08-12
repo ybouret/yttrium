@@ -143,6 +143,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(associative_hash_map);
     Y_UTEST(associative_hash_set);
 
+    Y_UTEST(mkl_numeric);
     Y_UTEST(mkl_complex);
     Y_UTEST(mkl_vtx);
     Y_UTEST(mkl_xreal);

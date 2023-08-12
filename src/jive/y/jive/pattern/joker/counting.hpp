@@ -57,8 +57,8 @@ namespace Yttrium
             // members
             //
             //__________________________________________________________________
-            const size_t minCount;
-            const size_t maxCount;
+            const size_t minCount; //!< min count
+            const size_t maxCount; //!< max count
 
         private:
             Y_DISABLE_ASSIGN(Counting);

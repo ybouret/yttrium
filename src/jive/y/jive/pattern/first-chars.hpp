@@ -62,6 +62,7 @@ namespace Yttrium
 
             bool   operator[](const uint8_t) const noexcept; //!< query status
 
+            //! transform content in optimized Or'd Single/Range
             Pattern *compile() const;
 
         private:
