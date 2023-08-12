@@ -7,9 +7,15 @@ namespace Yttrium
     namespace Jive
     {
 
-        And::  And() noexcept : Compound(UUID) {}
+        And::  And() noexcept : Compound(UUID)
+        {
+            Y_PATTERN(And);
+        }
 
-        And::  And(const And &other) : Compound(other) {}
+        And::  And(const And &other) : Compound(other)
+        {
+            Y_PATTERN(And);
+        }
 
         And:: ~And() noexcept
         {

@@ -111,7 +111,16 @@ namespace Yttrium
 
         bool Repeating:: isEqualTo(const Pattern &p) const noexcept
         {
-            return UUID == p.uuid && atLeast == p.as<Repeating>()->atLeast && hasSameMotifThan( *p.as<Repeating>() );
+            std::cerr << "rep:" << FourCC::ToText(uuid)   << ":" << atLeast << std::endl;
+            std::cerr << "oth:" << FourCC::ToText(p.uuid) << std::endl;
+            if(uuid==p.uuid)
+            {
+                std::cerr << "other.rep=" << p.as<Repeating>()->atLeast << std::endl;
+            }
+            return
+            UUID    == p.uuid &&
+            atLeast == p.as<Repeating>()->atLeast
+            && hasSameMotifThan( *p.as<Repeating>() );
         }
 
     }

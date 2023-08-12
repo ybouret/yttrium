@@ -79,10 +79,10 @@ namespace Yttrium
         class SpecificOrMore : public Repeating
         {
         public:
-            inline explicit SpecificOrMore(const Pattern &p) :        Repeating(N,p) {} //!< setup
-            inline explicit SpecificOrMore(Pattern *      p) :        Repeating(N,p) {} //!< setup
-            inline explicit SpecificOrMore(const SpecificOrMore &_) : Repeating(_)   {} //!< copy
-            inline virtual ~SpecificOrMore() noexcept                                {} //!< cleanup
+            inline explicit SpecificOrMore(const Pattern &p) :        Repeating(N,p) { assert(N==atLeast); } //!< setup
+            inline explicit SpecificOrMore(Pattern *      p) :        Repeating(N,p) { assert(N==atLeast); } //!< setup
+            inline explicit SpecificOrMore(const SpecificOrMore &_) : Repeating(_)   { assert(N==atLeast); } //!< copy
+            inline virtual ~SpecificOrMore() noexcept                                { assert(N==atLeast); } //!< cleanup
         private:
             Y_DISABLE_ASSIGN(SpecificOrMore);
         };
