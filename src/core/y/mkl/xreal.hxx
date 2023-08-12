@@ -73,4 +73,34 @@ namespace Yttrium
     XReal<real_t>:: operator real_t() const
     { return std::ldexp(mantissa,exponent); }
 
+    template<>
+    XReal<real_t>:: XReal(const int e, const real_t m) noexcept :
+    exponent(e),
+    mantissa(m)
+    {
+    }
+
+
+    template <>
+    XReal<real_t> XReal<real_t>:: abs() const noexcept
+    {
+        return XReal( exponent, std::abs(mantissa) );
+    }
+
+    template <>
+    XReal<real_t>  XReal<real_t>:: Div(const XReal &numer,
+                                       const XReal &denom)
+    {
+        if( std::fabs(denom.mantissa) <= 0)
+            throw Libc::Exception(EDOM,"XReal division by zero");
+
+        if( std::fabs(numer.mantissa) <=0 )
+            return XReal();
+
+        const int   xp = numer.exponent - denom.exponent;
+        const XReal xr(numer.mantissa/denom.mantissa);
+        Coerce(xr.exponent) += xp;
+        return xr;
+    }
+
 }

@@ -1,5 +1,7 @@
 
 #include "y/mkl/xreal.hpp"
+#include "y/system/exception.hpp"
+#include <cerrno>
 #include <cmath>
 
 #define real_t float

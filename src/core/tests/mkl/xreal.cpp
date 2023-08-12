@@ -24,9 +24,13 @@ static inline void checkXREAL(Random::Bits &ran)
     typedef XReal<T> xreal;
     typedef T        real;
 
+    std::cerr << "Testing Multiplication" << std::endl;
+    for(size_t i=0;i<8;++i)
     {
-        const real a = std::sqrt(std::abs(genReal<real>(ran)));
-        const real b = std::sqrt(std::abs(genReal<real>(ran)));
+        real a = std::sqrt(std::abs(genReal<real>(ran)));
+        real b = std::sqrt(std::abs(genReal<real>(ran)));
+        if(ran.choice()) a=-a;
+        if(ran.choice()) b=-b;
         const real c = a*b;
         const xreal A=a;
         const xreal B=b;
@@ -34,8 +38,23 @@ static inline void checkXREAL(Random::Bits &ran)
         std::cerr << c << " -> " << C << " -> " << T(C) << std::endl;
     }
 
+    std::cerr << "Testing Division" << std::endl;
+    for(size_t i=0;i<8;++i)
+    {
+        real a = std::sqrt(std::abs(genReal<real>(ran)));
+        real b = std::sqrt(std::abs(genReal<real>(ran)));
+        if(ran.choice()) a=-a;
+        if(ran.choice()) b=-b;
+        const real  c = a/b;
+        const xreal A = a;
+        const xreal B = b;
+        const xreal C = A/B;
+        std::cerr << a << "/" << b << " = " << A << "/" << B;
+        std::cerr << " = " << c << " -> " << C << " -> " << T(C) << std::endl;
+    }
 
 
+    std::cerr << std::endl;
 }
 
 Y_UTEST(mkl_xreal)

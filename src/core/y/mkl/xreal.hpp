@@ -45,19 +45,29 @@ namespace Yttrium
 
         operator T() const;
 
+        XReal abs() const noexcept;
+
         //______________________________________________________________________
         //
         //
         // Multiplication
         //
         //______________________________________________________________________
-
         inline friend XReal operator*(const XReal &lhs, const XReal &rhs) noexcept
         { return Mul(lhs,rhs); }
 
         inline XReal & operator*=(const XReal &rhs) noexcept { return (*this=Mul(*this,rhs)); }
 
+        //______________________________________________________________________
+        //
+        //
+        // Division
+        //
+        //______________________________________________________________________
+        inline friend XReal operator/(const XReal &lhs, const XReal &rhs) noexcept
+        { return Div(lhs,rhs); }
 
+        inline XReal & operator/=(const XReal &rhs) noexcept { return (*this=Div(*this,rhs)); }
 
         //______________________________________________________________________
         //
@@ -69,7 +79,9 @@ namespace Yttrium
         const T   mantissa; //!< mantissa
         
     private:
+        explicit XReal(const int, const T) noexcept;
         static XReal Mul(const XReal &, const XReal &) noexcept;
+        static XReal Div(const XReal &, const XReal &);
         void   display(std::ostream &) const;
     };
 
