@@ -1,4 +1,4 @@
-include_directories(. ..)
+include_directories(. .. ../y/zlib)
 
 file(GLOB quark y/concurrent/*.hxx)
 set(srcs ${quark})
