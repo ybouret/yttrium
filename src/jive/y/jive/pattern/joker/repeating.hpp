@@ -60,27 +60,34 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const size_t atLeast;
+            const size_t atLeast; //!< minimal valid count
 
 
         private:
             Y_DISABLE_ASSIGN(Repeating);
         };
 
+
+        //______________________________________________________________________
+        //
+        //
+        //! make a specific repeating
+        //
+        //______________________________________________________________________
         template <size_t N>
         class SpecificOrMore : public Repeating
         {
         public:
-            inline explicit SpecificOrMore(const Pattern &p) :        Repeating(N,p) {}
-            inline explicit SpecificOrMore(Pattern *      p) :        Repeating(N,p) {}
-            inline explicit SpecificOrMore(const SpecificOrMore &_) : Repeating(_)   {}
-            inline virtual ~SpecificOrMore() noexcept                                {}
+            inline explicit SpecificOrMore(const Pattern &p) :        Repeating(N,p) {} //!< setup
+            inline explicit SpecificOrMore(Pattern *      p) :        Repeating(N,p) {} //!< setup
+            inline explicit SpecificOrMore(const SpecificOrMore &_) : Repeating(_)   {} //!< copy
+            inline virtual ~SpecificOrMore() noexcept                                {} //!< cleanup
         private:
             Y_DISABLE_ASSIGN(SpecificOrMore);
         };
 
-        typedef SpecificOrMore<0> ZeroOrMore;
-        typedef SpecificOrMore<1> OneOrMore;
+        typedef SpecificOrMore<0> ZeroOrMore; //!< alias
+        typedef SpecificOrMore<1> OneOrMore;  //!< alias
 
 
     }

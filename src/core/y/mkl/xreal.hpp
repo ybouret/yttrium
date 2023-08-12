@@ -43,8 +43,10 @@ namespace Yttrium
         inline friend std::ostream &operator<<(std::ostream &os, const XReal &xr)
         { xr.display(os); return os; }
 
+        //! retrieveing floaint point
         operator T() const;
 
+        //! absolute value
         XReal abs() const noexcept;
 
         //______________________________________________________________________
@@ -53,9 +55,12 @@ namespace Yttrium
         // Multiplication
         //
         //______________________________________________________________________
+
+        //! binary multiplication
         inline friend XReal operator*(const XReal &lhs, const XReal &rhs) noexcept
         { return Mul(lhs,rhs); }
 
+        //! in-place multiplication
         inline XReal & operator*=(const XReal &rhs) noexcept { return (*this=Mul(*this,rhs)); }
 
         //______________________________________________________________________
@@ -64,10 +69,41 @@ namespace Yttrium
         // Division
         //
         //______________________________________________________________________
+
+        //! binary division
         inline friend XReal operator/(const XReal &lhs, const XReal &rhs) noexcept
         { return Div(lhs,rhs); }
 
+        //! in-place division
         inline XReal & operator/=(const XReal &rhs) noexcept { return (*this=Div(*this,rhs)); }
+
+        //______________________________________________________________________
+        //
+        //
+        // Addition
+        //
+        //______________________________________________________________________
+
+        //! unary +
+        XReal operator+() const noexcept;
+
+        //! binary addition
+        inline friend XReal operator+(const XReal &lhs, const XReal &rhs) noexcept
+        { return Add(lhs,rhs); }
+
+        //! in-place addition
+        inline XReal & operator+=(const XReal &rhs) noexcept { return (*this=Add(*this,rhs)); }
+
+        //______________________________________________________________________
+        //
+        //
+        // Subtraction
+        //
+        //______________________________________________________________________
+
+        //! unary -
+        XReal operator-() const noexcept;
+
 
         //______________________________________________________________________
         //
@@ -82,6 +118,7 @@ namespace Yttrium
         explicit XReal(const int, const T) noexcept;
         static XReal Mul(const XReal &, const XReal &) noexcept;
         static XReal Div(const XReal &, const XReal &);
+        static XReal Add(const XReal &, const XReal &);
         void   display(std::ostream &) const;
     };
 

@@ -103,4 +103,17 @@ namespace Yttrium
         return xr;
     }
 
+    template <>
+    XReal<real_t> XReal<real_t>:: operator+() const noexcept
+    {
+        return *this;
+    }
+
+    template <>
+    XReal<real_t> XReal<real_t>:: operator-() const noexcept
+    {
+        return XReal(exponent,-mantissa);
+    }
+
+
 }
