@@ -35,6 +35,19 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
+        // Methods
+        //
+        //______________________________________________________________________
+
+        //! display
+        inline friend std::ostream &operator<<(std::ostream &os, const XReal &xr)
+        { xr.display(os); return os; }
+
+        operator T() const;
+
+        //______________________________________________________________________
+        //
+        //
         // Multiplication
         //
         //______________________________________________________________________
@@ -44,13 +57,8 @@ namespace Yttrium
 
         inline XReal & operator*=(const XReal &rhs) noexcept { return (*this=Mul(*this,rhs)); }
 
-        // display
-        inline friend std::ostream &operator<<(std::ostream &os, const XReal &xr)
-        {
-            xr.display(os);
-            return os;
-        }
-        
+
+
         //______________________________________________________________________
         //
         //

@@ -69,4 +69,8 @@ namespace Yttrium
         os << ')';
     }
 
+    template <>
+    XReal<real_t>:: operator real_t() const
+    { return std::ldexp(mantissa,exponent); }
+
 }

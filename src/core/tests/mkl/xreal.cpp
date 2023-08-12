@@ -31,7 +31,7 @@ static inline void checkXREAL(Random::Bits &ran)
         const xreal A=a;
         const xreal B=b;
         const xreal C=A*B;
-        std::cerr << c << " -> " << C << std::endl;
+        std::cerr << c << " -> " << C << " -> " << T(C) << std::endl;
     }
 
 
