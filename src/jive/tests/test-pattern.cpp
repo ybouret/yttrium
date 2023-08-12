@@ -10,6 +10,8 @@ using namespace Jive;
 
 static inline void testPattern(Pattern &p)
 {
+    static unsigned I = 0;
+
     std::cerr << "-------- " << FourCC::ToText(p.uuid) << " --------" << std::endl;
     AutoPtr<Pattern> q = p.clone();
     Y_CHECK(q->uuid==p.uuid);
@@ -20,7 +22,7 @@ static inline void testPattern(Pattern &p)
     }
     Y_CHECK(p == *q);
 
-    String fileName = FourCC::ToText(p.uuid); fileName += ".dat";
+    String fileName = FourCC::ToText(p.uuid); fileName += FormatString("%u.dat",++I);
     {
         Libc::OutputFile fp(fileName);
         p.serialize(fp);
@@ -36,9 +38,9 @@ Y_UTEST(pattern)
     AutoPtr<Pattern>  r = new Range('0','9');  testPattern(*r);
     AutoPtr<Optional> O = new Optional( *r );  testPattern(*O);
     AutoPtr<Compound> A = new And();
-    *A << *a << *r << new Exclude('k');        testPattern(*A);
-    AutoPtr<Guest>    R = new Repeating(0,*r); testPattern(*R);
-
+    *A << *a << *r << new Exclude('k');         testPattern(*A);
+    AutoPtr<Guest>    R0 = new Repeating(0,*r); testPattern(*R0);
+    AutoPtr<Pattern>  R1 = new OneOrMore(new Range('a','z')); testPattern(*R1);
 
 
 

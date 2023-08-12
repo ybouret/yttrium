@@ -11,28 +11,17 @@ namespace Yttrium
         {
         }
 
-        static uint32_t RepUUID(const size_t nmin) noexcept
-        {
-            switch(nmin)
-            {
-                case 0: return Repeating::ZOM;
-                case 1: return Repeating::OOM;
-                default:
-                    break;
-            }
-            return Repeating::UUID;
 
-        }
 
         Repeating:: Repeating(const size_t nmin, const Pattern &source) :
-        Guest(RepUUID(nmin),source),
+        Guest(UUID,source),
         atLeast(nmin)
         {
             Y_PATTERN(Repeating);
         }
 
         Repeating:: Repeating(const size_t nmin, Pattern *source) :
-        Guest(RepUUID(nmin),source),
+        Guest(UUID,source),
         atLeast(nmin)
         {
             Y_PATTERN(Repeating);
@@ -50,19 +39,25 @@ namespace Yttrium
             return new Repeating(*this);
         }
 
+
+
+
+        const uint32_t Repeating:: UUID;
+        const uint32_t Repeating:: ZOM;
+        const uint32_t Repeating:: OOM;
+
+
         size_t Repeating:: serialize(OutputStream &fp) const
         {
-            size_t nw = fp.emitCBR(uuid);
-            switch(uuid)
+            size_t nw = 0;
+            switch(atLeast)
             {
-                case ZOM:
-                case OOM:
-                    break;
-
+                case 0: nw += fp.emitCBR(ZOM); break;
+                case 1: nw += fp.emitCBR(OOM); break;
                 default:
-                    // write atLeast
-                    assert(UUID==uuid);
+                    nw += fp.emitCBR(UUID);
                     nw += fp.emitVBR(atLeast);
+                    break;
             }
             return nw + motif->serialize(fp);
         }
@@ -111,12 +106,6 @@ namespace Yttrium
 
         bool Repeating:: isEqualTo(const Pattern &p) const noexcept
         {
-            std::cerr << "rep:" << FourCC::ToText(uuid)   << ":" << atLeast << std::endl;
-            std::cerr << "oth:" << FourCC::ToText(p.uuid) << std::endl;
-            if(uuid==p.uuid)
-            {
-                std::cerr << "other.rep=" << p.as<Repeating>()->atLeast << std::endl;
-            }
             return
             UUID    == p.uuid &&
             atLeast == p.as<Repeating>()->atLeast
