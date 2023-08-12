@@ -38,10 +38,10 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Repeating(const size_t nmin, const Pattern  &); //!< setup from clone
-            explicit Repeating(const size_t nmin, Pattern        *); //!< setup directly
             explicit Repeating(const Repeating&);                    //!< duplicate
             virtual ~Repeating() noexcept;                           //!< cleanup
+            static   Pattern *Make(const size_t nmin, Pattern *);
+            static   Pattern *Make(const size_t nmin, const Pattern &);
 
             //__________________________________________________________________
             //
@@ -66,30 +66,20 @@ namespace Yttrium
 
         private:
             Y_DISABLE_ASSIGN(Repeating);
+            explicit Repeating(const size_t nmin, Pattern *); //!< setup directly
         };
 
+        inline Pattern *ZeroOrMore(Pattern *p)       { return Repeating::Make(0,p); }
+        inline Pattern *ZeroOrMore(const Pattern &p) { return Repeating::Make(0,p); }
 
-        //______________________________________________________________________
-        //
-        //
-        //! make a specific repeating
-        //
-        //______________________________________________________________________
-        template <size_t N>
-        class SpecificOrMore : public Repeating
-        {
-        public:
-            inline explicit SpecificOrMore(const Pattern &p) :        Repeating(N,p) { assert(N==atLeast); } //!< setup
-            inline explicit SpecificOrMore(Pattern *      p) :        Repeating(N,p) { assert(N==atLeast); } //!< setup
-            inline explicit SpecificOrMore(const SpecificOrMore &_) : Repeating(_)   { assert(N==atLeast); } //!< copy
-            inline virtual ~SpecificOrMore() noexcept                                { assert(N==atLeast); } //!< cleanup
-        private:
-            Y_DISABLE_ASSIGN(SpecificOrMore);
-        };
+        inline Pattern *OneOrMore(Pattern *p)       { return Repeating::Make(1,p); }
+        inline Pattern *OneOrMore(const Pattern &p) { return Repeating::Make(1,p); }
 
-        typedef SpecificOrMore<0> ZeroOrMore; //!< alias
-        typedef SpecificOrMore<1> OneOrMore;  //!< alias
 
+
+
+
+        
 
     }
 

@@ -13,6 +13,7 @@ namespace Yttrium
 
         Pattern * Optional::From(Pattern *p)
         {
+            assert(0!=p);
             AutoPtr<Pattern> guard(p);
             Pattern *opt = new Optional(p);
             guard.yield();
@@ -21,11 +22,7 @@ namespace Yttrium
 
         Pattern * Optional::From(const Pattern &P)
         {
-            Pattern         *p = P.clone();
-            AutoPtr<Pattern> guard(p);
-            Pattern *opt = new Optional(p);
-            guard.yield();
-            return opt;
+            return From(P.clone());
         }
 
         Optional:: Optional(Pattern *source) :

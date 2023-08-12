@@ -2,6 +2,7 @@
 #include "y/jive/pattern/joker/repeating.hpp"
 #include "y/io/stream/output.hpp"
 #include "y/jive/source.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace Yttrium
 {
@@ -12,13 +13,20 @@ namespace Yttrium
         }
 
 
-
-        Repeating:: Repeating(const size_t nmin, const Pattern &source) :
-        Guest(UUID,source),
-        atLeast(nmin)
+        Pattern * Repeating:: Make(const size_t nmin, Pattern *p)
         {
-            Y_PATTERN(Repeating);
+            assert(0!=p);
+            AutoPtr<Pattern> guard(p);
+            Pattern *rep = new Repeating(nmin,p);
+            guard.yield();
+            return rep;
         }
+
+        Pattern * Repeating:: Make(const size_t nmin, const Pattern &P)
+        {
+            return Make(nmin,P.clone());
+        }
+        
 
         Repeating:: Repeating(const size_t nmin, Pattern *source) :
         Guest(UUID,source),
@@ -111,6 +119,8 @@ namespace Yttrium
             atLeast == p.as<Repeating>()->atLeast
             && hasSameMotifThan( *p.as<Repeating>() );
         }
+
+        
 
     }
 

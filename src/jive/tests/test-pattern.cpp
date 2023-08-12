@@ -1,6 +1,7 @@
 
 #include "y/jive/pattern/all.hpp"
 #include "y/io/libc/output.hpp"
+#include "y/io/libc/input.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
@@ -27,6 +28,13 @@ static inline void testPattern(Pattern &p)
         Libc::OutputFile fp(fileName);
         p.serialize(fp);
     }
+
+    {
+        Libc::InputFile fp(fileName);
+        AutoPtr<Pattern> r = Pattern::ReadFrom(fp);
+        Y_CHECK(p == *r);
+    }
+
     std::cerr << std::endl;
 
 }
@@ -39,9 +47,9 @@ Y_UTEST(pattern)
     AutoPtr<Pattern>  O = Optional::From( *r ); testPattern(*O);
     AutoPtr<Compound> A = new And();
     *A << *a << *r << new Exclude('k');         testPattern(*A);
-    AutoPtr<Guest>    R0 = new Repeating(0,*r); testPattern(*R0);
-    AutoPtr<Pattern>  R1 = new OneOrMore(new Range('a','z')); testPattern(*R1);
-
+    AutoPtr<Pattern>  R0 = ZeroOrMore(*r);      testPattern(*R0);
+    AutoPtr<Pattern>  R1 = OneOrMore(new Range('a','z')); testPattern(*R1);
+    AutoPtr<Pattern>  R4 = Repeating::Make(4, new Range('A','Z')); testPattern(*R4);
 
 
 }

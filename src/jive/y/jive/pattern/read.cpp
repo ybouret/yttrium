@@ -21,9 +21,11 @@ namespace Yttrium
 
             switch(uuid)
             {
+
                     // Basic
-                case Single::UUID: return new Single( fp.readCBR<uint8_t>("Single.code") );
-                case Range:: UUID: {
+                case Any1::   UUID: return new Any1();
+                case Single:: UUID: return new Single( fp.readCBR<uint8_t>("Single.code") );
+                case Range::  UUID: {
                     const uint8_t lower = fp.readCBR<uint8_t>("Range.lower");
                     const uint8_t upper = fp.readCBR<uint8_t>("Range.upper");
                     return new Range(lower,upper);
@@ -39,11 +41,11 @@ namespace Yttrium
                 case Optional::  UUID: return Optional::From( Pattern::ReadFrom(fp) );
                 case Repeating:: UUID: {
                     const size_t nmin = fp.readVBR<size_t>("Repeating.atLeast");
-                    return new Repeating( nmin, Pattern::ReadFrom(fp) );
+                    return  Repeating::Make( nmin, Pattern::ReadFrom(fp) );
                 }
 
-                case Repeating:: ZOM: return new ZeroOrMore( Pattern::ReadFrom(fp) );
-                case Repeating:: OOM: return new OneOrMore(  Pattern::ReadFrom(fp)  );
+                case Repeating:: ZOM: return ZeroOrMore( Pattern::ReadFrom(fp) );
+                case Repeating:: OOM: return OneOrMore(  Pattern::ReadFrom(fp)  );
 
 
                 default:
