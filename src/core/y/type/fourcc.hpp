@@ -15,7 +15,7 @@ namespace Yttrium
 #define Y_FourCC3(a) (Y_FourCC0(a) << 24)         //!< byte 3/4
 
     //! make 32bits flag
-#define Y_FOURCC(a,b,c,d) (Y_FourCC3(a)|Y_FourCC2(b)|Y_FourCC1(c)|Y_FourCC0(d))
+#define Y_FOURCC(a,b,c,d) (Y_FourCC3(d)|Y_FourCC2(c)|Y_FourCC1(b)|Y_FourCC0(a))
 
     //! helper to Four Characters Codes
     struct FourCC

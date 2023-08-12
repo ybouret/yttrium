@@ -13,7 +13,7 @@ Y_UTEST(type_fourcc)
     {
         const uint32_t uuid = Y_FOURCC(0x12, 0x34, 0x56, 0x78);
         std::cerr << Hexadecimal(uuid) << std::endl;
-        Y_CHECK(uuid==0x12345678);
+        Y_CHECK(uuid==0x78563412);
         std::cerr << FourCC::ToText(uuid) << std::endl;
     }
 
