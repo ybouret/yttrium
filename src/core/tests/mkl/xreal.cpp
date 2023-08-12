@@ -1,37 +1,49 @@
 
 #include "y/mkl/xreal.hpp"
+#include "y/mkl/numeric.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/timing.hpp"
+#include "y/random/bits.hpp"
+
 #include <cmath>
 
 using namespace Yttrium;
+using namespace MKL;
 
-template <typename T>
-static inline void checkXREAL()
+template <typename T> static inline T genReal(Random::Bits &ran)
 {
-    const T zero = 0;
-    int     zexp = 0;
-    const T zm = std::frexp(zero,&zexp);
-    std::cerr << "zero: mantissa=" << zm << ", exponent=" << zexp << std::endl;
+    const int    exponent = ran.in<int>(Numeric<T>::MIN_EXP+1,Numeric<T>::MAX_EXP-1);
+    const T      mantissa = ran.in<T>(0.5,0.999);
+    const T      r        = std::ldexp(mantissa,exponent);
+    return ran.choice() ? -r : +r;
 
+}
+template <typename T>
+static inline void checkXREAL(Random::Bits &ran)
+{
     typedef XReal<T> xreal;
+    typedef T        real;
 
-    xreal a = 1.2;
-    std::cerr << a << std::endl;
-    xreal b = 1e4;
-    std::cerr << b << std::endl;
+    {
+        const real a = std::sqrt(std::abs(genReal<real>(ran)));
+        const real b = std::sqrt(std::abs(genReal<real>(ran)));
+        const real c = a*b;
+        const xreal A=a;
+        const xreal B=b;
+        const xreal C=A*B;
+        std::cerr << c << " -> " << C << std::endl;
+    }
 
-    xreal c = (1.2*1e4);
-    std::cerr << c << " / " << a*b << std::endl;
 
 
 }
 
 Y_UTEST(mkl_xreal)
 {
-    checkXREAL<float>();
-    checkXREAL<double>();
-    checkXREAL<long double>();
+    Random::Rand ran;
+    checkXREAL<float>(ran);
+    checkXREAL<double>(ran);
+    checkXREAL<long double>(ran);
 
 }
 Y_UDONE()

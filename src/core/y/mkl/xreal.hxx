@@ -51,4 +51,22 @@ namespace Yttrium
         }
     }
 
+    template <>
+    void XReal<real_t>:: display(std::ostream &os) const
+    {
+        os << '(' << mantissa;
+        switch(exponent)
+        {
+            case -1: os << "/2"; break;
+            case  0: break;
+            case  1: os << "*2"; break;
+            default:
+                if(exponent>0)
+                    os << "*2^" << exponent;
+                else
+                    os << "/2^" << -exponent;
+        }
+        os << ')';
+    }
+
 }
