@@ -39,7 +39,16 @@ namespace Yttrium
             return ! isFragile();
         }
 
-        
+        bool operator==(const Pattern &lhs, const Pattern &rhs) noexcept
+        {
+            return lhs.isEqualTo(rhs);
+        }
+
+        bool operator!=(const Pattern &lhs, const Pattern &rhs) noexcept
+        {
+            return !lhs.isEqualTo(rhs);
+        }
+
         
     }
 

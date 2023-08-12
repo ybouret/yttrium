@@ -56,6 +56,20 @@ namespace Yttrium
             return *this;
         }
 
+        bool Compound:: hasSamePatternsThan(const Compound &other) const noexcept
+        {
+            if(patterns.size != other.patterns.size) return false;
+
+            for(const Pattern *lhs=patterns.head, *rhs=other.patterns.head;lhs;lhs=lhs->next,rhs=rhs->next)
+            {
+                assert(0!=lhs);
+                assert(0!=rhs);
+                if( ! lhs->isEqualTo(*rhs) ) return false;
+            }
+            return true;
+        }
+
+
     }
 
 }

@@ -29,7 +29,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const uint32_t UUID = Y_FOURCC('_','!','=','_'); //!< UUID
+            static const uint32_t UUID = Y_FOURCC('N','O','N','E'); //!< UUID
 
             //__________________________________________________________________
             //
@@ -53,6 +53,7 @@ namespace Yttrium
 
             //! false return first non matching char if any
             virtual bool     isFragile() const noexcept;
+            virtual bool     isEqualTo(const Pattern &) const noexcept;
 
         private:
             Y_DISABLE_ASSIGN(None);

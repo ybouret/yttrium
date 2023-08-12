@@ -83,6 +83,7 @@ namespace Yttrium
 
             while(true)
             {
+                assert(0==motif->size);
                 if(motif->takes(source))
                 {
                     ++count;
@@ -96,6 +97,7 @@ namespace Yttrium
                 }
             }
 
+            // check result
             if(count>=atLeast||phony)
             {
                 return true;
@@ -105,6 +107,11 @@ namespace Yttrium
                 source.put(*this);
                 return false;
             }
+        }
+
+        bool Repeating:: isEqualTo(const Pattern &p) const noexcept
+        {
+            return UUID == p.uuid && atLeast == p.as<Repeating>()->atLeast && hasSameMotifThan( *p.as<Repeating>() );
         }
 
     }

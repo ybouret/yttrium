@@ -61,6 +61,10 @@ namespace Yttrium
             return false;
         }
 
+        bool Single:: isEqualTo(const Pattern &p) const noexcept
+        {
+            return UUID == p.uuid && code == p.as<Single>()->code;
+        }
 
     }
 

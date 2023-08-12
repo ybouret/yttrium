@@ -63,7 +63,11 @@ namespace Yttrium
         {
             return false;
         }
-
+        
+        bool Range:: isEqualTo(const Pattern &p) const noexcept
+        {
+            return UUID == p.uuid && lower == p.as<Range>()->lower && upper == p.as<Range>()->upper;
+        }
     }
 
 }

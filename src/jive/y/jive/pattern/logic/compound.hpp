@@ -65,7 +65,10 @@ namespace Yttrium
         protected:
             explicit Compound(const uint32_t  ) noexcept; //!< setup empty
             explicit Compound(const Compound &);          //!< copy pattern+patterns
+
+            bool hasSamePatternsThan(const Compound &other) const noexcept;
             
+
         private:
             Y_DISABLE_ASSIGN(Compound);
         };

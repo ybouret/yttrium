@@ -46,7 +46,8 @@ namespace Yttrium
             virtual void     reset() noexcept;
             virtual size_t   serialize(OutputStream&) const;
             virtual bool     isFragile() const noexcept; //!< false
-
+            virtual bool     isEqualTo(const Pattern &) const noexcept;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Any1);
         };

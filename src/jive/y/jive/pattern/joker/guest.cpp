@@ -44,8 +44,14 @@ namespace Yttrium
         void Guest:: optimize()
         {
             ClonePtr<Pattern> opt( Pattern::Optimize( & *motif) );
-            
         }
+
+        bool Guest:: hasSameMotifThan(const Guest &other) const noexcept
+        {
+            return motif->isEqualTo(*other.motif);
+        }
+
+        
 
     }
 

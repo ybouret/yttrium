@@ -28,7 +28,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const uint32_t UUID = Y_FOURCC('_','|','|','_'); //!< UUID
+            static const uint32_t UUID = Y_FOURCC('O','R','_','_'); //!< UUID
 
             //__________________________________________________________________
             //
@@ -55,6 +55,7 @@ namespace Yttrium
              - isFragile if one of the patterns is fragile
              */
             virtual bool     isFragile() const noexcept;
+            virtual bool     isEqualTo(const Pattern &) const noexcept;
 
         private:
             Y_DISABLE_ASSIGN(Or);

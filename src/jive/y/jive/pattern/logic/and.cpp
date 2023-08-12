@@ -78,6 +78,11 @@ namespace Yttrium
             p->feed(text);
             return p.yield();
         }
+
+        bool And:: isEqualTo(const Pattern &p) const noexcept
+        {
+            return UUID == p.uuid && hasSamePatternsThan( *p.as<And>() );
+        }
     }
 
 }

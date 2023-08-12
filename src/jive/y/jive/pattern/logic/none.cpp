@@ -82,6 +82,10 @@ namespace Yttrium
         }
 
 
+        bool None:: isEqualTo(const Pattern &p) const noexcept
+        {
+            return UUID == p.uuid && hasSamePatternsThan( *p.as<None>() );
+        }
     }
 
 }

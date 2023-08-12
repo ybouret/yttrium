@@ -52,6 +52,12 @@ namespace Yttrium
             return true;
         }
 
+        bool Optional:: isEqualTo(const Pattern &p) const noexcept
+        {
+            return UUID == p.uuid && hasSameMotifThan( *p.as<Optional>() );
+        }
+
+
     }
 
 }

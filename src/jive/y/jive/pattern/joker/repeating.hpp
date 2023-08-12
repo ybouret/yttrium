@@ -28,9 +28,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const char * const CallSign; //!< Repeating
-            static const uint32_t     UUID = Y_FOURCC('R','E','P',':'); //!< UUID
-            static const uint32_t     ZOM  = Y_FOURCC('Z','O','M',':'); //!< Zero Or More
-            static const uint32_t     OOM  = Y_FOURCC('O','O','M',':'); //!< One Or More
+            static const uint32_t     UUID = Y_FOURCC('R','E','P','_'); //!< UUID
+            static const uint32_t     ZOM  = Y_FOURCC('Z','O','M','_'); //!< Zero Or More
+            static const uint32_t     OOM  = Y_FOURCC('O','O','M','_'); //!< One Or More
 
             //__________________________________________________________________
             //
@@ -53,7 +53,8 @@ namespace Yttrium
             virtual bool     takes(Source &);                 //!< try guest, return true
             virtual bool     isFragile() const noexcept;      //!< atLeast==0 or motif->isFragile()
             virtual size_t   serialize(OutputStream&) const;  //!< uuid[+atLeast]+guest
-
+            virtual bool     isEqualTo(const Pattern &) const noexcept;
+            
             //__________________________________________________________________
             //
             //

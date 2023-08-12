@@ -27,7 +27,7 @@ namespace Yttrium
             // Definition
             //
             //__________________________________________________________________
-            static const uint32_t UUID = Y_FOURCC('C','N','T',':'); //!< UUID
+            static const uint32_t UUID = Y_FOURCC('C','N','T','_'); //!< UUID
 
             //__________________________________________________________________
             //
@@ -50,7 +50,8 @@ namespace Yttrium
             virtual bool     takes(Source &);                 //!< try guest, return true
             virtual bool     isFragile() const noexcept;      //!< if minCount <= 0 or motif is fragile
             virtual size_t   serialize(OutputStream&) const;  //!< uuid+guest
-
+            virtual bool     isEqualTo(const Pattern &) const noexcept;
+            
             //__________________________________________________________________
             //
             //

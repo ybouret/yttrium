@@ -44,11 +44,12 @@ namespace Yttrium
              */
             //__________________________________________________________________
             virtual bool      takes(Source &)            = 0;
-            virtual void      query(FirstChars &)  const = 0; //!< query first chars
-            virtual Pattern * clone()              const = 0; //!< perform deep copy
-            virtual void      reset()           noexcept = 0; //!< reset content
-            virtual bool      isFragile() const noexcept = 0; //!< accept empty token
-            bool              isRegular() const noexcept;     //!< !isFragile()
+            virtual void      query(FirstChars &)  const = 0;            //!< query first chars
+            virtual Pattern * clone()              const = 0;            //!< perform deep copy
+            virtual void      reset()           noexcept = 0;            //!< reset content
+            virtual bool      isFragile() const noexcept = 0;            //!< accept empty token
+            bool              isRegular() const noexcept;                //!< !isFragile()
+            virtual bool      isEqualTo(const Pattern &) const noexcept = 0; //!< check equality
 
             //__________________________________________________________________
             //
@@ -100,6 +101,10 @@ namespace Yttrium
             static Pattern *Exact(const String &); //!< And[text]
             static Pattern *Among(const char *);   //!< Or[text]
             static Pattern *Among(const String &); //!< Or[text]
+
+            friend bool operator==(const Pattern &, const Pattern &) noexcept;
+            friend bool operator!=(const Pattern &, const Pattern &) noexcept;
+            
 
             //__________________________________________________________________
             //

@@ -154,6 +154,14 @@ namespace Yttrium
         {
         }
 
+        OutputFile:: OutputFile(const String &fileName, const bool append) :
+        OutputStream(),
+        OutputGrasp(fileName()),
+        Libc::File( openFile(fileName(),append), isReg),
+        buffer()
+        {
+        }
+
         
 
 

@@ -64,6 +64,15 @@ namespace Yttrium
             return false;
         }
 
+        bool Counting:: isEqualTo(const Pattern &p) const noexcept
+        {
+            return
+            UUID     == p.uuid &&
+            minCount == p.as<Counting>()->minCount &&
+            maxCount == p.as<Counting>()->maxCount &&
+            hasSameMotifThan( *p.as<Counting>() );
+        }
+
     }
 
 }

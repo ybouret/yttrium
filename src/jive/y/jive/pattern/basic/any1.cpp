@@ -57,7 +57,11 @@ namespace Yttrium
             return false;
         }
 
-        
+        bool Any1:: isEqualTo(const Pattern &p) const noexcept
+        {
+            return UUID == p.uuid;
+        }
+
     }
 
 }

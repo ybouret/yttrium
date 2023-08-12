@@ -62,6 +62,11 @@ namespace Yttrium
             return false;
         }
 
+        bool Exclude:: isEqualTo(const Pattern &p) const noexcept
+        {
+            return UUID == p.uuid && code == p.as<Exclude>()->code;
+        }
+
     }
 
 }
