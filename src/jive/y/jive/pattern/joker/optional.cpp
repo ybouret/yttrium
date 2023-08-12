@@ -1,6 +1,7 @@
 
 #include "y/jive/pattern/joker/optional.hpp"
 #include "y/io/stream/output.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace Yttrium
 {
@@ -10,10 +11,21 @@ namespace Yttrium
         {
         }
 
-        Optional:: Optional(const Pattern &source) :
-        Guest(UUID,source)
+        Pattern * Optional::From(Pattern *p)
         {
-            Y_PATTERN(Optional);
+            AutoPtr<Pattern> guard(p);
+            Pattern *opt = new Optional(p);
+            guard.yield();
+            return opt;
+        }
+
+        Pattern * Optional::From(const Pattern &P)
+        {
+            Pattern         *p = P.clone();
+            AutoPtr<Pattern> guard(p);
+            Pattern *opt = new Optional(p);
+            guard.yield();
+            return opt;
         }
 
         Optional:: Optional(Pattern *source) :

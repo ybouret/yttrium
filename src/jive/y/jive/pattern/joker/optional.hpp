@@ -36,11 +36,10 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Optional(const Pattern &); //!< setup from clone
-            explicit Optional(Pattern       *); //!< setup directly
-            explicit Optional(const Optional&); //!< duplicate
-            virtual ~Optional() noexcept;       //!< cleanup
-
+            explicit Optional(const Optional&);        //!< duplicate
+            virtual ~Optional() noexcept;              //!< cleanup
+            static   Pattern *From(Pattern *);        //!< create from pattern
+            static   Pattern *From(const Pattern &);  //!< create from cloned
             //__________________________________________________________________
             //
             //
@@ -55,6 +54,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_ASSIGN(Optional);
+            explicit Optional(Pattern *); //!< setup directly
         };
 
 

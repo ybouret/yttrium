@@ -33,10 +33,10 @@ static inline void testPattern(Pattern &p)
 
 Y_UTEST(pattern)
 {
-    AutoPtr<Pattern>  s = new Single('a');     testPattern(*s);
-    AutoPtr<Pattern>  a = new Any1();          testPattern(*a);
-    AutoPtr<Pattern>  r = new Range('0','9');  testPattern(*r);
-    AutoPtr<Optional> O = new Optional( *r );  testPattern(*O);
+    AutoPtr<Pattern>  s = new Single('a');      testPattern(*s);
+    AutoPtr<Pattern>  a = new Any1();           testPattern(*a);
+    AutoPtr<Pattern>  r = new Range('0','9');   testPattern(*r);
+    AutoPtr<Pattern>  O = Optional::From( *r ); testPattern(*O);
     AutoPtr<Compound> A = new And();
     *A << *a << *r << new Exclude('k');         testPattern(*A);
     AutoPtr<Guest>    R0 = new Repeating(0,*r); testPattern(*R0);
