@@ -15,6 +15,7 @@ Y_UTEST(pattern)
     AutoPtr<Compound> A = new And();
     AutoPtr<Optional> O = new Optional( *r );
     *A << *a << *r << new Exclude('k');
+    AutoPtr<Guest>    R = new Repeating(0,*r);
 
     {
         AutoPtr<Pattern> s1 = s->clone(); std::cerr << char(s1->as<Single>()->code) << std::endl;

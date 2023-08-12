@@ -1,6 +1,7 @@
 
 #include "y/jive/pattern/joker/repeating.hpp"
 #include "y/io/stream/output.hpp"
+#include "y/jive/source.hpp"
 
 namespace Yttrium
 {
@@ -78,14 +79,32 @@ namespace Yttrium
             assert(0==motif->size);
 
             size_t count = 0;
+            bool   phony = false;
+
             while(true)
             {
                 if(motif->takes(source))
                 {
-                    
+                    ++count;
+                    if(motif->size<=0)
+                    {
+                        phony = true; //!< fragile, assume true
+                        break;
+                    }
+                    else
+                        mergeTail(*motif);
                 }
             }
-            return false;
+
+            if(count>=atLeast||phony)
+            {
+                return true;
+            }
+            else
+            {
+                source.put(*this);
+                return false;
+            }
         }
 
     }
