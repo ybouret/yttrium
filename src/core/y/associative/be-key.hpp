@@ -20,8 +20,8 @@ namespace Yttrium
         code()
         {
             union {
-                T                                  data;
-                typename IntegerFor<T>::UInt::Type uint;
+                T                                     data;
+                typename UnsignedInt<sizeof(T)>::Type uint;
             } alias = { args };
             setup(alias.uint);
         }
@@ -43,8 +43,6 @@ namespace Yttrium
         void setup(const uint16_t) noexcept;
         void setup(const uint32_t) noexcept;
         void setup(const uint64_t) noexcept;
-
-        
     };
 
 }
