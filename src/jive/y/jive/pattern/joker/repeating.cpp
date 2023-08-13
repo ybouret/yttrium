@@ -120,7 +120,28 @@ namespace Yttrium
             && hasSameMotifThan( *p.as<Repeating>() );
         }
 
-        
+        Pattern * Repeating::ZeroOrMore(Pattern *p)
+        {
+            return Repeating::Make(0,p);
+        }
+
+        Pattern * Repeating::ZeroOrMore(const Pattern &p)
+        {
+            return Repeating::Make(0,p);
+        }
+
+        Pattern * Repeating:: OneOrMore(Pattern *p)
+        {
+            return Repeating::Make(1,p);
+        }
+
+        Pattern * Repeating::OneOrMore(const Pattern &p)
+        {
+            return Repeating::Make(1,p);
+        }
+
+
+
 
     }
 

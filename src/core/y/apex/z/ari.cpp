@@ -24,15 +24,9 @@ namespace Yttrium
 
         Integer Integer:: Abs(const Integer &z)
         {
-            switch(z.s)
-            {
-                case __Zero__:
-                case Positive:
-                    return z;
-                case Negative:
-                    break;
-            }
-            return Integer(Positive,z.n);
+            Integer a = z;
+            Sign::MakeAbs(Coerce(a.s));
+            return a;
         }
 
         Integer Integer:: abs() const

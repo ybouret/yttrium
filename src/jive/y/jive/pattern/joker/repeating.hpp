@@ -38,10 +38,10 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Repeating(const Repeating&);                    //!< duplicate
-            virtual ~Repeating() noexcept;                           //!< cleanup
-            static   Pattern *Make(const size_t nmin, Pattern *);
-            static   Pattern *Make(const size_t nmin, const Pattern &);
+            explicit Repeating(const Repeating&);                       //!< duplicate
+            virtual ~Repeating() noexcept;                              //!< cleanup
+            static   Pattern *Make(const size_t nmin, Pattern *);       //!< take care of pattern
+            static   Pattern *Make(const size_t nmin, const Pattern &); //!< take care of clone
 
             //__________________________________________________________________
             //
@@ -54,7 +54,14 @@ namespace Yttrium
             virtual bool     isFragile() const noexcept;      //!< atLeast==0 or motif->isFragile()
             virtual size_t   serialize(OutputStream&) const;  //!< uuid[+atLeast]+guest
             virtual bool     isEqualTo(const Pattern &) const noexcept;
-            
+
+            static Pattern *ZeroOrMore(Pattern *      p); //!< Make(0,p)
+            static Pattern *ZeroOrMore(const Pattern &p); //!< Make(0,p)
+
+            static Pattern *OneOrMore(Pattern *      p);  //!< Make(1,p)
+            static Pattern *OneOrMore(const Pattern &p);  //!< Make(1,p)
+
+
             //__________________________________________________________________
             //
             //
@@ -69,11 +76,6 @@ namespace Yttrium
             explicit Repeating(const size_t nmin, Pattern *); //!< setup directly
         };
 
-        inline Pattern *ZeroOrMore(Pattern *p)       { return Repeating::Make(0,p); }
-        inline Pattern *ZeroOrMore(const Pattern &p) { return Repeating::Make(0,p); }
-
-        inline Pattern *OneOrMore(Pattern *p)       { return Repeating::Make(1,p); }
-        inline Pattern *OneOrMore(const Pattern &p) { return Repeating::Make(1,p); }
 
 
 

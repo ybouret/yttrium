@@ -47,8 +47,8 @@ Y_UTEST(pattern)
     AutoPtr<Pattern>  O = Optional::From( *r ); testPattern(*O);
     AutoPtr<Compound> A = new And();
     *A << *a << *r << new Exclude('k');         testPattern(*A);
-    AutoPtr<Pattern>  R0 = ZeroOrMore(*r);      testPattern(*R0);
-    AutoPtr<Pattern>  R1 = OneOrMore(new Range('a','z')); testPattern(*R1);
+    AutoPtr<Pattern>  R0 = Repeating::ZeroOrMore(*r);      testPattern(*R0);
+    AutoPtr<Pattern>  R1 = Repeating::OneOrMore(new Range('a','z')); testPattern(*R1);
     AutoPtr<Pattern>  R4 = Repeating::Make(4, new Range('A','Z')); testPattern(*R4);
 
 

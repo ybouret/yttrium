@@ -168,10 +168,10 @@ inline friend bool operator OP (const Natural &lhs, const Integer &rhs ) noexcep
             // other
             //
             //__________________________________________________________________
-            static Integer Sqrt(const Integer &);
-            Integer        sqrt() const;
-            static Integer Abs(const Integer &);
-            Integer        abs() const;
+            static Integer Sqrt(const Integer &); //!< integer square root
+            Integer        sqrt() const;          //!< integer square root
+            static Integer Abs(const Integer &);  //!< absolute value
+            Integer        abs() const;           //!< absolute value
 
             //__________________________________________________________________
             //

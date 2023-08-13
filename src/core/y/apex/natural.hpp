@@ -201,6 +201,7 @@ namespace Yttrium
             static Natural Sqrt(const Natural &s);                   //!< square root
             Natural        sqrt() const;                             //!< square root
             
+
             //__________________________________________________________________
             //
             //

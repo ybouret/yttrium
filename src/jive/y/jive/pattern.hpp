@@ -102,8 +102,8 @@ namespace Yttrium
             static Pattern *Among(const char *);   //!< Or[text]
             static Pattern *Among(const String &); //!< Or[text]
 
-            friend bool operator==(const Pattern &, const Pattern &) noexcept;
-            friend bool operator!=(const Pattern &, const Pattern &) noexcept;
+            friend bool operator==(const Pattern &, const Pattern &) noexcept; //!< test equality
+            friend bool operator!=(const Pattern &, const Pattern &) noexcept; //!< test difference
             
 
             //__________________________________________________________________

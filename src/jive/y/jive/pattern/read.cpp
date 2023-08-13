@@ -44,8 +44,8 @@ namespace Yttrium
                     return  Repeating::Make( nmin, Pattern::ReadFrom(fp) );
                 }
 
-                case Repeating:: ZOM: return ZeroOrMore( Pattern::ReadFrom(fp) );
-                case Repeating:: OOM: return OneOrMore(  Pattern::ReadFrom(fp)  );
+                case Repeating:: ZOM: return Repeating::ZeroOrMore( Pattern::ReadFrom(fp) );
+                case Repeating:: OOM: return Repeating::OneOrMore(  Pattern::ReadFrom(fp)  );
 
 
                 default:

@@ -66,7 +66,8 @@ namespace Yttrium
             explicit Compound(const uint32_t  ) noexcept; //!< setup empty
             explicit Compound(const Compound &);          //!< copy pattern+patterns
 
-            bool hasSamePatternsThan(const Compound &other) const noexcept;
+            //! checking all patterns are equals
+            bool hasSamePatternsThan(const Compound &) const noexcept;
             
 
         private:
