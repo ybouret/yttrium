@@ -12,6 +12,8 @@ using namespace Yttrium;
 
 Y_UTEST(apex_q)
 {
+    Random::Rand ran;
+
     // equality
     {
         const apq     q(2);
@@ -77,57 +79,21 @@ Y_UTEST(apex_q)
 
     }
 
-
-
-    return 0;
-    
-    { apq q;      std::cerr << q << std::endl; }
-    { apq q(5,2); std::cerr << q << std::endl; }
-    { apq q(-6,14); std::cerr << q << std::endl; }
-
+    // square root
     {
-        apq a(1,2);
-        apq b(3,2);
-        std::cerr << a+b << std::endl;
-        b = apq(-1,2);
-        std::cerr << a+b << std::endl;
-        std::cerr << a+2 << std::endl;
-        std::cerr << -3+a << std::endl;
-        apz z =  -2;
-        std::cerr << a+z << std::endl;
-        std::cerr << z+a << std::endl;
-        apn n = 2;
-        std::cerr << a+n << std::endl;
-        std::cerr << n+a << std::endl;
+        for(size_t i=0;i<10;++i)
+        {
+            apq q(32,25,ran);
+            q = q.abs();
+            apq s = q.sqrt();
+            apq s2 = s*s;
+            std::cerr << q << "=> " << s << std::endl;
+            Y_ASSERT(s2<=q);
+        }
     }
 
-    {
-        apq a(1,2);
-        apq b(1,3);
-        apq c = a/b;
-        std::cerr << c << std::endl;
-    }
 
-    {
-        apq a(1,2);
-        apq b(-1,3);
-        apq c = a/b;
-        std::cerr << c << std::endl;
-    }
 
-    {
-        apq a(-1,2);
-        apq b(1,3);
-        apq c = a/b;
-        std::cerr << c << std::endl;
-    }
-
-    {
-        apq a(-1,2);
-        apq b(-1,3);
-        apq c = a/b;
-        std::cerr << c << std::endl;
-    }
 
 }
 Y_UDONE()
