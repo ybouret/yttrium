@@ -165,6 +165,17 @@ inline friend bool operator OP (const Natural &lhs, const Integer &rhs ) noexcep
             //__________________________________________________________________
             //
             //
+            // other
+            //
+            //__________________________________________________________________
+            static Integer Sqrt(const Integer &);
+            Integer        sqrt() const;
+            static Integer Abs(const Integer &);
+            Integer        abs() const;
+
+            //__________________________________________________________________
+            //
+            //
             // I/O
             //
             //__________________________________________________________________

@@ -14,6 +14,7 @@ Y_UTEST(calculus_isqrt)
     {
         const unsigned s = IntegerSquareRoot(i);
         std::cerr << i << " -> " << s << std::endl;
+        Y_ASSERT(s*s<=i);
         fp("%d %d\n", i, IntegerSquareRoot(i));
         const apn I = i;
         const apn S = I.sqrt();

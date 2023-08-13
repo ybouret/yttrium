@@ -10,6 +10,9 @@ namespace Yttrium
 {
     namespace MKL
     {
+
+
+        
         //______________________________________________________________________
         //
         //
@@ -19,6 +22,7 @@ namespace Yttrium
         template <typename T>
         struct Numeric
         {
+            static const unsigned RADIX;    //!< RADIX
             static const T        PI;       //!< PI
             static const T        EPSILON;  //!< EPSILON
             static const T        MAX;      //!< MAX
@@ -27,7 +31,6 @@ namespace Yttrium
             static const unsigned DIG;      //!< DIGits
             static const int      MIN_EXP;  //!< MIN_EXP
             static const int      MAX_EXP;  //!< MAX_EXP
-
         };
 
 #if !defined(_MSC_VER)

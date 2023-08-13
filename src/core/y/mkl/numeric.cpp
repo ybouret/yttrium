@@ -8,6 +8,8 @@ namespace Yttrium
 {
     namespace MKL
     {
+
+
 #define Y_F(X) X##f
 #define Y_D(X) X
 #define Y_L(X) X##l
@@ -15,6 +17,11 @@ namespace Yttrium
         template <> const float       Numeric<float> ::      PI = Y_F(3.14159265358979323846264338327950288419716939937510582);
         template <> const double      Numeric<double>::      PI = Y_D(3.14159265358979323846264338327950288419716939937510582);
         template <> const long double Numeric<long double>:: PI = Y_L(3.14159265358979323846264338327950288419716939937510582);
+
+        template <> const unsigned Numeric<float>::RADIX = FLT_RADIX;
+        template <> const unsigned Numeric<double>::RADIX = FLT_RADIX;
+        template <> const unsigned Numeric<long double>::RADIX = FLT_RADIX;
+
 
 #define Y_MKL_DECL_TYPE(TYPE,VAR) \
         template <> const TYPE Numeric<float> ::      VAR = FLT_##VAR; \

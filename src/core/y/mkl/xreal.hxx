@@ -54,17 +54,18 @@ namespace Yttrium
     template <>
     void XReal<real_t>:: display(std::ostream &os) const
     {
+        static const unsigned radix = MKL::Numeric<real_t>::RADIX;
         os << '(' << mantissa;
         switch(exponent)
         {
-            case -1: os << "/2"; break;
+            case -1: os << "/" << radix; break;
             case  0: break;
-            case  1: os << "*2"; break;
+            case  1: os << "*" << radix; break;
             default:
                 if(exponent>0)
-                    os << "*2^" << exponent;
+                    os << "*" << radix << "^" << exponent;
                 else
-                    os << "/2^" << -exponent;
+                    os << "/" << radix << "^" << -exponent;
         }
         os << ')';
     }

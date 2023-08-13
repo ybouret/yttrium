@@ -1,6 +1,8 @@
 
 #include "y/mkl/xreal.hpp"
 #include "y/system/exception.hpp"
+#include "y/mkl/numeric.hpp"
+
 #include <cerrno>
 #include <cmath>
 
