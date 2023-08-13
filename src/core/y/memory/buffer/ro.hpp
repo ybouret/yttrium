@@ -8,6 +8,8 @@
 
 namespace Yttrium
 {
+    class OutputStream;
+
     namespace Memory
     {
 
@@ -42,8 +44,9 @@ namespace Yttrium
             //! compare byte-wise contents
             bool HasSameContentThan(const ReadOnlyBuffer &) const noexcept;
 
-            //! helper
-            std::ostream & displayHexadecimal(std::ostream &) const;
+            std::ostream & displayHexadecimal(std::ostream &) const; //!< helper
+            OutputStream & displayHexadecimal(OutputStream &) const; //!< helper
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ReadOnlyBuffer);
