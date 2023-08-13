@@ -6,6 +6,7 @@
 #include "y/string.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
+#include "y/text/hexadecimal.hpp"
 
 using namespace Yttrium;
 
@@ -47,6 +48,8 @@ Y_UTEST(io_ostream)
     {
         Libc::OutputFile fp("out.dat",true);
         fp("Pi=%g\n",3.14);
+
+        
     }
 
 
@@ -59,22 +62,10 @@ Y_UTEST(io_ostream)
         }
 
         std::cerr << s << std::endl;
-
     }
 
-#if 0
-    {
-        OutputDataStream< Vector<char> > fp;
-        fp("Pi=%g",3.1431);
-        std::cerr << fp << std::endl;
-    }
 
-    {
-        OutputDataStream< List<char> > fp;
-        fp("Pi=%g",3.1431);
-        std::cerr << fp << std::endl;
-    }
-#endif
+
 
 }
 Y_UDONE()
