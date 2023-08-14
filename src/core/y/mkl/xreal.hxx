@@ -111,36 +111,43 @@ namespace Yttrium
     }
 
 
+
+
+    // big.mantissa * radix^big.exponent + lit.mantissa * radix^lit.mantissa
+    // = radix^big.exponent * ( big.mantissa + lit.mantissa * radix ^(lit.exponent-big.exponent) )
     static inline
-    XReal<real_t> Add(const XReal<real_t> &big,
-                      const XReal<real_t> &lit) noexcept
+    XReal<real_t> __add(const XReal<real_t> big,
+                        const XReal<real_t> lit) noexcept
     {
+
+        assert(big.exponent>lit.exponent);
+        
+
 
         return XReal<real_t>();
     }
 
-
     template <>
     XReal<real_t> XReal<real_t>:: Add(const XReal<real_t> &lhs, const XReal<real_t> &rhs)
     {
-        if( std::fabs(lhs.mantissa)<=0 )
-            return rhs;
-
-        if( std::fabs(rhs.mantissa)<=0 )
-            return lhs;
-
-        assert( std::fabs(lhs.mantissa) > 0);
-        assert( std::fabs(rhs.mantissa) > 0);
-
+        // check action depending on difference of exponents
         switch( Sign::Of(lhs.exponent,rhs.exponent) )
         {
-            case Negative: assert(lhs.exponent<rhs.exponent); return Add(rhs,lhs);
-            case Positive: assert(lhs.exponent>rhs.exponent); return Add(lhs,rhs);
-            case __Zero__:
-                break;
+            case Negative: assert(lhs.exponent<rhs.exponent); return __add(rhs,lhs);
+            case Positive: assert(lhs.exponent>rhs.exponent); return __add(lhs,rhs);
+            case __Zero__: break;
         }
 
-        return XReal();
+        // same exponent
+        const real_t m = lhs.mantissa + rhs.mantissa;
+        if( std::fabs(m) <= 0)
+            return XReal(); // zero
+        else
+        {
+            const int   comExponent = lhs.exponent; assert(rhs.exponent==comExponent);
+            const  XReal xr(m);
+            return XReal(xr.exponent+comExponent,xr.mantissa);
+        }
     }
 
 
