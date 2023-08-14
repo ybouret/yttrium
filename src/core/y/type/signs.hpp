@@ -61,7 +61,8 @@ namespace Yttrium
         template <typename T> static inline
         SignType Of(T &value)
         {
-            return value < 0 ? Negative : (0<value? Positive : __Zero__);
+            const T zero(0);
+            return value < zero ? Negative : (zero<value? Positive : __Zero__);
         }
 
         //______________________________________________________________________

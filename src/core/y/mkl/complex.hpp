@@ -68,12 +68,7 @@ namespace Yttrium
         //! display
         friend std::ostream & operator<<(std::ostream &os, const Complex &z)
         {
-            switch( Sign::Of(z.im ))
-            {
-                case __Zero__: os << z.re; break;
-                case Positive: os << Self::LPAREN << z.re << Self::PLUS << z.im << Self::IM << Self::RPAREN; break;
-                case Negative: os << Self::LPAREN << z.re <<               z.im << Self::IM << Self::RPAREN; break;
-            }
+            os << Self::LPAREN << z.re << Self::PLUS << Self::LPAREN << z.im << Self::IM << Self::RPAREN << Self::RPAREN;
             return os;
         }
 

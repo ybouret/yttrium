@@ -134,7 +134,8 @@ namespace Yttrium
             }
             else
             {
-                if(absb<=0)
+                const T zero(0);
+                if(absb<=zero)
                 {
                     return T(0);
                 }
