@@ -1,4 +1,4 @@
-#include "y/io/stream.hpp"
+#include "y/io/interface.hpp"
 
 namespace Yttrium
 {

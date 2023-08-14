@@ -5,7 +5,7 @@
 #define Y_IO_Output_Stream_Included 1
 
 
-#include "y/io/stream.hpp"
+#include "y/io/interface.hpp"
 #include "y/memory/buffer/ro.hpp"
 #include "y/check/printf.hpp"
 #include "y/type/ints.hpp"

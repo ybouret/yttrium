@@ -2,11 +2,11 @@
 
 //! \file
 
-#ifndef Y_IO_Input_Stream_Included
-#define Y_IO_Input_Stream_Included 1
+#ifndef Y_Input_Stream_Included
+#define Y_Input_Stream_Included 1
 
 
-#include "y/io/stream.hpp"
+#include "y/io/interface.hpp"
 #include "y/type/ints.hpp"
 #include "y/io/chars.hpp"
 
