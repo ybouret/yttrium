@@ -121,15 +121,28 @@ namespace Yttrium
     {
 
         assert(big.exponent>lit.exponent);
-        
-
-
-        return XReal<real_t>();
+        const int difExponent = lit.exponent - big.exponent;
+        if(difExponent < MKL::Numeric<real_t>::MIN_EXP)
+        {
+            return big;
+        }
+        else
+        {
+            const  XReal<real_t> xr( big.mantissa + std::ldexp(lit.mantissa,difExponent) );
+            Coerce(xr.exponent) += big.exponent;
+            return xr;
+        }
     }
 
     template <>
     XReal<real_t> XReal<real_t>:: Add(const XReal<real_t> &lhs, const XReal<real_t> &rhs)
     {
+        if( std::fabs(lhs.mantissa) <= 0) return rhs;
+        if( std::fabs(rhs.mantissa) <= 0) return lhs;
+
+        assert(std::fabs(lhs.mantissa)>0);
+        assert(std::fabs(rhs.mantissa)>0);
+
         // check action depending on difference of exponents
         switch( Sign::Of(lhs.exponent,rhs.exponent) )
         {
@@ -157,5 +170,11 @@ namespace Yttrium
         return XReal(exponent,-mantissa);
     }
 
+    template <>
+    XReal<real_t> XReal<real_t>:: Sub(const XReal<real_t> &lhs, const XReal<real_t> &rhs)
+    {
+        const XReal<real_t> r = -rhs;
+        return Add(lhs,r);
+    }
 
 }

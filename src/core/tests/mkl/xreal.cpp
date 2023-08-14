@@ -54,6 +54,12 @@ static inline void checkXREAL(Random::Bits &ran)
     }
 
 
+    std::cerr << "Testing Addition" << std::endl;
+    for(size_t i=0;i<8;++i)
+    {
+
+    }
+
     std::cerr << std::endl;
 }
 

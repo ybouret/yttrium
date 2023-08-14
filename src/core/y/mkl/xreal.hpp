@@ -104,7 +104,12 @@ namespace Yttrium
         //! unary -
         XReal operator-() const noexcept;
 
+        //! binary subtraction
+        inline friend XReal operator-(const XReal &lhs, const XReal &rhs) noexcept
+        { return Sub(lhs,rhs); }
 
+        //! in-place subtraction
+        inline XReal & operator-=(const XReal &rhs) noexcept { return (*this=Sub(*this,rhs)); }
         //______________________________________________________________________
         //
         //
@@ -119,6 +124,7 @@ namespace Yttrium
         static XReal Mul(const XReal &, const XReal &) noexcept;
         static XReal Div(const XReal &, const XReal &);
         static XReal Add(const XReal &, const XReal &);
+        static XReal Sub(const XReal &, const XReal &);
         void   display(std::ostream &) const;
     };
 
