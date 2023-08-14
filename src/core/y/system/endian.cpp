@@ -44,5 +44,25 @@ namespace Yttrium
         return Core::Unknown;
     }
 
+    const char * const Endianness:: CallSign = "Endianness";
+
+
+    uint8_t Endianness:: hton(const uint8_t x) const noexcept { return x; }
+    
+
+    Endianness:: Endianness() :
+    Singleton<Endianness>(),
+    type( Detect() )
+    {
+    }
+
+    Endianness:: ~Endianness() noexcept
+    {
+        
+    }
+
+
+
+
 }
 

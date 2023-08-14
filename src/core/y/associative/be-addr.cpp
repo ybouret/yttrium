@@ -11,13 +11,8 @@ namespace Yttrium
     {
         assert(size==sizeof(void*));
 
-        union {
-            UnsignedInt< sizeof(void*) >::Type uint;
-            void                              *addr;
-        } alias = { 0 };
         
-
-        return alias.addr;
+        return 0;
     }
 
 }
