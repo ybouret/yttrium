@@ -100,6 +100,7 @@ T makeProd(const Readable<T> &seq)
     else
         return 0;
 }
+
 template <typename T>
 static inline
 T makeSum(const Readable<T> &seq)
