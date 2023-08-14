@@ -23,6 +23,9 @@ mkl
 
 Y_LinkLibraries(test-core y-z)
 
+set( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
+set( DATA ${HERE}/../../../var)
+
 enable_testing()
 
 #main
@@ -44,18 +47,18 @@ add_test(text:embedding      test-core text_embedding)
 
 
 #memory
-add_test(memory:chunk  test-core memory_chunk)
-add_test(memory:pages  test-core memory_pages)
-add_test(memory:arena  test-core memory_arena)
-add_test(memory:album  test-core memory_album)
-add_test(memory:sentry test-core memory_sentry)
-add_test(memory:blocks test-core memory_blocks)
-add_test(memory:guild  test-core memory_guild)
-add_test(memory:notes  test-core memory_notes)
-add_test(memory:strap  test-core memory_strap)
-add_test(memory:straps test-core memory_straps)
-add_test(memory:quanta test-core memory_quanta)
-add_test(memory:corpus test-core memory_corpus)
+add_test(memory:chunk     test-core memory_chunk)
+add_test(memory:pages     test-core memory_pages)
+add_test(memory:arena     test-core memory_arena)
+add_test(memory:album     test-core memory_album)
+add_test(memory:sentry    test-core memory_sentry)
+add_test(memory:blocks    test-core memory_blocks)
+add_test(memory:guild     test-core memory_guild)
+add_test(memory:notes     test-core memory_notes)
+add_test(memory:strap     test-core memory_strap)
+add_test(memory:straps    test-core memory_straps)
+add_test(memory:quanta    test-core memory_quanta)
+add_test(memory:corpus    test-core memory_corpus)
 add_test(memory:allocator test-core memory_allocator)
 add_test(memory:blanks    test-core memory_blanks)
 add_test(memory:studio    test-core memory_studio)
@@ -76,10 +79,10 @@ add_test(type:args       test-core type_args)
 add_test(type:fourcc     test-core type_fourcc)
 
 #data
-add_test(data:list test-core data_list)
-add_test(data:pool test-core data_pool)
-add_test(data:rework test-core data_rework)
-add_test(data:cxx_linked test-core data_cxx_linked)
+add_test(data:list            test-core data_list)
+add_test(data:pool            test-core data_pool)
+add_test(data:rework          test-core data_rework)
+add_test(data:cxx_linked      test-core data_cxx_linked)
 add_test(data:bare-light-list test-core data_bare_light_list)
 add_test(data:solo-light-list test-core data_solo_light_list)
 add_test(data:coop-light-list test-core data_coop_light_list)
@@ -97,7 +100,7 @@ add_test(calculus:bcount test-core calculus_bcount)
 add_test(calculus:isqrt  test-core calculus_isqrt)
 
 #concurrent
-add_test(concurrent:mutex test-core concurrent_mutex)
+add_test(concurrent:mutex  test-core concurrent_mutex)
 add_test(concurrent:thread test-core concurrent_thread)
 
 #random
@@ -107,7 +110,7 @@ add_test(random:gaussian test-core random_gaussian)
 
 
 #hashing
-add_test(hashing:mix64 test-core hashing_mix64)
+add_test(hashing:mix64     test-core hashing_mix64)
 add_test(hashing:functions test-core hashing_functions)
 add_test(hashing:to        test-core hashing_to)
 add_test(hashing:mac       test-core hashing_mac)
@@ -117,20 +120,20 @@ add_test(sort:heap     test-core sort_heap)
 add_test(sort:merge    test-core sort_merge)
 
 #ptr
-add_test(ptr:auto test-core ptr_auto)
-add_test(ptr:arc  test-core ptr_arc)
+add_test(ptr:auto         test-core ptr_auto)
+add_test(ptr:arc          test-core ptr_arc)
 add_test(ptr:light-string test-core ptr_light_string)
 
 #io
-add_test(io:char    test-core io_char)
-add_test(io:buffers test-core io_buffers)
-add_test(io:istream test-core io_istream)
-add_test(io:ostream test-core io_ostream)
-add_test(io:copy    test-core io_copy)
-add_test(io:lines   test-core io_lines)
-add_test(io:pack64  test-core io_pack64)
-add_test(io:ints    test-core io_ints)
-add_test(io:ser     test-core io_ser)
+add_test(io:char      test-core io_char)
+add_test(io:buffers   test-core io_buffers)
+add_test(io:istream   test-core io_istream)
+add_test(io:ostream   test-core io_ostream)
+add_test(io:copy      test-core io_copy  ${DATA}/small.db)
+add_test(io:lines     test-core io_lines ${DATA}/small.db)
+add_test(io:pack64    test-core io_pack64)
+add_test(io:ints      test-core io_ints)
+add_test(io:ser       test-core io_ser)
 add_test(io:gzip-read test-core io_gzip_read)
 
 #fft
@@ -155,32 +158,32 @@ add_test(apex:q         test-core apex_q)
 add_test(ordered:PQ test-core ordered_PQ)
 
 #container
-add_test(container:cxx-array test-core container_cxx_array)
+add_test(container:cxx-array  test-core container_cxx_array)
 add_test(container:cxx-series test-core container_cxx_series)
-add_test(container:iterator  test-core container_iterator)
-add_test(container:matrix    test-core container_matrix)
-add_test(container:operating test-core container_operating)
+add_test(container:iterator   test-core container_iterator)
+add_test(container:matrix     test-core container_matrix)
+add_test(container:operating  test-core container_operating)
 
 #sequence
 add_test(sequence:vector test-core sequence_vector)
 add_test(sequence:list   test-core sequence_list)
 
 #counting
-add_test(counting:perm test-core counting_perm)
-add_test(counting:comb test-core counting_comb)
-add_test(counting:part test-core counting_part)
+add_test(counting:perm        test-core counting_perm)
+add_test(counting:comb        test-core counting_comb)
+add_test(counting:part        test-core counting_part)
 add_test(counting:partition   test-core counting_partition)
 add_test(counting:permutation test-core counting_permutation)
 add_test(counting:combination test-core counting_combination)
 
 #associatvie
 add_test(associative:suffix-tree test-core associative_suffix_tree)
-add_test(associative:suffix-map  test-core associative_suffix_map)
-add_test(associative:suffix-set  test-core associative_suffix_set)
+add_test(associative:suffix-map  test-core associative_suffix_map ${DATA}/small.db)
+add_test(associative:suffix-set  test-core associative_suffix_set ${DATA}/small.db)
 add_test(associative:key-variety test-core associative_key_variety)
 add_test(associative:hash-table  test-core associative_hash_table)
-add_test(associative:hash-map    test-core associative_hash_map)
-add_test(associative:hash-set    test-core associative_hash_set)
+add_test(associative:hash-map    test-core associative_hash_map ${DATA}/small.db)
+add_test(associative:hash-set    test-core associative_hash_set ${DATA}/small.db)
 add_test(associative:lek         test-core associative_lek)
 
 

@@ -1,6 +1,5 @@
 include_directories(. ../core)
 
-
 Y_CreateLibrary(y-jive
 jive
 jive/pattern

@@ -118,22 +118,14 @@ namespace Yttrium
                 else
                 {
                     C = buffer.entry[0];
-                    for(size_t i=1;i<nr;++i)
-                    {
-                        assert(buffer.stock.size>0);
-                        IO::Char *ch = buffer.stock.query();
-                        **ch = buffer.entry[i];
-                        buffer.pushTail(ch);
-                    }
+                    buffer.bring(1,nr-1);
                     return true;
                 }
 
             }
             else
             {
-                IO::Char *ch = buffer.popHead();
-                C = **ch;
-                buffer.stock.store(ch);
+                C = buffer.pluck();
                 return true;
             }
         }
@@ -145,7 +137,7 @@ namespace Yttrium
 
         bool InputFile:: ready()
         {
-            if(buffer.size) return true;
+            if(buffer.size>0) return true;
             assert(buffer.size<=0);
             char C = 0;
             if(!query(C)) return false;

@@ -33,6 +33,32 @@ namespace Yttrium
             {
             }
 
+            inline bool query(char &C)
+            {
+                if(io.size<=0 || !load())
+                    return false;
+                else
+                {
+                    assert(io.size>0);
+                    C = io.pluck();
+                    return true;
+                }
+            }
+
+            //! try to load more chars when io is starved
+            inline bool load()
+            {
+                assert(io.size<=0);
+                io.ready();
+                const unsigned nr = fp.read(io.entry,nb);
+                if(nr>0)
+                {
+                    io.bring(0,nr-1);
+                    return true;
+                }
+                else
+                    return false;
+            }
             
             File               fp;
             Libc::CachedBuffer io;
@@ -48,24 +74,7 @@ namespace Yttrium
                 return fileName;
             }
 
-            bool load()
-            {
-                assert(io.size<=0);
-                io.ready();
-                const unsigned nr = fp.read(io.entry,nb);
-                if(nr>0)
-                {
-                    for(unsigned i=0;i<nr;++i)
-                    {
-                        io.pushTail( new IO::Char(io.entry[i]) );
-                    }
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
+
         };
 
         InputFile:: InputFile(const char *fileName) :
@@ -80,6 +89,24 @@ namespace Yttrium
             code = 0;
         }
 
+        bool InputFile:: query(char &C)
+        {
+            assert(0!=code);
+            return code->query(C);
+        }
+
+        void InputFile:: store(const char C)
+        {
+            assert(0!=code);
+            code->io.unget(C);
+        }
+
+        bool InputFile:: ready()
+        {
+            assert(0!=code);
+            return code->io.size>0 || code->load();
+        }
+        
 
     }
 

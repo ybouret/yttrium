@@ -24,7 +24,10 @@ namespace Yttrium
             virtual ~InputFile() noexcept;
 
             virtual const char * callSign() const noexcept;
-            
+
+            virtual bool query(char &);
+            virtual void store(const char);
+            virtual bool ready();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(InputFile);

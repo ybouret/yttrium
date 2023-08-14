@@ -43,7 +43,14 @@ namespace Yttrium
             //__________________________________________________________________
             void     ready();           //!< stock.size>=bytes
             void     prune() noexcept;  //!< size+stock.size == bytes
-            void     unget(const char); //!< force new char at head
+            void     unget(const char); //!< force [new|from stock] char at head
+
+            //! with stock.size>=upper+1-lower, load byte[lower,upper] into Chars
+            void     bring(const size_t lower, const size_t upper) noexcept;
+
+            //! extract head, size>0
+            char     pluck() noexcept;
+
 
             //__________________________________________________________________
             //

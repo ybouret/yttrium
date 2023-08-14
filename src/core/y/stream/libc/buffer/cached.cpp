@@ -47,6 +47,30 @@ namespace Yttrium
             }
         }
 
+
+        void CachedBuffer:: bring(const size_t lower, const size_t upper) noexcept
+        {
+            assert(lower<=upper);
+            size_t         n = upper+1-lower; assert(stock.size>=n);  assert(n<=bytes);
+            const char    *p = entry+lower;
+            while(n-- > 0)
+            {
+                assert(stock.size>0);
+                **pushTail( stock.query() ) = *(p++);
+            }
+        }
+
+        char CachedBuffer:: pluck() noexcept
+        {
+            assert(size>0);
+            IO::Char  *ch = popHead();
+            const char c  = **ch;
+            stock.store(ch);
+            return c;
+        }
+
+
+
     }
 
 }
