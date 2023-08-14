@@ -2,6 +2,7 @@
 #include "y/mkl/xreal.hpp"
 #include "y/system/exception.hpp"
 #include "y/mkl/numeric.hpp"
+#include "y/type/signs.hpp"
 
 #include <cerrno>
 #include <cmath>

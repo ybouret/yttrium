@@ -36,7 +36,7 @@ namespace Yttrium
             // API
             //
             //__________________________________________________________________
-            unsigned read(void *buff, const unsigned size); //!< reading bytes
+            unsigned read(void *buff, const unsigned size); //!< reading bytes with gzread
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(File);

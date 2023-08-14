@@ -255,7 +255,7 @@ endmacro()
 
 set(Y_NeedsMath OFF)
 
-if(Y_SUNOS OR Y_LINUX)
+if(Y_SUNOS OR Y_LINUX OR Y_FREEBSD)
 	set(Y_NeedsMath ON)
 endif()
 
