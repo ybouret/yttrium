@@ -21,7 +21,8 @@ associative
 mkl
 )
 
-Y_LinkLibraries(test-core y-z)
+Y_LinkLibraries(test-core)
+target_link_libraries(test-core y-z)
 
 set( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
 set( DATA ${HERE}/../../../var)
