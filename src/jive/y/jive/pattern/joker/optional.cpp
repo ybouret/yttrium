@@ -66,6 +66,15 @@ namespace Yttrium
             return UUID == p.uuid && hasSameMotifThan( *p.as<Optional>() );
         }
 
+        void Optional:: viz(OutputStream &fp) const
+        {
+            node(fp) << '[';
+            const char msg[4] = { '?', 0,0,0 };
+            Label(fp, msg) << ",shape=circle";
+            fp << ']';
+            Endl(fp);
+            vizLink(fp);
+        }
 
     }
 

@@ -62,6 +62,14 @@ namespace Yttrium
             return UUID == p.uuid;
         }
 
+        void Any1:: viz(OutputStream &fp) const
+        {
+            node(fp) << '[';
+            Label(fp, "any1") << ",shape=circle";
+            fp << ']';
+            Endl(fp);
+        }
+
     }
 
 }

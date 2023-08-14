@@ -57,6 +57,7 @@ namespace Yttrium
              */
             virtual bool     isFragile() const noexcept;  
             virtual bool     isEqualTo(const Pattern &) const noexcept;
+            virtual void     viz(OutputStream &fp)      const;
 
             
         private:

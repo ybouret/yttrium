@@ -23,16 +23,30 @@ static inline void testPattern(Pattern &p)
     }
     Y_CHECK(p == *q);
 
-    String fileName = FourCC::ToText(p.uuid); fileName += FormatString("%u.dat",++I);
+    String root = FourCC::ToText(p.uuid); root += FormatString("%u",++I);
     {
-        Libc::OutputFile fp(fileName);
-        p.serialize(fp);
-    }
+        const String fileName = root + ".dat";
+        {
+            Libc::OutputFile fp(fileName);
+            p.serialize(fp);
+        }
 
+        {
+            Libc::InputFile fp(fileName);
+            AutoPtr<Pattern> r = Pattern::ReadFrom(fp);
+            Y_CHECK(p == *r);
+        }
+    }
     {
-        Libc::InputFile fp(fileName);
-        AutoPtr<Pattern> r = Pattern::ReadFrom(fp);
-        Y_CHECK(p == *r);
+        const String dotName = root + ".dot";
+        {
+            Libc::OutputFile fp(dotName);
+            Vizible::Enter(fp, "G");
+            p.viz(fp);
+            Vizible::Leave(fp);
+        }
+        const String pngName = root + ".png";
+        Vizible::Render(pngName,dotName);
     }
 
     std::cerr << std::endl;

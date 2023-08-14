@@ -46,7 +46,8 @@ namespace Yttrium
             virtual size_t   serialize(OutputStream&) const;
             virtual bool     isFragile() const noexcept; //!< false
             virtual bool     isEqualTo(const Pattern &) const noexcept;
-            
+            virtual void     viz(OutputStream &fp)      const;
+
             //__________________________________________________________________
             //
             // Members

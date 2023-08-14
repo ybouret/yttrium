@@ -51,7 +51,8 @@ namespace Yttrium
             virtual bool     isFragile() const noexcept;      //!< if minCount <= 0 or motif is fragile
             virtual size_t   serialize(OutputStream&) const;  //!< uuid+guest
             virtual bool     isEqualTo(const Pattern &) const noexcept;
-            
+            virtual void     viz(OutputStream &fp)      const;
+
             //__________________________________________________________________
             //
             //

@@ -51,8 +51,11 @@ namespace Yttrium
             return motif->isEqualTo(*other.motif);
         }
 
-        
-
+        void Guest::vizLink(OutputStream &fp) const
+        {
+            motif->viz(fp);
+            Endl(arrow(fp, & *motif));
+        }
     }
 
 }

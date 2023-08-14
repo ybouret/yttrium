@@ -5,6 +5,7 @@
 
 #include "y/jive/token.hpp"
 #include "y/stream/serializable.hpp"
+#include "y/graphviz/vizible.hpp"
 
 namespace Yttrium
 {
@@ -25,7 +26,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Pattern : public Object, public Counted, public Token, public Serializable
+        class Pattern : public Object, public Counted, public Token, public Serializable, public Vizible
         {
         public:
             //__________________________________________________________________
@@ -44,13 +45,14 @@ namespace Yttrium
              */
             //__________________________________________________________________
             virtual bool      takes(Source &)            = 0;
-            virtual void      query(FirstChars &)  const = 0;            //!< query first chars
-            virtual Pattern * clone()              const = 0;            //!< perform deep copy
-            virtual void      reset()           noexcept = 0;            //!< reset content
-            virtual bool      isFragile() const noexcept = 0;            //!< accept empty token
-            bool              isRegular() const noexcept;                //!< !isFragile()
+            virtual void      query(FirstChars &)  const = 0;             //!< query first chars
+            virtual Pattern * clone()              const = 0;             //!< perform deep copy
+            virtual void      reset()           noexcept = 0;             //!< reset content
+            virtual bool      isFragile() const noexcept = 0;             //!< accept empty token
+            bool              isRegular() const noexcept;                 //!< !isFragile()
             virtual bool      isEqualTo(const Pattern &) const noexcept = 0; //!< check equality
-
+            virtual void      viz(OutputStream &fp)      const          = 0; //!< output visual
+            
             //__________________________________________________________________
             //
             //! conversion

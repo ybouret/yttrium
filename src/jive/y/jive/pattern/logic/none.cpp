@@ -86,6 +86,15 @@ namespace Yttrium
         {
             return UUID == p.uuid && hasSamePatternsThan( *p.as<None>() );
         }
+
+        void None:: viz(OutputStream &fp) const
+        {
+            node(fp) << '[';
+            Label(fp, "!=") << ",shape=box";
+            fp << ']';
+            Endl(fp);
+            vizLink(fp);
+        }
     }
 
 }

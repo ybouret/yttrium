@@ -54,6 +54,7 @@ namespace Yttrium
             virtual bool     isFragile() const noexcept;      //!< atLeast==0 or motif->isFragile()
             virtual size_t   serialize(OutputStream&) const;  //!< uuid[+atLeast]+guest
             virtual bool     isEqualTo(const Pattern &) const noexcept;
+            virtual void     viz(OutputStream &fp)      const;
 
             static Pattern *ZeroOrMore(Pattern *      p); //!< Make(0,p)
             static Pattern *ZeroOrMore(const Pattern &p); //!< Make(0,p)

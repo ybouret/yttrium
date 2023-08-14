@@ -69,6 +69,14 @@ namespace Yttrium
             return true;
         }
 
+        void Compound:: vizLink(OutputStream &fp) const
+        {
+            for(const Pattern *p=patterns.head;p;p=p->next)
+            {
+                p->viz(fp);
+                Endl(arrow(fp, & *p));
+            }
+        }
 
     }
 

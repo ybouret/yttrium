@@ -3,12 +3,13 @@
 #ifndef Y_Vizible_Included
 #define Y_Vizible_Included 1
 
-#include "y/stream/output.hpp"
 #include "y/string.hpp"
+#include "y/stream/output.hpp"
 
 namespace Yttrium
 {
 
+    
     //__________________________________________________________________________
     //
     //

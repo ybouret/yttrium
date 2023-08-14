@@ -68,6 +68,15 @@ namespace Yttrium
         {
             return UUID == p.uuid && lower == p.as<Range>()->lower && upper == p.as<Range>()->upper;
         }
+
+        void Range:: viz(OutputStream &fp) const
+        {
+            node(fp) << '[';
+            const char msg[8] = { '[', char(lower), '-', char(upper), ']',0,0,0 };
+            Label(fp, msg) << ",shape=box";
+            fp << ']';
+            Endl(fp);
+        }
     }
 
 }

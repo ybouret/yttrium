@@ -67,6 +67,14 @@ namespace Yttrium
             return UUID == p.uuid && code == p.as<Exclude>()->code;
         }
 
+        void Exclude:: viz(OutputStream &fp) const
+        {
+            node(fp) << '[';
+            const char msg[4] = { char(code), 0, 0, 0 };
+            Label(fp, msg) << ",shape=invtriangle";
+            fp << ']';
+            Endl(fp);
+        }
     }
 
 }

@@ -66,6 +66,15 @@ namespace Yttrium
             return UUID == p.uuid && code == p.as<Single>()->code;
         }
 
+        void Single:: viz(OutputStream &fp) const
+        {
+            node(fp) << '[';
+            const char msg[4] = { char(code), 0, 0, 0 };
+            Label(fp, msg) << ",shape=box";
+            fp << ']';
+            Endl(fp);
+        }
+
     }
 
 }

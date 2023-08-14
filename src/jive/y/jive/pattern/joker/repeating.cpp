@@ -141,7 +141,24 @@ namespace Yttrium
         }
 
 
-
+        void Repeating:: viz(OutputStream &fp) const
+        {
+            node(fp) << '[';
+            switch(atLeast)
+            {
+                case 0: Label(fp,"*"); break;
+                case 1: Label(fp,"+"); break;
+                default:
+                {
+                    const String msg = FormatString(">=%u",unsigned(atLeast));
+                    Label(fp,msg);
+                }
+            }
+            fp << ",shape=circle";
+            fp << ']';
+            Endl(fp);
+            vizLink(fp);
+        }
 
     }
 
