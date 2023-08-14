@@ -9,12 +9,23 @@
 namespace Yttrium
 {
 
-
+    //__________________________________________________________________________
+    //
+    //
+    //! Encode an address to a Big Endian R/O buffer
+    //
+    //__________________________________________________________________________
     class BE_Addr : public BE_Key
     {
     public:
-        virtual ~BE_Addr() noexcept;
-        
+
+        template <typename T> inline
+        explicit BE_Addr(const T &args) noexcept : BE_Key( &args )  {}  //!< setup
+        virtual ~BE_Addr()              noexcept;                       //!< cleanup
+        BE_Addr(const BE_Addr &)        noexcept;                       //!< copy
+
+        const void *fetch() const noexcept; //!< retrieve stored address
+
     private:
         Y_DISABLE_ASSIGN(BE_Addr);
     };
