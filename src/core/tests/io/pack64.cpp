@@ -23,12 +23,11 @@ Y_UTEST(io_pack64)
         for(size_t loop=0;loop<32;++loop)
         {
             const uint64_t   qw = ran.to<uint64_t>(i);
-
             {
                 Libc::OutputFile fp("pack64.dat");
-                IO::Pack64::Emit(fp,qw);
+                (void) IO::Pack64::Emit(fp,qw);
             }
-
+            
 
             {
                 Libc::InputFile fp("pack64.dat");

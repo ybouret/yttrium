@@ -1,6 +1,10 @@
 project(yttrium)
 
+################################################################################
+##
 ## global settings
+##
+################################################################################
 cmake_minimum_required(VERSION 3.0)
 include(../etc/y.cmake)
 
@@ -9,7 +13,11 @@ message( STATUS "HERE='${HERE}'")
 
 set(CMAKE_INSTALL_PREFIX "${HERE}/../sdk")
 
+################################################################################
+##
 ## macro to create a series of tests
+##
+################################################################################
 macro(Y_CreateTest id)
     message( STATUS "[yttrium] <test-${id}>")
     file(GLOB srcs test-*.cpp)
@@ -25,12 +33,17 @@ macro(Y_CreateTest id)
     
     add_custom_target(utest-${id}
 		COMMAND ${CMAKE_CTEST_COMMAND} -C ${CMAKE_BUILD_TYPE}
+		DEPENDS test-${id}
 		COMMENT "[yttrium] Unit Tests on <core>"
 		VERBATIM)
 endmacro()
 
+################################################################################
+##
 ## macro to create a library from a series of subdir
 ## assuming srcs is existing
+##
+################################################################################
 macro(Y_CreateLibrary id)
     message( STATUS "[yttrium] <${id}>")
     #set(srcs "")
@@ -45,23 +58,46 @@ macro(Y_CreateLibrary id)
     message( STATUS "[yttrium] <${id}/>")
 endmacro()
 
+################################################################################
+##
 ## macro to load unit tests into regression
+##
+################################################################################
 set(Y_Regressions "")
 macro(Y_Regression id)
 	list(APPEND Y_Regressions "utest-${id}")
-	message( STATUS "Regressions: ${Y_Regressions}")
+    set(Y_Regressions ${Y_Regressions} PARENT_SCOPE)
+	#message( STATUS "Regressions: ${Y_Regressions}")
 endmacro()
 
-# all subdirectory
+################################################################################
+##
+## all subdirectories
+##
+################################################################################
 add_subdirectory(core)
 add_subdirectory(jive)
 
+################################################################################
+##
+## making the regression target
+##
+################################################################################
 message( STATUS "[yttrium] Regressions: ${Y_Regressions}")
+add_custom_target(Regression DEPENDS ${Y_Regressions})
 
-# third party
+################################################################################
+##
+## third party
+##
+################################################################################
 add_subdirectory(y)
 
-# looking for Doxygen to generate documentation
+################################################################################
+##
+## looking for Doxygen to generate documentation
+##
+################################################################################
 find_program(doxygen doxygen)
 if("${doxygen}" EQUAL "doxygen-NOTFOUND" )
     message( STATUS "missing Doxygen")

@@ -118,7 +118,8 @@ namespace Yttrium
                 else
                 {
                     C = buffer.entry[0];
-                    buffer.bring(1,nr-1);
+                    if(nr>1)
+                        buffer.bring(1,nr-1);
                     return true;
                 }
 

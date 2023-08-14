@@ -32,8 +32,7 @@ namespace Yttrium
         void CachedBuffer:: prune() noexcept
         {
             assert(size+stock.size>=bytes);
-
-            while(stock.size>0 && size+stock.size>bytes) delete stock.query();
+            while( (stock.size>0) && (size+stock.size>bytes) ) delete stock.query();
         }
 
         void CachedBuffer:: unget(const char c)
