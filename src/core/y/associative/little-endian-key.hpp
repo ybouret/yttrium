@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_Associative_BE_Key_Included
-#define Y_Associative_BE_Key_Included 1
+#ifndef Y_Associative_LE_Key_Included
+#define Y_Associative_LE_Key_Included 1
 
 #include "y/memory/buffer/ro.hpp"
 #include "y/type/ints.hpp"
@@ -14,10 +14,10 @@ namespace Yttrium
     //__________________________________________________________________________
     //
     //
-    //! Encode an integral type to a Big Endian R/O buffer
+    //! Encode an integral type to a Little Endian R/O buffer
     //
     //__________________________________________________________________________
-    class BE_Key : public Memory::ReadOnlyBuffer
+    class Little_Endian_Key : public Memory::ReadOnlyBuffer
     {
     public:
         //______________________________________________________________________
@@ -29,7 +29,7 @@ namespace Yttrium
 
         //! setup from integral type
         template <typename T> inline
-        explicit BE_Key(const T &args) noexcept :
+        explicit Little_Endian_Key(const T &args) noexcept :
         Memory::ReadOnlyBuffer(),
         size(sizeof(T)),  code()
         {
@@ -41,8 +41,8 @@ namespace Yttrium
         }
 
 
-        BE_Key(const BE_Key &) noexcept; //!< copy
-        virtual ~BE_Key()      noexcept; //!< cleanup
+        Little_Endian_Key(const Little_Endian_Key &) noexcept; //!< copy
+        virtual ~Little_Endian_Key()                 noexcept; //!< cleanup
 
         //______________________________________________________________________
         //
@@ -53,16 +53,18 @@ namespace Yttrium
         virtual const void * ro_addr() const noexcept; //!< code
         virtual size_t       measure() const noexcept; //!< size
 
+        friend std::ostream & operator<<(std::ostream &os, const Little_Endian_Key &key); //!< display
+        friend OutputStream & operator<<(OutputStream &os, const Little_Endian_Key &key); //!< write
 
-        friend std::ostream & operator<<(std::ostream &os, const BE_Key &key); //!< display
-        friend OutputStream & operator<<(OutputStream &os, const BE_Key &key); //!< write
+        template <size_t N>
+        typename UnsignedInt<N>::Type get() const noexcept;
 
     protected:
         const size_t size;      //!< stored bytes
         uint8_t      code[8];   //!< stored bytes
 
     private:
-        Y_DISABLE_ASSIGN(BE_Key);
+        Y_DISABLE_ASSIGN(Little_Endian_Key);
         void setup(const uint8_t) noexcept;
         void setup(const uint16_t) noexcept;
         void setup(const uint32_t) noexcept;
