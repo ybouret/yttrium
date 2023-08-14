@@ -27,7 +27,6 @@ namespace Yttrium
             io(),
             nb( unsigned(Min<size_t>(io.bytes, IntegerFor<unsigned>::Maximum) ) )
             {
-                std::cerr << "gzopen: " << fileName << std::endl;
             }
 
             inline virtual ~Code() noexcept
@@ -36,7 +35,7 @@ namespace Yttrium
 
             inline bool query(char &C)
             {
-                if(io.size<=0 || !load())
+                if(io.size<=0 && !load())
                     return false;
                 else
                 {

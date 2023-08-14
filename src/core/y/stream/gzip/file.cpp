@@ -7,6 +7,7 @@
 #include "y/type/ints.hpp"
 #include "y/type/utils.hpp"
 
+
 namespace Yttrium
 {
     namespace GZip
@@ -53,10 +54,11 @@ namespace Yttrium
             {
                 if( gzeof(gz) )
                 {
-                    return nr;
+                    return nr; // normal, truncated
                 }
                 else
                 {
+                    // bad...
                     throw Specific::Exception("gzread","%s",RetrieveError(gz));
                 }
             }
