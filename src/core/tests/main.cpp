@@ -11,6 +11,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(wtime);
     Y_UTEST(singleton);
     Y_UTEST(object);
+    Y_UTEST(endian);
     
     Y_UTEST(memory_chunk);
     Y_UTEST(memory_pages);
