@@ -30,7 +30,7 @@ namespace Yttrium
 
 
     template <>
-    typename UnsignedInt<1>::Type Little_Endian_Key:: get<1>() const noexcept
+    UnsignedInt<1>::Type Little_Endian_Key:: get<1>() const noexcept
     {
         return code[0];
     }
@@ -43,7 +43,7 @@ namespace Yttrium
 
 
     template <>
-    typename UnsignedInt<2>::Type Little_Endian_Key:: get<2>() const noexcept
+    UnsignedInt<2>::Type Little_Endian_Key:: get<2>() const noexcept
     {
         uint16_t b0 = code[1];
         uint16_t b1 = code[0];
@@ -58,7 +58,7 @@ namespace Yttrium
     }
 
     template <>
-    typename UnsignedInt<4>::Type Little_Endian_Key:: get<4>() const noexcept
+    UnsignedInt<4>::Type Little_Endian_Key:: get<4>() const noexcept
     {
         uint32_t b0 = code[3];
         uint32_t b1 = code[2];
@@ -78,7 +78,7 @@ namespace Yttrium
     }
 
     template <>
-    typename UnsignedInt<8>::Type Little_Endian_Key:: get<8>() const noexcept
+    UnsignedInt<8>::Type Little_Endian_Key:: get<8>() const noexcept
     {
         uint64_t b0 = code[7];
         uint64_t b1 = code[6];
