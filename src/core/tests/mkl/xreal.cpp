@@ -4,6 +4,7 @@
 #include "y/utest/run.hpp"
 #include "y/utest/timing.hpp"
 #include "y/random/bits.hpp"
+#include "y/sequence/vector.hpp"
 
 #include <cmath>
 
@@ -57,11 +58,53 @@ static inline void checkXREAL(Random::Bits &ran)
     std::cerr << "Testing Addition" << std::endl;
     for(size_t i=0;i<8;++i)
     {
-
+        real a =  genReal<real>(ran);
+        real b =  genReal<real>(ran);
+        real c = a+b;
+        const xreal A = a;
+        const xreal B = b;
+        const xreal C = A + B;
+        std::cerr << a << "+(" << b << ") = " << A << "+(" << B << ")";
+        std::cerr << " = " << c << " -> " << C << " -> " << T(C) << std::endl;
     }
 
     std::cerr << std::endl;
 }
+
+template <typename T>
+static inline
+T makeProd(const Readable<T> &seq)
+{
+    if(seq.size())
+    {
+        T res = seq[1];
+        for(size_t i=2;i<=seq.size();++i)
+        {
+            res *= seq[i];
+        }
+        return res;
+    }
+    else
+        return 0;
+}
+template <typename T>
+static inline
+T makeSum(const Readable<T> &seq)
+{
+    if(seq.size())
+    {
+        T res = seq[1];
+        for(size_t i=2;i<=seq.size();++i)
+        {
+            res += seq[i];
+        }
+        return res;
+    }
+    else
+        return 0;
+}
+
+
 
 Y_UTEST(mkl_xreal)
 {
@@ -69,6 +112,33 @@ Y_UTEST(mkl_xreal)
     checkXREAL<float>(ran);
     checkXREAL<double>(ran);
     checkXREAL<long double>(ran);
+
+    Vector<double>          v;
+    Vector< XReal<double> > V;
+    for(int i=1;i<argc;++i)
+    {
+        const double d = atof(argv[i]);
+        v << d;
+        V << d;
+    }
+    std::cerr << "v=" << v << std::endl;
+    std::cerr << "V=" << V << std::endl;
+
+    {
+        const double        p = makeProd(v);
+        const XReal<double> P = makeProd(V);
+        std::cerr << " prod = " << p << std::endl;
+        std::cerr << "xprod = " << P << " = " << double(P) << std::endl;
+
+    }
+
+    {
+        const double        s = makeSum(v);
+        const XReal<double> S = makeSum(V);
+        std::cerr << "  sum = " << s << std::endl;
+        std::cerr << " xsum = " << S << " = " << double(S) << std::endl;
+
+    }
 
 }
 Y_UDONE()
