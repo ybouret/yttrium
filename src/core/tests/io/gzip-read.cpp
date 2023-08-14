@@ -11,10 +11,10 @@ Y_UTEST(io_gzip_read)
     if(argc>1)
     {
         GZip::InputFile fp(argv[1]);
-        String line;
+        String          line;
         while(fp.gets(line))
         {
-            
+            std::cerr << line << std::endl;
         }
     }
 }

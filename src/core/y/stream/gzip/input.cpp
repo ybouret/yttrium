@@ -27,6 +27,7 @@ namespace Yttrium
             io(),
             nb( unsigned(Min<size_t>(io.bytes, IntegerFor<unsigned>::Maximum) ) )
             {
+                std::cerr << "gzopen: " << fileName << std::endl;
             }
 
             inline virtual ~Code() noexcept
