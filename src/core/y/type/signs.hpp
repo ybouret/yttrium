@@ -99,8 +99,9 @@ namespace Yttrium
         //! in-place change sign
         //
         //______________________________________________________________________
-        static void        Change(SignType &s)        noexcept;
+        static void        ReplaceByOpposite(SignType &s)        noexcept;
 
+        
         //______________________________________________________________________
         //
         //
@@ -115,7 +116,7 @@ namespace Yttrium
         //! in-place absolute
         //
         //______________________________________________________________________
-        static void MakeAbs(SignType &) noexcept;
+        static void ReplaceByAbs(SignType &) noexcept;
 
         //______________________________________________________________________
         //

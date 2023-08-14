@@ -68,6 +68,19 @@ static inline void checkXREAL(Random::Bits &ran)
         std::cerr << " = " << c << " -> " << C << " -> " << T(C) << std::endl;
     }
 
+    std::cerr << "Testing Square Root" << std::endl;
+    for(size_t i=0;i<8;++i)
+    {
+        real  a = std::fabs( genReal<real>(ran) );
+        real  s = std::sqrt(a);
+        xreal A = a;
+        xreal S = A.sqrt();
+
+        std::cerr << "sqrt(" << a << ") = " << s << std::endl;
+        std::cerr << "sqrt(" << A << ") = " << S << " = " << T(S) << std::endl;
+
+    }
+
     std::cerr << std::endl;
 }
 

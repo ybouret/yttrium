@@ -9,7 +9,7 @@ namespace Yttrium
         Rational Rational:: Abs(const Rational &q)
         {
             Rational a = q;
-            Sign::MakeAbs( Coerce(a.numer.s) );
+            Sign::ReplaceByAbs( Coerce(a.numer.s) );
             return a;
         }
 

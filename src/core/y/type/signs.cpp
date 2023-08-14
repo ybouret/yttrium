@@ -17,12 +17,12 @@ namespace Yttrium
     }
 
 
-    void Sign:: Change(SignType &s) noexcept
+    void Sign:: ReplaceByOpposite(SignType &s) noexcept
     {
         s = Opposite(s);
     }
 
-    void Sign:: MakeAbs(SignType &s) noexcept
+    void Sign:: ReplaceByAbs(SignType &s) noexcept
     {
         switch(s)
         {

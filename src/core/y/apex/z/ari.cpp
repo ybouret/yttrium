@@ -25,7 +25,7 @@ namespace Yttrium
         Integer Integer:: Abs(const Integer &z)
         {
             Integer a = z;
-            Sign::MakeAbs(Coerce(a.s));
+            Sign::ReplaceByAbs(Coerce(a.s));
             return a;
         }
 

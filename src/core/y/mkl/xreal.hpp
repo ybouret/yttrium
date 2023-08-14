@@ -49,6 +49,10 @@ namespace Yttrium
         //! absolute value
         XReal abs() const noexcept;
 
+        //! square root
+        XReal sqrt() const;
+
+
         //______________________________________________________________________
         //
         //
@@ -110,6 +114,9 @@ namespace Yttrium
 
         //! in-place subtraction
         inline XReal & operator-=(const XReal &rhs) noexcept { return (*this=Sub(*this,rhs)); }
+
+        
+
         //______________________________________________________________________
         //
         //

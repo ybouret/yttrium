@@ -85,7 +85,13 @@ namespace Yttrium
     template <>
     XReal<real_t> XReal<real_t>:: abs() const noexcept
     {
-        return XReal( exponent, std::abs(mantissa) );
+        switch( Sign::Of(mantissa) )
+        {
+            case Negative: return XReal(exponent,-mantissa);
+            case Positive: return *this;
+            case __Zero__: break;
+        }
+        return XReal();
     }
 
     template <>
@@ -176,5 +182,29 @@ namespace Yttrium
         const XReal<real_t> r = -rhs;
         return Add(lhs,r);
     }
+
+    template <>
+    XReal<real_t> XReal<real_t>:: sqrt() const
+    {
+        switch( Sign::Of(mantissa) )
+        {
+            case Negative: throw Libc::Exception(EDOM,"XReal negative square root");
+            case __Zero__: return XReal();
+            case Positive:
+                break;
+        }
+        real_t m = mantissa;
+        int    p = exponent;
+        if( 0!= (0x1&p) )
+        {
+            m *= MKL::Numeric<real_t>::RADIX;
+            --p;
+        }
+        assert(0==(0x01&p));
+        const XReal s = std::sqrt(m);
+        return XReal(s.exponent+p/2,s.mantissa);
+    }
+
+
 
 }

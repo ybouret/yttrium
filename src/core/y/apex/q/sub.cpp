@@ -8,7 +8,7 @@ namespace Yttrium
         Rational Rational:: operator-() const
         {
             Rational res = *this;
-            Sign::Change( Coerce(res.numer.s) );
+            Sign::ReplaceByOpposite( Coerce(res.numer.s) );
             return res;
         }
 
