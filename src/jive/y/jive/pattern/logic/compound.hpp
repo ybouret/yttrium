@@ -68,7 +68,8 @@ namespace Yttrium
 
             //! checking all patterns are equals
             bool hasSamePatternsThan(const Compound &) const noexcept;
-            
+
+            //! output and link patterns
             virtual void vizLink(OutputStream &fp)     const;
 
 

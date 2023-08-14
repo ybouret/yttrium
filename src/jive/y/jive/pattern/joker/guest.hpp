@@ -44,6 +44,8 @@ namespace Yttrium
             explicit Guest(const Guest &other);              //!< duplicate
 
             bool hasSameMotifThan(const Guest &) const noexcept; //!< forward testing
+
+            //! output and link motif
             void vizLink(OutputStream &fp) const;
 
             ClonePtr<Pattern> motif; //!< guest pattern
