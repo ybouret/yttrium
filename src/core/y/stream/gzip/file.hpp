@@ -9,18 +9,38 @@ namespace Yttrium
 {
     namespace GZip
     {
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! wrapper around gzFile
+        //
+        //
+        //______________________________________________________________________
         class File
         {
         public:
-            virtual ~File() noexcept;
-            explicit File(const char *filename, const char *options);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit File(const char *filename, const char *options); //!< gzopen
+            virtual ~File() noexcept;                                 //!< gzclose
 
-            void *handle;
-
-            unsigned read(void *buff, const unsigned size);
-
+            //__________________________________________________________________
+            //
+            //
+            // API
+            //
+            //__________________________________________________________________
+            unsigned read(void *buff, const unsigned size); //!< reading bytes
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(File);
+            void *handle;
 
         };
     }

@@ -6,6 +6,7 @@
 #include "y/type/ints.hpp"
 #include "y/calculus/align.hpp"
 #include "y/ostream-proto.hpp"
+#include "y/output-stream.hpp"
 
 
 namespace Yttrium
@@ -89,9 +90,12 @@ namespace Yttrium
                   outputCase);
         }
 
+
         Hexadecimal(const Hexadecimal &) noexcept; //!< copy data
         ~Hexadecimal() noexcept;                   //!< cleanup
         Y_OSTREAM_PROTO(Hexadecimal);              //!< display
+        Y_OUTPUT_STREAM(Hexadecimal);              //!< output
+        static Hexadecimal Address(const void *) noexcept; //!< make from address
 
     private:
         Y_DISABLE_ASSIGN(Hexadecimal);

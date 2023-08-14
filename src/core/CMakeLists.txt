@@ -67,6 +67,7 @@ associative/suffix/set
 associative/hash
 associative/hash/map
 associative/hash/set
+graphviz
 mkl
 )
 

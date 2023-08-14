@@ -154,4 +154,29 @@ namespace Yttrium
         os << h.data;
         return os;
     }
+
+
+    Hexadecimal Hexadecimal:: Address(const void *addr) noexcept
+    {
+        union
+        {
+            const void                      *addr;
+            UnsignedInt<sizeof(void*)>::Type code;
+        } alias = { addr };
+        return Hexadecimal(alias.code);
+    }
+
+}
+
+
+
+#include "y/stream/output.hpp"
+
+namespace Yttrium
+{
+    OutputStream & operator<<(OutputStream &os, const Hexadecimal &h)
+    {
+        os << h.data;
+        return os;
+    }
 }

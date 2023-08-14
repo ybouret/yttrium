@@ -24,9 +24,10 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        static const char * const      CallSign;
-        static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 8;
+        static const char * const      CallSign;                                //!< "Endianness"
+        static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 8; //!< LifeTime
 
+        //! possible types
         enum Type
         {
             Unknown,   //!< ??
@@ -46,10 +47,10 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        uint8_t  hton(const uint8_t)  const noexcept;
-        uint16_t hton(const uint16_t) const noexcept;
-        uint32_t hton(const uint32_t) const noexcept;
-        uint64_t hton(const uint64_t) const noexcept;
+        uint8_t  hton(const uint8_t)  const noexcept; //!< host to net
+        uint16_t hton(const uint16_t) const noexcept; //!< host to net
+        uint32_t hton(const uint32_t) const noexcept; //!< host to net
+        uint64_t hton(const uint64_t) const noexcept; //!< host to net
 
 
         //______________________________________________________________________
@@ -58,7 +59,7 @@ namespace Yttrium
         // Members
         //
         //______________________________________________________________________
-        const Type type;
+        const Type type; //!< system type
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Endianness);

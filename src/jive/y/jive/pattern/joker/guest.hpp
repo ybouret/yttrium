@@ -43,7 +43,7 @@ namespace Yttrium
             explicit Guest(const uint32_t, Pattern       *); //!< uuid+pattern
             explicit Guest(const Guest &other);              //!< duplicate
 
-            bool hasSameMotifThan(const Guest &) const noexcept;
+            bool hasSameMotifThan(const Guest &) const noexcept; //!< forward testing
 
             ClonePtr<Pattern> motif; //!< guest pattern
 
