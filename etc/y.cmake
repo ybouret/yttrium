@@ -236,7 +236,7 @@ set(CMAKE_CXX_FLAGS_DEBUG   ${Y_FLAGS_DEBUG})
 ########################################################################
 macro(Y_LinkLibraries target)
     set(libs y)
-    if(Y_LINUX)
+    if(Y_LINUX OR Y_FREEBSD)
         list(APPEND libs pthread)
     endif()
     
