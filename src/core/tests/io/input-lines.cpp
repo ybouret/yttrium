@@ -1,7 +1,7 @@
 
 
 
-#include "y/io/libc/input.hpp"
+#include "y/stream/libc/input.hpp"
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;

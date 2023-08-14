@@ -1,7 +1,7 @@
 
 
-#include "y/io/libc/buffer/direct.hpp"
-#include "y/io/libc/buffer/cached.hpp"
+#include "y/stream/libc/buffer/direct.hpp"
+#include "y/stream/libc/buffer/cached.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/concurrent/singulet.hpp"

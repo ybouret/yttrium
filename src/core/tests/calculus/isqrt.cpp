@@ -1,8 +1,7 @@
 #include "y/calculus/isqrt.hpp"
 #include "y/apex/natural.hpp"
 #include "y/utest/run.hpp"
-
-#include "y/io/libc/output.hpp"
+#include "y/stream/libc/output.hpp"
 
 using namespace Yttrium;
 

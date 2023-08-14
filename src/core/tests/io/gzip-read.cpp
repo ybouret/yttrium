@@ -1,6 +1,6 @@
 
 
-#include "y/io/gzip/input.hpp"
+#include "y/stream/gzip/input.hpp"
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;

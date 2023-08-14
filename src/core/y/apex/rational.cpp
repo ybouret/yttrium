@@ -1,5 +1,5 @@
 #include "y/apex/rational.hpp"
-#include "y/io/chars.hpp"
+#include "y/stream/io/chars.hpp"
 #include "y/system/exception.hpp"
 
 namespace Yttrium

@@ -1,6 +1,6 @@
 #include "y/memory/buffer/ro.hpp"
 #include "y/text/hexadecimal.hpp"
-#include "y/io/stream/output.hpp"
+#include "y/stream/output.hpp"
 #include <iostream>
 #include <cstring>
 

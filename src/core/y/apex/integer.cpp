@@ -1,5 +1,5 @@
 #include "y/apex/integer.hpp"
-#include "y/io/chars.hpp"
+#include "y/stream/io/chars.hpp"
 #include "y/random/bits.hpp"
 
 namespace Yttrium

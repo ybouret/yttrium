@@ -1,6 +1,6 @@
 
 #include "y/jive/pattern/joker/repeating.hpp"
-#include "y/io/stream/output.hpp"
+#include "y/stream/output.hpp"
 #include "y/jive/source.hpp"
 #include "y/ptr/auto.hpp"
 

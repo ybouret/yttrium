@@ -2,7 +2,7 @@
 
 #include "y/apex/natural.hpp"
 #include "y/apex/n/cxx.hpp"
-#include "y/io/chars.hpp"
+#include "y/stream/io/chars.hpp"
 
 namespace Yttrium
 {

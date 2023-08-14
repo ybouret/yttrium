@@ -4,7 +4,7 @@
 #define Y_Apex_Number_Included 1
 
 #include "y/object.hpp"
-#include "y/io/serializable.hpp"
+#include "y/stream/serializable.hpp"
 
 #include <iosfwd>
 

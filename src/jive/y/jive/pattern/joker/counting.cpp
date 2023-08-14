@@ -1,7 +1,7 @@
 
 
 #include "y/jive/pattern/joker/counting.hpp"
-#include "y/io/stream/output.hpp"
+#include "y/stream/output.hpp"
 
 namespace Yttrium
 {

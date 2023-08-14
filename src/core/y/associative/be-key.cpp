@@ -1,7 +1,7 @@
 
 #include "y/associative/be-key.hpp"
 #include <cstring>
-#include "y/io/stream/output.hpp"
+#include "y/stream/output.hpp"
 
 namespace Yttrium
 {

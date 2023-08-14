@@ -37,7 +37,7 @@ namespace Yttrium
 
 }
 
-#include "y/io/libc/input.hpp"
+#include "y/stream/libc/input.hpp"
 
 
 namespace Yttrium
@@ -70,7 +70,7 @@ namespace Yttrium
 
 }
 
-#include "y/io/data/input.hpp"
+#include "y/stream/data/input.hpp"
 
 
 namespace Yttrium

@@ -3,7 +3,7 @@
 #include "y/jive/pattern/basic/exclude.hpp"
 #include "y/jive/source.hpp"
 #include "y/jive/pattern/first-chars.hpp"
-#include "y/io/stream/output.hpp"
+#include "y/stream/output.hpp"
 
 namespace Yttrium
 {

@@ -1,6 +1,6 @@
 
 #include "y/jive/pattern.hpp"
-#include "y/io/stream/output.hpp"
+#include "y/stream/output.hpp"
 
 namespace Yttrium
 {

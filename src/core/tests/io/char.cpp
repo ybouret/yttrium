@@ -1,5 +1,5 @@
 
-#include "y/io/chars.hpp"
+#include "y/stream/io/chars.hpp"
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/concurrent/singulet.hpp"

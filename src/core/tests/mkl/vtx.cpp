@@ -4,7 +4,7 @@
 #include "y/utest/timing.hpp"
 #include "y/random/in2d.hpp"
 #include "y/random/in3d.hpp"
-#include "y/io/libc/output.hpp"
+#include "y/stream/libc/output.hpp"
 
 using namespace Yttrium;
 

@@ -4,7 +4,7 @@
 #define Y_Jive_Pattern_Included 1
 
 #include "y/jive/token.hpp"
-#include "y/io/serializable.hpp"
+#include "y/stream/serializable.hpp"
 
 namespace Yttrium
 {

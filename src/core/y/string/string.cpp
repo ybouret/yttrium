@@ -8,6 +8,8 @@
 #include <cstring>
 
 #include "y/random/bits.hpp"
+#include "y/stream/output.hpp"
+#include "y/stream/input.hpp"
 
 namespace Yttrium
 {

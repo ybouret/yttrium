@@ -1,6 +1,6 @@
 #include "y/jive/pattern/logic/compound.hpp"
-#include "y/io/stream/output.hpp"
-#include "y/io/stream/input.hpp"
+#include "y/stream/output.hpp"
+#include "y/stream/input.hpp"
 
 namespace Yttrium
 {

@@ -1,6 +1,6 @@
 
 #include "y/apex/number.hpp"
-#include "y/io/chars.hpp"
+#include "y/stream/io/chars.hpp"
 #include "y/memory/buffer/of.hpp"
 
 namespace Yttrium

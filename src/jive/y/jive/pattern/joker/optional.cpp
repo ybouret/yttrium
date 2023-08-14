@@ -1,6 +1,6 @@
 
 #include "y/jive/pattern/joker/optional.hpp"
-#include "y/io/stream/output.hpp"
+#include "y/stream/output.hpp"
 #include "y/ptr/auto.hpp"
 
 namespace Yttrium

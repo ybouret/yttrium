@@ -1,6 +1,6 @@
-#include "y/associative/suffix/map.hpp"
 
-#include "y/io/libc/input.hpp"
+#include "y/associative/suffix/map.hpp"
+#include "y/stream/libc/input.hpp"
 #include "y/string.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"

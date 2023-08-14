@@ -11,7 +11,7 @@
 #include "y/ostream-proto.hpp"
 #include "y/type/capacity.hpp"
 #include "y/memory/buffer/ro.hpp"
-#include "y/io/serializable.hpp"
+#include "y/stream/serializable.hpp"
 
 namespace Yttrium
 {

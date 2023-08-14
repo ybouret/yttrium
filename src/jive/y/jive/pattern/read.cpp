@@ -1,5 +1,5 @@
 #include "y/jive/pattern/all.hpp"
-#include "y/io/stream/input.hpp"
+#include "y/stream/input.hpp"
 #include "y/system/exception.hpp"
 #include "y/ptr/auto.hpp"
 namespace Yttrium

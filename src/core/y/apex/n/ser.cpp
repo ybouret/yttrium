@@ -1,8 +1,8 @@
 
 #include "y/apex/natural.hpp"
 #include "y/apex/n/cxx.hpp"
-#include "y/io/stream/output.hpp"
-#include "y/io/stream/input.hpp"
+#include "y/stream/output.hpp"
+#include "y/stream/input.hpp"
 #include "y/memory/buffer/of.hpp"
 
 namespace Yttrium

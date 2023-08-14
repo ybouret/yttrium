@@ -1,6 +1,6 @@
 
-#include "y/io/libc/output.hpp"
-#include "y/io/libc/input.hpp"
+#include "y/stream/libc/output.hpp"
+#include "y/stream/libc/input.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/string.hpp"

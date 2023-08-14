@@ -4,7 +4,7 @@
 #define Y_Jive_Module_Included 1
 
 #include "y/jive/token.hpp"
-#include "y/io/stream/input.hpp"
+#include "y/stream/input.hpp"
 #include "y/ptr/arc.hpp"
 
 namespace Yttrium

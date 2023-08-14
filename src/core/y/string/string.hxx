@@ -623,8 +623,6 @@ namespace Yttrium
 
 }
 
-#include "y/io/stream/output.hpp"
-#include "y/io/stream/input.hpp"
 
 namespace Yttrium
 {

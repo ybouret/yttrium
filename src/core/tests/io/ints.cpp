@@ -1,11 +1,11 @@
 
 
-#include "y/io/stream/pack64.hpp"
+#include "y/stream/io/pack64.hpp"
 #include "y/type/ints.hpp"
 #include "y/text/hexadecimal.hpp"
 #include "y/utest/run.hpp"
-#include "y/io/libc/output.hpp"
-#include "y/io/libc/input.hpp"
+#include "y/stream/libc/output.hpp"
+#include "y/stream/libc/input.hpp"
 #include "y/random/bits.hpp"
 
 

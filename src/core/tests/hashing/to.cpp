@@ -21,7 +21,7 @@
 #include "y/associative/suffix/map.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/memory/allocator/dyadic.hpp"
-#include "y/io/libc/input.hpp"
+#include "y/stream/libc/input.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/utest/timing.hpp"
