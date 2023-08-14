@@ -207,4 +207,11 @@ namespace Yttrium
 
 
 
+    template <>
+    SignType XReal<real_t>:: Compare(const XReal<real_t> &lhs, const XReal<real_t> &rhs) noexcept
+    {
+        const XReal delta = Sub(lhs,rhs);
+        return Sign::Of(delta.mantissa);
+    }
+
 }

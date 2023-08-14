@@ -4,11 +4,12 @@
 #ifndef Y_Type_XReal_Included
 #define Y_Type_XReal_Included 1
 
-#include "y/config/starting.hpp"
+#include "y/type/signs.hpp"
 #include <iostream>
 
 namespace Yttrium
 {
+    
 
     //__________________________________________________________________________
     //
@@ -115,7 +116,27 @@ namespace Yttrium
         //! in-place subtraction
         inline XReal & operator-=(const XReal &rhs) noexcept { return (*this=Sub(*this,rhs)); }
 
-        
+        //______________________________________________________________________
+        //
+        //
+        // comparisons
+        //
+        //______________________________________________________________________
+
+        //! generic comparison, C++ style
+        static SignType Compare(const XReal &lhs, const XReal &rhs) noexcept;
+
+        //! helper to implement friend functions
+#define Y_XREAL_CMP(OP,RESULT) \
+inline friend bool operator OP (const XReal &lhs, const XReal &rhs) noexcept { return Compare(lhs,rhs) RESULT; }
+
+        Y_XREAL_CMP(==,  == __Zero__ )
+        Y_XREAL_CMP(!=,  != __Zero__ )
+        Y_XREAL_CMP(<,   == Negative )
+        Y_XREAL_CMP(>,   == Positive )
+        Y_XREAL_CMP(<=,  != Positive )
+        Y_XREAL_CMP(>=,  != Negative )
+
 
         //______________________________________________________________________
         //
