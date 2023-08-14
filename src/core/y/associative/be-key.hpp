@@ -30,7 +30,8 @@ namespace Yttrium
         //! setup from integral type
         template <typename T> inline
         explicit BE_Key(const T &args) noexcept :
-        size(sizeof(T)), code()
+        Memory::ReadOnlyBuffer(),
+        size(sizeof(T)),  code()
         {
             union {
                 T                                     data;

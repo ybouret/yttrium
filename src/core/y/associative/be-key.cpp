@@ -11,6 +11,7 @@ namespace Yttrium
     }
 
     BE_Key:: BE_Key(const BE_Key &other) noexcept :
+    Memory::ReadOnlyBuffer(),
     size(other.size),
     code()
     {

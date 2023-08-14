@@ -13,6 +13,7 @@ namespace Yttrium
 
         Pattern:: Pattern(const uint32_t t) noexcept :
         Object(),
+        Counted(),
         Token(),
         Serializable(),
         next(0),
@@ -24,6 +25,7 @@ namespace Yttrium
 
         Pattern:: Pattern(const Pattern &p) noexcept :
         Object(),
+        Counted(),
         Token(),
         Serializable(),
         next(0),
