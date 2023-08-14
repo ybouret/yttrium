@@ -4,78 +4,186 @@
 #define Y_MKL_API_Included 1
 
 #include "y/mkl/complex.hpp"
+#include "y/mkl/xreal.hpp"
+#include "y/apex/rational.hpp"
 
 namespace Yttrium
 {
 
     namespace MKL
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! Default Scalar Type
+        //
+        //______________________________________________________________________
         template <typename T>
         struct ScalarFor
         {
-            typedef T Type;
+            typedef T Type; //!< self type
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //! Scalar type for Complexes
+        //
+        //______________________________________________________________________
         template <typename T>
         struct ScalarFor< Complex<T> >
         {
-            typedef T Type;
+            typedef T Type; //!< base type
         };
 
 
-        struct API
+        //______________________________________________________________________
+        //
+        //
+        //! Fabs for <float|double|long double>
+        //
+        //______________________________________________________________________
+        template <typename T>
+        struct Fabs
         {
+            //! use std functions
+            static inline T Of(const T &x) noexcept { return std::fabs(x); }
+        };
 
-#if 0
-            template <typename T> static T Fabs(const T&);
-            template <typename T> static T Sqrt(const T&);
+        //______________________________________________________________________
+        //
+        //
+        //! Fabs for XReal<float|double|long double>
+        //
+        //______________________________________________________________________
+        template <typename T>
+        struct Fabs< XReal<T> >
+        {
+            //! use built-in functions
+            static inline XReal<T> Of(const XReal<T> &x) noexcept { return x.abs(); }
+        };
 
-            template <typename T> static
-            T Hypotenuse(const T &a, const T &b)
+        //______________________________________________________________________
+        //
+        //
+        //! Fabs for apz
+        //
+        //______________________________________________________________________
+        template <>
+        struct Fabs<apz>
+        {
+            //! use buil-in function
+            static inline apz Of(const apz &z) { return z.abs(); }
+        };
+
+        //______________________________________________________________________
+        //
+        //
+        //! Fabs for apq
+        //
+        //______________________________________________________________________
+        template <>
+        struct Fabs<apq>
+        {
+            //! use built-in function
+            static inline apq Of(const apq &q) { return q.abs(); }
+        };
+
+        //______________________________________________________________________
+        //
+        //
+        //! Sqrt for <float|double|long double>
+        //
+        //______________________________________________________________________
+        template <typename T> struct Sqrt
+        {
+            //! use std function
+            static inline T Of(const T &x) noexcept { return std::sqrt(x); }
+        };
+
+        //______________________________________________________________________
+        //
+        //
+        //! Sqrt for XReal<float|double|long double>
+        //
+        //______________________________________________________________________
+        template <typename T> struct Sqrt< XReal<T> >
+        {
+            //! use buil-in functions
+            static inline XReal<T> Of(const XReal<T> &x) noexcept { return x.sqrt(); }
+        };
+
+
+        //______________________________________________________________________
+        //
+        //
+        //! hypotenuse for [Xreal]<float|double|long double>
+        //
+        //______________________________________________________________________
+        template <typename T>
+        inline T Hypotenuse(const T &a, const T &b) noexcept
+        {
+            const T one(1);
+            const T absa=Fabs<T>::Of(a);
+            const T absb=Fabs<T>::Of(b);
+            if (absa > absb)
             {
-                const T one(1);
-                const T absa=Fabs(a);
-                const T absb=Fabs(b);
-                if (absa > absb)
+                const T rho = absb/absa;
+                const T arg = one + rho*rho;
+                return absa*Sqrt<T>::Of(arg);
+            }
+            else
+            {
+                if(absb<=0)
                 {
-                    const T rho = absb/absa;
-                    const T arg = one + rho*rho;
-                    return absa*Sqrt(arg);
+                    return T(0);
                 }
                 else
                 {
-                    if(absb<=0)
-                    {
-                        return T(0);
-                    }
-                    else
-                    {
-                        const T rho = absa/absb;
-                        const T arg = one + rho*rho;
-                        return absb*Sqrt(arg);
-                    }
+                    const T rho = absa/absb;
+                    const T arg = one + rho*rho;
+                    return absb*Sqrt<T>::Of(arg);
                 }
             }
+        }
 
-            template <typename T> struct Mod2
-            {
-                static inline T Of(const T &x) { return x*x; }
-            };
-
-            template <typename T> struct Mod2< Complex<T> >
-            {
-                static inline T Of(const Complex<T> &x) { return x.re*x.re + x.im*x.im; }
-            };
-#endif
-
-
-
-            
-
-
-
+        //______________________________________________________________________
+        //
+        //
+        //! Fabs for any complexes
+        //
+        //______________________________________________________________________
+        template <typename T> struct Fabs< Complex<T> >
+        {
+            //! use hypotenuse
+            static inline T Of(const Complex<T> &z) noexcept  { return Hypotenuse(z.re,z.im); }
         };
+
+        //______________________________________________________________________
+        //
+        //
+        //! Default Module^2
+        //
+        //______________________________________________________________________
+        template <typename T> struct Mod2
+        {
+            //! default squared
+            static inline T Of(const T &x) { return x*x; }
+        };
+
+
+        //______________________________________________________________________
+        //
+        //
+        //! Module^2 for complexes
+        //
+        //______________________________________________________________________
+        template <typename T> struct Mod2< Complex<T> >
+        {
+            //! use built-in function
+            static inline T Of(const Complex<T> &z) noexcept { return z.mod2(); }
+        };
+
 
     }
 }
