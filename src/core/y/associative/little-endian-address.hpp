@@ -24,7 +24,10 @@ namespace Yttrium
         virtual ~Little_Endian_Address()                     noexcept;                       //!< cleanup
         Little_Endian_Address(const Little_Endian_Address &) noexcept;                       //!< copy
 
-        const void *fetch() const noexcept; //!< retrieve stored address
+        void *fetch() const noexcept; //!< retrieve stored address
+
+
+
 
     private:
         Y_DISABLE_ASSIGN(Little_Endian_Address);

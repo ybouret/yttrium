@@ -7,7 +7,7 @@ namespace Yttrium
     Little_Endian_Address:: Little_Endian_Address(const Little_Endian_Address &other) noexcept : Little_Endian_Key( static_cast<const Little_Endian_Key&>(other) ) {}
 
 
-    const void * Little_Endian_Address:: fetch() const noexcept
+    void * Little_Endian_Address:: fetch() const noexcept
     {
         assert(size==sizeof(void*));
 
