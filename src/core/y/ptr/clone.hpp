@@ -84,12 +84,12 @@ namespace Yttrium
         //
         //______________________________________________________________________
 
+
         //! exchange content
         inline void xch(ClonePtr &other) noexcept
         {
             Swap(handle,other.handle);
         }
-
     private:
         Y_DISABLE_ASSIGN(ClonePtr);
 

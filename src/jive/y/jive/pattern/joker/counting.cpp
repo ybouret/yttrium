@@ -73,6 +73,17 @@ namespace Yttrium
             hasSameMotifThan( *p.as<Counting>() );
         }
 
+
+        void Counting:: viz(OutputStream &fp) const
+        {
+            node(fp) << '[';
+            String msg = "cnt";
+            Label(fp, msg) << ",shape=oval";
+            fp << ']';
+            Endl(fp);
+            vizLink(fp);
+        }
+
     }
 
 }

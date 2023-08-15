@@ -4,7 +4,7 @@
 #define Y_Jive_Pattern_Guest_Included 1
 
 #include "y/jive/pattern.hpp"
-#include "y/ptr/clone.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace Yttrium
 {
@@ -39,14 +39,20 @@ namespace Yttrium
             //__________________________________________________________________
             virtual ~Guest() noexcept; //!< cleanup
         protected:
-            explicit Guest(const uint32_t, const Pattern &); //!< uuid+clone
-            explicit Guest(const uint32_t, Pattern       *); //!< uuid+pattern
-            explicit Guest(const Guest &other);              //!< duplicate
+            explicit Guest(const uint32_t, const Pattern &);          //!< uuid+clone
+            explicit Guest(const uint32_t, Pattern       *) noexcept; //!< uuid+pattern
+            explicit Guest(const Guest &other);                       //!< duplicate
 
             bool hasSameMotifThan(const Guest &) const noexcept; //!< forward testing
-            void vizLink(OutputStream &fp)       const;          //! output and link motif
+            void vizLink(OutputStream &fp)       const;          //!< output and link motif
 
-            ClonePtr<Pattern> motif; //!< guest pattern
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            AutoPtr<Pattern> motif; //!< guest pattern
 
         private:
             Y_DISABLE_ASSIGN(Guest);

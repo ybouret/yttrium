@@ -5,17 +5,20 @@ namespace Yttrium
 {
     namespace Jive
     {
-        Guest:: Guest(const uint32_t t, const Pattern &source) :
+        Guest:: Guest(const uint32_t t,
+                      const Pattern &source) :
         Pattern(t),
         motif( source.clone() )
         {
+            assert(motif.isValid());
         }
 
 
-        Guest:: Guest(const uint32_t t, Pattern *p) :
+        Guest:: Guest(const uint32_t t, Pattern *p) noexcept:
         Pattern(t),
         motif(p)
         {
+            assert(motif.isValid());
         }
 
         Guest:: ~Guest() noexcept
@@ -31,19 +34,21 @@ namespace Yttrium
 
         Guest:: Guest(const Guest &other) :
         Pattern(other),
-        motif(other.motif)
+        motif(other.motif->clone())
         {
 
         }
 
         void Guest:: query(FirstChars &fc) const
         {
+            assert(motif.isValid());
             motif->query(fc);
         }
 
         void Guest:: optimize()
         {
-            ClonePtr<Pattern> opt( Pattern::Optimize( & *motif) );
+            assert(motif.isValid());
+            motif = Pattern::Optimize( & *motif);
         }
 
         bool Guest:: hasSameMotifThan(const Guest &other) const noexcept

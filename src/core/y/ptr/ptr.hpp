@@ -78,7 +78,6 @@ namespace Yttrium
         inline bool     isValid() const noexcept { return 0!=handle;  } //!< check validity
         inline bool     isEmpty() const noexcept { return 0==handle;  } //!< check dangling
 
-
         inline Type      &     operator*()        noexcept { assert(isValid()); return *handle; }             //!< dereference
         inline ConstType &     operator*()  const noexcept { assert(isValid()); return *handle; }             //!< dereference, const
         inline ReturnType      operator->()       noexcept { assert(isValid()); return this->fetch(handle); } //!< access w.r.t. policy
@@ -91,6 +90,18 @@ namespace Yttrium
             else            os << Nil;
             return os;
         }
+
+        inline friend bool operator==(const Ptr &lhs, const Ptr &rhs) noexcept
+        {
+            return lhs.handle == rhs.handle;
+        }
+
+        inline friend bool operator!=(const Ptr &lhs, const Ptr &rhs) noexcept
+        {
+            return lhs.handle != rhs.handle;
+        }
+
+
 
     protected:
         MutableType *handle; //!< handle for all smart pointers

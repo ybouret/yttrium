@@ -114,10 +114,9 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        inline void   dismiss() noexcept { if(0!=handle) { delete handle; handle=0; }   } //!< dismiss pointee
-        inline Type * yield()   noexcept { Type *ptr = handle; handle = 0; return ptr;  } //!< yield pointee
-
-
+        inline void   dismiss()       noexcept { if(0!=handle) { delete handle; handle=0; }   } //!< dismiss pointee
+        inline Type * yield()         noexcept { Type *ptr = handle; handle = 0; return ptr;  } //!< yield pointee
+        
     };
 
 }
