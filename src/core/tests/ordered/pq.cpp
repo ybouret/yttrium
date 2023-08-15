@@ -1,6 +1,6 @@
 
 
-#include "y/ordered/prio-queue.hpp"
+#include "y/ordered/priority-queue.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/shuffle.hpp"
 #include "y/apex/natural.hpp"
@@ -24,13 +24,13 @@ Y_UTEST(ordered_PQ)
         {
             const apn temp(ran.leq(16),ran);
 
-            Core::PrioQueue<apn>::Insert(pq,count,temp,Comparison::Increasing<apn>);
+            Core::PriorityQueue<apn>::Insert(pq,count,temp,Comparison::Increasing<apn>);
             std::cerr << "(" << pq[0] << ") "; Core::Display(std::cerr,pq,count) << std::endl;
         }
     }
     catch(...)
     {
-        Core::PrioQueue<apn>::Finish(pq,count);
+        Core::PriorityQueue<apn>::Finish(pq,count);
         throw;
     }
     std::cerr << "Insertion" << std::endl;
@@ -38,7 +38,7 @@ Y_UTEST(ordered_PQ)
     while(count>0)
     {
         std::cerr << "(" << pq[0] << ") " << std::endl;
-        Core::PrioQueue<apn>::Remove(pq,count,Comparison::Increasing<apn>);
+        Core::PriorityQueue<apn>::Remove(pq,count,Comparison::Increasing<apn>);
     }
 
 
