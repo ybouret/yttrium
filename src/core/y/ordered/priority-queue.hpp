@@ -144,14 +144,21 @@ namespace Yttrium
 
         }
 
+        static inline void RemoveLast(MutableType *tree, size_t &count) noexcept
+        {
+            assert(Good(tree,count));
+            (void) Memory::OutOfReach::Naught( &tree[--count] );
+        }
+
         //______________________________________________________________________
         //
         //! helper to destruct all
         //______________________________________________________________________
         static inline void Finish(MutableType *tree, size_t &count) noexcept
         {
+            assert(Good(tree,count));
             while(count>0)
-                (void) Memory::OutOfReach::Naught( &tree[--count] );
+                RemoveLast(tree,count);
         }
     };
 

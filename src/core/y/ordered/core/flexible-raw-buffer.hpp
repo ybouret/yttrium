@@ -59,18 +59,7 @@ namespace Yttrium
                 free();
                 Release(Coerce(entry),Coerce(tally),Coerce(bytes));
             }
-
-#if 0
-            //! no-throw exchange
-            inline void xch(FlexibleRawBuffer &other) noexcept
-            {
-                CoerceSwap(entry,other.entry);
-                CoerceSwap(count,other.count);
-                CoerceSwap(tally,other.tally);
-                CoerceSwap(bytes,other.bytes);
-            }
-#endif
-
+            
 
 
         private:

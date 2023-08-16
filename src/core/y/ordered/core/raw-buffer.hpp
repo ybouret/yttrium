@@ -74,7 +74,7 @@ namespace Yttrium
 
 
             //! forward to PrioQ
-            template <typename COMPARE>
+            template <typename COMPARE> inline
             void insertWith(COMPARE &proc, const T &args)
             {
                 mustAcceptNext();
@@ -82,14 +82,15 @@ namespace Yttrium
             }
 
             //! forward to PrioQ
-            template <typename COMPARE> void removeWith(COMPARE &proc) noexcept
+            template <typename COMPARE> inline
+            void removeWith(COMPARE &proc) noexcept
             {
                 assert(count>0); assert(0!=entry);
                 PriorityQueue<T>::Remove(entry,count,proc);
             }
 
             //! forward to PrioQ
-            template <typename COMPARE>
+            template <typename COMPARE> inline
             Type uprootWith(COMPARE &proc)
             {
                 assert(count>0); assert(0!=entry);
@@ -97,6 +98,26 @@ namespace Yttrium
                 removeWith(proc);
                 return res;
             }
+
+            inline void insertAtTail(const T &args)
+            {
+                mustAcceptNext();
+                new (entry+count) MutableType(args);
+                ++count;
+            }
+
+            inline void removeAtTail() noexcept
+            { PriorityQueue<T>::RemoveLast(entry,count); }
+
+            inline ConstType uprootAtTail()
+            {
+                assert(count>0); assert(0!=entry);
+                MutableType *src = &entry[--count];
+                ConstType    res = *src;
+                (void)Memory::OutOfReach::Naught(src);
+                return res;
+            }
+
 
             
             //! [Readable] return in [1:count]
