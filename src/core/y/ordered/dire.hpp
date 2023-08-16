@@ -1,18 +1,15 @@
-
 //! \file
 
-#ifndef Y_Ordered_Heap_Included
-#define Y_Ordered_Heap_Included 1
+#ifndef Y_Ordered_Dire_Included
+#define Y_Ordered_Dire_Included 1
 
-#include "y/ordered/priority-queue.hpp"
-#include "y/ordered/core/heap.hpp"
-
+#include "y/ordered/core/dire.hpp"
 #include "y/type/capacity.hpp"
-#include "y/comparison.hpp"
+
 namespace Yttrium
 {
 
-    
+
     //__________________________________________________________________________
     //
     //
@@ -23,9 +20,8 @@ namespace Yttrium
     //__________________________________________________________________________
     template <
     typename T,
-    typename RAW_BUFFER,
-    typename COMPARATOR = IncreasingComparator >
-    class Heap : public RAW_BUFFER, public Core::Heap
+    typename RAW_BUFFER>
+    class Dire : public RAW_BUFFER, public Core::Dire
     {
     public:
         //______________________________________________________________________
@@ -45,13 +41,13 @@ namespace Yttrium
         //______________________________________________________________________
 
         //! setup empty
-        inline explicit Heap() noexcept : RawBufferType(), compare() {}
+        inline explicit Dire() noexcept : RawBufferType() {}
 
         //! setup with capacity
-        inline explicit Heap(const size_t n, const AsCapacity_ &) noexcept : RawBufferType(n), compare() {}
+        inline explicit Dire(const size_t n, const AsCapacity_ &) noexcept : RawBufferType(n) {}
 
         //! cleanup
-        inline virtual ~Heap() noexcept {}
+        inline virtual ~Dire() noexcept {}
 
         //______________________________________________________________________
         //
@@ -62,33 +58,28 @@ namespace Yttrium
 
         //! insert object
         inline void      insert(ParamType args)
-        { this->insertWith(compare,args);   }
+        { this->insertAtTail(args);   }
+
 
         //! insert mutliple objects
         inline void      insert(ParamType args, size_t n)
-        { while(n-- > 0) this->insertWith(compare,args); }
+        { while(n-- > 0) this->insertAtTail(args); }
 
 
         //! remove top object
         inline void      remove() noexcept
-        { this->removeWith(compare); }
+        { this->removeAtTail(); }
 
         //! pull top object
         inline ConstType pull()
-        { return this->uprootWith(compare); }
+        { return this->uprootAtTail(); }
 
         //! [Identifiable] CallSign
         virtual const char * callSign() const noexcept { return CallSign; }
 
-        //______________________________________________________________________
-        //
-        //
-        // Members
-        //
-        //______________________________________________________________________
-        const COMPARATOR compare; //!< comparator for priority queue
+
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(Heap);
+        Y_DISABLE_COPY_AND_ASSIGN(Dire);
     };
 
 

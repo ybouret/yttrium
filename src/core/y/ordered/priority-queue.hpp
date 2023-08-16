@@ -144,6 +144,8 @@ namespace Yttrium
 
         }
 
+
+        //! Cleanly remove last item, tree is left UNTOUCHED
         static inline void RemoveLast(MutableType *tree, size_t &count) noexcept
         {
             assert(Good(tree,count));

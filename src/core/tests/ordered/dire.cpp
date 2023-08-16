@@ -1,12 +1,12 @@
 
+
 #include "y/ordered/core/compiled-raw-buffer.hpp"
 #include "y/ordered/core/flexible-raw-buffer.hpp"
-#include "y/ordered/heap.hpp"
+#include "y/ordered/dire.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/random/shuffle.hpp"
 #include "y/apex/natural.hpp"
-#include "y/comparison.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 
@@ -16,29 +16,31 @@ using namespace Yttrium;
 
 
 
-Y_UTEST(ordered_heap)
+Y_UTEST(ordered_dire)
 {
 
     Random::Rand ran;
-    
 
-    Heap< apn, Core::FlexibleRawBuffer<apn,Memory::Dyadic> > h;
-    Heap< apn, Core::CompiledRawBuffer<13,apn>  >            hf;
 
+
+    Dire< apn, Core::FlexibleRawBuffer<apn,Memory::Dyadic> > Dd;
+    Dire< apn, Core::CompiledRawBuffer<13,apn>  >            Df;
+
+#if 1
     for(int i=0;i<10;++i)
     {
         const apn n(1+ran.leq(30),ran);
-        h.insert(n);
-        hf.insert(n);
-        std::cerr << h << "/" << hf << std::endl;
+        Dd.insert(n);
+        Df.insert(n);
+        std::cerr << Dd << "/" << Df << std::endl;
     }
 
-    while(h.size())
+    while(Dd.size())
     {
-        const apn top = h.pull();
-        std::cerr << std::setw(20) << top << " <- " << h << std::endl;
+        const apn top = Dd.pull();
+        std::cerr << std::setw(20) << top << " <- " << Dd << std::endl;
     }
-
+#endif
 
 
 }

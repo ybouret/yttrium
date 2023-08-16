@@ -99,6 +99,7 @@ namespace Yttrium
                 return res;
             }
 
+            //! dire insertion
             inline void insertAtTail(const T &args)
             {
                 mustAcceptNext();
@@ -106,9 +107,11 @@ namespace Yttrium
                 ++count;
             }
 
+            //! dire removal
             inline void removeAtTail() noexcept
             { PriorityQueue<T>::RemoveLast(entry,count); }
 
+            //! dire uproot
             inline ConstType uprootAtTail()
             {
                 assert(count>0); assert(0!=entry);
