@@ -19,31 +19,12 @@ namespace Yttrium
         //
         //
         //
-        //! Core Heap to old CallSign
-        //
-        //
-        //______________________________________________________________________
-        class Heap
-        {
-        public:
-            static const char * const CallSign; //!< "Heap"
-            virtual ~Heap() noexcept;           //!< cleanup
-            explicit Heap() noexcept;           //!< setup
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Heap);
-        };
-
-        //______________________________________________________________________
-        //
-        //
-        //
         //! Raw Buffer interface
         //
         //
         //______________________________________________________________________
         template <typename T>
-        class RawBuffer : public Readable<T>, public Container, public Recyclable, public Core::Heap
+        class RawBuffer : public Readable<T>, public Container, public Recyclable
         {
         public:
             //__________________________________________________________________
@@ -117,9 +98,7 @@ namespace Yttrium
                 return res;
             }
 
-            //! [Identifiable] CallSign
-            virtual const char * callSign() const noexcept { return CallSign; }
-
+            
             //! [Readable] return in [1:count]
             ConstType & operator[](const size_t index) const noexcept
             {

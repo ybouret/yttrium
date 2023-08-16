@@ -5,9 +5,10 @@
 #define Y_Ordered_Heap_Included 1
 
 #include "y/ordered/priority-queue.hpp"
+#include "y/ordered/core/heap.hpp"
+
 #include "y/type/capacity.hpp"
 #include "y/comparison.hpp"
-
 namespace Yttrium
 {
 
@@ -24,7 +25,7 @@ namespace Yttrium
     typename T,
     typename RAW_BUFFER,
     typename COMPARATOR = IncreasingComparator >
-    class Heap : public RAW_BUFFER
+    class Heap : public RAW_BUFFER, public Core::Heap
     {
     public:
         //______________________________________________________________________
@@ -75,6 +76,8 @@ namespace Yttrium
         //! pull top object
         inline ConstType pull()
         { return this->uprootWith(compare); }
+
+        virtual const char * callSign() const noexcept { return CallSign; }
 
         //______________________________________________________________________
         //

@@ -21,34 +21,7 @@ Y_UTEST(ordered_heap)
 {
 
     Random::Rand ran;
-    {
-        const int    arr[] = {1,2,3,4,5,6,7,8};
-        const size_t num   = sizeof(arr)/sizeof(arr[0]);
-        Random::Shuffle::Range(arr,num,ran);
-        Core::Display(std::cerr,arr,num) << std::endl;
-
-        Core::CompiledRawBuffer<8,int>              cbuf;
-        Core::FlexibleRawBuffer<int,Memory::Pooled> fbuf0;
-        Core::FlexibleRawBuffer<int,Memory::Dyadic> fbuf(3);
-
-
-
-        for(size_t i=0;i<num;++i)
-        {
-            cbuf.insertWith(  Comparison::CxxIncreasing<double>, arr[i]  );
-            fbuf0.insertWith( Comparison::CxxIncreasing<double>, arr[i]  );
-            fbuf.insertWith(  Comparison::CxxIncreasing<double>, arr[i]  );
-            Core::Display(std::cerr,cbuf.entry,cbuf.count) << " -> " << cbuf.peek() << std::endl;
-        }
-
-        while(cbuf.size())
-        {
-            const int top = cbuf.uprootWith(Comparison::CxxIncreasing<double>);
-            std::cerr << top << " <- ";  Core::Display(std::cerr,cbuf.entry,cbuf.count) << std::endl;
-        }
-
-
-    }
+    
 
 
     Heap< apn,Core::FlexibleRawBuffer<apn,Memory::Dyadic> > h;

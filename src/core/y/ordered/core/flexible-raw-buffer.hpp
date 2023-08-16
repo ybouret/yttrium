@@ -60,6 +60,7 @@ namespace Yttrium
                 Release(Coerce(entry),Coerce(tally),Coerce(bytes));
             }
 
+#if 0
             //! no-throw exchange
             inline void xch(FlexibleRawBuffer &other) noexcept
             {
@@ -68,7 +69,7 @@ namespace Yttrium
                 CoerceSwap(tally,other.tally);
                 CoerceSwap(bytes,other.bytes);
             }
-
+#endif
 
 
 
@@ -98,25 +99,30 @@ namespace Yttrium
                 }
             }
 
-            inline void upgradeMaxi(const size_t request)
+            inline void upgradeTally(const size_t request)
             {
-                assert(request>=tally);
-                FlexibleRawBuffer buff( request ); assert(buff.tally>tally);
-                Memory::OutOfReach::Copy(buff.entry,entry,(buff.count=count)*sizeof(T));
-                count=0;
-                xch(buff);
+                assert(request>tally);
+                static Memory::Allocator &mgr = ALLOCATOR::Instance();
+                size_t       newTally = request;
+                size_t       newBytes = 0;
+                MutableType *newEntry = mgr.allocate<MutableType>( newTally, newBytes);
+                Memory::OutOfReach::Copy(newEntry,entry,count*sizeof(T));
+                Release( Coerce(entry), Coerce(tally), Coerce(bytes) );
+                Coerce(entry) = newEntry;
+                Coerce(tally) = newTally;
+                Coerce(bytes) = newBytes;
             }
 
             virtual void mustAcceptNext()
             {
                 if(count>=tally)
-                    upgradeMaxi( Container::NextCapacity(tally) );
+                    upgradeTally( Container::NextCapacity(tally) );
             }
 
             virtual void prepareForMaxi(const size_t request)
             {
                 assert(0==count);
-                if(request>tally) upgradeMaxi( request );
+                if(request>tally) upgradeTally( request );
             }
         };
     }

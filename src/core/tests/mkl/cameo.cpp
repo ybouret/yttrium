@@ -5,6 +5,19 @@
 
 using namespace Yttrium;
 
+namespace Yttrium
+{
+
+    namespace CamEO
+    {
+        template <typename T>
+        struct Proxy
+        {
+            
+        };
+    }
+
+}
 
 Y_UTEST(mkl_cameo)
 {
