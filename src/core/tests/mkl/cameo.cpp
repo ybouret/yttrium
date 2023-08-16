@@ -2,7 +2,10 @@
 
 #include "y/mkl/api.hpp"
 #include "y/utest/run.hpp"
-#include "y/comparison.hpp"
+
+#include "y/ordered/heap.hpp"
+#include "y/ordered/dire.hpp"
+
 
 using namespace Yttrium;
 
@@ -51,6 +54,9 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Comparator);
             };
+
+            
+
         };
 
         template <>
