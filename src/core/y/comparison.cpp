@@ -9,3 +9,10 @@ namespace Yttrium
 
 }
 
+
+namespace Yttrium
+{
+    DecreasingComparator:: ~DecreasingComparator() noexcept {}
+    DecreasingComparator::  DecreasingComparator() noexcept {}
+    
+}

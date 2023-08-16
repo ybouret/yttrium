@@ -5,31 +5,62 @@
 
 #include "y/ordered/core/raw-buffer.hpp"
 #include "y/memory/allocator.hpp"
+#include "y/type/releasable.hpp"
 
 namespace Yttrium
 {
 
     namespace Core
     {
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Flexible Raw Buffer
+        //
+        //
+        //______________________________________________________________________
         template <typename T, typename ALLOCATOR>
-        class FlexibleRawBuffer : public RawBuffer<T>
+        class FlexibleRawBuffer : public RawBuffer<T>, public Releasable
         {
         public:
-            Y_ARGS_DECL(T,Type);
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            Y_ARGS_DECL(T,Type);        //!< aliases
             using RawBuffer<T>::tally;
             using RawBuffer<T>::count;
             using RawBuffer<T>::entry;
             using RawBuffer<T>::free;
+
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+
+            //! setup empty
             explicit FlexibleRawBuffer() noexcept :  RawBuffer<T>(), bytes(0) {}
+
+            //! cleanup
             virtual ~FlexibleRawBuffer() noexcept { release(); }
+
+            //! setup with capacity
             explicit FlexibleRawBuffer(size_t n)  :  RawBuffer<T>(), bytes(0) { setup(n); }
 
+            //! [Releasable] free and release memory
             virtual void release() noexcept
             {
                 free();
                 Release(Coerce(entry),Coerce(tally),Coerce(bytes));
             }
 
+            //! no-throw exchange
             inline void xch(FlexibleRawBuffer &other) noexcept
             {
                 CoerceSwap(entry,other.entry);

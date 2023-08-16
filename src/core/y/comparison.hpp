@@ -71,12 +71,19 @@ namespace Yttrium
 
     };
 
+    //__________________________________________________________________________
+    //
+    //
+    //! Making a comparator class
+    //
+    //__________________________________________________________________________
     class IncreasingComparator
     {
     public:
-        IncreasingComparator()  noexcept;
-        ~IncreasingComparator() noexcept;
+        IncreasingComparator()  noexcept; //!< setup
+        ~IncreasingComparator() noexcept; //!< cleanup
 
+        //! generic interface
         template <typename T> inline
         SignType operator()(T &lhs, T &rhs) const { return Comparison::CxxIncreasing<T>(lhs,rhs); }
 
@@ -84,6 +91,25 @@ namespace Yttrium
         Y_DISABLE_COPY_AND_ASSIGN(IncreasingComparator);
     };
 
+    //__________________________________________________________________________
+    //
+    //
+    //! Making a comparator class
+    //
+    //__________________________________________________________________________
+    class DecreasingComparator
+    {
+    public:
+        DecreasingComparator()  noexcept; //!< setup
+        ~DecreasingComparator() noexcept; //!< cleanup
+
+        //! generic interface
+        template <typename T> inline
+        SignType operator()(T &lhs, T &rhs) const { return Comparison::CxxDecreasing<T>(lhs,rhs); }
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(DecreasingComparator);
+    };
     
 
 }
