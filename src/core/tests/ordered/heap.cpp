@@ -7,6 +7,7 @@
 #include "y/comparison.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/system/exception.hpp"
+#include "y/type/capacity.hpp"
 
 using namespace Yttrium;
 
@@ -68,6 +69,7 @@ namespace Yttrium
                 Coerce(maxi) = N;
                 addr = Memory::OutOfReach::Cast<MutableType>( Y_STATIC_ZARR(wksp) );
             }
+
 
             virtual ~CompiledRawBuffer() noexcept
             { free(); }
@@ -164,12 +166,22 @@ namespace Yttrium
         };
     }
 
-    template <typename T,
-    typename RAW_BUFFER,
-    typename COMPARATOR>
-    class Heap
+    template <
+    typename T,
+    typename RAW_BUFFER>
+    class PriorityQueue
     {
+    public:
+        Y_ARGS_DECL(T,Type);
+        explicit PriorityQueue() noexcept : data() {}
+        explicit PriorityQueue(size_t n, const AsCapacity_ &) noexcept : data(n) {}
+        virtual ~PriorityQueue() noexcept {}
 
+
+
+
+    private:
+        RAW_BUFFER         data;
     };
 
 
@@ -180,13 +192,18 @@ namespace Yttrium
 Y_UTEST(ordered_heap)
 {
 
-    Core::CompiledRawBuffer<10,double>             cbuf;
-    Core::FlexibleRawBuffer<double,Memory::Pooled> fbuf0;
-    Core::FlexibleRawBuffer<double,Memory::Pooled> fbuf(10);
+    {
+        Core::CompiledRawBuffer<10,double>             cbuf;
+        Core::FlexibleRawBuffer<double,Memory::Pooled> fbuf0;
+        Core::FlexibleRawBuffer<double,Memory::Pooled> fbuf(10);
 
-    Core::PriorityQueue<double>::Insert(cbuf.addr,cbuf.size,1,Comparison::Increasing<double>);
+        Core::PriorityQueue<double>::Insert(cbuf.addr,cbuf.size,1,Comparison::Increasing<double>);
 
-    Core::Display(std::cerr,cbuf.addr,cbuf.size) << std::endl;
+        Core::Display(std::cerr,cbuf.addr,cbuf.size) << std::endl;
+    }
+
+    //Heap<double,Core::CompiledRawBuffer<10,double>);
+
 
 }
 Y_UDONE()
