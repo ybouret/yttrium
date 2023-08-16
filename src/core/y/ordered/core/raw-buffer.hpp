@@ -60,7 +60,6 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-
         protected:
             //! setup, empty
             inline explicit RawBuffer() noexcept : entry(0), count(0), tally(0) {}
@@ -128,7 +127,7 @@ namespace Yttrium
                 assert(index<=count);
                 return entry[index-1];
             }
-            
+
 
         protected:
             MutableType * const entry; //!< first object address
