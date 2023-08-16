@@ -59,6 +59,7 @@ counting
 counting/c
 sequence
 ordered
+ordered/core
 associative
 associative/suffix
 associative/suffix/core

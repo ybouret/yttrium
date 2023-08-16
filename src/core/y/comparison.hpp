@@ -71,6 +71,19 @@ namespace Yttrium
 
     };
 
+    class IncreasingComparator
+    {
+    public:
+        IncreasingComparator()  noexcept;
+        ~IncreasingComparator() noexcept;
+
+        template <typename T> inline
+        SignType operator()(T &lhs, T &rhs) const { return Comparison::CxxIncreasing<T>(lhs,rhs); }
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(IncreasingComparator);
+    };
+
     
 
 }

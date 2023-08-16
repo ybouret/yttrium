@@ -24,13 +24,13 @@ Y_UTEST(ordered_PQ)
         {
             const apn temp(ran.leq(16),ran);
 
-            Core::PriorityQueue<apn>::Insert(pq,count,temp,Comparison::Increasing<apn>);
+            PriorityQueue<apn>::Insert(pq,count,temp,Comparison::Increasing<apn>);
             std::cerr << "(" << pq[0] << ") "; Core::Display(std::cerr,pq,count) << std::endl;
         }
     }
     catch(...)
     {
-        Core::PriorityQueue<apn>::Finish(pq,count);
+        PriorityQueue<apn>::Finish(pq,count);
         throw;
     }
     std::cerr << "Insertion" << std::endl;
@@ -38,7 +38,7 @@ Y_UTEST(ordered_PQ)
     while(count>0)
     {
         std::cerr << "(" << pq[0] << ") " << std::endl;
-        Core::PriorityQueue<apn>::Remove(pq,count,Comparison::Increasing<apn>);
+        PriorityQueue<apn>::Remove(pq,count,Comparison::Increasing<apn>);
     }
 
 
