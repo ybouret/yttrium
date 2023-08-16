@@ -157,7 +157,8 @@ add_test(apex:z         test-core apex_z)
 add_test(apex:q         test-core apex_q)
 
 #ordered
-add_test(ordered:PQ test-core ordered_PQ)
+add_test(ordered:PQ   test-core ordered_PQ)
+add_test(ordered:heap test-core ordered_heap)
 
 #container
 add_test(container:cxx-array  test-core container_cxx_array)

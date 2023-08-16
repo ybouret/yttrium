@@ -119,6 +119,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(apex_q);
 
     Y_UTEST(ordered_PQ);
+    Y_UTEST(ordered_heap);
 
     Y_UTEST(container_cxx_array);
     Y_UTEST(container_cxx_series);
