@@ -1,6 +1,6 @@
 
 include_directories(../core)
 
-add_executable(y_leq y_leq.cpp)
-Y_LinkLibraries(y_leq)
+add_executable(y_trunc y_trunc.cpp)
+Y_LinkLibraries(y_trunc)
 
