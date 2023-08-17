@@ -17,10 +17,54 @@ namespace Yttrium
     namespace CamEO
     {
 
-        template <typename T> struct HeapPolicy
+        template <typename T> class UnitComparator
         {
-            
+        public:
+            inline  UnitComparator() noexcept {}
+            inline ~UnitComparator() noexcept {}
+
+
+            inline SignType operator()(const T &lhs, const T &rhs)
+            {
+                return Comparison::CxxIncreasing(lhs.absValue,rhs.absValue);
+            }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(UnitComparator);
         };
+
+        template <typename T, typename COMPARATOR>
+        struct HeapPolicy
+        {
+            template <typename ALLOCATOR>
+            struct FlexibleUnits
+            {
+                typedef Heap<T,Core::FlexibleRawBuffer<T,ALLOCATOR>,COMPARATOR> Type;
+            };
+
+            template <size_t N>
+            struct CompiledUnits
+            {
+                typedef Heap<T,Core::CompiledRawBuffer<N,T>,COMPARATOR> Type;
+            };
+        };
+
+        template <typename T>
+        struct DirePolicy
+        {
+            template <typename ALLOCATOR>
+            struct FlexibleUnits
+            {
+                typedef Dire<T,Core::FlexibleRawBuffer<T,ALLOCATOR> > Type;
+            };
+
+            template <size_t N>
+            struct CompiledUnits
+            {
+                typedef Dire<T,Core::CompiledRawBuffer<N,T> > Type;
+            };
+        };
+
 
         template <typename T>
         struct Proxy
@@ -121,6 +165,7 @@ namespace Yttrium
                 Y_DISABLE_ASSIGN(Unit);
             };
 
+            
 
         };
 

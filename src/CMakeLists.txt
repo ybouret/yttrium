@@ -106,3 +106,6 @@ else()
     add_custom_target(dox ${doxygen}
                         WORKING_DIRECTORY ${HERE}/..)
 endif()
+
+add_subdirectory(cli)
+
