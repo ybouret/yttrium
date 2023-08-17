@@ -10,6 +10,8 @@
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/memory/allocator/pooled.hpp"
 
+#include "y/sequence/vector.hpp"
+
 using namespace Yttrium;
 
 namespace Yttrium
@@ -53,14 +55,12 @@ namespace Yttrium
             T Reduce(UNITS &units)
             {
                 assert(units.size()>1);
-                std::cerr << units << std::endl;
                 while(units.size()>1)
                 {
                     const T lhs = units.pull();
                     const T rhs = units.pull();
                     const T sum = lhs+rhs;
                     units.push(sum);
-                    std::cerr << units << std::endl;
                 }
                 assert(1==units.size());
                 return units.pull();
@@ -199,6 +199,14 @@ namespace Yttrium
                 this->insert(u);
             }
 
+            inline Addition & operator<<(ParamType args)
+            {
+                UnitArgs u = args;
+                this->insert(u);
+                return *this;
+            }
+
+
             inline void push(const size_t n, ParamType args)
             {
                 UnitArgs u = args;
@@ -222,10 +230,19 @@ namespace Yttrium
         public Addition<T,Proxy<T>,typename Proxy<T>::template FlexibleUnits<ALLOCATOR>::Type>
         {
         public:
-            
+            typedef Proxy<T>                                                    ProxyType;
+            typedef typename ProxyType::template FlexibleUnits<ALLOCATOR>::Type UnitsType;
+            typedef Addition<T,ProxyType,UnitsType>                             BasisType;
+
+            explicit Add() noexcept : BasisType() {}
+            explicit Add(const size_t n) : BasisType(n,AsCapacity) {}
+            virtual ~Add() noexcept {}
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Add);
         };
+
+
 
 
 
@@ -236,6 +253,28 @@ namespace Yttrium
 Y_UTEST(mkl_cameo)
 {
     Random::Rand ran;
+
+
+    {
+        Cameo::Add<double> xadd;
+        double             vsum = 0;
+
+        for(size_t i=1+ran.leq(20);i>0;--i)
+        {
+            const double x = Bring<double>::Get(ran);
+            xadd << x;
+            vsum += x;
+        }
+        const double xsum = xadd.sum();
+        std::cerr << "vsum=" << vsum << std::endl;
+        std::cerr << "xsum=" << xsum << std::endl;
+
+
+
+
+    }
+
+    return 0;
 
 #if 1
     {

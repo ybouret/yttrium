@@ -6,6 +6,7 @@
 #include "y/system/exception.hpp"
 #include <iostream>
 
+//! prolog to create executable
 #define Y_Program() \
 int main(int argc, const char *argv[]) {\
 /**/ (void) argc;\
@@ -14,6 +15,7 @@ int main(int argc, const char *argv[]) {\
 /**/ (void) program;\
 /**/ try
 
+//! epilog to create executable
 #define Y_End() \
 /**/ catch(const Yttrium::Exception &e) { e.display();                              return 1; } \
 /**/ catch(const std::exception &e) { std::cerr << "*** " << e.what() << std::endl; return 2; } \
