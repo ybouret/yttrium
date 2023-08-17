@@ -48,32 +48,32 @@ namespace Yttrium
             return Pattern::Optimize( p.yield() );
         }
 
-#if 0
-        pattern * posix:: xdigit()
+        Pattern * posix:: xdigit()
         {
-            auto_ptr<op_or> p = new op_or();
-            p->push_back( digit() );
+            AutoPtr<Compound> p = new Or();
+            *p << digit();
             p->add('A','F');
             p->add('a','f');
-            return   p.yield();
+            return Pattern::Optimize( p.yield() );
         }
 
-        pattern * posix:: blank()
+        Pattern * posix:: blank()
         {
             static const char data[] = " \t";
-            return logical::among(data,sizeof(data)-1);
+            return Pattern::Among(data);
         }
 
-        pattern * posix:: space()
+        Pattern * posix:: space()
         {
-            return logical::among(" \t\n\r\v\f");
+            return Pattern::Among(" \t\n\r\v\f");
         }
 
-        pattern * posix::punct()
+        Pattern * posix::punct()
         {
-            return logical::among("][!\"#$%&'()*+,./:;<=>?@\\^_`{|}~-");
+            return Pattern::Among("][!\"#$%&'()*+,./:;<=>?@\\^_`{|}~-");
         }
 
+#if 0
         static inline void __fill_endl( patterns &ops )
         {
             ops.push_back( new single('\n') );

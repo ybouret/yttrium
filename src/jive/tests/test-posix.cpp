@@ -47,6 +47,10 @@ Y_UTEST(posix)
     Y_JIVE_POSIX(digit);
     Y_JIVE_POSIX(alnum);
     Y_JIVE_POSIX(word);
+    Y_JIVE_POSIX(xdigit);
+    Y_JIVE_POSIX(blank);
+    Y_JIVE_POSIX(space);
+    Y_JIVE_POSIX(punct);
 }
 Y_UDONE()
 
