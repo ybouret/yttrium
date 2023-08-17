@@ -2,6 +2,7 @@
 
 #include "y/jive/pattern/joker/counting.hpp"
 #include "y/stream/output.hpp"
+#include "y/jive/source.hpp"
 
 namespace Yttrium
 {
@@ -52,7 +53,7 @@ namespace Yttrium
 
         bool Counting:: isFragile() const noexcept
         {
-            return minCount <= 0 || motif->isFragile();
+            return minCount <= 0;
         }
 
         bool Counting:: takes(Source &source)
@@ -60,8 +61,47 @@ namespace Yttrium
             assert(0==size);
             assert(0==motif->size);
 
+            size_t count = 0;
+            bool   phony = false;
+            while( motif->takes(source) )
+            {
+                if(motif->size<=0)
+                {
+                    phony = true;
+                    break;
+                }
+                else
+                {
+                    mergeTail(*motif);
+                    ++count;
+                }
+            }
 
-            return false;
+            if(phony)
+            {
+                if(count<=0 && minCount<=0)
+                {
+                    return true;
+                }
+                else
+                {
+                    source.put(*this);
+                    return false;
+                }
+            }
+            else
+            {
+                if(count>=minCount&&count<=maxCount)
+                {
+                    return true;
+                }
+                else
+                {
+                    source.put(*this);
+                    return false;
+                }
+            }
+
         }
 
         bool Counting:: isEqualTo(const Pattern &p) const noexcept

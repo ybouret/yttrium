@@ -48,7 +48,7 @@ namespace Yttrium
             //__________________________________________________________________
             virtual Pattern *clone() const;                   //!< clone
             virtual bool     takes(Source &);                 //!< try guest, return true
-            virtual bool     isFragile() const noexcept;      //!< if minCount <= 0 or motif is fragile
+            virtual bool     isFragile() const noexcept;      //!< if minCount <= 0. If motif is fragile, fails and return false
             virtual size_t   serialize(OutputStream&) const;  //!< uuid+guest
             virtual bool     isEqualTo(const Pattern &) const noexcept;
             virtual void     viz(OutputStream &fp)      const;
