@@ -6,10 +6,11 @@ using namespace Yttrium;
 
 Y_Program()
 {
-    if(argc<=2) { std::cerr << "usage: " << program << " nmin nmax" << std::endl; return 0; }
+    if(argc<=1) { std::cerr << "usage: " << program << " n | nmin nmax" << std::endl; return 0; }
 
     const size_t nmin = atoi(argv[1]);
-    const size_t nmax = atoi(argv[2]);
+    size_t       nmax = nmin;
+    if(argc>2) nmax = atoi(argv[2]);
 
     Libc::InputFile fp( StdIn );
     IO::Chars line;

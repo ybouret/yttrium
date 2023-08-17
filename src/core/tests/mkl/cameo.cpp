@@ -48,6 +48,25 @@ namespace Yttrium
             {
                 typedef Heap<T,Core::CompiledRawBuffer<N,T>,Comparator> Type;
             };
+
+            template <typename UNITS> static inline
+            T Reduce(UNITS &units)
+            {
+                assert(units.size()>1);
+                std::cerr << units << std::endl;
+                while(units.size()>1)
+                {
+                    const T lhs = units.pull();
+                    const T rhs = units.pull();
+                    const T sum = lhs+rhs;
+                    units.push(sum);
+                    std::cerr << units << std::endl;
+                }
+                assert(1==units.size());
+                return units.pull();
+            }
+
+
         };
 
         template <typename T>
@@ -64,6 +83,17 @@ namespace Yttrium
             {
                 typedef Dire<T,Core::CompiledRawBuffer<N,T> > Type;
             };
+
+            template <typename UNITS> static inline
+            T Reduce(UNITS &units)
+            {
+                assert(units.size()>1);
+                T sum = units[1];
+                for(size_t i=units.size();i>1;--i) sum += units[i];
+                units.free();
+                return sum;
+            }
+
         };
 
 
@@ -98,7 +128,7 @@ namespace Yttrium
 
                 inline friend std::ostream & operator<<(std::ostream &os, const Unit &self)
                 {
-                    os << self.usrValue;
+                    os << self.usrValue; //<< '@' << '|' << self.absValue << '|';
                     return os;
                 }
 
@@ -106,70 +136,6 @@ namespace Yttrium
                 {
                     const T sum = lhs.usrValue + rhs.usrValue;
                     return Unit(sum);
-                }
-
-            private:
-                Y_DISABLE_ASSIGN(Unit);
-            };
-
-            typedef const Unit UnitArgs;
-
-            typedef HeapPolicy<Unit> Policy;
-
-            template <typename ALLOCATOR>
-            struct FlexibleUnits {
-                typedef typename Policy::template FlexibleUnits<ALLOCATOR>::Type Type;
-            };
-
-            template <size_t N>
-            struct CompiledUnits
-            {
-                typedef typename Policy:: template CompiledUnits<N>::Type Type;
-            };
-
-
-        };
-
-        template <>
-        struct Proxy<apq> {
-            typedef apq Unit;
-
-            typedef const Unit &UnitArgs;
-            typedef DirePolicy<Unit> Policy;
-
-            template <typename ALLOCATOR>
-            struct FlexibleUnits {
-                typedef typename Policy::template FlexibleUnits<ALLOCATOR>::Type Type;
-            };
-
-            template <size_t N>
-            struct CompiledUnits
-            {
-                typedef typename Policy:: template CompiledUnits<N>::Type Type;
-            };
-        };
-
-#if 0
-        template <typename T>
-        struct Proxy< Complex<T> >
-        {
-            class Unit
-            {
-            public:
-                const Complex<T> usrValue;
-                const T          absValue;
-                inline Unit(const T &args) :
-                usrValue(args),
-                absValue( MKL::Fabs< Complex<T> >::Of(usrValue) )
-                {
-                }
-
-                inline ~Unit() noexcept {}
-
-                inline Unit(const Unit &other) :
-                usrValue(other.usrValue),
-                absValue(other.absValue)
-                {
                 }
 
             private:
@@ -185,66 +151,82 @@ namespace Yttrium
             };
 
             template <size_t N>
+            struct CompiledUnits {
+                typedef typename Policy:: template CompiledUnits<N>::Type Type;
+            };
+
+
+        };
+
+        template <>
+        struct Proxy<apq> {
+            typedef apq Unit;
+
+            typedef const Unit &     UnitArgs;
+            typedef DirePolicy<Unit> Policy;
+
+            template <typename ALLOCATOR>
+            struct FlexibleUnits {
+                typedef typename Policy::template FlexibleUnits<ALLOCATOR>::Type Type;
+            };
+
+            template <size_t N>
             struct CompiledUnits
             {
                 typedef typename Policy:: template CompiledUnits<N>::Type Type;
             };
-
         };
-#endif
+
 
 
         template <
         typename  T,
-        typename  UNIT,
-        typename  UNIT_ARGS,
+        typename  PROXY,
         typename  STORAGE>
         class Addition : public STORAGE
         {
         public:
             Y_ARGS_DECL(T,Type);
+            typedef typename PROXY::Unit     Unit;
+            typedef typename PROXY::UnitArgs UnitArgs;
 
             explicit Addition() noexcept : STORAGE() {}
             virtual ~Addition() noexcept {}
 
             inline void push(ParamType args)
             {
-                UNIT_ARGS u = args;
+                UnitArgs u = args;
                 this->insert(u);
             }
 
             inline void push(const size_t n, ParamType args)
             {
-                UNIT_ARGS u = args;
+                UnitArgs u = args;
                 this->insert(u,n);
             }
             
             Type sum()
             {
                 if(this->size()>0)
-                {
-                    std::cerr << *this << std::endl;
-                    while( this->size() > 1)
-                    {
-                        const UNIT lhs = this->pull();
-                        const UNIT rhs = this->pull();
-                        const UNIT tmp = lhs+rhs;
-                        this->insert(tmp);
-                        std::cerr << *this << std::endl;
-                    }
-                    return this->pull();
-                }
+                    return PROXY::Policy::Reduce(*this);
                 else
-                {
                     return 0;
-                }
             }
-
-
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Addition);
         };
+
+        template <typename T, typename ALLOCATOR = Memory::Dyadic>
+        class Add :
+        public Addition<T,Proxy<T>,typename Proxy<T>::template FlexibleUnits<ALLOCATOR>::Type>
+        {
+        public:
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Add);
+        };
+
 
 
     }
@@ -253,14 +235,14 @@ namespace Yttrium
 
 Y_UTEST(mkl_cameo)
 {
+    Random::Rand ran;
 
 #if 1
     {
         Cameo::Addition
         <
         double,
-        Cameo::Proxy<double>::Unit,
-        Cameo::Proxy<double>::UnitArgs,
+        Cameo::Proxy<double>,
         Cameo::Proxy<double>::FlexibleUnits<Memory::Pooled>::Type
         > xadd;
 
@@ -280,8 +262,7 @@ Y_UTEST(mkl_cameo)
 #if 1
     {
         Cameo::Addition<apq,
-        Cameo::Proxy<apq>::Unit,
-        Cameo::Proxy<apq>::UnitArgs,
+        Cameo::Proxy<apq>,
         Cameo::Proxy<apq>::FlexibleUnits<Memory::Dyadic>::Type
         >
         xadd;
@@ -295,6 +276,30 @@ Y_UTEST(mkl_cameo)
 
     }
 #endif
+
+
+#if 1
+    {
+        Cameo::Addition< Complex<float>,
+        Cameo::Proxy< Complex<float> >,
+        Cameo::Proxy< Complex<float> >::CompiledUnits<10>::Type
+        >
+        xadd;
+
+        xadd.push( Bring< Complex<float> >::Get(ran) );
+        xadd.push( Bring< Complex<float> >::Get(ran) );
+        xadd.push( Bring< Complex<float> >::Get(ran) );
+        xadd.push( Bring< Complex<float> >::Get(ran) );
+        xadd.push( Bring< Complex<float> >::Get(ran) );
+
+        std::cerr << xadd.sum() << std::endl;
+
+        std::cerr << xadd.sum() << std::endl;
+
+    }
+#endif
+
+
 
 }
 Y_UDONE()
