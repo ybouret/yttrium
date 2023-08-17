@@ -3,6 +3,7 @@
 #ifndef Y_Ordered_Dire_Included
 #define Y_Ordered_Dire_Included 1
 
+#include "y/type/args.hpp"
 #include "y/ordered/core/dire.hpp"
 #include "y/type/capacity.hpp"
 
@@ -14,7 +15,7 @@ namespace Yttrium
     //
     //
     //
-    //! Parametrized Heap
+    //! Parametrized Dire access, mimicking Heap
     //
     //
     //__________________________________________________________________________

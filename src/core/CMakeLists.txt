@@ -70,6 +70,8 @@ associative/hash/map
 associative/hash/set
 graphviz
 mkl
+mkl/cameo
+mkl/cameo/add
 )
 
 source_group(concurrent FILES ${quark})
