@@ -18,7 +18,6 @@ namespace Yttrium
     {
 
 
-
         template <typename T>
         struct HeapPolicy
         {
@@ -37,7 +36,7 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Comparator);
             };
-            
+
             template <typename ALLOCATOR>
             struct FlexibleUnits
             {
@@ -94,31 +93,17 @@ namespace Yttrium
                 Y_DISABLE_ASSIGN(Unit);
             };
 
-            class Comparator
-            {
-            public:
-                inline  Comparator() noexcept {}
-                inline ~Comparator() noexcept {}
-
-                inline SignType operator()(const Unit &lhs, const Unit &rhs)
-                {
-                    return Comparison::CxxIncreasing(lhs.absValue,rhs.absValue);
-                }
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Comparator);
-            };
+            typedef HeapPolicy<Unit> Policy;
 
             template <typename ALLOCATOR>
-            struct FlexibleUnits
-            {
-                typedef Heap<Unit,Core::FlexibleRawBuffer<Unit,ALLOCATOR>,Comparator> Type;
+            struct FlexibleUnits {
+                typedef typename Policy::template FlexibleUnits<ALLOCATOR>::Type Type;
             };
 
             template <size_t N>
             struct CompiledUnits
             {
-                typedef Heap<Unit,Core::CompiledRawBuffer<N,Unit>,Comparator> Type;
+                typedef typename Policy:: template CompiledUnits<N>::Type Type;
             };
 
 
@@ -128,16 +113,17 @@ namespace Yttrium
         struct Proxy<apq> {
             typedef apq Unit;
 
+            typedef DirePolicy<Unit> Policy;
+
             template <typename ALLOCATOR>
-            struct FlexibleUnits
-            {
-                typedef Dire<Unit,Core::FlexibleRawBuffer<Unit,ALLOCATOR> > Type;
+            struct FlexibleUnits {
+                typedef typename Policy::template FlexibleUnits<ALLOCATOR>::Type Type;
             };
 
             template <size_t N>
             struct CompiledUnits
             {
-                typedef Dire<Unit,Core::CompiledRawBuffer<N,Unit> > Type;
+                typedef typename Policy:: template CompiledUnits<N>::Type Type;
             };
         };
 
