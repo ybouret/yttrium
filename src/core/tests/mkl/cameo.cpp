@@ -79,6 +79,32 @@ Y_UTEST(mkl_cameo)
 #endif
 
 
+    {
+        Cameo::StaticAdd< XReal<long double>, 100 > xadd;
+
+        for(size_t i=0;i<10;++i)
+        {
+            xadd << Bring< XReal<long double> >:: Get(ran);
+        }
+
+        std::cerr << xadd.sum() << std::endl;
+
+    }
+
+
+    {
+        Cameo::StaticAdd< Complex< XReal<double> > , 13 > xadd;
+
+        for(size_t i=0;i<10;++i)
+        {
+            xadd << Bring< Complex< XReal<double> > >:: Get(ran);
+        }
+
+        std::cerr << xadd.sum() << std::endl;
+
+    }
+
+
 
 }
 Y_UDONE()

@@ -16,22 +16,48 @@ namespace Yttrium
     {
         namespace Cameo
         {
-
+            
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Policy to use an internal array to perform additions
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             struct DirePolicy
             {
+                //______________________________________________________________
+                //
+                //
+                //! Flexible Units for a given ALLOCATOR
+                //
+                //______________________________________________________________
                 template <typename ALLOCATOR>
                 struct FlexibleUnits
                 {
-                    typedef Dire<T,Core::FlexibleRawBuffer<T,ALLOCATOR> > Type;
+                    typedef Dire<T,Core::FlexibleRawBuffer<T,ALLOCATOR> > Type; //!< alias
                 };
 
+                //______________________________________________________________
+                //
+                //
+                //! Compile Units for a given size
+                //
+                //______________________________________________________________
                 template <size_t N>
                 struct CompiledUnits
                 {
-                    typedef Dire<T,Core::CompiledRawBuffer<N,T> > Type;
+                    typedef Dire<T,Core::CompiledRawBuffer<N,T> > Type; //!< alias
                 };
 
+                //______________________________________________________________
+                //
+                //
+                //! Dire sum of units with more than one item
+                //
+                //______________________________________________________________
                 template <typename UNITS> static inline
                 T Reduce(UNITS &units)
                 {

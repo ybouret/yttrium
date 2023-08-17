@@ -14,37 +14,68 @@ namespace Yttrium
     {
         namespace Cameo
         {
-            
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Policy to use an internal heap to perform additions
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             struct HeapPolicy
             {
+                //______________________________________________________________
+                //
+                //
+                //! comparator of absValue of Units
+                //
+                //______________________________________________________________
                 class  Comparator
                 {
                 public:
-                    inline  Comparator() noexcept {}
-                    inline ~Comparator() noexcept {}
-                    
+                    inline  Comparator() noexcept {} //!< setup
+                    inline ~Comparator() noexcept {} //!< cleanup
+
+                    //! decreasing absolute value for heap
                     inline SignType operator()(const T &lhs, const T &rhs) const
-                    {
-                        return Comparison::CxxDecreasing(lhs.absValue,rhs.absValue);
-                    }
+                    { return Comparison::CxxDecreasing(lhs.absValue,rhs.absValue); }
                     
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Comparator);
                 };
-                
+
+                //______________________________________________________________
+                //
+                //
+                //! Flexible Units for a given ALLOCATOR
+                //
+                //______________________________________________________________
                 template <typename ALLOCATOR>
                 struct FlexibleUnits
                 {
-                    typedef Heap<T,Core::FlexibleRawBuffer<T,ALLOCATOR>,Comparator > Type;
+                    typedef Heap<T,Core::FlexibleRawBuffer<T,ALLOCATOR>,Comparator > Type; //!< alias
                 };
-                
+
+                //______________________________________________________________
+                //
+                //
+                //! Compile Units for a given size
+                //
+                //______________________________________________________________
                 template <size_t N>
                 struct CompiledUnits
                 {
-                    typedef Heap<T,Core::CompiledRawBuffer<N,T>,Comparator> Type;
+                    typedef Heap<T,Core::CompiledRawBuffer<N,T>,Comparator> Type; //!< alias
                 };
-                
+
+                //______________________________________________________________
+                //
+                //
+                //! Reduction os a Heap of Units whit more than one item
+                //
+                //______________________________________________________________
                 template <typename UNITS> static inline
                 T Reduce(UNITS &units)
                 {

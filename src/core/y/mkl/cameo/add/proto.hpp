@@ -14,6 +14,14 @@ namespace Yttrium
         namespace Cameo
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Prototype addition for a TYPE, its PROXY and a selected STORAGE
+            //
+            //
+            //__________________________________________________________________
             template <
             typename  T,
             typename  PROXY,
@@ -21,40 +29,52 @@ namespace Yttrium
             class AddProto : public STORAGE
             {
             public:
-                Y_ARGS_DECL(T,Type);
-                typedef typename PROXY::Unit     Unit;
-                typedef typename PROXY::UnitArgs UnitArgs;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                Y_ARGS_DECL(T,Type);                       //!< aliases
+                typedef typename PROXY::Unit     Unit;     //!< alias
+                typedef typename PROXY::UnitArgs UnitArgs; //!< alias
 
-                explicit AddProto() noexcept : STORAGE() {}
-                explicit AddProto(size_t n)  : STORAGE(n,AsCapacity) {}
-                virtual ~AddProto() noexcept {}
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit AddProto() noexcept : STORAGE()             {} //!< setup empty
+                explicit AddProto(size_t n)  : STORAGE(n,AsCapacity) {} //!< setup with capacity
+                virtual ~AddProto() noexcept                         {} //!< cleanup
 
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                //! insert a new iten
                 inline void push(ParamType args)
-                {
-                    UnitArgs u = args;
-                    this->insert(u);
-                }
+                { UnitArgs u = args; this->insert(u); }
 
+                //! insert a new item, helper
                 inline AddProto & operator<<(ParamType args)
-                {
-                    UnitArgs u = args;
-                    this->insert(u);
-                    return *this;
-                }
+                { UnitArgs u = args; this->insert(u); return *this; }
 
-
+                //! insert new items, helper
                 inline void push(const size_t n, ParamType args)
-                {
-                    UnitArgs u = args;
-                    this->insert(u,n);
-                }
+                { UnitArgs u = args; this->insert(u,n); }
 
-                Type sum()
+                //! call reduction algorithm
+                inline Type sum()
                 {
                     if(this->size()>0)
                         return PROXY::Policy::Reduce(*this);
                     else
-                        return 0;
+                        return T(0);
                 }
 
             private:
