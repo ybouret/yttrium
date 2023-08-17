@@ -13,6 +13,7 @@ namespace Yttrium
     namespace Jive
     {
 
+        //! compiling posix (and alike) patterns
         struct posix
         {
 

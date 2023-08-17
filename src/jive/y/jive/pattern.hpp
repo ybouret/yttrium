@@ -106,9 +106,15 @@ namespace Yttrium
             static Pattern *Avoid(const char *   ); //!< None[text]
             static Pattern *Avoid(const String & ); //!< None[text]
 
+            //__________________________________________________________________
+            //
+            // Testing
+            //__________________________________________________________________
             friend bool operator==(const Pattern &, const Pattern &) noexcept; //!< test equality
             friend bool operator!=(const Pattern &, const Pattern &) noexcept; //!< test difference
             
+            bool isBasic() const noexcept; //!< check is it's a basic pattern
+
 
             //__________________________________________________________________
             //
