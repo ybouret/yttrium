@@ -17,35 +17,37 @@ namespace Yttrium
     namespace CamEO
     {
 
-        template <typename T> class UnitComparator
-        {
-        public:
-            inline  UnitComparator() noexcept {}
-            inline ~UnitComparator() noexcept {}
 
 
-            inline SignType operator()(const T &lhs, const T &rhs)
-            {
-                return Comparison::CxxIncreasing(lhs.absValue,rhs.absValue);
-            }
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(UnitComparator);
-        };
-
-        template <typename T, typename COMPARATOR>
+        template <typename T>
         struct HeapPolicy
         {
+            class  Comparator
+            {
+            public:
+                inline  Comparator() noexcept {}
+                inline ~Comparator() noexcept {}
+
+
+                inline SignType operator()(const T &lhs, const T &rhs)
+                {
+                    return Comparison::CxxIncreasing(lhs.absValue,rhs.absValue);
+                }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Comparator);
+            };
+            
             template <typename ALLOCATOR>
             struct FlexibleUnits
             {
-                typedef Heap<T,Core::FlexibleRawBuffer<T,ALLOCATOR>,COMPARATOR> Type;
+                typedef Heap<T,Core::FlexibleRawBuffer<T,ALLOCATOR>,Comparator > Type;
             };
 
             template <size_t N>
             struct CompiledUnits
             {
-                typedef Heap<T,Core::CompiledRawBuffer<N,T>,COMPARATOR> Type;
+                typedef Heap<T,Core::CompiledRawBuffer<N,T>,Comparator> Type;
             };
         };
 
