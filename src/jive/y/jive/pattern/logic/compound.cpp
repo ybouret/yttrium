@@ -83,6 +83,7 @@ namespace Yttrium
 }
 
 #include "y/jive/pattern/basic/single.hpp"
+#include "y/jive/pattern/basic/range.hpp"
 #include "y/text/ops.hpp"
 
 namespace Yttrium
@@ -90,13 +91,21 @@ namespace Yttrium
     namespace Jive
     {
 
+        void Compound:: add(const uint8_t code)
+        {
+            patterns.pushTail( new Single(code) );
+        }
+
+        void Compound:: add(const uint8_t lower, const uint8_t upper)
+        {
+            patterns.pushTail( new Range(lower,upper) );
+        }
+
         void Compound:: feed(const char *buf, const size_t len)
         {
             assert( Good(buf,len) );
             for(size_t i=0;i<len;++i)
-            {
-                patterns.pushTail( new Single(buf[i]) );
-            }
+                add(buf[i]);
         }
 
         void Compound:: feed(const char *buf)

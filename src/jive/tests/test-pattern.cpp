@@ -39,13 +39,8 @@ static inline void testPattern(Pattern &p)
     }
     {
         const String dotName = root + ".dot";
-        {
-            Libc::OutputFile fp(dotName);
-            Vizible::Enter(fp, "G");
-            p.viz(fp);
-            Vizible::Leave(fp);
-        }
         const String pngName = root + ".png";
+        p.graphViz(dotName);
         Vizible::Render(pngName,dotName);
     }
 

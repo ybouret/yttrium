@@ -1,0 +1,52 @@
+
+
+#include "y/jive/pattern/posix.hpp"
+
+#include "y/stream/libc/output.hpp"
+#include "y/stream/libc/input.hpp"
+
+#include "y/utest/run.hpp"
+#include "y/ptr/auto.hpp"
+
+using namespace Yttrium;
+
+static inline
+void testPosix( Jive::Pattern *p, const char *id)
+{
+    const AutoPtr<Jive::Pattern> keep(p);
+    const String root     = id;
+    std::cerr << "-------- " << std::setw(10) << root << " --------" << std::endl;
+    const String dataFile = root + ".dat";
+
+    {
+        Libc::OutputFile fp(dataFile);
+        p->serialize(fp);
+    }
+
+    {
+        Libc::InputFile fp(dataFile);
+        const AutoPtr<Jive::Pattern> reloaded = Jive::Pattern::ReadFrom(fp);
+        Y_CHECK(*reloaded == *p );
+    }
+
+    const String dotFile = root + ".dot";
+    const String pngFile = root + ".png";
+    p->graphViz(dotFile);
+    Vizible::Render(pngFile,dotFile);
+
+
+}
+
+#define Y_JIVE_POSIX(NAME) testPosix( Jive::posix:: NAME(), #NAME )
+
+Y_UTEST(posix)
+{
+    Y_JIVE_POSIX(lower);
+    Y_JIVE_POSIX(upper);
+    Y_JIVE_POSIX(alpha);
+    Y_JIVE_POSIX(digit);
+    Y_JIVE_POSIX(alnum);
+    Y_JIVE_POSIX(word);
+}
+Y_UDONE()
+

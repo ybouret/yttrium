@@ -99,14 +99,28 @@ namespace Yttrium
             //
             // create logical patterns
             //__________________________________________________________________
-            static Pattern *Exact(const char *);   //!< And[text]
-            static Pattern *Exact(const String &); //!< And[text]
-            static Pattern *Among(const char *);   //!< Or[text]
-            static Pattern *Among(const String &); //!< Or[text]
+            static Pattern *Exact(const char *   ); //!< And[text]
+            static Pattern *Exact(const String & ); //!< And[text]
+            static Pattern *Among(const char *   ); //!< Or[text]
+            static Pattern *Among(const String & ); //!< Or[text]
+            static Pattern *Avoid(const char *   ); //!< None[text]
+            static Pattern *Avoid(const String & ); //!< None[text]
 
             friend bool operator==(const Pattern &, const Pattern &) noexcept; //!< test equality
             friend bool operator!=(const Pattern &, const Pattern &) noexcept; //!< test difference
             
+
+            //__________________________________________________________________
+            //
+            // saving
+            //__________________________________________________________________
+            size_t save(const String &datName) const; //!< save and return serialized bytes
+            size_t save(const char   *datName) const; //!< alias
+
+            void graphViz(const String &dotName) const; //!< save GraphViz dot code
+            void graphViz(const char   *dotName) const; //!< alias
+
+
 
             //__________________________________________________________________
             //

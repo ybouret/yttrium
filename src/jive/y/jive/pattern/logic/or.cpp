@@ -8,9 +8,15 @@ namespace Yttrium
     namespace Jive
     {
 
-        Or::  Or() noexcept : Compound(UUID) {}
+        Or::  Or() noexcept : Compound(UUID)
+        {
+            Y_PATTERN(Or);
+        }
 
-        Or::  Or(const Or &other) : Compound(other) {}
+        Or::  Or(const Or &other) : Compound(other)
+        {
+            Y_PATTERN(Or);
+        }
 
         Or:: ~Or() noexcept
         {

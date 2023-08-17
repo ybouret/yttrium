@@ -1,15 +1,22 @@
 #include "y/jive/pattern/logic/none.hpp"
 #include "y/jive/source.hpp"
 #include "y/jive/pattern/first-chars.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace Yttrium
 {
     namespace Jive
     {
 
-        None::  None() noexcept : Compound(UUID) {}
+        None::  None() noexcept : Compound(UUID)
+        {
+            Y_PATTERN(None);
+        }
 
-        None::  None(const None &other) : Compound(other) {}
+        None::  None(const None &other) : Compound(other)
+        {
+            Y_PATTERN(None);
+        }
 
         None:: ~None() noexcept
         {
@@ -95,6 +102,23 @@ namespace Yttrium
             Endl(fp);
             vizLink(fp);
         }
+
+
+        Pattern * Pattern:: Avoid(const char *text)
+        {
+            AutoPtr<Compound> p = new None();
+            p->feed(text);
+            return p.yield();
+        }
+
+
+        Pattern * Pattern:: Avoid(const String &text)
+        {
+            AutoPtr<Compound> p = new None();
+            p->feed(text);
+            return p.yield();
+        }
+
     }
 
 }

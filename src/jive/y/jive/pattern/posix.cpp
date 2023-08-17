@@ -38,17 +38,17 @@ namespace Yttrium
             return Pattern::Optimize( p.yield() );
         }
 
-#if 0
-        pattern * posix:: word()
+        Pattern * posix:: word()
         {
-            auto_ptr<op_or> p = new op_or();
+            AutoPtr<Compound> p = new Or();
             p->add(  '_'  );
-            p->push_back( digit() );
-            p->push_back( upper() );
-            p->push_back( lower() );
-            return p.yield();
+            *p << digit();
+            *p << upper();
+            *p << lower();
+            return Pattern::Optimize( p.yield() );
         }
 
+#if 0
         pattern * posix:: xdigit()
         {
             auto_ptr<op_or> p = new op_or();

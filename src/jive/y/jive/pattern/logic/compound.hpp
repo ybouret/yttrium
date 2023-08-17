@@ -43,9 +43,12 @@ namespace Yttrium
             Compound & operator<<( Pattern *);        //!< append argument
 
 
-            void feed(const char *, const size_t); //!< feed with singles
-            void feed(const char *);               //!< feed with singles
-            void feed(const String &);             //!< feed with singles
+            void feed(const char *, const size_t); //!< feed with Singles
+            void feed(const char *);               //!< feed with Singles
+            void feed(const String &);             //!< feed with Singles
+
+            void add(const uint8_t);                //!< add a Single
+            void add(const uint8_t, const uint8_t); //!< add a Range
 
             //__________________________________________________________________
             //

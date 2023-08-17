@@ -88,6 +88,10 @@ namespace Yttrium
                     break;
             }
 
+            std::cerr << "[[ Optimizing Multiple Or'd]]" << std::endl;
+
+
+
             return motif.yield();
         }
 
