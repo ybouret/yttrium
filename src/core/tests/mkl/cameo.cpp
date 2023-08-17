@@ -70,11 +70,13 @@ namespace Yttrium
         template <typename T>
         struct Proxy
         {
+            typedef typename MKL::ScalarFor<T>::Type Scalar;
+
             class Unit
             {
             public:
-                const T usrValue;
-                const T absValue;
+                const T      usrValue;
+                const Scalar absValue;
                 inline Unit(const T &args) noexcept:
                 usrValue(args),
                 absValue( MKL::Fabs<T>::Of(usrValue) )
@@ -252,7 +254,7 @@ namespace Yttrium
 Y_UTEST(mkl_cameo)
 {
 
-#if 0
+#if 1
     {
         Cameo::Addition
         <
