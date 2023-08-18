@@ -101,7 +101,7 @@ namespace Yttrium
                     break;
             }
 
-            std::cerr << "[[ Optimizing Multiple Or'd]]" << std::endl;
+            //std::cerr << "[[ Optimizing Multiple Or'd]]" << std::endl;
 
             Patterns all;
             while(patterns.size>0)
@@ -110,6 +110,7 @@ namespace Yttrium
                 assert(0!=curr);
                 if(curr->isBasic())
                 {
+                    // compile consecutive basic patterns
                     FirstChars fc;
                     {
                         const AutoPtr<Pattern> q(curr);
@@ -124,6 +125,7 @@ namespace Yttrium
                 }
                 else
                 {
+                    // keep consecutive compound patterns
                     all.pushTail(curr);
                     while(patterns.size>0 && !patterns.head->isBasic())
                     {
