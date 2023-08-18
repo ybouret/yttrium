@@ -6,6 +6,13 @@ namespace Yttrium
 {
     VFS:: ~VFS() noexcept {}
     VFS::  VFS() noexcept {}
+
+    bool VFS:: TryRemove(const char   *path)
+    {
+        const String _(path);
+        return TryRemove(_);
+    }
+
 }
 
 namespace Yttrium

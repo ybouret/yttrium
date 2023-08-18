@@ -43,6 +43,16 @@ namespace Yttrium
         static const char *Extension(const char * const path)                    noexcept; //!< NULL or .ext
         static const char *Extension(const String &     path)                    noexcept; //!< NULL or .ext
 
+
+        //______________________________________________________________________
+        //
+        //
+        // Interface
+        //
+        //______________________________________________________________________
+        virtual bool TryRemove(const String &path) = 0;
+        bool         TryRemove(const char   *path);
+        
         //______________________________________________________________________
         //
         //

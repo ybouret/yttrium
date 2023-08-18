@@ -55,7 +55,9 @@ namespace Yttrium
         static void Leave(OutputStream &);
 
         //! 'dot -T png -o pngFile dotFile'
-        static void Render(const String &pngFile, const String &dotFile);
+        static void Render(const String &pngFile,
+                           const String &dotFile,
+                           const bool    keepDot = false);
 
         //______________________________________________________________________
         //

@@ -67,14 +67,7 @@ namespace Yttrium
         return Arrow(fp,this,dst);
     }
 
-    void Vizible:: Render(const String &pngFile, const String &dotFile)
-    {
-        String cmd = "dot -T png -o " + pngFile + " " + dotFile;
-        if( 0 != system( cmd() ) )
-        {
-            std::cerr << "*** failure to execute [" << cmd << "]" << std::endl;
-        }
-    }
+
 
     static inline
     void emitLabel(OutputStream &fp, const char *msg, size_t len)
@@ -95,6 +88,30 @@ namespace Yttrium
     {
         emitLabel(fp,id,StringLength(id));
         return fp;
+    }
+
+}
+
+#include "y/vfs/local-fs.hpp"
+namespace Yttrium
+{
+    void Vizible:: Render(const String &pngFile,
+                          const String &dotFile,
+                          const bool    keepDot)
+    {
+        String cmd = "dot -T png -o " + pngFile + " " + dotFile;
+        if( 0 != system( cmd() ) )
+        {
+            std::cerr << "*** failure to execute [" << cmd << "]" << std::endl;
+        }
+        else
+        {
+            if(!keepDot)
+            {
+                static VFS &fs = LocalFS::Instance();
+                (void) fs.TryRemove(dotFile);
+            }
+        }
     }
 
 }
