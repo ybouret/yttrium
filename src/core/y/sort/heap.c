@@ -1,12 +1,12 @@
 #include "y/sort/heap.h"
 #include <string.h>
 
-void yack_heap_sort(void        *item,
-                    const size_t n,
-                    const size_t width,
-                    void        *rra,
-                    int (*proc)(const void *lhs, const void *rhs, void *args),
-                    void *args)
+void Y_HeapSort(void        *item,
+                const size_t n,
+                const size_t width,
+                void        *rra,
+                int (*proc)(const void *lhs, const void *rhs, void *args),
+                void *args)
 {
     assert(NULL!=proc);
     assert(NULL!=rra);
