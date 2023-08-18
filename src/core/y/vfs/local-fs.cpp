@@ -19,6 +19,7 @@ namespace Yttrium
 
     bool LocalFS:: TryRemove(const String &path)
     {
+        Y_GIANT_LOCK();
 #if defined(Y_BSD)
         if( 0!=unlink( path() ) ) return false;
         return true;

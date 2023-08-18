@@ -50,9 +50,9 @@ namespace Yttrium
         // Interface
         //
         //______________________________________________________________________
-        virtual bool TryRemove(const String &path) = 0;
-        bool         TryRemove(const char   *path);
-        
+        virtual bool TryRemove(const String &path) = 0; //!< try to remove file from VFS
+        bool         TryRemove(const char   *path);     //!< alias
+
         //______________________________________________________________________
         //
         //

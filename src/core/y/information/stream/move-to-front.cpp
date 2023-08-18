@@ -1,33 +1,82 @@
 
 #include "y/information/stream/move-to-front.hpp"
-#include "y/data/list.hpp"
 #include "y/object.hpp"
 #include "y/memory/allocator/dyadic.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
     namespace Information
     {
 
-        namespace
-        {
-            struct MTF
-            {
-                MTF    *next;
-                MTF    *prev;
-                uint8_t code;
-                void   *priv;
-            };
-        }
 
         class MoveToFront:: Code : public Object
         {
         public:
-            explicit Code() noexcept {}
-            virtual ~Code() noexcept {}
+            static const unsigned Shift = iLog2<256>::Value;
+
+            explicit Code() :
+            Object(),
+            shift(Shift),
+            entry( alloc() )
+            {
+                format();
+            }
+
+            virtual ~Code() noexcept
+            {
+                static Memory::Dyadic &mgr = Memory::Dyadic::Location();
+                mgr.releaseBlock( *(void**)&entry,shift);
+            }
+
+            inline void format() noexcept
+            {
+                for(unsigned i=0;i<256;++i)
+                {
+                    entry[i] = uint8_t(i);
+                }
+            }
+
+            uint8_t *lookFor(const uint8_t x) const noexcept
+            {
+                uint8_t *p = entry;
+
+            CHECK:
+                if(*p == x ) return p;
+                ++p;
+                goto CHECK;
+            }
+
+            inline uint8_t encode(const uint8_t x) noexcept
+            {
+                uint8_t      *p = lookFor(x);
+                const uint8_t n = static_cast<uint8_t>(p-entry);
+                memmove(entry+1,entry,n);
+                entry[0] = x;
+                return n;
+            }
+
+            inline uint8_t decode(const uint8_t n) noexcept
+            {
+                uint8_t *     p = entry+n;
+                const uint8_t x = *p;
+                memmove(entry+1,entry,n);
+                entry[0] = x;
+                return x;
+            }
+
+
+            unsigned  shift;
+            uint8_t  *entry;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
+            inline uint8_t *alloc() {
+                static Memory::Dyadic &mgr = Memory::Dyadic::Instance();
+                return static_cast<uint8_t*>(mgr.acquireBlock(shift));
+            }
+
+
         };
     }
 
@@ -53,6 +102,7 @@ namespace Yttrium
         void MoveToFront:: Common:: restart() noexcept
         {
             assert(0!=code);
+            code->format();
         }
     }
 
@@ -66,9 +116,7 @@ namespace Yttrium
         MoveToFront:: Encoder:: Encoder() :
         Common()
         {
-            std::cerr << "sizeof(Code) = " << sizeof(Code) << std::endl;
-            std::cerr << "sizeof(MTF)  = " << sizeof(MTF) << std::endl;
-
+            
         }
 
         MoveToFront:: Encoder:: ~Encoder() noexcept
@@ -78,7 +126,7 @@ namespace Yttrium
         uint8_t MoveToFront:: Encoder:: operator()(const uint8_t x) noexcept
         {
             assert(0!=code);
-            return x;
+            return code->encode(x);
         }
 
     }
@@ -102,8 +150,10 @@ namespace Yttrium
         uint8_t MoveToFront:: Decoder:: operator()(const uint8_t x) noexcept
         {
             assert(0!=code);
-            return x;
+            return code->decode(x);
         }
+
+
 
 
     }

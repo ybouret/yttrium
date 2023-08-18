@@ -11,13 +11,33 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Local File System Interface
+    //
+    //
+    //__________________________________________________________________________
     class LocalFS : public Singleton<LocalFS>, public VFS
     {
     public:
-        static const char * const      CallSign;
-        static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity-9;
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        static const char * const      CallSign;                              //!< "LocalFS"
+        static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity-9; //!< alias
 
-        virtual bool TryRemove(const String &path);
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        virtual bool TryRemove(const String &path); //!< try to remove file from disk
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(LocalFS);

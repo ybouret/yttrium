@@ -9,18 +9,35 @@ namespace Yttrium
 {
     namespace Information
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Stream Cipher interface
+        //
+        //
+        //______________________________________________________________________
         class StreamCipher
         {
         public:
-            virtual ~StreamCipher() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            virtual uint8_t operator()(const uint8_t) noexcept = 0; //!< get next byte
+            virtual void    restart()                 noexcept = 0; //!< restart cipher
 
-            virtual uint8_t operator()(const uint8_t) noexcept = 0;
-            virtual void    restart()                 noexcept = 0;
-
-
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            virtual ~StreamCipher() noexcept; //!< cleanup
         protected:
-            explicit StreamCipher() noexcept;
+            explicit StreamCipher() noexcept; //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(StreamCipher);
