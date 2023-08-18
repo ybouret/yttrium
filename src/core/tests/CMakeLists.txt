@@ -20,6 +20,7 @@ sequence
 associative
 graphviz
 mkl
+vfs
 )
 
 Y_LinkLibraries(test-core)
@@ -202,4 +203,7 @@ add_test(mkl:cameo   test-core mkl_cameo)
 
 #graphviz
 add_test(graphviz test-core graphviz)
+
+#VFS
+add_test(vfs:names test-core vfs_names)
 

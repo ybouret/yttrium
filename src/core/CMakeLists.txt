@@ -73,6 +73,7 @@ graphviz
 mkl
 mkl/cameo
 mkl/cameo/add
+vfs
 )
 
 source_group(concurrent FILES ${quark})

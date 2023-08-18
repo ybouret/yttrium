@@ -155,5 +155,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(mkl_cameo);
 
     Y_UTEST(graphviz);
+
+    Y_UTEST(vfs_names);
 }
 Y_UTEST_EXEC()
