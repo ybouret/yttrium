@@ -7,7 +7,8 @@
 
 namespace Yttrium
 {
-    namespace Core { template <typename> class String; }
+    namespace Core    { template <typename> class String;   }
+    namespace Hashing { class                     Function; }
 
     class OutputStream;
 
@@ -51,6 +52,12 @@ namespace Yttrium
         //! write to string
         //______________________________________________________________________
         Core::String<char> toBinary() const;
+
+        //______________________________________________________________________
+        //
+        //! send to hashing function
+        //______________________________________________________________________
+        void runHash( Hashing::Function &) const noexcept;
 
         //______________________________________________________________________
         //

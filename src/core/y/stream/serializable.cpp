@@ -39,3 +39,15 @@ namespace Yttrium
         return bin;
     }
 }
+#include "y/hashing/function.hpp"
+#include "y/stream/hash/output.hpp"
+
+namespace Yttrium
+{
+
+    void Serializable:: runHash( Hashing::Function &usr ) const noexcept
+    {
+        HashingStream fp(usr);
+        (void)serialize(fp);
+    }
+}

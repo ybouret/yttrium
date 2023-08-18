@@ -90,7 +90,32 @@ namespace Yttrium
 
             std::cerr << "[[ Optimizing Multiple Or'd]]" << std::endl;
 
-
+            Patterns all;
+            while(patterns.size>0)
+            {
+                Pattern *curr = patterns.popHead();
+                assert(0!=curr);
+                if(curr->isBasic())
+                {
+                    Patterns blk;
+                    blk.pushTail(curr);
+                    while(patterns.size>0 && patterns.head->isBasic())
+                    {
+                        blk.pushTail(patterns.popHead());
+                    }
+                    std::cerr << "Processing #blk=" << blk.size << std::endl;
+                    all.mergeTail(blk);
+                }
+                else
+                {
+                    all.pushTail(curr);
+                    while(patterns.size>0 && !patterns.head->isBasic())
+                    {
+                        all.pushTail(patterns.popHead());
+                    }
+                }
+            }
+            all.swapWith(patterns);
 
             return motif.yield();
         }

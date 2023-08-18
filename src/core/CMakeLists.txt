@@ -20,6 +20,7 @@ stream/libc
 stream/libc/buffer
 stream/data
 stream/gzip
+stream/hash
 text
 text/ascii
 data

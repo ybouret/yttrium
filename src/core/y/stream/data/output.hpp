@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_IO_Data_Output_Included
-#define Y_IO_Data_Output_Included 1
+#ifndef Y_Stream_Data_Output_Included
+#define Y_Stream_Data_Output_Included 1
 
 #include "y/stream/output.hpp"
 
