@@ -2,6 +2,7 @@
 #include "y/text/ops.hpp"
 #include "y/type/utils.hpp"
 #include <cstring>
+#include <cctype>
 
 namespace Yttrium
 {
@@ -48,6 +49,13 @@ namespace Yttrium
         }
         return buffer;
     }
+
+    void  TextOps:: ToLower(char *buffer, const size_t buflen) noexcept
+    {
+        assert( Good(buffer,buflen) );
+        for(size_t i=0;i<buflen;++i) buffer[i] = char(tolower(buffer[i]));
+    }
+
 
 }
 

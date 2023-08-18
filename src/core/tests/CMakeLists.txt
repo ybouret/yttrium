@@ -209,6 +209,7 @@ add_test(graphviz test-core graphviz)
 add_test(vfs:names test-core vfs_names)
 
 #Information
-add_test(info:mtf test-core info_mtf)
+add_test(info:mtf   test-core info_mtf)
 add_test(info:delta test-core info_delta)
+add_test(info:arc4  tedt-core info_arc4)
 

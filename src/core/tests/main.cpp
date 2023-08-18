@@ -160,5 +160,6 @@ Y_UTEST_DECL(256)
 
     Y_UTEST(info_mtf);
     Y_UTEST(info_delta);
+    Y_UTEST(info_arc4);
 }
 Y_UTEST_EXEC()

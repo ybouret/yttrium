@@ -22,7 +22,8 @@ namespace Yttrium
         //! safe removal of trailing bad characters
         static char *TrimInvalid(char *buffer, const size_t buflen, const char *bad, const size_t num) noexcept;
 
-
+        //! in-place tolowe
+        static void  ToLower(char *buffer, const size_t buflen) noexcept;
 
     };
 
