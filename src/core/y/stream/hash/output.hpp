@@ -11,16 +11,37 @@ namespace Yttrium
 
     namespace Hashing { class Function; }
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Running Hash Function on outpu
+    //
+    //
+    //__________________________________________________________________________
     class HashingStream : public OutputStream
     {
     public:
-        static const char * const CallSign;
+        static const char * const CallSign; //!< "HashingStream"
 
-        explicit HashingStream(Hashing::Function &) noexcept;
-        virtual ~HashingStream() noexcept;
-        virtual  void        write(const char) noexcept;
-        virtual  void        flush()           noexcept;
-        virtual  const char *callSign()  const noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        explicit HashingStream(Hashing::Function &) noexcept; //!< setup from PERSISTENT Hash Function
+        virtual ~HashingStream()                    noexcept; //!< cleanup
+
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        virtual  void        write(const char) noexcept; //!< send to hash
+        virtual  void        flush()           noexcept; //!< do nothing
+        virtual  const char *callSign()  const noexcept; //!< CallSign
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(HashingStream);

@@ -9,23 +9,50 @@
 
 namespace Yttrium
 {
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! VFS Interface
+    //
+    //
+    //__________________________________________________________________________
     class VFS
     {
     public:
-        static const char  EmptyName[];
-        static bool        IsSeparator(const char c) noexcept;
-        static const char *BaseName(const char * const path, const size_t size)  noexcept;
-        static const char *BaseName(const char * const path)                     noexcept;
-        static const char *BaseName(const String     & path)                     noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        static const char  EmptyName[]; //!< ""
 
-        static const char *Extension(const char * const path, const size_t size) noexcept;
-        static const char *Extension(const char * const path)                    noexcept;
-        static const char *Extension(const String &     path)                    noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // File Names
+        //
+        //______________________________________________________________________
+        static bool        IsSeparator(const char c) noexcept; //!< [back]slash
+        static const char *BaseName(const char * const path, const size_t size)  noexcept; //!< basename
+        static const char *BaseName(const char * const path)                     noexcept; //!< basename
+        static const char *BaseName(const String     & path)                     noexcept; //!< basename
 
+        static const char *Extension(const char * const path, const size_t size) noexcept; //!< NULL or .ext
+        static const char *Extension(const char * const path)                    noexcept; //!< NULL or .ext
+        static const char *Extension(const String &     path)                    noexcept; //!< NULL or .ext
 
-        virtual ~VFS() noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+
+        virtual ~VFS() noexcept; //!< cleanup
     protected:
-        explicit  VFS() noexcept;
+        explicit VFS() noexcept; //!< setup
     private:
         Y_DISABLE_COPY_AND_ASSIGN(VFS);
     };
