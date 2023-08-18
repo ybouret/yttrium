@@ -1,4 +1,4 @@
-#include "y/information/stream/move-to-front.hpp"
+#include "y/information/stream/delta.hpp"
 #include "y/information/entropy.hpp"
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
@@ -7,18 +7,18 @@
 
 using namespace Yttrium;
 
-Y_UTEST(info_mtf)
+Y_UTEST(info_delta)
 {
-    Information::MoveToFront::Encoder enc;
-    Information::MoveToFront::Decoder dec;
-    Information::Entropy              source;
-    Information::Entropy              target;
+    Information::Delta::Encoder enc;
+    Information::Delta::Decoder dec;
+    Information::Entropy        source;
+    Information::Entropy        target;
 
 
     if(argc>1)
     {
         Libc::InputFile  inp(argv[1]);
-        Libc::OutputFile out("mtf.dat");
+        Libc::OutputFile out("delta.dat");
         char c = 0;
         while(inp.query(c))
         {

@@ -210,4 +210,5 @@ add_test(vfs:names test-core vfs_names)
 
 #Information
 add_test(info:mtf test-core info_mtf)
+add_test(info:delta test-core info_delta)
 
