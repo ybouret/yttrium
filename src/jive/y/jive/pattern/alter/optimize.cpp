@@ -1,5 +1,6 @@
 
 #include "y/jive/pattern/all.hpp"
+#include "y/jive/pattern/first-chars.hpp"
 #include "y/ptr/auto.hpp"
 
 namespace Yttrium
@@ -9,7 +10,9 @@ namespace Yttrium
         //----------------------------------------------------------------------
         //
         //
+        //
         // Basic
+        //
         //
         //
         //----------------------------------------------------------------------
@@ -31,14 +34,18 @@ namespace Yttrium
         //----------------------------------------------------------------------
         //
         //
+        //
         // Logic
+        //
         //
         //
         //----------------------------------------------------------------------
 
         //----------------------------------------------------------------------
         //
+        //
         // propagate optimize to inner patterns
+        //
         //
         //----------------------------------------------------------------------
         template <typename T>
@@ -58,7 +65,9 @@ namespace Yttrium
 
         //----------------------------------------------------------------------
         //
+        //
         // optimize And
+        //
         //
         //----------------------------------------------------------------------
         static inline Pattern * OptimizeAnd(And *p)
@@ -73,9 +82,13 @@ namespace Yttrium
 
         //----------------------------------------------------------------------
         //
+        //
         // optimize Or
         //
+        //
         //----------------------------------------------------------------------
+
+
         static inline Pattern * OptimizeOr(Or *p)
         {
             AutoPtr<Or> motif    = OptimizeCompound(p);
@@ -97,14 +110,17 @@ namespace Yttrium
                 assert(0!=curr);
                 if(curr->isBasic())
                 {
-                    Patterns blk;
-                    blk.pushTail(curr);
+                    FirstChars fc;
+                    {
+                        const AutoPtr<Pattern> q(curr);
+                        q->query(fc);
+                    }
                     while(patterns.size>0 && patterns.head->isBasic())
                     {
-                        blk.pushTail(patterns.popHead());
+                        const AutoPtr<Pattern> q(patterns.popHead());
+                        q->query(fc);
                     }
-                    std::cerr << "Processing #blk=" << blk.size << std::endl;
-                    all.mergeTail(blk);
+                    fc.sendTo(all);
                 }
                 else
                 {

@@ -65,12 +65,12 @@ namespace Yttrium
 
         Pattern * posix:: space()
         {
-            return Pattern::Among(" \t\n\r\v\f");
+            return Pattern::Optimize( Pattern::Among(" \t\n\r\v\f") );
         }
 
         Pattern * posix::punct()
         {
-            return Pattern::Among("][!\"#$%&'()*+,./:;<=>?@\\^_`{|}~-");
+            return Pattern::Optimize( Pattern::Among("][!\"#$%&'()*+,./:;<=>?@\\^_`{|}~-") );
         }
 
 #if 0

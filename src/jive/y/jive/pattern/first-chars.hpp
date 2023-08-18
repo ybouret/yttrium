@@ -5,6 +5,7 @@
 
 #include "y/config/starting.hpp"
 #include "y/ostream-proto.hpp"
+#include "y/data/list.hpp"
 
 namespace Yttrium
 {
@@ -62,8 +63,10 @@ namespace Yttrium
 
             bool   operator[](const uint8_t) const noexcept; //!< query status
 
-            //! transform content in optimized Or'd Single/Range
-            Pattern *compile() const;
+
+            void     sendTo(ListOf<Pattern> &target) const; //!< send content to optimized list of Single/Range
+            Pattern *makeOr()                        const; //!< make Or'd patterns
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(FirstChars);

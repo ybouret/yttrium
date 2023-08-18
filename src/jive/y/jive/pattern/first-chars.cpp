@@ -142,11 +142,8 @@ namespace Yttrium
 {
     namespace Jive
     {
-        Pattern * FirstChars:: compile() const
+        void     FirstChars:: sendTo(ListOf<Pattern> &target) const
         {
-            AutoPtr<Compound> guard = new Or();
-            Compound         &p     = *guard;
-
             unsigned i = 0;
             unsigned j = 0;
             while( NextBlock(i,j,*this) )
@@ -156,16 +153,21 @@ namespace Yttrium
                 if(jm>i)
                 {
                     // range
-                    p << new Range(i,jm);
+                    target.pushTail( new Range(i,jm) );
                 }
                 else
                 {
                     // single
-                    p << new Single(i);
+                    target.pushTail( new Single(i) );
                 }
                 i=j;
             }
+        }
 
+        Pattern * FirstChars:: makeOr() const
+        {
+            AutoPtr<Compound> guard = new Or();
+            sendTo(guard->patterns);
             return guard.yield();
         }
     }

@@ -15,7 +15,6 @@ void testPosix( Jive::Pattern *p, const char *id)
 {
     const AutoPtr<Jive::Pattern> keep(p);
     const String root     = id;
-    std::cerr << "-------- " << std::setw(10) << root << " --------" << std::endl;
     const String dataFile = root + ".dat";
 
     {
@@ -37,7 +36,10 @@ void testPosix( Jive::Pattern *p, const char *id)
 
 }
 
-#define Y_JIVE_POSIX(NAME) testPosix( Jive::posix:: NAME(), #NAME )
+#define Y_JIVE_POSIX(NAME) do {            \
+std::cerr << "--> " << #NAME << std::endl; \
+testPosix( Jive::posix:: NAME(), #NAME );  \
+} while(false)
 
 Y_UTEST(posix)
 {
