@@ -74,6 +74,8 @@ mkl
 mkl/cameo
 mkl/cameo/add
 vfs
+information
+information/stream
 )
 
 source_group(concurrent FILES ${quark})

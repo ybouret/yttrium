@@ -21,6 +21,7 @@ associative
 graphviz
 mkl
 vfs
+information
 )
 
 Y_LinkLibraries(test-core)
@@ -206,4 +207,7 @@ add_test(graphviz test-core graphviz)
 
 #VFS
 add_test(vfs:names test-core vfs_names)
+
+#Information
+add_test(info:mtf test-core info_mtf)
 
