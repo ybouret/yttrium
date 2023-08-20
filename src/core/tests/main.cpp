@@ -153,6 +153,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(mkl_xreal);
     Y_UTEST(mkl_api);
     Y_UTEST(mkl_cameo);
+    Y_UTEST(mkl_antelope);
 
     Y_UTEST(graphviz);
 

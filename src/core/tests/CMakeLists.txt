@@ -200,6 +200,8 @@ add_test(mkl:vtx     test-core mkl_vtx)
 add_test(mkl:xreal   test-core mkl_xreal)
 add_test(mkl:api     test-core mkl_api)
 add_test(mkl:cameo   test-core mkl_cameo)
+add_test(mkl:antelope test-core mkl_antelope)
+
 
 
 #graphviz
