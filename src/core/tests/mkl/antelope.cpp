@@ -18,6 +18,32 @@ namespace Yttrium
         {
 
             template <typename T>
+            struct NeedProxy
+            {
+                enum { Flag = true };
+            };
+
+            template <>
+            struct NeedProxy<apn>
+            {
+                enum { Flag = false };
+            };
+
+            template <>
+            struct NeedProxy<apz>
+            {
+                enum { Flag = false };
+            };
+
+            template <>
+            struct NeedProxy<apq>
+            {
+                enum { Flag = false };
+            };
+
+
+
+            template <typename T>
             class AddProto
             {
                 //______________________________________________________________
