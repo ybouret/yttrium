@@ -1,5 +1,5 @@
 
-#include "y/information/bwt.h"
+#include "y/information/bwt/bwt.h"
 
 #define Y_BWT_Z8  0,0,0,0,0,0,0,0
 #define Y_BWT_Z16  Y_BWT_Z8,   Y_BWT_Z8

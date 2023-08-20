@@ -1,4 +1,4 @@
-#include "y/information/bwt.h"
+#include "y/information/bwt/bwt.h"
 #include "y/sort/heap.h"
 
 struct rotlexdat

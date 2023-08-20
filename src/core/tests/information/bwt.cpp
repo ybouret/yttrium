@@ -1,6 +1,6 @@
 
 
-#include "y/information/bwt.h"
+#include "y/information/bwt/bwt.h"
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
 #include "y/sequence/vector.hpp"
@@ -26,8 +26,7 @@ Y_UTEST(info_bwt)
             String decoded(size,AsCapacity,true);
             Y_BWT_Decode(&decoded[1], &output[1], size, indx(), pidx);
             std::cerr << input << " -> " << output << "@" << pidx << " -> " << decoded << std::endl;
-
-
+            
         }
     }
 
