@@ -18,7 +18,7 @@ namespace Yttrium
         {
 
             template <typename T>
-            class AddProxy
+            class AddProto
             {
                 //______________________________________________________________
                 //
@@ -88,8 +88,17 @@ namespace Yttrium
                 private:
                     Y_DISABLE_ASSIGN(Unit);
                 };
+
+
+
             };
             
+
+            template <>
+            class AddProto<apq>
+            {
+
+            };
 
         }
 
