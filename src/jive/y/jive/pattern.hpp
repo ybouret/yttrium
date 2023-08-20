@@ -6,6 +6,7 @@
 #include "y/jive/token.hpp"
 #include "y/stream/serializable.hpp"
 #include "y/graphviz/vizible.hpp"
+#include "y/ptr/arc.hpp"
 
 namespace Yttrium
 {
@@ -154,6 +155,7 @@ namespace Yttrium
             Y_DISABLE_ASSIGN(Pattern);
         };
 
+        typedef ArcPtr<const Pattern> Motif;
 
     }
 

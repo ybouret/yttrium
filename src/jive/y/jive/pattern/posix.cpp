@@ -73,51 +73,64 @@ namespace Yttrium
             return Pattern::Optimize( Pattern::Among("][!\"#$%&'()*+,./:;<=>?@\\^_`{|}~-") );
         }
 
-#if 0
-        static inline void __fill_endl( patterns &ops )
+        Pattern * posix:: core()
         {
-            ops.push_back( new single('\n') );
-            ops.push_back( new single('\r') );
-            ops.push_back( logical::equal("\r\n") );
-        }
-
-        pattern * posix:: endl()
-        {
-            auto_ptr<op_or> p = new op_or();
-            __fill_endl(*p);
-            return  pattern::optimize(p.yield());
-        }
-
-        pattern * posix:: dot()
-        {
-            auto_ptr<op_none> p = new op_none();
-            __fill_endl(*p);
-            return  pattern::optimize(p.yield());
-        }
-
-        pattern * posix:: core()
-        {
-            auto_ptr<op_or> p = new op_or();
+            AutoPtr<Compound> p = new Or();
             p->add( 0x20 );
             p->add( 0x21 );
             p->add( 0x23,0x26 );
             p->add( 0x28,0x5B );
             p->add( 0x5D,0x7F );
-            return pattern::optimize( p.yield() );
+            return Pattern::Optimize( p.yield() );
         }
 
         static const char __vowels__[] = "aeiouyAEIOUY";
 
-        pattern * posix:: vowel()
+        Pattern * posix:: vowel()
         {
-            return logical::among(__vowels__);
+            return Pattern::Among(__vowels__);
         }
 
-        pattern * posix:: consonant()
+        Pattern * posix:: consonant()
         {
-            return logical::avoid(__vowels__);
+            AutoPtr<Compound> p = new Or();
+            for(int i='a';i<='z';++i)
+            {
+                if(strchr(__vowels__,i)) continue;
+                p->add(i);
+            }
+
+            for(int i='A';i<='Z';++i)
+            {
+                if(strchr(__vowels__,i)) continue;
+                p->add(i);
+            }
+            return Pattern::Optimize( p.yield() );
         }
-#endif
+
+        static inline void __fill_endl( Patterns &ops )
+        {
+            ops.pushTail( new Single('\n') );
+            ops.pushTail( new Single('\r') );
+            ops.pushTail( Pattern::Exact("\r\n") );
+        }
+
+        Pattern * posix:: endl()
+        {
+            AutoPtr<Compound> p = new Or();
+            __fill_endl(p->patterns);
+            return  Pattern::Optimize(p.yield());
+        }
+
+        Pattern * posix:: dot()
+        {
+            AutoPtr<Compound> p = new None();
+            __fill_endl(p->patterns);
+            return  Pattern::Optimize(p.yield());
+        }
+
+
+
 
     }
 }

@@ -10,6 +10,8 @@ Y_UTEST_DECL(32)
     Y_UTEST(fc);
     Y_UTEST(pattern);
     Y_UTEST(posix);
+    Y_UTEST(dict);
+    Y_UTEST(rx);
 
 }
 Y_UTEST_EXEC()
