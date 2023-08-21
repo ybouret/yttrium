@@ -11,24 +11,63 @@ namespace Yttrium
 
     namespace Core { template <typename> class String; }
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Justify text
+    //
+    //
+    //__________________________________________________________________________
     class Justify
     {
     public:
-        static const char SPC = ' ';
+        //______________________________________________________________________
+        //
+        //
+        // Definition
+        //
+        //______________________________________________________________________
+        static const char SPC = ' '; //!< space
+
+        //! How to justify
         enum Type
         {
-            Left,
-            Center,
-            Right
+            Left,     //!< [text....]
+            Center,   //!< [..text..]
+            Right     //!< [....text]
         };
 
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+
+        //! setup from msg+len
         Justify(const char *, const size_t, const size_t , const Type = Left) noexcept;
+
+        //! setup from msg
         Justify(const char *, const size_t, const Type = Left) noexcept;
+
+        //! setup from string
         Justify(const Core::String<char> &, const size_t, const Type = Left) noexcept;
 
+        //! copy data
         Justify(const Justify &) noexcept;
+
+        //! cleanup
         ~Justify() noexcept;
 
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+
+        //! display
         template <typename OSTREAM>
         friend inline OSTREAM & operator<<(OSTREAM &os, const Justify &J)
         {
