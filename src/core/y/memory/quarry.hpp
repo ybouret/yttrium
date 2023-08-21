@@ -66,6 +66,7 @@ namespace Yttrium
                 Dyad &dyad; //!< internal allocator with bytes=2^shift
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Vein);
+                void release_() noexcept;
             };
 
 

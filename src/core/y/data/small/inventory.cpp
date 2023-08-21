@@ -12,15 +12,21 @@ namespace Yttrium
             assert(blockSize>=sizeof(Node));
         }
 
+
+        void Inventory:: release_() noexcept
+        {
+            while(pool.size>0)
+                zrelease( pool.query(), blockSize );
+        }
+
         Inventory:: ~Inventory() noexcept
         {
-            release();
+            release_();
         }
 
         void Inventory:: release() noexcept
         {
-            while(pool.size>0)
-                zrelease( pool.query(), blockSize );
+            release_();
         }
 
 

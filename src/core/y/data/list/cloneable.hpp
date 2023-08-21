@@ -40,7 +40,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         explicit ListOfCloneable() noexcept : ListType(), Releasable() { } //!< setup
-        virtual ~ListOfCloneable() noexcept { release(); }                 //!< cleanup
+        virtual ~ListOfCloneable() noexcept { release_(); }                //!< cleanup
 
         //! copy using NODE copy constructor
         ListOfCloneable( const ListOfCloneable &other ) : ListType(), Releasable()

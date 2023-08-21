@@ -67,7 +67,7 @@ namespace Yttrium
 
             virtual void *getFlat();
             virtual void  putFlat(void *) noexcept;
-            
+            virtual void  release_()      noexcept;
         };
 
     }

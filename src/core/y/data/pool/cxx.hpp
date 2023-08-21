@@ -40,7 +40,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         explicit CxxPoolOf() noexcept : PoolType(), Releasable() { } //!< setup
-        virtual ~CxxPoolOf() noexcept { release(); }                 //!< cleanup
+        virtual ~CxxPoolOf() noexcept { release_(); }                 //!< cleanup
 
         //! copy using NODE copy constructor
         CxxPoolOf( const CxxPoolOf &other ) : PoolType(), Releasable()

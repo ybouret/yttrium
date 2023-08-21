@@ -249,25 +249,7 @@ namespace Yttrium
             return *this;
         }
 
-#if 0
-        template <>
-        void String<CH>:: release() noexcept
-        {
-            assert(0!=code);
-            code->free();
-        }
-
-        template <>
-        void String<CH>:: reserve(const size_t n)
-        {
-            assert(0!=code);
-            if(n>0)
-            {
-                String tmp(*this,n);
-                swapWith(tmp);
-            }
-        }
-#endif
+        
         
     }
 

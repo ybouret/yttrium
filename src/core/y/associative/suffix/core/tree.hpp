@@ -65,7 +65,7 @@ namespace Yttrium
 
             void free()    noexcept; //!< empty structure
             void trim()    noexcept; //!< release unused memory
-            void release() noexcept; //!< emptyy and keep only root
+            void release() noexcept; //!< empty  and keep only root
 
             //! search wrapper
             const void  *search(const Memory::ReadOnlyBuffer & path) const noexcept;

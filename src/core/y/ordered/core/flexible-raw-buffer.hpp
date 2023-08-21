@@ -48,7 +48,7 @@ namespace Yttrium
             explicit FlexibleRawBuffer() noexcept :  RawBuffer<T>(), bytes(0) {}
 
             //! cleanup
-            virtual ~FlexibleRawBuffer() noexcept { release(); }
+            virtual ~FlexibleRawBuffer() noexcept { release_(); }
 
             //! setup with capacity
             explicit FlexibleRawBuffer(size_t n)  :  RawBuffer<T>(), bytes(0) { setup(n); }
@@ -56,8 +56,7 @@ namespace Yttrium
             //! [Releasable] free and release memory
             virtual void release() noexcept
             {
-                free();
-                Release(Coerce(entry),Coerce(tally),Coerce(bytes));
+                release_();
             }
             
 
@@ -65,6 +64,12 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(FlexibleRawBuffer);
             const size_t bytes;
+
+            inline void release_() noexcept
+            {
+                free();
+                Release(Coerce(entry),Coerce(tally),Coerce(bytes));
+            }
 
             static inline void Release(MutableType * & entry,
                                        size_t        & count,

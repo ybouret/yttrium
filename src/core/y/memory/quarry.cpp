@@ -19,15 +19,13 @@ namespace Yttrium
         
         Quarry:: Vein:: ~Vein() noexcept
         {
-            //std::cerr << "-Vein @2^" << dyad.shift << " = " << dyad.bytes << std::endl;
-            release();
+            release_();
         }
 
         Quarry:: Vein:: Vein(Dyad &user) noexcept :
         PoolOf<Stone>(),
         dyad(user)
         {
-            //std::cerr << "+Vein @2^" << dyad.shift << " = " << dyad.bytes << std::endl;
         }
 
         void * Quarry:: Vein:: acquire()
@@ -35,15 +33,22 @@ namespace Yttrium
             return (size>0) ? OutOfReach::Zero(query(),dyad.bytes) : dyad.acquire();
         }
 
+
         void Quarry:: Vein:: release(void *blockAddr) noexcept
         {
             assert(0!=blockAddr);
             store( static_cast<Stone *>( OutOfReach::Zero(blockAddr,sizeof(Stone))) );
         }
 
-        void Quarry:: Vein:: release() noexcept
+        void Quarry:: Vein:: release_() noexcept
         {
             while(size>0) dyad.release( query() );
+        }
+
+
+        void Quarry:: Vein:: release() noexcept
+        {
+            release_();
         }
 
         uint64_t Quarry:: Vein:: displayInfo(const size_t indent) const

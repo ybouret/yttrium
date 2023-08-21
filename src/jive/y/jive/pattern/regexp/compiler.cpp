@@ -1,6 +1,8 @@
 
 #include "y/jive/pattern/regexp/compiler.hpp"
 #include "y/jive/pattern/posix.hpp"
+#include "y/jive/pattern/all.hpp"
+#include "y/system/exception.hpp"
 
 namespace  Yttrium
 {
@@ -73,7 +75,16 @@ namespace  Yttrium
             const Dictionary  &posixDict;
             const Dictionary  *userDictP;
 
-            
+
+            inline Pattern *subExpression()
+            {
+                AutoPtr<Compound> p = new And();
+
+
+                if(p->size<=0) throw Specific::Exception(RegExpCompiler::CallSign,"empty sub-expression in '%s'",expr);
+                return Pattern::Optimize( p.yield() );
+            }
+
 
 
         private:
@@ -83,8 +94,8 @@ namespace  Yttrium
 
         Pattern * RegExpCompiler:: operator()(const String &rx, const Dictionary *dict) const
         {
-            RXC(rx.c_str(),rx.size(),posixDict,dict);
-            return 0;
+            RXC rxc(rx.c_str(),rx.size(),posixDict,dict);
+            return rxc.subExpression();
         }
 
     }

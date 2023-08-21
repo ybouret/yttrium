@@ -39,7 +39,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         explicit CxxListOf() noexcept : ListType(), Releasable() { } //!< setup
-        virtual ~CxxListOf() noexcept { release(); }                 //!< cleanup
+        virtual ~CxxListOf() noexcept { release_(); }                //!< cleanup
 
         //! copy using NODE copy constructor
         CxxListOf( const CxxListOf &other ) : ListType(), Releasable()
