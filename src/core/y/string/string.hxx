@@ -57,6 +57,7 @@ namespace Yttrium
                 memcpy(data,other.data,(size=other.size)*sizeof(CH));
             }
 
+            //! setup from message
             inline explicit Code(const CH *arr, const size_t num) :
             Y_STRING_CODE(num)
             {
@@ -74,6 +75,9 @@ namespace Yttrium
                 memcpy(data+size,cr,nr*sizeof(CH)); size += nr;
             }
 
+            inline virtual ~Code() noexcept
+            {
+            }
 
             //__________________________________________________________________
             //

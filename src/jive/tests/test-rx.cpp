@@ -14,13 +14,13 @@ using namespace Yttrium;
 Y_UTEST(rx)
 {
 
-    Jive::RegExpCompiler &rxc = Jive::RegExpCompiler::Instance();
+    Jive::RegExpCompiler::Instance();
 
     if(argc>1)
     {
         AutoPtr<Jive::Pattern> P = Jive::RegExp::Compile(argv[1]);
     }
 
-    throw Specific::Exception("whatever","here=%s",__FILE__);
+    //throw Specific::Exception("whatever","here=%s",__FILE__);
 }
 Y_UDONE()

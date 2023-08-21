@@ -16,7 +16,10 @@ namespace Yttrium
         {
         public:
             explicit Code() : Object(), Dict() {}
-            virtual ~Code() noexcept {}
+            virtual ~Code() noexcept
+            {
+                std::cerr << "~Dictionary::Code #" << size() << std::endl;
+            }
 
 
             void mustInsert(const String &label, const Motif &motif)
@@ -47,16 +50,17 @@ namespace Yttrium
 
         Dictionary:: Dictionary() :
         code( new Code() )
+        //code(0)
         {
         }
 
         Dictionary:: ~Dictionary() noexcept
         {
-            std::cerr << "deleting dictionary" << std::endl;
+            std::cerr << "deleting dictionary..." << std::endl;
             assert(0!=code);
             delete code;
             code = 0;
-            std::cerr << "done" << std::endl;
+            std::cerr << "...deleted dictionary" << std::endl;
         }
 
         void Dictionary:: operator()(const char    *name,

@@ -42,10 +42,19 @@ namespace Yttrium
         // C++
         //
         //______________________________________________________________________
-        inline explicit SuffixTree() : list(), pool(), tree() {} //!< setup empty
-        inline virtual ~SuffixTree() noexcept { hardReset(); }   //!< cleanup
+
+        //! setup empty
+        inline explicit SuffixTree() : list(), pool(), tree() {}
+
+        //! cleanup
+        inline virtual ~SuffixTree() noexcept {
+            hardReset();
+            std::cerr << "~SuffixTree" << std::endl;
+        }
+
+        //! duplicate
         inline          SuffixTree(const SuffixTree &other) :
-        list(), pool(), tree() { duplicate_(other); }            //!< copy
+        list(), pool(), tree() { duplicate_(other); }
 
         //______________________________________________________________________
         //
@@ -95,10 +104,13 @@ namespace Yttrium
         //! release all possible memory
         //______________________________________________________________________
         inline void hardReset() noexcept {
+            std::cerr << "Hard Reset, list.size=" << list.size << std::endl;
             tree.release();
             while(list.size>0)
                 pool.quit(list.popTail());
+            std::cerr << "Hard Reset, pool.available=" << pool.available() << std::endl;
             pool.release();
+            std::cerr << "done" << std::endl;
         }
 
         //______________________________________________________________________
