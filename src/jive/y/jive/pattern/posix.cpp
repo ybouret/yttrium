@@ -1,6 +1,7 @@
 
 #include "y/jive/pattern/posix.hpp"
 #include "y/jive/pattern/all.hpp"
+#include <cstring>
 
 namespace Yttrium
 {

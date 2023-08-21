@@ -295,7 +295,7 @@ namespace Yttrium
         String<CH>::ConstType & String<CH>::operator[](const size_t index) const noexcept
         {
             assert(index>=1);
-            assert(index<=size());
+            assert(index<=size()+1);
             return code->item[index];
         }
 

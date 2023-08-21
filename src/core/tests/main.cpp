@@ -158,6 +158,8 @@ Y_UTEST_DECL(256)
     Y_UTEST(graphviz);
 
     Y_UTEST(vfs_names);
+    Y_UTEST(vfs_entry);
+    Y_UTEST(vfs_scan);
 
     Y_UTEST(info_mtf);
     Y_UTEST(info_delta);

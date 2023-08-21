@@ -37,7 +37,8 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        virtual bool TryRemove(const String &path); //!< try to remove file from disk
+        virtual bool     TryRemove(const String &path); //!< try to remove file from disk
+        virtual Scanner *OpenDirectory(const String &dirName);
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(LocalFS);

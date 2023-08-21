@@ -86,3 +86,14 @@ namespace Yttrium
         return Extension(path(),path.size());
     }
 }
+
+namespace Yttrium
+{
+
+    VFS::Scanner * VFS:: OpenDirectory(const char *dirName)
+    {
+        const String _(dirName);
+        return OpenDirectory(_);
+    }
+
+}
