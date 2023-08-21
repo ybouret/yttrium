@@ -22,7 +22,7 @@ namespace Yttrium
             void mustInsert(const String &label, const Motif &motif)
             {
                 if(!insert(label,motif))
-                    throw Specific::Exception("Dictionary","multiple pattern '%s'", label() );
+                    throw Specific::Exception("Jive::Dictionary","multiple pattern '%s'", label() );
             }
 
             std::ostream & show(std::ostream &os) const
@@ -52,9 +52,11 @@ namespace Yttrium
 
         Dictionary:: ~Dictionary() noexcept
         {
+            std::cerr << "deleting dictionary" << std::endl;
             assert(0!=code);
             delete code;
             code = 0;
+            std::cerr << "done" << std::endl;
         }
 
         void Dictionary:: operator()(const char    *name,

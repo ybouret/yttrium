@@ -35,13 +35,12 @@ namespace  Yttrium
 
         RegExpCompiler:: RegExpCompiler() : Singleton<RegExpCompiler>(), posixDict()
         {
-            fillPosixDict(Coerce(posixDict));
+            //fillPosixDict(Coerce(posixDict));
         }
 
 
         RegExpCompiler:: ~RegExpCompiler() noexcept
         {
-            
         }
 
         

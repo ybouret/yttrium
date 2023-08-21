@@ -70,8 +70,7 @@ namespace Yttrium
 
         //! copy
         inline SuffixMap(const SuffixMap &other) :
-        Identifiable(), Collection(),
-        SelfType(other)         {}
+        Identifiable(), Collection(), SelfType(other) {}
 
         //______________________________________________________________________
         //
@@ -82,7 +81,7 @@ namespace Yttrium
 
         //! insert pair into tree
         virtual bool insert(ParamKey k, ParamType t)
-        { return  this->insert_(k,t); }
+        { return this->insert_(k,t); }
 
     private:
         Y_DISABLE_ASSIGN(SuffixMap);

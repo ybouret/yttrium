@@ -7,12 +7,14 @@
 #include "y/concurrent/singulet.hpp"
 #include "y/lockable.hpp"
 
+#include "y/jive/pattern/regexp/compiler.hpp"
+
 using namespace Yttrium;
 
 Y_UTEST(rx)
 {
-    //Concurrent::Singulet::Verbose = true;
-    // hardcoded in Quark
+
+    Jive::RegExpCompiler &rxc = Jive::RegExpCompiler::Instance();
 
     if(argc>1)
     {
