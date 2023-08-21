@@ -55,29 +55,26 @@ namespace  Yttrium
         class RXC
         {
         public:
-            inline RXC(const char  *rx,
-                       const size_t sz,
+            //! initialize
+            inline RXC(const char       *rx,
+                       const size_t      sz,
                        const Dictionary &pd,
                        const Dictionary *ud) noexcept :
-            expr(rx),
-            curr(expr),
-            last(expr+sz),
-            posixDict(pd),
-            userDictP(ud)
-            {
-            }
+            expr(rx), curr(expr), last(expr+sz), deep(0), posixDict(pd), userDictP(ud) { }
 
-            inline ~RXC() noexcept
-            {
-            }
-
+            //! cleanup
+            inline ~RXC() noexcept { }
 
 
             const char * const expr;
             const char *       curr;
             const char * const last;
+            int                deep;
             const Dictionary  &posixDict;
             const Dictionary  *userDictP;
+
+            
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(RXC);
