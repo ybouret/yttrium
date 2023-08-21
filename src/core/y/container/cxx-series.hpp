@@ -4,7 +4,7 @@
 #define Y_Cxx_Series_Included 1
 
 #include "y/memory/wad.hpp"
-#include "y/memory/workspace.hpp"
+#include "y/memory/solitary/workspace.hpp"
 #include "y/container/writable.hpp"
 #include "y/sequence/interface.hpp"
 #include "y/container/recyclable.hpp"

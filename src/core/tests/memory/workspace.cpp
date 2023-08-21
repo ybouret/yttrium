@@ -1,6 +1,6 @@
 
 
-#include "y/memory/workspace.hpp"
+#include "y/memory/solitary/workspace.hpp"
 #include "y/string.hpp"
 #include "y/utest/run.hpp"
 

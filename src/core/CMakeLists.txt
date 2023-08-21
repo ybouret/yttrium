@@ -43,6 +43,7 @@ memory
 memory/allocator
 memory/exclusive
 memory/buffer
+memory/solitary
 ptr
 container
 container/iterator

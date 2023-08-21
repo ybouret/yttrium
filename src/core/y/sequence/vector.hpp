@@ -9,7 +9,7 @@
 #include "y/object.hpp"
 #include "y/memory/wad.hpp"
 #include "y/memory/allocator/global.hpp"
-#include "y/memory/workspace.hpp"
+#include "y/memory/solitary/workspace.hpp"
 #include "y/type/capacity.hpp"
 #include "y/container/iterator/writable-contiguous.hpp"
 

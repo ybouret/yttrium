@@ -1,11 +1,14 @@
 
 #include "../main.hpp"
 #include "y/utest/run.hpp"
-#include "y/memory/allocator/pooled.hpp"
+//#include "y/memory/allocator/pooled.hpp"
+#include "y/memory/allocator/dyadic.hpp"
 
 #include "y/mkl/scalar.hpp"
 #include "y/mkl/api.hpp"
 #include "y/ordered/heap.hpp"
+#include "y/ordered/core/flexible-raw-buffer.hpp"
+#include "y/ordered/core/compiled-raw-buffer.hpp"
 
 using namespace Yttrium;
 using namespace MKL;
@@ -18,7 +21,15 @@ namespace Yttrium
         namespace   Antelope
         {
 
-            
+            struct AddCompiled
+            {
+                static   void CheckAcceptable(const size_t count,
+                                              const size_t total)
+                {
+
+                }
+            };
+
             template <typename T>
             struct NeedUnit
             {
@@ -136,10 +147,50 @@ namespace Yttrium
                 class Code_   : public Heap<Unit,RAW_BUFFER,typename Unit::Comparator>
                 {
                 public:
+                    using RAW_BUFFER::size;
+
                     inline explicit Code_() noexcept {}
                     inline virtual ~Code_() noexcept {}
+
+                    inline T sum()
+                    {
+                        if(  size() > 0 )
+                        {
+
+                        }
+                        else
+                        {
+                            return T(0);
+                        }
+
+                    }
+
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Code_);
+                };
+
+                template <typename ALLOCATOR>
+                struct FlexibleBuffer
+                {
+                    typedef Core::FlexibleRawBuffer<Unit,ALLOCATOR> Type;
+                };
+
+                template <size_t N>
+                struct CompiledBuffer
+                {
+                    typedef Core::CompiledRawBuffer<N,Unit> Type;
+                };
+                
+                template <typename ALLOCATOR = Memory::Dyadic>
+                class Code : public Code_<typename FlexibleBuffer<ALLOCATOR>::Type>
+                {
+                public:
+                    typedef Code_<typename FlexibleBuffer<ALLOCATOR>::Type> CodeType;
+                    explicit Code() noexcept : CodeType() {}
+                    virtual ~Code() noexcept {}
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Code);
                 };
 
 
@@ -149,7 +200,7 @@ namespace Yttrium
             template <typename T>
             struct AddInterface<T,false>
             {
-
+                
             };
 
             template <typename T>
@@ -157,6 +208,7 @@ namespace Yttrium
             {
                 static const bool               UseUnit = NeedUnit<T>::Flag;
                 typedef AddInterface<T,UseUnit> Interface;
+
 
             };
 
