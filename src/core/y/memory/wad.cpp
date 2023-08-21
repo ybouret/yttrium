@@ -1,7 +1,6 @@
 
 #include "y/memory/wad.hpp"
 #include "y/type/utils.hpp"
-#include <iostream>
 
 namespace Yttrium
 {
@@ -27,14 +26,11 @@ namespace Yttrium
                 workspace      = allocator.acquire(count,blockSize);
                 Coerce(maxBlocks) = (Coerce(allocated) = count) / blockSize;
                 assert(maxBlocks>=numBlocks);
-                std::cerr << "+Wad<" << allocator.variety() << "> numBlocks=" << numBlocks << ", blockSize=" << blockSize << std::endl;
             }
 
 
             void Wad:: returnTo(Allocator &allocator) noexcept
             {
-                std::cerr << "~Wad" << std::endl;
-                //std::cerr << "~Wad<" << allocator.variety() << "> allocated=" << allocated << std::endl;
                 assert(0!=workspace);
                 allocator.release(workspace, Coerce(allocated) );
                 Coerce(maxBlocks) = 0;
