@@ -74,9 +74,9 @@ namespace Yttrium
             size_t prolog = 0;
             size_t epilog = 0;
             J.compute(prolog,epilog);
-            for(size_t i=prolog;i>0;--i) os << SPC;
+            Pad(os,prolog);
             for(size_t i=0;i<J.size;++i) os << J.text[i];
-            for(size_t i=epilog;i>0;--i) os << SPC;
+            Pad(os,epilog);
             return os;
         }
 
@@ -89,6 +89,11 @@ namespace Yttrium
 
         void compute(size_t &prolog, size_t &epilog) const noexcept;
 
+        template <typename OSTREAM>
+        static inline void Pad(OSTREAM &os, size_t n)
+        {
+            while(n-- > 0) os << SPC;
+        }
 
     };
 }
