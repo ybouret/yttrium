@@ -37,7 +37,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
             unsigned read(void *buff, const unsigned size); //!< reading bytes with gzread
-            
+
+            void putc(const char);
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(File);
             void *handle;

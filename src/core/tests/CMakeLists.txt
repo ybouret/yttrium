@@ -141,6 +141,7 @@ add_test(io:pack64    test-core io_pack64)
 add_test(io:ints      test-core io_ints)
 add_test(io:ser       test-core io_ser)
 add_test(io:gzip-read test-core io_gzip_read ${DATA}/compressed.db.gz)
+add_test(io:gzip-write test-core io_gzip_write)
 
 #fft
 add_test(fft:1   test-core fft1)

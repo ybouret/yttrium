@@ -67,5 +67,14 @@ namespace Yttrium
         }
 
 
+        void File:: putc(const char c)
+        {
+            gzFile gz = static_cast<gzFile>(handle);
+            if( -1 == gzputc(gz,c) )
+            {
+                throw Specific::Exception("gzputc","%s",RetrieveError(gz));
+            }
+        }
+
     }
 }

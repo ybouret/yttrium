@@ -5,7 +5,6 @@
 #define Y_IO_GZIP_Input_File_Imcluded 1
 
 #include "y/stream/input.hpp"
-#include "y/stream/io/chars.hpp"
 
 namespace Yttrium
 {
