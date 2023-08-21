@@ -5,6 +5,7 @@
 
 #include "y/mkl/scalar.hpp"
 #include "y/mkl/api.hpp"
+#include "y/ordered/heap.hpp"
 
 using namespace Yttrium;
 using namespace MKL;
@@ -17,34 +18,38 @@ namespace Yttrium
         namespace   Antelope
         {
 
+            
             template <typename T>
-            struct NeedProxy
+            struct NeedUnit
             {
                 enum { Flag = true };
             };
 
             template <>
-            struct NeedProxy<apn>
+            struct NeedUnit<apn>
             {
                 enum { Flag = false };
             };
 
             template <>
-            struct NeedProxy<apz>
+            struct NeedUnit<apz>
             {
                 enum { Flag = false };
             };
 
             template <>
-            struct NeedProxy<apq>
+            struct NeedUnit<apq>
             {
                 enum { Flag = false };
             };
 
+
+            template <typename T,bool>
+            struct AddInterface;
 
 
             template <typename T>
-            class AddProto
+            struct AddInterface<T,true>
             {
                 //______________________________________________________________
                 //
@@ -61,6 +66,18 @@ namespace Yttrium
                 class Unit
                 {
                 public:
+                    class Comparator
+                    {
+                    public:
+                        inline  Comparator() noexcept {}
+                        inline ~Comparator() noexcept {}
+                        inline SignType operator()(const Unit &lhs, const Unit &rhs) noexcept
+                        { return Comparison::CxxDecreasing(lhs.absValue,rhs.absValue); }
+
+                    private:
+                        Y_DISABLE_COPY_AND_ASSIGN(Comparator);
+                    };
+
                     //__________________________________________________________
                     //
                     // C++
@@ -115,14 +132,31 @@ namespace Yttrium
                     Y_DISABLE_ASSIGN(Unit);
                 };
 
+                template <typename RAW_BUFFER>
+                class Code_   : public Heap<Unit,RAW_BUFFER,typename Unit::Comparator>
+                {
+                public:
+                    inline explicit Code_() noexcept {}
+                    inline virtual ~Code_() noexcept {}
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Code_);
+                };
 
 
             };
             
 
-            template <>
-            class AddProto<apq>
+            template <typename T>
+            struct AddInterface<T,false>
             {
+
+            };
+
+            template <typename T>
+            struct AddProxy
+            {
+                static const bool               UseUnit = NeedUnit<T>::Flag;
+                typedef AddInterface<T,UseUnit> Interface;
 
             };
 
