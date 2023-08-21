@@ -89,6 +89,7 @@ namespace Yttrium
 
             //! release memory
             inline virtual ~Wad() noexcept {
+                assert(ALLOCATOR::Exists());
                 static Allocator &_ = ALLOCATOR::Location();
                 returnTo(_);
             }

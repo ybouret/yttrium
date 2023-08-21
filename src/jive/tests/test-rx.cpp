@@ -5,13 +5,14 @@
 #include "y/system/exception.hpp"
 
 #include "y/concurrent/singulet.hpp"
+#include "y/lockable.hpp"
 
 using namespace Yttrium;
 
 Y_UTEST(rx)
 {
-
-    Concurrent::Singulet::Verbose = true;
+    //Concurrent::Singulet::Verbose = true;
+    // hardcoded in Quark
 
     if(argc>1)
     {

@@ -118,6 +118,7 @@ namespace Yttrium
 
             static Quark & QuarkInstance()
             {
+                Singulet::Verbose = 1;
                 if(!Quark_)
                 {
                     
