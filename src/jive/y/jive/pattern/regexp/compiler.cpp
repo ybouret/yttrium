@@ -33,7 +33,7 @@ namespace  Yttrium
 
         RegExpCompiler:: RegExpCompiler() : Singleton<RegExpCompiler>(), posixDict()
         {
-            fillPosixDict(posixDict);
+            fillPosixDict(Coerce(posixDict));
         }
 
 

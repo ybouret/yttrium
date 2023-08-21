@@ -13,10 +13,16 @@ namespace Yttrium
         class Pattern;
         class Dictionary;
 
+        //______________________________________________________________________
+        //
+        //
+        //! Regular Expressions interface
+        //
+        //______________________________________________________________________
         struct RegExp
         {
-            static Pattern *Compile(const String &rx, const Dictionary *dict =0);
-            static Pattern *Compile(const char   *rx, const Dictionary *dict =0);
+            static Pattern *Compile(const String &rx, const Dictionary *dict =0); //!< compile regular expression
+            static Pattern *Compile(const char   *rx, const Dictionary *dict =0); //!< compuler rgular expression
         };
     }
 

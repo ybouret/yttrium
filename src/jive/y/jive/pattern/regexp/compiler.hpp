@@ -11,20 +11,48 @@ namespace  Yttrium
 {
     namespace Jive
     {
+        //______________________________________________________________________
+        //
+        //
+        //! Regular Expression Compiler
+        //
+        //______________________________________________________________________
         class RegExpCompiler : public Singleton<RegExpCompiler>
         {
         public:
-            static const char * const      CallSign;
-            static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 10;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const      CallSign;                                  //!< "RegExpCompiler"
+            static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 10;  //!< life time
 
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! compile the given regular expression with optional dictionary
             Pattern *            operator()(const String &rx, const Dictionary *dict) const;
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const Dictionary posixDict; //!< registered posix for '[:expr:]
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(RegExpCompiler);
             friend class Singleton<RegExpCompiler>;
             explicit RegExpCompiler();
             virtual ~RegExpCompiler() noexcept;
-            Dictionary posixDict;
 
         };
     }

@@ -12,16 +12,29 @@ namespace Yttrium
     {
         class Pattern;
 
-        
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Dictionary of named patterns
+        //
+        //
+        //______________________________________________________________________
         class Dictionary
         {
         public:
-            explicit Dictionary();
-            virtual ~Dictionary() noexcept;
-            Y_OSTREAM_PROTO(Dictionary);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Dictionary();           //!< setup
+            virtual ~Dictionary() noexcept;  //!< cleanup
+            Y_OSTREAM_PROTO(Dictionary);     //!< display names
 
-            void operator()(const char *   name, const Pattern *p);
-            void operator()(const String & name, const Pattern *p);
+            void operator()(const char *   name, const Pattern *p); //!< append a newly created pattern
+            void operator()(const String & name, const Pattern *p); //!< append a newly created pattern
 
 
         private:
