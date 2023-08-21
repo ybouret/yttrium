@@ -238,7 +238,7 @@ namespace Yttrium
                     inline virtual ~Code_() noexcept {}
 
 
-                private:
+                protected:
                     SOLITARY    job;
                     T          &acc;
                 };
