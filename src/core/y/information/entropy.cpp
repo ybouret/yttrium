@@ -11,7 +11,9 @@ namespace Yttrium
 
         Entropy:: ~Entropy() noexcept
         {
-            Memory::Dyadic::Location().releaseBlock(*(void **)&count,shift);
+            void *block = count;
+            Memory::Dyadic::Location().releaseBlock(block,shift);
+            count = 0;
         }
 
         Entropy:: Entropy() :
