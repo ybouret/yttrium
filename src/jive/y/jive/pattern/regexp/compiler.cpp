@@ -41,7 +41,7 @@ namespace  Yttrium
 
         RegExpCompiler:: ~RegExpCompiler() noexcept
         {
-
+            
         }
 
         
@@ -79,8 +79,7 @@ namespace  Yttrium
             inline Pattern *subExpression()
             {
                 AutoPtr<Compound> p = new And();
-
-
+                
                 if(p->size<=0) throw Specific::Exception(RegExpCompiler::CallSign,"empty sub-expression in '%s'",expr);
                 return Pattern::Optimize( p.yield() );
             }
@@ -92,7 +91,7 @@ namespace  Yttrium
         };
 
 
-        Pattern * RegExpCompiler:: operator()(const String &rx, const Dictionary *dict) const
+        Pattern * RegExpCompiler:: compile(const String &rx, const Dictionary *dict) const
         {
             RXC rxc(rx.c_str(),rx.size(),posixDict,dict);
             return rxc.subExpression();

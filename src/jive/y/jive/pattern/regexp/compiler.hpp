@@ -38,7 +38,7 @@ namespace  Yttrium
             //__________________________________________________________________
 
             //! compile the given regular expression with optional dictionary
-            Pattern *            operator()(const String &rx, const Dictionary *dict) const;
+            Pattern *           compile(const String &rx, const Dictionary *dict) const;
 
             //__________________________________________________________________
             //

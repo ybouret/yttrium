@@ -12,8 +12,7 @@ namespace Yttrium
 
         typedef SuffixMap<String,Motif> Dict;
 
-        class Dictionary:: Code :
-        public Object, public Dict
+        class Dictionary:: Code : public Object, public Dict
         {
         public:
             explicit Code() : Object(), Dict() {}

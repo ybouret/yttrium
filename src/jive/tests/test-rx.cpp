@@ -4,10 +4,15 @@
 #include "y/jive/pattern.hpp"
 #include "y/system/exception.hpp"
 
+#include "y/concurrent/singulet.hpp"
+
 using namespace Yttrium;
 
 Y_UTEST(rx)
 {
+
+    Concurrent::Singulet::Verbose = true;
+
     if(argc>1)
     {
         AutoPtr<Jive::Pattern> P = Jive::RegExp::Compile(argv[1]);

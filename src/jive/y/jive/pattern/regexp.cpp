@@ -8,7 +8,7 @@ namespace Yttrium
     {
         Pattern *RegExp:: Compile(const String &rx, const Dictionary *dict)
         {
-            return RegExpCompiler::Instance()(rx,dict);
+            return RegExpCompiler::Instance().compile(rx,dict);
         }
 
         Pattern *RegExp:: Compile(const char *rx, const Dictionary *dict)
