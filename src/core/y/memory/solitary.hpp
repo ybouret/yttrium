@@ -76,7 +76,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            inline virtual ~Solitary() noexcept { erase(); }
+            inline virtual ~Solitary() noexcept { assert(0 == data); }
 
         protected:
             inline explicit Solitary() noexcept :data(0) {}

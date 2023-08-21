@@ -23,12 +23,13 @@ namespace Yttrium
         class Workspace : public Solitary<T>
         {
         public:
-            
+            using Solitary<T>::erase;
+
             //! create empty
             inline explicit Workspace() noexcept : Solitary<T>(), wksp() { Y_STATIC_ZARR(wksp); }
 
             //! cleanup
-            inline virtual ~Workspace() noexcept { Y_STATIC_ZARR(wksp); }
+            inline virtual ~Workspace() noexcept { erase();  Y_STATIC_ZARR(wksp); }
 
 
         private:

@@ -24,6 +24,8 @@ namespace Yttrium
         class Specimen : public Solitary<T>
         {
         public:
+            using Solitary<T>::erase;
+
             inline explicit Specimen() :
             Solitary<T>(),
             wlen(sizeof(T)),
@@ -32,6 +34,7 @@ namespace Yttrium
             }
 
             inline virtual ~Specimen() noexcept {
+                erase();
                 ALLOCATOR::Location().release(wksp,wlen);
             }
             
