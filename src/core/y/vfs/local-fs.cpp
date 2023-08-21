@@ -121,11 +121,6 @@ namespace Yttrium
 
 namespace Yttrium
 {
-    String MakeWin32Path(const String &dirName)
-    {
-        String res = dirName;
-
-    }
 
     class LocalScanner : public VFS::Scanner
     {
@@ -137,9 +132,9 @@ namespace Yttrium
         ready(TRUE)
         {
             Y_GIANT_LOCK();
-            std::cerr << "opening " << dirName << std::endl;
+			const String wDirName = LocalFS::MakeWin32Path(dirName);
             memset(&fData, 0, sizeof(fData));
-            hFind = ::FindFirstFile(dirName(), &fData);
+            hFind = ::FindFirstFile(wDirName(), &fData);
             if (INVALID_HANDLE_VALUE == hFind)
             {
                 throw Win32::Exception(::GetLastError(), "FindFirstFile(%s)", dirName());
