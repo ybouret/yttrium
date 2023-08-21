@@ -2,6 +2,7 @@
 #include "y/concurrent/singulet.hpp"
 #include "y/system/exception.hpp"
 #include "y/system/error.hpp"
+#include "y/text/justify.hpp"
 #include <cerrno>
 #include <iostream>
 #include <iomanip>
@@ -12,6 +13,7 @@ namespace Yttrium
     {
 
         bool Singulet:: Verbose = false;
+        size_t Singulet:: Width = 32;
 
         Singulet:: ~Singulet() noexcept
         {
@@ -48,7 +50,7 @@ namespace Yttrium
             if(!Verbose) return;
             try {
                 assert(0!=name);
-                std::cerr << "+[" << name << "] @" << last << std::endl;
+                std::cerr << "+[" << Justify(name,Width,Justify::Center) << "] @" << last << std::endl;
             }
             catch(...) {}
         }
@@ -60,7 +62,7 @@ namespace Yttrium
             if(!Verbose) return;
             try {
                 assert(0!=name);
-                std::cerr << "~[" << name << "] @" << last << std::endl;
+                std::cerr << "~[" << Justify(name,Width,Justify::Center) << "] @" << last << std::endl;
             }
             catch(...) {}
         }

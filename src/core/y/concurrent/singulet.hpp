@@ -55,8 +55,9 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            static bool Verbose; //!< operations verbosity
-
+            static bool   Verbose; //!< operations verbosity
+            static size_t Width;   //!< for alignment, initally 32
+            
         protected:
             //! check valid LifeTime, throw on error
             static void CheckLifeTime(const char             *whose,
