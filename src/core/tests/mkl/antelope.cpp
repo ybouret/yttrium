@@ -9,6 +9,7 @@
 #include "y/ordered/heap.hpp"
 #include "y/ordered/core/flexible-raw-buffer.hpp"
 #include "y/ordered/core/compiled-raw-buffer.hpp"
+#include "y/memory/solitary/specimen.hpp"
 
 using namespace Yttrium;
 using namespace MKL;
@@ -21,14 +22,7 @@ namespace Yttrium
         namespace   Antelope
         {
 
-            struct AddCompiled
-            {
-                static   void CheckAcceptable(const size_t count,
-                                              const size_t total)
-                {
 
-                }
-            };
 
             template <typename T>
             struct NeedUnit
@@ -147,7 +141,10 @@ namespace Yttrium
                 class Code_   : public Heap<Unit,RAW_BUFFER,typename Unit::Comparator>
                 {
                 public:
-                    using RAW_BUFFER::size;
+                    typedef Heap<Unit,RAW_BUFFER,typename Unit::Comparator> HeapType;
+                    using HeapType::size;
+                    using HeapType::insert;
+                    using HeapType::pull;
 
                     inline explicit Code_() noexcept {}
                     inline virtual ~Code_() noexcept {}
@@ -156,7 +153,14 @@ namespace Yttrium
                     {
                         if(  size() > 0 )
                         {
-
+                            while(size()>1)
+                            {
+                                const Unit lhs = pull();
+                                const Unit rhs = pull();
+                                const Unit tmp = lhs+rhs;
+                                insert(tmp);
+                            }
+                            return pull();
                         }
                         else
                         {
@@ -191,6 +195,19 @@ namespace Yttrium
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Code);
+                };
+
+                template <size_t N>
+                class StaticCode : public Code_<typename CompiledBuffer<N>::Type>
+                {
+                public:
+                    typedef Code_<typename CompiledBuffer<N>::Type> CodeType;
+
+                    explicit StaticCode() noexcept : CodeType() {}
+                    virtual ~StaticCode() noexcept {}
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(StaticCode);
                 };
 
 
