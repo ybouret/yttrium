@@ -26,7 +26,10 @@ namespace Yttrium
 
             virtual ~Code() noexcept
             {
-                Memory::Dyadic::Location().releaseBlock(*(void **)&S,shift);
+                void *block = S;
+                Memory::Dyadic::Location().releaseBlock(block,shift);
+                S = 0;
+                Coerce(Q) = 0;
             }
 
             inline void restart() noexcept
