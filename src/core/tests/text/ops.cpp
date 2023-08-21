@@ -1,5 +1,3 @@
-
-
 #include "y/text/ops.hpp"
 #include "y/utest/run.hpp"
 

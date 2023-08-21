@@ -48,6 +48,8 @@ add_test(text:ops            test-core text_ops)
 add_test(text:hexa           test-core text_hexa)
 add_test(text:printable      test-core text_printable)
 add_test(text:embedding      test-core text_embedding)
+add_test(text:justify        test-core text_justify)
+
 
 
 #memory
