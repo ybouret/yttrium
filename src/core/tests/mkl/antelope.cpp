@@ -10,6 +10,7 @@
 #include "y/ordered/core/flexible-raw-buffer.hpp"
 #include "y/ordered/core/compiled-raw-buffer.hpp"
 #include "y/memory/solitary/specimen.hpp"
+#include "y/memory/solitary/workspace.hpp"
 
 using namespace Yttrium;
 using namespace MKL;
@@ -76,7 +77,7 @@ namespace Yttrium
                     public:
                         inline  Comparator() noexcept {}
                         inline ~Comparator() noexcept {}
-                        inline SignType operator()(const Unit &lhs, const Unit &rhs) noexcept
+                        inline SignType operator()(const Unit &lhs, const Unit &rhs) const noexcept
                         { return Comparison::CxxDecreasing(lhs.absValue,rhs.absValue); }
 
                     private:
@@ -146,8 +147,18 @@ namespace Yttrium
                     using HeapType::insert;
                     using HeapType::pull;
 
-                    inline explicit Code_() noexcept {}
+                protected:
+                    inline explicit Code_() noexcept      : HeapType() {}
+                    inline explicit Code_(const size_t n) : HeapType(n,AsCapacity) {}
+
+                public:
                     inline virtual ~Code_() noexcept {}
+
+                    inline Code_ & operator<<(const T args)
+                    {
+                        insert(args);
+                        return *this;
+                    }
 
                     inline T sum()
                     {
@@ -158,6 +169,7 @@ namespace Yttrium
                                 const Unit lhs = pull();
                                 const Unit rhs = pull();
                                 const Unit tmp = lhs+rhs;
+                                std::cerr << "(" << lhs << ")+(" << rhs << ")=" << tmp << std::endl;
                                 insert(tmp);
                             }
                             return pull();
@@ -191,6 +203,7 @@ namespace Yttrium
                 public:
                     typedef Code_<typename FlexibleBuffer<ALLOCATOR>::Type> CodeType;
                     explicit Code() noexcept : CodeType() {}
+                    explicit Code(const size_t n) : CodeType(n) {}
                     virtual ~Code() noexcept {}
 
                 private:
@@ -217,7 +230,54 @@ namespace Yttrium
             template <typename T>
             struct AddInterface<T,false>
             {
-                
+                template <typename SOLITARY>
+                class Code_
+                {
+                public:
+                    inline explicit Code_() : job(), acc( job.build() ) {}
+                    inline virtual ~Code_() noexcept {}
+
+
+                private:
+                    SOLITARY    job;
+                    T          &acc;
+                };
+
+                template <typename ALLOCATOR>
+                class Code : public Code_< Memory::Specimen<T,ALLOCATOR> >
+                {
+                public:
+                    typedef Code_< Memory::Specimen<T,ALLOCATOR> > CodeType;
+                    using CodeType::acc;
+
+                    explicit Code() : CodeType() {}
+                    explicit Code(const size_t) : CodeType() {}
+                    virtual ~Code() noexcept {}
+
+                    inline void make(size_t)  { acc=0; }
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Code);
+                };
+
+                template <size_t N>
+                class StaticCode : public Code_< Memory::Workspace<T> >
+                {
+                public:
+                    typedef Code_< Memory::Workspace<T> > CodeType;
+
+                    explicit StaticCode() : CodeType(), count(0), total(N) {}
+                    virtual ~StaticCode() noexcept {}
+
+                    
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(StaticCode);
+                    size_t       count;
+                    const size_t total;
+                };
+
+
             };
 
             template <typename T>
@@ -225,8 +285,6 @@ namespace Yttrium
             {
                 static const bool               UseUnit = NeedUnit<T>::Flag;
                 typedef AddInterface<T,UseUnit> Interface;
-
-
             };
 
         }
@@ -237,6 +295,26 @@ namespace Yttrium
 Y_UTEST(mkl_antelope)
 {
     Random::Rand ran;
+
+    MKL::Antelope::AddInterface<double,true>::Code<Memory::Dyadic> code, code2(13);
+
+    code.make(5);
+    code << 8 << -1 << 2 << 4;
+    code.insert(1,5);
+    std::cerr << code.sum() << std::endl;
+    code.free();
+
+
+    MKL::Antelope::AddInterface<double,true>::StaticCode<24> scode;
+
+    scode.make(5);
+    scode << 8 << -1 << 2 << 4;
+    scode.insert(1,5);
+    std::cerr << scode.sum() << std::endl;
+    scode.free();
+
+
+    MKL::Antelope::AddInterface<double,false>::StaticCode<24> f_scode;
 
 }
 Y_UDONE()
