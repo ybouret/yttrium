@@ -3,6 +3,7 @@
 #include "y/jive/pattern/posix.hpp"
 #include "y/jive/pattern/all.hpp"
 #include "y/system/exception.hpp"
+#include "y/text/ascii/printable.hpp"
 
 namespace  Yttrium
 {
@@ -56,9 +57,17 @@ namespace  Yttrium
         class RXC
         {
         public:
-            static const char LPAREN = '(';
-            static const char RPAREN = ')';
-            static const char ALT    = '|';
+            static const char LPAREN    =  '(';
+            static const char RPAREN    =  ')';
+            static const char LBRACK    =  '[';
+            static const char RBRACK    =  ']';
+            static const char ALT       =  '|';
+            static const char BACKSLASH = '\\';
+            static const char QUOTE     = '\'';
+            static const char DQUOTE    = '\"';
+
+
+            static const char * const CallSign;
 
             //! initialize
             inline RXC(const char       *rx,
@@ -67,8 +76,6 @@ namespace  Yttrium
                        const Dictionary *ud) noexcept :
             expr(rx), curr(expr), last(expr+sz), deep(0), posixDict(pd), userDictP(ud)
             {
-                const String tmp(curr,sz);
-                std::cerr << "compiling '" << tmp << "'" << std::endl;
             }
 
             //! cleanup
@@ -84,6 +91,7 @@ namespace  Yttrium
 
 
 #include "sub-expr.hxx"
+#include "esc-expr.hxx"
 
 
 
@@ -93,6 +101,7 @@ namespace  Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(RXC);
         };
 
+        const char * const RXC::CallSign = RegExpCompiler::CallSign;
 
         Pattern * RegExpCompiler:: compile(const String &rx, const Dictionary *dict) const
         {

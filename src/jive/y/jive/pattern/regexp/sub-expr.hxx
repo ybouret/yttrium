@@ -26,7 +26,7 @@ inline Pattern *subExpr()
 
             case RPAREN:
                 if(deep--<=0)
-                    throw Specific::Exception(RegExpCompiler::CallSign,"extraneous '%c' in '%s'", RPAREN, expr);
+                    throw Specific::Exception(CallSign,"extraneous '%c' in '%s'", RPAREN, expr);
                 goto FINISH;
 
 
@@ -34,13 +34,22 @@ inline Pattern *subExpr()
                 //
                 //  Alternation
                 //
-                //---------------------------------------------------------------
+                //--------------------------------------------------------------
             case ALT: {
                 AutoPtr<Compound> alt = new Or();
                 *alt << p.yield(); assert(p.isEmpty());
                 *alt << subExpr();
                 p = alt;
             } goto FINISH;
+
+                //--------------------------------------------------------------
+                //
+                //  escape sequence
+                //
+                //--------------------------------------------------------------
+            case BACKSLASH:
+                *p << escExpr();
+                break;
 
             default:
                 p->add(c);
@@ -50,7 +59,7 @@ inline Pattern *subExpr()
 
     // check at this point
 FINISH:
-    if(p->count<=0) throw Specific::Exception(RegExpCompiler::CallSign,"empty sub-expression in '%s'",expr);
+    if(p->count<=0) throw Specific::Exception(CallSign,"empty sub-expression in '%s'",expr);
     return Pattern::Optimize( p.yield() );
 }
 

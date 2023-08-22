@@ -72,7 +72,7 @@ namespace Yttrium
         //----------------------------------------------------------------------
         static inline Pattern * OptimizeAnd(And *p)
         {
-            AutoPtr<And> motif = OptimizeCompound(p);
+            AutoPtr<And> motif    = OptimizeCompound(p);
             Patterns    &patterns = motif->patterns;
             if(1==patterns.size)
             {
