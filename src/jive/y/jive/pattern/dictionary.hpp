@@ -36,8 +36,8 @@ namespace Yttrium
             void operator()(const char *   name, const Pattern *p); //!< append a newly created pattern
             void operator()(const String & name, const Pattern *p); //!< append a newly created pattern
 
-            Pattern * create(const String &name);
-            Pattern * create(const char   *name);
+            Pattern * create(const String &name); //!< return NULL on not found
+            Pattern * create(const char   *name); //!< alias to create
 
 
         private:

@@ -85,8 +85,14 @@ namespace Yttrium
         {
             assert(0!=code);
             const Motif *pp =code->search(name);
-            if(!pp) throw Specific::Exception(Code::CallSign,"no pattern '%s'", name() );
+            if(!pp) return 0;
             return (*pp)->clone();
+        }
+
+        Pattern * Dictionary:: create(const char *name)
+        {
+            const String  _(name);
+            return create(_);
         }
 
 
