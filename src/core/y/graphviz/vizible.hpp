@@ -46,12 +46,10 @@ namespace Yttrium
         static OutputStream &Label(OutputStream &, const String &);                         //!< label="..."
         static OutputStream &Label(OutputStream &, const char   *);                         //!< label="...
 
-        //! start a directed graph
-        static void Enter(OutputStream &fp, const String &graphName);
-        static void Enter(OutputStream &fp, const char   *graphName);
 
-        //! finish a directed grapj
-        static void Leave(OutputStream &);
+        static void Enter(OutputStream &fp, const String &graphName); //!< start  a directed graph
+        static void Enter(OutputStream &fp, const char   *graphName); //!< start  a directed graph
+        static void Leave(OutputStream &);                            //!< finish a directed graph
 
         //! 'dot -T png -o pngFile dotFile'
         static void Render(const String &pngFile,

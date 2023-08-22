@@ -30,7 +30,7 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        Y_ARGS_EXPOSE(T,Type); //!< aliases
+        Y_ARGS_DECL(T,Type); //!< aliases
 
         //______________________________________________________________________
         //
@@ -83,6 +83,20 @@ namespace Yttrium
             return true;
         }
 
+        //! single object comparison
+        inline friend bool operator==(const Readable<T> &lhs, ParamType rhs) noexcept
+        {
+            return 1 == lhs.size() && rhs == lhs[1];
+        }
+
+
+        //! single object comparision
+        inline friend bool operator==(ParamType lhs, const Readable<T> &rhs) noexcept
+        {
+            return 1 == rhs.size() && lhs == rhs[1];
+        }
+
+
         //! object-wise comparison
         inline friend bool operator!=(const Readable<T> &lhs, const Readable<T> &rhs) noexcept
         {
@@ -95,6 +109,19 @@ namespace Yttrium
             return false;
         }
 
+
+        //! single object difference
+        inline friend bool operator!=(const Readable<T> &lhs, ParamType rhs) noexcept
+        {
+            return 1 != lhs.size() || rhs != lhs[1];
+        }
+
+
+        //! single object difference
+        inline friend bool operator!=(ParamType lhs, const Readable<T> &rhs) noexcept
+        {
+            return 1 != rhs.size() || lhs != rhs[1];
+        }
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Readable);
