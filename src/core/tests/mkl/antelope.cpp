@@ -239,6 +239,12 @@ static inline void ShowUnit( const char *name )
     std::cerr << '[' << Justify(name,32,Justify::Center) << ']' << std::endl;
     std::cerr << std::setw(16) << sizeof( typename MKL::Antelope::AddInterface<T,true>::Unit ) << std::endl;
 
+    MKL::Antelope::Add<T> xadd;
+
+    xadd.free();
+
+    std::cerr << xadd.sum() << std::endl;
+
 
 }
 
@@ -266,8 +272,7 @@ Y_UTEST(mkl_antelope)
     Y_SHOW_UNIT(Complex<  XReal<double> >);
     Y_SHOW_UNIT(Complex< XReal<long double> >);
 
-    MKL::Antelope::Add<double> xadd;
-    
+
 
 
 }
