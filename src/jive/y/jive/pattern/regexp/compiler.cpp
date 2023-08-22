@@ -58,6 +58,7 @@ namespace  Yttrium
         public:
             static const char LPAREN = '(';
             static const char RPAREN = ')';
+            static const char ALT    = '|';
 
             //! initialize
             inline RXC(const char       *rx,

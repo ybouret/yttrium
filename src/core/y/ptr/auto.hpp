@@ -85,7 +85,7 @@ namespace Yttrium
         //______________________________________________________________________
         inline AutoPtr & operator=(const AutoPtr &other) noexcept
         {
-            if(this!=other)
+            if(this != &other)
             {
                 if(0!=handle) delete handle;
                 handle = other.handle;
