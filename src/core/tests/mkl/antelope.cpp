@@ -1,16 +1,12 @@
 
 #include "../main.hpp"
 #include "y/utest/run.hpp"
-//#include "y/memory/allocator/pooled.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 
 #include "y/mkl/scalar.hpp"
 #include "y/mkl/api.hpp"
 #include "y/ordered/heap.hpp"
 #include "y/ordered/core/flexible-raw-buffer.hpp"
-#include "y/ordered/core/compiled-raw-buffer.hpp"
-#include "y/memory/solitary/specimen.hpp"
-#include "y/memory/solitary/workspace.hpp"
 
 using namespace Yttrium;
 using namespace MKL;
@@ -84,6 +80,9 @@ namespace Yttrium
                         Y_DISABLE_COPY_AND_ASSIGN(Comparator);
                     };
 
+
+                    typedef Core::FlexibleRawBuffer<Unit,Memory::Dyadic> Buffer;
+
                     //__________________________________________________________
                     //
                     // C++
@@ -138,27 +137,18 @@ namespace Yttrium
                     Y_DISABLE_ASSIGN(Unit);
                 };
 
-                template <typename RAW_BUFFER>
-                class Code_   : public Heap<Unit,RAW_BUFFER,typename Unit::Comparator>
+
+                class Code : public Heap<Unit,typename Unit::Buffer, typename Unit::Comparator>
                 {
                 public:
-                    typedef Heap<Unit,RAW_BUFFER,typename Unit::Comparator> HeapType;
+                    typedef Heap<Unit,typename Unit::Buffer, typename Unit::Comparator> HeapType;
                     using HeapType::size;
                     using HeapType::insert;
                     using HeapType::pull;
 
-                protected:
-                    inline explicit Code_() noexcept      : HeapType() {}
-                    inline explicit Code_(const size_t n) : HeapType(n,AsCapacity) {}
-
-                public:
-                    inline virtual ~Code_() noexcept {}
-
-                    inline Code_ & operator<<(const T args)
-                    {
-                        insert(args);
-                        return *this;
-                    }
+                    inline explicit Code()      noexcept : HeapType() {}
+                    inline explicit Code(const size_t n) : HeapType(n,AsCapacity) {}
+                    inline virtual ~Code() noexcept {}
 
                     inline T sum()
                     {
@@ -182,45 +172,7 @@ namespace Yttrium
                     }
 
                 private:
-                    Y_DISABLE_COPY_AND_ASSIGN(Code_);
-                };
-
-                template <typename ALLOCATOR>
-                struct FlexibleBuffer
-                {
-                    typedef Core::FlexibleRawBuffer<Unit,ALLOCATOR> Type;
-                };
-
-                template <size_t N>
-                struct CompiledBuffer
-                {
-                    typedef Core::CompiledRawBuffer<N,Unit> Type;
-                };
-                
-                template <typename ALLOCATOR = Memory::Dyadic>
-                class Code : public Code_<typename FlexibleBuffer<ALLOCATOR>::Type>
-                {
-                public:
-                    typedef Code_<typename FlexibleBuffer<ALLOCATOR>::Type> CodeType;
-                    explicit Code() noexcept : CodeType() {}
-                    explicit Code(const size_t n) : CodeType(n) {}
-                    virtual ~Code() noexcept {}
-
-                private:
                     Y_DISABLE_COPY_AND_ASSIGN(Code);
-                };
-
-                template <size_t N>
-                class StaticCode : public Code_<typename CompiledBuffer<N>::Type>
-                {
-                public:
-                    typedef Code_<typename CompiledBuffer<N>::Type> CodeType;
-
-                    explicit StaticCode() noexcept : CodeType() {}
-                    virtual ~StaticCode() noexcept {}
-
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(StaticCode);
                 };
 
 
@@ -230,91 +182,93 @@ namespace Yttrium
             template <typename T>
             struct AddInterface<T,false>
             {
-                template <typename SOLITARY>
-                class Code_
+
+                class Code
                 {
                 public:
-                    inline explicit Code_() : job(), acc( job.build() ) {}
-                    inline virtual ~Code_() noexcept {}
-
-
-                protected:
-                    SOLITARY    job;
-                    T          &acc;
-                };
-
-                template <typename ALLOCATOR>
-                class Code : public Code_< Memory::Specimen<T,ALLOCATOR> >
-                {
-                public:
-                    typedef Code_< Memory::Specimen<T,ALLOCATOR> > CodeType;
-                    using CodeType::acc;
-
-                    explicit Code() : CodeType() {}
-                    explicit Code(const size_t) : CodeType() {}
+                    explicit Code()             : acc(0) {}
+                    explicit Code(const size_t) : acc(0) {}
                     virtual ~Code() noexcept {}
 
-                    inline void make(size_t)  { acc=0; }
+                    inline void make(size_t) {
+                        acc = 0;
+                    }
+
+                    inline void free()
+                    {
+                        acc = 0;
+                    }
+
+                    inline T sum()
+                    {
+                        T res = acc;
+                        acc = 0;
+                        return acc;
+                    }
 
                 private:
-                    Y_DISABLE_COPY_AND_ASSIGN(Code);
+                    T acc;
                 };
-
-                template <size_t N>
-                class StaticCode : public Code_< Memory::Workspace<T> >
-                {
-                public:
-                    typedef Code_< Memory::Workspace<T> > CodeType;
-
-                    explicit StaticCode() : CodeType(), count(0), total(N) {}
-                    virtual ~StaticCode() noexcept {}
-
-                    
-
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(StaticCode);
-                    size_t       count;
-                    const size_t total;
-                };
-
 
             };
 
             template <typename T>
-            struct AddProxy
+            class Add : public AddInterface<T,NeedUnit<T>::Flag>::Code
             {
-                static const bool               UseUnit = NeedUnit<T>::Flag;
-                typedef AddInterface<T,UseUnit> Interface;
+            public:
+                typedef typename AddInterface<T,NeedUnit<T>::Flag>::Code CodeType;
+
+                explicit Add() : CodeType() {}
+                virtual ~Add() noexcept {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Add);
             };
+
 
         }
 
     }
 }
 
+#include "y/text/justify.hpp"
+
+template <typename T>
+static inline void ShowUnit( const char *name )
+{
+    std::cerr << '[' << Justify(name,32,Justify::Center) << ']' << std::endl;
+    std::cerr << std::setw(16) << sizeof( typename MKL::Antelope::AddInterface<T,true>::Unit ) << std::endl;
+
+
+}
+
+#define Y_SHOW_UNIT(CLASS) ShowUnit<CLASS>( #CLASS )
+
+
+
 Y_UTEST(mkl_antelope)
 {
     Random::Rand ran;
 
-    MKL::Antelope::AddInterface<double,true>::Code<Memory::Dyadic> code, code2(13);
+    Y_SHOW_UNIT(float);
+    Y_SHOW_UNIT(double);
+    Y_SHOW_UNIT(long double);
 
-    code.make(5);
-    code << 8 << -1 << 2 << 4;
-    code.insert(1,5);
-    std::cerr << code.sum() << std::endl;
-    code.free();
-
-
-    MKL::Antelope::AddInterface<double,true>::StaticCode<24> scode;
-
-    scode.make(5);
-    scode << 8 << -1 << 2 << 4;
-    scode.insert(1,5);
-    std::cerr << scode.sum() << std::endl;
-    scode.free();
+    Y_SHOW_UNIT(Complex<float>);
+    Y_SHOW_UNIT(Complex<double>);
+    Y_SHOW_UNIT(Complex<long double>);
 
 
-    MKL::Antelope::AddInterface<double,false>::StaticCode<24> f_scode;
+    Y_SHOW_UNIT(XReal<float>);
+    Y_SHOW_UNIT(XReal<double>);
+    Y_SHOW_UNIT(XReal<long double>);
+    Y_SHOW_UNIT(Complex< XReal<float> >);
+    Y_SHOW_UNIT(Complex<  XReal<double> >);
+    Y_SHOW_UNIT(Complex< XReal<long double> >);
+
+    MKL::Antelope::Add<double> xadd;
+    
+
 
 }
 Y_UDONE()
