@@ -53,24 +53,13 @@ namespace Yttrium
             return !lhs.isEqualTo(rhs);
         }
 
-        size_t Pattern:: save(const String &datName) const
+        void Pattern:: graphViz(OutputStream &fp) const
         {
-            Libc::OutputFile fp(datName);
-            return serialize(fp);
-        }
-
-        size_t Pattern:: save(const char *datName) const
-        {
-            const String _(datName); return save(_);
-        }
-
-        void Pattern:: graphViz(const String &dotName) const
-        {
-            Libc::OutputFile fp(dotName);
-            Vizible::Enter(fp,"G");
+            Vizible::Enter(fp, "G");
             viz(fp);
             Vizible::Leave(fp);
         }
+        
     }
 
 }

@@ -19,6 +19,7 @@ Y_UTEST(rx)
     if(argc>1)
     {
         AutoPtr<Jive::Pattern> P = Jive::RegExp::Compile(argv[1]);
+        P->toBinary("rx.dat");
     }
 
     //throw Specific::Exception("whatever","here=%s",__FILE__);

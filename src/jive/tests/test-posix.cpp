@@ -17,6 +17,7 @@ void testPosix( Jive::Pattern *p, const char *id)
     const String root     = id;
     const String dataFile = root + ".dat";
 
+    
     {
         Libc::OutputFile fp(dataFile);
         p->serialize(fp);
@@ -29,10 +30,7 @@ void testPosix( Jive::Pattern *p, const char *id)
     }
 
     const String dotFile = root + ".dot";
-    const String pngFile = root + ".png";
-    p->graphViz(dotFile);
-    Vizible::Render(pngFile,dotFile);
-
+    Vizible::GraphViz(dotFile,*p);
 
 }
 

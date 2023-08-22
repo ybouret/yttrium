@@ -28,7 +28,6 @@ static inline void testPattern(Pattern &p)
         const String fileName = root + ".dat";
         p.toBinary(fileName);
 
-
         {
             Libc::InputFile fp(fileName);
             AutoPtr<Pattern> r = Pattern::ReadFrom(fp);
@@ -37,10 +36,9 @@ static inline void testPattern(Pattern &p)
     }
 
 
-    {
-        const String dotName = root + ".dot";
-        Vizible::GraphViz(dotName,p);
-    }
+    const String dotName = root + ".dot";
+    Vizible::GraphViz(dotName,p);
+
 
     std::cerr << std::endl;
 

@@ -121,11 +121,7 @@ namespace Yttrium
             //
             // saving
             //__________________________________________________________________
-            size_t save(const String &datName) const; //!< save and return serialized bytes
-            size_t save(const char   *datName) const; //!< alias
-
-            void graphViz(const String &dotName) const; //!< save GraphViz dot code
-            void graphViz(const char   *dotName) const; //!< alias
+            void graphViz(OutputStream &) const; //!< call viz
 
 
 
