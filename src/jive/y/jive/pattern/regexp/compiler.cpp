@@ -4,6 +4,8 @@
 #include "y/jive/pattern/all.hpp"
 #include "y/system/exception.hpp"
 #include "y/text/ascii/printable.hpp"
+#include "y/text/hexadecimal.hpp"
+
 #include <cstring>
 
 namespace  Yttrium
@@ -100,6 +102,7 @@ namespace  Yttrium
 #include "sub-expr.hxx"
 #include "make-jkr.hxx"
 #include "esc-expr.hxx"
+#include "esc-hexa.hxx"
 #include "to-posix.hxx"
 #include "sub-band.hxx"
 

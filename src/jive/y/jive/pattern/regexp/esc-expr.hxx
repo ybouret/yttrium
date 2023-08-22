@@ -23,7 +23,9 @@ inline Pattern * escExpr()
             Y_ESC_ECHO('*');
             Y_ESC_ECHO('?');
             Y_ESC_ECHO('.');
-
+        case 'x':
+            return escHexa();
+       
 
         default:
             break;
