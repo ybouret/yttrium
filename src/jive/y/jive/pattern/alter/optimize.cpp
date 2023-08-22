@@ -73,10 +73,34 @@ namespace Yttrium
         static inline Pattern * OptimizeAnd(And *p)
         {
             AutoPtr<And> motif = OptimizeCompound(p);
-            if(1==motif->patterns.size)
+            Patterns    &patterns = motif->patterns;
+            if(1==patterns.size)
             {
-                return motif->patterns.popTail();
+                return patterns.popTail();
             }
+
+            //------------------------------------------------------------------
+            // mergin sub And
+            //------------------------------------------------------------------
+            {
+                Patterns sub;
+                while(patterns.size>0)
+                {
+                    Pattern *curr = patterns.popHead();
+                    assert(0!=curr);
+                    if(And::UUID == curr->uuid)
+                    {
+                        sub.mergeTail( curr->as<And>()->patterns );
+                        delete curr;
+                    }
+                    else
+                    {
+                        sub.pushTail(curr);
+                    }
+                }
+                sub.swapWith(patterns);
+            }
+
             return motif.yield();
         }
 
@@ -101,39 +125,64 @@ namespace Yttrium
                     break;
             }
 
-            //std::cerr << "[[ Optimizing Multiple Or'd]]" << std::endl;
-
-            Patterns all;
-            while(patterns.size>0)
+            //------------------------------------------------------------------
+            //! Pass 1: optimizing groups of basic
+            //------------------------------------------------------------------
             {
-                Pattern *curr = patterns.popHead();
-                assert(0!=curr);
-                if(curr->isBasic())
+                Patterns all;
+                while(patterns.size>0)
                 {
-                    // compile consecutive basic patterns
-                    FirstChars fc;
+                    Pattern *curr = patterns.popHead();
+                    assert(0!=curr);
+                    if(curr->isBasic())
                     {
-                        const AutoPtr<Pattern> q(curr);
-                        q->query(fc);
+                        // compile consecutive basic patterns
+                        FirstChars fc;
+                        {
+                            const AutoPtr<Pattern> q(curr);
+                            q->query(fc);
+                        }
+                        while(patterns.size>0 && patterns.head->isBasic())
+                        {
+                            const AutoPtr<Pattern> q(patterns.popHead());
+                            q->query(fc);
+                        }
+                        fc.sendTo(all);
                     }
-                    while(patterns.size>0 && patterns.head->isBasic())
+                    else
                     {
-                        const AutoPtr<Pattern> q(patterns.popHead());
-                        q->query(fc);
+                        // keep consecutive compound patterns
+                        all.pushTail(curr);
+                        while(patterns.size>0 && !patterns.head->isBasic())
+                        {
+                            all.pushTail(patterns.popHead());
+                        }
                     }
-                    fc.sendTo(all);
                 }
-                else
-                {
-                    // keep consecutive compound patterns
-                    all.pushTail(curr);
-                    while(patterns.size>0 && !patterns.head->isBasic())
-                    {
-                        all.pushTail(patterns.popHead());
-                    }
-                }
+                all.swapWith(patterns);
             }
-            all.swapWith(patterns);
+
+            //------------------------------------------------------------------
+            // Pass 2: merging sub-or
+            //------------------------------------------------------------------
+            {
+                Patterns sub;
+                while(patterns.size>0)
+                {
+                    Pattern *curr = patterns.popHead();
+                    assert(0!=curr);
+                    if(Or::UUID == curr->uuid)
+                    {
+                        sub.mergeTail( curr->as<Or>()->patterns );
+                        delete curr;
+                    }
+                    else
+                    {
+                        sub.pushTail(curr);
+                    }
+                }
+                sub.swapWith(patterns);
+            }
 
             return motif.yield();
         }
