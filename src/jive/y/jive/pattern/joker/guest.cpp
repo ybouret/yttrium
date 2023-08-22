@@ -1,16 +1,26 @@
 
 #include "y/jive/pattern/joker/guest.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
     namespace Jive
     {
+
+
+        void Guest:: NoFragileMotif(const char *clid)
+        {
+            assert(0!=clid);
+            throw Specific::Exception(clid,"Fragile pattern is not accepted");
+        }
+
         Guest:: Guest(const uint32_t t,
                       const Pattern &source) :
         Pattern(t),
         motif( source.clone() )
         {
             assert(motif.isValid());
+            assert(motif->isRegular());
         }
 
 
@@ -19,6 +29,7 @@ namespace Yttrium
         motif(p)
         {
             assert(motif.isValid());
+            assert(motif->isRegular());
         }
 
         Guest:: ~Guest() noexcept
@@ -36,7 +47,8 @@ namespace Yttrium
         Pattern(other),
         motif(other.motif->clone())
         {
-
+            assert(motif.isValid());
+            assert(motif->isRegular());
         }
 
         void Guest:: query(FirstChars &fc) const
@@ -48,7 +60,10 @@ namespace Yttrium
         void Guest:: optimize()
         {
             assert(motif.isValid());
-            motif = Pattern::Optimize( & *motif);
+            assert(motif->isRegular());
+            motif = Pattern::Optimize( motif.yield() );
+            assert(motif.isValid());
+            assert(motif->isRegular());
         }
 
         bool Guest:: hasSameMotifThan(const Guest &other) const noexcept

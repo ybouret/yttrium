@@ -65,9 +65,11 @@ namespace  Yttrium
             static const char BACKSLASH = '\\';
             static const char QUOTE     = '\'';
             static const char DQUOTE    = '\"';
-
+            
 
             static const char * const CallSign;
+
+            typedef Pattern * (*MakeJoker)(Pattern *);
 
             //! initialize
             inline RXC(const char       *rx,
@@ -91,6 +93,7 @@ namespace  Yttrium
 
 
 #include "sub-expr.hxx"
+#include "make-jkr.hxx"
 #include "esc-expr.hxx"
 
 
@@ -103,6 +106,7 @@ namespace  Yttrium
 
         const char * const RXC::CallSign = RegExpCompiler::CallSign;
 
+        
         Pattern * RegExpCompiler:: compile(const String &rx, const Dictionary *dict) const
         {
             RXC rxc(rx.c_str(),rx.size(),posixDict,dict);

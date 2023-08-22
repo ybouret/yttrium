@@ -12,7 +12,8 @@ namespace Yttrium
         {
         }
 
-        Counting:: Counting(const size_t nmin, const size_t nmax, const Pattern &source) :
+        
+        Counting:: Counting(const size_t nmin, const size_t nmax, Pattern *source) :
         Guest(UUID,source),
         minCount(nmin),
         maxCount(nmax)
@@ -21,13 +22,20 @@ namespace Yttrium
             if(minCount>maxCount) CoerceSwap(minCount, maxCount);
         }
 
-        Counting:: Counting(const size_t nmin, const size_t nmax, Pattern *source) :
-        Guest(UUID,source),
-        minCount(nmin),
-        maxCount(nmax)
+        Pattern * Counting:: Make(const size_t nmin, const size_t nmax, Pattern *source)
         {
-            Y_PATTERN(Counting);
-            if(minCount>maxCount) CoerceSwap(minCount, maxCount);
+            assert(0!=source);
+            AutoPtr<Pattern> guard(source);
+            if(source->isFragile()) NoFragileMotif("Jive::Counting");
+            Pattern *res = new Counting(nmin,nmax,source);
+            (void) guard.yield();
+            return res;
+        }
+
+
+        Pattern * Counting:: Make(const size_t nmin, const size_t nmax, const Pattern &source)
+        {
+            return Make(nmin,nmax,source.clone());
         }
 
         Counting:: Counting(const Counting &other)  :

@@ -17,6 +17,7 @@ namespace Yttrium
         {
             assert(0!=p);
             AutoPtr<Pattern> guard(p);
+            if(p->isFragile()) NoFragileMotif("Jive::Repeating");
             Pattern *rep = new Repeating(nmin,p);
             guard.yield();
             return rep;

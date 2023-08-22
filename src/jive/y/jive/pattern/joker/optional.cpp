@@ -15,8 +15,9 @@ namespace Yttrium
         {
             assert(0!=p);
             AutoPtr<Pattern> guard(p);
+            if(p->isFragile()) NoFragileMotif("Jive::Optional");
             Pattern *opt = new Optional(p);
-            guard.yield();
+            (void)guard.yield();
             return opt;
         }
 

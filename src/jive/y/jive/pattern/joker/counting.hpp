@@ -35,8 +35,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Counting(const size_t nmin, const size_t nmax, const Pattern &); //!< setup from clone
-            explicit Counting(const size_t nmin, const size_t nmax, Pattern       *); //!< setup directly
+            static   Pattern *Make(const size_t nmin, const size_t nmax, Pattern       *); //!< take care of pattern
+            static   Pattern *Make(const size_t nmin, const size_t nmax, const Pattern &); //!< take care of clone
             explicit Counting(const Counting&); //!< duplicate
             virtual ~Counting() noexcept;       //!< cleanup
 
@@ -48,7 +48,7 @@ namespace Yttrium
             //__________________________________________________________________
             virtual Pattern *clone() const;                   //!< clone
             virtual bool     takes(Source &);                 //!< try guest, return true
-            virtual bool     isFragile() const noexcept;      //!< if minCount <= 0. If motif is fragile, fails and return false
+            virtual bool     isFragile() const noexcept;      //!< if minCount <= 0
             virtual size_t   serialize(OutputStream&) const;  //!< uuid+guest
             virtual bool     isEqualTo(const Pattern &) const noexcept;
             virtual void     viz(OutputStream &fp)      const;
@@ -64,6 +64,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_ASSIGN(Counting);
+            explicit Counting(const size_t nmin, const size_t nmax, Pattern       *); //!< setup directly
         };
 
 

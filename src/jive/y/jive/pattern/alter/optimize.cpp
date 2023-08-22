@@ -208,6 +208,7 @@ namespace Yttrium
         T *OptimizeGuest(T *p)
         {
             assert(0!=p);
+            std::cerr << "optimizing guest " << FourCC::ToText(p->uuid) << std::endl;
             AutoPtr<T> guard(p);
             p->optimize();
             return guard.yield();

@@ -14,7 +14,7 @@ namespace Yttrium
         //
         //
         //
-        //! Guest for a Pattern
+        //! Guest for a Pattern, that cannot be fragile
         //
         //
         //______________________________________________________________________
@@ -41,10 +41,11 @@ namespace Yttrium
         protected:
             explicit Guest(const uint32_t, const Pattern &);          //!< uuid+clone
             explicit Guest(const uint32_t, Pattern       *) noexcept; //!< uuid+pattern
-            explicit Guest(const Guest &other);                       //!< duplicate
+            explicit Guest(const Guest &other);              //!< duplicate
 
-            bool hasSameMotifThan(const Guest &) const noexcept; //!< forward testing
-            void vizLink(OutputStream &fp)       const;          //!< output and link motif
+            bool        hasSameMotifThan(const Guest &)   const noexcept; //!< forward testing
+            void        vizLink(OutputStream &fp)         const;          //!< output and link motif
+            static void NoFragileMotif(const char *clid );                //!< throw exception
 
             //__________________________________________________________________
             //
