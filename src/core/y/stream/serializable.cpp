@@ -51,3 +51,21 @@ namespace Yttrium
         (void)serialize(fp);
     }
 }
+
+#include "y/stream/libc/output.hpp"
+
+namespace Yttrium
+{
+    size_t Serializable:: toBinary(const String &fileName, const bool append) const
+    {
+        Libc::OutputFile fp(fileName,append);
+        return serialize(fp);
+    }
+
+    size_t Serializable:: toBinary(const char *fileName, const bool append) const
+    {
+        const String _(fileName);
+        return toBinary(_,append);
+    }
+
+}

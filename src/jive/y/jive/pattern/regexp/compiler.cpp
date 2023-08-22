@@ -78,7 +78,17 @@ namespace  Yttrium
             inline Pattern *subExpression()
             {
                 AutoPtr<Compound> p = new And();
-                
+
+                while(curr<last)
+                {
+                    const char c = *(curr++);
+                    switch(c)
+                    {
+                        default:
+                            p->add(c);
+                    }
+                }
+
                 if(p->size<=0) throw Specific::Exception(RegExpCompiler::CallSign,"empty sub-expression in '%s'",expr);
                 return Pattern::Optimize( p.yield() );
             }

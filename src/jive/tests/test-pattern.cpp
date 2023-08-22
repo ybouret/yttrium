@@ -26,10 +26,8 @@ static inline void testPattern(Pattern &p)
     String root = FourCC::ToText(p.uuid); root += FormatString("%u",++I);
     {
         const String fileName = root + ".dat";
-        {
-            Libc::OutputFile fp(fileName);
-            p.serialize(fp);
-        }
+        p.toBinary(fileName);
+
 
         {
             Libc::InputFile fp(fileName);
@@ -37,11 +35,11 @@ static inline void testPattern(Pattern &p)
             Y_CHECK(p == *r);
         }
     }
+
+
     {
         const String dotName = root + ".dot";
-        const String pngName = root + ".png";
-        p.graphViz(dotName);
-        Vizible::Render(pngName,dotName);
+        Vizible::GraphViz(dotName,p);
     }
 
     std::cerr << std::endl;

@@ -55,6 +55,14 @@ namespace Yttrium
 
         //______________________________________________________________________
         //
+        //! write to file
+        //______________________________________________________________________
+        size_t toBinary(const Core::String<char> &fileName, const bool append=false) const;
+        size_t toBinary(const char *              fileName, const bool append=false) const; //!< alias
+
+
+        //______________________________________________________________________
+        //
         //! send to hashing function
         //______________________________________________________________________
         void runHash( Hashing::Function &) const noexcept;
