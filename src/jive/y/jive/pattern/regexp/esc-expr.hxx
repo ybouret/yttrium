@@ -15,6 +15,10 @@ inline Pattern * escExpr()
             Y_ESC_ECHO(BACKSLASH);
             Y_ESC_ECHO(QUOTE);
             Y_ESC_ECHO(DQUOTE);
+            Y_ESC_ECHO(LBRACK);
+            Y_ESC_ECHO(RBRACK);
+            Y_ESC_ECHO(LBRACE);
+            Y_ESC_ECHO(RBRACE);
             Y_ESC_ECHO('+');
             Y_ESC_ECHO('*');
             Y_ESC_ECHO('?');

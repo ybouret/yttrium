@@ -4,6 +4,7 @@
 #include "y/jive/pattern/all.hpp"
 #include "y/system/exception.hpp"
 #include "y/text/ascii/printable.hpp"
+#include <cstring>
 
 namespace  Yttrium
 {
@@ -31,7 +32,6 @@ namespace  Yttrium
             Y_RX_POSIX(core);
             Y_RX_POSIX(vowel);
             Y_RX_POSIX(consonant);
-
         }
 
         RegExpCompiler:: RegExpCompiler() : Singleton<RegExpCompiler>(), posixDict()
@@ -65,7 +65,12 @@ namespace  Yttrium
             static const char BACKSLASH = '\\';
             static const char QUOTE     = '\'';
             static const char DQUOTE    = '\"';
-            
+            static const char LBRACE    =  '{';
+            static const char RBRACE    =  '}';
+            static const char CARET     =  '^';
+            static const char MINUS     =  '-';
+            static const char DOT       =  '.';
+            static const char COLON     =  ':';
 
             static const char * const CallSign;
 
@@ -84,17 +89,21 @@ namespace  Yttrium
             inline ~RXC() noexcept { }
 
 
-            const char * const expr;
-            const char *       curr;
-            const char * const last;
-            int                deep;
-            const Dictionary  &posixDict;
-            const Dictionary  *userDictP;
+            const char * const expr;      //!< original expression
+            const char *       curr;      //!< current position
+            const char * const last;      //!< end of expression
+            int                deep;      //!< depth
+            const Dictionary  &posixDict; //!< RexExpCompiler
+            const Dictionary  *userDictP; //!< optional
 
 
 #include "sub-expr.hxx"
 #include "make-jkr.hxx"
 #include "esc-expr.hxx"
+#include "to-posix.hxx"
+#include "sub-band.hxx"
+
+
 
 
 

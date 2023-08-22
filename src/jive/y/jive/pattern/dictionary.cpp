@@ -81,7 +81,7 @@ namespace Yttrium
             return dict.code->show(os);
         }
 
-        Pattern * Dictionary:: create(const String &name)
+        Pattern * Dictionary:: create(const String &name) const
         {
             assert(0!=code);
             const Motif *pp =code->search(name);
@@ -89,7 +89,7 @@ namespace Yttrium
             return (*pp)->clone();
         }
 
-        Pattern * Dictionary:: create(const char *name)
+        Pattern * Dictionary:: create(const char *name) const
         {
             const String  _(name);
             return create(_);
