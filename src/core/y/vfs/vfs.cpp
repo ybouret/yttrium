@@ -87,6 +87,45 @@ namespace Yttrium
     }
 }
 
+
+namespace Yttrium
+{
+    String VFS:: ChangeExtension(const char * const newExt,
+                                 const size_t       extLen,
+                                 const char * const path,
+                                 const size_t       size)
+    {
+        assert(Good(newExt,extLen));
+        assert(Good(path,size));
+        const char *ext = Extension(path,size);
+        if(!ext)
+        {
+            String res(path,size);
+            res << '.';
+            res.pushAtTail(newExt,extLen);
+            return res;
+        }
+        else
+        {
+            String res(path,1+ext-path);
+            res.pushAtTail(newExt,extLen);
+            return res;
+        }
+    }
+
+    String VFS:: ChangeExtension(const char * const  newExt, const String & path)
+    {
+        return ChangeExtension(newExt, StringLength(newExt),path(),path.size());
+    }
+
+    String VFS:: ChangeExtension(const String & newExt, const String & path)
+    {
+        return ChangeExtension(newExt(), newExt.size(),path(),path.size());
+    }
+
+}
+
+
 namespace Yttrium
 {
 

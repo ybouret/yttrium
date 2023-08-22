@@ -2,8 +2,8 @@
 #include "y/data/list.hpp"
 #include "y/memory/blanks.hpp"
 #include "y/object.hpp"
-#include "y/type/destruct.hpp"
 #include "y/system/exception.hpp"
+#include "y/graphviz/vizible.hpp"
 
 namespace Yttrium
 {
@@ -46,6 +46,48 @@ namespace Yttrium
                 SuffixNode *  next; //!< for list
                 SuffixNode *  prev; //!< for list
                 SuffixList    chld; //!< for list
+
+                //______________________________________________________________
+                //
+                //! GraphViz
+                //______________________________________________________________
+                inline void viz(OutputStream &fp) const
+                {
+                    Vizible::Addr(fp,this) << '[';
+                    if(0==from)
+                    {
+                        Vizible::Label(fp, "");
+                        fp << ",shape=triangle";
+                    }
+                    else
+                    {
+                        const char msg[2] = { char(code), 0 };
+                        Vizible::Label(fp,msg);
+                        fp << ",shape=circle";
+                    }
+                    if(data)
+                    {
+                        fp << ",style=bold";
+                    }
+                    else
+                    {
+                        fp << ",style=dotted";
+                    }
+                    fp  << ']';
+                    Vizible::Endl(fp);
+                    for(const SuffixNode *node=chld.head;node;node=node->next)
+                    {
+                        // node
+                        node->viz(fp);
+
+                        // link
+                        Vizible::Addr(fp,this);
+                        fp << "->";
+                        Vizible::Addr(fp,node);
+                        Vizible::Endl(fp);
+                    }
+                }
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(SuffixNode);
@@ -389,6 +431,17 @@ namespace Yttrium
         {
             throw Specific::Exception("SuffixTree(copy)","unexpected insertion failure!");
         }
+
+        void SuffixTree:: graphViz(OutputStream &fp) const
+        {
+            assert(0!=code);
+            assert(0!=code->root);
+            Vizible::Enter(fp,"G");
+            code->root->viz(fp);
+            Vizible::Leave(fp);
+        }
+
+        
 
     }
 

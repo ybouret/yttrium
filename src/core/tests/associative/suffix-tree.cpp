@@ -1,8 +1,11 @@
 #include "y/associative/suffix/core/tree.hpp"
 #include "y/stream/libc/input.hpp"
+#include "y/stream/libc/output.hpp"
 #include "y/string.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/graphviz/vizible.hpp"
+
 
 using namespace Yttrium;
 
@@ -22,6 +25,11 @@ Y_UTEST(associative_suffix_tree)
         {
             std::cerr << "path = " << tree.pathOf(addr[i]) << std::endl;
         }
+
+        
+
+        Vizible::GraphViz("tree.dot",tree);
+
     }
 
     addr.free();
@@ -50,6 +58,9 @@ Y_UTEST(associative_suffix_tree)
             std::cerr << "path = " << path << std::endl;
             Y_ASSERT(&data == tree.search(path) );
         }
+
+        Vizible::GraphViz("input.dot",tree);
+
         
     }
 

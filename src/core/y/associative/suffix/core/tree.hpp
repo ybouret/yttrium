@@ -70,6 +70,12 @@ namespace Yttrium
             //! search wrapper
             const void  *search(const Memory::ReadOnlyBuffer & path) const noexcept;
 
+            //! write GraphViz code
+            void graphViz(OutputStream &) const;
+
+            
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SuffixTree);
             class Code;

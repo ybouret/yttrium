@@ -499,6 +499,44 @@ namespace Yttrium
 
 namespace Yttrium
 {
+
+    namespace Core
+    {
+        template<>
+        bool operator == <CH>(const String<CH> &lhs, const CH *rhs) noexcept
+        {
+            const Yttrium::LightArray<CH> arr((CH *)rhs,StringLength(rhs));
+            return lhs == arr;
+        }
+
+        template<>
+        bool operator == <CH>(const CH *lhs, const String<CH> &rhs) noexcept
+        {
+            const Yttrium::LightArray<CH> arr((CH *)lhs,StringLength(lhs));
+            return rhs == arr;
+        }
+
+        template<>
+        bool operator != <CH>(const String<CH> &lhs, const CH *rhs) noexcept
+        {
+            const Yttrium::LightArray<CH> arr((CH *)rhs,StringLength(rhs));
+            return lhs != arr;
+        }
+
+        template<>
+        bool operator != <CH>(const CH *lhs, const String<CH> &rhs) noexcept
+        {
+            const Yttrium::LightArray<CH> arr((CH *)lhs,StringLength(lhs));
+            return rhs != arr;
+        }
+
+    }
+
+}
+
+
+namespace Yttrium
+{
     namespace Core
     {
 

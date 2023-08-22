@@ -5,6 +5,7 @@
 
 #include "y/string.hpp"
 #include "y/stream/output.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace Yttrium
 {
@@ -36,6 +37,7 @@ namespace Yttrium
         // API
         //
         //______________________________________________________________________
+        static OutputStream &Addr(OutputStream &fp, const void *   ptr);                    //!< emit address
         static OutputStream &Node(OutputStream &fp, const Vizible *viz);                    //!< emit UUID
         static OutputStream &Endl(OutputStream &);                                          //!< ";\n"
         static OutputStream &Text(OutputStream &,const String &);                           //!< encode text
@@ -45,11 +47,8 @@ namespace Yttrium
         static OutputStream &Label(OutputStream &, const char   *);                         //!< label="...
 
         //! start a directed graph
-        template <typename GNAME> inline
-        static void Enter(OutputStream &fp, const GNAME &gname)
-        {
-            fp << "digraph " << gname << " {\n";
-        }
+        static void Enter(OutputStream &fp, const String &graphName);
+        static void Enter(OutputStream &fp, const char   *graphName);
 
         //! finish a directed grapj
         static void Leave(OutputStream &);
@@ -69,9 +68,25 @@ namespace Yttrium
         OutputStream & arrow(OutputStream &f, const Vizible *) const; //!< arrow from self to other
 
 
+        //! save and render any CLASS with a graphViz(OutputStream &) methods
+        template <typename CLASS>
+        static inline void GraphViz(const String &dotFile,
+                                    CLASS        &vizible)
+        {
+            {
+                AutoPtr<OutputStream> fp = OpenFile(dotFile);
+                vizible.graphViz(*fp);
+            }
+            RenderPNG(dotFile);
+        }
+
+
+
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Vizible);
+        static OutputStream *OpenFile(const String &dotFile);
+        static void          RenderPNG(const String &dotFile);
     };
 
 }

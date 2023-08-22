@@ -42,12 +42,15 @@ namespace Yttrium
 
         template <typename> class String;
 
-        template <typename T> String<T> operator+(const String<T> &, const String<T> &); //!< forward declaration
-        template <typename T> String<T> operator+(const String<T> &, const T);           //!< forward declaration
-        template <typename T> String<T> operator+(const String<T> &, const T *);         //!< forward declaration
-        template <typename T> String<T> operator+(const T, const String<T> &);           //!< forward declaration
-        template <typename T> String<T> operator+(const T*, const String<T> &);          //!< forward declaration
-
+        template <typename T> String<T> operator+(const String<T> &, const String<T> &);  //!< forward declaration
+        template <typename T> String<T> operator+(const String<T> &, const T);            //!< forward declaration
+        template <typename T> String<T> operator+(const String<T> &, const T *);          //!< forward declaration
+        template <typename T> String<T> operator+(const T, const String<T> &);            //!< forward declaration
+        template <typename T> String<T> operator+(const T*, const String<T> &);           //!< forward declaration
+        template <typename T> bool      operator==(const T *, const String<T> &) noexcept; //!< forward declaration
+        template <typename T> bool      operator==(const String<T> &, const T *) noexcept; //!< forward declaration
+        template <typename T> bool      operator!=(const T *, const String<T> &) noexcept; //!< forward declaration
+        template <typename T> bool      operator!=(const String<T> &, const T *) noexcept; //!< forward declaration
 
         //______________________________________________________________________
         //
@@ -167,6 +170,17 @@ namespace Yttrium
             String & operator+=(const String &); //!< in place addition
             String & operator+=(const T      *); //!< in place addition
             String & operator+=(const T       ); //!< in place addition
+
+            //__________________________________________________________________
+            //
+            //
+            // legacy comparison
+            //
+            //__________________________________________________________________
+            friend bool operator== <> (const String<T> &lhs, const T *buf) noexcept;
+            friend bool operator== <> (const T *buf, const String<T> &rhs) noexcept;
+            friend bool operator!= <> (const String<T> &lhs, const T *buf) noexcept;
+            friend bool operator!= <> (const T *buf, const String<T> &rhs) noexcept;
 
             //__________________________________________________________________
             //

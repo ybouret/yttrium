@@ -15,14 +15,31 @@ namespace Yttrium
     {
     }
 
+    void Vizible:: Enter(OutputStream &fp, const String &graphName)
+    {
+        fp << "digraph " << graphName << " {\n";
+    }
+
+    void Vizible:: Enter(OutputStream &fp, const char *graphName)
+    {
+        const String _(graphName);
+        Enter(fp,_);
+    }
+
     void Vizible:: Leave(OutputStream &fp)
     {
         fp << "}\n";
     }
 
+
+    OutputStream & Vizible:: Addr(OutputStream &fp, const void *ptr)
+    {
+        return fp << 'n' << Hexadecimal::Address(ptr);
+    }
+
     OutputStream & Vizible:: Node(OutputStream &fp, const Vizible *viz)
     {
-        return fp << 'n' << Hexadecimal::Address(viz);
+        return Addr(fp,viz);
     }
 
 
@@ -90,9 +107,14 @@ namespace Yttrium
         return fp;
     }
 
+
+
 }
 
 #include "y/vfs/local-fs.hpp"
+#include "y/system/exception.hpp"
+#include "y/stream/libc/output.hpp"
+
 namespace Yttrium
 {
     void Vizible:: Render(const String &pngFile,
@@ -112,6 +134,19 @@ namespace Yttrium
                 (void) fs.TryRemove(dotFile);
             }
         }
+    }
+
+    OutputStream * Vizible:: OpenFile(const String &dotFile)
+    {
+        const String ext = VFS::Extension(dotFile);
+        if(ext != ".dot") throw Specific::Exception("Vizible","invalud extension '%s'", ext() );
+        return new Libc::OutputFile(dotFile);
+    }
+
+    void Vizible:: RenderPNG(const String &dotFile)
+    {
+        String pngFile = VFS::ChangeExtension("png", dotFile);
+        Render(pngFile,dotFile);
     }
 
 }

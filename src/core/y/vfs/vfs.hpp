@@ -43,7 +43,13 @@ namespace Yttrium
         static const char *Extension(const char * const path, const size_t size) noexcept; //!< NULL or .ext
         static const char *Extension(const char * const path)                    noexcept; //!< NULL or .ext
         static const char *Extension(const String &     path)                    noexcept; //!< NULL or .ext
-        
+
+        static String ChangeExtension(const char * const newExt,
+                                      const size_t       extLen,
+                                      const char * const path,
+                                      const size_t       size);
+        static String ChangeExtension(const char * const  newExt, const String & path);
+        static String ChangeExtension(const String      & newExt, const String & path);
 
         //______________________________________________________________________
         //

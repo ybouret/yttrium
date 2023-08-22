@@ -53,6 +53,14 @@ Y_UTEST(strings)
         Iterating::DisplayAll::Of(s);
     }
 
+    {
+        Core::String<char> s = "Hello";
+        Y_CHECK("Hello"==s);
+        Y_CHECK(s=="Hello");
+        Y_CHECK("World"!=s);
+        Y_CHECK(s!="World");
+    }
+
 
 
 }

@@ -17,6 +17,10 @@ Y_UTEST(vfs_names)
         else        std::cerr << " NoExt";
         std::cerr << std::endl;
 
+        const String tmp = path;
+        const String xxx = VFS::ChangeExtension("xxx", path);
+        std::cerr << xxx << std::endl;
+
     }
 }
 Y_UDONE()
