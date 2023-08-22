@@ -68,8 +68,7 @@ namespace Yttrium
                 enum { Flag = false };
             };
 
-            template <typename T,const bool>
-            struct AddProxy;
+            
 
         }
     }
