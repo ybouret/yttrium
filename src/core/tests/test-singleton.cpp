@@ -46,14 +46,14 @@ Y_UTEST(singleton)
     MyData &data = MyData::Instance();
     std::cerr << "data.callSign = " << data.callSign() << std::endl;
     {
-        Y_LOCK(MyData::Access);
+        Y_LOCK(data.access);
     }
 
 
     SysData &sysData = SysData::Instance();
     std::cerr << "sysd.callSign = " << sysData.callSign() << std::endl;
     {
-        Y_LOCK(SysData::Access);
+        Y_LOCK(sysData.access);
     }
 
 }

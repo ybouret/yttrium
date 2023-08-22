@@ -15,17 +15,16 @@ namespace Yttrium
         class Dictionary:: Code : public Object, public Dict
         {
         public:
+            static const char * const CallSign;
+
             explicit Code() : Object(), Dict() {}
-            virtual ~Code() noexcept
-            {
-                std::cerr << "~Dictionary::Code #" << size() << std::endl;
-            }
+            virtual ~Code() noexcept           {}
 
 
             void mustInsert(const String &label, const Motif &motif)
             {
                 if(!insert(label,motif))
-                    throw Specific::Exception("Jive::Dictionary","multiple pattern '%s'", label() );
+                    throw Specific::Exception(CallSign,"multiple pattern '%s'", label() );
             }
 
             std::ostream & show(std::ostream &os) const
@@ -48,19 +47,18 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Code);
         };
 
+        const char * const Dictionary::Code::CallSign = "Jive::Dictionary";
+
         Dictionary:: Dictionary() :
         code( new Code() )
-        //code(0)
         {
         }
 
         Dictionary:: ~Dictionary() noexcept
         {
-            std::cerr << "deleting dictionary..." << std::endl;
             assert(0!=code);
             delete code;
             code = 0;
-            std::cerr << "...deleted dictionary" << std::endl;
         }
 
         void Dictionary:: operator()(const char    *name,
@@ -81,6 +79,14 @@ namespace Yttrium
         std::ostream & operator<<(std::ostream &os, const Dictionary &dict)
         {
             return dict.code->show(os);
+        }
+
+        Pattern * Dictionary:: create(const String &name)
+        {
+            assert(0!=code);
+            const Motif *pp =code->search(name);
+            if(!pp) throw Specific::Exception(Code::CallSign,"no pattern '%s'", name() );
+            return (*pp)->clone();
         }
 
 

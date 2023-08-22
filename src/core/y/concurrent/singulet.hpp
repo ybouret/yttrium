@@ -56,7 +56,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static bool   Verbose; //!< operations verbosity
-            static size_t Width;   //!< for alignment, initally 32
+            static size_t Width;   //!< for callSign alignment, initally 32
             
         protected:
             //! check valid LifeTime, throw on error

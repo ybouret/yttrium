@@ -36,6 +36,9 @@ namespace Yttrium
             void operator()(const char *   name, const Pattern *p); //!< append a newly created pattern
             void operator()(const String & name, const Pattern *p); //!< append a newly created pattern
 
+            Pattern * create(const String &name);
+            Pattern * create(const char   *name);
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Dictionary);

@@ -27,7 +27,7 @@ namespace Yttrium
         {
             assert(quanta);
             assert(blockSize>0);
-            Y_LOCK(Access);
+            Y_LOCK(access);
             return quanta->acquire(blockSize);
         }
 
@@ -37,7 +37,7 @@ namespace Yttrium
             assert(0!=blockAddr);
             assert(blockSize>0);
 
-            Y_LOCK(Access);
+            Y_LOCK(access);
             quanta->release(blockAddr,blockSize);
 
         }

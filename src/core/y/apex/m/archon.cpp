@@ -64,7 +64,7 @@ namespace Yttrium
         void * Archon:: acquire(unsigned &shift)
         {
             assert(0!=engine);
-            Y_LOCK(Access);
+            Y_LOCK(access);
             return engine->acquire(shift);
         }
 
@@ -72,7 +72,7 @@ namespace Yttrium
         {
             assert(0!=engine);
             assert(0!=entry);
-            Y_LOCK(Access);
+            Y_LOCK(access);
             engine->release(entry,shift);
         }
         

@@ -63,7 +63,10 @@ namespace Yttrium
     //
     //__________________________________________________________________________
     template <typename T>
-    class Studio : public Blanks<T>, public Core::Studio
+    class Studio :
+    public Singleton< Studio<T> >,
+    public Blanks<T>,
+    public Core::Studio
     {
     public:
         //______________________________________________________________________
@@ -75,7 +78,7 @@ namespace Yttrium
         static const char * const                  CallSign;   //!< for Singleton
         static const AtExit::Longevity             LifeTime;   //!< for Singleton
         static const size_t                        Starting;   //!< for Singleton
-        typedef Singleton<Studio>                  Single;     //!< the Singleton
+        typedef Singleton< Studio<T> >             Single;     //!< the Singleton
 
 
 
@@ -84,7 +87,7 @@ namespace Yttrium
         inline explicit Studio() : Blanks<T>(Starting) {}
         inline virtual ~Studio() noexcept {}
         Y_DISABLE_COPY_AND_ASSIGN(Studio);
-        friend class Singleton<Studio>;
+        friend class Singleton< Studio<T> >;
     };
     
 

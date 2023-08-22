@@ -35,7 +35,7 @@ namespace Yttrium
 
             if(shift>mgr.MaxShift) throw Specific::Exception(CallSign,"shift request is too high");
 
-            Y_LOCK(Access);
+            Y_LOCK(access);
             return mgr[shift].acquire();
         }
 
@@ -60,7 +60,7 @@ namespace Yttrium
                 throw Specific::Exception(CallSign,"bytes request is too high");
             size_t         bytes = req;
             const unsigned shift = Base2<size_t>::LogFor(bytes);
-            Y_LOCK(Access);
+            Y_LOCK(access);
             try {
                 void *p = mgr[shift].acquire(); assert( OutOfReach::Are0(p,bytes) );
                 count   = bytes;
@@ -85,7 +85,7 @@ namespace Yttrium
             const unsigned shift = Base2<size_t>::LogFor(bytes);
             if(bytes!=count) Libc::CriticalError(EINVAL, "%s.release(bad count=%lu)", CallSign, (unsigned long)count );
 
-            Y_LOCK(Access);
+            Y_LOCK(access);
             mgr[shift].release(entry);
             entry = 0;
             count = 0;

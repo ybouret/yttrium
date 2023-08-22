@@ -42,7 +42,6 @@ namespace Yttrium
         //
         //______________________________________________________________________
         typedef typename POLICY::MutexType MutexType;     //!< alias
-        static MutexType                   Access;        //!< static class/system level mutex
 
         //______________________________________________________________________
         //
@@ -52,6 +51,7 @@ namespace Yttrium
         //______________________________________________________________________
         inline virtual const char *             callSign() const noexcept { return T::CallSign; } //!< forward CallSign
         inline virtual AtExit::Longevity        lifeTime() const noexcept { return T::LifeTime; } //!< forward LifeTime
+        MutexType                                access;                                          //!< class/system level mutex
 
         //______________________________________________________________________
         //
@@ -70,10 +70,10 @@ namespace Yttrium
         static inline T & Instance()
         {
             static void * Instance__[ Y_WORDS_FOR(T) ] = { 0 };
-            Y_LOCK(Access);
+            Y_GIANT_LOCK();
             if(0 == Instance_)
             {
-                Y_LOCK(Access);
+                Y_GIANT_LOCK();
                 if(Register) {
                     OnInitDisplay(T::CallSign,T::LifeTime);
                     CheckLifeTime(T::CallSign,T::LifeTime);
@@ -101,8 +101,15 @@ namespace Yttrium
 
 
     protected:
-        inline explicit Singleton() noexcept : Concurrent::Singulet() {} //!< setup
-        inline virtual ~Singleton() noexcept {}                          //!< cleanup
+
+        //! setup
+        inline explicit Singleton() noexcept :
+        Concurrent::Singulet(),
+        access(T::CallSign)
+        {}
+
+        //! cleanup
+        inline virtual ~Singleton() noexcept {}
 
 
     private:
@@ -122,8 +129,6 @@ namespace Yttrium
         }
     };
 
-    template <typename T,class R>
-    typename Singleton<T,R>::MutexType   Singleton<T,R>:: Access(T::CallSign);
     template <typename T,class R> bool   Singleton<T,R>:: Register  = true;
     template <typename T,class R> T *    Singleton<T,R>:: Instance_ = 0;
     template <typename T,class R> size_t Singleton<T,R>:: Required  = 0;

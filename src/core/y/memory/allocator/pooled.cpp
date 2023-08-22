@@ -28,7 +28,7 @@ namespace Yttrium
 
         void * Pooled:: acquire(size_t & count, const size_t blockSize)
         {
-            Y_LOCK(Access);
+            Y_LOCK(access);
             size_t request = count * blockSize;
             try {
                 void *p = straps->acquire(request);
@@ -46,7 +46,7 @@ namespace Yttrium
 
         void Pooled:: release(void *&entry, size_t &count) noexcept
         {
-            Y_LOCK(Access);
+            Y_LOCK(access);
             assert(0!=entry);
             straps->release(entry);
             entry = 0;

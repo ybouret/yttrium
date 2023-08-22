@@ -168,14 +168,14 @@ namespace Yttrium
     {
         MutexProto:: ~MutexProto() noexcept
         {
-            std::cerr << "~MutexProto[" << uuid << "]" << std::endl;
+            //std::cerr << "~MutexProto[" << uuid << "]" << std::endl;
         }
 
         MutexProto:: MutexProto(const char *id) :
         Lockable(id),
         quark( Nucleus::QuarkInstance() )
         {
-            std::cerr << "+MutexProto[" << uuid << "]" << std::endl;
+            //std::cerr << "+MutexProto[" << uuid << "]" << std::endl;
         }
 
     }

@@ -49,7 +49,6 @@ namespace Yttrium
         //! cleanup
         inline virtual ~SuffixTree() noexcept {
             hardReset();
-            std::cerr << "~SuffixTree" << std::endl;
         }
 
         //! duplicate
@@ -104,13 +103,10 @@ namespace Yttrium
         //! release all possible memory
         //______________________________________________________________________
         inline void hardReset() noexcept {
-            std::cerr << "Hard Reset, list.size=" << list.size << std::endl;
             tree.release();
             while(list.size>0)
                 pool.quit(list.popTail());
-            std::cerr << "Hard Reset, pool.available=" << pool.available() << std::endl;
             pool.release();
-            std::cerr << "done" << std::endl;
         }
 
         //______________________________________________________________________
