@@ -46,6 +46,7 @@ Pattern *subBand()
         const char c = *(curr++);
         switch(c)
         {
+                // ending
             case RBRACK:
                 goto FINISH;
 
@@ -55,6 +56,7 @@ Pattern *subBand()
                 *p << subBand();
                 break;
 
+                // default
             default:
                 p->add(c);
         }

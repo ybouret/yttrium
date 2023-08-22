@@ -26,8 +26,8 @@ inline Pattern * escExpr()
 
 
         default:
-            throw Specific::Exception(CallSign,"unknow escape character '%s", ASCII::Printable::Char[esc]);
+            break;
     }
 
-    return 0;
+    throw Specific::Exception(CallSign,"unknow escape character '%s", ASCII::Printable::Char[esc]);
 }
