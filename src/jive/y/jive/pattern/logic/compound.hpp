@@ -36,8 +36,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             virtual void   reset()                noexcept;  //!< recursive reset
-            virtual size_t serialize(OutputStream &) const;  //!< uuid+size+pattern
-            void           retrieve(InputStream &);          //!< load size+pattersn
+            virtual size_t serialize(OutputStream &) const;  //!< uuid+num patterns+patterns
+            void           retrieve(InputStream &);          //!< load num patterns+patterns
 
             Compound & operator<<( const Pattern & ); //!< append clone of argument
             Compound & operator<<( Pattern *);        //!< append argument
@@ -50,13 +50,15 @@ namespace Yttrium
             void add(const uint8_t);                //!< add a Single
             void add(const uint8_t, const uint8_t); //!< add a Range
 
+
             //__________________________________________________________________
             //
             //
             // Members
             //
             //__________________________________________________________________
-            Patterns patterns; //!< operands
+            Patterns      patterns; //!< operands
+            const size_t &count;    //!< patterns.size
 
             //__________________________________________________________________
             //

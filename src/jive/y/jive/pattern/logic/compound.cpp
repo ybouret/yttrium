@@ -10,11 +10,16 @@ namespace Yttrium
         {
         }
 
-        Compound:: Compound(const uint32_t t) noexcept : Pattern(t), patterns() {}
+        Compound:: Compound(const uint32_t t) noexcept :
+        Pattern(t),
+        patterns(),
+        count(patterns.size)
+        {}
 
         Compound:: Compound(const Compound &other) :
         Pattern(other),
-        patterns(other.patterns)
+        patterns(other.patterns),
+        count(patterns.size)
         {
         }
 

@@ -28,8 +28,7 @@ namespace  Yttrium
             //__________________________________________________________________
             static const char * const      CallSign;                                  //!< "RegExpCompiler"
             static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 10;  //!< life time
-
-
+            
             //__________________________________________________________________
             //
             //

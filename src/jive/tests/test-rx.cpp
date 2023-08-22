@@ -20,6 +20,7 @@ Y_UTEST(rx)
     {
         AutoPtr<Jive::Pattern> P = Jive::RegExp::Compile(argv[1]);
         P->toBinary("rx.dat");
+        Vizible::GraphViz("rx.dot",*P);
     }
 
     //throw Specific::Exception("whatever","here=%s",__FILE__);

@@ -56,12 +56,19 @@ namespace  Yttrium
         class RXC
         {
         public:
+            static const char LPAREN = '(';
+            static const char RPAREN = ')';
+
             //! initialize
             inline RXC(const char       *rx,
                        const size_t      sz,
                        const Dictionary &pd,
                        const Dictionary *ud) noexcept :
-            expr(rx), curr(expr), last(expr+sz), deep(0), posixDict(pd), userDictP(ud) { }
+            expr(rx), curr(expr), last(expr+sz), deep(0), posixDict(pd), userDictP(ud)
+            {
+                const String tmp(curr,sz);
+                std::cerr << "compiling '" << tmp << "'" << std::endl;
+            }
 
             //! cleanup
             inline ~RXC() noexcept { }
@@ -75,23 +82,9 @@ namespace  Yttrium
             const Dictionary  *userDictP;
 
 
-            inline Pattern *subExpression()
-            {
-                AutoPtr<Compound> p = new And();
+#include "sub-expr.hxx"
 
-                while(curr<last)
-                {
-                    const char c = *(curr++);
-                    switch(c)
-                    {
-                        default:
-                            p->add(c);
-                    }
-                }
 
-                if(p->size<=0) throw Specific::Exception(RegExpCompiler::CallSign,"empty sub-expression in '%s'",expr);
-                return Pattern::Optimize( p.yield() );
-            }
 
 
 
@@ -103,7 +96,10 @@ namespace  Yttrium
         Pattern * RegExpCompiler:: compile(const String &rx, const Dictionary *dict) const
         {
             RXC rxc(rx.c_str(),rx.size(),posixDict,dict);
-            return rxc.subExpression();
+            AutoPtr<Pattern>  result = rxc.subExpr();
+            if(rxc.deep!=0)
+                throw Specific::Exception(CallSign,"unfinished sub-expression in '%s'",rx());
+            return result.yield();
         }
 
     }
