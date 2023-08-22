@@ -60,6 +60,10 @@ inline Pattern *subExpr()
                 *p << subBand();
                 break;
 
+            case '.':
+                *p << posix::dot();
+                break;
+
                 //--------------------------------------------------------------
                 //
                 //  escape sequence

@@ -1,19 +1,21 @@
 
-Pattern * escHexa()
+
+inline uint8_t getHexa(const char *which)
+{
+    assert(0!=which);
+    if(curr>=last) throw Specific::Exception(CallSign,"missing %s hexadecimal character in '%s'",which,expr);
+    const uint8_t c = *(curr++);
+    const int     h = Hexadecimal::ToDecimal(c);
+    if(h<0)
+        throw Specific::Exception(CallSign,"invalid %s hexadecimal '%s' in '%s'", which, ASCII::Printable::Char[c], expr);
+
+    return uint8_t(h);
+}
+
+inline Pattern * escHexa()
 {
     assert('x'==curr[-1]);
-    if(curr>=last) throw Specific::Exception(CallSign,"missing first hexadecimal character in '%s'",expr);
-    const uint8_t hiChar = *(curr++);
-    const int     hiByte = Hexadecimal::ToDecimal(hiChar);
-    if(hiByte<0)
-        throw Specific::Exception(CallSign,"invalid first hexadecimal '%s' in '%s'", ASCII::Printable::Char[hiChar], expr);
-
-    if(curr>=last) throw Specific::Exception(CallSign,"missing second hexadecimal character in '%s'",expr);
-    const uint8_t loChar = *(curr++);
-    const int     loByte = Hexadecimal::ToDecimal(loChar);
-    if(loByte<0)
-        throw Specific::Exception(CallSign,"invalid second hexadecimal '%s' in '%s'", ASCII::Printable::Char[loChar], expr);
-
-    const uint8_t code = uint8_t(hiByte*16+loByte);
-    return new Single(code);
+    const uint8_t hi = getHexa("first");
+    const uint8_t lo = getHexa("second");
+    return new Single( (hi<<4) | lo );
 }
