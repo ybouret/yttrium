@@ -121,7 +121,7 @@ namespace  Yttrium
             RXC rxc(rx.c_str(),rx.size(),posixDict,dict);
             AutoPtr<Pattern>  result = rxc.subExpr();
             if(rxc.deep!=0)
-                throw Specific::Exception(CallSign,"unfinished sub-expression in '%s'",rx());
+                throw Specific::Exception(CallSign,"unfinished expression in '%s'",rx());
             return result.yield();
         }
 

@@ -49,6 +49,12 @@ Pattern *subBand()
             case RBRACK:
                 goto FINISH;
 
+
+                // recursive
+            case LBRACK:
+                *p << subBand();
+                break;
+
             default:
                 p->add(c);
         }
