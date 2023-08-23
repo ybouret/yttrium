@@ -16,8 +16,7 @@ inline void toRange(Patterns &patterns)
 
     // let's decipher next char
     if(curr>=last) throw Specific::Exception(CallSign,"unfinished RANGE in '%s'",expr);
-
-    const char rhs = *(curr++);
+    const uint8_t rhs = *(curr++);
     
 
     throw Exception("makeRange not implemented");

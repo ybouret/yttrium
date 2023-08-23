@@ -30,6 +30,14 @@ namespace Yttrium
     {
         namespace Antelope
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Proxy when Heap is required
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             struct AddProxy<T,true>
             {
@@ -55,8 +63,10 @@ namespace Yttrium
                     class Comparator
                     {
                     public:
-                        inline  Comparator() noexcept {}
-                        inline ~Comparator() noexcept {}
+                        inline  Comparator() noexcept {} //!< setup
+                        inline ~Comparator() noexcept {} //!< cleanup
+
+                        //! keep smallest absValue on top
                         inline SignType operator()(const Unit &lhs, const Unit &rhs) const noexcept
                         { return Comparison::CxxDecreasing(lhs.absValue,rhs.absValue); }
 
@@ -125,19 +135,44 @@ namespace Yttrium
                 };
 
 
+                //______________________________________________________________
+                //
+                //
+                //
                 //! Code to use units and heap
+                //
+                //
+                //______________________________________________________________
                 class Code : public Heap<Unit,typename Unit::Buffer, typename Unit::Comparator>
                 {
                 public:
-                    typedef Heap<Unit,typename Unit::Buffer, typename Unit::Comparator> HeapType;
+                    //__________________________________________________________
+                    //
+                    //
+                    // Definitions
+                    //
+                    //__________________________________________________________
+                    typedef Heap<Unit,typename Unit::Buffer, typename Unit::Comparator> HeapType; //!< alias
                     using HeapType::size;
                     using HeapType::insert;
                     using HeapType::pull;
 
-                    inline explicit Code()      noexcept : HeapType() {}
-                    inline explicit Code(const size_t n) : HeapType(n,AsCapacity) {}
-                    inline virtual ~Code() noexcept {}
+                    //__________________________________________________________
+                    //
+                    //
+                    // C++
+                    //
+                    //__________________________________________________________
+                    inline explicit Code()      noexcept : HeapType()             {} //!< setup
+                    inline explicit Code(const size_t n) : HeapType(n,AsCapacity) {} //!< setup with capacity
+                    inline virtual ~Code()      noexcept                          {} //!< cleanup
 
+                    //__________________________________________________________
+                    //
+                    //
+                    //! Sum algorithm
+                    //
+                    //__________________________________________________________
                     inline T sum()
                     {
                         if(  size() > 0 )
