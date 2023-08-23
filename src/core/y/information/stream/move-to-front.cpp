@@ -26,7 +26,9 @@ namespace Yttrium
             virtual ~Code() noexcept
             {
                 static Memory::Dyadic &mgr = Memory::Dyadic::Location();
-                mgr.releaseBlock( *(void**)&entry,shift);
+                void *alias = entry;
+                mgr.releaseBlock(alias,shift);
+                entry = 0;
             }
 
             inline void format() noexcept
