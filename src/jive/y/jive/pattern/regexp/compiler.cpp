@@ -102,6 +102,7 @@ namespace  Yttrium
 #include "sub-expr.hxx"
 #include "make-jkr.hxx"
 #include "esc-expr.hxx"
+#include "esc-band.hxx"
 #include "esc-hexa.hxx"
 #include "to-posix.hxx"
 #include "sub-band.hxx"

@@ -20,11 +20,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            template <typename T>
-            struct Wary
-            {
-                enum { Flag = true };
-            };
+            template <typename T> struct Wary { enum { Flag = true }; };
 
             //__________________________________________________________________
             //
@@ -34,11 +30,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            template <>
-            struct Wary<apn>
-            {
-                enum { Flag = false };
-            };
+            template <> struct Wary<apn> { enum { Flag = false }; };
 
             //__________________________________________________________________
             //
@@ -48,11 +40,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            template <>
-            struct Wary<apz>
-            {
-                enum { Flag = false };
-            };
+            template <> struct Wary<apz> { enum { Flag = false }; };
 
             //__________________________________________________________________
             //
@@ -62,11 +50,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            template <>
-            struct Wary<apq>
-            {
-                enum { Flag = false };
-            };
+            template <> struct Wary<apq> { enum { Flag = false }; };
 
             
 

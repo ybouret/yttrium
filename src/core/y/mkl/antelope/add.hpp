@@ -18,7 +18,6 @@ namespace Yttrium
         namespace Antelope
         {
             template <typename T,const bool> struct AddProxy;
-
         }
     }
 
@@ -49,6 +48,10 @@ namespace Yttrium
                 class Unit
                 {
                 public:
+                    //__________________________________________________________
+                    //
+                    //! Comparator for Heap of Units
+                    //__________________________________________________________
                     class Comparator
                     {
                     public:
@@ -61,7 +64,10 @@ namespace Yttrium
                         Y_DISABLE_COPY_AND_ASSIGN(Comparator);
                     };
 
-
+                    //__________________________________________________________
+                    //
+                    //! Memory Buffer model for Units
+                    //__________________________________________________________
                     typedef Core::FlexibleRawBuffer<Unit,Memory::Dyadic> Buffer;
 
                     //__________________________________________________________
@@ -87,7 +93,7 @@ namespace Yttrium
                     // Methods
                     //__________________________________________________________
 
-                    //! retrieve original value by cast
+                    //! retrieve original value by cast operator
                     inline operator T() const noexcept
                     {
                         return usrValue;
@@ -232,10 +238,7 @@ namespace Yttrium
 
                 explicit Add() : CodeType() {}
                 virtual ~Add() noexcept {}
-
-                Add & operator<<(ParamType args)
-                { this->insert(args); return *this; }
-
+                
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Add);

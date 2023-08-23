@@ -74,6 +74,7 @@ graphviz
 mkl
 mkl/cameo
 mkl/cameo/add
+mkl/antelope
 vfs
 information
 information/stream
