@@ -106,7 +106,7 @@ namespace  Yttrium
 #include "esc-hexa.hxx"
 #include "to-posix.hxx"
 #include "sub-band.hxx"
-
+#include "to-range.hxx"
 
 
 
