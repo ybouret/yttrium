@@ -67,6 +67,13 @@ Pattern *subBand()
                 break;
 
                 //--------------------------------------------------------------
+                // Range detection
+                //--------------------------------------------------------------
+            case MINUS:
+                makeRange(p->patterns);
+                break;
+
+                //--------------------------------------------------------------
                 // default
                 //--------------------------------------------------------------
             default:
@@ -81,3 +88,19 @@ FINISH:
     return Pattern::Optimize( p.yield() );
 }
 
+
+inline void makeRange(Patterns &patterns)
+{
+    assert(MINUS == curr[-1]);
+    std::cerr << "Now in makeRange" << std::endl;
+
+
+    // check patterns not empty
+    if(patterns.size<=0)                     throw Specific::Exception(CallSign,"no character before  '-' in '%s'", expr);
+
+    // check single char before '-'
+    assert(0!=patterns.tail);
+    if(Single::UUID != patterns.tail->uuid)  throw Specific::Exception(CallSign,"no SINGLE char before '-' in '%s'", expr);
+
+    throw Exception("makeRange not implemented");
+}
