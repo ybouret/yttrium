@@ -13,9 +13,7 @@ using namespace Yttrium;
 
 Y_UTEST(rx)
 {
-
-    //Jive::RegExpCompiler::Instance();
-
+    
     if(argc>1)
     {
         std::cerr << "-- compiling '" << argv[1] << "'" << std::endl;
@@ -27,7 +25,15 @@ Y_UTEST(rx)
         Vizible::GraphViz("rx.dot",*P);
         Jive::FirstChars fc;
         P->query(fc);
+
         std::cerr << "-- first chars : " << fc << std::endl;
+        if(true)
+        {
+            std::cerr << "-- rendering..." << std::endl;
+            const AutoPtr<Jive::Pattern> q = fc.makeOr();
+            Vizible::GraphViz("fc.dot",*q);
+
+        }
     }
 
 }

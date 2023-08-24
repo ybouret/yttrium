@@ -107,6 +107,13 @@ namespace Yttrium
         return fp;
     }
 
+    OutputStream  & Vizible::Label(OutputStream &fp, const void *msg, const size_t len)
+    {
+        assert(Good(msg,len));
+        emitLabel(fp,static_cast<const char*>(msg),len);
+        return fp;
+    }
+
 
 
 }
@@ -143,10 +150,10 @@ namespace Yttrium
         return new Libc::OutputFile(dotFile);
     }
 
-    void Vizible:: RenderPNG(const String &dotFile)
+    void Vizible:: RenderPNG(const String &dotFile, const bool keepDot)
     {
         String pngFile = VFS::ChangeExtension("png", dotFile);
-        Render(pngFile,dotFile);
+        Render(pngFile,dotFile,keepDot);
     }
 
 }

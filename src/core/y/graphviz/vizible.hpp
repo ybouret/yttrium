@@ -43,6 +43,7 @@ namespace Yttrium
         static OutputStream &Text(OutputStream &,const String &);                           //!< encode text
         static OutputStream &Text(OutputStream &,const char   *);                           //!< encode text
         static OutputStream &Arrow(OutputStream &, const Vizible *src, const Vizible *dst); //!< start arrow
+        static OutputStream &Label(OutputStream &, const void   *, const size_t);           //!< label="...
         static OutputStream &Label(OutputStream &, const String &);                         //!< label="..."
         static OutputStream &Label(OutputStream &, const char   *);                         //!< label="...
 
@@ -69,13 +70,14 @@ namespace Yttrium
         //! save and render any CLASS with a graphViz(OutputStream &) methods
         template <typename CLASS>
         static inline void GraphViz(const String &dotFile,
-                                    CLASS        &vizible)
+                                    CLASS        &vizible,
+                                    const bool    keepDot = false)
         {
             {
                 AutoPtr<OutputStream> fp = OpenFile(dotFile);
                 vizible.graphViz(*fp);
             }
-            RenderPNG(dotFile);
+            RenderPNG(dotFile,keepDot);
         }
 
 
@@ -84,7 +86,7 @@ namespace Yttrium
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Vizible);
         static OutputStream *OpenFile(const String &dotFile);
-        static void          RenderPNG(const String &dotFile);
+        static void          RenderPNG(const String &dotFile, const bool keepDot);
     };
 
 }

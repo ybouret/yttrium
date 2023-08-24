@@ -73,7 +73,7 @@ namespace Yttrium
         {
             node(fp) << '[';
             const char msg[8] = { '[', char(lower), '-', char(upper), ']',0,0,0 };
-            Label(fp, msg) << ",shape=box";
+            Label(fp, msg,5) << ",shape=box";
             fp << ']';
             Endl(fp);
         }

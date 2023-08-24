@@ -1,7 +1,8 @@
 
 #include "y/jive/pattern/first-chars.hpp"
 #include "y/memory/out-of-reach.hpp"
-#include "y/text/ascii/printable.hpp"
+#include "y/text/ascii/embedding.hpp"
+
 #include "y/object.hpp"
 #include <iostream>
 #include <cstring>
@@ -97,10 +98,10 @@ namespace Yttrium
             while( NextBlock(i,j,fc) )
             {
                 os << '[';
-                os << ASCII::Printable::Char[i];
+                os << ASCII::Embedding::Char[i];
                 const unsigned jm = j-1;
                 if(jm>i)
-                    os << '-' << ASCII::Printable::Char[jm];
+                    os << '-' << ASCII::Embedding::Char[jm];
                 os << ']';
                 ++n;
                 i=j;
@@ -153,11 +154,13 @@ namespace Yttrium
                 if(jm>i)
                 {
                     // range
+                    //std::cerr << "fc: new range  " << i << " -> " << jm << std::endl;
                     target.pushTail( new Range(i,jm) );
                 }
                 else
                 {
                     // single
+                    //std::cerr << "fc: new single " << i << std::endl;
                     target.pushTail( new Single(i) );
                 }
                 i=j;
