@@ -117,6 +117,31 @@ namespace Yttrium
         {
             AutoPtr<Or> motif    = OptimizeCompound(p);
             Patterns   &patterns = motif->patterns;
+
+            //------------------------------------------------------------------
+            //! Pass 0: optimizing redudant
+            //------------------------------------------------------------------
+
+            {
+                Patterns temp;
+                while(patterns.size)
+                {
+                    AutoPtr<Pattern>  lhs   = patterns.popHead(); assert(lhs.isValid());
+                    bool              found = false;
+                    for(const Pattern *rhs=temp.head;rhs;rhs=rhs->next)
+                    {
+                        if(lhs->isEqualTo(*rhs))
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(!found) temp.pushTail( lhs.yield() );
+                }
+                patterns.swapWith(temp);
+            }
+
+
             switch(patterns.size)
             {
                 case 0: return motif.yield();
@@ -124,6 +149,8 @@ namespace Yttrium
                 default:
                     break;
             }
+
+
 
             //------------------------------------------------------------------
             //! Pass 1: optimizing groups of basic
@@ -208,7 +235,6 @@ namespace Yttrium
         T *OptimizeGuest(T *p)
         {
             assert(0!=p);
-            //std::cerr << "optimizing guest " << FourCC::ToText(p->uuid) << std::endl;
             AutoPtr<T> guard(p);
             p->optimize();
             return guard.yield();
