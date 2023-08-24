@@ -179,6 +179,7 @@ add_test(container:operating  test-core container_operating)
 #sequence
 add_test(sequence:vector test-core sequence_vector)
 add_test(sequence:list   test-core sequence_list)
+add_test(sequence:arrays test-core sequence_arrays)
 
 #counting
 add_test(counting:perm        test-core counting_perm)
