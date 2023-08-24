@@ -8,7 +8,7 @@
 #include "y/container/writable.hpp"
 #include "y/object.hpp"
 #include "y/memory/wad.hpp"
-#include "y/memory/allocator/global.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/memory/solitary/workspace.hpp"
 #include "y/type/capacity.hpp"
 #include "y/container/iterator/writable-contiguous.hpp"
@@ -48,7 +48,7 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(), Core::Vector(), Writable
     //
     //
     //__________________________________________________________________________
-    template <typename T, typename ALLOCATOR = Memory::Global>
+    template <typename T, typename ALLOCATOR = Memory::Pooled>
     class Vector :
     public Dynamic,
     public Sequence<T>,

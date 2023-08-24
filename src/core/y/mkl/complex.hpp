@@ -212,6 +212,24 @@ namespace Yttrium
             const Complex d = (*this) / z; re = d.re; im = d.im; return *this;
         }
 
+        //______________________________________________________________________
+        //
+        //
+        // comparison
+        //
+        //______________________________________________________________________
+
+        friend inline bool operator==(const Complex &lhs, const Complex &rhs) noexcept
+        {
+            return lhs.re == rhs.re && lhs.im == rhs.im;
+        }
+
+
+        friend inline bool operator!=(const Complex &lhs, const Complex &rhs) noexcept
+        {
+            return lhs.re != rhs.re || lhs.im != rhs.im;
+        }
+
 
         //______________________________________________________________________
         //

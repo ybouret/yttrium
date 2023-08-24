@@ -55,6 +55,40 @@ namespace Yttrium
 
         }
 
+        Natural & Natural:: operator=(const Natural &other)
+        {
+            Prototype       &me = PROTO(*this);
+            const Prototype &it = CONST_PROTO(other);
+            if(!me.couldSteal(it))
+            {
+                Prototype *clone = new Prototype(it);
+                delete    &me;
+                impl = clone;
+            }
+            return *this;
+        }
+
+        Natural & Natural:: operator=(const uint64_t qword) noexcept
+        {
+            PROTO(*this).ld64(qword);
+            return *this;
+        }
+
+        Natural:: Natural(void *user,const AsImpl_&) noexcept :
+        Number(),
+        impl(user)
+        {
+            assert(0!=impl);
+        }
+
+        //----------------------------------------------------------------------
+        //
+        //
+        // Some methods
+        //
+        //
+        //----------------------------------------------------------------------
+
         void Natural:: xch(Natural &other) noexcept
         {
             Swap(impl,other.impl);
@@ -70,32 +104,13 @@ namespace Yttrium
             return CONST_PROTO(*this).nbits;
         }
 
-        Natural & Natural:: operator=(const Natural &other)
+        void Natural:: zset() noexcept
         {
-            Prototype       &me = PROTO(*this);
-            const Prototype &it = CONST_PROTO(other);
-            if(!me.couldSteal(it))
-            {
-                Prototype *clone = new Prototype(it);
-                delete    &me;
-                impl = clone;
-            }
-            return *this;
+            PROTO(*this).zset();
         }
 
 
-        Natural & Natural:: operator=(const uint64_t qword) noexcept
-        {
-            PROTO(*this).ld64(qword);
-            return *this;
-        }
 
-        Natural:: Natural(void *user,const AsImpl_&) noexcept :
-        Number(),
-        impl(user)
-        {
-            assert(0!=impl);
-        }
 
         void Natural:: ThrowOverflow(const char *which)
         {

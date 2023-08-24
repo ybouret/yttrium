@@ -66,6 +66,7 @@ namespace Yttrium
             //__________________________________________________________________
             void xch(Rational &)    noexcept; //!< no-throw exchange
             void appendTo(IO::Chars &) const; //!< smart formatting
+            void zset()             noexcept; //!< setting to zero, keeping memory, no exception
 
             //__________________________________________________________________
             //

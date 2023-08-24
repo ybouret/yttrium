@@ -60,8 +60,9 @@ namespace Yttrium
             //__________________________________________________________________
             void xch(Integer &)     noexcept;  //!< no-throw exchange
             void appendTo(IO::Chars &) const;  //!< append to chars
-            Integer incr() const;              //!< increase by 1
-            Integer decr() const;              //!< decrease by 1
+            Integer incr()             const; //!< increase by 1
+            Integer decr()             const; //!< decrease by 1
+            void    zset()          noexcept; //!< setting to zero, keeping memory, no exception
 
             //__________________________________________________________________
             //

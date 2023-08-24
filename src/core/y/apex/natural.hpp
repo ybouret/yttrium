@@ -67,8 +67,9 @@ namespace Yttrium
             size_t         bits()          const noexcept; //!< exact number of bit
             void           xch(Natural &)        noexcept; //!< no-throw exchange
             uint64_t       u64()           const noexcept; //!< get least significant bits
-            SignType       getSign()       const noexcept; //!< __Zero__ of Positive
-            
+            SignType       getSign()       const noexcept; //!< __Zero__ or Positive
+            void           zset()                noexcept; //!< setting to zero, keeping memory, no exception
+
             //__________________________________________________________________
             //
             //

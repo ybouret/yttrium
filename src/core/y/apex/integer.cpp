@@ -34,7 +34,11 @@ namespace Yttrium
 
         }
 
-
+        void Integer:: zset() noexcept
+        {
+            Coerce(s) = __Zero__;
+            Coerce(n).zset();
+        }
 
         void Integer:: xch(Integer &z) noexcept
         {

@@ -20,12 +20,26 @@ namespace Yttrium
         //! Fabs for <float|double|long double>
         //
         //______________________________________________________________________
-        template <typename T>
-        struct Fabs
+        template <typename T> struct Fabs;
+
+        template <>
+        struct Fabs<float>
         {
-            //! use std functions
-            static inline T Of(const T &x) noexcept { return std::fabs(x); }
+            static inline float Of(const float x) noexcept { return fabsf(x); }
         };
+
+        template <>
+        struct Fabs<double>
+        {
+            static inline double Of(const double x) noexcept { return fabs(x); }
+        };
+
+        template <>
+        struct Fabs<long double>
+        {
+            static inline long double Of(const long double x) noexcept { return fabsl(x); }
+        };
+
 
         //______________________________________________________________________
         //
@@ -38,6 +52,20 @@ namespace Yttrium
         {
             //! use built-in functions
             static inline XReal<T> Of(const XReal<T> &x) noexcept { return x.abs(); }
+        };
+
+
+        //______________________________________________________________________
+        //
+        //
+        //! Fabs for apn
+        //
+        //______________________________________________________________________
+        template <>
+        struct Fabs<apn>
+        {
+            //! use buil-in function
+            static inline apn Of(const apn &n) { return n; }
         };
 
         //______________________________________________________________________

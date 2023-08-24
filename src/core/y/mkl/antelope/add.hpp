@@ -153,6 +153,7 @@ namespace Yttrium
                     //
                     //__________________________________________________________
                     typedef Heap<Unit,typename Unit::Buffer, typename Unit::Comparator> HeapType; //!< alias
+                    static const bool Exact = false; //!< result is not exact
                     using HeapType::size;
                     using HeapType::insert;
                     using HeapType::pull;
@@ -166,6 +167,13 @@ namespace Yttrium
                     inline explicit Code()      noexcept : HeapType()             {} //!< setup
                     inline explicit Code(const size_t n) : HeapType(n,AsCapacity) {} //!< setup with capacity
                     inline virtual ~Code()      noexcept                          {} //!< cleanup
+
+                    //! add a new value
+                    inline Code & operator<<(const T args)
+                    {
+                        insert(args);
+                        return *this;
+                    }
 
                     //__________________________________________________________
                     //
@@ -236,31 +244,42 @@ namespace Yttrium
                 class Code
                 {
                 public:
-                    explicit Code()             : acc(0) {}
-                    explicit Code(const size_t) : acc(0) {}
-                    virtual ~Code() noexcept {}
+                    //__________________________________________________________
+                    //
+                    //
+                    // Definitions
+                    //
+                    //__________________________________________________________
+                    static const bool Exact = true; //!< result is exact
 
-                    inline void make(size_t) {
-                        acc = 0;
-                    }
+                    //__________________________________________________________
+                    //
+                    //
+                    // C++
+                    //
+                    //__________________________________________________________
+                    explicit Code(const size_t =0) : acc(0) {} //!< initialize, whatever the size
+                    virtual ~Code() noexcept                {} //!< cleanup
 
-                    inline void free()
-                    {
-                        acc = 0;
-                    }
+                    //__________________________________________________________
+                    //
+                    //
+                    // Methods
+                    //
+                    //__________________________________________________________
+                    inline void make(size_t) noexcept { acc.zset(); } //!< initialize, whatever the size
+                    inline void free()       noexcept { acc.zset(); } //!< set to zero
 
-                    inline T sum()
-                    {
-                        T res = acc;
-                        acc = 0;
-                        return acc;
-                    }
+                    //! return computed sum, reset
+                    inline T    sum()
+                    { T res = acc; acc.zset(); return res; }
 
-                    inline void insert(const T &args)
+                    //! add
+                    inline Code & operator<<(const T &args)
                     {
                         acc += args;
+                        return *this;
                     }
-
                 private:
                     T acc;
                 };

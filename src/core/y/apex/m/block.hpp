@@ -101,7 +101,7 @@ words( bytes >> WordShift )
                 memcpy(entry,other.entry,other.bytes);
             }
 
-            //! copy WITHOUT data copu
+            //! copy metrics WITHOUT data copy
             explicit Block(const Block &other, const NoMemoryCopy_ &) :
             Y_APEX_BLOCK_CTOR(other.shift)
             {
@@ -124,6 +124,18 @@ words( bytes >> WordShift )
             //! cleanup
             virtual ~Block() noexcept { Nexus::Block::Release(entry,shift); }
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+
+            inline void clear() noexcept
+            {
+                memset(entry,0,bytes);
+            }
 
             //__________________________________________________________________
             //

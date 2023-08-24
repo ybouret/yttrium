@@ -193,7 +193,13 @@ namespace Yttrium
 #include "proto/fmul.hxx"
 #include "proto/mul.hxx"
 
-           
+            inline void zset() noexcept
+            {
+                Coerce(nbits) = 0;
+                Coerce(bytes) = 0;
+                Coerce(words) = 0;
+                block.clear();
+            }
 
 
             

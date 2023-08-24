@@ -13,10 +13,11 @@ using namespace Yttrium;
 
 Y_UTEST(apex_n)
 {
-    Concurrent::Singulet::Verbose = true;
+   // Concurrent::Singulet::Verbose = true;
 
     Random::Rand ran;
 
+    
     
     std::cerr << "-- Check Init64" << std::endl;
     for(unsigned i=0;i<=64;++i)

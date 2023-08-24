@@ -68,11 +68,6 @@ Number(), numer(n), denom(d)                    \
             zDenom(); update();
         }
 
-
-        
-
-
-
         Rational:: ~Rational() noexcept
         {
         }
@@ -140,6 +135,12 @@ Number(), numer(n), denom(d)                    \
         }
 
 
+        void Rational:: zset() noexcept
+        {
+            static const uint64_t _1(1);
+            Coerce(numer).zset();
+            Coerce(denom) = _1;
+        }
 
 
     }
