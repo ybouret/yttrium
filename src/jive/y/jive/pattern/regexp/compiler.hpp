@@ -14,6 +14,7 @@ namespace  Yttrium
         //______________________________________________________________________
         //
         //
+        //
         //! Regular Expression Compiler
         //
         //______________________________________________________________________
@@ -26,7 +27,7 @@ namespace  Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const char * const      CallSign;                                  //!< "RegExpCompiler"
+            static const char * const      CallSign;                                  //!< "RegExp"
             static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 10;  //!< life time
             
             //__________________________________________________________________

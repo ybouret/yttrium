@@ -13,7 +13,7 @@ namespace  Yttrium
     namespace Jive
     {
 
-        const char * const RegExpCompiler:: CallSign = "RegExpCompiler";
+        const char * const RegExpCompiler:: CallSign = "RegExp";
 
 #define Y_RX_POSIX(NAME) dict(#NAME, posix:: NAME() )
 
@@ -55,10 +55,23 @@ namespace  Yttrium
 {
     namespace Jive
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Regular Expression Compiler
+        //
+        //
+        //______________________________________________________________________
         class RXC
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             static const char LPAREN    =  '(';
             static const char RPAREN    =  ')';
             static const char LBRACK    =  '[';
@@ -75,8 +88,14 @@ namespace  Yttrium
             static const char COLON     =  ':';
 
             static const char * const CallSign;
+            typedef Pattern *       (*MakeJoker)(Pattern *);
 
-            typedef Pattern * (*MakeJoker)(Pattern *);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
             //! initialize
             inline RXC(const char       *rx,
@@ -90,6 +109,12 @@ namespace  Yttrium
             //! cleanup
             inline ~RXC() noexcept { }
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
 
             const char * const expr;      //!< original expression
             const char *       curr;      //!< current position
@@ -98,6 +123,12 @@ namespace  Yttrium
             const Dictionary  &posixDict; //!< RexExpCompiler
             const Dictionary  *userDictP; //!< optional
 
+            //__________________________________________________________________
+            //
+            //
+            // API
+            //
+            //__________________________________________________________________
 
 #include "sub-expr.hxx"
 #include "make-jkr.hxx"
@@ -107,12 +138,7 @@ namespace  Yttrium
 #include "to-posix.hxx"
 #include "sub-band.hxx"
 #include "to-range.hxx"
-
-
-
-
-
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(RXC);
         };

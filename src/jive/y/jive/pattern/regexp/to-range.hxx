@@ -3,21 +3,52 @@
 inline void toRange(Patterns &patterns)
 {
     assert(MINUS == curr[-1]);
-    std::cerr << "Now in makeRange" << std::endl;
 
-
-    // check patterns not empty
+    //--------------------------------------------------------------------------
+    //
+    // check current patterns not empty
+    //
+    //--------------------------------------------------------------------------
     if(patterns.size<=0)                     throw Specific::Exception(CallSign,"no character before  '-' in '%s'", expr);
 
-    // check single char before '-'
+    //--------------------------------------------------------------------------
+    //
+    // check LHS single char before '-'
+    //
+    //--------------------------------------------------------------------------
     assert(0!=patterns.tail);
-    if(Single::UUID != patterns.tail->uuid)  throw Specific::Exception(CallSign,"no SINGLE char before '-' in '%s'", expr);
+    if(Single::UUID != patterns.tail->uuid)  throw Specific::Exception(CallSign,"no character before '-' in '%s'", expr);
+    const uint8_t lhs = patterns.tail->as<Single>()->code;
+    delete patterns.popTail();
 
-
+    //--------------------------------------------------------------------------
+    //
     // let's decipher next char
-    if(curr>=last) throw Specific::Exception(CallSign,"unfinished RANGE in '%s'",expr);
-    const uint8_t rhs = *(curr++);
-    
+    //
+    //--------------------------------------------------------------------------
+    if(curr>=last) throw Specific::Exception(CallSign,"unfinished range in '%s'",expr);
+    uint8_t rhs = *(curr++);
 
-    throw Exception("makeRange not implemented");
+    switch(rhs)
+    {
+        case LBRACK:
+        case RBRACK:
+            throw Specific::Exception(CallSign,"invalid upper range '%s'", ASCII::Printable::Char[rhs]);
+
+        case BACKSLASH: {
+            const AutoPtr<Pattern> esc = escBand(); assert(Single::UUID==esc->uuid);
+            rhs = esc->as<Single>()->code;
+        } break;
+
+        default:
+            break;
+    }
+
+    //--------------------------------------------------------------------------
+    //
+    // done
+    //
+    //--------------------------------------------------------------------------
+    patterns.pushTail( new Range(lhs,rhs) );
+
 }

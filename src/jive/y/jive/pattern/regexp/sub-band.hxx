@@ -1,6 +1,6 @@
 Pattern *subBand()
 {
-    if(curr>=last) throw Specific::Exception(CallSign,"unfinished band in '%s'",expr);
+    if(curr>=last) throw Specific::Exception(CallSign,"starting band in '%s'",expr);
 
     AutoPtr<Compound> p = 0;
 

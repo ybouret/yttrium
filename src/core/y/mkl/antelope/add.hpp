@@ -213,10 +213,26 @@ namespace Yttrium
     {
         namespace Antelope
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Proxy when direct operations
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             struct AddProxy<T,false>
             {
 
+                //______________________________________________________________
+                //
+                //
+                //
+                //! Code to use bare accumulator, mocking Heap behaviour
+                //
+                //
+                //______________________________________________________________
                 class Code
                 {
                 public:

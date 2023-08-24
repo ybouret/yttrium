@@ -13,7 +13,7 @@ Pattern *toPosix()
 
     // look for it in posixDict
     Pattern *q = posixDict.create(name);
-    if(!q) throw Specific::Exception(CallSign,"unknown [:%s:]",name());
+    if(!q) throw Specific::Exception(CallSign,"unknown posix [:%s:]",name());
 
     // update satus and return
     curr = nxt+1;

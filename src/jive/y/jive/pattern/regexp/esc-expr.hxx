@@ -44,5 +44,5 @@ inline Pattern * escExpr()
             break;
     }
 
-    throw Specific::Exception(CallSign,"unknow escape character '%s", ASCII::Printable::Char[esc]);
+    throw Specific::Exception(CallSign,"unknown escaped character '%s", ASCII::Printable::Char[esc]);
 }
