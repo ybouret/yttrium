@@ -10,18 +10,13 @@ namespace Yttrium
         }
 
         Context:: Context(const Context &ctx) noexcept :
-        mark( ctx.mark ),
-        line( ctx.line ),
-        ncol( ctx.ncol )
+        mark(ctx.mark),
+        line(ctx.line),
+        ncol(ctx.ncol)
         {
         }
 
 #define Y_JIVE_CTX(args) mark(args), line(1), ncol(1)
-
-        Context:: Context(const Mark &usr) noexcept :
-        Y_JIVE_CTX(usr)
-        {
-        }
 
 
         Context:: Context(String *str) noexcept :
@@ -33,8 +28,8 @@ namespace Yttrium
         {
             excp.pre("%s:%u:%u: ",
                      mark->c_str(),
-                     (line),
-                     (ncol));
+                     line,
+                     ncol);
             return excp;
         }
 

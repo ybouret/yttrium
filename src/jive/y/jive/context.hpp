@@ -27,8 +27,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            Context(const Mark &)    noexcept; //!< setup
-            Context(String *)        noexcept; //!< setup
+            Context(String        *) noexcept; //!< setup
+            Context(const Mark    &) noexcept; //!< setup
             Context(const Context &) noexcept; //!< copy
             virtual ~Context()       noexcept; //!< cleanup
 
@@ -42,7 +42,6 @@ namespace Yttrium
             //! stamp exception with 'mark:line:ncol: '
             Exception & stamp(Exception &) const noexcept;
 
-
             void newChar() noexcept; //!< increase ncol
             void newLine() noexcept; //!< incrase  line, ncol=1
 
@@ -52,11 +51,10 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const Mark     mark; //!< name
+            const Mark     mark; //!< identifier
             const unsigned line; //!< current line
             const unsigned ncol; //!< current column
-
-
+            
         private:
             Y_DISABLE_ASSIGN(Context);
         };
