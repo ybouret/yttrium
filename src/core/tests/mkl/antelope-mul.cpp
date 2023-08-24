@@ -1,0 +1,194 @@
+
+
+#include "../main.hpp"
+#include "y/utest/run.hpp"
+
+#include "y/mkl/antelope/add.hpp"
+#include "y/text/justify.hpp"
+#include "y/sequence/vector.hpp"
+
+using namespace Yttrium;
+using namespace MKL;
+
+
+namespace Yttrium
+{
+    namespace MKL
+    {
+        namespace Antelope
+        {
+            template <typename> class MulUnit;
+
+
+
+            template <typename T>
+            class MulUnit< XReal<T> >
+            {
+            public:
+                typedef XReal<T> Type;
+                const Type       value;
+
+                inline  MulUnit(const T args) noexcept : value(args)                {}
+                inline  MulUnit(const MulUnit &other) noexcept : value(other.value) {}
+                inline ~MulUnit() noexcept                                          {}
+
+                static inline SignType Compare(const MulUnit &lhs, const MulUnit &rhs) noexcept
+                {
+                    return Sign::Of(lhs.value.exponent,rhs.value.exponent);
+                }
+
+
+            private:
+                Y_DISABLE_ASSIGN(MulUnit);
+            };
+
+
+            template <typename T>
+            class MulUnit< Complex<T> >
+            {
+            public:
+                typedef Complex<T> Type;
+                const Type value;
+                const int  exponent;
+
+                inline MulUnit(const Type args) noexcept : value(args), exponent(0)
+                {
+                    const T av = Fabs<Type>::Of(value);
+                    (void) std::frexp(av, & Coerce(exponent) );
+                }
+
+                inline  MulUnit(const MulUnit &other) noexcept : value(other.value), exponent(other.exponent) {}
+                inline ~MulUnit() noexcept {}
+
+                static inline SignType Compare(const MulUnit &lhs, const MulUnit &rhs) noexcept
+                {
+                    return Sign::Of(lhs.exponent,rhs.exponent);
+                }
+
+            private:
+                Y_DISABLE_ASSIGN(MulUnit);
+            };
+
+            template <typename T>
+            class MulUnit< Complex< XReal<T> > >
+            {
+            public:
+                typedef Complex< XReal<T> > Type;
+                const Type value;
+                const int  exponent;
+
+                inline MulUnit(const Type args) noexcept : value(args), exponent(0)
+                {
+                    const XReal<T> av = Fabs<Type>::Of(value);
+                    Coerce(exponent) = av.exponent;
+                }
+
+                inline  MulUnit(const MulUnit &other) noexcept : value(other.value), exponent(other.exponent) {}
+                inline ~MulUnit() noexcept {}
+
+                static inline SignType Compare(const MulUnit &lhs, const MulUnit &rhs) noexcept
+                {
+                    return Sign::Of(lhs.exponent,rhs.exponent);
+                }
+
+            private:
+                Y_DISABLE_ASSIGN(MulUnit);
+            };
+
+            template <typename T>
+            class MulUnit
+            {
+            public:
+                typedef T Type;
+                const Type value;
+                const int  exponent;
+
+                inline MulUnit(const Type args) noexcept :
+                value(args), exponent(0)
+                {
+                    (void) std::frexp(value, & Coerce(exponent) );
+                }
+
+                inline  MulUnit(const MulUnit &other) noexcept : value(other.value), exponent(other.exponent) {}
+                inline ~MulUnit() noexcept {}
+
+                static inline SignType Compare(const MulUnit &lhs, const MulUnit &rhs) noexcept
+                {
+                    return Sign::Of(lhs.exponent,rhs.exponent);
+                }
+
+
+            private:
+                Y_DISABLE_ASSIGN(MulUnit);
+            };
+
+            template <typename T>
+            inline std::ostream & operator<<(std::ostream &os, const MulUnit<T> &u)
+            {
+                os << u.value;
+                return os;
+            }
+
+
+            template <typename T>
+            inline   MulUnit<T> operator * (const MulUnit<T> &lhs, const MulUnit<T> &rhs) noexcept
+            {
+                return MulUnit<T>(lhs.value*rhs.value);
+            }
+        }
+    }
+}
+
+template <typename T>
+static inline void ShowUnit( const char *name, Random::Bits &ran )
+{
+    std::cerr << '[' << Justify(name,32,Justify::Center) << ']' << std::endl;
+
+    Y_SIZEOF( MKL::Antelope::MulUnit<T> );
+
+    MKL::Antelope::MulUnit<T> a(Bring<T>::Get(ran));
+    MKL::Antelope::MulUnit<T> b(Bring<T>::Get(ran));
+    std::cerr << "a=" << a << std::endl;
+    std::cerr << "b=" << b << std::endl;
+    MKL::Antelope::MulUnit<T> c = a*b;
+    std::cerr << "c=" << c << std::endl;
+    std::cerr << "compare(a,b)=" << MKL::Antelope::MulUnit<T>::Compare(a,b) << std::endl;
+
+}
+
+#define Y_SHOW_UNIT(CLASS) ShowUnit<CLASS>( #CLASS, ran )
+
+
+
+Y_UTEST(mkl_xmul)
+{
+    Random::Rand ran;
+
+    Y_SHOW_UNIT(float);
+    Y_SHOW_UNIT(double);
+    Y_SHOW_UNIT(long double);
+
+    Y_SHOW_UNIT(XReal<float>);
+    Y_SHOW_UNIT(XReal<double>);
+    Y_SHOW_UNIT(XReal<long double>);
+
+    Y_SHOW_UNIT(Complex<float>);
+    Y_SHOW_UNIT(Complex<double>);
+    Y_SHOW_UNIT(Complex<long double>);
+
+
+
+
+    Y_SHOW_UNIT(Complex< XReal<float> >);
+    Y_SHOW_UNIT(Complex< XReal<double> >);
+    Y_SHOW_UNIT(Complex< XReal<long double> >);
+
+#if 0
+    Y_SHOW_UNIT(apn);
+    Y_SHOW_UNIT(apz);
+    Y_SHOW_UNIT(apq);
+#endif
+
+
+}
+Y_UDONE()

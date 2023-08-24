@@ -11,6 +11,7 @@ namespace Yttrium
             Unit:: ~Unit() noexcept {}
 
             Unit:: Unit(const Context &ctx) noexcept :
+            Object(),
             Context(ctx),
             Token(),
             next(0),
@@ -19,6 +20,7 @@ namespace Yttrium
             }
 
             Unit:: Unit(const Unit &other)  :
+            Object(),
             Context(other),
             Token(other),
             next(0),

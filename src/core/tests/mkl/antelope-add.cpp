@@ -16,7 +16,6 @@ template <typename T>
 static inline void ShowUnit( const char *name, Random::Bits &ran )
 {
     std::cerr << '[' << Justify(name,32,Justify::Center) << ']' << std::endl;
-    std::cerr << std::setw(16) << sizeof( typename MKL::Antelope::AddProxy<T,true>::Unit ) << std::endl;
 
     MKL::Antelope::Add<T> xadd;
     xadd.free();
@@ -53,7 +52,7 @@ static inline void ShowUnit( const char *name, Random::Bits &ran )
 
 
 
-Y_UTEST(mkl_antelope)
+Y_UTEST(mkl_xadd)
 {
     Random::Rand ran;
 
@@ -74,8 +73,8 @@ Y_UTEST(mkl_antelope)
     Y_SHOW_UNIT(Complex< XReal<long double> >);
 
     Y_SHOW_UNIT(apn);
-    //Y_SHOW_UNIT(apz);
-    //Y_SHOW_UNIT(apq);
+    Y_SHOW_UNIT(apz);
+    Y_SHOW_UNIT(apq);
 
 
 }
