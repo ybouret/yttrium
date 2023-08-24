@@ -5,8 +5,11 @@ namespace Yttrium
 {
     namespace Jive
     {
-        Scanner:: ~Scanner() noexcept {}
-        
+        namespace Lexical
+        {
+            Scanner:: ~Scanner() noexcept {}
+            
+        }
     }
 
 }

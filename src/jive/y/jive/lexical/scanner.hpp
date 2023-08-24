@@ -5,26 +5,38 @@
 
 #include "y/jive/pattern.hpp"
 #include "y/jive/lexical/unit.hpp"
+#include "y/functor.hpp"
 
 namespace Yttrium
 {
     namespace Jive
     {
 
-        class Scanner
+        namespace Lexical
         {
-        public:
-            template <typename NAME>
-            explicit Scanner(NAME name) : mark(name) {}
-            virtual ~Scanner() noexcept;
-            
-            
-            const Mark mark;
+            enum Action
+            {
+                Produce,
+                Control
+            };
 
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Scanner);
-        };
+            typedef Functor<Action,TL1(const Token&)> CallBack;
 
+            class Scanner
+            {
+            public:
+                template <typename NAME>
+                explicit Scanner(NAME name) : mark(name) {}
+                virtual ~Scanner() noexcept;
+
+
+                const Mark mark;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Scanner);
+            };
+        }
+        
     }
 }
 

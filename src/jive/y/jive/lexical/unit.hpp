@@ -12,19 +12,25 @@ namespace Yttrium
     namespace Jive
     {
 
-        class Unit : public Object, public Context, public Token
+        namespace Lexical
         {
-        public:
-            explicit Unit(const Context &) noexcept;
-            Unit(const Unit &);
-            virtual ~Unit() noexcept;
-
-            Unit *next;
-            Unit *prev;
+            class Unit : public Object, public Context, public Token
+            {
+            public:
+                explicit Unit(const Context &) noexcept;
+                Unit(const Unit &);
+                virtual ~Unit() noexcept;
+                
+                Unit *next;
+                Unit *prev;
+                
+            private:
+                Y_DISABLE_ASSIGN(Unit);
+            };
             
-        private:
-            Y_DISABLE_ASSIGN(Unit);
-        };
+            typedef CxxListOf<Unit> Units;
+            
+        }
 
     }
 }
