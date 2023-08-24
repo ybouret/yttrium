@@ -219,12 +219,14 @@ namespace Yttrium
         //
         //______________________________________________________________________
 
+        //! testing equality, TODO
         friend inline bool operator==(const Complex &lhs, const Complex &rhs) noexcept
         {
             return lhs.re == rhs.re && lhs.im == rhs.im;
         }
 
 
+        //! testing difference
         friend inline bool operator!=(const Complex &lhs, const Complex &rhs) noexcept
         {
             return lhs.re != rhs.re || lhs.im != rhs.im;

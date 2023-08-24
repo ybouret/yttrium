@@ -17,26 +17,47 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        //! Fabs for <float|double|long double>
+        //! Fabs declaration
         //
         //______________________________________________________________________
         template <typename T> struct Fabs;
 
+        //______________________________________________________________________
+        //
+        //
+        //! Fabs<float>
+        //
+        //______________________________________________________________________
         template <>
         struct Fabs<float>
         {
+            //! fabsf
             static inline float Of(const float x) noexcept { return fabsf(x); }
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //! Fabs<double>
+        //
+        //______________________________________________________________________
         template <>
         struct Fabs<double>
         {
+            //! fabs
             static inline double Of(const double x) noexcept { return fabs(x); }
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //! Fabs<long double>
+        //
+        //______________________________________________________________________
         template <>
         struct Fabs<long double>
         {
+            //! fabsl
             static inline long double Of(const long double x) noexcept { return fabsl(x); }
         };
 

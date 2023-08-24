@@ -298,16 +298,35 @@ namespace Yttrium
         namespace Antelope
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Addition Protocol depending on type
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             class Add : public AddProxy<T,Wary<T>::Flag>::Code
             {
             public:
-                Y_ARGS_DECL(T,Type);
+                //__________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //__________________________________________________________
+                Y_ARGS_DECL(T,Type);                                       //!< aliases
+                typedef typename AddProxy<T,Wary<T>::Flag>::Code CodeType; //!< alias
 
-                typedef typename AddProxy<T,Wary<T>::Flag>::Code CodeType;
-
-                explicit Add() : CodeType() {}
-                virtual ~Add() noexcept {}
+                //__________________________________________________________
+                //
+                //
+                // C++
+                //
+                //__________________________________________________________
+                explicit Add() : CodeType() {} //!< setup
+                virtual ~Add() noexcept {}     //!< cleanup
                 
 
             private:

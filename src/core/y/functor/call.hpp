@@ -28,7 +28,7 @@ namespace Yttrium
 /**/    virtual callable *clone() const = 0
 
 
-
+        //! Helper to declare parameters
 #define Y_FUNCTOR_PARAM(TYPE) typename TypeTraits<TYPE>::ParamType
 
         //! memory management

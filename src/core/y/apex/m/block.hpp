@@ -131,7 +131,7 @@ words( bytes >> WordShift )
             //
             //__________________________________________________________________
 
-
+            //! clear content
             inline void clear() noexcept
             {
                 memset(entry,0,bytes);

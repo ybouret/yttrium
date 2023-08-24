@@ -193,6 +193,7 @@ namespace Yttrium
 #include "proto/fmul.hxx"
 #include "proto/mul.hxx"
 
+            //! force to zero, keep memory
             inline void zset() noexcept
             {
                 Coerce(nbits) = 0;
