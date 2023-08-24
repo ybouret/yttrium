@@ -79,6 +79,7 @@ vfs
 information
 information/stream
 information/bwt
+functor
 )
 
 source_group(concurrent FILES ${quark})

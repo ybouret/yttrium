@@ -85,6 +85,7 @@ add_test(type:traits     test-core type_traits)
 add_test(type:conversion test-core type_conversion)
 add_test(type:args       test-core type_args)
 add_test(type:fourcc     test-core type_fourcc)
+add_test(type:functor    test-core type_functor)
 
 #data
 add_test(data:list            test-core data_list)
