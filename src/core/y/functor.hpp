@@ -11,14 +11,14 @@ namespace Yttrium
 
     //__________________________________________________________________________
     //
-    //! functor
+    //! Functor
     /**
      - R     is the return type
      - TLIST is the parameters type list
      */
     //__________________________________________________________________________
     template <typename R, class TLIST>
-    class functor : public kernel::callable<R,TLIST>
+    class Functor : public Kernel::callable<R,TLIST>
     {
     public:
         //______________________________________________________________________
@@ -27,8 +27,8 @@ namespace Yttrium
         //______________________________________________________________________
         typedef R                                   result;    //!< alias for result
         typedef TLIST                               arguments; //!< alias for type list
-        typedef typename kernel::callable<R,TLIST>  callable;  //!< base class
-        YACK_FUNCTOR_PARAMETERS();                             //!< alias for parameters
+        typedef typename Kernel::callable<R,TLIST>  callable;  //!< base class
+        Y_FUNCTOR_PARAMETERS();                                //!< alias for parameters
 
 
         //______________________________________________________________________
@@ -37,16 +37,16 @@ namespace Yttrium
         //______________________________________________________________________
 
         //! destroy the internal wrappers
-        inline virtual ~functor() noexcept { assert(function_); destroy(); }
+        inline virtual ~Functor() noexcept { assert(function_); destroy(); }
 
 
         //! copy: duplicate the functor context
-        inline functor( const functor &other ) :
+        inline Functor( const Functor &other ) :
         callable(), function_( other.function_->clone() )
         { assert( function_ ); }
 
         //! assign: duplicate source context
-        inline functor & operator=( const functor &other )
+        inline Functor & operator=( const Functor &other )
         {
             if( this != &other )
             {
@@ -72,8 +72,8 @@ namespace Yttrium
          This is achieved through the kernel::callback which uses the copy semantic of FUNCTION.
          */
         template <typename FUNCTION>
-        inline functor( const FUNCTION &functionoid ) : callable(),
-        function_( new kernel::callback<R,TLIST,FUNCTION>(functionoid) ) {}
+        inline Functor( const FUNCTION &functionoid ) : callable(),
+        function_( new Kernel::callback<R,TLIST,FUNCTION>(functionoid) ) {}
 
         //! object+method constructor
         /**
@@ -84,14 +84,14 @@ namespace Yttrium
          original object.
          */
         template <typename OBJECT_POINTER, typename METHOD_POINTER>
-        inline functor( OBJECT_POINTER o, METHOD_POINTER m ) :  callable(),
-        function_( new kernel::command<R,TLIST,OBJECT_POINTER,METHOD_POINTER>( o, m ) ) {}
+        inline Functor( OBJECT_POINTER o, METHOD_POINTER m ) :  callable(),
+        function_( new Kernel::command<R,TLIST,OBJECT_POINTER,METHOD_POINTER>( o, m ) ) {}
 
         //______________________________________________________________________
         //
         // clonable interface
         //______________________________________________________________________
-        virtual callable  *clone() const { return new functor(*this); } //!< cloneable interface, using copy constructor
+        virtual callable  *clone() const { return new Functor(*this); } //!< cloneable interface, using copy constructor
 
 
         //______________________________________________________________________
@@ -141,7 +141,7 @@ namespace Yttrium
         }
 
         //! direct assignation for binder_first or manual setting
-        explicit functor( callable *proc ) noexcept : function_( proc ) { assert( proc ); }
+        explicit Functor( callable *proc ) noexcept : function_( proc ) { assert( proc ); }
 
     private:
         callable  *function_;
@@ -154,7 +154,7 @@ namespace Yttrium
     };
 
 
-    namespace kernel {
+    namespace Kernel {
 
         //! first parameter binding
         /**
@@ -166,10 +166,12 @@ namespace Yttrium
         public:
             typedef typename incoming::result                     R;        //!< return type alias
             typedef typename incoming::arguments::tail            TLIST;    //!< arguments alias
-            typedef functor<R,TLIST>                              outgoing; //!< return functor alias
+            typedef Functor<R,TLIST>                              outgoing; //!< return functor alias
 
             typedef typename incoming::arguments::head            bounded;       //!< bounded type
             typedef typename TypeTraits<bounded>::ParamType       bounded_param; //!< bounded parameter type
+
+            Y_FUNCTOR_PARAMETERS(); //!< parameters alias
 
             //! cloneable interface by copy
             virtual callable<R,TLIST> *clone() const { return new binder_first( *this ); }
@@ -184,7 +186,6 @@ namespace Yttrium
             virtual ~binder_first() noexcept {}
 
 
-            YACK_FUNCTOR_PARAMETERS(); //!< parameters alias
 
             //! 1->0 argument call
             inline R operator()(void)
@@ -220,26 +221,26 @@ namespace Yttrium
     //! bind first parameter to make a new functor
     template <typename incoming>
     inline
-    typename kernel::binder_first<incoming>::outgoing
-    bind_first( const incoming &f, typename kernel::binder_first<incoming>::bounded_param p )
+    typename Kernel::binder_first<incoming>::outgoing
+    bind_first( const incoming &f, typename Kernel::binder_first<incoming>::bounded_param p )
     {
-        typedef typename kernel::binder_first<incoming>::outgoing out_functor;
+        typedef typename Kernel::binder_first<incoming>::outgoing out_functor;
         typedef typename out_functor::callable                    out_callable;
-        out_callable *proc = new kernel::binder_first<incoming>( f, p );
+        out_callable *proc = new Kernel::binder_first<incoming>( f, p );
         return  out_functor( proc );
     }
 
     //! make a functor from a C function
     template <typename R,typename T>
-    inline functor<R,TL1(T)> cfunctor( R (*cfn)(T) ) { return functor<R,TL1(T)>( cfn ); }
+    inline Functor<R,TL1(T)> cfunctor( R (*cfn)(T) ) { return Functor<R,TL1(T)>( cfn ); }
 
     //! make a functor from a C function
     template <typename R,typename T,typename U>
-    inline functor<R,TL2(T,U)> cfunctor2( R (*cfn)(T,U) ) { return functor<R,TL2(T,U)>( cfn ); }
+    inline Functor<R,TL2(T,U)> cfunctor2( R (*cfn)(T,U) ) { return Functor<R,TL2(T,U)>( cfn ); }
 
     //! make a functor from a C function
     template <typename R,typename T,typename U,typename V>
-    inline functor<R,TL3(T,U,V)> cfunctor3( R (*cfn)(T,U,V) ) { return functor<R,TL3(T,U,V)>( cfn ); }
+    inline Functor<R,TL3(T,U,V)> cfunctor3( R (*cfn)(T,U,V) ) { return Functor<R,TL3(T,U,V)>( cfn ); }
 
 }
 

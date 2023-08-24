@@ -6,7 +6,7 @@
 
 namespace Yttrium {
 
-    namespace kernel {
+    namespace Kernel {
 
         //______________________________________________________________________
         //
@@ -27,7 +27,7 @@ namespace Yttrium {
             // types and definitions
             //__________________________________________________________________
             typedef callable<R,TLIST> callable_type; //!< alias
-            YACK_FUNCTOR_PARAMETERS();               //!< parameters aliases
+            Y_FUNCTOR_PARAMETERS();                  //!< parameters aliases
 
             //__________________________________________________________________
             //

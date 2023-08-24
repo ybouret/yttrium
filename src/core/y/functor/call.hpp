@@ -9,7 +9,7 @@
 namespace Yttrium
 {
 
-    namespace kernel
+    namespace Kernel
     {
 
         //______________________________________________________________________
@@ -91,7 +91,7 @@ namespace Yttrium
         };
 
         //! compute parameters aliases
-#define YACK_FUNCTOR_PARAMETERS() \
+#define Y_FUNCTOR_PARAMETERS() \
 typedef typename TypeTraits< typename TL::SafeTypeAt<TLIST,0,EmptyType>::Result>::ParamType param1;\
 typedef typename TypeTraits< typename TL::SafeTypeAt<TLIST,1,EmptyType>::Result>::ParamType param2;\
 typedef typename TypeTraits< typename TL::SafeTypeAt<TLIST,2,EmptyType>::Result>::ParamType param3;\
