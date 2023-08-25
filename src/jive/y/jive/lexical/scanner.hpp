@@ -6,6 +6,7 @@
 #include "y/jive/pattern.hpp"
 #include "y/jive/lexical/unit.hpp"
 #include "y/functor.hpp"
+#include "y/associative/suffix/set.hpp"
 
 namespace Yttrium
 {
@@ -14,24 +15,71 @@ namespace Yttrium
 
         namespace Lexical
         {
-            enum Action
-            {
-                Produce,
-                Control
-            };
 
-            typedef Functor<Action,TL1(const Token&)> CallBack;
 
-            class Scanner
+            class Action : public Object, public Counted, public Tag
             {
             public:
-                
-                virtual ~Scanner() noexcept;
+                enum Type
+                {
+                    Produce,
+                    Control
+                };
+
+                typedef Functor<Type,TL1(const Token &)> CallBack;
+                typedef ArkPtr<String,Action>            Pointer;
+
+                virtual ~Action() noexcept {}
+
+                template <typename TAG, typename OBJECT, typename METHOD_POINTER>
+                static inline Action *Create(TAG             &t,
+                                             OBJECT          &host,
+                                             METHOD_POINTER  &method,
+                                             Pattern *        pattern)
+                {
+                    const Motif    m(pattern);
+                    const CallBack c(&host,method);
+                    return new Action(t,m,c);
+                }
+
+
+                Motif    motif;
+                CallBack instr;
+
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Action);
+                template <typename TAG> inline
+                explicit Action(TAG &            t,
+                                const Motif    & m,
+                                const CallBack & c) :
+                Object(),
+                Counted(),
+                Tag(t),
+                motif(m),
+                instr(c)
+                {
+                }
+
+            };
+
+            class Scanner : public Tag
+            {
+            public:
+                template <typename TAG>
+                explicit Scanner(TAG &usr) : Tag(usr)
+                {
+
+                }
+
+                virtual ~Scanner() noexcept {}
 
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
+                SuffixSet<String,Action::Pointer> adb;
+
             };
         }
         

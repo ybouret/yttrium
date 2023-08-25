@@ -61,8 +61,8 @@ namespace Yttrium
             code = 0;
         }
 
-        void Dictionary:: operator()(const char    *name,
-                                     const Pattern *p)
+        void Dictionary:: operator()(const char *name,
+                                     Pattern *   p)
         {
             assert(0!=p);
             const Motif  motif(p);
@@ -70,7 +70,8 @@ namespace Yttrium
             code->mustInsert(label,motif);
         }
 
-        void Dictionary:: operator()(const String & label, const Pattern *p)
+        void Dictionary:: operator()(const String &label,
+                                     Pattern *     p)
         {
             const Motif  motif(p);
             code->mustInsert(label,motif);

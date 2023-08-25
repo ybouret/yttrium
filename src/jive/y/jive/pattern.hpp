@@ -157,7 +157,7 @@ namespace Yttrium
         //! alias
         //
         //______________________________________________________________________
-        typedef ArcPtr<const Pattern> Motif;
+        typedef ArcPtr<Pattern> Motif;
         
     }
 
