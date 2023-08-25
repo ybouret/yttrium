@@ -138,6 +138,7 @@ namespace  Yttrium
 #include "to-posix.hxx"
 #include "sub-band.hxx"
 #include "to-range.hxx"
+#include "embraces.hxx"
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(RXC);

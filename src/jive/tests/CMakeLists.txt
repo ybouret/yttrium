@@ -12,3 +12,5 @@ add_test(pattern test-jive pattern)
 add_test(posix   test-jive posix)
 add_test(dict    test-jive dict)
 add_test(rx      test-jive rx)
+add_test(scanner test-jive scanner)
+

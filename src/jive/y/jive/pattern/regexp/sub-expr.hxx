@@ -50,6 +50,9 @@ inline Pattern *subExpr()
             case '+': assert(p.isValid()); makeJkr(*p,Repeating::OneOrMore,  '+'); break;
             case '*': assert(p.isValid()); makeJkr(*p,Repeating::ZeroOrMore, '*'); break;
             case '?': assert(p.isValid()); makeJkr(*p,Optional::From,        '?'); break;
+            case LBRACE:
+                embraces(p->patterns);
+                break;
 
                 //--------------------------------------------------------------
                 //
