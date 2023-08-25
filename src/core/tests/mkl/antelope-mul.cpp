@@ -144,9 +144,15 @@ namespace Yttrium
             public:
                 typedef MulUnit<T> UnitType;
                 typedef Small::SoloHeavyList<UnitType> ListType;
+                typedef typename ListType::NodeType    NodeType;
 
                 explicit MulList() noexcept : ListType() {}
                 virtual ~MulList() noexcept {}
+
+                void push(const UnitType &u)
+                {
+                    NodeType *node = this->proxy->produce(u);
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(MulList);
