@@ -33,9 +33,9 @@ namespace Yttrium
 
                 template <typename TAG, typename OBJECT, typename METHOD_POINTER>
                 static inline Action *Create(TAG             &t,
+                                             Pattern *        pattern,
                                              OBJECT          &host,
-                                             METHOD_POINTER  &method,
-                                             Pattern *        pattern)
+                                             METHOD_POINTER  &method)
                 {
                     const Motif    m(pattern);
                     const CallBack c(&host,method);
@@ -74,13 +74,12 @@ namespace Yttrium
 
                 virtual ~Scanner() noexcept;
 
-                
+
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
                 SuffixSet<String,Action::Pointer> adb;
-
             };
         }
         

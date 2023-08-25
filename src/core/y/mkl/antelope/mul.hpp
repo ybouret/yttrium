@@ -574,6 +574,7 @@ namespace Yttrium
                     }
                 }
 
+                //! helper
                 MulProxy & operator<<(const T &args) {
                     insert(args);
                     return *this;
