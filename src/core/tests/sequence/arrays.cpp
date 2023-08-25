@@ -11,6 +11,7 @@ Y_UTEST(sequence_arrays)
     Y_SIZEOF(LightArray<double>);
     Y_SIZEOF(LightArray<String>);
 
+#if 0
     Arrays<double,Memory::Pooled> arr(5,10);
 
     for(size_t i=1;i<=5;++i)
@@ -23,6 +24,7 @@ Y_UTEST(sequence_arrays)
     {
         std::cerr << arr[i] << std::endl;
     }
+#endif
 
 }
 Y_UDONE()

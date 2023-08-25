@@ -12,6 +12,33 @@
 namespace Yttrium
 {
 
+    namespace Core
+    {
+        class Arrays
+        {
+        public:
+            static const char * const CallSign;
+            virtual ~Arrays() noexcept;
+
+        protected:
+            explicit Arrays() noexcept;
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Arrays);
+        };
+    }
+
+    template <typename T, typename ALLOCATOR>
+    class Arrays :
+    public Memory::Wad<LightArray<T>,Memory::Pooled>,
+    public Writable< LightArray<T> >
+    {
+    public:
+
+    private:
+        
+    };
+
+#if 0
     template <typename T, typename ALLOCATOR>
     class Arrays :
     public Memory::Wad<LightArray<T>,Memory::Pooled>,
@@ -112,6 +139,7 @@ namespace Yttrium
         };
 
     };
+#endif
 
 }
 
