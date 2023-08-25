@@ -14,22 +14,42 @@ namespace Yttrium
 
         namespace Lexical
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! a Unit is a Token from a Context
+            //
+            //
+            //__________________________________________________________________
             class Unit : public Object, public Context, public Token
             {
             public:
-                explicit Unit(const Context &) noexcept;
-                Unit(const Unit &);
-                virtual ~Unit() noexcept;
-                
-                Unit *next;
-                Unit *prev;
-                
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Unit(const Context &) noexcept; //!< empty unit from context
+                Unit(const Unit &);                      //!< copy context/content
+                virtual ~Unit() noexcept;                //!< cleanup
+
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                Unit *next; //!< for list
+                Unit *prev; //!< for list
+
+
             private:
                 Y_DISABLE_ASSIGN(Unit);
             };
             
-            typedef CxxListOf<Unit> Units;
-            
+
         }
 
     }

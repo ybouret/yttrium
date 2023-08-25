@@ -25,12 +25,10 @@ namespace Yttrium
             class Scanner
             {
             public:
-                template <typename NAME>
-                explicit Scanner(NAME name) : mark(name) {}
+                
                 virtual ~Scanner() noexcept;
 
 
-                const Mark mark;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);

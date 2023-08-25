@@ -10,39 +10,31 @@ namespace Yttrium
         }
 
         Context:: Context(const Context &ctx) noexcept :
-        mark(ctx.mark),
+        tag(ctx.tag),
         line(ctx.line),
-        ncol(ctx.ncol)
-        {
-        }
-
-#define Y_JIVE_CTX(args) mark(args), line(1), ncol(1)
-
-
-        Context:: Context(String *str) noexcept :
-        Y_JIVE_CTX(str)
+        column(ctx.column)
         {
         }
 
         Exception & Context::stamp(Exception &excp) const noexcept
         {
             excp.pre("%s:%u:%u: ",
-                     mark->c_str(),
+                     tag->c_str(),
                      line,
-                     ncol);
+                     column);
             return excp;
         }
 
         void Context:: newChar() noexcept
         {
-            ++Coerce(ncol);
+            ++Coerce(column);
 
         }
 
         void Context:: newLine() noexcept
         {
             Coerce(line)++;
-            Coerce(ncol)=1;
+            Coerce(column)=1;
         }
 
         

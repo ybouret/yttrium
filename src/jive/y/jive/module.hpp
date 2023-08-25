@@ -62,7 +62,7 @@ namespace Yttrium
             template <typename DATANAME>
             static Module * OpenData(DATANAME &dataName, const void *addr, const size_t size)
             {
-                const Context ctx = new String(dataName);
+                const Context ctx(dataName,AsTag);
                 return OpenData_(ctx,addr,size);
             }
 
@@ -70,7 +70,7 @@ namespace Yttrium
             template <typename DATANAME>
             static Module * OpenData(DATANAME &dataName, const Memory::ReadOnlyBuffer &buff)
             {
-                const Context ctx = new String(dataName);
+                const Context ctx(dataName,AsTag);
                 return OpenData_(ctx,buff.ro_addr(),buff.measure());
             }
 

@@ -18,7 +18,7 @@ Y_UTEST(module)
     if(argc>1)
     {
         Jive::Source source( Jive::Module::OpenFile(argv[1]) );
-        std::cerr << "open " << source->mark << std::endl;
+        std::cerr << "open " << source->tag << std::endl;
 
         Jive::Token  token;
         while(source.guess(token))

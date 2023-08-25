@@ -3,13 +3,14 @@
 #ifndef Y_Jive_Context_Included
 #define Y_Jive_Context_Included 1
 
-#include "y/jive/mark.hpp"
+#include "y/jive/tag.hpp"
 #include "y/exception.hpp"
 
 namespace Yttrium
 {
     namespace Jive
     {
+
         //______________________________________________________________________
         //
         //
@@ -27,8 +28,15 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            Context(String        *) noexcept; //!< setup
-            Context(const Mark    &) noexcept; //!< setup
+
+
+            //! initialize a context from a tag
+            template <typename TAG> inline
+            Context(TAG &usr, const AsTag_ &) :
+            tag(usr), line(1), column(1)
+            {
+            }
+
             Context(const Context &) noexcept; //!< copy
             virtual ~Context()       noexcept; //!< cleanup
 
@@ -51,9 +59,9 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const Mark     mark; //!< identifier
-            const unsigned line; //!< current line
-            const unsigned ncol; //!< current column
+            const Tag      tag;    //!< identifier
+            const unsigned line;   //!< current line
+            const unsigned column; //!< current column
             
         private:
             Y_DISABLE_ASSIGN(Context);

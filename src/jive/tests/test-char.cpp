@@ -11,7 +11,7 @@ Y_UTEST(char)
 {
 
     Y_SIZEOF(Jive::Char);
-    const Jive::Context ctx = new String("here");
+    const Jive::Context ctx("here",Jive::AsTag);
     Jive::Token         tkn;
     tkn.pushTail( new Jive::Char(ctx,'a') );
     tkn.pushTail( new Jive::Char(ctx,'b') );
