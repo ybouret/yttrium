@@ -144,17 +144,27 @@ namespace Yttrium
 
 
             template <typename T>
-            class MulList : public Small::SoloHeavyList< MulUnit<T> >
+            class MulList
             {
             public:
-                typedef MulUnit<T> UnitType;
+                typedef MulUnit<T>                     UnitType;
                 typedef Small::SoloHeavyList<UnitType> ListType;
                 typedef typename ListType::NodeType    NodeType;
                 typedef ListOf<NodeType>               CoreList;
 
-                explicit MulList() noexcept : ListType() {}
+                explicit MulList() noexcept : my() {}
                 virtual ~MulList() noexcept {}
 
+                inline void make(const size_t n)
+                {
+                    my.release();
+                    const size_t m = my.proxy->stowage();
+                    if(m<n)
+                    {
+                        my.proxy->reserve(n-m);
+                        assert(n==my.proxy->stowage());
+                    }
+                }
 
                 void insert(const T args)
                 {
@@ -164,62 +174,81 @@ namespace Yttrium
 
                 void insert(const T args, size_t n)
                 {
-                    CoreList lhs;
+                    if(n<=0)
                     {
-                        const UnitType u(args);
-                        while(n-- > 0)
+                        if(my.size<=0)
                         {
-                            lhs.pushTail( this->proxy->produce(u) );
+                            const T one(1);
+                            insert(one);
                         }
                     }
-                    CoreList rhs; rhs.swapWith(*this);
-
-                    while(lhs.size>0 && rhs.size>0)
+                    else
                     {
-                        switch( UnitType::Compare( **lhs.head, **rhs.head) )
+                        CoreList lhs;
                         {
-                            case Negative:
-                            case __Zero__:
-                                this->mergeTail(lhs);
-                                break;
-
-                            case Positive:
-                                this->pushTail(rhs.popHead());
-                                break;
+                            const UnitType u(args);
+                            while(n-- > 0)
+                            {
+                                lhs.pushTail( my.proxy->produce(u) );
+                            }
                         }
+                        CoreList rhs; rhs.swapWith(my);
+
+                        while(lhs.size>0 && rhs.size>0)
+                        {
+                            switch( UnitType::Compare( **lhs.head, **rhs.head) )
+                            {
+                                case Negative:
+                                case __Zero__:
+                                    my.mergeTail(lhs);
+                                    break;
+
+                                case Positive:
+                                    my.pushTail(rhs.popHead());
+                                    break;
+                            }
+                        }
+                        assert(0==lhs.size||0==rhs.size);
+                        my.mergeTail(lhs);
+                        my.mergeTail(rhs);
                     }
-                    assert(0==lhs.size||0==rhs.size);
-                    this->mergeTail(lhs);
-                    this->mergeTail(rhs);
                 }
 
                 inline T product()
                 {
-                    if( this->size <= 0)
+                    if(my.size<=0)
                     {
                         return T(0);
                     }
                     else
                     {
-                        while(this->size>1)
+                        while(my.size>1)
                         {
-                            const UnitType lhs = this->pullHead(); assert(this->size>0);
-                            const UnitType rhs = this->pullTail();
+                            const UnitType lhs = my.pullHead(); assert(my.size>0);
+                            const UnitType rhs = my.pullTail();
                             const UnitType tmp = lhs * rhs;
                             pushUnit(tmp);
                         }
-                        assert(1==this->size);
-                        return this->pullHead().value;
+                        assert(1==my.size);
+                        return my.pullHead().value;
                     }
+                }
+
+                inline friend std::ostream & operator<<(std::ostream &os, const MulList &self)
+                {
+                    return os << self.my;
                 }
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(MulList);
+                ListType my;
+
+
                 inline void pushUnit(const UnitType &u)
                 {
-                    CoreList lhs; lhs.pushTail( this->proxy->produce(u) );
-                    CoreList rhs; rhs.swapWith(*this);
+                    CoreList lhs; lhs.pushTail( my.proxy->produce(u) );
+                    CoreList rhs; rhs.swapWith( my );
 
                     while(lhs.size>0 && rhs.size>0)
                     {
@@ -227,16 +256,16 @@ namespace Yttrium
                         {
                             case Negative:
                             case __Zero__:
-                                this->pushTail(lhs.popHead());
+                               my.pushTail(lhs.popHead());
                                 break;
                             case Positive:
-                                this->pushTail(rhs.popHead());
+                                my.pushTail(rhs.popHead());
                                 break;
                         }
                     }
                     assert(0==lhs.size||0==rhs.size);
-                    this->mergeTail(lhs);
-                    this->mergeTail(rhs);
+                    my.mergeTail(lhs);
+                    my.mergeTail(rhs);
                 }
             };
 
@@ -252,10 +281,9 @@ namespace Yttrium
         {
 
             template <typename T>
-            class MulProxy<T,true> : protected MulList<T>
+            class MulProxy<T,true> : public MulList<T>
             {
             public:
-                
                 inline virtual ~MulProxy() noexcept {}
 
             protected:
@@ -283,6 +311,42 @@ namespace Yttrium
             public:
                 inline virtual ~MulProxy() noexcept {}
 
+                inline void insert(const T &args)
+                {
+                    if(empty)
+                    {
+                        state = args;
+                        empty = false;
+                    }
+                    else
+                    {
+                        state *= args;
+                    }
+                }
+
+                inline void insert(const T &args, size_t n)
+                {
+                    if(n>0)
+                    {
+                        T p = args; while(--n>0) p *= args;
+                        insert(p);
+                    }
+                    else
+                    {
+                        const T one(1);
+                        insert(one);
+                    }
+                }
+
+
+
+                inline T product()
+                {
+                    const T res = state;
+                    state = 0;
+                    empty = true;
+                    return res;
+                }
 
 
             protected:

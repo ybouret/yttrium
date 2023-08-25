@@ -60,6 +60,7 @@ namespace Yttrium
             //! send items to proxy
             virtual void release() noexcept {  release_(); }
 
+            
         protected:
             //! non-virtual release
             inline void release_() noexcept { proxy->destroy(*this); }

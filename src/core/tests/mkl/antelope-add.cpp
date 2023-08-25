@@ -30,6 +30,7 @@ static inline void ShowUnit( const char *name, Random::Bits &ran )
         xadd << tmp;
         raw  << tmp;
     }
+    
     const T xsum = xadd.sum();
     T rsum(0);
     for(size_t i=1;i<=raw.size();++i) rsum += raw[i];

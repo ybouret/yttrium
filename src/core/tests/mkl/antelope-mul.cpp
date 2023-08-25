@@ -63,7 +63,8 @@ static inline void ShowUnit( const char *name, Random::Bits &ran )
     for(size_t i=2;i<=vec.size();++i) p *= vec[i];
     std::cerr << "pvec=" << p << std::endl;
 
-
+    xmul.make(60);
+    
 }
 
 #define Y_SHOW_UNIT(CLASS) ShowUnit<CLASS>( #CLASS, ran )
