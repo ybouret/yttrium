@@ -20,7 +20,7 @@ namespace Yttrium
             // hexa
             msg += 2;
             len -= 2;
-            if(len>16) throw Specific::Exception(fn,"overflow for hexadecimal %s", (ctx?ctx:Core::Unknown) );
+            if(len>16) throw Specific::Exception(fn,"hexadecimal overflow for %s", (ctx?ctx:Core::Unknown) );
             uint64_t res = 0;
             while(len-- > 0)
             {
@@ -32,34 +32,44 @@ namespace Yttrium
             }
 
             return res;
+
         }
         else
         {
             // decimal
-            std::cerr << "-> dec" << std::endl;
+            static const uint64_t Umax = IntegerFor<uint64_t>::Maximum;
+            static const uint64_t Utop = Umax / 10;
+#define Y_CHECK_ADD(DELTA)                    \
+if(res>(Umax-(DELTA))) goto DECIMAL_OVERFLOW; \
+res += DELTA; break
+
             uint64_t res = 0;
             while(len-- > 0)
             {
+                if(res>Utop) goto DECIMAL_OVERFLOW;
+
                 const uint8_t c = *(msg++);
-                std::cerr << "c=" << char(c) << std::endl;
                 res *= 10;
                 switch(c)
                 {
                     case '0': break;
-                    case '1': ++res; break;
-                    case '2': res += 2; break;
-                    case '3': res += 3; break;
-                    case '4': res += 4; break;
-                    case '5': res += 5; break;
-                    case '6': res += 6; break;
-                    case '7': res += 7; break;
-                    case '8': res += 8; break;
-                    case '9': res += 9; break;
+                    case '1': Y_CHECK_ADD(1);
+                    case '2': Y_CHECK_ADD(2);
+                    case '3': Y_CHECK_ADD(3);
+                    case '4': Y_CHECK_ADD(4);
+                    case '5': Y_CHECK_ADD(5);
+                    case '6': Y_CHECK_ADD(6);
+                    case '7': Y_CHECK_ADD(7);
+                    case '8': Y_CHECK_ADD(8);
+                    case '9': Y_CHECK_ADD(9);
                     default:
-                        throw Specific::Exception(fn,"invalid decimal '%s' for %s", ASCII::Printable::Char[c],(ctx?ctx:Core::Unknown));
+                        throw Specific::Exception(fn,"invalid decimal '%s' for %s", ASCII::Printable::Char[c], (ctx?ctx:Core::Unknown));
                 }
             }
             return res;
+
+        DECIMAL_OVERFLOW:
+            throw Specific::Exception(fn,"decimal overflow for %s", (ctx?ctx:Core::Unknown));
         }
 
     }
