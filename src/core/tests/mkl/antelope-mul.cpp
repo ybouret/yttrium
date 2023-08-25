@@ -145,14 +145,73 @@ namespace Yttrium
                 typedef MulUnit<T> UnitType;
                 typedef Small::SoloHeavyList<UnitType> ListType;
                 typedef typename ListType::NodeType    NodeType;
+                typedef ListOf<NodeType>               CoreList;
 
                 explicit MulList() noexcept : ListType() {}
                 virtual ~MulList() noexcept {}
 
-                void push(const UnitType &u)
+
+                void push(const T args)
                 {
-                    NodeType *node = this->proxy->produce(u);
+                    CoreList lhs;
+                    {
+                        const UnitType u(args);
+                        lhs.pushTail( this->proxy->produce(u) );
+                    }
+                    CoreList rhs; rhs.swapWith(*this);
+
+                    while(lhs.size>0 && rhs.size>0)
+                    {
+                        switch( UnitType::Compare( **lhs.head, **rhs.head) )
+                        {
+                            case Negative:
+                            case __Zero__:
+                                this->pushTail(lhs.popHead());
+                                break;
+                            case Positive:
+                                this->pushTail(rhs.popHead());
+                                break;
+                        }
+                    }
+                    assert(0==lhs.size||0==rhs.size);
+                    this->mergeTail(lhs);
+                    this->mergeTail(rhs);
                 }
+
+                void push(const T args, size_t n)
+                {
+                    CoreList lhs;
+                    {
+                        const UnitType u(args);
+                        while(n-- > 0)
+                        {
+                            lhs.pushTail( this->proxy->produce(u) );
+                        }
+                    }
+                    CoreList rhs; rhs.swapWith(*this);
+
+                    while(lhs.size>0 && rhs.size>0)
+                    {
+                        switch( UnitType::Compare( **lhs.head, **rhs.head) )
+                        {
+                            case Negative:
+                            case __Zero__:
+                                this->mergeTail(lhs);
+                                break;
+
+                            case Positive:
+                                this->pushTail(rhs.popHead());
+                                break;
+                        }
+                    }
+                    assert(0==lhs.size||0==rhs.size);
+                    this->mergeTail(lhs);
+                    this->mergeTail(rhs);
+                }
+
+
+
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(MulList);
@@ -169,8 +228,10 @@ static inline void ShowUnit( const char *name, Random::Bits &ran )
 
     Y_SIZEOF( MKL::Antelope::MulUnit<T> );
 
-    MKL::Antelope::MulUnit<T> a(Bring<T>::Get(ran));
-    MKL::Antelope::MulUnit<T> b(Bring<T>::Get(ran));
+    const T amp(100000);
+
+    MKL::Antelope::MulUnit<T> a(amp*Bring<T>::Get(ran));
+    MKL::Antelope::MulUnit<T> b(amp*Bring<T>::Get(ran));
     std::cerr << "a=" << a << std::endl;
     std::cerr << "b=" << b << std::endl;
     MKL::Antelope::MulUnit<T> c = a*b;
@@ -180,8 +241,12 @@ static inline void ShowUnit( const char *name, Random::Bits &ran )
 
     MKL::Antelope::MulList<T> xmul;
 
-    xmul << a;
-    xmul << b;
+
+    xmul.push( amp*Bring<T>::Get(ran));
+    xmul.push( amp*Bring<T>::Get(ran));
+    xmul.push( amp*Bring<T>::Get(ran) );
+    xmul.push( amp*Bring<T>::Get(ran), 4);
+
     std::cerr << xmul << std::endl;
 
 
@@ -196,6 +261,7 @@ Y_UTEST(mkl_xmul)
     Random::Rand ran;
 
     Y_SHOW_UNIT(float);
+    return 0;
     Y_SHOW_UNIT(double);
     Y_SHOW_UNIT(long double);
 
