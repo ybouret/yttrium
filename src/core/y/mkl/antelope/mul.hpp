@@ -14,6 +14,12 @@ namespace Yttrium
     {
         namespace Antelope
         {
+            //__________________________________________________________________
+            //
+            //
+            //! proxy to perform multiplication
+            //
+            //__________________________________________________________________
             template <typename T,const bool> class MulProxy;
         }
     }
@@ -26,108 +32,266 @@ namespace Yttrium
     {
         namespace Antelope
         {
+
+            //__________________________________________________________________
+            //
+            //
+            //! Prototype to store values
+            //
+            //__________________________________________________________________
             template <typename> class MulUnit;
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Multiplication of extended reals
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             class MulUnit< XReal<T> >
             {
             public:
-                typedef XReal<T> Type;
-                const Type       value;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef XReal<T> Type; //!< alias
 
-                inline  MulUnit(const T args) noexcept : value(args)                {}
-                inline  MulUnit(const MulUnit &other) noexcept : value(other.value) {}
-                inline ~MulUnit() noexcept                                          {}
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                inline  MulUnit(const T args) noexcept : value(args)                {} //!< setup
+                inline  MulUnit(const MulUnit &other) noexcept : value(other.value) {} //!< copy
+                inline ~MulUnit() noexcept                                          {} //!< cleanup
 
+                //______________________________________________________________
+                //
+                //
+                //! Comparison
+                //
+                //______________________________________________________________
                 static inline SignType Compare(const MulUnit &lhs, const MulUnit &rhs) noexcept
                 {
                     return Sign::Of(lhs.value.exponent,rhs.value.exponent);
                 }
 
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const Type value; //!< internal exponent is pre-computed
+
             private:
                 Y_DISABLE_ASSIGN(MulUnit);
             };
 
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Multiplication of complexes
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             class MulUnit< Complex<T> >
             {
             public:
-                typedef Complex<T> Type;
-                const Type value;
-                const int  exponent;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef Complex<T> Type; //!< alias
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! setup
                 inline MulUnit(const Type args) noexcept : value(args), exponent(0)
                 {
                     const T av = Fabs<Type>::Of(value);
                     (void) std::frexp(av, & Coerce(exponent) );
                 }
 
+                //! copy
                 inline  MulUnit(const MulUnit &other) noexcept : value(other.value), exponent(other.exponent) {}
+
+                //! cleanup
                 inline ~MulUnit() noexcept {}
 
+                //______________________________________________________________
+                //
+                //
+                //! Comparison
+                //
+                //______________________________________________________________
                 static inline SignType Compare(const MulUnit &lhs, const MulUnit &rhs) noexcept
                 {
                     return Sign::Of(lhs.exponent,rhs.exponent);
                 }
 
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const Type value;      //!< complex
+                const int  exponent;   //!< exponent of its modulus
+
             private:
                 Y_DISABLE_ASSIGN(MulUnit);
             };
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Multiplication of extended complexes
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             class MulUnit< Complex< XReal<T> > >
             {
             public:
-                typedef Complex< XReal<T> > Type;
-                const Type value;
-                const int  exponent;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef Complex< XReal<T> > Type; //!< alias
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! setup
                 inline MulUnit(const Type args) noexcept : value(args), exponent(0)
                 {
                     const XReal<T> av = Fabs<Type>::Of(value);
                     Coerce(exponent) = av.exponent;
                 }
 
+                //! copy
                 inline  MulUnit(const MulUnit &other) noexcept : value(other.value), exponent(other.exponent) {}
+
+                //! cleanup
                 inline ~MulUnit() noexcept {}
 
+                //______________________________________________________________
+                //
+                //
+                //! comparison
+                //
+                //______________________________________________________________
                 static inline SignType Compare(const MulUnit &lhs, const MulUnit &rhs) noexcept
                 {
                     return Sign::Of(lhs.exponent,rhs.exponent);
                 }
 
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const Type value;     //!< value
+                const int  exponent;  //!< exponent of its modulus
+
             private:
                 Y_DISABLE_ASSIGN(MulUnit);
             };
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Multiplication of float|double|long double
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             class MulUnit
             {
             public:
-                typedef T Type;
-                const Type value;
-                const int  exponent;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef T Type; //!< alias
 
-                inline MulUnit(const Type args) noexcept :
-                value(args), exponent(0)
+
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! setup
+                inline MulUnit(const Type args) noexcept : value(args), exponent(0)
                 {
                     (void) std::frexp(value, & Coerce(exponent) );
                 }
 
+                //! copy
                 inline  MulUnit(const MulUnit &other) noexcept : value(other.value), exponent(other.exponent) {}
+
+                //! cleanup
                 inline ~MulUnit() noexcept {}
 
+                //______________________________________________________________
+                //
+                //
+                //! Comparison
+                //
+                //______________________________________________________________
                 static inline SignType Compare(const MulUnit &lhs, const MulUnit &rhs) noexcept
                 {
                     return Sign::Of(lhs.exponent,rhs.exponent);
                 }
 
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const Type value;     //!< real value
+                const int  exponent;  //!< its exponent
 
             private:
                 Y_DISABLE_ASSIGN(MulUnit);
             };
 
+            //__________________________________________________________________
+            //
+            //
+            //! display forwarding
+            //
+            //__________________________________________________________________
             template <typename T>
             inline std::ostream & operator<<(std::ostream &os, const MulUnit<T> &u)
             {
@@ -135,26 +299,58 @@ namespace Yttrium
                 return os;
             }
 
-
+            //__________________________________________________________________
+            //
+            //
+            //! universal binary multiplication
+            //
+            //__________________________________________________________________
             template <typename T>
             inline   MulUnit<T> operator * (const MulUnit<T> &lhs, const MulUnit<T> &rhs) noexcept
             {
                 return MulUnit<T>(lhs.value*rhs.value);
             }
 
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Ordered List of MulUnit to perform algorithm
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             class MulList
             {
             public:
-                typedef MulUnit<T>                     UnitType;
-                typedef Small::SoloHeavyList<UnitType> ListType;
-                typedef typename ListType::NodeType    NodeType;
-                typedef ListOf<NodeType>               CoreList;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef MulUnit<T>                     UnitType; //!< alias
+                typedef Small::SoloHeavyList<UnitType> ListType; //!< alias
+                typedef typename ListType::NodeType    NodeType; //!< alias
+                typedef ListOf<NodeType>               CoreList; //!< alias
 
-                explicit MulList() noexcept : my() {}
-                virtual ~MulList() noexcept {}
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit MulList() noexcept : my() {}  //!< setup empty
+                virtual ~MulList() noexcept        {}  //!< cleanup
 
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                //! free and reserve memory
                 inline void make(const size_t n)
                 {
                     my.free();
@@ -166,12 +362,21 @@ namespace Yttrium
                     }
                 }
 
+                //! insert args
                 void insert(const T args)
                 {
                     const UnitType u(args);
                     pushUnit(u);
                 }
 
+                //! helper
+                MulList & operator<<(const T &args) {
+                    insert(args);
+                    return *this;
+                }
+
+
+                //! insert args^n, one if n==0
                 void insert(const T args, size_t n)
                 {
                     if(n<=0)
@@ -214,6 +419,7 @@ namespace Yttrium
                     }
                 }
 
+                //! product algorithm
                 inline T product()
                 {
                     if(my.size<=0)
@@ -234,6 +440,8 @@ namespace Yttrium
                     }
                 }
 
+
+                //! display content
                 inline friend std::ostream & operator<<(std::ostream &os, const MulList &self)
                 {
                     return os << self.my;
@@ -279,15 +487,22 @@ namespace Yttrium
     {
         namespace Antelope
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Multiplication with MulList usage
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             class MulProxy<T,true> : public MulList<T>
             {
             public:
-                inline virtual ~MulProxy() noexcept {}
+                inline virtual ~MulProxy() noexcept {} //!< cleanup
 
             protected:
-                inline explicit MulProxy() noexcept : MulList<T>() {}
+                inline explicit MulProxy() noexcept : MulList<T>() {} //!< setup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(MulProxy);
@@ -305,12 +520,32 @@ namespace Yttrium
     {
         namespace Antelope
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Direct multiplication
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             class MulProxy<T,false>
             {
             public:
-                inline virtual ~MulProxy() noexcept {}
+                //______________________________________________________________
+                //
+                //
+                // Simplified Methods
+                //
+                //______________________________________________________________
 
+                //! cleaning and read for any number
+                inline void make(size_t)
+                {
+                    clear();
+                }
+
+                //! insert args
                 inline void insert(const T &args)
                 {
                     if(empty)
@@ -324,6 +559,7 @@ namespace Yttrium
                     }
                 }
 
+                //! insert args^n, 1 if n == 0
                 inline void insert(const T &args, size_t n)
                 {
                     if(n>0)
@@ -338,27 +574,86 @@ namespace Yttrium
                     }
                 }
 
-
-
-                inline T product()
-                {
-                    const T res = state;
-                    state = 0;
-                    empty = true;
-                    return res;
+                MulProxy & operator<<(const T &args) {
+                    insert(args);
+                    return *this;
                 }
 
 
+                //! return product and set empty
+                inline T product()
+                {
+                    const T res = state;
+                    clear();
+                    return res;
+                }
+
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                inline virtual ~MulProxy() noexcept {}
+
             protected:
-                explicit MulProxy() : empty(true), state(0) {}
+                inline explicit MulProxy() : empty(true), state(0) {}
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(MulProxy);
+                inline void clear() { state=0; empty=true; }
                 bool empty;
                 T    state;
             };
         }
     }
+}
+
+namespace Yttrium
+{
+    namespace MKL
+    {
+        namespace Antelope
+        {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Multiplication Protocol depending on type
+            //
+            //
+            //__________________________________________________________________
+            template <typename T>
+            class Mul : public MulProxy<T,Wary<T>::Flag>
+            {
+            public:
+                //__________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //__________________________________________________________
+                Y_ARGS_DECL(T,Type);                        //!< aliases
+                typedef MulProxy<T,Wary<T>::Flag> CodeType; //!< alias
+
+                //__________________________________________________________
+                //
+                //
+                // C++
+                //
+                //__________________________________________________________
+                explicit Mul() : CodeType() {} //!< setup
+                virtual ~Mul() noexcept {}     //!< cleanup
+
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Mul);
+            };
+
+        }
+
+    }
+
 }
 
 

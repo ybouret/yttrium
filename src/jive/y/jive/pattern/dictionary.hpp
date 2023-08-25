@@ -33,9 +33,16 @@ namespace Yttrium
             virtual ~Dictionary() noexcept;  //!< cleanup
             Y_OSTREAM_PROTO(Dictionary);     //!< display names
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
             void operator()(const char *   name, Pattern *p); //!< append a newly created pattern
             void operator()(const String & name, Pattern *p); //!< append a newly created pattern
 
+            //! insert compiled regular expression
             template <typename NAME, typename RX>
             inline void operator()(NAME &name, RX &rx)
             {
@@ -44,7 +51,8 @@ namespace Yttrium
                 dict(name,p);
             }
 
-            Pattern * create(const String &name) const; //!< return NULL on not found
+
+            Pattern * create(const String &name) const; //!< return NULL if not found
             Pattern * create(const char   *name) const; //!< alias to create
 
 

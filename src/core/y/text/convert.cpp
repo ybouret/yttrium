@@ -3,7 +3,8 @@
 #include "y/system/exception.hpp"
 #include "y/text/hexadecimal.hpp"
 #include "y/text/ascii/printable.hpp"
-#include <iostream>
+#include "y/text/ops.hpp"
+#include "y/string.hpp"
 
 namespace Yttrium
 {
@@ -17,7 +18,11 @@ namespace Yttrium
         if(len<=0) throw Specific::Exception(fn,"no data for %s", (ctx?ctx:Core::Unknown) );
         if(len>2 && '0' == msg[0] && ('x'==msg[1] || 'X'==msg[1] ))
         {
+            //------------------------------------------------------------------
+            //
             // hexa
+            //
+            //------------------------------------------------------------------
             msg += 2;
             len -= 2;
             if(len>16) throw Specific::Exception(fn,"hexadecimal overflow for %s", (ctx?ctx:Core::Unknown) );
@@ -36,7 +41,11 @@ namespace Yttrium
         }
         else
         {
+            //------------------------------------------------------------------
+            //
             // decimal
+            //
+            //------------------------------------------------------------------
             static const uint64_t Umax = IntegerFor<uint64_t>::Maximum;
             static const uint64_t Utop = Umax / 10;
 #define Y_CHECK_ADD(DELTA)                    \
@@ -74,6 +83,14 @@ res += DELTA; break
 
     }
 
+    uint64_t Convert:: ToU64(const char *msg, const char *ctx)
+    {
+        return ToU64(msg,StringLength(msg),ctx);
+    }
 
+    uint64_t Convert:: ToU64(const String &msg,const char *ctx)
+    {
+        return ToU64(msg.c_str(),msg.size(),ctx);
+    }
 
 }

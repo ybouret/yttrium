@@ -10,11 +10,26 @@
 namespace Yttrium
 {
 
+    namespace Core { template <typename> class String; }
 
+    //__________________________________________________________________________
+    //
+    //
+    //! string to data
+    //
+    //__________________________________________________________________________
     struct Convert
     {
+        //______________________________________________________________________
+        //
+        //! convert to uint64_t, whith overflow control, hex/dec
+        //______________________________________________________________________
         static uint64_t ToU64(const char *msg, size_t len, const char *ctx=0);
+        static uint64_t ToU64(const char *msg, const char *ctx=0);               //!< alias
+        static uint64_t ToU64(const Core::String<char> &msg, const char *ctx=0); //!< alias
+
         
+
     };
 
 }
