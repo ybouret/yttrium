@@ -1,6 +1,3 @@
-
-
-
 #include "y/text/hexadecimal.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/bits.hpp"

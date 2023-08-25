@@ -10,10 +10,16 @@ inline void embraces(Patterns &patterns)
 
     if(isalpha(choice))
     {
-        std::cerr << "->alias" << std::endl;
+        // assuming alias
         insertAlias(patterns,content);
         goto DONE;
     }
+    else
+    {
+        // assuming joker
+        insertJoker(patterns,content);
+    }
+
 
     throw Specific::Exception(CallSign,"invalid char '%s' within in braces in '%s'",ASCII::Printable::Char[choice],expr);
 
@@ -28,4 +34,11 @@ inline void insertAlias(Patterns &patterns, const String &name)
     Pattern *alias = userDictP->create(name);
     if(0 == alias)   throw Specific::Exception(CallSign,"no alias '%s' in '%s'", name(), expr);
     patterns.pushTail(alias);
+}
+
+
+inline void insertJoker(Patterns &patterns, const String &name)
+{
+    if(patterns.size<=0) throw Specific::Exception(CallSign,"no pattern befor braces in '%s'", expr);
+    
 }

@@ -52,6 +52,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(text_printable);
     Y_UTEST(text_embedding);
     Y_UTEST(text_justify);
+    Y_UTEST(text_convert);
 
 
 
