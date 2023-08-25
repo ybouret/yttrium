@@ -64,18 +64,41 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! push at tail
-            HeavyList & operator<<(ParamType args)
+            inline HeavyList & operator<<(ParamType args)
             {
                 this->pushTail( proxy->produce(args) );
                 return *this;
             }
 
             //! push at head
-            HeavyList & operator>>(ParamType args)
+            inline HeavyList & operator>>(ParamType args)
             {
                 this->pushHead( proxy->produce(args) );
                 return *this;
             }
+
+            //! return hard copy of head content and remove head
+            inline Type pullHead()
+            {
+                assert(this->size>0);
+                assert(0!=this->head);
+                ConstType res = **(this->head);
+                this->cutHead();
+                return res;
+            }
+
+            //! return hard copy of head content and remove head
+            inline Type pullTail()
+            {
+                assert(this->size>0);
+                assert(0!=this->tail);
+                ConstType res = **(this->tail);
+                this->cutTail();
+                return res;
+            }
+
+
+
 
 
 

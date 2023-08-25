@@ -20,8 +20,6 @@ namespace Yttrium
         {
             template <typename> class MulUnit;
 
-
-
             template <typename T>
             class MulUnit< XReal<T> >
             {
@@ -37,7 +35,6 @@ namespace Yttrium
                 {
                     return Sign::Of(lhs.value.exponent,rhs.value.exponent);
                 }
-
 
             private:
                 Y_DISABLE_ASSIGN(MulUnit);
@@ -151,34 +148,13 @@ namespace Yttrium
                 virtual ~MulList() noexcept {}
 
 
-                void push(const T args)
+                void insert(const T args)
                 {
-                    CoreList lhs;
-                    {
-                        const UnitType u(args);
-                        lhs.pushTail( this->proxy->produce(u) );
-                    }
-                    CoreList rhs; rhs.swapWith(*this);
-
-                    while(lhs.size>0 && rhs.size>0)
-                    {
-                        switch( UnitType::Compare( **lhs.head, **rhs.head) )
-                        {
-                            case Negative:
-                            case __Zero__:
-                                this->pushTail(lhs.popHead());
-                                break;
-                            case Positive:
-                                this->pushTail(rhs.popHead());
-                                break;
-                        }
-                    }
-                    assert(0==lhs.size||0==rhs.size);
-                    this->mergeTail(lhs);
-                    this->mergeTail(rhs);
+                    const UnitType u(args);
+                    pushUnit(u);
                 }
 
-                void push(const T args, size_t n)
+                void insert(const T args, size_t n)
                 {
                     CoreList lhs;
                     {
@@ -209,12 +185,51 @@ namespace Yttrium
                     this->mergeTail(rhs);
                 }
 
-
-
+                inline T product()
+                {
+                    if( this->size <= 0)
+                    {
+                        return T(0);
+                    }
+                    else
+                    {
+                        while(this->size>1)
+                        {
+                            const UnitType lhs = this->pullHead(); assert(this->size>0);
+                            const UnitType rhs = this->pullTail();
+                            const UnitType tmp = lhs * rhs;
+                            pushUnit(tmp);
+                        }
+                        assert(1==this->size);
+                        return this->pullHead().value;
+                    }
+                }
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(MulList);
+                inline void pushUnit(const UnitType &u)
+                {
+                    CoreList lhs; lhs.pushTail( this->proxy->produce(u) );
+                    CoreList rhs; rhs.swapWith(*this);
+
+                    while(lhs.size>0 && rhs.size>0)
+                    {
+                        switch( UnitType::Compare( **lhs.head, **rhs.head) )
+                        {
+                            case Negative:
+                            case __Zero__:
+                                this->pushTail(lhs.popHead());
+                                break;
+                            case Positive:
+                                this->pushTail(rhs.popHead());
+                                break;
+                        }
+                    }
+                    assert(0==lhs.size||0==rhs.size);
+                    this->mergeTail(lhs);
+                    this->mergeTail(rhs);
+                }
             };
 
         }
@@ -241,13 +256,26 @@ static inline void ShowUnit( const char *name, Random::Bits &ran )
 
     MKL::Antelope::MulList<T> xmul;
 
+    Vector<T> vec;
+    for(size_t i=1+ran.leq(5);i>0;--i)
+    {
+        const T tmp = amp*Bring<T>::Get(ran);
+        xmul.insert(tmp);
+        vec << tmp;
+    }
+    {
+        const T tmp = amp*Bring<T>::Get(ran);
+        xmul.insert(tmp, 4);
+        for(size_t i=4;i>0;--i) vec << tmp;
+    }
 
-    xmul.push( amp*Bring<T>::Get(ran));
-    xmul.push( amp*Bring<T>::Get(ran));
-    xmul.push( amp*Bring<T>::Get(ran) );
-    xmul.push( amp*Bring<T>::Get(ran), 4);
 
     std::cerr << xmul << std::endl;
+    const T prod = xmul.product();
+    std::cerr << "prod=" << prod << std::endl;
+    T p = vec[1];
+    for(size_t i=2;i<=vec.size();++i) p *= vec[i];
+    std::cerr << "pvec=" << p << std::endl;
 
 
 }
@@ -261,7 +289,6 @@ Y_UTEST(mkl_xmul)
     Random::Rand ran;
 
     Y_SHOW_UNIT(float);
-    return 0;
     Y_SHOW_UNIT(double);
     Y_SHOW_UNIT(long double);
 

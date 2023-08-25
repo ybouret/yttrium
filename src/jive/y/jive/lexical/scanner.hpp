@@ -72,8 +72,7 @@ namespace Yttrium
 
                 }
 
-                virtual ~Scanner() noexcept {}
-
+                virtual ~Scanner() noexcept;
 
 
             private:
