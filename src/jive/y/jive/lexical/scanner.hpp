@@ -4,9 +4,10 @@
 #define Y_Lexical_Scanner_Included 1
 
 #include "y/jive/pattern.hpp"
+#include "y/jive/pattern/dictionary.hpp"
 #include "y/jive/lexical/unit.hpp"
-#include "y/functor.hpp"
 #include "y/associative/suffix/set.hpp"
+#include "y/functor.hpp"
 
 namespace Yttrium
 {
@@ -35,7 +36,7 @@ namespace Yttrium
                 static inline Action *Create(TAG             &t,
                                              Pattern *        pattern,
                                              OBJECT          &host,
-                                             METHOD_POINTER  &method)
+                                             METHOD_POINTER   method)
                 {
                     const Motif    m(pattern);
                     const CallBack c(&host,method);
@@ -67,16 +68,29 @@ namespace Yttrium
             {
             public:
                 template <typename TAG>
-                explicit Scanner(TAG &usr) : Tag(usr)
+                explicit Scanner(TAG &usr) :
+                Tag(usr),
+                dict( new Dictionary() )
                 {
 
                 }
 
                 virtual ~Scanner() noexcept;
 
+                Action::Type produce(const Token &) const;
+
+                template <
+                typename TAG,
+                typename RX,
+                typename OBJECT,
+                typename METHOD_POINTER>
+                void operator()( TAG &tag, RX &rx, OBJECT &host, METHOD_POINTER method)
+                {
+                    const Action::Pointer A( Action::Create(tag, RegExp::Compile(rx, & *dict), host, method) );
+                }
 
 
-
+                ArcPtr<Dictionary> dict;
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
                 SuffixSet<String,Action::Pointer> adb;

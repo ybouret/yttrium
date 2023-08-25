@@ -20,7 +20,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Dictionary
+        class Dictionary : public Object, public Counted
         {
         public:
             //__________________________________________________________________
