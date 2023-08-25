@@ -6,6 +6,7 @@
 #include "y/mkl/antelope/add.hpp"
 #include "y/text/justify.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/data/small/heavy/list/solo.hpp"
 
 using namespace Yttrium;
 using namespace MKL;
@@ -135,6 +136,22 @@ namespace Yttrium
             {
                 return MulUnit<T>(lhs.value*rhs.value);
             }
+
+
+            template <typename T>
+            class MulList : public Small::SoloHeavyList< MulUnit<T> >
+            {
+            public:
+                typedef MulUnit<T> UnitType;
+                typedef Small::SoloHeavyList<UnitType> ListType;
+
+                explicit MulList() noexcept : ListType() {}
+                virtual ~MulList() noexcept {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(MulList);
+            };
+
         }
     }
 }
@@ -153,6 +170,14 @@ static inline void ShowUnit( const char *name, Random::Bits &ran )
     MKL::Antelope::MulUnit<T> c = a*b;
     std::cerr << "c=" << c << std::endl;
     std::cerr << "compare(a,b)=" << MKL::Antelope::MulUnit<T>::Compare(a,b) << std::endl;
+
+
+    MKL::Antelope::MulList<T> xmul;
+
+    xmul << a;
+    xmul << b;
+    std::cerr << xmul << std::endl;
+
 
 }
 
