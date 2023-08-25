@@ -22,7 +22,7 @@ Y_UTEST(data_coop_light_list)
             const Small::CoopLightList<String> tmp(L);
             std::cerr << " =" << tmp << std::endl;
         }
-        L.release();
+        L.free();
         std::cerr << L.proxy->stowage() << std::endl;
     }
     std::cerr << px->stowage() << std::endl;

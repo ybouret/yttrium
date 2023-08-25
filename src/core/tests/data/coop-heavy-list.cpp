@@ -23,7 +23,7 @@ Y_UTEST(data_coop_heavy_list)
             const Small::CoopHeavyList<String> tmp(L);
             std::cerr << " =" << tmp << std::endl;
         }
-        L.release();
+        L.free();
         std::cerr << L.proxy->stowage() << std::endl;
     }
     std::cerr << px->stowage() << std::endl;

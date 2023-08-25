@@ -35,7 +35,7 @@ namespace Yttrium
             typedef typename ProtoType::ProxyType        ProxyType; //!< alias
             using ProtoType::proxy;
             using ProtoType::pushTail;
-            using ProtoType::release_;
+            using ProtoType::free_;
 
             //__________________________________________________________________
             //
@@ -61,7 +61,7 @@ namespace Yttrium
                     for(const NODE *node=other.head;node;node=node->next)
                         pushTail( proxy->replica(node) );
                 }
-                catch(...) { release_(); throw; }
+                catch(...) { free_(); throw; }
             }
 
             //__________________________________________________________________

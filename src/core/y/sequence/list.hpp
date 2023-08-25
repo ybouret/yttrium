@@ -96,8 +96,8 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(), Core::List(), Writable<T
         inline virtual size_t       size()                 const noexcept { return code.size; }
         inline virtual size_t       capacity()             const noexcept { return code.size + code.proxy->stowage(); }
         inline virtual size_t       available()            const noexcept { return code.proxy->stowage(); }
-        inline virtual void         free()                       noexcept { code.release(); }
-        inline virtual void         release()                    noexcept { code.release(); code.proxy->release(); }
+        inline virtual void         free()                       noexcept { code.free(); }
+        inline virtual void         release()                    noexcept { code.free(); code.proxy->release(); }
         inline virtual void         reserve(const size_t n)               { code.proxy->reserve(n); }
         inline virtual void         pushTail(ParamType args)              { code << args; }
         inline virtual void         pushHead(ParamType args)              { code >> args; }

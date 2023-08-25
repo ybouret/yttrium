@@ -21,7 +21,7 @@ Y_UTEST(data_solo_heavy_list)
             const Small::SoloHeavyList<String> tmp(L);
             std::cerr << " =" << tmp << std::endl;
         }
-        L.release();
+        L.free();
         std::cerr << L.proxy->stowage() << std::endl;
     }
 
@@ -33,7 +33,7 @@ Y_UTEST(data_solo_heavy_list)
             const Small::SoloHeavyList<const String> tmp(L);
             std::cerr << " =" << tmp << std::endl;
         }
-        L.release();
+        L.free();
         std::cerr << L.proxy->stowage() << std::endl;
     }
 

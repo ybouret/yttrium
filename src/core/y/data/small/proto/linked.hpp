@@ -3,7 +3,7 @@
 #ifndef Y_Data_Small_Proto_Linked_Included
 #define Y_Data_Small_Proto_Linked_Included 1
 
-#include "y/type/releasable.hpp"
+#include "y/container/recyclable.hpp"
 
 namespace Yttrium
 {
@@ -22,7 +22,7 @@ namespace Yttrium
         class                     LINKED,
         typename                  NODE,
         template <typename> class PROXY>
-        class ProtoLinked : public LINKED, public Releasable
+        class ProtoLinked : public LINKED, public Recyclable
         {
             //__________________________________________________________________
             //
@@ -48,7 +48,7 @@ namespace Yttrium
 
         public:
             //! cleanup
-            virtual ~ProtoLinked() noexcept {  release_(); }
+            virtual ~ProtoLinked() noexcept {  free_(); }
 
             //__________________________________________________________________
             //
@@ -58,12 +58,12 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! send items to proxy
-            virtual void release() noexcept {  release_(); }
+            virtual void free() noexcept {  free_(); }
 
             
         protected:
             //! non-virtual release
-            inline void release_() noexcept { proxy->destroy(*this); }
+            inline void free_() noexcept { proxy->destroy(*this); }
 
             //__________________________________________________________________
             //

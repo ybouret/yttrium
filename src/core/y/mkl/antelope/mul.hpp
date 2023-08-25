@@ -157,7 +157,7 @@ namespace Yttrium
 
                 inline void make(const size_t n)
                 {
-                    my.release();
+                    my.free();
                     const size_t m = my.proxy->stowage();
                     if(m<n)
                     {

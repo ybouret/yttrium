@@ -20,7 +20,7 @@ Y_UTEST(data_bare_heavy_list)
             const Small::BareHeavyList<String> tmp(L);
             std::cerr << " =" << tmp << std::endl;
         }
-        L.release();
+        L.free();
         std::cerr << L.proxy->stowage() << std::endl;
     }
 
@@ -32,7 +32,7 @@ Y_UTEST(data_bare_heavy_list)
             const Small::BareHeavyList<const String> tmp(L);
             std::cerr << " =" << tmp << std::endl;
         }
-        L.release();
+        L.free();
         std::cerr << L.proxy->stowage() << std::endl;
     }
 

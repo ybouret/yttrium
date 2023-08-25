@@ -22,7 +22,7 @@ Y_UTEST(data_bare_light_list)
             std::cerr << " =" << tmp << std::endl;
         }
         Iterating::DisplayAll::Of(L);
-        L.release();
+        L.free();
         std::cerr << L.proxy->stowage() << std::endl;
     }
 
@@ -34,7 +34,7 @@ Y_UTEST(data_bare_light_list)
             const Small::BareLightList<const String> tmp(L);
             std::cerr << " =" << tmp << std::endl;
         }
-        L.release();
+        L.free();
         std::cerr << L.proxy->stowage() << std::endl;
     }
 
