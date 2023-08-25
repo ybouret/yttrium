@@ -8,16 +8,20 @@
 #include "y/lockable.hpp"
 
 #include "y/jive/pattern/first-chars.hpp"
+#include "y/jive/pattern/dictionary.hpp"
 
 using namespace Yttrium;
 
 Y_UTEST(rx)
 {
-    
+    Jive::Dictionary dict;
+
+    dict("INT","[:digit:]+");
+
     if(argc>1)
     {
         std::cerr << "-- compiling '" << argv[1] << "'" << std::endl;
-        AutoPtr<Jive::Pattern> P = Jive::RegExp::Compile(argv[1]);
+        AutoPtr<Jive::Pattern> P = Jive::RegExp::Compile(argv[1],&dict);
         std::cerr << "-- " << (P->isFragile() ? "FRAGILE" : "REGULAR" ) << std::endl;
         std::cerr << "-- saving..." << std::endl;
         P->toBinary("rx.dat");
@@ -32,7 +36,6 @@ Y_UTEST(rx)
             std::cerr << "-- rendering..." << std::endl;
             const AutoPtr<Jive::Pattern> q = fc.makeOr();
             Vizible::GraphViz("fc.dot",*q);
-
         }
     }
 
