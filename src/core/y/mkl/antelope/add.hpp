@@ -4,7 +4,6 @@
 #define Y_MKL_Antelope_Add_Included 1
 
 #include "y/mkl/antelope/wary.hpp"
-#include "y/mkl/scalar.hpp"
 #include "y/mkl/api.hpp"
 #include "y/comparison.hpp"
 #include "y/ordered/heap.hpp"
