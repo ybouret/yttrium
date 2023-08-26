@@ -85,6 +85,7 @@ Pattern *subBand()
     throw Specific::Exception(CallSign,"unfinished band in '%s'",expr);
 
 FINISH:
-    return Pattern::Optimize( p.yield() );
+    //return Pattern::Optimize( p.yield() );
+    return p.yield();
 }
 

@@ -4,6 +4,7 @@
 #include "y/jive/pattern/all.hpp"
 #include "y/system/exception.hpp"
 #include "y/text/ascii/printable.hpp"
+#include "y/text/ascii/convert.hpp"
 #include "y/text/hexadecimal.hpp"
 
 #include <cstring>
@@ -153,7 +154,7 @@ namespace  Yttrium
             AutoPtr<Pattern>  result = rxc.subExpr();
             if(rxc.deep!=0)
                 throw Specific::Exception(CallSign,"unfinished expression in '%s'",rx());
-            return result.yield();
+            return Pattern::Optimize( result.yield() );
         }
 
     }

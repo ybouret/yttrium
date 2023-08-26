@@ -230,7 +230,6 @@ namespace Yttrium
                     for(const Pattern *b=basic.head;b;b=b->next)
                         b->query(fc);
                     fc.sendTo(motif->patterns);
-                    //motif->patterns.mergeTail(basic);
                 }
                 motif->patterns.mergeTail(other);
             }

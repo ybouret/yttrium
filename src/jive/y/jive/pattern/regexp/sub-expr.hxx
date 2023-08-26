@@ -85,6 +85,7 @@ inline Pattern *subExpr()
     // check at this point
 FINISH:
     if(p->count<=0) throw Specific::Exception(CallSign,"empty expression in '%s'",expr);
-    return Pattern::Optimize( p.yield() );
+    return p.yield();
+    //return Pattern::Optimize( p.yield() );
 }
 
