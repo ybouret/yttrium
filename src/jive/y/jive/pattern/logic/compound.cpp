@@ -83,6 +83,26 @@ namespace Yttrium
             }
         }
 
+        void Compound:: noDuplicate() noexcept
+        {
+            Patterns temp;
+            while(patterns.size)
+            {
+                AutoPtr<Pattern>  lhs   = patterns.popHead(); assert(lhs.isValid());
+                bool              found = false;
+                for(const Pattern *rhs=temp.head;rhs;rhs=rhs->next)
+                {
+                    if(lhs->isEqualTo(*rhs))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if(!found) temp.pushTail( lhs.yield() );
+            }
+            patterns.swapWith(temp);
+        }
+
     }
 
 }

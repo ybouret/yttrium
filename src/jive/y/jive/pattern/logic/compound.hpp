@@ -38,6 +38,7 @@ namespace Yttrium
             virtual void   reset()                noexcept;  //!< recursive reset
             virtual size_t serialize(OutputStream &) const;  //!< uuid+num patterns+patterns
             void           retrieve(InputStream &);          //!< load num patterns+patterns
+            void           noDuplicate()          noexcept;  //! remove duplicate patterns
 
             Compound & operator<<( const Pattern & ); //!< append clone of argument
             Compound & operator<<( Pattern *);        //!< append argument
@@ -73,6 +74,8 @@ namespace Yttrium
 
             //! checking all patterns are equals
             bool hasSamePatternsThan(const Compound &) const noexcept;
+
+
 
             //! output and link patterns
             virtual void vizLink(OutputStream &fp)     const;

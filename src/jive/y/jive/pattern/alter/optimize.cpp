@@ -80,7 +80,7 @@ namespace Yttrium
             }
 
             //------------------------------------------------------------------
-            // mergin sub And
+            // merging sub And
             //------------------------------------------------------------------
             {
                 Patterns sub;
@@ -119,29 +119,13 @@ namespace Yttrium
             Patterns   &patterns = motif->patterns;
 
             //------------------------------------------------------------------
-            //! Pass 0: optimizing redudant
+            //! Remove redundant
             //------------------------------------------------------------------
+            motif->noDuplicate();
 
-            {
-                Patterns temp;
-                while(patterns.size)
-                {
-                    AutoPtr<Pattern>  lhs   = patterns.popHead(); assert(lhs.isValid());
-                    bool              found = false;
-                    for(const Pattern *rhs=temp.head;rhs;rhs=rhs->next)
-                    {
-                        if(lhs->isEqualTo(*rhs))
-                        {
-                            found = true;
-                            break;
-                        }
-                    }
-                    if(!found) temp.pushTail( lhs.yield() );
-                }
-                patterns.swapWith(temp);
-            }
-
-
+            //------------------------------------------------------------------
+            //! trivial cases
+            //------------------------------------------------------------------
             switch(patterns.size)
             {
                 case 0: return motif.yield();
@@ -151,9 +135,8 @@ namespace Yttrium
             }
 
 
-
             //------------------------------------------------------------------
-            //! Pass 1: optimizing groups of basic
+            //! Optimizing groups of basic
             //------------------------------------------------------------------
             {
                 Patterns all;
@@ -190,7 +173,7 @@ namespace Yttrium
             }
 
             //------------------------------------------------------------------
-            // Pass 2: merging sub-or
+            // Merging sub-or
             //------------------------------------------------------------------
             {
                 Patterns sub;
@@ -218,6 +201,40 @@ namespace Yttrium
         static inline Pattern * OptimizeNone(None *p)
         {
             AutoPtr<None> motif = OptimizeCompound(p);
+            //------------------------------------------------------------------
+            //! Remove redundant
+            //------------------------------------------------------------------
+            motif->noDuplicate();
+
+            //------------------------------------------------------------------
+            //! Organizing
+            //------------------------------------------------------------------
+            {
+                Patterns basic;
+                Patterns other;
+                while(motif->patterns.size)
+                {
+                    Pattern *sub = motif->patterns.popHead();
+                    if(sub->isBasic())
+                    {
+                        basic.pushTail(sub);
+                    }
+                    else
+                    {
+                        other.pushTail(sub);
+                    }
+                }
+                if(basic.size>0)
+                {
+                    FirstChars fc;
+                    for(const Pattern *b=basic.head;b;b=b->next)
+                        b->query(fc);
+                    fc.sendTo(motif->patterns);
+                    //motif->patterns.mergeTail(basic);
+                }
+                motif->patterns.mergeTail(other);
+            }
+
 
             return motif.yield();
         }
