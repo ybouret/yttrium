@@ -57,10 +57,12 @@ namespace Yttrium
                 assert(0==p->size);
                 if(p->takes(source))
                 {
+                    // one more is accepted
                     mergeTail(*p); assert(0==p->size);
                 }
                 else
                 {
+                    // failure here
                     assert(0==p->size);
                     source.put(*this); assert(0==size);
                     return false;

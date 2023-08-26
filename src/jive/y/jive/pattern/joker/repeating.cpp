@@ -73,7 +73,7 @@ namespace Yttrium
 
         bool Repeating:: isFragile() const noexcept
         {
-            return atLeast <=0 || motif->isFragile();
+            return atLeast <=0;
         }
         
 
@@ -83,26 +83,17 @@ namespace Yttrium
             assert(0==motif->size);
 
             size_t count = 0;
-            bool   phony = false;
-
-            while(true)
+        PROBE:
+            assert(0==motif->size);
+            if(motif->takes(source))
             {
-                assert(0==motif->size);
-                if(motif->takes(source))
-                {
-                    ++count;
-                    if(motif->size<=0)
-                    {
-                        phony = true; //!< fragile, assume true
-                        break;
-                    }
-                    else
-                        mergeTail(*motif);
-                }
+                assert(motif->size>0);
+                ++count;
+                mergeTail(*motif);
+                goto PROBE;
             }
 
-            // check result
-            if(count>=atLeast||phony)
+            if(count>=atLeast)
             {
                 return true;
             }
@@ -111,6 +102,7 @@ namespace Yttrium
                 source.put(*this);
                 return false;
             }
+
         }
 
         bool Repeating:: isEqualTo(const Pattern &p) const noexcept

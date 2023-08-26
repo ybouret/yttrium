@@ -70,44 +70,24 @@ namespace Yttrium
             assert(0==motif->size);
 
             size_t count = 0;
-            bool   phony = false;
-            while( motif->takes(source) )
+        PROBE:
+            assert(0==motif->size);
+            if(motif->takes(source))
             {
-                if(motif->size<=0)
-                {
-                    phony = true;
-                    break;
-                }
-                else
-                {
-                    mergeTail(*motif);
-                    ++count;
-                }
+                assert(motif->size>0);
+                ++count;
+                mergeTail(*motif);
+                goto PROBE;
             }
 
-            if(phony)
+            if(count>=minCount&&count<=maxCount)
             {
-                if(count<=0 && minCount<=0)
-                {
-                    return true;
-                }
-                else
-                {
-                    source.put(*this);
-                    return false;
-                }
+                return true;
             }
             else
             {
-                if(count>=minCount&&count<=maxCount)
-                {
-                    return true;
-                }
-                else
-                {
-                    source.put(*this);
-                    return false;
-                }
+                source.put(*this);
+                return false;
             }
 
         }

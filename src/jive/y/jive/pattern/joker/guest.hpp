@@ -38,14 +38,15 @@ namespace Yttrium
             //
             //__________________________________________________________________
             virtual ~Guest() noexcept; //!< cleanup
+            
         protected:
             explicit Guest(const uint32_t, const Pattern &);          //!< uuid+clone
             explicit Guest(const uint32_t, Pattern       *) noexcept; //!< uuid+pattern
-            explicit Guest(const Guest &other);              //!< duplicate
+            explicit Guest(const Guest &other);                       //!< duplicate
 
             bool        hasSameMotifThan(const Guest &)   const noexcept; //!< forward testing
             void        vizLink(OutputStream &fp)         const;          //!< output and link motif
-            static void NoFragileMotif(const char *clid );                //!< throw exception
+            static void NoFragileMotif(const char *clid);                 //!< throw exception
 
             //__________________________________________________________________
             //
