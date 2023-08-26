@@ -39,6 +39,6 @@ inline void insertAlias(Patterns &patterns, const String &name)
 
 inline void insertJoker(Patterns &patterns, const String &name)
 {
-    if(patterns.size<=0) throw Specific::Exception(CallSign,"no pattern befor braces in '%s'", expr);
+    if(patterns.size<=0) throw Specific::Exception(CallSign,"no pattern before braces in '%s'", expr);
     
 }
