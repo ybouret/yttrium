@@ -54,6 +54,10 @@ inline Pattern *subExpr()
                 embraces(p->patterns);
                 break;
 
+            case AMPERSAND:
+                ignoreCase(p->patterns);
+                break;
+
                 //--------------------------------------------------------------
                 //
                 //  Band
@@ -89,3 +93,9 @@ FINISH:
     //return Pattern::Optimize( p.yield() );
 }
 
+inline void ignoreCase(Patterns &patterns)
+{
+    std::cerr << "ignoring case..." << std::endl;
+    if( patterns.size <=0 ) throw Specific::Exception(CallSign,"no pattern before '&' in '%s'",expr);
+    patterns.pushTail( Pattern::IgnoreCase(patterns.popTail()) );
+}

@@ -29,6 +29,7 @@ inline Pattern * escExpr()
             Y_ESC_ECHO(RBRACK);
             Y_ESC_ECHO(LBRACE);
             Y_ESC_ECHO(RBRACE);
+            Y_ESC_ECHO(AMPERSAND);
             Y_ESC_ECHO('+');
             Y_ESC_ECHO('*');
             Y_ESC_ECHO('?');

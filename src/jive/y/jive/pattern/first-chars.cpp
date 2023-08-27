@@ -171,6 +171,8 @@ namespace Yttrium
         {
             AutoPtr<Compound> guard = new Or();
             sendTo(guard->patterns);
+            if(1==guard->patterns.size)
+                return guard->patterns.popTail();
             return guard.yield();
         }
     }

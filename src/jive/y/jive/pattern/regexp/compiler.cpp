@@ -87,6 +87,7 @@ namespace  Yttrium
             static const char MINUS     =  '-';
             static const char DOT       =  '.';
             static const char COLON     =  ':';
+            static const char AMPERSAND =  '&';
 
             static const char * const CallSign;
             typedef Pattern *       (*MakeJoker)(Pattern *);
