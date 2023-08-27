@@ -8,6 +8,17 @@ code( dims > 0 ? new Code(dims) : 0 )
 template <>
 RK4<real_t>:: RK4() noexcept : code(0) {}
 
+
+template <>
+RK4<real_t>:: ~RK4() noexcept
+{
+    if(code)
+    {
+        delete code;
+        code = 0;
+    }
+}
+
 template <>
 void RK4<real_t>:: operator()(Writable<real_t> &y,
                               Equation         &eqs,
