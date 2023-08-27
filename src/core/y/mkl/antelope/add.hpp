@@ -325,6 +325,7 @@ namespace Yttrium
                 //
                 //__________________________________________________________
                 explicit Add() : CodeType() {} //!< setup
+                explicit Add(const size_t n) : CodeType(n) {}
                 virtual ~Add() noexcept {}     //!< cleanup
                 
 

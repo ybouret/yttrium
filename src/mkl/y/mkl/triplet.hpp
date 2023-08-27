@@ -37,7 +37,7 @@ namespace Yttrium
             }
 
             //! check if ordinates are minima
-            inline bool isMinima() const
+            inline bool isLocalMinima() const
             {
                 return (b<=a) && (b<=c);
             }
