@@ -3,21 +3,23 @@
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/stream/libc/output.hpp"
+#include "y/mkl/xreal.hpp"
 
 using namespace Yttrium;
 using namespace MKL;
 
 namespace
 {
+    template <typename T>
     class dExp
     {
     public:
-        explicit dExp(const double fac) noexcept : k(fac) {}
+        explicit dExp(const T fac) noexcept : k(fac) {}
         virtual ~dExp() noexcept {}
 
-        const double k;
+        const T k;
 
-        inline void compute(Writable<double> &dydt, double, const Readable<double> &y)
+        inline void compute(Writable<T> &dydt, double, const Readable<T> &y)
         {
             dydt[1] = k * y[1];
         }
@@ -26,30 +28,40 @@ namespace
     private:
         Y_DISABLE_COPY_AND_ASSIGN(dExp);
     };
+
+
+    template <typename T>
+    static inline
+    void makeExp(const char *fileName)
+    {
+        dExp<T> eq(-1.2);
+        typename ODE::Field<T>::Equation dexp(&eq, & dExp<T>::compute);
+
+        Vector<T> y(1,2.7);
+        const double tmax = 8;
+        const size_t N    = 1000;
+        ODE::RK4<T>  rk4;
+
+        Libc::OutputFile fp(fileName);
+        fp("%g %g\n",0.0,double(y[1]));
+        for(size_t i=1;i<=N;++i)
+        {
+            const double t0 = ((i-1)*tmax)/N;
+            const double t1 = (i*tmax)/N;
+            rk4(y,dexp,t0,t1);
+            fp("%g %g\n",t1,double(y[1]));
+
+        }
+    }
 }
+
+
 
 Y_UTEST(ode_rk4)
 {
 
-    dExp eq(-1.2);
-    ODE::Field<double>::Equation dexp(&eq, & dExp::compute);
-
-    Vector<double> y(1,2.7);
-    const double tmax = 4;
-    const size_t N    = 100;
-    ODE::RK4<double> rk4;
-
-    Libc::OutputFile fp("rk4-exp.dat");
-    fp("%g %g\n",0.0,y[1]);
-    for(size_t i=1;i<=N;++i)
-    {
-        const double t0 = ((i-1)*tmax)/N;
-        const double t1 = (i*tmax)/N;
-        rk4(y,dexp,t0,t1);
-        fp("%g %g\n",t1,y[1]);
-
-    }
-
+    makeExp<double>("rk4-exp.dat");
+    makeExp< XReal<double> >("rk4-exp-x.dat");
 
 
 }

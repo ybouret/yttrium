@@ -14,11 +14,19 @@ namespace Yttrium
     {
         namespace ODE
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Interfaces for ODEs
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             struct Field
             {
-                typedef Functor<void,TL3(Writable<T> &,T,const Readable<T> &)> Equation;
+                typedef Functor<void,TL3(Writable<T> &,T,const Readable<T> &)> Equation; //!< equation interface
+                typedef Functor<void,TL2(T,Writable<T>)>                       Callback; //!< callback interface
             };
 
         }

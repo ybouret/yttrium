@@ -324,9 +324,9 @@ namespace Yttrium
                 // C++
                 //
                 //__________________________________________________________
-                explicit Add() : CodeType() {} //!< setup
-                explicit Add(const size_t n) : CodeType(n) {}
-                virtual ~Add() noexcept {}     //!< cleanup
+                explicit Add() : CodeType() {}                //!< setup
+                explicit Add(const size_t n) : CodeType(n) {} //!< setup with capacity
+                virtual ~Add() noexcept {}                    //!< cleanup
                 
 
             private:

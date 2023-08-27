@@ -10,6 +10,7 @@ namespace Yttrium
         namespace ODE
         {
 
+            //! RK4 Code for any T
             template <typename T>
             class RK4<T>:: Code : public Object
             {
@@ -35,7 +36,8 @@ namespace Yttrium
                 inline void step(Writable<T> &y,
                                  Equation    &eqs,
                                  const T      t0,
-                                 const T      t1)
+                                 const T      t1,
+                                 Callback    *cb)
                 {
                     assert(y.size()==nvar);
                     static const T half(0.5);
@@ -50,12 +52,15 @@ namespace Yttrium
                     eqs(k1,t0,y);
 
                     for(size_t i=n;i>0;--i) yt[i] = y[i] + hh * k1[i];
+                    if(cb) (*cb)(th,yt);
                     eqs(k2,th,yt);
 
                     for(size_t i=n;i>0;--i) yt[i] = y[i] + hh * k2[i];
+                    if(cb) (*cb)(th,yt);
                     eqs(k3,th,yt);
 
                     for(size_t i=n;i>0;--i) yt[i] = y[i] + h * k3[i];
+                    if(cb) (*cb)(t1,yt);
                     eqs(k4,t1,yt);
 
                     for(size_t i=n;i>0;--i)
@@ -64,6 +69,7 @@ namespace Yttrium
                         xadd << k1[i] << k2[i] << k2[i] << k3[i] << k3[i] << k4[i];
                         y[i] += hs * xadd.sum();
                     }
+                    if(cb) (*cb)(t1,y);
 
                 }
                 
@@ -84,6 +90,18 @@ namespace Yttrium
 
 #undef  real_t
 #define real_t long double
+#include "rk4.hxx"
+
+#undef  real_t
+#define real_t XReal<float>
+#include "rk4.hxx"
+
+#undef  real_t
+#define real_t XReal<double>
+#include "rk4.hxx"
+
+#undef  real_t
+#define real_t XReal<long double>
 #include "rk4.hxx"
 
         }

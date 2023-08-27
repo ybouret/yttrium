@@ -23,7 +23,8 @@ template <>
 void RK4<real_t>:: operator()(Writable<real_t> &y,
                               Equation         &eqs,
                               const real_t     t0,
-                              const real_t     t1)
+                              const real_t     t1,
+                              Callback        *cb)
 {
     const size_t nvar = y.size(); assert(nvar>0);
     if(0==code||nvar!=code->nvar)
@@ -31,6 +32,5 @@ void RK4<real_t>:: operator()(Writable<real_t> &y,
         if(code) { delete code; code=0; }
         code = new Code(nvar);
     }
-    code->step(y,eqs,t0,t1);
-
+    code->step(y,eqs,t0,t1,cb);
 }
