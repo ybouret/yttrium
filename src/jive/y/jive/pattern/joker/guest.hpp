@@ -30,7 +30,8 @@ namespace Yttrium
             virtual void reset()             noexcept; //!< release and propagate reset
             virtual void query(FirstChars &) const;    //!< forward call
             void         optimize();                   //!< forward call
-
+            void         ignoreCase();                 //!< forward call
+            
             //__________________________________________________________________
             //
             //

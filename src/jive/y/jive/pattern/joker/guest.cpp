@@ -66,6 +66,17 @@ namespace Yttrium
             assert(motif->isRegular());
         }
 
+        void Guest:: ignoreCase()
+        {
+            assert(motif.isValid());
+            assert(motif->isRegular());
+            motif = Pattern::IgnoreCase( motif.yield() );
+            assert(motif.isValid());
+            assert(motif->isRegular());
+        }
+
+
+
         bool Guest:: hasSameMotifThan(const Guest &other) const noexcept
         {
             return motif->isEqualTo(*other.motif);

@@ -32,7 +32,7 @@ namespace Yttrium
 
         Pattern * IgnoreCaseOfCompound(Compound *p)
         {
-            AutoPtr<Compound> guard(p);
+            AutoPtr<Pattern> guard(p);
 
             {
                 Patterns ign;
@@ -43,6 +43,13 @@ namespace Yttrium
                 p->patterns.swapWith(ign);
             }
 
+            return guard.yield();
+        }
+
+        Pattern *IgnoreCaseOfGuest(Guest *p)
+        {
+            AutoPtr<Pattern> guard(p);
+            p->ignoreCase();
             return guard.yield();
         }
 
@@ -63,6 +70,9 @@ namespace Yttrium
                 case And::  UUID: return IgnoreCaseOfCompound( guard.yield()->as<And>()  );
                 case None:: UUID: return IgnoreCaseOfCompound( guard.yield()->as<None>() );
 
+                case Optional::  UUID: return IgnoreCaseOfGuest( guard.yield()->as<Optional>()  );
+                case Repeating:: UUID: return IgnoreCaseOfGuest( guard.yield()->as<Repeating>() );
+                case Counting::  UUID: return IgnoreCaseOfGuest( guard.yield()->as<Counting>()  );
 
                 default:
                     break;
