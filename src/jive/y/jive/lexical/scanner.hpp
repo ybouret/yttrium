@@ -8,7 +8,6 @@
 #include "y/jive/lexical/unit.hpp"
 #include "y/associative/suffix/set.hpp"
 #include "y/functor.hpp"
-#include "y/ptr/ark.hpp"
 
 namespace Yttrium
 {
@@ -29,7 +28,7 @@ namespace Yttrium
                 };
 
                 typedef Functor<Type,TL1(const Token &)> CallBack;
-                typedef ArkPtr<String,Action>            Pointer;
+                typedef Yttrium::ArkPtr<String,Action>            Pointer;
 
                 virtual ~Action() noexcept {}
 
