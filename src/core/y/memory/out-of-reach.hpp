@@ -63,6 +63,13 @@ namespace Yttrium
                 Swap(&a,&b,sizeof(T));
             }
 
+            //! generic memory copy
+            template <typename T> static inline
+            void Copy(T &a, const T &b) noexcept
+            {
+                Copy(&a,&b,sizeof(T));
+            }
+
         };
     }
 
