@@ -103,7 +103,7 @@ static const unsigned * const start = table.index
             static inline void Increasing(ARRAY &arr, BRRAY &brr)
             {
                 Y_NW_IMPL(
-                          if(arr[lhs]<arr[rhs])
+                          if(arr[rhs]<arr[lhs])
                           {
                               Swp(arr[lhs],arr[rhs]);
                               Swp(brr[lhs],brr[rhs]);

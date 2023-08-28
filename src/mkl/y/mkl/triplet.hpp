@@ -3,6 +3,7 @@
 #ifndef Y_MKL_Triple_Included
 #define Y_MKL_Triple_Included 1
 
+#include "y/sort/nw.hpp"
 #include "y/type/args.hpp"
 #include <iostream>
 
@@ -24,6 +25,7 @@ namespace Yttrium
         struct Triplet
         {
             Y_ARGS_EXPOSE(T,Type); //!< aliases
+            static const size_t SIZE = 3;
 
             T a; //!< a
             T b; //!< b
@@ -36,11 +38,37 @@ namespace Yttrium
                 return os;
             }
 
+            inline void makeIncreasing()
+            {
+                NetworkSort::Algo<SIZE,Type>::Increasing(*this);
+            }
+
+            template <typename U>
+            inline void makeIncreasing(Triplet<U> &other)
+            {
+                NetworkSort::Algo<SIZE,Type>::Increasing(*this,other);
+            }
+
             //! check if ordinates form a local minimum
             inline bool isLocalMinimum() const
             {
                 return (b<=a) && (b<=c);
             }
+
+            inline bool isIncreasing() const {
+                return a<=b && b <= c;
+            }
+
+            inline bool isDecreasing() const {
+                return c <= b && b <= a;
+            }
+
+            inline bool isOrdered() const
+            {
+                return isIncreasing() || isDecreasing();
+            }
+
+            inline size_t size() const noexcept { return SIZE; }
 
             //! in [1:3]
             inline ConstType & operator[](const size_t indx) const noexcept
