@@ -8,6 +8,7 @@
 #include "y/jive/lexical/unit.hpp"
 #include "y/associative/suffix/set.hpp"
 #include "y/functor.hpp"
+#include "y/ptr/ark.hpp"
 
 namespace Yttrium
 {
