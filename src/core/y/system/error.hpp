@@ -17,7 +17,7 @@ namespace Yttrium
         //! using strerror
         //
         //______________________________________________________________________
-        void FormatError(char* buffer,
+        void FormatError(char*        buffer,
                          const size_t buflen,
                          const int    err) noexcept;
 
@@ -39,9 +39,9 @@ namespace Yttrium
         //! using strerror
         //
         //______________________________________________________________________
-        void FormatError(char* buffer,
-                         const size_t buflen,
-                         const uint32_t    err) noexcept;
+        void FormatError(char*          buffer,
+                         const size_t   buflen,
+                         const uint32_t err) noexcept;
 
         void CriticalError(const uint32_t err, const char* fmt, ...) Y_PRINTF_CHECK(2, 3);
 
