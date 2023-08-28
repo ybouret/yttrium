@@ -28,7 +28,7 @@ namespace Yttrium
                 };
 
                 typedef Functor<Type,TL1(const Token &)> CallBack;
-                typedef Yttrium::ArkPtr<String,Action>            Pointer;
+                typedef Yttrium::ArkPtr<String,Action>   Pointer;
 
                 virtual ~Action() noexcept {}
 
