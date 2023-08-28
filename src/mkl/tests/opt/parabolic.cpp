@@ -18,7 +18,6 @@ double Sin(double x)
 Y_UTEST(opt_parabolic)
 {
     Triplet<double> x,f;
-
     Parabolic<double>::Step(Sin,x,f);
 
 }
