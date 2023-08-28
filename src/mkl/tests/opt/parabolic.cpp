@@ -10,15 +10,22 @@ using namespace MKL;
 
 
 
-double Sin(double x)
+double F(double x)
 {
-    return sin(x);
+    return  0.7-cos(0.9*x-0.1);
 }
 
 Y_UTEST(opt_parabolic)
 {
-    Triplet<double> x,f;
-    Parabolic<double>::Step(Sin,x,f);
+    Triplet<double> x = { -0.5, 0, 0.5 };
+    Triplet<double> f = { F(x.a), F(x.b), F(x.c) };
+
+    std::cerr << x << " -> " << f << std::endl;
+    for(int i=0;i<=2;++i)
+    {
+        Parabolic<double>::Step(F,x,f);
+        std::cerr << x << " -> " << f << std::endl;
+    }
 
 }
 Y_UDONE()

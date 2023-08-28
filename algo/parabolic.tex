@@ -28,17 +28,43 @@ We change the coordinate to $u_a=0$, $u_c=1$ and
 	\right.
 \end{equation}
 
-We define the polynomial:
-\begin{equation}
-	P(u) = f_a + \sigma u + \gamma u^2
-\end{equation}
-
+ 
 \section{$\beta\leq0$ or $\beta\geq1$}
 
-We probe $P(\frac{1}{2})$.
+We probe $\frac{x_a+x_c}2$ and take the best triplet.
 
 \section{$0<\beta<1$}
+We define the reduced polynomial
+\begin{equation}
+	Q(u) =  \mu_a (1-u) + \mu_c u - \gamma u(1-u)
+\end{equation}	 
  
+\begin{equation}
+\begin{array}{rcl}
+	Q(0) & = & \mu_a = f_a - f_b \geq 0\\
+	Q(1) & = & \mu_c = f_c - f_b \geq 0\\
+	Q(\beta) & = & 0 = (1-\beta)\mu_a + \beta \mu_c - \gamma \beta(1-\beta)\\
+\end{array}
+\end{equation}	
+
+\begin{equation}
+	\gamma = \dfrac{(1-\beta)\mu_a + \beta \mu_c}{\beta(1-\beta)}  \geq 0 
+\end{equation}
+
+\begin{equation}
+	u_\star = \dfrac{1}{2} + \dfrac{\mu_a-\mu_c}{2\gamma} = \dfrac{1}{2} + \dfrac{\beta(1-\beta)}{2} 
+	\dfrac{\mu_a-\mu_c}{(1-\beta)\mu_a + \beta \mu_c}
+\end{equation}
+
+\begin{equation}
+\begin{array}{lcl}
+\mu_a = 0, \;\mu_c = 0 & \implies & u_\star = \dfrac{1}{2}\\
+\\
+\mu_a > 0, \;\mu_c = 0 & \implies & u_\star = \dfrac{1}{2} + \dfrac{\beta}{2} \\
+\\
+\mu_a = 0, \;\mu_c > 0 & \implies & u_\star = \dfrac{1}{2} - \dfrac{1-\beta}{2} \\
+\end{array}
+\end{equation}
 
 
 \end{document}

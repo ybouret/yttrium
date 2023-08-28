@@ -104,7 +104,7 @@ namespace Yttrium
         struct Fabs< XReal<T> >
         {
             //! use built-in functions
-            static inline XReal<T> Of(const XReal<T> &x) noexcept { return x.abs(); }
+            static inline XReal<T> Of(const XReal<T> x) noexcept { return x.abs(); }
         };
 
 
@@ -215,7 +215,7 @@ namespace Yttrium
         template <typename T> struct Fabs< Complex<T> >
         {
             //! use hypotenuse
-            static inline T Of(const Complex<T> &z) noexcept  { return Hypotenuse(z.re,z.im); }
+            static inline T Of(const Complex<T> z) noexcept  { return Hypotenuse(z.re,z.im); }
         };
 
         //______________________________________________________________________
