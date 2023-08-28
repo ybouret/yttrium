@@ -3,7 +3,7 @@ use Algorithm::Networksort;
 
 my $algorithm = "bosenelson";
 
-for my $inputs (2..4) 
+for my $inputs (2..32) 
 {
     #   
     # Generate the sorting network (a list of comparators).
@@ -28,7 +28,7 @@ for my $inputs (2..4)
     #print $nw->formatted(),"\n";
 
     my $filename = "nw" . $inputs . ".hxx";
-    print $filename,  ";\n";
+    print $filename,"\n";
     open(FH,'>',$filename);
     print FH "const unsigned nwTable$inputs\[\]=", $string, ";\n";
     print FH "const unsigned nwCount$inputs = sizeof(nwTable$inputs)/sizeof(nwTable$inputs\[0\])/2;\n";

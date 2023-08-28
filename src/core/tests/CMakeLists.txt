@@ -129,6 +129,7 @@ add_test(hashing:mac       test-core hashing_mac)
 #sort
 add_test(sort:heap     test-core sort_heap)
 add_test(sort:merge    test-core sort_merge)
+add_test(sort:nw       test-core sort_nw)
 
 #ptr
 add_test(ptr:auto         test-core ptr_auto)

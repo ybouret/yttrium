@@ -38,6 +38,7 @@ random
 hashing
 hashing/to
 sort
+sort/nw
 utest 
 memory
 memory/allocator
