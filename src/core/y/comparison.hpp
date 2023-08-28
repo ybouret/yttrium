@@ -84,6 +84,10 @@ namespace Yttrium
             return true;
         }
 
+        //______________________________________________________________________
+        //
+        //! Check Decreasing ARRAY (readable)
+        //______________________________________________________________________
         template <typename ARRAY> static inline
         bool IsDecreasing(ARRAY &arr, const size_t num)
         {

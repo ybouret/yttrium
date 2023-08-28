@@ -12,13 +12,49 @@ namespace Yttrium
     namespace MKL
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Improve local minimum
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         struct Parabolic
         {
-            typedef Function<T,T> FunctionType;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef Function<T,T> FunctionType; //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+
+            //__________________________________________________________________
+            //
+            //! parabolic step
+            /**
+             - start from increasing x and correspond local minimum F
+             - update by parabolic estimation and 1 function evaluation
+             */
+            //__________________________________________________________________
             static void Step(Triplet<T> &x, Triplet<T> &f, FunctionType &F);
 
+            //__________________________________________________________________
+            //
+            //
+            //! Step for any Callable function
+            //
+            //__________________________________________________________________
             template <typename FUNCTION> static inline
             void Step(FUNCTION &F, Triplet<T> &x, Triplet<T> &f )
             {

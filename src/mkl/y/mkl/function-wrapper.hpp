@@ -11,35 +11,86 @@ namespace Yttrium
 
     namespace MKL
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Generic function interface for algorithms
+        //
+        //
+        //______________________________________________________________________
         template <typename R, typename T>
         class Function
         {
         public:
-            Y_ARGS_EXPOSE(T,Type);
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            Y_ARGS_EXPOSE(T,Type); //!< aliases
 
-            inline virtual ~Function() noexcept {}
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual R operator()(ConstType) = 0; //!< callable type
 
-            virtual R operator()(ConstType) = 0;
-
-
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            inline virtual ~Function() noexcept {} //!< cleanup
         protected:
-            inline explicit Function() noexcept {}
+            inline explicit Function() noexcept {} //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Function);
         };
 
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Wrapper for any User's function
+        //
+        //
+        //______________________________________________________________________
         template <typename R, typename T, typename FUNCTION>
         class Wrapper : public Function<R,T>
         {
         public:
-            typedef typename Function<R,T>::ConstType ConstType;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef typename Function<R,T>::ConstType ConstType; //!< alias
 
-            inline explicit Wrapper(FUNCTION &f) noexcept : Function<R,T>(), fcn(f) {}
-            inline virtual ~Wrapper() noexcept {}
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            inline explicit Wrapper(FUNCTION &f) noexcept : Function<R,T>(), fcn(f) {} //!< setup
+            inline virtual ~Wrapper()            noexcept                           {} //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! forward call
             inline virtual R operator()(ConstType t) { return fcn(t); }
 
         private:
