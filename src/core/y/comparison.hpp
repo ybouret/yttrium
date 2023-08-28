@@ -69,6 +69,34 @@ namespace Yttrium
             return Sign::Of(rhs,lhs);
         }
 
+        //______________________________________________________________________
+        //
+        //! Check Increasing ARRAY (readable)
+        //______________________________________________________________________
+        template <typename ARRAY> static inline
+        bool IsIncreasing(ARRAY &arr, const size_t num)
+        {
+            if(num<=1) return true;
+            for(size_t i=1;i<num;++i)
+            {
+                if(arr[i+1]<arr[i]) return false;
+            }
+            return true;
+        }
+
+        template <typename ARRAY> static inline
+        bool IsDecreasing(ARRAY &arr, const size_t num)
+        {
+            if(num<=1) return true;
+            for(size_t i=1;i<num;++i)
+            {
+                if(arr[i+1]>arr[i]) return false;
+            }
+            return true;
+        }
+
+
+
     };
 
     //__________________________________________________________________________
