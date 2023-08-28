@@ -110,7 +110,6 @@ static const unsigned * const start = table.index
                           }
                     );
             }
-
         };
 
     }
