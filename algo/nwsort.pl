@@ -19,6 +19,12 @@ for my $inputs (2..4)
     #
     $nw->index_base([1 .. $inputs]);
     print $nw->title(), "\n";
-    print $nw->formatted(),"\n";
+     
+    $nw->formats([ "{%d,%d}," ]);
+    my $string = '{' . $nw->formatted();
+    substr($string, -1, 1) = '}';    # Overwrite the trailing comma.
+    print $string, ";\n";
+   
+    #print $nw->formatted(),"\n";
 }
  
