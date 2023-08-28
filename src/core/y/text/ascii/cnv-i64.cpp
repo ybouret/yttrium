@@ -28,7 +28,7 @@ namespace Yttrium
                 if(len<=0) throw Specific::Exception(fn,"no data for negative %s", (ctx?ctx:Core::Unknown) );
             }
 
-            const uint64_t Umax = neg ? uint64_t(-IntegerFor<int64_t>::Minimum) : uint64_t(IntegerFor<int64_t>::Maximum);
+            const uint64_t Umax = neg ? uint64_t(-(IntegerFor<int64_t>::Minimum+1))+1 : uint64_t(IntegerFor<int64_t>::Maximum);
             const uint64_t Utop = Umax/10;
 
 #define Y_CHECK_ADD(DELTA)                    \
