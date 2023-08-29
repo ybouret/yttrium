@@ -46,7 +46,7 @@ namespace Yttrium
 
             //! optimized co-sorting
             template <typename U>
-            inline void makeIncreasing(Triplet<U> &other)
+            inline void makeIncreasingWith(Triplet<U> &other)
             {
                 NetworkSort::Algo<SIZE,Type>::Increasing(*this,other);
             }

@@ -26,7 +26,7 @@ Y_UTEST(triplet)
     xx.a = 3; xx.b = 1; xx.c = 2;
     XX.a = 1; XX.b = 2; XX.c = 3;
 
-    xx.makeIncreasing(XX);
+    xx.makeIncreasingWith(XX);
     Y_CHECK(xx.isIncreasing());
     std::cerr << xx << ", " << XX << std::endl;
 

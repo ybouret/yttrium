@@ -10,7 +10,7 @@ using namespace MKL;
 
 
 
-double F(double x)
+static inline double F(double x)
 {
     return  0.7-cos(0.9*x-0.1);
 }

@@ -99,7 +99,7 @@ void Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
     else
     {
         const real_t width =  x.c-x.a;
-        const real_t beta  = (x.b-x.a)/width;
+        const real_t beta  = Clamp(zero,(x.b-x.a)/width,one);
         const real_t mu_a  = Fabs<real_t>::Of(f.a - f.b);
         const real_t mu_c  = Fabs<real_t>::Of(f.c - f.b);
         real_t       uopt  = half;
