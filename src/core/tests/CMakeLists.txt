@@ -178,6 +178,7 @@ add_test(container:cxx-series test-core container_cxx_series)
 add_test(container:iterator   test-core container_iterator)
 add_test(container:matrix     test-core container_matrix)
 add_test(container:operating  test-core container_operating)
+add_test(container:cxx-tableau test-core container_cxx_tableau)
 
 #sequence
 add_test(sequence:vector test-core sequence_vector)

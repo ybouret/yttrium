@@ -37,11 +37,14 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //__________________________________________________________________
+            //
             //! bracket withing f.a = F(x.a), f.c = F(x.c)
             /**
-             - return true for regular local minimum
+             - return true for regular local minimum, ordered x
              - return false for global minimum, on lowest side
              */
+            //__________________________________________________________________
             static bool Inside(Triplet<T>   &x,
                                Triplet<T>   &f,
                                FunctionType &F);
@@ -58,6 +61,12 @@ namespace Yttrium
                 Wrapper<T,T,FUNCTION> FW(F);
                 return Inside(x,f,FW);
             }
+
+
+            static void Expand(Triplet<T>   &x,
+                               Triplet<T>   &f,
+                               FunctionType &F);
+            
         };
     }
 

@@ -1,7 +1,7 @@
 //! \file
-//! 
-#ifndef Y_Container_CxxArray_Included
-#define Y_Container_CxxArray_Included 1
+
+#ifndef Y_Container_CxxTableau_Included
+#define Y_Container_CxxTableau_Included 1
 
 #include "y/container/writable.hpp"
 #include "y/container/operating.hpp"
@@ -11,21 +11,20 @@
 
 namespace Yttrium
 {
-
     namespace Core
     {
         //______________________________________________________________________
         //
         //
-        //! Base class for CxxArrays
+        //! Base class for CxxTableau
         //
         //______________________________________________________________________
-        class CxxArray
+        class CxxTableau
         {
-        public:     static const char * const CallSign; //!< "CxxArray"
-        protected:  explicit CxxArray() noexcept;       //!< setup
-        public:     virtual ~CxxArray() noexcept;       //!< cleanup
-        private: Y_DISABLE_COPY_AND_ASSIGN(CxxArray);
+        public:     static const char * const CallSign;   //!< "CxxTableau"
+        protected:  explicit CxxTableau() noexcept;       //!< setup
+        public:     virtual ~CxxTableau() noexcept;       //!< cleanup
+        private: Y_DISABLE_COPY_AND_ASSIGN(CxxTableau);
         };
     }
 
@@ -43,7 +42,7 @@ namespace Yttrium
     public Operating<T>,
     public Writable<T>,
     public WritableContiguous<T>,
-    public Core::CxxArray
+    public Core::CxxTableau
     {
     public:
         //______________________________________________________________________
@@ -102,7 +101,7 @@ namespace Yttrium
         MutableType * const cdata; //!< memory or [0..count-1]
         MutableType * const entry; //!< memory for [1..count]
         const size_t        count; //!< built objecct
-        
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(CxxArray);
         virtual ConstType *getBaseForward() const noexcept { return cdata; }
@@ -110,11 +109,11 @@ namespace Yttrium
 
         virtual ConstType *getBaseReverse() const noexcept { return entry+count; }
         virtual ConstType *getLastReverse() const noexcept { return entry;       }
-        
+
     };
 
-
 }
+
 
 #endif
 

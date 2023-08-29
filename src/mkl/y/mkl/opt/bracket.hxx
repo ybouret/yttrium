@@ -8,15 +8,13 @@ bool Bracket<real_t>:: Inside(Triplet<real_t>   &x,
     //static const real_t zero(0);
 
     //--------------------------------------------------------------------------
-    // order f.a<=f.c
+    // order f.a<=f.c and initialize width
     //--------------------------------------------------------------------------
     if(f.a>f.c)
     {
         Swap(x.a,x.c);
         Swap(f.a,f.c);
     }
-
-    std::cerr << "Start: f(" << x.a << ")=" << f.a << ", f(" << x.c << ")=" << f.c << std::endl;
     real_t width = Fabs<real_t>::Of(x.c-x.a);
 
 PROBE:
@@ -26,7 +24,6 @@ PROBE:
     if(xmin>xmax) Swap(xmin,xmax);
     f.b = F( x.b = Clamp(xmin,half*(xmin+xmax),xmax) );
 
-    std::cerr << "-> f(" << x.b << ")=" << f.b << std::endl;
 
     if(f.b <= f.a)
     {
@@ -44,7 +41,7 @@ PROBE:
     {
         f.c = f.b = f.a;
         x.c = x.b = x.a;
-        return false;
+        return false; 
     }
 
     width = newWidth;
