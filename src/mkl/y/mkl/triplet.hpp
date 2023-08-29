@@ -24,8 +24,8 @@ namespace Yttrium
         template <typename T>
         struct Triplet
         {
-            Y_ARGS_EXPOSE(T,Type); //!< aliases
-            static const size_t SIZE = 3;
+            Y_ARGS_EXPOSE(T,Type);        //!< aliases
+            static const size_t SIZE = 3; //!< alias
 
             T a; //!< a
             T b; //!< b
@@ -38,11 +38,13 @@ namespace Yttrium
                 return os;
             }
 
+            //! optimized sorting
             inline void makeIncreasing()
             {
                 NetworkSort::Algo<SIZE,Type>::Increasing(*this);
             }
 
+            //! optimized co-sorting
             template <typename U>
             inline void makeIncreasing(Triplet<U> &other)
             {
@@ -55,19 +57,23 @@ namespace Yttrium
                 return (b<=a) && (b<=c);
             }
 
+            //! check increasing values
             inline bool isIncreasing() const {
                 return a<=b && b <= c;
             }
 
+            //! check decreasing values
             inline bool isDecreasing() const {
                 return c <= b && b <= a;
             }
 
+            //! check ordered value
             inline bool isOrdered() const
             {
                 return isIncreasing() || isDecreasing();
             }
 
+            //! helper
             inline size_t size() const noexcept { return SIZE; }
 
             //! in [1:3]
@@ -84,6 +90,7 @@ namespace Yttrium
                 return *(( &a - 1) + indx);
             }
 
+            //! load three next value from array
             template <typename U> inline
             void load(U *arr)
             {

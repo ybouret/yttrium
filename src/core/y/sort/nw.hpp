@@ -23,6 +23,7 @@ const Table &          table = Tables::CxxData[N]; \
 const unsigned         swaps = table.swaps;        \
 const unsigned * const start = table.index
 
+    //! loop CODE on given swaps
 #define Y_NW_LOOP(CODE)                  \
 /**/    const unsigned *I = start;       \
 /**/    for(unsigned i=swaps;i>0;--i)    \
@@ -32,12 +33,12 @@ const unsigned * const start = table.index
 /**/        CODE                         \
 /**/    }
 
-    //! core code executiong
+    //! core code execution
 #define Y_NW_IMPL_STATIC(CODE)           \
 /**/    Y_NW_FETCH_STATIC(N);            \
 /**/    Y_NW_LOOP(CODE)
 
-    //! core code executiong
+    //! core code execution
 #define Y_NW_IMPL_AD_HOC(N,CODE)         \
 /**/    assert(n>=Tables::MinSize);      \
 /**/    assert(n<=Tables::MaxSize);      \
@@ -128,6 +129,7 @@ const unsigned * const start = table.index
             }
         };
 
+        //! AdHoc algorithms
         template <typename T>
         struct Make
         {

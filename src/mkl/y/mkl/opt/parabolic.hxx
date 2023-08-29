@@ -158,8 +158,8 @@ void Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
         // create local evaluation
         //----------------------------------------------------------------------
         {
-            real_t * const _x = xx-1;
-            real_t * const _f = ff-1;
+            real_t * const _x = Memory::OutOfReach::Self(xx)-1;
+            real_t * const _f = Memory::OutOfReach::Self(ff)-1;
             NetworkSort::Algo<4,real_t>::Increasing(_x, _f);
         }
 

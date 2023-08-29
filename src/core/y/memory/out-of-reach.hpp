@@ -48,6 +48,12 @@ namespace Yttrium
                 return static_cast<T*>( Addr(source) );
             }
 
+            template <typename T> static inline
+            T *Self(T *source) noexcept
+            {
+                return static_cast<T*>( Addr(source) );
+            }
+
             //! force Haul
             template <typename T> static inline
             T *Shift(T *item, const ptrdiff_t n) noexcept
