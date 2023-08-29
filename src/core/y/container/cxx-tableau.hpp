@@ -37,7 +37,7 @@ namespace Yttrium
     //
     //__________________________________________________________________________
     template <typename T, typename ALLOCATOR>
-    class CxxArray :
+    class CxxTableau :
     public Memory::Wad<T,ALLOCATOR>,
     public Operating<T>,
     public Writable<T>,
@@ -62,16 +62,16 @@ namespace Yttrium
         //
         //______________________________________________________________________
 
-        //! setup with default [1:n] objects
-        inline explicit CxxArray(const size_t n) :
-        WadType(n), OpsType(this->workspace,n), Writable<T>(),
+        //! setup with default   objects
+        inline explicit CxxTableau(const size_t nmin) :
+        WadType(nmin), OpsType(this->workspace,nmin), Writable<T>(),
         cdata( static_cast<MutableType *>(this->workspace) ),
         entry( cdata-1 ),
-        count( n )
+        count( this->maxBlocks )
         {
         }
 
-        inline virtual ~CxxArray() noexcept {}
+        inline virtual ~CxxTableau() noexcept {}
 
         //______________________________________________________________________
         //
@@ -103,7 +103,7 @@ namespace Yttrium
         const size_t        count; //!< built objecct
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(CxxArray);
+        Y_DISABLE_COPY_AND_ASSIGN(CxxTableau);
         virtual ConstType *getBaseForward() const noexcept { return cdata; }
         virtual ConstType *getLastForward() const noexcept { return cdata+count; }
 

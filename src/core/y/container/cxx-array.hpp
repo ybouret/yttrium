@@ -26,6 +26,24 @@ namespace Yttrium
         protected:  explicit CxxArray() noexcept;       //!< setup
         public:     virtual ~CxxArray() noexcept;       //!< cleanup
         private: Y_DISABLE_COPY_AND_ASSIGN(CxxArray);
+        public:
+
+            template <bool> struct  GetSize;
+
+            template <>  struct GetSize<true> {
+                static inline size_t From(const size_t n, const Memory::Crux::Wad &) noexcept
+                {
+                    return n;
+                }
+            };
+
+            template <>  struct GetSize<false> {
+                static inline size_t From(const size_t, const Memory::Crux::Wad &w) noexcept
+                {
+                    return w.maxBlocks;
+                }
+            };
+
         };
     }
 
@@ -37,7 +55,7 @@ namespace Yttrium
     //
     //
     //__________________________________________________________________________
-    template <typename T, typename ALLOCATOR>
+    template <typename T, typename ALLOCATOR, bool UseAssigned = true >
     class CxxArray :
     public Memory::Wad<T,ALLOCATOR>,
     public Operating<T>,
@@ -52,9 +70,10 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        typedef Memory::Wad<T,ALLOCATOR> WadType; //!< alias
-        typedef Operating<T>             OpsType; //!< alias
-        Y_ARGS_EXPOSE(T,Type);                    //!< aliases
+        typedef Memory::Wad<T,ALLOCATOR>             WadType; //!< alias
+        typedef Operating<T>                         OpsType; //!< alias
+        typedef Core::CxxArray::GetSize<UseAssigned> GetSize; //!< decide size
+        Y_ARGS_EXPOSE(T,Type);                                //!< aliases
 
         //______________________________________________________________________
         //
@@ -63,12 +82,14 @@ namespace Yttrium
         //
         //______________________________________________________________________
 
-        //! setup with default [1:n] objects
+        //! setup with default [1:n/max] objects
         inline explicit CxxArray(const size_t n) :
-        WadType(n), OpsType(this->workspace,n), Writable<T>(),
+        WadType(n),
+        OpsType(this->workspace,GetSize::From(n,*this)),
+        Writable<T>(),
         cdata( static_cast<MutableType *>(this->workspace) ),
         entry( cdata-1 ),
-        count( n )
+        count( GetSize::From(n,*this) )
         {
         }
 
