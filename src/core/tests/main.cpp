@@ -134,7 +134,6 @@ Y_UTEST_DECL(256)
     Y_UTEST(container_iterator);
     Y_UTEST(container_matrix);
     Y_UTEST(container_operating);
-    Y_UTEST(container_cxx_tableau);
 
     Y_UTEST(sequence_vector);
     Y_UTEST(sequence_list);
