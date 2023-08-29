@@ -25,17 +25,31 @@ INITIALIZE:
         goto INITIALIZE;
     }
     assert(f.isLocalMinimum());
+    real_t w = Fabs<real_t>::Of(x.c-x.a);
     for(++it;it<nt;++it)
     {
         const size_t    i1 = it+1;
         const size_t    i2 = it+2;
         Triplet<real_t> tx = { xx[it], xx[i1], xx[i2] };
         Triplet<real_t> tf = { ff[it], ff[i1], ff[i2] };
-        if(tf.isLocalMinimum() && tf.b < f.b)
+        if( tf.isLocalMinimum() )
         {
-            // better
+            const real_t tw = Fabs<real_t>::Of(tx.c-tx.a);
+            switch( Sign::Of(tf.b,f.b) )
+            {
+                case Positive: assert(tf.b>f.b); continue;
+                case Negative: assert(tf.b<f.b); goto IMPROVE;
+                case __Zero__:
+                    if(tw>=w)
+                        continue;
+                    else
+                        break;
+            }
+
+        IMPROVE:
             Memory::OutOfReach::Copy(x,tx);
             Memory::OutOfReach::Copy(f,tf);
+            w=tw;
         }
     }
 }
