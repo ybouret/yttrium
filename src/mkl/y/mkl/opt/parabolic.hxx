@@ -1,21 +1,35 @@
 
 
 
-
+//! append fourth value
 static inline void append(const real_t xm, real_t xx[], real_t ff[], Function<real_t,real_t> &F)
 {
     ff[3] = F( xx[3] = xm );
 }
 
-static inline void makeTriplets(Triplet<real_t> &x,
-                                Triplet<real_t> &f,
-                                const real_t    xx[],
-                                const real_t    ff[],
-                                const size_t    nn)
+//------------------------------------------------------------------------------
+//
+//
+//  choose best triplets among selected points
+//
+//
+//------------------------------------------------------------------------------
+static inline
+void chooseTriplets(Triplet<real_t> & x,
+                    Triplet<real_t> & f,
+                    const real_t      xx[],
+                    const real_t      ff[],
+                    const size_t      nn)
 {
     assert(nn>=3);
-    const size_t nt = nn-2;
-    size_t       it = 0;
+    const size_t nt = nn-2; // number of triplets
+    size_t       it = 0;    // index of triplet in [0:nt-1]
+
+    //--------------------------------------------------------------------------
+    //
+    // MUST find a first local minimum
+    //
+    //--------------------------------------------------------------------------
 INITIALIZE:
     x.load(xx+it);
     f.load(ff+it);
@@ -24,6 +38,12 @@ INITIALIZE:
         if(++it>=nt) return throw Specific::Exception(CallSign,"no local minimum!");
         goto INITIALIZE;
     }
+
+    //--------------------------------------------------------------------------
+    //
+    // Loop over following triplets
+    //
+    //------------------------------------------------------------------------------
     assert(f.isLocalMinimum());
     real_t w = Fabs<real_t>::Of(x.c-x.a);
     for(++it;it<nt;++it)
@@ -32,6 +52,7 @@ INITIALIZE:
         const size_t    i2 = it+2;
         Triplet<real_t> tx = { xx[it], xx[i1], xx[i2] };
         Triplet<real_t> tf = { ff[it], ff[i1], ff[i2] };
+
         if( tf.isLocalMinimum() )
         {
             const real_t tw = Fabs<real_t>::Of(tx.c-tx.a);
@@ -40,10 +61,9 @@ INITIALIZE:
                 case Positive: assert(tf.b>f.b); continue;
                 case Negative: assert(tf.b<f.b); goto IMPROVE;
                 case __Zero__:
-                    if(tw>=w)
-                        continue;
-                    else
-                        break;
+                    if(tw<w) goto IMPROVE;
+                    continue;
+
             }
 
         IMPROVE:
@@ -69,6 +89,11 @@ void Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
     
     if(x.b<=x.a||x.c<=x.b)
     {
+        //----------------------------------------------------------------------
+        //
+        // value on one side: probe middle
+        //
+        //----------------------------------------------------------------------
         append(Clamp(x.a,half*(x.a+x.c),x.c),xx,ff,F);
     }
     else
@@ -81,7 +106,9 @@ void Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
         bool         used  = false;
         if(mu_a<=zero)
         {
+            //------------------------------------------------------------------
             // mu_a = 0
+            //------------------------------------------------------------------
             if(mu_c<=zero)
             {
                 used = true;
@@ -105,7 +132,9 @@ void Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
         }
         else
         {
+            //------------------------------------------------------------------
             // mu_a > 0
+            //------------------------------------------------------------------
             if(mu_c<=zero)
             {
                 // mu_a>0, mu_c=0
@@ -119,19 +148,25 @@ void Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
             }
         }
 
+        //----------------------------------------------------------------------
+        // append value if not used
+        //----------------------------------------------------------------------
         if(!used)
             append(Clamp(x.a,x.a+uopt*width,x.c),xx,ff,F);
 
+        //----------------------------------------------------------------------
+        // create local evaluation
+        //----------------------------------------------------------------------
         {
             real_t * const _x = xx-1;
             real_t * const _f = ff-1;
             NetworkSort::Algo<4,real_t>::Increasing(_x, _f);
         }
-        Core::Display(std::cerr << "x=",xx,4) << std::endl;
-        Core::Display(std::cerr << "f=",ff,4) << std::endl;
 
-        makeTriplets(x,f,xx,ff,4);
-
+        //----------------------------------------------------------------------
+        // and choose the final triplets
+        //----------------------------------------------------------------------
+        chooseTriplets(x,f,xx,ff,4);
 
     }
 
