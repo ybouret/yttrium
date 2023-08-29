@@ -11,7 +11,14 @@ namespace Yttrium
 {
     namespace MKL
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Bracketing minimum
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         struct Bracket
         {
@@ -29,6 +36,12 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
+            //! bracket withing f.a = F(x.a), f.c = F(x.c)
+            /**
+             - return true for regular local minimum
+             - return false for global minimum, on lowest side
+             */
             static bool Inside(Triplet<T>   &x,
                                Triplet<T>   &f,
                                FunctionType &F);

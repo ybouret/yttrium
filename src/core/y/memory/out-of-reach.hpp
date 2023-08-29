@@ -48,6 +48,7 @@ namespace Yttrium
                 return static_cast<T*>( Addr(source) );
             }
 
+            //! make out of reach local variable to avoid compiler check
             template <typename T> static inline
             T *Self(T *source) noexcept
             {
