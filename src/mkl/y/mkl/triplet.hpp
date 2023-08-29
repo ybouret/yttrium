@@ -84,6 +84,16 @@ namespace Yttrium
                 return *(( &a - 1) + indx);
             }
 
+            template <typename U> inline
+            void load(U *arr)
+            {
+                assert(0!=arr);
+                a = arr[0];
+                b = arr[1];
+                c = arr[2];
+            }
+
+
 
         };
 

@@ -21,7 +21,7 @@ Y_UTEST(opt_parabolic)
     Triplet<double> f = { F(x.a), F(x.b), F(x.c) };
 
     std::cerr << x << " -> " << f << std::endl;
-    for(int i=0;i<=2;++i)
+    for(int i=0;i<6;++i)
     {
         Parabolic<double>::Step(F,x,f);
         std::cerr << x << " -> " << f << std::endl;

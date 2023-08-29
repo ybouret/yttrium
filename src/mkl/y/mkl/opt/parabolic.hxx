@@ -1,66 +1,43 @@
 
 
 
-static inline void createTriplets(Triplet<real_t> &      x,
-                                  Triplet<real_t> &      f,
-                                  const real_t *   const xx,
-                                  const real_t *   const ff,
-                                  const unsigned * const id)
+
+static inline void append(const real_t xm, real_t xx[], real_t ff[], Function<real_t,real_t> &F)
 {
-    for(size_t j=3;j>0;--j)
-    {
-        const unsigned J = id[j]; assert(J<4);
-        x[j] = xx[J];
-        f[j] = ff[J];
-    }
-    //std::cerr << "built : " << x << " -> " << f << std::endl;
+    ff[3] = F( xx[3] = xm );
 }
 
-static inline void updateTriplets(Triplet<real_t>      &x,
-                                  Triplet<real_t>      &f,
-                                  const real_t * const xx,
-                                  const real_t * const ff)
+static inline void makeTriplets(Triplet<real_t> &x,
+                                Triplet<real_t> &f,
+                                const real_t    xx[],
+                                const real_t    ff[],
+                                const size_t    nn)
 {
-    static const unsigned indx[4][4] =
-    {
-        {0xff,0,1,2},
-        {0xff,0,1,3},
-        {0xff,0,2,3},
-        {0xff,1,2,3}
-    };
-
-    // find first local minimum
-    unsigned i = 0;
+    assert(nn>=3);
+    const size_t nt = nn-2;
+    size_t       it = 0;
 INITIALIZE:
-    createTriplets(x,f,xx,ff,indx[i]);
+    x.load(xx+it);
+    f.load(ff+it);
     if(!f.isLocalMinimum())
     {
-        ++i;
-        if(i>=4)
-        {
-            throw Specific::Exception(CallSign,"corrupted data!");
-        }
+        if(++it>=nt) return throw Specific::Exception(CallSign,"no local minimum!");
         goto INITIALIZE;
     }
-
-    // find better local minimum
-    for(++i;i<4;++i)
+    assert(f.isLocalMinimum());
+    for(++it;it<nt;++it)
     {
-        Triplet<real_t> tx,tf;
-        createTriplets(tx,tf,xx,ff,indx[i]);
-        if(!tf.isLocalMinimum()) continue;
-        if(tf.b<f.b)
+        const size_t    i1 = it+1;
+        const size_t    i2 = it+2;
+        Triplet<real_t> tx = { xx[it], xx[i1], xx[i2] };
+        Triplet<real_t> tf = { ff[it], ff[i1], ff[i2] };
+        if(tf.isLocalMinimum() && tf.b < f.b)
         {
-            // new winner
+            // better
             Memory::OutOfReach::Copy(x,tx);
             Memory::OutOfReach::Copy(f,tf);
         }
     }
-
-
-
-
-
 }
 
 template <>
@@ -73,80 +50,75 @@ void Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
     assert(x.isIncreasing());
     assert(f.isLocalMinimum());
 
-#if 0
+    real_t xx[4] = { x.a,x.b,x.c,zero };
+    real_t ff[4] = { f.a,f.b,f.c,zero };
+    
     if(x.b<=x.a||x.c<=x.b)
     {
-        const real_t x_m = Clamp(x.a,half*(x.a+x.c),x.c);
-        const real_t f_m = F(x_m);
-    }
-#endif
-
-    if(x.b<=x.a)
-    {
-        const real_t x_m   = Clamp(x.a,half*(x.a+x.c),x.c);
-        const real_t f_m   = F(x_m);
-        const real_t xx[4] = { x.a, x.b, x_m, x.c };
-        const real_t ff[4] = { f.a, f.b, f_m, f.c };
-        updateTriplets(x,f,xx,ff);
+        append(Clamp(x.a,half*(x.a+x.c),x.c),xx,ff,F);
     }
     else
     {
-        if(x.c <= x.b)
+        const real_t width =  x.c-x.a;
+        const real_t beta  = (x.b-x.a)/width;
+        const real_t mu_a  = Fabs<real_t>::Of(f.a - f.b);
+        const real_t mu_c  = Fabs<real_t>::Of(f.c - f.b);
+        real_t       uopt  = half;
+        bool         used  = false;
+        if(mu_a<=zero)
         {
-            const real_t x_m   = Clamp(x.a,half*(x.a+x.c),x.c);
-            const real_t f_m   = F(x_m);
-            const real_t xx[4] = { x.a, x_m, x.b, x.c };
-            const real_t ff[4] = { x.a, f_m, x.b, x.c };
-            updateTriplets(x,f,xx,ff);
-        }
-        else
-        {
-            assert(x.a<x.c);
-            const real_t width = x.c-x.a;
-            const real_t beta = (x.b-x.a)/width;
-            const real_t mu_a = Fabs<real_t>::Of(f.a - f.b);
-            const real_t mu_c = Fabs<real_t>::Of(f.c - f.b);
-            real_t       uopt = half;
-            if(mu_a<=zero)
+            // mu_a = 0
+            if(mu_c<=zero)
             {
-                if(mu_c<=zero)
+                used = true;
+                // mu_a=0, mu_c=0
+                if(beta<half)
                 {
-                    uopt = half;
+                    // probe between b and c
+                    append(Clamp(x.b,half*(x.b+x.c),x.c),xx,ff,F);
                 }
                 else
                 {
-                    uopt = half - (one-beta)*half;
+                    // probe between a and b
+                    append(Clamp(x.a,half*(x.a+x.b),x.b),xx,ff,F);
                 }
             }
             else
             {
-                //mu_a>0
-                if(mu_c<=zero)
-                {
-                    uopt = half + half * beta;
-                }
-                else
-                {
-                    const real_t omb = one - beta;
-                    uopt = half + half * beta * omb * (mu_a-mu_c)/(omb*mu_a+beta*mu_c);
-                }
+                // mu_a=0, mu_c>0
+                uopt = half - (one-beta)*half;
             }
-            //std::cerr << "uopt=" << uopt << std::endl;
-            uopt = Clamp(zero,uopt,one);
-            const real_t x_opt = Clamp(x.a,x.a+width*uopt,x.c);
-            const real_t f_opt = F(x_opt);
-            //std::cerr << "x_opt=" << x_opt << std::endl;
-            //std::cerr << "f_opt=" << f_opt << std::endl;
-
-            real_t xx[5] = {0,x.a,x.b,x.c,x_opt};
-            real_t ff[5] = {0,f.a,f.b,f.c,f_opt};
-            NetworkSort::Algo<4,real_t>::Increasing(xx,ff);
-            //Core::Display(std::cerr,xx+1,4) << std::endl;
-            //Core::Display(std::cerr,ff+1,4) << std::endl;
-            updateTriplets(x,f,xx+1,ff+1);
         }
+        else
+        {
+            // mu_a > 0
+            if(mu_c<=zero)
+            {
+                // mu_a>0, mu_c=0
+                uopt = half + half * beta;
+            }
+            else
+            {
+                // mu_a>0, mu_c>0
+                const real_t omb  = one - beta;
+                uopt = half + half * beta * omb * (mu_a-mu_c)/(omb*mu_a+beta*mu_c);
+            }
+        }
+
+        if(!used)
+            append(Clamp(x.a,x.a+uopt*width,x.c),xx,ff,F);
+
+        {
+            real_t * const _x = xx-1;
+            real_t * const _f = ff-1;
+            NetworkSort::Algo<4,real_t>::Increasing(_x, _f);
+        }
+        Core::Display(std::cerr << "x=",xx,4) << std::endl;
+        Core::Display(std::cerr << "f=",ff,4) << std::endl;
+
+        makeTriplets(x,f,xx,ff,4);
+
+
     }
-
-
 
 }
