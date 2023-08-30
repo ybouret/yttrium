@@ -4,4 +4,4 @@ add_subdirectory(zlib)
 add_subdirectory(jpeg)
 
 add_custom_target(ThirdParty 
-DEPENDS y_lua z-example)
+DEPENDS y_lua z-example y_test_jpeg)
