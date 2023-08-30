@@ -65,3 +65,10 @@ bool LU<real_t>::build( Matrix<real_t> &a)
     
     return code->build(a);
 }
+
+template<>
+void LU<real_t>:: solve(const Matrix<real_t> &a, Writable<real_t> &b)
+{
+    assert(0!=code);
+    code->solve(a,b);
+}

@@ -7,7 +7,7 @@
 #include "y/container/operating.hpp"
 #include "y/container/cxx-capacity.hpp"
 #include "y/container/iterator/writable-contiguous.hpp"
-
+#include "y/type/copy.hpp"
 
 namespace Yttrium
 {
@@ -68,7 +68,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
 
-        //! setup with default [1:n/max] objects
+        //! setup with default [1:[n|max]] objects
         inline explicit CxxArray(const size_t n) :
         WadType(n),
         OpsType(this->workspace,SetCapa::From(n,*this)),
@@ -78,6 +78,33 @@ namespace Yttrium
         count( SetCapa::From(n,*this) )
         {
         }
+
+        template <typename U>
+        inline explicit CxxArray(const Readable<U> &src,const AsCopy_ &) :
+        WadType(src.size()),
+        OpsType(this->workspace,src.size()),
+        cdata( static_cast<MutableType *>(this->workspace) ),
+        entry( cdata-1    ),
+        count( src.size() )
+        {
+            Writable<T> &self = *this;
+            for(size_t i=src.size();i>0;--i)
+                self[i] = src[i];
+        }
+
+        inline explicit CxxArray(const CxxArray &src) :
+        WadType(src.size()),
+        OpsType(this->workspace,src.size()),
+        cdata( static_cast<MutableType *>(this->workspace) ),
+        entry( cdata-1 ),
+        count( src.size() )
+        {
+            Writable<T> &self = *this;
+            for(size_t i=src.size();i>0;--i)
+                self[i] = src[i];
+        }
+
+
 
         inline virtual ~CxxArray() noexcept {}
 
@@ -111,7 +138,7 @@ namespace Yttrium
         const size_t        count; //!< built objecct
         
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(CxxArray);
+        Y_DISABLE_ASSIGN(CxxArray);
         virtual ConstType *getBaseForward() const noexcept { return cdata; }
         virtual ConstType *getLastForward() const noexcept { return cdata+count; }
 

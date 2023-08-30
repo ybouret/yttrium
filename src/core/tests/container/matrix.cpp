@@ -4,8 +4,7 @@
 #include "y/apex/natural.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/container/iterator/display-all.hpp"
-#include "y/string.hpp"
-#include "y/apex/natural.hpp"
+#include "../main.hpp"
 #include <cstring>
 
 using namespace Yttrium;
@@ -14,7 +13,7 @@ using namespace Yttrium;
 
 Y_UTEST(container_matrix)
 {
-
+    Random::Rand ran;
     int arr[4] = {1,2,3,4};
 
     LightArray<int> Arr(arr,4);
@@ -56,9 +55,13 @@ Y_UTEST(container_matrix)
     }
 
     {
-        Matrix<unsigned,Memory::Dyadic> u(5,3);
-        Matrix<apn,Memory::Pooled>      A(u,Identity<unsigned>);
-        std::cerr << A << std::endl;
+        Matrix<uint16_t,Memory::Dyadic> u(5,3);
+        FillMatrix(u,ran);
+        Matrix<apn,Memory::Pooled>      A(u,AsCopy,Identity<unsigned>);
+        std::cerr << "A0=" << A << std::endl;
+        A.swapRows(1,5);
+        std::cerr << "A1=" << A << std::endl;
+
     }
 
 

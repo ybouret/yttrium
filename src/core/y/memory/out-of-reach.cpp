@@ -53,9 +53,9 @@ namespace Yttrium
             uint8_t *q = static_cast<uint8_t *>(source);
 
             for(size_t i=0;i<size;++i) {
-                uint8_t t = p[i];
-                p[i]      = q[i];
-                q[i]      = t;
+                const uint8_t t = p[i];
+                p[i]            = q[i];
+                q[i]            = t;
             }
 
             return target;

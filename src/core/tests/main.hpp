@@ -10,6 +10,7 @@
 #include "y/mkl/v3d.hpp"
 #include "y/apex/rational.hpp"
 #include "y/string.hpp"
+#include "y/container/matrix.hpp"
 
 namespace Yttrium
 {
@@ -141,6 +142,13 @@ namespace Yttrium
             data[i] = Bring< typename WRITABLE::Type >::Get(ran);
     }
 
+    template <typename T>
+    inline void FillMatrix(Matrix<T>    &a,
+                           Random::Bits &ran)
+    {
+        LightArray<T> arr = a.asArray();
+        FillWritable(arr,ran);
+    }
 
 }
 

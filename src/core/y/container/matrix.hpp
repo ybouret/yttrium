@@ -12,6 +12,7 @@
 #include "y/container/implanted.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/type/utils.hpp"
+#include "y/type/copy.hpp"
 
 namespace Yttrium
 {
@@ -66,9 +67,18 @@ namespace Yttrium
             duplicate(other,Identity<T>);
         }
 
+        //! copy another
+
+        template <typename U,typename ALLOC> inline
+        Matrix(const Matrix<U,ALLOC> &other, const AsCopy_ &) :
+        Y_MATRIX( (other) )
+        {
+            duplicate(other,Identity<U>);
+        }
+
         //! copy transform
         template <typename U,typename ALLOC, typename TRANSFORM> inline
-        Matrix(const Matrix<U,ALLOC> &other, TRANSFORM &transform) :
+        Matrix(const Matrix<U,ALLOC> &other, const AsCopy_ &, TRANSFORM &transform) :
         Y_MATRIX( (other) )
         {
             duplicate(other,transform);
@@ -89,7 +99,6 @@ namespace Yttrium
         {
             duplicateTransposeOf(other,transform);
         }
-
 
 
 
@@ -158,6 +167,20 @@ namespace Yttrium
         {
             Matrix &self = *this;
             Memory::OutOfReach::Swap(&self[a][1], &self[b][1], code->stride );
+        }
+
+        //! assign
+        template <typename U>
+        Matrix<T> & assign( const Matrix<U> &other)
+        {
+            assert(hasSameMetricsThan(other));
+            for(size_t i=rows;i>0;--i)
+            {
+                Writable<T      > &tgt = (*this)[i];
+                const Readable<U> &src = other[i];
+                for(size_t j=cols;j>0;--j) tgt[j] = src[j];
+            }
+            return *this;
         }
 
 

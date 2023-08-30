@@ -119,11 +119,10 @@ namespace Yttrium
 
                     if (j != imax) {
                         a.swapRows(j,imax);
-                        Swap(scal[imax],scal[j]);
+                        //Swap(scal[imax],scal[j]);
                         dpos = !dpos;
-                        //scal[imax]=scal[j];
+                        scal[imax]=scal[j];
                     }
-
                     indx[j]=imax;
 
                     if( Fabs<Type>::Of(a[j][j]) <= s0 ) return false;
@@ -137,6 +136,43 @@ namespace Yttrium
 
                 return true;
             }
+
+            inline void solve(const Matrix<T> &a, Writable<T> &b)
+            {
+                assert(a.isSquare());
+                assert(a.rows>0);
+                assert(a.rows<=scal.size());
+                assert(a.rows<=indx.size());
+                assert(b.size()>=a.rows);
+
+
+                const size_t n  = a.rows;
+                size_t       ii = 0;
+                for(size_t i=1;i<=n;i++)
+                {
+                    const size_t ip  = indx[i];
+                    Type         sum = b[ip];
+                    b[ip]=b[i];
+                    if(ii>0)
+                    {
+                        for(size_t j=ii;j<=i-1;j++) sum -= a[i][j]*b[j];
+                    }
+                    else
+                    {
+                        if ( Fabs<Type>::Of(sum)>s0)
+                            ii=i;
+                    }
+                    b[i]=sum;
+                }
+
+                for(size_t i=n;i>=1;i--)
+                {
+                    Type sum=b[i];
+                    for(size_t j=i+1;j<=n;j++) sum -= a[i][j]*b[j];
+                    b[i]=sum/a[i][i];
+                }
+            }
+
 
             //__________________________________________________________________
             //
@@ -165,6 +201,11 @@ namespace Yttrium
 #undef  real_t
 #define real_t long double
 #include "lu.hxx"
+
+#undef  real_t
+#define real_t apq
+#include "lu.hxx"
+
 
 #undef  real_t
 #define real_t XReal<float>

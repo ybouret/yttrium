@@ -41,7 +41,8 @@ namespace Yttrium
             //______________________________________________________________________
             void ensure(const size_t nmin); //!< ensure memory for nmin x nmin matrices
             bool build(Matrix<T> &a);       //!< try to decompose matrix
-
+            void solve(const Matrix<T> &a, Writable<T> &b);
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(LU);
             class Code;
