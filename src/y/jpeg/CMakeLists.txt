@@ -53,6 +53,7 @@ COMMAND ${CMAKE_COMMAND} -E compare_files testimg.jpg testout.jpg
 COMMAND ${CMAKE_COMMAND} -E compare_files testimg.ppm testoutp.ppm
 COMMAND ${CMAKE_COMMAND} -E compare_files testimgp.jpg testoutp.jpg
 #COMMAND ${CMAKE_COMMAND} -E compare_files testorig.jpg testoutt.jpg
+COMMAND ${CMAKE_COMMAND} -E ${cmake_rm} -f testout*
 WORKING_DIRECTORY ${HERE}
 COMMENT "Testing JPEG"
 VERBATIM)
