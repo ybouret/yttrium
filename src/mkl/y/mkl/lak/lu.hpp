@@ -1,5 +1,3 @@
-
-
 //! \file
 
 #ifndef Y_MKL_LAK_LU_Included
