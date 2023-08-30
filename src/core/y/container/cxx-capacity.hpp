@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Container_CxxCapacity_Included
@@ -18,8 +17,8 @@ namespace Yttrium
     //__________________________________________________________________________
     enum CxxCapacity
     {
-        CxxRequiredCapacity, //!< user's request
-        CxxAcquiredCapacity  //!< from acquired memory
+        CxxRequiredCapacity = 0, //!< user's request
+        CxxAcquiredCapacity = 1  //!< from acquired memory
     };
 
     //__________________________________________________________________________
@@ -28,7 +27,7 @@ namespace Yttrium
     //! template prototype for selectro
     //
     //__________________________________________________________________________
-    template <enum CxxCapacity> struct CxxSetCapacity;
+    template <int> struct CxxSetCapacity;
 
     //__________________________________________________________________________
     //
