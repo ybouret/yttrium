@@ -226,6 +226,37 @@ namespace Yttrium
                 return dpos ? xmul.product() : -xmul.product();
             }
 
+            inline void ajdoint(Matrix<T> &adj, const Matrix<T> &a)
+            {
+                assert(a.isValid());
+                assert(a.isSquare());
+                assert(a.rows>=2);
+                assert(scal.size()>=a.rows-1);
+                assert(adj.hasSameMetricsThan(a));
+
+                const size_t n  = a.rows;
+                const size_t nm = n-1;
+                Matrix<T>    minor(nm,nm);
+                bool         positive = true;
+                for(size_t i=n;i>0;--i)
+                {
+                    for(size_t j=n;j>0;--j)
+                    {
+                        a.minor(minor,i,j);
+                        if(build(minor))
+                        {
+                            adj[j][i] = positive ? det(minor) : -det(minor);
+                        }
+                        else
+                        {
+                            adj[j][i] = 0;
+                        }
+                        positive = !positive;
+                    }
+                }
+                
+            }
+
 
             //__________________________________________________________________
             //

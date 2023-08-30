@@ -217,6 +217,31 @@ namespace Yttrium
             }
         }
 
+        template <typename U>
+        inline void minor(Matrix<U> &m, const size_t I, const size_t J) const
+        {
+            assert(I>=1); assert(I<=rows);
+            assert(J>=1); assert(J<=cols);
+            assert(m.rows==rows-1);
+            assert(m.cols==cols-1);
+            size_t ii=1;
+            for(size_t i=1;i<=rows;++i)
+            {
+                if(i==I) continue;
+                Writable<U>       &tgt = m[ii++];
+                const Readable<T> &src = (*this)[i];
+                size_t jj=1;
+                for(size_t j=1;j<=cols;++j)
+                {
+                    if(j==J) continue;
+                    tgt[jj++] = src[j];
+                }
+            }
+
+
+        }
+
+
     private:
         Y_DISABLE_ASSIGN(Matrix);
         class Code;

@@ -49,8 +49,13 @@ namespace
             I.ld(0);
             lu.invert(a,I);
             std::cerr << "I=" << I << std::endl;
+            
+            std::cerr << "detA=" << lu.determinant(a) << std::endl;
 
-            std::cerr << "detA=" << lu.det(a) << std::endl;
+            Matrix<T> adj(n,n);
+            lu.adjoint(adj,a0);
+            std::cerr << "a0=" << a0  << std::endl;
+            std::cerr << "aa=" << adj << std::endl;
 
 
         }
@@ -64,8 +69,12 @@ Y_UTEST(lak_lu)
     MKL::LU<double> lu(10);
 
     testLU<double>(ran);
+    testLU< XReal<float> >(ran);
 
 
+    testLU<apq>(ran);
+
+    testLU< Complex<long double> >(ran);
 
 }
 Y_UDONE()

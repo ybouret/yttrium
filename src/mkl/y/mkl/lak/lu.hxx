@@ -89,7 +89,7 @@ void LU<real_t>:: invert(const Matrix<real_t> &a, Matrix<real_t> &inv)
 }
 
 template <>
-real_t  LU<real_t>:: det(const Matrix<real_t> &a)
+real_t  LU<real_t>:: determinant(const Matrix<real_t> &a)
 {
     assert(0!=code);
     return code->det(a);
@@ -117,4 +117,23 @@ Antelope::Add<real_t> &  LU<real_t>:: xadd() noexcept
 {
     assert(0!=code);
     return code->xadd;
+}
+
+template <>
+void LU<real_t>:: adjoint(Matrix<real_t>       &adj,
+                          const Matrix<real_t> &a)
+{
+    assert(a.isSquare());
+    assert(a.isValid());
+    assert(adj.hasSameMetricsThan(a));
+    if(a.rows>1)
+    {
+        ensure(a.rows-1);
+        code->ajdoint(adj,a);
+    }
+    else
+    {
+        const real_t one(1);
+        adj[1][1] = one;
+    }
 }

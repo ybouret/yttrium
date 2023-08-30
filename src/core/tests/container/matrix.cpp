@@ -62,6 +62,16 @@ Y_UTEST(container_matrix)
         A.swapRows(1,5);
         std::cerr << "A1=" << A << std::endl;
 
+        Matrix<apq,Memory::Dyadic> M(A.rows-1,A.cols-1);
+        for(size_t i=1;i<=A.rows;++i)
+        {
+            for(size_t j=1;j<=A.cols;++j)
+            {
+                A.minor(M,i,j);
+                std::cerr << "M" << i << "_" << j << "=" << M << std::endl;
+            }
+        }
+
     }
 
 

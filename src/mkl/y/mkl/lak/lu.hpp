@@ -40,12 +40,13 @@ namespace Yttrium
             // Methods
             //
             //______________________________________________________________________
-            void ensure(const size_t nmin);                  //!< ensure memory for nmin x nmin matrices
-            bool build(Matrix<T> &a);                        //!< try to decompose matrix
-            void solve(const Matrix<T>  &a, Writable<T> &b); //!< in-place solving
-            void solve(const Matrix<T>  &a, Matrix<T>   &b); //!< in-place solve all columns
-            void invert(const Matrix<T> &a, Matrix<T>   &b); //!< b=a^-1, a is decomposed
-            T    det(const Matrix<T> &a);                    //!< determinant
+            void ensure(const size_t nmin);                   //!< ensure memory for nmin x nmin matrices
+            bool build(Matrix<T> &a);                         //!< try to decompose matrix
+            void solve(const Matrix<T>  &a, Writable<T> &b);  //!< in-place solving
+            void solve(const Matrix<T>  &a, Matrix<T>   &b);  //!< in-place solve all columns
+            void invert(const Matrix<T> &a, Matrix<T>   &b);  //!< b=a^-1, a is decomposed
+            T    determinant(const Matrix<T> &a);             //!< determinant
+            void adjoint(Matrix<T> &adj, const Matrix<T> &a); //!< adjoint
 
 
             template<typename LHS, typename RHS> inline
@@ -64,6 +65,7 @@ namespace Yttrium
 
             Antelope::Add<T> & xadd() noexcept; //!< is code was activated
             Antelope::Mul<T> & xmul() noexcept; //!< is code was activated
+
 
 
 
