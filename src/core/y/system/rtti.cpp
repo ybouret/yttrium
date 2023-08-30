@@ -250,18 +250,20 @@ namespace Yttrium
 }
 
 #include "y/apex/rational.hpp"
+#include "y/mkl/xreal.hpp"
+#include "y/mkl/complex.hpp"
 
 namespace Yttrium
 {
 
 #define Y_RTTI(NAME) do {       \
-update(typeid(NAME),#NAME); \
-std::cerr << getPrimary( typeid(NAME) ) << std::endl;\
+update(typeid(NAME),#NAME);     \
 } while(false)
 
 
     RTTIdb:: RTTIdb() : Singleton<RTTIdb>()
     {
+#if 0
         Y_RTTI(char);
         Y_RTTI(short);
         Y_RTTI(int);
@@ -278,7 +280,7 @@ std::cerr << getPrimary( typeid(NAME) ) << std::endl;\
         Y_RTTI(unsigned);
         Y_RTTI(unsigned long);
         Y_RTTI(unsigned long long);
-        
+
         Y_RTTI(uint8_t);
         Y_RTTI(uint16_t);
         Y_RTTI(uint32_t);
@@ -291,20 +293,28 @@ std::cerr << getPrimary( typeid(NAME) ) << std::endl;\
 
         Y_RTTI(ptrdiff_t);
         Y_RTTI(size_t);
-
+#endif
 
         Y_RTTI(float);
         Y_RTTI(double);
         Y_RTTI(long double);
         Y_RTTI(String);
 
-        Y_RTTI(Apex::Natural);
         Y_RTTI(apn);
-        Y_RTTI(Apex::Integer);
         Y_RTTI(apz);
-        Y_RTTI(Apex::Rational);
         Y_RTTI(apq);
 
+        Y_RTTI(XReal<float>);
+        Y_RTTI(XReal<double>);
+        Y_RTTI(XReal<long double>);
+
+        Y_RTTI(Complex<float>);
+        Y_RTTI(Complex<double>);
+        Y_RTTI(Complex<long double>);
+
+        Y_RTTI(Complex< XReal<float> >);
+        Y_RTTI(Complex< XReal<double> >);
+        Y_RTTI(Complex< XReal<long double> >);
 
     }
 }

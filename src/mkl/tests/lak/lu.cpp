@@ -5,7 +5,7 @@
 #include "y/utest/run.hpp"
 #include "../../../core/tests/main.hpp"
 #include "y/container/cxx-array.hpp"
-#include <typeinfo>
+#include "y/system/rtti.hpp"
 
 using namespace Yttrium;
 using namespace MKL;
@@ -14,40 +14,45 @@ using namespace MKL;
 namespace
 {
     template <typename T>
-    static inline void testLU(Random::Bits &ran)
+    static inline void testLU(Random::Bits &ran, const size_t nmax=3)
     {
-
+        std::cerr << "---------- Testing LU< " << TypeName<T>() << " > ----------" << std::endl;
         MKL::LU<T> lu;
 
-        for(size_t n=1;n<=3;++n)
+        for(size_t n=1;n<=nmax;++n)
         {
-            std::cerr << std::endl;
-            std::cerr << "-- n = " << n << " --" << std::endl;
+            std::cerr << "\tn = " << n << std::endl;
             Matrix<T> a(n,n);
             Matrix<T> a0(n,n);
 
-        FILL:
-            FillMatrix(a,ran);
-            //std::cerr << "a=" << a << std::endl;
-            a0.assign(a);
-            if(!lu.build(a)) goto FILL;
-
-            CxxArray<T,Memory::Dyadic> r(n); FillWritable(r,ran); // rhs
-            CxxArray<T,Memory::Dyadic> b(r); lu.solve(a,b);       // b = a^-1 * r
-            CxxArray<T,Memory::Dyadic> p(n); a0(p,b);             // p = a*b = r
-
-            typename ScalarFor<T>::Type delta = 0, zero = 0;
-            for(size_t i=n;i>0;--i)
+            for(size_t loop=0;loop<3;++loop)
             {
-                delta += Fabs<T>::Of(p[i]-r[i]);
-            }
-            delta /= n;
-            std::cerr << "delta=" << delta << std::endl;
+            FILL:
+                FillMatrix(a,ran);
+                a0.assign(a);
+                if(!lu.build(a)) goto FILL;
 
-            if( typeid(T) == typeid(apq) )
-            {
-                Y_CHECK(delta<=zero);
+                CxxArray<T,Memory::Dyadic> r(n); FillWritable(r,ran); // rhs
+                CxxArray<T,Memory::Dyadic> b(r); lu.solve(a,b);       // b = a^-1 * r
+                CxxArray<T,Memory::Dyadic> p(n); a0(p,b);             // p = a*b = r
+
+                typename ScalarFor<T>::Type delta = 0, zero = 0;
+                for(size_t i=n;i>0;--i)
+                {
+                    delta += Fabs<T>::Of(p[i]-r[i]);
+                }
+                delta /= n;
+
+                if( typeid(T) == typeid(apq) )
+                {
+                    Y_CHECK(delta<=zero);
+                }
+                else
+                {
+                    std::cerr << "delta=" << delta << std::endl;
+                }
             }
+            std::cerr << std::endl;
 
 #if 0
             Matrix<T> I(n,n);
@@ -79,13 +84,24 @@ Y_UTEST(lak_lu)
     MKL::LU<double> lu0;
     MKL::LU<double> lu(10);
 
+    testLU<float>(ran);
     testLU<double>(ran);
-    testLU< XReal<float> >(ran);
+    testLU<long double>(ran);
 
+    testLU< XReal<float>       >(ran);
+    testLU< XReal<double>      >(ran);
+    testLU< XReal<long double> >(ran);
 
-    testLU<apq>(ran);
-
+    testLU< Complex<float>       >(ran);
+    testLU< Complex<double>      >(ran);
     testLU< Complex<long double> >(ran);
+
+    testLU< Complex< XReal<float> >       >(ran);
+   // testLU< Complex< XReal<double> >      >(ran);
+   // testLU< Complex< XReal<long double> > >(ran);
+
+   // testLU<apq>(ran);
+
 
 }
 Y_UDONE()

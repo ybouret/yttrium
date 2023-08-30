@@ -319,7 +319,9 @@ namespace Yttrium
 #define real_t Complex<long double>
 #include "lu.hxx"
 
-
+#undef  real_t
+#define real_t Complex< XReal<float> >
+#include "lu.hxx"
     }
 
 }
