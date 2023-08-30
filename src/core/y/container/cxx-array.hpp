@@ -12,6 +12,30 @@
 namespace Yttrium
 {
 
+    enum CxxCapacity
+    {
+        CxxRequiredCapacity, //!< user's request
+        CxxAcquiredCapacity  //!< from acquired memory
+    };
+
+    template <enum CxxCapacity> struct CxxSetCapacity;
+
+    template <> struct CxxSetCapacity<CxxRequiredCapacity>
+    {
+        static size_t From(const size_t n, const Memory::Crux::Wad &) noexcept
+        {
+            return n;
+        }
+    };
+
+    template <> struct CxxSetCapacity<CxxAcquiredCapacity>
+    {
+        static size_t From(const size_t, const Memory::Crux::Wad &w) noexcept
+        {
+            return w.maxBlocks;
+        }
+    };
+
     namespace Core
     {
         //______________________________________________________________________
@@ -30,20 +54,22 @@ namespace Yttrium
 
             template <bool> struct  GetSize;
 
-            template <>  struct GetSize<true> {
-                static inline size_t From(const size_t n, const Memory::Crux::Wad &) noexcept
-                {
-                    return n;
-                }
-            };
 
-            template <>  struct GetSize<false> {
-                static inline size_t From(const size_t, const Memory::Crux::Wad &w) noexcept
-                {
-                    return w.maxBlocks;
-                }
-            };
 
+        };
+
+        template <>  struct CxxArray:: GetSize<true> {
+            static inline size_t From(const size_t n, const Memory::Crux::Wad &) noexcept
+            {
+                return n;
+            }
+        };
+
+        template <>  struct CxxArray:: GetSize<false> {
+            static inline size_t From(const size_t, const Memory::Crux::Wad &w) noexcept
+            {
+                return w.maxBlocks;
+            }
         };
     }
 
@@ -72,7 +98,7 @@ namespace Yttrium
         //______________________________________________________________________
         typedef Memory::Wad<T,ALLOCATOR>             WadType; //!< alias
         typedef Operating<T>                         OpsType; //!< alias
-        typedef Core::CxxArray::GetSize<UseAssigned> GetSize; //!< decide size
+        typedef Core::CxxArray::GetSize<UseAssigned> GSZ; //!< decide size
         Y_ARGS_EXPOSE(T,Type);                                //!< aliases
 
         //______________________________________________________________________
@@ -85,11 +111,11 @@ namespace Yttrium
         //! setup with default [1:n/max] objects
         inline explicit CxxArray(const size_t n) :
         WadType(n),
-        OpsType(this->workspace,GetSize::From(n,*this)),
+        OpsType(this->workspace,GSZ::From(n,*this)),
         Writable<T>(),
         cdata( static_cast<MutableType *>(this->workspace) ),
         entry( cdata-1 ),
-        count( GetSize::From(n,*this) )
+        count( GSZ::From(n,*this) )
         {
         }
 
