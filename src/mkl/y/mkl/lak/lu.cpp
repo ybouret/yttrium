@@ -58,6 +58,13 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
+            //__________________________________________________________________
+            //
+            //
+            //! Decomposition
+            //
+            //__________________________________________________________________
             bool build(Matrix<T> &a)
             {
                 assert(a.isSquare());
@@ -142,6 +149,12 @@ namespace Yttrium
                 return true;
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // In place solve
+            //
+            //__________________________________________________________________
             inline void solve(const Matrix<T> &a, Writable<T> &b)
             {
                 assert(a.isSquare());
@@ -178,7 +191,12 @@ namespace Yttrium
                 }
             }
 
+            //__________________________________________________________________
+            //
+            //
             //! solve all columns of b
+            //
+            //__________________________________________________________________
             inline void solve(const Matrix<T> &a, Matrix<T> &b)
             {
                 assert(a.isSquare());
@@ -196,7 +214,12 @@ namespace Yttrium
                 }
             }
 
+            //__________________________________________________________________
+            //
+            //
             //! invert of a
+            //
+            //__________________________________________________________________
             inline void invert(const Matrix<T> &a,
                                Matrix<T>       &b)
             {
@@ -215,6 +238,12 @@ namespace Yttrium
                 }
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // Determinant of a
+            //
+            //__________________________________________________________________
             inline T det(const Matrix<T> &a)
             {
                 assert(a.isValid());
@@ -226,6 +255,12 @@ namespace Yttrium
                 return dpos ? xmul.product() : -xmul.product();
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // tranpose(Comatrix)
+            //
+            //__________________________________________________________________
             inline void ajdoint(Matrix<T> &adj, const Matrix<T> &a)
             {
                 assert(a.isValid());
@@ -237,7 +272,6 @@ namespace Yttrium
                 const size_t n  = a.rows;
                 const size_t nm = n-1;
                 Matrix<T>    minor(nm,nm);
-                bool         positive = true;
                 for(size_t i=n;i>0;--i)
                 {
                     for(size_t j=n;j>0;--j)
@@ -245,13 +279,13 @@ namespace Yttrium
                         a.minor(minor,i,j);
                         if(build(minor))
                         {
+                            const bool positive = 0 == (0x01 & (i+j));
                             adj[j][i] = positive ? det(minor) : -det(minor);
                         }
                         else
                         {
                             adj[j][i] = 0;
                         }
-                        positive = !positive;
                     }
                 }
                 
@@ -322,6 +356,16 @@ namespace Yttrium
 #undef  real_t
 #define real_t Complex< XReal<float> >
 #include "lu.hxx"
+
+#undef  real_t
+#define real_t Complex< XReal<double> >
+#include "lu.hxx"
+
+
+#undef  real_t
+#define real_t Complex< XReal<long double> >
+#include "lu.hxx"
+
     }
 
 }

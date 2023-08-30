@@ -14,7 +14,7 @@ using namespace MKL;
 namespace
 {
     template <typename T>
-    static inline void testLU(Random::Bits &ran, const size_t nmax=3)
+    static inline void testLU(Random::Bits &ran, const size_t nmax=10)
     {
         std::cerr << "---------- Testing LU< " << TypeName<T>() << " > ----------" << std::endl;
         MKL::LU<T> lu;
@@ -60,30 +60,111 @@ namespace
                 lu.solve(a,M);
                 Matrix<T> P(n,n);
                 a0.mmul(P,M);
-                std::cerr << "P=" << P << std::endl;
+                typename ScalarFor<T>::Type delta = 0, zero = 0;
+                for(size_t i=1;i<=n;++i)
+                {
+                    for(size_t j=1;j<=n;++j)
+                    {
+                        if(i==j)
+                        {
+                            const T one(1);
+                            delta += Fabs<T>::Of(P[i][j]-one);
+                        }
+                        else
+                        {
+                            delta += Fabs<T>::Of(P[i][j]);
+                        }
+
+                    }
+                }
+                delta /= (n*n);
+                std::cerr << "manual  : ";
+                if( typeid(T) == typeid(apq) )
+                {
+                    Y_CHECK(delta<=zero);
+                }
+                else
+                {
+                    std::cerr << "delta=" << delta << std::endl;
+                }
+            }
+
+            {
+                // auto inversion
+                Matrix<T> I(n,n);
+                lu.invert(a,I);
+                Matrix<T> P(n,n);
+                a0.mmul(P,I);
+                typename ScalarFor<T>::Type delta = 0, zero = 0;
+                for(size_t i=1;i<=n;++i)
+                {
+                    for(size_t j=1;j<=n;++j)
+                    {
+                        if(i==j)
+                        {
+                            const T one(1);
+                            delta += Fabs<T>::Of(P[i][j]-one);
+                        }
+                        else
+                        {
+                            delta += Fabs<T>::Of(P[i][j]);
+                        }
+
+                    }
+                }
+                delta /= (n*n);
+                std::cerr << "invert  : ";
+                if( typeid(T) == typeid(apq) )
+                {
+                    Y_CHECK(delta<=zero);
+                }
+                else
+                {
+                    std::cerr << "delta=" << delta << std::endl;
+                }
+            }
+
+            {
+                // adjoint and determinant
+                const T    detA = lu.determinant(a);
+                Matrix<T> adjA(n,n);
+                lu.adjoint(adjA,a0);
+
+                Matrix<T> P(n,n);
+                a0.mmul(P,adjA);
+                P /= detA;
+                typename ScalarFor<T>::Type delta = 0, zero = 0;
+                for(size_t i=1;i<=n;++i)
+                {
+                    for(size_t j=1;j<=n;++j)
+                    {
+                        if(i==j)
+                        {
+                            const T one(1);
+                            delta += Fabs<T>::Of(P[i][j]-one);
+                        }
+                        else
+                        {
+                            delta += Fabs<T>::Of(P[i][j]);
+                        }
+
+                    }
+                }
+                delta /= (n*n);
+                std::cerr << "adjoint : ";
+                if( typeid(T) == typeid(apq) )
+                {
+                    Y_CHECK(delta<=zero);
+                }
+                else
+                {
+                    std::cerr << "delta=" << delta << std::endl;
+                }
+
             }
 
             std::cerr << std::endl;
 
-#if 0
-            Matrix<T> I(n,n);
-            for(size_t i=1;i<=n;++i) I[i][i] = T(1);
-
-            std::cerr << "I=" << I << std::endl;
-            lu.solve(a,I);
-            std::cerr << "I=" << I << std::endl;
-
-            I.ld(0);
-            lu.invert(a,I);
-            std::cerr << "I=" << I << std::endl;
-            
-            std::cerr << "detA=" << lu.determinant(a) << std::endl;
-
-            Matrix<T> adj(n,n);
-            lu.adjoint(adj,a0);
-            std::cerr << "a0=" << a0  << std::endl;
-            std::cerr << "aa=" << adj << std::endl;
-#endif
 
         }
     }
@@ -92,8 +173,6 @@ namespace
 Y_UTEST(lak_lu)
 {
     Random::Rand    ran;
-    MKL::LU<double> lu0;
-    MKL::LU<double> lu(10);
 
     testLU<float>(ran);
     testLU<double>(ran);
@@ -108,11 +187,11 @@ Y_UTEST(lak_lu)
     testLU< Complex<long double> >(ran);
 
     testLU< Complex< XReal<float> >       >(ran);
-   // testLU< Complex< XReal<double> >      >(ran);
-   // testLU< Complex< XReal<long double> > >(ran);
+    testLU< Complex< XReal<double> >      >(ran);
+    testLU< Complex< XReal<long double> > >(ran);
 
-    testLU<apq>(ran);
-
+    testLU<apq>(ran,3);
+    
 
 }
 Y_UDONE()

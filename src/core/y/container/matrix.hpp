@@ -137,6 +137,7 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
+
         inline virtual size_t       size()     const noexcept { return rows;     } //!< rows
         inline virtual const char * callSign() const noexcept { return CallSign; } //!< CallSign
 
@@ -183,7 +184,10 @@ namespace Yttrium
             return *this;
         }
 
+        //______________________________________________________________________
+        //
         //! multiply LHS = M * RHS
+        //______________________________________________________________________
         template <typename RES, typename RHS> inline
         void mul(RES &res, RHS &rhs) const
         {
@@ -198,7 +202,10 @@ namespace Yttrium
             }
         }
 
+        //______________________________________________________________________
+        //
         //! multiply with xadd
+        //______________________________________________________________________
         template <typename RES, typename RHS> inline
         void mul(RES &res, RHS &rhs, MKL::Antelope::Add<T> &xadd) const
         {
@@ -217,6 +224,11 @@ namespace Yttrium
             }
         }
 
+
+        //______________________________________________________________________
+        //
+        //! matrix multiplication
+        //______________________________________________________________________
         template <typename U, typename V> inline
         void mmul(Matrix<U> &res, const Matrix<V> &rhs) const
         {
@@ -237,7 +249,20 @@ namespace Yttrium
                     res_i[j] = sum;
                 }
             }
+        }
 
+        template <typename RHS>
+        Matrix<T> & operator*=(RHS &rhs)
+        {
+            for(size_t i=0;i<items;++i) base[i] *= rhs;
+            return *this;
+        }
+
+        template <typename RHS>
+        Matrix<T> & operator/=(RHS &rhs)
+        {
+            for(size_t i=0;i<items;++i) base[i] /= rhs;
+            return *this;
         }
 
 
