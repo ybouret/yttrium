@@ -350,6 +350,12 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
+                //! free
+                inline void free() noexcept
+                {
+                    my.free();
+                }
+
                 //! free and reserve memory
                 inline void make(const size_t n)
                 {
@@ -539,10 +545,16 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
+                //! free
+                inline void free() noexcept
+                {
+                    clearState();
+                }
+
                 //! cleaning and read for any number
                 inline void make(size_t)
                 {
-                    clear();
+                    clearState();
                 }
 
                 //! insert args
@@ -585,7 +597,7 @@ namespace Yttrium
                 inline T product()
                 {
                     const T res = state;
-                    clear();
+                    clearState();
                     return res;
                 }
 
@@ -602,7 +614,7 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(MulProxy);
-                inline void clear() { state=0; empty=true; }
+                inline void clearState() { state=0; empty=true; }
                 bool empty;
                 T    state;
             };

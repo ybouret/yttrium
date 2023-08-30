@@ -72,3 +72,25 @@ void LU<real_t>:: solve(const Matrix<real_t> &a, Writable<real_t> &b)
     assert(0!=code);
     code->solve(a,b);
 }
+
+
+template<>
+void LU<real_t>:: solve(const Matrix<real_t> &a, Matrix<real_t> &b)
+{
+    assert(0!=code);
+    code->solve(a,b);
+}
+
+template<>
+void LU<real_t>:: invert(const Matrix<real_t> &a, Matrix<real_t> &inv)
+{
+    assert(0!=code);
+    code->invert(a,inv);
+}
+
+template <>
+real_t  LU<real_t>:: det(const Matrix<real_t> &a)
+{
+    assert(0!=code);
+    return code->det(a);
+}

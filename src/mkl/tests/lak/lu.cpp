@@ -35,6 +35,21 @@ namespace
             lu.solve(a,b);
             std::cerr << "b=" << b << std::endl;
 
+            CxxArray<T,Memory::Dyadic> p(n);
+            a0(p,b);
+            std::cerr << "p=" << p << std::endl;
+
+            Matrix<T> I(n,n);
+            for(size_t i=1;i<=n;++i) I[i][i] = T(1);
+
+            std::cerr << "I=" << I << std::endl;
+            lu.solve(a,I);
+            std::cerr << "I=" << I << std::endl;
+
+            I.ld(0);
+            lu.invert(a,I);
+            std::cerr << "I=" << I << std::endl;
+
 
 
         }

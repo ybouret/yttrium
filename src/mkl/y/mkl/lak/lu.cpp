@@ -1,6 +1,6 @@
 
 #include "y/mkl/lak/lu.hpp"
-#include "y/mkl/api.hpp"
+#include "y/mkl/antelope/mul.hpp"
 #include "y/type/utils.hpp"
 #include "y/container/cxx-array.hpp"
 
@@ -25,6 +25,7 @@ namespace Yttrium
             typedef Memory::Dyadic              MemMgr;  //!< memory model
             typedef CxxArray<Scalar,MemMgr>     Scalars; //!< requested size
             typedef CxxArray<size_t,MemMgr>     Indices; //!< requested size
+            typedef CxxArray<Type,MemMgr>       Types;   //!< request size, helper
 
             //__________________________________________________________________
             //
@@ -35,14 +36,18 @@ namespace Yttrium
             explicit Code(const size_t nmin) :
             s0(0),
             s1(1),
+            t0(0),
             t1(1),
             dpos(true),
             scal(nmin),
-            indx(nmin)
+            indx(nmin),
+            aux(nmin),
+            xmul()
             {
                 assert(nmin>0);
                 assert(scal.size() == nmin);
                 assert(indx.size() == nmin);
+                assert(aux.size()  == nmin);
             }
 
             virtual ~Code() noexcept {}
@@ -173,6 +178,54 @@ namespace Yttrium
                 }
             }
 
+            //! solve all columns of b
+            inline void solve(const Matrix<T> &a, Matrix<T> &b)
+            {
+                assert(a.isSquare());
+                assert(a.rows>0);
+                assert(a.rows<=scal.size());
+                assert(b.rows == a.rows);
+                const size_t n = a.rows;
+                for(size_t j=b.cols;j>0;--j)
+                {
+                    for(size_t k=n;k>0;--k)
+                        aux[k] = b[k][j];
+                    solve(a,aux);
+                    for(size_t k=n;k>0;--k)
+                        b[k][j] = aux[k];
+                }
+            }
+
+            //! invert of a
+            inline void invert(const Matrix<T> &a,
+                               Matrix<T>       &b)
+            {
+                assert(a.isValid());
+                assert(a.isSquare());
+                assert(a.rows>0);
+                assert(a.rows<=scal.size());
+                assert(a.hasSameMetricsThan(b));
+                const size_t n=a.rows;
+                for(size_t j=n;j>0;--j)
+                {
+                    aux.ld(t0);
+                    aux[j]=t1;
+                    solve(a,aux);
+                    for(size_t i=n;i>0;--i) b[i][j] = aux[i];
+                }
+            }
+
+            inline T det(const Matrix<T> &a)
+            {
+                assert(a.isValid());
+                assert(a.isSquare());
+                assert(a.rows>0);
+                assert(a.rows<=scal.size());
+                xmul.free();
+                for(size_t i=a.rows;i>0;--i) xmul << a[i][i];
+                return dpos ? xmul.product() : -xmul.product();
+            }
+
 
             //__________________________________________________________________
             //
@@ -180,12 +233,15 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const Scalar s0;     //!< Scalar(0)
-            const Scalar s1;     //!< Scalar(1)
-            const Type   t1;     //!< Type(1)
-            bool         dpos;   //!< sign of determinant is positive
-            Scalars      scal;   //!< scaling factors
-            Indices      indx;   //!< swap indices
+            const Scalar     s0;     //!< Scalar(0)
+            const Scalar     s1;     //!< Scalar(1)
+            const Type       t0;     //!< Type(0);
+            const Type       t1;     //!< Type(1)
+            bool             dpos;   //!< sign of determinant is positive
+            Scalars          scal;   //!< scaling factors
+            Indices          indx;   //!< swap indices
+            Types            aux;    //!< auxiliary vector
+            Antelope::Mul<T> xmul;   //!< multiplier
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);

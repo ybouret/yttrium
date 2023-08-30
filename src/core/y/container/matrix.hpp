@@ -13,6 +13,7 @@
 #include "y/ptr/auto.hpp"
 #include "y/type/utils.hpp"
 #include "y/type/copy.hpp"
+#include "y/mkl/antelope/add.hpp"
 
 namespace Yttrium
 {
@@ -170,8 +171,8 @@ namespace Yttrium
         }
 
         //! assign
-        template <typename U>
-        Matrix<T> & assign( const Matrix<U> &other)
+        template <typename U> inline
+        Matrix<T> & assign(const Matrix<U> &other)
         {
             assert(hasSameMetricsThan(other));
             for(size_t i=rows;i>0;--i)
@@ -183,6 +184,20 @@ namespace Yttrium
             return *this;
         }
 
+        //! multiply
+        template <typename LHS, typename RHS> inline
+        void operator()(LHS &lhs, RHS &rhs) const
+        {
+            assert(lhs.size()>=rows);
+            assert(rhs.size()>=cols);
+            for(size_t i=rows;i>0;--i)
+            {
+                Type sum(0);
+                const Readable<T> &r = row[i];
+                for(size_t j=cols;j>0;--j) sum += r[j] * rhs[j];
+                lhs[i] = sum;
+            }
+        }
 
     private:
         Y_DISABLE_ASSIGN(Matrix);

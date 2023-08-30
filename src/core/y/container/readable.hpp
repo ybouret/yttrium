@@ -71,6 +71,13 @@ namespace Yttrium
             return os;
         }
 
+        //______________________________________________________________________
+        //
+        //
+        // Comparisons
+        //
+        //______________________________________________________________________
+
         //! object-wise comparison
         inline friend bool operator==(const Readable<T> &lhs, const Readable<T> &rhs) noexcept
         {

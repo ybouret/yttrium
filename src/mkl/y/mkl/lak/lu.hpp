@@ -39,10 +39,13 @@ namespace Yttrium
             // Methods
             //
             //______________________________________________________________________
-            void ensure(const size_t nmin); //!< ensure memory for nmin x nmin matrices
-            bool build(Matrix<T> &a);       //!< try to decompose matrix
-            void solve(const Matrix<T> &a, Writable<T> &b);
-            
+            void ensure(const size_t nmin);                  //!< ensure memory for nmin x nmin matrices
+            bool build(Matrix<T> &a);                        //!< try to decompose matrix
+            void solve(const Matrix<T>  &a, Writable<T> &b); //!< in-place solving
+            void solve(const Matrix<T>  &a, Matrix<T>   &b); //!< in-place solve all columns
+            void invert(const Matrix<T> &a, Matrix<T>   &b); //!< b=a^-1, a is decomposed
+            T    det(const Matrix<T> &a);                    //!< determinant
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(LU);
             class Code;

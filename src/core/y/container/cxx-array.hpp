@@ -30,8 +30,23 @@ namespace Yttrium
         private: Y_DISABLE_COPY_AND_ASSIGN(CxxArray);
         };
 
-
     }
+
+    //__________________________________________________________________________
+    //
+    //
+    //! helper to setup CxxArray
+    //
+    //__________________________________________________________________________
+#define Y_CxxArray_Ctor(CAPACITY)                     \
+OpsType(this->workspace,CAPACITY),                    \
+Writable<T>(),                                        \
+WritableContiguous<T>(),                              \
+Core::CxxArray(),                                     \
+cdata( static_cast<MutableType *>(this->workspace) ), \
+entry( cdata-1    ),\
+count( CAPACITY   )
+    
 
     //__________________________________________________________________________
     //
@@ -71,41 +86,33 @@ namespace Yttrium
         //! setup with default [1:[n|max]] objects
         inline explicit CxxArray(const size_t n) :
         WadType(n),
-        OpsType(this->workspace,SetCapa::From(n,*this)),
-        Writable<T>(),
-        cdata( static_cast<MutableType *>(this->workspace) ),
-        entry( cdata-1 ),
-        count( SetCapa::From(n,*this) )
+        Y_CxxArray_Ctor(SetCapa::From(n,*this))
         {
         }
 
-        template <typename U>
-        inline explicit CxxArray(const Readable<U> &src,const AsCopy_ &) :
+        //! setup from any compatible
+        template <typename SOURCE>
+        inline explicit CxxArray(SOURCE &src,const AsCopy_ &) :
         WadType(src.size()),
-        OpsType(this->workspace,src.size()),
-        cdata( static_cast<MutableType *>(this->workspace) ),
-        entry( cdata-1    ),
-        count( src.size() )
+        Y_CxxArray_Ctor(src.size())
         {
             Writable<T> &self = *this;
             for(size_t i=src.size();i>0;--i)
                 self[i] = src[i];
         }
 
+        //! copy
         inline explicit CxxArray(const CxxArray &src) :
+        Identifiable(), Collection(),
         WadType(src.size()),
-        OpsType(this->workspace,src.size()),
-        cdata( static_cast<MutableType *>(this->workspace) ),
-        entry( cdata-1 ),
-        count( src.size() )
+        Y_CxxArray_Ctor(src.size())
         {
             Writable<T> &self = *this;
             for(size_t i=src.size();i>0;--i)
                 self[i] = src[i];
         }
 
-
-
+        //! cleanup
         inline virtual ~CxxArray() noexcept {}
 
         //______________________________________________________________________

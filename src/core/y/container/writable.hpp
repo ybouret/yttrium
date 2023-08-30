@@ -27,7 +27,7 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        Y_ARGS_EXPOSE(T,Type); //!< aliases
+        Y_ARGS_DECL(T,Type); //!< aliases
 
         //______________________________________________________________________
         //
@@ -48,7 +48,12 @@ namespace Yttrium
         //______________________________________________________________________
         virtual Type & operator[](const size_t) noexcept = 0; //!< access in [1..size()]
 
-
+        //! load same value(s)
+        inline void ld(ParamType sameValue)
+        {
+            Writable<T> &self = *this;
+            for(size_t i=self.size();i>0;--i) self[i] = sameValue;
+        }
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Writable);
