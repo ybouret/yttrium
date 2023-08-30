@@ -217,6 +217,7 @@ namespace Yttrium
             }
         }
 
+        //! get minor(I,J)
         template <typename U>
         inline void minor(Matrix<U> &m, const size_t I, const size_t J) const
         {

@@ -48,7 +48,7 @@ namespace Yttrium
             T    determinant(const Matrix<T> &a);             //!< determinant
             void adjoint(Matrix<T> &adj, const Matrix<T> &a); //!< adjoint
 
-
+            //! generix lhs = a^-1 * rhs, post build
             template<typename LHS, typename RHS> inline
             void solve(LHS &lhs, const Matrix<T> &a, RHS &rhs)
             {
@@ -63,8 +63,8 @@ namespace Yttrium
                 for(size_t i=n;i>0;--i) lhs[i] = aux[i];
             }
 
-            Antelope::Add<T> & xadd() noexcept; //!< is code was activated
-            Antelope::Mul<T> & xmul() noexcept; //!< is code was activated
+            Antelope::Add<T> & xadd() noexcept; //!< if code was activated
+            Antelope::Mul<T> & xmul() noexcept; //!< if code was activated
 
 
 

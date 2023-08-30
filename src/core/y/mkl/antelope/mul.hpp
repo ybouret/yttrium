@@ -508,8 +508,10 @@ namespace Yttrium
                 inline virtual ~MulProxy() noexcept {} //!< cleanup
 
             protected:
-                inline explicit MulProxy() noexcept : MulList<T>() {} //!< setup
+                //! setup empty
+                inline explicit MulProxy() noexcept : MulList<T>() {}
 
+                //! setup with capacity
                 inline explicit MulProxy(const size_t n) : MulList<T>()
                 {
                     this->make(n);
@@ -615,8 +617,8 @@ namespace Yttrium
                 inline virtual ~MulProxy() noexcept {}
 
             protected:
-                inline explicit MulProxy() : empty(true), state(0) {}
-                inline explicit MulProxy(const size_t) : empty(true), state(0) {}
+                inline explicit MulProxy() : empty(true), state(0) {}             //!< setup
+                inline explicit MulProxy(const size_t) : empty(true), state(0) {} //!< setup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(MulProxy);
