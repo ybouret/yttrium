@@ -52,6 +52,13 @@ namespace
                     std::cerr << "delta=" << delta << std::endl;
                 }
             }
+
+            {
+                Matrix<T> M(n,n);
+                for(size_t i=1;i<=n;++i) M[i][i] = T(1);
+                lu.solve(a,M);
+            }
+
             std::cerr << std::endl;
 
 #if 0
