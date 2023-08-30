@@ -102,3 +102,19 @@ Writable<real_t> &  LU<real_t>:: getAux() noexcept
     assert(0!=code);
     return code->aux;
 }
+
+
+template <>
+Antelope::Mul<real_t> &  LU<real_t>:: xmul() noexcept
+{
+    assert(0!=code);
+    return code->xmul;
+}
+
+
+template <>
+Antelope::Add<real_t> &  LU<real_t>:: xadd() noexcept
+{
+    assert(0!=code);
+    return code->xadd;
+}

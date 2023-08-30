@@ -69,7 +69,6 @@ namespace Yttrium
         }
 
         //! copy another
-
         template <typename U,typename ALLOC> inline
         Matrix(const Matrix<U,ALLOC> &other, const AsCopy_ &) :
         Y_MATRIX( (other) )
@@ -196,6 +195,25 @@ namespace Yttrium
                 const Readable<T> &r = row[i];
                 for(size_t j=cols;j>0;--j) sum += r[j] * rhs[j];
                 lhs[i] = sum;
+            }
+        }
+
+        //! multiply with xadd
+        template <typename LHS, typename RHS> inline
+        void operator()(LHS &lhs, RHS &rhs, MKL::Antelope::Add<T> &xadd) const
+        {
+            assert(lhs.size()>=rows);
+            assert(rhs.size()>=cols);
+            for(size_t i=rows;i>0;--i)
+            {
+                xadd.free();
+                const Readable<T> &r = row[i];
+                for(size_t j=cols;j>0;--j)
+                {
+                    ConstType p = r[j] * rhs[j];
+                    xadd << p;
+                }
+                lhs[i] = xadd.sum();;
             }
         }
 

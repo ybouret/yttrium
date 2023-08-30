@@ -6,6 +6,7 @@
 #define Y_MKL_LAK_LU_Included 1
 
 #include "y/container/matrix.hpp"
+#include "y/mkl/antelope/mul.hpp"
 
 namespace Yttrium
 {
@@ -60,6 +61,10 @@ namespace Yttrium
                 solve(a,aux);
                 for(size_t i=n;i>0;--i) lhs[i] = aux[i];
             }
+
+            Antelope::Add<T> & xadd() noexcept; //!< is code was activated
+            Antelope::Mul<T> & xmul() noexcept; //!< is code was activated
+
 
 
         private:

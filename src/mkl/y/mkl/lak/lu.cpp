@@ -1,6 +1,5 @@
 
 #include "y/mkl/lak/lu.hpp"
-#include "y/mkl/antelope/mul.hpp"
 #include "y/type/utils.hpp"
 #include "y/container/cxx-array.hpp"
 
@@ -42,7 +41,8 @@ namespace Yttrium
             scal(nmin),
             indx(nmin),
             aux(nmin),
-            xmul()
+            xadd(nmin),
+            xmul(nmin)
             {
                 assert(nmin>0);
                 assert(scal.size() == nmin);
@@ -241,7 +241,8 @@ namespace Yttrium
             Scalars          scal;   //!< scaling factors
             Indices          indx;   //!< swap indices
             Types            aux;    //!< auxiliary vector
-            Antelope::Mul<T> xmul;   //!< multiplier
+            Antelope::Add<T> xadd;   //!< add
+            Antelope::Mul<T> xmul;   //!< mul
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);

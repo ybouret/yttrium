@@ -510,6 +510,11 @@ namespace Yttrium
             protected:
                 inline explicit MulProxy() noexcept : MulList<T>() {} //!< setup
 
+                inline explicit MulProxy(const size_t n) : MulList<T>()
+                {
+                    this->make(n);
+                }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(MulProxy);
             };
@@ -611,6 +616,7 @@ namespace Yttrium
 
             protected:
                 inline explicit MulProxy() : empty(true), state(0) {}
+                inline explicit MulProxy(const size_t) : empty(true), state(0) {}
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(MulProxy);
@@ -655,8 +661,9 @@ namespace Yttrium
                 // C++
                 //
                 //__________________________________________________________
-                explicit Mul() : CodeType() {} //!< setup
-                virtual ~Mul() noexcept {}     //!< cleanup
+                explicit Mul() : CodeType() {}                //!< setup
+                explicit Mul(const size_t n) : CodeType(n) {} //!< setup
+                virtual ~Mul() noexcept {}                    //!< cleanup
 
 
             private:
