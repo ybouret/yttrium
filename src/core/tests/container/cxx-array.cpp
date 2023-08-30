@@ -21,7 +21,7 @@ Y_UTEST(container_cxx_array)
 
     Iterating::DisplayAll::Of(arr);
 
-    CxxArray<int,Memory::Pooled,false> brr(5);
+    CxxArray<int,Memory::Pooled,CxxAcquiredCapacity> brr(5);
     std::cerr << "size: 5->" << brr.size() << std::endl;
 
 }

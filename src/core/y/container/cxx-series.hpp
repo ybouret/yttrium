@@ -3,7 +3,7 @@
 #ifndef Y_Cxx_Series_Included
 #define Y_Cxx_Series_Included 1
 
-#include "y/memory/wad.hpp"
+#include "y/container/cxx-capacity.hpp"
 #include "y/memory/solitary/workspace.hpp"
 #include "y/container/writable.hpp"
 #include "y/sequence/interface.hpp"
@@ -24,10 +24,10 @@ namespace Yttrium
         //______________________________________________________________________
         class CxxSeries
         {
-        public:     static const char * const CallSign;  //!< "CxxSeries"
-        protected:  explicit CxxSeries() noexcept;       //!< setup
-        public:     virtual ~CxxSeries() noexcept;       //!< cleanup
-        private: Y_DISABLE_COPY_AND_ASSIGN(CxxSeries);
+        public:    static const char * const CallSign;  //!< "CxxSeries"
+        protected: explicit CxxSeries() noexcept;       //!< setup
+        public:    virtual ~CxxSeries() noexcept;       //!< cleanup
+        private:   Y_DISABLE_COPY_AND_ASSIGN(CxxSeries);
         };
     }
 
@@ -39,7 +39,7 @@ namespace Yttrium
     //
     //
     //__________________________________________________________________________
-    template <typename T, typename ALLOCATOR>
+    template <typename T, typename ALLOCATOR, CxxCapacity CAPA = CxxRequiredCapacity >
     class CxxSeries :
     public Memory::Wad<T,ALLOCATOR>,
     public Writable<T>,
@@ -56,8 +56,9 @@ namespace Yttrium
         //
         //______________________________________________________________________
         typedef Memory::Wad<T,ALLOCATOR> WadType; //!< alias
-        Y_ARGS_DECL(T,Type);                    //!< aliases
         typedef Memory::OutOfReach       MemOps;  //!< alias
+        typedef CxxSetCapacity<CAPA>     SetCapa; //!< decide capacity
+        Y_ARGS_DECL(T,Type);                      //!< aliases
 
         //______________________________________________________________________
         //
@@ -75,7 +76,7 @@ namespace Yttrium
         cdata( static_cast<MutableType *>(this->workspace)),
         entry( cdata-1 ),
         count( 0 ),
-        total( n )
+        total( SetCapa::From(n,*this) )
         {
         }
 

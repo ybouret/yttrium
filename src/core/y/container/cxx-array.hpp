@@ -1,40 +1,18 @@
 //! \file
-//! 
+
 #ifndef Y_Container_CxxArray_Included
 #define Y_Container_CxxArray_Included 1
 
 #include "y/container/writable.hpp"
 #include "y/container/operating.hpp"
-#include "y/memory/wad.hpp"
+#include "y/container/cxx-capacity.hpp"
 #include "y/container/iterator/writable-contiguous.hpp"
 
 
 namespace Yttrium
 {
 
-    enum CxxCapacity
-    {
-        CxxRequiredCapacity, //!< user's request
-        CxxAcquiredCapacity  //!< from acquired memory
-    };
 
-    template <enum CxxCapacity> struct CxxSetCapacity;
-
-    template <> struct CxxSetCapacity<CxxRequiredCapacity>
-    {
-        static size_t From(const size_t n, const Memory::Crux::Wad &) noexcept
-        {
-            return n;
-        }
-    };
-
-    template <> struct CxxSetCapacity<CxxAcquiredCapacity>
-    {
-        static size_t From(const size_t, const Memory::Crux::Wad &w) noexcept
-        {
-            return w.maxBlocks;
-        }
-    };
 
     namespace Core
     {
@@ -50,27 +28,9 @@ namespace Yttrium
         protected:  explicit CxxArray() noexcept;       //!< setup
         public:     virtual ~CxxArray() noexcept;       //!< cleanup
         private: Y_DISABLE_COPY_AND_ASSIGN(CxxArray);
-        public:
-
-            template <bool> struct  GetSize;
-
-
-
         };
 
-        template <>  struct CxxArray:: GetSize<true> {
-            static inline size_t From(const size_t n, const Memory::Crux::Wad &) noexcept
-            {
-                return n;
-            }
-        };
 
-        template <>  struct CxxArray:: GetSize<false> {
-            static inline size_t From(const size_t, const Memory::Crux::Wad &w) noexcept
-            {
-                return w.maxBlocks;
-            }
-        };
     }
 
     //__________________________________________________________________________
@@ -81,7 +41,7 @@ namespace Yttrium
     //
     //
     //__________________________________________________________________________
-    template <typename T, typename ALLOCATOR, bool UseAssigned = true >
+    template <typename T, typename ALLOCATOR, CxxCapacity CAPA = CxxRequiredCapacity >
     class CxxArray :
     public Memory::Wad<T,ALLOCATOR>,
     public Operating<T>,
@@ -98,7 +58,7 @@ namespace Yttrium
         //______________________________________________________________________
         typedef Memory::Wad<T,ALLOCATOR>             WadType; //!< alias
         typedef Operating<T>                         OpsType; //!< alias
-        typedef Core::CxxArray::GetSize<UseAssigned> GSZ; //!< decide size
+        typedef CxxSetCapacity<CAPA>                 SetCapa; //!< decide capacity
         Y_ARGS_EXPOSE(T,Type);                                //!< aliases
 
         //______________________________________________________________________
@@ -111,11 +71,11 @@ namespace Yttrium
         //! setup with default [1:n/max] objects
         inline explicit CxxArray(const size_t n) :
         WadType(n),
-        OpsType(this->workspace,GSZ::From(n,*this)),
+        OpsType(this->workspace,SetCapa::From(n,*this)),
         Writable<T>(),
         cdata( static_cast<MutableType *>(this->workspace) ),
         entry( cdata-1 ),
-        count( GSZ::From(n,*this) )
+        count( SetCapa::From(n,*this) )
         {
         }
 
