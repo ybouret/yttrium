@@ -94,3 +94,11 @@ real_t  LU<real_t>:: det(const Matrix<real_t> &a)
     assert(0!=code);
     return code->det(a);
 }
+
+
+template <>
+Writable<real_t> &  LU<real_t>:: getAux() noexcept
+{
+    assert(0!=code);
+    return code->aux;
+}

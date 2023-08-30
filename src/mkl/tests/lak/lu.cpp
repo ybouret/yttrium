@@ -17,7 +17,7 @@ namespace
     {
 
         MKL::LU<T> lu;
-        for(size_t n=1;n<=2;++n)
+        for(size_t n=1;n<=3;++n)
         {
 
             Matrix<T> a(n,n);
@@ -50,6 +50,7 @@ namespace
             lu.invert(a,I);
             std::cerr << "I=" << I << std::endl;
 
+            std::cerr << "detA=" << lu.det(a) << std::endl;
 
 
         }
