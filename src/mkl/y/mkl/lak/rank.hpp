@@ -14,8 +14,17 @@ namespace Yttrium
 
         struct Rank
         {
-            static size_t Compute(Matrix<apq> &M);
-            
+            //! compute rank of Q, destroyed
+            static size_t Compute(Matrix<apq> &Q);
+
+            template <typename T> static inline
+            size_t Of(const Matrix<T> &M)
+            {
+                Matrix<apq> Q(M,AsCopy);
+                return Compute(Q);
+            }
+
+
         };
 
     }
