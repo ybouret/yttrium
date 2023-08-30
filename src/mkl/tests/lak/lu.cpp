@@ -34,7 +34,7 @@ namespace
 
                 CxxArray<T,Memory::Dyadic> r(n); FillWritable(r,ran); // rhs
                 CxxArray<T,Memory::Dyadic> b(r); lu.solve(a,b);       // b = a^-1 * r
-                CxxArray<T,Memory::Dyadic> p(n); a0(p,b);             // p = a*b = r
+                CxxArray<T,Memory::Dyadic> p(n); a0.mul(p,b);         // p = a*b = r
 
                 typename ScalarFor<T>::Type delta = 0, zero = 0;
                 for(size_t i=n;i>0;--i)
@@ -54,9 +54,13 @@ namespace
             }
 
             {
+                // manual inversion
                 Matrix<T> M(n,n);
                 for(size_t i=1;i<=n;++i) M[i][i] = T(1);
                 lu.solve(a,M);
+                Matrix<T> P(n,n);
+                a0.mmul(P,M);
+                std::cerr << "P=" << P << std::endl;
             }
 
             std::cerr << std::endl;
@@ -107,7 +111,7 @@ Y_UTEST(lak_lu)
    // testLU< Complex< XReal<double> >      >(ran);
    // testLU< Complex< XReal<long double> > >(ran);
 
-   // testLU<apq>(ran);
+    testLU<apq>(ran);
 
 
 }

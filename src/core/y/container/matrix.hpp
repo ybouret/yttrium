@@ -183,26 +183,26 @@ namespace Yttrium
             return *this;
         }
 
-        //! multiply
-        template <typename LHS, typename RHS> inline
-        void operator()(LHS &lhs, RHS &rhs) const
+        //! multiply LHS = M * RHS
+        template <typename RES, typename RHS> inline
+        void mul(RES &res, RHS &rhs) const
         {
-            assert(lhs.size()>=rows);
+            assert(res.size()>=rows);
             assert(rhs.size()>=cols);
             for(size_t i=rows;i>0;--i)
             {
                 Type sum(0);
                 const Readable<T> &r = row[i];
                 for(size_t j=cols;j>0;--j) sum += r[j] * rhs[j];
-                lhs[i] = sum;
+                res[i] = sum;
             }
         }
 
         //! multiply with xadd
-        template <typename LHS, typename RHS> inline
-        void operator()(LHS &lhs, RHS &rhs, MKL::Antelope::Add<T> &xadd) const
+        template <typename RES, typename RHS> inline
+        void mul(RES &res, RHS &rhs, MKL::Antelope::Add<T> &xadd) const
         {
-            assert(lhs.size()>=rows);
+            assert(res.size()>=rows);
             assert(rhs.size()>=cols);
             for(size_t i=rows;i>0;--i)
             {
@@ -213,9 +213,35 @@ namespace Yttrium
                     ConstType p = r[j] * rhs[j];
                     xadd << p;
                 }
-                lhs[i] = xadd.sum();;
+                res[i] = xadd.sum();;
             }
         }
+
+        template <typename U, typename V> inline
+        void mmul(Matrix<U> &res, const Matrix<V> &rhs) const
+        {
+            assert(res.rows == rows);
+            assert(res.cols == rhs.cols);
+            const size_t nc = res.cols;
+            const size_t nk = cols;
+            for(size_t i=res.rows;i>0;--i)
+            {
+                Writable<U> &res_i = res[i];
+                for(size_t j=nc;j>0;--j)
+                {
+                    T sum(0);
+                    for(size_t k=nk;k>0;--k)
+                    {
+                        sum += (*this)[i][k] * rhs[k][j];
+                    }
+                    res_i[j] = sum;
+                }
+            }
+
+        }
+
+
+
 
         //! get minor(I,J)
         template <typename U>
