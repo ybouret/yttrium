@@ -46,6 +46,13 @@ COMMAND y_cjpeg -dct int -outfile testout.jpg testimg.ppm
 COMMAND y_djpeg -dct int -ppm -outfile testoutp.ppm testprog.jpg
 COMMAND y_cjpeg -dct int -progressive -opt -outfile testoutp.jpg testimg.ppm
 COMMAND y_jpegtran -outfile testoutt.jpg testprog.jpg
+COMMAND ${CMAKE_COMMAND} -E compare_files testimg.ppm testout.ppm
+COMMAND ${CMAKE_COMMAND} -E compare_files testimg.gif testout.gif
+COMMAND ${CMAKE_COMMAND} -E compare_files testimg.bmp testout.bmp
+COMMAND ${CMAKE_COMMAND} -E compare_files testimg.jpg testout.jpg
+COMMAND ${CMAKE_COMMAND} -E compare_files testimg.ppm testoutp.ppm
+COMMAND ${CMAKE_COMMAND} -E compare_files testimgp.jpg testoutp.jpg
+#COMMAND ${CMAKE_COMMAND} -E compare_files testorig.jpg testoutt.jpg
 WORKING_DIRECTORY ${HERE}
 COMMENT "Testing JPEG"
 VERBATIM)
