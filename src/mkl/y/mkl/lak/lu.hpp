@@ -11,15 +11,36 @@ namespace Yttrium
 {
     namespace MKL
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! LU decomposition/solving by Crout's algorithm
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class LU
         {
         public:
-            explicit LU() noexcept;
-            virtual ~LU() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit LU() noexcept;         //!< start empty
+            explicit LU(const size_t nmin); //!< start with capacity
+            virtual ~LU() noexcept;         //!< cleanup
 
-            bool build(Matrix<T> &a);
+            //______________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //______________________________________________________________________
+            void ensure(const size_t nmin); //!< ensure memory for nmin x nmin matrices
+            bool build(Matrix<T> &a);       //!< try to decompose matrix
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(LU);

@@ -14,6 +14,10 @@ using namespace MKL;
 Y_UTEST(lak_lu)
 {
     
+    MKL::LU<double> lu0;
+    MKL::LU<double> lu(10);
+
+
 
 
 }

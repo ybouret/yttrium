@@ -153,6 +153,13 @@ namespace Yttrium
             for(size_t i=0;i<items;++i) base[i] = args;
         }
 
+        //! swap rows
+        inline void swapRows(const size_t a, const size_t b) noexcept
+        {
+            Matrix &self = *this;
+            Memory::OutOfReach::Swap(&self[a][1], &self[b][1], code->stride );
+        }
+
 
     private:
         Y_DISABLE_ASSIGN(Matrix);
@@ -194,6 +201,7 @@ namespace Yttrium
         public:
             explicit Code(Memory::Embed emb[], const size_t nc) :
             Memory::Embedded(emb,NUM_FIELDS,ALLOCATOR::Instance()),
+            stride(nc*sizeof(T)),
             dataOps(emb[DATA_INDEX]),
             rowInfo(emb[DATA_INDEX].address(),nc),
             rowsOps(emb[ROWS_INDEX],rowInfo)
@@ -202,6 +210,7 @@ namespace Yttrium
 
             inline virtual ~Code() noexcept { }
 
+            const size_t             stride;
         private:
             Implanted<T>             dataOps;
             Core::MatrixRow::Info    rowInfo;
