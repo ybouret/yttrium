@@ -49,11 +49,11 @@ namespace Yttrium
 
                 //! setup from compatible array
                 template <typename ARRAY>
-                inline Vector(ARRAY &arr, const AsCopy_ &):
+                inline Vector(const CopyOf_ &, ARRAY &arr):
                 Object(), VectorType(arr.size()), norm2(0), next(0), prev(0)
                 {
                     assert(arr.size()>0);
-                    QArrayType wksp(arr,AsCopy);
+                    QArrayType wksp(CopyOf,arr);
                     update(wksp);
                 }
 
@@ -79,7 +79,7 @@ namespace Yttrium
                 template <typename ARRAY>
                 inline bool isColinear(ARRAY &arr) const
                 {
-                    QArrayType v(arr,AsCopy);
+                    QArrayType v(CopyOf,arr);
                     return !computeOrtho(v);
                 }
 

@@ -9,8 +9,8 @@
 namespace Yttrium
 {
 
-    //! use of AsCopy[_]
-    Y_SHALLOW_DECL(AsCopy);
+    //! use of CopyOf[_]
+    Y_SHALLOW_DECL(CopyOf);
 
 }
 

@@ -57,7 +57,7 @@ Y_UTEST(container_matrix)
     {
         Matrix<uint16_t,Memory::Dyadic> u(5,3);
         FillMatrix(u,ran);
-        Matrix<apn,Memory::Pooled>      A(u,AsCopy,Identity<unsigned>);
+        Matrix<apn,Memory::Pooled>      A(CopyOf,u,Identity<unsigned>);
         std::cerr << "A0=" << A << std::endl;
         A.swapRows(1,5);
         std::cerr << "A1=" << A << std::endl;
@@ -71,6 +71,10 @@ Y_UTEST(container_matrix)
                 std::cerr << "M" << i << "_" << j << "=" << M << std::endl;
             }
         }
+
+        Matrix<apq,Memory::Pooled> At(TransposeOf,A);
+        std::cerr << "A="  << A << std::endl;
+        std::cerr << "At=" << At << std::endl;
 
     }
 

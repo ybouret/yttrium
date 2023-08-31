@@ -3,7 +3,7 @@
 
 namespace Yttrium
 {
-    Y_SHALLOW_IMPL(AsCopy);
+    Y_SHALLOW_IMPL(CopyOf);
     
 }
 

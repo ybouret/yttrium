@@ -28,7 +28,7 @@ namespace Yttrium
             template <typename T> static inline
             size_t Of(const Matrix<T> &M)
             {
-                Matrix<apq> Q(M,AsCopy);
+                Matrix<apq> Q(CopyOf,M);
                 return Compute(Q);
             }
 

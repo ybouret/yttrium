@@ -92,7 +92,7 @@ count( CAPACITY   )
 
         //! setup from any compatible
         template <typename SOURCE>
-        inline explicit CxxArray(SOURCE &src,const AsCopy_ &) :
+        inline explicit CxxArray(const CopyOf_ &, SOURCE &src) :
         WadType(src.size()),
         Y_CxxArray_Ctor(src.size())
         {

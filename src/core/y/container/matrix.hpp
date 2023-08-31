@@ -70,7 +70,7 @@ namespace Yttrium
 
         //! copy another
         template <typename U,typename ALLOC> inline
-        Matrix(const Matrix<U,ALLOC> &other, const AsCopy_ &) :
+        Matrix(const CopyOf_ &, const Matrix<U,ALLOC> &other) :
         Y_MATRIX( (other) )
         {
             duplicate(other,Identity<U>);
@@ -78,7 +78,7 @@ namespace Yttrium
 
         //! copy transform
         template <typename U,typename ALLOC, typename TRANSFORM> inline
-        Matrix(const Matrix<U,ALLOC> &other, const AsCopy_ &, TRANSFORM &transform) :
+        Matrix(const CopyOf_ &, const Matrix<U,ALLOC> &other, TRANSFORM &transform) :
         Y_MATRIX( (other) )
         {
             duplicate(other,transform);
@@ -86,7 +86,7 @@ namespace Yttrium
 
         //! copy transposed, using identity
         template <typename U,typename ALLOC> inline
-        Matrix(const Matrix<U,ALLOC> &other, const TransposeOf_ &_) :
+        Matrix( const TransposeOf_ &_, const Matrix<U,ALLOC> &other) :
         Y_MATRIX( (other,_) )
         {
             duplicateTransposeOf(other,Identity<U>);
@@ -94,7 +94,7 @@ namespace Yttrium
 
         //! copy transposed, using transform
         template <typename U,typename ALLOC,typename TRANSFORM> inline
-        Matrix(const Matrix<U,ALLOC> &other, const TransposeOf_ &_, TRANSFORM &transform) :
+        Matrix(const TransposeOf_ &_, const Matrix<U,ALLOC> &other,  TRANSFORM &transform) :
         Y_MATRIX( (other,_) )
         {
             duplicateTransposeOf(other,transform);
@@ -234,22 +234,46 @@ namespace Yttrium
         {
             assert(res.rows == rows);
             assert(res.cols == rhs.cols);
-            const size_t nc = res.cols;
-            const size_t nk = cols;
             for(size_t i=res.rows;i>0;--i)
             {
-                Writable<U> &res_i = res[i];
-                for(size_t j=nc;j>0;--j)
+                for(size_t j=res.cols;j>0;--j)
                 {
                     T sum(0);
-                    for(size_t k=nk;k>0;--k)
+                    for(size_t k=cols;k>0;--k)
                     {
                         sum += (*this)[i][k] * rhs[k][j];
                     }
-                    res_i[j] = sum;
+                    res[i][j] = sum;
                 }
             }
         }
+
+        //______________________________________________________________________
+        //
+        //! matrix multiplication
+        //______________________________________________________________________
+        template <typename U, typename V> inline
+        void mmul(Matrix<U> &res, const TransposeOf_ &,const Matrix<V> &rhs) const
+        {
+            assert(res.rows == rows);
+            assert(res.cols == rhs.rows);
+            assert(cols     == rhs.cols);
+            for(size_t i=rows;i>0;--i)
+            {
+                for(size_t j=res.cols;j>0;--j)
+                {
+                    T sum(0);
+                    for(size_t k=cols;k>0;--k)
+                    {
+                        sum += (*this)[i][k] * rhs[j][k];
+                    }
+                    res[i][j] = sum;
+                }
+            }
+        }
+
+
+
 
         //______________________________________________________________________
         //
@@ -380,8 +404,26 @@ namespace Yttrium
             LightArray<T>       target = asArray();   assert(target.size()==items);
             for(size_t i=items;i>0;--i)
                 target[i] = transform(source[i]);
-
         }
+
+        // duplicateTranspse
+        template <typename U, typename ALLOC, typename TRANSFORM>
+        inline void duplicateTransposeOf(const Matrix<U,ALLOC> &M, TRANSFORM &transform)
+        {
+            assert(hasSameMetricsThanTransposeOf(M));
+            create();
+            Matrix &A = *this;
+            for(size_t i=rows;i>0;--i)
+            {
+                for(size_t j=cols;j>0;--j)
+                {
+                    A[i][j] = transform(M[j][i]);
+                }
+            }
+        }
+
+
+
     };
 
 }
