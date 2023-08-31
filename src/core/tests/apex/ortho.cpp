@@ -1,8 +1,9 @@
 
-#include "y/apex/ortho/vector.hpp"
+#include "y/apex/ortho/family.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/random/bits.hpp"
+#include "y/container/light-array.hpp"
 
 #include <cstdio>
 
@@ -13,20 +14,24 @@ Y_UTEST(apex_ortho)
 {
     Random::Rand ran;
 
-    Vector<int> coef;
-    coef << -1 << 2 << 0;
+    Apex::Ortho::Family F(3);
 
-    Apex::Ortho::Vector V(coef,AsCopy);
+    while(F.size<F.dimension)
+    {
+        int arr[3] = {0,0,0};
+        for(size_t i=0;i<3;++i) arr[i] = ran.in<int>(-5,5);
+        const LightArray<int> V(arr,3);
+        if( F.wouldAccept(V) )
+        {
+            const Apex::Ortho::Vector &B = F.expand();
+            std::cerr << "V=" << V << std::endl;
+            std::cerr << "B=" << B << std::endl;
+        }
+    }
+    std::cerr << "F=" << F << std::endl;
 
-    std::cerr << "coef=" << coef << std::endl;
-    std::cerr << "V   =" << V << std::endl;
 
-    
-    Vector<apq> tmp(V.size(),0);
-    tmp[1] = 1;
-    std::cerr << tmp << std::endl;
-    V.computeOrtho(tmp);
-    std::cerr << "Q=" << tmp << std::endl;
+
 
 }
 Y_UDONE()

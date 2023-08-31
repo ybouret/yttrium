@@ -39,6 +39,18 @@ namespace Yttrium
                 assert(dims>0);
             }
 
+            Vector:: Vector(QArrayType &wksp) :
+            Object(),
+            VectorType( wksp.size() ),
+            norm2(0),
+            next(0),
+            prev(0)
+            {
+                update(wksp);
+            }
+
+
+
             void  Vector:: clear() noexcept
             {
                 for(size_t i=size();i>0;--i)
@@ -62,7 +74,7 @@ namespace Yttrium
                     assert(Q.size()==size());
 
                     // initialize norm2
-                    Natural    &s2 = (Coerce(norm2) = 0);
+                    Natural    &s2 = ( Coerce(norm2) = 0 );
 
                     // make univocal Q
                     Mylar::Univocal(Q);
@@ -94,9 +106,7 @@ namespace Yttrium
                 const size_t n    = size();
                 apq          coef = B[1] * Q[1];
                 for(size_t i=n;i>1;--i)
-                {
                     coef += B[i] * Q[i];
-                }
                 coef /= norm2;
 
                 bool success = false;
@@ -108,6 +118,17 @@ namespace Yttrium
                 return success;
             }
 
+
+            Integer operator* (const Vector &lhs, const Vector &rhs)
+            {
+                Integer sum = 0;
+                assert(lhs.size()==rhs.size());
+                for(size_t i=lhs.size();i>0;--i)
+                {
+                    sum += lhs[i] * rhs[i];
+                }
+                return sum;
+            }
         }
 
     }

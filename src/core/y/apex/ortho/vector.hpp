@@ -45,6 +45,7 @@ namespace Yttrium
                 explicit Vector(const size_t  dims);  //!< nul vector
                 explicit Vector(const Vector &other); //!< copy
                 virtual ~Vector() noexcept;           //!< cleanup
+                explicit Vector(QArrayType  &wksp);   //!< build from workspace
 
                 //! setup from compatible array
                 template <typename ARRAY>
@@ -81,7 +82,8 @@ namespace Yttrium
                     QArrayType v(arr,AsCopy);
                     return !computeOrtho(v);
                 }
-                
+
+                friend Integer operator* (const Vector &lhs, const Vector &rhs);
 
                 //______________________________________________________________
                 //
