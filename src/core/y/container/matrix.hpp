@@ -270,7 +270,7 @@ namespace Yttrium
 
         //! get minor(I,J)
         template <typename U>
-        inline void minor(Matrix<U> &m, const size_t I, const size_t J) const
+        inline void buildMinor(Matrix<U> &m, const size_t I, const size_t J) const
         {
             assert(I>=1); assert(I<=rows);
             assert(J>=1); assert(J<=cols);

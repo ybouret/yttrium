@@ -67,7 +67,7 @@ Y_UTEST(container_matrix)
         {
             for(size_t j=1;j<=A.cols;++j)
             {
-                A.minor(M,i,j);
+                A.buildMinor(M,i,j);
                 std::cerr << "M" << i << "_" << j << "=" << M << std::endl;
             }
         }

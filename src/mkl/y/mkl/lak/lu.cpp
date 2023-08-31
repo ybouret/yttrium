@@ -271,16 +271,16 @@ namespace Yttrium
 
                 const size_t n  = a.rows;
                 const size_t nm = n-1;
-                Matrix<T>    minor(nm,nm);
+                Matrix<T>    sub(nm,nm);
                 for(size_t i=n;i>0;--i)
                 {
                     for(size_t j=n;j>0;--j)
                     {
-                        a.minor(minor,i,j);
-                        if(build(minor))
+                        a.buildMinor(sub,i,j);
+                        if(build(sub))
                         {
                             const bool positive = 0 == (0x01 & (i+j));
-                            adj[j][i] = positive ? det(minor) : -det(minor);
+                            adj[j][i] = positive ? det(sub) : -det(sub);
                         }
                         else
                         {
