@@ -30,6 +30,21 @@ Y_UTEST(apex_mylar)
     Apex::Mylar::Simplify(Q);
     std::cerr << "Q=" << Q << std::endl;
 
+    Q.free();
+    Q << 0 << -1;
+    std::cerr << Q << " -> ";
+    Apex::Mylar::Univocal(Q);
+    std::cerr << Q << std::endl;
+
+    Q.free();
+    for(size_t i=5;i>0;--i)
+    {
+        Q << apq(1+ran.leq(10),1+ran.leq(10),ran);
+    }
+    std::cerr << Q << std::endl;
+    Apex::Mylar::Univocal(Q);
+    std::cerr << Q << std::endl;
+
 
 }
 Y_UDONE()
