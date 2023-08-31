@@ -218,8 +218,7 @@ Rational & Rational:: operator OP##=(const Natural  & lhs) Y_APQ_BINARY_BODY(OP)
             static Rational Sqrt(const Rational &); //!< absolute value
             Rational        sqrt()           const; //!< absolute value
 
-
-
+            
             //__________________________________________________________________
             //
             //

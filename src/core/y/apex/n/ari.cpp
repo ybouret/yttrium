@@ -51,6 +51,13 @@ namespace Yttrium
             }
         }
 
+        Natural Natural:: LCM(const Natural &a, const Natural &b)
+        {
+            
+            assert(a>0); assert(b>0);
+            return (a*b)/__GCD(a,b);
+        }
+
         void Natural:: Simplify(Natural &Numer, Natural &Denom)
         {
             if(Denom<=0) throw Specific::Exception(CallSign,"Simplify by Zero");
