@@ -14,7 +14,7 @@ namespace Yttrium
         
         struct OrthoSpace
         {
-            static bool Build(const Matrix<apz> &P);
+            static bool Build(Matrix<apz> &Q, const Matrix<apz> &P);
         };
 
     }

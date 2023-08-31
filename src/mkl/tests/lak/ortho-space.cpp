@@ -11,7 +11,7 @@ using namespace MKL;
 Y_UTEST(lak_ortho_space)
 {
     Random::Rand ran;
-    Matrix<apz> P(3,8);
+    Matrix<apz> P(1,8);
     for(size_t i=1;i<=P.rows;++i)
     {
         for(size_t j=1;j<=P.cols;++j)
@@ -21,6 +21,8 @@ Y_UTEST(lak_ortho_space)
     }
     std::cerr << "P=" << P << std::endl;
 
-    OrthoSpace::Build(P);
+    Matrix<apz> Q(8,8);
+    OrthoSpace::Build(Q,P);
+    std::cerr << "Q=" << Q << std::endl;
 }
 Y_UDONE()
