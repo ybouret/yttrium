@@ -152,6 +152,28 @@ namespace Yttrium
                         break;
                 }
 
+                if(__Zero__!=firstSign)
+                {
+                    ITERATOR scan = curr;
+                    size_t   left = size;
+                PROBE:
+                    const apq &q = *scan; assert(1==q.denom);
+                    const apz &z = q.numer;
+                    if( __Zero__ != z.s ) goto INIT;
+                    ++scan;
+                    --left;
+                    goto PROBE;
+
+                INIT:
+                    Natural g = (*scan).numer.n;
+                    assert(left>0);
+                    while(--left > 0)
+                    {
+                        ++scan;
+                    }
+                }
+
+
 
             }
 
@@ -169,6 +191,8 @@ namespace Yttrium
 
         private:
             static const Natural & Dispatch(size_t &numPos, size_t &numNeg, SignType &firstSign, const apq &q) noexcept;
+
+
 
 
             template <typename ITERATOR> static inline
