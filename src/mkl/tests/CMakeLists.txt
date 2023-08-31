@@ -15,4 +15,6 @@ add_test(opt:parabolic test-mkl opt_parabolic)
 add_test(opt:bracket   test-mkl opt_bracket)
 
 add_test(lak:lu        test-mkl lak_lu)
+add_test(lak:ortho_space test-mkl lak_ortho_space)
+
 

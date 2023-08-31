@@ -1,6 +1,5 @@
 
 #include "y/apex/ortho/family.hpp"
-#include "y/apex/ortho/space.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/random/bits.hpp"
@@ -33,20 +32,7 @@ Y_UTEST(apex_ortho)
 
     }
 
-    {
-        Matrix<apz> P(3,8);
-        for(size_t i=1;i<=P.rows;++i)
-        {
-            for(size_t j=1;j<=P.cols;++j)
-            {
-                P[i][j] = ran.in<int>(-5,5);
-            }
-        }
-        std::cerr << "P=" << P << std::endl;
-
-        Apex::Ortho::Space::Build(P);
-    }
-
+  
 
 
 
