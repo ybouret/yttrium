@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_Apex_Ortho_Included
-#define Y_Apex_Ortho_Included 1
+#ifndef Y_Apex_Ortho_Vector_Included
+#define Y_Apex_Ortho_Vector_Included 1
 
 #include "y/apex/rational.hpp"
 #include "y/container/cxx-array.hpp"
@@ -14,15 +14,7 @@ namespace Yttrium
     namespace Apex
     {
 
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! Handling orthogonal, univocal vectors
-        //
-        //
-        //______________________________________________________________________
-        struct Ortho
+        namespace Ortho
         {
             //__________________________________________________________________
             //
@@ -70,14 +62,26 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
-                Y_OSTREAM_PROTO(Vector); //!< display with norm2
-                virtual const char *callSign() const noexcept;
+                Y_OSTREAM_PROTO(Vector);                       //!< display with norm2
+                virtual const char *callSign() const noexcept; //!< overridden
 
-
-                
+                //______________________________________________________________
+                //
+                //! v <-  v - ( (this*v)/ |this|^2) * this
+                /**
+                 \return true is v had orthogonal component
+                 */
+                //______________________________________________________________
                 bool computeOrtho(Writable<apq> &v) const;
 
-
+                //! colinearity if no orthogonal components
+                template <typename ARRAY>
+                inline bool isColinear(ARRAY &arr) const
+                {
+                    QArrayType v(arr,AsCopy);
+                    return !computeOrtho(v);
+                }
+                
 
                 //______________________________________________________________
                 //

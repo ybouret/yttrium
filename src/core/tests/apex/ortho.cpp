@@ -1,5 +1,5 @@
 
-#include "y/apex/ortho.hpp"
+#include "y/apex/ortho/vector.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/random/bits.hpp"
@@ -25,7 +25,7 @@ Y_UTEST(apex_ortho)
     Vector<apq> tmp(V.size(),0);
     tmp[1] = 1;
     std::cerr << tmp << std::endl;
-    V.ortho(tmp);
+    V.computeOrtho(tmp);
     std::cerr << "Q=" << tmp << std::endl;
 
 }
