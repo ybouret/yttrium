@@ -94,14 +94,14 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename ITERATOR> static inline
-            void Univocal(ITERATOR curr, const size_t n)
+            void Univocal(ITERATOR curr, const size_t size)
             {
                 //--------------------------------------------------------------
                 //
                 // sorting out cases
                 //
                 //--------------------------------------------------------------
-                switch(n)
+                switch(size)
                 {
                     case 0:
                         return;
@@ -118,14 +118,14 @@ namespace Yttrium
                 // counting signs and computing common denomitar
                 //
                 //--------------------------------------------------------------
-                assert(n>=2);
+                assert(size>=2);
                 size_t   numPos    = 0;
                 size_t   numNeg    = 0;
                 SignType firstSign = __Zero__;
                 Natural  common = Dispatch(numPos,numNeg,firstSign,*curr);
                 {
                     ITERATOR temp = curr;
-                    for(size_t i=n;i>1;--i)
+                    for(size_t i=size;i>1;--i)
                         common = Natural::LCM(common,Dispatch(numPos,numNeg,firstSign,*(++temp)));
                 }
                 
@@ -134,14 +134,26 @@ namespace Yttrium
                 // update
                 //
                 //--------------------------------------------------------------
-                if(numNeg>numPos)
+                switch( Sign::Of(numPos,numNeg) )
                 {
-                    MulByNeg(common,curr,n);
+                    case Negative: assert(numPos<numNeg);
+                        MulByNeg(common,curr,size);
+                        break;
+
+                    case Positive: assert(numPos>numNeg);
+                        MulByPos(common,curr,size);
+                        break;
+
+                    case __Zero__: assert(numPos==numNeg);
+                        switch(firstSign)
+                        {
+                            case __Zero__: break; // all zero
+                            case Positive: MulByPos(common,curr,size); break;
+                            case Negative: MulByNeg(common,curr,size); break;
+                        }
+                        break;
                 }
-                else
-                {
-                    MulByPos(common,curr,n);
-                }
+
 
             }
 

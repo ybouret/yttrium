@@ -37,7 +37,7 @@ Y_UTEST(apex_mylar)
     std::cerr << Q << std::endl;
 
     Q.free();
-    for(size_t i=5;i>0;--i)
+    for(size_t i=6;i>0;--i)
     {
         Q << apq(1+ran.leq(10),1+ran.leq(10),ran);
     }
