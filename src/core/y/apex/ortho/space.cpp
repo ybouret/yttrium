@@ -17,6 +17,8 @@ namespace Yttrium
                 Matrix<apz>  Pt(TransposeOf,P);
                 Matrix<apz>  P2(p,p);
                 P.mmul(P2,TransposeOf,P);
+                std::cerr << "P2=" << P2 << std::endl;
+
             }
 
 
