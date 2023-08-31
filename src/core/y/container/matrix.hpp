@@ -251,6 +251,10 @@ namespace Yttrium
             }
         }
 
+        //______________________________________________________________________
+        //
+        //! multiply all terms by rhs
+        //______________________________________________________________________
         template <typename RHS>
         Matrix<T> & operator*=(RHS &rhs)
         {
@@ -258,6 +262,10 @@ namespace Yttrium
             return *this;
         }
 
+        //______________________________________________________________________
+        //
+        //! divide all terms by rhs
+        //______________________________________________________________________
         template <typename RHS>
         Matrix<T> & operator/=(RHS &rhs)
         {
@@ -265,10 +273,10 @@ namespace Yttrium
             return *this;
         }
 
-
-
-
-        //! get minor(I,J)
+        //______________________________________________________________________
+        //
+        //! build minor(I,J)
+        //______________________________________________________________________
         template <typename U>
         inline void buildMinor(Matrix<U> &m, const size_t I, const size_t J) const
         {
@@ -289,8 +297,7 @@ namespace Yttrium
                     tgt[jj++] = src[j];
                 }
             }
-
-
+            
         }
 
 

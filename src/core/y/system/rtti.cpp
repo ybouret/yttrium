@@ -261,7 +261,7 @@ update(typeid(NAME),#NAME);     \
 } while(false)
 
 
-    RTTIdb:: RTTIdb() : Singleton<RTTIdb>()
+    RTTIdb:: RTTIdb() : Singleton<RTTIdb>(), db()
     {
 #if 0
         Y_RTTI(char);
