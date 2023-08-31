@@ -1,13 +1,7 @@
 project(jpeg C)
 
-#message( STATUS "CMAKE_C_FLAGS='${CMAKE_C_FLAGS}'")
-string(REPLACE "-Wall" "" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
-string(STRIP ${CMAKE_C_FLAGS} CMAKE_C_FLAGS)
-string(REPLACE "-Wextra" "" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
-string(STRIP ${CMAKE_C_FLAGS} CMAKE_C_FLAGS)
-#message( STATUS "CMAKE_C_FLAGS='${CMAKE_C_FLAGS}'")
-
 set(HERE ${CMAKE_CURRENT_SOURCE_DIR})
+
 configure_file(jconfig.txt jconfig.h)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
@@ -64,22 +58,5 @@ COMMAND ${CMAKE_COMMAND} -E ${cmake_rm} -f testout*
 WORKING_DIRECTORY ${HERE}
 COMMENT "Testing JPEG"
 VERBATIM)
-
-#$(RM) testout*
-#	./djpeg -dct int -ppm -outfile testout.ppm testorig.jpg
-#	./djpeg -dct int -gif -outfile testout.gif testorig.jpg
-#	./djpeg -dct int -bmp -colors 256 -outfile testout.bmp testorig.jpg
-#	./cjpeg -dct int -outfile testout.jpg testimg.ppm
-#	./djpeg -dct int -ppm -outfile testoutp.ppm testprog.jpg
-#	./cjpeg -dct int -progressive -opt -outfile testoutp.jpg testimg.ppm
-#	./jpegtran -outfile testoutt.jpg testprog.jpg
-#	cmp testimg.ppm testout.ppm
-#	cmp testimg.gif testout.gif
-#	cmp testimg.bmp testout.bmp
-#	cmp testimg.jpg testout.jpg
-#	cmp testimg.ppm testoutp.ppm
-#	cmp testimgp.jpg testoutp.jpg
-#	cmp testorig.jpg testoutt.jpg
-
 
 #Y_LinkMath(y_luac)

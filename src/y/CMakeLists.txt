@@ -1,7 +1,13 @@
 # third_party library/code
+string(REPLACE "-Wall" "" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
+string(STRIP ${CMAKE_C_FLAGS} CMAKE_C_FLAGS)
+string(REPLACE "-Wextra" "" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
+string(STRIP ${CMAKE_C_FLAGS} CMAKE_C_FLAGS)
+
 add_subdirectory(lua)
 add_subdirectory(zlib)
 add_subdirectory(jpeg)
+add_subdirectory(bzip2)
 
 add_custom_target(ThirdParty 
-DEPENDS y_lua z-example y_test_jpeg)
+DEPENDS y_lua z-example y_test_jpeg y_test_bzip2)
