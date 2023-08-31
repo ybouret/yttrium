@@ -132,48 +132,47 @@ namespace Yttrium
                 // update
                 //
                 //--------------------------------------------------------------
+                Natural g = 0;
                 switch( Sign::Of(numPos,numNeg) )
                 {
                     case Negative: assert(numPos<numNeg);
-                        MulByNeg(common,curr,size);
+                        MulByNeg(common,curr,size,g);
                         break;
 
                     case Positive: assert(numPos>numNeg);
-                        MulByPos(common,curr,size);
+                        MulByPos(common,curr,size,g);
                         break;
 
                     case __Zero__: assert(numPos==numNeg);
                         switch(firstSign)
                         {
                             case __Zero__: break; // all zero
-                            case Positive: MulByPos(common,curr,size); break;
-                            case Negative: MulByNeg(common,curr,size); break;
+                            case Positive: MulByPos(common,curr,size,g); break;
+                            case Negative: MulByNeg(common,curr,size,g); break;
                         }
                         break;
                 }
 
-                if(__Zero__!=firstSign)
+                //--------------------------------------------------------------
+                //
+                // Normalize
+                //
+                //--------------------------------------------------------------
+                if(g>1)
                 {
-                    ITERATOR scan = curr;
-                    size_t   left = size;
-                PROBE:
-                    const apq &q = *scan; assert(1==q.denom);
-                    const apz &z = q.numer;
-                    if( __Zero__ != z.s ) goto INIT;
-                    ++scan;
-                    --left;
-                    goto PROBE;
-
-                INIT:
-                    Natural g = (*scan).numer.n;
-                    assert(left>0);
-                    while(--left > 0)
+                    for(size_t i=size;i>0;--i,++curr)
                     {
-                        ++scan;
+                        const apq &q = (*curr); assert(1==q.denom);
+                        switch(q.numer.s)
+                        {
+                            case __Zero__: continue;
+                            case Negative:
+                            case Positive:
+                                Coerce(q.numer.n) /= g;
+                                continue;
+                        }
                     }
                 }
-
-
 
             }
 
@@ -192,28 +191,47 @@ namespace Yttrium
         private:
             static const Natural & Dispatch(size_t &numPos, size_t &numNeg, SignType &firstSign, const apq &q) noexcept;
 
-
+            static inline
+            void updateGCD(Natural &g, const apq &q)
+            {
+                const Natural &rhs = q.numer.n;
+                if(rhs>0)
+                {
+                    if(g<=0)
+                    {
+                        g = rhs;
+                    }
+                    else
+                    {
+                        g = Natural::GCD(g,rhs);
+                    }
+                }
+            }
 
 
             template <typename ITERATOR> static inline
-            void MulByPos(const Natural &common, ITERATOR curr, size_t n)
+            void MulByPos(const Natural &common, ITERATOR curr, size_t n, Natural &g)
             {
+                assert(0==g);
                 while(n-- > 0)
                 {
                     apq &q = Coerce(*curr);
                     q *= common;
+                    updateGCD(g,q);
                     ++curr;
                     assert(1==q.denom);
                 }
             }
 
             template <typename ITERATOR> static inline
-            void MulByNeg(const Natural &common, ITERATOR curr, size_t n)
+            void MulByNeg(const Natural &common, ITERATOR curr, size_t n, Natural &g)
             {
+                assert(0==g);
                 while(n-- > 0)
                 {
                     apq &q = Coerce(*curr);
                     q *= common;
+                    updateGCD(g,q);
                     Sign::ReplaceByOpposite( Coerce(q.numer.s) );
                     ++curr;
                     assert(1==q.denom);

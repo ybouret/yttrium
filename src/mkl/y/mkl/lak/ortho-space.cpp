@@ -66,7 +66,8 @@ namespace Yttrium
             {
                 for(size_t j=d;j>0;--j) q[j] = Q[i][j];
                 Apex::Mylar::Univocal(q);
-                std::cerr << Q[i] << " -> " << q << std::endl;
+                for(size_t j=d;j>0;--j) Q[i][j] = q[j].numer;
+
             }
 
             return true;
