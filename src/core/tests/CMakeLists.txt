@@ -168,6 +168,7 @@ add_test(apex:factorial test-core apex_factorial)
 add_test(apex:z         test-core apex_z)
 add_test(apex:q         test-core apex_q)
 add_test(apex:mylar     test-core apex_mylar)
+add_test(apex:ortho     test-core apex_ortho)
 
 #ordered
 add_test(ordered:PQ   test-core ordered_PQ)

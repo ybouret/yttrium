@@ -83,7 +83,7 @@ namespace Yttrium
                 Simplify(seq.begin(),seq.size());
             }
 
-            
+
 
             //__________________________________________________________________
             //
@@ -104,7 +104,7 @@ namespace Yttrium
                     case 0:
                         return;
 
-                    case 1: { apq &q = *curr; if(__Zero__!=q.numer.s) q = 1;}
+                    case 1: { apq &q = Coerce(*curr); if(__Zero__!=q.numer.s) q = 1;}
                         return;
 
                     default:
@@ -176,7 +176,7 @@ namespace Yttrium
             {
                 while(n-- > 0)
                 {
-                    apq &q = *curr;
+                    apq &q = Coerce(*curr);
                     q *= common;
                     ++curr;
                     assert(1==q.denom);
@@ -188,7 +188,7 @@ namespace Yttrium
             {
                 while(n-- > 0)
                 {
-                    apq &q = *curr;
+                    apq &q = Coerce(*curr);
                     q *= common;
                     Sign::ReplaceByOpposite( Coerce(q.numer.s) );
                     ++curr;

@@ -98,7 +98,7 @@ count( CAPACITY   )
         {
             Writable<T> &self = *this;
             for(size_t i=src.size();i>0;--i)
-                self[i] = src[i];
+                Coerce(self[i]) = src[i];
         }
 
         //! copy
@@ -109,7 +109,7 @@ count( CAPACITY   )
         {
             Writable<T> &self = *this;
             for(size_t i=src.size();i>0;--i)
-                self[i] = src[i];
+                Coerce(self[i]) = src[i];
         }
 
         //! cleanup

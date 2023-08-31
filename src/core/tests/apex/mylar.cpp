@@ -1,13 +1,8 @@
-
-
-
-
 #include "y/apex/mylar.hpp"
 #include "y/utest/run.hpp"
-#include "y/random/shuffle.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/random/bits.hpp"
 
-#include <cstdio>
 
 using namespace Yttrium;
 

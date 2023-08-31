@@ -1,0 +1,114 @@
+
+#include "y/apex/ortho.hpp"
+#include "y/apex/mylar.hpp"
+
+namespace Yttrium
+{
+    namespace Apex
+    {
+
+        const char * const Ortho::Vector:: DerivedCallSign = "Ortho::Vector";
+
+        const char * Ortho::Vector:: callSign() const noexcept { return DerivedCallSign; }
+
+        Ortho:: Vector:: ~Vector() noexcept
+        {
+        }
+
+        Ortho:: Vector:: Vector(const Vector &other) :
+        Identifiable(), Collection(),
+        Object(),
+        VectorType(other),
+        norm2(other.norm2),
+        next(0),
+        prev(0)
+        {
+        }
+
+
+
+        Ortho:: Vector:: Vector(const size_t dims) :
+        Object(),
+        VectorType(dims),
+        norm2(0),
+        next(0),
+        prev(0)
+        {
+            assert(dims>0);
+        }
+        
+        void Ortho:: Vector:: clear() noexcept
+        {
+            for(size_t i=size();i>0;--i)
+            {
+                Coerce( (*this)[i] ).zset();
+            }
+            Coerce(norm2).zset();
+        }
+
+        static inline Natural ComputeZ2(const Integer &z)
+        {
+            return z.n * z.n;
+        }
+
+        void Ortho:: Vector:: update(QArrayType &Q)
+        {
+            try
+            {
+                // sanity check
+                assert(size()>0);
+                assert(Q.size()==size());
+
+                // initialize norm2
+                Natural    &s2 = (Coerce(norm2) = 0);
+
+                // make univocal Q
+                Mylar::Univocal(Q);
+
+                // transfer numerators
+                for(size_t i=size();i>0;--i)
+                {
+                    assert(1==Q[i].denom);
+                    s2 += ComputeZ2( Coerce( (*this)[i] ) = Q[i].numer );
+                }
+            }
+            catch(...)
+            {
+                clear();
+                throw;
+            }
+        }
+
+        std::ostream & operator<<(std::ostream &os, const Ortho::Vector &v)
+        {
+            const Readable<const apz> &self = v;
+            os << self << " #@" << v.norm2;
+            return os;
+        }
+
+        bool Ortho::Vector:: computeOrtho(Writable<apq> &Q) const
+        {
+            const Readable<const apz> &B = *this; assert(B.size()==Q.size());
+            const size_t n    = size();
+            apq          coef = B[1] * Q[1];
+            for(size_t i=n;i>1;--i)
+            {
+                coef += B[i] * Q[i];
+            }
+            coef /= norm2;
+            
+            bool success = false;
+            for(size_t i=n;i>0;--i)
+            {
+                const apq &q = (Q[i] -= coef * B[i]);
+                if(q.numer.s!=__Zero__) success= true;
+            }
+            return success;
+        }
+
+
+    }
+
+}
+
+
