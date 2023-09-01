@@ -4,6 +4,8 @@
 #define Y_Apex_Mylar_Included 1
 
 #include "y/apex/rational.hpp"
+#include "y/container/matrix.hpp"
+#include "y/data/small/heavy/list/bare.hpp"
 #include <iostream>
 
 
@@ -25,7 +27,7 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            //! find common denominator of a range
+            //! find common denominator of a range of rational
             //
             //__________________________________________________________________
             template <typename ITERATOR> static inline
@@ -45,7 +47,7 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            //! find common denominator of a sequence
+            //! find common denominator of a sequence of rationals
             //
             //__________________________________________________________________
             template <typename SEQUENCE> static inline
@@ -57,7 +59,7 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            //! Simplify a range
+            //! Simplify a range of rationals
             //
             //__________________________________________________________________
             template <typename ITERATOR> static inline
@@ -74,7 +76,7 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            //! Simplify a sequence
+            //! Simplify a sequence of rationals
             //
             //__________________________________________________________________
             template <typename SEQUENCE> static inline
@@ -88,7 +90,7 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            //! Make univocal range
+            //! Make univocal range of rationals
             //
             //__________________________________________________________________
             template <typename ITERATOR> static inline
@@ -187,7 +189,7 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            //! Make univocal sequence
+            //! Make univocal sequence of rationals
             //
             //__________________________________________________________________
             template <typename SEQUENCE> static inline
@@ -196,6 +198,20 @@ namespace Yttrium
                 Univocal(seq.begin(),seq.size());
             }
 
+            //__________________________________________________________________
+            //
+            //
+            //! Make univocal rows of Integers
+            //
+            //__________________________________________________________________
+            static void MakeUnivocal(Matrix<apz> &a);
+
+            //__________________________________________________________________
+            //
+            //
+            //! Check colinearity of int/unsigned/apz arrays
+            //
+            //__________________________________________________________________
             template <typename LHS, typename RHS> static inline
             bool AreColinear(LHS &lhs, RHS &rhs)
             {
@@ -265,6 +281,57 @@ namespace Yttrium
                 
                 return true;
             }
+
+
+
+
+            typedef Small::BareHeavyList<size_t> IList; //!< list of indices
+            typedef IList::NodeType              INode; //!< nodes for IList
+
+            //__________________________________________________________________
+            //
+            //
+            //! keep only non trivially colinear row vectors
+            //
+            //__________________________________________________________________
+            template <typename T, typename U> static inline
+            void Compress(Matrix<T> &target, const Matrix<U> &source)
+            {
+                target.release();
+                IList        indx;
+                const size_t cols = source.cols;
+                const size_t rows = source.rows;
+                for(size_t i=1;i<=rows;++i)
+                {
+                    const MatrixRow<U> &src = source[i];
+                    bool                bad = false;
+                    for(const INode *node=indx.head;node;node=node->next)
+                    {
+                        const size_t k = **node;
+                        if( AreColinear(src,source[k]))
+                        {
+                            bad = true;
+                            break;
+                        }
+                    }
+                    if(bad) continue;
+                    indx << i;
+                }
+                if(indx.size>0)
+                {
+                    assert(cols>0);
+                    target.make(indx.size,cols);
+                    size_t i=1;
+                    for(const INode *node=indx.head;node;node=node->next,++i)
+                    {
+                        const size_t        k   = **node;
+                        MatrixRow<T>       &tgt = target[i];
+                        const MatrixRow<U> &src = source[k];
+                        for(size_t j=cols;j>0;--j) tgt[j] = src[j];
+                    }
+                }
+            }
+
 
         private:
             static const Natural & Dispatch(size_t &numPos, size_t &numNeg, SignType &firstSign, const apq &q) noexcept;

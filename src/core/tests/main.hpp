@@ -51,7 +51,7 @@ namespace Yttrium
     {
         static inline uint16_t Get(Random::Bits &ran) noexcept
         {
-            return ran.to<uint16_t>(unsigned(ran.leq(16)));
+            return ran.to<uint16_t>(unsigned(ran.leq(14)));
         }
     };
 

@@ -30,7 +30,7 @@ namespace Yttrium
     //
     //__________________________________________________________________________
     template <class T, typename ALLOCATOR = Memory::Dyadic>
-    class Matrix : public MatrixMetrics, public Writable< MatrixRow<T> >
+    class Matrix : public MatrixMetrics, public Writable< MatrixRow<T> >, public Releasable
     {
     public:
         //______________________________________________________________________
@@ -137,6 +137,8 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
+
+
 
         inline virtual size_t       size()     const noexcept { return rows;     } //!< rows
         inline virtual const char * callSign() const noexcept { return CallSign; } //!< CallSign
@@ -324,6 +326,33 @@ namespace Yttrium
             
         }
 
+        //! exchange
+        inline void xch(Matrix &other) noexcept
+        {
+            CoerceSwap(cols,other.cols);
+            CoerceSwap(rows,other.rows);
+            CoerceSwap(items,other.items);
+            CoerceSwap(row,other.row);
+            CoerceSwap(base,other.base);
+            code.xch(other.code);
+        }
+
+        //! release content, exchange with empty matrix
+        virtual void release() noexcept
+        {
+            Matrix _;
+            xch(_);
+        }
+
+        //! exchange with a new matrix if metrics is different
+        virtual void make(const size_t nr, const size_t nc)
+        {
+            if(rows!=nr||cols!=nc)
+            {
+                Matrix _(nr,nc);
+                xch(_);
+            }
+        }
 
     private:
         Y_DISABLE_ASSIGN(Matrix);

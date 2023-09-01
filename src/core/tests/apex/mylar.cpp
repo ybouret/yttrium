@@ -2,6 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/random/bits.hpp"
+#include "../main.hpp"
 
 
 using namespace Yttrium;
@@ -60,6 +61,19 @@ Y_UTEST(apex_mylar)
         lhs << -5;
         rhs << -10;
         std::cerr << Apex::Mylar::AreColinear(lhs,rhs) << std::endl;
+
+    }
+
+    {
+        Matrix<uint16_t> source(3,5);
+        Matrix<apz>      target;
+        FillWritable(source[1],ran);
+        FillWritable(source[3],ran);
+        for(size_t j=source.cols;j>0;--j) source[2][j] = 3*source[1][j];
+        std::cerr << "source=" << source << std::endl;
+
+        Apex::Mylar::Compress(target,source);
+        std::cerr << "target=" << target << std::endl;
 
     }
 
