@@ -11,9 +11,16 @@ namespace Yttrium
 {
     namespace MKL
     {
-        
+
+        //! Orthogonal Space computation
         struct OrthoSpace
         {
+            //! compute orthogonal family of vectors
+            /**
+             - P(p,d), free family of (row) vectors
+             - Q(d,d), univocal set of row
+             - Q*P' = 0
+             */
             static bool Build(Matrix<apz> &Q, const Matrix<apz> &P);
         };
 

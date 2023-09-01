@@ -35,7 +35,8 @@ namespace Yttrium
             class Vector : public Object, public VectorType
             {
             public:
-                static const char * const DerivedCallSign;
+                static const char * const DerivedCallSign; //!< new call sign
+
                 //______________________________________________________________
                 //
                 //
@@ -75,7 +76,7 @@ namespace Yttrium
                 //______________________________________________________________
                 bool computeOrtho(Writable<apq> &v) const;
 
-                //! colinearity if no orthogonal components
+                //! colinearity iff no orthogonal components
                 template <typename ARRAY>
                 inline bool isColinear(ARRAY &arr) const
                 {
@@ -83,6 +84,7 @@ namespace Yttrium
                     return !computeOrtho(v);
                 }
 
+                //! dot product
                 friend Integer operator* (const Vector &lhs, const Vector &rhs);
 
                 //______________________________________________________________

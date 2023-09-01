@@ -113,44 +113,52 @@ namespace Yttrium
 
                 //--------------------------------------------------------------
                 //
-                // counting signs and computing common denomitar
+                // counting signs and computing common denomitor
                 //
                 //--------------------------------------------------------------
-                assert(size>=2);
-                size_t   numPos    = 0;
-                size_t   numNeg    = 0;
-                SignType firstSign = __Zero__;
-                Natural  common = Dispatch(numPos,numNeg,firstSign,*curr);
+                Natural  g = 0; // final scaling facotr
                 {
-                    ITERATOR temp = curr;
-                    for(size_t i=size;i>1;--i)
-                        common = Natural::LCM(common,Dispatch(numPos,numNeg,firstSign,*(++temp)));
-                }
-                
-                //--------------------------------------------------------------
-                //
-                // update
-                //
-                //--------------------------------------------------------------
-                Natural g = 0;
-                switch( Sign::Of(numPos,numNeg) )
-                {
-                    case Negative: assert(numPos<numNeg);
-                        MulByNeg(common,curr,size,g);
-                        break;
+                    //----------------------------------------------------------
+                    //
+                    // counting signs and computing common denomitor
+                    //
+                    //----------------------------------------------------------
+                    assert(size>=2);
+                    size_t   numPos    = 0;
+                    size_t   numNeg    = 0;
+                    SignType firstSign = __Zero__;
+                    Natural  commonDen = Dispatch(numPos,numNeg,firstSign,*curr);
+                    {
+                        ITERATOR temp = curr;
+                        for(size_t i=size;i>1;--i)
+                            commonDen = Natural::LCM(commonDen,Dispatch(numPos,numNeg,firstSign,*(++temp)));
+                    }
 
-                    case Positive: assert(numPos>numNeg);
-                        MulByPos(common,curr,size,g);
-                        break;
+                    //----------------------------------------------------------
+                    //
+                    // update
+                    //
+                    //----------------------------------------------------------
+                    switch( Sign::Of(numPos,numNeg) )
+                    {
+                        case Negative: assert(numPos<numNeg);
+                            MulByNeg(commonDen,curr,size,g);
+                            break;
 
-                    case __Zero__: assert(numPos==numNeg);
-                        switch(firstSign)
-                        {
-                            case __Zero__: break; // all zero
-                            case Positive: MulByPos(common,curr,size,g); break;
-                            case Negative: MulByNeg(common,curr,size,g); break;
-                        }
-                        break;
+                        case Positive: assert(numPos>numNeg);
+                            MulByPos(commonDen,curr,size,g);
+                            break;
+
+                        case __Zero__: assert(numPos==numNeg);
+                            switch(firstSign)
+                            {
+                                case __Zero__: break; // all zero
+                                case Positive: MulByPos(commonDen,curr,size,g); break;
+                                case Negative: MulByNeg(commonDen,curr,size,g); break;
+                            }
+                            break;
+                    }
+
                 }
 
                 //--------------------------------------------------------------
@@ -188,6 +196,76 @@ namespace Yttrium
                 Univocal(seq.begin(),seq.size());
             }
 
+            template <typename LHS, typename RHS> static inline
+            bool AreColinear(LHS &lhs, RHS &rhs)
+            {
+                const size_t n = lhs.size(); assert( lhs.size() == rhs.size() );
+
+                SignType s = __Zero__;
+                Natural  numer, denom;
+                for(size_t i=n;i>0;--i)
+                {
+                    apz l = lhs[i];
+                    apz r = rhs[i];
+                    switch( Sign::MakePair(l.s,r.s) )
+                    {
+                            //--------------------------------------------------
+                            // zero in front of not zero => false
+                            //--------------------------------------------------
+                        case ZP_Signs:
+                        case ZN_Signs:
+                        case PZ_Signs:
+                        case NZ_Signs:
+                            return false;
+
+                        case ZZ_Signs:
+                            continue;
+
+                            //--------------------------------------------------
+                            // produce a positive factor
+                            //--------------------------------------------------
+                        case NN_Signs:
+                        case PP_Signs:
+                            switch(s)
+                            {
+                                case Negative: // => false
+                                    return false;
+                                case __Zero__: // initialize to positive value
+                                    s     = Positive;
+                                    Natural::Simplify(numer=l.n,denom=r.n);
+                                    break;
+                                case Positive: // test propto
+                                    if(r.n*numer != l.n * denom) return false;
+                                    break;
+
+                            }
+                            break;
+
+                            //--------------------------------------------------
+                            // produce a negative factor
+                            //--------------------------------------------------
+                        case NP_Signs:
+                        case PN_Signs:
+                            switch(s)
+                            {
+                                case Positive: // => false
+                                    return false;
+                                case __Zero__: // initialize to negative value
+                                    s     = Negative;
+                                    Natural::Simplify(numer=l.n,denom=r.n);
+                                    break;
+                                case Negative: // test propto
+                                    if(r.n*numer != l.n * denom) return false;
+                                    break;
+                            }
+                            break;
+
+                    }
+                }
+                
+                return true;
+            }
+
         private:
             static const Natural & Dispatch(size_t &numPos, size_t &numNeg, SignType &firstSign, const apq &q) noexcept;
 
@@ -198,13 +276,9 @@ namespace Yttrium
                 if(rhs>0)
                 {
                     if(g<=0)
-                    {
                         g = rhs;
-                    }
                     else
-                    {
                         g = Natural::GCD(g,rhs);
-                    }
                 }
             }
 

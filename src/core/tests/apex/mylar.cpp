@@ -40,6 +40,29 @@ Y_UTEST(apex_mylar)
     Apex::Mylar::Univocal(Q);
     std::cerr << Q << std::endl;
 
+    {
+        Vector<int> lhs;
+        Vector<int> rhs;
+        std::cerr << Apex::Mylar::AreColinear(lhs,rhs) << std::endl;
+        lhs << 1;
+        rhs << 2;
+        std::cerr << Apex::Mylar::AreColinear(lhs,rhs) << std::endl;
+
+        lhs << 0;
+        rhs << 1;
+        std::cerr << Apex::Mylar::AreColinear(lhs,rhs) << std::endl;
+        rhs.tail() = 0;
+        std::cerr << Apex::Mylar::AreColinear(lhs,rhs) << std::endl;
+
+        lhs << 2;
+        rhs << 4;
+        std::cerr << Apex::Mylar::AreColinear(lhs,rhs) << std::endl;
+        lhs << -5;
+        rhs << -10;
+        std::cerr << Apex::Mylar::AreColinear(lhs,rhs) << std::endl;
+
+    }
+
 
 }
 Y_UDONE()
