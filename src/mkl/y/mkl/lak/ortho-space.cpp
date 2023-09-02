@@ -8,67 +8,61 @@ namespace Yttrium
 {
     namespace MKL
     {
-        bool OrthoSpace:: Build(Matrix<apz> &Q, const Matrix<apz> &P)
+        bool OrthoSpace:: Build(Matrix<apz>       &Q,
+                                const Matrix<apz> &P)
         {
             const size_t p = P.rows;
             const size_t d = P.cols;
 
+            Matrix<apz>       QQ(d,d);
             {
-                Matrix<apz> Q_(d,d);
+                apz         dP2 = 0;  // determinant(P*P')
+                Matrix<apz> aP2(p,p); // adjoint(P*P')
+                Matrix<apz> P2(p,p);  // P*P'
+                P.mmul(P2,TransposeOf,P);
+
+                // compute det/adj using LU
                 {
-                    apz         dP2 = 0;
+                    LU<apq>           lu(p);
+                    const Matrix<apq> P2_(CopyOf,P2);
                     {
-                        Matrix<apz> aP2(p,p);
-                        {
-                            // compute in rational
-                            Matrix<apq> P2(p,p);
-                            P.mmul(P2,TransposeOf,P);
-                            LU<apq> lu(p);
-
-                            // retrieve determinant
-                            dP2 = lu.determinant(P2).numer;
-                            if(dP2==0)
-                                return false;
-
-                            Matrix<apq> aP2_(p,p);
-                            lu.adjoint(aP2_,P2);
-
-                            // retrieve adjoint
-                            for(size_t i=p;i>0;--i)
-                            {
-                                for(size_t j=p;j>0;--j)
-                                {
-                                    aP2[i][j] = aP2_[i][j].numer;
-                                }
-                            }
-                        }
-
-                        {
-                            Matrix<apz> aP2P(p,d);
-                            aP2.mmul(aP2P,P);
-                            Matrix<apz>  Pt(TransposeOf,P);
-                            Pt.mmul(Q_,aP2P);
-                        }
+                        Matrix<apq>       P2__(P2_);
+                        if(!lu.build(P2__)) return false;
+                        dP2 = lu.determinant(P2__).numer;
                     }
-
-                    // finalize Q
-                    for(size_t i=d;i>0;--i)
-                    {
-                        for(size_t j=d;j>0;--j)
-                        {
-                            Sign::ReplaceByOpposite( Coerce(Q_[i][j].s) );
-                        }
-                    }
-                    for(size_t i=d;i>0;--i) Q_[i][i] += dP2;
+                    assert(0!=dP2);
+                    Matrix<apq> aP2_(p,p);
+                    lu.adjoint(aP2_,P2_);
+                    aP2.make(aP2_);
                 }
 
-                // compress
-                Apex::Mylar::Compress(Q,Q_);
+                // finalize QQ
+                {
+                    const Matrix<apz> Pt(TransposeOf,P);
+                    {
+                        Matrix<apz> P3(p,d);
+                        aP2.mmul(P3,P);
+                        Pt.mmul(QQ,P3);
+                    }
+                }
+
+                {
+                    apz *q = &QQ[1][1];
+                    for(size_t i=QQ.items;i>0;--i,++q)
+                    {
+                        Sign::ReplaceByOpposite( Coerce(q->s) );
+                    }
+                }
+
+                for(size_t i=d;i>0;--i) QQ[i][i] += dP2;
             }
 
-            // univocal Q
-            Apex::Mylar::MakeUnivocal(Q);
+            // make univocal
+            Apex::Mylar::MakeUnivocal(QQ);
             
+            // avoid trivial repetitions
+            Apex::Mylar::Compress(Q,QQ);
+
 
             return true;
         }

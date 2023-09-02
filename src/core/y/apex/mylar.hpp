@@ -34,7 +34,7 @@ namespace Yttrium
             Natural CommonDenominator(ITERATOR curr, size_t n)
             {
                 if(n<=0) return 1;
-                Natural den = (*curr).denom;
+                Natural den = (*curr).denom; assert(den>0);
                 while(--n > 0)
                 {
                     ++curr;
@@ -52,9 +52,7 @@ namespace Yttrium
             //__________________________________________________________________
             template <typename SEQUENCE> static inline
             Natural CommonDenominator(SEQUENCE &seq)
-            {
-                return CommonDenominator(seq.begin(),seq.size());
-            }
+            { return CommonDenominator(seq.begin(),seq.size()); }
 
             //__________________________________________________________________
             //
@@ -68,8 +66,9 @@ namespace Yttrium
                 const Natural den = CommonDenominator(curr,n);
                 while(n-- > 0)
                 {
-                    (*curr) *= den;
+                    apq &q = *curr;
                     ++curr;
+                    q *= den; assert(q.denom==1);
                 }
             }
 
@@ -80,12 +79,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename SEQUENCE> static inline
-            void Simplify(SEQUENCE &seq)
-            {
-                Simplify(seq.begin(),seq.size());
-            }
-
-
+            void Simplify(SEQUENCE &seq) { Simplify(seq.begin(),seq.size()); }
+            
 
             //__________________________________________________________________
             //
@@ -118,11 +113,11 @@ namespace Yttrium
                 // counting signs and computing common denomitor
                 //
                 //--------------------------------------------------------------
-                Natural  g = 0; // final scaling facotr
+                Natural  g = 0; // final scaling factor
                 {
                     //----------------------------------------------------------
                     //
-                    // counting signs and computing common denomitor
+                    // counting signs and computing common denominator
                     //
                     //----------------------------------------------------------
                     assert(size>=2);
@@ -138,7 +133,7 @@ namespace Yttrium
 
                     //----------------------------------------------------------
                     //
-                    // update
+                    // update and gather GCD
                     //
                     //----------------------------------------------------------
                     switch( Sign::Of(numPos,numNeg) )
@@ -165,7 +160,7 @@ namespace Yttrium
 
                 //--------------------------------------------------------------
                 //
-                // Normalize
+                // Final reduction
                 //
                 //--------------------------------------------------------------
                 if(g>1)
@@ -193,10 +188,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename SEQUENCE> static inline
-            void Univocal(SEQUENCE &seq)
-            {
-                Univocal(seq.begin(),seq.size());
-            }
+            void Univocal(SEQUENCE &seq) { Univocal(seq.begin(),seq.size()); }
 
             //__________________________________________________________________
             //
@@ -297,6 +289,9 @@ namespace Yttrium
             template <typename T, typename U> static inline
             void Compress(Matrix<T> &target, const Matrix<U> &source)
             {
+                //--------------------------------------------------------------
+                // preparing indices
+                //--------------------------------------------------------------
                 target.release();
                 IList        indx;
                 const size_t cols = source.cols;
@@ -308,7 +303,7 @@ namespace Yttrium
                     for(const INode *node=indx.head;node;node=node->next)
                     {
                         const size_t k = **node;
-                        if( AreColinear(src,source[k]))
+                        if( AreColinear(src,source[k]) )
                         {
                             bad = true;
                             break;

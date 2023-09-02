@@ -133,6 +133,7 @@ void LU<real_t>:: adjoint(Matrix<real_t>       &adj,
     }
     else
     {
+        assert(a.rows>0);
         const real_t one(1);
         adj[1][1] = one;
     }

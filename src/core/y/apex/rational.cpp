@@ -146,5 +146,27 @@ Number(), numer(n), denom(d)                    \
     }
 }
 
+namespace Yttrium
+{
+    namespace Apex
+    {
+
+        Integer:: Integer(const Rational &q) :
+        s(q.numer.s),
+        n(q.numer.n)
+        {
+            if(1!=q.denom) throw Specific::Exception(CallSign,"assign non integer rational!");
+        }
+
+        Integer & Integer:: operator=(const Rational &q)
+        {
+            Integer tmp(q);
+            xch(tmp);
+            return *this;
+        }
+
+    }
+}
+
 
 

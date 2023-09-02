@@ -9,6 +9,9 @@ namespace Yttrium
 {
     namespace Apex
     {
+
+        class Rational;
+
         //______________________________________________________________________
         //
         //
@@ -26,7 +29,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const char * const CallSign; //!< "Apex::Natural"
+            static const char * const CallSign; //!< "Apex::Integer"
 
             //__________________________________________________________________
             //
@@ -49,7 +52,10 @@ namespace Yttrium
             Integer & operator=(const int64_t);    //!< assign integral
 
             Integer(const SignType _s, const Natural _n); //!< build from sign+natural
-            
+
+            Integer(const Rational &q);            //!< if q.denom==1
+            Integer & operator=(const Rational &); //!< if q.denom==1
+
             Y_OSTREAM_PROTO(Integer);              //!< display
 
             //__________________________________________________________________

@@ -172,7 +172,7 @@ namespace Yttrium
             Memory::OutOfReach::Swap(&self[a][1], &self[b][1], code->stride );
         }
 
-        //! assign
+        //! assign matrices with same metrics
         template <typename U> inline
         Matrix<T> & assign(const Matrix<U> &other)
         {
@@ -326,7 +326,10 @@ namespace Yttrium
             
         }
 
-        //! exchange
+        //______________________________________________________________________
+        //
+        //! exchange, no throw
+        //______________________________________________________________________
         inline void xch(Matrix &other) noexcept
         {
             CoerceSwap(cols,other.cols);
@@ -337,15 +340,21 @@ namespace Yttrium
             code.xch(other.code);
         }
 
+        //______________________________________________________________________
+        //
         //! release content, exchange with empty matrix
+        //______________________________________________________________________
         virtual void release() noexcept
         {
             Matrix _;
             xch(_);
         }
 
+        //______________________________________________________________________
+        //
         //! exchange with a new matrix if metrics is different
-        virtual void make(const size_t nr, const size_t nc)
+        //______________________________________________________________________
+        void make(const size_t nr, const size_t nc)
         {
             if(rows!=nr||cols!=nc)
             {
@@ -353,6 +362,25 @@ namespace Yttrium
                 xch(_);
             }
         }
+
+        //______________________________________________________________________
+        //
+        //! assign of copy-swap
+        //______________________________________________________________________
+        template <typename U> inline
+        void make(const Matrix<U> &other)
+        {
+            if( hasSameMetricsThan(other))
+                assign(other);
+            else
+            {
+                Matrix _(CopyOf,other);
+                xch(_);
+            }
+        }
+        
+
+
 
     private:
         Y_DISABLE_ASSIGN(Matrix);

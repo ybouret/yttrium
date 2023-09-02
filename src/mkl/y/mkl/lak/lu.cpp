@@ -258,10 +258,11 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // tranpose(Comatrix)
+            // tranpose(CoMatrix)
             //
             //__________________________________________________________________
-            inline void ajdoint(Matrix<T> &adj, const Matrix<T> &a)
+            inline void ajdoint(Matrix<T>       &adj,
+                                const Matrix<T> &a)
             {
                 assert(a.isValid());
                 assert(a.isSquare());
