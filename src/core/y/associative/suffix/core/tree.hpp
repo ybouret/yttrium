@@ -57,7 +57,7 @@ namespace Yttrium
             //! check ownership
             bool owns(const void *nodeAddr) const noexcept;
 
-            //! remove data
+            //! remove data, prune excess nodes
             void        loosen(void *nodeAddr) noexcept;
 
             //! search for data within tree

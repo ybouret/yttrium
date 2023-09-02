@@ -62,7 +62,24 @@ Y_UTEST(associative_suffix_tree)
         }
     }
 
-    
+    {
+        int data = 7;
+        Core::SuffixTree tree;
+        const String     key1 = "chemical";
+        const String     key2 = "chemistry";
+        const String     key3 = "chemically";
+        void  *node1 = tree.insert(key1,&data);
+        void  *node2 = tree.insert(key2,&data);
+        void  *node3 = tree.insert(key3,&data);
+
+        Vizible::GraphViz("full.dot",tree);
+        tree.loosen(node3);
+        Vizible::GraphViz("cut1.dot",tree);
+        tree.loosen(node2);
+        Vizible::GraphViz("cut2.dot",tree);
+
+
+    }
 
 }
 Y_UDONE()
