@@ -19,7 +19,7 @@ namespace Yttrium
 {
 
     //! constructor helper for Matrices
-#define Y_MATRIX(TOPO) Identifiable(), Collection(), MatrixMetrics TOPO, RowsType(), row(0), base(0), code(0)
+#define Y_MATRIX(TOPO) Identifiable(), Collection(), MatrixMetrics TOPO, RowsType(), Releasable(), row(0), base(0), code(0)
 
     //__________________________________________________________________________
     //
