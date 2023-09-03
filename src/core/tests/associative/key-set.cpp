@@ -46,7 +46,7 @@ private:
 Y_UTEST(associative_key_set)
 {
 
-    IKeySet<unsigned> kset;
+    IKeySet<size_t> kset;
 
     kset.add(1);
     kset.add(2);
