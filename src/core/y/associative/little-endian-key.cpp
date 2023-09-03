@@ -20,7 +20,7 @@ namespace Yttrium
 
     const void * Little_Endian_Key:: ro_addr() const noexcept
     {
-        return code;
+        return &code[0];
     }
 
     size_t Little_Endian_Key:: measure() const noexcept
@@ -35,7 +35,7 @@ namespace Yttrium
         return code[0];
     }
 
-    void Little_Endian_Key::setup(const uint8_t x) noexcept
+    void Little_Endian_Key::setup(const uint8_t &x) noexcept
     {
         code[0] = x;
         assert(x==get<1>());
@@ -50,7 +50,7 @@ namespace Yttrium
         return b0 | (b1<<8);
     }
 
-    void Little_Endian_Key::setup(const uint16_t x) noexcept
+    void Little_Endian_Key::setup(const uint16_t &x) noexcept
     {
         code[1] = uint8_t(x);
         code[0] = uint8_t(x>>8);
@@ -68,7 +68,7 @@ namespace Yttrium
         return b0 | (b1<<8) | (b2<<16) | (b3<<24);
     }
 
-    void Little_Endian_Key::setup(const uint32_t x) noexcept
+    void Little_Endian_Key::setup(const uint32_t &x) noexcept
     {
         code[3] = uint8_t(x);
         code[2] = uint8_t(x>>8);
@@ -93,7 +93,7 @@ namespace Yttrium
     }
 
 
-    void Little_Endian_Key::setup(const uint64_t x) noexcept
+    void Little_Endian_Key::setup(const uint64_t &x) noexcept
     {
         code[7] = uint8_t(x);
         code[6] = uint8_t(x>>8);

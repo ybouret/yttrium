@@ -61,8 +61,7 @@ namespace Yttrium
                     }
                     else
                     {
-                        const char msg[2] = { char(code), 0 };
-                        Vizible::Label(fp,msg);
+                        Vizible::Label(fp,&code,1);
                         fp << ",shape=circle";
                     }
                     if(data)

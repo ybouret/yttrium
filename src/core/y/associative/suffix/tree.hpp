@@ -93,10 +93,19 @@ namespace Yttrium
         typedef Iterating::Linked<Type,NODE,Iterating::Forward>            Iterator;      //!< forward
         typedef Iterating::Linked<ConstType,const NODE,Iterating::Forward> ConstIterator; //!< forward const
 
-        inline Iterator      begin()       noexcept { return Iterator(list.head); }       //!< begin forward
-        inline Iterator      end()         noexcept { return Iterator(0);         }       //!< end   forward
+        inline Iterator      begin()       noexcept { return Iterator(list.head);      }  //!< begin forward
+        inline Iterator      end()         noexcept { return Iterator(0);              }  //!< end   forward
         inline ConstIterator begin() const noexcept { return ConstIterator(list.head); }  //!< begin const forward
         inline ConstIterator end()   const noexcept { return ConstIterator(0);         }  //!< end   const forward
+
+        typedef Iterating::Linked<Type,NODE,Iterating::Reverse>            ReverseIterator;      //!< reverse
+        typedef Iterating::Linked<ConstType,const NODE,Iterating::Reverse> ConstReverseIterator; //!< reverse const
+
+        inline ReverseIterator      rbegin()       noexcept { return ReverseIterator(list.tail);      } //!< begin forward
+        inline ReverseIterator      rend()         noexcept { return ReverseIterator(0);              } //!< end   forward
+        inline ConstReverseIterator rbegin() const noexcept { return ConstReverseIterator(list.tail); }  //!< begin const forward
+        inline ConstReverseIterator rend()   const noexcept { return ConstReverseIterator(0);         }  //!< end   const forward
+
 
     protected:
         ListType         list; //!< managed list of Nodes

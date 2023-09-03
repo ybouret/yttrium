@@ -52,7 +52,13 @@ namespace Yttrium
     void emitASCII(OutputStream &fp, const char *msg, size_t len)
     {
         assert(Good(msg,len));
-        while(len-- > 0) fp << ASCII::Embedding::Char[ uint8_t(*(msg++))];
+        while(len-- > 0)
+        {
+            const uint8_t byte = uint8_t(*(msg++));
+            const char   *data =ASCII::Embedding::Char[byte];
+            //std::cerr << "emit '" << data << "'" << std::endl;
+            fp << data;
+        }
     }
 
     OutputStream & Vizible:: Text(OutputStream &fp, const String &s)

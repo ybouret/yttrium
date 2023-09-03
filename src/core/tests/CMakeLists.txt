@@ -203,6 +203,7 @@ add_test(associative:hash-table  test-core associative_hash_table)
 add_test(associative:hash-map    test-core associative_hash_map ${DATA}/small.db)
 add_test(associative:hash-set    test-core associative_hash_set ${DATA}/small.db)
 add_test(associative:lek         test-core associative_lek)
+add_test(associative:key-set     test-core associative_key_set)
 
 
 #mkl

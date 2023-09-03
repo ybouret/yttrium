@@ -66,10 +66,10 @@ namespace Yttrium
 
     private:
         Y_DISABLE_ASSIGN(Little_Endian_Key);
-        void setup(const uint8_t) noexcept;
-        void setup(const uint16_t) noexcept;
-        void setup(const uint32_t) noexcept;
-        void setup(const uint64_t) noexcept;
+        void setup(const uint8_t  &) noexcept;
+        void setup(const uint16_t &) noexcept;
+        void setup(const uint32_t &) noexcept;
+        void setup(const uint64_t &) noexcept;
     };
 
 }
