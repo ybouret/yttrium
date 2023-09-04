@@ -10,12 +10,28 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! locate/insert withing ordered arrays
+    //
+    //
+    //__________________________________________________________________________
     struct Orderly
     {
 
+        //______________________________________________________________________
+        //
+        //! locate data withing an ordered array
         /**
-         - compare(args,data[.])
+         \param ipos    insertion/current position
+         \param args    argument to insert/look-for
+         \param data    data[0..size-1]
+         \param size    current number of objects in array
+         \param compare SignType compare(args,data[.])
          */
+        //______________________________________________________________________
         template <
         typename T,
         typename U,
@@ -86,6 +102,14 @@ namespace Yttrium
             return false;
         }
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! insert data withing an ordered array
+        //
+        //
+        //______________________________________________________________________
         template <typename T, typename U> static inline
         void Insert(const size_t ipos,
                     T           &args,
@@ -94,6 +118,7 @@ namespace Yttrium
         {
             if(ipos>=size)
             {
+                // 'pushTail'
                 new (data+size) U(args);
             }
             else
@@ -113,6 +138,12 @@ namespace Yttrium
             ++size;
         }
 
+        //______________________________________________________________________
+        //
+        //
+        //! helper to cleanup data
+        //
+        //______________________________________________________________________
         template <typename U> static inline
         void Finish(U *data, size_t &size) noexcept
         { while(size>0) Memory::OutOfReach::Naught(&data[--size]); }
