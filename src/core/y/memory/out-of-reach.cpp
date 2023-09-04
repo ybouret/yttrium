@@ -78,20 +78,6 @@ namespace Yttrium
         }
 
 
-#if 0
-        void * OutOfReach:: Mov0(void *target, void *source, const size_t size) noexcept
-        {
-            uint8_t *p = static_cast<uint8_t *>(target);
-            uint8_t *q = static_cast<uint8_t *>(source);
-
-            for(size_t i=0;i<size;++i) {
-                p[i]      = q[i];
-                q[i]      = 0;
-            }
-
-            return target;
-        }
-#endif
         
         bool  OutOfReach:: Are0(const void *addr, const size_t size) noexcept
         {
