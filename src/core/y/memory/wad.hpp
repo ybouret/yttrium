@@ -45,7 +45,7 @@ namespace Yttrium
             public:    virtual ~Wad()                       noexcept; //!< check clean
 
             protected: void *       workspace; //!< flat memory
-            public:    const size_t maxBlocks; //!< acquired blocks
+            public:    const size_t capacity;  //!< acquired blocks
             public:    const size_t allocated; //!< acquired bytes
 
                 //______________________________________________________________

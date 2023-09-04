@@ -11,7 +11,7 @@ Y_UTEST(memory_wad)
     Y_SIZEOF(Memory::Crux::Wad);
 
     Memory::Wad<int,Memory::Pooled> iWad(17);
-    std::cerr << "iwad: maxBlocks=" << iWad.maxBlocks << " / allocated=" << iWad.allocated << std::endl;
+    std::cerr << "iwad: capacity=" << iWad.capacity << " / allocated=" << iWad.allocated << std::endl;
 
 
 

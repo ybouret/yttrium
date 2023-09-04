@@ -26,7 +26,7 @@ namespace Yttrium
             //__________________________________________________________________
             typedef Memory::Wad<CH,Memory::Pooled> WadType;
             using   WadType:: workspace;
-            using   WadType:: maxBlocks;
+            using   WadType:: capacity;
 
             //__________________________________________________________________
             //
@@ -39,7 +39,7 @@ namespace Yttrium
             inline explicit Code(const size_t numChars) :
             Y_STRING_CODE(numChars)
             {
-                assert(Memory::OutOfReach::Are0(data,maxBlocks*sizeof(CH)));
+                assert(Memory::OutOfReach::Are0(data,capacity*sizeof(CH)));
             }
             
 
@@ -129,7 +129,7 @@ namespace Yttrium
 
             inline void free() noexcept
             {
-                memset(data,0,size*sizeof(CH)); assert( Memory::OutOfReach::Are0(data+size, (maxBlocks-size)*sizeof(CH)));
+                memset(data,0,size*sizeof(CH)); assert( Memory::OutOfReach::Are0(data+size, (capacity-size)*sizeof(CH)));
                 size = 0;
             }
 

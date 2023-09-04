@@ -36,7 +36,7 @@ namespace Yttrium
             Y_ARGS_EXPOSE(T,Type);            //!< aliases
             typedef Wad<T,ALLOCATOR> WadType; //!< alias
             using WadType::workspace;
-            using WadType::maxBlocks;
+            using WadType::capacity;
 
             //__________________________________________________________________
             //
@@ -68,7 +68,7 @@ namespace Yttrium
 
             //! safe access
             inline Type &operator[](const size_t i) noexcept {
-                assert(i<maxBlocks);
+                assert(i<capacity);
                 return wksp[i];
             }
 

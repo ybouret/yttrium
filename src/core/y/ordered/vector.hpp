@@ -44,8 +44,8 @@ namespace Yttrium
 
         inline virtual const char * callSign() const noexcept { return CallSign; }
         inline virtual void         release()        noexcept { release_(); }
-        inline virtual size_t       size()     const noexcept { return 0!=code ? code->size : 0; }
-        inline virtual size_t       capacity() const noexcept { return 0!=code ? code->maxBlocks : 0; }
+        inline virtual size_t       size()     const noexcept { return 0!=code ? code->size     : 0; }
+        inline virtual size_t       capacity() const noexcept { return 0!=code ? code->capacity : 0; }
         inline virtual void         free()           noexcept { if(0!=code) code->free();        }
         inline virtual ConstType & operator[](const size_t indx) const noexcept
         {
@@ -61,7 +61,7 @@ namespace Yttrium
             {
                 if(0!=code)
                 {
-                    Code *newCode = new Code(n+code->maxBlocks);
+                    Code *newCode = new Code(n+code->capacity);
                     Memory::OutOfReach::Grab(newCode->head,code->head,(newCode->size=code->size)*sizeof(T));
                     code->size = 0;
                     delete code;
@@ -92,7 +92,7 @@ namespace Yttrium
             }
             else
             {
-                if(code->size<code->maxBlocks)
+                if(code->size<code->capacity)
                 {
                     // code do all the work
                     return code->insert(args);
@@ -102,7 +102,7 @@ namespace Yttrium
                     // need to increase capacity
                     Memory::Workspace<MutableType> temp;
                     ConstType &alias = temp.build(args);
-                    reserve( NextIncrease(code->maxBlocks) );
+                    reserve( NextIncrease(code->capacity) );
                     return code->insert(alias);
                 }
             }
@@ -168,7 +168,7 @@ namespace Yttrium
 
             inline bool insert(ConstType &args)
             {
-                assert(size<this->maxBlocks);
+                assert(size<this->capacity);
                 size_t ipos = 0;
                 if(search(ipos,args))
                     return false; // already exists

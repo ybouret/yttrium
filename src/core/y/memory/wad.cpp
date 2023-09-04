@@ -10,7 +10,7 @@ namespace Yttrium
         {
             Wad:: ~Wad() noexcept {
                 assert(0==workspace);
-                assert(0==maxBlocks);
+                assert(0==capacity);
                 assert(0==allocated);
             }
 
@@ -18,14 +18,14 @@ namespace Yttrium
                       const size_t numBlocks,
                       const size_t blockSize) noexcept :
             workspace(0),
-            maxBlocks(0),
+            capacity(0),
             allocated(0)
             {
                 assert(blockSize>0);
                 size_t count  = Max<size_t>(numBlocks,1);
                 workspace      = allocator.acquire(count,blockSize);
-                Coerce(maxBlocks) = (Coerce(allocated) = count) / blockSize;
-                assert(maxBlocks>=numBlocks);
+                Coerce(capacity) = (Coerce(allocated) = count) / blockSize;
+                assert(capacity>=numBlocks);
             }
 
 
@@ -33,7 +33,7 @@ namespace Yttrium
             {
                 assert(0!=workspace);
                 allocator.release(workspace, Coerce(allocated) );
-                Coerce(maxBlocks) = 0;
+                Coerce(capacity) = 0;
             }
 
         }

@@ -49,7 +49,7 @@ Serializable()
 Object(),                                      \
 WadType( StringCommon::BlocksFor(NUM_CHARS) ), \
 data(    static_cast<CH*>(workspace)        ), \
-item(data-1), size(0), maxi(maxBlocks-1)
+item(data-1), size(0), maxi(capacity-1)
 
 #define CH char
 #include "string.hxx"

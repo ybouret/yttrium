@@ -110,8 +110,8 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(), Core::Vector(), Writable
         //
         //______________________________________________________________________
         inline virtual const char * callSign() const noexcept { return CallSign; }
-        inline virtual size_t       size()     const noexcept { return code ? code->size     :  0; }
-        inline virtual size_t       capacity() const noexcept { return code ? code->maxBlocks : 0; }
+        inline virtual size_t       size()     const noexcept { return code ? code->size    :  0; }
+        inline virtual size_t       capacity() const noexcept { return code ? code->capacity : 0; }
         inline virtual void         free()           noexcept { if(0!=code) code->free(); }
         inline virtual void         release()        noexcept { release_(); }
         inline virtual void         reserve(const size_t n)
@@ -237,7 +237,7 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(), Core::Vector(), Writable
                 code = new Code( n );
             else
             {
-                assert(n>code->maxBlocks);
+                assert(n>code->capacity);
                 Code *temp = new Code(n);
                 Memory::OutOfReach::Grab(temp->base,code->base,(temp->size=code->size)*sizeof(T));
                 code->size = 0;
@@ -245,7 +245,7 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(), Core::Vector(), Writable
                 code = temp;
             }
             assert(0!=code);
-            assert(code->maxBlocks>=n);
+            assert(code->capacity>=n);
         }
 
         //! check enough space to insert one item
@@ -255,7 +255,7 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(), Core::Vector(), Writable
             if(size()>=capa)
                 minimalCapacity( this->NextCapacity(capa) );
             assert(0!=code);
-            assert(code->size<code->maxBlocks);
+            assert(code->size<code->capacity);
         }
 
         static inline Code *Duplicate(const Vector &other)
@@ -311,7 +311,7 @@ item(base-1), size(0)
             //__________________________________________________________________
             inline explicit Code(const size_t n) : Y_Vector_Code_Prolog(n)
             {
-                assert(this->maxBlocks>=n);
+                assert(this->capacity>=n);
             }
 
 
@@ -327,7 +327,7 @@ item(base-1), size(0)
             //__________________________________________________________________
             inline explicit Code(const size_t n, ConstType &args) : Y_Vector_Code_Prolog(n)
             {
-                assert(this->maxBlocks>=n);
+                assert(this->capacity>=n);
                 try {
                     while(size<n) { new (base+size) MutableType(args); ++size; }
                 }
@@ -361,7 +361,7 @@ item(base-1), size(0)
             //__________________________________________________________________
             inline void pushTail(ConstType &temp) noexcept
             {
-                assert(size<this->maxBlocks);
+                assert(size<this->capacity);
                 MemOps::Copy(&base[size++],&temp,sizeof(T));
             }
 
@@ -371,7 +371,7 @@ item(base-1), size(0)
             //__________________________________________________________________
             inline void pushHead(ConstType &temp) noexcept
             {
-                assert(size<this->maxBlocks);
+                assert(size<this->capacity);
                 MemOps::Move(base+1,base,size*sizeof(T));
                 MemOps::Copy(base,&temp,sizeof(T));
                 ++size;

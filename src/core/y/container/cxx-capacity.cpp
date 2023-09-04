@@ -11,7 +11,7 @@ namespace Yttrium
 
     size_t CxxSetCapacity<CxxAcquiredCapacity> :: From(const size_t, const Memory::Crux::Wad &w) noexcept
     {
-        return w.maxBlocks;
+        return w.capacity;
     }
 
 }
