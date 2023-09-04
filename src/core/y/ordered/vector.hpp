@@ -74,6 +74,54 @@ namespace Yttrium
             }
         }
 
+        inline bool search(ParamType args) const
+        {
+            size_t ipos = 0;
+            return (0!=code) ? code->search(ipos,args) : false;
+        }
+
+        inline bool insert(ParamType args)
+        {
+            if(0==code)
+            {
+                code = new Code( NextCapacity(0) );
+                const bool inserted = code->insert(args);
+                assert(true==inserted);
+                return inserted;
+            }
+            else
+            {
+                if(code->size<code->maxBlocks)
+                {
+                    return code->insert(args);
+                }
+                else
+                {
+                    size_t ipos = 0;
+                    if(code->search(ipos,args))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        AutoPtr<Code> newCode = new Code( NextCapacity(code->maxBlocks) );
+                        size_t source = 0;
+                        for(size_t i=0;i<ipos;++i,++source)
+                        {
+                            new (newCode->base+newCode->size) MutableType(code->base[source]);
+                            newCode->size++;
+                        }
+                        newCode->base[ipos] = args;
+                        newCode->size++;
+
+                        return false;
+                    }
+
+                }
+            }
+        }
+
+
 
     private:
         Y_DISABLE_ASSIGN(OrderedVector);
@@ -92,7 +140,8 @@ namespace Yttrium
             WadType(n),
             base(static_cast<MutableType*>(this->workspace) ),
             data(base-1),
-            size(0)
+            size(0),
+            proc()
             {
                 assert(n>0);
             }
@@ -102,7 +151,8 @@ namespace Yttrium
             WadType(impl->size),
             base(static_cast<MutableType*>(this->workspace) ),
             data(base-1),
-            size(0)
+            size(0),
+            proc()
             {
                 assert(impl->size>0);
                 try {
@@ -120,14 +170,33 @@ namespace Yttrium
             }
 
 
-
             inline virtual ~Code() noexcept { free(); }
+            inline void     free() noexcept { Orderly::Finish(base,size); }
 
-            inline void free() noexcept { Orderly::Finish(base,size); }
+            inline bool search(size_t    &ipos,
+                               ConstType &args) const
+            {
+                return Orderly::Locate(ipos,args,static_cast<ConstType*>(base),size,proc);
+            }
+
+            inline bool insert(ConstType &args)
+            {
+                assert(size<this->maxBlocks);
+                size_t ipos = 0;
+                if(search(ipos,args))
+                    return false; // already exists
+                else
+                {
+                    Orderly::Insert(ipos,args,base,size);
+                    return true;
+                }
+            }
+
 
             MutableType * const base;
             MutableType * const data;
             size_t              size;
+            COMPARATOR          proc;
 
         private:
             Y_DISABLE_ASSIGN(Code);
