@@ -174,6 +174,7 @@ add_test(apex:ortho     test-core apex_ortho)
 add_test(ordered:PQ   test-core ordered_PQ)
 add_test(ordered:heap test-core ordered_heap)
 add_test(ordered:dire test-core ordered_dire)
+add_test(ordered:locate test-core oredered_locate)
 
 #container
 add_test(container:cxx-array  test-core container_cxx_array)

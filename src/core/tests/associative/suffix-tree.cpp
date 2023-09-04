@@ -77,7 +77,8 @@ Y_UTEST(associative_suffix_tree)
         Vizible::GraphViz("cut1.dot",tree);
         tree.loosen(node2);
         Vizible::GraphViz("cut2.dot",tree);
-
+        tree.loosen(node1);
+        
 
     }
 
