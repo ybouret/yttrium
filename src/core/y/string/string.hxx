@@ -532,9 +532,9 @@ namespace Yttrium
 
 
         template <>
-        SignType String<CH>:: Compare(const String<CH> &lhs, const String<CH> &hs) noexcept
+        SignType String<CH>:: Compare(const String<CH> &lhs, const String<CH> &rhs) noexcept
         {
-            
+            return LexicographicCompare(lhs,rhs);
         }
     }
 

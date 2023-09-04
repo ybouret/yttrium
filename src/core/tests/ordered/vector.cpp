@@ -3,6 +3,7 @@
 #include "y/random/shuffle.hpp"
 #include "y/container/cxx-array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
+#include "y/container/iterator/display-all.hpp"
 #include "../main.hpp"
 
 using namespace Yttrium;
@@ -55,19 +56,20 @@ Y_UTEST(ordered_vector)
                 Y_ASSERT( V.insert( data[i] ) );
             }
             std::cerr << V << std::endl;
-            DisplayRange(V.begin(),V.end());
+            Iterating::DisplayAll::ConstOf(V);
         }
 
     }
 
     {
         OrderedVector<String,StringComparator,Memory::Pooled> V;
-        for(size_t i = 10+ran.leq(10);i>0;--i)
+        for(size_t i = 5+ran.leq(5);i>0;--i)
         {
         TRIAL:
             const String tmp = Bring<String>::Get(ran);
             if(!V.insert(tmp)) goto TRIAL;
         }
+        std::cerr << V << std::endl;
     }
 
 

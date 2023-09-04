@@ -11,12 +11,18 @@
 #include "y/container/dynamic.hpp"
 #include "y/object.hpp"
 #include "y/memory/solitary/workspace.hpp"
-#include "y/container/iterator/linear.hpp"
+#include "y/container/iterator/readable-contiguous.hpp"
 
 namespace Yttrium
 {
     namespace Core
     {
+        //______________________________________________________________________
+        //
+        //
+        //! common class for ordered vectors
+        //
+        //______________________________________________________________________
         class OrderedVector
         {
         public:
@@ -28,21 +34,58 @@ namespace Yttrium
         };
     }
 
-
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Ordered Vectors
+    //
+    //
+    //__________________________________________________________________________
     template <
     typename T,
     typename COMPARATOR = IncreasingComparator,
     typename ALLOCATOR  = Memory::Pooled>
-    class OrderedVector : public Dynamic, public Readable<T>, public Core::OrderedVector
+    class OrderedVector :
+    public Dynamic,
+    public Readable<T>,
+    public ReadableContiguous<T>,
+    public Core::OrderedVector
     {
     public:
-        Y_ARGS_DECL(T,Type);
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        Y_ARGS_DECL(T,Type); //!< aliases
+
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+
+        //! setup empty
         explicit OrderedVector() noexcept      : code(0) {}
+
+        //! setup with capacity
         explicit OrderedVector(const size_t n) : code( n>0 ? new Code(n) :0 ) {}
+
+        //! cleanup
         virtual ~OrderedVector() noexcept { release_(); }
+
+        //! copy
         inline   OrderedVector(const OrderedVector &_) : code( Duplicate(_.code) ) {}
 
-
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
         inline virtual const char * callSign() const noexcept { return CallSign; }
         inline virtual void         release()        noexcept { release_(); }
         inline virtual size_t       size()     const noexcept { return 0!=code ? code->size     : 0; }
@@ -75,17 +118,34 @@ namespace Yttrium
             }
         }
 
+        //______________________________________________________________________
+        //
+        //
+        // interface
+        //
+        //______________________________________________________________________
+
+        //______________________________________________________________________
+        //
+        //! search for args
+        //______________________________________________________________________
         inline bool search(ParamType args) const
         {
             size_t ipos = 0;
             return (0!=code) ? code->search(ipos,args) : false;
         }
 
+        //______________________________________________________________________
+        //
+        //! insert args
+        //______________________________________________________________________
         inline bool insert(ParamType args)
         {
             if(0==code)
             {
+                //--------------------------------------------------------------
                 // will be the first inserted
+                //--------------------------------------------------------------
                 code = new Code( NextCapacity(0) );
                 const bool inserted = code->insert(args);
                 assert(true==inserted);
@@ -95,12 +155,16 @@ namespace Yttrium
             {
                 if(code->size<code->capacity)
                 {
-                    // code do all the work
+                    //----------------------------------------------------------
+                    // regular case, code do all the work
+                    //----------------------------------------------------------
                     return code->insert(args);
                 }
                 else
                 {
-                    // need to increase capacity
+                    //----------------------------------------------------------
+                    // need to increase capacity while preserving args
+                    //----------------------------------------------------------
                     Memory::Workspace<MutableType> temp;
                     ConstType &alias = temp.build(args);
                     reserve( NextIncrease(code->capacity) );
@@ -109,9 +173,7 @@ namespace Yttrium
             }
         }
 
-        typedef Iterating::Linear<ConstType,Iterating::Forward> ConstIterator;
-        inline ConstIterator begin() const noexcept { return ConstIterator(0!=code?code->head:0); }
-        inline ConstIterator end()   const noexcept { return ConstIterator(0!=code?code->head+code->size:0); }
+
 
 
     private:
@@ -119,7 +181,12 @@ namespace Yttrium
         class   Code;
         typedef Memory::Wad<MutableType,ALLOCATOR> WadType;
 
-        inline void release_() noexcept { if(0!=code) { delete code; code=0; } }
+        inline void               release_()             noexcept { if(0!=code) { delete code; code=0; } }
+        inline virtual ConstType *getBaseForward() const noexcept { return code?code->head:0; }
+        inline virtual ConstType *getLastForward() const noexcept { return code?code->head+code->size:0; }
+
+        inline virtual ConstType *getBaseReverse() const noexcept { return code?code->data+code->size:0; }
+        inline virtual ConstType *getLastReverse() const noexcept { return code?code->data:0;            }
 
         Code *code;
 

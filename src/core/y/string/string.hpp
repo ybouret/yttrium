@@ -183,6 +183,7 @@ namespace Yttrium
             friend bool operator!= <> (const String<T> &lhs, const T *buf) noexcept;
             friend bool operator!= <> (const T *buf, const String<T> &rhs) noexcept;
 
+            //! lexicographic comparison
             static SignType Compare(const String &lhs, const String &hs) noexcept;
 
             //__________________________________________________________________

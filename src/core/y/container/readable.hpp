@@ -6,6 +6,7 @@
 
 #include "y/container/collection.hpp"
 #include "y/type/args.hpp"
+#include "y/type/signs.hpp"
 #include <iostream>
 
 namespace Yttrium
@@ -52,7 +53,10 @@ namespace Yttrium
 
         virtual ConstType & operator[](const size_t) const noexcept = 0; //!< access items in [1..size()]
 
+        //______________________________________________________________________
+        //
         //! default display
+        //______________________________________________________________________
         inline friend std::ostream & operator<<(std::ostream &os, const Readable &self)
         {
             const size_t n = self.size();
@@ -78,7 +82,10 @@ namespace Yttrium
         //
         //______________________________________________________________________
 
+        //______________________________________________________________________
+        //
         //! object-wise comparison
+        //______________________________________________________________________
         inline friend bool operator==(const Readable<T> &lhs, const Readable<T> &rhs) noexcept
         {
             const size_t n = lhs.size();
@@ -90,21 +97,28 @@ namespace Yttrium
             return true;
         }
 
+        //______________________________________________________________________
+        //
         //! single object comparison
+        //______________________________________________________________________
         inline friend bool operator==(const Readable<T> &lhs, ParamType rhs) noexcept
         {
             return 1 == lhs.size() && rhs == lhs[1];
         }
 
-
+        //______________________________________________________________________
+        //
         //! single object comparision
+        //______________________________________________________________________
         inline friend bool operator==(ParamType lhs, const Readable<T> &rhs) noexcept
         {
             return 1 == rhs.size() && lhs == rhs[1];
         }
 
-
+        //______________________________________________________________________
+        //
         //! object-wise comparison
+        //______________________________________________________________________
         inline friend bool operator!=(const Readable<T> &lhs, const Readable<T> &rhs) noexcept
         {
             const size_t n = lhs.size();
@@ -116,22 +130,71 @@ namespace Yttrium
             return false;
         }
 
-
+        //______________________________________________________________________
+        //
         //! single object difference
+        //______________________________________________________________________
         inline friend bool operator!=(const Readable<T> &lhs, ParamType rhs) noexcept
         {
             return 1 != lhs.size() || rhs != lhs[1];
         }
 
-
+        //______________________________________________________________________
+        //
         //! single object difference
+        //______________________________________________________________________
         inline friend bool operator!=(ParamType lhs, const Readable<T> &rhs) noexcept
         {
             return 1 != rhs.size() || lhs != rhs[1];
         }
 
+        //______________________________________________________________________
+        //
+        //! lexicographic comparison
+        //______________________________________________________________________
+        inline static SignType LexicographicCompare(const Readable<T> &lhs,
+                                                    const Readable<T> &rhs)
+        {
+            const size_t ls = lhs.size();
+            const size_t rs = rhs.size();
+
+
+            switch( Sign::Of(ls,rs) )
+            {
+                case Negative: return lxcmp(lhs,rhs);
+                case __Zero__: break;
+                case Positive: return Sign::Opposite(lxcmp(rhs,lhs));
+            }
+            for(size_t i=1;i<=ls;++i)
+            {
+                switch( Sign::Of(lhs[i],rhs[i]))
+                {
+                    case Negative: return Negative;
+                    case __Zero__: continue;
+                    case Positive: return Positive;
+                }
+            }
+            return __Zero__; // all the same, same length
+        }
+
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Readable);
+        static inline SignType lxcmp(const Readable<T> &lhs, const Readable<T> &rhs)
+        {
+            assert( lhs.size() < rhs.size() );
+            const size_t n = lhs.size();
+            for(size_t i=1;i<=n;++i)
+            {
+                switch( Sign::Of(lhs[i],rhs[i]))
+                {
+                    case Negative: return Negative;
+                    case __Zero__: continue;
+                    case Positive: return Positive;
+                }
+            }
+            return Negative; // lhs is prefix of greater rhs
+        }
     };
 }
 
