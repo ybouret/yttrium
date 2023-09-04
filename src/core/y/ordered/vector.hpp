@@ -78,7 +78,13 @@ namespace Yttrium
         virtual ~OrderedVector() noexcept { release_(); }
 
         //! copy
-        inline   OrderedVector(const OrderedVector &_) : code( Duplicate(_.code) ) {}
+        inline   OrderedVector(const OrderedVector &_) :
+        Identifiable(), Collection(),
+        Dynamic(),
+        Readable<T>(),
+        ReadableContiguous<T>(),
+        Core::OrderedVector(),
+        code( Duplicate(_.code) ) {}
 
         //______________________________________________________________________
         //
@@ -206,17 +212,17 @@ namespace Yttrium
 
             inline explicit Code(const Code &impl) :
             Object(),
-            WadType(impl->size),
+            WadType(impl.size),
             head(static_cast<MutableType*>(this->workspace) ),
             data(head-1),
             size(0),
             proc()
             {
-                assert(impl->size>0);
+                assert(impl.size>0);
                 try {
-                    while(size<impl->size)
+                    while(size<impl.size)
                     {
-                        new (head+size) MutableType( impl->head[size] );
+                        new (head+size) MutableType( impl.head[size] );
                         ++size;
                     }
                 }

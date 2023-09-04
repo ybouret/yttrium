@@ -70,6 +70,9 @@ Y_UTEST(ordered_vector)
             if(!V.insert(tmp)) goto TRIAL;
         }
         std::cerr << V << std::endl;
+
+        const OrderedVector<String,StringComparator,Memory::Pooled> U(V);
+
     }
 
 
