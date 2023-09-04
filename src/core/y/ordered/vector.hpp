@@ -222,6 +222,12 @@ namespace Yttrium
             return *this;
         }
 
+        inline OrderedVector & operator ^=(ParamType args)
+        {
+            (void)remove(args);
+            return *this;
+        }
+
 
 
 
