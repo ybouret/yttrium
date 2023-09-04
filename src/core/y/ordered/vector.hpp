@@ -29,6 +29,10 @@ namespace Yttrium
             static const char * const CallSign; //!< "OrderedVector"
             explicit OrderedVector() noexcept;  //!< setup
             virtual ~OrderedVector() noexcept;  //!< cleanup
+
+            void multipleValueException() const;
+            void valueNotFoundException() const;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(OrderedVector);
         };
@@ -85,6 +89,13 @@ namespace Yttrium
         ReadableContiguous<T>(),
         Core::OrderedVector(),
         code( Duplicate(_.code) ) {}
+
+        inline OrderedVector & operator=(const OrderedVector &other)
+        {
+            OrderedVector tmp(other);
+            xch(tmp);
+            return *this;
+        }
 
         //______________________________________________________________________
         //
@@ -179,11 +190,45 @@ namespace Yttrium
             }
         }
 
+        //______________________________________________________________________
+        //
+        //! remove args
+        //______________________________________________________________________
+        inline bool remove(ParamType args)
+        {
+            return (0!=code) ? code->remove(args) : false;
+        }
+
+
+        inline void xch(OrderedVector &other) noexcept
+        {
+            Swap(code,other.code);
+        }
+
+        inline OrderedVector & operator+=(ParamType args) {
+            if(!insert(args)) multipleValueException();
+            return *this;
+        }
+
+        inline OrderedVector & operator |=(ParamType args)
+        {
+            (void) insert(args);
+            return *this;
+        }
+
+        inline OrderedVector & operator -=(ParamType args)
+        {
+            if(!remove(args)) valueNotFoundException();
+            return *this;
+        }
+
+
+
+
 
 
 
     private:
-        Y_DISABLE_ASSIGN(OrderedVector);
         class   Code;
         typedef Memory::Wad<MutableType,ALLOCATOR> WadType;
 
@@ -254,6 +299,18 @@ namespace Yttrium
                     Orderly::Insert(ipos,args,head,size);
                     return true;
                 }
+            }
+
+            inline bool remove(ConstType &args)
+            {
+                size_t ipos = 0;
+                if(search(ipos,args))
+                {
+                    Orderly::Remove(ipos,head,size);
+                    return true;
+                }
+                else
+                    return false;
             }
 
 

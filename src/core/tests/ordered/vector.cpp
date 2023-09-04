@@ -48,6 +48,7 @@ Y_UTEST(ordered_vector)
         CxxArray<int,Memory::Pooled> data(10 + ran.leq(22));
         for(size_t i=data.size();i>0;--i) data[i] = int(i);
         std::cerr << "data=" << data << std::endl;
+        Random::Shuffle::Range(data.begin(),data.size(),ran);
 
         V.free();
         {
@@ -57,6 +58,12 @@ Y_UTEST(ordered_vector)
             }
             std::cerr << V << std::endl;
             Iterating::DisplayAll::ConstOf(V);
+        }
+
+        Random::Shuffle::Range(data.begin(),data.size(),ran);
+        for(size_t i=data.size();i>0;--i)
+        {
+            Y_ASSERT( V.remove(data[i]) );
         }
 
     }

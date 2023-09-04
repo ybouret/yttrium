@@ -116,6 +116,7 @@ namespace Yttrium
                     U           *data,
                     size_t      &size)
         {
+            assert(0!=data);
             if(ipos>=size)
             {
                 // 'pushTail'
@@ -136,6 +137,19 @@ namespace Yttrium
 
             }
             ++size;
+        }
+
+        template <typename U> static inline
+        void Remove(const size_t ipos,
+                    U           *data,
+                    size_t      &size) noexcept
+        {
+            assert(ipos<size);
+            assert(0!=data);
+            const size_t bytes  = (--size - ipos) * sizeof(U);
+            U           *target = data + ipos;
+            Memory::OutOfReach::Move( Destructed(target), target+1, bytes);
+
         }
 
         //______________________________________________________________________
