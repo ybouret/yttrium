@@ -10,7 +10,7 @@
 #include "y/memory/wad.hpp"
 #include "y/container/dynamic.hpp"
 #include "y/object.hpp"
-#include "y/ptr/auto.hpp"
+#include "y/memory/solitary/workspace.hpp"
 
 namespace Yttrium
 {
@@ -62,7 +62,7 @@ namespace Yttrium
                 if(0!=code)
                 {
                     Code *newCode = new Code(n+code->maxBlocks);
-                    Memory::OutOfReach::Grab(newCode->base,code->base,(newCode->size=code->size)*sizeof(T));
+                    Memory::OutOfReach::Grab(newCode->head,code->head,(newCode->size=code->size)*sizeof(T));
                     code->size = 0;
                     delete code;
                     code = newCode;
@@ -84,6 +84,7 @@ namespace Yttrium
         {
             if(0==code)
             {
+                // will be the first inserted
                 code = new Code( NextCapacity(0) );
                 const bool inserted = code->insert(args);
                 assert(true==inserted);
@@ -93,30 +94,16 @@ namespace Yttrium
             {
                 if(code->size<code->maxBlocks)
                 {
+                    // code do all the work
                     return code->insert(args);
                 }
                 else
                 {
-                    size_t ipos = 0;
-                    if(code->search(ipos,args))
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        AutoPtr<Code> newCode = new Code( NextCapacity(code->maxBlocks) );
-                        size_t source = 0;
-                        for(size_t i=0;i<ipos;++i,++source)
-                        {
-                            new (newCode->base+newCode->size) MutableType(code->base[source]);
-                            newCode->size++;
-                        }
-                        newCode->base[ipos] = args;
-                        newCode->size++;
-
-                        return false;
-                    }
-
+                    // need to increase capacity
+                    Memory::Workspace<MutableType> temp;
+                    ConstType &alias = temp.build(args);
+                    reserve( NextIncrease(code->maxBlocks) );
+                    return code->insert(alias);
                 }
             }
         }
@@ -138,8 +125,8 @@ namespace Yttrium
             inline explicit Code(const size_t n) :
             Object(),
             WadType(n),
-            base(static_cast<MutableType*>(this->workspace) ),
-            data(base-1),
+            head(static_cast<MutableType*>(this->workspace) ),
+            data(head-1),
             size(0),
             proc()
             {
@@ -149,8 +136,8 @@ namespace Yttrium
             inline explicit Code(const Code &impl) :
             Object(),
             WadType(impl->size),
-            base(static_cast<MutableType*>(this->workspace) ),
-            data(base-1),
+            head(static_cast<MutableType*>(this->workspace) ),
+            data(head-1),
             size(0),
             proc()
             {
@@ -158,7 +145,7 @@ namespace Yttrium
                 try {
                     while(size<impl->size)
                     {
-                        new (base+size) MutableType( impl->base[size] );
+                        new (head+size) MutableType( impl->head[size] );
                         ++size;
                     }
                 }
@@ -171,12 +158,12 @@ namespace Yttrium
 
 
             inline virtual ~Code() noexcept { free(); }
-            inline void     free() noexcept { Orderly::Finish(base,size); }
+            inline void     free() noexcept { Orderly::Finish(head,size); }
 
             inline bool search(size_t    &ipos,
                                ConstType &args) const
             {
-                return Orderly::Locate(ipos,args,static_cast<ConstType*>(base),size,proc);
+                return Orderly::Locate(ipos,args,static_cast<ConstType*>(head),size,proc);
             }
 
             inline bool insert(ConstType &args)
@@ -187,13 +174,13 @@ namespace Yttrium
                     return false; // already exists
                 else
                 {
-                    Orderly::Insert(ipos,args,base,size);
+                    Orderly::Insert(ipos,args,head,size);
                     return true;
                 }
             }
 
 
-            MutableType * const base;
+            MutableType * const head;
             MutableType * const data;
             size_t              size;
             COMPARATOR          proc;
