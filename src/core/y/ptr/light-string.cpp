@@ -66,7 +66,7 @@ namespace Yttrium
 
         virtual ~Code() noexcept
         {
-            memset(workspace,0,allocated);
+            memset(workspace,0,numBytes);
         }
 
         const char * const data;

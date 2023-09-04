@@ -12,6 +12,7 @@
 #include "y/type/capacity.hpp"
 #include "y/memory/buffer/ro.hpp"
 #include "y/stream/serializable.hpp"
+#include "y/type/signs.hpp"
 
 namespace Yttrium
 {
@@ -181,6 +182,8 @@ namespace Yttrium
             friend bool operator== <> (const T *buf, const String<T> &rhs) noexcept;
             friend bool operator!= <> (const String<T> &lhs, const T *buf) noexcept;
             friend bool operator!= <> (const T *buf, const String<T> &rhs) noexcept;
+
+            static SignType Compare(const String &lhs, const String &hs) noexcept;
 
             //__________________________________________________________________
             //

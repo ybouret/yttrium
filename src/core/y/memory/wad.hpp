@@ -46,7 +46,7 @@ namespace Yttrium
 
             protected: void *       workspace; //!< flat memory
             public:    const size_t capacity;  //!< acquired blocks
-            public:    const size_t allocated; //!< acquired bytes
+            public:    const size_t numBytes;  //!< acquired bytes
 
                 //______________________________________________________________
                 //

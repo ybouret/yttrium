@@ -530,6 +530,12 @@ namespace Yttrium
             return rhs != arr;
         }
 
+
+        template <>
+        SignType String<CH>:: Compare(const String<CH> &lhs, const String<CH> &hs) noexcept
+        {
+            
+        }
     }
 
 }

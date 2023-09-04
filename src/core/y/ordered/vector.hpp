@@ -11,6 +11,7 @@
 #include "y/container/dynamic.hpp"
 #include "y/object.hpp"
 #include "y/memory/solitary/workspace.hpp"
+#include "y/container/iterator/linear.hpp"
 
 namespace Yttrium
 {
@@ -108,6 +109,9 @@ namespace Yttrium
             }
         }
 
+        typedef Iterating::Linear<ConstType,Iterating::Forward> ConstIterator;
+        inline ConstIterator begin() const noexcept { return ConstIterator(0!=code?code->head:0); }
+        inline ConstIterator end()   const noexcept { return ConstIterator(0!=code?code->head+code->size:0); }
 
 
     private:
