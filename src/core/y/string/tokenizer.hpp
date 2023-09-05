@@ -6,13 +6,13 @@
 #define Y_String_Tokenizer_Included 1
 
 #include "y/config/starting.hpp"
+#include "y/string/fwd.hpp"
 
 namespace Yttrium
 {
 
     namespace Core {
-        template <typename> class String;
-
+        
 
         //______________________________________________________________________
         //

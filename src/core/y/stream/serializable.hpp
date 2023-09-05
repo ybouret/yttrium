@@ -4,10 +4,10 @@
 #define Y_IO_Serializable_Included 1
 
 #include "y/config/starting.hpp"
+#include "y/string/fwd.hpp"
 
 namespace Yttrium
 {
-    namespace Core    { template <typename> class String;   }
     namespace Hashing { class                     Function; }
 
     class OutputStream;

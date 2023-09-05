@@ -8,10 +8,10 @@
 #include "y/stream/output.hpp"
 #include "y/stream/libc/file.hpp"
 #include "y/stream/libc/buffer/direct.hpp"
+#include "y/string/fwd.hpp"
 
 namespace Yttrium
 {
-    namespace Core { template <typename> class String; }
 
 
     //__________________________________________________________________________

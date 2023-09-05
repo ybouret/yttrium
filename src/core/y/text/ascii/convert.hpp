@@ -5,13 +5,12 @@
 #define Y_Text_Convert_Included 1
 
 #include "y/type/ints.hpp"
-
+#include "y/string/fwd.hpp"
 
 namespace Yttrium
 {
 
-    namespace Core { template <typename> class String; }
-
+    
     namespace ASCII
     {
         //______________________________________________________________________

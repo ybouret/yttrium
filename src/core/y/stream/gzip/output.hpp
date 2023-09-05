@@ -5,11 +5,11 @@
 #define Y_IO_GZIP_Output_File_Imcluded 1
 
 #include "y/stream/output.hpp"
+#include "y/string/fwd.hpp"
 
 namespace Yttrium
 {
-    namespace Core { template <typename> class String; }
-
+    
     namespace GZip
     {
         //______________________________________________________________________
