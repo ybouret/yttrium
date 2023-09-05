@@ -5,42 +5,19 @@
 #define Y_IO_Libc_Input_Included 1
 
 #include "y/stream/input.hpp"
+#include "y/stream/libc/is-stdin.hpp"
 #include "y/stream/libc/file.hpp"
 #include "y/stream/libc/buffer/cached.hpp"
+#include "y/string/fwd.hpp"
 
 namespace Yttrium
 {
-    namespace Core { template <typename> class String; }
 
 
-    //__________________________________________________________________________
-    //
-    //! Hard-coded file name redirecting to stdin
-    //__________________________________________________________________________
-#define Y_STDIN ":STDIN:"
 
     namespace Libc
     {
-        //______________________________________________________________________
-        //
-        //
-        //! analyze file name of assuming stdin
-        //
-        //______________________________________________________________________
-        class IsStdIn
-        {
-        public:
-            virtual ~IsStdIn() noexcept;    //!< cleanup
-
-        protected:
-            explicit IsStdIn() noexcept;    //!< flag = true
-            explicit IsStdIn(const char *); //!< check valid file name and stdin
-            const bool flag;                //!< true if stdin
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(IsStdIn);
-        };
-
+        
         //______________________________________________________________________
         //
         //

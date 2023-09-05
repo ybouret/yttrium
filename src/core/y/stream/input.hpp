@@ -9,11 +9,11 @@
 #include "y/stream/interface.hpp"
 #include "y/type/ints.hpp"
 #include "y/stream/io/chars.hpp"
+#include "y/string/fwd.hpp"
 
 namespace Yttrium
 {
 
-    namespace Core { template <typename> class String; }
 
     //______________________________________________________________________
     //
