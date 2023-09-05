@@ -1,9 +1,9 @@
 
-#include "y/mkl/lak/ortho-space.hpp"
+#include "y/mkl/algebra/ortho-space.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/bits.hpp"
 #include "../../../core/tests/main.hpp"
-#include "y/mkl/lak/rank.hpp"
+#include "y/mkl/algebra/rank.hpp"
 
 using namespace Yttrium;
 using namespace MKL;

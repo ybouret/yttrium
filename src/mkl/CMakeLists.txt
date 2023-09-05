@@ -4,7 +4,7 @@ Y_CreateLibrary(y-mkl
 mkl
 mkl/ode
 mkl/opt
-mkl/lak
+mkl/algebra
 )
 
 add_subdirectory(tests)

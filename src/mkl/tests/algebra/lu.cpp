@@ -1,7 +1,7 @@
 
 
 
-#include "y/mkl/lak/lu.hpp"
+#include "y/mkl/algebra/lu.hpp"
 #include "y/utest/run.hpp"
 #include "../../../core/tests/main.hpp"
 #include "y/container/cxx-array.hpp"

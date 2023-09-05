@@ -1,5 +1,5 @@
 
-#include "y/mkl/lak/rank.hpp"
+#include "y/mkl/algebra/rank.hpp"
 
 namespace Yttrium
 {

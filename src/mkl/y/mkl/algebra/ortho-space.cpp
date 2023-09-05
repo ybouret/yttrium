@@ -1,6 +1,6 @@
 
-#include "y/mkl/lak/ortho-space.hpp"
-#include "y/mkl/lak/lu.hpp"
+#include "y/mkl/algebra/ortho-space.hpp"
+#include "y/mkl/algebra/lu.hpp"
 #include "y/apex/mylar.hpp"
 #include "y/container/cxx-array.hpp"
 

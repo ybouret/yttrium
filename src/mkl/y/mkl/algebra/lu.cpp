@@ -1,5 +1,5 @@
 
-#include "y/mkl/lak/lu.hpp"
+#include "y/mkl/algebra/lu.hpp"
 #include "y/type/utils.hpp"
 #include "y/container/cxx-array.hpp"
 
