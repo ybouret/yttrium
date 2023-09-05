@@ -7,7 +7,7 @@
 
 #include "y/stream/output.hpp"
 #include "y/stream/libc/file.hpp"
-#include "y/stream/libc/writable/output-grasp.hpp"
+#include "y/stream/libc/writable/file.hpp"
 #include "y/stream/libc/buffer/direct.hpp"
 #include "y/string/fwd.hpp"
 
@@ -15,21 +15,8 @@ namespace Yttrium
 {
 
 
-    //__________________________________________________________________________
-    //
-    //! Hard-coded file name redirecting to stderr
-    //__________________________________________________________________________
-#define Y_STDERR ":STDERR:"
-
-    //__________________________________________________________________________
-    //
-    //! Hard-coded file name redirecting to stderr
-    //__________________________________________________________________________
-#define Y_STDOUT ":STDOUT:"
-
     namespace Libc
     {
-
 
         //______________________________________________________________________
         //
@@ -39,7 +26,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class OutputFile : public OutputStream, public OutputGrasp, public File
+        class OutputFile : public OutputStream, public WritableFile
         {
         public:
             //__________________________________________________________________
@@ -72,8 +59,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            virtual void write(const char); //!< emit/write to buffer
-            virtual void flush();           //!< emit
+            virtual void         write(const char); //!< emit/write to buffer
+            virtual void         flush();           //!< emit
             virtual const char * callSign() const throw();
             
         private:

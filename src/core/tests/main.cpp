@@ -110,6 +110,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(io_gzip_read);
     Y_UTEST(io_gzip_write);
     Y_UTEST(io_bzip2_read);
+    Y_UTEST(io_bzip2_write);
 
     Y_UTEST(fft1);
     Y_UTEST(fft2);

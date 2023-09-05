@@ -23,65 +23,11 @@ namespace Yttrium
         {
             try { emit(); } catch(...) {}
         }
-
-#if 0
-        static inline void *openErr()
-        {
-            Y_GIANT_LOCK();
-            FILE *fp = stderr;
-            if(!fp) throw Libc::Exception(EIO,"closed stderr!");
-            return fp;
-        }
-
-        static inline void *openOut()
-        {
-            Y_GIANT_LOCK();
-            FILE *fp = stdout;
-            if(!fp) throw Libc::Exception(EIO,"closed stdout!");
-            return fp;
-        }
-
-
-        void * OutputGrasp:: openFile(const char *fileName,
-                                      const bool append)
-        {
-            assert(0!=fileName);
-
-            if(isErr)
-            {
-                assert(!isOut);
-                assert(!isReg);
-                assert(0==strcmp(fileName,Y_STDERR));
-                return openErr();
-            }
-
-            if(isOut)
-            {
-                assert(!isErr);
-                assert(!isReg);
-                assert(0==strcmp(fileName,Y_STDOUT));
-                return openOut();
-            }
-
-            assert(isReg);
-            assert(!isErr);
-            assert(!isOut);
-
-            const char *mode = append ? "ab" : "wb";
-            Y_GIANT_LOCK();
-            FILE *fp = fopen(fileName,mode);
-            if(!fp)
-            {
-                throw Libc::Exception(errno,"fopen(%s)",fileName);
-            }
-            return fp;
-        }
-#endif
         
+
         OutputFile:: OutputFile(const StdErr_ &_) :
         OutputStream(),
-        OutputGrasp(_),
-        Libc::File( openErr(), false),
+        WritableFile(_),
         buffer()
         {
         }
@@ -89,8 +35,7 @@ namespace Yttrium
 
         OutputFile:: OutputFile(const StdOut_ &_) :
         OutputStream(),
-        OutputGrasp(_),
-        Libc::File( openOut(), false),
+        WritableFile(_),
         buffer()
         {
         }
@@ -99,21 +44,17 @@ namespace Yttrium
 
         OutputFile:: OutputFile(const char *fileName, const bool append) :
         OutputStream(),
-        OutputGrasp(fileName),
-        Libc::File( openFile(fileName,append), isReg),
+        WritableFile(fileName,append),
         buffer()
         {
         }
 
         OutputFile:: OutputFile(const String &fileName, const bool append) :
         OutputStream(),
-        OutputGrasp(fileName()),
-        Libc::File( openFile(fileName(),append), isReg),
+        WritableFile(fileName,append),
         buffer()
         {
         }
-
-        
 
 
         void OutputFile:: write(const char c)
