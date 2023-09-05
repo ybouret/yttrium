@@ -38,7 +38,10 @@ namespace Yttrium
             //__________________________________________________________________
             unsigned read(void *buff, const unsigned size); //!< reading bytes with gzread
 
-            //! append a single char to stream
+            //! read a single char with gzgetc
+            bool getc(char &C);
+
+            //! append a single char with gzputc
             void putc(const char);
 
         private:

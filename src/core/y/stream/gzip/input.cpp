@@ -3,8 +3,6 @@
 #include "y/string.hpp"
 #include "y/system/exception.hpp"
 #include "y/stream/gzip/file.hpp"
-#include "y/stream/libc/buffer/cached.hpp"
-#include "y/type/utils.hpp"
 
 namespace Yttrium
 {
@@ -23,59 +21,45 @@ namespace Yttrium
         {
         public:
             inline explicit Code(const char *fileName) :
-            fp( CheckFileName(fileName), "r'"),
-            io(),
-            nb( unsigned(Min<size_t>(io.bytes, IntegerFor<unsigned>::Maximum) ) )
-            {
-            }
+            fp( CheckFileName(fileName), "r"),
+            io() { }
 
-            inline virtual ~Code() noexcept
-            {
-            }
-
+            inline virtual ~Code() noexcept { }
+            
             inline bool query(char &C)
             {
-                if(io.size<=0 && !load())
-                    return false;
-                else
+                if(io.size>0)
                 {
-                    assert(io.size>0);
-                    C = io.pluck();
+                    C = io.pullHead();
                     return true;
                 }
+                else
+                    return fp.getc(C);
             }
 
-            //! try to load more chars when io is starved
-            inline bool load()
-            {
-                assert(io.size<=0);
-                io.ready();
-                const unsigned nr = fp.read(io.entry,nb);
-                if(nr>0)
-                {
-                    io.bring(0,nr-1);
-                    return true;
-                }
-                else
-                    return false;
-            }
             
-            File               fp;
-            Libc::CachedBuffer io;
-            const unsigned     nb;
+            inline bool ready()
+            {
+                char C=0;
+                if(fp.getc(C)) io << C;
+                return io.size>0;
+            }
 
-
+            File      fp;
+            IO::Chars io;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
+
+
             static const char * CheckFileName(const char *fileName)
             {
                 if(0==fileName) throw Specific::Exception(InputFile::CallSign,"NULL fileName");
                 return fileName;
             }
-
-
         };
+
+
 
         InputFile:: InputFile(const char *fileName) :
         code( new Code(fileName) )
@@ -98,13 +82,13 @@ namespace Yttrium
         void InputFile:: store(const char C)
         {
             assert(0!=code);
-            code->io.unget(C);
+            code->io << C;
         }
 
         bool InputFile:: ready()
         {
             assert(0!=code);
-            return code->io.size>0 || code->load();
+            return code->ready();
         }
         
 
