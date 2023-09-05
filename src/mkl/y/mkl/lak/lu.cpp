@@ -190,7 +190,16 @@ namespace Yttrium
                     b[ip]=b[i];
                     if(ii>0)
                     {
-                        for(size_t j=ii;j<=i-1;j++) sum -= a[i][j]*b[j];
+#if 0
+                        for(size_t j=ii;j<i;j++) sum -= a[i][j]*b[j];
+#endif
+                        xadd.free();
+                        xadd << sum;
+                        {
+                            const Readable<T> &a_i = a[i];
+                            for(size_t j=ii;j<i;j++) xadd << -a_i[j]*b[j];
+                        }
+                        sum = xadd.sum();
                     }
                     else
                     {
@@ -207,8 +216,8 @@ namespace Yttrium
                     for(size_t j=i+1;j<=n;j++) sum -= a[i][j]*b[j];
                     b[i]=sum/a[i][i];
 #endif
-                    
-                    MatrixRow<T> &a_i = a[i];
+
+                    const Readable<T> &a_i = a[i];
                     xadd.free();
                     xadd << b[i];
                     for(size_t j=n;j>i;--j)
