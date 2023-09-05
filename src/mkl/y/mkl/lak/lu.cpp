@@ -202,9 +202,19 @@ namespace Yttrium
 
                 for(size_t i=n;i>=1;i--)
                 {
+#if 0
                     Type sum=b[i];
                     for(size_t j=i+1;j<=n;j++) sum -= a[i][j]*b[j];
                     b[i]=sum/a[i][i];
+#endif
+                    
+                    MatrixRow<T> &a_i = a[i];
+                    xadd.free();
+                    xadd << b[i];
+                    for(size_t j=n;j>i;--j)
+                        xadd << - a_i[j] * b[j];
+                    b[i] = xadd.sum()/a_i[i];
+
                 }
             }
 
