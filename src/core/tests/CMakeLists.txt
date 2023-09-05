@@ -25,7 +25,7 @@ information
 )
 
 Y_LinkLibraries(test-core)
-target_link_libraries(test-core y-z)
+target_link_libraries(test-core y-z y-bz2)
 
 set( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
 set( DATA ${HERE}/../../../var)
@@ -149,6 +149,7 @@ add_test(io:ints      test-core io_ints)
 add_test(io:ser       test-core io_ser)
 add_test(io:gzip-read test-core io_gzip_read ${DATA}/compressed.db.gz)
 add_test(io:gzip-write test-core io_gzip_write)
+add_test(io:bzip2-read test-core io_bzip2_read ${DATA}/compressed.db2.bz2)
 
 #fft
 add_test(fft:1   test-core fft1)

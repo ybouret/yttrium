@@ -30,8 +30,8 @@ namespace Yttrium
             explicit OrderedVector() noexcept;  //!< setup
             virtual ~OrderedVector() noexcept;  //!< cleanup
 
-            void multipleValueException() const;
-            void valueNotFoundException() const;
+            void multipleValueException() const; //!< raise exception
+            void valueNotFoundException() const; //!< raise exception
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(OrderedVector);
@@ -90,6 +90,7 @@ namespace Yttrium
         Core::OrderedVector(),
         code( Duplicate(_.code) ) {}
 
+        //! assign by copy/swap
         inline OrderedVector & operator=(const OrderedVector &other)
         {
             OrderedVector tmp(other);

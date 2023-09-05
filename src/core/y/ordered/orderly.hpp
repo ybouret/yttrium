@@ -139,6 +139,13 @@ namespace Yttrium
             ++size;
         }
 
+
+        //______________________________________________________________________
+        //
+        //
+        //! remove data at given ipos
+        //
+        //______________________________________________________________________
         template <typename U> static inline
         void Remove(const size_t ipos,
                     U           *data,
