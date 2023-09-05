@@ -190,7 +190,7 @@ Y_UTEST(lak_lu)
     testLU< Complex< XReal<double> >      >(ran);
     testLU< Complex< XReal<long double> > >(ran);
 
-    testLU<apq>(ran,3);
+    testLU<apq>(ran,4);
     
 
 }

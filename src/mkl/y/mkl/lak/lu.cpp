@@ -107,21 +107,39 @@ namespace Yttrium
                 {
                     for (size_t i=1;i<j;i++)
                     {
+#if 0
                         Type sum=a[i][j];
                         for(size_t k=1;k<i;k++)
                             sum -= a[i][k]*a[k][j];
                         a[i][j]=sum;
+#endif
+                        MatrixRow<T> &a_i  = a[i];
+                        T            &a_ij = a_i[j];
+                        xadd.free();
+                        xadd << a_ij;
+                        for(size_t k=1;k<i;k++)
+                            xadd << -a_i[k] * a[k][j];
+                        a_ij = xadd.sum();
                     }
 
                     Scalar big=s0;
                     size_t imax=j;
                     for (size_t i=j;i<=n;i++)
                     {
+#if 0
                         Type sum=a[i][j];
                         for (size_t k=1;k<j;k++)
                             sum -= a[i][k]*a[k][j];
                         a[i][j]=sum;
-                        const Scalar dum = scal[i] * Fabs<Type>::Of(sum);
+#endif
+
+                        MatrixRow<T> &a_i  = a[i];
+                        T            &a_ij = a_i[j];
+                        xadd.free();
+                        xadd << a_ij;
+                        for (size_t k=1;k<j;k++)
+                            xadd << -a[i][k]*a[k][j];
+                        const Scalar dum = scal[i] * Fabs<Type>::Of(a_ij=xadd.sum());
                         if( dum >= big)
                         {
                             big  = dum;
@@ -131,7 +149,6 @@ namespace Yttrium
 
                     if (j != imax) {
                         a.swapRows(j,imax);
-                        //Swap(scal[imax],scal[j]);
                         dpos = !dpos;
                         scal[imax]=scal[j];
                     }
