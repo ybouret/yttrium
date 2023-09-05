@@ -200,28 +200,48 @@ namespace Yttrium
         }
 
 
+        //______________________________________________________________________
+        //
+        //! no throw exchange
+        //______________________________________________________________________
         inline void xch(OrderedVector &other) noexcept
         {
             Swap(code,other.code);
         }
 
+        //______________________________________________________________________
+        //
+        //! add a non-existing args
+        //______________________________________________________________________
         inline OrderedVector & operator+=(ParamType args) {
             if(!insert(args)) multipleValueException();
             return *this;
         }
 
+        //______________________________________________________________________
+        //
+        //! add any args
+        //______________________________________________________________________
         inline OrderedVector & operator |=(ParamType args)
         {
             (void) insert(args);
             return *this;
         }
 
+        //______________________________________________________________________
+        //
+        //! remove a pre-existing arg
+        //______________________________________________________________________
         inline OrderedVector & operator -=(ParamType args)
         {
             if(!remove(args)) valueNotFoundException();
             return *this;
         }
 
+        //______________________________________________________________________
+        //
+        //! remove any arg
+        //______________________________________________________________________
         inline OrderedVector & operator ^=(ParamType args)
         {
             (void)remove(args);
