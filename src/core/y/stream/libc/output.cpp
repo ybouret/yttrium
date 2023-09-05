@@ -14,57 +14,6 @@ namespace Yttrium
 
     namespace Libc
     {
-        OutputGrasp:: ~OutputGrasp() noexcept
-        {
-
-        }
-
-
-        OutputGrasp:: OutputGrasp(const StdErr_ &) noexcept :
-        isErr(true),
-        isOut(false),
-        isReg(false)
-        {
-
-        }
-
-        OutputGrasp:: OutputGrasp(const StdOut_ &) noexcept :
-        isErr(false),
-        isOut(true),
-        isReg(false)
-        {
-
-        }
-
-        OutputGrasp:: OutputGrasp(const char *fileName):
-        isErr(false),
-        isOut(false),
-        isReg(true)
-        {
-            if( 0 == fileName) throw Specific::Exception("Libc::OutputFile","NULL file name");
-
-            if( 0 == strcmp(fileName,Y_STDERR) )
-            {
-                Coerce(isErr) = true;
-                Coerce(isReg) = false;
-                return;
-            }
-
-            if( 0 == strcmp(fileName,Y_STDOUT) )
-            {
-                Coerce(isOut) = true;
-                Coerce(isReg) = false;
-                return;
-            }
-            
-        }
-
-
-
-    }
-
-    namespace Libc
-    {
 
         const char * const OutputFile::CallSign = "Libc::OutputFile";
 
@@ -75,7 +24,7 @@ namespace Yttrium
             try { emit(); } catch(...) {}
         }
 
-
+#if 0
         static inline void *openErr()
         {
             Y_GIANT_LOCK();
@@ -127,7 +76,8 @@ namespace Yttrium
             }
             return fp;
         }
-
+#endif
+        
         OutputFile:: OutputFile(const StdErr_ &_) :
         OutputStream(),
         OutputGrasp(_),
@@ -144,6 +94,7 @@ namespace Yttrium
         buffer()
         {
         }
+
 
 
         OutputFile:: OutputFile(const char *fileName, const bool append) :

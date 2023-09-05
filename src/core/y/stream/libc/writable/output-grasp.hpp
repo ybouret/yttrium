@@ -1,15 +1,9 @@
-
-
 //! \file
 
-#ifndef Y_IO_Libc_Output_Included
-#define Y_IO_Libc_Output_Included 1
+#ifndef Y_IO_Libc_OutputGrasp_Included
+#define Y_IO_Libc_OutputGrasp_Included 1
 
-#include "y/stream/output.hpp"
 #include "y/stream/libc/file.hpp"
-#include "y/stream/libc/writable/output-grasp.hpp"
-#include "y/stream/libc/buffer/direct.hpp"
-#include "y/string/fwd.hpp"
 
 namespace Yttrium
 {
@@ -29,26 +23,16 @@ namespace Yttrium
 
     namespace Libc
     {
-
-
         //______________________________________________________________________
         //
         //
         //
-        //! OutputStream based on a C FILE
+        //! Grasp kind of output
         //
         //
         //______________________________________________________________________
-        class OutputFile : public OutputStream, public OutputGrasp, public File
+        class OutputGrasp
         {
-        public:
-            //__________________________________________________________________
-            //
-            //
-            // Definition
-            //
-            //__________________________________________________________________
-            static const char * const CallSign; //!< "Libc::OutputFile"
 
             //__________________________________________________________________
             //
@@ -56,15 +40,23 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            virtual ~OutputFile() noexcept;       //!< cleanup
-            explicit OutputFile(const StdErr_ &); //!< stderr
-            explicit OutputFile(const StdOut_ &); //!< stdout
+        protected:
+            explicit OutputGrasp(const StdErr_ &) noexcept; //!< StdErr
+            explicit OutputGrasp(const StdOut_ &) noexcept; //!< StdOut
+            explicit OutputGrasp(const char *   );          //!< check name
 
-            //! open regular files of Y_STDERR/Y_STDOUT
-            explicit OutputFile(const char *fileName, const bool append=false);
+        public:
+            virtual ~OutputGrasp() noexcept; //!< cleanup
 
-            //! open regular files of Y_STDERR/Y_STDOUT
-            explicit OutputFile(const Core::String<char> &fileName, const bool append=false);
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const bool isErr; //!< -> stderr
+            const bool isOut; //!< -> stdout
+            const bool isReg; //!< -> fopen
 
             //__________________________________________________________________
             //
@@ -72,20 +64,19 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            virtual void write(const char); //!< emit/write to buffer
-            virtual void flush();           //!< emit
-            virtual const char * callSign() const throw();
+        protected:
+            //! act according to flags
+            void *openFile(const char *, const bool append);
+            void *openOut();
+            void *openErr();
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(OutputFile);
-            Libc::DirectBuffer buffer;
-            void emit();
+            Y_DISABLE_COPY_AND_ASSIGN(OutputGrasp);
         };
-
 
     }
 
 }
 
-
 #endif
+
