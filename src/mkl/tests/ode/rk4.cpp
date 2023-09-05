@@ -87,6 +87,7 @@ namespace
         Vector<T> y(2,0);
         y[1] = 1;
         y[2] = 0;
+        fcos(0,y);
         const double tmax = 80;
         const size_t N    = 10000;
         ODE::RK4<T>  rk4;
