@@ -170,7 +170,7 @@ namespace
     }
 }
 
-Y_UTEST(lak_lu)
+Y_UTEST(algebra_lu)
 {
     Random::Rand    ran;
 

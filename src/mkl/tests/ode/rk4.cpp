@@ -35,7 +35,7 @@ namespace
     void makeExp(const char *fileName)
     {
         dExp<T> eq(-1.2);
-        typename ODE::Field<T>::Equation dexp(&eq, & dExp<T>::compute);
+        typename ODE::Named<T>::Equation dexp(&eq, & dExp<T>::compute);
 
         Vector<T> y(1,2.7);
         const double tmax = 8;
@@ -81,8 +81,8 @@ namespace
     void makeCos(const char *fileName)
     {
         dCos<T> eq;
-        typename ODE::Field<T>::Equation dcos(&eq, & dCos<T>::compute);
-        typename ODE::Field<T>::Callback fcos(&eq, & dCos<T>::callback);
+        typename ODE::Named<T>::Equation dcos(&eq, & dCos<T>::compute);
+        typename ODE::Named<T>::Callback fcos(&eq, & dCos<T>::callback);
 
         Vector<T> y(2,0);
         y[1] = 1;

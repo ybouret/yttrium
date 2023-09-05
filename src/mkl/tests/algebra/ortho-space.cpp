@@ -9,7 +9,7 @@ using namespace Yttrium;
 using namespace MKL;
 
 
-Y_UTEST(lak_ortho_space)
+Y_UTEST(algebra_ortho_space)
 {
     Random::Rand ran;
     if(false)

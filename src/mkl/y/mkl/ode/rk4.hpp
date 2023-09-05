@@ -33,8 +33,8 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef typename Field<T>::Equation Equation; //!< alias
-                typedef typename Field<T>::Callback Callback; //!< alias
+                typedef typename Named<T>::Equation Equation; //!< alias
+                typedef typename Named<T>::Callback Callback; //!< alias
 
                 //______________________________________________________________
                 //
