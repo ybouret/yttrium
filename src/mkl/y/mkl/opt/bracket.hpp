@@ -39,7 +39,7 @@ namespace Yttrium
 
             //__________________________________________________________________
             //
-            //! bracket withing f.a = F(x.a), f.c = F(x.c)
+            //! bracket within f.a = F(x.a), f.c = F(x.c)
             /**
              - return true for regular local minimum, ordered x
              - return false for global minimum, on lowest side
@@ -62,7 +62,12 @@ namespace Yttrium
                 return Inside(x,f,FW);
             }
 
-
+            //__________________________________________________________________
+            //
+            //
+            //! bracket from f.a=F(x.a) and f.b=F(x.c)
+            //
+            //__________________________________________________________________
             static void Expand(Triplet<T>   &x,
                                Triplet<T>   &f,
                                FunctionType &F);

@@ -49,3 +49,41 @@ PROBE:
 
 
 }
+
+
+template <>
+void Bracket<real_t>:: Expand(Triplet<real_t>   &x,
+                              Triplet<real_t>   &f,
+                              FunctionType      &F)
+{
+    static const real_t lambda(1.2);
+    
+    // find decreasing direction
+    if(f.b>f.a)
+    {
+        Swap(f.a,f.b);
+        Swap(x.a,x.b);
+    }
+
+    assert(f.b<=f.a);
+    // take a new step
+PROBE:
+    f.c = F(x.c = x.b + lambda * (x.b - x.a));
+    if(f.b<=f.c)
+    {
+        x.makeIncreasingWith(f);
+        return;
+    }
+    else
+    {
+
+        x.a = x.b;
+        f.a = x.b;
+        x.b = x.c;
+        f.b = f.c;
+        goto PROBE;
+    }
+
+
+
+}
