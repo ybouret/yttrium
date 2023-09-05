@@ -248,12 +248,7 @@ namespace Yttrium
             return *this;
         }
 
-
-
-
-
-
-
+        
     private:
         class   Code;
         typedef Memory::Wad<MutableType,ALLOCATOR> WadType;
