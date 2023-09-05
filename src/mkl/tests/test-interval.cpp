@@ -11,5 +11,7 @@ Y_UTEST(interval)
     std::cerr << I << std::endl;
     Interval<double> J(-1,3);
     std::cerr << J << std::endl;
+
+    
 }
 Y_UDONE()

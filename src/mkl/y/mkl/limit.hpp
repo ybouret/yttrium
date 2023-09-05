@@ -12,29 +12,63 @@ namespace Yttrium
 
     namespace MKL
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Limit type
+        //
+        //
+        //______________________________________________________________________
         enum LimitType
         {
-            LimitNone,   //!< +/- infinity
-            LimitClosed, //!< take value
-            LimitOpen    //!< exclude value
+            UnboundedLimit, //!< +/- infinity
+            IncludingLimit, //!< take value
+            ExcludingLimit  //!< exclude value
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Limit has a value and a type
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class Limit
         {
         public:
-            Y_ARGS_EXPOSE(T,Type);
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            Y_ARGS_EXPOSE(T,Type); //!< aliases
 
-            inline  Limit() : value(0), type(LimitNone) {}
-            inline  Limit(const Limit &l) : value(l.value), type(l.type) {}
-            inline ~Limit() noexcept {}
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            inline  Limit()               : value(0), type(UnboundedLimit) {} //!< setup
+            inline  Limit(const Limit &l) : value(l.value), type(l.type)   {} //!< copy
+            inline ~Limit() noexcept                                       {} //!< cleanup
+            inline Limit(ConstType x) : value(x), type(IncludingLimit)     {} //!< setup default
 
-            inline Limit(ConstType x) : value(x), type(LimitClosed) {}
-            inline Limit(ConstType x, const bool taken) : value(x), type(taken?LimitClosed:LimitOpen) {}
+            //! more generic setup
+            inline Limit(ConstType x, const bool includes) : value(x), type(includes?IncludingLimit:ExcludingLimit) {}
 
-            ConstType       value;
-            const LimitType type;
+            //__________________________________________________________________
+            //
+            //
+            // members
+            //
+            //__________________________________________________________________
+            ConstType       value; //!< limit value, meaningless if type==Unbounded
+            const LimitType type;  //!< type of limit
 
         private:
             Y_DISABLE_ASSIGN(Limit);

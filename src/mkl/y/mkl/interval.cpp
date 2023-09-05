@@ -6,7 +6,6 @@ namespace Yttrium
 
     namespace MKL
     {
-        Y_SHALLOW_IMPL(Infinity);
         
         namespace Kernel
         {
