@@ -67,8 +67,8 @@ namespace Yttrium
         protected:
             //! act according to flags
             void *openFile(const char *, const bool append);
-            void *openOut();
-            void *openErr();
+            void *openOut(); //!< return stdout
+            void *openErr(); //!< return stderr
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(OutputGrasp);

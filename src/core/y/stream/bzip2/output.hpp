@@ -12,19 +12,44 @@ namespace Yttrium
 {
     namespace Bzip2
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! BZ2 basic output file
+        //
+        //
+        //______________________________________________________________________
         class OutputFile : public OutputStream
         {
         public:
-            static const char * const CallSign;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< BZ2::OutputFile
 
-            virtual ~OutputFile() noexcept;
-            explicit OutputFile(const char *               fileName, const int level);
-            explicit OutputFile(const Core::String<char> & filename, const int level);
+            //______________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //______________________________________________________________________
+            virtual ~OutputFile() noexcept;                                            //!< flush/close
+            explicit OutputFile(const char *               fileName, const int level); //!< open with level of compression
+            explicit OutputFile(const Core::String<char> & filename, const int level); //!< open with level of compression
 
-            virtual const char * callSign() const noexcept;
-            virtual void         write(const char);
-            virtual void         flush();
+            //______________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //______________________________________________________________________
+            virtual const char * callSign() const noexcept; //!< CallSign
+            virtual void         write(const char);         //!< compress one more cahr
+            virtual void         flush();                   //!< do nothing, see Bzip2 AI
             
 
         private:
