@@ -22,7 +22,7 @@ namespace Yttrium
             if(mustClose)
             {
                 (void)fclose( static_cast<FILE*>(handle) );
-                handle = 0;
+                Coerce(handle) = 0;
             }
         }
     }

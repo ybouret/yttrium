@@ -18,6 +18,7 @@ stream
 stream/io
 stream/libc
 stream/libc/buffer
+stream/libc/readable
 stream/data
 stream/gzip
 stream/bzip2

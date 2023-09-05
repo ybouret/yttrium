@@ -1,5 +1,5 @@
-#ifndef Y_Stream_IsStdin_Included
-#define Y_Stream_IsStdin_Included 1
+#ifndef Y_Stream_Readable_IsStdin_Included
+#define Y_Stream_Readable_IsStdin_Included 1
 
 #include "y/config/starting.hpp"
 

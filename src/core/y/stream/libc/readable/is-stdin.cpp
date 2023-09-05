@@ -1,5 +1,5 @@
 
-#include "y/stream/libc/is-stdin.hpp"
+#include "y/stream/libc/readable/is-stdin.hpp"
 #include "y/system/exception.hpp"
 #include <cstring>
 

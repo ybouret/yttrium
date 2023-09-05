@@ -15,9 +15,18 @@ namespace Yttrium
 
     namespace Libc
     {
+        //______________________________________________________________________
+        //
+        //
         //! FILE wrapper
+        //
+        //______________________________________________________________________
         class File
         {
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
         protected:
             //! setup from FILE * and closing flag
             explicit File(void *, const bool) noexcept;
@@ -26,8 +35,11 @@ namespace Yttrium
             //! auto-close
             virtual ~File() noexcept;
 
-        protected:
-            void      *handle; //!< anonymous handle
+            //__________________________________________________________________
+            //
+            // Members
+            //__________________________________________________________________
+            void * const handle; //!< anonymous handle
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(File);

@@ -23,48 +23,22 @@ namespace Yttrium
         {
         }
 
-        static inline void *openStdIn()
-        {
-            Y_GIANT_LOCK();
-            FILE *fp = stdin;
-            if(!fp) throw Libc::Exception(EIO,"closed stdin!");
-            return fp;
-        }
+        
 
-        InputFile:: InputFile(const StdIn_ &) :
-        InputStream(),
-        IsStdIn(),
-        File(openStdIn(),false),
+        InputFile:: InputFile(const StdIn_ &_) :
+        ReadableFile(_),
         buffer()
         {
-            assert(true==flag);
-        }
-
-        static inline FILE * openCFILE(const char *fileName)
-        {
-            assert(0!=fileName);
-            assert(0!=strcmp(fileName,Y_STDIN));
-
-            //std::cerr << "openCFILE(" << fileName << ")" << std::endl;
-            Y_GIANT_LOCK();
-            FILE *fp = fopen(fileName,"rb");
-            if(!fp) throw Libc::Exception(errno,"fopen(%s)",fileName);
-            return fp;
-
         }
 
         InputFile:: InputFile(const char *fileName) :
-        InputStream(),
-        IsStdIn(fileName),
-        File( flag ? openStdIn() : openCFILE(fileName), !flag ),
+        ReadableFile(fileName),
         buffer()
         {
         }
 
         InputFile:: InputFile(const String &fileName) :
-        InputStream(),
-        IsStdIn(fileName()),
-        File( flag ? openStdIn() : openCFILE(fileName()), !flag ),
+        ReadableFile(fileName),
         buffer()
         {
         }

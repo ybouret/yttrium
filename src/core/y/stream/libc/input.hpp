@@ -5,7 +5,7 @@
 #define Y_IO_Libc_Input_Included 1
 
 #include "y/stream/input.hpp"
-#include "y/stream/libc/is-stdin.hpp"
+#include "y/stream/libc/readable/file.hpp"
 #include "y/stream/libc/file.hpp"
 #include "y/stream/libc/buffer/cached.hpp"
 #include "y/string/fwd.hpp"
@@ -24,7 +24,7 @@ namespace Yttrium
         //! InputStream based on legacy FILE
         //
         //______________________________________________________________________
-        class InputFile : public InputStream, public IsStdIn, public File
+        class InputFile : public InputStream, public ReadableFile
         {
         public:
             //__________________________________________________________________
@@ -45,6 +45,8 @@ namespace Yttrium
             explicit InputFile(const StdIn_ &);                      //!< stdin
             explicit InputFile(const char *fileName);                //!< regular/stdin
             explicit InputFile(const Core::String<char> &fileName);  //!< regilar/stdin
+
+            
 
             //__________________________________________________________________
             //
