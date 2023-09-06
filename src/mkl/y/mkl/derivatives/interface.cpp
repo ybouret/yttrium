@@ -1,4 +1,6 @@
 #include "y/mkl/derivatives/interface.hpp"
+#include "y/mkl/interpolation/polynomial.hpp"
+
 #include "y/container/matrix.hpp"
 #include "y/mkl/api.hpp"
 #include "y/mkl/triplet.hpp"
@@ -7,9 +9,12 @@
 #include "y/mkl/algebra/lu.hpp"
 #include "y/container/cxx-array.hpp"
 #include "y/calculus/ipower.hpp"
+#include "y/sequence/vector.hpp"
 
 #include "y/stream/libc/output.hpp"
 #include "y/string.hpp"
+
+
 
 namespace Yttrium
 {
@@ -41,19 +46,21 @@ namespace Yttrium
         }
 
         template <typename T>
-        class Derivatives<T>:: Code
+        class Derivatives<T>:: Code : public Object
         {
         public:
-            static const size_t NTAB = 16;
             typedef Function<T,T>              FunctionType;
             typedef CxxArray<T,Memory::Dyadic> ArrayType;
+            typedef Vector<T,Memory::Dyadic>   VectorType;
 
             explicit Code() :
-            a(NTAB,NTAB),
+            Object(),
+            xa(),
+            ya(),
             mu(3,3),
             lu(3),
-            xadd( lu.xadd() ),
-            cf(3)
+            cf(3),
+            zp(16)
             {
             }
 
@@ -108,6 +115,7 @@ namespace Yttrium
                 // compute rhs = sum_i x_i^k F_i
                 //
                 //--------------------------------------------------------------
+                Antelope::Add<T> &xadd = lu.xadd();
                 for(size_t k=0;k<3;)
                 {
                     xadd.free();
@@ -229,26 +237,39 @@ namespace Yttrium
             inline T compute(FunctionType      &F,
                              const T            x0,
                              const T            h,
-                             const Interval<T> &I,
-                             T                 *err)
+                             const Interval<T> &I)
             {
+                xa.free();
+                ya.free();
 
                 // first call
                 Triplet<T> X;
                 T          L = h;
                 SetMetrics(X,x0,L,I);
-                const T    F0 = F(x0);
-                const T    d  = eval(F,X,F0);
+                const T    Scaling = L;
+                const T    F0      = F(x0);
+                std::cerr << "Scaling=" << L << std::endl;
+                xa << 1;
+                ya << eval(F,X,F0);
 
-                std::cerr << L << " -> " << d << std::endl;
+                std::cerr << xa << " -> " << ya << std::endl;
+
                 L /= 1.4;
                 SetMetrics(X,x0,L,I);
-                std::cerr << L << " -> " << eval(F,X,F0) << std::endl;
+                xa << L/Scaling;
+                ya << eval(F,X,F0);
+                std::cerr << xa << " -> " << ya << std::endl;
+
                 L /= 1.4;
                 SetMetrics(X,x0,L,I);
-                std::cerr << L << " -> " << eval(F,X,F0) << std::endl;
+                xa << L/Scaling;
+                ya << eval(F,X,F0);
+                std::cerr << xa << " -> " << ya << std::endl;
+
+
+
                 
-                return d;
+                return 0;
             }
 
             
@@ -256,13 +277,13 @@ namespace Yttrium
 
 
 
-
-            Matrix<T> a;
-            Matrix<T> mu;
-            LU<T>     lu;
-            Antelope::Add<T> &xadd;
-            ArrayType cf;
-
+            VectorType                 xa;
+            VectorType                 ya;
+            Matrix<T>                  mu;
+            LU<T>                      lu;
+            ArrayType                  cf;
+            PolynomialInterpolation<T> zp;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
         };

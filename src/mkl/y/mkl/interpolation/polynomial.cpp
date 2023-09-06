@@ -4,6 +4,7 @@
 #include "y/object.hpp"
 #include "y/mkl/api.hpp"
 #include "y/system/exception.hpp"
+#include "y/mkl/antelope/add.hpp"
 
 namespace Yttrium
 {
@@ -19,7 +20,8 @@ namespace Yttrium
 
             inline virtual ~Code() noexcept {}
 
-            inline explicit Code(const size_t n) : Object(), c(n), d(n)
+            inline explicit Code(const size_t n) :
+            Object(), c(n), d(n), xadd(n)
             {
 
             }
@@ -42,14 +44,16 @@ namespace Yttrium
                         const T dift = Fabs<T>::Of(x-xa[i]);
                         if( dift < dif)
                         {
-                            ns = i;
-                            dif= dift;
+                            ns  = i;
+                            dif = dift;
                         }
                         c[i]=ya[i];
                         d[i]=ya[i];
                     }
                 }
-                T y = ya[ns--];
+
+                xadd.free();
+                xadd << ya[ns--];
                 for(size_t m=1;m<n;++m)
                 {
                     const size_t nm = n-m;
@@ -65,14 +69,15 @@ namespace Yttrium
                         d[i]=hp*den;
                         c[i]=ho*den;
                     }
-                    y += (dy=( (ns<<1) < nm ? c[ns+1] : d[ns--]));
+                    xadd << (dy=( (ns<<1) < nm ? c[ns+1] : d[ns--]));
                 }
-                return y;
+
+                return xadd.sum();
             }
 
 
-            ArrayType c,d;
-
+            ArrayType        c,d;
+            Antelope::Add<T> xadd;
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
         };
@@ -88,6 +93,19 @@ namespace Yttrium
 
 #undef  real_t
 #define real_t long double
+#include "polynomial.hxx"
+
+#undef  real_t
+#define real_t XReal<float>
+#include "polynomial.hxx"
+
+#undef  real_t
+#define real_t XReal<double>
+#include "polynomial.hxx"
+
+
+#undef  real_t
+#define real_t XReal<long double>
 #include "polynomial.hxx"
 
     }

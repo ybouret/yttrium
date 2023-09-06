@@ -3,6 +3,13 @@ template <>
 PolynomialInterpolation<real_t>:: PolynomialInterpolation() noexcept : code(0) {}
 
 template <>
+PolynomialInterpolation<real_t>:: PolynomialInterpolation(const size_t n) :
+code(n>0 ? new Code(n) : 0)
+{}
+
+
+
+template <>
 PolynomialInterpolation<real_t>:: ~PolynomialInterpolation() noexcept
 {
     if(0!=code)
@@ -46,3 +53,6 @@ real_t PolynomialInterpolation<real_t>:: operator()(const real_t            x,
         return code->compute(x,xa,ya,dy);
     }
 }
+
+
+

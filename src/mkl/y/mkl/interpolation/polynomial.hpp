@@ -17,6 +17,7 @@ namespace Yttrium
         public:
 
             explicit PolynomialInterpolation() noexcept;
+            explicit PolynomialInterpolation(const size_t);
             virtual ~PolynomialInterpolation() noexcept;
 
             T operator()(const T            x,
