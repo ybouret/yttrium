@@ -20,7 +20,7 @@ Y_UTEST(drvs_1d)
 {
     Derivatives<double> drvs;
 
-    drvs.eval(F,0.5,0.05,0.1);
+    drvs.eval(F,0.5,-0.1,0.2);
 
 
 }

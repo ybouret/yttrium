@@ -63,8 +63,8 @@ namespace Yttrium
                 // computing offsets and associated values
                 //
                 //--------------------------------------------------------------
-                volatile T lowerOffset  = -delta;
-                volatile T upperOffset  = length-delta;
+                volatile T lowerOffset  = delta;
+                volatile T upperOffset  = length+delta;
                 volatile T centerOffset = half*(lowerOffset + upperOffset);
 
                 T xx[4] = { zero, zero, zero, zero };
@@ -168,7 +168,7 @@ namespace Yttrium
                 return cf[2];
             }
 
-            T eval(FunctionType &F, const T x, const T length)
+            T eval(FunctionType &F, const T x, const T length, const Interval<T> &I)
             {
                 return 0;
             }
