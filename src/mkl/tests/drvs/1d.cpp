@@ -10,18 +10,28 @@ using namespace Yttrium;
 using namespace MKL;
 
 
-
-static inline double F(double x)
+namespace
 {
-    return  0.7-cos(0.9*x-0.1);
+    struct Fcn
+    {
+        size_t calls;
+
+        inline double operator()(double x)
+        {
+            ++calls;
+            return  0.7-cos(0.9*x-0.1);
+        }
+
+    };
 }
+
 
 Y_UTEST(drvs_1d)
 {
     Derivatives<double> drvs;
-
+    Fcn F = { 0 };
+    std::cerr << "calls=" << F.calls << std::endl;
     drvs.eval(F,0.5,-0.1,0.2);
-
-
+    std::cerr << "calls=" << F.calls << std::endl;
 }
 Y_UDONE()

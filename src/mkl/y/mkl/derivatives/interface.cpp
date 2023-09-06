@@ -147,9 +147,9 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 if(!lu.build(mu)) throw Specific::Exception(Kernel::Derivatives::CallSign,"singular function");
                 lu.solve(mu,cf);
-                std::cerr << "cf=" << cf << std::endl;
+                //std::cerr << "cf=" << cf << std::endl;
 
-#if 1
+#if 0
                 {
                     Libc::OutputFile fp("drvs.dat");
                     const T xmin = x+lowerOffset;
