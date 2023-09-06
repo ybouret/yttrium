@@ -37,7 +37,7 @@ Y_UTEST(drvs_1d)
     Derivatives<double> drvs;
     Fcn F = { 0 };
     const Interval<double> I(0,1);
-    drvs.compute(F,0.2,0.1,I);
+    drvs.compute(F,0.2,0.0001,I);
 
     //drvs.compute(F,0.99,0.5,I);
 

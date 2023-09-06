@@ -1,12 +1,13 @@
 #include "y/mkl/derivatives/interface.hpp"
 #include "y/mkl/interpolation/polynomial.hpp"
-
-#include "y/container/matrix.hpp"
 #include "y/mkl/api.hpp"
 #include "y/mkl/triplet.hpp"
+#include "y/mkl/algebra/lu.hpp"
+#include "y/mkl/numeric.hpp"
+
+
 
 #include "y/system/exception.hpp"
-#include "y/mkl/algebra/lu.hpp"
 #include "y/container/cxx-array.hpp"
 #include "y/calculus/ipower.hpp"
 #include "y/sequence/vector.hpp"
@@ -238,13 +239,25 @@ namespace Yttrium
 
             }
 
+            inline T extrapolate(T &err)
+            {
+                static const T zero(0);
+                const T res = zp(zero,xa,ya,err);
+                err = Fabs<T>::Of(err);
+                return res;
+            }
+
             inline T compute(FunctionType      &F,
                              const T            x0,
                              const T            h,
                              const Interval<T> &I)
             {
-                static const T zero(0.0);
+                //static const T zero(0.0);
                 static const T ctrl(1.4);
+
+                assert(h>0);
+
+                //T length = h;
 
                 xa.free();
                 ya.free();
@@ -260,12 +273,46 @@ namespace Yttrium
                 const T    Scaling = L;
                 const T    F0      = F(x0);
 
-                xa << 1;
+                xa << L;
                 ya << eval(F,X,F0);
 
                 Libc::OutputFile fp("drvs.dat");
-                fp("%g %g\n", double(xa.tail()), double(ya.tail()));
 
+                T currErr = 0;
+                T currVal = extrapolate(currErr);
+                std::cerr << "(*) d_F=" << currVal << " \\pm " << currErr << " @" << xa << "->" << ya << std::endl;
+
+                fp("%g %.15g %.15g\n", double(xa.tail()), double(ya.tail()), double(currVal));
+
+                while(true)
+                {
+                    // add new point
+                    L /= ctrl;
+                    SetMetrics(X,x0,L,I);
+                    xa << L;
+                    ya << eval(F,X,F0);
+                    fp("%g %.15g\n", double(xa.tail()), double(ya.tail()));
+
+                    // extrapolate
+                    T tempErr = 0;
+                    T tempVal = extrapolate(tempErr);
+                    std::cerr << std::setprecision(15);
+                    std::cerr << "(+) d_F=" << tempVal << " \\pm " << tempErr << " @" << xa << "->" << ya << std::endl;
+                    std::cerr << " |_delta: " << Fabs<T>::Of(tempVal-currVal) << std::endl;
+
+                    fp("%g %.15g %.15g\n", double(xa.tail()), double(ya.tail()), double(tempVal));
+
+                    if(tempErr>=currErr)
+                        break;
+                    currErr = tempErr;
+                    currVal = tempVal;
+
+                }
+
+                return 0;
+
+
+#if 0
                 //--------------------------------------------------------------
                 // and get first extrapolation
                 //--------------------------------------------------------------
@@ -290,7 +337,7 @@ namespace Yttrium
                     err = err_tmp;
                     d_F = d_F_tmp;
                 }
-
+#endif
 
                 return 0;
             }
