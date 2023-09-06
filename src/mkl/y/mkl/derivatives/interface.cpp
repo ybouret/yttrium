@@ -191,14 +191,17 @@ namespace Yttrium
             {
                 static const T half(0.5);
 
+                // check x0 is inside interval
                 assert(length>0);
                 if(!I.contains(x0)) Kernel::Derivatives::OutOfDomainException();
 
+                // prepare optimistic scenario
                 const T hlen = half * length;
                 x.b = x0;
                 x.a = x0-hlen;
                 x.c = x0+hlen;
 
+                // check/decrease lower bound
                 switch(I.lower.type)
                 {
                     case UnboundedLimit:
@@ -215,6 +218,7 @@ namespace Yttrium
                         break;
                 }
 
+                // check/decrease upper bound
                 switch(I.upper.type)
                 {
                     case UnboundedLimit:
@@ -240,12 +244,16 @@ namespace Yttrium
                              const Interval<T> &I)
             {
                 static const T zero(0.0);
+                static const T ctrl(1.4);
 
                 xa.free();
                 ya.free();
-                T de = 0;
 
-                // first call
+                //--------------------------------------------------------------
+                //
+                // first call: define scaling and F0
+                //
+                //--------------------------------------------------------------
                 Triplet<T> X;
                 T          L = h;
                 SetMetrics(X,x0,L,I);
@@ -255,21 +263,31 @@ namespace Yttrium
                 xa << 1;
                 ya << eval(F,X,F0);
 
-                T df = zp(zero,xa,ya,de);
-
-
-                std::cerr << xa << " -> " << ya << std::endl;
-                std::cerr << " => " << df << " +/-" << de << std::endl;
-
-                for(size_t iter=2;iter<=5;++iter)
+                //--------------------------------------------------------------
+                // and get first extrapolation
+                //--------------------------------------------------------------
+                T err = 0;
+                T d_F = zp(zero,xa,ya,err);
+                err   = Fabs<T>::Of(err);
+                std::cerr << "d_F=" << d_F << " \\pm " << err << " @" << xa << "->" << ya << std::endl;
+                while(true)
                 {
                     L /= 1.4;
                     SetMetrics(X,x0,L,I);
                     xa << L/Scaling;
                     ya << eval(F,X,F0);
-                    std::cerr << xa << " -> " << ya << std::endl;
-                    std::cerr << " => " << zp(zero,xa,ya,de) << " +/-" << de << std::endl;
+                    T       err_tmp = 0;
+                    const T d_F_tmp = zp(zero,xa,ya,err_tmp);
+                    err_tmp = Fabs<T>::Of(err_tmp);
+                    std::cerr << "d_F=" << d_F_tmp << " \\pm " << err_tmp << " @" << xa << "->" << ya << std::endl;
+
+                    if(err_tmp>=err)
+                        return d_F;
+                    err = err_tmp;
+                    d_F = d_F_tmp;
                 }
+
+
 
 
 
