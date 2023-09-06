@@ -159,7 +159,7 @@ namespace Yttrium
                 if(!lu.build(mu))  Kernel::Derivatives::SingularFunctionException();
                 lu.solve(mu,cf);
 
-#if 1
+#if 0
                 {
                     static unsigned count = 0;
                     const String    fname = FormatString("drvs%u.dat",++count);
@@ -263,6 +263,9 @@ namespace Yttrium
                 xa << 1;
                 ya << eval(F,X,F0);
 
+                Libc::OutputFile fp("drvs.dat");
+                fp("%g %g\n", double(xa.tail()), double(ya.tail()));
+
                 //--------------------------------------------------------------
                 // and get first extrapolation
                 //--------------------------------------------------------------
@@ -272,10 +275,11 @@ namespace Yttrium
                 std::cerr << "d_F=" << d_F << " \\pm " << err << " @" << xa << "->" << ya << std::endl;
                 while(true)
                 {
-                    L /= 1.4;
+                    L /= ctrl;
                     SetMetrics(X,x0,L,I);
                     xa << L/Scaling;
                     ya << eval(F,X,F0);
+                    fp("%g %g\n", double(xa.tail()), double(ya.tail()));
                     T       err_tmp = 0;
                     const T d_F_tmp = zp(zero,xa,ya,err_tmp);
                     err_tmp = Fabs<T>::Of(err_tmp);
@@ -288,10 +292,6 @@ namespace Yttrium
                 }
 
 
-
-
-
-                
                 return 0;
             }
 

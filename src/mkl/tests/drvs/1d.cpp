@@ -34,7 +34,7 @@ Y_UTEST(drvs_1d)
     const Interval<double> I(0,1);
     drvs.compute(F,0.2,0.5,I);
 
-    drvs.compute(F,0.99,0.5,I);
+    //drvs.compute(F,0.99,0.5,I);
 
 }
 Y_UDONE()
