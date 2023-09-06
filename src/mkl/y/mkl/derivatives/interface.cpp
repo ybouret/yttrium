@@ -239,8 +239,11 @@ namespace Yttrium
                              const T            h,
                              const Interval<T> &I)
             {
+                static const T zero(0.0);
+
                 xa.free();
                 ya.free();
+                T de = 0;
 
                 // first call
                 Triplet<T> X;
@@ -248,23 +251,25 @@ namespace Yttrium
                 SetMetrics(X,x0,L,I);
                 const T    Scaling = L;
                 const T    F0      = F(x0);
-                std::cerr << "Scaling=" << L << std::endl;
+
                 xa << 1;
                 ya << eval(F,X,F0);
 
-                std::cerr << xa << " -> " << ya << std::endl;
+                T df = zp(zero,xa,ya,de);
 
-                L /= 1.4;
-                SetMetrics(X,x0,L,I);
-                xa << L/Scaling;
-                ya << eval(F,X,F0);
-                std::cerr << xa << " -> " << ya << std::endl;
 
-                L /= 1.4;
-                SetMetrics(X,x0,L,I);
-                xa << L/Scaling;
-                ya << eval(F,X,F0);
                 std::cerr << xa << " -> " << ya << std::endl;
+                std::cerr << " => " << df << " +/-" << de << std::endl;
+
+                for(size_t iter=2;iter<=5;++iter)
+                {
+                    L /= 1.4;
+                    SetMetrics(X,x0,L,I);
+                    xa << L/Scaling;
+                    ya << eval(F,X,F0);
+                    std::cerr << xa << " -> " << ya << std::endl;
+                    std::cerr << " => " << zp(zero,xa,ya,de) << " +/-" << de << std::endl;
+                }
 
 
 

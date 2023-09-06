@@ -53,7 +53,7 @@ namespace Yttrium
                 }
 
                 xadd.free();
-                xadd << ya[ns--];
+                xadd << (dy=ya[ns--]);
                 for(size_t m=1;m<n;++m)
                 {
                     const size_t nm = n-m;
