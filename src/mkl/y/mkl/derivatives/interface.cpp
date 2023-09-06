@@ -6,6 +6,8 @@
 #include "y/container/cxx-array.hpp"
 #include "y/calculus/ipower.hpp"
 
+#include "y/stream/libc/output.hpp"
+
 namespace Yttrium
 {
     namespace MKL
@@ -34,10 +36,10 @@ namespace Yttrium
 
             explicit Code() :
             a(NTAB,NTAB),
-            mu(4,4),
-            lu(4),
+            mu(3,3),
+            lu(3),
             xadd( lu.xadd() ),
-            rhs(4)
+            cf(3)
             {
             }
 
@@ -63,19 +65,17 @@ namespace Yttrium
                 static const T zero(0);
                 static const T one(1);
 
+                //--------------------------------------------------------------
+                //
+                // computing offsets and associated values
+                //
+                //--------------------------------------------------------------
                 volatile T lowerOffset  = -delta;
                 volatile T upperOffset  = length-delta;
                 volatile T centerOffset = half*(lowerOffset + upperOffset);
 
-                T ff[4] = { Fx,   zero, zero, zero };
                 T xx[4] = { zero, zero, zero, zero };
-
-                T pw[4][5] = {
-                    { one, zero, zero, zero, zero },
-                    { one, zero, zero, zero, zero },
-                    { one, zero, zero, zero, zero },
-                };
-
+                T ff[4] = { Fx,   zero, zero, zero };
 
                 {
                     volatile T center = x + centerOffset;
@@ -87,16 +87,92 @@ namespace Yttrium
                     xx[3] = upperOffset;  ff[3] = F(upper);
                 }
 
+                //--------------------------------------------------------------
+                //
+                // pre-computing:  pw[i][j] = xx[i]^j
+                //
+                //--------------------------------------------------------------
+                T pw[4][5] = {
+                    { one, zero, zero, zero, zero },
+                    { one, zero, zero, zero, zero },
+                    { one, zero, zero, zero, zero },
+                    { one, zero, zero, zero, zero },
+                };
+
                 for(size_t i=0;i<4;++i)
                 {
+                    T      *xp = pw[i];
                     const T xi = xx[i];
-                    pw[i][1] = xi;
-                    for(size_t p=2;p<4;++p) pw[i][p] = ipower(xi,p);
+                    xp[1] = xi;
+                    for(size_t p=2;p<5;++p) xp[p] = ipower(xi,p);
                 }
-                
 
+                //--------------------------------------------------------------
+                //
+                // compute rhs = sum_i x_i^k F_i
+                //
+                //--------------------------------------------------------------
+                for(size_t k=0;k<3;)
+                {
+                    xadd.free();
+                    for(size_t i=0;i<4;++i)
+                        xadd << pw[i][k] * ff[i];
+                    cf[++k] = xadd.sum();
+                }
 
-                return 0;
+                //--------------------------------------------------------------
+                //
+                // precomputing sxp[p] = sum_i x_i^p
+                //
+                //--------------------------------------------------------------
+                T sxp[5] = { 4, zero, zero, zero, zero };
+                for(size_t p=1;p<=4;++p)
+                {
+                    xadd.free();
+                    for(size_t i=0;i<4;++i) xadd << pw[i][p];
+                    sxp[p] = xadd.sum();
+                }
+
+                //--------------------------------------------------------------
+                //
+                // computing matrix of moments
+                //
+                //--------------------------------------------------------------
+                for(size_t i=0,ii=1;i<3;++i,++ii)
+                {
+                    Writable<T> &mi = mu[ii];
+                    for(size_t j=0,jj=1;j<3;++j,++jj)
+                    {
+                        mi[jj] = sxp[i+j];
+                    }
+                }
+
+                //--------------------------------------------------------------
+                //
+                // solving
+                //
+                //--------------------------------------------------------------
+                if(!lu.build(mu)) throw Specific::Exception(Kernel::Derivatives::CallSign,"singular function");
+                lu.solve(mu,cf);
+                std::cerr << "cf=" << cf << std::endl;
+
+#if 0
+                {
+                    Libc::OutputFile fp("drvs.dat");
+                    const T xmin = x+lowerOffset;
+                    const T xmax = x+upperOffset;
+                    const size_t np   = 100;
+                    for(size_t i=0;i<np;++i)
+                    {
+                        const T xtmp = xmin + T(i) * (xmax-xmin)/np;
+                        const T ftmp = F(xtmp);
+                        const T u    = xtmp - x;
+                        fp("%g %g %g\n", double(u), double(ftmp), double(cf[1]+cf[2]*u+cf[3]*u*u) );
+                    }
+                }
+#endif
+
+                return cf[2];
             }
 
 
@@ -106,7 +182,7 @@ namespace Yttrium
             Matrix<T> mu;
             LU<T>     lu;
             Antelope::Add<T> &xadd;
-            ArrayType rhs;
+            ArrayType cf;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
