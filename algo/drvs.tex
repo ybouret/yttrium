@@ -1,0 +1,37 @@
+\documentclass[aps,12pt]{revtex4}
+\usepackage[a4paper]{geometry}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{chemarr}
+\usepackage{mathptmx}
+\usepackage{bookman}
+
+  	 
+\begin{document}
+
+\begin{equation}
+	f(x+h) \simeq f(x) + \beta h + \gamma h^2 + \lambda h^3
+\end{equation}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	f(x+u) &\simeq & f(x) + \beta u + \gamma u^2 + \lambda u^3\\
+	f(x-v) &\simeq & f(x) - \beta v + \gamma v^2 - \lambda v^3\\
+\end{array}
+\right.
+\end{equation}
+
+\begin{equation}
+\begin{array}{rl}
+	f(x+u) \cos^2\alpha - f(x-u) \sin^2\alpha 
+	& = \left\lbrack \cos^2\alpha - \sin^2\alpha \right \rbrack f(x) \\
+    &	+ \left\lbrack u\cos^2\alpha + v \sin^2\alpha \right\rbrack \beta\\
+    &   + \left\lbrack u^2\cos^2\alpha - v^2 \sin^2\alpha \right\rbrack \gamma\\
+    &   + \left\lbrack u^3\cos^2\alpha + v^3 \sin^2\alpha \right\rbrack \lambda\\
+ \end{array}
+\end{equation}
+
+\end{document}
