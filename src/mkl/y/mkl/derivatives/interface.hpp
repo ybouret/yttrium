@@ -23,6 +23,9 @@ namespace Yttrium
                 virtual ~Derivatives() noexcept;
 
                 static void UnderflowException();
+                static void SingularFunctionException();
+                static void OutOfDomainException();
+
 
             protected:
                 explicit Derivatives() noexcept;
@@ -41,6 +44,9 @@ namespace Yttrium
             virtual ~Derivatives() noexcept;
 
             T eval_(FunctionType &F, const T x, const T delta, const T length);
+
+            void setMetrics(T &offset, T &length, const T x, const Interval<T> &I) const;
+
 
             template <typename FUNCTION> inline
             T eval(FUNCTION &F, const T x, const T delta, const T length)

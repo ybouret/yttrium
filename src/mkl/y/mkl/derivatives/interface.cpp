@@ -22,7 +22,18 @@ namespace Yttrium
 
             void Derivatives:: UnderflowException()
             {
-                throw Libc::Exception(ERANGE,"underflow step");
+                throw Specific::Exception(CallSign,"Step Underflow");
+            }
+
+
+            void Derivatives:: SingularFunctionException()
+            {
+                throw Specific::Exception(CallSign,"Singular Function");
+            }
+
+            void Derivatives:: OutOfDomainException()
+            {
+                throw Specific::Exception(CallSign,"Value Out Of Definition Domain");
             }
         }
 
@@ -52,7 +63,7 @@ namespace Yttrium
             //
             //! evaluate second order estimation of F'
             //__________________________________________________________________
-            T eval(FunctionType &F, const T x, const T Fx, const T delta, const T length)
+            inline T eval(FunctionType &F, const T x, const T Fx, const T offset, const T length)
             {
                 static const T half(0.5);
                 static const T zero(0);
@@ -63,8 +74,8 @@ namespace Yttrium
                 // computing offsets and associated values
                 //
                 //--------------------------------------------------------------
-                volatile T lowerOffset  = delta;
-                volatile T upperOffset  = length+delta;
+                volatile T lowerOffset  = offset;
+                volatile T upperOffset  = length+offset;
                 volatile T centerOffset = half*(lowerOffset + upperOffset);
 
                 T xx[4] = { zero, zero, zero, zero };
@@ -145,9 +156,8 @@ namespace Yttrium
                 // solving
                 //
                 //--------------------------------------------------------------
-                if(!lu.build(mu)) throw Specific::Exception(Kernel::Derivatives::CallSign,"singular function");
+                if(!lu.build(mu))  Kernel::Derivatives::SingularFunctionException();
                 lu.solve(mu,cf);
-                //std::cerr << "cf=" << cf << std::endl;
 
 #if 0
                 {
@@ -168,10 +178,61 @@ namespace Yttrium
                 return cf[2];
             }
 
-            T eval(FunctionType &F, const T x, const T length, const Interval<T> &I)
+
+            inline void setMetrics(T &offset, T &length, const T x, const Interval<T> & I)
             {
-                return 0;
+                static const T half(0.5);
+                static const T safe(0.9);
+                assert(length>0);
+
+                if(!I.contains(x)) Kernel::Derivatives::OutOfDomainException();
+                const    T hlen = half * length;
+                volatile T xmin = x - hlen;
+                switch(I.lower.type)
+                {
+                    case UnboundedLimit:
+                        break;
+
+                    case IncludingLimit:
+                        if(xmin<I.lower.value)
+                            xmin = I.lower.value;
+                        break;
+
+                    case ExcludingLimit:
+                        while(xmin<=I.lower.value)
+                        {
+                            xmin += (x-xmin)*half;
+                        }
+                        break;
+                }
+
+                volatile T xmax = x + hlen;
+                switch(I.upper.type)
+                {
+                    case UnboundedLimit:
+                        break;
+
+                    case IncludingLimit:
+                        if(xmax>I.upper.value)
+                            xmax = I.upper.value;
+                        break;
+
+                    case ExcludingLimit:
+                        while(xmax>=I.upper.value)
+                        {
+
+                        }
+                        break;
+                }
+
+
+                
+
+
+
             }
+
+
 
 
 
