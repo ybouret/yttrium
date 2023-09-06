@@ -6,6 +6,7 @@ mkl/ode
 mkl/opt
 mkl/algebra
 mkl/derivatives
+mkl/interpolation
 )
 
 add_subdirectory(tests)

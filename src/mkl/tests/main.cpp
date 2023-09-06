@@ -19,6 +19,8 @@ Y_UTEST_DECL(32)
 
     Y_UTEST(drvs_1d);
 
+    Y_UTEST(interp_poly);
+
 }
 Y_UTEST_EXEC()
 

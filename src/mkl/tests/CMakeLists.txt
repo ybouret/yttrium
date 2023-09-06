@@ -2,7 +2,8 @@ Y_CreateTest(mkl
 ode
 opt
 algebra
-drvs)
+drvs
+interp)
 
 Y_LinkLibraries(test-mkl y-mkl)
 
@@ -20,4 +21,6 @@ add_test(algebra:lu          test-mkl algebra_lu)
 add_test(algebra:ortho_space test-mkl algebra_ortho_space)
 
 add_test(drvs:1d test-mkl drvs_1d)
+
+add_test(interp:poly test-mkl interp_poly)
 
