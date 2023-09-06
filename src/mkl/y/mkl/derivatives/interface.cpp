@@ -47,18 +47,11 @@ namespace Yttrium
             {
             }
 
-            static inline T CheckState(const T x, const T h)
-            {
-                assert(h>0);
-                static const T zero(0);
-                volatile     T temp = x + h;
-                const        T hd   = temp - x;
-                if( Fabs<T>::Of(hd) <= zero ) Kernel::Derivatives:: UnderflowException();
-                return hd;
-            }
 
-
-
+            //__________________________________________________________________
+            //
+            //! evaluate second order estimation of F'
+            //__________________________________________________________________
             T eval(FunctionType &F, const T x, const T Fx, const T delta, const T length)
             {
                 static const T half(0.5);
@@ -156,7 +149,7 @@ namespace Yttrium
                 lu.solve(mu,cf);
                 std::cerr << "cf=" << cf << std::endl;
 
-#if 0
+#if 1
                 {
                     Libc::OutputFile fp("drvs.dat");
                     const T xmin = x+lowerOffset;
@@ -167,12 +160,17 @@ namespace Yttrium
                         const T xtmp = xmin + T(i) * (xmax-xmin)/np;
                         const T ftmp = F(xtmp);
                         const T u    = xtmp - x;
-                        fp("%g %g %g\n", double(u), double(ftmp), double(cf[1]+cf[2]*u+cf[3]*u*u) );
+                        fp("%g %g %g\n", double(xtmp), double(ftmp), double(cf[1]+cf[2]*u+cf[3]*u*u) );
                     }
                 }
 #endif
 
                 return cf[2];
+            }
+
+            T eval(FunctionType &F, const T x, const T length)
+            {
+                return 0;
             }
 
 
