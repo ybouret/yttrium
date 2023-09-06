@@ -9,6 +9,7 @@
 #include "y/calculus/ipower.hpp"
 
 #include "y/stream/libc/output.hpp"
+#include "y/string.hpp"
 
 namespace Yttrium
 {
@@ -60,7 +61,13 @@ namespace Yttrium
             {
             }
 
-
+            //------------------------------------------------------------------
+            //
+            //
+            //! evaluation from (x.b,F.b) on x.a <= x.b <= x.c
+            //
+            //
+            //------------------------------------------------------------------
             inline T eval(FunctionType &F, const Triplet<T> &x, const T Fb)
             {
                 static const T half(0.5);
@@ -146,7 +153,9 @@ namespace Yttrium
 
 #if 1
                 {
-                    Libc::OutputFile fp("drvs.dat");
+                    static unsigned count = 0;
+                    const String    fname = FormatString("drvs%u.dat",++count);
+                    Libc::OutputFile fp(fname);
                     const T xmin = x.a;
                     const T xmax = x.c;
                     const size_t np   = 100;
@@ -163,13 +172,18 @@ namespace Yttrium
                 return cf[2];
             }
 
-            
-            void setMetrics(Triplet<T> &x, const T x0, T &length, const Interval<T> &I)
+            //------------------------------------------------------------------
+            //
+            //
+            //! preparing triplet and upgrading length for derivative evaluation
+            //
+            //
+            //------------------------------------------------------------------
+            static inline void SetMetrics(Triplet<T> &x, const T x0, T &length, const Interval<T> &I)  
             {
                 static const T half(0.5);
 
                 assert(length>0);
-
                 if(!I.contains(x0)) Kernel::Derivatives::OutOfDomainException();
 
                 const T hlen = half * length;
@@ -209,9 +223,34 @@ namespace Yttrium
                         break;
                             
                 }
-                
 
             }
+
+            inline T compute(FunctionType      &F,
+                             const T            x0,
+                             const T            h,
+                             const Interval<T> &I,
+                             T                 *err)
+            {
+
+                // first call
+                Triplet<T> X;
+                T          L = h;
+                SetMetrics(X,x0,L,I);
+                const T    F0 = F(x0);
+                const T    d  = eval(F,X,F0);
+
+                std::cerr << L << " -> " << d << std::endl;
+                L /= 1.4;
+                SetMetrics(X,x0,L,I);
+                std::cerr << L << " -> " << eval(F,X,F0) << std::endl;
+                L /= 1.4;
+                SetMetrics(X,x0,L,I);
+                std::cerr << L << " -> " << eval(F,X,F0) << std::endl;
+                
+                return d;
+            }
+
             
 
 

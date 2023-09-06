@@ -28,5 +28,12 @@ template <>
 void Derivatives<real_t>:: setMetrics( Triplet<real_t> &x, const real_t x0,   real_t &length, const Interval<real_t> &I) const
 {
     assert(0!=code);
-    return code->setMetrics(x,x0,length,I);
+    return Code::SetMetrics(x,x0,length,I);
+}
+
+template <>
+real_t Derivatives<real_t>:: compute_(FunctionType &F, const real_t x0, const real_t h, const Interval<real_t> &I)
+{
+    assert(0!=code);
+    return code->compute(F,x0, h,I, 0);
 }

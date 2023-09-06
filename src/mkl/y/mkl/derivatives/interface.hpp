@@ -56,6 +56,15 @@ namespace Yttrium
                 return eval_(FW,xlo,x,xhi);
             }
 
+            T compute_(FunctionType &F, const T x0, const T h, const Interval<T> &I);
+
+            template <typename FUNCTION> inline
+            T compute(FUNCTION &F, const T x0, const T h, const Interval<T> &I)
+            {
+                Wrapper<T,T,FUNCTION> FW(F);
+                return compute_(FW,x0,h,I);
+            }
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Derivatives);
             class Code;
