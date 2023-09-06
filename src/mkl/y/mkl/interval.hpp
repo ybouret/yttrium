@@ -86,7 +86,7 @@ namespace Yttrium
             //! copy
             inline Interval(const Interval &I) : Kernel::Interval(), lower(I.lower), upper(I.upper) {}
 
-            //! setup from limit
+            //! setup from limits
             inline Interval(const Limit<T> lo, const Limit<T> up) :
             Kernel::Interval(),
             lower(lo),
@@ -121,6 +121,40 @@ namespace Yttrium
                 }
 
                 return os;
+            }
+
+            inline bool contains(ConstType x) const
+            {
+                switch(lower.type)
+                {
+                    case UnboundedLimit:
+                        break;
+
+                    case ExcludingLimit:
+                        if(x<=lower.value) return false;
+                        break;
+
+                    case IncludingLimit:
+                        if(x<lower.value) return false;
+                        break;
+                }
+
+                switch(upper.type)
+                {
+                    case UnboundedLimit:
+                        break;
+
+                    case ExcludingLimit:
+                        if(x>=upper.value) return false;
+                        break;
+
+                    case IncludingLimit:
+                        if(x>upper.value) return false;
+                        break;
+                }
+
+                return true;
+
             }
 
             //__________________________________________________________________

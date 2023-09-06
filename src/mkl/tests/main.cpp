@@ -16,6 +16,9 @@ Y_UTEST_DECL(32)
 
     Y_UTEST(algebra_lu);
     Y_UTEST(algebra_ortho_space);
+
+    Y_UTEST(drvs_1d);
+
 }
 Y_UTEST_EXEC()
 

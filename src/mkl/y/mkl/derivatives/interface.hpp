@@ -18,8 +18,11 @@ namespace Yttrium
             class Derivatives : public Object, public Counted
             {
             public:
-                static const size_t NTAB = 16;
+                static const char * const CallSign;
+                
                 virtual ~Derivatives() noexcept;
+
+                static void UnderflowException();
 
             protected:
                 explicit Derivatives() noexcept;
@@ -36,6 +39,15 @@ namespace Yttrium
 
             explicit Derivatives();
             virtual ~Derivatives() noexcept;
+
+            T eval_(FunctionType &F, const T x, const T delta, const T length);
+
+            template <typename FUNCTION> inline
+            T eval(FUNCTION &F, const T x, const T delta, const T length)
+            {
+                Wrapper<T,T,FUNCTION> FW(F);
+                return eval_(FW,x,delta,length);
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Derivatives);
