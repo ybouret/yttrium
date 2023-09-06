@@ -1,6 +1,8 @@
 #include "y/mkl/derivatives/interface.hpp"
 #include "y/container/matrix.hpp"
 #include "y/mkl/api.hpp"
+#include "y/mkl/triplet.hpp"
+
 #include "y/system/exception.hpp"
 #include "y/mkl/algebra/lu.hpp"
 #include "y/container/cxx-array.hpp"
@@ -59,37 +61,21 @@ namespace Yttrium
             }
 
 
-            //__________________________________________________________________
-            //
-            //! evaluate second order estimation of F'
-            //__________________________________________________________________
-            inline T eval(FunctionType &F, const T x, const T Fx, const T offset, const T length)
+            inline T eval(FunctionType &F, const Triplet<T> &x, const T Fb)
             {
                 static const T half(0.5);
-                static const T zero(0);
-                static const T one(1);
+                static const T zero(0.0);
+                static const T one(1.0);
+                static const T four(4.0);
 
-                //--------------------------------------------------------------
-                //
-                // computing offsets and associated values
-                //
-                //--------------------------------------------------------------
-                volatile T lowerOffset  = offset;
-                volatile T upperOffset  = length+offset;
-                volatile T centerOffset = half*(lowerOffset + upperOffset);
+                assert(x.isIncreasing());
 
-                T xx[4] = { zero, zero, zero, zero };
-                T ff[4] = { Fx,   zero, zero, zero };
+                const T xm = half*(x.a+x.c);
+                if(Fabs<T>::Of(xm-x.a) <= zero ) Kernel:: Derivatives:: UnderflowException();
+                if(Fabs<T>::Of(xm-x.c) <= zero ) Kernel:: Derivatives:: UnderflowException();
 
-                {
-                    volatile T center = x + centerOffset;
-                    volatile T lower  = x + lowerOffset;   if(Fabs<T>::Of(center-lower) <= zero) Kernel:: Derivatives:: UnderflowException();
-                    volatile T upper  = x + upperOffset;   if(Fabs<T>::Of(upper-center) <= zero) Kernel:: Derivatives:: UnderflowException();
-
-                    xx[1] = lowerOffset;  ff[1] = F(lower);
-                    xx[2] = centerOffset; ff[2] = F(center);
-                    xx[3] = upperOffset;  ff[3] = F(upper);
-                }
+                const T xx[4] = { x.a-x.b, zero, x.c-x.b, xm - x.b };
+                const T ff[4] = { F(x.a),  Fb,   F(x.c),  F(xm)    };
 
                 //--------------------------------------------------------------
                 //
@@ -97,17 +83,16 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 T pw[4][5] = {
-                    { one, zero, zero, zero, zero },
-                    { one, zero, zero, zero, zero },
-                    { one, zero, zero, zero, zero },
-                    { one, zero, zero, zero, zero },
+                    { one, xx[0], zero, zero, zero },
+                    { one, xx[1], zero, zero, zero },
+                    { one, xx[2], zero, zero, zero },
+                    { one, xx[3], zero, zero, zero },
                 };
 
                 for(size_t i=0;i<4;++i)
                 {
                     T      *xp = pw[i];
                     const T xi = xx[i];
-                    xp[1] = xi;
                     for(size_t p=2;p<5;++p) xp[p] = ipower(xi,p);
                 }
 
@@ -129,7 +114,7 @@ namespace Yttrium
                 // precomputing sxp[p] = sum_i x_i^p
                 //
                 //--------------------------------------------------------------
-                T sxp[5] = { 4, zero, zero, zero, zero };
+                T sxp[5] = { four, zero, zero, zero, zero };
                 for(size_t p=1;p<=4;++p)
                 {
                     xadd.free();
@@ -159,17 +144,17 @@ namespace Yttrium
                 if(!lu.build(mu))  Kernel::Derivatives::SingularFunctionException();
                 lu.solve(mu,cf);
 
-#if 0
+#if 1
                 {
                     Libc::OutputFile fp("drvs.dat");
-                    const T xmin = x+lowerOffset;
-                    const T xmax = x+upperOffset;
+                    const T xmin = x.a;
+                    const T xmax = x.c;
                     const size_t np   = 100;
                     for(size_t i=0;i<np;++i)
                     {
                         const T xtmp = xmin + T(i) * (xmax-xmin)/np;
                         const T ftmp = F(xtmp);
-                        const T u    = xtmp - x;
+                        const T u    = xtmp - x.b;
                         fp("%g %g %g\n", double(xtmp), double(ftmp), double(cf[1]+cf[2]*u+cf[3]*u*u) );
                     }
                 }
@@ -178,60 +163,56 @@ namespace Yttrium
                 return cf[2];
             }
 
-
-            inline void setMetrics(T &offset, T &length, const T x, const Interval<T> & I)
+            
+            void setMetrics(Triplet<T> &x, const T x0, T &length, const Interval<T> &I)
             {
                 static const T half(0.5);
-                static const T safe(0.9);
+
                 assert(length>0);
 
-                if(!I.contains(x)) Kernel::Derivatives::OutOfDomainException();
-                const    T hlen = half * length;
-                volatile T xmin = x - hlen;
+                if(!I.contains(x0)) Kernel::Derivatives::OutOfDomainException();
+
+                const T hlen = half * length;
+                x.b = x0;
+                x.a = x0-hlen;
+                x.c = x0+hlen;
+
                 switch(I.lower.type)
                 {
                     case UnboundedLimit:
                         break;
 
                     case IncludingLimit:
-                        if(xmin<I.lower.value)
-                            xmin = I.lower.value;
+                        if(x.a<I.lower.value)
+                            x.a = I.lower.value;
                         break;
 
                     case ExcludingLimit:
-                        while(xmin<=I.lower.value)
-                        {
-                            xmin += (x-xmin)*half;
-                        }
+                        while(x.a<=I.lower.value)
+                            x.a = half*(x.a+x.b);
                         break;
                 }
 
-                volatile T xmax = x + hlen;
                 switch(I.upper.type)
                 {
                     case UnboundedLimit:
                         break;
 
                     case IncludingLimit:
-                        if(xmax>I.upper.value)
-                            xmax = I.upper.value;
+                        if(x.c>I.upper.value)
+                            x.c = I.upper.value;
                         break;
 
                     case ExcludingLimit:
-                        while(xmax>=I.upper.value)
-                        {
-
-                        }
+                        while(x.c>=I.upper.value)
+                            x.c = half*(x.b+x.c);
                         break;
+                            
                 }
-
-
                 
 
-
-
             }
-
+            
 
 
 

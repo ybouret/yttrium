@@ -12,6 +12,7 @@ namespace Yttrium
 {
     namespace MKL
     {
+        template <typename> struct Triplet;
 
         namespace Kernel
         {
@@ -43,16 +44,16 @@ namespace Yttrium
             explicit Derivatives();
             virtual ~Derivatives() noexcept;
 
-            T eval_(FunctionType &F, const T x, const T delta, const T length);
+            T eval_(FunctionType &F, const T xlo, const T x, const T xhi);
 
-            void setMetrics(T &offset, T &length, const T x, const Interval<T> &I) const;
-
+            void setMetrics( Triplet<T> &, const T x0, T &length, const Interval<T> &I) const;
+            
 
             template <typename FUNCTION> inline
-            T eval(FUNCTION &F, const T x, const T delta, const T length)
+            T eval(FUNCTION &F, const T xlo, const T x, const T xhi)
             {
                 Wrapper<T,T,FUNCTION> FW(F);
-                return eval_(FW,x,delta,length);
+                return eval_(FW,xlo,x,xhi);
             }
 
         private:

@@ -16,16 +16,17 @@ code( new Code() )
 }
 
 template <>
-real_t Derivatives<real_t>:: eval_(FunctionType &F, const real_t x, const real_t delta, const real_t length)
+real_t Derivatives<real_t>:: eval_(FunctionType &F, const real_t xlo, const real_t x, const real_t xhi)
 {
     assert(0!=code);
-    const real_t Fx = F(x);
-    return code->eval(F, x, Fx, delta, length);
+    const Triplet<real_t> xx = {xlo, x, xhi };
+    const real_t          Fb = F(xx.b);
+    return code->eval(F,xx,Fb);
 }
-
+ 
 template <>
-void  Derivatives<real_t>:: setMetrics(real_t &offset, real_t &length, const real_t x, const Interval<real_t> &I) const
+void Derivatives<real_t>:: setMetrics( Triplet<real_t> &x, const real_t x0,   real_t &length, const Interval<real_t> &I) const
 {
     assert(0!=code);
-    return code->setMetrics(offset,length,x,I);
+    return code->setMetrics(x,x0,length,I);
 }
