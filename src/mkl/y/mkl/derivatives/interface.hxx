@@ -22,4 +22,5 @@ real_t Derivatives<real_t>:: compute_(FunctionType &F, const real_t x0, const re
 {
     assert(0!=code);
     return code->compute(F,x0, h,I);
+    //return 0;
 }

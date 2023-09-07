@@ -245,6 +245,38 @@ namespace Yttrium
             }
 
 
+            inline bool tryPack( Triplet<T> &x ) const
+            {
+                bool movedLower = false;
+                bool movedUpper = false;
+
+            TRY:
+                {
+                    const T shift = shiftLower(x);
+                    if(shift>0)
+                    {
+                        movedLower = true;
+                        if(!movedUpper) x.c += shift;
+                    }
+                }
+
+                {
+                    const T shift = shiftUpper(x);
+                    if(shift>0)
+                    {
+                        movedUpper = true;
+                        if(!movedLower)
+                        {
+                            x.a -= shift;
+                            goto TRY;
+                        }
+                    }
+                }
+
+                return !movedLower && !movedUpper;
+            }
+
+
 
             //__________________________________________________________________
             //
