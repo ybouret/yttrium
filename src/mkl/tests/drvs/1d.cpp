@@ -41,8 +41,11 @@ Y_UTEST(drvs_1d)
     drvs.compute(F,0.2,0.8,I);
     std::cerr << "\t\texpected: " << dFcn(0.2) << std::endl;
 
-    drvs.compute(F,3.99,0.5,I);
-    std::cerr << "\t\texpected: " << dFcn(3.99) << std::endl;
+    drvs.compute(F,0.2,0.1,I);
+    std::cerr << "\t\texpected: " << dFcn(0.2) << std::endl;
+
+    //drvs.compute(F,3.99,0.5,I);
+    //std::cerr << "\t\texpected: " << dFcn(3.99) << std::endl;
 
 }
 Y_UDONE()

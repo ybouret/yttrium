@@ -171,7 +171,7 @@ namespace Yttrium
                             }
                         }
                     }
-                    if(Fabs<T>::Of(a[i][i]-a[im][im]) >= Twice(err))
+                    if(Fabs<T>::Of(a[i][i]-a[im][im]) >= Twice(err) )
                         break;
                 }
                 return ans;
@@ -183,7 +183,7 @@ namespace Yttrium
 
                 T       err = 0;
                 const T res = compute(F,x,h,I,err);
-                std::cerr << "err=" << err << std::endl;
+                std::cerr << "res=" << res << " @err=" << err << std::endl;
 
                 return res;
             }
