@@ -20,6 +20,7 @@ namespace Yttrium
             {
             public:
                 static const char * const CallSign;
+                static bool               Verbose;
                 
                 virtual ~Derivatives() noexcept;
 

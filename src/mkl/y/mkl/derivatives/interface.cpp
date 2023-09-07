@@ -1,5 +1,4 @@
 #include "y/mkl/derivatives/interface.hpp"
-#include "y/mkl/interpolation/polynomial.hpp"
 #include "y/mkl/api.hpp"
 #include "y/mkl/triplet.hpp"
 #include "y/mkl/algebra/lu.hpp"
@@ -25,6 +24,7 @@ namespace Yttrium
         namespace Kernel
         {
             const char * const Derivatives:: CallSign = "Derivatives";
+            bool               Derivatives:: Verbose  = false;
 
             Derivatives::  Derivatives() noexcept {}
             Derivatives:: ~Derivatives() noexcept {}
@@ -46,6 +46,8 @@ namespace Yttrium
             }
         }
 
+#define Y_DRVS(MSG) do { if(Kernel::Derivatives::Verbose) std::cerr << "[drvs] " << MSG << std::endl; } while(false)
+
         template <typename T>
         class Derivatives<T>:: Code : public Object
         {
@@ -60,8 +62,7 @@ namespace Yttrium
             ya(),
             mu(3,3),
             lu(3),
-            cf(3),
-            zp(16)
+            cf(3)
             {
             }
 
@@ -76,19 +77,18 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            inline T eval(FunctionType &F, const Triplet<T> &x, const T Fb)
+            inline T adjusted(FunctionType &F, const Triplet<T> &x, const T Fb)
             {
                 static const T half(0.5);
                 static const T zero(0.0);
                 static const T one(1.0);
                 static const T four(4.0);
 
+                Y_DRVS("adjusted");
+
                 assert(x.isIncreasing());
 
                 const T xm = half*(x.a+x.c);
-                if(Fabs<T>::Of(xm-x.a) <= zero ) Kernel:: Derivatives:: UnderflowException();
-                if(Fabs<T>::Of(xm-x.c) <= zero ) Kernel:: Derivatives:: UnderflowException();
-
                 const T xx[4] = { x.a-x.b, zero, x.c-x.b, xm - x.b };
                 const T ff[4] = { F(x.a),  Fb,   F(x.c),  F(xm)    };
 
@@ -181,28 +181,47 @@ namespace Yttrium
                 return cf[2];
             }
 
+
             //------------------------------------------------------------------
             //
             //
-            //! preparing triplet and upgrading length for derivative evaluation
+            //! build x.a <= x.b=x0 <= x.c, try to conserve max length
             //
             //
             //------------------------------------------------------------------
-            static inline void SetMetrics(Triplet<T> &x, const T x0, T &length, const Interval<T> &I)  
+            static inline bool StandardMetrics(Triplet<T> &x, const T x0, T &length, const Interval<T> &I)
             {
                 static const T half(0.5);
+                static const T zero(0);
 
+                //--------------------------------------------------------------
                 // check x0 is inside interval
+                //--------------------------------------------------------------
                 assert(length>0);
                 if(!I.contains(x0)) Kernel::Derivatives::OutOfDomainException();
 
+                //--------------------------------------------------------------
+                //
                 // prepare optimistic scenario
-                const T hlen = half * length;
-                x.b = x0;
-                x.a = x0-hlen;
-                x.c = x0+hlen;
+                //
+                //--------------------------------------------------------------
+                bool    result = true;
+                {
+                    const T hlen = half * length;
+                    x.b = x0;
+                    x.a = x0-hlen; if(Fabs<T>::Of(x.b-x.a) <= zero ) Kernel:: Derivatives:: UnderflowException();
+                    x.c = x0+hlen; if(Fabs<T>::Of(x.c-x.b) <= zero ) Kernel:: Derivatives:: UnderflowException();
+                }
 
-                // check/decrease lower bound
+                assert(x.isIncreasing());
+
+                bool movedUpper = false; // did we already move upper value ?
+                bool movedLower = false; // did we already move lower value ?
+
+            PROBE:
+                //--------------------------------------------------------------
+                // check/increase lower bound
+                //--------------------------------------------------------------
                 switch(I.lower.type)
                 {
                     case UnboundedLimit:
@@ -210,16 +229,44 @@ namespace Yttrium
 
                     case IncludingLimit:
                         if(x.a<I.lower.value)
-                            x.a = I.lower.value;
+                        {
+                            movedLower = true;
+                            result     = false;
+                            Y_DRVS(" [incl] moving lower from " << x.a << " to " << I.lower.value);
+                            if(!movedUpper)
+                            {
+                                Y_DRVS(" [incl] shifting upper value...");
+                                x.c += (I.lower.value - x.a); // shift upper value
+                            }
+                            x.a  = I.lower.value;             // and set new lower value
+                        }
                         break;
 
                     case ExcludingLimit:
-                        while(x.a<=I.lower.value)
-                            x.a = half*(x.a+x.b);
+                        if(x.a<=I.lower.value)
+                        {
+                            movedLower = true;
+                            result     = false;
+                            const T x_old = x.a;
+                            do
+                            {
+                                x.a = half*(x.a+x.b); // make lower bound closer to central value
+                            }
+                            while(x.a<=I.lower.value);
+                            Y_DRVS(" [excl] moving lower from " << x_old << " to " << x.a);
+                            if(!movedUpper)
+                            {
+                                Y_DRVS(" [excl] shifting upper value...");
+                                x.c += x.a - x_old;   // shift upper value
+                            }
+
+                        }
                         break;
                 }
 
+                //--------------------------------------------------------------
                 // check/decrease upper bound
+                //--------------------------------------------------------------
                 switch(I.upper.type)
                 {
                     case UnboundedLimit:
@@ -227,122 +274,123 @@ namespace Yttrium
 
                     case IncludingLimit:
                         if(x.c>I.upper.value)
-                            x.c = I.upper.value;
+                        {
+                            result     = false;
+                            movedUpper = true;
+                            Y_DRVS(" [incl] moving upper value from " << x.c << " to " << I.upper.value);
+                            if(movedLower)
+                                x.c = I.upper.value; // set new upper value
+                            else
+                            {
+                                Y_DRVS(" [incl] shifting lower value...");
+                                x.a -= (x.c - I.upper.value); // shift lower value
+                                x.c  = I.upper.value;         // set upper value
+                                goto PROBE;                   // and check again
+                            }
+                        }
                         break;
 
                     case ExcludingLimit:
-                        while(x.c>=I.upper.value)
-                            x.c = half*(x.b+x.c);
+                        if(x.c>=I.upper.value)
+                        {
+                            result     = false;
+                            movedUpper = true;
+                            const T x_old = x.c;
+                            do
+                            {
+                                // make upper value closer to central value
+                                x.c = half*(x.b+x.c);
+                            } while(x.c>=I.upper.value);
+                            Y_DRVS(" [incl] moving upper value from " << x_old << " to " << x.c);
+
+                            if(!movedLower)
+                            {
+                                // shift lower value and check again
+                                Y_DRVS(" [incl] shifting lower value...");
+                                x.a -= (x_old - x.c);
+                                goto PROBE;
+                            }
+                        }
                         break;
-                            
                 }
 
+                //--------------------------------------------------------------
+                // update length upon change
+                //--------------------------------------------------------------
+                if(!result)
+                    length = x.c-x.a;
+
+                return result;
             }
 
-            inline T extrapolate(T &err)
+            inline T evaluate(FunctionType      &F,
+                              const T            x,
+                              T                 &h,
+                              const Interval<T> &I,
+                              bool              &hasFx,
+                              T                 &Fx)
             {
-                static const T zero(0);
-                const T res = zp(zero,xa,ya,err);
-                err = Fabs<T>::Of(err);
-                return res;
+                Triplet<T> xx = {x,x,x};
+
+                if( StandardMetrics(xx,x,h,I) )
+                {
+                    Y_DRVS("centered");
+                    return (F(xx.c) - F(xx.a))/(h+h);
+                }
+                else
+                {
+                    if(!hasFx)
+                    {
+                        Fx    = F(x);
+                        hasFx = true;
+                    }
+                    return adjusted(F,xx,Fx);
+                }
             }
+
 
             inline T compute(FunctionType      &F,
-                             const T            x0,
-                             const T            h,
+                             const T            x,
+                             T                  h,
                              const Interval<T> &I)
             {
-                //static const T zero(0.0);
-                static const T ctrl(1.4);
+
+                static const T zero(0);
+                static const T one(1);
 
                 assert(h>0);
 
-                //T length = h;
-
+                // initialize
+                bool hasFx = false;
+                T       Fx = zero;
                 xa.free();
                 ya.free();
 
-                //--------------------------------------------------------------
-                //
-                // first call: define scaling and F0
-                //
-                //--------------------------------------------------------------
-                Triplet<T> X;
-                T          L = h;
-                SetMetrics(X,x0,L,I);
-                const T    Scaling = L;
-                const T    F0      = F(x0);
+                ya << evaluate(F,x,h,I,hasFx,Fx);
+                const T scaling = h;
+                xa << one;
 
-                xa << L;
-                ya << eval(F,X,F0);
-
-                Libc::OutputFile fp("drvs.dat");
-
-                T currErr = 0;
-                T currVal = extrapolate(currErr);
-                std::cerr << "(*) d_F=" << currVal << " \\pm " << currErr << " @" << xa << "->" << ya << std::endl;
-
-                fp("%g %.15g %.15g\n", double(xa.tail()), double(ya.tail()), double(currVal));
-
-                while(true)
+                for(size_t i=1;i<=5;++i)
                 {
-                    // add new point
-                    L /= ctrl;
-                    SetMetrics(X,x0,L,I);
-                    xa << L;
-                    ya << eval(F,X,F0);
-                    fp("%g %.15g\n", double(xa.tail()), double(ya.tail()));
-
-                    // extrapolate
-                    T tempErr = 0;
-                    T tempVal = extrapolate(tempErr);
-                    std::cerr << std::setprecision(15);
-                    std::cerr << "(+) d_F=" << tempVal << " \\pm " << tempErr << " @" << xa << "->" << ya << std::endl;
-                    std::cerr << " |_delta: " << Fabs<T>::Of(tempVal-currVal) << std::endl;
-
-                    fp("%g %.15g %.15g\n", double(xa.tail()), double(ya.tail()), double(tempVal));
-
-                    if(tempErr>=currErr)
-                        break;
-                    currErr = tempErr;
-                    currVal = tempVal;
-
+                    h /= 1.4;
+                    ya << evaluate(F,x,h, I, hasFx, Fx);
+                    xa << h/scaling;
                 }
 
-                return 0;
-
-
-#if 0
-                //--------------------------------------------------------------
-                // and get first extrapolation
-                //--------------------------------------------------------------
-                T err = 0;
-                T d_F = zp(zero,xa,ya,err);
-                err   = Fabs<T>::Of(err);
-                std::cerr << "d_F=" << d_F << " \\pm " << err << " @" << xa << "->" << ya << std::endl;
-                while(true)
                 {
-                    L /= ctrl;
-                    SetMetrics(X,x0,L,I);
-                    xa << L/Scaling;
-                    ya << eval(F,X,F0);
-                    fp("%g %g\n", double(xa.tail()), double(ya.tail()));
-                    T       err_tmp = 0;
-                    const T d_F_tmp = zp(zero,xa,ya,err_tmp);
-                    err_tmp = Fabs<T>::Of(err_tmp);
-                    std::cerr << "d_F=" << d_F_tmp << " \\pm " << err_tmp << " @" << xa << "->" << ya << std::endl;
-
-                    if(err_tmp>=err)
-                        return d_F;
-                    err = err_tmp;
-                    d_F = d_F_tmp;
+                    Libc::OutputFile fp("drvs.dat");
+                    for(size_t i=1;i<=xa.size();++i)
+                    {
+                        fp("%.15g %.15g\n", double(xa[i]), double(ya[i]));
+                    }
                 }
-#endif
+
+
+
+
 
                 return 0;
             }
-
-            
 
 
 
@@ -352,8 +400,7 @@ namespace Yttrium
             Matrix<T>                  mu;
             LU<T>                      lu;
             ArrayType                  cf;
-            PolynomialInterpolation<T> zp;
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
         };
