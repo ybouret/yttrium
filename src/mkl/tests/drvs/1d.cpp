@@ -29,6 +29,8 @@ namespace
     {
         return 0.9 * sin(0.9 * x - 0.1);
     }
+
+    static inline double Cos(double x) { return cos(x); }
 }
 
 
@@ -37,14 +39,19 @@ Y_UTEST(drvs_1d)
     Derivatives<double> drvs;
     Fcn F = { 0 };
     const Interval<double> I(0,4);
-    drvs.computeFor(F,0.2,0.8,I);
+    std::cerr << drvs.computeFor(F,0.2,0.8,I) << std::endl;
     std::cerr << "\t\texpected: " << dFcn(0.2) << std::endl;
 
-    drvs.computeFor(F,0.2,0.1,I);
+    std::cerr << drvs.computeFor(F,0.2,0.1,I) << std::endl;
     std::cerr << "\t\texpected: " << dFcn(0.2) << std::endl;
 
-    //drvs.compute(F,3.99,0.5,I);
-    //std::cerr << "\t\texpected: " << dFcn(3.99) << std::endl;
+    std::cerr << drvs.computeFor(F,3.99,0.5,I) << std::endl;
+    std::cerr << "\t\texpected: " << dFcn(3.99) << std::endl;
+
+    const Interval<double> R;
+    drvs.computeFor(Cos,0.0,0.1,R);
+    drvs.computeFor(Cos,0.0,0.001,I);
+
 
 }
 Y_UDONE()

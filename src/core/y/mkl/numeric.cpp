@@ -49,6 +49,9 @@ template <> const long double Numeric<long double>:: VAR = LDBL_##VAR
         template <> const double      Numeric<double>      :: FTOL = pow(  10.0, -int(DIG));
         template <> const long double Numeric<long double> :: FTOL = powl( 10.0l,-int(DIG));
 
+        template <> const float       Numeric<float>       :: SQRT_EPSILON = sqrtf(FLT_EPSILON);
+        template <> const double      Numeric<double>      :: SQRT_EPSILON = sqrt(DBL_EPSILON);
+        template <> const long double Numeric<long double> :: SQRT_EPSILON = sqrtl(LDBL_EPSILON);
     }
 
 }

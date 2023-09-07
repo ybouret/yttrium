@@ -22,6 +22,7 @@ static inline void displayNumeric(const char *id)
     Y_SHOW(MAX_EXP);
     Y_SHOW(RADIX);
     Y_SHOW(FTOL);
+    Y_SHOW(SQRT_EPSILON);
     std::cerr << std::endl;
 
 }

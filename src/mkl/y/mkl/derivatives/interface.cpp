@@ -67,6 +67,8 @@ namespace Yttrium
             negativeHalf(-half),
             ctrl(1.4),
             ctrl2(ctrl*ctrl),
+            ftol( Numeric<T>::SQRT_EPSILON ),
+            //ftol( Numeric<T>::FTOL ),
             a(NTAB,NTAB)
             {
             }
@@ -93,17 +95,28 @@ namespace Yttrium
 
             inline T eval(FunctionType &F, const T x, T &h, const Interval<T> &I)
             {
+                //--------------------------------------------------------------
+                //
                 // check
+                //
+                //--------------------------------------------------------------
                 if(h<=0) Kernel::Derivatives::UnderflowException();
 
+                //--------------------------------------------------------------
+                //
                 // initialize triplet
+                //
+                //--------------------------------------------------------------
                 const        T delta     = half*h;
                 const        T lowerStep = ComputeLowerStep(x,delta);
                 const        T upperStep = ComputeUpperStep(x,delta);
                 Triplet<T> xx = { x - lowerStep, x, x + upperStep };
 
-
+                //--------------------------------------------------------------
+                //
                 // compute depending on triplet vs. interval
+                //
+                //--------------------------------------------------------------
                 if( I.tryPack(xx) )
                 {
                     // direct version
@@ -158,7 +171,7 @@ namespace Yttrium
                         fac *= ctrl2;
                         if(first)
                         {
-                            ans    = anst;
+                            ans   = anst;
                             err   = errt;
                             first = false;
                         }
@@ -171,8 +184,10 @@ namespace Yttrium
                             }
                         }
                     }
+
                     if(Fabs<T>::Of(a[i][i]-a[im][im]) >= Twice(err) )
                         break;
+
                 }
                 return ans;
 
@@ -181,11 +196,26 @@ namespace Yttrium
             inline T compute(FunctionType &F, const T x, T h, const Interval<T> &I)
             {
 
-                T       err = 0;
-                const T res = compute(F,x,h,I,err);
-                std::cerr << "res=" << res << " @err=" << err << std::endl;
-
-                return res;
+                T       currErr    = 0;
+                T       currRes    = compute(F,x,h,I,currErr);
+            AUTHORIZED:
+                const T authorized = ftol * Fabs<T>::Of(currRes);
+                if(currErr<=authorized)
+                    return currRes;
+                h *= half;
+                {
+                    T       tempErr = 0;
+                    const T tempRes = compute(F,x,h,I,tempErr);
+                    
+                    if(tempErr>currErr)
+                    {
+                        return currRes;
+                    }
+                    currErr = tempErr;
+                    currRes = tempRes;
+                    goto AUTHORIZED;
+                }
+                
             }
 
             const T   zero;
@@ -194,6 +224,7 @@ namespace Yttrium
             const T   negativeHalf;
             const T   ctrl;
             const T   ctrl2;
+            const T   ftol;
             Matrix<T> a;
 
         private:

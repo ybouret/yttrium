@@ -32,6 +32,7 @@ namespace Yttrium
             static const int      MIN_EXP;  //!< MIN_EXP
             static const int      MAX_EXP;  //!< MAX_EXP
             static const T        FTOL;     //!< 10^(-DIG)
+            static const T        SQRT_EPSILON; //!< sqrt(EPSILON)
         };
 
 #if !defined(_MSC_VER)
@@ -41,11 +42,13 @@ template <> const float       Numeric<float>      :: VAR;\
 template <> const double      Numeric<double>     :: VAR;\
 template <> const long double Numeric<long double>:: VAR
 
-        Y_MKL_NUMERIC(PI);         //!< declare PI
-        Y_MKL_NUMERIC(EPSILON);    //!< declare EPSILON
-        Y_MKL_NUMERIC(MIN);        //!< declare MIN
-        Y_MKL_NUMERIC(MAX);        //!< declare MIN
-        Y_MKL_NUMERIC(FTOL);       //!< declare FTOL
+        Y_MKL_NUMERIC(PI);           //!< declare PI
+        Y_MKL_NUMERIC(EPSILON);      //!< declare EPSILON
+        Y_MKL_NUMERIC(MIN);          //!< declare MIN
+        Y_MKL_NUMERIC(MAX);          //!< declare MIN
+        Y_MKL_NUMERIC(FTOL);         //!< declare FTOL
+        Y_MKL_NUMERIC(SQRT_EPSILON); //!< declare SQRT_EPSILON
+
 #endif
 
     }
