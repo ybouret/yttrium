@@ -18,8 +18,8 @@ namespace Yttrium
         template <> const double      Numeric<double>::      PI = Y_D(3.14159265358979323846264338327950288419716939937510582);
         template <> const long double Numeric<long double>:: PI = Y_L(3.14159265358979323846264338327950288419716939937510582);
 
-        template <> const unsigned Numeric<float>::RADIX = FLT_RADIX;
-        template <> const unsigned Numeric<double>::RADIX = FLT_RADIX;
+        template <> const unsigned Numeric<float>::      RADIX = FLT_RADIX;
+        template <> const unsigned Numeric<double>::     RADIX = FLT_RADIX;
         template <> const unsigned Numeric<long double>::RADIX = FLT_RADIX;
 
 
@@ -43,6 +43,11 @@ template <> const long double Numeric<long double>:: VAR = LDBL_##VAR
         Y_MKL_DECL_REAL(EPSILON);
         Y_MKL_DECL_REAL(MIN);
         Y_MKL_DECL_REAL(MAX);
+
+
+        template <> const float       Numeric<float>       :: FTOL = powf( 10.0f,-int(DIG));
+        template <> const double      Numeric<double>      :: FTOL = pow(  10.0, -int(DIG));
+        template <> const long double Numeric<long double> :: FTOL = powl( 10.0l,-int(DIG));
 
     }
 

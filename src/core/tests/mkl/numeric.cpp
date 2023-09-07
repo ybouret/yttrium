@@ -21,6 +21,7 @@ static inline void displayNumeric(const char *id)
     Y_SHOW(MIN_EXP);
     Y_SHOW(MAX_EXP);
     Y_SHOW(RADIX);
+    Y_SHOW(FTOL);
     std::cerr << std::endl;
 
 }
