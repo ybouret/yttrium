@@ -159,32 +159,9 @@ namespace Yttrium
                         ya[i] = xadd.sum();
                     }
 
-#if 0
-                    {
-                        Libc::OutputFile fp("adapt.dat");
-                        for(size_t i=1;i<=4;++i)
-                        {
-                            fp("%.15g %.15g %.15g\n",double(xa[i]),double(FF[i-1]), double(ya[i]) );
-                        }
-                    }
-#endif
-
                     T dum = 0;
-                    const T res = zp(x,xa,ya,dum)/(h+h);
-                    //std::cerr << "res=" << res << std::endl;
-                    //exit(1);
-                    return res;
-#if 0
-                    xx.b = Clamp(xx.a,half*(xx.a+xx.c),xx.c);
-                    const T Fa    = F(xx.a);
-                    const T Fb    = F(xx.b);
-                    const T Fc    = F(xx.c);
-                    const T sigma = (Fc -Fa);
-                    const T gamma = Twice( (Fc-Fb) + (Fa-Fb) );
-                    const T u     = Clamp(negativeHalf,(x-xx.b)/h, half);
+                    return zp(x,xa,ya,dum)/(h+h);
 
-                    return (sigma + Twice( gamma * u) )/h;
-#endif
                 }
             }
 
