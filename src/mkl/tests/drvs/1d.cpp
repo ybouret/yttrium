@@ -38,10 +38,10 @@ Y_UTEST(drvs_1d)
     drvs.Verbose =  true;
     Fcn F = { 0 };
     const Interval<double> I(0,4);
-    drvs.compute(F,0.2,0.8,I);
+    drvs.computeFor(F,0.2,0.8,I);
     std::cerr << "\t\texpected: " << dFcn(0.2) << std::endl;
 
-    drvs.compute(F,0.2,0.1,I);
+    drvs.computeFor(F,0.2,0.1,I);
     std::cerr << "\t\texpected: " << dFcn(0.2) << std::endl;
 
     //drvs.compute(F,3.99,0.5,I);

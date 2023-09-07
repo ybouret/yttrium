@@ -244,7 +244,10 @@ namespace Yttrium
                 return shift;
             }
 
-
+            //__________________________________________________________________
+            //
+            //! Try to pack triplet within interval and conserve length
+            //__________________________________________________________________
             inline bool tryPack( Triplet<T> &x ) const
             {
                 bool movedLower = false;

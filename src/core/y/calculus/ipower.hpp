@@ -8,6 +8,7 @@
 namespace Yttrium
 {
 
+    //! integer power of x
     template <typename T>
     T ipower(const T x, size_t n) {
         switch(n)

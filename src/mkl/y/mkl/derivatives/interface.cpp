@@ -8,8 +8,6 @@
 
 #include "y/system/exception.hpp"
 #include "y/container/cxx-array.hpp"
-#include "y/calculus/ipower.hpp"
-#include "y/sequence/vector.hpp"
 
 #include "y/stream/libc/output.hpp"
 #include "y/string.hpp"
@@ -48,6 +46,13 @@ namespace Yttrium
 
 #define Y_DRVS(MSG) do { if(Kernel::Derivatives::Verbose) std::cerr << "[drvs] " << MSG << std::endl; } while(false)
 
+        //----------------------------------------------------------------------
+        //
+        //
+        //! derivative code
+        //
+        //
+        //----------------------------------------------------------------------
         template <typename T>
         class Derivatives<T>:: Code : public Object
         {
@@ -55,8 +60,7 @@ namespace Yttrium
             static const size_t                NTAB = 16;
             typedef Function<T,T>              FunctionType;
             typedef CxxArray<T,Memory::Dyadic> ArrayType;
-            typedef Vector<T,Memory::Dyadic>   VectorType;
-
+            
             explicit Code() :
             Object(),
             zero(0),

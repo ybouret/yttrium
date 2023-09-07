@@ -11,16 +11,42 @@ namespace Yttrium
 
     namespace MKL
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Rational Interpolation
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class RationalInterpolation
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit RationalInterpolation() noexcept;     //!< setup empty
+            explicit RationalInterpolation(const size_t);  //!< setup with capacity
+            virtual ~RationalInterpolation() noexcept;     //!< cleanup
 
-            explicit RationalInterpolation() noexcept;
-            explicit RationalInterpolation(const size_t);
-            virtual ~RationalInterpolation() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
+            //! perform interpolation at x from [xa,ya]
+            /**
+             \param x value where to inter/extrapolator
+             \param xa abscissae
+             \param ya ordinates
+             \param dy error estimate
+             */
             T operator()(const T            x,
                          const Readable<T> &xa,
                          const Readable<T> &ya,

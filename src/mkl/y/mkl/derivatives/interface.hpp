@@ -12,64 +12,108 @@ namespace Yttrium
 {
     namespace MKL
     {
-        template <typename> struct Triplet;
 
         namespace Kernel
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Common code for Derivatives
+            //
+            //
+            //__________________________________________________________________
             class Derivatives : public Object, public Counted
             {
             public:
-                static const char * const CallSign;
-                static bool               Verbose;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                static const char * const CallSign; //!< Derivatives
+                static bool               Verbose;  //!< verbosity to debug
                 
-                virtual ~Derivatives() noexcept;
 
-                static void UnderflowException();
-                static void SingularFunctionException();
-                static void OutOfDomainException();
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                static void UnderflowException();         //!< step size too small
+                static void SingularFunctionException();  //!< unexpected function behavior
+                static void OutOfDomainException();       //!< data point is out of definition domain
 
-
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                virtual ~Derivatives() noexcept; //!< cleanup
             protected:
-                explicit Derivatives() noexcept;
+                explicit Derivatives() noexcept; //!< setup
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Derivatives);
             };
         }
 
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Numerical Derivatives with Interval control
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class Derivatives : public Kernel::Derivatives
         {
         public:
-            typedef Function<T,T> FunctionType;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef Function<T,T> FunctionType; //!< alias
 
-            explicit Derivatives();
-            virtual ~Derivatives() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Derivatives();            //!< setup
+            virtual ~Derivatives() noexcept;   //!< cleanup
 
-            T eval_(FunctionType &F, const T xlo, const T x, const T xhi);
 
-            void setMetrics( Triplet<T> &, const T x0, T &length, const Interval<T> &I) const;
-            
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
+            //! internal computation by modified Ridder's Method
+            T compute(FunctionType &F, const T x0, const T h, const Interval<T> &I);
+
+
+            //! code wrapper
             template <typename FUNCTION> inline
-            T eval(FUNCTION &F, const T xlo, const T x, const T xhi)
+            T computeFor(FUNCTION &F, const T x0, const T h, const Interval<T> &I)
             {
                 Wrapper<T,T,FUNCTION> FW(F);
-                return eval_(FW,xlo,x,xhi);
-            }
-
-            T compute_(FunctionType &F, const T x0, const T h, const Interval<T> &I);
-
-            template <typename FUNCTION> inline
-            T compute(FUNCTION &F, const T x0, const T h, const Interval<T> &I)
-            {
-                Wrapper<T,T,FUNCTION> FW(F);
-                return compute_(FW,x0,h,I);
+                return compute(FW,x0,h,I);
             }
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Derivatives);
             class Code;
-
             Code *code;
         };
 
