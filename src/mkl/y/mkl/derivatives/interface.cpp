@@ -58,8 +58,14 @@ namespace Yttrium
             typedef Vector<T,Memory::Dyadic>   VectorType;
 
             explicit Code() :
-            Object()
-
+            Object(),
+            zero(0),
+            one(1),
+            half(0.5),
+            negativeHalf(-half),
+            ctrl(1.4),
+            ctrl2(ctrl*ctrl),
+            a(NTAB,NTAB)
             {
             }
 
@@ -67,18 +73,16 @@ namespace Yttrium
             {
             }
 
-            static inline T ComputeLowerStep(const T x, const T h)
+            inline T ComputeLowerStep(const T x, const T h) const
             {
-                static const T zero(0);
                 volatile T temp = x - h;
                 volatile T step = x-temp;;
                 if(Fabs<T>::Of(step) <= zero) Kernel::Derivatives::UnderflowException();
                 return step;
             }
 
-            static inline T ComputeUpperStep(const T x, const T h)
+            inline T ComputeUpperStep(const T x, const T h) const
             {
-                static const T zero(0);
                 volatile T temp = x + h;
                 volatile T step = temp-x;
                 if(Fabs<T>::Of(step) <= zero) Kernel::Derivatives::UnderflowException();
@@ -91,8 +95,6 @@ namespace Yttrium
                 if(h<=0) Kernel::Derivatives::UnderflowException();
 
                 // initialize triplet
-                static const T half(0.5);
-                static const T negHalf   = -half;
                 const        T delta     = half*h;
                 const        T lowerStep = ComputeLowerStep(x,delta);
                 const        T upperStep = ComputeUpperStep(x,delta);
@@ -118,9 +120,9 @@ namespace Yttrium
                     const T Fc    = F(xx.c);
                     const T sigma = (Fc -Fa);
                     const T gamma = Twice( (Fc-Fb) + (Fa-Fb) );
-                    const T u     = Clamp(negHalf,(x-xx.b)/h, half);
+                    const T u     = Clamp(negativeHalf,(x-xx.b)/h, half);
 
-#if 1
+#if 0
                     {
                         static unsigned  id = 0;
                         const String     name = FormatString("adapt%u.dat",++id);
@@ -139,24 +141,60 @@ namespace Yttrium
                 }
             }
 
-            inline T compute(FunctionType &F, const T x, T h, const Interval<T> &I)
+
+            inline T compute(FunctionType &F, const T x, T h, const Interval<T> &I, T &err)
             {
-                Libc::OutputFile fp("drvs.dat");
-                for(size_t i=1;i<=5;++i)
+                T    ans   = a[1][1] = eval(F,x,h,I);
+                bool first = true;
+                for(size_t i=2,im=1;i<=NTAB;++i,++im)
                 {
-                    T df = eval(F,x,h,I);
-                    std::cerr << "h=" << h << " df=" << df << std::endl;
-
-                    fp("%.15g %.15g\n",h,df);
-                    h/=1.4;
+                    h /= ctrl;
+                    a[1][i] = eval(F,x,h,I);
+                    T fac = ctrl2;
+                    for(size_t j=2,jm=1;j<=i;++j,++jm)
+                    {
+                        const T anst = a[j][i] = (a[jm][i]*fac-a[jm][im])/(fac-one);
+                        const T errt = Max(Fabs<T>::Of(anst-a[jm][i]),Fabs<T>::Of(anst-a[jm][im]));
+                        fac *= ctrl2;
+                        if(first)
+                        {
+                            ans    = anst;
+                            err   = errt;
+                            first = false;
+                        }
+                        else
+                        {
+                            if(errt<err)
+                            {
+                                ans = anst;
+                                err = errt;
+                            }
+                        }
+                    }
+                    if(Fabs<T>::Of(a[i][i]-a[im][im]) >= Twice(err))
+                        break;
                 }
+                return ans;
 
-
-                return 0;
             }
 
+            inline T compute(FunctionType &F, const T x, T h, const Interval<T> &I)
+            {
 
+                T       err = 0;
+                const T res = compute(F,x,h,I,err);
+                std::cerr << "err=" << err << std::endl;
 
+                return res;
+            }
+
+            const T   zero;
+            const T   one;
+            const T   half;
+            const T   negativeHalf;
+            const T   ctrl;
+            const T   ctrl2;
+            Matrix<T> a;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);

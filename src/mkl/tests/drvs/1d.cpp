@@ -37,10 +37,12 @@ Y_UTEST(drvs_1d)
     Derivatives<double> drvs;
     drvs.Verbose =  true;
     Fcn F = { 0 };
-    const Interval<double> I(0,1);
+    const Interval<double> I(0,4);
     drvs.compute(F,0.2,0.8,I);
-    std::cerr << "expected: " << dFcn(0.2) << std::endl;
-    //drvs.compute(F,0.99,0.5,I);
+    std::cerr << "\t\texpected: " << dFcn(0.2) << std::endl;
+
+    drvs.compute(F,3.99,0.5,I);
+    std::cerr << "\t\texpected: " << dFcn(3.99) << std::endl;
 
 }
 Y_UDONE()
