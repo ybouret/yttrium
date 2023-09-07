@@ -126,7 +126,7 @@ namespace Yttrium
                 else
                 {
                     // adaptive version
-                    h = xx.c-xx.a;
+                    h    = xx.c-xx.a;
                     xx.b = Clamp(xx.a,half*(xx.a+xx.c),xx.c);
                     const T Fa    = F(xx.a);
                     const T Fb    = F(xx.b);
@@ -135,21 +135,6 @@ namespace Yttrium
                     const T gamma = Twice( (Fc-Fb) + (Fa-Fb) );
                     const T u     = Clamp(negativeHalf,(x-xx.b)/h, half);
 
-#if 0
-                    {
-                        static unsigned  id = 0;
-                        const String     name = FormatString("adapt%u.dat",++id);
-                        Libc::OutputFile fp(name);
-                        const size_t np = 100;
-                        for(size_t i=0;i<np;++i)
-                        {
-                            const T xt = xx.a + (i*h)/np;
-                            const T ft = F(xt);
-                            const T ut = xt-xx.b;
-                            fp("%g %g %g\n",double(xt),double(ft), double(Fb + sigma * ut/h + gamma * Squared(ut/h)) );
-                        }
-                    }
-#endif
                     return (sigma + Twice( gamma * u) )/h;
                 }
             }
@@ -161,9 +146,9 @@ namespace Yttrium
                 bool first = true;
                 for(size_t i=2,im=1;i<=NTAB;++i,++im)
                 {
-                    h /= ctrl;
+                    h      /= ctrl;
+                    T fac   = ctrl2;
                     a[1][i] = eval(F,x,h,I);
-                    T fac = ctrl2;
                     for(size_t j=2,jm=1;j<=i;++j,++jm)
                     {
                         const T anst = a[j][i] = (a[jm][i]*fac-a[jm][im])/(fac-one);
