@@ -3,12 +3,13 @@
 #include "y/mkl/triplet.hpp"
 #include "y/mkl/algebra/lu.hpp"
 #include "y/mkl/numeric.hpp"
+#include "y/mkl/interpolation/polynomial.hpp"
+#include "y/mkl/antelope/add.hpp"
 
 
 
 #include "y/system/exception.hpp"
 #include "y/container/cxx-array.hpp"
-
 #include "y/stream/libc/output.hpp"
 #include "y/string.hpp"
 
@@ -58,18 +59,25 @@ namespace Yttrium
             static const size_t                NTAB = 16;
             typedef Function<T,T>              FunctionType;
             typedef CxxArray<T,Memory::Dyadic> ArrayType;
+            typedef PolynomialInterpolation<T> PolInt;
 
             explicit Code() :
             Object(),
             zero(0),
             one(1),
+            two(2),
             half(0.5),
             negativeHalf(-half),
             ctrl(1.4),
             ctrl2(ctrl*ctrl),
             ftol( Numeric<T>::SQRT_EPSILON ),
-            //ftol( Numeric<T>::FTOL ),
-            a(NTAB,NTAB)
+            a(NTAB,NTAB),
+            xa(4),
+            ya(4),
+            zp(4),
+            xadd(4),
+            oneThird(one/3),
+            twoThird(two/3)
             {
             }
 
@@ -126,7 +134,47 @@ namespace Yttrium
                 else
                 {
                     // adaptive version
+                    static const int weight[4][4] =
+                    {
+                        {-11, 18,  -9,  2},
+                        {-2,  -3,   6, -1},
+                        { 1,  -6,   3,  2},
+                        {-2,   9, -18, 11}
+                    };
                     h    = xx.c-xx.a;
+
+                    const T FF[4] =
+                    {
+                        F(xa[1] = xx.a),
+                        F(xa[2] = xx.a + oneThird * h),
+                        F(xa[3] = xx.a + twoThird * h),
+                        F(xa[4] = xx.c)
+                    };
+
+                    for(size_t i=1;i<=4;++i)
+                    {
+                        xadd.free();
+                        const int * const w = weight[i-1];
+                        xadd << w[0] * FF[0] << w[1] * FF[1] << w[2] * FF[2] << w[3] * FF[3];
+                        ya[i] = xadd.sum();
+                    }
+
+#if 0
+                    {
+                        Libc::OutputFile fp("adapt.dat");
+                        for(size_t i=1;i<=4;++i)
+                        {
+                            fp("%.15g %.15g %.15g\n",double(xa[i]),double(FF[i-1]), double(ya[i]) );
+                        }
+                    }
+#endif
+
+                    T dum = 0;
+                    const T res = zp(x,xa,ya,dum)/(h+h);
+                    //std::cerr << "res=" << res << std::endl;
+                    //exit(1);
+                    return res;
+#if 0
                     xx.b = Clamp(xx.a,half*(xx.a+xx.c),xx.c);
                     const T Fa    = F(xx.a);
                     const T Fb    = F(xx.b);
@@ -136,6 +184,7 @@ namespace Yttrium
                     const T u     = Clamp(negativeHalf,(x-xx.b)/h, half);
 
                     return (sigma + Twice( gamma * u) )/h;
+#endif
                 }
             }
 
@@ -205,13 +254,19 @@ namespace Yttrium
 
             const T   zero;
             const T   one;
+            const T   two;
             const T   half;
             const T   negativeHalf;
             const T   ctrl;
             const T   ctrl2;
             const T   ftol;
             Matrix<T> a;
-
+            ArrayType xa;
+            ArrayType ya;
+            PolInt    zp;
+            Antelope::Add<T> xadd;
+            const T   oneThird;
+            const T   twoThird;
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
         };

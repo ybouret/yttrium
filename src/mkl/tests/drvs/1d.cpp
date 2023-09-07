@@ -49,8 +49,12 @@ Y_UTEST(drvs_1d)
     std::cerr << "\t\texpected: " << dFcn(3.99) << std::endl;
 
     const Interval<double> R;
-    drvs.computeFor(Cos,0.0,0.1,R);
-    drvs.computeFor(Cos,0.0,0.001,I);
+    std::cerr << drvs.computeFor(Cos,0.0,0.1,R) << std::endl;
+    std::cerr << "\t\texpected: 0" << std::endl;
+
+    std::cerr << drvs.computeFor(Cos,0.0,0.1,I) << std::endl;
+    std::cerr << "\t\texpected: 0" << std::endl;
+
 
 
 }
