@@ -38,8 +38,8 @@ Y_UTEST(drvs_1d)
     drvs.Verbose =  true;
     Fcn F = { 0 };
     const Interval<double> I(0,1);
-    drvs.compute(F,0.2,0.5,I);
-
+    drvs.compute(F,0.2,0.8,I);
+    std::cerr << "expected: " << dFcn(0.2) << std::endl;
     //drvs.compute(F,0.99,0.5,I);
 
 }

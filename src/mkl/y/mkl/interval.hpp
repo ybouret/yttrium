@@ -5,6 +5,7 @@
 #define Y_MKL_Interval_Included 1
 
 #include "y/mkl/limit.hpp"
+#include "y/mkl/triplet.hpp"
 #include "y/memory/out-of-reach.hpp"
 
 namespace Yttrium
@@ -123,6 +124,10 @@ namespace Yttrium
                 return os;
             }
 
+            //__________________________________________________________________
+            //
+            //! check x is inside the interval
+            //__________________________________________________________________
             inline bool contains(ConstType x) const
             {
                 switch(lower.type)
@@ -154,8 +159,92 @@ namespace Yttrium
                 }
 
                 return true;
+            }
+
+            //__________________________________________________________________
+            //
+            //! shift lower value withing interval
+            /**
+             \param x x.a <= x.b <= x.c, this->contains(x.b)
+             \return positive value if x.a was shifted up
+             */
+            //__________________________________________________________________
+            inline T shiftLower(Triplet<T> &x) const
+            {
+                assert( contains(x.b) );
+                assert( x.isIncreasing() );
+                T shift(0);
+
+                switch(lower.type)
+                {
+                    case UnboundedLimit:
+                        break;
+
+                    case IncludingLimit:
+                        if(x.a<lower.value)
+                        {
+                            shift = lower.value - x.a;
+                            x.a   = lower.value;
+                            assert(x.isIncreasing());
+                        }
+                        break;
+
+                    case ExcludingLimit:
+                        if(x.a<=lower.value)
+                        {
+                            static const T half(0.5);
+                            const T        xOld = x.a;
+                            do x.a = x.b + (x.a-x.b) * half; while(x.b<=lower.value);
+                            shift = x.a - xOld;
+                        }
+                        break;
+                }
+                return shift;
 
             }
+
+            //__________________________________________________________________
+            //
+            //! shift upper value withing interval
+            /**
+             \param x x.a <= x.b <= x.c, this->contains(x.b)
+             \return positive value if x.c was shifted down
+             */
+            //__________________________________________________________________
+            inline T shiftUpper(Triplet<T> &x) const
+            {
+                assert( contains(x.b) );
+                assert( x.isIncreasing() );
+                T shift(0);
+
+                switch(upper.type)
+                {
+                    case UnboundedLimit:
+                        break;
+
+                    case IncludingLimit:
+                        if(x.c>upper.value)
+                        {
+                            shift = x.c - upper.value;
+                            x.c   = upper.value;
+                            assert(x.isIncreasing());
+                        }
+                        break;
+
+                    case ExcludingLimit:
+                        if(x.c>=upper.value)
+                        {
+                            static const T half(0.5);
+                            const T        xOld = x.c;
+                            do x.c = x.b + (x.c-x.b) * half; while(x.c>=upper.value);
+                            shift = xOld-x.c;
+                        }
+                        break;
+                }
+                return shift;
+            }
+
+
 
             //__________________________________________________________________
             //

@@ -84,13 +84,23 @@ namespace Yttrium
                 static const T one(1.0);
                 static const T four(4.0);
 
-                Y_DRVS("adjusted");
 
                 assert(x.isIncreasing());
 
                 const T xm = half*(x.a+x.c);
                 const T xx[4] = { x.a-x.b, zero, x.c-x.b, xm - x.b };
                 const T ff[4] = { F(x.a),  Fb,   F(x.c),  F(xm)    };
+
+                {
+                    static unsigned nadj = 1;
+                    const String    name = FormatString("adj%u.dat",nadj++);
+                    Libc::OutputFile fp(name);
+                    for(size_t i=0;i<4;++i)
+                    {
+                        fp("%.15g %.15g\n", double(xx[i]+x.b), double(ff[i]));
+                    }
+                }
+
 
                 //--------------------------------------------------------------
                 //
@@ -160,7 +170,7 @@ namespace Yttrium
                 if(!lu.build(mu))  Kernel::Derivatives::SingularFunctionException();
                 lu.solve(mu,cf);
 
-#if 0
+#if 1
                 {
                     static unsigned count = 0;
                     const String    fname = FormatString("drvs%u.dat",++count);
@@ -173,11 +183,12 @@ namespace Yttrium
                         const T xtmp = xmin + T(i) * (xmax-xmin)/np;
                         const T ftmp = F(xtmp);
                         const T u    = xtmp - x.b;
-                        fp("%g %g %g\n", double(xtmp), double(ftmp), double(cf[1]+cf[2]*u+cf[3]*u*u) );
+                        fp("%g %g %g %g\n", double(xtmp), double(ftmp), double(cf[1]+cf[2]*u+cf[3]*u*u), double(cf[1]+cf[2]*u) );
                     }
                 }
 #endif
 
+                Y_DRVS("slope: " << cf[2]);
                 return cf[2];
             }
 
@@ -207,7 +218,7 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 bool    result = true;
                 {
-                    const T hlen = half * length;
+                    const T hlen = length*half;
                     x.b = x0;
                     x.a = x0-hlen; if(Fabs<T>::Of(x.b-x.a) <= zero ) Kernel:: Derivatives:: UnderflowException();
                     x.c = x0+hlen; if(Fabs<T>::Of(x.c-x.b) <= zero ) Kernel:: Derivatives:: UnderflowException();
@@ -331,11 +342,11 @@ namespace Yttrium
                               T                 &Fx)
             {
                 Triplet<T> xx = {x,x,x};
-
+                Y_DRVS("evaluate h=" <<h);
                 if( StandardMetrics(xx,x,h,I) )
                 {
-                    Y_DRVS("centered");
-                    return (F(xx.c) - F(xx.a))/(h+h);
+                    Y_DRVS("centered on " << xx);
+                    return (F(xx.c) - F(xx.a))/h;
                 }
                 else
                 {
@@ -344,6 +355,7 @@ namespace Yttrium
                         Fx    = F(x);
                         hasFx = true;
                     }
+                    Y_DRVS("adjusted on " << xx);
                     return adjusted(F,xx,Fx);
                 }
             }
@@ -385,9 +397,7 @@ namespace Yttrium
                     }
                 }
 
-
-
-
+                
 
                 return 0;
             }

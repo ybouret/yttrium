@@ -12,6 +12,16 @@ Y_UTEST(interval)
     Interval<double> J(-1,3);
     std::cerr << J << std::endl;
 
+    Triplet<double> x = { -1.1,0,3.2 };
+
+    std::cerr << "x   = " << x << std::endl;
+    const double slo = J.shiftLower(x);
+    const double sup = J.shiftUpper(x);
+
+    std::cerr << "slo = " << slo << std::endl;
+    std::cerr << "sup = " << sup << std::endl;
+    std::cerr << "x   = " << x   << std::endl;
+
     
 }
 Y_UDONE()
