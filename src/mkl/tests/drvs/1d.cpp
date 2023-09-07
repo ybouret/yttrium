@@ -35,7 +35,6 @@ namespace
 Y_UTEST(drvs_1d)
 {
     Derivatives<double> drvs;
-    drvs.Verbose =  true;
     Fcn F = { 0 };
     const Interval<double> I(0,4);
     drvs.computeFor(F,0.2,0.8,I);

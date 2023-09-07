@@ -22,7 +22,6 @@ namespace Yttrium
         namespace Kernel
         {
             const char * const Derivatives:: CallSign = "Derivatives";
-            bool               Derivatives:: Verbose  = false;
 
             Derivatives::  Derivatives() noexcept {}
             Derivatives:: ~Derivatives() noexcept {}
@@ -44,8 +43,7 @@ namespace Yttrium
             }
         }
 
-#define Y_DRVS(MSG) do { if(Kernel::Derivatives::Verbose) std::cerr << "[drvs] " << MSG << std::endl; } while(false)
-
+        
         //----------------------------------------------------------------------
         //
         //
@@ -60,7 +58,7 @@ namespace Yttrium
             static const size_t                NTAB = 16;
             typedef Function<T,T>              FunctionType;
             typedef CxxArray<T,Memory::Dyadic> ArrayType;
-            
+
             explicit Code() :
             Object(),
             zero(0),
@@ -109,14 +107,12 @@ namespace Yttrium
                 if( I.tryPack(xx) )
                 {
                     // direct version
-                    Y_DRVS("direct   on " << xx);
                     h = xx.c-xx.a;
                     return (F(xx.c) - F(xx.a))/h;
                 }
                 else
                 {
                     // adaptive version
-                    Y_DRVS("adaptive on " << xx);
                     h = xx.c-xx.a;
                     xx.b = Clamp(xx.a,half*(xx.a+xx.c),xx.c);
                     const T Fa    = F(xx.a);

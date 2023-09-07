@@ -33,7 +33,6 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 static const char * const CallSign; //!< Derivatives
-                static bool               Verbose;  //!< verbosity to debug
                 
 
                 //______________________________________________________________
