@@ -43,7 +43,7 @@ namespace Yttrium
             if(0!=loc.arena)
             {
                 assert(0!=loc.chunk);
-                os << "@Arena[" << loc.width << "]";
+                os << "@Arena[blockSize=" << loc.width << "]";
                 return os;
             }
 
