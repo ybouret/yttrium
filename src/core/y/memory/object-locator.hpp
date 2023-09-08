@@ -24,16 +24,28 @@ namespace Yttrium
         class ObjectLocator
         {
         public:
-
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             explicit ObjectLocator(const void *blockAddr); //!< setup
             virtual ~ObjectLocator() noexcept;             //!< cleanup
             Y_OSTREAM_PROTO(ObjectLocator);                //!< display
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
             const void  * const where; //!< block address
             const Arena * const arena; //!< if small object
             const Chunk * const chunk; //!< if small object
             const Strap * const strap; //!< if large object
             
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ObjectLocator);
         };

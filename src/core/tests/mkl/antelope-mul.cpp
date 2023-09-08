@@ -72,6 +72,7 @@ static inline void singleNode(Random::Bits &ran)
     std::cerr << "-- " << typeid(T).name() << std::endl;
     typedef Antelope::MulUnit<T>     Unit;
     typedef Small::HeavyNode<Unit>   Node;
+    Y_SIZEOF(T);
     Y_SIZEOF(Unit);
     Y_SIZEOF(Node);
 
