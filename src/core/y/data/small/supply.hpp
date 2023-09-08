@@ -66,8 +66,15 @@ namespace Yttrium
             template <typename NODE> inline
             NODE * newNode(typename NODE::ParamType args)
             {
+                std::cerr << "newNode " << args << std::endl;
                 NODE *node = static_cast<NODE *>(getFlat());
-                try { return new (node) NODE(args); }
+                std::cerr << "|_@" << node << std::endl;
+                try {
+                    NODE *res = new (node) NODE(args);
+                    std::cerr << "res@" << res << std::endl;
+                    return res;
+                    return new (node) NODE(args);
+                }
                 catch(...)  { putFlat(node); throw; }
             }
 

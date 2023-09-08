@@ -37,7 +37,14 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            inline  HeavyNode(ParamType args) : next(0), prev(0), data(args) { } //!< setup with data
+
+            //! setup with data
+            inline  HeavyNode(ParamType args) :
+            next(0),
+            prev(0),
+            data(args)
+            { std::cerr << "+Heavy Node" << std::endl; }
+
             inline ~HeavyNode() noexcept { assert(0==next); assert(0==prev); }   //!< cleanup
 
             //! copy data content

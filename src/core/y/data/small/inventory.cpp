@@ -9,6 +9,7 @@ namespace Yttrium
         blockSize(bs),
         pool()
         {
+            std::cerr << "[[ New Inventory[" << bs << "] ]]" << std::endl;
             assert(blockSize>=sizeof(Node));
         }
 
@@ -32,12 +33,26 @@ namespace Yttrium
 
         void * Inventory:: getFlat()
         {
-            return (pool.size>0) ? memset( pool.query(), 0, blockSize ) : zacquire(blockSize);
+            std::cerr << "Inventory@pool.size=" << pool.size << std::endl;
+            if(pool.size>0)
+            {
+                void   *node = pool.query();
+                std::cerr << "old => node@" << node << ", blockSize=" << blockSize << std::endl;
+                return memset(node, 0, blockSize);
+            }
+            else
+            {
+                void *node = zacquire(blockSize);
+                std::cerr << "new => node@" << node << ", blockSize=" << blockSize << std::endl;
+                return node;
+            }
+           // return (pool.size>0) ? memset( pool.query(), 0, blockSize ) : zacquire(blockSize);
         }
 
         void Inventory:: putFlat(void *blockAddr) noexcept
         {
             assert(0!=blockAddr);
+            std::cerr << "storing node@" << blockAddr << std::endl;
             pool.store( static_cast<Node*>( memset(blockAddr,0,sizeof(Node))) );
         }
 
@@ -51,7 +66,7 @@ namespace Yttrium
         {
             while(n-- > 0)
             {
-                pool.store( static_cast<Node*>( zacquire(blockSize)) );
+                pool.store( static_cast<Node*>( zacquire(blockSize) ) );
             }
         }
 

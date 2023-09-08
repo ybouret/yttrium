@@ -253,6 +253,7 @@ namespace Yttrium
                 //! setup
                 inline MulUnit(const Type args) noexcept : value(args), exponent(0)
                 {
+                    std::cerr << "+MulUnit(" << args << ")" << std::endl;
                     (void) std::frexp(value, & Coerce(exponent) );
                 }
 
@@ -351,10 +352,7 @@ namespace Yttrium
                 //______________________________________________________________
 
                 //! free
-                inline void free() noexcept
-                {
-                    my.free();
-                }
+                inline void free() noexcept { my.free(); }
 
                 //! free and reserve memory
                 inline void make(const size_t n)
@@ -370,10 +368,7 @@ namespace Yttrium
 
                 //! insert args
                 void insert(const T args)
-                {
-                    const UnitType u(args);
-                    pushUnit(u);
-                }
+                { const UnitType u(args); pushUnit(u); }
 
                 //! helper
                 MulList & operator<<(const T &args) {
@@ -461,11 +456,19 @@ namespace Yttrium
 
                 inline void pushUnit(const UnitType &u)
                 {
-                    CoreList lhs; lhs.pushTail( my.proxy->produce(u) );
+                    std::cerr << "prepare lhs" << std::endl;
+                    CoreList lhs;
+                    NodeType *node = my.proxy->produce(u);
+                    std::cerr << "node@" << node << std::endl;
+                    lhs.pushTail( node );
+
+                    std::cerr << "prepare rhs" << std::endl;
                     CoreList rhs; rhs.swapWith( my );
 
                     while(lhs.size>0 && rhs.size>0)
                     {
+                        assert(0!=rhs.head);
+                        assert(0!=lhs.head);
                         switch( UnitType::Compare( **lhs.head, **rhs.head) )
                         {
                             case Negative:
