@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_Memory_Pages_Included
-#define Y_Memory_Pages_Included 1
+#ifndef Y_Memory_Sentry_Included
+#define Y_Memory_Sentry_Included 1
 
 #include "y/config/starting.hpp"
 

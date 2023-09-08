@@ -50,8 +50,97 @@ namespace Yttrium
             return os;
         }
 
+        const void * ObjectLocator:: prevAddr(size_t &prevSize) const noexcept
+        {
+            if(0!=arena)
+            {
+                assert(0!=chunk);
+                const uint8_t *init = chunk->data;
+                const uint8_t *here = static_cast<const uint8_t *>(where);
+                prevSize = here-init;
+                return init;
+            }
+
+            prevSize = 0;
+            return 0;
+        }
+
+        const void * ObjectLocator:: nextAddr(size_t &nextSize) const noexcept
+        {
+            if(0!=arena)
+            {
+                assert(0!=chunk);
+                const uint8_t *last = chunk->last;
+                const uint8_t *next = static_cast<const uint8_t *>(where)+arena->blockSize;
+                nextSize = last-next;
+                return next;
+            }
+
+            nextSize = 0;
+            return 0;
+        }
+    }
+
+}
+
+namespace Yttrium
+{
+    namespace Memory
+    {
+
+        ObjectGuard:: ObjectGuard(const ObjectLocator &objloc, ObjectLocator::Query query) noexcept :
+        blockSize(0), blockAddr((objloc.*query)(Coerce(blockSize)))
+        {
+
+        }
+
+        ObjectGuard::  ~ObjectGuard() noexcept
+        {
+
+        }
+
 
     }
 
 }
+
+namespace Yttrium
+{
+    namespace Memory
+    {
+
+        ObjectSentry:: ~ObjectSentry() noexcept {}
+
+        ObjectSentry:: ObjectSentry(const ObjectLocator &objloc, ObjectLocator::Query query) noexcept :
+        ObjectGuard(objloc,query),
+        Sentry(blockAddr,blockSize)
+        {
+        }
+
+    }
+
+}
+
+namespace Yttrium
+{
+    namespace Memory
+    {
+
+        ObjectSentries:: ObjectSentries(const void *blockAddr) :
+        ObjectLocator(blockAddr),
+        prev(*this, & ObjectLocator:: prevAddr),
+        next(*this, & ObjectLocator:: nextAddr)
+        {
+
+        }
+
+        ObjectSentries:: ~ObjectSentries() noexcept
+        {
+
+        }
+
+    }
+
+}
+
 

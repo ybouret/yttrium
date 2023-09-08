@@ -15,9 +15,18 @@ Y_UTEST(memory_objloc)
 
 
     {
-        void *small = Object:: operator new(48);
+        uint8_t *small = static_cast<uint8_t *> ( Object:: operator new(48) );
         const Memory::ObjectLocator meminfo(small);
         std::cerr << meminfo << std::endl;
+
+        {
+            const Memory::ObjectSentries sentries(small);
+            for(size_t i=0;i<48;++i)
+            {
+                small[i] = 0xff;
+            }
+        }
+
         Object::operator delete(small,48);
     }
 
