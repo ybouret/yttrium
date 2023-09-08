@@ -44,7 +44,7 @@ namespace Yttrium
                 T hh= Fabs<T>::Of(x-xa[1]);
                 for(size_t i=1;i<=n;i++)
                 {
-                    const T h=fabs(x-xa[i]);
+                    const T h=Fabs<T>::Of(x-xa[i]);
                     if (h <= zero)
                     {
                         dy=0;
