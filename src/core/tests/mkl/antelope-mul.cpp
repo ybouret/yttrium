@@ -6,6 +6,7 @@
 #include "y/mkl/antelope/mul.hpp"
 #include "y/text/justify.hpp"
 #include "y/sequence/vector.hpp"
+#include <cstring>
 
 using namespace Yttrium;
 using namespace MKL;
@@ -78,9 +79,18 @@ Y_UTEST(mkl_xmul)
 {
     Random::Rand ran;
 
+    typedef Antelope::MulUnit<long double> Unit;
+    typedef Small::HeavyNode<Unit>         Node;
+    Y_SIZEOF(Unit);
+    Y_SIZEOF(Node);
+    void *obj = Object:: operator new(48);
+    const Unit u = 1000;
+    new (obj) Node(u);
+
+
     //Y_SHOW_UNIT(float);
     //Y_SHOW_UNIT(double);
-    Y_SHOW_UNIT(long double);
+    //Y_SHOW_UNIT(long double);
 
     return 0;
 
