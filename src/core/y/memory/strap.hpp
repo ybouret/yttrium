@@ -109,6 +109,11 @@ namespace Yttrium
             //! probe for  size of an OWNED block
             size_t blockSizeOf(const void *blockAddr) const noexcept;
 
+            //! from head to blockAddr that must be OWNED
+            const void *prevAddr(const void *blockAddr, size_t &prevSize) const noexcept;
+
+            //! from next block to tail include, blockAddr must be OWNED
+            const void *nextAddr(const void *blockAddr, size_t &nextSize) const noexcept;
 
             //__________________________________________________________________
             //

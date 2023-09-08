@@ -24,7 +24,13 @@ namespace Yttrium
         class ObjectLocator
         {
         public:
-            typedef const void * (ObjectLocator:: *Query)(size_t &) const;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef const void * (ObjectLocator:: *Query)(size_t &) const; //!< alias to query memory to check
 
 
             //__________________________________________________________________
@@ -43,8 +49,9 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            const void * prevAddr(size_t &prevSize) const noexcept;
-            const void * nextAddr(size_t &nextSize) const noexcept;
+            const void * prevAddr(size_t &prevSize) const noexcept; //!< query known prev memory area
+            const void * nextAddr(size_t &nextSize) const noexcept; //!< query known next memory area
+
 
             //__________________________________________________________________
             //
@@ -56,44 +63,63 @@ namespace Yttrium
             const Arena * const arena; //!< if small object
             const Chunk * const chunk; //!< if small object
             const Strap * const strap; //!< if large object
+            const size_t        width; //!< used bytes
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ObjectLocator);
             
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //! guess memory Area from locator and given Query method
+        //
+        //______________________________________________________________________
         class ObjectGuard
         {
         public:
-            explicit ObjectGuard(const ObjectLocator &, ObjectLocator::Query query) noexcept;
-            virtual ~ObjectGuard() noexcept;
+            explicit ObjectGuard(const ObjectLocator &, ObjectLocator::Query) noexcept; //!< setup
+            virtual ~ObjectGuard()                                            noexcept; //!< cleanup
 
-            const size_t blockSize;
-            const void  *blockAddr;
+            const size_t       blockSize; //!< stored block size
+            const void * const blockAddr; //!< stored block address
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ObjectGuard);
         };
 
 
+        //______________________________________________________________________
+        //
+        //
+        //! Sentry based on a computed Object Guard
+        //
+        //______________________________________________________________________
         class ObjectSentry : public ObjectGuard, public Sentry
         {
         public:
-            explicit ObjectSentry(const ObjectLocator &, ObjectLocator::Query query) noexcept;
-            virtual ~ObjectSentry() noexcept;
+            explicit ObjectSentry(const ObjectLocator &, ObjectLocator::Query) noexcept; //!< setup
+            virtual ~ObjectSentry()                                            noexcept; //!< cleanup
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ObjectSentry);
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //! Sentries based on both computed ObjectSentry
+        //
+        //______________________________________________________________________
         class ObjectSentries : public ObjectLocator
         {
         public:
-            explicit ObjectSentries(const void *blockAddr);
-            virtual ~ObjectSentries() noexcept;
+            explicit ObjectSentries(const void *obj); //!< setup
+            virtual ~ObjectSentries()       noexcept; //!< cleanup
 
-            const ObjectSentry prev;
-            const ObjectSentry next;
+            const ObjectSentry prev; //!< sentry at previous memory area
+            const ObjectSentry next; //!< sentry at next     memory area
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ObjectSentries);

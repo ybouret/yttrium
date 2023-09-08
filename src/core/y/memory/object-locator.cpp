@@ -20,28 +20,37 @@ namespace Yttrium
         }
 
         ObjectLocator:: ObjectLocator(const void *blockAddr) :
-        where(blockAddr), arena(0), chunk(0), strap(0)
+        where(blockAddr), arena(0), chunk(0), strap(0), width(0)
         {
             if(where)
             {
                 const Memory::Grains & grains = Grains::Instance();
                 grains.lookFor(*this);
+
+                if(0!=arena)
+                    Coerce(width) = arena->blockSize;
+
+                if(0!=strap)
+                    Coerce(width) = strap->blockSizeOf(where);
+
             }
         }
+
+     
 
         std::ostream & operator<<(std::ostream &os, const ObjectLocator &loc)
         {
             if(0!=loc.arena)
             {
                 assert(0!=loc.chunk);
-                os << "@Arena[" << loc.arena->blockSize << "]";
+                os << "@Arena[" << loc.width << "]";
                 return os;
             }
 
             if(0!=loc.strap)
             {
                 assert(0==loc.chunk);
-                os << "@Strap[blockSize=" << loc.strap->blockSizeOf(loc.where) << "]";
+                os << "@Strap[blockSize=" << loc.width << "]";
                 return os;
             }
 
@@ -61,6 +70,10 @@ namespace Yttrium
                 return init;
             }
 
+            if(0!=strap)
+                return strap->prevAddr(where,prevSize);
+            
+
             prevSize = 0;
             return 0;
         }
@@ -75,6 +88,9 @@ namespace Yttrium
                 nextSize = last-next;
                 return next;
             }
+
+            if(0!=strap)
+                return strap->nextAddr(where,nextSize);
 
             nextSize = 0;
             return 0;

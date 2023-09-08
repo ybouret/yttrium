@@ -3,6 +3,7 @@
 #include "y/calculus/align.hpp"
 #include "y/calculus/base2.hpp"
 #include "y/system/exception.hpp"
+#include "y/memory/out-of-reach.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -315,6 +316,26 @@ namespace Yttrium
             return block->size;
         }
 
+        const void * Strap:: prevAddr(const void *blockAddr, size_t &prevSize) const noexcept
+        {
+            assert(0!=blockAddr);
+            assert(owns(blockAddr));
+            const uint8_t * const here = static_cast<const uint8_t *>(blockAddr);
+            const uint8_t * const init = Memory::OutOfReach::Cast<const uint8_t,const Block>(head);
+            prevSize = here-init;
+            return init;
+        }
+
+        const void * Strap:: nextAddr(const void *blockAddr, size_t &nextSize) const noexcept
+        {
+            assert(0!=blockAddr);
+            assert(owns(blockAddr));
+            const Block * const block = static_cast<const Block *>(blockAddr)-1;
+            const uint8_t *     init  = Memory::OutOfReach::Cast<const uint8_t,const Block>(block->next); assert(0!=init);
+            const uint8_t *     fini  = Memory::OutOfReach::Cast<const uint8_t,const Block>(tail+1);      assert(0!=fini);
+            nextSize = fini-init;
+            return init;
+        }
 
     }
 

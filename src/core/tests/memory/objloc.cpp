@@ -31,9 +31,18 @@ Y_UTEST(memory_objloc)
     }
 
     {
-        void *big = Object:: operator new(301);
+        uint8_t  *big = static_cast<uint8_t *>(Object:: operator new(301));
         const Memory::ObjectLocator meminfo(big);
         std::cerr << meminfo << std::endl;
+
+        {
+            const Memory::ObjectSentries sentries(big);
+            for(size_t i=0;i<sentries.width;++i)
+            {
+                big[i] = 0xff;
+            }
+            
+        }
         Object:: operator delete(big,301);
     }
 
