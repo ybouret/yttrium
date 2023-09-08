@@ -7,6 +7,7 @@
 #include "y/text/justify.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/random/fill.hpp"
+#include "y/memory/object-locator.hpp"
 
 #include <cstring>
 
@@ -84,7 +85,12 @@ static inline void singleNode(Random::Bits &ran)
 
     const Unit u = 1000;
 
-    new (obj) Node(u);
+    {
+        const Memory::ObjectSentries check(obj);
+        Node *node = new (obj) Node(u);
+        std::cerr << "node=" << *node << std::endl;
+        Memory::OutOfReach::Naught(node);
+    }
 
 
     Object:: operator delete(obj,bs);
@@ -94,7 +100,6 @@ static inline void singleNode(Random::Bits &ran)
 Y_UTEST(mkl_xmul)
 {
     Random::Rand ran;
-    //UnitTestDisplay::Width = 50;
 
     singleNode<float>(ran);
     singleNode<double>(ran);
