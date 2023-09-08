@@ -45,7 +45,7 @@ namespace Yttrium
             //__________________________________________________________________
             void *acquire(size_t blockSize);               //!< acquire blockSize
             void  release(void *, const size_t) noexcept;  //!< release previously acquired
-            void  lookFor(ObjectLocator &) const;
+            void  lookFor(ObjectLocator &) const;          //!< fill memory info
 
         private:
             explicit  Grains();

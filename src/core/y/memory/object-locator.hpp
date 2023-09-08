@@ -15,17 +15,24 @@ namespace Yttrium
         class Chunk;
         class Strap;
 
+        //______________________________________________________________________
+        //
+        //
+        //! find memory information of a block of memory allocated by object
+        //
+        //______________________________________________________________________
         class ObjectLocator
         {
         public:
-            explicit ObjectLocator(const void *blockAddr);
-            virtual ~ObjectLocator() noexcept;
-            Y_OSTREAM_PROTO(ObjectLocator);
 
-            const void  * where;
-            const Arena * arena;
-            const Chunk * chunk;
-            const Strap * strap;
+            explicit ObjectLocator(const void *blockAddr); //!< setup
+            virtual ~ObjectLocator() noexcept;             //!< cleanup
+            Y_OSTREAM_PROTO(ObjectLocator);                //!< display
+
+            const void  * const where; //!< block address
+            const Arena * const arena; //!< if small object
+            const Chunk * const chunk; //!< if small object
+            const Strap * const strap; //!< if large object
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ObjectLocator);

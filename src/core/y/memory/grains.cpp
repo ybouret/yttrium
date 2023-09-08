@@ -59,8 +59,8 @@ namespace Yttrium
 
         void Grains::lookFor(ObjectLocator &objloc) const
         {
-            if( quanta->blocks.owns(objloc.where,objloc.arena,objloc.chunk) ) return;
-            if( quanta->straps.find(objloc.where,objloc.strap) )              return;
+            if( quanta->blocks.owns(objloc.where,Coerce(objloc.arena),Coerce(objloc.chunk)) ) return;
+            if( quanta->straps.find(objloc.where,Coerce(objloc.strap)) )                      return;
         }
 
 

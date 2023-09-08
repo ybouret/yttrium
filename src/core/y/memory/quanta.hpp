@@ -66,8 +66,8 @@ namespace Yttrium
             // members
             //
             //__________________________________________________________________
-            const Blocks &blocks;
-            const Straps &straps;
+            const Blocks &blocks; //!< blocks for size <= LimitSize
+            const Straps &straps; //!< straps for size >  LimitSize
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Quanta);

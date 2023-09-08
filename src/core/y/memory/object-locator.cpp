@@ -13,6 +13,7 @@ namespace Yttrium
 
         ObjectLocator:: ~ObjectLocator() noexcept
         {
+            Coerce(where) = 0;
             Coerce(arena) = 0;
             Coerce(chunk) = 0;
             Coerce(strap) = 0;
