@@ -83,11 +83,18 @@ Y_UTEST(mkl_xmul)
     typedef Small::HeavyNode<Unit>         Node;
     Y_SIZEOF(Unit);
     Y_SIZEOF(Node);
-    void *obj = Object:: operator new(64);
+    uint8_t    *obj = static_cast<uint8_t*>(Object:: operator new(48));
+    for(size_t i=0;i<48;++i)
+    {
+        obj[i] = 0xff;
+    }
+
     const Unit u = 1000;
     void *wksp[10];
     new (wksp) Node(u);
-    new (obj)  Node(u);
+    //new (obj)  Node(u);
+
+    Object::operator delete(obj,48);
 
     //Y_SHOW_UNIT(float);
     //Y_SHOW_UNIT(double);
