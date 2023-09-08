@@ -23,7 +23,7 @@ namespace Yttrium
 
         void *Quanta:: acquire(size_t blockSize)
         {
-            return (blockSize <= LimitSize) ? blocks.acquire(blockSize) : straps.acquire(blockSize);
+            return (blockSize <= LimitSize) ? Coerce(blocks).acquire(blockSize) : Coerce(straps).acquire(blockSize);
         }
 
         void Quanta:: release(void *blockAddr, const size_t blockSize) noexcept
@@ -32,11 +32,11 @@ namespace Yttrium
             assert(blockSize>0);
             if(blockSize<=LimitSize)
             {
-                blocks.release(blockAddr,blockSize);
+                Coerce(blocks).release(blockAddr,blockSize);
             }
             else
             {
-                straps.release(blockAddr);
+                Coerce(straps).release(blockAddr);
             }
         }
 
@@ -50,6 +50,7 @@ namespace Yttrium
             straps.displayInfo(indent+2);
             Core::Indent(std::cerr,indent) << "<" << CallSign << "/>" << std::endl;
         }
+        
 
 
     }

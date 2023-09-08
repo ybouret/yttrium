@@ -55,6 +55,9 @@ namespace Yttrium
             //! get/on-the-fly create arena
             Arena & operator[](const size_t blockSize);
 
+
+            //! look for arena/chunk owning the block
+            bool owns(const void *blockAddr, const Arena * &theArena, const Chunk * &theChunk) const;
             
             //__________________________________________________________________
             //

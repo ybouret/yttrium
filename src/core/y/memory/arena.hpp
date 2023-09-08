@@ -106,10 +106,20 @@ namespace Yttrium
             void  releaseBlock(void *blockAddr) noexcept;
 
 
+            //__________________________________________________________________
+            //
             //! display statistics
+            //__________________________________________________________________
             void displayInfo(const size_t indent, const bool verbose=true) const;
 
-            
+            //__________________________________________________________________
+            //
+            //! check ownership
+            //__________________________________________________________________
+            bool owns(const void *blockAddr, const Chunk * &whose) const;
+
+
+
             //__________________________________________________________________
             //
             //

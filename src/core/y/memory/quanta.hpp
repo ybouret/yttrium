@@ -59,10 +59,19 @@ namespace Yttrium
             //! display statistics
             void displayInfo(const size_t indent) const;
 
+
+            //__________________________________________________________________
+            //
+            //
+            // members
+            //
+            //__________________________________________________________________
+            const Blocks &blocks;
+            const Straps &straps;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Quanta);
-            Blocks &blocks;
-            Straps &straps;
+
         };
     }
 

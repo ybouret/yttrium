@@ -46,3 +46,24 @@ namespace Yttrium
 }
 
 
+
+#include "y/memory/object-locator.hpp"
+#include "y/memory/blocks.hpp"
+#include "y/memory/straps.hpp"
+
+namespace Yttrium
+{
+
+    namespace Memory
+    {
+
+        void Grains::lookFor(ObjectLocator &objloc) const
+        {
+            if( quanta->blocks.owns(objloc.where,objloc.arena,objloc.chunk) ) return;
+            if( quanta->straps.find(objloc.where,objloc.strap) )              return;
+        }
+
+
+    }
+
+}

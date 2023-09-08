@@ -295,6 +295,27 @@ namespace Yttrium
         }
 
 
+        bool Strap:: owns(const void *blockAddr) const noexcept
+        {
+            assert(0!=blockAddr);
+            const Block * const guess = static_cast<const Block *>(blockAddr)-1;
+            for(const Block *block=head;block!=tail;block=block->next)
+            {
+                if(guess==block) return true;
+            }
+            return false;
+        }
+
+
+        size_t Strap:: blockSizeOf(const void *blockAddr) const noexcept
+        {
+            assert(0!=blockAddr);
+            assert(owns(blockAddr));
+            const Block * const block = static_cast<const Block *>(blockAddr)-1;
+            return block->size;
+        }
+
+
     }
 
 }

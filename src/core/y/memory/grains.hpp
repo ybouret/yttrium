@@ -13,6 +13,9 @@ namespace Yttrium
 
     namespace Memory
     {
+
+        class ObjectLocator;
+
         //______________________________________________________________________
         //
         //
@@ -42,6 +45,7 @@ namespace Yttrium
             //__________________________________________________________________
             void *acquire(size_t blockSize);               //!< acquire blockSize
             void  release(void *, const size_t) noexcept;  //!< release previously acquired
+            void  lookFor(ObjectLocator &) const;
 
         private:
             explicit  Grains();

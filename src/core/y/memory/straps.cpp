@@ -288,5 +288,22 @@ namespace Yttrium
             Core::Indent(std::cerr,indent) << "<" << CallSign << "/>" << std::endl;
         }
 
+
+        bool Straps:: find(const void *blockAddr, const  Strap * &whose) const
+        {
+            assert(0!=blockAddr);
+            assert(0==whose);
+            for(const Strap *strap = head; strap; strap=strap->next)
+            {
+                if(strap->owns(blockAddr))
+                {
+                    whose = strap;
+                    return true;
+                }
+
+            }
+            return false;
+        }
+
     }
 }

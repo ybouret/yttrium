@@ -333,6 +333,28 @@ namespace Yttrium
 
 
         }
+
+
+        bool Arena:: owns(const void *blockAddr, const Chunk * &whose) const
+        {
+            assert(0!=blockAddr);
+            assert(0==whose);
+
+            for(const Chunk *ch=head;ch;ch=ch->next)
+            {
+                if(ch->entails(blockAddr))
+                {
+                    if(!ch->owns(blockAddr,blockSize))
+                        throw Specific::Exception(CallSign,"owning a not-aligned block!");
+                    whose = ch;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
     }
 
 }

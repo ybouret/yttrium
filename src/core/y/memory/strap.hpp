@@ -103,6 +103,13 @@ namespace Yttrium
             //__________________________________________________________________
             void   displayInfo(size_t indent) const;
 
+            //! detect anonymous ownership
+            bool owns(const void *blockAddr) const noexcept;
+
+            //! probe for  size of an OWNED block
+            size_t blockSizeOf(const void *blockAddr) const noexcept;
+
+
             //__________________________________________________________________
             //
             //

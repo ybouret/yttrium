@@ -154,7 +154,27 @@ namespace Yttrium
             }
         }
 
-        
+        bool Blocks:: owns(const void *blockAddr, const Arena * &theArena, const Chunk * &theChunk) const
+        {
+            assert(0!=blockAddr);
+            assert(0==theArena);
+            assert(0==theChunk);
+
+            for(size_t i=0;i<nslot;++i)
+            {
+                for(const Arena *a = slots[i].head; a; a=a->next)
+                {
+                    if(a->owns(blockAddr,theChunk))
+                    {
+                        theArena = a;
+                        return true;
+                    }
+                }
+            }
+            return false;
+
+        }
+
 
     }
 
