@@ -258,7 +258,12 @@ namespace Yttrium
                 }
 
                 //! copy
-                inline  MulUnit(const MulUnit &other) noexcept : value(other.value), exponent(other.exponent) {}
+                inline  MulUnit(const MulUnit &other) noexcept :
+                value(other.value),
+                exponent(other.exponent)
+                {
+                    std::cerr << "+MulUnit(copy:" << other << ")" << std::endl;
+                }
 
                 //! cleanup
                 inline ~MulUnit() noexcept {}
@@ -456,7 +461,7 @@ namespace Yttrium
 
                 inline void pushUnit(const UnitType &u)
                 {
-                    std::cerr << "prepare lhs" << std::endl;
+                    std::cerr << "prepare lhs from " << u << std::endl;
                     CoreList lhs;
                     NodeType *node = my.proxy->produce(u);
                     std::cerr << "node@" << node << std::endl;

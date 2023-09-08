@@ -95,6 +95,7 @@ namespace Yttrium
 
         void * Blocks:: acquire(const size_t blockSize)
         {
+            assert(0!=which);
             return ((*this).*which)(blockSize);
         }
 
@@ -121,6 +122,7 @@ namespace Yttrium
             assert(0==cache);
             cache = slots[blockSize&smask].pushHead(makeNewArena(blockSize));
             which = & Blocks::acquireExtra; // will never come back
+            assert(blockSize==cache->blockSize);
             return cache->acquireBlock();
         }
 
@@ -142,7 +144,7 @@ namespace Yttrium
                 {
                     if(node->blockSize==blockSize)
                     {
-                        return (cache = slot.moveToFront(node))->acquireBlock();
+                        return (cache = slot.moveToFront(node) )->acquireBlock();
                     }
                 }
 

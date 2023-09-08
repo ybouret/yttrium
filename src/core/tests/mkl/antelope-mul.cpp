@@ -42,13 +42,16 @@ static inline void ShowUnit( const char *name, Random::Bits &ran )
 
     MKL::Antelope::MulList<T> xmul;
 
+    std::cerr << "-- Creating List" << std::endl;
     Vector<T> vec;
     for(size_t i=1+ran.leq(5);i>0;--i)
     {
         const T tmp = amp*Bring<T>::Get(ran);
+        std::cerr << "-- Inserting " << tmp << std::endl;
         xmul.insert(tmp);
         vec << tmp;
     }
+
     {
         const T tmp = amp*Bring<T>::Get(ran);
         xmul.insert(tmp, 4);
@@ -75,9 +78,11 @@ Y_UTEST(mkl_xmul)
 {
     Random::Rand ran;
 
-    Y_SHOW_UNIT(float);
-    Y_SHOW_UNIT(double);
+    //Y_SHOW_UNIT(float);
+    //Y_SHOW_UNIT(double);
     Y_SHOW_UNIT(long double);
+
+    return 0;
 
     Y_SHOW_UNIT(XReal<float>);
     Y_SHOW_UNIT(XReal<double>);

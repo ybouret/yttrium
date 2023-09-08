@@ -23,7 +23,7 @@ namespace Yttrium
 
         void *Quanta:: acquire(size_t blockSize)
         {
-            return blockSize <= LimitSize ? blocks.acquire(blockSize) : straps.acquire(blockSize);
+            return (blockSize <= LimitSize) ? blocks.acquire(blockSize) : straps.acquire(blockSize);
         }
 
         void Quanta:: release(void *blockAddr, const size_t blockSize) noexcept
