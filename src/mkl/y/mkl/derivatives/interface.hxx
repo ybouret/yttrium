@@ -18,7 +18,7 @@ code( new Code() )
 
 
 template <>
-real_t Derivatives<real_t>:: compute(FunctionType &F, const real_t x0, const real_t h, const Interval<real_t> &I)
+real_t Derivatives<real_t>:: compute1D(FunctionType &F, const real_t x0, const real_t h, const Interval<real_t> &I)
 {
     assert(0!=code);
     return code->compute(F,x0, h,I);

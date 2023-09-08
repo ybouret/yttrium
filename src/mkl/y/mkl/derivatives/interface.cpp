@@ -60,6 +60,7 @@ namespace Yttrium
             typedef Function<T,T>              FunctionType;
             typedef CxxArray<T,Memory::Dyadic> ArrayType;
             typedef PolynomialInterpolation<T> PolInt;
+            typedef Antelope::Add<T>           XAdd;
 
             explicit Code() :
             Object(),
@@ -141,8 +142,9 @@ namespace Yttrium
                         { 1,  -6,   3,  2},
                         {-2,   9, -18, 11}
                     };
-                    h    = xx.c-xx.a;
 
+                    // compute values at evaluation points
+                    h    = xx.c-xx.a;
                     const T FF[4] =
                     {
                         F(xa[1] = xx.a),
@@ -151,6 +153,7 @@ namespace Yttrium
                         F(xa[4] = xx.c)
                     };
 
+                    // compute derivative estimation at those points
                     for(size_t i=1;i<=4;++i)
                     {
                         xadd.free();
@@ -159,6 +162,7 @@ namespace Yttrium
                         ya[i] = xadd.sum();
                     }
 
+                    // and polynomial interpolation of the derivative :)
                     T dum = 0;
                     return zp(x,xa,ya,dum)/(h+h);
 
@@ -241,9 +245,10 @@ namespace Yttrium
             ArrayType xa;
             ArrayType ya;
             PolInt    zp;
-            Antelope::Add<T> xadd;
+            XAdd      xadd;
             const T   oneThird;
             const T   twoThird;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
         };

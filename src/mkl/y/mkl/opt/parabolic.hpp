@@ -4,7 +4,7 @@
 #define Y_MKL_Opt_Parabolic_Included 1
 
 #include "y/mkl/triplet.hpp"
-#include "y/mkl/function-wrapper.hpp"
+#include "y/mkl/function-wrapper-1d.hpp"
 
 namespace Yttrium
 {
@@ -57,7 +57,7 @@ namespace Yttrium
             template <typename FUNCTION> static inline
             void Step(FUNCTION &F, Triplet<T> &x, Triplet<T> &f )
             {
-                Wrapper<T,T,FUNCTION> FW(F);
+                Wrapper1D<T,T,FUNCTION> FW(F);
                 Step(x,f,FW);
             }
 

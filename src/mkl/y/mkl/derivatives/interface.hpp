@@ -5,8 +5,10 @@
 
 #include "y/object.hpp"
 #include "y/counted.hpp"
-#include "y/mkl/function-wrapper.hpp"
+#include "y/mkl/function-wrapper-1d.hpp"
+#include "y/mkl/function-wrapper-nd.hpp"
 #include "y/mkl/interval.hpp"
+#include "y/container/writable.hpp"
 
 namespace Yttrium
 {
@@ -79,7 +81,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Function<T,T> FunctionType; //!< alias
+            typedef Function<T,T>                       FunctionType; //!< alias
 
             //__________________________________________________________________
             //
@@ -99,16 +101,36 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! internal computation by modified Ridder's Method
-            T compute(FunctionType &F, const T x0, const T h, const Interval<T> &I);
+            T compute1D(FunctionType &F, const T x0, const T h, const Interval<T> &I);
 
 
             //! code wrapper
             template <typename FUNCTION> inline
-            T computeFor(FUNCTION &F, const T x0, const T h, const Interval<T> &I)
+            T operator()(FUNCTION &F, const T x0, const T h, const Interval<T> &I)
             {
-                Wrapper<T,T,FUNCTION> FW(F);
-                return compute(FW,x0,h,I);
+                Wrapper1D<T,T,FUNCTION> FW(F);
+                return compute1D(FW,x0,h,I);
             }
+
+            //! code wrapper for gradient
+            template <typename SCALAR_FIELD> inline
+            void operator()(Writable<T>                   &dFdX,
+                            SCALAR_FIELD                  &F,
+                            const Readable<T>             &X,
+                            const Readable<T>             &H,
+                            const Readable< Interval<T> > &I)
+            {
+                assert(dFdX.size() == X.size() );
+                assert(dFdX.size() == H.size() );
+                assert(dFdX.size() == I.size() );
+                const size_t n = dFdX.size();
+                for(size_t i=n;i>0;--i)
+                {
+                    WrapperND<T,T,SCALAR_FIELD> FW(F,X,i);
+                    dFdX[i] = compute1D(FW,X[i],H[i],I[i]);
+                }
+            }
+
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Derivatives);

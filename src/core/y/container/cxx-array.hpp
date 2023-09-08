@@ -74,7 +74,7 @@ count( CAPACITY   )
         typedef Memory::Wad<T,ALLOCATOR>             WadType; //!< alias
         typedef Operating<T>                         OpsType; //!< alias
         typedef CxxSetCapacity<CAPA>                 SetCapa; //!< decide capacity
-        Y_ARGS_EXPOSE(T,Type);                                //!< aliases
+        Y_ARGS_DECL(T,Type);                                //!< aliases
 
         //______________________________________________________________________
         //
@@ -89,6 +89,17 @@ count( CAPACITY   )
         Y_CxxArray_Ctor(SetCapa::From(n,*this))
         {
         }
+
+        //! setup with default [1:[n|max]] objects, and set to value
+        inline explicit CxxArray(const size_t n, ParamType value) :
+        WadType(n),
+        Y_CxxArray_Ctor(SetCapa::From(n,*this))
+        {
+            Writable<T> &self = *this;
+            for(size_t i=self.size();i>0;--i)
+                Coerce(self[i]) = value;
+        }
+
 
         //! setup from any compatible
         template <typename SOURCE>

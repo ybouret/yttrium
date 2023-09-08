@@ -5,7 +5,7 @@
 #define Y_MKL_Opt_Bracket_Included 1
 
 #include "y/mkl/triplet.hpp"
-#include "y/mkl/function-wrapper.hpp"
+#include "y/mkl/function-wrapper-1d.hpp"
 
 namespace Yttrium
 {
@@ -58,7 +58,7 @@ namespace Yttrium
             template <typename FUNCTION> static inline
             bool Inside(FUNCTION &F, Triplet<T> &x, Triplet<T> &f )
             {
-                Wrapper<T,T,FUNCTION> FW(F);
+                Wrapper1D<T,T,FUNCTION> FW(F);
                 return Inside(x,f,FW);
             }
 

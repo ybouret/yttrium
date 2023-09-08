@@ -20,7 +20,9 @@ add_test(opt:bracket   test-mkl opt_bracket)
 add_test(algebra:lu          test-mkl algebra_lu)
 add_test(algebra:ortho_space test-mkl algebra_ortho_space)
 
-add_test(drvs:1d test-mkl drvs_1d)
+add_test(drvs:1d test-mkl drvs1D)
+add_test(drvs:nd test-mkl drvsND)
 
-add_test(interp:poly test-mkl interp_poly)
+add_test(interp:poly  test-mkl interp_poly)
+add_test(interp:ratio test-mkl interp_ratio)
 

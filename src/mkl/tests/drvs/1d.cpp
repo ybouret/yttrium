@@ -1,10 +1,7 @@
 
-
-
 #include "y/mkl/derivatives/interface.hpp"
 #include "y/utest/run.hpp"
 #include "y/mkl/xreal.hpp"
-#include "y/mkl/triplet.hpp"
 #include <cmath>
 
 using namespace Yttrium;
@@ -34,25 +31,25 @@ namespace
 }
 
 
-Y_UTEST(drvs_1d)
+Y_UTEST(drvs1D)
 {
     Derivatives<double> drvs;
     Fcn F = { 0 };
     const Interval<double> I(0,4);
-    std::cerr << drvs.computeFor(F,0.2,0.8,I) << std::endl;
+    std::cerr << drvs(F,0.2,0.8,I) << std::endl;
     std::cerr << "\t\texpected: " << dFcn(0.2) << std::endl;
 
-    std::cerr << drvs.computeFor(F,0.2,0.1,I) << std::endl;
+    std::cerr << drvs(F,0.2,0.1,I) << std::endl;
     std::cerr << "\t\texpected: " << dFcn(0.2) << std::endl;
 
-    std::cerr << drvs.computeFor(F,3.99,0.5,I) << std::endl;
+    std::cerr << drvs(F,3.99,0.5,I) << std::endl;
     std::cerr << "\t\texpected: " << dFcn(3.99) << std::endl;
 
     const Interval<double> R;
-    std::cerr << drvs.computeFor(Cos,0.0,0.1,R) << std::endl;
+    std::cerr << drvs(Cos,0.0,0.1,R) << std::endl;
     std::cerr << "\t\texpected: 0" << std::endl;
 
-    std::cerr << drvs.computeFor(Cos,0.0,0.1,I) << std::endl;
+    std::cerr << drvs(Cos,0.0,0.1,I) << std::endl;
     std::cerr << "\t\texpected: 0" << std::endl;
 
 

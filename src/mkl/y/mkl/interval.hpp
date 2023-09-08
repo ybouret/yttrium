@@ -96,6 +96,13 @@ namespace Yttrium
                 if(lower.value>upper.value) Memory::OutOfReach::Swap(Coerce(lower), Coerce(upper));
             }
 
+            //! assign to safely change values
+            Interval & operator=(const Interval &I) noexcept
+            {
+                Memory::OutOfReach::Copy( Coerce(lower), I.lower);
+                Memory::OutOfReach::Copy( Coerce(upper), I.upper);
+                return *this;
+            }
 
             //__________________________________________________________________
             //
@@ -292,8 +299,6 @@ namespace Yttrium
 
 
 
-        private:
-            Y_DISABLE_ASSIGN(Interval);
 
         };
     }
