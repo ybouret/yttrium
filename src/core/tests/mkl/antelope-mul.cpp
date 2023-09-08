@@ -78,23 +78,35 @@ static inline void ShowUnit( const char *name, Random::Bits &ran )
 Y_UTEST(mkl_xmul)
 {
     Random::Rand ran;
+    UnitTestDisplay::Width = 50;
 
-    typedef Antelope::MulUnit<long double> Unit;
-    typedef Small::HeavyNode<Unit>         Node;
+    Y_SIZEOF(Antelope::MulUnit<float>);
+    Y_SIZEOF(Antelope::MulUnit<double>);
+    Y_SIZEOF(Antelope::MulUnit<long double>);
+    std::cerr << std::endl;
+    Y_SIZEOF(Small::HeavyNode< Antelope::MulUnit<float> >);
+    Y_SIZEOF(Small::HeavyNode< Antelope::MulUnit<double> >);
+    Y_SIZEOF(Small::HeavyNode< Antelope::MulUnit<long double> >);
+    std::cerr << std::endl;
+
+    typedef Antelope::MulUnit<float> Unit;
+    typedef Small::HeavyNode<Unit>   Node;
     Y_SIZEOF(Unit);
     Y_SIZEOF(Node);
-    uint8_t    *obj = static_cast<uint8_t*>(Object:: operator new(48));
-    for(size_t i=0;i<48;++i)
+    Y_SIZEOF(double);
+    Y_SIZEOF(long double);
+    const size_t bs = sizeof(Node);
+    uint8_t    *obj = static_cast<uint8_t*>(Object:: operator new(bs));
+    for(size_t i=0;i<bs;++i)
     {
         obj[i] = 0xff;
     }
 
     const Unit u = 1000;
-    void *wksp[10];
-    new (wksp) Node(u);
-    //new (obj)  Node(u);
-
-    Object::operator delete(obj,48);
+    Node *node = new (obj)  Node(u);
+    Y_CHECK(0==node->next);
+    Y_CHECK(0==node->prev);
+    Object::operator delete(obj,bs);
 
     //Y_SHOW_UNIT(float);
     //Y_SHOW_UNIT(double);

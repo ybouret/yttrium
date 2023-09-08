@@ -43,7 +43,7 @@ namespace Yttrium
             next(0),
             prev(0),
             data(args)
-            { std::cerr << "+Heavy Node" << std::endl; }
+            { std::cerr << "+Heavy Node(" << args << ")" << std::endl; }
 
             inline ~HeavyNode() noexcept { assert(0==next); assert(0==prev); }   //!< cleanup
 
