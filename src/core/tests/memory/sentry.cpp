@@ -36,7 +36,11 @@ Y_UTEST(memory_sentry)
     Y_ASSERT(Memory::OutOfReach::Are0(c,7));
 
 
+    {
+        const Memory::Sentry empty(0,0);
+        Y_CHECK(empty.isUntouched());
 
+    }
 
 
 }

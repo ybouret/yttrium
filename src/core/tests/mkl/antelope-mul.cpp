@@ -80,7 +80,10 @@ static inline void singleNode(Random::Bits &ran)
     uint8_t *obj = static_cast<uint8_t*>( Object:: operator new(bs) );
     std::cerr << "-- randomizing " << bs << " bytes" << std::endl;
     Random::Fill::Block(obj,bs,ran,0x01,0xff);
-    
+
+    const Unit u = 1000;
+
+    new (obj) Node(u);
 
 
     Object:: operator delete(obj,bs);
