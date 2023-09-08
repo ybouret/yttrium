@@ -6,22 +6,14 @@
 #include "y/mkl/antelope/mul.hpp"
 #include "y/text/justify.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/random/fill.hpp"
+
 #include <cstring>
 
 using namespace Yttrium;
 using namespace MKL;
 
 
-namespace Yttrium
-{
-    namespace MKL
-    {
-        namespace Antelope
-        {
-            
-        }
-    }
-}
 
 template <typename T>
 static inline void ShowUnit( const char *name, Random::Bits &ran )
@@ -74,39 +66,36 @@ static inline void ShowUnit( const char *name, Random::Bits &ran )
 #define Y_SHOW_UNIT(CLASS) ShowUnit<CLASS>( #CLASS, ran )
 
 
+template <typename T>
+static inline void singleNode(Random::Bits &ran)
+{
+    std::cerr << "-- " << typeid(T).name() << std::endl;
+    typedef Antelope::MulUnit<T>     Unit;
+    typedef Small::HeavyNode<Unit>   Node;
+    Y_SIZEOF(Unit);
+    Y_SIZEOF(Node);
+
+    const size_t bs = sizeof(Node);
+    std::cerr << "-- acquire object" << std::endl;
+    uint8_t *obj = static_cast<uint8_t*>( Object:: operator new(bs) );
+    std::cerr << "-- randomizing " << bs << " bytes" << std::endl;
+    Random::Fill::Block(obj,bs,ran,0x01,0xff);
+    
+
+
+    Object:: operator delete(obj,bs);
+    std::cerr << std::endl;
+}
 
 Y_UTEST(mkl_xmul)
 {
     Random::Rand ran;
-    UnitTestDisplay::Width = 50;
+    //UnitTestDisplay::Width = 50;
 
-    Y_SIZEOF(Antelope::MulUnit<float>);
-    Y_SIZEOF(Antelope::MulUnit<double>);
-    Y_SIZEOF(Antelope::MulUnit<long double>);
-    std::cerr << std::endl;
-    Y_SIZEOF(Small::HeavyNode< Antelope::MulUnit<float> >);
-    Y_SIZEOF(Small::HeavyNode< Antelope::MulUnit<double> >);
-    Y_SIZEOF(Small::HeavyNode< Antelope::MulUnit<long double> >);
-    std::cerr << std::endl;
+    singleNode<float>(ran);
+    singleNode<double>(ran);
+    singleNode<long double>(ran);
 
-    typedef Antelope::MulUnit<float> Unit;
-    typedef Small::HeavyNode<Unit>   Node;
-    Y_SIZEOF(Unit);
-    Y_SIZEOF(Node);
-    Y_SIZEOF(double);
-    Y_SIZEOF(long double);
-    const size_t bs = sizeof(Node);
-    uint8_t    *obj = static_cast<uint8_t*>(Object:: operator new(bs));
-    for(size_t i=0;i<bs;++i)
-    {
-        obj[i] = 0xff;
-    }
-
-    const Unit u = 1000;
-    Node *node = new (obj)  Node(u);
-    Y_CHECK(0==node->next);
-    Y_CHECK(0==node->prev);
-    Object::operator delete(obj,bs);
 
     //Y_SHOW_UNIT(float);
     //Y_SHOW_UNIT(double);
