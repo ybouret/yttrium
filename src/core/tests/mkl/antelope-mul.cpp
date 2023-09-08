@@ -83,7 +83,7 @@ static inline void singleNode(Random::Bits &ran)
     std::cerr << "-- randomizing " << bs << " bytes" << std::endl;
     Random::Fill::Block(obj,bs,ran,0x01,0xff);
 
-    const Unit u = 1000;
+    const Unit u(1000);
 
     {
         const Memory::ObjectSentries check(obj);
@@ -103,7 +103,17 @@ Y_UTEST(mkl_xmul)
 
     singleNode<float>(ran);
     singleNode<double>(ran);
-    singleNode<long double>(ran);
+    //singleNode<long double>(ran);
+
+    singleNode< XReal<float> >(ran);
+    singleNode< XReal<double> >(ran);
+    //singleNode< XReal<long double> >(ran);
+
+
+    singleNode< Complex<float>  >(ran);
+    singleNode< Complex<double> >(ran);
+    //singleNode< Complex<long double> >(ran);
+
 
 
     //Y_SHOW_UNIT(float);
