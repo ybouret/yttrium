@@ -14,7 +14,7 @@ CashKarp<real_t>:: CashKarp() noexcept : code(0)
 }
 
 template <>
-CashKarp<real_t>:: CashKarp(const size_t n) : code( new Code(n) )
+CashKarp<real_t>:: CashKarp(const size_t n) : code(  n <= 0 ? 0 : new Code(n) )
 {
 
 }

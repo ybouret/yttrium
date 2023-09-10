@@ -30,7 +30,9 @@ namespace Yttrium
                 ak6(n),
                 ytemp(n),
                 xadd(n)
-                {}
+                {
+                    assert(dims>0);
+                }
 
                 inline virtual ~Code() noexcept {}
 

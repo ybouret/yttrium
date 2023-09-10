@@ -12,8 +12,34 @@ namespace Yttrium
 
         namespace ODE
         {
+
             template <typename T>
-            class CashKarp
+            class RK45_Step
+            {
+            public:
+                typedef typename Named<T>::Equation Equation;
+                typedef typename Named<T>::Callback Callback;
+
+                virtual ~RK45_Step() noexcept {}
+
+                virtual void operator()(Writable<T> &       y,
+                                        const Readable<T> & dydx,
+                                        const T             x,
+                                        const T             h,
+                                        Writable<T> &       yout,
+                                        Writable<T> &       yerr,
+                                        Equation     &      drvs,
+                                        Callback     *      cntl) = 0;
+
+            protected:
+                explicit RK45_Step() noexcept {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(RK45_Step);
+            };
+
+            template <typename T>
+            class CashKarp : public RK45_Step<T>
             {
             public:
                 typedef typename Named<T>::Equation Equation;
