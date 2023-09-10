@@ -1,4 +1,4 @@
-#include "y/memory/object-locator.hpp"
+#include "y/memory/object/sentries.hpp"
 #include "y/utest/run.hpp"
 #include "y/object.hpp"
 

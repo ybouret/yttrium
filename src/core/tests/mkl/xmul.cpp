@@ -7,7 +7,7 @@
 #include "y/text/justify.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/random/fill.hpp"
-#include "y/memory/object-locator.hpp"
+#include "y/memory/object/sentries.hpp"
 
 #include <cstring>
 

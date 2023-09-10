@@ -70,65 +70,9 @@ namespace Yttrium
             
         };
 
-        //______________________________________________________________________
-        //
-        //
-        //! guess memory Area from locator and given Query method
-        //
-        //______________________________________________________________________
-        class ObjectGuard
-        {
-        public:
-            explicit ObjectGuard(const ObjectLocator &, ObjectLocator::Query) noexcept; //!< setup
-            virtual ~ObjectGuard()                                            noexcept; //!< cleanup
+     
 
-            const size_t       blockSize; //!< stored block size
-            const void * const blockAddr; //!< stored block address
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(ObjectGuard);
-        };
-
-
-        //______________________________________________________________________
-        //
-        //
-        //! Sentry based on a computed Object Guard
-        //
-        //______________________________________________________________________
-        class ObjectSentry : public ObjectGuard, public Sentry
-        {
-        public:
-            explicit ObjectSentry(const ObjectLocator &, ObjectLocator::Query) noexcept; //!< setup
-            virtual ~ObjectSentry()                                            noexcept; //!< cleanup
-            
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(ObjectSentry);
-        };
-
-        //______________________________________________________________________
-        //
-        //
-        //! Sentries based on both computed ObjectSentry
-        //
-        //______________________________________________________________________
-        class ObjectSentries : public ObjectLocator
-        {
-        public:
-            explicit ObjectSentries(const void *obj); //!< setup
-            virtual ~ObjectSentries()       noexcept; //!< cleanup
-
-            const ObjectSentry prev; //!< sentry at previous memory area
-            const ObjectSentry next; //!< sentry at next     memory area
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(ObjectSentries);
-        };
-
-
-
-
-
+        
 
     }
 

@@ -1,5 +1,5 @@
 
-#include "y/memory/object-locator.hpp"
+#include "y/memory/object/locator.hpp"
 #include "y/memory/grains.hpp"
 #include <iostream>
 
@@ -99,64 +99,6 @@ namespace Yttrium
 
 }
 
-namespace Yttrium
-{
-    namespace Memory
-    {
 
-        ObjectGuard:: ObjectGuard(const ObjectLocator &objloc, ObjectLocator::Query query) noexcept :
-        blockSize(0), blockAddr((objloc.*query)(Coerce(blockSize)))
-        {
-
-        }
-
-        ObjectGuard::  ~ObjectGuard() noexcept
-        {
-
-        }
-
-
-    }
-
-}
-
-namespace Yttrium
-{
-    namespace Memory
-    {
-
-        ObjectSentry:: ~ObjectSentry() noexcept {}
-
-        ObjectSentry:: ObjectSentry(const ObjectLocator &objloc, ObjectLocator::Query query) noexcept :
-        ObjectGuard(objloc,query),
-        Sentry(blockAddr,blockSize)
-        {
-        }
-
-    }
-
-}
-
-namespace Yttrium
-{
-    namespace Memory
-    {
-
-        ObjectSentries:: ObjectSentries(const void *blockAddr) :
-        ObjectLocator(blockAddr),
-        prev(*this, & ObjectLocator:: prevAddr),
-        next(*this, & ObjectLocator:: nextAddr)
-        {
-
-        }
-
-        ObjectSentries:: ~ObjectSentries() noexcept
-        {
-
-        }
-
-    }
-
-}
 
 

@@ -47,7 +47,7 @@ namespace Yttrium
 
 
 
-#include "y/memory/object-locator.hpp"
+#include "y/memory/object/locator.hpp"
 #include "y/memory/blocks.hpp"
 #include "y/memory/straps.hpp"
 
