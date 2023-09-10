@@ -49,7 +49,7 @@ namespace Yttrium
     //__________________________________________________________________________
     template <> struct CxxSetCapacity<CxxAcquiredCapacity>
     {
-        //! choose w.maxBlocks
+        //! choose w.capacity
         static size_t From(const size_t, const Memory::Crux::Wad &w) noexcept;
     };
 
