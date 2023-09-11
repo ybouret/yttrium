@@ -40,7 +40,6 @@ namespace Yttrium
             //! helper to produce a new node
             inline NODE * produce(typename NODE::ParamType args)
             {
-                std::cerr << "Producing " << args << std::endl;
                 return newNode<NODE>(args);
             }
 

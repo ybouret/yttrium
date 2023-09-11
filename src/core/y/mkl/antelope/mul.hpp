@@ -7,6 +7,7 @@
 #include "y/mkl/antelope/wary.hpp"
 #include "y/mkl/api.hpp"
 #include "y/data/small/heavy/list/solo.hpp"
+#include "y/type/moniker.hpp"
 
 namespace Yttrium
 {
@@ -79,7 +80,7 @@ namespace Yttrium
                 //______________________________________________________________
                 static inline SignType Compare(const MulUnit &lhs, const MulUnit &rhs) noexcept
                 {
-                    return Sign::Of(lhs.value.exponent,rhs.value.exponent);
+                    return Sign::Of(lhs.value->exponent,rhs.value->exponent);
                 }
 
                 //______________________________________________________________
@@ -88,7 +89,7 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                const Type value; //!< internal exponent is pre-computed
+                const Moniker<Type> value; //!< internal exponent is pre-computed
 
             private:
                 Y_DISABLE_ASSIGN(MulUnit);
@@ -124,7 +125,7 @@ namespace Yttrium
                 //! setup
                 inline MulUnit(const Type args) noexcept : value(args), exponent(0)
                 {
-                    const T av = Fabs<Type>::Of(value);
+                    const T av = Fabs<Type>::Of(*value);
                     (void) std::frexp(av, & Coerce(exponent) );
                 }
 
@@ -151,8 +152,8 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                const Type value;      //!< complex
-                const int  exponent;   //!< exponent of its modulus
+                const Moniker<Type> value;      //!< complex
+                const int           exponent;   //!< exponent of its modulus
 
             private:
                 Y_DISABLE_ASSIGN(MulUnit);
@@ -188,7 +189,7 @@ namespace Yttrium
                 //! setup
                 inline MulUnit(const Type args) noexcept : value(args), exponent(0)
                 {
-                    const XReal<T> av = Fabs<Type>::Of(value);
+                    const XReal<T> av = Fabs<Type>::Of(*value);
                     Coerce(exponent) = av.exponent;
                 }
 
@@ -215,8 +216,8 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                const Type value;     //!< value
-                const int  exponent;  //!< exponent of its modulus
+                const Moniker<Type> value;     //!< value
+                const int           exponent;  //!< exponent of its modulus
 
             private:
                 Y_DISABLE_ASSIGN(MulUnit);
@@ -253,8 +254,7 @@ namespace Yttrium
                 //! setup
                 inline MulUnit(const Type args) noexcept : value(args), exponent(0)
                 {
-                    std::cerr << "+MulUnit(" << args << ")" << std::endl;
-                    (void) std::frexp(value, & Coerce(exponent) );
+                    (void) std::frexp(*value, & Coerce(exponent) );
                 }
 
                 //! copy
@@ -262,7 +262,6 @@ namespace Yttrium
                 value(other.value),
                 exponent(other.exponent)
                 {
-                    std::cerr << "+MulUnit(copy:" << other << ")" << std::endl;
                 }
 
                 //! cleanup
@@ -285,8 +284,8 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                const Type value;     //!< real value
-                const int  exponent;  //!< its exponent
+                const Moniker<Type> value;     //!< real value
+                const int           exponent;  //!< its exponent
 
             private:
                 Y_DISABLE_ASSIGN(MulUnit);
@@ -314,7 +313,7 @@ namespace Yttrium
             template <typename T>
             inline   MulUnit<T> operator * (const MulUnit<T> &lhs, const MulUnit<T> &rhs) noexcept
             {
-                return MulUnit<T>(lhs.value*rhs.value);
+                return MulUnit<T>( (*lhs.value)* (*rhs.value) );
             }
 
             //__________________________________________________________________
@@ -442,7 +441,7 @@ namespace Yttrium
                             pushUnit(tmp);
                         }
                         assert(1==my.size);
-                        return my.pullHead().value;
+                        return *(my.pullHead().value);
                     }
                 }
 
@@ -461,13 +460,7 @@ namespace Yttrium
 
                 inline void pushUnit(const UnitType &u)
                 {
-                    std::cerr << "prepare lhs from " << u << std::endl;
-                    CoreList lhs;
-                    NodeType *node = my.proxy->produce(u);
-                    std::cerr << "node@" << node << std::endl;
-                    lhs.pushTail( node );
-
-                    std::cerr << "prepare rhs" << std::endl;
+                    CoreList lhs; lhs.pushTail( my.proxy->produce(u) );
                     CoreList rhs; rhs.swapWith( my );
 
                     while(lhs.size>0 && rhs.size>0)

@@ -1,5 +1,3 @@
-
-
 #include "../main.hpp"
 #include "y/utest/run.hpp"
 
@@ -20,11 +18,12 @@ using namespace MKL;
 template <typename T>
 static inline void ShowUnit( const char *name, Random::Bits &ran )
 {
+    std::cerr << std::endl;
     std::cerr << '[' << Justify(name,32,Justify::Center) << ']' << std::endl;
 
     Y_SIZEOF( MKL::Antelope::MulUnit<T> );
 
-    const T amp(100000);
+    const T amp(1000);
 
     MKL::Antelope::MulUnit<T> a(amp*Bring<T>::Get(ran));
     MKL::Antelope::MulUnit<T> b(amp*Bring<T>::Get(ran));
@@ -76,12 +75,11 @@ Y_UTEST(mkl_xmul)
 {
     Random::Rand ran;
 
-    
-    //Y_SHOW_UNIT(float);
-    //Y_SHOW_UNIT(double);
-    //Y_SHOW_UNIT(long double);
 
-    return 0;
+    Y_SHOW_UNIT(float);
+    Y_SHOW_UNIT(double);
+    Y_SHOW_UNIT(long double);
+
 
     Y_SHOW_UNIT(XReal<float>);
     Y_SHOW_UNIT(XReal<double>);
@@ -98,12 +96,7 @@ Y_UTEST(mkl_xmul)
     Y_SHOW_UNIT(Complex< XReal<double> >);
     Y_SHOW_UNIT(Complex< XReal<long double> >);
 
-#if 0
-    Y_SHOW_UNIT(apn);
-    Y_SHOW_UNIT(apz);
-    Y_SHOW_UNIT(apq);
-#endif
-
+    
 
 }
 Y_UDONE()

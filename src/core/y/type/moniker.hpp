@@ -37,6 +37,12 @@ namespace Yttrium
         { new ( Y_STATIC_ZARR(wksp) ) MutableType(src); }
 
 
+        //! copy
+        inline Moniker(const Moniker &other) :
+        wksp(), addr( Memory::OutOfReach::Cast<MutableType>(wksp) )
+        { new ( Y_STATIC_ZARR(wksp) ) MutableType(*other); }
+
+
         //! deep clean
         inline ~Moniker() noexcept
         { Memory::OutOfReach::Naught(addr); addr=0; }
@@ -47,7 +53,7 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        
+
         inline Type      & operator*()       noexcept { return *addr; } //!< access
         inline ConstType & operator*() const noexcept { return *addr;}  //!< access
 
@@ -59,7 +65,7 @@ namespace Yttrium
         { return os << *self; }
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(Moniker);
+        Y_DISABLE_ASSIGN(Moniker);
         void        *wksp[ Y_WORDS_FOR(T) ];
         MutableType *addr;
 
