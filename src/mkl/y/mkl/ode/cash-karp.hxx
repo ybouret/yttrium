@@ -36,8 +36,7 @@ void CashKarp<real_t>::  operator()(const Readable<real_t> & y,
     const size_t n = y.size();
     if(0==code||code->dims<n)
     {
-        delete code;
-        code = 0;
+        Nullify(code);
         code = new Code(n);
     }
     assert(0!=code);

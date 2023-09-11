@@ -34,6 +34,7 @@ void Integrator<real_t>:: run(Writable<real_t> & ystart,
     assert(n>0);
     if(0==code||code->dims<n)
     {
+        Nullify(code);
         code = new Code(n);
     }
     return code->update(ystart, x1, x2, hini, drvs, cntl, actuator, eps);
