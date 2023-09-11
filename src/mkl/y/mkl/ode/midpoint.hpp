@@ -53,6 +53,11 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
+
+                //______________________________________________________________
+                //
+                //! estimate yout with nstep over [x:x+h]
+                //______________________________________________________________
                 void compute(const Readable<T> &y,
                              const Readable<T> &dydx,
                              const T            x,

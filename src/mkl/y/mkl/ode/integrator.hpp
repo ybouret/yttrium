@@ -12,18 +12,58 @@ namespace Yttrium
     {
         namespace ODE
         {
-
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Drive an Actuator to integrate a differential equation
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             class Integrator
             {
             public:
-                typedef typename Named<T>::Equation Equation;
-                typedef typename Named<T>::Callback Callback;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef typename Named<T>::Equation Equation; //!< alias
+                typedef typename Named<T>::Callback Callback; //!< alias
 
-                explicit Integrator(const T userEps) noexcept;
-                explicit Integrator(const T userEps,const size_t n);
-                virtual ~Integrator() noexcept;
+
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Integrator(const T userEps) noexcept;        //!< setup empty
+                explicit Integrator(const T userEps,const size_t n);  //!< setup with capacity
+                virtual ~Integrator() noexcept;                       //!< cleanup
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                //______________________________________________________________
+                //
+                //! integration over an interval
+                /**
+                 \param ystart   initial phase space, updated
+                 \param x1       initial position
+                 \param x2       final  position
+                 \param hini     guess step size, updated
+                 \param drvs     differential equation
+                 \param cntl     differential control
+                 \param actuator actuator
+                 */
+                //______________________________________________________________
 
                 void run(Writable<T> & ystart,
                          const T       x1,
@@ -33,7 +73,13 @@ namespace Yttrium
                          Callback    * cntl,
                          Actuator<T> & actuator);
 
-                T eps;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                T eps; //!< tolerance withing algorithm
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Integrator);

@@ -30,6 +30,7 @@ namespace Yttrium
                     target[i] = source[i];
             }
 
+            //! target += source
             template <typename TARGET, typename SOURCE> static inline
             void Add( TARGET &target, SOURCE &source )
             {
@@ -38,6 +39,7 @@ namespace Yttrium
                     target[i] += source[i];
             }
 
+            //! target += factor * source
             template <typename TARGET, typename T, typename SOURCE> static inline
             void Add( TARGET &target, T factor, SOURCE &source )
             {
@@ -46,6 +48,7 @@ namespace Yttrium
                     target[i] += factor * source[i];
             }
 
+            //! target = source + factor * vector
             template <typename TARGET, typename SOURCE, typename T, typename VECTOR>
             void Add( TARGET &target, SOURCE &source, T factor, VECTOR &vector)
             {
