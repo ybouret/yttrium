@@ -20,7 +20,7 @@ CashKarp<real_t>:: CashKarp(const size_t n) : code(  n <= 0 ? 0 : new Code(n) )
 }
 
 template <>
-void CashKarp<real_t>::  operator()(Writable<real_t> &       y,
+void CashKarp<real_t>::  operator()(const Readable<real_t> & y,
                                     const Readable<real_t> & dydx,
                                     const real_t             x,
                                     const real_t             h,
@@ -32,7 +32,7 @@ void CashKarp<real_t>::  operator()(Writable<real_t> &       y,
     assert(y.size()==dydx.size());
     assert(y.size()==yout.size());
     assert(y.size()==yerr.size());
-    
+
     const size_t n = y.size();
     if(0==code||code->dims<n)
     {

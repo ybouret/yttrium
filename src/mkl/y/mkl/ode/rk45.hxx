@@ -2,7 +2,8 @@
 
 template <>
 RK45<real_t>:: RK45(const StepType &s) noexcept :
-Actuator<real_t>(s),
+Actuator<real_t>(),
+step(s),
 code(0)
 {
 }
@@ -11,7 +12,8 @@ code(0)
 template <>
 RK45<real_t>:: RK45(const StepType &s,
                     const size_t   n):
-Actuator<real_t>(s),
+Actuator<real_t>(),
+step(s),
 code( n <=0 ? 0 : new Code(n) )
 {
 }

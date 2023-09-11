@@ -4,6 +4,7 @@
 #define Y_ODE_RK45_Included 1
 
 #include "y/mkl/ode/cash-karp.hpp"
+#include "y/mkl/ode/actuator.hpp"
 
 namespace Yttrium
 {
@@ -12,40 +13,7 @@ namespace Yttrium
         namespace ODE
         {
 
-            template <typename T>
-            class Actuator
-            {
-            public:
-                typedef typename Named<T>::Equation   Equation;
-                typedef typename Named<T>::Callback   Callback;
-                typedef typename RK45_Step<T>::Handle StepType;
-
-
-                virtual void move(Writable<T>  &       y,
-                                  const Readable<T>  & dydx,
-                                  T                  & x,
-                                  const T              htry,
-                                  const T              eps,
-                                  const Readable<T> &  yscal,
-                                  T  &                 hdid,
-                                  T  &                 hnxt,
-                                  Equation &           drvs,
-                                  Callback *           cntl) = 0;
-
-                StepType step;
-
-                virtual ~Actuator() noexcept {}
-
-            protected:
-                explicit Actuator(const StepType &s) noexcept :
-                step(s)
-                {
-                }
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Actuator);
-            };
-
+          
             template <typename T>
             class RK45 : public Actuator<T>
             {
@@ -72,8 +40,9 @@ namespace Yttrium
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(RK45);
-                class Code;
-                Code *code;
+                class    Code;
+                StepType step;
+                Code *   code;
             };
         }
     }

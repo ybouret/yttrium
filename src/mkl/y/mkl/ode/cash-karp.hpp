@@ -15,17 +15,41 @@ namespace Yttrium
         namespace ODE
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //! Interface for RK45 Steps
+            //
+            //__________________________________________________________________
             template <typename T>
             class RK45_Step : public Object, public Counted
             {
             public:
-                typedef typename Named<T>::Equation Equation;
-                typedef typename Named<T>::Callback Callback;
-                typedef ArcPtr<RK45_Step>           Handle;
+                //______________________________________________________________
+                //
+                //
+                //  Definitions
+                //
+                //______________________________________________________________
+                typedef typename Named<T>::Equation Equation; //!< alias
+                typedef typename Named<T>::Callback Callback; //!< alias
+                typedef ArcPtr<RK45_Step>           Handle;   //!< alias
 
-                virtual ~RK45_Step() noexcept {}
-
-                virtual void operator()(Writable<T> &       y,
+                //______________________________________________________________
+                //
+                //! interface to guess next positiuon
+                /**
+                 \param y    initial phase space
+                 \param dydx initial derivaties
+                 \param x    initial parameter
+                 \param h    guess step
+                 \param yout guess output phase space
+                 \param yerr guess output error
+                 \param drvs differential equation
+                 \param cntl differential control
+                */
+                //______________________________________________________________
+                virtual void operator()(const Readable<T> & y,
                                         const Readable<T> & dydx,
                                         const T             x,
                                         const T             h,
@@ -34,25 +58,56 @@ namespace Yttrium
                                         Equation     &      drvs,
                                         Callback     *      cntl) = 0;
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                virtual ~RK45_Step() noexcept {} //!< cleanup
             protected:
-                explicit RK45_Step() noexcept {}
+                explicit RK45_Step() noexcept {} //!< setup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(RK45_Step);
             };
 
+            //__________________________________________________________________
+            //
+            //
+            //! Cash Karp 4/5 step
+            //
+            //__________________________________________________________________
             template <typename T>
             class CashKarp : public RK45_Step<T>
             {
             public:
-                typedef typename Named<T>::Equation Equation;
-                typedef typename Named<T>::Callback Callback;
-                
-                explicit CashKarp() noexcept;
-                explicit CashKarp(const size_t n);
-                virtual ~CashKarp() noexcept;
+                //______________________________________________________________
+                //
+                //
+                //  Definitions
+                //
+                //______________________________________________________________
+                typedef typename Named<T>::Equation Equation; //!< alias
+                typedef typename Named<T>::Callback Callback; //!< alias
 
-                void operator()(Writable<T> &       y,
+                //______________________________________________________________
+                //
+                //
+                //  C++
+                //
+                //______________________________________________________________
+                explicit CashKarp() noexcept;      //!< setup empty
+                explicit CashKarp(const size_t n); //!< setup with capacity
+                virtual ~CashKarp() noexcept;      //!< cleanup
+
+                //______________________________________________________________
+                //
+                //
+                //!  Interface
+                //
+                //______________________________________________________________
+                void operator()(const Readable<T> & y,
                                 const Readable<T> & dydx,
                                 const T             x,
                                 const T             h,

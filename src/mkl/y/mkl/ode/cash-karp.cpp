@@ -36,7 +36,7 @@ namespace Yttrium
 
                 inline virtual ~Code() noexcept {}
 
-                inline void step(Writable<T> &       y,
+                inline void step(const Readable<T> & y,
                                  const Readable<T> & dydx,
                                  const T             x,
                                  const T             h,

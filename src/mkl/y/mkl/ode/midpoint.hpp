@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_MKL_ODE_MidPoint_Included
