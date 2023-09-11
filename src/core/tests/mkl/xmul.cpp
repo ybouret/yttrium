@@ -68,6 +68,37 @@ static inline void ShowUnit( const char *name, Random::Bits &ran )
 
 
 
+template <typename T>
+static inline void testXMUL(Random::Rand &ran)
+{
+
+    Antelope::Mul<T> xmul;
+    Vector<T>        smul;
+
+    for(size_t n=1;n<=10;++n)
+    {
+        xmul.free();
+        smul.free();
+        for(size_t i=n;i>0;--i)
+        {
+            const T tmp = Bring<T>::Get(ran);
+            xmul << tmp;
+            smul << tmp;
+        }
+
+        const T xres = xmul.product();
+        T       sres(1);
+        for(size_t i=smul.size();i>0;--i) sres *= smul[i];
+        if( !Antelope::Wary<T>::Flag )
+        {
+            sres -= xres;
+            const typename ScalarFor<T>::Type zero(0);
+            Y_CHECK( Fabs<T>::Of(sres) <= zero);
+        }
+    }
+
+}
+
 
 
 
@@ -96,7 +127,28 @@ Y_UTEST(mkl_xmul)
     Y_SHOW_UNIT(Complex< XReal<double> >);
     Y_SHOW_UNIT(Complex< XReal<long double> >);
 
-    
+
+    testXMUL<float>(ran);
+    testXMUL<double>(ran);
+    testXMUL<long double>(ran);
+
+    testXMUL< XReal<float>       >(ran);
+    testXMUL< XReal<double>      >(ran);
+    testXMUL< XReal<long double> >(ran);
+
+    testXMUL< Complex<float>       >(ran);
+    testXMUL< Complex<double>      >(ran);
+    testXMUL< Complex<long double> >(ran);
+
+
+    testXMUL<  Complex<XReal<float>       > >(ran);
+    testXMUL<  Complex<XReal<double>      > >(ran);
+    testXMUL<  Complex<XReal<long double> > >(ran);
+
+    testXMUL<apq>(ran);
+    testXMUL<apz>(ran);
+    testXMUL<apn>(ran);
+
 
 }
 Y_UDONE()
