@@ -10,6 +10,7 @@
 #include "y/memory/object/sentries.hpp"
 
 #include <cstring>
+#include <typeinfo>
 
 using namespace Yttrium;
 using namespace MKL;
