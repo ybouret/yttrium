@@ -13,19 +13,24 @@ namespace Yttrium
     {
         namespace Antelope
         {
+
             template <typename T,const bool> struct Sum3Proxy;
 
-
+            //__________________________________________________________________
+            //
+            //
+            //! performing wary sum3
+            //
+            //__________________________________________________________________
             template <typename T>
             struct Sum3Proxy<T,true>
             {
+                Y_ARGS_DECL(T,Type);                                      //!< aliases
+                typedef typename ScalarFor<MutableType>::Type ScalarType; //!< alias
 
-                typedef typename ScalarFor<T>::Type ScalarType;
-
-                Y_ARGS_DECL(T,Type);
+                //! make sum3 by probing largest elememnt
                 static inline Type Of(ConstType &a, ConstType &b, ConstType &c)
                 {
-                    std::cerr << "wary sum3" << std::endl;
                     ScalarType amx  = Fabs<T>::Of(a);
                     Big        big  = BigA;
                     {
@@ -55,22 +60,36 @@ namespace Yttrium
                 };
             };
 
+            //__________________________________________________________________
+            //
+            //
+            //! performing direct sum3
+            //
+            //__________________________________________________________________
             template <typename T>
             struct Sum3Proxy<T,false>
             {
-                Y_ARGS_DECL(T,Type);
+                Y_ARGS_DECL(T,Type); //!< aliases
+
+                //! direct sum3
                 static inline Type Of(ConstType &a, ConstType &b, ConstType &c)
                 {
-                    std::cerr << "direct sum3" << std::endl;
                     return a+b+c;
                 }
             };
 
+            //__________________________________________________________________
+            //
+            //
+            //! selecting sum3 algorithm
+            //
+            //__________________________________________________________________
             template <typename T>
             struct Sum3
             {
-                Y_ARGS_DECL(T,Type);
+                Y_ARGS_DECL(T,Type); //!< aliases
 
+                //! algorithm selection
                 static inline T Of(ParamType a, ParamType b, ParamType c)
                 {
                     return Sum3Proxy<T, Wary<T>::Flag >::Of(a,b,c);
