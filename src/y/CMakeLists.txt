@@ -14,6 +14,11 @@ add_subdirectory(lua)
 add_subdirectory(zlib)
 add_subdirectory(jpeg)
 add_subdirectory(bzip2)
+add_subdirectory(png)
 
 add_custom_target(ThirdParty 
-DEPENDS y_lua z-example y_test_jpeg y_test_bzip2)
+DEPENDS 
+y_lua 
+z-example 
+y_test_jpeg 
+y_test_bzip2)
