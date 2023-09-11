@@ -46,6 +46,8 @@ Y_UTEST(type_moniker)
     Random::Rand ran;
 
     testXNode<float>(ran);
+    testXNode<double>(ran);
+    testXNode<long double>(ran);
 
 
 }

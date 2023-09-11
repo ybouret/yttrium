@@ -199,10 +199,13 @@ namespace Yttrium
                         }
                     }
 
+                    //! sum(x1)
                     inline T operator()(const T x1) { return x1; }
 
+                    //! sum(x1,x2)
                     inline T operator()(const T x1, const T x2) { return x1+x2; }
 
+                    //! sum(x1,x2,x3)
                     inline T operator()(const T x1, const T x2, const T x3)
                     {
                         this->free();
@@ -210,6 +213,7 @@ namespace Yttrium
                         return sum();
                     }
 
+                    //! sum(x1,x2,x3,x4)
                     inline T operator()(const T x1, const T x2, const T x3, const T x4)
                     {
                         this->free();
@@ -217,7 +221,7 @@ namespace Yttrium
                         return sum();
                     }
 
-
+                    //! sum(x1,x2,x3,x4,x5)
                     inline T operator()(const T x1, const T x2, const T x3, const T x4, const T x5)
                     {
                         this->free();
@@ -225,7 +229,7 @@ namespace Yttrium
                         return sum();
                     }
 
-
+                    //! sum(x1,x2,x3,x4,x5,x6)
                     inline T operator()(const T x1, const T x2, const T x3, const T x4, const T x5, const T x6)
                     {
                         this->free();

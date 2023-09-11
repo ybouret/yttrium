@@ -16,32 +16,47 @@ namespace Yttrium
     class Moniker
     {
     public:
-        Y_ARGS_DECL(T,Type);
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        Y_ARGS_DECL(T,Type); //!< alias
 
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+
+        //! setup from source
         inline Moniker(ParamType src) :
-        wksp(),
-        addr( Memory::OutOfReach::Cast<MutableType>(wksp) )
-        {
-            new ( Y_STATIC_ZARR(wksp) ) MutableType(src);
-        }
+        wksp(), addr( Memory::OutOfReach::Cast<MutableType>(wksp) )
+        { new ( Y_STATIC_ZARR(wksp) ) MutableType(src); }
 
 
+        //! deep clean
         inline ~Moniker() noexcept
-        {
-            Memory::OutOfReach::Naught(addr);
-            addr=0;
-        }
+        { Memory::OutOfReach::Naught(addr); addr=0; }
 
-        inline Type      & operator*()       noexcept { return *addr; }
-        inline ConstType & operator*() const noexcept { return *addr;}
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        
+        inline Type      & operator*()       noexcept { return *addr; } //!< access
+        inline ConstType & operator*() const noexcept { return *addr;}  //!< access
 
-        inline Type *      operator->()       noexcept { return addr; }
-        inline ConstType * operator->() const noexcept { return addr; }
+        inline Type *      operator->()       noexcept { return addr; } //!< access
+        inline ConstType * operator->() const noexcept { return addr; } //!< access
 
+        //! display
         inline friend std::ostream & operator<<(std::ostream &os, const Moniker &self)
-        {
-            return os << *self;
-        }
+        { return os << *self; }
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Moniker);
