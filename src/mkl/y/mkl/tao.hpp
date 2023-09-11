@@ -17,7 +17,7 @@ namespace Yttrium
             void Load(TARGET &target, SOURCE &source)
             {
                 assert(target.size()<=source.size());
-                for(size_t i=target.size();i>=0;--i)
+                for(size_t i=target.size();i>0;--i)
                     target[i] = source[i];
             }
 
@@ -26,7 +26,7 @@ namespace Yttrium
             void Save(TARGET &target, SOURCE &source)
             {
                 assert(target.size()>=source.size());
-                for(size_t i=source.size();i>=0;--i)
+                for(size_t i=source.size();i>0;--i)
                     target[i] = source[i];
             }
 
