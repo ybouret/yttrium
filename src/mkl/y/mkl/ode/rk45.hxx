@@ -35,6 +35,9 @@ void RK45<real_t>::move(Writable<real_t>  &       y,
                         Equation &                drvs,
                         Callback *                cntl)
 {
+    assert(y.size() == dydx.size());
+    assert(y.size() == yscal.size());
+    
     const size_t n= y.size();
     if(0==code||code->dims<n)
     {

@@ -29,6 +29,10 @@ void CashKarp<real_t>::  operator()(Writable<real_t> &       y,
                                     Equation     &           drvs,
                                     Callback     *           cntl)
 {
+    assert(y.size()==dydx.size());
+    assert(y.size()==yout.size());
+    assert(y.size()==yerr.size());
+    
     const size_t n = y.size();
     if(0==code||code->dims<n)
     {

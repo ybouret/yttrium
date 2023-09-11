@@ -22,11 +22,11 @@ void RK4<real_t>:: operator()(Writable<real_t> &y,
                               const real_t     t1,
                               Callback        *cb)
 {
-    const size_t nvar = y.size(); assert(nvar>0);
-    if(0==code||nvar!=code->nvar)
+    const size_t n = y.size(); assert(n>0);
+    if(0==code||n>code->dims)
     {
         Nullify(code);
-        code = new Code(nvar);
+        code = new Code(n);
     }
     code->step(y,eqs,t0,t1,cb);
 }

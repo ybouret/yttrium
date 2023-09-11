@@ -18,8 +18,8 @@ namespace Yttrium
             public:
                 typedef CxxArray<T,Memory::Dyadic> Array;
 
-                inline explicit Code(const size_t dims) :
-                nvar(dims),
+                inline explicit Code(const size_t nvar) :
+                dims(nvar),
                 k1(nvar),
                 k2(nvar),
                 k3(nvar),
@@ -40,7 +40,7 @@ namespace Yttrium
                                  const T      t1,
                                  Callback    *cb)
                 {
-                    assert(y.size()==nvar);
+                    assert(y.size()<=dims);
                     static const T half(0.5);
                     static const T six(6);
 
@@ -48,7 +48,7 @@ namespace Yttrium
                     const T      hh = half*h;
                     const T      th = t0 + hh;
                     const T      hs = h/six;
-                    const size_t n  = nvar;
+                    const size_t n  = y.size();
 
                     eqs(k1,t0,y);
 
@@ -75,7 +75,7 @@ namespace Yttrium
                 }
                 
 
-                const size_t     nvar;
+                const size_t     dims;
                 Array            k1,k2,k3,k4,yt;
                 Antelope::Add<T> xadd;
             private:
