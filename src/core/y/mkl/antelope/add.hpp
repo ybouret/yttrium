@@ -197,8 +197,45 @@ namespace Yttrium
                         {
                             return T(0);
                         }
-
                     }
+
+                    inline T operator()(const T x1) { return x1; }
+
+                    inline T operator()(const T x1, const T x2) { return x1+x2; }
+
+                    inline T operator()(const T x1, const T x2, const T x3)
+                    {
+                        this->free();
+                        insert(x1); insert(x2); insert(x3);
+                        return sum();
+                    }
+
+                    inline T operator()(const T x1, const T x2, const T x3, const T x4)
+                    {
+                        this->free();
+                        insert(x1); insert(x2); insert(x3); insert(x4);
+                        return sum();
+                    }
+
+
+                    inline T operator()(const T x1, const T x2, const T x3, const T x4, const T x5)
+                    {
+                        this->free();
+                        insert(x1); insert(x2); insert(x3); insert(x4); insert(x5);
+                        return sum();
+                    }
+
+
+                    inline T operator()(const T x1, const T x2, const T x3, const T x4, const T x5, const T x6)
+                    {
+                        this->free();
+                        insert(x1); insert(x2); insert(x3); insert(x4); insert(x5); insert(x6);
+                        return sum();
+                    }
+
+
+
+
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Code);

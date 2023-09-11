@@ -74,8 +74,8 @@ namespace Yttrium
                         drvs(ak2,x2,ytemp);
                     }
 
-                    for (size_t i=n;i>0;--i)
-                        ytemp[i]=y[i]+h*(b31*dydx[i]+b32*ak2[i]);
+                    for(size_t i=n;i>0;--i)
+                        ytemp[i]=y[i]+h*xadd(b31*dydx[i],b32*ak2[i]);
 
                     {
                         const T x3=x+a3*h;
@@ -83,9 +83,9 @@ namespace Yttrium
                         drvs(ak3,x3,ytemp);
                     }
 
-                    for (size_t i=n;i>0;--i)
+                    for(size_t i=n;i>0;--i)
                     {
-                        ytemp[i]=y[i]+h*(b41*dydx[i]+b42*ak2[i]+b43*ak3[i]);
+                        ytemp[i]=y[i]+h*xadd(b41*dydx[i],b42*ak2[i],b43*ak3[i]);
                     }
 
                     {
@@ -94,7 +94,7 @@ namespace Yttrium
                         drvs(ak4,x4,ytemp);
                     }
                     for (size_t i=n;i>0;--i)
-                        ytemp[i]=y[i]+h*(b51*dydx[i]+b52*ak2[i]+b53*ak3[i]+b54*ak4[i]);
+                        ytemp[i]=y[i]+h*xadd(b51*dydx[i],b52*ak2[i],b53*ak3[i],b54*ak4[i]);
 
                     {
                         const T x5 = x+a5*h;
@@ -102,7 +102,7 @@ namespace Yttrium
                         drvs(ak5,x5,ytemp);
                     }
                     for (size_t i=n;i>0;--i)
-                        ytemp[i]=y[i]+h*(b61*dydx[i]+b62*ak2[i]+b63*ak3[i]+b64*ak4[i]+b65*ak5[i]);
+                        ytemp[i]=y[i]+h*xadd(b61*dydx[i],b62*ak2[i],b63*ak3[i],b64*ak4[i],b65*ak5[i]);
 
                     {
                         const T x6 = x+a6*h;
@@ -111,15 +111,15 @@ namespace Yttrium
                     }
 
                     for (size_t i=n;i>0;--i)
-                        yout[i]=y[i]+h*(c1*dydx[i]+c3*ak3[i]+c4*ak4[i]+c6*ak6[i]);
+                        yout[i]=y[i]+h*xadd(c1*dydx[i],c3*ak3[i],c4*ak4[i],c6*ak6[i]);
 
                     for (size_t i=n;i>0;--i)
-                        yerr[i]=h*(dc1*dydx[i]+dc3*ak3[i]+dc4*ak4[i]+dc5*ak5[i]+dc6*ak6[i]);
+                        yerr[i]=h*xadd(dc1*dydx[i],dc3*ak3[i],dc4*ak4[i],dc5*ak5[i],dc6*ak6[i]);
                 }
 
 
-                const size_t dims;
-                ArrayType    ak2, ak3, ak4, ak5, ak6, ytemp;
+                const size_t     dims;
+                ArrayType        ak2, ak3, ak4, ak5, ak6, ytemp;
                 Antelope::Add<T> xadd;
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Code);
