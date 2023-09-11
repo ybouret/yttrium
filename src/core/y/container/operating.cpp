@@ -1,5 +1,6 @@
 #include "y/container/operating.hpp"
 #include "y/object.hpp"
+#include "y/type/nullify.hpp"
 #include <cstring>
 
 namespace Yttrium
@@ -129,8 +130,7 @@ namespace Yttrium
         Operating:: ~Operating() noexcept
         {
             assert(code);
-            delete code;
-            code=0;
+            Nullify(code);
         }
 
         const void * Operating:: entry() const noexcept

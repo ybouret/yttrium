@@ -4,6 +4,8 @@
 
 
 #include "y/mkl/ode/types.hpp"
+#include "y/counted.hpp"
+#include "y/ptr/arc.hpp"
 
 namespace Yttrium
 {
@@ -14,11 +16,12 @@ namespace Yttrium
         {
 
             template <typename T>
-            class RK45_Step
+            class RK45_Step : public Object, public Counted
             {
             public:
                 typedef typename Named<T>::Equation Equation;
                 typedef typename Named<T>::Callback Callback;
+                typedef ArcPtr<RK45_Step>           Handle;
 
                 virtual ~RK45_Step() noexcept {}
 

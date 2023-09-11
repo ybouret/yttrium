@@ -13,6 +13,7 @@ add_test(triplet test-mkl triplet)
 add_test(interval test-mkl interval)
 
 add_test(ode:rk4 test-mkl ode_rk4)
+add_test(odeint  test-mkl odeint)
 
 add_test(opt:parabolic test-mkl opt_parabolic)
 add_test(opt:bracket   test-mkl opt_bracket)

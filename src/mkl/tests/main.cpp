@@ -10,6 +10,7 @@ Y_UTEST_DECL(32)
     Y_UTEST(interval);
     
     Y_UTEST(ode_rk4);
+    Y_UTEST(odeint);
  
     Y_UTEST(opt_parabolic);
     Y_UTEST(opt_bracket);

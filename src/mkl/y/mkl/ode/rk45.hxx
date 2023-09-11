@@ -1,13 +1,18 @@
 
 
 template <>
-RK45<real_t>:: RK45() noexcept : code(0)
+RK45<real_t>:: RK45(const StepType &s) noexcept :
+Actuator<real_t>(s),
+code(0)
 {
 }
 
 
 template <>
-RK45<real_t>:: RK45(const size_t n): code( n <=0 ? 0 : new Code(n) )
+RK45<real_t>:: RK45(const StepType &s,
+                    const size_t   n):
+Actuator<real_t>(s),
+code( n <=0 ? 0 : new Code(n) )
 {
 }
 
@@ -19,8 +24,7 @@ RK45<real_t>:: ~RK45() noexcept
 }
 
 template <>
-void RK45<real_t>::move(RK45_Step<real_t> &       step,
-                        Writable<real_t>  &       y,
+void RK45<real_t>::move(Writable<real_t>  &       y,
                         const Readable<real_t>  & dydx,
                         real_t &                  x,
                         real_t                    htry,
@@ -38,5 +42,5 @@ void RK45<real_t>::move(RK45_Step<real_t> &       step,
         code = new Code(n);
     }
     assert(0!=code);
-    code->move(step, y, dydx, x, htry, eps, yscal, hdid, hnext, drvs, cntl);
+    code->move(*step, y, dydx, x, htry, eps, yscal, hdid, hnext, drvs, cntl);
 }
