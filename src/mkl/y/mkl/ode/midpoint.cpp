@@ -2,7 +2,7 @@
 #include "y/mkl/ode/midpoint.hpp"
 #include "y/container/cxx-array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
-#include "y/mkl/api.hpp"
+#include "y/mkl/antelope/sum3.hpp"
 #include "y/type/nullify.hpp"
 
 namespace Yttrium
@@ -18,8 +18,8 @@ namespace Yttrium
             class MidPoint<T> :: Code : public Object
             {
             public:
-                typedef CxxArray<T,Memory::Dyadic> ArrayType;
-                
+                typedef CxxArray<T,Memory::Dyadic>  ArrayType;
+                typedef Antelope::Sum3Proxy<T,true> Sum3;
 
                 explicit Code(const size_t n) :
                 dims(n),
@@ -68,7 +68,11 @@ namespace Yttrium
                     }
 
                     for(size_t i=nvar;i>0;--i)
-                        yout[i]=half*(ym[i]+yn[i]+h*yout[i]);
+                    {
+                        //yout[i]=half*(ym[i]+yn[i]+h*yout[i]);
+                        const T incr = h * yout[i];
+                        yout[i] = half * Sum3::Of(ym[i],yn[i],incr);
+                    }
                     if(cntl) (*cntl)(xs+htot,yout);
                 }
 
