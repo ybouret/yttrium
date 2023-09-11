@@ -91,6 +91,7 @@ add_test(type:args       test-core type_args)
 add_test(type:fourcc     test-core type_fourcc)
 add_test(type:functor    test-core type_functor)
 add_test(type:temporary  test-core type_temporary)
+add_test(type:moniker    test-core type_moniker)
 
 #data
 add_test(data:list            test-core data_list)

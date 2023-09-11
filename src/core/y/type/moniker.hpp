@@ -1,0 +1,58 @@
+//! \file
+
+#ifndef Y_Type_Moniker_Included
+#define Y_Type_Moniker_Included 1
+
+#include "y/type/args.hpp"
+#include "y/calculus/align.hpp"
+#include "y/memory/out-of-reach.hpp"
+#include <iostream>
+
+namespace Yttrium
+{
+
+    //! workaround for misaligned type
+    template <typename T>
+    class Moniker
+    {
+    public:
+        Y_ARGS_DECL(T,Type);
+
+        inline Moniker(ParamType src) :
+        wksp(),
+        addr( Memory::OutOfReach::Cast<MutableType>(wksp) )
+        {
+            new ( Y_STATIC_ZARR(wksp) ) MutableType(src);
+        }
+
+
+        inline ~Moniker() noexcept
+        {
+            Memory::OutOfReach::Naught(addr);
+            addr=0;
+        }
+
+        inline Type      & operator*()       noexcept { return *addr; }
+        inline ConstType & operator*() const noexcept { return *addr;}
+
+        inline Type *      operator->()       noexcept { return addr; }
+        inline ConstType * operator->() const noexcept { return addr; }
+
+        inline friend std::ostream & operator<<(std::ostream &os, const Moniker &self)
+        {
+            return os << *self;
+        }
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(Moniker);
+        void        *wksp[ Y_WORDS_FOR(T) ];
+        MutableType *addr;
+
+    };
+
+
+
+}
+
+#endif
+
