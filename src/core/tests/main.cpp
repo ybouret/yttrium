@@ -172,6 +172,8 @@ Y_UTEST_DECL(256)
     Y_UTEST(mkl_api);
     Y_UTEST(mkl_xadd);
     Y_UTEST(mkl_xmul);
+    Y_UTEST(mkl_sum3);
+
 
     Y_UTEST(graphviz);
 
