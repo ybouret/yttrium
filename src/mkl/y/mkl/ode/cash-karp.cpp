@@ -42,8 +42,8 @@ namespace Yttrium
                                  const T             h,
                                  Writable<T> &       yout,
                                  Writable<T> &       yerr,
-                                 Equation     &      drvs,
-                                 Callback     *      cntl)
+                                 Equation &          drvs,
+                                 Callback *          cntl)
                 {
                     static const T a2=0.2,a3=0.3,a4=0.6,a5=1.0,a6=0.875;
                     static const T b21=0.2, b31=3.0/40.0,b32=9.0/40.0,b41=0.3,b42 = -0.9,b43=1.2,
@@ -53,6 +53,7 @@ namespace Yttrium
                     dc4=c4-T(13525.0/55296.0),dc6=c6-T(0.25);
 
                     const size_t n = dydx.size(); assert(n<=dims);
+
                     {
                         const T fac = b21*h;
                         for (size_t i=n;i>0;--i)
@@ -82,7 +83,7 @@ namespace Yttrium
                     {
                         const T x4 = x+a4*h;
                         if(cntl) (*cntl)(x4,ytemp);
-                        drvs(ak3,x4,ytemp);
+                        drvs(ak4,x4,ytemp);
                     }
                     for (size_t i=n;i>0;--i)
                         ytemp[i]=y[i]+h*(b51*dydx[i]+b52*ak2[i]+b53*ak3[i]+b54*ak4[i]);

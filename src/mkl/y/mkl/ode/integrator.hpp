@@ -25,13 +25,13 @@ namespace Yttrium
                 explicit Integrator(const T userEps,const size_t n);
                 virtual ~Integrator() noexcept;
 
-                void run(Writable<T> &ystart,
-                         const T      x1,
-                         const T      x2,
-                         T           &hini,
-                         Equation    &drvs,
-                         Callback    *cntl,
-                         Actuator<T> &actuator);
+                void run(Writable<T> & ystart,
+                         const T       x1,
+                         const T       x2,
+                         T           & hini,
+                         Equation    & drvs,
+                         Callback    * cntl,
+                         Actuator<T> & actuator);
 
                 T eps;
                 
