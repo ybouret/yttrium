@@ -98,9 +98,78 @@ static inline void singleNode(Random::Bits &ran)
     std::cerr << std::endl;
 }
 
+
+namespace
+{
+
+    template <typename T>
+    class MulKnot
+    {
+    public:
+
+        inline MulKnot(const T x) noexcept :
+        next(0),
+        prev(0),
+        exponent(0)
+        {
+            //(void) std::frexp(value, &Coerce(exponent) );
+            (void) std::frexp( value() = x, &Coerce(exponent) );
+        }
+
+        inline ~MulKnot() noexcept {}
+
+        inline friend std::ostream & operator<<(std::ostream &os, const MulKnot &knot)
+        {
+            return os << '<' << knot.value() << '>';
+        }
+
+        MulKnot     *next;
+        MulKnot     *prev;
+        const int    exponent;
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(MulKnot);
+        void  *wksp[ Y_WORDS_FOR(T) ];
+        inline T &value() const noexcept { return *Memory::OutOfReach::Cast<T>( Coerce(wksp) ); }
+    };
+
+
+    template <typename T>
+    static inline void testKnots(Random::Bits &ran)
+    {
+
+        std::cerr << "-- " << typeid(T).name() << std::endl;
+        Y_SIZEOF(T);
+        Y_SIZEOF(MulKnot<T>);
+        const size_t bs = sizeof(MulKnot<T>);
+        std::cerr << "-- acquire object" << std::endl;
+        uint8_t *obj = static_cast<uint8_t*>( Object:: operator new(bs) );
+        std::cerr << "-- randomizing " << bs << " bytes" << std::endl;
+        {
+            const Memory::ObjectSentries check(obj);
+             Random::Fill::Block(obj,bs,ran,0x01,0xff);
+        }
+        const T u = 1000;
+
+        MulKnot<T> *knot = new (obj) MulKnot<T>(u);
+        std::cerr << *knot << std::endl;
+
+        Object:: operator delete(obj,bs);
+
+    }
+
+}
+
+
 Y_UTEST(mkl_xmul)
 {
     Random::Rand ran;
+
+    testKnots<float>(ran);
+    testKnots<double>(ran);
+    testKnots<long double>(ran);
+
+    return 0;
 
     singleNode<float>(ran);
     singleNode<double>(ran);
