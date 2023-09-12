@@ -69,19 +69,29 @@ namespace Yttrium
             template <typename T>
             bool generate(const Matrix<T> &mu, QSurvey *survey)
             {
-                Subspace::List newGen;
-                for(Subspace *sub=head;sub;sub=sub->next)
                 {
-                    std::cerr << "Expanding " << *sub << std::endl;
-                    sub->expand(newGen, mu, survey);
+                    Subspace::List newGen;
+                    for(Subspace *sub=head;sub;sub=sub->next)
+                    {
+                        //std::cerr << "Expanding " << *sub << std::endl;
+                        sub->expand(newGen, mu, survey);
+                    }
+                    swapWith(newGen);
                 }
-                swapWith(newGen);
-                std::cerr << "-- direct" << std::endl;
-                std::cerr << *this << std::endl;
-                pack();
-                std::cerr << "-- compact" << std::endl;
-                std::cerr << *this << std::endl;
-                return size>0;
+                if(size>0)
+                {
+                    //std::cerr << "-- direct" << std::endl;
+                    //std::cerr << *this << std::endl;
+                    pack();
+                    //std::cerr << "-- compact" << std::endl;
+                    //std::cerr << *this << std::endl;
+                    assert(size>0);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
 
 
