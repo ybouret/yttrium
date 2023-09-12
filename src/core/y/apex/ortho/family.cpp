@@ -79,6 +79,18 @@ namespace Yttrium
                 }
                 return os;
             }
+
+
+            bool Family:: contains(const Vectors &vecs)
+            {
+                for(const Vector *vec=vecs.head;vec;vec=vec->next)
+                {
+                    if(wouldAccept(*vec)) return false;
+                }
+                return true;
+            }
+            
+
         }
 
     }

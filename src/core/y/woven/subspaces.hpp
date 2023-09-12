@@ -30,14 +30,14 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! setup from rows of vectors
+            //! setup from rows of vectors, tighten from multiple values
             template <typename T> inline
             Subspaces(const Matrix<T> &mu) :
-            Subspace::List(),
-            px()
+            Subspace::List()
             {
                 for(size_t ir=mu.rows;ir>0;--ir)
-                    pushHead( new Subspace(mu,ir,px) );
+                    pushHead( new Subspace(mu,ir) );
+                pack();
             }
 
             //! cleanup
@@ -46,6 +46,14 @@ namespace Yttrium
             //! display
             Y_OSTREAM_PROTO(Subspaces);
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void pack();
+
 
             //__________________________________________________________________
             //
@@ -53,7 +61,6 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const IProxy px; //!< shared cache
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Subspaces);

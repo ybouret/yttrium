@@ -6,7 +6,6 @@
 #include "y/woven/indices.hpp"
 #include "y/apex/ortho/family.hpp"
 #include "y/container/matrix.hpp"
-#include "y/data/small/heavy/list/coop.hpp"
 
 namespace Yttrium
 {
@@ -15,8 +14,6 @@ namespace Yttrium
 
         typedef  Apex::Ortho::Vector          QVector; //!< alias
         typedef  Apex::Ortho::Family          QFamily; //!< alias
-        typedef  Small::CoopHeavyList<size_t> IList;   //!< alias
-        typedef  IList::ProxyType             IProxy;  //!< alias
 
         //______________________________________________________________________
         //
@@ -53,11 +50,10 @@ namespace Yttrium
              */
             template <typename T>
             explicit Subspace(const Matrix<T> &mu,
-                              const size_t     ir,
-                              const IProxy    &px) :
+                              const size_t     ir) :
             qfamily( CheckDims(mu) ),
             indices( CheckDOFs(mu) ),
-            staying( px ),
+            staying( mu.rows       ),
             next(0),
             prev(0)
             {
@@ -86,7 +82,7 @@ namespace Yttrium
             //__________________________________________________________________
             QFamily   qfamily; //!< family of orthogonal vectors
             Indices   indices; //!< indices of vectors composing the family
-            IList     staying; //!< indices of available vectores
+            Indices   staying; //!< indices of available vectores
             Subspace *next;    //!< for list
             Subspace *prev;    //!< for lust
 

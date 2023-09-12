@@ -70,6 +70,11 @@ namespace Yttrium
                     return wouldAccept();
                 }
 
+                
+                bool contains(const Vectors &vecs);
+
+
+
                 //! expand family from remaining vector
                 const Vector &expand();
 

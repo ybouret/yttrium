@@ -252,7 +252,37 @@ namespace Yttrium
             return *this;
         }
 
-        
+        //______________________________________________________________________
+        //
+        //! merge values
+        //______________________________________________________________________
+        inline OrderedVector & operator |= (const OrderedVector &rhs)
+        {
+            const Code *source = rhs.code;
+            if(0!=source)
+            {
+                for(size_t i=source->size;i>0;--i)
+                    (void) insert(source->data[i]);
+            }
+            return *this;
+        }
+
+        //______________________________________________________________________
+        //
+        //! exclude values
+        //______________________________________________________________________
+        inline OrderedVector & operator ^= (const OrderedVector &rhs)
+        {
+            const Code *source = rhs.code;
+            if(0!=source)
+            {
+                for(size_t i=source->size;i>0;--i)
+                    (void) remove(source->data[i]);
+            }
+            return *this;
+        }
+
+
         
     private:
         class   Code;

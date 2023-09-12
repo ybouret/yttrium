@@ -32,9 +32,9 @@ namespace Yttrium
         void Subspace:: setup(const size_t ir, const size_t nr)
         {
             qfamily.expand();
-            indices |= ir;
-            for(size_t i=1;    i<ir;  ++i) staying << i;
-            for(size_t i=ir+1; i<=nr; ++i) staying << i;
+            indices += ir;
+            for(size_t i=1;    i<ir;  ++i) staying += i;
+            for(size_t i=ir+1; i<=nr; ++i) staying += i;
         }
 
 
@@ -43,6 +43,7 @@ namespace Yttrium
             os << sp.qfamily << "@{" << sp.indices << "} <== {" << sp.staying << "}";
             return os;
         }
+
 
     }
 
