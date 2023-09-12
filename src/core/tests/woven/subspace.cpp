@@ -1,6 +1,6 @@
 
 #include "y/woven/subspaces.hpp"
-#include "y/woven/isurvey.hpp"
+#include "y/woven/integer-survey.hpp"
 #include "y/woven/usurvey.hpp"
 
 #include "y/utest/run.hpp"
@@ -33,7 +33,7 @@ Y_UTEST(woven_subspace)
     std::cerr << "mu=" << mu << std::endl;
 
     {
-        WOVEn::ISurvey survey;
+        WOVEn::IntegerSurvey survey;
         {
             WOVEn::Subspaces spaces(mu,NULL);
 
@@ -44,7 +44,7 @@ Y_UTEST(woven_subspace)
             }
             survey.sort();
 
-            for(const WOVEn::IArray *arr=survey.head;arr;arr=arr->next)
+            for(const WOVEn::IntegerArray *arr=survey.head;arr;arr=arr->next)
             {
                 std::cerr << " (+) " << *arr << std::endl;
             }

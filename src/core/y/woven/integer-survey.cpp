@@ -1,5 +1,5 @@
 
-#include "y/woven/isurvey.hpp"
+#include "y/woven/integer-survey.hpp"
 #include "y/sort/merge.hpp"
 
 namespace Yttrium
@@ -7,13 +7,13 @@ namespace Yttrium
 
     namespace WOVEn
     {
-        IArray:: ~IArray() noexcept
+        IntegerArray:: ~IntegerArray() noexcept
         {
         }
 
-        IArray:: IArray(const QVector &qvec) :
+        IntegerArray:: IntegerArray(const QVector &qvec) :
         Object(),
-        IArrayType(CopyOf,qvec),
+        IntegerArrayType(CopyOf,qvec),
         norm1(qvec.norm1),
         next(0),
         prev(0)
@@ -25,30 +25,30 @@ namespace Yttrium
     namespace WOVEn
     {
 
-        ISurvey:: ~ISurvey() noexcept
+        IntegerSurvey:: ~IntegerSurvey() noexcept
         {
         }
 
-        ISurvey:: ISurvey() :
-        IArray::List(),
-        QSurvey(this,&ISurvey::tryGrow)
+        IntegerSurvey:: IntegerSurvey() :
+        IntegerArray::List(),
+        QSurvey(this,&IntegerSurvey::tryGrow)
         {
         }
 
-        void ISurvey:: tryGrow(const QVector &vec)
+        void IntegerSurvey:: tryGrow(const QVector &vec)
         {
             if(vec.ncoeff<=1) return;
 
-            for(const IArray *arr=head;arr;arr=arr->next)
+            for(const IntegerArray *arr=head;arr;arr=arr->next)
             {
                 if(*arr==vec) return;
             }
 
-            pushTail( new IArray(vec) );
+            pushTail( new IntegerArray(vec) );
 
         }
 
-        static inline SignType CompareIArrays(const IArray *lhs, const IArray *rhs) noexcept
+        static inline SignType CompareIntegerArrays(const IntegerArray *lhs, const IntegerArray *rhs) noexcept
         {
             assert(0!=lhs);
             assert(0!=rhs);
@@ -61,9 +61,9 @@ namespace Yttrium
             return Readable<const apz>::LexicographicCompare(*lhs,*rhs);
         }
         
-        void ISurvey:: sort() noexcept
+        void IntegerSurvey:: sort() noexcept
         {
-            MergeSort::Call(*this,CompareIArrays);
+            MergeSort::Call(*this,CompareIntegerArrays);
         }
 
 

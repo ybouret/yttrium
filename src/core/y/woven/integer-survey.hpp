@@ -15,7 +15,7 @@ namespace Yttrium
         //! base type for IArray
         //
         //______________________________________________________________________
-        typedef CxxArray<const apz,Memory::Pooled> IArrayType;
+        typedef CxxArray<const apz,Memory::Pooled> IntegerArrayType;
 
         //______________________________________________________________________
         //
@@ -25,7 +25,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class IArray : public Object, public IArrayType
+        class IntegerArray : public Object, public IntegerArrayType
         {
         public:
             //__________________________________________________________________
@@ -34,7 +34,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef CxxListOf<IArray> List; //!< alias
+            typedef CxxListOf<IntegerArray> List; //!< alias
 
             //__________________________________________________________________
             //
@@ -42,8 +42,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit IArray(const QVector &); //!< copy from QVector
-            virtual ~IArray() noexcept;       //!< cleanup
+            explicit IntegerArray(const QVector &); //!< copy from QVector
+            virtual ~IntegerArray() noexcept;       //!< cleanup
 
             //__________________________________________________________________
             //
@@ -51,11 +51,11 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const apn norm1; //!< |this|_1 > 0
-            IArray   *next;  //!< for list
-            IArray   *prev;  //!< for list
+            const apn       norm1; //!< |this|_1 > 0
+            IntegerArray   *next;  //!< for list
+            IntegerArray   *prev;  //!< for list
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(IArray);
+            Y_DISABLE_COPY_AND_ASSIGN(IntegerArray);
         };
 
 
@@ -67,7 +67,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class ISurvey : public IArray::List, public QSurvey
+        class IntegerSurvey : public IntegerArray::List, public QSurvey
         {
         public:
             //__________________________________________________________________
@@ -76,8 +76,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit ISurvey();           //!< setup empty
-            virtual ~ISurvey() noexcept;  //!< cleanup
+            explicit IntegerSurvey();           //!< setup empty
+            virtual ~IntegerSurvey() noexcept;  //!< cleanup
 
             //__________________________________________________________________
             //
@@ -86,12 +86,12 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! sort by norm1 the lexicographic
+            //! sort by norm1 then lexicographic
             void sort() noexcept;
 
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(ISurvey);
+            Y_DISABLE_COPY_AND_ASSIGN(IntegerSurvey);
             void tryGrow(const QVector &);
         };
     }
