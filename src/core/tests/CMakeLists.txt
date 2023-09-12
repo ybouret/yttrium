@@ -242,4 +242,5 @@ add_test(info:bwt   test-core info_bwt)
 
 #WOVEn
 add_test(woven:indices test-core woven_indices)
+add_test(woven:subspace test-core woven_subspace)
 

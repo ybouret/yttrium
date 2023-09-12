@@ -188,6 +188,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(info_bwt);
 
     Y_UTEST(woven_indices);
+    Y_UTEST(woven_subspace);
 
 }
 Y_UTEST_EXEC()

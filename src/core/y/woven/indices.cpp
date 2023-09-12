@@ -4,7 +4,6 @@ namespace Yttrium
 {
     namespace WOVEn
     {
-
         Indices::  Indices(const size_t n) :
         Identifiable(), Collection(),
         BaseType(n) {}

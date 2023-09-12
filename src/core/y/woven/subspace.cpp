@@ -1,0 +1,42 @@
+
+#include "y/woven/subspace.hpp"
+#include "y/system/exception.hpp"
+
+namespace Yttrium
+{
+    namespace WOVEn
+    {
+
+        Subspace:: ~Subspace() noexcept {}
+
+        const char * const Subspace::CallSign = "WOVEn::Subspace";
+
+        size_t Subspace:: CheckDims(const MatrixMetrics &mu)
+        {
+            if(mu.cols<=0) throw Specific::Exception(CallSign,"Matrix #cols=0");
+            return mu.cols;
+        }
+
+
+        size_t Subspace:: CheckDOFs(const MatrixMetrics &mu)
+        {
+            if(mu.rows<=0) throw Specific::Exception(CallSign,"Matrix #rows=0");
+            return mu.rows;
+        }
+
+        void Subspace:: SingularFirstRowException()
+        {
+            throw Specific::Exception(CallSign,"Singular first row!");
+        }
+
+        void Subspace:: setup(const size_t ir, const size_t nr)
+        {
+            qfamily.expand();
+            indices |= ir;
+            
+        }
+
+
+    }
+
+}

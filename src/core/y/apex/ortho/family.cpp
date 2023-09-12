@@ -26,6 +26,19 @@ namespace Yttrium
             bool Family:: wouldAccept( )
             {
 
+                for(size_t i=remaining.size();i>0;--i)
+                {
+                    switch(remaining[i].numer.s)
+                    {
+                        case __Zero__: continue;
+                        case Negative:
+                        case Positive:
+                            goto CHECK;
+                    }
+                }
+                return false;
+
+            CHECK:
                 for(const Vector *vec=head;vec;vec=vec->next)
                 {
                     if(vec->computeOrtho(remaining)) continue;
