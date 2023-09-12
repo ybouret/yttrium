@@ -1,6 +1,6 @@
 
 
-#include "y/woven/usurvey.hpp"
+#include "y/woven/natural-survey.hpp"
 #include "y/sort/merge.hpp"
 
 namespace Yttrium
@@ -8,13 +8,13 @@ namespace Yttrium
 
     namespace WOVEn
     {
-        UArray:: ~UArray() noexcept
+        NaturalArray:: ~NaturalArray() noexcept
         {
         }
 
-        UArray:: UArray(const QVector &qvec) :
+        NaturalArray:: NaturalArray(const QVector &qvec) :
         Object(),
-        UArrayType(qvec.size()),
+        NaturalArrayType(qvec.size()),
         norm1(qvec.norm1),
         next(0),
         prev(0)
@@ -28,7 +28,7 @@ namespace Yttrium
         }
 
 
-        bool UArray:: equals(const QVector &v) const noexcept
+        bool NaturalArray:: equals(const QVector &v) const noexcept
         {
             assert(size()==v.size());
             for(size_t i=size();i>0;--i)
@@ -44,32 +44,32 @@ namespace Yttrium
     namespace WOVEn
     {
 
-        USurvey:: ~USurvey() noexcept
+        NaturalSurvey:: ~NaturalSurvey() noexcept
         {
         }
 
-        USurvey:: USurvey() :
-        UArray::List(),
-        QSurvey(this,&USurvey::tryGrow)
+        NaturalSurvey:: NaturalSurvey() :
+        NaturalArray::List(),
+        QSurvey(this,&NaturalSurvey::tryGrow)
         {
         }
 
-        void USurvey:: tryGrow(const QVector &vec)
+        void NaturalSurvey:: tryGrow(const QVector &vec)
         {
 
             if(vec.numNeg>0)  return;
             if(vec.numPos<=1) return;
 
-            for(const UArray *arr=head;arr;arr=arr->next)
+            for(const NaturalArray *arr=head;arr;arr=arr->next)
             {
                 if(arr->equals(vec)) return;
             }
 
-            pushTail( new UArray(vec) );
+            pushTail( new NaturalArray(vec) );
 
         }
 
-        static inline SignType CompareUArrays(const UArray *lhs, const UArray *rhs) noexcept
+        static inline SignType CompareNaturalArrays(const NaturalArray *lhs, const NaturalArray *rhs) noexcept
         {
             assert(0!=lhs);
             assert(0!=rhs);
@@ -82,9 +82,9 @@ namespace Yttrium
             return Readable<const apn>::LexicographicCompare(*lhs,*rhs);
         }
 
-        void USurvey:: sort() noexcept
+        void NaturalSurvey:: sort() noexcept
         {
-            MergeSort::Call(*this,CompareUArrays);
+            MergeSort::Call(*this,CompareNaturalArrays);
         }
 
 

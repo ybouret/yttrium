@@ -16,17 +16,17 @@ namespace Yttrium
         //! base type for UArray
         //
         //______________________________________________________________________
-        typedef CxxArray<const apn,Memory::Pooled> UArrayType;
+        typedef CxxArray<const apn,Memory::Pooled> NaturalArrayType;
 
         //______________________________________________________________________
         //
         //
         //
-        //! Array (!=0) of Unsigned
+        //! Array (!=0) of Natural
         //
         //
         //______________________________________________________________________
-        class UArray : public Object, public UArrayType
+        class NaturalArray : public Object, public NaturalArrayType
         {
         public:
             //__________________________________________________________________
@@ -35,7 +35,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef CxxListOf<UArray> List; //!< alias
+            typedef CxxListOf<NaturalArray> List; //!< alias
 
             //__________________________________________________________________
             //
@@ -43,8 +43,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit UArray(const QVector &); //!< copy from QVector
-            virtual ~UArray() noexcept;       //!< cleanup
+            explicit NaturalArray(const QVector &); //!< copy from QVector
+            virtual ~NaturalArray() noexcept;       //!< cleanup
 
             bool equals(const QVector &) const noexcept;
 
@@ -54,11 +54,11 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const apn norm1; //!< |this|_1 > 0
-            UArray   *next;  //!< for list
-            UArray   *prev;  //!< for list
+            const apn     norm1; //!< |this|_1 > 0
+            NaturalArray *next;  //!< for list
+            NaturalArray *prev;  //!< for list
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(UArray);
+            Y_DISABLE_COPY_AND_ASSIGN(NaturalArray);
         };
 
 
@@ -70,7 +70,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class USurvey : public UArray::List, public QSurvey
+        class NaturalSurvey : public NaturalArray::List, public QSurvey
         {
         public:
             //__________________________________________________________________
@@ -79,8 +79,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit USurvey();           //!< setup empty
-            virtual ~USurvey() noexcept;  //!< cleanup
+            explicit NaturalSurvey();           //!< setup empty
+            virtual ~NaturalSurvey() noexcept;  //!< cleanup
 
             //__________________________________________________________________
             //
@@ -94,7 +94,7 @@ namespace Yttrium
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(USurvey);
+            Y_DISABLE_COPY_AND_ASSIGN(NaturalSurvey);
             void tryGrow(const QVector &);
             
         };
