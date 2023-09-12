@@ -49,9 +49,10 @@ namespace Yttrium
         {
             assert(source.isValid());
             assert( this != & *source );
-            
 
-            if(indices.contains(source->indices) || qfamily.contains(source->qfamily))
+            assert(qfamily.size == source->qfamily.size );
+
+            if( indices.contains(source->indices) || qfamily.contains(source->qfamily))
             {
                 // different indices but includes sub-space
                 indices |= source->indices; // merge indices
@@ -75,11 +76,13 @@ namespace Yttrium
 
         void Subspace:: expand(List &L, const size_t ir, QSurvey *survey) 
         {
-            Subspace      *sub = L.pushTail( new Subspace(*this) );
-            const QVector &vec = sub->qfamily.expandFrom( qfamily.remaining );
+            AutoPtr<Subspace> sub = new Subspace(*this);
+            const QVector &   vec = sub->qfamily.expandFrom( qfamily.remaining );
             sub->indices += ir;
             sub->staying -= ir;
             if(survey) (*survey)(vec);
+            if(sub->staying.size()>0)
+                L.pushTail( sub.yield() );
         }
 
         

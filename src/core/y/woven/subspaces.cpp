@@ -21,37 +21,33 @@ namespace Yttrium
             return os;
         }
 
+
+     
+
         void Subspaces:: pack()
         {
-
-
-            while(true)
+            Subspace::List temp;
+            while(size>0)
             {
-                bool           done = true;
-                Subspace::List temp;
-                while(size>0)
+                AutoPtr<Subspace> source = popHead();
+                for(Subspace *target=temp.head;target;target=target->next)
                 {
-
-                    AutoPtr<Subspace> source = popHead();
-                    for(Subspace *target=temp.head;target;target=target->next)
+                    if(target->merged(source))
                     {
-                        if(target->merged(source))
-                        {
-                            assert(source.isEmpty());
-                            done = false;
-                            goto CYCLE;
-                        }
+                        assert(source.isEmpty());
+                        goto CYCLE;
                     }
-                    assert(source.isValid());
-                    temp.pushTail( source.yield() );
-                CYCLE:
-                    continue;
                 }
-                swapWith(temp);
-                if(done) break;
+
+                assert(source.isValid());
+                temp.pushTail( source.yield() );
+            CYCLE:
+                continue;
             }
-            
+            swapWith(temp);
+
         }
+
 
         void Subspaces:: conductInitial(QSurvey &survey) const
         {

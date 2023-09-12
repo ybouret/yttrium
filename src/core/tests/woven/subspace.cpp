@@ -23,7 +23,7 @@ namespace
 Y_UTEST(woven_subspace)
 {
     Random::Rand  ran;
-    Matrix<int>   mu(4,3);
+    Matrix<int>   mu(4,5);
 
     DoSomething    dum;
     WOVEn::QSurvey survey(&dum, &DoSomething::With);
@@ -43,8 +43,9 @@ Y_UTEST(woven_subspace)
 
     std::cerr << spaces << std::endl;
 
-    spaces.generate(mu, &survey);
-    spaces.generate(mu, &survey);
+    while(spaces.generate(mu, &survey))
+    {
+    }
 
 
 }

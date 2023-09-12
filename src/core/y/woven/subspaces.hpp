@@ -42,9 +42,11 @@ namespace Yttrium
                 // remove multiple same vector
                 pack();
 
+
                 // initial survey if any
                 if(survey)
                     conductInitial(*survey);
+
 
             }
 
@@ -65,20 +67,21 @@ namespace Yttrium
             void pack();
 
             template <typename T>
-            void generate(const Matrix<T> &mu, QSurvey *survey)
+            bool generate(const Matrix<T> &mu, QSurvey *survey)
             {
-                Subspace::List here;
+                Subspace::List newGen;
                 for(Subspace *sub=head;sub;sub=sub->next)
                 {
                     std::cerr << "Expanding " << *sub << std::endl;
-                    sub->expand(here, mu, survey);
+                    sub->expand(newGen, mu, survey);
                 }
-
-                swapWith(here);
+                swapWith(newGen);
+                std::cerr << "-- direct" << std::endl;
                 std::cerr << *this << std::endl;
                 pack();
+                std::cerr << "-- compact" << std::endl;
                 std::cerr << *this << std::endl;
-
+                return size>0;
             }
 
 
@@ -86,7 +89,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Subspaces);
-            void conductInitial(QSurvey &survey) const;
+            void conductInitial(QSurvey &survey) const;            
         };
         
 
