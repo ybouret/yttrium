@@ -93,10 +93,13 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                const apn norm2; //!< |this|^2
-                const apn norm1; //!< |this|_1
-                Vector   *next;  //!< for list
-                Vector   *prev;  //!< for list
+                const apn    norm2;  //!< |this|^2
+                const apn    norm1;  //!< |this|_1
+                const size_t numPos; //!< positive coefficients
+                const size_t numNeg; //!< negative coefficients
+                const size_t ncoeff; //!< number of coefficients
+                Vector   *   next;   //!< for list
+                Vector   *   prev;   //!< for list
 
             private:
                 Y_DISABLE_ASSIGN(Vector);

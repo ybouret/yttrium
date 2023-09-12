@@ -23,6 +23,9 @@ namespace Yttrium
             VectorType(other),
             norm2(other.norm2),
             norm1(other.norm1),
+            numPos(other.numPos),
+            numNeg(other.numNeg),
+            ncoeff(other.ncoeff),
             next(0),
             prev(0)
             {
@@ -35,6 +38,9 @@ namespace Yttrium
             VectorType(dims),
             norm2(0),
             norm1(0),
+            numPos(0),
+            numNeg(0),
+            ncoeff(0),
             next(0),
             prev(0)
             {
@@ -46,6 +52,9 @@ namespace Yttrium
             VectorType( wksp.size() ),
             norm2(0),
             norm1(0),
+            numPos(0),
+            numNeg(0),
+            ncoeff(0),
             next(0),
             prev(0)
             {
@@ -63,10 +72,7 @@ namespace Yttrium
                 Coerce(norm2).zset();
             }
 
-            static inline Natural ComputeZ2(const Integer &z)
-            {
-                return z.n * z.n;
-            }
+
 
             void  Vector:: update(QArrayType &Q)
             {
@@ -88,6 +94,10 @@ namespace Yttrium
                     //----------------------------------------------------------
                     Natural    &s1 = ( Coerce(norm1) = 0);
 
+                    size_t     &np = ( Coerce(numPos) = 0);
+                    size_t     &nn = ( Coerce(numNeg) = 0);
+                    size_t     &nt = ( Coerce(ncoeff) = 0);
+
                     //----------------------------------------------------------
                     // make univocal Q
                     //----------------------------------------------------------
@@ -100,8 +110,14 @@ namespace Yttrium
                     {
                         assert(1==Q[i].denom);
                         const Integer &z = (Coerce( (*this)[i] ) = Q[i].numer);
+                        switch(z.s)
+                        {
+                            case Negative: ++nn; ++nt; break;
+                            case Positive: ++np; ++nt; break;
+                            case __Zero__: continue;
+                        }
                         s1 += z.n;
-                        s2 += ComputeZ2( z );
+                        s2 += z.n * z.n;
                     }
                 }
                 catch(...)

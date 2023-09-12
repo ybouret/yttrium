@@ -56,11 +56,9 @@ namespace Yttrium
 
         void USurvey:: tryGrow(const QVector &vec)
         {
-            if(vec.norm1<=0) return;
-            for(size_t i=vec.size();i>0;--i)
-            {
-                if(vec[i] < 0) return;
-            }
+
+            if(vec.numNeg>0)  return;
+            if(vec.numPos<=1) return;
 
             for(const UArray *arr=head;arr;arr=arr->next)
             {

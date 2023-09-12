@@ -37,7 +37,7 @@ namespace Yttrium
 
         void ISurvey:: tryGrow(const QVector &vec)
         {
-            if(vec.norm1<=0) return;
+            if(vec.ncoeff<=1) return;
 
             for(const IArray *arr=head;arr;arr=arr->next)
             {
