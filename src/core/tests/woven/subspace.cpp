@@ -6,10 +6,27 @@
 
 using namespace Yttrium;
 
+namespace
+{
+
+    struct DoSomething
+    {
+
+        void With(const WOVEn::QVector &q)
+        {
+            std::cerr << " (*) " << q << std::endl;
+        }
+    };
+
+}
+
 Y_UTEST(woven_subspace)
 {
     Random::Rand  ran;
     Matrix<int>   mu(4,3);
+
+    DoSomething    dum;
+    WOVEn::QSurvey survey(&dum, &DoSomething::With);
 
     for(size_t i=1;i<=mu.rows;++i)
     {
@@ -22,11 +39,14 @@ Y_UTEST(woven_subspace)
 
     std::cerr << "mu=" << mu << std::endl;
 
-    WOVEn::Subspaces spaces(mu);
+    WOVEn::Subspaces spaces(mu,&survey);
 
     std::cerr << spaces << std::endl;
 
-    Y_SIZEOF(WOVEn::Subspace);
+    spaces.generate(mu, &survey);
+    spaces.generate(mu, &survey);
+
+
 }
 Y_UDONE()
 

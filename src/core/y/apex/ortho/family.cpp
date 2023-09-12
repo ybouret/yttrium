@@ -18,9 +18,16 @@ namespace Yttrium
             Family:: Family(const size_t dims) noexcept :
             Vectors(),
             dimension(dims),
-            remaining(dims)
+            remaining(dimension)
             {
                 
+            }
+
+            Family:: Family(const Family &other) :
+            Vectors(other),
+            dimension(other.dimension),
+            remaining(dimension)
+            {
             }
 
             bool Family:: wouldAccept( )
@@ -59,6 +66,22 @@ namespace Yttrium
 
                 return *tail;
             }
+
+
+            const Vector & Family:: expandFrom( QArrayType &arr )
+            {
+                assert(size<dimension);
+                assert(wouldAccept(arr));
+                
+                pushTail( new Vector(arr) );
+
+                assert(0!=tail);
+                assert(tail->norm2>0);
+
+                
+                return *tail;
+            }
+
 
             std::ostream & operator<<(std::ostream &os, const Family &F)
             {

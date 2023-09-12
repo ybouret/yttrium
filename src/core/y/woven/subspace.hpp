@@ -6,14 +6,16 @@
 #include "y/woven/indices.hpp"
 #include "y/apex/ortho/family.hpp"
 #include "y/container/matrix.hpp"
+#include "y/functor.hpp"
 
 namespace Yttrium
 {
     namespace WOVEn
     {
 
-        typedef  Apex::Ortho::Vector          QVector; //!< alias
-        typedef  Apex::Ortho::Family          QFamily; //!< alias
+        typedef Apex::Ortho::Vector                QVector; //!< alias
+        typedef Apex::Ortho::Family                QFamily; //!< alias
+        typedef Functor<void,TL1(const QVector &)> QSurvey; //!< alias
 
         //______________________________________________________________________
         //
@@ -57,8 +59,10 @@ namespace Yttrium
             prev(0)
             {
                 if( !qfamily.wouldAccept(mu[ir]) ) SingularFirstRowException();
-                setup(ir,mu.rows);
+                initializeWith(ir,mu.rows);
             }
+
+            Subspace(const Subspace &);
 
             //! cleanup
             virtual ~Subspace() noexcept;
@@ -79,6 +83,19 @@ namespace Yttrium
              - qfamilu can contain source qfamily
              */
             bool merged( AutoPtr<Subspace> &source );
+
+            template <typename T>
+            inline void expand(List &            L,
+                               const Matrix<T> & mu,
+                               QSurvey         * survey)
+            {
+                for(size_t i=staying.size();i>0;--i)
+                {
+                    const size_t ir = staying[i];
+                    if(qfamily.wouldAccept(mu[ir]))
+                        expand(L,ir,survey);
+                }
+            }
 
 
 
@@ -101,7 +118,8 @@ namespace Yttrium
             static size_t CheckDims(const MatrixMetrics &mu);
             static size_t CheckDOFs(const MatrixMetrics &mu);
             static void   SingularFirstRowException();
-            void setup(const size_t ir, const size_t nr);
+            void          initializeWith(const size_t ir, const size_t nr);
+            void          expand(List &L, const size_t ir, QSurvey *survey);
 
         };
 

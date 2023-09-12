@@ -29,7 +29,7 @@ namespace Yttrium
             throw Specific::Exception(CallSign,"Singular first row!");
         }
 
-        void Subspace:: setup(const size_t ir, const size_t nr)
+        void Subspace:: initializeWith(const size_t ir, const size_t nr)
         {
             qfamily.expand();
             indices += ir;
@@ -64,7 +64,25 @@ namespace Yttrium
             return false;
         }
 
+        Subspace:: Subspace(const Subspace &other) :
+        Object(),
+        qfamily(other.qfamily),
+        indices(other.indices),
+        staying(other.staying)
+        {
+        }
 
+
+        void Subspace:: expand(List &L, const size_t ir, QSurvey *survey) 
+        {
+            Subspace      *sub = L.pushTail( new Subspace(*this) );
+            const QVector &vec = sub->qfamily.expandFrom( qfamily.remaining );
+            sub->indices += ir;
+            sub->staying -= ir;
+            if(survey) (*survey)(vec);
+        }
+
+        
 
     }
 

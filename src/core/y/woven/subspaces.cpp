@@ -23,6 +23,8 @@ namespace Yttrium
 
         void Subspaces:: pack()
         {
+
+
             while(true)
             {
                 bool           done = true;
@@ -47,6 +49,16 @@ namespace Yttrium
                 }
                 swapWith(temp);
                 if(done) break;
+            }
+            
+        }
+
+        void Subspaces:: conductInitial(QSurvey &survey) const
+        {
+            for(const Subspace *sub = head; sub; sub=sub->next)
+            {
+                assert(sub->qfamily.size>0);
+                survey(*(sub->qfamily.tail));
             }
         }
 
