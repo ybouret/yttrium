@@ -69,7 +69,9 @@ namespace Yttrium
         Object(),
         qfamily(other.qfamily),
         indices(other.indices),
-        staying(other.staying)
+        staying(other.staying),
+        next(0),
+        prev(0)
         {
         }
 

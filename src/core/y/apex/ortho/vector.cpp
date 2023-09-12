@@ -34,6 +34,7 @@ namespace Yttrium
             Object(),
             VectorType(dims),
             norm2(0),
+            norm1(0),
             next(0),
             prev(0)
             {

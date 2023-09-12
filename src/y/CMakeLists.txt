@@ -1,6 +1,6 @@
 # third_party library/code
 
-message( STATUS "CMAKE_C_FLAGS      ,  = ${CMAKE_C_FLAGS}")
+message( STATUS "CMAKE_C_FLAGS         = ${CMAKE_C_FLAGS}")
 string(REPLACE "-Wall" "" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
 string(STRIP ${CMAKE_C_FLAGS} CMAKE_C_FLAGS)
 string(REPLACE "-Wextra" "" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
