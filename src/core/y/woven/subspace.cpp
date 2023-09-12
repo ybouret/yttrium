@@ -33,9 +33,16 @@ namespace Yttrium
         {
             qfamily.expand();
             indices |= ir;
-            
+            for(size_t i=1;    i<ir;  ++i) staying << i;
+            for(size_t i=ir+1; i<=nr; ++i) staying << i;
         }
 
+
+        std::ostream & operator<<(std::ostream &os, const Subspace &sp)
+        {
+            os << sp.qfamily << "@{" << sp.indices << "} <== {" << sp.staying << "}";
+            return os;
+        }
 
     }
 
