@@ -45,6 +45,33 @@ namespace Yttrium
         }
 
 
+        bool Subspace:: merged( AutoPtr<Subspace> &source )
+        {
+            assert(source.isValid());
+            assert( this != & *source );
+            if(indices == source->indices )
+            {
+                // same indices
+                assert(staying==source->staying);
+                source.dismiss();
+                return true;
+            }
+
+            if(qfamily.contains(source->qfamily))
+            {
+                // different indices but include sub-space
+                indices |= source->indices;
+                staying |= source->staying;
+                staying ^= indices;
+                source.dismiss();
+                return true;
+            }
+
+            return false;
+        }
+
+
+
     }
 
 }

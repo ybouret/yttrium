@@ -29,28 +29,18 @@ namespace Yttrium
             {
 
                 AutoPtr<Subspace> source = popHead();
-                bool              packed = false;
                 for(Subspace *target=temp.head;target;target=target->next)
                 {
-                    if(target->indices == source->indices)
+                    if(target->merged(source))
                     {
-                        assert(target->staying == source->staying);
-                        packed = true;
-                        break;
-                    }
-
-                    if(target->qfamily.contains(source->qfamily))
-                    {
-                        target->indices |= source->indices;
-                        target->staying |= source->staying;
-                        target->staying ^= target->indices;
-                        packed = true;
-                        break;
+                        assert(source.isEmpty());
+                        goto DONE;
                     }
                 }
-
-                if(!packed)
-                    temp.pushTail( source.yield() );
+                assert(source.isValid());
+                temp.pushTail( source.yield() );
+            DONE:
+                continue;
             }
 
             swapWith(temp);
