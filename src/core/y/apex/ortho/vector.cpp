@@ -22,6 +22,7 @@ namespace Yttrium
             Object(),
             VectorType(other),
             norm2(other.norm2),
+            norm1(other.norm1),
             next(0),
             prev(0)
             {
@@ -43,6 +44,7 @@ namespace Yttrium
             Object(),
             VectorType( wksp.size() ),
             norm2(0),
+            norm1(0),
             next(0),
             prev(0)
             {
@@ -69,21 +71,36 @@ namespace Yttrium
             {
                 try
                 {
+                    //----------------------------------------------------------
                     // sanity check
+                    //----------------------------------------------------------
                     assert(size()>0);
                     assert(Q.size()==size());
 
+                    //----------------------------------------------------------
                     // initialize norm2
+                    //----------------------------------------------------------
                     Natural    &s2 = ( Coerce(norm2) = 0 );
 
+                    //----------------------------------------------------------
+                    // initialize norm1
+                    //----------------------------------------------------------
+                    Natural    &s1 = ( Coerce(norm1) = 0);
+
+                    //----------------------------------------------------------
                     // make univocal Q
+                    //----------------------------------------------------------
                     Mylar::Univocal(Q);
 
+                    //----------------------------------------------------------
                     // transfer numerators
+                    //----------------------------------------------------------
                     for(size_t i=size();i>0;--i)
                     {
                         assert(1==Q[i].denom);
-                        s2 += ComputeZ2( Coerce( (*this)[i] ) = Q[i].numer );
+                        const Integer &z = (Coerce( (*this)[i] ) = Q[i].numer);
+                        s1 += z.n;
+                        s2 += ComputeZ2( z );
                     }
                 }
                 catch(...)
@@ -96,7 +113,7 @@ namespace Yttrium
             std::ostream & operator<<(std::ostream &os, const Ortho::Vector &v)
             {
                 const Readable<const apz> &self = v;
-                os << self << " #@" << v.norm2;
+                os << self << " #@" << v.norm2 << ":" << v.norm1;
                 return os;
             }
 

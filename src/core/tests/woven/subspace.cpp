@@ -1,5 +1,8 @@
 
 #include "y/woven/subspaces.hpp"
+#include "y/woven/isurvey.hpp"
+#include "y/woven/usurvey.hpp"
+
 #include "y/utest/run.hpp"
 #include "../main.hpp"
 
@@ -9,24 +12,14 @@ using namespace Yttrium;
 namespace
 {
 
-    struct DoSomething
-    {
 
-        void With(const WOVEn::QVector &q)
-        {
-            std::cerr << " (*) " << q << std::endl;
-        }
-    };
 
 }
 
 Y_UTEST(woven_subspace)
 {
-    Random::Rand  ran;
-    Matrix<int>   mu(4,5);
-
-    DoSomething    dum;
-    WOVEn::QSurvey survey(&dum, &DoSomething::With);
+    Random::Rand   ran;
+    Matrix<int>    mu(4,3);
 
     for(size_t i=1;i<=mu.rows;++i)
     {
@@ -39,12 +32,43 @@ Y_UTEST(woven_subspace)
 
     std::cerr << "mu=" << mu << std::endl;
 
-    WOVEn::Subspaces spaces(mu,&survey);
-
-    std::cerr << spaces << std::endl;
-
-    while(spaces.generate(mu, &survey))
     {
+        WOVEn::ISurvey survey;
+        {
+            WOVEn::Subspaces spaces(mu,NULL);
+
+            std::cerr << spaces << std::endl;
+
+            while(spaces.generate(mu, &survey))
+            {
+            }
+            survey.sort();
+
+            for(const WOVEn::IArray *arr=survey.head;arr;arr=arr->next)
+            {
+                std::cerr << " (+) " << *arr << std::endl;
+            }
+        }
+    }
+
+    {
+        WOVEn::USurvey survey;
+        {
+            WOVEn::Subspaces spaces(mu,&survey);
+
+            std::cerr << spaces << std::endl;
+
+            while(spaces.generate(mu, &survey))
+            {
+            }
+            survey.sort();
+
+            for(const WOVEn::UArray *arr=survey.head;arr;arr=arr->next)
+            {
+                std::cerr << " (*) " << *arr << std::endl;
+            }
+        }
+
     }
 
 

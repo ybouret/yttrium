@@ -94,6 +94,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 const apn norm2; //!< |this|^2
+                const apn norm1; //!< |this|_1
                 Vector   *next;  //!< for list
                 Vector   *prev;  //!< for list
 

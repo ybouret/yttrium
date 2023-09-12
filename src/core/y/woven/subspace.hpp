@@ -4,9 +4,8 @@
 #define Y_WOVEn_Subspace_Included 1
 
 #include "y/woven/indices.hpp"
-#include "y/apex/ortho/family.hpp"
 #include "y/container/matrix.hpp"
-#include "y/functor.hpp"
+#include "y/woven/types.hpp"
 
 namespace Yttrium
 {
@@ -16,6 +15,7 @@ namespace Yttrium
         typedef Apex::Ortho::Vector                QVector; //!< alias
         typedef Apex::Ortho::Family                QFamily; //!< alias
         typedef Functor<void,TL1(const QVector &)> QSurvey; //!< alias
+
 
         //______________________________________________________________________
         //
@@ -62,6 +62,7 @@ namespace Yttrium
                 initializeWith(ir,mu.rows);
             }
 
+            //! copy
             Subspace(const Subspace &);
 
             //! cleanup
@@ -84,6 +85,11 @@ namespace Yttrium
              */
             bool merged( AutoPtr<Subspace> &source );
 
+            //! try to expand current subspace dimension
+            /**
+             a new subspace is added for all possible
+             staying indices that would increase the dimension
+             */
             template <typename T>
             inline void expand(List &            L,
                                const Matrix<T> & mu,
