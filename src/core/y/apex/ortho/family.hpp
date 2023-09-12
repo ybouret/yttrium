@@ -70,7 +70,11 @@ namespace Yttrium
                     return wouldAccept();
                 }
 
-                
+
+                //! check if contains vectors
+                /**
+                 true if would accept NO vector
+                 */
                 bool contains(const Vectors &vecs);
 
 

@@ -49,20 +49,14 @@ namespace Yttrium
         {
             assert(source.isValid());
             assert( this != & *source );
-            if(indices == source->indices )
-            {
-                // same indices
-                assert(staying==source->staying);
-                source.dismiss();
-                return true;
-            }
+            
 
-            if(qfamily.contains(source->qfamily))
+            if(indices.contains(source->indices) || qfamily.contains(source->qfamily))
             {
-                // different indices but include sub-space
-                indices |= source->indices;
-                staying |= source->staying;
-                staying ^= indices;
+                // different indices but includes sub-space
+                indices |= source->indices; // merge indices
+                staying |= source->staying; // merge staying
+                staying ^= indices;         // update stayin
                 source.dismiss();
                 return true;
             }

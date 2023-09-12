@@ -46,7 +46,6 @@ namespace Yttrium
             /**
              \param mu matrices : cols=space dimensions, rows= degrees of freedom
              \param ir row index to start with
-             \param px shared proxy for staying indices
              */
             template <typename T>
             explicit Subspace(const Matrix<T> &mu,
@@ -70,17 +69,24 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // C++
+            // Methods
             //
             //__________________________________________________________________
 
+            //! check if source was merged with this
+            /**
+             - indices can contain source indices
+             - qfamilu can contain source qfamily
+             */
             bool merged( AutoPtr<Subspace> &source );
-            
+
+
+
 
             //__________________________________________________________________
             //
             //
-            // Memberss
+            // Members
             //
             //__________________________________________________________________
             QFamily   qfamily; //!< family of orthogonal vectors

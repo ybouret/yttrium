@@ -258,12 +258,8 @@ namespace Yttrium
         //______________________________________________________________________
         inline OrderedVector & operator |= (const OrderedVector &rhs)
         {
-            const Code *source = rhs.code;
-            if(0!=source)
-            {
-                for(size_t i=source->size;i>0;--i)
-                    (void) insert(source->data[i]);
-            }
+            for(size_t i=rhs.size();i>0;--i)
+                (void) insert(rhs[i]);
             return *this;
         }
 
@@ -273,15 +269,24 @@ namespace Yttrium
         //______________________________________________________________________
         inline OrderedVector & operator ^= (const OrderedVector &rhs)
         {
-            const Code *source = rhs.code;
-            if(0!=source)
-            {
-                for(size_t i=source->size;i>0;--i)
-                    (void) remove(source->data[i]);
-            }
+            for(size_t i=rhs.size();i>0;--i)
+                (void) remove(rhs[i]);
             return *this;
         }
 
+
+        //______________________________________________________________________
+        //
+        //! check if contains all value TODO: optimize
+        //______________________________________________________________________
+        inline bool contains(const OrderedVector &rhs) const noexcept
+        {
+            for(size_t i=rhs.size();i>0;--i)
+            {
+                if(!search(rhs[i])) return false;
+            }
+            return true;
+        }
 
         
     private:
