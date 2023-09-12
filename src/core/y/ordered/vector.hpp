@@ -212,7 +212,7 @@ namespace Yttrium
 
         //______________________________________________________________________
         //
-        //! add a non-existing args
+        //! add a NON-existing args
         //______________________________________________________________________
         inline OrderedVector & operator+=(ParamType args) {
             if(!insert(args)) multipleValueException();
@@ -249,6 +249,7 @@ namespace Yttrium
             return *this;
         }
 
+        
         
     private:
         class   Code;

@@ -86,6 +86,7 @@ information
 information/stream
 information/bwt
 functor
+woven
 )
 
 source_group(concurrent FILES ${quark})

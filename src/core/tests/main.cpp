@@ -186,5 +186,8 @@ Y_UTEST_DECL(256)
     Y_UTEST(info_delta);
     Y_UTEST(info_arc4);
     Y_UTEST(info_bwt);
+
+    Y_UTEST(woven_indices);
+
 }
 Y_UTEST_EXEC()

@@ -22,6 +22,7 @@ graphviz
 mkl
 vfs
 information
+woven
 )
 
 Y_LinkLibraries(test-core)
@@ -238,3 +239,7 @@ add_test(info:mtf   test-core info_mtf)
 add_test(info:delta test-core info_delta)
 add_test(info:arc4  test-core info_arc4)
 add_test(info:bwt   test-core info_bwt)
+
+#WOVEn
+add_test(woven:indices test-core woven_indices)
+
