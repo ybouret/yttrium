@@ -104,11 +104,13 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        inline virtual const char * callSign() const noexcept { return CallSign; }
-        inline virtual void         release()        noexcept { release_(); }
-        inline virtual size_t       size()     const noexcept { return 0!=code ? code->size     : 0; }
-        inline virtual size_t       capacity() const noexcept { return 0!=code ? code->capacity : 0; }
-        inline virtual void         free()           noexcept { if(0!=code) code->free();        }
+        inline virtual const char * callSign() const noexcept { return CallSign; }                     //!< CallSign
+        inline virtual void         release()        noexcept { release_();      }                     //!< release all memory
+        inline virtual size_t       size()     const noexcept { return 0!=code ? code->size     : 0; } //!< current size
+        inline virtual size_t       capacity() const noexcept { return 0!=code ? code->capacity : 0; } //!< current capacity
+        inline virtual void         free()           noexcept { if(0!=code) code->free();        }     //!< free content, keep memory
+
+        //! [Readable] access
         inline virtual ConstType & operator[](const size_t indx) const noexcept
         {
             assert(0!=code);
@@ -117,6 +119,7 @@ namespace Yttrium
             return code->data[indx];
         }
 
+        //! reserve extra space
         inline virtual void reserve(size_t n)
         {
             if(n>0)

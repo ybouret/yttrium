@@ -5,11 +5,16 @@ namespace Yttrium
     namespace WOVEn
     {
 
-        Indices::  Indices(const size_t n) : BaseType(n) {}
+        Indices::  Indices(const size_t n) :
+        Identifiable(), Collection(),
+        BaseType(n) {}
 
         Indices:: ~Indices() noexcept {}
 
-        Indices:: Indices(const Indices &indx) : BaseType(indx) {}
+        Indices:: Indices(const Indices &indx) :
+        Identifiable(), Collection(),
+        BaseType(indx)
+        {}
         
     }
 
