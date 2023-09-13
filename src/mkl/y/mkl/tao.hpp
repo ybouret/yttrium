@@ -75,6 +75,10 @@ namespace Yttrium
                     target[i] += source[i] + factor * vector[i];
             }
 
+            //__________________________________________________________________
+            //
+            //! |source|^2
+            //__________________________________________________________________
             template <typename SOURCE> static inline
             typename ScalarFor< typename SOURCE::Type >::Type Mod2(SOURCE &source)
             {
@@ -84,6 +88,10 @@ namespace Yttrium
                 return res;
             }
 
+            //__________________________________________________________________
+            //
+            //! |primary-replica|^2
+            //__________________________________________________________________
             template <typename PRIMARY, typename REPLICA> static inline
             typename ScalarFor<typename PRIMARY::Type>::Type Mod2(PRIMARY &primary, REPLICA &replica)
             {

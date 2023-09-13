@@ -15,10 +15,12 @@ namespace
     template <typename T>
     static inline void TestTriDiag(Random::Rand &ran, const size_t nmax=10)
     {
+        std::cerr << "-- using " << RTTI::Name<T>() << std::endl;
         typedef typename ScalarFor<T>::Type ScalarType;
 
         for(size_t n=1;n<=nmax;++n)
         {
+            std::cerr << "--   n=" << n << std::endl;
             TriDiag<T>                 tr(n);
             CxxArray<T,Memory::Pooled> u(n);
             CxxArray<T,Memory::Pooled> r(n);
@@ -47,15 +49,15 @@ namespace
             const ScalarType residue1 = Tao::Mod2(v,r);
             const ScalarType residue2 = Tao::Mod2(v,r);
 
-            std::cerr << "M=" << M << std::endl;
-            std::cerr << "r=" << r << std::endl;
-            std::cerr << "u=" << u << std::endl;
-            std::cerr << "v=" << v << std::endl;
-            std::cerr << "w=" << w << std::endl;
-            std::cerr << "residue1=" << residue1 << std::endl;
-            std::cerr << "residue2=" << residue2 << std::endl;
-
+            //std::cerr << "M=" << M << std::endl;
+           // std::cerr << "r=" << r << std::endl;
+           // std::cerr << "u=" << u << std::endl;
+           // std::cerr << "v=" << v << std::endl;
+           // std::cerr << "w=" << w << std::endl;
+            std::cerr << "--     residue1=" << residue1 << std::endl;
+            std::cerr << "--     residue2=" << residue2 << std::endl;
         }
+        std::cerr << std::endl;
 
     }
 }

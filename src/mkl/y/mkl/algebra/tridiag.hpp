@@ -11,16 +11,41 @@ namespace Yttrium
     namespace MKL
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Tri-Diagonal Matrix (a,b,c)
+        //
+        //
+        //__________________________________________________________________
         template <typename T>
         class TriDiag
         {
         public:
-            explicit TriDiag(const size_t n);
-            virtual ~TriDiag() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit TriDiag(const size_t n); //!< setup with size=m
+            virtual ~TriDiag() noexcept;      //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! common size
             size_t size() const noexcept;
+
+            //! try to solve this * u = r
             bool  solve(Writable<T> &u, const Writable<T> &r);
 
+            //! res = this * rhs
             template <typename RES, typename RHS> inline
             void mul(RES &res, RHS &rhs) const
             {
@@ -34,11 +59,11 @@ namespace Yttrium
                 }
                 res[1] = b[1] * rhs[1] + c[1] * rhs[2];
                 const size_t nm=n-1;
-                for(size_t i=nm;i>1;--i)
+                for(size_t i=nm,im=i-1,ip=i+1;i>1;--i,--im,--ip)
                 {
-                    const T A = a[i] * rhs[i-1];
+                    const T A = a[i] * rhs[im];
                     const T B = b[i] * rhs[i];
-                    const T C = c[i] * rhs[i+1];
+                    const T C = c[i] * rhs[ip];
                     res[i] = Antelope::Sum3<T>::Of(A,B,C);
                 }
                 res[n] = a[n] * rhs[nm] + b[n] * rhs[n];
@@ -50,10 +75,11 @@ namespace Yttrium
             class Code;
             Code *code;
         public:
-            Writable<T> &a;
-            Writable<T> &b;
-            Writable<T> &c;
+            Writable<T> &a; //!< a[2..size]
+            Writable<T> &b; //!< b[1..size]
+            Writable<T> &c; //!< c[1..size-1]
 
+            //! return a copy of item, depending on i,j
             T operator()(const size_t i, const size_t j) const;
 
         };
