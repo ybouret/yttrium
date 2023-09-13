@@ -40,9 +40,7 @@ namespace
             while( !tr.solve(u,r) );
 
             Matrix<T> M(n,n);
-            for(size_t i=1;i<=n;++i)
-                for(size_t j=1;j<=n;++j)
-                    M[i][j] = tr(i,j);
+            tr.sendTo(M);
 
             M.mul(v,u);
             tr.mul(w,u);

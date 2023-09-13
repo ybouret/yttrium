@@ -10,18 +10,12 @@ TriDiag<real_t>:: TriDiag(const size_t n) :
 code( new Code(n) ),
 a(code->a),
 b(code->b),
-c(code->c)
+c(code->c),
+size(code->size)
 {}
 
 
 
-
-template <>
-size_t TriDiag<real_t>:: size() const noexcept
-{
-    assert(0!=code);
-    return code->size;
-}
 
 template <>
 real_t TriDiag<real_t>:: operator()(const size_t i, const size_t j) const

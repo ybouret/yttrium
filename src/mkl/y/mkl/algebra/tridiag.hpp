@@ -3,7 +3,7 @@
 #ifndef Y_MKL_Algebra_TriDiag_Included
 #define Y_MKL_Algebra_TriDiag_Included 1
 
-#include "y/container/writable.hpp"
+#include "y/container/matrix.hpp"
 #include "y/mkl/antelope/sum3.hpp"
 
 namespace Yttrium
@@ -39,9 +39,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! common size
-            size_t size() const noexcept;
-
+            
             //! try to solve this * u = r
             bool  solve(Writable<T> &u, const Writable<T> &r);
 
@@ -49,7 +47,7 @@ namespace Yttrium
             template <typename RES, typename RHS> inline
             void mul(RES &res, RHS &rhs) const
             {
-                const size_t n = size();
+                const size_t n = size;
                 switch(n)
                 {
                     case 0: return;
@@ -69,18 +67,40 @@ namespace Yttrium
                 res[n] = a[n] * rhs[nm] + b[n] * rhs[n];
             }
 
+            inline friend std::ostream & operator<<(std::ostream &os, const TriDiag &self)
+            {
+                Matrix<T> M(self.size(),self.size());
+                self.sendTo(M);
+                os << M;
+                return os;
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(TriDiag);
             class Code;
             Code *code;
         public:
-            Writable<T> &a; //!< a[2..size]
-            Writable<T> &b; //!< b[1..size]
-            Writable<T> &c; //!< c[1..size-1]
+            Writable<T>  & a; //!< a[2..size]
+            Writable<T>  & b; //!< b[1..size]
+            Writable<T>  & c; //!< c[1..size-1]
+            const size_t & size;
 
             //! return a copy of item, depending on i,j
             T operator()(const size_t i, const size_t j) const;
+
+            template <typename U>
+            inline void sendTo(Matrix<U> &M) const
+            {
+                assert(M.rows==size);
+                assert(M.cols==M.rows);
+                const TriDiag &self = *this;
+                const size_t   n    = self.size;
+                for(size_t i=n;i>0;--i)
+                {
+                    Writable<U> &M_i = M[i];
+                    for(size_t j=n;j>0;--j) M_i[j] = self(i,j);
+                }
+            }
 
         };
     }
