@@ -89,18 +89,6 @@ namespace Yttrium
                     return false;
             }
 
-            template <typename T> static inline
-            void Explore(const Matrix<T> &mu,
-                         QSurvey         &survey,
-                         const bool       useTop)
-            {
-                Subspaces working(mu,useTop ? &survey : 0);
-            CYCLE:
-                if( working.generate(mu,&survey) )
-                    goto CYCLE;
-            }
-
-
 
 
 
@@ -108,7 +96,18 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Subspaces);
             void conductInitial(QSurvey &survey) const;            
         };
-        
+
+
+        template <typename T> inline
+        void Explore(const Matrix<T> &mu,
+                     QSurvey         &survey,
+                     const bool       useTop)
+        {
+            Subspaces working(mu,useTop ? &survey : 0);
+        CYCLE:
+            if( working.generate(mu,&survey) )
+                goto CYCLE;
+        }
 
     }
 

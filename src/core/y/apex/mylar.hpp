@@ -276,9 +276,19 @@ namespace Yttrium
 
 
 
+            template <typename SOURCE>
+            static inline size_t CountNonZero(SOURCE &source)
+            {
+                size_t count = 0;
+                for(size_t i=source.size();i>0;--i)
+                { if(0!=source[i]) ++count; }
+                return count;
+            }
+
 
             typedef Small::BareHeavyList<size_t> IList; //!< list of indices
             typedef IList::NodeType              INode; //!< nodes for IList
+
 
             //__________________________________________________________________
             //
@@ -287,7 +297,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename T, typename U> static inline
-            void Compress(Matrix<T> &target, const Matrix<U> &source)
+            void Compress(Matrix<T>       &target,
+                          const Matrix<U> &source)
             {
                 //--------------------------------------------------------------
                 // preparing indices
@@ -298,8 +309,9 @@ namespace Yttrium
                 const size_t rows = source.rows;
                 for(size_t i=1;i<=rows;++i)
                 {
-                    const MatrixRow<U> &src = source[i];
+                    const MatrixRow<U> &src = source[i];  if( CountNonZero(src) <=0 ) continue;
                     bool                bad = false;
+
                     for(const INode *node=indx.head;node;node=node->next)
                     {
                         const size_t k = **node;
@@ -309,6 +321,7 @@ namespace Yttrium
                             break;
                         }
                     }
+                    
                     if(bad) continue;
                     indx << i;
                 }
