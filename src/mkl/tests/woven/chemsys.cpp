@@ -117,6 +117,9 @@ Y_UTEST(woven_chemsys)
         std::cerr << *arr << std::endl;
     }
     std::cerr << "#=" << zeroing.size << std::endl;
+
+    std::cerr << "Nu=" << Nu << std::endl;
+
 }
 Y_UDONE()
 
