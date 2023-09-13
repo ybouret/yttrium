@@ -4,6 +4,7 @@
 #include "y/text/ascii/printable.hpp"
 #include "y/text/ops.hpp"
 #include "y/string.hpp"
+#include <cmath>
 
 namespace Yttrium
 {
@@ -26,6 +27,9 @@ namespace Yttrium
                        const size_t size,
                        const char * ctx)
             {
+                static const T    oneTenth(0.1);
+                static const T    ten(10);
+
                 static const char fn[] = "ASCII::Convert::ToReal";
                 assert(Good(curr,size));
                 const char * const last = curr + size;
@@ -70,16 +74,16 @@ namespace Yttrium
 
                     switch(c)
                     {
-                        case '0': res *= 10;           break;
-                        case '1': res *= 10; res += 1; break;
-                        case '2': res *= 10; res += 2; break;
-                        case '3': res *= 10; res += 3; break;
-                        case '4': res *= 10; res += 4; break;
-                        case '5': res *= 10; res += 5; break;
-                        case '6': res *= 10; res += 6; break;
-                        case '7': res *= 10; res += 7; break;
-                        case '8': res *= 10; res += 8; break;
-                        case '9': res *= 10; res += 9; break;
+                        case '0': res *= ten;           break;
+                        case '1': res *= ten; res += 1; break;
+                        case '2': res *= ten; res += 2; break;
+                        case '3': res *= ten; res += 3; break;
+                        case '4': res *= ten; res += 4; break;
+                        case '5': res *= ten; res += 5; break;
+                        case '6': res *= ten; res += 6; break;
+                        case '7': res *= ten; res += 7; break;
+                        case '8': res *= ten; res += 8; break;
+                        case '9': res *= ten; res += 9; break;
                         case '.':
                             goto FRACTIONAL_PART;
 
@@ -94,7 +98,6 @@ namespace Yttrium
                 //--------------------------------------------------------------
             FRACTIONAL_PART:
                 {
-                    static const T oneTenth(0.1);
                     T cf = oneTenth;
                     T fp = 0;
                     while(curr<last)
@@ -171,7 +174,9 @@ namespace Yttrium
                                 throw Specific::Exception(fn,"bad '%s' in exponent part for '%s'", Printable::Char[c], WHERE);
                         }
                     }
-                    std::cerr << "ex=" << ex << std::endl;
+                    if(0!=ex)
+                        res *= std::pow(negativeExponent?oneTenth:ten,ex);
+                    
                 }
 
 
