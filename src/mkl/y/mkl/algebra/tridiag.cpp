@@ -78,6 +78,43 @@ namespace Yttrium
 #define real_t long double
 #include "tridiag.hxx"
 
+#undef  real_t
+#define real_t XReal<float>
+#include "tridiag.hxx"
+
+#undef  real_t
+#define real_t XReal<double>
+#include "tridiag.hxx"
+
+#undef  real_t
+#define real_t XReal<long double>
+#include "tridiag.hxx"
+
+
+#undef  real_t
+#define real_t Complex<float>
+#include "tridiag.hxx"
+
+#undef  real_t
+#define real_t Complex<double>
+#include "tridiag.hxx"
+
+#undef  real_t
+#define real_t Complex<long double>
+#include "tridiag.hxx"
+
+#undef  real_t
+#define real_t Complex< XReal<float> >
+#include "tridiag.hxx"
+
+#undef  real_t
+#define real_t Complex< XReal<double> >
+#include "tridiag.hxx"
+
+#undef  real_t
+#define real_t Complex< XReal<long double> >
+#include "tridiag.hxx"
+
 
 #undef  real_t
 #define real_t apq

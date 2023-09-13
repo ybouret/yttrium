@@ -5,6 +5,7 @@
 #include "y/container/cxx-array.hpp"
 #include "y/system/rtti.hpp"
 #include "y/memory/allocator/pooled.hpp"
+#include "y/mkl/tao.hpp"
 
 using namespace Yttrium;
 using namespace MKL;
@@ -12,8 +13,9 @@ using namespace MKL;
 namespace
 {
     template <typename T>
-    static inline void TestTriDiag(Random::Rand &ran, const size_t nmax=4)
+    static inline void TestTriDiag(Random::Rand &ran, const size_t nmax=10)
     {
+        typedef typename ScalarFor<T>::Type ScalarType;
 
         for(size_t n=1;n<=nmax;++n)
         {
@@ -40,14 +42,18 @@ namespace
                 for(size_t j=1;j<=n;++j)
                     M[i][j] = tr(i,j);
 
+            M.mul(v,u);
+            tr.mul(w,u);
+            const ScalarType residue1 = Tao::Mod2(v,r);
+            const ScalarType residue2 = Tao::Mod2(v,r);
+
             std::cerr << "M=" << M << std::endl;
             std::cerr << "r=" << r << std::endl;
             std::cerr << "u=" << u << std::endl;
-            M.mul(v,u);
             std::cerr << "v=" << v << std::endl;
-            tr.mul(w,u);
             std::cerr << "w=" << w << std::endl;
-
+            std::cerr << "residue1=" << residue1 << std::endl;
+            std::cerr << "residue2=" << residue2 << std::endl;
 
         }
 
@@ -62,7 +68,21 @@ Y_UTEST(algebra_tridiag)
     TestTriDiag<double>(ran);
     TestTriDiag<long double>(ran);
 
-    //TestTriDiag<apq>(ran);
+
+    TestTriDiag< XReal<float> >(ran);
+    TestTriDiag< XReal<double> >(ran);
+    TestTriDiag< XReal<long double> >(ran);
+
+    TestTriDiag< Complex<float> >(ran);
+    TestTriDiag< Complex<double> >(ran);
+    TestTriDiag< Complex<long double> >(ran);
+
+    TestTriDiag< Complex< XReal<float> > >(ran);
+    TestTriDiag< Complex< XReal<double> > >(ran);
+    TestTriDiag< Complex< XReal<long double> > >(ran);
+
+
+    TestTriDiag<apq>(ran,5);
 
 
 }

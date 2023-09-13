@@ -147,6 +147,9 @@ namespace Yttrium
             static inline apq Of(const apq &q) { return q.abs(); }
         };
 
+
+        
+
         //______________________________________________________________________
         //
         //
