@@ -52,6 +52,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             const apn       norm1; //!< |this|_1 > 0
+            const size_t    order; //!< num coeff
             IntegerArray   *next;  //!< for list
             IntegerArray   *prev;  //!< for list
         private:

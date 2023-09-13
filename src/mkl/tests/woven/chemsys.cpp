@@ -1,8 +1,8 @@
 
 
 #include "y/woven/subspaces.hpp"
-#include "y/woven/integer-survey.hpp"
-#include "y/woven/natural-survey.hpp"
+#include "y/woven/survey/integer.hpp"
+#include "y/woven/survey/natural.hpp"
 #include "y/apex/mylar.hpp"
 #include "y/utest/run.hpp"
 #include "y/mkl/algebra/rank.hpp"
@@ -75,20 +75,37 @@ Y_UTEST(woven_chemsys)
     std::cerr << "Nu=" << Nu << std::endl;
     std::cerr << "#"; Y_CHECK( MKL::Rank::Of(Nu) == N);
 
-    // compute ortho-space
-    Matrix<apz> Q;
-    MKL::OrthoSpace::Build(Q,CopyOf,Nu);
+    WOVEn::NaturalSurvey      zcons;
+
+    {
+        // compute ortho-space
+        Matrix<apz> NuOrtho;
+        MKL::OrthoSpace::Build(NuOrtho,CopyOf,Nu);
+        std::cerr << "NuOrtho=" << NuOrtho << std::endl;
+
+        // compute conservations
+        WOVEn::Subspaces::Explore(NuOrtho,zcons,true);
+        zcons.sort();
+    }
+
+    Matrix<unsigned> Q;
+    if(zcons.size)
+    {
+        Q.make(zcons.size,M);
+        size_t i=1;
+        for(const WOVEn::NaturalArray *zcf=zcons.head;zcf;zcf=zcf->next,++i)
+        {
+            for(size_t j=M;j>0;--j) Q[i][j] = (*zcf)[j].cast<unsigned>("q");
+        }
+    }
     std::cerr << "Q=" << Q << std::endl;
 
-    // compute conservations
-    WOVEn::NaturalSurvey      zcons;
-    WOVEn::Subspaces::Explore(Q,zcons,true);
-    zcons.sort();
-    
+
     for(const WOVEn::NaturalArray *zcf=zcons.head;zcf;zcf=zcf->next)
     {
-        std::cerr << *zcf << std::endl;
+        //std::cerr << *zcf << std::endl;
     }
+
 }
 Y_UDONE()
 

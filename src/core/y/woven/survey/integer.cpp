@@ -1,5 +1,5 @@
 
-#include "y/woven/integer-survey.hpp"
+#include "y/woven/survey/integer.hpp"
 #include "y/sort/merge.hpp"
 
 namespace Yttrium
@@ -15,6 +15,7 @@ namespace Yttrium
         Object(),
         IntegerArrayType(CopyOf,qvec),
         norm1(qvec.norm1),
+        order(qvec.ncoeff),
         next(0),
         prev(0)
         {

@@ -1,6 +1,6 @@
 
 
-#include "y/woven/natural-survey.hpp"
+#include "y/woven/survey/natural.hpp"
 #include "y/sort/merge.hpp"
 
 namespace Yttrium

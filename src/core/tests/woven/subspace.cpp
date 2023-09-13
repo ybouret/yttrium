@@ -1,7 +1,7 @@
 
 #include "y/woven/subspaces.hpp"
-#include "y/woven/integer-survey.hpp"
-#include "y/woven/natural-survey.hpp"
+#include "y/woven/survey/integer.hpp"
+#include "y/woven/survey/natural.hpp"
 
 #include "y/utest/run.hpp"
 #include "../main.hpp"
