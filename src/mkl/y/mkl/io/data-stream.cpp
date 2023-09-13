@@ -198,9 +198,6 @@ namespace Yttrium
         }
 
 
-#define real_t float
-#include "data-stream.hxx"
-
 
     }
 

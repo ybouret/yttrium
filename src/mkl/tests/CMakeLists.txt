@@ -24,6 +24,7 @@ add_test(opt:bracket   test-mkl opt_bracket)
 
 add_test(algebra:lu          test-mkl algebra_lu)
 add_test(algebra:ortho_space test-mkl algebra_ortho_space)
+add_test(algebra:tridiag     test-mkl algebra_tridiag)
 
 add_test(drvs:1d test-mkl drvs1D)
 add_test(drvs:nd test-mkl drvsND)
