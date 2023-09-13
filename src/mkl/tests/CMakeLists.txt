@@ -3,7 +3,8 @@ ode
 opt
 algebra
 drvs
-interp)
+interp
+io)
 
 Y_LinkLibraries(test-mkl y-mkl)
 
@@ -26,4 +27,7 @@ add_test(drvs:nd test-mkl drvsND)
 
 add_test(interp:poly  test-mkl interp_poly)
 add_test(interp:ratio test-mkl interp_ratio)
+
+add_test(io:data-stream test-mkl io_data_stream)
+
 
