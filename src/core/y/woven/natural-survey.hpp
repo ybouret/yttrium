@@ -46,6 +46,7 @@ namespace Yttrium
             explicit NaturalArray(const QVector &); //!< copy from QVector
             virtual ~NaturalArray() noexcept;       //!< cleanup
 
+            //! check equality of heterogeneous vectors
             bool equals(const QVector &) const noexcept;
 
             //__________________________________________________________________

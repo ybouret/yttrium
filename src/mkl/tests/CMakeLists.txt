@@ -6,6 +6,9 @@ drvs
 interp
 io)
 
+set( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
+set( DATA ${HERE}/../../../var)
+
 Y_LinkLibraries(test-mkl y-mkl)
 
 enable_testing()
@@ -28,6 +31,6 @@ add_test(drvs:nd test-mkl drvsND)
 add_test(interp:poly  test-mkl interp_poly)
 add_test(interp:ratio test-mkl interp_ratio)
 
-add_test(io:data-stream test-mkl io_data_stream)
+add_test(io:data-stream test-mkl io_data_stream ${DATA}/sample.txt)
 
 

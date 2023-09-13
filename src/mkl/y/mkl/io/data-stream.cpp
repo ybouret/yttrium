@@ -6,18 +6,51 @@
 #include "y/system/exception.hpp"
 #include "y/string/tokenizer.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/text/ascii/convert.hpp"
 
 namespace Yttrium
 {
     namespace MKL
     {
 
+        namespace
+        {
+            template <typename T> static inline
+            void Grow(void *addr, const String &msg, const char *ctx)
+            {
+                assert(0!=addr);
+                Sequence<T> &seq = *static_cast< Sequence<T> * >(addr);
+                seq.pushTail( ASCII::Convert::ToReal<T>(msg,ctx) );
+            }
+        }
+
+        template <>
+        void DataStream::ATOF_<float>(void *addr, const String &msg, const char *ctx)
+        {
+            Grow<float>(addr,msg,ctx);
+        }
+
+        template <>
+        void DataStream::ATOF_<double>(void *addr, const String &msg, const char *ctx)
+        {
+            Grow<double>(addr,msg,ctx);
+        }
+
+
+        template <>
+        void DataStream::ATOF_<long double>(void *addr, const String &msg, const char *ctx)
+        {
+            Grow<long double>(addr,msg,ctx);
+        }
+
+
         DataStream:: Column:: Column(const String &uid,
                                      const size_t num) :
         Object(), Counted(),
         name(uid),
         indx(num),
-        mine(0)
+        mine(0),
+        proc(0)
         {
         }
 
@@ -26,6 +59,13 @@ namespace Yttrium
         const String & DataStream:: Column:: key() const noexcept
         {
             return name;
+        }
+
+        void  DataStream:: Column:: append(const String &msg)
+        {
+            assert(0!=mine);
+            assert(0!=proc);
+            proc(mine,msg,name.c_str());
         }
 
     }
@@ -58,6 +98,7 @@ namespace Yttrium
                 for(DataBase::Iterator it=cdb.begin(); it != cdb.end(); ++it)
                 {
                     const ColPtr &rhs = *it;
+                    assert(0!=rhs->mine);
                     if(rhs->mine==ptr->mine)
                         throw Specific::Exception(fn,"same sequence in '%s' and '%s'", ptr->name.c_str(), rhs->name.c_str());
                 }
@@ -102,9 +143,12 @@ namespace Yttrium
                         {
                             Column      &col = **it;
                             const size_t idx = col.indx;
+                            assert(0!=col.mine);
+                            assert(0!=col.proc);
+
                             if(idx<=0||idx>nw)
                                 throw Specific::Exception(fn,"'%s' @%u not in #words=%u", col.name.c_str(), unsigned(idx), unsigned(nw) );
-                            std::cerr << "assigning '" << words[idx] << "' at " << col.name << std::endl;
+                            col.append(words[idx]);
                         }
 
                         ++count;
