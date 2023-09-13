@@ -43,8 +43,8 @@ namespace Yttrium
                 u[1]  = r[1]/piv;
                 for(size_t j=2,jm=1;j<=n;++j,++jm)
                 {
-                    gam[j]=c[jm]/piv;
-                    piv=b[j]-a[j]*gam[j];
+                    gam[j]= c[jm]/piv;
+                    piv   = b[j]-a[j]*gam[j];
                     if( Fabs<T>::Of(piv) <= s0) return false;
                     u[j]=(r[j]-a[j]*u[jm])/piv;
                 }
