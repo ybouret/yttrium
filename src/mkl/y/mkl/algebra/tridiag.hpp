@@ -73,7 +73,7 @@ namespace Yttrium
 
             inline friend std::ostream & operator<<(std::ostream &os, const TriDiag &self)
             {
-                Matrix<T> M(self.size(),self.size());
+                Matrix<T> M(self.size,self.size);
                 self.sendTo(M);
                 os << M;
                 return os;
