@@ -242,6 +242,7 @@ add_test(info:arc4  test-core info_arc4)
 add_test(info:bwt   test-core info_bwt)
 
 #WOVEn
-add_test(woven:indices test-core woven_indices)
+add_test(woven:indices  test-core woven_indices)
 add_test(woven:subspace test-core woven_subspace)
+
 

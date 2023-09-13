@@ -70,14 +70,15 @@ namespace Yttrium
             template <typename T>
             bool generate(const Matrix<T> &mu, QSurvey *survey)
             {
+                // substitute new generation
                 {
                     Subspace::List newGen;
                     for(Subspace *sub=head;sub;sub=sub->next)
-                    {
                         sub->expand(newGen, mu, survey);
-                    }
                     swapWith(newGen);
                 }
+
+                // cleanup
                 if(size>0)
                 {
                     pack();
@@ -87,6 +88,18 @@ namespace Yttrium
                 else
                     return false;
             }
+
+            template <typename T> static inline
+            void Explore(const Matrix<T> &mu,
+                         QSurvey         &survey,
+                         const bool       useTop)
+            {
+                Subspaces working(mu,useTop ? &survey : 0);
+            CYCLE:
+                if( working.generate(mu,&survey) )
+                    goto CYCLE;
+            }
+
 
 
 

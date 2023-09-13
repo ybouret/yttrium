@@ -22,6 +22,14 @@ namespace Yttrium
              - Q*P' = 0
              */
             static bool Build(Matrix<apz> &Q, const Matrix<apz> &P);
+
+            template <typename T>
+            static bool Build(Matrix<apz> &Q, const CopyOf_ &_, const Matrix<T> &P)
+            {
+                Matrix<apz> PP(_,P);
+                return Build(Q,PP);
+            }
+
         };
 
     }
