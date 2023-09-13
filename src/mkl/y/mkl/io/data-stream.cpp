@@ -82,13 +82,31 @@ namespace Yttrium
 
                 size_t count = 0;
                 {
-                    Vector<String> words;
-                    String         line;
+                    Vector<String>           words;
+                    String                   line;
+                    const size_t             ncol = cdb.size();
+                    const DataBase::Iterator init = cdb.begin();
+
                     while(input.gets(line))
                     {
+                        if( line.size() <= 0 ) continue;
+                        if( '#' == line[1] )   continue;
+
                         words.free();
                         Tokenizer::AppendTo(words,line, " \t", 2);
                         std::cerr << "words: " << words << std::endl;
+
+                        const size_t       nw = words.size();
+                        DataBase::Iterator it = init;
+                        for(size_t i=ncol;i>0;--i,++it)
+                        {
+                            Column      &col = **it;
+                            const size_t idx = col.indx;
+                            if(idx<=0||idx>nw)
+                                throw Specific::Exception(fn,"'%s' @%u not in #words=%u", col.name.c_str(), unsigned(idx), unsigned(nw) );
+                            std::cerr << "assigning '" << words[idx] << "' at " << col.name << std::endl;
+                        }
+
                         ++count;
                         if(nmax>0 && count>=nmax) break;
                     }
