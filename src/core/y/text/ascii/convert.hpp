@@ -48,6 +48,18 @@ namespace Yttrium
                 return To<T,DATA>(data,ctx,which);
             }
 
+
+            template <typename T> static
+            T ToReal(const char *msg, const size_t len, const char *ctx);
+
+            template <typename T> static
+            T ToReal(const char *msg, const char *ctx);
+
+            template <typename T> static
+            T ToReal(const Core::String<char> &msg, const char *ctx);
+
+
+
         private:
             static void Check(const uint64_t, const uint64_t, const char *ctx);
 
