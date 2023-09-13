@@ -43,6 +43,10 @@ namespace Yttrium
             //! try to solve this * u = r
             bool  solve(Writable<T> &u, const Writable<T> &r);
 
+            //! try to solve with a foreing diagonal
+            bool  solve(Writable<T> &u, const Writable<T> &r, const Readable<T> &B);
+
+
             //! res = this * rhs
             template <typename RES, typename RHS> inline
             void mul(RES &res, RHS &rhs) const

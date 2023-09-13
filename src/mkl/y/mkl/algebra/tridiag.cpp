@@ -32,19 +32,22 @@ namespace Yttrium
                 assert(n>0);
             }
 
-            inline bool solve(Writable<T> &u, const Readable<T> &r)
-            {
-                assert(u.size()==r.size());
-                assert(size==u.size());
-                const size_t n = size;
-                if( Fabs<T>::Of(b[1]) <= s0) return false;
 
-                T piv = b[1];
+            inline bool solve(Writable<T> &u, const Readable<T> &r, const Readable<T> &B)
+            {
+                assert(size==u.size());
+                assert(size==r.size());
+                assert(size==B.size());
+
+                const size_t n = size;
+                if( Fabs<T>::Of(B[1]) <= s0) return false;
+
+                T piv = B[1];
                 u[1]  = r[1]/piv;
                 for(size_t j=2,jm=1;j<=n;++j,++jm)
                 {
                     gam[j]= c[jm]/piv;
-                    piv   = b[j]-a[j]*gam[j];
+                    piv   = B[j]-a[j]*gam[j];
                     if( Fabs<T>::Of(piv) <= s0) return false;
                     u[j]=(r[j]-a[j]*u[jm])/piv;
                 }

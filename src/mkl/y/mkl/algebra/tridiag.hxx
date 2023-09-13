@@ -40,5 +40,12 @@ template <>
 bool  TriDiag<real_t>:: solve(Writable<real_t> &u, const Writable<real_t> &r)
 {
     assert(0!=code);
-    return code->solve(u,r);
+    return code->solve(u,r,b);
+}
+
+template <>
+bool  TriDiag<real_t>:: solve(Writable<real_t> &u, const Writable<real_t> &r, const Readable<real_t> &B)
+{
+    assert(0!=code);
+    return code->solve(u,r,B);
 }
