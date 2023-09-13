@@ -5,21 +5,29 @@
 
 #include "y/utest/run.hpp"
 #include "../main.hpp"
-
+#include "y/text/ascii/convert.hpp"
 
 using namespace Yttrium;
 
-namespace
-{
 
-
-
-}
 
 Y_UTEST(woven_subspace)
 {
     Random::Rand   ran;
-    Matrix<int>    mu(4,3);
+
+    size_t         nr = 4;
+    size_t         nc = 3;
+    if(argc>1)
+    {
+        nr = ASCII::Convert::To<size_t>(argv[1],"rows");
+    }
+    
+    if(argc>2)
+    {
+        nc = ASCII::Convert::To<size_t>(argv[2],"cols");
+    }
+
+    Matrix<int>    mu(nr,nc);
 
     for(size_t i=1;i<=mu.rows;++i)
     {
