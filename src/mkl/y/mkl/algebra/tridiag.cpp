@@ -4,6 +4,7 @@
 #include "y/type/nullify.hpp"
 #include "y/container/cxx-array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
+#include "y/mkl/api.hpp"
 
 namespace Yttrium
 {
@@ -14,7 +15,8 @@ namespace Yttrium
         class TriDiag<T> :: Code : public Object
         {
         public:
-            typedef CxxArray<T,Memory::Dyadic> ArrayType;
+            typedef CxxArray<T,Memory::Dyadic>  ArrayType;
+            typedef typename ScalarFor<T>::Type ScalarType;
 
             inline virtual ~Code() noexcept {}
             inline explicit Code(const size_t n) :
@@ -24,14 +26,42 @@ namespace Yttrium
             b(n),
             c(n),
             gam(n),
-            zero(0)
+            t0(0),
+            s0(0)
             {
                 assert(n>0);
             }
 
-            const size_t size;
-            ArrayType    a,b,c,gam;
-            const T      zero;
+            inline bool solve(Writable<T> &u, const Readable<T> &r)
+            {
+                assert(u.size()==r.size());
+                assert(size==u.size());
+                const size_t n = size;
+                if( Fabs<T>::Of(b[1]) <= s0) return false;
+
+                T piv = b[1];
+                u[1]  = r[1]/piv;
+                for(size_t j=2;j<=n;++j)
+                {
+                    gam[j]=c[j-1]/piv;
+                    piv=b[j]-a[j]*gam[j];
+                    if( Fabs<T>::Of(piv) <= s0) return false;
+                    u[j]=(r[j]-a[j]*u[j-1])/piv;
+                }
+
+                for(size_t j=(n-1);j>0;--j)
+                    u[j] -= gam[j+1]*u[j+1];
+
+                return true;
+                
+            }
+
+
+
+            const size_t     size;
+            ArrayType        a,b,c,gam;
+            const T          t0;
+            const ScalarType s0;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
@@ -47,6 +77,14 @@ namespace Yttrium
 #undef  real_t
 #define real_t long double
 #include "tridiag.hxx"
+
+
+#undef  real_t
+#define real_t apq
+#include "tridiag.hxx"
+
+
+
 
     }
 
