@@ -80,7 +80,8 @@ namespace Yttrium
                         case '7': res *= 10; res += 7; break;
                         case '8': res *= 10; res += 8; break;
                         case '9': res *= 10; res += 9; break;
-                        case '.': goto FRACTIONAL_PART;
+                        case '.':
+                            goto FRACTIONAL_PART;
 
                         default:
                             throw Specific::Exception(fn,"bad '%s' in integer part for '%s'", Printable::Char[c], WHERE);
@@ -112,6 +113,13 @@ namespace Yttrium
                             case '8': fp += 8*cf; break;
                             case '9': fp += 9*cf; break;
 
+                            case 'e':
+                            case 'E':
+                            case 'd':
+                            case 'D':
+                                res += fp;
+                                goto EXPONENT_PART;
+
                             default:
                                 throw Specific::Exception(fn,"bad '%s' in fractional part for '%s'", Printable::Char[c], WHERE);
                         }
@@ -119,6 +127,53 @@ namespace Yttrium
                     }
                     res += fp;
                 }
+                goto RETURN;
+
+                //--------------------------------------------------------------
+                // exponent part
+                //--------------------------------------------------------------
+            EXPONENT_PART:
+                {
+                    if(curr>=last)
+                        throw Specific::Exception(fn,"empty exponent content for '%s'", WHERE);
+
+                    bool negativeExponent = false;
+                    switch(*curr)
+                    {
+                        case '+': ++curr; break;
+                        case '-': ++curr; negativeExponent = true; break;
+                        default:
+                            break;
+                    }
+
+                    if(curr>=last)
+                        throw Specific::Exception(fn,"empty exponent part for '%s'", WHERE);
+
+                    unsigned ex = 0;
+                    while(curr<last)
+                    {
+                        const uint8_t c = *(curr++);
+                        ex *= 10;
+                        switch(c)
+                        {
+                            case '0':        break;
+                            case '1': ++ex;  break;
+                            case '2': ex+=2; break;
+                            case '3': ex+=3; break;
+                            case '4': ex+=4; break;
+                            case '5': ex+=5; break;
+                            case '6': ex+=6; break;
+                            case '7': ex+=7; break;
+                            case '8': ex+=8; break;
+                            case '9': ex+=9; break;
+
+                            default:
+                                throw Specific::Exception(fn,"bad '%s' in exponent part for '%s'", Printable::Char[c], WHERE);
+                        }
+                    }
+                    std::cerr << "ex=" << ex << std::endl;
+                }
+
 
             RETURN:
                 return isNegative ? -res: res;
