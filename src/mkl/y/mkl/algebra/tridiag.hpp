@@ -42,10 +42,10 @@ namespace Yttrium
             uint32_t crc32() const noexcept;
             
             //! try to solve this * u = r
-            bool  solve(Writable<T> &u, const Writable<T> &r);
+            bool  solve(Writable<T> &u, const Readable<T> &r);
 
-            //! try to solve with a foreing diagonal
-            bool  solve(Writable<T> &u, const Writable<T> &r, const Readable<T> &B);
+            //! try to solve with a foreign diagonal
+            bool  solve(Writable<T> &u, const Readable<T> &r, const Readable<T> &B);
 
 
             //! res = this * rhs
@@ -72,6 +72,7 @@ namespace Yttrium
                 res[n] = a[n] * rhs[nm] + b[n] * rhs[n];
             }
 
+            //! display as a dense matrix
             inline friend std::ostream & operator<<(std::ostream &os, const TriDiag &self)
             {
                 Matrix<T> M(self.size,self.size);
@@ -85,14 +86,16 @@ namespace Yttrium
             class Code;
             Code *code;
         public:
-            Writable<T>  & a; //!< a[2..size]
-            Writable<T>  & b; //!< b[1..size]
-            Writable<T>  & c; //!< c[1..size-1]
-            const size_t & size;
+            Writable<T>  & a;     //!< a[2..size]
+            Writable<T>  & b;     //!< b[1..size]
+            Writable<T>  & c;     //!< c[1..size-1]
+            const size_t & size;  //!< dimensions
+            const T      & zero;  //!< constant zero value
 
             //! return a copy of item, depending on i,j
             T operator()(const size_t i, const size_t j) const;
 
+            //! fill dense matrix
             template <typename U>
             inline void sendTo(Matrix<U> &M) const
             {

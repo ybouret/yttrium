@@ -18,7 +18,7 @@ namespace
         std::cerr << "-- using " << RTTI::Name<T>() << std::endl;
         typedef typename ScalarFor<T>::Type ScalarType;
 
-        for(size_t n=1;n<=nmax;++n)
+        for(size_t n=3;n<=nmax;++n)
         {
             std::cerr << "--   n=" << n << std::endl;
             Cyclic<T>                  cy(n);
@@ -27,26 +27,32 @@ namespace
             CxxArray<T,Memory::Pooled> v(n);
             CxxArray<T,Memory::Pooled> w(n);
 
-#if 0
+
             do
             {
                 for(size_t i=1;i<=n;++i)
                 {
-                    tr.a[i] = Bring<T>::Get(ran);
-                    tr.b[i] = Bring<T>::Get(ran);
-                    tr.c[i] = Bring<T>::Get(ran);
+                    cy.a[i] = Bring<T>::Get(ran);
+                    cy.b[i] = Bring<T>::Get(ran);
+                    cy.c[i] = Bring<T>::Get(ran);
                     r[i]    = Bring<T>::Get(ran);
                 }
+
+                const uint32_t chk = cy.crc32();
+                cy.alpha = Bring<T>::Get(ran);
+                cy.beta  = Bring<T>::Get(ran);
+                Y_CHECK(cy.crc32()==chk);
+
             }
-            while( !tr.solve(u,r) );
+            while( !cy.solve(u,r) );
 
             Matrix<T> M(n,n);
-            tr.sendTo(M);
+            cy.sendTo(M);
 
             M.mul(v,u);
-            tr.mul(w,u);
+            cy.mul(w,u);
             const ScalarType residue1 = Tao::Mod2(v,r);
-            const ScalarType residue2 = Tao::Mod2(v,r);
+            const ScalarType residue2 = Tao::Mod2(w,r);
 
             //std::cerr << "M=" << M << std::endl;
             // std::cerr << "r=" << r << std::endl;
@@ -55,7 +61,6 @@ namespace
             // std::cerr << "w=" << w << std::endl;
             std::cerr << "--     residue1=" << residue1 << std::endl;
             std::cerr << "--     residue2=" << residue2 << std::endl;
-#endif
         }
         std::cerr << std::endl;
 

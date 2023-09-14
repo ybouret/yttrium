@@ -45,7 +45,7 @@ namespace
             M.mul(v,u);
             tr.mul(w,u);
             const ScalarType residue1 = Tao::Mod2(v,r);
-            const ScalarType residue2 = Tao::Mod2(v,r);
+            const ScalarType residue2 = Tao::Mod2(w,r);
 
             //std::cerr << "M=" << M << std::endl;
            // std::cerr << "r=" << r << std::endl;

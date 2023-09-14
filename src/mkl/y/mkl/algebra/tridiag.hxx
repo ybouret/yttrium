@@ -11,7 +11,8 @@ code( new Code(n) ),
 a(code->a),
 b(code->b),
 c(code->c),
-size(code->size)
+size(code->size),
+zero(code->t0)
 {}
 
 
@@ -37,14 +38,14 @@ real_t TriDiag<real_t>:: operator()(const size_t i, const size_t j) const
 }
 
 template <>
-bool  TriDiag<real_t>:: solve(Writable<real_t> &u, const Writable<real_t> &r)
+bool  TriDiag<real_t>:: solve(Writable<real_t> &u, const Readable<real_t> &r)
 {
     assert(0!=code);
     return code->solve(u,r,b);
 }
 
 template <>
-bool  TriDiag<real_t>:: solve(Writable<real_t> &u, const Writable<real_t> &r, const Readable<real_t> &B)
+bool  TriDiag<real_t>:: solve(Writable<real_t> &u, const Readable<real_t> &r, const Readable<real_t> &B)
 {
     assert(0!=code);
     return code->solve(u,r,B);
