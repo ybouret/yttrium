@@ -76,6 +76,26 @@ namespace Yttrium
 
         }
 
+        Token * Matcher:: somehow(Source &source)
+        {
+            Pattern &self = Coerce(*motif);
+            self.reset();
+            assert(0==self.size);
+
+            while( source.ready() )
+            {
+                if(self.takes(source))
+                    return &self;
+
+                assert(0==self.size);
+                source.skip();
+            }
+
+            return 0;
+
+        }
+
+
 
     }
 

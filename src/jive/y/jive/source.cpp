@@ -34,10 +34,6 @@ namespace Yttrium
                 return true;
             }
 
-            inline void skip()
-            {
-                
-            }
 
 
             AutoPtr<Module> handle;
@@ -93,7 +89,9 @@ namespace Yttrium
 
         void Source:: skip() noexcept
         {
-
+            assert(code!=0);
+            assert(code->cache.size>0);
+            delete code->cache.popHead();
         }
 
 

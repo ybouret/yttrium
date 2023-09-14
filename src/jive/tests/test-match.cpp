@@ -25,11 +25,23 @@ Y_UTEST(match)
                 std::cerr << "-- '" << line << "'" << std::endl;
                 {
                     Jive::Source jsrc( Jive::Module::OpenData(uuid,line) );
-                    Jive::Token *token = match.exactly(jsrc);
-                    if(token)
                     {
-                        std::cerr << "exactly: " << *token << std::endl;
+                        Jive::Token *token = match.exactly(jsrc);
+                        if(token)
+                        {
+                            std::cerr << "exactly: " << *token << std::endl;
+                        }
                     }
+                    {
+                        Jive::Token *token = match.somehow(jsrc);
+                        if(token)
+                        {
+                            std::cerr << "somehow: " << *token << std::endl;
+                        }
+                    }
+
+
+
                 }
 
             }
