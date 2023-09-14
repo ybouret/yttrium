@@ -98,6 +98,13 @@ namespace Yttrium
         };
 
 
+        //______________________________________________________________________
+        //
+        //
+        //! conduct survey for full matrix
+        //
+        //______________________________________________________________________
+
         template <typename T> inline
         void Explore(const Matrix<T> &mu,
                      QSurvey         &survey,

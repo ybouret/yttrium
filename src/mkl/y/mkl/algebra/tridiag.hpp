@@ -39,6 +39,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //! crc32 of used data
             uint32_t crc32() const noexcept;
             
             //! try to solve this * u = r

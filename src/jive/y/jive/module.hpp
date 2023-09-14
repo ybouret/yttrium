@@ -90,9 +90,12 @@ namespace Yttrium
                 return OpenData_(ctx,line);
             }
 
+            //! open a file
             template <typename FILENAME> static inline
             Module * Open(FILENAME &fileName) { return OpenFile(fileName); }
 
+
+            //! open data
             template <typename DATANAME, typename DATA>
             Module * Open(DATANAME &dataName, DATA &data) { return OpenData(dataName,data); }
 

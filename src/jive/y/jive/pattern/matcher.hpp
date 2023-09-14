@@ -14,28 +14,50 @@ namespace Yttrium
     {
         class Dictionary;
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Matching regular expressions in data
+        //
+        //
+        //______________________________________________________________________
         class Matcher
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            virtual ~Matcher() noexcept;                     //!< cleanup
+            Matcher(Pattern *p) noexcept;                    //!< initialize from newly created pattern
+            Matcher(const char   *, const Dictionary * = 0); //!< initialize from regexp
+            Matcher(const String &, const Dictionary * = 0); //!< initialize from regexp
+            Matcher(const Matcher &);                        //!< clone pattern, copy first chars
 
-            virtual ~Matcher() noexcept;
-            Matcher(Pattern *p) noexcept;
-            Matcher(const char   *, const Dictionary * = 0);
-            Matcher(const String &, const Dictionary * = 0);
-            Matcher(const Matcher &); //!< clone pattern, copy first chars
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void    cleanUp() noexcept;      //!< reset pattern
+            Token * exactly(Source &source); //!< source must match exactly the pattern
+            Token * somehow(Source &source); //!< source must contains the pattern
 
-
-            void    cleanUp() noexcept;
-            Token * exactly(Source &source);
-            Token * somehow(Source &source);
-
-            const Motif      motif;
-            const FirstChars firstChars;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const Motif      motif;        //!< compiled patter
+            const FirstChars firstChars;   //!< pattern first chars
 
         private:
             Y_DISABLE_ASSIGN(Matcher);
-
             void initialize();
         };
 
