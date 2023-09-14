@@ -153,6 +153,11 @@ namespace Yttrium
             vizLink(fp);
         }
 
+        bool Repeating:: isUnivocal() const noexcept
+        {
+            return false;
+        }
+
     }
 
 }

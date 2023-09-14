@@ -74,6 +74,11 @@ namespace Yttrium
             fp << ']';
             Endl(fp);
         }
+
+        bool Exclude:: isUnivocal() const noexcept
+        {
+            return false;
+        }
     }
 
 }

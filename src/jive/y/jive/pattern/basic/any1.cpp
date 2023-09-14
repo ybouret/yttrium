@@ -70,6 +70,10 @@ namespace Yttrium
             Endl(fp);
         }
 
+        bool    Any1::  isUnivocal() const noexcept
+        {
+            return false;
+        }
     }
 
 }

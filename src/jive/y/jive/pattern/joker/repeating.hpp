@@ -55,7 +55,7 @@ namespace Yttrium
             virtual size_t   serialize(OutputStream&) const;  //!< uuid[+atLeast]+guest
             virtual bool     isEqualTo(const Pattern &) const noexcept;
             virtual void     viz(OutputStream &fp)      const;
-
+            virtual bool     isUnivocal() const noexcept; //!< false
             static Pattern *ZeroOrMore(Pattern *      p); //!< Make(0,p)
             static Pattern *ZeroOrMore(const Pattern &p); //!< Make(0,p)
 

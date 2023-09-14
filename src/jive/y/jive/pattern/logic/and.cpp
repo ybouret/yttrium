@@ -100,6 +100,16 @@ namespace Yttrium
             Endl(fp);
             vizLink(fp);
         }
+
+
+        bool And:: isUnivocal() const noexcept
+        {
+            for(const Pattern *p=patterns.head;p;p=p->next)
+            {
+                if(p->isMultiple()) return false;
+            }
+            return true;
+        }
     }
 
 }

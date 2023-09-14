@@ -77,6 +77,11 @@ namespace Yttrium
             fp << ']';
             Endl(fp);
         }
+
+        bool Range:: isUnivocal() const noexcept
+        {
+            return lower>=upper;
+        }
     }
 
 }

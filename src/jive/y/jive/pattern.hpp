@@ -45,15 +45,16 @@ namespace Yttrium
              - token must be left empty on failure
              */
             //__________________________________________________________________
-            virtual bool      takes(Source &)            = 0;
-            virtual void      query(FirstChars &)  const = 0;             //!< query first chars
-            virtual Pattern * clone()              const = 0;             //!< perform deep copy
-            virtual void      reset()           noexcept = 0;             //!< reset content
-            virtual bool      isFragile() const noexcept = 0;             //!< accept empty token
-            bool              isRegular() const noexcept;                 //!< !isFragile()
+            virtual bool      takes(Source &)                           = 0;
+            virtual void      query(FirstChars &)        const          = 0; //!< query first chars
+            virtual Pattern * clone()                    const          = 0; //!< perform deep copy
+            virtual void      reset()                          noexcept = 0; //!< reset content
+            virtual bool      isUnivocal()               const noexcept = 0; //!< only one possible token can be accepted
+            bool              isMultiple()               const noexcept;     //!< multiple tokens can match the pattern
+            virtual bool      isFragile()                const noexcept = 0; //!< accept empty token
+            bool              isRegular()                const noexcept;     //!< !isFragile()
             virtual bool      isEqualTo(const Pattern &) const noexcept = 0; //!< check equality
             virtual void      viz(OutputStream &fp)      const          = 0; //!< output visual
-            
             //__________________________________________________________________
             //
             //! conversion

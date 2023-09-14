@@ -119,6 +119,11 @@ namespace Yttrium
             return p.yield();
         }
 
+        bool None:: isUnivocal() const noexcept
+        {
+            return false;
+        }
+
     }
 
 }

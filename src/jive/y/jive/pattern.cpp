@@ -43,6 +43,13 @@ namespace Yttrium
             return ! isFragile();
         }
 
+        bool Pattern:: isMultiple() const noexcept
+        {
+            return ! isUnivocal();
+        }
+
+
+
         bool operator==(const Pattern &lhs, const Pattern &rhs) noexcept
         {
             return lhs.isEqualTo(rhs);

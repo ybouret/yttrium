@@ -77,6 +77,11 @@ namespace Yttrium
             vizLink(fp);
         }
 
+        bool Optional:: isUnivocal() const noexcept
+        {
+            return motif->isUnivocal();
+        }
+
     }
 
 }

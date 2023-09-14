@@ -112,6 +112,11 @@ namespace Yttrium
             vizLink(fp);
         }
 
+
+        bool Counting:: isUnivocal() const noexcept
+        {
+            return minCount == maxCount && motif->isUnivocal();
+        }
     }
 
 }

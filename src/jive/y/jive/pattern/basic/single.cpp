@@ -74,6 +74,11 @@ namespace Yttrium
             Endl(fp);
         }
 
+        bool Single:: isUnivocal() const noexcept
+        {
+            return true;
+        }
+
     }
 
 }

@@ -52,11 +52,12 @@ namespace Yttrium
 
             //! checking isFragile
             /**
-             - isFragile if one of the patterns is fragile
+             - isFragile
              */
-            virtual bool     isFragile() const noexcept;
+            virtual bool     isFragile() const noexcept; //!< if one of the patterns is fragile
             virtual bool     isEqualTo(const Pattern &) const noexcept;
             virtual void     viz(OutputStream &fp)      const;
+            virtual bool     isUnivocal() const noexcept; //!< iff only one univocal pattern
 
         private:
             Y_DISABLE_ASSIGN(Or);

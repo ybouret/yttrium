@@ -52,6 +52,7 @@ namespace Yttrium
             virtual size_t   serialize(OutputStream&) const;  //!< uuid+guest
             virtual bool     isEqualTo(const Pattern &) const noexcept;
             virtual void     viz(OutputStream &fp)      const;
+            virtual bool     isUnivocal()               const noexcept; //!< transfer to guest
 
         private:
             Y_DISABLE_ASSIGN(Optional);

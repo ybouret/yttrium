@@ -106,6 +106,11 @@ namespace Yttrium
             vizLink(fp);
         }
 
+        bool Or:: isUnivocal() const noexcept
+        {
+            return (1==patterns.size) && (patterns.head->isUnivocal());
+        }
+
     }
 
 }
