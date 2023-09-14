@@ -26,7 +26,15 @@ namespace Yttrium
             explicit Indices(const size_t n); //!< setup
             virtual ~Indices() noexcept;      //!< cleanup
             Indices(const Indices &);         //!< copy
-            
+
+            template <typename SOURCE> inline
+            void record(SOURCE &source) {
+                Indices &self = *this;
+                for(size_t j=source.size();j>0;--j)
+                { if(0!=source[j]) self |= j; }
+            }
+
+
         private:
             Y_DISABLE_ASSIGN(Indices);
         };

@@ -22,6 +22,44 @@ using namespace Yttrium;
 #define OxH  8
 #define Ox   9
 
+namespace
+{
+    class Topo : public Object, public CxxArray<int,Memory::Pooled>
+    {
+    public:
+        typedef CxxArray<int,Memory::Pooled> TopoArray;
+        typedef CxxListOf<Topo>              List;
+
+        explicit Topo(const Readable<apz> &nu) :
+        TopoArray(nu.size()),
+        next(0),
+        prev(0)
+        {
+            for(size_t i=size();i>0;--i)
+            {
+                (*this)[i] = nu[i].cast<int>(0);
+            }
+        }
+
+        virtual ~Topo() noexcept
+        {
+
+        }
+
+        Topo * next;
+        Topo * prev;
+
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(Topo);
+    };
+
+
+
+}
+
+
+
 Y_UTEST(woven_chemsys)
 {
     //Random::Rand   ran;
@@ -119,6 +157,77 @@ Y_UTEST(woven_chemsys)
     std::cerr << "#=" << zeroing.size << std::endl;
 
     std::cerr << "Nu=" << Nu << std::endl;
+
+    // creating new reaction
+    Topo::List topoList;
+
+    CxxArray<apz,Memory::Pooled> coeff(M);
+    Matrix<apz>                  apNuT(CopyOf,NuT);
+    WOVEn::Indices               incoming(M);
+    WOVEn::Indices               outgoing(M);
+
+    for(const WOVEn::IntegerArray *arr=zeroing.head;arr;arr=arr->next)
+    {
+        const Readable<const apz> &weight = *arr;
+        apNuT.mul(coeff,weight);
+        std::cerr << "coeff: " << coeff << std::endl;
+        AutoPtr<Topo> topo = new Topo(coeff);
+
+        // look for duplicate
+        {
+            bool          isOk = true;
+            for(const Topo *node=topoList.head;node;node=node->next)
+            {
+                if(*topo==*node)
+                {
+                    isOk = false;
+                    break;
+                }
+            }
+
+            if(!isOk )
+            {
+                // shouldn't happen ?
+                std::cerr << "*** duplicate" << std::endl;
+                continue;
+            }
+        }
+
+        // look for meaningful combination
+        incoming.free();
+        for(size_t i=N;i>0;--i)
+        {
+            if( 0 == weight[i] ) continue;
+            incoming.record(Nu[i]);
+        }
+
+        outgoing.free();
+        outgoing.record(coeff);
+        std::cerr << "-- incoming: " << incoming << std::endl;
+        std::cerr << "-- outgoing: " << outgoing << std::endl;
+
+        const size_t outgoingSize = outgoing.size();
+        const size_t incomingSize = incoming.size();
+
+        switch( Sign::Of(outgoingSize,incomingSize) )
+        {
+            case Negative:
+                break;
+
+            case __Zero__:
+                if(outgoing!=incoming) throw Exception("same size but different content!");
+                continue;
+
+            case Positive:
+                throw Exception("More Outgoing Than Incoming");
+        }
+        incoming ^= outgoing;
+
+        std::cerr << "-- missing: " << incoming << std::endl;
+
+
+    }
+
 
 }
 Y_UDONE()

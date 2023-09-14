@@ -1,6 +1,7 @@
 #include "y/apex/integer.hpp"
 #include "y/stream/io/chars.hpp"
 #include "y/random/bits.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -157,6 +158,14 @@ namespace Yttrium
                     break;
             }
             return Integer(-1);
+        }
+
+        void Integer:: ThrowOverflow(const char *which)
+        {
+            if(which)
+                throw Specific::Exception(CallSign,"during cast to '%s'", which);
+            else
+                throw Specific::Exception(CallSign,"during cast");
         }
 
     }

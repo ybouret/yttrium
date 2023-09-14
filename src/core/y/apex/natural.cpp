@@ -115,7 +115,7 @@ namespace Yttrium
         void Natural:: ThrowOverflow(const char *which)
         {
             if(which)
-                throw Specific::Exception(CallSign,"during cast to %s", which);
+                throw Specific::Exception(CallSign,"during cast to '%s'", which);
             else
                 throw Specific::Exception(CallSign,"during cast");
         }

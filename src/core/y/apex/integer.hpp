@@ -64,11 +64,11 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void xch(Integer &)     noexcept;  //!< no-throw exchange
-            void appendTo(IO::Chars &) const;  //!< append to chars
-            Integer incr()             const; //!< increase by 1
-            Integer decr()             const; //!< decrease by 1
-            void    zset()          noexcept; //!< setting to zero, keeping memory, no exception
+            void    xch(Integer &)     noexcept; //!< no-throw exchange
+            void    appendTo(IO::Chars &) const; //!< append to chars
+            Integer incr()                const; //!< increase by 1
+            Integer decr()                const; //!< decrease by 1
+            void    zset()             noexcept; //!< setting to zero, keeping memory, no exception
 
             //__________________________________________________________________
             //
@@ -192,13 +192,48 @@ inline friend bool operator OP (const Natural &lhs, const Integer &rhs ) noexcep
             //__________________________________________________________________
             //
             //
+            // I/O
+            //
+            //__________________________________________________________________
+            //! no-throw try to cast to an integer type
+            template <typename T> inline
+            bool tryCast(T &target) const noexcept
+            {
+                //static const size_t maxBits = sizeof(T)*8 - (IsSigned<T>::Value ? 1 : 0);
+                //if(bits()>maxBits) return false;
+                //target = static_cast<T>( u64() );
+                //return true;
+                switch(s)
+                {
+                    case __Zero__: target=0; return true;
+                    case Positive: return n.tryCast(target);
+                    case Negative: break;
+                }
+                if(!n.tryCast(target)) return false;
+                target = -target;
+                return true;
+            }
+
+            //! cast to an integer type, throw on overflow
+            template <typename T> inline
+            T cast(const char *which) const
+            {
+                T target(0);
+                if(!tryCast(target)) ThrowOverflow(which);
+                return target;
+            }
+
+            //__________________________________________________________________
+            //
+            //
             // Members
             //
             //__________________________________________________________________
             const SignType s; //!< sign
             const Natural  n; //!< unsigned value
 
-
+        private:
+            static void ThrowOverflow(const char *which);
 
         };
     }
