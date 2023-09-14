@@ -21,7 +21,7 @@ namespace Yttrium
         class Indices : public OrderedVector<size_t,IncreasingComparator,Memory::Pooled>
         {
         public:
-            typedef OrderedVector<size_t,IncreasingComparator,Memory::Pooled> BaseType; //!< alias
+            typedef Yttrium::OrderedVector<size_t,IncreasingComparator,Memory::Pooled> BaseType; //!< alias
 
             explicit Indices(const size_t n); //!< setup
             virtual ~Indices() noexcept;      //!< cleanup
