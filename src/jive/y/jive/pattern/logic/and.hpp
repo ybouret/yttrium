@@ -47,13 +47,13 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            virtual Pattern *clone() const;
             virtual bool     takes(Source &);
-            virtual void     query(FirstChars &) const;    //! first chars up to first regular
-            virtual bool     isFragile() const noexcept;   //!<iff is empty or all patterns are fragile
-            virtual bool     isEqualTo(const Pattern &) const noexcept;
+            virtual Pattern *clone()                    const;
+            virtual void     query(FirstChars &)        const;          //!< first chars up to first regular
             virtual void     viz(OutputStream &fp)      const;
-            virtual bool     isUnivocal() const noexcept; //!< iff all patterns are univocal
+            virtual bool     isFragile()                const noexcept; //!<iff is empty or all patterns are fragile
+            virtual bool     isEqualTo(const Pattern &) const noexcept;
+            virtual bool     isUnivocal()               const noexcept; //!< iff all patterns are univocal
             
         private:
             Y_DISABLE_ASSIGN(And);

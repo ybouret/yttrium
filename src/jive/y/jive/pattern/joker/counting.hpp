@@ -46,14 +46,14 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            virtual Pattern *clone() const;                   //!< clone
-            virtual bool     takes(Source &);                 //!< try guest, return true
-            virtual bool     isFragile() const noexcept;      //!< if minCount <= 0
-            virtual size_t   serialize(OutputStream&) const;  //!< uuid+guest
-            virtual bool     isEqualTo(const Pattern &) const noexcept;
+            virtual bool     takes(Source &);                           //!< try guest, return true
+            virtual Pattern *clone()                    const;          //!< clone
+            virtual size_t   serialize(OutputStream&)   const;          //!< uuid+guest
             virtual void     viz(OutputStream &fp)      const;
-            virtual bool     isUnivocal() const noexcept; //!< iff min==max and motif is univocal
-            
+            virtual bool     isUnivocal()               const noexcept; //!< iff min==max and motif is univocal
+            virtual bool     isFragile()                const noexcept; //!< if minCount <= 0
+            virtual bool     isEqualTo(const Pattern &) const noexcept;
+
             //__________________________________________________________________
             //
             //

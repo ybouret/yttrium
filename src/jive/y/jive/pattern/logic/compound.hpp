@@ -36,9 +36,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
             virtual void   reset()                noexcept;  //!< recursive reset
+            void           noDuplicate()          noexcept;  //!< remove duplicate patterns
             virtual size_t serialize(OutputStream &) const;  //!< uuid+num patterns+patterns
             void           retrieve(InputStream &);          //!< load num patterns+patterns
-            void           noDuplicate()          noexcept;  //!< remove duplicate patterns
 
             Compound & operator<<( const Pattern & ); //!< append clone of argument
             Compound & operator<<( Pattern *);        //!< append argument

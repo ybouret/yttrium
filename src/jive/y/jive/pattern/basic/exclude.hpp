@@ -39,16 +39,16 @@ namespace Yttrium
             //
             // Interface
             //__________________________________________________________________
-            virtual Pattern *clone() const;
             virtual bool     takes(Source &);
-            virtual void     query(FirstChars &) const;
-            virtual void     reset() noexcept;
-            virtual size_t   serialize(OutputStream&) const;
-            virtual bool     isFragile() const noexcept; //!< false
-            virtual bool     isEqualTo(const Pattern &) const noexcept;
+            virtual Pattern *clone()                    const;
+            virtual void     query(FirstChars &)        const;
+            virtual size_t   serialize(OutputStream&)   const;
             virtual void     viz(OutputStream &fp)      const;
-            virtual bool     isUnivocal() const noexcept;
-            
+            virtual bool     isFragile()                const noexcept; //!< false
+            virtual bool     isEqualTo(const Pattern &) const noexcept;
+            virtual bool     isUnivocal()               const noexcept;
+            virtual void     reset()                          noexcept;
+
             //__________________________________________________________________
             //
             // Members
