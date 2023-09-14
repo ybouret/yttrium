@@ -5,6 +5,7 @@
 #include "y/container/cxx-array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/mkl/api.hpp"
+#include "y/check/crc32.hpp"
 
 namespace Yttrium
 {
@@ -58,7 +59,7 @@ namespace Yttrium
                 return true;
                 
             }
-
+            
 
 
             const size_t     size;

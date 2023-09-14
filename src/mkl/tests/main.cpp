@@ -1,6 +1,3 @@
-
-
-
 #include "y/utest/driver.hpp"
 #include "y/config/compiler.h"
 
@@ -18,6 +15,7 @@ Y_UTEST_DECL(32)
     Y_UTEST(algebra_lu);
     Y_UTEST(algebra_ortho_space);
     Y_UTEST(algebra_tridiag);
+    Y_UTEST(algebra_cyclic);
 
     Y_UTEST(drvs1D);
     Y_UTEST(drvsND);

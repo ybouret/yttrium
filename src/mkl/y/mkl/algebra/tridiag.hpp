@@ -39,6 +39,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            uint32_t crc32() const noexcept;
             
             //! try to solve this * u = r
             bool  solve(Writable<T> &u, const Writable<T> &r);

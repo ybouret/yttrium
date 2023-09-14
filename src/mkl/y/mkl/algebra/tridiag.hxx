@@ -49,3 +49,13 @@ bool  TriDiag<real_t>:: solve(Writable<real_t> &u, const Writable<real_t> &r, co
     assert(0!=code);
     return code->solve(u,r,B);
 }
+
+template <>
+uint32_t TriDiag<real_t>:: crc32() const noexcept
+{
+    uint32_t hash = uint32_t(size);
+    for(size_t i=size;i>1;--i) CRC32::Run(hash, &a[i], sizeof(real_t) );
+    for(size_t i=1;i<size;++i) CRC32::Run(hash, &c[i], sizeof(real_t) );
+    for(size_t i=size;i>0;--i) CRC32::Run(hash, &b[i], sizeof(real_t) );
+    return hash;
+}
