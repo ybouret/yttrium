@@ -158,7 +158,7 @@ Y_UTEST(woven_chemsys)
 
     std::cerr << "Nu=" << Nu << std::endl;
 
-    // creating new reaction
+    // creating new reactions
     Topo::List topoList;
 
     CxxArray<apz,Memory::Pooled> coeff(M);
@@ -170,7 +170,8 @@ Y_UTEST(woven_chemsys)
     {
         const Readable<const apz> &weight = *arr;
         apNuT.mul(coeff,weight);
-        std::cerr << "coeff: " << coeff << std::endl;
+        std::cerr << "weight = " << weight << std::endl;
+        std::cerr << "coeff  = " << coeff  << std::endl;
         AutoPtr<Topo> topo = new Topo(coeff);
 
         // look for duplicate
