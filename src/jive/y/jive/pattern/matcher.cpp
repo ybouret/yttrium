@@ -9,43 +9,48 @@ namespace Yttrium
     namespace Jive
     {
         
+
         Matcher:: ~Matcher() noexcept
         {
         }
 
         void Matcher:: initialize()
         {
-            motif->query( Coerce(fc) );
-
+            motif->query( Coerce(firstChars) );
         }
 
         Matcher:: Matcher(Pattern *p) noexcept :
-        motif(p), fc()
+        motif(p), firstChars()
         {
             initialize();
         }
 
         Matcher:: Matcher(const char *rx, const Dictionary *dict) :
-        motif( RegExp::Compile(rx,dict) ), fc()
+        motif( RegExp::Compile(rx,dict) ), firstChars()
         {
             initialize();
         }
 
         Matcher:: Matcher(const String &rx, const Dictionary *dict) :
-        motif( RegExp::Compile(rx,dict) ), fc()
+        motif( RegExp::Compile(rx,dict) ), firstChars()
         {
             initialize();
         }
 
         Matcher:: Matcher(const Matcher &other) :
         motif( other.motif->clone() ),
-        fc( other.fc )
+        firstChars( other.firstChars )
         {
+        }
+
+        void Matcher:: cleanUp() noexcept
+        {
+            Coerce(*motif).reset();
         }
 
         Token * Matcher:: exactly(Source &source)
         {
-            Pattern &self = *motif;
+            Pattern &self = Coerce(*motif);
             self.reset();
             assert(0==self.size);
 

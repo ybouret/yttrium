@@ -45,7 +45,9 @@ namespace Yttrium
             void  newLine()   noexcept; //!< propagate newLine
             bool  guess(Token &token);  //!< guess next blank-separated token
             bool  ready();              //!< check if char is available
-            
+            void  skip() noexcept;      //!< skip next char if ready!
+
+
             //! read-only inner module access
             const Module * operator->() const noexcept;
 

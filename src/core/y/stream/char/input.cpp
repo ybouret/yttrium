@@ -11,11 +11,10 @@ namespace Yttrium
 
     }
 
-    InputCharStream:: InputCharStream(IO::Chars &chars) noexcept:
+    InputCharStream:: InputCharStream(const IO::Chars &chars):
     InputStream(),
-    cache()
+    cache(chars)
     {
-        cache.swapWith(chars);
     }
 
 

@@ -1,6 +1,7 @@
 #include "y/jive/source.hpp"
 #include "y/system/exception.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/type/nullify.hpp"
 #include <cstring>
 
 namespace Yttrium
@@ -33,6 +34,11 @@ namespace Yttrium
                 return true;
             }
 
+            inline void skip()
+            {
+                
+            }
+
 
             AutoPtr<Module> handle;
             Token           cache;
@@ -56,8 +62,7 @@ namespace Yttrium
         Source:: ~Source() noexcept
         {
             assert(0!=code);
-            delete code;
-            code = 0;
+            Nullify(code);
         }
 
 
@@ -84,6 +89,11 @@ namespace Yttrium
         {
             assert(0!=code);
             return code->ready();
+        }
+
+        void Source:: skip() noexcept
+        {
+
         }
 
 

@@ -67,28 +67,35 @@ namespace Yttrium
             }
 
             //! open user's buffer
-            template <typename DATANAME>
-            static Module * OpenData(DATANAME &dataName, const Memory::ReadOnlyBuffer &buff)
+            template <typename DATANAME> static inline
+             Module * OpenData(DATANAME &dataName, const Memory::ReadOnlyBuffer &buff)
             {
                 const Context ctx(dataName,AsTag);
                 return OpenData_(ctx,buff.ro_addr(),buff.measure());
             }
 
             //! open text
-            template <typename DATANAME>
-            static Module *OpenData(DATANAME &dataName, const char *text)
+            template <typename DATANAME> static inline
+            Module *OpenData(DATANAME &dataName, const char *text)
             {
                 const Context ctx(dataName,AsTag);
                 return OpenData_(ctx,text);
             }
 
             //! open line
-            template <typename DATANAME>
-            static Module *OpenData(DATANAME &dataName, IO::Chars &line)
+            template <typename DATANAME> static inline
+            Module *OpenData(DATANAME &dataName, const IO::Chars &line)
             {
                 const Context ctx(dataName,AsTag);
                 return OpenData_(ctx,line);
             }
+
+            template <typename FILENAME> static inline
+            Module * Open(FILENAME &fileName) { return OpenFile(fileName); }
+
+            template <typename DATANAME, typename DATA>
+            Module * Open(DATANAME &dataName, DATA &data) { return OpenData(dataName,data); }
+
 
 
         private:
@@ -96,7 +103,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Module);
             static Module * OpenData_(const Context &, const void *addr, const size_t size);
             static Module * OpenData_(const Context &, const char *text);
-            static Module * OpenData_(const Context &, IO::Chars &line);
+            static Module * OpenData_(const Context &, const IO::Chars &line);
 
         };
 

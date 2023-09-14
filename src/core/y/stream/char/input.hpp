@@ -32,8 +32,8 @@ namespace Yttrium
         // C++
         //
         //______________________________________________________________________
-        explicit InputCharStream(IO::Chars &chars) noexcept; //!< setup by stealing chars
-        virtual ~InputCharStream()                 noexcept; //!< cleanup
+        explicit InputCharStream(const IO::Chars &chars); //!< setup by copy
+        virtual ~InputCharStream()              noexcept; //!< cleanup
 
         //______________________________________________________________________
         //

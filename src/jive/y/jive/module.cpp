@@ -100,7 +100,7 @@ namespace Yttrium
 {
     namespace Jive
     {
-        Module * Module:: OpenData_(const Context &ctx, IO::Chars &line)
+        Module * Module:: OpenData_(const Context &ctx, const IO::Chars &line)
         {
             const Input inp = new InputCharStream(line);
             return new Module(ctx,inp);
