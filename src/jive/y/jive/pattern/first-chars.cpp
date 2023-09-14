@@ -18,11 +18,26 @@ namespace Yttrium
             Coerce(field) = 0;
         }
 
-        FirstChars:: FirstChars() :
-        field( static_cast<uint8_t *>(Object::operator new(Bytes)) )
+
+        static inline uint8_t *GetField()
         {
-            assert( Memory::OutOfReach::Are0(field,Bytes) );
+            static const size_t bytes = FirstChars::Bytes;
+            uint8_t *field = static_cast<uint8_t *>(Object::operator new(bytes));
+            assert( Memory::OutOfReach::Are0(field,bytes) );
+            return field;
         }
+
+        FirstChars:: FirstChars() :
+        field( GetField() )
+        {
+        }
+
+        FirstChars:: FirstChars(const FirstChars &fc) :
+        field( GetField() )
+        {
+            memcpy(field,fc.field,Bytes);
+        }
+
 
         static const uint8_t on1[8] =
         {

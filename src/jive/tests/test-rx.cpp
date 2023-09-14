@@ -22,7 +22,8 @@ Y_UTEST(rx)
     {
         std::cerr << "-- compiling '" << argv[1] << "'" << std::endl;
         AutoPtr<Jive::Pattern> P = Jive::RegExp::Compile(argv[1],&dict);
-        std::cerr << "-- " << (P->isFragile() ? "FRAGILE" : "REGULAR" ) << std::endl;
+        std::cerr << "-- " << (P->isFragile()  ? "FRAGILE" : "REGULAR" ) << std::endl;
+        std::cerr << "-- " << (P->isUnivocal() ? "UNIVOCAL" : "MULTIPLE") << std::endl;
         std::cerr << "-- saving..." << std::endl;
         P->toBinary("rx.dat");
         std::cerr << "-- rendering..." << std::endl;

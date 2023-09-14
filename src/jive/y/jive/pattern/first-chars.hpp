@@ -41,6 +41,7 @@ namespace Yttrium
             //__________________________________________________________________
             explicit FirstChars();          //!< setup, all false
             virtual ~FirstChars() noexcept; //!< cleanup
+            FirstChars(const FirstChars &); //!< copy
             Y_OSTREAM_PROTO(FirstChars);    //!< display
 
             //__________________________________________________________________
@@ -69,7 +70,7 @@ namespace Yttrium
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(FirstChars);
+            Y_DISABLE_ASSIGN(FirstChars);
             uint8_t * const field;
         };
     }
