@@ -27,6 +27,7 @@ namespace Yttrium
             virtual ~Indices() noexcept;      //!< cleanup
             Indices(const Indices &);         //!< copy
 
+            //! record all indices corresponding to not-zero values of source
             template <typename SOURCE> inline
             void record(SOURCE &source) {
                 Indices &self = *this;

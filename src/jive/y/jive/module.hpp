@@ -74,11 +74,30 @@ namespace Yttrium
                 return OpenData_(ctx,buff.ro_addr(),buff.measure());
             }
 
+            //! open text
+            template <typename DATANAME>
+            static Module *OpenData(DATANAME &dataName, const char *text)
+            {
+                const Context ctx(dataName,AsTag);
+                return OpenData_(ctx,text);
+            }
+
+            //! open line
+            template <typename DATANAME>
+            static Module *OpenData(DATANAME &dataName, IO::Chars &line)
+            {
+                const Context ctx(dataName,AsTag);
+                return OpenData_(ctx,line);
+            }
+
+
         private:
             Input input;
             Y_DISABLE_COPY_AND_ASSIGN(Module);
             static Module * OpenData_(const Context &, const void *addr, const size_t size);
-            
+            static Module * OpenData_(const Context &, const char *text);
+            static Module * OpenData_(const Context &, IO::Chars &line);
+
         };
 
     }

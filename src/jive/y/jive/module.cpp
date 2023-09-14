@@ -71,15 +71,38 @@ namespace Yttrium
 }
 
 #include "y/stream/data/input.hpp"
+#include "y/text/ops.hpp"
 
 
 namespace Yttrium
 {
     namespace Jive
     {
-        Module * OpenData_(const Context &ctx, const void *addr, const size_t size)
+        Module * Module:: OpenData_(const Context &ctx, const void *addr, const size_t size)
         {
             const Input   inp = new InputDataStream(addr,size);
+            return new Module(ctx,inp);
+        }
+
+        Module * Module:: OpenData_(const Context &ctx, const char *text)
+        {
+            const Input   inp = new InputDataStream(text,StringLength(text));
+            return new Module(ctx,inp);
+        }
+    }
+
+}
+
+#include "y/stream/char/input.hpp"
+
+
+namespace Yttrium
+{
+    namespace Jive
+    {
+        Module * Module:: OpenData_(const Context &ctx, IO::Chars &line)
+        {
+            const Input inp = new InputCharStream(line);
             return new Module(ctx,inp);
         }
 

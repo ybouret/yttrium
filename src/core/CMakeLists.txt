@@ -24,6 +24,7 @@ stream/data
 stream/gzip
 stream/bzip2
 stream/hash
+stream/char
 text
 text/ascii
 data
