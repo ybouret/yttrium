@@ -27,8 +27,8 @@ namespace
     class Topo : public Object, public CxxArray<int,Memory::Pooled>
     {
     public:
-        typedef CxxArray<int,Memory::Pooled> TopoArray;
-        typedef CxxListOf<Topo>              List;
+        typedef Yttrium::CxxArray<int,Memory::Pooled> TopoArray;
+        typedef CxxListOf<Topo>                       List;
 
         explicit Topo(const Readable<apz> &nu) :
         TopoArray(nu.size()),
