@@ -80,7 +80,7 @@ Y_UTEST(woven_chemsys)
     {
         // compute ortho-space
         Matrix<apz> NuOrtho;
-        MKL::OrthoSpace::Build(NuOrtho,CopyOf,Nu);
+        MKL::OrthoSpace::Make(NuOrtho,Nu);
         std::cerr << "NuOrtho=" << NuOrtho << std::endl;
 
         // compute conservations

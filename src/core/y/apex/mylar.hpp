@@ -275,7 +275,12 @@ namespace Yttrium
             }
 
 
-
+            //__________________________________________________________________
+            //
+            //
+            //! count number of non-zero elements
+            //
+            //__________________________________________________________________
             template <typename SOURCE>
             static inline size_t CountNonZero(SOURCE &source)
             {

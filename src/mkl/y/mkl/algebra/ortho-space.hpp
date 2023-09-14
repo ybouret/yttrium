@@ -23,10 +23,11 @@ namespace Yttrium
              */
             static bool Build(Matrix<apz> &Q, const Matrix<apz> &P);
 
+            //! make from any compatible matrix P
             template <typename T>
-            static bool Build(Matrix<apz> &Q, const CopyOf_ &_, const Matrix<T> &P)
+            static bool Make(Matrix<apz> &Q,const Matrix<T> &P)
             {
-                Matrix<apz> PP(_,P);
+                Matrix<apz> PP(CopyOf,P);
                 return Build(Q,PP);
             }
 
