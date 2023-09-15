@@ -24,6 +24,26 @@ Y_UTEST(match)
                 const String uuid = fileName + FormatString(":%u",iline);
                 std::cerr << "-- '" << line << "'" << std::endl;
                 {
+
+                    {
+                        Jive::Token *token = match.exactly(uuid,line);
+                        if(token)
+                        {
+                            std::cerr << "-- exactly: " << *token << std::endl;
+                        }
+                    }
+
+                    {
+                        Jive::Token *token = match.somehow(uuid,line);
+                        if(token)
+                        {
+                            std::cerr << "-- somehow: " << *token << std::endl;
+                        }
+                    }
+
+
+
+#if 0
                     Jive::Source jsrc( Jive::Module::OpenData(uuid,line) );
                     {
                         Jive::Token *token = match.exactly(jsrc);
@@ -39,7 +59,7 @@ Y_UTEST(match)
                             std::cerr << "somehow: " << *token << std::endl;
                         }
                     }
-
+#endif
 
 
                 }

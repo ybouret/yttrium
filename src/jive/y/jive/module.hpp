@@ -96,7 +96,7 @@ namespace Yttrium
 
 
             //! open data
-            template <typename DATANAME, typename DATA>
+            template <typename DATANAME, typename DATA> static inline
             Module * Open(DATANAME &dataName, DATA &data) { return OpenData(dataName,data); }
 
 

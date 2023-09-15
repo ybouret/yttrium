@@ -47,6 +47,23 @@ namespace Yttrium
             Token * exactly(Source &source); //!< source must match exactly the pattern
             Token * somehow(Source &source); //!< source must contains the pattern
 
+
+            template <typename DATANAME, typename DATA>
+            Token *exactly(DATANAME &dataName, DATA &data)
+            {
+                Source source( Module::Open(dataName,data) );
+                return exactly(source);
+            }
+
+            template <typename DATANAME, typename DATA>
+            Token *somehow(DATANAME &dataName, DATA &data)
+            {
+                Source source( Module::Open(dataName,data) );
+                return exactly(source);
+            }
+
+            
+
             //__________________________________________________________________
             //
             //
