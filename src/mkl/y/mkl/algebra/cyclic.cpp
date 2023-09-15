@@ -38,16 +38,16 @@ namespace Yttrium
 
             bool solve(Writable<T>       &x,
                        const Readable<T> &r,
-                       TriDiag<T>        &td,
-                       const T           &alpha,
-                       const T           &beta)
+                       TriDiag<T>        &td)
             {
                 assert(size==x.size());
                 assert(size==r.size());
                 assert(size==td.size);
 
-                const size_t       n = size;
-                const Readable<T> &b = td.b;
+                const size_t       n     = size;
+                const Readable<T> &b     = td.b;
+                const T &          alpha = td.c[n];
+                const T &          beta  = td.a[1];
 
                 T gamma = -b[1];
                 bb[1]   = b[1]-gamma;

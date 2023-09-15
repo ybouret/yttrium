@@ -35,5 +35,5 @@ template <>
 bool  Cyclic<real_t>:: solve(Writable<real_t> &u, const Readable<real_t> &r)
 {
     assert(0!=code);
-    return code->solve(u,r,*this,alpha,beta);
+    return code->solve(u,r,*this);
 }

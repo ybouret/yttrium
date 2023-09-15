@@ -89,7 +89,7 @@ Y_UTEST(algebra_cyclic)
     TestCyclic< Complex< XReal<long double> > >(ran);
 
 
-    TestCyclic<apq>(ran,5);
+    TestCyclic<apq>(ran,6);
 
 
 }
