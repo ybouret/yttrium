@@ -27,7 +27,11 @@ Y_UTEST(io_xmlog)
         XMLog::Markup sub(xml,"toto",false);
         *xml << " value='" << 1 << "'";
         sub.endl();
+    }
 
+    {
+        Y_XMLSUB_OPT(xml, "level3", " value='3'");
+        
     }
 
 }

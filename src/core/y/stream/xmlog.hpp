@@ -116,11 +116,8 @@ namespace Yttrium
             xml_(xml), uid_( xml.verbose ? new String(uid) : 0 )
             { incr(full); }
 
-            void endl() const
-            {
-                if(xml_.verbose) *xml_ << RANGLE << ENDL;
-            }
-
+            void endl();
+            
             //__________________________________________________________________
             //
             //! cleanup
@@ -135,16 +132,27 @@ namespace Yttrium
         };
     };
 
+    //! output some optional message
 #define Y_XMLOG(XML,MSG) do { if(XML.verbose) do { XML() << MSG << std::endl; } while(false); } while(false)
 
     //! create the xml sub name
 #define Y_XML_SUB__(X,Y) X##Y
 
     //! instantiate the xml sub name
-#define Y_XML_SUB_(HOST,ID,NAME) volatile Yttrium::XMLog::Markup Y_XML_SUB__(__xml,ID)(HOST,NAME)
+#define Y_XML_SUB_(HOST,ID,NAME,FLAG) Yttrium::XMLog::Markup Y_XML_SUB__(__xml,ID)(HOST,NAME,FLAG)
 
     //! use a local xml sub-section
-#define Y_XMLSUB(HOST,NAME) Y_XML_SUB_(HOST,__LINE__,NAME)
+#define Y_XMLSUB(HOST,NAME) Y_XML_SUB_(HOST,__LINE__,NAME,true)
+
+    //! end a local xml sub-section header
+#define Y_XMLSUB_END(ID) Y_XML_SUB__(__xml,ID).endl()
+
+    //! make a xml sub-section with options
+#define Y_XMLSUB_OPT(HOST,NAME,MSG)   \
+Y_XML_SUB_(HOST,__LINE__,NAME,false); \
+if(HOST.verbose)  { *HOST << MSG;  }; \
+Y_XMLSUB_END(__LINE__)
+
 
 }
 

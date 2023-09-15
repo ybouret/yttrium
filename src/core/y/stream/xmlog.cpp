@@ -37,4 +37,9 @@ namespace Yttrium
         xml_.leave(uid_);
         Coerce(xml_.deep)--;
     }
+
+    void XMLog:: Markup:: endl()
+    {
+        if(xml_.verbose) *xml_ << RANGLE << ENDL;
+    }
 }
