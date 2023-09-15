@@ -1,5 +1,5 @@
 
-#include "y/container/cxx-capacity.hpp"
+#include "y/container/cxx/capacity.hpp"
 
 
 namespace Yttrium

@@ -4,7 +4,7 @@
 #include "y/random/shuffle.hpp"
 #include "y/mkl/v3d.hpp"
 #include "y/comparison.hpp"
-#include "y/container/cxx-array.hpp"
+#include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 #include "../main.hpp"
 

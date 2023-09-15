@@ -1,7 +1,7 @@
 #include "y/ordered/vector.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/shuffle.hpp"
-#include "y/container/cxx-array.hpp"
+#include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/container/iterator/display-all.hpp"
 #include "../main.hpp"

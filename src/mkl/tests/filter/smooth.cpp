@@ -4,7 +4,7 @@
 #include "y/utest/run.hpp"
 #include "y/stream/libc/output.hpp"
 #include "y/mkl/algebra/lu.hpp"
-#include "y/container/cxx-array.hpp"
+#include "y/container/cxx/array.hpp"
 #include "y/type/nullify.hpp"
 #include "y/calculus/ipower.hpp"
 

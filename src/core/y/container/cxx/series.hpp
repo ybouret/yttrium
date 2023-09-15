@@ -3,12 +3,13 @@
 #ifndef Y_Cxx_Series_Included
 #define Y_Cxx_Series_Included 1
 
-#include "y/container/cxx-capacity.hpp"
+#include "y/container/cxx/capacity.hpp"
 #include "y/memory/solitary/workspace.hpp"
 #include "y/container/writable.hpp"
 #include "y/sequence/interface.hpp"
 #include "y/container/recyclable.hpp"
 #include "y/container/iterator/writable-contiguous.hpp"
+#include "y/memory/allocator/pooled.hpp"
 
 namespace Yttrium
 {
@@ -39,7 +40,7 @@ namespace Yttrium
     //
     //
     //__________________________________________________________________________
-    template <typename T, typename ALLOCATOR, CxxCapacity CAPA = CxxRequiredCapacity >
+    template <typename T, typename ALLOCATOR = Memory::Pooled, CxxCapacity CAPA = CxxRequiredCapacity >
     class CxxSeries :
     public Memory::Wad<T,ALLOCATOR>,
     public Writable<T>,

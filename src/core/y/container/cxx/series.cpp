@@ -1,5 +1,5 @@
 
-#include "y/container/cxx-series.hpp"
+#include "y/container/cxx/series.hpp"
 
 namespace Yttrium
 {

@@ -4,7 +4,7 @@
 #include "y/mkl/algebra/lu.hpp"
 #include "y/utest/run.hpp"
 #include "../../../core/tests/main.hpp"
-#include "y/container/cxx-array.hpp"
+#include "y/container/cxx/array.hpp"
 #include "y/system/rtti.hpp"
 
 using namespace Yttrium;

@@ -1,6 +1,6 @@
 #include "y/mkl/derivatives/interface.hpp"
 #include "y/utest/run.hpp"
-#include "y/container/cxx-array.hpp"
+#include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 
 #include <cmath>

@@ -1,5 +1,5 @@
 #include "y/counting/c/perm.h"
-#include "y/container/cxx-array.hpp"
+#include "y/container/cxx/array.hpp"
 #include "y/utest/run.hpp"
 #include "y/memory/allocator/pooled.hpp"
 

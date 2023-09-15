@@ -1,7 +1,7 @@
 
 #include "y/mkl/algebra/lu.hpp"
 #include "y/type/utils.hpp"
-#include "y/container/cxx-array.hpp"
+#include "y/container/cxx/array.hpp"
 
 namespace Yttrium
 {

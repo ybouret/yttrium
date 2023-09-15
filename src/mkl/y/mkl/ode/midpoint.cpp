@@ -1,6 +1,6 @@
 
 #include "y/mkl/ode/midpoint.hpp"
-#include "y/container/cxx-array.hpp"
+#include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/mkl/antelope/sum3.hpp"
 #include "y/type/nullify.hpp"

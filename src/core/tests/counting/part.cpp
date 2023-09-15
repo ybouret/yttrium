@@ -1,6 +1,6 @@
 
 #include "y/counting/c/part.h"
-#include "y/container/cxx-array.hpp"
+#include "y/container/cxx/array.hpp"
 #include "y/utest/run.hpp"
 #include "y/memory/allocator/pooled.hpp"
 
@@ -18,7 +18,7 @@ Y_UTEST(counting_part)
     for(size_t n=1;n<=16;++n)
     {
         std::cerr << "n=" << n << std::endl;
-        CxxArray<size_t,Memory::Pooled> arr(n);
+        CxxArray<size_t> arr(n);
         Y_Part_Init(&part,n);
         Y_Part_Boot(&part,arr.legacy());
         size_t count = 0;

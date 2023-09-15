@@ -5,9 +5,8 @@
 #define Y_Apex_Ortho_Vector_Included 1
 
 #include "y/apex/rational.hpp"
-#include "y/container/cxx-array.hpp"
+#include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/pooled.hpp"
-#include "y/memory/allocator/dyadic.hpp"
 
 namespace Yttrium
 {
@@ -22,8 +21,8 @@ namespace Yttrium
             // Definition
             //
             //__________________________________________________________________
-            typedef CxxArray<const apz,Memory::Pooled > VectorType; //!< base type for a vector
-            typedef CxxArray<apq,      Memory::Dyadic>  QArrayType; //!< workspace
+            typedef CxxArray<const apz> VectorType; //!< base type for a vector
+            typedef CxxArray<apq>       QArrayType; //!< workspace
 
 
             //__________________________________________________________________

@@ -2,7 +2,7 @@
 #include "y/mkl/algebra/cyclic.hpp"
 #include "y/object.hpp"
 #include "y/type/nullify.hpp"
-#include "y/container/cxx-array.hpp"
+#include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/mkl/api.hpp"
 #include "y/system/exception.hpp"

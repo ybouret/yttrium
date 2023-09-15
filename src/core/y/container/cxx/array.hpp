@@ -5,8 +5,9 @@
 
 #include "y/container/writable.hpp"
 #include "y/container/operating.hpp"
-#include "y/container/cxx-capacity.hpp"
+#include "y/container/cxx/capacity.hpp"
 #include "y/container/iterator/writable-contiguous.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/type/copy.hpp"
 
 namespace Yttrium
@@ -56,7 +57,7 @@ count( CAPACITY   )
     //
     //
     //__________________________________________________________________________
-    template <typename T, typename ALLOCATOR, CxxCapacity CAPA = CxxRequiredCapacity >
+    template <typename T, typename ALLOCATOR = Memory::Pooled, CxxCapacity CAPA = CxxRequiredCapacity >
     class CxxArray :
     public Memory::Wad<T,ALLOCATOR>,
     public Operating<T>,

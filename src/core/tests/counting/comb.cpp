@@ -1,6 +1,6 @@
 
 #include "y/counting/c/comb.h"
-#include "y/container/cxx-array.hpp"
+#include "y/container/cxx/array.hpp"
 #include "y/utest/run.hpp"
 #include "y/memory/allocator/pooled.hpp"
 
@@ -16,7 +16,7 @@ Y_UTEST(counting_comb)
         {
             std::cerr << "(" << n << "," << k << ")" << std::endl;
             Y_Comb_Init(&ctx,n,k);
-            CxxArray<size_t, Memory::Pooled> arr(k);
+            CxxArray<size_t> arr(k);
             Y_Comb_Boot(&ctx,arr.legacy());
             do
             {

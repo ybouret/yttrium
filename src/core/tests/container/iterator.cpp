@@ -1,10 +1,9 @@
 
-#include "y/container/cxx-array.hpp"
+#include "y/container/cxx/array.hpp"
 #include "y/container/iterator/linked.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/apex/natural.hpp"
-#include "y/memory/allocator/pooled.hpp"
 #include "y/memory/out-of-reach.hpp"
 #include "y/data/list/cxx.hpp"
 

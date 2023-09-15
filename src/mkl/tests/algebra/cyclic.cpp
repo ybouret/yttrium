@@ -2,9 +2,8 @@
 #include "y/mkl/algebra/cyclic.hpp"
 #include "y/utest/run.hpp"
 #include "../../../core/tests/main.hpp"
-#include "y/container/cxx-array.hpp"
+#include "y/container/cxx/array.hpp"
 #include "y/system/rtti.hpp"
-#include "y/memory/allocator/pooled.hpp"
 #include "y/mkl/tao.hpp"
 
 using namespace Yttrium;

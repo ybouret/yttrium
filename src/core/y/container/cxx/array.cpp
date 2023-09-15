@@ -1,4 +1,4 @@
-#include "y/container/cxx-array.hpp"
+#include "y/container/cxx/array.hpp"
 
 namespace Yttrium
 {

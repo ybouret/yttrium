@@ -1,7 +1,7 @@
 
 
 #include "y/mkl/ode/integrator.hpp"
-#include "y/container/cxx-array.hpp"
+#include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/mkl/antelope/add.hpp"
 #include "y/mkl/tao.hpp"

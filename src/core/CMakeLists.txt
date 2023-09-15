@@ -54,6 +54,7 @@ ptr
 container
 container/iterator
 container/matrix
+container/cxx
 container/algo
 string
 fft

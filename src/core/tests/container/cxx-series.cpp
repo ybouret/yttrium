@@ -1,5 +1,5 @@
 
-#include "y/container/cxx-series.hpp"
+#include "y/container/cxx/series.hpp"
 #include "y/utest/run.hpp"
 #include "y/apex/natural.hpp"
 #include "y/memory/allocator/pooled.hpp"

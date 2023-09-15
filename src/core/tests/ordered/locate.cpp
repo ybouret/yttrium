@@ -4,7 +4,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/comparison.hpp"
 #include "y/random/shuffle.hpp"
-#include "y/container/cxx-array.hpp"
+#include "y/container/cxx/array.hpp"
 
 using namespace Yttrium;
 
