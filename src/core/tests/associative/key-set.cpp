@@ -13,7 +13,7 @@ public:
     inline IKey(const T k) noexcept : val_(k), key_(val_) {}
     ~IKey() noexcept {}
 
-    const Little_Endian_Key & key() const noexcept { return key_; }
+    const LittleEndianKey & key() const noexcept { return key_; }
 
     friend inline std::ostream & operator<<(std::ostream &os, const IKey &self)
     {
@@ -22,12 +22,12 @@ public:
     }
 
 private:
-    const T           val_;
-    Little_Endian_Key key_;
+    const T         val_;
+    LittleEndianKey key_;
 };
 
 template <typename T>
-class IKeySet : public SuffixSet<Little_Endian_Key,IKey<T> >
+class IKeySet : public SuffixSet<LittleEndianKey,IKey<T> >
 {
 public:
     IKeySet() {}

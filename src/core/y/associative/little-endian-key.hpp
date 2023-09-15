@@ -17,7 +17,7 @@ namespace Yttrium
     //! Encode an integral type to a Little Endian R/O buffer
     //
     //__________________________________________________________________________
-    class Little_Endian_Key : public Memory::ReadOnlyBuffer
+    class LittleEndianKey : public Memory::ReadOnlyBuffer
     {
     public:
         //______________________________________________________________________
@@ -29,7 +29,7 @@ namespace Yttrium
 
         //! setup from integral type
         template <typename T> inline
-        explicit Little_Endian_Key(const T &args) noexcept :
+        explicit LittleEndianKey(const T &args) noexcept :
         Memory::ReadOnlyBuffer(),
         size(sizeof(T)),  code()
         {
@@ -41,8 +41,8 @@ namespace Yttrium
         }
 
 
-        Little_Endian_Key(const Little_Endian_Key &) noexcept; //!< copy
-        virtual ~Little_Endian_Key()                 noexcept; //!< cleanup
+        LittleEndianKey(const LittleEndianKey &) noexcept; //!< copy
+        virtual ~LittleEndianKey()               noexcept; //!< cleanup
 
         //______________________________________________________________________
         //
@@ -53,8 +53,8 @@ namespace Yttrium
         virtual const void * ro_addr() const noexcept; //!< code
         virtual size_t       measure() const noexcept; //!< size
 
-        friend std::ostream & operator<<(std::ostream &os, const Little_Endian_Key &key); //!< display
-        friend OutputStream & operator<<(OutputStream &os, const Little_Endian_Key &key); //!< write
+        friend std::ostream & operator<<(std::ostream &os, const LittleEndianKey &key); //!< display
+        friend OutputStream & operator<<(OutputStream &os, const LittleEndianKey &key); //!< write
 
         //! recompose integer from code
         template <size_t N>
@@ -65,7 +65,7 @@ namespace Yttrium
         uint8_t      code[8];   //!< stored bytes
 
     private:
-        Y_DISABLE_ASSIGN(Little_Endian_Key);
+        Y_DISABLE_ASSIGN(LittleEndianKey);
         void setup(const uint8_t  &) noexcept;
         void setup(const uint16_t &) noexcept;
         void setup(const uint32_t &) noexcept;

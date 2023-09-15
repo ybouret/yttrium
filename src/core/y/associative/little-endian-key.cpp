@@ -5,12 +5,12 @@
 
 namespace Yttrium
 {
-    Little_Endian_Key:: ~Little_Endian_Key() noexcept
+    LittleEndianKey:: ~LittleEndianKey() noexcept
     {
         memset(code,0,sizeof(code));
     }
 
-    Little_Endian_Key:: Little_Endian_Key(const Little_Endian_Key &other) noexcept :
+    LittleEndianKey:: LittleEndianKey(const LittleEndianKey &other) noexcept :
     Memory::ReadOnlyBuffer(),
     size(other.size),
     code()
@@ -18,24 +18,24 @@ namespace Yttrium
         memcpy(code,other.code,sizeof(code));
     }
 
-    const void * Little_Endian_Key:: ro_addr() const noexcept
+    const void * LittleEndianKey:: ro_addr() const noexcept
     {
         return &code[0];
     }
 
-    size_t Little_Endian_Key:: measure() const noexcept
+    size_t LittleEndianKey:: measure() const noexcept
     {
         return size;
     }
 
 
     template <>
-    UnsignedInt<1>::Type Little_Endian_Key:: get<1>() const noexcept
+    UnsignedInt<1>::Type LittleEndianKey:: get<1>() const noexcept
     {
         return code[0];
     }
 
-    void Little_Endian_Key::setup(const uint8_t &x) noexcept
+    void LittleEndianKey::setup(const uint8_t &x) noexcept
     {
         code[0] = x;
         assert(x==get<1>());
@@ -43,14 +43,14 @@ namespace Yttrium
 
 
     template <>
-    UnsignedInt<2>::Type Little_Endian_Key:: get<2>() const noexcept
+    UnsignedInt<2>::Type LittleEndianKey:: get<2>() const noexcept
     {
         uint16_t b0 = code[1];
         uint16_t b1 = code[0];
         return b0 | (b1<<8);
     }
 
-    void Little_Endian_Key::setup(const uint16_t &x) noexcept
+    void LittleEndianKey::setup(const uint16_t &x) noexcept
     {
         code[1] = uint8_t(x);
         code[0] = uint8_t(x>>8);
@@ -58,7 +58,7 @@ namespace Yttrium
     }
 
     template <>
-    UnsignedInt<4>::Type Little_Endian_Key:: get<4>() const noexcept
+    UnsignedInt<4>::Type LittleEndianKey:: get<4>() const noexcept
     {
         uint32_t b0 = code[3];
         uint32_t b1 = code[2];
@@ -68,7 +68,7 @@ namespace Yttrium
         return b0 | (b1<<8) | (b2<<16) | (b3<<24);
     }
 
-    void Little_Endian_Key::setup(const uint32_t &x) noexcept
+    void LittleEndianKey::setup(const uint32_t &x) noexcept
     {
         code[3] = uint8_t(x);
         code[2] = uint8_t(x>>8);
@@ -78,7 +78,7 @@ namespace Yttrium
     }
 
     template <>
-    UnsignedInt<8>::Type Little_Endian_Key:: get<8>() const noexcept
+    UnsignedInt<8>::Type LittleEndianKey:: get<8>() const noexcept
     {
         uint64_t b0 = code[7];
         uint64_t b1 = code[6];
@@ -93,7 +93,7 @@ namespace Yttrium
     }
 
 
-    void Little_Endian_Key::setup(const uint64_t &x) noexcept
+    void LittleEndianKey::setup(const uint64_t &x) noexcept
     {
         code[7] = uint8_t(x);
         code[6] = uint8_t(x>>8);
@@ -109,13 +109,13 @@ namespace Yttrium
 
 
 
-    std::ostream & operator<<(std::ostream &os, const Little_Endian_Key &key)
+    std::ostream & operator<<(std::ostream &os, const LittleEndianKey &key)
     {
         return key.displayHexadecimal(os);
     }
 
 
-    OutputStream & operator<<(OutputStream &os, const Little_Endian_Key &key)
+    OutputStream & operator<<(OutputStream &os, const LittleEndianKey &key)
     {
         return key.displayHexadecimal(os);
     }

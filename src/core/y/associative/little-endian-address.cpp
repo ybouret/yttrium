@@ -2,12 +2,18 @@
 
 namespace Yttrium
 {
-    Little_Endian_Address:: ~Little_Endian_Address() noexcept {}
+    LittleEndianAddress:: ~LittleEndianAddress() noexcept {}
 
-    Little_Endian_Address:: Little_Endian_Address(const Little_Endian_Address &other) noexcept : Little_Endian_Key( static_cast<const Little_Endian_Key&>(other) ) {}
+    LittleEndianAddress:: LittleEndianAddress(const LittleEndianAddress &other) noexcept : LittleEndianKey( static_cast<const LittleEndianKey&>(other) ) {}
 
 
-    void * Little_Endian_Address:: fetch() const noexcept
+    LittleEndianAddress:: LittleEndianAddress(const CopyOf_ &, const void *addr) noexcept :
+    LittleEndianKey(addr)
+    {
+    }
+    
+
+    void * LittleEndianAddress:: fetch() const noexcept
     {
         assert(size==sizeof(void*));
 
