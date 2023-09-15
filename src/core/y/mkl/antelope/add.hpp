@@ -399,7 +399,26 @@ namespace Yttrium
                 {
                     return average(seq.begin(),seq.size());
                 }
-                
+
+                //! sum(|range-ave|^2)
+                template <typename ITERATOR>
+                T sumMod2(ITERATOR it, const size_t n, const T ave)
+                {
+                    if(n<=0)
+                    {
+                        return Mod2<T>::Of(ave);
+                    }
+                    else
+                    {
+                        this->make(n);
+                        for(size_t i=n;i>0;--i,++it)
+                        {
+                            const T delta = *it - ave;
+                            (*this) << Mod2<T>::Of(delta);
+                        }
+                        return this->sum();
+                    }
+                }
 
 
 
