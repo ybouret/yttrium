@@ -47,7 +47,7 @@ namespace Yttrium
             Token * exactly(Source &source); //!< source must match exactly the pattern
             Token * somehow(Source &source); //!< source must contains the pattern
 
-
+            //! use data as source to match exactly
             template <typename DATANAME, typename DATA>
             Token *exactly(DATANAME &dataName, DATA &data)
             {
@@ -55,6 +55,7 @@ namespace Yttrium
                 return exactly(source);
             }
 
+            //! use data as source to match somehow
             template <typename DATANAME, typename DATA>
             Token *somehow(DATANAME &dataName, DATA &data)
             {
