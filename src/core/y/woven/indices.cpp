@@ -6,13 +6,13 @@ namespace Yttrium
     {
         Indices::  Indices(const size_t n) :
         Identifiable(), Collection(),
-        BaseType(n) {}
+        Indices_(n) {}
 
         Indices:: ~Indices() noexcept {}
 
         Indices:: Indices(const Indices &indx) :
         Identifiable(), Collection(),
-        BaseType(indx)
+        Indices_(indx)
         {}
         
     }

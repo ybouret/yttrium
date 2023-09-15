@@ -10,6 +10,8 @@ namespace Yttrium
     namespace WOVEn
     {
 
+        typedef OrderedVector<size_t,IncreasingComparator,Memory::Pooled> Indices_;
+
         //______________________________________________________________________
         //
         //
@@ -18,11 +20,9 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Indices : public OrderedVector<size_t,IncreasingComparator,Memory::Pooled>
+        class Indices : public Indices_
         {
         public:
-            typedef Yttrium::OrderedVector<size_t,IncreasingComparator,Memory::Pooled> BaseType; //!< alias
-
             explicit Indices(const size_t n); //!< setup
             virtual ~Indices() noexcept;      //!< cleanup
             Indices(const Indices &);         //!< copy

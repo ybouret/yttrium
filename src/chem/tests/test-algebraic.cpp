@@ -26,6 +26,11 @@ Y_UTEST(algebraic)
     Matrix<unsigned> Q;
     Chemical::Algebraic::Compute(Q,Nu);
     std::cerr << "Q=" << Q << std::endl;
+
+    Chemical::Algebraic::Weight::List W;
+    Chemical::Algebraic::Compute(W,Nu);
+
+
 }
 Y_UDONE()
 

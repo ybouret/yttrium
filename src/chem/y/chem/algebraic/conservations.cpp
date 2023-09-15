@@ -20,12 +20,12 @@ namespace Yttrium
 
             {
                 // make orthospace
-                Matrix<apz> QQ;
-                if(!MKL::OrthoSpace::Make(QQ,Nu))
+                Matrix<apz> O;
+                if(!MKL::OrthoSpace::Make(O,Nu))
                     throw Specific::Exception("Chemica::Algebraic::Conservation","Singular Topology");
 
                 // explore all ortho space
-                WOVEn::Explore(QQ,survey,true);
+                WOVEn::Explore(O,survey,true);
             }
             std::cerr << "# =" << survey.size << std::endl;
 
@@ -33,15 +33,16 @@ namespace Yttrium
             {
                 const size_t M  = Nu.cols;
                 Q.make(survey.size,M);
-
-                size_t       i = 0;
-                for(const WOVEn::NaturalArray *node=survey.head;node;node=node->next)
+                survey.sort();
                 {
-                    const Readable<const apn> &cof = *node;
-                    Writable<unsigned>        &Q_i = Q[++i];
-                    for(size_t j=M;j>0;--j)
-                        Q_i[j] = cof[j].cast<unsigned>("conservation coefficient");
-
+                    size_t       i = 0;
+                    for(const WOVEn::NaturalArray *node=survey.head;node;node=node->next)
+                    {
+                        const Readable<const apn> &cof = *node;
+                        Writable<unsigned>        &Q_i = Q[++i];
+                        for(size_t j=M;j>0;--j)
+                            Q_i[j] = cof[j].cast<unsigned>("conservation coefficient");
+                    }
                 }
             }
 
