@@ -12,8 +12,12 @@ namespace Yttrium
     {
         void Algebraic:: Compute(Weight::List &wl, const Matrix<int> &Nu)
         {
+            //------------------------------------------------------------------
+            // initialize lists
+            //------------------------------------------------------------------
             wl.release();
             WOVEn:: IntegerSurvey survey;
+
             {
                 const Matrix<int> NuT(TransposeOf,Nu);
                 const Matrix<int> NuTx;
@@ -27,20 +31,27 @@ namespace Yttrium
                 survey.sort();
                 WOVEn::Indices incoming(Nu.cols);
                 WOVEn::Indices outgoing(Nu.cols);
+
                 for(const WOVEn::IntegerArray *node=survey.head;node;node=node->next)
                 {
                     const Readable<const apz> & w = *node;              // survey result
                     AutoPtr<Weight>             W = new Weight(w,Nu);   // weight for reactions
                     std::cerr << W << " -> " << W->stoi << std::endl;
 
+                    //----------------------------------------------------------
                     // checking species
+                    //----------------------------------------------------------
                     outgoing.free();
                     incoming.free();
 
+                    //----------------------------------------------------------
                     // outgoing species by new stoichiometry
+                    //----------------------------------------------------------
                     outgoing.record(W->stoi);
 
+                    //----------------------------------------------------------
                     // incoming species by presence in original reactions
+                    //----------------------------------------------------------
                     for(size_t i=Nu.rows;i>0;--i)
                     {
                         if( (*W)[i]!=0 ) incoming.record( Nu[i] );
@@ -48,7 +59,9 @@ namespace Yttrium
                     std::cerr << "|_incoming : " << incoming << std::endl;
                     std::cerr << "|_outgoing : " << outgoing << std::endl;
 
+                    //----------------------------------------------------------
                     // checking consistency
+                    //----------------------------------------------------------
                     const size_t numOutgoing = outgoing.size();
                     const size_t numIncoming = incoming.size();
 
@@ -66,13 +79,15 @@ namespace Yttrium
                     incoming ^= outgoing;
                     std::cerr << "|_missing  : " << incoming << std::endl;
 
-                    // chechink multiplicity
+                    //----------------------------------------------------------
+                    // cheching multiplicity
+                    //----------------------------------------------------------
                     for(const Weight *rhs=wl.head;rhs;rhs=rhs->next)
                     {
                         assert(*W != *rhs);
                         if(W->stoi == rhs->stoi)
                         {
-                            std::cerr << "Multiple Stoi" << std::endl;
+                            std::cerr << "multiple stoi" << std::endl;
                             goto DONE;
                         }
                     }
