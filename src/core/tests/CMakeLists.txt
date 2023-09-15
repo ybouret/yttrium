@@ -158,6 +158,7 @@ add_test(io:gzip-read test-core io_gzip_read ${DATA}/compressed.db.gz)
 add_test(io:gzip-write test-core io_gzip_write)
 add_test(io:bzip2-read test-core io_bzip2_read ${DATA}/compressed.db2.bz2)
 add_test(io:bzip2-write test-core io_bzip2_write)
+add_test(io:xmlog       test-core io_xmlog)
 
 #fft
 add_test(fft:1   test-core fft1)
