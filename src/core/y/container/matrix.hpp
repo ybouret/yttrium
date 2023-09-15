@@ -7,13 +7,13 @@
 
 #include "y/container/matrix/metrics.hpp"
 #include "y/container/matrix/row.hpp"
-#include "y/memory/allocator/dyadic.hpp"
 #include "y/memory/embedded.hpp"
+#include "y/memory/allocator/dyadic.hpp"
+#include "y/type/releasable.hpp"
 #include "y/container/implanted.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/type/utils.hpp"
 #include "y/type/copy.hpp"
-#include "y/mkl/antelope/add.hpp"
 
 namespace Yttrium
 {
@@ -204,6 +204,7 @@ namespace Yttrium
             }
         }
 
+#if 0
         //______________________________________________________________________
         //
         //! multiply with xadd
@@ -225,6 +226,7 @@ namespace Yttrium
                 res[i] = xadd.sum();;
             }
         }
+#endif
 
 
         //______________________________________________________________________

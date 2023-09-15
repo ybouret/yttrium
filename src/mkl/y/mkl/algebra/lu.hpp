@@ -5,6 +5,7 @@
 
 #include "y/container/matrix.hpp"
 #include "y/mkl/antelope/mul.hpp"
+#include "y/mkl/antelope/add.hpp"
 
 namespace Yttrium
 {

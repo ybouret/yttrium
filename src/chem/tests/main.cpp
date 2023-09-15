@@ -5,7 +5,7 @@
 
 Y_UTEST_DECL(32)
 {
-    Y_UTEST(algebra);
+    Y_UTEST(algebraic);
 
 }
 Y_UTEST_EXEC()
