@@ -32,22 +32,34 @@ namespace Yttrium
 
             //! setup from rows of vectors, pack multiple values
             template <typename T> inline
-            Subspaces(const Matrix<T> &mu, QSurvey *survey) :
-            Subspace::List()
+            Subspaces(const Matrix<T> &mu,
+                      QSurvey         *survey,
+                      const bool       v=false) :
+            Subspace::List(),
+            verbose(v)
             {
+                //--------------------------------------------------------------
                 // create all starting vector
+                //--------------------------------------------------------------
+                if(verbose)
+                    std::cerr << "-- Initializing Subspaces" << std::endl;
                 for(size_t ir=mu.rows;ir>0;--ir)
                     pushHead( new Subspace(mu,ir) );
 
+                //--------------------------------------------------------------
                 // remove multiple same vector
+                //--------------------------------------------------------------
                 pack();
 
 
-                // initial survey if any
+                //--------------------------------------------------------------
+                // conduct initial survey if any
+                //--------------------------------------------------------------
+                if(verbose)
+                    std::cerr << "-- Initial Generation #" << size << std::endl;
+                
                 if(survey)
                     conductInitial(*survey);
-
-
             }
 
             //! cleanup
@@ -90,7 +102,7 @@ namespace Yttrium
             }
 
 
-
+            const bool verbose;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Subspaces);

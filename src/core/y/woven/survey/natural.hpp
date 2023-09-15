@@ -5,6 +5,7 @@
 #define Y_WOVEn_Unsigned_Survey_Included 1
 
 #include "y/woven/types.hpp"
+#include "y/woven/survey.hpp"
 
 namespace Yttrium
 {
@@ -71,7 +72,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class NaturalSurvey : public NaturalArray::List, public QSurvey
+        class NaturalSurvey : public Survey, public NaturalArray::List, public QSurvey
         {
         public:
             //__________________________________________________________________
@@ -80,8 +81,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit NaturalSurvey();           //!< setup empty
-            virtual ~NaturalSurvey() noexcept;  //!< cleanup
+            explicit NaturalSurvey(const bool=false); //!< setup empty
+            virtual ~NaturalSurvey()        noexcept; //!< cleanup
 
             //__________________________________________________________________
             //

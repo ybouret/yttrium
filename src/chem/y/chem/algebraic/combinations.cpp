@@ -10,13 +10,13 @@ namespace Yttrium
 
     namespace Chemical
     {
-        void Algebraic:: Compute(Weight::List &wl, const Matrix<int> &Nu)
+        void Algebraic:: Compute(Weight::List &wl, const Matrix<int> &Nu, const bool verbose)
         {
             //------------------------------------------------------------------
             // initialize lists
             //------------------------------------------------------------------
             wl.release();
-            WOVEn:: IntegerSurvey survey;
+            WOVEn:: IntegerSurvey survey(verbose);
 
             {
                 const Matrix<int> NuT(TransposeOf,Nu);

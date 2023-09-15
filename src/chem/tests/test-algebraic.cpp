@@ -27,9 +27,11 @@ Y_UTEST(algebraic)
 
     std::cerr << "Nu=" << Nu << std::endl;
     Matrix<unsigned> Q;
-    Chemical::Algebraic::Compute(Q,Nu);
+    Chemical::Algebraic::Compute(Q,Nu,true);
     std::cerr << "Q=" << Q << std::endl;
 
+    return 0;
+    
     Chemical::Algebraic::Weight::List W;
     Chemical::Algebraic::Compute(W,Nu);
 

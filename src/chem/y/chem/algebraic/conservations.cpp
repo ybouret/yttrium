@@ -12,11 +12,11 @@ namespace Yttrium
     {
 
 
-        void Algebraic:: Compute(Matrix<unsigned> &Q, const Matrix<int> &Nu)
+        void Algebraic:: Compute(Matrix<unsigned> &Q, const Matrix<int> &Nu, const bool verbose)
         {
             // prepare data
             Q.release();
-            WOVEn::NaturalSurvey survey;
+            WOVEn::NaturalSurvey survey(verbose);
 
             {
                 // make orthospace

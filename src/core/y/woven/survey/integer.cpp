@@ -30,7 +30,8 @@ namespace Yttrium
         {
         }
 
-        IntegerSurvey:: IntegerSurvey() :
+        IntegerSurvey:: IntegerSurvey(const bool v) :
+        Survey(v),
         IntegerArray::List(),
         QSurvey(this,&IntegerSurvey::tryGrow)
         {
@@ -42,7 +43,14 @@ namespace Yttrium
 
             for(const IntegerArray *arr=head;arr;arr=arr->next)
             {
-                if(*arr==vec) return;
+                if(*arr==vec)
+                {
+                    if(verbose)
+                    {
+                        std:: cerr << "rejecting multiple " << vec << std::endl;
+                    }
+                    return;
+                }
             }
 
             pushTail( new IntegerArray(vec) );

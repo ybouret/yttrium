@@ -4,6 +4,7 @@
 #define Y_WOVEn_Integer_Survey_Included 1
 
 #include "y/woven/types.hpp"
+#include "y/woven/survey.hpp"
 
 namespace Yttrium
 {
@@ -68,7 +69,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class IntegerSurvey : public IntegerArray::List, public QSurvey
+        class IntegerSurvey : public Survey, public IntegerArray::List, public QSurvey
         {
         public:
             //__________________________________________________________________
@@ -77,8 +78,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit IntegerSurvey();           //!< setup empty
-            virtual ~IntegerSurvey() noexcept;  //!< cleanup
+            explicit IntegerSurvey(const bool=false); //!< setup empty
+            virtual ~IntegerSurvey()        noexcept;  //!< cleanup
 
             //__________________________________________________________________
             //

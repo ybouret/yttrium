@@ -37,8 +37,8 @@ namespace Yttrium
 
 
 
-            static void Compute(Matrix<unsigned> &Q, const Matrix<int> &Nu);
-            static void Compute(Weight::List     &W, const Matrix<int> &Nu);
+            static void Compute(Matrix<unsigned> &Q, const Matrix<int> &Nu, const bool verbose = false);
+            static void Compute(Weight::List     &W, const Matrix<int> &Nu, const bool verbose = false);
         };
 
     }

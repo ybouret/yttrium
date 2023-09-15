@@ -48,7 +48,8 @@ namespace Yttrium
         {
         }
 
-        NaturalSurvey:: NaturalSurvey() :
+        NaturalSurvey:: NaturalSurvey(const bool v) :
+        Survey(v),
         NaturalArray::List(),
         QSurvey(this,&NaturalSurvey::tryGrow)
         {
@@ -62,7 +63,14 @@ namespace Yttrium
 
             for(const NaturalArray *arr=head;arr;arr=arr->next)
             {
-                if(arr->equals(vec)) return;
+                if(arr->equals(vec))
+                {
+                    if(verbose)
+                    {
+                        std::cerr << "rejecting multiple " << *arr << std::endl;
+                    }
+                    return;
+                }
             }
 
             pushTail( new NaturalArray(vec) );
