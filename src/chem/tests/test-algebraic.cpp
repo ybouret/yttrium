@@ -2,14 +2,17 @@
 #include "y/utest/run.hpp"
 #include "y/random/bits.hpp"
 #include "y/mkl/algebra/rank.hpp"
+#include "y/text/ascii/convert.hpp"
 
 using namespace Yttrium;
 
 Y_UTEST(algebraic)
 {
     Random::Rand ran;
-    const size_t N = 3;
-    const size_t M = 5;
+    size_t N = 3; if(argc>1) N = ASCII::Convert::To<size_t>(argv[1],"N");
+    size_t M = 5; if(argc>2) M = ASCII::Convert::To<size_t>(argv[2],"M");
+
+
     Matrix<int> Nu(N,M);
 
     do
