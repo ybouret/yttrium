@@ -10,6 +10,7 @@ namespace Yttrium
     namespace WOVEn
     {
 
+        //! base class for indices
         typedef OrderedVector<size_t,IncreasingComparator,Memory::Pooled> Indices_;
 
         //______________________________________________________________________

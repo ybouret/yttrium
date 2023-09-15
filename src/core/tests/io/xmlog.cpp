@@ -1,8 +1,4 @@
-
 #include "y/stream/xmlog.hpp"
-
-
-
 #include "y/utest/run.hpp"
 #include "y/string/env.hpp"
 

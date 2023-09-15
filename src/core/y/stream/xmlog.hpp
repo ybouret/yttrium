@@ -26,11 +26,11 @@ namespace Yttrium
         // Defintions
         //
         //______________________________________________________________________
-        static const char LANGLE = '<';
-        static const char RANGLE = '>';
-        static const char SLASH  = '/';
-        static const char ENDL   = '\n';
-        typedef AutoPtr<const String> Mark;
+        static const char LANGLE = '<';     //!< alias
+        static const char RANGLE = '>';     //!< alias
+        static const char SLASH  = '/';     //!< alias
+        static const char ENDL   = '\n';    //!< alias
+        typedef AutoPtr<const String> Mark; //!< alias
 
 
         //______________________________________________________________________
@@ -59,9 +59,8 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        std::ostream & operator()(void);
-
-        std::ostream & operator*() noexcept;
+        std::ostream & operator()(void);     //!< indented
+        std::ostream & operator*() noexcept; //!< raw
 
         //! display entering
         template <typename NAME> inline void enter(const NAME &name, const bool full) const
@@ -88,7 +87,7 @@ namespace Yttrium
         // Members
         //
         //______________________________________________________________________
-        bool           verbose;
+        bool           verbose;  //!< effective
         const unsigned deep;     //!< current depth
         const Mark     mark;     //!< root mark
 
@@ -116,7 +115,7 @@ namespace Yttrium
             xml_(xml), uid_( xml.verbose ? new String(uid) : 0 )
             { incr(full); }
 
-            void endl();
+            void endl(); //!< end if wasn't fully started
             
             //__________________________________________________________________
             //
