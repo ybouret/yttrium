@@ -27,6 +27,8 @@ Y_UTEST_DECL(32)
 
     Y_UTEST(woven_chemsys);
 
+    Y_UTEST(filter_smooth);
+
 }
 Y_UTEST_EXEC()
 

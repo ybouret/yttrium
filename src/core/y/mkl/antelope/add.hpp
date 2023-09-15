@@ -350,25 +350,59 @@ namespace Yttrium
             class Add : public AddProxy<T,Wary<T>::Flag>::Code
             {
             public:
-                //__________________________________________________________
+                //______________________________________________________________
                 //
                 //
                 // Definitions
                 //
-                //__________________________________________________________
+                //______________________________________________________________
                 Y_ARGS_DECL(T,Type);                                       //!< aliases
                 typedef typename AddProxy<T,Wary<T>::Flag>::Code CodeType; //!< alias
 
-                //__________________________________________________________
+                //______________________________________________________________
                 //
                 //
                 // C++
                 //
-                //__________________________________________________________
+                //______________________________________________________________
                 explicit Add() : CodeType() {}                //!< setup
                 explicit Add(const size_t n) : CodeType(n) {} //!< setup with capacity
                 virtual ~Add() noexcept {}                    //!< cleanup
                 
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                //! average of a range
+                template <typename ITERATOR> inline
+                T average(ITERATOR it, const size_t n)
+                {
+                    switch(n)
+                    {
+                        case 0: return T(0);
+                        case 1: return *it;
+                        default: break;
+                    }
+                    this->make(n);
+                    for(size_t i=n;i>0;--i,++it)
+                        (*this) << *it;
+                    return this->sum()/T(n);
+                }
+
+                //! average of a sequence
+                template <typename SEQUENCE> inline
+                T average(SEQUENCE &seq)
+                {
+                    return average(seq.begin(),seq.size());
+                }
+                
+
+
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Add);

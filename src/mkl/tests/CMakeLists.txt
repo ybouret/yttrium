@@ -5,7 +5,8 @@ algebra
 drvs
 interp
 io
-woven)
+woven
+filter)
 
 set( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
 set( DATA ${HERE}/../../../var)
@@ -38,3 +39,4 @@ add_test(io:data-stream test-mkl io_data_stream ${DATA}/sample.txt)
 
 add_test(woven:chemsys  test-mkl woven_chemsys)
 
+add_test(filter:smooth  test-mkl filter_smooth)

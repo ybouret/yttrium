@@ -46,6 +46,18 @@ static inline void ShowUnit( const char *name, Random::Bits &ran )
         std::cerr << "delta=" << Fabs<T>::Of(delta) << std::endl;
     }
 
+    {
+        Vector<T> someData;
+        for(size_t n=0;n<=5;++n)
+        {
+            someData.free();
+            for(size_t i=n;i>0;--i)
+            {
+                someData << Bring<T>::Get(ran);
+            }
+            std::cerr << "average(" << someData << ")=" << xadd.average( someData ) << std::endl;
+        }
+    }
 
 }
 
