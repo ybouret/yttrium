@@ -16,15 +16,20 @@ namespace Yttrium
         return std::cerr;
     }
 
+    std::ostream & XMLog :: operator*() noexcept
+    {
+        return std::cerr;
+    }
+
     std::ostream & XMLog:: operator()(void)
     {
         return indent();
     }
 
-    void XMLog:: Markup:: incr()
+    void XMLog:: Markup:: incr(bool full)
     {
         Coerce(xml_.deep)++;
-        xml_.enter(uid_);
+        xml_.enter(uid_,full);
     }
 
     XMLog:: Markup:: ~Markup() noexcept

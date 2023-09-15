@@ -47,7 +47,7 @@ namespace Yttrium
         deep(0),
         mark( verbose ? new String(name) : 0)
         {
-            enter(mark);
+            enter(mark,true);
         }
 
         //! leave/cleanup
@@ -61,9 +61,19 @@ namespace Yttrium
         //______________________________________________________________________
         std::ostream & operator()(void);
 
+        std::ostream & operator*() noexcept;
+
         //! display entering
-        template <typename NAME> inline void enter(const NAME &name) const
-        { if(verbose) indent() << LANGLE << name << RANGLE << ENDL; }
+        template <typename NAME> inline void enter(const NAME &name, const bool full) const
+        {
+            if(verbose)
+            {
+                if(full)
+                    indent() << LANGLE << name << RANGLE << ENDL;
+                else
+                    indent() << LANGLE << name;
+            }
+        }
 
         //! display leaving
         template <typename NAME> inline void leave(const NAME &name) const {
@@ -102,9 +112,14 @@ namespace Yttrium
             //! setup
             //__________________________________________________________________
             template <typename NAME> inline
-            Markup(XMLog &xml,const NAME &uid) :
+            Markup(XMLog &xml,const NAME &uid, bool full = true) :
             xml_(xml), uid_( xml.verbose ? new String(uid) : 0 )
-            { incr(); }
+            { incr(full); }
+
+            void endl() const
+            {
+                if(xml_.verbose) *xml_ << RANGLE << ENDL;
+            }
 
             //__________________________________________________________________
             //
@@ -116,19 +131,19 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Markup);
             XMLog     &xml_;
             const Mark uid_;
-            void incr();
+            void incr(bool full);
         };
     };
 
 #define Y_XMLOG(XML,MSG) do { if(XML.verbose) do { XML() << MSG << std::endl; } while(false); } while(false)
 
-    //! create the guard name
+    //! create the xml sub name
 #define Y_XML_SUB__(X,Y) X##Y
 
-    //! instantiace the guard name
+    //! instantiate the xml sub name
 #define Y_XML_SUB_(HOST,ID,NAME) volatile Yttrium::XMLog::Markup Y_XML_SUB__(__xml,ID)(HOST,NAME)
 
-    //! use a local ScopedLock to lock HOST
+    //! use a local xml sub-section
 #define Y_XMLSUB(HOST,NAME) Y_XML_SUB_(HOST,__LINE__,NAME)
 
 }
