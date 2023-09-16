@@ -167,6 +167,8 @@ add_test(fft:2   test-core fft2)
 #string(s)
 add_test(strings test-core strings)
 add_test(string:tokenizer test-core string_tokenizer)
+add_test(string:env       test-core string_env)
+
 
 #apex
 add_test(apex:archon    test-core apex_archon)

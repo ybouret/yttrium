@@ -5,7 +5,6 @@ namespace Yttrium
 
     XMLog:: ~XMLog() noexcept
     {
-        leave(mark);
     }
 
 

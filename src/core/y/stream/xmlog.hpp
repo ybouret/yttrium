@@ -40,17 +40,14 @@ namespace Yttrium
         //
         //______________________________________________________________________
 
-        //! setup root/enter
-        template <typename NAME>
-        XMLog(const NAME &name, const bool flag) :
+        //! setup
+        XMLog(const bool flag) :
         verbose(flag),
-        deep(0),
-        mark( verbose ? new String(name) : 0)
+        deep(0)
         {
-            enter(mark,true);
         }
 
-        //! leave/cleanup
+        //! cleanup
         virtual ~XMLog() noexcept;
 
         //______________________________________________________________________
@@ -89,8 +86,7 @@ namespace Yttrium
         //______________________________________________________________________
         bool           verbose;  //!< effective
         const unsigned deep;     //!< current depth
-        const Mark     mark;     //!< root mark
-
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(XMLog);
         std::ostream & indent() const;

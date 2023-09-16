@@ -124,6 +124,7 @@ Y_UTEST_DECL(256)
 
     Y_UTEST(strings);
     Y_UTEST(string_tokenizer);
+    Y_UTEST(string_env);
 
     Y_UTEST(apex_archon);
     Y_UTEST(apex_block);

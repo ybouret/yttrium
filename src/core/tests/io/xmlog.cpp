@@ -7,7 +7,7 @@ using namespace Yttrium;
 
 Y_UTEST(io_xmlog)
 {
-    XMLog xml("root", Environment::Flag("VERBOSE") );
+    XMLog xml(Environment::Flag("VERBOSE") );
 
     Y_XMLOG(xml,"Hello");
 
