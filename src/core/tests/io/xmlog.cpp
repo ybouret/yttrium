@@ -7,28 +7,26 @@ using namespace Yttrium;
 
 Y_UTEST(io_xmlog)
 {
-    XMLog xml(Environment::Flag("VERBOSE") );
+    bool verb = Environment::Flag("VERBOSE");
 
+    XMLog xml(verb);
     Y_XMLOG(xml,"Hello");
-
     {
-        XMLog::Markup sub(xml,"level1");
+        XMLog::Section sec(xml,"data",true);
+        Y_XMLOG(xml,"blah blah");
+
+        {
+            Y_XML_SECTION(xml, "subsec");
+            Y_XMLOG(xml,"blah blah");
+            {
+                Y_XML_SECTION_OPT(xml,"again"," count='1'");
+            }
+        }
+
+
     }
 
-    {
-        Y_XMLSUB(xml,"level2");
-    }
-
-    {
-        XMLog::Markup sub(xml,"toto",false);
-        *xml << " value='" << 1 << "'";
-        sub.endl();
-    }
-
-    {
-        Y_XMLSUB_OPT(xml, "level3", " value='3'");
-        
-    }
+    
 
 }
 Y_UDONE()

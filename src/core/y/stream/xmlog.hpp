@@ -13,7 +13,7 @@ namespace Yttrium
     //
     //
     //
-    //! helper to display optional XML-like log
+    //! simple class to produce XML-like logs
     //
     //
     //__________________________________________________________________________
@@ -23,15 +23,13 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        // Defintions
+        // Definitions
         //
         //______________________________________________________________________
+        typedef AutoPtr<const String> Mark;
         static const char LANGLE = '<';     //!< alias
         static const char RANGLE = '>';     //!< alias
         static const char SLASH  = '/';     //!< alias
-        static const char ENDL   = '\n';    //!< alias
-        typedef AutoPtr<const String> Mark; //!< alias
-
 
         //______________________________________________________________________
         //
@@ -39,16 +37,8 @@ namespace Yttrium
         // C++
         //
         //______________________________________________________________________
-
-        //! setup
-        XMLog(const bool flag) :
-        verbose(flag),
-        deep(0)
-        {
-        }
-
-        //! cleanup
-        virtual ~XMLog() noexcept;
+        XMLog(bool &globalVerbose) noexcept;
+        ~XMLog() noexcept;
 
         //______________________________________________________________________
         //
@@ -56,27 +46,8 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        std::ostream & operator()(void);     //!< indented
-        std::ostream & operator*() noexcept; //!< raw
-
-        //! display entering
-        template <typename NAME> inline void enter(const NAME &name, const bool full) const
-        {
-            if(verbose)
-            {
-                if(full)
-                    indent() << LANGLE << name << RANGLE << ENDL;
-                else
-                    indent() << LANGLE << name;
-            }
-        }
-
-        //! display leaving
-        template <typename NAME> inline void leave(const NAME &name) const {
-            try
-            { if(verbose) indent() << LANGLE << name << SLASH << RANGLE << ENDL; }
-            catch(...) { }
-        }
+        std::ostream & operator()(void);      //!< indented
+        std::ostream & operator*() noexcept;  //!< raw
 
         //______________________________________________________________________
         //
@@ -84,47 +55,44 @@ namespace Yttrium
         // Members
         //
         //______________________________________________________________________
-        bool           verbose;  //!< effective
-        const unsigned deep;     //!< current depth
-        
-    private:
-        Y_DISABLE_COPY_AND_ASSIGN(XMLog);
-        std::ostream & indent() const;
-
-    public:
+        const bool   & verbose; //!< global verbosity
+        const unsigned depth;   //!< local depth
 
         //______________________________________________________________________
         //
         //
-        //! making a local markup
+        //! createing a local subsection
         //
         //______________________________________________________________________
-        class Markup
+        class Section
         {
         public:
-            //__________________________________________________________________
-            //
-            //! setup
-            //__________________________________________________________________
-            template <typename NAME> inline
-            Markup(XMLog &xml,const NAME &uid, bool full = true) :
-            xml_(xml), uid_( xml.verbose ? new String(uid) : 0 )
-            { incr(full); }
+            //! setup from parent xml, a name, and full/partial display
+            template <typename NAME>
+            Section(XMLog       &parent,
+                    const NAME  &name,
+                    const bool   full) :
+            xml( parent ),
+            sub( xml.verbose ? new String(name) : 0 )
+            {
+                enter(full);
+            }
 
-            void endl(); //!< end if wasn't fully started
-            
-            //__________________________________________________________________
-            //
-            //! cleanup
-            //__________________________________________________________________
-            ~Markup() noexcept;
+            //! leave/cleanup
+            ~Section() noexcept;
+
+
+            XMLog      &xml;
+            const Mark sub;
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Markup);
-            XMLog     &xml_;
-            const Mark uid_;
-            void incr(bool full);
+            Y_DISABLE_COPY_AND_ASSIGN(Section);
+            void enter(const bool);
+
         };
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(XMLog);
     };
 
     //! output some optional message
@@ -134,19 +102,17 @@ namespace Yttrium
 #define Y_XML_SUB__(X,Y) X##Y
 
     //! instantiate the xml sub name
-#define Y_XML_SUB_(HOST,ID,NAME,FLAG) Yttrium::XMLog::Markup Y_XML_SUB__(__xml,ID)(HOST,NAME,FLAG)
+#define Y_XML_SUB_(HOST,ID,NAME,FLAG) volatile Yttrium::XMLog::Section Y_XML_SUB__(__xml,ID)(HOST,NAME,FLAG)
 
     //! use a local xml sub-section
-#define Y_XMLSUB(HOST,NAME) Y_XML_SUB_(HOST,__LINE__,NAME,true)
+#define Y_XML_SECTION(HOST,NAME) Y_XML_SUB_(HOST,__LINE__,NAME,true)
 
-    //! end a local xml sub-section header
-#define Y_XMLSUB_END(ID) Y_XML_SUB__(__xml,ID).endl()
 
     //! make a xml sub-section with options
-#define Y_XMLSUB_OPT(HOST,NAME,MSG)   \
-Y_XML_SUB_(HOST,__LINE__,NAME,false); \
-if(HOST.verbose)  { *HOST << MSG;  }; \
-Y_XMLSUB_END(__LINE__)
+#define Y_XML_SECTION_OPT(HOST,NAME,OPTIONS)   \
+Y_XML_SUB_(HOST,__LINE__,NAME,false);          \
+do if(HOST.verbose)  { (*HOST << OPTIONS) <<  Yttrium::XMLog::RANGLE << std::endl; } while(false)
+
 
 
 }
