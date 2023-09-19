@@ -84,7 +84,7 @@ namespace Yttrium
             //! check if source was merged with this
             /**
              - indices can contain source indices
-             - qfamilu can contain source qfamily
+             - qfamily can contain source qfamily
              */
             bool merged( AutoPtr<Subspace> &source );
 
@@ -117,7 +117,7 @@ namespace Yttrium
             //__________________________________________________________________
             QFamily   qfamily; //!< family of orthogonal vectors
             Indices   indices; //!< indices of vectors composing the family
-            Indices   staying; //!< indices of available vectores
+            Indices   staying; //!< indices of available vectors
             Subspace *next;    //!< for list
             Subspace *prev;    //!< for lust
 

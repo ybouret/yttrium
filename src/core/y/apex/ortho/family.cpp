@@ -71,6 +71,8 @@ namespace Yttrium
             const Vector & Family:: expandFrom( QArrayType &arr )
             {
                 assert(size<dimensions);
+                assert( &arr != &remaining);
+                
                 assert(wouldAccept(arr));
                 
                 pushTail( new Vector(arr) );
@@ -108,6 +110,7 @@ namespace Yttrium
             {
                 for(const Vector *vec=vecs.head;vec;vec=vec->next)
                 {
+                    assert(dimensions==vec->dimensions);
                     if(wouldAccept(*vec)) return false;
                 }
                 return true;
