@@ -20,9 +20,14 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Subspaces : public Subspace::List
+        class SubSpaces :
+        public Identifiable,
+        public QMetrics,
+        public SubSpace::List
         {
         public:
+            static const char * const CallSign;
+
             //__________________________________________________________________
             //
             //
@@ -35,10 +40,13 @@ namespace Yttrium
             //! setup from rows of vectors, pack multiple values
             //__________________________________________________________________
             template <typename T> inline
-            Subspaces(const Matrix<T> &mu,
+            SubSpaces(const Matrix<T> &mu,
                       QSurvey         *survey,
                       XMLog           &xmlog) :
-            Subspace::List(),
+            Identifiable(),
+            QMetrics( SubSpace::CheckDims(mu) ),
+            SubSpace::List(),
+            generation(1),
             xml(xmlog)
             {
                 //--------------------------------------------------------------
@@ -46,12 +54,13 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 Y_XML_SECTION(xml,"Subspaces::Initialize");
                 for(size_t ir=mu.rows;ir>0;--ir)
-                    pushHead( new Subspace(mu,ir) );
+                    pushHead( new SubSpace(mu,ir) );
 
                 //--------------------------------------------------------------
                 // remove multiple same vector
                 //--------------------------------------------------------------
                 pack();
+
 
 
                 //--------------------------------------------------------------
@@ -64,10 +73,10 @@ namespace Yttrium
             }
 
             //! cleanup
-            virtual ~Subspaces() noexcept;
+            virtual ~SubSpaces() noexcept;
 
             //! display
-            Y_OSTREAM_PROTO(Subspaces);
+            Y_OSTREAM_PROTO(SubSpaces);
 
             //__________________________________________________________________
             //
@@ -76,8 +85,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! try to pack similar subspaces
-            void pack();
+            virtual const char * callSign() const noexcept; //!< CallSign
+            void                 pack();                    //!< pack similar subspaces
 
             //__________________________________________________________________
             //
@@ -87,16 +96,22 @@ namespace Yttrium
             bool generate(const Matrix<T> &mu, QSurvey *survey)
             {
 
+                Y_XML_SECTION_OPT(xml,
+                                  "Subspaces::Generate",
+                                  " generation='" << generation << "'" <<
+                                  " dimensions='" << dimensions << "'");
 
                 //--------------------------------------------------------------
                 // substitute new generation
                 //--------------------------------------------------------------
                 {
-                    Subspace::List newGen;
-                    for(Subspace *sub=head;sub;sub=sub->next)
-                        sub->expand(newGen, mu, survey);
+                    SubSpace::List newGen;
+                    for(SubSpace *sub=head;sub;sub=sub->next)
+                        sub->tryExpand(newGen, mu, survey);
                     swapWith(newGen);
                 }
+
+                Coerce(generation)++;
 
                 //--------------------------------------------------------------
                 // cleanup
@@ -119,10 +134,11 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            XMLog &xml; //!< output helper
+            const size_t generation;
+            XMLog       &xml; //!< output helper
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Subspaces);
+            Y_DISABLE_COPY_AND_ASSIGN(SubSpaces);
             void conductInitial(QSurvey &survey) const;            
         };
 
@@ -140,7 +156,7 @@ namespace Yttrium
                      const bool       useTop,
                      XMLog           &xmlog)
         {
-            Subspaces working(mu,useTop ? &survey : 0,xmlog);
+            SubSpaces working(mu,useTop ? &survey : 0,xmlog);
         CYCLE:
             if( working.generate(mu,&survey) )
                 goto CYCLE;

@@ -22,11 +22,11 @@ namespace Yttrium
         //
         //
         //
-        //! a subspace is a qfamily with its indices and remaining indices
+        //! a SubSpace is a qfamily with its indices and remaining indices
         //
         //
         //______________________________________________________________________
-        class Subspace : public Object, public QMetrics
+        class SubSpace : public Object, public QFamily
         {
         public:
             //__________________________________________________________________
@@ -36,7 +36,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const char * const   CallSign; //!< Subspace
-            typedef CxxListOf<Subspace> List;     //!< alias
+            typedef CxxListOf<SubSpace> List;     //!< alias
 
             //__________________________________________________________________
             //
@@ -51,28 +51,27 @@ namespace Yttrium
              \param ir row index to start with, other are stored in staying
              */
             template <typename T>
-            explicit Subspace(const Matrix<T> &mu,
+            explicit SubSpace(const Matrix<T> &mu,
                               const size_t     ir) :
             Object(),
-            QMetrics( CheckDims(mu) ),
-            qfamily(  dimensions    ),
+            QFamily(  CheckDims(mu) ),
             indices(  CheckDOFs(mu) ),
             staying(  mu.rows       ),
             next(0),
             prev(0)
             {
-                if( !qfamily.wouldAccept(mu[ir]) ) SingularFirstRowException();
+                if( !wouldAccept(mu[ir]) ) SingularFirstRowException();
                 initializeWith(ir,mu.rows);
             }
 
             //! copy
-            Subspace(const Subspace &);
+            SubSpace(const SubSpace &);
 
             //! cleanup
-            virtual ~Subspace() noexcept;
+            virtual ~SubSpace() noexcept;
 
             //! display
-            Y_OSTREAM_PROTO(Subspace);
+            Y_OSTREAM_PROTO(SubSpace);
 
             //__________________________________________________________________
             //
@@ -86,7 +85,7 @@ namespace Yttrium
              - indices can contain source indices
              - qfamily can contain source qfamily
              */
-            bool merged( AutoPtr<Subspace> &source );
+            bool merged( AutoPtr<SubSpace> &source );
 
             //! try to expand current subspace dimension
             /**
@@ -94,19 +93,21 @@ namespace Yttrium
              staying indices that would increase the dimension
              */
             template <typename T>
-            inline void expand(List &            L,
-                               const Matrix<T> & mu,
-                               QSurvey         * survey)
+            inline void tryExpand(List &            L,
+                                  const Matrix<T> & mu,
+                                  QSurvey         * survey)
             {
                 for(size_t i=staying.size();i>0;--i)
                 {
                     const size_t ir = staying[i];
-                    if(qfamily.wouldAccept(mu[ir]))
-                        expand(L,ir,survey);
+                    if(wouldAccept(mu[ir]))
+                        doExpand(L,ir,survey);
                 }
             }
 
 
+            //! check dimensions = mu.cols > 0
+            static size_t CheckDims(const MatrixMetrics &mu);
 
 
             //__________________________________________________________________
@@ -115,20 +116,18 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            QFamily   qfamily; //!< family of orthogonal vectors
             Indices   indices; //!< indices of vectors composing the family
             Indices   staying; //!< indices of available vectors
-            Subspace *next;    //!< for list
-            Subspace *prev;    //!< for lust
+            SubSpace *next;    //!< for list
+            SubSpace *prev;    //!< for lust
 
 
         private:
-            Y_DISABLE_ASSIGN(Subspace);
-            static size_t CheckDims(const MatrixMetrics &mu);
+            Y_DISABLE_ASSIGN(SubSpace);
             static size_t CheckDOFs(const MatrixMetrics &mu);
             static void   SingularFirstRowException();
             void          initializeWith(const size_t ir, const size_t nr);
-            void          expand(List &L, const size_t ir, QSurvey *survey);
+            void          doExpand(List &L, const size_t ir, QSurvey *survey);
 
         };
 

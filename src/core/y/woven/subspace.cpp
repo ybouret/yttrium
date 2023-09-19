@@ -7,57 +7,58 @@ namespace Yttrium
     namespace WOVEn
     {
 
-        Subspace:: ~Subspace() noexcept {}
+        SubSpace:: ~SubSpace() noexcept {}
 
-        const char * const Subspace::CallSign = "WOVEn::Subspace";
+        const char * const SubSpace::CallSign = "WOVEn::SubSpace";
 
-        size_t Subspace:: CheckDims(const MatrixMetrics &mu)
+        size_t SubSpace:: CheckDims(const MatrixMetrics &mu)
         {
             if(mu.cols<=0) throw Specific::Exception(CallSign,"Matrix #cols=0");
             return mu.cols;
         }
 
 
-        size_t Subspace:: CheckDOFs(const MatrixMetrics &mu)
+        size_t SubSpace:: CheckDOFs(const MatrixMetrics &mu)
         {
             if(mu.rows<=0) throw Specific::Exception(CallSign,"Matrix #rows=0");
             return mu.rows;
         }
 
-        void Subspace:: SingularFirstRowException()
+        void SubSpace:: SingularFirstRowException()
         {
             throw Specific::Exception(CallSign,"Singular first row!");
         }
 
-        void Subspace:: initializeWith(const size_t ir, const size_t nr)
+        void SubSpace:: initializeWith(const size_t ir, const size_t nr)
         {
-            qfamily.expand();
+            expand();
             indices += ir;
             for(size_t i=1;    i<ir;  ++i) staying += i;
             for(size_t i=ir+1; i<=nr; ++i) staying += i;
         }
 
 
-        std::ostream & operator<<(std::ostream &os, const Subspace &sp)
+        std::ostream & operator<<(std::ostream &os, const SubSpace &sp)
         {
-            os << sp.qfamily << "@{" << sp.indices << "} <== {" << sp.staying << "}";
+            const QFamily &f = sp;
+            os << f << "@{" << sp.indices << "} <== {" << sp.staying << "}";
             return os;
         }
 
 
-        bool Subspace:: merged( AutoPtr<Subspace> &source )
+        bool SubSpace:: merged( AutoPtr<SubSpace> &source )
         {
             assert(source.isValid());
             assert( this != & *source );
 
-            assert(qfamily.size == source->qfamily.size );
+            assert(size == source->size );
 
-            if( indices.contains(source->indices) || qfamily.contains(source->qfamily))
+            if( indices.contains(source->indices) ||  contains(*source) )
             {
                 // different indices but includes sub-space
-                indices |= source->indices; // merge indices
-                staying |= source->staying; // merge staying
-                staying ^= indices;         // update stayin
+                indices |= source->indices; // merge  indices
+                staying |= source->staying; // merge  staying
+                staying ^= indices;         // update staying
                 source.dismiss();
                 return true;
             }
@@ -65,10 +66,9 @@ namespace Yttrium
             return false;
         }
 
-        Subspace:: Subspace(const Subspace &other) :
+        SubSpace:: SubSpace(const SubSpace &other) :
         Object(),
-        QMetrics(other),
-        qfamily(other.qfamily),
+        QFamily(other),
         indices(other.indices),
         staying(other.staying),
         next(0),
@@ -77,14 +77,16 @@ namespace Yttrium
         }
 
 
-        void Subspace:: expand(List &L, const size_t ir, QSurvey *survey) 
+        void SubSpace:: doExpand(List &        L,
+                                 const size_t  ir,
+                                 QSurvey      *survey)
         {
-            AutoPtr<Subspace> sub = new Subspace(*this);
-            const QVector &   vec = sub->qfamily.expandFrom( qfamily.remaining );
-            sub->indices += ir;
-            sub->staying -= ir;
-            if(survey) (*survey)(vec);
-            if(sub->staying.size()>0)
+            AutoPtr<SubSpace> sub = new SubSpace(*this);           // duplicate in sub
+            const QVector &   vec = sub->expandFrom( remaining );  // expand sub with this->remainng
+            sub->indices += ir;                                    // update indices
+            sub->staying -= ir;                                    // update staying
+            if(survey) (*survey)(vec);                             // take survey if any
+            if(sub->staying.size()>0)                              // grow list IFF subspace got staying index
                 L.pushTail( sub.yield() );
         }
 

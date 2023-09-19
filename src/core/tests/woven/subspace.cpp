@@ -45,7 +45,7 @@ Y_UTEST(woven_subspace)
         WOVEn::IntegerSurvey survey(xml);
         Y_XML_SECTION(xml, "IntegerSurvey");
         {
-            WOVEn::Subspaces spaces(mu,0,xml);
+            WOVEn::SubSpaces spaces(mu,0,xml);
 
             std::cerr << spaces << std::endl;
             {
@@ -67,7 +67,7 @@ Y_UTEST(woven_subspace)
         WOVEn::NaturalSurvey survey(xml);
         Y_XML_SECTION(xml, "NaturalSurvey");
         {
-            WOVEn::Subspaces spaces(mu,&survey,xml);
+            WOVEn::SubSpaces spaces(mu,&survey,xml);
 
             std::cerr << spaces << std::endl;
             {
