@@ -86,7 +86,7 @@ namespace Yttrium
             template <typename T>
             bool generate(const Matrix<T> &mu, QSurvey *survey)
             {
-                
+
 
                 //--------------------------------------------------------------
                 // substitute new generation
@@ -119,7 +119,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            XMLog &xml;
+            XMLog &xml; //!< output helper
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Subspaces);

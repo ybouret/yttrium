@@ -27,7 +27,7 @@ namespace Yttrium
             //
             //
             //
-            //! Family of orthogonal vectors
+            //! Family of orthogonal vectors, size<=dimensions
             //
             //
             //__________________________________________________________________

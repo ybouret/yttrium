@@ -11,16 +11,22 @@ namespace Yttrium
     namespace WOVEn
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! base class for a Survey
+        //
+        //______________________________________________________________________
         class Survey
         {
         public:
-            virtual ~Survey() noexcept;
+            virtual ~Survey() noexcept;        //!< cleanup
 
         protected:
-            explicit Survey(XMLog &) noexcept;
+            explicit Survey(XMLog &) noexcept; //!< setip
 
         public:
-            XMLog &xml;
+            XMLog &xml; //!< output helper
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Survey);

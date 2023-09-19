@@ -26,7 +26,7 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        typedef AutoPtr<const String> Mark;
+        typedef AutoPtr<const String> Mark; //!< alias
         static const char LANGLE = '<';     //!< alias
         static const char RANGLE = '>';     //!< alias
         static const char SLASH  = '/';     //!< alias
@@ -37,8 +37,8 @@ namespace Yttrium
         // C++
         //
         //______________________________________________________________________
-        XMLog(bool &globalVerbose) noexcept;
-        ~XMLog() noexcept;
+        XMLog(bool &globalVerbose) noexcept; //!< setup with global verbosity ref
+        ~XMLog()                   noexcept; //!< cleanup
 
         //______________________________________________________________________
         //
@@ -49,8 +49,8 @@ namespace Yttrium
         std::ostream & operator()(void);      //!< indented
         std::ostream & operator*() noexcept;  //!< raw
 
-        static std::ostream & Indent(std::ostream &, const unsigned n);
-        std::ostream &        indent(std::ostream &) const;
+        static std::ostream & Indent(std::ostream &, const unsigned n); //!< indent n times
+        std::ostream &        indent(std::ostream &) const;             //!< indent depth
 
         //______________________________________________________________________
         //
@@ -85,8 +85,8 @@ namespace Yttrium
             ~Section() noexcept;
 
 
-            XMLog      &xml;
-            const Mark sub;
+            XMLog      &xml; //!< output
+            const Mark sub;  //!< sub-section name
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Section);
