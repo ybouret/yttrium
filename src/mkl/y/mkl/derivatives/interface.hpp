@@ -100,11 +100,17 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //__________________________________________________________________
+            //
             //! internal computation by modified Ridder's Method
+            //__________________________________________________________________
             T compute1D(FunctionType &F, const T x0, const T h, const Interval<T> &I);
 
 
-            //! code wrapper
+            //__________________________________________________________________
+            //
+            //! code wrapper for 1D function
+            //__________________________________________________________________
             template <typename FUNCTION> inline
             T operator()(FUNCTION &F, const T x0, const T h, const Interval<T> &I)
             {
@@ -112,7 +118,10 @@ namespace Yttrium
                 return compute1D(FW,x0,h,I);
             }
 
+            //__________________________________________________________________
+            //
             //! code wrapper for gradient
+            //__________________________________________________________________
             template <typename SCALAR_FIELD> inline
             void operator()(Writable<T>                   &dFdX,
                             SCALAR_FIELD                  &F,
