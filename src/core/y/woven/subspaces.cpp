@@ -39,7 +39,6 @@ namespace Yttrium
                         goto CYCLE;
                     }
                 }
-
                 assert(source.isValid());
                 temp.pushTail( source.yield() );
             CYCLE:

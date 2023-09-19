@@ -48,7 +48,7 @@ namespace Yttrium
             //! setup
             /**
              \param mu matrices : cols=space dimensions, rows= degrees of freedom
-             \param ir row index to start with
+             \param ir row index to start with, other are stored in staying
              */
             template <typename T>
             explicit Subspace(const Matrix<T> &mu,
