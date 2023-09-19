@@ -58,16 +58,25 @@ namespace Yttrium
                 /**
                  - load array into 'remaining'
                  - compute orthogonal components from all vectors
-                 - return true if something is left
+                 - return true if something is left to built
                  */
                 //______________________________________________________________
                 template <typename ARRAY> inline
                 bool wouldAccept(ARRAY &arr)
                 {
-                    assert(remaining.size()==arr.size());
-                    for(size_t i=dimensions;i>0;--i)
-                        remaining[i] = arr[i];
-                    return wouldAccept();
+                    assert(dimensions==arr.size());
+                    if(size>=dimensions)
+                    {
+                        // already a base
+                        return false;
+                    }
+                    else
+                    {
+                        // will check
+                        for(size_t i=dimensions;i>0;--i)
+                            remaining[i] = arr[i];
+                        return wouldAccept();
+                    }
                 }
 
 

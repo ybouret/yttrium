@@ -31,7 +31,9 @@ namespace Yttrium
 
             bool Family:: wouldAccept( )
             {
+                assert(size<dimensions);
 
+                // checking remaining != 0
                 for(size_t i=dimensions;i>0;--i)
                 {
                     switch(remaining[i].numer.s)
@@ -50,8 +52,7 @@ namespace Yttrium
                     if(vec->computeOrtho(remaining)) continue;
                     return false;
                 }
-
-                assert(size<dimensions);
+                
                 return true;
             }
 
