@@ -4,7 +4,7 @@
 #ifndef Y_WOVEn_Survey_Included
 #define Y_WOVEn_Survey_Included 1
 
-#include "y/config/starting.hpp"
+#include "y/stream/xmlog.hpp"
 
 namespace Yttrium
 {
@@ -17,10 +17,10 @@ namespace Yttrium
             virtual ~Survey() noexcept;
 
         protected:
-            explicit Survey(const bool) noexcept;
+            explicit Survey(XMLog &) noexcept;
 
         public:
-            bool verbose;
+            XMLog &xml;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Survey);

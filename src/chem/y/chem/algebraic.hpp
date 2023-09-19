@@ -7,6 +7,7 @@
 #include "y/container/cxx/array.hpp"
 #include "y/apex/integer.hpp"
 #include "y/data/list/cxx.hpp"
+#include "y/stream/xmlog.hpp"
 
 namespace Yttrium
 {
@@ -37,8 +38,8 @@ namespace Yttrium
 
 
 
-            static void Compute(Matrix<unsigned> &Q, const Matrix<int> &Nu, const bool verbose = false);
-            static void Compute(Weight::List     &W, const Matrix<int> &Nu, const bool verbose = false);
+            static void Compute(Matrix<unsigned> &Q, const Matrix<int> &Nu, XMLog &xml);
+            static void Compute(Weight::List     &W, const Matrix<int> &Nu, XMLog &xml);
         };
 
     }

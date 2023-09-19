@@ -26,12 +26,13 @@ namespace Yttrium
     namespace WOVEn
     {
 
+        
         IntegerSurvey:: ~IntegerSurvey() noexcept
         {
         }
 
-        IntegerSurvey:: IntegerSurvey(const bool v) :
-        Survey(v),
+        IntegerSurvey:: IntegerSurvey(XMLog &xmlog) :
+        Survey(xmlog),
         IntegerArray::List(),
         QSurvey(this,&IntegerSurvey::tryGrow)
         {
@@ -45,14 +46,12 @@ namespace Yttrium
             {
                 if(*arr==vec)
                 {
-                    if(verbose)
-                    {
-                        std:: cerr << "rejecting multiple " << vec << std::endl;
-                    }
+                    Y_XMLOG(xml, " (-) " << vec);
                     return;
                 }
             }
-
+            
+            Y_XMLOG(xml, " (+) " << vec);
             pushTail( new IntegerArray(vec) );
 
         }

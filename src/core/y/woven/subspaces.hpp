@@ -30,19 +30,21 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //__________________________________________________________________
+            //
             //! setup from rows of vectors, pack multiple values
+            //__________________________________________________________________
             template <typename T> inline
             Subspaces(const Matrix<T> &mu,
                       QSurvey         *survey,
-                      const bool       v=false) :
+                      XMLog           &xmlog) :
             Subspace::List(),
-            verbose(v)
+            xml(xmlog)
             {
                 //--------------------------------------------------------------
                 // create all starting vector
                 //--------------------------------------------------------------
-                if(verbose)
-                    std::cerr << "-- Initializing Subspaces" << std::endl;
+                Y_XML_SECTION(xml,"Subspaces::Initialize");
                 for(size_t ir=mu.rows;ir>0;--ir)
                     pushHead( new Subspace(mu,ir) );
 
@@ -55,8 +57,7 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 // conduct initial survey if any
                 //--------------------------------------------------------------
-                if(verbose)
-                    std::cerr << "-- Initial Generation #" << size << std::endl;
+                Y_XMLOG(xml,"-- initial count = " << size);
                 
                 if(survey)
                     conductInitial(*survey);
@@ -78,11 +79,16 @@ namespace Yttrium
             //! try to pack similar subspaces
             void pack();
 
+            //__________________________________________________________________
+            //
             //! expand all subspaces then pack
+            //__________________________________________________________________
             template <typename T>
             bool generate(const Matrix<T> &mu, QSurvey *survey)
             {
+                //--------------------------------------------------------------
                 // substitute new generation
+                //--------------------------------------------------------------
                 {
                     Subspace::List newGen;
                     for(Subspace *sub=head;sub;sub=sub->next)
@@ -90,7 +96,9 @@ namespace Yttrium
                     swapWith(newGen);
                 }
 
+                //--------------------------------------------------------------
                 // cleanup
+                //--------------------------------------------------------------
                 if(size>0)
                 {
                     pack();
@@ -101,8 +109,13 @@ namespace Yttrium
                     return false;
             }
 
-
-            const bool verbose;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            XMLog &xml;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Subspaces);
@@ -120,9 +133,10 @@ namespace Yttrium
         template <typename T> inline
         void Explore(const Matrix<T> &mu,
                      QSurvey         &survey,
-                     const bool       useTop)
+                     const bool       useTop,
+                     XMLog           &xmlog)
         {
-            Subspaces working(mu,useTop ? &survey : 0);
+            Subspaces working(mu,useTop ? &survey : 0,xmlog);
         CYCLE:
             if( working.generate(mu,&survey) )
                 goto CYCLE;

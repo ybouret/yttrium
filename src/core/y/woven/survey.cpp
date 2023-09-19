@@ -11,7 +11,7 @@ namespace Yttrium
 
         }
 
-        Survey:: Survey(const bool v) noexcept : verbose(v)
+        Survey:: Survey(XMLog &xmlog) noexcept : xml(xmlog)
         {
         }
         

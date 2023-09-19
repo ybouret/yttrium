@@ -12,25 +12,29 @@ namespace Yttrium
     {
 
 
-        void Algebraic:: Compute(Matrix<unsigned> &Q, const Matrix<int> &Nu, const bool verbose)
+        void Algebraic:: Compute(Matrix<unsigned> &Q, const Matrix<int> &Nu, XMLog &xml)
         {
+            Y_XML_SECTION(xml, "Algebraic::ComputeConservations");
             // prepare data
             Q.release();
-            WOVEn::NaturalSurvey survey(verbose);
+            WOVEn::NaturalSurvey survey(xml);
 
             {
+                Y_XML_SECTION(xml, "Exploring");
                 // make orthospace
                 Matrix<apz> O;
                 if(!MKL::OrthoSpace::Make(O,Nu))
                     throw Specific::Exception("Chemica::Algebraic::Conservation","Singular Topology");
 
                 // explore all ortho space
-                WOVEn::Explore(O,survey,true);
+                WOVEn::Explore(O,survey,true,xml);
+                Y_XMLOG(xml," (*) #conservation = " << survey.size);
             }
-            std::cerr << "# =" << survey.size << std::endl;
 
             if(survey.size)
             {
+                Y_XML_SECTION(xml, "Processing");
+                // survey => matrix
                 const size_t M  = Nu.cols;
                 Q.make(survey.size,M);
                 survey.sort();

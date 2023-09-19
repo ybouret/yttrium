@@ -12,12 +12,13 @@ namespace Yttrium
 
         std::ostream & operator<<(std::ostream &os, const Subspaces &subs)
         {
-            os << '{' << std::endl;
+            const XMLog &xml = subs.xml;
+            xml.indent(os) << '{' << std::endl;
             for(const Subspace *s=subs.head;s;s=s->next)
             {
-                os << "  " << *s << std::endl;
+                xml.indent(os) << "  " << *s << std::endl;
             }
-            os << '}';
+            xml.indent(os) << '}';
             return os;
         }
 
@@ -51,6 +52,7 @@ namespace Yttrium
 
         void Subspaces:: conductInitial(QSurvey &survey) const
         {
+            Y_XMLOG(xml, "-- initial survey...");
             for(const Subspace *sub = head; sub; sub=sub->next)
             {
                 assert(sub->qfamily.size>0);

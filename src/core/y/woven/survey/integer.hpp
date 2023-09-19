@@ -78,8 +78,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit IntegerSurvey(const bool=false); //!< setup empty
-            virtual ~IntegerSurvey()        noexcept;  //!< cleanup
+            explicit IntegerSurvey(XMLog &);    //!< setup empty
+            virtual ~IntegerSurvey() noexcept;  //!< cleanup
 
             //__________________________________________________________________
             //

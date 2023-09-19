@@ -6,6 +6,7 @@
 #include "y/woven/indices.hpp"
 #include "y/container/matrix.hpp"
 #include "y/woven/types.hpp"
+#include "y/stream/xmlog.hpp"
 
 namespace Yttrium
 {

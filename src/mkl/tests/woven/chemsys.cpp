@@ -113,8 +113,11 @@ Y_UTEST(woven_chemsys)
     std::cerr << "Nu=" << Nu << std::endl;
     std::cerr << "#"; Y_CHECK( MKL::Rank::Of(Nu) == N);
 
+    bool verbose = true;
+    XMLog xml(verbose);
+
     // conservation laws
-    WOVEn::NaturalSurvey  conserv;
+    WOVEn::NaturalSurvey  conserv(xml);
     {
         // compute ortho-space
         Matrix<apz> NuOrtho;
@@ -122,7 +125,7 @@ Y_UTEST(woven_chemsys)
         std::cerr << "NuOrtho=" << NuOrtho << std::endl;
 
         // compute conservations
-        WOVEn::Explore(NuOrtho,conserv,true);
+        WOVEn::Explore(NuOrtho,conserv,true,xml);
         conserv.sort();
     }
 
@@ -140,7 +143,7 @@ Y_UTEST(woven_chemsys)
     std::cerr << "Q=" << Q << std::endl;
 
     // combinations
-    WOVEn::IntegerSurvey zeroing;
+    WOVEn::IntegerSurvey zeroing(xml);
     const Matrix<int> NuT(TransposeOf,Nu);
     std::cerr << "NuT=" << NuT << std::endl;
     Matrix<int> NuTx;
@@ -148,7 +151,7 @@ Y_UTEST(woven_chemsys)
     std::cerr << "NuTx=" << NuTx << std::endl;
 
 
-    WOVEn::Explore(NuTx,zeroing,false);
+    WOVEn::Explore(NuTx,zeroing,false,xml);
 
     for(const WOVEn::IntegerArray *arr=zeroing.head;arr;arr=arr->next)
     {

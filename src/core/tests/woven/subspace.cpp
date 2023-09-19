@@ -39,41 +39,48 @@ Y_UTEST(woven_subspace)
     }
 
     std::cerr << "mu=" << mu << std::endl;
-
+    bool  verbose = true;
+    XMLog xml(verbose);
     {
-        WOVEn::IntegerSurvey survey;
+        WOVEn::IntegerSurvey survey(xml);
+        Y_XML_SECTION(xml, "IntegerSurvey");
         {
-            WOVEn::Subspaces spaces(mu,NULL);
+            WOVEn::Subspaces spaces(mu,0,xml);
 
             std::cerr << spaces << std::endl;
-
-            while(spaces.generate(mu, &survey))
             {
+                Y_XML_SECTION(xml, "Generating");
+                while(spaces.generate(mu, &survey))
+                {
+                }
+                survey.sort();
             }
-            survey.sort();
 
             for(const WOVEn::IntegerArray *arr=survey.head;arr;arr=arr->next)
             {
-                std::cerr << " (+) " << *arr << std::endl;
+                Y_XMLOG(xml," (+) " << *arr);
             }
         }
     }
 
     {
-        WOVEn::NaturalSurvey survey;
+        WOVEn::NaturalSurvey survey(xml);
+        Y_XML_SECTION(xml, "NaturalSurvey");
         {
-            WOVEn::Subspaces spaces(mu,&survey);
+            WOVEn::Subspaces spaces(mu,&survey,xml);
 
             std::cerr << spaces << std::endl;
-
-            while(spaces.generate(mu, &survey))
             {
+                Y_XML_SECTION(xml, "Generating");
+                while(spaces.generate(mu, &survey))
+                {
+                }
+                survey.sort();
             }
-            survey.sort();
 
             for(const WOVEn::NaturalArray *arr=survey.head;arr;arr=arr->next)
             {
-                std::cerr << " (*) " << *arr << std::endl;
+                Y_XMLOG(xml," (+) " << *arr);
             }
         }
 

@@ -49,6 +49,9 @@ namespace Yttrium
         std::ostream & operator()(void);      //!< indented
         std::ostream & operator*() noexcept;  //!< raw
 
+        static std::ostream & Indent(std::ostream &, const unsigned n);
+        std::ostream &        indent(std::ostream &) const;
+
         //______________________________________________________________________
         //
         //

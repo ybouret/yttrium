@@ -26,14 +26,16 @@ Y_UTEST(algebraic)
     while( N != MKL::Rank::Of(Nu) );
 
     std::cerr << "Nu=" << Nu << std::endl;
+    bool  verbose = true;
+    XMLog xml(verbose);
+
     Matrix<unsigned> Q;
-    Chemical::Algebraic::Compute(Q,Nu,true);
+    Chemical::Algebraic::Compute(Q,Nu,xml);
     std::cerr << "Q=" << Q << std::endl;
 
-    return 0;
     
     Chemical::Algebraic::Weight::List W;
-    Chemical::Algebraic::Compute(W,Nu);
+    Chemical::Algebraic::Compute(W,Nu,xml);
 
 
 }

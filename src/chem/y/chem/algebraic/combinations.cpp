@@ -10,24 +10,28 @@ namespace Yttrium
 
     namespace Chemical
     {
-        void Algebraic:: Compute(Weight::List &wl, const Matrix<int> &Nu, const bool verbose)
+        void Algebraic:: Compute(Weight::List &wl, const Matrix<int> &Nu, XMLog &xml)
         {
+            Y_XML_SECTION(xml, "Algebraic::ComputeCombinations");
+
             //------------------------------------------------------------------
             // initialize lists
             //------------------------------------------------------------------
             wl.release();
-            WOVEn:: IntegerSurvey survey(verbose);
+            WOVEn:: IntegerSurvey survey(xml);
 
             {
+                Y_XML_SECTION(xml,"Exploring");
                 const Matrix<int> NuT(TransposeOf,Nu);
                 const Matrix<int> NuTx;
                 Apex::Mylar::Compress(Coerce(NuTx),NuT);
-                WOVEn:: Explore(NuTx,survey,false);
+                WOVEn:: Explore(NuTx,survey,false,xml);
+                Y_XMLOG(xml," (*) #combination = " << survey.size);
             }
-            std::cerr << "# =" << survey.size << std::endl;
 
             if(survey.size)
             {
+                Y_XML_SECTION(xml,"Processing");
                 survey.sort();
                 WOVEn::Indices incoming(Nu.cols);
                 WOVEn::Indices outgoing(Nu.cols);
@@ -36,7 +40,7 @@ namespace Yttrium
                 {
                     const Readable<const apz> & w = *node;              // survey result
                     AutoPtr<Weight>             W = new Weight(w,Nu);   // weight for reactions
-                    std::cerr << W << " -> " << W->stoi << std::endl;
+                    //std::cerr << W << " -> " << W->stoi << std::endl;
 
                     //----------------------------------------------------------
                     // checking species
@@ -56,8 +60,8 @@ namespace Yttrium
                     {
                         if( (*W)[i]!=0 ) incoming.record( Nu[i] );
                     }
-                    std::cerr << "|_incoming : " << incoming << std::endl;
-                    std::cerr << "|_outgoing : " << outgoing << std::endl;
+                    //std::cerr << "|_incoming : " << incoming << std::endl;
+                    //std::cerr << "|_outgoing : " << outgoing << std::endl;
 
                     //----------------------------------------------------------
                     // checking consistency
@@ -77,7 +81,8 @@ namespace Yttrium
                             throw Specific::Exception("Chemical::Algebraic::Weight","corrupted topology (extra components)");
                     }
                     incoming ^= outgoing;
-                    std::cerr << "|_missing  : " << incoming << std::endl;
+                    //std::cerr << "|_missing  : " << incoming << std::endl;
+
 
                     //----------------------------------------------------------
                     // cheching multiplicity
@@ -87,15 +92,24 @@ namespace Yttrium
                         assert(*W != *rhs);
                         if(W->stoi == rhs->stoi)
                         {
-                            std::cerr << "multiple stoi" << std::endl;
+                            std::cerr << "*** multiple stoi" << std::endl;
                             goto DONE;
                         }
                     }
+
+                    //----------------------------------------------------------
+                    // cheching meaningfull
+                    //----------------------------------------------------------
+
+
+                    Y_XMLOG(xml, " (+) " << W << " -> " << W->stoi <<", missing=" << incoming);
 
                     wl.pushTail( W.yield() );
                 DONE:
                     ;
                 }
+                Y_XMLOG(xml," (*) #combination = " << wl.size << " / " << survey.size);
+
             }
         }
     }

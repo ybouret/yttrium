@@ -19,9 +19,20 @@ namespace Yttrium
         return std::cerr;
     }
 
+    std::ostream & XMLog:: Indent(std::ostream &os, const unsigned n)
+    {
+        for(unsigned i=n<<1;i>0;--i) os << ' ';
+        return os;
+    }
+
+    std::ostream & XMLog:: indent(std::ostream &os) const
+    {
+        return Indent(os,depth);
+    }
+
+
     std::ostream & XMLog:: operator()(void) {
-        for(unsigned i=depth<<1;i>0;--i) std::cerr << ' ';
-        return std::cerr;
+        return indent(std::cerr);
     }
 
 

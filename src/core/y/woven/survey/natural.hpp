@@ -81,8 +81,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit NaturalSurvey(const bool=false); //!< setup empty
-            virtual ~NaturalSurvey()        noexcept; //!< cleanup
+            explicit NaturalSurvey(XMLog &);   //!< setup empty
+            virtual ~NaturalSurvey() noexcept; //!< cleanup
 
             //__________________________________________________________________
             //
