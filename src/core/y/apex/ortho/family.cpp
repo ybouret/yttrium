@@ -12,28 +12,27 @@ namespace Yttrium
 
             Family:: ~Family() noexcept
             {
-                Coerce(dimension) = 0;
             }
 
             Family:: Family(const size_t dims) noexcept :
+            Metrics(dims),
             Vectors(),
-            dimension(dims),
-            remaining(dimension)
+            remaining(dimensions)
             {
                 
             }
 
             Family:: Family(const Family &other) :
+            Metrics(other),
             Vectors(other),
-            dimension(other.dimension),
-            remaining(dimension)
+            remaining(dimensions)
             {
             }
 
             bool Family:: wouldAccept( )
             {
 
-                for(size_t i=remaining.size();i>0;--i)
+                for(size_t i=dimensions;i>0;--i)
                 {
                     switch(remaining[i].numer.s)
                     {
@@ -52,13 +51,13 @@ namespace Yttrium
                     return false;
                 }
 
-                assert(size<dimension);
+                assert(size<dimensions);
                 return true;
             }
 
             const Vector & Family:: expand()
             {
-                assert(size<dimension);
+                assert(size<dimensions);
                 pushTail( new Vector(remaining) );
 
                 assert(0!=tail);
@@ -70,7 +69,7 @@ namespace Yttrium
 
             const Vector & Family:: expandFrom( QArrayType &arr )
             {
-                assert(size<dimension);
+                assert(size<dimensions);
                 assert(wouldAccept(arr));
                 
                 pushTail( new Vector(arr) );
@@ -87,11 +86,11 @@ namespace Yttrium
             {
                 if(F.size)
                 {
-                    Matrix<apz> M(F.size,F.dimension);
+                    Matrix<apz> M(F.size,F.dimensions);
                     size_t i=1;
                     for(const Vector *v=F.head;v;v=v->next,++i)
                     {
-                        for(size_t j=F.dimension;j>0;--j) M[i][j] = (*v)[j];
+                        for(size_t j=F.dimensions;j>0;--j) M[i][j] = (*v)[j];
                     }
                     os << M;
                 }

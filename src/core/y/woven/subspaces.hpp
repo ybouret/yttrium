@@ -86,6 +86,8 @@ namespace Yttrium
             template <typename T>
             bool generate(const Matrix<T> &mu, QSurvey *survey)
             {
+                
+
                 //--------------------------------------------------------------
                 // substitute new generation
                 //--------------------------------------------------------------
@@ -106,7 +108,9 @@ namespace Yttrium
                     return true;
                 }
                 else
+                {
                     return false;
+                }
             }
 
             //__________________________________________________________________

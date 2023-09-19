@@ -31,7 +31,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Family : public Vectors
+            class Family : public Metrics, public Vectors
             {
             public:
                 //______________________________________________________________
@@ -65,7 +65,7 @@ namespace Yttrium
                 bool wouldAccept(ARRAY &arr)
                 {
                     assert(remaining.size()==arr.size());
-                    for(size_t i=dimension;i>0;--i)
+                    for(size_t i=dimensions;i>0;--i)
                         remaining[i] = arr[i];
                     return wouldAccept();
                 }
@@ -92,7 +92,6 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                const size_t dimension; //!< space dimension
                 QArrayType   remaining; //!< workspace
 
             private:

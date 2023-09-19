@@ -16,7 +16,7 @@ namespace Yttrium
         typedef Apex::Ortho::Vector                QVector; //!< alias
         typedef Apex::Ortho::Family                QFamily; //!< alias
         typedef Functor<void,TL1(const QVector &)> QSurvey; //!< alias
-
+        typedef Apex::Ortho::Metrics               QMetrics; //!< alias
 
         //______________________________________________________________________
         //
@@ -26,7 +26,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Subspace : public Object
+        class Subspace : public Object, public QMetrics
         {
         public:
             //__________________________________________________________________
@@ -53,9 +53,11 @@ namespace Yttrium
             template <typename T>
             explicit Subspace(const Matrix<T> &mu,
                               const size_t     ir) :
-            qfamily( CheckDims(mu) ),
-            indices( CheckDOFs(mu) ),
-            staying( mu.rows       ),
+            Object(),
+            QMetrics( CheckDims(mu) ),
+            qfamily(  dimensions    ),
+            indices(  CheckDOFs(mu) ),
+            staying(  mu.rows       ),
             next(0),
             prev(0)
             {

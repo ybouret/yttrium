@@ -67,6 +67,7 @@ namespace Yttrium
 
         Subspace:: Subspace(const Subspace &other) :
         Object(),
+        QMetrics(other),
         qfamily(other.qfamily),
         indices(other.indices),
         staying(other.staying),

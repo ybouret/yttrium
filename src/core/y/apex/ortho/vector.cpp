@@ -20,6 +20,7 @@ namespace Yttrium
             Vector:: Vector(const Vector &other) :
             Identifiable(), Collection(),
             Object(),
+            Metrics(other),
             VectorType(other),
             norm2(other.norm2),
             norm1(other.norm1),
@@ -35,7 +36,8 @@ namespace Yttrium
 
             Vector:: Vector(const size_t dims) :
             Object(),
-            VectorType(dims),
+            Metrics(dims),
+            VectorType(dimensions),
             norm2(0),
             norm1(0),
             numPos(0),
@@ -49,7 +51,8 @@ namespace Yttrium
 
             Vector:: Vector(QArrayType &wksp) :
             Object(),
-            VectorType( wksp.size() ),
+            Metrics(wksp.size()),
+            VectorType( dimensions ),
             norm2(0),
             norm1(0),
             numPos(0),
@@ -65,7 +68,7 @@ namespace Yttrium
 
             void  Vector:: clear() noexcept
             {
-                for(size_t i=size();i>0;--i)
+                for(size_t i=dimensions;i>0;--i)
                 {
                     Coerce( (*this)[i] ).zset();
                 }
@@ -106,7 +109,7 @@ namespace Yttrium
                     //----------------------------------------------------------
                     // transfer numerators
                     //----------------------------------------------------------
-                    for(size_t i=size();i>0;--i)
+                    for(size_t i=dimensions;i>0;--i)
                     {
                         assert(1==Q[i].denom);
                         const Integer &z = (Coerce( (*this)[i] ) = Q[i].numer);
@@ -137,7 +140,7 @@ namespace Yttrium
             bool Vector:: computeOrtho(Writable<apq> &Q) const
             {
                 const Readable<const apz> &B = *this; assert(B.size()==Q.size());
-                const size_t n    = size();
+                const size_t n    = dimensions;
                 apq          coef = B[1] * Q[1];
                 for(size_t i=n;i>1;--i)
                     coef += B[i] * Q[i];

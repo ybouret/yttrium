@@ -16,7 +16,7 @@ Y_UTEST(apex_ortho)
     {
         Apex::Ortho::Family F(3);
 
-        while(F.size<F.dimension)
+        while(F.size<F.dimensions)
         {
             int arr[3] = {0,0,0};
             for(size_t i=0;i<3;++i) arr[i] = ran.in<int>(-5,5);

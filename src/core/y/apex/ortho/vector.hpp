@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Apex_Ortho_Vector_Included
@@ -7,6 +6,7 @@
 #include "y/apex/rational.hpp"
 #include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/pooled.hpp"
+#include "y/apex/ortho/metrics.hpp"
 
 namespace Yttrium
 {
@@ -24,6 +24,7 @@ namespace Yttrium
             typedef CxxArray<const apz> VectorType; //!< base type for a vector
             typedef CxxArray<apq>       QArrayType; //!< workspace
 
+          
 
             //__________________________________________________________________
             //
@@ -31,7 +32,7 @@ namespace Yttrium
             //! univocal vector of rationals + squared norm
             //
             //__________________________________________________________________
-            class Vector : public Object, public VectorType
+            class Vector : public Object, public Metrics, public VectorType
             {
             public:
                 static const char * const DerivedCallSign; //!< new call sign
@@ -50,9 +51,13 @@ namespace Yttrium
                 //! setup from compatible array
                 template <typename ARRAY>
                 inline Vector(const CopyOf_ &, ARRAY &arr):
-                Object(), VectorType(arr.size()), norm2(0), next(0), prev(0)
+                Object(),
+                Metrics(arr.size()),
+                VectorType(dimensions),
+                norm2(0),
+                next(0),
+                prev(0)
                 {
-                    assert(arr.size()>0);
                     QArrayType wksp(CopyOf,arr);
                     update(wksp);
                 }
