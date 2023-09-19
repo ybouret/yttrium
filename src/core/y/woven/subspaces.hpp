@@ -26,7 +26,13 @@ namespace Yttrium
         public SubSpace::List
         {
         public:
-            static const char * const CallSign;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< WOVEn::SubSpaces
 
             //__________________________________________________________________
             //
@@ -99,7 +105,8 @@ namespace Yttrium
                 Y_XML_SECTION_OPT(xml,
                                   "Subspaces::Generate",
                                   " generation='" << generation << "'" <<
-                                  " dimensions='" << dimensions << "'");
+                                  " dimensions='" << dimensions << "'" <<
+                                  " size='" << size << "'");
 
                 //--------------------------------------------------------------
                 // substitute new generation
@@ -134,8 +141,8 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const size_t generation;
-            XMLog       &xml; //!< output helper
+            const size_t generation; //!< generation in [1..dimensions]
+            XMLog       &xml;        //!< output helper
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SubSpaces);

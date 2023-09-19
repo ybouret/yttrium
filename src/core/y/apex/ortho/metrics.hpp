@@ -24,6 +24,7 @@ namespace Yttrium
             public:
                 const size_t dimensions;                 //!< dimensions of working space
                 virtual ~Metrics() noexcept;             //!< cleanup
+
             protected:
                 explicit Metrics(const size_t) noexcept; //!< setup, dims>0
                 Metrics(const Metrics &)       noexcept; //!< copy

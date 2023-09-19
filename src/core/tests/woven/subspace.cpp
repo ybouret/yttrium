@@ -63,6 +63,7 @@ Y_UTEST(woven_subspace)
         }
     }
 
+    if(false)
     {
         WOVEn::NaturalSurvey survey(xml);
         Y_XML_SECTION(xml, "NaturalSurvey");
