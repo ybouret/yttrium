@@ -44,47 +44,15 @@ Y_UTEST(woven_subspace)
     {
         WOVEn::IntegerSurvey survey(xml);
         Y_XML_SECTION(xml, "IntegerSurvey");
-        {
-            WOVEn::SubSpaces spaces(mu,0,xml);
+        WOVEn::Explore(mu,survey,false, xml);
 
-            std::cerr << spaces << std::endl;
-            {
-                Y_XML_SECTION(xml, "Generating");
-                while(spaces.generate(mu, &survey))
-                {
-                }
-                survey.sort();
-            }
-
-            for(const WOVEn::IntegerArray *arr=survey.head;arr;arr=arr->next)
-            {
-                Y_XMLOG(xml," (+) " << *arr);
-            }
-        }
     }
 
     if(false)
     {
         WOVEn::NaturalSurvey survey(xml);
         Y_XML_SECTION(xml, "NaturalSurvey");
-        {
-            WOVEn::SubSpaces spaces(mu,&survey,xml);
-
-            std::cerr << spaces << std::endl;
-            {
-                Y_XML_SECTION(xml, "Generating");
-                while(spaces.generate(mu, &survey))
-                {
-                }
-                survey.sort();
-            }
-
-            for(const WOVEn::NaturalArray *arr=survey.head;arr;arr=arr->next)
-            {
-                Y_XMLOG(xml," (+) " << *arr);
-            }
-        }
-
+        WOVEn::Explore(mu,survey,true, xml);
     }
 
     Y_SIZEOF(WOVEn::QVector);
