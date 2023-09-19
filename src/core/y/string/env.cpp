@@ -7,6 +7,10 @@
 #include <cstdlib>
 #endif
 
+#if defined(Y_WIN)
+#include <windows.h>
+#endif
+
 namespace Yttrium
 {
     bool Environment:: Get(String &value, const String &name)
@@ -22,7 +26,54 @@ namespace Yttrium
 #endif
 
 #if defined(Y_WIN)
-        
+        LPCH es = ::GetEnvironmentStrings();
+        if (!es) throw Win32::Exception(::GetLastError(), "GetEnvironmentStrings()");
+
+        try
+        {
+            const char* curr = es;
+
+
+        CYCLE:
+            const char* next = curr;
+            while (0 != *(++next))
+                ;
+
+            const size_t size = (next - curr);
+
+
+            //std::cerr << "size=" << size << std::endl;
+            if (1 == size && 0 == *next)
+            {
+                // std::cerr << "done" << std::endl;
+                return false;
+            }
+            const char* const sep = strchr(curr, '=');
+            if (!sep) throw Win32::Exception(ERROR_NO_DATA, "while parsing environment strings");
+            const String uuid(curr, sep - curr);
+            if (uuid == name)
+            {
+                const String data(sep + 1, next - sep);
+                value = data;
+                return true;
+            }
+            
+           //std::cerr << "|_uuid='" << uuid << "'" << std::endl;
+            //std::cerr << "|_data='" << data << "'" << std::endl;
+
+            //const String content(curr, size);
+            //std::cerr << "|_[" << content << "]" << std::endl;
+            curr = ++next;
+            goto CYCLE;
+        }
+        catch (...)
+        {
+            ::FreeEnvironmentStrings(es);
+            throw;
+        }
+
+        ::FreeEnvironmentStrings(es);
+        return false;
 #endif
 
 

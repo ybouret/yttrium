@@ -60,8 +60,22 @@ Y_UTEST(string_env)
         std::cerr << entry << std::endl;
     }
 #endif
+    
+    for (int i = 1; i < argc; ++i)
+    {
+        const String name = argv[1];
+        String       value;
+        if (Environment::Get(value, name))
+        {
+            std::cerr << "found '" << name << "' = '" << value << "'" << std::endl;
+        }
+        else
+        {
+            std::cerr << "no    '" << name << "'" << std::endl;
 
-    getFrom(data);
+        }
+    }
+    //getFrom(data);
 
 }
 Y_UDONE()
