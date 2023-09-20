@@ -213,7 +213,22 @@ namespace Yttrium
 
     VFS::EntryType LocalFS:: findEntryType(const String &path, bool &link) const
     {
-        return VFS::IsUnk;
+		Y_GIANT_LOCK();
+		link = false;
+		const DWORD res = ::GetFileAttributes(path.c_str());
+		if (INVALID_FILE_ATTRIBUTES == res)
+		{
+			return IsUnk;
+		}
+		//std::cerr << "res=" << res << std::endl;
+		
+		if (res & FILE_ATTRIBUTE_DIRECTORY)
+			return IsDir;
+
+		if (res & FILE_ATTRIBUTE_NORMAL)
+			return IsReg;
+
+        return IsUnk;
     }
 
 }
