@@ -87,6 +87,19 @@ namespace Yttrium
             return code->ready();
         }
 
+        uint8_t Source:: peek() const noexcept
+        {
+            assert(0!=code);
+            assert(code->cache.size>0);
+            return **(code->cache.head);
+        }
+
+        size_t Source:: cached() const noexcept
+        {
+            assert(0!=code);
+            return code->cache.size;
+        }
+
         void Source:: skip() noexcept
         {
             assert(code!=0);

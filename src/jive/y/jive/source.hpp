@@ -42,11 +42,12 @@ namespace Yttrium
             void  put(Token &)       noexcept;  //!< unread a token
             void  dup(const Token &);           //!< unread a copy
 
-            void  newLine()   noexcept; //!< propagate newLine
-            bool  guess(Token &token);  //!< guess next blank-separated token
-            bool  ready();              //!< check if char is available
-            void  skip() noexcept;      //!< skip next char if ready!
-
+            bool    ready();                 //!< check if char is available
+            bool    guess(Token &token);     //!< guess next blank-separated token
+            void    skip()         noexcept; //!< skip next char if ready!
+            uint8_t peek()   const noexcept; //!< next content if ready()
+            size_t  cached() const noexcept; //!< cache size
+            void    newLine()      noexcept; //!< propagate newLine to module
 
             //! read-only inner module access
             const Module * operator->() const noexcept;

@@ -60,7 +60,7 @@ namespace Yttrium
             Token *somehow(DATANAME &dataName, DATA &data)
             {
                 Source source( Module::Open(dataName,data) );
-                return exactly(source);
+                return somehow(source);
             }
 
             

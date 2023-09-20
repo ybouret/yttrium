@@ -82,16 +82,22 @@ namespace Yttrium
             self.reset();
             assert(0==self.size);
 
-            while( source.ready() )
+        PROBE:
+            if(!source.ready())            return   0; // End Of Source
+            if(!firstChars[source.peek()]) 
             {
-                if(self.takes(source))
-                    return &self;
-
-                assert(0==self.size);
                 source.skip();
+                goto PROBE; // couldn't match
             }
 
-            return 0;
+            assert(source.cached()>0);
+            if(self.takes(source))       return &self;
+
+            assert(0==self.size);
+            assert(source.cached()>0);
+            
+            source.skip();
+            goto PROBE;
 
         }
 

@@ -21,7 +21,7 @@ namespace Yttrium
         {
             assert(w.size()==size());
             assert(w.size()==Nu.rows);
-
+            
             // fetch weights
             for(size_t i=w.size();i>0;--i)
             {
