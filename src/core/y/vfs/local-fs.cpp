@@ -211,9 +211,9 @@ namespace Yttrium
         }
     };
 
-    VFS::EntryType LocalFS:: findEntryType(const String &path) const
+    VFS::EntryType LocalFS:: findEntryType(const String &path, bool &link) const
     {
-        return VFS::IsUnknown;
+        return VFS::IsUnk;
     }
 
 }
