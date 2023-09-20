@@ -20,10 +20,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class SubSpaces :
-        public Identifiable,
-        public QMetrics,
-        public SubSpace::List
+        class SubSpaces : public Identifiable, public QMetrics, public SubSpace::List
         {
         public:
             //__________________________________________________________________
