@@ -11,7 +11,7 @@ namespace Yttrium
 {
 
 
-
+#if 0
     void getFrom(const char * const env)
     {
         const char *curr = env;
@@ -43,7 +43,7 @@ namespace Yttrium
     "\0"
     //"hello=world\0"     "abc=def\0"
     ;
-
+#endif
 
 
 }

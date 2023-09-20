@@ -13,10 +13,14 @@ namespace Yttrium
     namespace WOVEn
     {
 
-        typedef Apex::Ortho::Vector                QVector; //!< alias
-        typedef Apex::Ortho::Family                QFamily; //!< alias
-        typedef Functor<void,TL1(const QVector &)> QSurvey; //!< alias
+        typedef Apex::Ortho::Vector                QVector;  //!< alias
+        typedef Apex::Ortho::Family                QFamily;  //!< alias
+        typedef Functor<void,TL1(const QVector &)> QSurvey;  //!< alias
         typedef Apex::Ortho::Metrics               QMetrics; //!< alias
+        typedef Apex::Ortho::Quality               Quality;  //!< alias
+        
+
+      
 
         //______________________________________________________________________
         //
@@ -57,6 +61,7 @@ namespace Yttrium
             QFamily(  CheckDims(mu) ),
             indices(  CheckDOFs(mu) ),
             staying(  mu.rows       ),
+            quality( getQuality(1)  ),
             next(0),
             prev(0)
             {
@@ -89,8 +94,10 @@ namespace Yttrium
 
             //! try to expand current subspace dimension
             /**
-             a new subspace is added for all possible
+             - a new subspace is built for all possible
              staying indices that would increase the dimension
+             - survey is conducted
+             - if staying indices, the new subspace is added to list
              */
             template <typename T>
             inline void tryExpand(List &            L,
@@ -116,10 +123,11 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            Indices   indices; //!< indices of vectors composing the family
-            Indices   staying; //!< indices of available vectors
-            SubSpace *next;    //!< for list
-            SubSpace *prev;    //!< for lust
+            Indices       indices; //!< indices of vectors composing the family
+            Indices       staying; //!< indices of available vectors
+            const Quality quality; //!< depending on size vs. dims
+            SubSpace     *next;    //!< for list
+            SubSpace     *prev;    //!< for lust
 
 
         private:

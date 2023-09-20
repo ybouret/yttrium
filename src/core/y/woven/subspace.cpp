@@ -71,6 +71,7 @@ namespace Yttrium
         QFamily(other),
         indices(other.indices),
         staying(other.staying),
+        quality(other.quality),
         next(0),
         prev(0)
         {
@@ -88,6 +89,9 @@ namespace Yttrium
             if(survey) (*survey)(vec);                             // take survey if any
             if(sub->staying.size()>0)                              // grow list IFF subspace got staying index
                 L.pushTail( sub.yield() );
+
+            Coerce(sub->quality) = sub->getQuality(sub->size);
+
         }
 
         
