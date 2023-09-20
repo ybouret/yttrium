@@ -88,9 +88,10 @@ namespace Yttrium
             sub->staying -= ir;                                    // update staying
             if(survey) (*survey)(vec);                             // take survey if any
             if(sub->staying.size()>0)                              // grow list IFF subspace got staying index
+            {
+                Coerce(sub->quality) = sub->getQuality(sub->size);
                 L.pushTail( sub.yield() );
-
-            Coerce(sub->quality) = sub->getQuality(sub->size);
+            }
 
         }
 
