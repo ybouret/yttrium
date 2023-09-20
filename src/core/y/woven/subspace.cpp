@@ -29,7 +29,7 @@ namespace Yttrium
             throw Specific::Exception(CallSign,"Singular first row!");
         }
 
-        void SubSpace:: initializeWith(const size_t ir, const size_t nr)
+        void SubSpace:: initWith(const size_t ir, const size_t nr)
         {
             expand();
             indices += ir;

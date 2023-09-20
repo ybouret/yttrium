@@ -66,7 +66,7 @@ namespace Yttrium
             prev(0)
             {
                 if( !wouldAccept(mu[ir]) ) SingularFirstRowException();
-                initializeWith(ir,mu.rows);
+                initWith(ir,mu.rows);
             }
 
             //! copy
@@ -142,10 +142,6 @@ namespace Yttrium
                             }
                         }
 
-
-
-
-                        exit(1);
                     } break;
 
                     case Apex::Ortho::Generating:
@@ -182,7 +178,8 @@ namespace Yttrium
             Y_DISABLE_ASSIGN(SubSpace);
             static size_t CheckDOFs(const MatrixMetrics &mu);
             static void   SingularFirstRowException();
-            void          initializeWith(const size_t ir, const size_t nr);
+
+            void          initWith(const size_t ir, const size_t nr);
             void          doExpand(List &L, const size_t ir, QSurvey *survey);
             void          fullfill(); //!< staying -> indices
 
