@@ -18,9 +18,9 @@ namespace Yttrium
         typedef Functor<void,TL1(const QVector &)> QSurvey;  //!< alias
         typedef Apex::Ortho::Metrics               QMetrics; //!< alias
         typedef Apex::Ortho::Quality               Quality;  //!< alias
-        
 
-      
+
+
 
         //______________________________________________________________________
         //
@@ -85,13 +85,18 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //__________________________________________________________________
+            //
             //! check if source was merged with this
             /**
              - indices can contain source indices
              - qfamily can contain source qfamily
              */
+            //__________________________________________________________________
             bool merged( AutoPtr<SubSpace> &source );
 
+            //__________________________________________________________________
+            //
             //! try to expand current subspace dimension
             /**
              - a new subspace is built for all possible
@@ -99,17 +104,60 @@ namespace Yttrium
              - survey is conducted
              - if staying indices, the new subspace is added to list
              */
+            //__________________________________________________________________
             template <typename T>
             inline void tryExpand(List &            L,
                                   const Matrix<T> & mu,
                                   QSurvey         * survey)
             {
-                for(size_t i=staying.size();i>0;--i)
+                switch(quality)
                 {
-                    const size_t ir = staying[i];
-                    if(wouldAccept(mu[ir]))
-                        doExpand(L,ir,survey);
+                    case Apex::Ortho::Fragmental:
+                        //------------------------------------------------------
+                        // need to test all the staying vectors
+                        //------------------------------------------------------
+                        assert(size<concluding);
+                        for(size_t i=staying.size();i>0;--i)
+                        {
+                            const size_t ir = staying[i];
+                            if(wouldAccept(mu[ir]))
+                                doExpand(L,ir,survey);
+                        }
+                        break;
+
+                    case Apex::Ortho::Hyperplane: {
+                        //------------------------------------------------------
+                        // there is AT MOST ONE new vector
+                        //------------------------------------------------------
+                        assert(size==concluding);
+                        List tmp;
+                        for(size_t i=staying.size();i>0;--i)
+                        {
+                            const size_t ir = staying[i];
+                            if(wouldAccept(mu[ir]))
+                            {
+                                doExpand(tmp,ir,survey);
+                                assert(0==tmp.size);
+                                return;
+                            }
+                        }
+
+
+
+
+                        exit(1);
+                    } break;
+
+                    case Apex::Ortho::Generating:
+                        //------------------------------------------------------
+                        // base is complete, call fullfill for consistency
+                        //------------------------------------------------------
+                        assert(size==dimensions);
+                        fullfill();
+                        break;
                 }
+
+
             }
 
 
@@ -136,6 +184,7 @@ namespace Yttrium
             static void   SingularFirstRowException();
             void          initializeWith(const size_t ir, const size_t nr);
             void          doExpand(List &L, const size_t ir, QSurvey *survey);
+            void          fullfill(); //!< staying -> indices
 
         };
 

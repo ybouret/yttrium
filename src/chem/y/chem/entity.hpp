@@ -12,19 +12,50 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Named entity interface
+        //
+        //
+        //______________________________________________________________________
         class Entity : public Object, public Counted
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup from name
             template <typename NAME>
             explicit inline Entity(const NAME &uid) :
             Object(), Counted(), name(uid) {}
 
+            //! copy
             Entity(const Entity &);
+
+            //! cleanup
             virtual ~Entity() noexcept;
 
-            const String &key() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            const String &key() const noexcept; //!< key for databases
 
-            const String  name;
+            //__________________________________________________________________
+            //
+            //
+            // Member
+            //
+            //__________________________________________________________________s
+            const String  name; //!< identifier
 
         private:
             Y_DISABLE_ASSIGN(Entity);

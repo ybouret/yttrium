@@ -52,14 +52,15 @@ namespace Yttrium
         static String ChangeExtension(const char * const  newExt, const String & path); //!< change extension
         static String ChangeExtension(const String      & newExt, const String & path); //!< change extension
 
-
+        //! admitted entry type
         enum EntryType
         {
-            IsUnk,
-            IsReg,
-            IsDir
+            IsUnk, //!< doesn't exists ?
+            IsReg, //!< regular file
+            IsDir  //!< directory
         };
 
+        //! human readable entry type
         static const char *EntryTypeText(const EntryType) noexcept;
 
         //______________________________________________________________________

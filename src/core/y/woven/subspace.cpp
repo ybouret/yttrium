@@ -87,15 +87,24 @@ namespace Yttrium
             sub->indices += ir;                                    // update indices
             sub->staying -= ir;                                    // update staying
             if(survey) (*survey)(vec);                             // take survey if any
-            if(sub->staying.size()>0)                              // grow list IFF subspace got staying index
+            if(sub->staying.size()<=0) return;                     // it was the final trial
+            switch( (Coerce(sub->quality) = sub->getQuality(sub->size)) )
             {
-                Coerce(sub->quality) = sub->getQuality(sub->size);
-                L.pushTail( sub.yield() );
+                case Apex::Ortho::Generating: return; // won't accept any more
+                case Apex::Ortho::Fragmental:
+                case Apex::Ortho::Hyperplane:
+                    break;
             }
-
+            L.pushTail( sub.yield() );
         }
 
-        
+        void SubSpace:: fullfill()
+        {
+            assert(size==dimensions);
+            assert(Apex::Ortho::Generating==quality);
+            indices |= staying;
+            staying.free();
+        }
 
     }
 

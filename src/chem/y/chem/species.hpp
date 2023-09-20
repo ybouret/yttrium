@@ -10,17 +10,40 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Base class for species
+        //
+        //
+        //______________________________________________________________________
         class Species : public Entity
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup from name + algebraic charge
             template <typename NAME> inline
             explicit Species(const NAME &uid,
                              const int   algebraicCharge) :
             Entity(uid), z(algebraicCharge) {}
+
+            //! cleanup
             virtual ~Species() noexcept;
 
-
-            const int z;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            const int z; //!< algebraic charge
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Species);

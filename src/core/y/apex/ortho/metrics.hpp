@@ -13,6 +13,10 @@ namespace Yttrium
 
         namespace Ortho
         {
+            //__________________________________________________________________
+            //
+            //! quality of a family w.r.t space dimensions
+            //__________________________________________________________________
             enum Quality
             {
                 Fragmental, // size < dimensions-1
@@ -29,15 +33,14 @@ namespace Yttrium
             class Metrics
             {
             public:
-                const size_t dimensions;                 //!< dimensions>0 of working space
-                const size_t concluding;                 //!< dimensions-1 = hyperplane dimensions
-                virtual ~Metrics() noexcept;             //!< cleanup
-
-                Quality getQuality(const size_t n) const noexcept;
+                const size_t dimensions;                         //!< dimensions>0 of working space
+                const size_t concluding;                         //!< dimensions-1 = hyperplane dimensions
+                virtual ~Metrics() noexcept;                     //!< cleanup
+                Quality getQuality(const size_t) const noexcept; //!< compute quality
 
             protected:
-                explicit Metrics(const size_t) noexcept; //!< setup, dims>0
-                Metrics(const Metrics &)       noexcept; //!< copy
+                explicit Metrics(const size_t) noexcept;         //!< setup, dims>0
+                Metrics(const Metrics &)       noexcept;         //!< copy
 
             private:
                 Y_DISABLE_ASSIGN(Metrics);
