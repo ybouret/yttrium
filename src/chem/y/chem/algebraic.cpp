@@ -15,6 +15,7 @@ namespace Yttrium
                                     const Matrix<int>         &Nu) :
         Coefficients(w.size()),
         stoi(Nu.cols),
+        nEqs(0),
         next(0),
         prev(0)
         {
@@ -24,7 +25,10 @@ namespace Yttrium
             // fetch weights
             for(size_t i=w.size();i>0;--i)
             {
-                (*this)[i] = w[i].cast<int>("reaction weight");
+                if( 0 != ( (*this)[i] = w[i].cast<int>("reaction weight") ) )
+                {
+                    ++Coerce(nEqs);
+                }
             }
 
             // compute stoi

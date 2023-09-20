@@ -51,6 +51,7 @@ namespace Yttrium
                 //! setup coefficients from W, compute Nu = W' * Nu
                 explicit Weight(const Readable<const apz> &W,
                                 const Matrix<int>         &Nu);
+                
                 //! cleanup
                 virtual ~Weight() noexcept;
 
@@ -59,6 +60,7 @@ namespace Yttrium
                 // Members
                 //______________________________________________________________
                 const Coefficients stoi; //!< stoichiometric coefficients
+                const size_t       nEqs; //!< involved nEqs
                 Weight *           next; //!< for list
                 Weight *           prev; //!< for list
 
