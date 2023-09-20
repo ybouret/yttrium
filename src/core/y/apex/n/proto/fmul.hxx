@@ -62,34 +62,10 @@ Proto * FFT_Mul(const WordType * const a, const size_t p,
         {
             assert(p>0);
             assert(q>0);
-            const size_t   w = p+q;          // result #words
-            const size_t   n = w * WordSize; // result #bytes
-            Batch<cplx>    fft1(n);          // as many cplx
-            Batch<cplx>    fft2(fft1);  assert(fft2.count==fft1.count);
-            const size_t   N = fft1.count;
 
-            std::cerr << "re :";
-            FillRe(fft1(),a,p); std::cerr << std::endl;
-            std::cerr << "im :";
-            FillIm(fft1(),b,q); std::cerr << std::endl;
 
-            Core::Display(std::cerr << "pack=", fft1(), N) << std::endl;
-            cplx::Type *f1 = (&fft1()->re) - 1;
-            cplx::Type *f2 = (&fft2()->re) - 1;
-            FFT::Forward(f1,N);
-            FFT::Expand(f1,f2,N);
-            Core::Display(std::cerr << "fft1=", fft1(), N) << std::endl;
-            Core::Display(std::cerr << "fft2=", fft2(), N) << std::endl;
-            for(size_t i=0;i<N;++i)
-            {
-                fft1[i] *= fft2[i];
-            }
-            FFT::Reverse(f1,N);
-            for(size_t i=N*2;i>0;--i) f1[i] /= N;
-            Core::Display(std::cerr << "fft1=", fft1(), N) << std::endl;
 
-            
-            return 0;
+            return new Proto(0,AsCapacity);
         }
     }
 }
