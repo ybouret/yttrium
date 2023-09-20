@@ -7,10 +7,10 @@ namespace Yttrium
     VFS:: ~VFS() noexcept {}
     VFS::  VFS() noexcept {}
 
-    bool VFS:: TryRemove(const char   *path)
+    bool VFS:: tryRemove(const char   *path)
     {
         const String _(path);
-        return TryRemove(_);
+        return tryRemove(_);
     }
 
 }
@@ -129,10 +129,29 @@ namespace Yttrium
 namespace Yttrium
 {
 
-    VFS::Scanner * VFS:: OpenDirectory(const char *dirName)
+    VFS::Scanner * VFS:: openDirectory(const char *dirName)
     {
         const String _(dirName);
-        return OpenDirectory(_);
+        return openDirectory(_);
     }
+
+    VFS::EntryType VFS:: findEntryType(const char   *path, bool &link) const
+    {
+        const String _(path);
+        return findEntryType(_,link);
+    }
+
+    const char * VFS:: EntryTypeText(const EntryType t) noexcept
+    {
+        switch(t)
+        {
+            case IsReg: return "f";
+            case IsDir: return "d";
+            case IsUnk: return "?";
+        }
+        return "!";
+    }
+
+
 
 }

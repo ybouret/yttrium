@@ -37,15 +37,16 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        virtual bool     TryRemove(const String &path);        //!< try to remove file from disk
-        virtual Scanner *OpenDirectory(const String &dirName); //!< use O/S functions
-        static String    MakeWin32Path(const String &dirName); //!< needed for Win32
+        virtual bool      tryRemove(const String &path);           //!< try to remove file from disk
+        virtual Scanner * openDirectory(const String &dirName);    //!< use O/S functions
+        virtual EntryType findEntryType(const String &path, bool &link) const; //!< use O/S functions
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(LocalFS);
         friend class Singleton<LocalFS>;
         explicit LocalFS() noexcept;
         virtual ~LocalFS() noexcept;
+        static String    MakeWin32Path(const String &dirName); //!< needed for Win32
 
     };
 }

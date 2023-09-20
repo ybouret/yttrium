@@ -3,11 +3,13 @@
 namespace Yttrium
 {
 
-    VFS::Entry:: Entry(const VFS &, const String &name) :
+    VFS::Entry:: Entry(const VFS &fs, const String &name) :
     Object(),
     path(name),
     base( BaseName(path)  ),
     ext(  Extension(base) ),
+    link(false),
+    type( fs.findEntryType(path, Coerce(link)) ),
     next(0),
     prev(0)
     {
@@ -15,11 +17,13 @@ namespace Yttrium
     }
 
 
-    VFS::Entry:: Entry(const VFS &, const char *name) :
+    VFS::Entry:: Entry(const VFS &fs, const char *name) :
     Object(),
     path( name ),
     base( BaseName(path)  ),
     ext(  Extension(base) ),
+    link( false ),
+    type( fs.findEntryType(path, Coerce(link)) ),
     next(0),
     prev(0)
     {
@@ -41,9 +45,37 @@ namespace Yttrium
     path(entry.path),
     base(path.c_str() + shifting(entry.base,entry.path)),
     ext(0==entry.ext? 0 : path.c_str() + shifting(entry.ext,entry.path)),
+    link(entry.link),
+    type(entry.type),
     next(0),
     prev(0)
     {
+    }
+
+
+    const char * VFS::Entry:: typeText() const noexcept
+    {
+        return VFS::EntryTypeText(type);
+    }
+
+    std::ostream & operator<<(std::ostream &os, const VFS::Entry &ep)
+    {
+        os << '[';
+        os << ep.typeText();
+        if(ep.link)
+        {
+            os << '@';
+        }
+        else
+        {
+            os << ' ';
+        }
+        os << ']' << ' ' << ep.path;
+        if(ep.ext)
+        {
+            os << ' ' << '[' << ep.ext << ']';
+        }
+        return os;
     }
 
 }

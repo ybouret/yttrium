@@ -14,8 +14,9 @@ Y_UTEST(vfs_entry)
         const char * const  path     = argv[i];
         AutoPtr<VFS::Entry> ep = new VFS::Entry(fs,path);
         const VFS::Entry    cp = *ep;
-        std::cerr << ep->path << ", " << ep->base << ", " << (ep->ext ? ep->ext : Core::Ptr::Nil) << std::endl;
-        std::cerr << cp.path << ", " << cp.base << ", " << (cp.ext ? cp.ext : Core::Ptr::Nil) << std::endl;
+        std::cerr << ep << std::endl;
+        std::cerr << cp << std::endl;
+
     }
 }
 Y_UDONE()

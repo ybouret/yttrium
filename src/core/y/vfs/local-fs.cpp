@@ -25,7 +25,7 @@ namespace Yttrium
     {
     }
 
-    bool LocalFS::TryRemove(const String &path)
+    bool LocalFS::tryRemove(const String &path)
     {
         Y_GIANT_LOCK();
 #if defined(Y_BSD)
@@ -64,6 +64,7 @@ namespace Yttrium
 #if defined(Y_BSD)
 #include <dirent.h>
 #include <cerrno>
+#include <sys/stat.h>
 
 namespace Yttrium
 {
@@ -111,6 +112,45 @@ namespace Yttrium
             }
         };
     }
+
+    VFS::EntryType LocalFS:: findEntryType(const String &path, bool &link) const
+    {
+        Y_GIANT_LOCK();
+        assert(false==link);
+
+        struct stat buf;
+        mode_t &    m = buf.st_mode;
+
+        Y_STATIC_ZVAR(buf);
+        if(0!=lstat(path.c_str(),&buf))
+        {
+            return IsUnk;
+        }
+
+        if( S_ISLNK(m) )
+        {
+            std::cerr << "->link" << std::endl;
+            link = true;
+            Y_STATIC_ZVAR(buf);
+            if(0!=stat(path.c_str(),&buf))
+            {
+                return IsUnk;
+            }
+        }
+
+        if( S_ISREG(m) )
+        {
+            return IsReg;
+        }
+
+        if( S_ISDIR(m) )
+        {
+            return IsDir;
+        }
+
+        return IsUnk;
+    }
+
 }
 
 #endif
@@ -171,6 +211,11 @@ namespace Yttrium
         }
     };
 
+    VFS::EntryType LocalFS:: findEntryType(const String &path) const
+    {
+        return VFS::IsUnknown;
+    }
+
 }
 #endif
 
@@ -178,7 +223,7 @@ namespace Yttrium
 {
 
 
-    VFS::Scanner *LocalFS::OpenDirectory(const String &dirName)
+    VFS::Scanner *LocalFS:: openDirectory(const String &dirName)
     {
         return new LocalScanner(*this, dirName);
     }

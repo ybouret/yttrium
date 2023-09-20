@@ -52,6 +52,16 @@ namespace Yttrium
         static String ChangeExtension(const char * const  newExt, const String & path); //!< change extension
         static String ChangeExtension(const String      & newExt, const String & path); //!< change extension
 
+
+        enum EntryType
+        {
+            IsUnk,
+            IsReg,
+            IsDir
+        };
+
+        static const char *EntryTypeText(const EntryType) noexcept;
+
         //______________________________________________________________________
         //
         //
@@ -61,6 +71,8 @@ namespace Yttrium
         class Entry : public Object
         {
         public:
+
+
             //__________________________________________________________________
             //
             // C++
@@ -72,11 +84,20 @@ namespace Yttrium
 
             //__________________________________________________________________
             //
+            // methods
+            //__________________________________________________________________
+            const char * typeText() const noexcept; //!< EntryTypeText(type)
+            Y_OSTREAM_PROTO(Entry);                 //!< full display
+
+            //__________________________________________________________________
+            //
             // members
             //__________________________________________________________________
             const String        path; //!< full   path
             const char  * const base; //!< within path
             const char  * const ext;  //!< within path
+            const bool          link; //!< flag for symbolic link
+            const EntryType     type; //!< from fs
             Entry              *next; //!< for list
             Entry              *prev; //!< fir list
             
@@ -118,10 +139,13 @@ namespace Yttrium
         // Interface
         //
         //______________________________________________________________________
-        virtual bool     TryRemove(const String &path) = 0;        //!< try to remove file from VFS
-        bool             TryRemove(const char   *path);            //!< alias
-        virtual Scanner *OpenDirectory(const String &dirName) = 0; //!< create scanner for dirName
-        virtual Scanner *OpenDirectory(const char   *dirName);     //!< alias
+        virtual bool      tryRemove(const String &path) = 0;           //!< try to remove file from VFS
+        bool              tryRemove(const char   *path);               //!< alias
+        virtual Scanner * openDirectory(const String &dirName)    = 0; //!< create scanner for dirName
+        Scanner         * openDirectory(const char   *dirName);        //!< alias
+        virtual EntryType findEntryType(const String &path, bool &lnk) const = 0; //!< get entry attributes
+        EntryType         findEntryType(const char   *path, bool &lnk) const;     //!< alias
+
 
         //______________________________________________________________________
         //

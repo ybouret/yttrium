@@ -13,7 +13,7 @@ Y_UTEST(vfs_scan)
     {
         VFS::Entries entries;
         {
-            AutoPtr<VFS::Scanner> scanner = fs.OpenDirectory(argv[1]);
+            AutoPtr<VFS::Scanner> scanner = fs.openDirectory(argv[1]);
             VFS::Entry *ep;
             while( 0 != (ep=scanner->get()))
             {
