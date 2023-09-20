@@ -138,7 +138,7 @@ namespace Yttrium
                             {
                                 doExpand(tmp,ir,survey);
                                 assert(0==tmp.size);
-                                return;
+                                return; // stop at first vector, other are the same
                             }
                         }
 

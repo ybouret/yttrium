@@ -5,3 +5,4 @@ Y_LinkLibraries(test-chem y-chem y-mkl)
 enable_testing()
 
 add_test(algebraic test-chem algebraic)
+add_test(simple    test-chem simple)
