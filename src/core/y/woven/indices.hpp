@@ -17,7 +17,7 @@ namespace Yttrium
         //
         //
         //
-        //! Set of indices to keep track of used vector
+        //! Set of indices to keep track of used vectors
         //
         //
         //______________________________________________________________________
