@@ -38,7 +38,7 @@ namespace Yttrium
 
                 for(const WOVEn::IntegerArray *node=survey.head;node;node=node->next)
                 {
-                    const Readable<const apz> & w = *node;              // survey result
+                    const WOVEn::IntegerArray & w = *node;              // survey result
                     AutoPtr<Weight>             W = new Weight(w,Nu);   // weight for reactions
                     //std::cerr << W << " -> " << W->stoi << std::endl;
 

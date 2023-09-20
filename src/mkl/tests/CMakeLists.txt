@@ -5,7 +5,6 @@ algebra
 drvs
 interp
 io
-woven
 filter)
 
 set( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
@@ -36,7 +35,5 @@ add_test(interp:poly  test-mkl interp_poly)
 add_test(interp:ratio test-mkl interp_ratio)
 
 add_test(io:data-stream test-mkl io_data_stream ${DATA}/sample.txt)
-
-add_test(woven:chemsys  test-mkl woven_chemsys)
 
 add_test(filter:smooth  test-mkl filter_smooth)
