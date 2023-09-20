@@ -18,51 +18,7 @@ namespace Yttrium
         {
 
 
-            class Action : public Object, public Counted, public Tag
-            {
-            public:
-                enum Type
-                {
-                    Produce,
-                    Control
-                };
-
-                typedef Functor<Type,TL1(const Token &)> CallBack;
-                typedef Yttrium::ArkPtr<String,Action>   Pointer;
-
-                virtual ~Action() noexcept {}
-
-                template <typename TAG, typename OBJECT, typename METHOD_POINTER>
-                static inline Action *Create(TAG             &t,
-                                             Pattern *        pattern,
-                                             OBJECT          &host,
-                                             METHOD_POINTER   method)
-                {
-                    const Motif    m(pattern);
-                    const CallBack c(&host,method);
-                    return new Action(t,m,c);
-                }
-
-
-                Motif    motif;
-                CallBack instr;
-
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Action);
-                template <typename TAG> inline
-                explicit Action(TAG &            t,
-                                const Motif    & m,
-                                const CallBack & c) :
-                Object(),
-                Counted(),
-                Tag(t),
-                motif(m),
-                instr(c)
-                {
-                }
-
-            };
+            
 
             class Scanner : public Tag
             {
@@ -77,23 +33,10 @@ namespace Yttrium
 
                 virtual ~Scanner() noexcept;
 
-                Action::Type produce(const Token &) const;
-
-                template <
-                typename TAG,
-                typename RX,
-                typename OBJECT,
-                typename METHOD_POINTER>
-                void operator()( TAG &tag, RX &rx, OBJECT &host, METHOD_POINTER method)
-                {
-                    const Action::Pointer A( Action::Create(tag, RegExp::Compile(rx, & *dict), host, method) );
-                }
-
 
                 ArcPtr<Dictionary> dict;
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
-                SuffixSet<String,Action::Pointer> adb;
             };
         }
         
