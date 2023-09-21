@@ -163,6 +163,7 @@ add_test(io:xmlog       test-core io_xmlog)
 #fft
 add_test(fft:1   test-core fft1)
 add_test(fft:2   test-core fft2)
+add_test(fft:mul test-core fft_mul)
 
 #string(s)
 add_test(strings test-core strings)

@@ -125,6 +125,7 @@ namespace Yttrium
                 Object(),
                 Plan(),
                 name(id),
+                hub(),
                 dict( new Dictionary() )
                 {
 

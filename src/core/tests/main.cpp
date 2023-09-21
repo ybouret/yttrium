@@ -13,7 +13,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(object);
     Y_UTEST(endian);
     Y_UTEST(rtti);
-    
+
     Y_UTEST(memory_chunk);
     Y_UTEST(memory_pages);
     Y_UTEST(memory_arena);
@@ -121,6 +121,7 @@ Y_UTEST_DECL(256)
 
     Y_UTEST(fft1);
     Y_UTEST(fft2);
+    Y_UTEST(fft_mul);
 
     Y_UTEST(strings);
     Y_UTEST(string_tokenizer);

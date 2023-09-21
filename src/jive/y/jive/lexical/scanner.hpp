@@ -63,8 +63,8 @@ namespace Yttrium
 
                 //! creating a new action
                 /**
-                 \param id name of the action/resulting Unit
-                 \param rx regular expression
+                 \param id   name of the action/resulting Unit
+                 \param rx   regular expression
                  \param host host object
                  \param meth host method pointer
                  */
@@ -87,7 +87,7 @@ namespace Yttrium
                 void cleanup() noexcept;
 
                 Action *find(Source &source);
-                
+
 
 
 
