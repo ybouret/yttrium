@@ -43,17 +43,20 @@ namespace Yttrium
 
 
             //std::cerr << "size=" << size << std::endl;
-            if (1 == size && 0 == *next)
+            if ( size <= 1 && 0 == *next)
             {
                 // std::cerr << "done" << std::endl;
                 return false;
             }
-            const char* const sep = strchr(curr, '=');
-            if (!sep) throw Win32::Exception(ERROR_NO_DATA, "while parsing environment strings");
+			const String content(curr, size);
+			std::cerr << "content=" << content << std::endl;
+            const char * const sep = strchr(curr, '=');
+            if (0==sep) throw Win32::Exception(ERROR_NO_DATA, "while parsing environment strings");
             const String uuid(curr, sep - curr);
             if (uuid == name)
             {
-                const String data(sep + 1, next - sep);
+				const char * const ini = sep + 1;
+                const String data(ini, next - ini);
                 value = data;
                 return true;
             }
