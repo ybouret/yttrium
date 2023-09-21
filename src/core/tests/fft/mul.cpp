@@ -5,6 +5,7 @@
 #include "y/container/cxx/array.hpp"
 #include "y/random/bits.hpp"
 #include "y/text/hexadecimal.hpp"
+#include "y/type/utils.hpp"
 
 using namespace Yttrium;
 
@@ -53,8 +54,17 @@ Y_UTEST(fft_mul)
     std::cerr << "V=" << Hexadecimal(V) << "@" << m << std::endl;
     show(v);
 
+    const size_t mn=Max(m,n);
+    size_t       nn=1;
+    while (nn < mn) nn <<= 1;
+    nn <<= 1;
+    CxxArray<double> a(nn);
+    CxxArray<double> b(nn);
+    for(size_t i=1;i<=n;++i) a[i] = u[i];
+    for(size_t i=1;i<=m;++i) b[i] = v[i];
 
-
+    FFT::Forward(&a[1]-1,nn>>1);
+    FFT::Forward(&b[1]-1,nn>>1);
 
 
 }
