@@ -12,18 +12,18 @@ Y_UTEST(text_printable)
     Vector<String> txt(256,AsCapacity);
     for(size_t i=0;i<256;++i)
     {
-        txt << FormatString("\\x%02x",unsigned(i));
+        txt << FormatString("\\\\x%02x",unsigned(i));
     }
 
     
 
-    txt('\a') = "\\a";
-    txt('\b') = "\\b";
-    txt('\f') = "\\f";
+    txt('\a') = "\\\\a";
+    txt('\b') = "\\\\b";
+    txt('\f') = "\\\\f";
     txt('\n') = "\\\\n";
-    txt('\r') = "\\r";
-    txt('\t') = "\\t";
-    txt('\v') = "\\v";
+    txt('\r') = "\\\\r";
+    txt('\t') = "\\\\t";
+    txt('\v') = "\\\\v";
 
     for(size_t i=32;i<=126;++i)
     {
