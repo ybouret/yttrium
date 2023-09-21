@@ -14,7 +14,7 @@ Y_UTEST(scanner)
     scanner("INT","[:digit:]+", scanner, & Jive::Lexical::Scanner::produce);
     
     scanner.cleanup();
-    
+
 
 }
 Y_UDONE()

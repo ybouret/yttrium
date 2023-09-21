@@ -83,7 +83,13 @@ namespace Yttrium
                     return 0;
                 }
 
+                //! make cleanup of all motifs
                 void cleanup() noexcept;
+
+                Action *find(Source &source);
+                
+
+
 
                 //______________________________________________________________
                 //
