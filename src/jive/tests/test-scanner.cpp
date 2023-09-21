@@ -15,17 +15,18 @@ Y_UTEST(scanner)
     Y_SIZEOF(Jive::Lexical::Callback);
     
 
-    scanner("INT","[:digit:]+",        scanner, & Jive::Lexical::Scanner::produce);
-    scanner("ID","[:alpha:][:word:]*", scanner, & Jive::Lexical::Scanner::produce);
-    scanner("FLT","[:digit:]+f?",       scanner, & Jive::Lexical::Scanner::produce);
+    scanner("INT","[:digit:]+");
+    scanner("ID","[:alpha:][:word:]*");
+    scanner("FLT","[:digit:]+f?");;
+    scanner("blank","[:blank:]",false);
 
-    scanner.cleanup();
-
+    
     if(argc>1)
     {
 
         Jive::Source           source( Jive::Module::Open(argv[1]) );
     SCAN:
+        scanner.cleanup();
         Jive::Lexical::Action *action = 0;
         switch( scanner.probe(source,action) )
         {

@@ -84,11 +84,17 @@ namespace Yttrium
                     submitCode(which);
                 }
 
-                //! prototype
-                unsigned produce(const Token &)
+
+                template <typename ID, typename RX>
+                inline void operator()(const ID &id, const RX &rx, const bool emit = true)
                 {
-                    return 0;
+                    Scanner &self = *this;
+                    self(id,rx,self, emit ? & Scanner::produce : & Scanner::discard );
                 }
+
+                //! prototype
+                Message produce(const Token &) const { return LX_EMIT; }
+                Message discard(const Token &) const { return LX_DROP; }
 
                 //! make cleanup of all motifs
                 void cleanup() noexcept;
