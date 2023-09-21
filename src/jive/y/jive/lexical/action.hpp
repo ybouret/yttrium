@@ -5,7 +5,7 @@
 #define Y_Lexical_Action_Included 1
 
 #include "y/jive/pattern.hpp"
-#include "y/jive/entity.hpp"
+#include "y/jive/lexical/unit.hpp"
 #include "y/functor.hpp"
 
 namespace Yttrium
@@ -21,14 +21,15 @@ namespace Yttrium
             // generic callback to process detected token
             //
             //__________________________________________________________________
-            typedef uint32_t Message;
+            typedef uint32_t                            Message;
             typedef Functor<Message,TL1(const Token &)> Callback;
 
             enum MessageID
             {
                 LX_EMIT = 0x01,
                 LX_DROP = 0x02,
-                LX_CNTL = 0x04
+                LX_ENDL = 0x04,
+                LX_CNTL = 0x08
             };
 
 

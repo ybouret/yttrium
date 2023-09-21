@@ -89,7 +89,7 @@ namespace Yttrium
                 inline void operator()(const ID &id, const RX &rx, const bool emit = true)
                 {
                     Scanner &self = *this;
-                    self(id,rx,self, emit ? & Scanner::produce : & Scanner::discard );
+                    self(id,rx,self, (emit ? & Scanner::produce : & Scanner::discard) );
                 }
 
                 //! prototype
