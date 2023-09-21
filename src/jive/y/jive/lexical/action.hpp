@@ -18,10 +18,11 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            //! generic callback to process detected token
+            // generic callback to process detected token
             //
             //__________________________________________________________________
-            typedef Functor<unsigned,TL1(const Token &)> Callback;
+            typedef uint32_t Message;
+            typedef Functor<Message,TL1(const Token &)> Callback;
 
 
             //__________________________________________________________________

@@ -15,7 +15,8 @@ namespace Yttrium
         namespace Lexical
         {
 
-         
+
+
             //__________________________________________________________________
             //
             //
@@ -33,6 +34,14 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
+                enum Return
+                {
+                    ReturnSuccess, //!< valid action
+                    ReturnFailure, //!< no action, still data in source
+                    AtEndOfStream  //!< no action, no more data in source
+                };
+
+                static bool Verbose;
 
                 //______________________________________________________________
                 //
@@ -86,7 +95,8 @@ namespace Yttrium
                 //! make cleanup of all motifs
                 void cleanup() noexcept;
 
-                Action *find(Source &source);
+                //! find next action
+                Return probe(Source &, Action * &);
 
 
 
@@ -106,6 +116,9 @@ namespace Yttrium
                 static Code *Initialize(const String &, Dictionary * &);
                 void         submitCode(Action::Pointer &which);
             };
+
+#define Y_JIVE_LEXICAL(MSG) do { if(Yttrium::Jive::Lexical::Scanner::Verbose) { std::cerr << MSG << std::endl; } } while(false)
+            
         }
         
     }

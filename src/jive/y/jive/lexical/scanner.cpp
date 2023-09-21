@@ -1,11 +1,14 @@
 
 #include "y/jive/lexical/scanner.hpp"
 #include "y/jive/pattern/first-chars.hpp"
+#include "y/jive/source.hpp"
+
 #include "y/system/exception.hpp"
 #include "y/associative/suffix/set.hpp"
 #include "y/associative/hash/set.hpp"
 #include "y/data/small/light/list/bare.hpp"
 #include "y/type/nullify.hpp"
+#include "y/text/ascii/embedding.hpp"
 
 namespace Yttrium
 {
@@ -13,6 +16,7 @@ namespace Yttrium
     {
         namespace Lexical
         {
+            bool Scanner::Verbose = false;
 
             namespace
             {
@@ -24,7 +28,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 typedef Small::BareLightList<Action> ActionList;
-
+                typedef ActionList::NodeType         ActionNode;
 
                 //______________________________________________________________
                 //
@@ -64,7 +68,7 @@ namespace Yttrium
                     // C++
                     //
                     //__________________________________________________________
-                   
+
                     //! initialize empty
                     inline explicit Starting(const uint8_t b) noexcept:
                     Object(),
@@ -140,9 +144,14 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
+                //______________________________________________________________
+                //
                 //! add a new action
+                //______________________________________________________________
                 inline void add(Action::Pointer &which)
                 {
+
+                    Y_JIVE_LEXICAL("-- append : '" << which->name << "'");
 
                     assert(!which->motif->isFragile());
 
@@ -152,7 +161,10 @@ namespace Yttrium
                     if(!insert(which))
                         throw Specific::Exception( name.c_str(), "multiple callback '%s'", which->name->c_str());
 
-                    try 
+                    //----------------------------------------------------------
+                    // make hub
+                    //----------------------------------------------------------
+                    try
                     {
 
                         //------------------------------------------------------
@@ -160,6 +172,7 @@ namespace Yttrium
                         //------------------------------------------------------
                         FirstChars fc;
                         which->motif->query(fc);
+                        Y_JIVE_LEXICAL("-- sending  '" << which->name << "' to " << fc);
 
                         //------------------------------------------------------
                         // dispatch action to all matching first chars
@@ -177,6 +190,119 @@ namespace Yttrium
                         throw;
                     }
 
+                }
+
+                //______________________________________________________________
+                //
+                //! find next action
+                //______________________________________________________________
+                inline Scanner::Return  probe(Source &source, Action * &primary)
+                {
+                    Y_JIVE_LEXICAL("<" << name << "> probe");
+
+                    assert(0==primary);
+                    //----------------------------------------------------------
+                    //
+                    // test if still data in source
+                    //
+                    //----------------------------------------------------------
+                    if(!source.ready())
+                    {
+                        Y_JIVE_LEXICAL("<" << name << "> EOS");
+                        return Scanner::AtEndOfStream;
+                    }
+                    assert(source.cached()>0);
+
+                    //----------------------------------------------------------
+                    //
+                    // select motifs to test using pre-computed hub
+                    //
+                    //----------------------------------------------------------
+                    const uint8_t      byte = source.peek();
+                    Starting::Pointer *hook = hub.search(byte);
+                    if(!hook)
+                    {
+                        Y_JIVE_LEXICAL("<" << name << "> no motif with first char '" << ASCII::Embedding::Char[byte] << "'");
+                        return Scanner::ReturnFailure; // syntax error, no possible match
+                    }
+
+                    //----------------------------------------------------------
+                    //
+                    // find first matching node
+                    //
+                    //----------------------------------------------------------
+                    ActionNode *node = (**hook).head; assert(0!=node);
+
+                PROBE_FIRST:
+                    if( (**node).motif->takes(source) )
+                    {
+                        Y_JIVE_LEXICAL("<" << name << "> (+) primary : '" << (**node).name << "'='" << (**node).motif << "'");
+                        goto FOUND_FIRST;
+                    }
+
+                    if( 0 == (node=node->next) )
+                    {
+                        Y_JIVE_LEXICAL("<" << name << "> no first char matching '" << ASCII::Embedding::Char[byte] << "'");
+                        return Scanner::ReturnFailure; // syntax error, no possible match
+                    }
+                    goto PROBE_FIRST;
+
+                FOUND_FIRST:
+                    assert(0!=node);
+                    primary = & **node;
+                    size_t length = primary->motif->size;
+                    assert(primary->motif->size>0);
+
+                    //----------------------------------------------------------
+                    //
+                    // find a better match ?
+                    //
+                    //----------------------------------------------------------
+                    for(node=node->next;node;node=node->next)
+                    {
+                        Action *replica = & **node;
+
+                        //------------------------------------------------------
+                        // restore source state
+                        //------------------------------------------------------
+                        source.dup( *(primary->motif) ); assert(source.cached()>=length);
+
+                        if(replica->motif->takes(source) )
+                        {
+                            const size_t len = replica->motif->size;
+                            if(len>length)
+                            {
+                                //----------------------------------------------
+                                // new primary!
+                                //----------------------------------------------
+                                Y_JIVE_LEXICAL("<" << name << "> (+) replica : '" << replica->name << "'='" << replica->motif << "'");
+                                primary->motif->release();
+                                primary = replica;
+                                length  = len;
+                            }
+                            else
+                            {
+                                //----------------------------------------------
+                                // too late: retrieve source state
+                                //----------------------------------------------
+                                Y_JIVE_LEXICAL("<" << name << "> (-) replica : '" << replica->name << "'='" << replica->motif << "'");
+                                source.put(*(replica->motif));
+                                source.skip(length);
+                            }
+                        }
+                        else
+                        {
+                            //--------------------------------------------------
+                            // retrieve source state
+                            //--------------------------------------------------
+                            Y_JIVE_LEXICAL("<" << name << "> (0) replica : '" << replica->name << "'");
+                            assert(0==replica->motif->size);
+                            source.skip(length);
+                        }
+                    }
+
+                    
+                    return Scanner::ReturnSuccess;
 
                 }
 
@@ -213,8 +339,6 @@ namespace Yttrium
 
             Scanner::Code * Scanner:: Initialize(const String &id, Dictionary * &dict )
             {
-                std::cerr << "sizeof(Scanner::Code)=" << sizeof(Code) << std::endl;
-                std::cerr << "sizeof(Starting)     =" << sizeof(Starting) << std::endl;
                 Code *c = new Code(id);
                 dict = & *(c->dict);
                 return c;
@@ -246,6 +370,14 @@ namespace Yttrium
                     a.motif->reset();
                 }
             }
+
+            Scanner::Return Scanner:: probe(Source &source, Action * &action)
+            {
+                assert(0!=code);
+                assert(0==action);
+                return code->probe(source,action);
+            }
+
 
 
         }

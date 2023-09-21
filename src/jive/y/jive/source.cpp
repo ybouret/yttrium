@@ -107,6 +107,15 @@ namespace Yttrium
             delete code->cache.popHead();
         }
 
+        void Source:: skip(size_t n) noexcept
+        {
+            assert(code!=0);
+            assert(code->cache.size>=n);
+            while(n-- > 0)
+                delete code->cache.popHead();
+        }
+
+
 
         void Source:: dup(const Token &token)
         {

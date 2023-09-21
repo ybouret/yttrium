@@ -45,6 +45,7 @@ namespace Yttrium
             bool    ready();                 //!< check if char is available
             bool    guess(Token &token);     //!< guess next blank-separated token
             void    skip()         noexcept; //!< skip next char if ready!
+            void    skip(size_t n) noexcept; //!< skip n<=cached()
             uint8_t peek()   const noexcept; //!< next content if ready()
             size_t  cached() const noexcept; //!< cache size
             void    newLine()      noexcept; //!< propagate newLine to module
