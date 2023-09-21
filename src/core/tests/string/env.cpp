@@ -60,7 +60,7 @@ Y_UTEST(string_env)
         std::cerr << entry << std::endl;
     }
 #endif
-    
+
     const bool verbose = Environment::Flag("VERBOSE");
     std::cerr << "Verbose=" << verbose << std::endl;
 
