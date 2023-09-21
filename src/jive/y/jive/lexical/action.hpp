@@ -1,0 +1,59 @@
+
+//! \file
+
+#ifndef Y_Lexical_Action_Included
+#define Y_Lexical_Action_Included 1
+
+#include "y/jive/pattern.hpp"
+#include "y/jive/entity.hpp"
+#include "y/functor.hpp"
+
+namespace Yttrium
+{
+    namespace Jive
+    {
+
+        namespace Lexical
+        {
+            //__________________________________________________________________
+            //
+            //
+            //! generic callback to process detected token
+            //
+            //__________________________________________________________________
+            typedef Functor<unsigned,TL1(const Token &)> Callback;
+
+
+            //__________________________________________________________________
+            //
+            //
+            //! Action to be taken upon detected token
+            //
+            //__________________________________________________________________
+            class Action : public Entity
+            {
+            public:
+                typedef ArkPtr<String,Action> Pointer; //!< alias
+
+                template <typename LABEL>
+                explicit Action(const LABEL    & id,
+                                const Motif    & pp,
+                                const Callback & cb) :
+                Entity(id), motif(pp), doing(cb) {}      //!< setup
+                virtual ~Action() noexcept;              //!< cleanup
+
+                Motif            motif; //!< motif to be match
+                Callback         doing; //!< callback to be done upon match
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Action);
+
+            };
+
+        }
+
+    }
+
+}
+
+#endif

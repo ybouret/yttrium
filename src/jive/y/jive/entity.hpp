@@ -9,23 +9,50 @@ namespace Yttrium
 {
     namespace Jive
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Action to be taken upon detected token
+        //
+        //
+        //______________________________________________________________________
         class Entity : public Object, public Counted
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            
+            //! setup
             template <typename LABEL> inline
-            explicit Entity(const LABEL &id) : 
+            explicit Entity(const LABEL &id) :
             Object(),
             Counted(),
             name(id)
             {}
 
-            Entity(const Entity &) noexcept;
-            virtual ~Entity()      noexcept;
+            Entity(const Entity &) noexcept; //!< copy
+            virtual ~Entity()      noexcept; //!< cleanup
 
-            const String & key() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            const String & key() const noexcept; //!< generic key for associative
 
-            const Tag name;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const Tag name; //!< identifier
 
         private:
             Y_DISABLE_ASSIGN(Entity);

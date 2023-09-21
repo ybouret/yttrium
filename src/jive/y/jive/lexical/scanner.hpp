@@ -3,12 +3,9 @@
 #ifndef Y_Lexical_Scanner_Included
 #define Y_Lexical_Scanner_Included 1
 
-#include "y/jive/pattern.hpp"
+#include "y/jive/lexical/action.hpp"
 #include "y/jive/pattern/dictionary.hpp"
 #include "y/jive/lexical/unit.hpp"
-#include "y/jive/entity.hpp"
-#include "y/functor.hpp"
-#include "y/associative/suffix/set.hpp"
 
 namespace Yttrium
 {
@@ -18,50 +15,59 @@ namespace Yttrium
         namespace Lexical
         {
 
-            typedef Functor<unsigned,TL1(const Token &)> Action;
-
-            class Callback : public Entity
-            {
-            public:
-                typedef ArkPtr<String,Callback> Pointer;
-
-                template <typename LABEL>
-                explicit Callback(const LABEL  & l,
-                                  const Motif  & m,
-                                  const Action & a) :
-                Entity(l), motif(m), action(a) {}      //!< setup
-                virtual ~Callback() noexcept;          //!< cleanup
-
-                Motif            motif;
-                Action           action;
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Callback);
-
-            };
-
-
+         
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Lexical Scanner: produce units from Source
+            //
+            //
+            //__________________________________________________________________
             class Scanner : public Entity
             {
             public:
-                typedef Callback::Pointer Deed;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef Action::Pointer Deed;
+
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
 
                 //! setup with identifier
                 template <typename LABEL>
                 explicit Scanner(const LABEL &usr) :
                 Entity(usr),
-                plan(),
-                dict( new Dictionary() )
+                dict(0),
+                code( Initialize( *name, Coerce(dict) ) )
                 {
                 }
+
+                //! cleanup
+                virtual ~Scanner() noexcept;
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
 
 
                 template <typename ID, typename RX, typename HOST, typename METHOD>
                 inline void operator()(const ID &id, const RX &rx, HOST &host, METHOD meth)
                 {
-                    const Action action( &host, meth );
-                    const Motif  motif( RegExp::Compile(rx, & *dict) );
-                    const Deed   deed( new Callback(id,motif,action) );
+                    const Motif    motif( RegExp::Compile(rx, & *dict) );
+                    const Callback doing( &host, meth );
+                    const Deed     deed( new Action(id,motif,doing)   );
                 }
 
                 unsigned produce(const Token &)
@@ -70,15 +76,21 @@ namespace Yttrium
                 }
 
 
-                //! cleanup
-                virtual ~Scanner() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                Dictionary * const dict; //!< internal dictionary
 
-                SuffixSet<String,Deed> plan;
-                ArcPtr<Dictionary>     dict;
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
-                void append(const Deed &deed);
-                
+                class Code;
+                Code *code;
+                static Code *Initialize(const String &, Dictionary * &);
+                void         append(const Deed &deed);
+
             };
         }
         
