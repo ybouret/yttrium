@@ -17,16 +17,33 @@ namespace Yttrium
             namespace
             {
 
+                //______________________________________________________________
+                //
+                //
+                //! list of action reference
+                //
+                //______________________________________________________________
+                typedef Small::BareLightList<Action> ActionList;
 
-                typedef Small::BareLightList<const Action> ActionList;
 
-
-
+                //______________________________________________________________
+                //
+                //
+                //! list of actions for a given starting byte
+                //
+                //______________________________________________________________
                 class Starting : public Object, public Counted, public ActionList
                 {
                 public:
-                    typedef ArkPtr<uint8_t,Starting> Pointer;
+                    //__________________________________________________________
+                    //
+                    //
+                    // Definitions
+                    //
+                    //__________________________________________________________
+                    typedef ArkPtr<uint8_t,Starting> Pointer; //!< alias
 
+                    //! specific key hasher
                     class KeyDumper
                     {
                     public:
@@ -37,9 +54,19 @@ namespace Yttrium
                         Y_DISABLE_COPY_AND_ASSIGN(KeyDumper);
                     };
 
+                    //! making a hash set from byte, pointer and key dumper
                     typedef HashSet<uint8_t,Starting::Pointer,KeyDumper> Set;
 
-                    inline explicit Starting(const uint8_t b) :
+
+                    //__________________________________________________________
+                    //
+                    //
+                    // C++
+                    //
+                    //__________________________________________________________
+                   
+                    //! initialize empty
+                    inline explicit Starting(const uint8_t b) noexcept:
                     Object(),
                     Counted(),
                     ActionList(),
@@ -47,24 +74,57 @@ namespace Yttrium
                     {
                     }
 
+                    //! cleanup
                     inline virtual ~Starting() noexcept {}
 
+                    //__________________________________________________________
+                    //
+                    //
+                    // Methods
+                    //
+                    //__________________________________________________________
+
+                    //! key for API
                     inline const uint8_t & key() const noexcept { return byte; }
 
-                    const uint8_t byte;
+                    //__________________________________________________________
+                    //
+                    //
+                    // Members
+                    //
+                    //__________________________________________________________
+                    const uint8_t byte; //!< first common char
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Starting);
                 };
+
+                typedef SuffixSet<String,Action::Pointer> Plan;
+
             }
 
-            class Scanner:: Code : public Object
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Data and Algorithm for Lexical::Scanner
+            //
+            //
+            //__________________________________________________________________
+            class Scanner:: Code : public Object, public Plan
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
                 inline explicit Code(const String &id) :
                 Object(),
+                Plan(),
                 name(id),
-                plan(),
                 dict( new Dictionary() )
                 {
 
@@ -72,7 +132,15 @@ namespace Yttrium
 
                 inline virtual ~Code() noexcept {}
 
-                inline void append(const Action::Pointer &which)
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                //! add a new action
+                inline void add(Action::Pointer &which)
                 {
 
                     assert(!which->motif->isFragile());
@@ -80,32 +148,46 @@ namespace Yttrium
                     //----------------------------------------------------------
                     // try to insert into plan
                     //----------------------------------------------------------
-                    if(!plan.insert(which))
+                    if(!insert(which))
                         throw Specific::Exception( name.c_str(), "multiple callback '%s'", which->name->c_str());
 
-                    //----------------------------------------------------------
-                    // query first chars
-                    //----------------------------------------------------------
-                    FirstChars fc;
-                    which->motif->query(fc);
-
-                    //----------------------------------------------------------
-                    // dispatch action to all matching chars
-                    //----------------------------------------------------------
-                    for(unsigned i=0;i<256;++i)
+                    try 
                     {
-                        const uint8_t byte(i);
-                        if( !fc[byte] ) continue;
-                        lookFor(byte) << *which;
+
+                        //------------------------------------------------------
+                        // query first chars
+                        //------------------------------------------------------
+                        FirstChars fc;
+                        which->motif->query(fc);
+
+                        //------------------------------------------------------
+                        // dispatch action to all matching first chars
+                        //------------------------------------------------------
+                        for(unsigned i=0;i<256;++i)
+                        {
+                            const uint8_t byte(i);
+                            if( !fc[byte] ) continue;
+                            lookFor(byte) << *which;
+                        }
+                    }
+                    catch(...)
+                    {
+                        remove(which->key());
+                        throw;
                     }
 
 
                 }
 
-                const String &                    name;
-                SuffixSet<String,Action::Pointer> plan;
-                Starting::Set                     hub;
-                ArcPtr<Dictionary>                dict;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const String &                    name; //!< Scanner's name
+                Starting::Set                     hub;  //!< map first char to action
+                ArcPtr<Dictionary>                dict; //!< shared dictionary
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Code);
@@ -141,19 +223,30 @@ namespace Yttrium
             Scanner:: ~Scanner() noexcept
             {
                 assert(0!=code);
+                Coerce(dict) = 0;
                 Nullify(code);
             }
 
-            void Scanner:: append(const Action::Pointer &which)
+            void Scanner:: submitCode(Action::Pointer &which)
             {
                 assert(0!=code);
-                code->append(which);
+                if(which->motif->isFragile())
+                    throw Specific::Exception(name->c_str(), "pattern '%s' if fragile", which->name->c_str());
+                code->add(which);
             }
 
-            void Scanner:: noFragile(const Tag &id, const Motif &motif) const
+            void Scanner:: cleanup() noexcept
             {
-                if(motif->isFragile()) throw Specific::Exception(name->c_str(), "pattern '%s' if fragile", id->c_str());
+                assert(0!=code);
+                for(Code::Iterator it=code->begin();it!=code->end();++it)
+                {
+                    Action &a = **it;
+                    std::cerr << "Cleaning " << a.name << std::endl;
+                    a.motif->reset();
+                }
             }
+
+
         }
     }
 

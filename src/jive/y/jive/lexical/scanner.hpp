@@ -61,21 +61,29 @@ namespace Yttrium
                 //______________________________________________________________
 
 
+                //! creating a new action
+                /**
+                 \param id name of the action/resulting Unit
+                 \param rx regular expression
+                 \param host host object
+                 \param meth host method pointer
+                 */
                 template <typename ID, typename RX, typename HOST, typename METHOD>
                 inline void operator()(const ID &id, const RX &rx, HOST &host, METHOD meth)
                 {
-                    const Motif           motif( RegExp::Compile(rx, & *dict) );
-                    const Callback        doing( &host, meth );
-                    const Action::Pointer which( new Action(id,motif,doing)   );
-                    noFragile(which->name,motif);
-                    append(which);
+                    const Motif     motif( RegExp::Compile(rx, & *dict) );
+                    const Callback  doing( &host, meth );
+                    Action::Pointer which( new Action(id,motif,doing)   );
+                    submitCode(which);
                 }
 
+                //! prototype
                 unsigned produce(const Token &)
                 {
                     return 0;
                 }
 
+                void cleanup() noexcept;
 
                 //______________________________________________________________
                 //
@@ -90,8 +98,7 @@ namespace Yttrium
                 class Code;
                 Code *code;
                 static Code *Initialize(const String &, Dictionary * &);
-                void         append(const Action::Pointer &which);
-                void         noFragile(const Tag &id, const Motif &motif) const;
+                void         submitCode(Action::Pointer &which);
             };
         }
         
