@@ -61,6 +61,9 @@ Y_UTEST(string_env)
     }
 #endif
     
+    const bool verbose = Environment::Flag("VERBOSE");
+    std::cerr << "Verbose=" << verbose << std::endl;
+
     for (int i = 1; i < argc; ++i)
     {
         const String name = argv[1];
