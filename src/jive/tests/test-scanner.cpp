@@ -8,8 +8,12 @@ Y_UTEST(scanner)
     Jive::Lexical::Scanner scanner("demo");
 
     Y_SIZEOF(Jive::Dictionary);
+    Y_SIZEOF(Jive::Lexical::Callback);
+    
 
-    //scanner("INT","[:digit:]+", scanner, & Jive::Lexical::Scanner::produce);
+    scanner("INT","[:digit:]+", scanner, & Jive::Lexical::Scanner::produce);
+    
+
 
 }
 Y_UDONE()

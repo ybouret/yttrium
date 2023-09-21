@@ -10,17 +10,19 @@ namespace Yttrium
         {
             Unit:: ~Unit() noexcept {}
 
-            Unit:: Unit(const Context &ctx) noexcept :
-            Object(),
+            Unit:: Unit(const Entity &ent,
+                        const Context &ctx) noexcept :
+            Entity(ent),
             Context(ctx),
             Token(),
             next(0),
             prev(0)
             {
             }
+            
 
             Unit:: Unit(const Unit &other)  :
-            Object(),
+            Entity( static_cast<const Entity&>(other) ),
             Context(other),
             Token(other),
             next(0),

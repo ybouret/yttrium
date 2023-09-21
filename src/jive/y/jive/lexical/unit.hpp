@@ -5,6 +5,7 @@
 #define Y_Lexical_Unit_Included 1
 
 #include "y/jive/token.hpp"
+#include "y/jive/entity.hpp"
 
 
 namespace Yttrium
@@ -22,7 +23,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Unit : public Object, public Context, public Token
+            class Unit : public Entity, public Context, public Token
             {
             public:
                 //______________________________________________________________
@@ -31,9 +32,9 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                explicit Unit(const Context &) noexcept; //!< empty unit from context
-                Unit(const Unit &);                      //!< copy context/content
-                virtual ~Unit() noexcept;                //!< cleanup
+                Unit(const Entity &, const Context &) noexcept; //!< empty unit from context
+                Unit(const Unit &);                             //!< copy context/content
+                virtual ~Unit() noexcept;                       //!< cleanup
 
                 //______________________________________________________________
                 //
