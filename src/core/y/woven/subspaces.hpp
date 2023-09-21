@@ -43,9 +43,9 @@ namespace Yttrium
             //! setup from rows of vectors, pack multiple values
             //__________________________________________________________________
             template <typename T> inline
-            SubSpaces(const Matrix<T> &mu,
-                      QSurvey         *survey,
-                      XMLog           &xmlog) :
+            SubSpaces(const Matrix<T> & mu,
+                      Survey *          survey,
+                      XMLog  &          xmlog) :
             Identifiable(),
             QMetrics( SubSpace::CheckDims(mu) ),
             SubSpace::List(),
@@ -96,7 +96,7 @@ namespace Yttrium
             //! expand all subspaces then pack
             //__________________________________________________________________
             template <typename T>
-            bool generate(const Matrix<T> &mu, QSurvey *survey)
+            bool generate(const Matrix<T> &mu, Survey *survey)
             {
 
                 Y_XML_SECTION_OPT(xml,
@@ -143,7 +143,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SubSpaces);
-            void conductInitial(QSurvey &survey) const;            
+            void conductInitial(Survey &survey) const;
         };
 
 
@@ -156,7 +156,7 @@ namespace Yttrium
 
         template <typename T> inline
         void Explore(const Matrix<T> &mu,
-                     QSurvey         &survey,
+                     Survey         &survey,
                      const bool       useTop,
                      XMLog           &xmlog)
         {

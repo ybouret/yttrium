@@ -50,12 +50,11 @@ namespace Yttrium
 
         NaturalSurvey:: NaturalSurvey(XMLog &xmlog) :
         Survey(xmlog),
-        NaturalArray::List(),
-        QSurvey(this,&NaturalSurvey::tryGrow)
+        NaturalArray::List()
         {
         }
 
-        void NaturalSurvey:: tryGrow(const QVector &vec)
+        void NaturalSurvey:: verify(const QVector &vec)
         {
 
             if(vec.numNeg>0)  return;

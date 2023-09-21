@@ -33,12 +33,11 @@ namespace Yttrium
 
         IntegerSurvey:: IntegerSurvey(XMLog &xmlog) :
         Survey(xmlog),
-        IntegerArray::List(),
-        QSurvey(this,&IntegerSurvey::tryGrow)
-        {
+        IntegerArray::List()
+         {
         }
 
-        void IntegerSurvey:: tryGrow(const QVector &vec)
+        void IntegerSurvey:: verify(const QVector &vec)
         {
             if(vec.ncoeff<=1) return;
 

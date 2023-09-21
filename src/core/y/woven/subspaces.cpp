@@ -58,13 +58,13 @@ namespace Yttrium
         }
 
 
-        void SubSpaces:: conductInitial(QSurvey &survey) const
+        void SubSpaces:: conductInitial(Survey &survey) const
         {
             Y_XMLOG(xml, "-- initial survey...");
             for(const SubSpace *sub = head; sub; sub=sub->next)
             {
                 assert(sub->size>0);
-                survey(*(sub->tail));
+                survey.verify( *(sub->tail) );
             }
         }
 

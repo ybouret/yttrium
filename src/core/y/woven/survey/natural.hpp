@@ -72,7 +72,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class NaturalSurvey : public Survey, public NaturalArray::List, public QSurvey
+        class NaturalSurvey : public Survey, public NaturalArray::List
         {
         public:
             //__________________________________________________________________
@@ -97,7 +97,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(NaturalSurvey);
-            void tryGrow(const QVector &);
+            virtual void verify(const QVector &);
             
         };
     }

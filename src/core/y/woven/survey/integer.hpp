@@ -69,7 +69,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class IntegerSurvey : public Survey, public IntegerArray::List, public QSurvey
+        class IntegerSurvey : public Survey, public IntegerArray::List
         {
         public:
             //__________________________________________________________________
@@ -94,7 +94,7 @@ namespace Yttrium
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(IntegerSurvey);
-            void tryGrow(const QVector &);
+            virtual void verify(const QVector &);
         };
     }
 

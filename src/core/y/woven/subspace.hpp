@@ -4,9 +4,8 @@
 #define Y_WOVEn_Subspace_Included 1
 
 #include "y/woven/indices.hpp"
+#include "y/woven/survey.hpp"
 #include "y/container/matrix.hpp"
-#include "y/woven/types.hpp"
-#include "y/stream/xmlog.hpp"
 
 namespace Yttrium
 {
@@ -15,7 +14,6 @@ namespace Yttrium
 
         typedef Apex::Ortho::Vector                QVector;  //!< alias
         typedef Apex::Ortho::Family                QFamily;  //!< alias
-        typedef Functor<void,TL1(const QVector &)> QSurvey;  //!< alias
         typedef Apex::Ortho::Metrics               QMetrics; //!< alias
         typedef Apex::Ortho::Quality               Quality;  //!< alias
 
@@ -108,7 +106,7 @@ namespace Yttrium
             template <typename T>
             inline void tryExpand(List &            L,
                                   const Matrix<T> & mu,
-                                  QSurvey         * survey)
+                                  Survey          * survey)
             {
                 switch(quality)
                 {
@@ -180,7 +178,7 @@ namespace Yttrium
             static void   SingularFirstRowException();
 
             void          initWith(const size_t ir, const size_t nr);
-            void          doExpand(List &L, const size_t ir, QSurvey *survey);
+            void          doExpand(List &L, const size_t ir, Survey *survey);
             void          fullfill(); //!< staying -> indices
 
         };

@@ -80,13 +80,13 @@ namespace Yttrium
 
         void SubSpace:: doExpand(List &        L,
                                  const size_t  ir,
-                                 QSurvey      *survey)
+                                 Survey       *survey)
         {
             AutoPtr<SubSpace> sub = new SubSpace(*this);           // duplicate in sub
             const QVector &   vec = sub->expandFrom( remaining );  // expand sub with this->remainng
             sub->indices += ir;                                    // update indices
             sub->staying -= ir;                                    // update staying
-            if(survey) (*survey)(vec);                             // take survey if any
+            if(survey) survey->verify(vec);                             // take survey if any
             if(sub->staying.size()<=0) return;                     // it was the final trial
             switch( (Coerce(sub->quality) = sub->getQuality(sub->size)) )
             {

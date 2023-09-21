@@ -4,6 +4,7 @@
 #ifndef Y_WOVEn_Survey_Included
 #define Y_WOVEn_Survey_Included 1
 
+#include "y/woven/types.hpp"
 #include "y/stream/xmlog.hpp"
 
 namespace Yttrium
@@ -14,16 +15,33 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
+        //
         //! base class for a Survey
+        //
         //
         //______________________________________________________________________
         class Survey
         {
         public:
-            virtual ~Survey() noexcept;        //!< cleanup
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
+            //! verify that vector is expected
+            virtual void verify(const QVector &) = 0;
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            virtual ~Survey() noexcept;        //!< cleanup
         protected:
-            explicit Survey(XMLog &) noexcept; //!< setip
+            explicit Survey(XMLog &) noexcept; //!< setup
 
         public:
             XMLog &xml; //!< output helper
