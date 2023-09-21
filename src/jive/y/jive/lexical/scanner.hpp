@@ -33,7 +33,6 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef Action::Pointer Deed;
 
                 //______________________________________________________________
                 //
@@ -65,9 +64,11 @@ namespace Yttrium
                 template <typename ID, typename RX, typename HOST, typename METHOD>
                 inline void operator()(const ID &id, const RX &rx, HOST &host, METHOD meth)
                 {
-                    const Motif    motif( RegExp::Compile(rx, & *dict) );
-                    const Callback doing( &host, meth );
-                    const Deed     deed( new Action(id,motif,doing)   );
+                    const Motif           motif( RegExp::Compile(rx, & *dict) );
+                    const Callback        doing( &host, meth );
+                    const Action::Pointer which( new Action(id,motif,doing)   );
+                    noFragile(which->name,motif);
+                    append(which);
                 }
 
                 unsigned produce(const Token &)
@@ -89,8 +90,8 @@ namespace Yttrium
                 class Code;
                 Code *code;
                 static Code *Initialize(const String &, Dictionary * &);
-                void         append(const Deed &deed);
-
+                void         append(const Action::Pointer &which);
+                void         noFragile(const Tag &id, const Motif &motif) const;
             };
         }
         

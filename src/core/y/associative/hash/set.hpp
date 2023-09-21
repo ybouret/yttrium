@@ -48,7 +48,7 @@ namespace Yttrium
     typename T,
     typename KEY_HASHER = Hashing::ToHashKey<Hashing::FNV>
     >
-    class HashSet : public HashLinked<KEY,T, Registry<KEY,T>, HashSetNode<KEY,T>,KEY_HASHER,Core::HashSet>
+    class HashSet : public HashLinked<KEY,T,Registry<KEY,T>,HashSetNode<KEY,T>,KEY_HASHER,Core::HashSet>
     {
     public:
         //______________________________________________________________________
@@ -61,7 +61,7 @@ namespace Yttrium
         Y_ARGS_DECL(KEY,Key);                                                          //!< aliases
         typedef HashSetNode<KEY,T> NodeType;                                           //!< alias
         typedef Registry<KEY,T>    API_Type;                                           //!< alias
-        typedef HashLinked<KEY,T,API_Type,NodeType,KEY_HASHER,Core::HashSet> SelfType; //!< alis
+        typedef HashLinked<KEY,T,API_Type,NodeType,KEY_HASHER,Core::HashSet> SelfType; //!< alias
 
         //______________________________________________________________________
         //
