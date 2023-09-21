@@ -45,26 +45,66 @@ Y_UTEST(fft_mul)
     const uint32_t U = ran.to<uint32_t>( ran.in<unsigned>(0,32) );
     const size_t   n = fill(u,U);
 
-    std::cerr << "U=" << Hexadecimal(U) << "@" << n << std::endl;
+    std::cerr << "U=" << Hexadecimal(U) << "@" << n << " =" << U << std::endl;
     show(u);
 
     const uint32_t V = ran.to<uint32_t>( ran.in<unsigned>(0,32) );
     const size_t   m = fill(v,V);
 
-    std::cerr << "V=" << Hexadecimal(V) << "@" << m << std::endl;
+    std::cerr << "V=" << Hexadecimal(V) << "@" << m << " = " << V << std::endl;
     show(v);
 
-    const size_t mn=Max(m,n);
-    size_t       nn=1;
-    while (nn < mn) nn <<= 1;
-    nn <<= 1;
-    CxxArray<double> a(nn);
-    CxxArray<double> b(nn);
-    for(size_t i=1;i<=n;++i) a[i] = u[i];
-    for(size_t i=1;i<=m;++i) b[i] = v[i];
+    const uint64_t W = uint64_t(U) * uint64_t(V);
+    std::cerr << "W=" << Hexadecimal(W) << std::endl;
 
-    FFT::Forward(&a[1]-1,nn>>1);
-    FFT::Forward(&b[1]-1,nn>>1);
+    const size_t nr = NextPowerOfTwo( Max(n,m) )<<1;
+    const size_t nc = nr << 1;
+
+    CxxArray<double> a(nc);
+    for(size_t i=1;i<=n;++i)
+    {
+        a[1+((i-1)<<1)] = u[i];
+    }
+    for(size_t i=1;i<=m;++i)
+    {
+        a[2+((i-1)<<1)] = v[i];
+    }
+    Core::Display(std::cerr, &a[1],nc) << std::endl;
+    FFT::Forward(&a[1]-1,nr);
+    CxxArray<double> b(nc);
+    FFT::Expand(&a[1]-1, &b[1]-1,nr);
+
+    //b[1] *= a[1];
+    //b[2] *= a[2];
+    for(size_t j=1;j<=nc;j+=2)
+    {
+        const double t = b[j];
+        b[j]  = t*a[j]   - b[j+1]*a[j+1];
+        b[j+1]= t*a[j+1] + b[j+1]*a[j];
+    }
+    FFT::Reverse(&b[1]-1,nr);
+    Core::Display(std::cerr << "p=", &b[1], nc) << std::endl;
+    double cy=0.0;
+    for(size_t j=nr;j>0;--j) {
+        const size_t k=1+(j-1)*2;
+        const double t=b[k]/nr+cy+0.5;
+        cy=(unsigned long) (t/256.0);
+        b[k]   = t-cy*256.0;
+        b[k+1] = 0;
+    }
+    std::cerr << "cy=" << cy << std::endl;
+    Core::Display(std::cerr << "p=", &b[1], nc) << std::endl;
+
+    CxxArray<uint8_t> w(n+m);
+    w[1]=(unsigned char) cy;
+    for(size_t j=2;j<=n+m;j++)
+    {
+        const size_t k=1+(j-2)*2;
+        std::cerr << "j=" << j << " -> " << k << " / nc=" << nc << std::endl;
+        w[j]=(unsigned char) b[k];
+    }
+    show(w);
+
 
 
 }

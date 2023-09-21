@@ -186,12 +186,13 @@ namespace Yttrium
 
             //REAL wtemp,wr,wpr,wpi,wi;
 
-            const size_t n = BitReversal(data,size);
+            const size_t n = BitReversal(data,size); assert(n==size*2);
             size_t mmax=2;
             while(n>mmax)
             {
                 const size_t istep = (mmax << 1);
-                const REAL   theta = (myPI/istep);
+                //const REAL   theta = (myPI/istep);
+                const REAL   theta = (2*myPI/mmax);
                 REAL         wtemp = std::sin(half*theta);
                 REAL         wpr   = -two*wtemp*wtemp;
                 REAL         wpi   = std::sin(theta);
