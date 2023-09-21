@@ -9,6 +9,7 @@
 #include "y/data/small/light/list/bare.hpp"
 #include "y/type/nullify.hpp"
 #include "y/text/ascii/embedding.hpp"
+#include "y/text/ascii/printable.hpp"
 
 namespace Yttrium
 {
@@ -196,7 +197,7 @@ namespace Yttrium
                 //
                 //! find next action
                 //______________________________________________________________
-                inline Scanner::Return  probe(Source &source, Action * &primary)
+                inline ReturnValue  probe(Source &source, Action * &primary)
                 {
                     Y_JIVE_LEXICAL("<" << name << "> probe");
 
@@ -209,7 +210,7 @@ namespace Yttrium
                     if(!source.ready())
                     {
                         Y_JIVE_LEXICAL("<" << name << "> EOS");
-                        return Scanner::AtEndOfStream;
+                        return AtEndOfStream;
                     }
                     assert(source.cached()>0);
 
@@ -222,8 +223,8 @@ namespace Yttrium
                     Starting::Pointer *hook = hub.search(byte);
                     if(!hook)
                     {
-                        Y_JIVE_LEXICAL("<" << name << "> no motif with first char '" << ASCII::Embedding::Char[byte] << "'");
-                        return Scanner::ReturnFailure; // syntax error, no possible match
+                        Y_JIVE_LEXICAL("<" << name << "> no motif with first char '" << ASCII::Printable::Char[byte] << "'");
+                        return ReturnFailure; // syntax error, no possible match
                     }
 
                     //----------------------------------------------------------
@@ -242,8 +243,8 @@ namespace Yttrium
 
                     if( 0 == (node=node->next) )
                     {
-                        Y_JIVE_LEXICAL("<" << name << "> no first char matching '" << ASCII::Embedding::Char[byte] << "'");
-                        return Scanner::ReturnFailure; // syntax error, no possible match
+                        Y_JIVE_LEXICAL("<" << name << "> no first char matching '" << ASCII::Printable::Char[byte] << "'");
+                        return  ReturnFailure; // syntax error, no possible match
                     }
                     goto PROBE_FIRST;
 
@@ -302,7 +303,7 @@ namespace Yttrium
                     }
 
                     
-                    return Scanner::ReturnSuccess;
+                    return  ReturnSuccess;
 
                 }
 
@@ -371,7 +372,7 @@ namespace Yttrium
                 }
             }
 
-            Scanner::Return Scanner:: probe(Source &source, Action * &action)
+            ReturnValue Scanner:: probe(Source &source, Action * &action)
             {
                 assert(0!=code);
                 assert(0==action);

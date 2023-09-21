@@ -15,7 +15,12 @@ namespace Yttrium
         namespace Lexical
         {
 
-
+            enum ReturnValue
+            {
+                ReturnSuccess, //!< valid action
+                ReturnFailure, //!< no action, still data in source
+                AtEndOfStream  //!< no action, no more data in source
+            };
 
             //__________________________________________________________________
             //
@@ -34,13 +39,6 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                enum Return
-                {
-                    ReturnSuccess, //!< valid action
-                    ReturnFailure, //!< no action, still data in source
-                    AtEndOfStream  //!< no action, no more data in source
-                };
-
                 static bool Verbose;
 
                 //______________________________________________________________
@@ -96,7 +94,7 @@ namespace Yttrium
                 void cleanup() noexcept;
 
                 //! find next action
-                Return probe(Source &, Action * &);
+                ReturnValue probe(Source &, Action * &);
 
 
 

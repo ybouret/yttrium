@@ -24,6 +24,13 @@ namespace Yttrium
             typedef uint32_t Message;
             typedef Functor<Message,TL1(const Token &)> Callback;
 
+            enum MessageID
+            {
+                LX_EMIT = 0x01,
+                LX_DROP = 0x02,
+                LX_CNTL = 0x04
+            };
+
 
             //__________________________________________________________________
             //

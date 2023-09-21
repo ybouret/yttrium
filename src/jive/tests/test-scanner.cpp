@@ -25,8 +25,22 @@ Y_UTEST(scanner)
     {
 
         Jive::Source           source( Jive::Module::Open(argv[1]) );
+    SCAN:
         Jive::Lexical::Action *action = 0;
-        scanner.probe(source,action);
+        switch( scanner.probe(source,action) )
+        {
+            case Jive::Lexical::AtEndOfStream:
+                break;
+                
+            case Jive::Lexical::ReturnSuccess: {
+
+            } goto SCAN;
+
+            case Jive::Lexical::ReturnFailure: {
+                std::cerr << "Failure!!" << std::endl;
+            } break;
+
+        }
     }
 
 

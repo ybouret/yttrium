@@ -20,7 +20,7 @@ Y_UTEST(text_printable)
     txt('\a') = "\\a";
     txt('\b') = "\\b";
     txt('\f') = "\\f";
-    txt('\n') = "\\n";
+    txt('\n') = "\\\\n";
     txt('\r') = "\\r";
     txt('\t') = "\\t";
     txt('\v') = "\\v";
