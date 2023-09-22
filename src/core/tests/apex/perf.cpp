@@ -25,13 +25,16 @@ namespace
         std::cerr << std::endl;
         std::cerr << label << std::endl;
 
-        const PROTO  lhs(ran.in<unsigned>(0,200),ran);
-        const PROTO  rhs(ran.in<unsigned>(0,200),ran);
-        const hPROTO LNG_Prod = PROTO::Mul(lhs,rhs,PROTO::LongMul,0);
-        const hPROTO FFT_Prod = PROTO::Mul(lhs,rhs,PROTO::FFT_Mul,0);
 
-        Y_CHECK(PROTO::AreEqual(*LNG_Prod, *FFT_Prod));
-
+        for(size_t i=0;i<Loops;++i)
+        {
+            const PROTO  lhs(ran.in<unsigned>(0,2000),ran);
+            const PROTO  rhs(ran.in<unsigned>(0,2000),ran);
+            const hPROTO LNG_Prod = PROTO::Mul(lhs,rhs,PROTO::LongMul,0);
+            const hPROTO FFT_Prod = PROTO::Mul(lhs,rhs,PROTO::FFT_Mul,0);
+            //LNG_Prod->printHex(std::cerr) << std::endl;
+            Y_CHECK(PROTO::AreEqual(*LNG_Prod, *FFT_Prod));
+        }
     }
 
 }

@@ -1,6 +1,5 @@
 #include "y/fft/fft.hpp"
 #include "y/utest/run.hpp"
-#include "y/utest/timing.hpp"
 #include "y/type/utils.hpp"
 #include "y/memory/buffer/of.hpp"
 
@@ -12,7 +11,6 @@ namespace
 
 
 
-    static double Duration = 0.1;
 
     template <typename T> static inline
     void checkFFT(const unsigned shift)
@@ -52,8 +50,7 @@ namespace
 Y_UTEST(fft1)
 {
 
-    if(argc>1) Duration = atof(argv[1]);
-
+    
     Y_SIZEOF( LongTypeFor<float>::Type );
     Y_SIZEOF( LongTypeFor<double>::Type );
     Y_SIZEOF( LongTypeFor<long double>::Type );

@@ -107,35 +107,44 @@ namespace Yttrium
         static inline void Real(T data[], const size_t n, const int isign)
         {
             typedef typename LongTypeFor<T>::Type REAL;
+            static const REAL half(0.5);
+            static const REAL one(1);
+            static const REAL two(2);
+
             assert(data);
             assert(IsPowerOfTwo(n));
-            unsigned long i,i1,i2,i3,i4,np3;
-            T c1=0.5,c2,h1r,h1i,h2r,h2i;
-            REAL wr,wi,wpr,wpi,wtemp;
 
-            REAL theta=3.141592653589793/(REAL) (n>>1);
+            static const T c1=0.5;
+            T              c2=0;
+
+            const size_t nc    = n>>1;
+            REAL         theta = 3.141592653589793/REAL(nc);
             if (isign == 1) {
-                c2 = -0.5;
-                Forward(data,n>>1);
+                c2 = -c1;
+                Forward(data,nc);
             }
             else
             {
-                c2    = 0.5;
+                c2    = c1;
                 theta = -theta;
             }
-            wtemp = sin(0.5*theta);
-            wpr   = -2.0*wtemp*wtemp;
-            wpi   = sin(theta);
-            wr    = 1.0+wpr;
-            wi    = wpi;
-            np3   = n+3;
-            for (i=2;i<=(n>>2);i++)
+            REAL wtemp       = sin(half*theta);
+            REAL wpr         = -two*wtemp*wtemp;
+            REAL wpi         = sin(theta);
+            REAL wr          = one+wpr;
+            REAL wi          = wpi;
+            const size_t np3 = n+3;
+            const size_t ns2 = n>>2;
+            for(size_t i=2;i<=ns2;i++)
             {
-                i4=1+(i3=np3-(i2=1+(i1=i+i-1)));
-                h1r=c1*(data[i1]+data[i3]);
-                h1i=c1*(data[i2]-data[i4]);
-                h2r = -c2*(data[i2]+data[i4]);
-                h2i=c2*(data[i1]-data[i3]);
+                const size_t i1=(i<<1)-1;
+                const size_t i2=1+i1;
+                const size_t i3=np3-i2;
+                const size_t i4=1+i3;
+                const T h1r =  c1*(data[i1]+data[i3]);
+                const T h1i =  c1*(data[i2]-data[i4]);
+                const T h2r = -c2*(data[i2]+data[i4]);
+                const T h2i =  c2*(data[i1]-data[i3]);
                 data[i1]=h1r+wr*h2r-wi*h2i;
                 data[i2]=h1i+wr*h2i+wi*h2r;
                 data[i3]=h1r-wr*h2r+wi*h2i;
@@ -144,16 +153,16 @@ namespace Yttrium
                 wi=wi*wpr+wtemp*wpi+wi;
             }
 
+            const T temp = data[1];
             if (isign == 1) {
-                data[1] = (h1r=data[1])+data[2];
-                data[2] = h1r-data[2];
-
+                data[1] = temp+data[2];
+                data[2] = temp-data[2];
             }
             else
             {
-                data[1]=c1*((h1r=data[1])+data[2]);
-                data[2]=c1*(h1r-data[2]);
-                Reverse(data,n>>1);
+                data[1]=c1*(temp+data[2]);
+                data[2]=c1*(temp-data[2]);
+                Reverse(data,nc);
             }
         }
 
@@ -174,13 +183,13 @@ namespace Yttrium
                 fft1[jj-1] = data1[j];
                 fft1[jj]   = data2[j];
             }
-            Core::Display(std::cerr << "pack = ", fft1+1, 2*size) << std::endl;
+            //Core::Display(std::cerr << "pack = ", fft1+1, 2*size) << std::endl;
             FFT::Forward(fft1,size);
-            Core::Display(std::cerr << "fft1  = ", fft1+1, 2*size) << std::endl;
-            Core::Display(std::cerr << "fft2  = ", fft2+1, 2*size) << std::endl;
+            //Core::Display(std::cerr << "fft1  = ", fft1+1, 2*size) << std::endl;
+            //Core::Display(std::cerr << "fft2  = ", fft2+1, 2*size) << std::endl;
             Expand(fft1,fft2,size);
-            Core::Display(std::cerr << "fft1  = ", fft1+1, 2*size) << std::endl;
-            Core::Display(std::cerr << "fft2  = ", fft2+1, 2*size) << std::endl;
+            //Core::Display(std::cerr << "fft1  = ", fft1+1, 2*size) << std::endl;
+            //Core::Display(std::cerr << "fft2  = ", fft2+1, 2*size) << std::endl;
         }
 
         //______________________________________________________________________
@@ -238,7 +247,7 @@ namespace Yttrium
             static  const    REAL half(0.5);
             static  const    REAL two(2);
 
-            const size_t n = BitReversal(data,size); assert(n==size*2);
+            const size_t n = BitReversal(data,size);
             size_t mmax=2;
             while(n>mmax)
             {
@@ -254,13 +263,15 @@ namespace Yttrium
                 {
                     for(size_t i=m;i<=n;i+=istep)
                     {
+                        const size_t i1    = i+1;
                         const size_t j     = i+mmax;
-                        const T      tempr = wr*data[j]  -wi*data[j+1];
-                        const T      tempi = wr*data[j+1]+wi*data[j];
-                        data[j]    = data[i]-tempr;
-                        data[j+1]  = data[i+1]-tempi;
-                        data[i]   += tempr;
-                        data[i+1] += tempi;
+                        const size_t j1    = j+1;
+                        const T      tempr = wr*data[j] -wi*data[j1];
+                        const T      tempi = wr*data[j1]+wi*data[j];
+                        data[j]   = data[i] -tempr;
+                        data[j1]  = data[i1]-tempi;
+                        data[i]  += tempr;
+                        data[i1] += tempi;
                     }
                     wr=(wtemp=wr)*wpr-wi*wpi+wr;
                     wi=wi*wpr+wtemp*wpi+wi;
