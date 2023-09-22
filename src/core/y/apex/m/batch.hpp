@@ -52,20 +52,20 @@ namespace Yttrium
 
             //! allocate next power of two numObjects
             inline Batch(const size_t numObjects) :
-            count(     numObjects                                   ),
-            shift(     Base2<size_t>::LogFor( Coerce(count))        ),
-            dataShift( DataShiftFor(count)                          ),
-            addr( static_cast<T*>(Self::Acquire(Coerce(dataShift))) )
+            count(     numObjects                                    ),
+            shift(     Base2<size_t>::LogFor( Coerce(count))         ),
+            dataShift( DataShiftFor(count)                           ),
+            cxx( static_cast<T*>(Self::Acquire(Coerce(dataShift)))-1 )
             {
 
             }
 
             //! setup WITHOUT memory copy, just copy metrics
             inline Batch(const Batch &other) :
-            count( other.count ),
-            shift( other.shift ),
+            count(     other.count     ),
+            shift(     other.shift     ),
             dataShift( other.dataShift ),
-            addr( static_cast<T*>(Self::Acquire(Coerce(dataShift))) )
+            cxx( static_cast<T*>(Self::Acquire(Coerce(dataShift)))-1 )
             {
 
             }
@@ -73,8 +73,8 @@ namespace Yttrium
             //! cleanup
             inline ~Batch() noexcept
             {
-                assert(0!=addr);
-                Self::Release(addr,dataShift);
+                assert(0!=cxx);
+                Self::Release(++cxx,dataShift);
             }
 
             //__________________________________________________________________
@@ -87,14 +87,15 @@ namespace Yttrium
             //! access
             inline T & operator[](const size_t i) noexcept
             {
-                assert(i<count);
-                return addr[i];
+                assert(i>=1);
+                assert(i<=count);
+                return cxx[i];
             }
 
-            //! access
+            //! access to get [1..count]
             inline T *operator()(void) noexcept
             {
-                return addr;
+                return cxx;
             }
 
 
@@ -110,7 +111,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_ASSIGN(Batch);
-            T       *addr;
+            T       *cxx;
 
             static inline unsigned DataShiftFor( const size_t nobj )
             {

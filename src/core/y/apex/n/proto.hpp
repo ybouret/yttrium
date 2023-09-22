@@ -18,6 +18,7 @@
 #include "y/memory/out-of-reach.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/fft/fft.hpp"
+#include "y/type/utils.hpp"
 
 #include <iostream>
 #include <iomanip>

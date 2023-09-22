@@ -11,6 +11,7 @@ using namespace Yttrium;
 
 namespace Yttrium
 {
+#if 0
     template <typename T>
     static inline void realft(T data[], unsigned long n, int isign)
     {
@@ -63,6 +64,7 @@ namespace Yttrium
             FFT::Reverse(data,n>>1);
         }
     }
+#endif
 }
 
 
@@ -115,19 +117,19 @@ Y_UTEST(fft_mul)
         const uint64_t W = uint64_t(U) * uint64_t(V);
         std::cerr << "W= 0x" << Hexadecimal(W) << " = " << W << std::endl;
 
-        size_t nn=1;
+        size_t       nn = 1;
         const size_t mn = Max(n,m);
         while (nn < mn) nn <<= 1;
         nn <<= 1;
-
+        std::cerr << "#nn=" << nn << std::endl;
         CxxArray<double> a(nn), b(nn);
         for(size_t i=n;i>0;--i) a[i] = u[n+1-i];
         for(size_t i=m;i>0;--i) b[i] = v[m+1-i];
         //Core::Display(std::cerr << "a=", &a[1], nn) << std::endl;
         //Core::Display(std::cerr << "b=", &b[1], nn) << std::endl;
 
-        realft(&a[1]-1,nn,1);
-        realft(&b[1]-1,nn,1);
+        FFT::Real(&a[1]-1,nn,1);
+        FFT::Real(&b[1]-1,nn,1);
 
         b[1] *= a[1];
         b[2] *= a[2];
@@ -137,24 +139,26 @@ Y_UTEST(fft_mul)
             b[j]=t*a[j]-b[j+1]*a[j+1];
             b[j+1]=t*a[j+1]+b[j+1]*a[j];
         }
-        realft(&b[1]-1,nn,-1);
-        //Core::Display(std::cerr << "p=", &b[1], nn) << std::endl;
+        FFT::Real(&b[1]-1,nn,-1);
 
         static const double RX = 256.0;
         double cy=0.0;
         for(size_t j=nn;j>=1;j--)
         {
-            const double t= floor(b[j]/(nn>>1)+cy+0.5);
+            const double t=  (b[j]/(nn>>1)+cy+0.5);
             cy=(unsigned long) (t/RX);
            // std::cerr << "t=" << t << ", cy=" << cy << std::endl;
             b[j]=t-cy*RX;
         }
         //std::cerr << "#cy = 0x" << Hexadecimal(uint8_t(cy)) << std::endl;
         CxxArray<uint8_t> w(m+n);
-        w[1]=(unsigned char) cy;
-        for (size_t j=2;j<=n+m;j++)
-            w[j]=(unsigned char) b[j-1];
-        //show(w);
+        if(m+n>0)
+        {
+            w[1]=(unsigned char) cy;
+            for (size_t j=2;j<=n+m;j++)
+                w[j]=(unsigned char) b[j-1];
+            //show(w);
+        }
 
         uint64_t res = 0;
         for(size_t i=1;i<=m+n;++i)

@@ -31,7 +31,7 @@ namespace
             std::cerr << "  batch.dshft = " << batch.dataShift << std::endl;
             std::cerr << "  "; Y_CHECK( size_t(1) << batch.dataShift >= batch.count * sizeof(T) );
 
-            for(size_t i=0;i<batch.count;++i)
+            for(size_t i=1;i<=batch.count;++i)
             {
                 Random::Fill::Fuzzy(batch[i],ran);
             }

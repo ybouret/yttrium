@@ -103,6 +103,60 @@ namespace Yttrium
             Transform(data,size,myPI);
         }
 
+        template <typename T>
+        static inline void Real(T data[], const size_t n, const int isign)
+        {
+            typedef typename LongTypeFor<T>::Type REAL;
+            assert(data);
+            assert(IsPowerOfTwo(n));
+            unsigned long i,i1,i2,i3,i4,np3;
+            T c1=0.5,c2,h1r,h1i,h2r,h2i;
+            REAL wr,wi,wpr,wpi,wtemp;
+
+            REAL theta=3.141592653589793/(REAL) (n>>1);
+            if (isign == 1) {
+                c2 = -0.5;
+                Forward(data,n>>1);
+            }
+            else
+            {
+                c2    = 0.5;
+                theta = -theta;
+            }
+            wtemp = sin(0.5*theta);
+            wpr   = -2.0*wtemp*wtemp;
+            wpi   = sin(theta);
+            wr    = 1.0+wpr;
+            wi    = wpi;
+            np3   = n+3;
+            for (i=2;i<=(n>>2);i++)
+            {
+                i4=1+(i3=np3-(i2=1+(i1=i+i-1)));
+                h1r=c1*(data[i1]+data[i3]);
+                h1i=c1*(data[i2]-data[i4]);
+                h2r = -c2*(data[i2]+data[i4]);
+                h2i=c2*(data[i1]-data[i3]);
+                data[i1]=h1r+wr*h2r-wi*h2i;
+                data[i2]=h1i+wr*h2i+wi*h2r;
+                data[i3]=h1r-wr*h2r+wi*h2i;
+                data[i4] = -h1i+wr*h2i+wi*h2r;
+                wr=(wtemp=wr)*wpr-wi*wpi+wr;
+                wi=wi*wpr+wtemp*wpi+wi;
+            }
+
+            if (isign == 1) {
+                data[1] = (h1r=data[1])+data[2];
+                data[2] = h1r-data[2];
+
+            }
+            else
+            {
+                data[1]=c1*((h1r=data[1])+data[2]);
+                data[2]=c1*(h1r-data[2]);
+                Reverse(data,n>>1);
+            }
+        }
+
         //______________________________________________________________________
         //
         //! computed fft1[1..2n] and fft2[1..2n] data[1..n] and data2[1..n]
@@ -184,8 +238,6 @@ namespace Yttrium
             static  const    REAL half(0.5);
             static  const    REAL two(2);
 
-            //REAL wtemp,wr,wpr,wpi,wi;
-
             const size_t n = BitReversal(data,size); assert(n==size*2);
             size_t mmax=2;
             while(n>mmax)
@@ -202,11 +254,11 @@ namespace Yttrium
                 {
                     for(size_t i=m;i<=n;i+=istep)
                     {
-                        const size_t j=i+mmax;
-                        const T tempr= wr*data[j]  -wi*data[j+1];
-                        const T tempi= wr*data[j+1]+wi*data[j];
-                        data[j]=data[i]-tempr;
-                        data[j+1]=data[i+1]-tempi;
+                        const size_t j     = i+mmax;
+                        const T      tempr = wr*data[j]  -wi*data[j+1];
+                        const T      tempi = wr*data[j+1]+wi*data[j];
+                        data[j]    = data[i]-tempr;
+                        data[j+1]  = data[i+1]-tempi;
                         data[i]   += tempr;
                         data[i+1] += tempi;
                     }

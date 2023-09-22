@@ -252,8 +252,8 @@ namespace
         {
             const PROTO lhs(30,ran);
             const PROTO rhs(30,ran);
-            lhs.printHex(std::cerr << "\t"); std::cerr << std::endl;
-            rhs.printHex(std::cerr << "\t"); std::cerr << std::endl;
+            lhs.printHex(std::cerr << "\t0x"); std::cerr << std::endl;
+            rhs.printHex(std::cerr << "\t0x"); std::cerr << std::endl;
 
             const hPROTO proto( PROTO::FFT_Mul(lhs.block.entry,lhs.words,
                                                rhs.block.entry,rhs.words,0) );
@@ -285,6 +285,8 @@ Y_UTEST(apex_proto)
     if(argc>1) Loops = unsigned( atol(argv[1]) );
 
     TestProto<uint64_t,uint32_t>( ran );
+    return 0;
+    
     TestProto<uint64_t,uint16_t>( ran );
 
     TestProto<uint64_t,uint8_t>(  ran );

@@ -112,6 +112,26 @@ namespace Yttrium
 
         //______________________________________________________________________
         //
+        //! helper to display ranges
+        //______________________________________________________________________
+        template <typename OSTREAM, typename ITERATOR, typename TRANSFORM> inline
+        OSTREAM & Display(OSTREAM &os, ITERATOR curr, const size_t size, TRANSFORM &transform)
+        {
+            os << '[';
+            if(size>0)
+            {
+                os << transform(*(curr++));
+                for(size_t i=1;i<size;++i) os << ';' << transform(*(curr++));
+            }
+            os << ']';
+            return os;
+        }
+
+
+
+
+        //______________________________________________________________________
+        //
         //! helper to safe string-like length
         //______________________________________________________________________
         template <typename T> static inline
