@@ -60,7 +60,7 @@ namespace Yttrium
             assert(IsPowerOfTwo(size));
             assert(0!=data);
             const size_t n = (size<<1);
-            for(size_t j=1, i=1;i<n;i+=2)
+            for(size_t j=1,i=1;i<n;i+=2)
             {
                 if(j>i)
                 {

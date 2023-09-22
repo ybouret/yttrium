@@ -17,8 +17,8 @@ namespace
     template <typename T> static inline
     void checkFFT(const unsigned shift)
     {
-
-        const size_t size = 1 << shift;
+        static const  T half(0.5);
+        const size_t    size = 1 << shift;
         std::cerr << "FFT-" << std::setw(3) << sizeof(T)*8 << " : 2^" << std::setw(2) << shift << " = " << std::setw(8) << size << " : ";
 
         Memory::BufferOf< Complex<T> > source(size);
@@ -34,11 +34,11 @@ namespace
         {
             s[i] /= size;
         }
-        size_t nok = 0;
-        size_t bad = 0;
+        size_t   nok = 0;
+        size_t   bad = 0;
         for(size_t i=1;i<=n;++i)
         {
-            const size_t ii = static_cast<size_t>(std::floor(s[i]+T(0.5)));
+            const size_t ii = static_cast<size_t>(std::floor(s[i]+half));
             if( ii == i ) ++nok; else ++bad;
         }
         std::cerr << " |  +" << std::setw(8) << nok;

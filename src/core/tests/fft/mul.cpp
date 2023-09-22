@@ -9,6 +9,62 @@
 
 using namespace Yttrium;
 
+namespace Yttrium
+{
+    template <typename T>
+    static inline void realft(T data[], unsigned long n, int isign)
+    {
+        unsigned long i,i1,i2,i3,i4,np3;
+        T c1=0.5,c2,h1r,h1i,h2r,h2i;
+        double wr,wi,wpr,wpi,wtemp,theta;
+
+        theta=3.141592653589793/(double) (n>>1);
+        if (isign == 1) {
+            c2 = -0.5;
+            //four1(data,n>>1,1);
+            FFT::Forward(data,n>>1);
+        }
+        else
+        {
+                c2=0.5;
+                theta = -theta;
+        }
+        wtemp = sin(0.5*theta);
+        wpr   = -2.0*wtemp*wtemp;
+        wpi   = sin(theta);
+        wr    = 1.0+wpr;
+        wi    = wpi;
+        np3   = n+3;
+        for (i=2;i<=(n>>2);i++)
+        {
+            i4=1+(i3=np3-(i2=1+(i1=i+i-1)));
+            h1r=c1*(data[i1]+data[i3]);
+            h1i=c1*(data[i2]-data[i4]);
+            h2r = -c2*(data[i2]+data[i4]);
+            h2i=c2*(data[i1]-data[i3]);
+            data[i1]=h1r+wr*h2r-wi*h2i;
+            data[i2]=h1i+wr*h2i+wi*h2r;
+            data[i3]=h1r-wr*h2r+wi*h2i;
+            data[i4] = -h1i+wr*h2i+wi*h2r;
+            wr=(wtemp=wr)*wpr-wi*wpi+wr;
+            wi=wi*wpr+wtemp*wpi+wi;
+        }
+
+        if (isign == 1) {
+            data[1] = (h1r=data[1])+data[2];
+            data[2] = h1r-data[2];
+
+        }
+        else
+        {
+            data[1]=c1*((h1r=data[1])+data[2]);
+            data[2]=c1*(h1r-data[2]);
+            //four1(data,n>>1,-1);
+            FFT::Reverse(data,n>>1);
+        }
+    }
+}
+
 
 static inline size_t fill(Writable<uint8_t> &arr, const uint32_t x)
 {
@@ -25,7 +81,7 @@ static inline size_t fill(Writable<uint8_t> &arr, const uint32_t x)
 
 static inline void show(const Readable<uint8_t> &arr)
 {
-    std::cerr << " =";
+    std::cerr << " = 0x";
     for(size_t i=arr.size();i>0;--i)
     {
         std::cerr << Hexadecimal(arr[i]);
@@ -45,68 +101,65 @@ Y_UTEST(fft_mul)
     const uint32_t U = ran.to<uint32_t>( ran.in<unsigned>(0,32) );
     const size_t   n = fill(u,U);
 
-    std::cerr << "U=" << Hexadecimal(U) << "@" << n << " =" << U << std::endl;
+    std::cerr << "U= 0x" << Hexadecimal(U) << "@" << n << " = " << U << std::endl;
     show(u);
 
     const uint32_t V = ran.to<uint32_t>( ran.in<unsigned>(0,32) );
     const size_t   m = fill(v,V);
 
-    std::cerr << "V=" << Hexadecimal(V) << "@" << m << " = " << V << std::endl;
+    std::cerr << "V= 0x" << Hexadecimal(V) << "@" << m << " = " << V << std::endl;
     show(v);
 
     const uint64_t W = uint64_t(U) * uint64_t(V);
-    std::cerr << "W=" << Hexadecimal(W) << std::endl;
+    std::cerr << "W= 0x" << Hexadecimal(W) << " = " << W << std::endl;
 
-    const size_t nr = NextPowerOfTwo( Max(n,m) )<<1;
-    const size_t nc = nr << 1;
+    size_t nn=1;
+    const size_t mn = Max(n,m);
+    while (nn < mn) nn <<= 1;
+    nn <<= 1;
 
-    CxxArray<double> a(nc);
-    for(size_t i=1;i<=n;++i)
-    {
-        a[1+((i-1)<<1)] = u[i];
-    }
-    for(size_t i=1;i<=m;++i)
-    {
-        a[2+((i-1)<<1)] = v[i];
-    }
-    Core::Display(std::cerr, &a[1],nc) << std::endl;
-    FFT::Forward(&a[1]-1,nr);
-    CxxArray<double> b(nc);
-    FFT::Expand(&a[1]-1, &b[1]-1,nr);
+    CxxArray<double> a(nn), b(nn);
+    for(size_t i=n;i>0;--i) a[i] = u[i];
+    for(size_t i=m;i>0;--i) b[i] = v[i];
+    Core::Display(std::cerr << "a=", &a[1], nn) << std::endl;
+    Core::Display(std::cerr << "b=", &b[1], nn) << std::endl;
 
-    //b[1] *= a[1];
-    //b[2] *= a[2];
-    for(size_t j=1;j<=nc;j+=2)
+    realft(&a[1]-1,nn,1);
+    realft(&b[1]-1,nn,1);
+
+    b[1] *= a[1];
+    b[2] *= a[2];
+    for(size_t j=3;j<=nn;j+=2)
     {
         const double t = b[j];
-        b[j]  = t*a[j]   - b[j+1]*a[j+1];
-        b[j+1]= t*a[j+1] + b[j+1]*a[j];
+        b[j]=t*a[j]-b[j+1]*a[j+1];
+        b[j+1]=t*a[j+1]+b[j+1]*a[j];
     }
-    FFT::Reverse(&b[1]-1,nr);
-    Core::Display(std::cerr << "p=", &b[1], nc) << std::endl;
-    double cy=0.0;
-    for(size_t j=nr;j>0;--j) {
-        const size_t k=1+(j-1)*2;
-        const double t=b[k]/nr+cy+0.5;
-        cy=(unsigned long) (t/256.0);
-        b[k]   = t-cy*256.0;
-        b[k+1] = 0;
-    }
-    std::cerr << "cy=" << cy << std::endl;
-    Core::Display(std::cerr << "p=", &b[1], nc) << std::endl;
+    realft(&b[1]-1,nn,-1);
+    Core::Display(std::cerr << "p=", &b[1], nn) << std::endl;
 
-    CxxArray<uint8_t> w(n+m);
-    w[1]=(unsigned char) cy;
-    for(size_t j=2;j<=n+m;j++)
+    static const double RX = 256.0;
+    double cy=0.0;
+    for(size_t j=nn;j>=1;j--)
     {
-        const size_t k=1+(j-2)*2;
-        std::cerr << "j=" << j << " -> " << k << " / nc=" << nc << std::endl;
-        w[j]=(unsigned char) b[k];
+        const double t=b[j]/(nn>>1)+cy+0.5;
+        cy=(unsigned long) (t/RX);
+        b[j]=t-cy*RX;
     }
+    std::cerr << "#cy = 0x" << Hexadecimal(uint8_t(cy)) << std::endl;
+    CxxArray<uint8_t> w(m+n);
+    w[1]=(unsigned char) cy;
+    for (size_t j=2;j<=n+m;j++)
+        w[j]=(unsigned char) b[j-1];
     show(w);
 
-
-
+    uint64_t res = 0;
+    for(size_t i=m+n;i>0;--i)
+    {
+        res <<= 8;
+        res |= w[i];
+    }
+    std::cerr << "p=" << res << std::endl;
 }
 Y_UDONE()
 
