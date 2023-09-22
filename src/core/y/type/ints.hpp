@@ -97,6 +97,10 @@ namespace Yttrium
 
         //! shift right 8 bits
         static inline Type SHR8(const Type) noexcept { return 0; }
+
+        //! shift left 8 bits
+        static inline Type SHL8(const Type) noexcept { return 0; }
+
     };
 
     //__________________________________________________________________________
@@ -127,6 +131,9 @@ namespace Yttrium
 
         //! shift right 8 bits
         static inline Type SHR8(const Type x) noexcept { return x>>8; }
+
+        //! shift left 8 bits
+        static inline Type SHL8(const Type x) noexcept { return x<<8; }
     };
 
     //__________________________________________________________________________
@@ -164,6 +171,9 @@ namespace Yttrium
 
         //! shift right 8 bits
         static inline Type SHR8(const Type x) noexcept { return x>>8; }
+
+        //! shift left 8 bits
+        static inline Type SHL8(const Type x) noexcept { return x<<8; }
     };
 
     //__________________________________________________________________________
@@ -213,6 +223,9 @@ namespace Yttrium
 
         //! shift right 8 bits
         static inline Type SHR8(const Type x) noexcept { return x>>8; }
+
+        //! shift left 8 bits
+        static inline Type SHL8(const Type x) noexcept { return x<<8; }
     };
 
     //__________________________________________________________________________

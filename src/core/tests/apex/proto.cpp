@@ -248,15 +248,32 @@ namespace
             }
         }
 
-        std::cerr << "   (*) FFT mul" << std::endl;
+        std::cerr << "   (*) FFT mul64" << std::endl;
+        for(unsigned i=0;i<=32;++i)
         {
-            const PROTO lhs(30,ran);
-            const PROTO rhs(30,ran);
-            lhs.printHex(std::cerr << "\t0x"); std::cerr << std::endl;
-            rhs.printHex(std::cerr << "\t0x"); std::cerr << std::endl;
+            for(unsigned j=0;j<=32;++j)
+            {
+                const uint64_t l = ran.to<uint64_t>( i );
+                const uint64_t r = ran.to<uint64_t>( j );
+                const uint64_t p =l*r;
+                const PROTO    lhs(l);
+                const PROTO    rhs(r);
+                const hPROTO   prod( PROTO::Mul(lhs,rhs,PROTO::FFT_Mul,0) );
+                Y_ASSERT( prod->ls64() == p );
+            }
+        }
+
+        if(false)
+        {
+            const PROTO lhs(ran.in<unsigned>(0,32),ran);
+            const PROTO rhs(ran.in<unsigned>(0,32),ran);
+            lhs.printHex(std::cerr << "\tstring(Int(0x") << ")*";
+            rhs.printHex(std::cerr << "Int(0x") << "),base=16)" << std::endl;
+
 
             const hPROTO proto( PROTO::FFT_Mul(lhs.block.entry,lhs.words,
                                                rhs.block.entry,rhs.words,0) );
+            proto->printHex(std::cerr) << std::endl;
         }
 
 
@@ -285,10 +302,7 @@ Y_UTEST(apex_proto)
     if(argc>1) Loops = unsigned( atol(argv[1]) );
 
     TestProto<uint64_t,uint32_t>( ran );
-    return 0;
-    
     TestProto<uint64_t,uint16_t>( ran );
-
     TestProto<uint64_t,uint8_t>(  ran );
 
     TestProto<uint32_t,uint16_t>( ran );
