@@ -55,6 +55,27 @@ Y_UTEST(fft1)
     Y_SIZEOF( LongTypeFor<double>::Type );
     Y_SIZEOF( LongTypeFor<long double>::Type );
 
+    for(size_t i=1;i<64;++i)
+    {
+        
+    }
+
+    for(unsigned shift=00; shift<=8; ++shift)
+    {
+        const size_t                        size = 1 << shift;
+        std::cerr << "size=" << size << std::endl;
+        Memory::BufferOf< Complex<double> > source(size);
+        const size_t n = size << 1;
+        double *s = &(source[0].re)-1;
+
+        for(size_t i=1;i<=n;++i) s[i] = double(i);
+
+        FFT::Forward(s,size);
+    }
+
+    return 0;
+
+
     for(unsigned shift=00; shift<=20; ++shift)
     {
         checkFFT<float>(shift);

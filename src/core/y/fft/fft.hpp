@@ -80,7 +80,7 @@ namespace Yttrium
 
         //______________________________________________________________________
         //
-        //! bit reversal of data1[1..size*2] data2[1..size*2]
+        //! bit reversal of BOTH data1[1..size*2] AND data2[1..size*2]
         //______________________________________________________________________
         template <typename T> static inline
         size_t BitReversal(T data1[], T data2[], const size_t size) noexcept
@@ -285,8 +285,8 @@ namespace Yttrium
             {
                 const size_t istep = (mmax << 1);
                 //const REAL   theta = (myPI/istep);
-                const REAL   theta = (2*myPI/mmax);
-                REAL         wtemp = std::sin(half*theta);
+                const REAL   theta = (2*myPI/mmax);         //std::cerr << "pi/" << (mmax/2) <<  " = " << theta << std::endl;
+                REAL         wtemp = std::sin(half*theta);  //std::cerr << "pi/" << (mmax)   << std::endl;
                 REAL         wpr   = -two*wtemp*wtemp;
                 REAL         wpi   = std::sin(theta);
                 REAL         wr    = 1.0;
