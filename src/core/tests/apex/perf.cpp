@@ -32,8 +32,10 @@ namespace
             const PROTO  rhs(ran.in<unsigned>(0,2000),ran);
             const hPROTO LNG_Prod = PROTO::Mul(lhs,rhs,PROTO::LongMul,0);
             const hPROTO FFT_Prod = PROTO::Mul(lhs,rhs,PROTO::FFT_Mul,0);
-            //LNG_Prod->printHex(std::cerr) << std::endl;
-            Y_CHECK(PROTO::AreEqual(*LNG_Prod, *FFT_Prod));
+            const PROTO &LongProduct = *LNG_Prod;
+            const PROTO &FFT_Product = *FFT_Prod;
+
+            Y_CHECK( PROTO::AreEqual(LongProduct,FFT_Product) );
         }
     }
 

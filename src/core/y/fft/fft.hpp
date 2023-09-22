@@ -78,35 +78,39 @@ namespace Yttrium
             return n;
         }
 
-#include "xbr.hxx"
-
-        //! using pre-computed inlines
+        //______________________________________________________________________
+        //
+        //! bit reversal of data1[1..size*2] data2[1..size*2]
+        //______________________________________________________________________
         template <typename T> static inline
-        size_t XBitReversal(T data[], const size_t size) noexcept
+        size_t BitReversal(T data1[], T data2[], const size_t size) noexcept
         {
             assert(IsPowerOfTwo(size));
-            assert(0!=data);
-            switch(size)
+            assert(0!=data1);
+            assert(0!=data2);
+            const size_t n = (size<<1);
+            for(size_t j=1,i=1;i<n;i+=2)
             {
-                case 0:
-                case 1:
-                case 2:
-                    return (size<<1);
-
-                case 4:   return XBR4(data);
-                case 8:   return XBR8(data);
-                case 16:  return XBR16(data);
-                case 32:  return XBR32(data);
-                case 64:  return XBR64(data);
-                case 128: return XBR128(data);
-                case 256: return XBR256(data);
-
-                default:
-                    break;
+                if(j>i)
+                {
+                    const size_t j1 = j+1;
+                    const size_t i1 = i+1;
+                    Swap(data1[j],data1[i]);
+                    Swap(data1[j1],data1[i1]);
+                    Swap(data2[j],data2[i]);
+                    Swap(data2[j1],data2[i1]);
+                }
+                size_t m=size;
+                while (m >= 2 && j > m)
+                {
+                    j -= m;
+                    m >>= 1;
+                }
+                j += m;
             }
-            return BitReversal(data,size);
-
+            return n;
         }
+
 
 
 
@@ -216,13 +220,8 @@ namespace Yttrium
                 fft1[jj-1] = data1[j];
                 fft1[jj]   = data2[j];
             }
-            //Core::Display(std::cerr << "pack = ", fft1+1, 2*size) << std::endl;
             FFT::Forward(fft1,size);
-            //Core::Display(std::cerr << "fft1  = ", fft1+1, 2*size) << std::endl;
-            //Core::Display(std::cerr << "fft2  = ", fft2+1, 2*size) << std::endl;
             Expand(fft1,fft2,size);
-            //Core::Display(std::cerr << "fft1  = ", fft1+1, 2*size) << std::endl;
-            //Core::Display(std::cerr << "fft2  = ", fft2+1, 2*size) << std::endl;
         }
 
         //______________________________________________________________________
@@ -280,7 +279,7 @@ namespace Yttrium
             static  const    REAL half(0.5);
             static  const    REAL two(2);
 
-            const size_t n = XBitReversal(data,size);
+            const size_t n = BitReversal(data,size);
             size_t mmax=2;
             while(n>mmax)
             {

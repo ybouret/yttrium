@@ -69,6 +69,7 @@ namespace Yttrium
 
     static double Duration = 0.5;
 
+#if 0
     template <typename T>
     static inline void TestXBR(const unsigned shift)
     {
@@ -101,6 +102,7 @@ namespace Yttrium
 
 
     }
+#endif
 
 
 }
@@ -110,7 +112,8 @@ Y_UTEST(fft_xbr)
 {
 
     if(argc>1) Duration = atof(argv[1]);
-    
+
+#if 0
     for(unsigned shift=0;shift<=10;++shift)
     {
         TestXBR<float>(shift);
@@ -119,7 +122,8 @@ Y_UTEST(fft_xbr)
     }
 
     return 0;
-
+#endif
+    
     {
         Libc::OutputFile header("xbr.hxx");
 
