@@ -119,8 +119,8 @@ Y_UTEST(fft_mul)
     nn <<= 1;
 
     CxxArray<double> a(nn), b(nn);
-    for(size_t i=n;i>0;--i) a[i] = u[i];
-    for(size_t i=m;i>0;--i) b[i] = v[i];
+    for(size_t i=n;i>0;--i) a[i] = u[n+1-i];
+    for(size_t i=m;i>0;--i) b[i] = v[m+1-i];
     Core::Display(std::cerr << "a=", &a[1], nn) << std::endl;
     Core::Display(std::cerr << "b=", &b[1], nn) << std::endl;
 
@@ -154,7 +154,8 @@ Y_UTEST(fft_mul)
     show(w);
 
     uint64_t res = 0;
-    for(size_t i=m+n;i>0;--i)
+    //for(size_t i=m+n;i>0;--i)
+    for(size_t i=1;i<=m+n;++i)
     {
         res <<= 8;
         res |= w[i];
