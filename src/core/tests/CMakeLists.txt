@@ -161,6 +161,7 @@ add_test(io:bzip2-write test-core io_bzip2_write)
 add_test(io:xmlog       test-core io_xmlog)
 
 #fft
+add_test(fft:xbr test-core fft_xbr)
 add_test(fft:1   test-core fft1)
 add_test(fft:2   test-core fft2)
 add_test(fft:mul test-core fft_mul)
