@@ -78,6 +78,37 @@ namespace Yttrium
             return n;
         }
 
+#include "xbr.hxx"
+
+        //! using pre-computed inlines
+        template <typename T> static inline
+        size_t XBitReversal(T data[], const size_t size) noexcept
+        {
+            assert(IsPowerOfTwo(size));
+            assert(0!=data);
+            switch(size)
+            {
+                case 0:
+                case 1:
+                case 2:
+                    return (size<<1);
+
+                case 4:   return XBR4(data);
+                case 8:   return XBR8(data);
+                case 16:  return XBR16(data);
+                case 32:  return XBR32(data);
+                case 64:  return XBR64(data);
+                case 128: return XBR128(data);
+                case 256: return XBR256(data);
+
+                default:
+                    break;
+            }
+            return BitReversal(data,size);
+
+        }
+
+
 
         //______________________________________________________________________
         //
@@ -103,6 +134,8 @@ namespace Yttrium
             Transform(data,size,myPI);
         }
 
+
+        //! Transform of real data
         template <typename T>
         static inline void Real(T data[], const size_t n, const int isign)
         {
@@ -247,7 +280,7 @@ namespace Yttrium
             static  const    REAL half(0.5);
             static  const    REAL two(2);
 
-            const size_t n = BitReversal(data,size);
+            const size_t n = XBitReversal(data,size);
             size_t mmax=2;
             while(n>mmax)
             {

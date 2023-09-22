@@ -21,9 +21,10 @@ namespace Yttrium
             // generic callback to process detected token
             //
             //__________________________________________________________________
-            typedef uint32_t                            Message;
-            typedef Functor<Message,TL1(const Token &)> Callback;
+            typedef uint32_t                            Message;  //!< alias
+            typedef Functor<Message,TL1(const Token &)> Callback; //!< alias
 
+            //! predefined messages
             enum MessageID
             {
                 LX_EMIT = 0x01,
