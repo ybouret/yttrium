@@ -55,10 +55,8 @@ Y_UTEST(fft1)
     Y_SIZEOF( LongTypeFor<double>::Type );
     Y_SIZEOF( LongTypeFor<long double>::Type );
 
-    for(size_t i=1;i<64;++i)
-    {
-        
-    }
+    Core::Display(std::cerr << "tab=", &FFT::Table<double>::Sin[0], 64) << std::endl;
+    Core::Display(std::cerr << "tab=", &FFT::Table<long double>::Sin[0], 64) << std::endl;
 
     for(unsigned shift=00; shift<=8; ++shift)
     {
