@@ -55,8 +55,10 @@ Y_UTEST(fft1)
     Y_SIZEOF( LongTypeFor<double>::Type );
     Y_SIZEOF( LongTypeFor<long double>::Type );
 
-    Core::Display(std::cerr << "tab=", &FFT::Table<double>::PositiveSin[0], 64) << std::endl;
-    Core::Display(std::cerr << "tab=", &FFT::Table<long double>::PositiveSin[0], 64) << std::endl;
+    Core::Display(std::cerr << "PosSin=", &FFT::Table<double>::PositiveSin[0], 64) << std::endl;
+    Core::Display(std::cerr << "PosSin=", &FFT::Table<long double>::PositiveSin[0], 64) << std::endl;
+    Core::Display(std::cerr << "NegSin=", &FFT::Table<double>::NegativeSin[0], 64) << std::endl;
+    Core::Display(std::cerr << "NegSin=", &FFT::Table<long double>::NegativeSin[0], 64) << std::endl;
 
     for(unsigned shift=00; shift<=8; ++shift)
     {
