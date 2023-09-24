@@ -47,7 +47,8 @@ namespace Yttrium
         struct Table
         {
             static const T PI;
-            static const T Sin[64];
+            static const T PositiveSin[64];
+            static const T NegativeSin[64];
         };
 
         //______________________________________________________________________
