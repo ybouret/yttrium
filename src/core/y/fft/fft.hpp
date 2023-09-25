@@ -185,7 +185,6 @@ namespace Yttrium
             typedef typename LongTypeFor<T>::Type REAL;
             static const REAL myPI(3.141592653589793238462643383279502884197);
             static const REAL half(0.5);
-            static const REAL one(1);
             static const REAL two(2);
             //const REAL *   Sine = Table<REAL>::PositiveSin;
 
@@ -204,9 +203,39 @@ namespace Yttrium
                     break;
             }
             
-            REAL wpi         = sin(theta);
-            REAL wtemp       = sin(half*theta);
-            REAL wpr         = -two*wtemp*wtemp;
+            const REAL wpi    = sin(theta);
+            const REAL wtemp  = sin(half*theta);
+            const REAL wpr    = -two*wtemp*wtemp;
+
+            RealCore<T,REAL>(data, n, wpr, wpi, c1, c2);
+
+            const T temp = data[1];
+            switch(dir)
+            {
+                case RealForward:
+                    data[1] = temp+data[2];
+                    data[2] = temp-data[2];
+                    break;
+
+                case RealReverse:
+                    data[1]=c1*(temp+data[2]);
+                    data[2]=c1*(temp-data[2]);
+                    Reverse(data,nc);
+                    break;
+            }
+
+        }
+
+
+        template <typename T, typename REAL>
+        static inline void RealCore(T            data[],
+                                    const size_t n,
+                                    const REAL   wpr,
+                                    const REAL   wpi,
+                                    const T      c1,
+                                    const T      c2)
+        {
+            static const REAL  one(1);
             REAL wr          = one+wpr;
             REAL wi          = wpi;
             const size_t np3 = n+3;
@@ -227,26 +256,13 @@ namespace Yttrium
                     data[i3] =  h1r-wr*h2r+wi*h2i;
                     data[i4] = -h1i+wr*h2i+wi*h2r;
                 }
-                wr=(wtemp=wr)*wpr-wi*wpi+wr;
-                wi=wi*wpr+wtemp*wpi+wi;
+                const REAL wt = wr;
+                wr=wt*wpr-wi*wpi+wr;
+                wi=wi*wpr+wt*wpi+wi;
             }
-
-            const T temp = data[1];
-            switch(dir)
-            {
-                case RealForward:
-                    data[1] = temp+data[2];
-                    data[2] = temp-data[2];
-                    break;
-
-                case RealReverse:
-                    data[1]=c1*(temp+data[2]);
-                    data[2]=c1*(temp-data[2]);
-                    Reverse(data,nc);
-                    break;
-            }
-
         }
+
+
 
         //______________________________________________________________________
         //
