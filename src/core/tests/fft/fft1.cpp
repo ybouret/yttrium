@@ -3,6 +3,8 @@
 #include "y/type/utils.hpp"
 #include "y/memory/buffer/of.hpp"
 
+#include <cstring>
+
 using namespace Yttrium;
 
 
@@ -45,6 +47,35 @@ namespace
 
     }
 
+
+    template <typename T> static inline
+    void checkDualFFT(const unsigned shift)
+    {
+
+
+        const size_t size = 1 << shift;
+        const size_t n    = size << 1;
+
+        std::cerr << "check dual @2^" << shift << " = " << size << std::endl;
+
+        Memory::BufferOf< Complex<T> > data1(size);
+        Memory::BufferOf< Complex<T> > data2(size);
+        Memory::BufferOf< Complex<T> > data3(size);
+
+        T *s1 = &(data1[0].re)-1;
+        T *s2 = &(data2[0].re)-1;
+        T *s3 = &(data3[0].re)-1;
+
+        for(size_t i=1;i<=n;++i) s1[i] = s2[i] = s3[i] = T(i);
+        Y_ASSERT(0==memcmp(data1.ro_addr(),data2.ro_addr(),data1.measure()));
+        Y_ASSERT(0==memcmp(data1.ro_addr(),data3.ro_addr(),data1.measure()));
+        FFT::Forward(s1,size);
+        FFT::Forward(s2,s3,size);
+        Y_ASSERT(0==memcmp(data1.ro_addr(),data2.ro_addr(),data1.measure()));
+        Y_ASSERT(0==memcmp(data1.ro_addr(),data3.ro_addr(),data1.measure()));
+    }
+
+
 }
 
 Y_UTEST(fft1)
@@ -60,7 +91,11 @@ Y_UTEST(fft1)
     Core::Display(std::cerr << "PosSin=", &FFT::Table<long double>::PositiveSin[0], 64) << std::endl;
     Core::Display(std::cerr << "NegSin=", &FFT::Table<double>::NegativeSin[0], 64) << std::endl;
     Core::Display(std::cerr << "NegSin=", &FFT::Table<long double>::NegativeSin[0], 64) << std::endl;
+    Core::Display(std::cerr << "AuxTab=", &FFT::Table<double>::Minus2SinSq[0], 64) << std::endl;
+    Core::Display(std::cerr << "AuxTab=", &FFT::Table<long double>::Minus2SinSq[0], 64) << std::endl;
 #endif
+
+
 
 #if 0
     for(unsigned shift=00; shift<=8; ++shift)
@@ -79,6 +114,7 @@ Y_UTEST(fft1)
     return 0;
 #endif
 
+    std::cerr << "Checking Fwd/Rev" << std::endl;
     for(unsigned shift=00; shift<=20; ++shift)
     {
         checkFFT<float>(shift);
@@ -86,6 +122,13 @@ Y_UTEST(fft1)
         checkFFT<long double>(shift);
     }
 
+    std::cerr << "Checking Fwd/Dual" << std::endl;
+    for(unsigned shift=00; shift<=20; ++shift)
+    {
+        checkDualFFT<float>(shift);
+        checkDualFFT<double>(shift);
+        checkDualFFT<long double>(shift);
+    }
 
 
 }
