@@ -168,7 +168,7 @@ namespace Yttrium
             Transform(data1, data2, size, Table< typename LongTypeFor<T>::Type >::PositiveSin );
         }
 
-        
+
         //______________________________________________________________________
         //
         //! Transform of real data, forward
@@ -178,7 +178,7 @@ namespace Yttrium
         {
             typedef typename LongTypeFor<T>::Type REAL;
 
-            assert(data);
+            assert(0!=data);
             assert(IsPowerOfTwo(n));
 
             static const T c1= 0.5;
@@ -197,6 +197,43 @@ namespace Yttrium
                 data[2] = temp-data[2];
             }
         }
+
+        //______________________________________________________________________
+        //
+        //! Transform of real data1 and data2, forward
+        //______________________________________________________________________
+        template <typename T>
+        static inline void ForwardReal(T data1[], T data2[], const size_t n)
+        {
+            typedef typename LongTypeFor<T>::Type REAL;
+
+            assert(0!=data1); assert(0!=data2);
+            assert(IsPowerOfTwo(n));
+
+            static const T c1= 0.5;
+            static const T c2=-0.5;
+
+            const size_t nc = n>>1;
+            size_t       sh = ExactLog2(nc);
+            Forward(data1,data2,nc);
+            const REAL wpi = Table<REAL>::PositiveSin[sh++];
+            const REAL wpr = Table<REAL>::Minus2SinSq[sh];
+            RealCore<T,REAL>(data1, data2, n, wpr, wpi, c1, c2);
+
+            {
+                const T temp = data1[1];
+                data1[1] = temp+data1[2];
+                data1[2] = temp-data1[2];
+            }
+
+            {
+                const T temp = data2[1];
+                data2[1] = temp+data2[2];
+                data2[2] = temp-data2[2];
+            }
+        }
+
+
 
         //______________________________________________________________________
         //
@@ -230,6 +267,19 @@ namespace Yttrium
 
 
     private:
+        //! internal computation for RealCore
+#define Y_FFT_REAL_CORE(data)          \
+do {                                   \
+const T h1r =  c1*(data[i1]+data[i3]); \
+const T h1i =  c1*(data[i2]-data[i4]); \
+const T h2r = -c2*(data[i2]+data[i4]); \
+const T h2i =  c2*(data[i1]-data[i3]); \
+data[i1] =  h1r+wr*h2r-wi*h2i;         \
+data[i2] =  h1i+wr*h2i+wi*h2r;         \
+data[i3] =  h1r-wr*h2r+wi*h2i;         \
+data[i4] = -h1i+wr*h2i+wi*h2r;         \
+} while(false)
+
         template <typename T, typename REAL>
         static inline void RealCore(T            data[],
                                     const size_t n,
@@ -249,16 +299,39 @@ namespace Yttrium
                 const size_t i2=1+i1;
                 const size_t i3=np3-i2;
                 const size_t i4=1+i3;
-                {
-                    const T h1r =  c1*(data[i1]+data[i3]);
-                    const T h1i =  c1*(data[i2]-data[i4]);
-                    const T h2r = -c2*(data[i2]+data[i4]);
-                    const T h2i =  c2*(data[i1]-data[i3]);
-                    data[i1] =  h1r+wr*h2r-wi*h2i;
-                    data[i2] =  h1i+wr*h2i+wi*h2r;
-                    data[i3] =  h1r-wr*h2r+wi*h2i;
-                    data[i4] = -h1i+wr*h2i+wi*h2r;
-                }
+
+                Y_FFT_REAL_CORE(data);
+
+                const REAL wt = wr;
+                wr=wt*wpr-wi*wpi+wr;
+                wi=wi*wpr+wt*wpi+wi;
+            }
+        }
+
+        template <typename T, typename REAL>
+        static inline void RealCore(T            data1[],
+                                    T            data2[],
+                                    const size_t n,
+                                    const REAL   wpr,
+                                    const REAL   wpi,
+                                    const T      c1,
+                                    const T      c2)
+        {
+            static const REAL  one(1);
+            REAL wr          = one+wpr;
+            REAL wi          = wpi;
+            const size_t np3 = n+3;
+            const size_t ns2 = n>>2;
+            for(size_t i=2;i<=ns2;i++)
+            {
+                const size_t i1=(i<<1)-1;
+                const size_t i2=1+i1;
+                const size_t i3=np3-i2;
+                const size_t i4=1+i3;
+
+                Y_FFT_REAL_CORE(data1);
+                Y_FFT_REAL_CORE(data2);
+
                 const REAL wt = wr;
                 wr=wt*wpr-wi*wpi+wr;
                 wi=wi*wpr+wt*wpi+wi;

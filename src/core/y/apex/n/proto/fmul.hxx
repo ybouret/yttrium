@@ -104,27 +104,28 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                     FillBatch(a,U,p,n);
                     FillBatch(b,V,q,m);
 
-                    FFT::ForwardReal(a(),nn);
-                    FFT::ForwardReal(b(),nn);
-
+                    FFT::ForwardReal(a(),b(),nn);
 
                     b[1] *= a[1];
                     b[2] *= a[2];
                     for(size_t j=3;j<=nn;j+=2)
                     {
+                        const size_t j1 = j+1;
                         const double t = b[j];
-                        b[j]=t*a[j]-b[j+1]*a[j+1];
-                        b[j+1]=t*a[j+1]+b[j+1]*a[j];
+                        b[j]=t*a[j]-b[j1]*a[j1];
+                        b[j1]=t*a[j1]+b[j1]*a[j];
                     }
                 }
-                
+
                 FFT::ReverseReal(b(),nn);
 
-                static const double RX = 256.0;
-                double cy=0.0;
-                for(size_t j=nn;j>=1;j--)
+                static const double RX  = 256.0;
+                const size_t        den = nn>>1;
+                double              cy  = 0.0;
+
+                for(size_t j=nn;j>=1;--j)
                 {
-                    const double t =  (b[j]/(nn>>1)+cy+0.5);
+                    const double t =  (b[j]/den+cy+0.5);
                     cy=(unsigned long) (t/RX);
                     // std::cerr << "t=" << t << ", cy=" << cy << std::endl;
                     b[j]=t-cy*RX;
@@ -133,7 +134,6 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                 {
                     throw Specific::Exception(CallSign,"Invalid carry in FFT_Mul");
                 }
-
                 prod[1] = uint8_t(cy);
                 for (size_t j=mpn;j>1;--j)
                     prod[j]=uint8_t(b[j-1]);
