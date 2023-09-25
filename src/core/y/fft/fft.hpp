@@ -174,6 +174,7 @@ namespace Yttrium
         static inline void Real(T data[], const size_t n, const RealDirection dir)
         {
             typedef typename LongTypeFor<T>::Type REAL;
+            static const REAL myPI(3.141592653589793238462643383279502884197);
             static const REAL half(0.5);
             static const REAL one(1);
             static const REAL two(2);
@@ -185,7 +186,7 @@ namespace Yttrium
             T              c2=0;
 
             const size_t nc    = n>>1;
-            REAL         theta = 3.141592653589793/REAL(nc);
+            REAL         theta = myPI/REAL(nc);
             switch(dir)
             {
                 case RealForward: c2=-c1; Forward(data,nc); break;
@@ -205,14 +206,16 @@ namespace Yttrium
                 const size_t i2=1+i1;
                 const size_t i3=np3-i2;
                 const size_t i4=1+i3;
-                const T h1r =  c1*(data[i1]+data[i3]);
-                const T h1i =  c1*(data[i2]-data[i4]);
-                const T h2r = -c2*(data[i2]+data[i4]);
-                const T h2i =  c2*(data[i1]-data[i3]);
-                data[i1]=h1r+wr*h2r-wi*h2i;
-                data[i2]=h1i+wr*h2i+wi*h2r;
-                data[i3]=h1r-wr*h2r+wi*h2i;
-                data[i4] = -h1i+wr*h2i+wi*h2r;
+                {
+                    const T h1r =  c1*(data[i1]+data[i3]);
+                    const T h1i =  c1*(data[i2]-data[i4]);
+                    const T h2r = -c2*(data[i2]+data[i4]);
+                    const T h2i =  c2*(data[i1]-data[i3]);
+                    data[i1]=h1r+wr*h2r-wi*h2i;
+                    data[i2]=h1i+wr*h2i+wi*h2r;
+                    data[i3]=h1r-wr*h2r+wi*h2i;
+                    data[i4] = -h1i+wr*h2i+wi*h2r;
+                }
                 wr=(wtemp=wr)*wpr-wi*wpi+wr;
                 wi=wi*wpr+wtemp*wpi+wi;
             }
@@ -231,7 +234,7 @@ namespace Yttrium
                     Reverse(data,nc);
                     break;
             }
-            
+
         }
 
         //______________________________________________________________________

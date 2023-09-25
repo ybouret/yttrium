@@ -67,7 +67,7 @@ static inline Hexadecimal D2H(const double x)
 static inline
 Proto * FFT_Mul(const WordType * const U, const size_t p,
                 const WordType * const V, const size_t q,
-                uint64_t * )
+                uint64_t *ell)
 {
     assert(0!=U);
     assert(0!=V);
@@ -85,9 +85,11 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
         {
             assert(p>0);
             assert(q>0);
-            const size_t   n   = p * WordSize; // U bytes
-            const size_t   m   = q * WordSize; // V bytes
-            const size_t   mpn = m+n;
+            const size_t   n     = p * WordSize; // U bytes
+            const size_t   m     = q * WordSize; // V bytes
+            const size_t   mpn   = m+n;          // product bytes
+            Pointer        proto = new Proto(mpn,AsCapacity);
+            const uint64_t t     = ell ? WallTime::Ticks() : 0;
             Batch<uint8_t> prod(mpn);
 
             {
@@ -102,8 +104,6 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                     FillBatch(a,U,p,n);
                     FillBatch(b,V,q,m);
 
-                    //Core::Display(std::cerr << "a=", a()+1, nn, D2H) << std::endl;
-                    //Core::Display(std::cerr << "b=", b()+1, nn, D2H) << std::endl;
 
                     FFT::Real(a(),nn,FFT::RealForward);
                     FFT::Real(b(),nn,FFT::RealForward);
@@ -118,13 +118,12 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                     }
                 }
                 FFT::Real(b(),nn,FFT::RealReverse);
-                //Core::Display(std::cerr << "p=", b()+1, nn) << std::endl;
 
                 static const double RX = 256.0;
                 double cy=0.0;
                 for(size_t j=nn;j>=1;j--)
                 {
-                    const double t=  (b[j]/(nn>>1)+cy+0.5);
+                    const double t =  (b[j]/(nn>>1)+cy+0.5);
                     cy=(unsigned long) (t/RX);
                     // std::cerr << "t=" << t << ", cy=" << cy << std::endl;
                     b[j]=t-cy*RX;
@@ -140,8 +139,8 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
             }
 
 
-            Proto *proto = new Proto(mpn,AsCapacity);
 
+            // transform array of bytes into array of words
             {
                 WordType *W = proto->block.entry;
                 size_t    I = 0;
@@ -164,7 +163,9 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                 proto->update();
             }
 
-            return proto;
+            // done
+            if(ell) (*ell) += WallTime::Ticks() - t;
+            return proto.yield();
         }
     }
 }
