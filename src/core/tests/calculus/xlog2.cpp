@@ -1,5 +1,7 @@
 
-#include "y/calculus/bit-count.hpp"
+#include "y/calculus/base2.hpp"
+#include "y/calculus/xlog2.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/utest/timing.hpp"
 #include "y/memory/out-of-reach.hpp"
@@ -11,13 +13,9 @@ using namespace Yttrium;
 
 namespace
 {
-    template <typename T>
-    static inline
-    unsigned ExactLog2(const T u)
-    {
-        Y_ASSERT( IsPowerOfTwo(u) );
-        return 0;
-    }
+
+
+
 
     template <typename T>
     static inline
@@ -27,10 +25,36 @@ namespace
         static const unsigned NB = SZ * 8;
         T xloc[NB] = { 0 };
         for(unsigned i=0;i<NB;++i) xloc[i] = static_cast<T>(xtab[i]);
-        for(size_t i=0;i<NB;++i)
-            std::cerr << " 0x" << Hexadecimal(xloc[i],Hexadecimal::Compact);
-        std::cerr << std::endl;
-        
+        if(false)
+        {
+            std::cerr << std::endl;
+            for(size_t i=0;i<NB;++i)
+                std::cerr << " 0x" << Hexadecimal(xloc[i],Hexadecimal::Compact) << ",";
+            std::cerr << std::endl;
+        }
+
+        for(unsigned i=0;i<NB;++i)
+        {
+            volatile unsigned p = ExactLog2(xloc[i]);
+            volatile unsigned q = Base2<T>::Log(xloc[i]);
+            Y_ASSERT(p==q);
+        }
+
+        std::cerr << "uint" << std::setw(3) << NB;
+        Timing tmx;
+
+        Y_Timing(tmx, 
+                 for(unsigned i=0;i<NB;++i)
+                 { volatile unsigned p = ExactLog2(xloc[i]); (void)p; },
+                 0.5);
+        (std::cerr << " | xlog2: " << HumanReadable(tmx.speed())).flush();
+
+        Y_Timing(tmx,
+                 for(unsigned i=0;i<NB;++i)
+                 { volatile unsigned p = Base2<T>::Log(xloc[i]); (void)p; },
+                 0.5);
+        std::cerr << " | blog2: " << HumanReadable(tmx.speed()) << std::endl;
+
     }
 
 }
@@ -46,7 +70,7 @@ Y_UTEST(calculus_xlog2)
     }
 
 
-    TestXLog2<uint8_t>( Memory::OutOfReach::Cast<uint64_t>(xtab) );
+    TestXLog2<uint8_t>(  Memory::OutOfReach::Cast<uint64_t>(xtab) );
     TestXLog2<uint16_t>( Memory::OutOfReach::Cast<uint64_t>(xtab) );
     TestXLog2<uint32_t>( Memory::OutOfReach::Cast<uint64_t>(xtab) );
     TestXLog2<uint64_t>( Memory::OutOfReach::Cast<uint64_t>(xtab) );

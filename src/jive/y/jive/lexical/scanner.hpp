@@ -14,12 +14,15 @@ namespace Yttrium
 
         namespace Lexical
         {
-
+            //__________________________________________________________________
+            //
+            //! probe algorithm return value
+            //__________________________________________________________________
             enum ReturnValue
             {
                 ReturnSuccess, //!< valid action
-                ReturnFailure, //!< no action, still data in source
-                AtEndOfStream  //!< no action, no more data in source
+                ReturnFailure, //!< no action, BUT still data in source
+                AtEndOfStream  //!< no action, AND no data in source
             };
 
             //__________________________________________________________________
@@ -39,7 +42,7 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                static bool Verbose;
+                static bool Verbose; //!< global vebosity
 
                 //______________________________________________________________
                 //
@@ -85,6 +88,7 @@ namespace Yttrium
                 }
 
 
+                //! create a simple action to produce or discard an unit
                 template <typename ID, typename RX>
                 inline void operator()(const ID &id, const RX &rx, const bool emit = true)
                 {
@@ -92,11 +96,11 @@ namespace Yttrium
                     self(id,rx,self, (emit ? & Scanner::produce : & Scanner::discard) );
                 }
 
-                //! prototype
-                Message produce(const Token &) const { return LX_EMIT; }
-                Message discard(const Token &) const { return LX_DROP; }
 
-                //! make cleanup of all motifs
+                Message produce(const Token &) const { return LX_EMIT; } //!< produce prototype
+                Message discard(const Token &) const { return LX_DROP; } //!< discaed prototype
+
+                //! recursive cleanup of all motifs
                 void cleanup() noexcept;
 
                 //! find next action
@@ -121,6 +125,7 @@ namespace Yttrium
                 void         submitCode(Action::Pointer &which);
             };
 
+            //! helper for verbosity
 #define Y_JIVE_LEXICAL(MSG) do { if(Yttrium::Jive::Lexical::Scanner::Verbose) { std::cerr << MSG << std::endl; } } while(false)
             
         }

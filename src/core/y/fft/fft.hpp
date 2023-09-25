@@ -5,6 +5,7 @@
 
 #include "y/mkl/complex.hpp"
 #include "y/calculus/base2.hpp"
+#include "y/calculus/xlog2.hpp"
 
 
 namespace Yttrium
@@ -42,7 +43,14 @@ namespace Yttrium
     //__________________________________________________________________________
     struct FFT
     {
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
 
+        //! table of pre-computed data
         template <typename T>
         struct Table
         {
@@ -160,10 +168,11 @@ namespace Yttrium
         }
 
         
+        //! direction for real data transform
         enum RealDirection
         {
-            RealForward,
-            RealReverse
+            RealForward, //!< forward
+            RealReverse  //!< reverse
         };
 
         //______________________________________________________________________
@@ -178,6 +187,7 @@ namespace Yttrium
             static const REAL half(0.5);
             static const REAL one(1);
             static const REAL two(2);
+            //const REAL *   Sine = Table<REAL>::PositiveSin;
 
             assert(data);
             assert(IsPowerOfTwo(n));
@@ -190,7 +200,8 @@ namespace Yttrium
             switch(dir)
             {
                 case RealForward: c2=-c1; Forward(data,nc); break;
-                case RealReverse: c2= c1; theta=-theta;     break;
+                case RealReverse: c2= c1; theta=-theta; //Sine =  Table<REAL>::NegativeSin;   break;
+                    break;
             }
             
             REAL wpi         = sin(theta);
@@ -211,9 +222,9 @@ namespace Yttrium
                     const T h1i =  c1*(data[i2]-data[i4]);
                     const T h2r = -c2*(data[i2]+data[i4]);
                     const T h2i =  c2*(data[i1]-data[i3]);
-                    data[i1]=h1r+wr*h2r-wi*h2i;
-                    data[i2]=h1i+wr*h2i+wi*h2r;
-                    data[i3]=h1r-wr*h2r+wi*h2i;
+                    data[i1] =  h1r+wr*h2r-wi*h2i;
+                    data[i2] =  h1i+wr*h2i+wi*h2r;
+                    data[i3] =  h1r-wr*h2r+wi*h2i;
                     data[i4] = -h1i+wr*h2i+wi*h2r;
                 }
                 wr=(wtemp=wr)*wpr-wi*wpi+wr;
@@ -453,14 +464,13 @@ namespace Yttrium
     };
 
 #if !defined(_MSC_VER)
-    template <> const double      FFT:: Table<double>::      PositiveSin[];
-    template <> const double      FFT:: Table<double>::      NegativeSin[];
-    template <> const double      FFT:: Table<double>::      Minus2SinSq[];
+    template <> const double      FFT:: Table<double>::      PositiveSin[]; //!< decl
+    template <> const double      FFT:: Table<double>::      NegativeSin[]; //!< decl
+    template <> const double      FFT:: Table<double>::      Minus2SinSq[]; //!< decl
 
-    template <> const long double FFT:: Table<long double>:: PositiveSin[];
-    template <> const long double FFT:: Table<long double>:: NegativeSin[];
-    template <> const long double FFT:: Table<long double>:: Minus2SinSq[];
-
+    template <> const long double FFT:: Table<long double>:: PositiveSin[]; //!< decl
+    template <> const long double FFT:: Table<long double>:: NegativeSin[]; //!< decl
+    template <> const long double FFT:: Table<long double>:: Minus2SinSq[]; //!< decl
 #endif
 
 

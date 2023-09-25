@@ -52,12 +52,9 @@ namespace Yttrium
             return shift;
         }
 
-
     };
 
     
-
-   
 
 
     //! power of two detection
