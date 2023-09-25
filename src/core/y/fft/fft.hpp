@@ -41,8 +41,9 @@ namespace Yttrium
     //! Computing FFT
     //
     //__________________________________________________________________________
-    struct FFT
+    class FFT
     {
+    public:
         //______________________________________________________________________
         //
         //
@@ -168,65 +169,67 @@ namespace Yttrium
         }
 
         
-        //! direction for real data transform
-        enum RealDirection
+        //______________________________________________________________________
+        //
+        //! Transform of real data, forward
+        //______________________________________________________________________
+        template <typename T>
+        static inline void ForwardReal(T data[], const size_t n)
         {
-            RealForward, //!< forward
-            RealReverse  //!< reverse
-        };
+            typedef typename LongTypeFor<T>::Type REAL;
+
+            assert(data);
+            assert(IsPowerOfTwo(n));
+
+            static const T c1= 0.5;
+            static const T c2=-0.5;
+
+            const size_t nc = n>>1;
+            size_t       sh = ExactLog2(nc);
+            Forward(data,nc);
+            const REAL wpi = Table<REAL>::PositiveSin[sh++];
+            const REAL wpr = Table<REAL>::Minus2SinSq[sh];
+            RealCore<T,REAL>(data, n, wpr, wpi, c1, c2);
+
+            {
+                const T temp = data[1];
+                data[1] = temp+data[2];
+                data[2] = temp-data[2];
+            }
+        }
 
         //______________________________________________________________________
         //
-        //! Transform of real data
+        //! Transform of real data, reverse
         //______________________________________________________________________
         template <typename T>
-        static inline void Real(T data[], const size_t n, const RealDirection dir)
+        static inline void ReverseReal(T data[], const size_t n)
         {
             typedef typename LongTypeFor<T>::Type REAL;
-            static const REAL myPI(3.141592653589793238462643383279502884197);
-            static const REAL half(0.5);
-            static const REAL two(2);
-            //const REAL *   Sine = Table<REAL>::PositiveSin;
 
             assert(data);
             assert(IsPowerOfTwo(n));
 
             static const T c1=0.5;
-            T              c2=0;
+            static const T c2=0.5;
 
-            const size_t nc    = n>>1;
-            REAL         theta = myPI/REAL(nc);
-            switch(dir)
-            {
-                case RealForward: c2=-c1; Forward(data,nc); break;
-                case RealReverse: c2= c1; theta=-theta; //Sine =  Table<REAL>::NegativeSin;   break;
-                    break;
-            }
-            
-            const REAL wpi    = sin(theta);
-            const REAL wtemp  = sin(half*theta);
-            const REAL wpr    = -two*wtemp*wtemp;
+            const size_t nc  = n>>1;
+            size_t       sh  = ExactLog2(nc);
+            const REAL   wpi = Table<REAL>::NegativeSin[sh++];
+            const REAL   wpr = Table<REAL>::Minus2SinSq[sh];
 
             RealCore<T,REAL>(data, n, wpr, wpi, c1, c2);
 
             const T temp = data[1];
-            switch(dir)
-            {
-                case RealForward:
-                    data[1] = temp+data[2];
-                    data[2] = temp-data[2];
-                    break;
-
-                case RealReverse:
-                    data[1]=c1*(temp+data[2]);
-                    data[2]=c1*(temp-data[2]);
-                    Reverse(data,nc);
-                    break;
-            }
+            data[1]=c1*(temp+data[2]);
+            data[2]=c1*(temp-data[2]);
+            Reverse(data,nc);
 
         }
 
 
+
+    private:
         template <typename T, typename REAL>
         static inline void RealCore(T            data[],
                                     const size_t n,
@@ -263,7 +266,7 @@ namespace Yttrium
         }
 
 
-
+    public:
         //______________________________________________________________________
         //
         //! computed fft1[1..2n] and fft2[1..2n] data[1..n] and data2[1..n]

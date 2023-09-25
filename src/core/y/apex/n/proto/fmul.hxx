@@ -104,9 +104,9 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                     FillBatch(a,U,p,n);
                     FillBatch(b,V,q,m);
 
+                    FFT::ForwardReal(a(),nn);
+                    FFT::ForwardReal(b(),nn);
 
-                    FFT::Real(a(),nn,FFT::RealForward);
-                    FFT::Real(b(),nn,FFT::RealForward);
 
                     b[1] *= a[1];
                     b[2] *= a[2];
@@ -117,7 +117,8 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                         b[j+1]=t*a[j+1]+b[j+1]*a[j];
                     }
                 }
-                FFT::Real(b(),nn,FFT::RealReverse);
+                
+                FFT::ReverseReal(b(),nn);
 
                 static const double RX = 256.0;
                 double cy=0.0;

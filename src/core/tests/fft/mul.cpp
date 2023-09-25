@@ -68,11 +68,9 @@ Y_UTEST(fft_mul)
         CxxArray<double> a(nn), b(nn);
         for(size_t i=n;i>0;--i) a[i] = u[n+1-i];
         for(size_t i=m;i>0;--i) b[i] = v[m+1-i];
-        //Core::Display(std::cerr << "a=", &a[1], nn) << std::endl;
-        //Core::Display(std::cerr << "b=", &b[1], nn) << std::endl;
-
-        FFT::Real(&a[1]-1,nn,FFT::RealForward);
-        FFT::Real(&b[1]-1,nn,FFT::RealForward);
+        
+        FFT::ForwardReal(&a[1]-1,nn);
+        FFT::ForwardReal(&b[1]-1,nn);
 
         b[1] *= a[1];
         b[2] *= a[2];
@@ -82,7 +80,8 @@ Y_UTEST(fft_mul)
             b[j]=t*a[j]-b[j+1]*a[j+1];
             b[j+1]=t*a[j+1]+b[j+1]*a[j];
         }
-        FFT::Real(&b[1]-1,nn,FFT::RealReverse);
+        //FFT::Real(&b[1]-1,nn,FFT::RealReverse);
+        FFT::ReverseReal(&b[1]-1,nn);
 
         static const double RX = 256.0;
         double cy=0.0;
