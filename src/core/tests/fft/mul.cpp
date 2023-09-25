@@ -43,7 +43,7 @@ Y_UTEST(fft_mul)
     CxxArray<uint8_t> u(4);
     CxxArray<uint8_t> v(4);
 
-    for(size_t iter=0;iter<=0;++iter)
+    for(size_t iter=0;iter<=100;++iter)
     {
         const uint32_t U = ran.to<uint32_t>( ran.in<unsigned>(0,32) );
         const size_t   n = fill(u,U);
@@ -71,8 +71,8 @@ Y_UTEST(fft_mul)
         //Core::Display(std::cerr << "a=", &a[1], nn) << std::endl;
         //Core::Display(std::cerr << "b=", &b[1], nn) << std::endl;
 
-        FFT::Real(&a[1]-1,nn,1);
-        FFT::Real(&b[1]-1,nn,1);
+        FFT::Real(&a[1]-1,nn,FFT::RealForward);
+        FFT::Real(&b[1]-1,nn,FFT::RealForward);
 
         b[1] *= a[1];
         b[2] *= a[2];
@@ -82,7 +82,7 @@ Y_UTEST(fft_mul)
             b[j]=t*a[j]-b[j+1]*a[j+1];
             b[j+1]=t*a[j+1]+b[j+1]*a[j];
         }
-        FFT::Real(&b[1]-1,nn,-1);
+        FFT::Real(&b[1]-1,nn,FFT::RealReverse);
 
         static const double RX = 256.0;
         double cy=0.0;
@@ -110,6 +110,7 @@ Y_UTEST(fft_mul)
             res |= w[i];
         }
         std::cerr << "p=" << res << std::endl;
+        Y_CHECK(W==res);
     }
 }
 Y_UDONE()

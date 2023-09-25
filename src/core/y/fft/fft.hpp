@@ -160,12 +160,18 @@ namespace Yttrium
         }
 
         
+        enum RealDirection
+        {
+            RealForward,
+            RealReverse
+        };
+
         //______________________________________________________________________
         //
         //! Transform of real data
         //______________________________________________________________________
         template <typename T>
-        static inline void Real(T data[], const size_t n, const int isign)
+        static inline void Real(T data[], const size_t n, const RealDirection dir)
         {
             typedef typename LongTypeFor<T>::Type REAL;
             static const REAL half(0.5);
@@ -180,15 +186,12 @@ namespace Yttrium
 
             const size_t nc    = n>>1;
             REAL         theta = 3.141592653589793/REAL(nc);
-            if (isign == 1) {
-                c2 = -c1;
-                Forward(data,nc);
-            }
-            else
+            switch(dir)
             {
-                c2    = c1;
-                theta = -theta;
+                case RealForward: c2=-c1; Forward(data,nc); break;
+                case RealReverse: c2= c1; theta=-theta;     break;
             }
+
             REAL wtemp       = sin(half*theta);
             REAL wpr         = -two*wtemp*wtemp;
             REAL wpi         = sin(theta);
@@ -215,16 +218,20 @@ namespace Yttrium
             }
 
             const T temp = data[1];
-            if (isign == 1) {
-                data[1] = temp+data[2];
-                data[2] = temp-data[2];
-            }
-            else
+            switch(dir)
             {
-                data[1]=c1*(temp+data[2]);
-                data[2]=c1*(temp-data[2]);
-                Reverse(data,nc);
+                case RealForward:
+                    data[1] = temp+data[2];
+                    data[2] = temp-data[2];
+                    break;
+
+                case RealReverse:
+                    data[1]=c1*(temp+data[2]);
+                    data[2]=c1*(temp-data[2]);
+                    Reverse(data,nc);
+                    break;
             }
+            
         }
 
         //______________________________________________________________________
