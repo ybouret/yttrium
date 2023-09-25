@@ -116,6 +116,7 @@ add_test(calculus:gcd    test-core calculus_gcd)
 add_test(calculus:bcount test-core calculus_bcount)
 add_test(calculus:isqrt  test-core calculus_isqrt)
 add_test(calculus:ipower test-core calculus_ipower)
+add_test(calculus:xlog2  test-core calculus_xlog2)
 
 #concurrent
 add_test(concurrent:mutex  test-core concurrent_mutex)

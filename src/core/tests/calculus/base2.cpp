@@ -1,5 +1,3 @@
-
-
 #include "y/calculus/bit-count.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/timing.hpp"

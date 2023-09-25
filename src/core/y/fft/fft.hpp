@@ -192,10 +192,10 @@ namespace Yttrium
                 case RealForward: c2=-c1; Forward(data,nc); break;
                 case RealReverse: c2= c1; theta=-theta;     break;
             }
-
+            
+            REAL wpi         = sin(theta);
             REAL wtemp       = sin(half*theta);
             REAL wpr         = -two*wtemp*wtemp;
-            REAL wpi         = sin(theta);
             REAL wr          = one+wpr;
             REAL wi          = wpi;
             const size_t np3 = n+3;
