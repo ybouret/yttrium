@@ -46,9 +46,9 @@ namespace Yttrium
         template <typename T>
         struct Table
         {
-            static const T PI;
-            static const T PositiveSin[64];
-            static const T NegativeSin[64];
+            static const T PI;              //!< 3.14...
+            static const T PositiveSin[64]; //!< PositiveSin[i] =  sin(PI/2^i)
+            static const T NegativeSin[64]; //!< NegativeSin[i] = -sin(PI/2^i)
         };
 
         //______________________________________________________________________
@@ -131,8 +131,9 @@ namespace Yttrium
         static inline void Forward(T            data[],
                                    const size_t size) noexcept
         {
-            static  const  typename LongTypeFor<T>::Type myPI(3.141592653589793238462643383279502884197);
-            Transform(data,size,myPI);
+            //static  const  typename LongTypeFor<T>::Type myPI(3.141592653589793238462643383279502884197);
+            //Transform(data,size,myPI);
+            Transform(data,size, Table< typename LongTypeFor<T>::Type >::PositiveSin );
         }
 
         //______________________________________________________________________
@@ -143,8 +144,9 @@ namespace Yttrium
         static inline void Reverse(T            data[],
                                    const size_t size) noexcept
         {
-            static  const  typename LongTypeFor<T>::Type myPI(-3.141592653589793238462643383279502884197);
-            Transform(data,size,myPI);
+            //static  const  typename LongTypeFor<T>::Type myPI(-3.141592653589793238462643383279502884197);
+            //Transform(data,size,myPI);
+            Transform(data,size, Table< typename LongTypeFor<T>::Type >::NegativeSin );
         }
 
 
@@ -278,6 +280,53 @@ namespace Yttrium
         //! Transform data[1..n=size*2]
         //______________________________________________________________________
         template <typename T>
+        static inline void Transform(T *                                  data,
+                                     const size_t                         size,
+                                     const typename LongTypeFor<T>::Type  sine[]) noexcept
+        {
+            assert(0!=data);
+            assert(IsPowerOfTwo(size));
+            typedef typename LongTypeFor<T>::Type REAL;
+            static  const    REAL two(2);
+
+            const size_t n = BitReversal(data,size);
+            size_t mmax=2;
+            while(n>mmax)
+            {
+                const size_t istep = (mmax << 1);
+                REAL         wpi   = sine[0];
+                REAL         wtemp = sine[1];  
+                REAL         wpr   = -two*wtemp*wtemp;
+                REAL         wr    = 1.0;
+                REAL         wi    = 0.0;
+                ++sine;
+                for(size_t m=1;m<mmax;m+=2)
+                {
+                    for(size_t i=m;i<=n;i+=istep)
+                    {
+                        const size_t i1    = i+1;
+                        const size_t j     = i+mmax;
+                        const size_t j1    = j+1;
+                        const T      tempr = wr*data[j] -wi*data[j1];
+                        const T      tempi = wr*data[j1]+wi*data[j];
+                        data[j]   = data[i] -tempr;
+                        data[j1]  = data[i1]-tempi;
+                        data[i]  += tempr;
+                        data[i1] += tempi;
+                    }
+                    wr=(wtemp=wr)*wpr-wi*wpi+wr;
+                    wi=wi*wpr+wtemp*wpi+wi;
+                }
+                mmax=istep;
+            }
+        }
+
+#if 0
+        //______________________________________________________________________
+        //
+        //! Transform data[1..n=size*2]
+        //______________________________________________________________________
+        template <typename T>
         static inline void Transform(T *                           data,
                                      const size_t                  size,
                                      typename LongTypeFor<T>::Type myPI) noexcept
@@ -294,10 +343,11 @@ namespace Yttrium
             {
                 const size_t istep = (mmax << 1);
                 //const REAL   theta = (myPI/istep);
-                const REAL   theta = (2*myPI/mmax);         //std::cerr << "pi/" << (mmax/2) <<  " = " << theta << std::endl;
-                REAL         wtemp = std::sin(half*theta);  //std::cerr << "pi/" << (mmax)   << std::endl;
+                
+                const REAL   theta = (2*myPI/mmax);
+                REAL         wpi   = std::sin(theta);      // std::cerr << "pi/" << (mmax/2) <<  " = " << theta << std::endl;
+                REAL         wtemp = std::sin(half*theta); // std::cerr << "pi/" << (mmax)   << std::endl;
                 REAL         wpr   = -two*wtemp*wtemp;
-                REAL         wpi   = std::sin(theta);
                 REAL         wr    = 1.0;
                 REAL         wi    = 0.0;
                 for(size_t m=1;m<mmax;m+=2)
@@ -320,7 +370,16 @@ namespace Yttrium
                 mmax=istep;
             }
         }
+#endif
     };
+
+#if !defined(_MSC_VER)
+    template <> const double      FFT:: Table<double>::      PositiveSin[];
+    template <> const double      FFT:: Table<double>::      NegativeSin[];
+    template <> const long double FFT:: Table<long double>:: PositiveSin[];
+    template <> const long double FFT:: Table<long double>:: NegativeSin[];
+#endif
+
 
 }
 
