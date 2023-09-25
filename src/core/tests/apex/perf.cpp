@@ -13,7 +13,7 @@ using namespace Yttrium;
 namespace
 {
 
-    static size_t Loops = 32;
+    static size_t Loops = 8;
 
     template <typename Core, typename Word> static inline
     void TestProto(Random::Bits &ran)
