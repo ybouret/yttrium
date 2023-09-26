@@ -31,13 +31,16 @@ Y_UTEST(scanner)
         switch( scanner.probe(source,action) )
         {
             case Jive::Lexical::AtEndOfStream:
+                Y_ASSERT(0==action);
                 break;
                 
             case Jive::Lexical::ReturnSuccess: {
-
+                Y_ASSERT(0!=action);
+                const Jive::Lexical::Message msg = action->doing( *(action->motif) );
             } goto SCAN;
 
             case Jive::Lexical::ReturnFailure: {
+                Y_ASSERT(0==action);
                 std::cerr << "Failure!!" << std::endl;
             } break;
 

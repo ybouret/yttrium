@@ -42,7 +42,7 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                static bool Verbose; //!< global vebosity
+                static bool Verbose;
 
                 //______________________________________________________________
                 //
@@ -97,13 +97,16 @@ namespace Yttrium
                 }
 
 
-                Message produce(const Token &) const { return LX_EMIT; } //!< produce prototype
-                Message discard(const Token &) const { return LX_DROP; } //!< discaed prototype
+                Message produce(const Token &); //!< produce prototype
+                Message discard(const Token &); //!< discaed prototype
 
                 //! recursive cleanup of all motifs
                 void cleanup() noexcept;
 
+                //______________________________________________________________
+                //
                 //! find next action
+                //______________________________________________________________
                 ReturnValue probe(Source &, Action * &);
 
 
@@ -125,8 +128,6 @@ namespace Yttrium
                 void         submitCode(Action::Pointer &which);
             };
 
-            //! helper for verbosity
-#define Y_JIVE_LEXICAL(MSG) do { if(Yttrium::Jive::Lexical::Scanner::Verbose) { std::cerr << MSG << std::endl; } } while(false)
             
         }
         

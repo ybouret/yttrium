@@ -11,12 +11,15 @@
 #include "y/text/ascii/embedding.hpp"
 #include "y/text/ascii/printable.hpp"
 
+#include "y/stream/xmlog.hpp"
+
 namespace Yttrium
 {
     namespace Jive
     {
         namespace Lexical
         {
+
             bool Scanner::Verbose = false;
 
             namespace
@@ -131,7 +134,8 @@ namespace Yttrium
                 Plan(),
                 name(id),
                 hub(),
-                dict( new Dictionary() )
+                dict( new Dictionary() ),
+                xml(  new XMLog(Scanner::Verbose) )
                 {
 
                 }
@@ -151,9 +155,6 @@ namespace Yttrium
                 //______________________________________________________________
                 inline void add(Action::Pointer &which)
                 {
-
-                    Y_JIVE_LEXICAL("-- append : '" << which->name << "'");
-
                     assert(!which->motif->isFragile());
 
                     //----------------------------------------------------------
@@ -173,7 +174,8 @@ namespace Yttrium
                         //------------------------------------------------------
                         FirstChars fc;
                         which->motif->query(fc);
-                        Y_JIVE_LEXICAL("-- sending  '" << which->name << "' to " << fc);
+                        Y_XMLOG(*xml,"--> '" << which->name << "' to " << fc);
+
 
                         //------------------------------------------------------
                         // dispatch action to all matching first chars
@@ -199,7 +201,7 @@ namespace Yttrium
                 //______________________________________________________________
                 inline ReturnValue  probe(Source &source, Action * &primary)
                 {
-                    Y_JIVE_LEXICAL("<" << name << "> probe");
+                    Y_XML_SECTION(*xml, name);
 
                     assert(0==primary);
                     //----------------------------------------------------------
@@ -209,7 +211,8 @@ namespace Yttrium
                     //----------------------------------------------------------
                     if(!source.ready())
                     {
-                        Y_JIVE_LEXICAL("<" << name << "> EOS");
+                        //Y_JIVE_LEXICAL("<" << name << "> EOS");
+                        Y_XMLOG(*xml," => EOS");
                         return AtEndOfStream;
                     }
                     assert(source.cached()>0);
@@ -223,7 +226,7 @@ namespace Yttrium
                     Starting::Pointer *hook = hub.search(byte);
                     if(!hook)
                     {
-                        Y_JIVE_LEXICAL("<" << name << "> no motif with first char '" << ASCII::Printable::Char[byte] << "'");
+                        Y_XMLOG(*xml,"no motif with first char '" << ASCII::Printable::Char[byte] << "'");
                         return ReturnFailure; // syntax error, no possible match
                     }
 
@@ -237,13 +240,13 @@ namespace Yttrium
                 PROBE_FIRST:
                     if( (**node).motif->takes(source) )
                     {
-                        Y_JIVE_LEXICAL("<" << name << "> (+) primary : '" << (**node).name << "'='" << (**node).motif << "'");
+                        Y_XMLOG(*xml," (+) primary : '" << (**node).name << "'='" << (**node).motif << "'");
                         goto FOUND_FIRST;
                     }
 
                     if( 0 == (node=node->next) )
                     {
-                        Y_JIVE_LEXICAL("<" << name << "> no first char matching '" << ASCII::Printable::Char[byte] << "'");
+                        Y_XMLOG(*xml,"no first char matching '" << ASCII::Printable::Char[byte] << "'");
                         return  ReturnFailure; // syntax error, no possible match
                     }
                     goto PROBE_FIRST;
@@ -276,7 +279,7 @@ namespace Yttrium
                                 //----------------------------------------------
                                 // new primary!
                                 //----------------------------------------------
-                                Y_JIVE_LEXICAL("<" << name << "> (+) replica : '" << replica->name << "'='" << replica->motif << "'");
+                                Y_XMLOG(*xml," (+) replica : '" << replica->name << "'='" << replica->motif << "'");
                                 primary->motif->release();
                                 primary = replica;
                                 length  = len;
@@ -286,7 +289,7 @@ namespace Yttrium
                                 //----------------------------------------------
                                 // too late: retrieve source state
                                 //----------------------------------------------
-                                Y_JIVE_LEXICAL("<" << name << "> (-) replica : '" << replica->name << "'='" << replica->motif << "'");
+                                Y_XMLOG(*xml," (-) replica : '" << replica->name << "'='" << replica->motif << "'");
                                 source.put(*(replica->motif));
                                 source.skip(length);
                             }
@@ -296,7 +299,7 @@ namespace Yttrium
                             //--------------------------------------------------
                             // retrieve source state
                             //--------------------------------------------------
-                            Y_JIVE_LEXICAL("<" << name << "> (0) replica : '" << replica->name << "'");
+                            Y_XMLOG(*xml," (0) replica : '" << replica->name << "'");
                             assert(0==replica->motif->size);
                             source.skip(length);
                         }
@@ -316,7 +319,8 @@ namespace Yttrium
                 const String &                    name; //!< Scanner's name
                 Starting::Set                     hub;  //!< map first char to action
                 ArcPtr<Dictionary>                dict; //!< shared dictionary
-
+                ArcPtr<XMLog>                     xml;  //!< shared output
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Code);
                 inline Starting &lookFor(const uint8_t byte)
@@ -333,6 +337,7 @@ namespace Yttrium
                         if(!hub.insert(temp))
                             throw Specific::Exception(name(), "corrupted internal hub");
                     }
+                    
                     return *starting;
                 }
 
@@ -350,7 +355,7 @@ namespace Yttrium
         namespace Lexical
         {
 
-            Scanner::Code * Scanner:: Initialize(const String &id, Dictionary * &dict )
+            Scanner::Code * Scanner:: Initialize(const String &id, Dictionary * &dict)
             {
                 Code *c = new Code(id);
                 dict = & *(c->dict);
@@ -376,11 +381,11 @@ namespace Yttrium
             void Scanner:: cleanup() noexcept
             {
                 assert(0!=code);
-                Y_JIVE_LEXICAL("<" << name << "> cleaning");
+                //Y_JIVE_LEXICAL("<" << name << "> cleaning");
                 for(Code::Iterator it=code->begin();it!=code->end();++it)
                 {
                     Action &a = **it;
-                    std::cerr << "Cleaning " << a.name << std::endl;
+                    //std::cerr << "Cleaning " << a.name << std::endl;
                     a.motif->reset();
                 }
             }
@@ -392,7 +397,18 @@ namespace Yttrium
                 return code->probe(source,action);
             }
 
+            Message Scanner:: produce(const Token &tkn)
+            {
+                assert(0!=code);
+                Y_XMLOG(*(code->xml),"produce '" << tkn << "'");
+                return LX_EMIT;
+            }
 
+            Message Scanner:: discard(const Token &tkn)
+            {
+                Y_XMLOG(*(code->xml),"discard '" << tkn << "'");
+                return LX_DROP;
+            }
 
         }
     }

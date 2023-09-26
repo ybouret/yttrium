@@ -17,7 +17,7 @@ namespace Yttrium
     //
     //
     //__________________________________________________________________________
-    class XMLog
+    class XMLog : public Object, public Counted
     {
     public:
         //______________________________________________________________________
@@ -99,7 +99,7 @@ namespace Yttrium
     };
 
     //! output some optional message
-#define Y_XMLOG(XML,MSG) do { if(XML.verbose) do { XML() << MSG << std::endl; } while(false); } while(false)
+#define Y_XMLOG(XML,MSG) do { if((XML).verbose) do { (XML)() << MSG << std::endl; } while(false); } while(false)
 
     //! create the xml sub name
 #define Y_XML_SUB__(X,Y) X##Y
