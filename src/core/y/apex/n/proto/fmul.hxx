@@ -115,8 +115,11 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                 WordType  w = 0;
                 for(size_t i=mpn;i>0;--i)
                 {
+                    static const unsigned ks[4] = { 0, 8, 16, 24 };
                     WordType x = prod[i];
-                    w |= (x<< (k<<3));
+                    //w |= (x<< (k<<3));
+                    w |= (x<<ks[k]);
+
                     if(++k>=WordSize)
                     {
                         W[I++] = w;

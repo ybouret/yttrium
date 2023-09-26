@@ -4,6 +4,7 @@
 #include "y/random/shuffle.hpp"
 #include "y/utest/timing.hpp"
 #include "y/stream/libc/output.hpp"
+#include "y/string.hpp"
 
 #include <cstdio>
 
@@ -13,7 +14,8 @@ using namespace Yttrium;
 namespace
 {
 
-    static size_t Loops = 8;
+    static size_t   Loops   = 8;
+    static unsigned MaxBits = 512;
 
     template <typename Core, typename Word> static inline
     void TestProto(Random::Bits &ran)
@@ -38,10 +40,11 @@ namespace
             return;
         }
 
-        Libc::OutputFile fp("apex-perf.dat");
-        for(unsigned lbits=32;lbits<=1024;lbits+=32)
+        const String     fileName = FormatString("apex%u-%u.dat",PROTO::CoreSize*8,PROTO::WordSize*8 );
+        Libc::OutputFile fp(fileName);
+        for(unsigned lbits=32;lbits<=MaxBits;lbits+=32)
         {
-            for(unsigned rbits=32;rbits<=1024;rbits+=32)
+            for(unsigned rbits=32;rbits<=MaxBits;rbits+=32)
             {
                 (std::cerr << std::setw(6) << lbits << " x " << std::setw(6) << rbits << " : ").flush();
                 uint64_t l64 = 0;
@@ -56,10 +59,14 @@ namespace
                     const PROTO &FFT_Product = *FFT_Prod;
                     Y_ASSERT( PROTO::AreEqual(LongProduct,FFT_Product) );
                 }
-                const double lrate = double(l64)/Loops;
-                const double frate = double(f64)/Loops;
-                std::cerr << "long: " << HumanReadable(lrate) << " | fft: " << HumanReadable(frate) << std::endl;
-                fp("%u %u %g %g\n", lbits, rbits, lrate, frate );
+                const double lrate = double(Loops)/double(l64);
+                const double frate = double(Loops)/double(f64);
+                std::cerr << "long: " << std::setw(15) << lrate << " | fft: " << std::setw(15) << frate << std::endl;
+                //fp("%u %u %g %g\n", lbits, rbits, lrate, frate );
+                if(frate>=lrate)
+                {
+                    fp("%u %u\n", lbits, rbits);
+                }
             }
         }
 
@@ -88,10 +95,9 @@ Y_UTEST(apex_perf)
     Random::Rand ran;
 
     if(argc>1) Loops = unsigned( atol(argv[1]) );
+    if(argc>2) MaxBits = unsigned( atol(argv[2]) );
 
     TestProto<uint64_t,uint32_t>( ran );
-    return 0;
-
     TestProto<uint64_t,uint16_t>( ran );
     TestProto<uint64_t,uint8_t>(  ran );
 
