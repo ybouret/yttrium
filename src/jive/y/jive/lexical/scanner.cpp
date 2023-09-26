@@ -400,13 +400,13 @@ namespace Yttrium
             Message Scanner:: produce(const Token &tkn)
             {
                 assert(0!=code);
-                Y_XMLOG(*(code->xml),"produce '" << tkn << "'");
+                Y_XMLOG(*(code->xml),"produce '" << tkn.toPrintable() << "'");
                 return LX_EMIT;
             }
 
             Message Scanner:: discard(const Token &tkn)
             {
-                Y_XMLOG(*(code->xml),"discard '" << tkn << "'");
+                Y_XMLOG(*(code->xml),"discard '" << tkn.toPrintable() << "'");
                 return LX_DROP;
             }
 

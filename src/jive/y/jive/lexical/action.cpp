@@ -12,6 +12,13 @@ namespace Yttrium
 
             }
 
+            Message Action:: perform()
+            {
+                const Token &token = *motif;
+                assert(token.size>0);
+                return doing(token);
+            }
+
         }
     }
 

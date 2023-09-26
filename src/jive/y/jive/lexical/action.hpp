@@ -52,8 +52,12 @@ namespace Yttrium
                 Entity(id), motif(pp), doing(cb) {}      //!< setup
                 virtual ~Action() noexcept;              //!< cleanup
 
+                Message perform();
+
                 Motif            motif; //!< motif to be match
                 Callback         doing; //!< callback to be done upon match
+
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Action);

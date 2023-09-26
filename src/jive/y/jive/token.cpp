@@ -1,5 +1,7 @@
 
 #include "y/jive/token.hpp"
+#include "y/text/ascii/printable.hpp"
+
 namespace Yttrium
 {
     namespace Jive
@@ -33,6 +35,16 @@ namespace Yttrium
         {
             const String str = token.toString();
             return os << str;
+        }
+
+        String Token:: toPrintable() const
+        {
+            String res;
+            for(const Char *chr=head;chr;chr=chr->next)
+            {
+                res << ASCII::Printable::Char[ **chr ];
+            }
+            return res;
         }
 
 

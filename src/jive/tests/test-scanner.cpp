@@ -18,7 +18,7 @@ Y_UTEST(scanner)
     scanner("INT","[:digit:]+");
     scanner("ID","[:alpha:][:word:]*");
     scanner("FLT","[:digit:]+f?");;
-    scanner("blank","[:blank:]",false);
+    scanner("blank","[:blank:]+",false);
 
     
     if(argc>1)
