@@ -114,7 +114,7 @@ namespace Yttrium
     //! make a xml sub-section with options
 #define Y_XML_SECTION_OPT(HOST,NAME,OPTIONS)   \
 Y_XML_SUB_(HOST,__LINE__,NAME,false);          \
-do if(HOST.verbose)  { (*HOST << OPTIONS) <<  Yttrium::XMLog::RANGLE << std::endl; } while(false)
+do if( (HOST).verbose)  { (*HOST << OPTIONS) <<  Yttrium::XMLog::RANGLE << std::endl; } while(false)
 
 
 

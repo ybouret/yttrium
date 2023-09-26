@@ -96,9 +96,18 @@ namespace Yttrium
                     self(id,rx,self, (emit ? & Scanner::produce : & Scanner::discard) );
                 }
 
+                template <typename ID, typename RX>
+                inline void endl(const ID &id, const RX &rx, const bool emit = false)
+                {
+                    Scanner &self = *this;
+                    self(id,rx,self, (emit ? & Scanner::newLineAndEmit : & Scanner::newLineAndDrop) );
+                }
 
-                Message produce(const Token &); //!< produce prototype
-                Message discard(const Token &); //!< discaed prototype
+
+                Message produce(const Token &);        //!< produce prototype
+                Message discard(const Token &);        //!< discard prototype
+                Message newLineAndEmit(const Token &); //!< propagate and emit new line
+                Message newLineAndDrop(const Token &); //!< propagate and drop new line
 
                 //! recursive cleanup of all motifs
                 void cleanup() noexcept;
@@ -123,7 +132,9 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
                 class Code;
-                Code *code;
+                Code    *code;
+                //Source  *hsrc;
+
                 static Code *Initialize(const String &, Dictionary * &);
                 void         submitCode(Action::Pointer &which);
             };

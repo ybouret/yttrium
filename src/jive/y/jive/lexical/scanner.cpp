@@ -201,7 +201,7 @@ namespace Yttrium
                 //______________________________________________________________
                 inline ReturnValue  probe(Source &source, Action * &primary)
                 {
-                    Y_XML_SECTION(*xml, name);
+                    Y_XML_SECTION_OPT(*xml, name, " probe='" << size() << "'");
 
                     assert(0==primary);
                     //----------------------------------------------------------
@@ -211,7 +211,6 @@ namespace Yttrium
                     //----------------------------------------------------------
                     if(!source.ready())
                     {
-                        //Y_JIVE_LEXICAL("<" << name << "> EOS");
                         Y_XMLOG(*xml," => EOS");
                         return AtEndOfStream;
                     }
@@ -240,7 +239,7 @@ namespace Yttrium
                 PROBE_FIRST:
                     if( (**node).motif->takes(source) )
                     {
-                        Y_XMLOG(*xml," (+) primary : '" << (**node).name << "'='" << (**node).motif << "'");
+                        Y_XMLOG(*xml," (+) primary : '" << (**node).name << "'='" << (**node).motif->toPrintable() << "'");
                         goto FOUND_FIRST;
                     }
 
@@ -279,7 +278,7 @@ namespace Yttrium
                                 //----------------------------------------------
                                 // new primary!
                                 //----------------------------------------------
-                                Y_XMLOG(*xml," (+) replica : '" << replica->name << "'='" << replica->motif << "'");
+                                Y_XMLOG(*xml," (+) replica : '" << replica->name << "'='" << replica->motif->toPrintable() << "'");
                                 primary->motif->release();
                                 primary = replica;
                                 length  = len;
@@ -289,7 +288,7 @@ namespace Yttrium
                                 //----------------------------------------------
                                 // too late: retrieve source state
                                 //----------------------------------------------
-                                Y_XMLOG(*xml," (-) replica : '" << replica->name << "'='" << replica->motif << "'");
+                                Y_XMLOG(*xml," (-) replica : '" << replica->name << "'='" << replica->motif->toPrintable() << "'");
                                 source.put(*(replica->motif));
                                 source.skip(length);
                             }
@@ -348,6 +347,8 @@ namespace Yttrium
 
 }
 
+#include "y/type/temporary.hpp"
+
 namespace Yttrium
 {
     namespace Jive
@@ -381,11 +382,11 @@ namespace Yttrium
             void Scanner:: cleanup() noexcept
             {
                 assert(0!=code);
-                //Y_JIVE_LEXICAL("<" << name << "> cleaning");
+                Y_XML_SECTION_OPT( *(code->xml), *name, " cleaning='" << code->size() << "'");
                 for(Code::Iterator it=code->begin();it!=code->end();++it)
                 {
                     Action &a = **it;
-                    //std::cerr << "Cleaning " << a.name << std::endl;
+                    Y_XMLOG(*(code->xml), "-- cleaning '" << a.name << "'");
                     a.motif->reset();
                 }
             }
@@ -402,6 +403,16 @@ namespace Yttrium
                 assert(0!=code);
                 Y_XMLOG(*(code->xml),"produce '" << tkn.toPrintable() << "'");
                 return LX_EMIT;
+            }
+
+            Message Scanner:: newLineAndEmit(const Token &tkn)
+            {
+                return produce(tkn) | LX_ENDL;
+            }
+
+            Message Scanner:: newLineAndDrop(const Token &tkn)
+            {
+                return discard(tkn) | LX_ENDL;
             }
 
             Message Scanner:: discard(const Token &tkn)
