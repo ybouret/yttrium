@@ -42,7 +42,7 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                static bool Verbose;
+                static bool Verbose; //!< scanning verbosity for internal XMLog
 
                 //______________________________________________________________
                 //
@@ -96,6 +96,7 @@ namespace Yttrium
                     self(id,rx,self, (emit ? & Scanner::produce : & Scanner::discard) );
                 }
 
+                //! lexical end line
                 template <typename ID, typename RX>
                 inline void endl(const ID &id, const RX &rx, const bool emit = false)
                 {
@@ -104,10 +105,10 @@ namespace Yttrium
                 }
 
 
-                Message produce(const Token &);        //!< produce prototype
-                Message discard(const Token &);        //!< discard prototype
-                Message newLineAndEmit(const Token &); //!< propagate and emit new line
-                Message newLineAndDrop(const Token &); //!< propagate and drop new line
+                Message produce(const Token &);        //!< return LX_EMIT
+                Message discard(const Token &);        //!< return LX_DROP
+                Message newLineAndEmit(const Token &); //!< return LX_EMIT | LX_ENDL
+                Message newLineAndDrop(const Token &); //!< return LX_DROP | LX_ENDL
 
                 //! iterative cleanup of all motifs
                 void cleanup() noexcept;
