@@ -35,6 +35,7 @@ namespace Yttrium
                 Unit(const Entity &, const Context &) noexcept; //!< empty unit from context
                 Unit(const Unit &);                             //!< copy context/content
                 virtual ~Unit() noexcept;                       //!< cleanup
+                Y_OSTREAM_PROTO(Unit);
 
                 //______________________________________________________________
                 //

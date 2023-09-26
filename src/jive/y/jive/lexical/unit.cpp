@@ -29,6 +29,13 @@ namespace Yttrium
             prev(0)
             {
             }
+
+            std::ostream & operator<<(std::ostream &os, const Unit &unit)
+            {
+                os << "@" << unit.tag << ':' << unit.line << ':' << unit.column;
+                os << ": '" << unit.name << "'='" << unit.toPrintable() << "'";
+                return os;
+            }
         }
         
 

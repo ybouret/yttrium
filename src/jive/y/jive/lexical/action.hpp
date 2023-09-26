@@ -37,14 +37,28 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
+            //
             //! Action to be taken upon detected token
+            //
             //
             //__________________________________________________________________
             class Action : public Entity
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
                 typedef ArkPtr<String,Action> Pointer; //!< alias
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
                 template <typename LABEL>
                 explicit Action(const LABEL    & id,
                                 const Motif    & pp,
@@ -52,8 +66,21 @@ namespace Yttrium
                 Entity(id), motif(pp), doing(cb) {}      //!< setup
                 virtual ~Action() noexcept;              //!< cleanup
 
-                Message perform();
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                Message perform(); //!< doing(*motif), motif->size>0
+                Unit   *produce(); //!< new unit from motif
 
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
                 Motif            motif; //!< motif to be match
                 Callback         doing; //!< callback to be done upon match
 

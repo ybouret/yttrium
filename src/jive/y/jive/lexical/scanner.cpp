@@ -391,6 +391,23 @@ namespace Yttrium
                 }
             }
 
+
+            bool Scanner:: isClean() const noexcept
+            {
+                assert(0!=code);
+                bool flag = true;
+                for(Code::Iterator it=code->begin();it!=code->end();++it)
+                {
+                    const Action &a = **it;
+                    if(a.motif->size>0)
+                    {
+                        flag = false;
+                        Y_XMLOG(*(code->xml), "-- not clean '" << a.name << "'");
+                    }
+                }
+                return flag;
+            }
+
             ReturnValue Scanner:: probe(Source &source, Action * &action)
             {
                 assert(0!=code);

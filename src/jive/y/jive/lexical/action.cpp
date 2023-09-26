@@ -19,6 +19,16 @@ namespace Yttrium
                 return doing(token);
             }
 
+            Unit * Action:: produce()
+            {
+                Token &token = *motif;
+                assert(token.size>0);
+                assert(0!=token.head);
+                Unit *unit = new Unit(*this,*(motif->head));
+                unit->swapWith(token);
+                return unit;
+            }
+
         }
     }
 

@@ -109,8 +109,11 @@ namespace Yttrium
                 Message newLineAndEmit(const Token &); //!< propagate and emit new line
                 Message newLineAndDrop(const Token &); //!< propagate and drop new line
 
-                //! recursive cleanup of all motifs
+                //! iterative cleanup of all motifs
                 void cleanup() noexcept;
+
+                //! iterative checking
+                bool isClean() const noexcept;
 
                 //______________________________________________________________
                 //

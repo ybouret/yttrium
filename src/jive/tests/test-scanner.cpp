@@ -23,7 +23,7 @@ Y_UTEST(scanner)
     scanner.endl("endl", "[:endl:]");
 
     scanner.cleanup();
-    
+
     if(argc>1)
     {
 
@@ -31,7 +31,7 @@ Y_UTEST(scanner)
 
         Source source( Jive::Module::Open(argv[1]) );
     SCAN:
-        //scanner.cleanup();
+        Y_ASSERT(scanner.isClean());
         Lexical::Action *action = 0;
         switch( scanner.probe(source,action) )
         {
@@ -43,7 +43,7 @@ Y_UTEST(scanner)
                 Y_ASSERT(0!=action);
                 const  Lexical::Message msg = action->doing( *(action->motif) );
                 if( msg & Lexical::LX_ENDL ) source.newLine();
-
+                if( msg & Lexical::LX_EMIT ) lexemes.pushTail( action->produce() );
                 action->motif->release();
             } goto SCAN;
 
@@ -52,6 +52,11 @@ Y_UTEST(scanner)
                 std::cerr << "Failure!!" << std::endl;
             } break;
 
+        }
+
+        for(const Lexical::Unit *unit=lexemes.head;unit;unit=unit->next)
+        {
+            std::cerr << *unit << std::endl;
         }
     }
 

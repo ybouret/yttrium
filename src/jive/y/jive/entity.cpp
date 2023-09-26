@@ -13,6 +13,13 @@ namespace Yttrium
         {
             return *name;
         }
+
+        Entity::Entity(const Entity &other) noexcept :
+        Object(),
+        Counted(),
+        name(other.name)
+        {
+        }
     }
 
 }

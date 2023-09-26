@@ -1,4 +1,4 @@
-
+//! \file
 #ifndef Y_Jive_Entity_Included
 #define Y_Jive_Entity_Included 1
 
@@ -13,7 +13,7 @@ namespace Yttrium
         //
         //
         //
-        //! Action to be taken upon detected token
+        //! Entity to share names
         //
         //
         //______________________________________________________________________
