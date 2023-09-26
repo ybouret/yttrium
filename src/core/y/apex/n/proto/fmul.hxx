@@ -1,43 +1,4 @@
 
-#if 0
-//! fill real parts of fft
-static inline
-void FillRe(cplx           * fft,
-            const WordType * w,
-            const size_t     n) noexcept
-{
-    size_t j = 0;
-    for(size_t i=0;i<n;++i)
-    {
-        WordType       W = w[i];
-        const uint8_t *B = MakeBytes::From(W);
-        for(size_t k=0;k<WordSize;++k)
-        {
-            std::cerr << ' ' << Hexadecimal(B[k]);
-            fft[j++].re = B[k];
-        }
-    }
-}
-
-//! fill imaginary parts of fft
-static inline
-void FillIm(cplx           * fft,
-            const WordType * w,
-            const size_t     n) noexcept
-{
-    size_t j = 0;
-    for(size_t i=0;i<n;++i)
-    {
-        WordType       W = w[i];
-        const uint8_t *B = MakeBytes::From(W);
-        for(size_t k=0;k<WordSize;++k)
-        {
-            std::cerr << ' ' << Hexadecimal(B[k]);
-            fft[j++].im = B[k];
-        }
-    }
-}
-#endif
 
 static inline
 void FillBatch(Batch<double>  &batch,
@@ -111,37 +72,42 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                     for(size_t j=3;j<=nn;j+=2)
                     {
                         const size_t j1 = j+1;
-                        const double t = b[j];
-                        b[j]=t*a[j]-b[j1]*a[j1];
-                        b[j1]=t*a[j1]+b[j1]*a[j];
+                        const double t  = b[j];
+                        b[j]  = t*a[j]  - b[j1]*a[j1];
+                        b[j1] = t*a[j1] + b[j1]*a[j];
                     }
                 }
 
                 FFT::ReverseReal(b(),nn);
 
-                static const double RX  = 256.0;
-                const size_t        den = nn>>1;
-                double              cy  = 0.0;
-
+                static const double RX    = 256.0;
+                double              carry = 0.0;
+                const double        scale = 1.0/(nn>>1);
                 for(size_t j=nn;j>=1;--j)
                 {
-                    const double t =  (b[j]/den+cy+0.5);
-                    cy=(unsigned long) (t/RX);
-                    // std::cerr << "t=" << t << ", cy=" << cy << std::endl;
-                    b[j]=t-cy*RX;
+                    double      *f = &b[j];
+                    const double t =  floor( (*f)*scale+carry+0.5 );
+                    carry=(unsigned long) (t/RX);
+                   // std::cerr  << "t=" << std::setw(15) << t << "; cy=" << carry << std::endl;
+                    *(uint8_t *)f = static_cast<uint8_t>(t-carry*RX);
                 }
-                if(cy>=256)
-                {
+
+                if(carry>=RX)
                     throw Specific::Exception(CallSign,"Invalid carry in FFT_Mul");
+
+                prod[1] = static_cast<uint8_t>(carry);
+                {
+                    const double *f = &b[mpn];
+                    for (size_t j=mpn;j>1;--j)
+                        prod[j] = *(const uint8_t *)(--f);
                 }
-                prod[1] = uint8_t(cy);
-                for (size_t j=mpn;j>1;--j)
-                    prod[j]=uint8_t(b[j-1]);
             }
 
 
-
+            //__________________________________________________________________
+            //
             // transform array of bytes into array of words
+            //__________________________________________________________________
             {
                 WordType *W = proto->block.entry;
                 size_t    I = 0;
@@ -164,7 +130,10 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                 proto->update();
             }
 
+            //__________________________________________________________________
+            //
             // done
+            //__________________________________________________________________
             if(ell) (*ell) += WallTime::Ticks() - t;
             return proto.yield();
         }

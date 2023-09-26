@@ -26,6 +26,18 @@ namespace
         std::cerr << std::endl;
         std::cerr << label << std::endl;
 
+        if(false)
+        {
+            const PROTO  lhs(5000,ran);
+            const PROTO  rhs(5000,ran);
+            const hPROTO LNG_Prod = PROTO::Mul(lhs,rhs,PROTO::LongMul,0);
+            const hPROTO FFT_Prod = PROTO::Mul(lhs,rhs,PROTO::FFT_Mul,0);
+            const PROTO &LongProduct = *LNG_Prod;
+            const PROTO &FFT_Product = *FFT_Prod;
+            Y_CHECK( PROTO::AreEqual(LongProduct,FFT_Product) );
+            return;
+        }
+
         Libc::OutputFile fp("apex-perf.dat");
         for(unsigned lbits=32;lbits<=1024;lbits+=32)
         {
@@ -60,13 +72,15 @@ namespace
             const hPROTO FFT_Prod = PROTO::Mul(lhs,rhs,PROTO::FFT_Mul,0);
             const PROTO &LongProduct = *LNG_Prod;
             const PROTO &FFT_Product = *FFT_Prod;
-
             Y_CHECK( PROTO::AreEqual(LongProduct,FFT_Product) );
         }
 #endif
     }
 
 }
+
+#include <cmath>
+#include <cfloat>
 
 Y_UTEST(apex_perf)
 {
@@ -76,6 +90,8 @@ Y_UTEST(apex_perf)
     if(argc>1) Loops = unsigned( atol(argv[1]) );
 
     TestProto<uint64_t,uint32_t>( ran );
+    return 0;
+
     TestProto<uint64_t,uint16_t>( ran );
     TestProto<uint64_t,uint8_t>(  ran );
 

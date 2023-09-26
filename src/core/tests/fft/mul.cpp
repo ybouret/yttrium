@@ -85,14 +85,18 @@ Y_UTEST(fft_mul)
         FFT::ReverseReal(&b[1]-1,nn);
 
         static const double RX = 256.0;
+        const size_t        nh = nn>>1;
+        
         double cy=0.0;
         for(size_t j=nn;j>=1;j--)
         {
-            const double t=  (b[j]/(nn>>1)+cy+0.5);
+            const double t =  floor(b[j]/nh+cy+0.5);
             cy=(unsigned long) (t/RX);
-           // std::cerr << "t=" << t << ", cy=" << cy << std::endl;
-            b[j]=t-cy*RX;
+            std::cerr << "t=" << t << ", cy=" << cy << std::endl;
+            b[j]=uint8_t(t-cy*RX);
         }
+
+
         //std::cerr << "#cy = 0x" << Hexadecimal(uint8_t(cy)) << std::endl;
         CxxArray<uint8_t> w(m+n);
         if(m+n>0)
@@ -112,6 +116,11 @@ Y_UTEST(fft_mul)
         std::cerr << "p=" << res << std::endl;
         Y_CHECK(W==res);
     }
+
+    double   arr[2] = { 1, 2 };
+    uint8_t *chr = (uint8_t *)&arr[0];
+    chr[0] = 0;
+
 }
 Y_UDONE()
 
