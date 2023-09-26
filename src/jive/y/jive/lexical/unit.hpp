@@ -49,7 +49,8 @@ namespace Yttrium
             private:
                 Y_DISABLE_ASSIGN(Unit);
             };
-            
+
+            typedef CxxListOf<Unit> Units;
 
         }
 

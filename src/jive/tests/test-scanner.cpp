@@ -21,13 +21,17 @@ Y_UTEST(scanner)
     scanner("FLT","[:digit:]+f?");;
     scanner("blank","[:blank:]+",false);
     scanner.endl("endl", "[:endl:]");
+
+    scanner.cleanup();
     
     if(argc>1)
     {
 
+        Lexical::Units lexemes;
+
         Source source( Jive::Module::Open(argv[1]) );
     SCAN:
-        scanner.cleanup();
+        //scanner.cleanup();
         Lexical::Action *action = 0;
         switch( scanner.probe(source,action) )
         {
@@ -39,6 +43,8 @@ Y_UTEST(scanner)
                 Y_ASSERT(0!=action);
                 const  Lexical::Message msg = action->doing( *(action->motif) );
                 if( msg & Lexical::LX_ENDL ) source.newLine();
+
+                action->motif->release();
             } goto SCAN;
 
             case  Lexical::ReturnFailure: {

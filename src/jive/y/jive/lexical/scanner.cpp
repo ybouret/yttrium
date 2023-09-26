@@ -401,12 +401,14 @@ namespace Yttrium
             Message Scanner:: produce(const Token &tkn)
             {
                 assert(0!=code);
-                Y_XMLOG(*(code->xml),"produce '" << tkn.toPrintable() << "'");
+                Y_XMLOG(*(code->xml),"@EMIT '" << tkn.toPrintable() << "'");
                 return LX_EMIT;
             }
 
             Message Scanner:: newLineAndEmit(const Token &tkn)
             {
+                assert(0!=code);
+                Y_XMLOG(*(code->xml),"@ENDL");
                 return produce(tkn) | LX_ENDL;
             }
 
@@ -417,7 +419,7 @@ namespace Yttrium
 
             Message Scanner:: discard(const Token &tkn)
             {
-                Y_XMLOG(*(code->xml),"discard '" << tkn.toPrintable() << "'");
+                Y_XMLOG(*(code->xml),"@DROP '" << tkn.toPrintable() << "'");
                 return LX_DROP;
             }
 
