@@ -27,10 +27,10 @@ namespace Yttrium
             //! predefined messages
             enum MessageID
             {
-                LX_EMIT = 0x01,
-                LX_DROP = 0x02,
-                LX_ENDL = 0x04,
-                LX_CNTL = 0x08
+                LX_EMIT = 0x01, //!< emit unit
+                LX_DROP = 0x02, //!< drop unit
+                LX_ENDL = 0x04, //!< propagate newline
+                LX_CNTL = 0x08  //!< is a control
             };
 
 

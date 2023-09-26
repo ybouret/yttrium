@@ -338,6 +338,18 @@ namespace Yttrium
 
             };
 
+        }
+    }
+
+}
+
+namespace Yttrium
+{
+    namespace Jive
+    {
+        namespace Lexical
+        {
+
             Scanner::Code * Scanner:: Initialize(const String &id, Dictionary * &dict )
             {
                 Code *c = new Code(id);
@@ -364,6 +376,7 @@ namespace Yttrium
             void Scanner:: cleanup() noexcept
             {
                 assert(0!=code);
+                Y_JIVE_LEXICAL("<" << name << "> cleaning");
                 for(Code::Iterator it=code->begin();it!=code->end();++it)
                 {
                     Action &a = **it;
