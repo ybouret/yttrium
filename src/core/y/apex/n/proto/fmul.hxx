@@ -17,8 +17,8 @@ void FillBatch(Batch<double>  &batch,
             batch[nBytes-j++] = B[k];
         }
     }
-
 }
+
 
 static inline Hexadecimal D2H(const double x)
 {
@@ -50,8 +50,8 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
             const size_t   m     = q * WordSize; // V bytes
             const size_t   mpn   = m+n;          // product bytes
             Pointer        proto = new Proto(mpn,AsCapacity);
-            const uint64_t tmx   = ell ? WallTime::Ticks() : 0;
             Batch<uint8_t> prod(mpn);
+            const uint64_t tmx   = ell ? WallTime::Ticks() : 0;
 
             {
                 size_t       nn = 1;
@@ -88,7 +88,6 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                     double      *f = &b[j];
                     const double t =  floor( (*f)*scale+carry+0.5 );
                     carry=(unsigned long) (t/RX);
-                   // std::cerr  << "t=" << std::setw(15) << t << "; cy=" << carry << std::endl;
                     *(uint8_t *)f = static_cast<uint8_t>(t-carry*RX);
                 }
 
