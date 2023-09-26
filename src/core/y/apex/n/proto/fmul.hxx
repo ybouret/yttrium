@@ -1,10 +1,30 @@
 
-
+#if 0
 static inline
 void FillBatch(Batch<double>  &batch,
                const WordType *w,
                const size_t    nWords,
                const size_t    nBytes)
+{
+    assert(nWords*WordSize==nBytes);
+    size_t j = 0;
+    for(size_t i=0;i<nWords;++i)
+    {
+        WordType              W = w[i];
+        const uint8_t * const B = MakeBytes::From(W);
+        for(size_t k=0;k<WordSize;++k)
+        {
+            batch[nBytes-j++] = B[k];
+        }
+    }
+}
+#endif
+
+static inline
+void FillArray(double         *batch,
+               const WordType *w,
+               const size_t    nWords,
+               const size_t    nBytes) noexcept
 {
     assert(nWords*WordSize==nBytes);
     size_t j = 0;
@@ -59,13 +79,15 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                 while (nn < mn)
                     nn <<= 1;
                 nn <<= 1;
-                Batch<double> b(nn);
+                Batch<double> B(nn*2);
+                double       *b = B();
                 {
-                    Batch<double> a(b);
-                    FillBatch(a,U,p,n);
-                    FillBatch(b,V,q,m);
+                    //Batch<double> A(nn);
+                    double *a = b+nn; //A();
+                    FillArray(a,U,p,n);
+                    FillArray(b,V,q,m);
 
-                    FFT::ForwardReal(a(),b(),nn);
+                    FFT::ForwardReal(a,b,nn);
 
                     b[1] *= a[1];
                     b[2] *= a[2];
@@ -78,7 +100,7 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                     }
                 }
 
-                FFT::ReverseReal(b(),nn);
+                FFT::ReverseReal(b,nn);
 
                 static const double RX    = 256.0;
                 double              carry = 0.0;
@@ -114,8 +136,8 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                 WordType  w = 0;
                 for(size_t i=mpn;i>0;--i)
                 {
-                    static const unsigned ks[4] = { 0, 8, 16, 24 };
-                    w |= ( prod[i] <<ks[k] );
+                    static const unsigned kshift[4] = { 0, 8, 16, 24 };
+                    w |= ( prod[i] << kshift[k] );
                     if(++k>=WordSize)
                     {
                         W[I++] = w;
