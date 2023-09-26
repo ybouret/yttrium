@@ -50,7 +50,7 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
             const size_t   m     = q * WordSize; // V bytes
             const size_t   mpn   = m+n;          // product bytes
             Pointer        proto = new Proto(mpn,AsCapacity);
-            const uint64_t t     = ell ? WallTime::Ticks() : 0;
+            const uint64_t tmx   = ell ? WallTime::Ticks() : 0;
             Batch<uint8_t> prod(mpn);
 
             {
@@ -116,10 +116,7 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                 for(size_t i=mpn;i>0;--i)
                 {
                     static const unsigned ks[4] = { 0, 8, 16, 24 };
-                    WordType x = prod[i];
-                    //w |= (x<< (k<<3));
-                    w |= (x<<ks[k]);
-
+                    w |= ( prod[i] <<ks[k] );
                     if(++k>=WordSize)
                     {
                         W[I++] = w;
@@ -137,7 +134,7 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
             //
             // done
             //__________________________________________________________________
-            if(ell) (*ell) += WallTime::Ticks() - t;
+            if(ell) (*ell) += WallTime::Ticks() - tmx;
             return proto.yield();
         }
     }
