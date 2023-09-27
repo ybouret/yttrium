@@ -29,7 +29,7 @@ namespace Yttrium
             //! cleanup
             virtual ~Lexer() noexcept;
 
-            Lexeme *get();
+            Lexeme *get(Source &);
             void    put(Lexeme *) noexcept;
             void    restart()     noexcept;
 

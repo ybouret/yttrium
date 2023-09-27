@@ -17,11 +17,24 @@ namespace Yttrium
         class Lexer:: App : public Object
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             typedef Lexical::Scanner              Scanner;
             typedef ArkPtr<String,Scanner>        ScanPtr;
             typedef SuffixSet<String,ScanPtr>     ScanDB;
             typedef ScanDB::Iterator              Iterator;
             typedef Small::SoloLightList<Scanner> History;
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
             //! setup with genesis
             inline explicit App(Scanner &self) :
@@ -47,7 +60,14 @@ namespace Yttrium
 
             inline virtual ~App() noexcept {}
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
+            //! restart all
             inline void restart() noexcept
             {
                 scanner = &genesis;
@@ -57,7 +77,29 @@ namespace Yttrium
                     (**it).cleanup();
             }
 
-            Scanner &            genesis;
+            inline Lexeme * get(Source &source)
+            {
+                if(lexemes.size)
+                {
+                    // use cache
+                    return lexemes.popHead();
+                }
+                else
+                {
+
+                    return 0;
+                }
+
+            }
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            Scanner &            genesis; //!< top-level scanner
             Scanner *            scanner; //!< current scanner
             Lexemes              lexemes; //!< lexemes cache
             const StaticRetainer retains; //!< helper
@@ -102,6 +144,12 @@ namespace Yttrium
             assert(0!=lxm);
             assert(0!=app);
             app->lexemes.pushHead(lxm);
+        }
+
+        Lexeme * Lexer:: get(Source &source)
+        {
+            assert(0!=app);
+            return app->get(source);
         }
     }
 
