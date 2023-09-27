@@ -1,8 +1,8 @@
 
 #include "y/jive/lexer.hpp"
+#include "y/jive/source.hpp"
 #include "y/associative/suffix/set.hpp"
 #include "y/type/nullify.hpp"
-#include "y/utest/run.hpp"
 #include "y/system/exception.hpp"
 #include "y/type/static-retainer.hpp"
 #include "y/data/small/light/list/solo.hpp"
@@ -49,9 +49,6 @@ namespace Yttrium
             xml( genesis.getXMLog() )
             {
 
-                Y_SIZEOF(Lexemes);
-                Y_SIZEOF(ScanDB);
-                Y_SIZEOF(History);
                 const ScanPtr ptr( &genesis );
                 if(!content.insert(ptr))
                     throw Specific::Exception(name.c_str(),"Initialization Failure!");
@@ -67,7 +64,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //__________________________________________________________________
+            //
             //! restart all
+            //__________________________________________________________________
             inline void restart() noexcept
             {
                 scanner = &genesis;
@@ -77,18 +77,75 @@ namespace Yttrium
                     (**it).cleanup();
             }
 
+            //__________________________________________________________________
+            //
+            //! processing source
+            //__________________________________________________________________
             inline Lexeme * get(Source &source)
             {
-                Y_XMLOG(xml, "get lexeme");
+                //Y_XMLOG(xml, "get lexeme");
+                Y_XML_SECTION_OPT(xml,name, " get");
+            PROBE:
+                assert(0!=scanner);
+                assert(scanner->isClean());
                 if(lexemes.size)
                 {
+                    //----------------------------------------------------------
+                    //
                     // use cache
+                    //
+                    //----------------------------------------------------------
                     return lexemes.popHead();
                 }
                 else
                 {
+                    //----------------------------------------------------------
+                    //
+                    // probe with current scanner
+                    //
+                    //----------------------------------------------------------
+                    Lexical::Action *action = 0;
+                    switch( scanner->probe(source,action) )
+                    {
+                        case Lexical::ReturnSuccess: {
+                            assert(0!=action);
+                            const Lexical::Message msg = action->perform();
 
-                    
+                            if(msg & Lexical::LX_DROP)
+                            {
+                                action->motif->release();
+                                goto PROBE;
+                            }
+
+                            if(msg & Lexical::LX_EMIT) return action->produce();
+
+                            throw Exception("unhandled message");
+                        }
+
+                        case Lexical::ReturnFailure: {
+                            Token bad;
+                            if(source.guess(bad))
+                            {
+                                const String info  = bad.toPrintable();
+                                Exception    excp =  Specific::Exception( name.c_str(), "syntax error '%s'", info.c_str());
+                                throw bad.head->stamp(excp);
+                            }
+                            else
+                            {
+                                Exception excp = Specific::Exception( name.c_str(), "forbidden trailing blanks");
+                                throw source->stamp(excp);
+                            }
+                        }
+
+                        case Lexical::AtEndOfStream:
+                            break;
+                    }
+
+                    //----------------------------------------------------------
+                    //
+                    // end of stream
+                    //
+                    //----------------------------------------------------------
                     return 0;
                 }
 
@@ -162,7 +219,6 @@ namespace Yttrium
 
         Lexer:: ~Lexer() noexcept
         {
-            Y_SIZEOF(App);
             assert(0!=app);
             Nullify(app);
         }

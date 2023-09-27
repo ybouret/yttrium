@@ -189,7 +189,7 @@ namespace Yttrium
                         //------------------------------------------------------
                         FirstChars fc;
                         which->motif->query(fc);
-                        Y_XMLOG(*xml,"--> '" << which->name << "' to " << fc);
+                        Y_XMLOG(*xml,"<" << name << "> --> '" << which->name << "' to " << fc);
 
 
                         //------------------------------------------------------
@@ -216,7 +216,7 @@ namespace Yttrium
                 //______________________________________________________________
                 inline ReturnValue  probe(Source &source, Action * &primary)
                 {
-                    Y_XML_SECTION_OPT(*xml, name, " probe='" << size() << "'");
+                    //Y_XML_SECTION_OPT(*xml, name, " probe='" << size() << "'");
 
                     assert(0==primary);
                     //----------------------------------------------------------
@@ -226,7 +226,7 @@ namespace Yttrium
                     //----------------------------------------------------------
                     if(!source.ready())
                     {
-                        Y_XMLOG(*xml," => EOS");
+                        Y_XMLOG(*xml,"<" << name << "> => EOS");
                         return AtEndOfStream;
                     }
                     assert(source.cached()>0);
@@ -254,7 +254,7 @@ namespace Yttrium
                 PROBE_FIRST:
                     if( (**node).motif->takes(source) )
                     {
-                        Y_XMLOG(*xml," (+) primary : '" << (**node).name << "'='" << (**node).motif->toPrintable() << "'");
+                        Y_XMLOG(*xml,"<" << name << "> (+) primary : '" << (**node).name << "'='" << (**node).motif->toPrintable() << "'");
                         goto FOUND_FIRST;
                     }
 
@@ -293,7 +293,7 @@ namespace Yttrium
                                 //----------------------------------------------
                                 // new primary!
                                 //----------------------------------------------
-                                Y_XMLOG(*xml," (+) replica : '" << replica->name << "'='" << replica->motif->toPrintable() << "'");
+                                Y_XMLOG(*xml,"<" << name << "> (+) replica : '" << replica->name << "'='" << replica->motif->toPrintable() << "'");
                                 primary->motif->release();
                                 primary = replica;
                                 length  = len;
@@ -303,7 +303,7 @@ namespace Yttrium
                                 //----------------------------------------------
                                 // too late: retrieve source state
                                 //----------------------------------------------
-                                Y_XMLOG(*xml," (-) replica : '" << replica->name << "'='" << replica->motif->toPrintable() << "'");
+                                Y_XMLOG(*xml,"<" << name << "> (-) replica : '" << replica->name << "'='" << replica->motif->toPrintable() << "'");
                                 source.put(*(replica->motif));
                                 source.skip(length);
                             }
@@ -313,7 +313,7 @@ namespace Yttrium
                             //--------------------------------------------------
                             // retrieve source state
                             //--------------------------------------------------
-                            Y_XMLOG(*xml," (0) replica : '" << replica->name << "'");
+                            Y_XMLOG(*xml,"<" << name << "> (0) replica : '" << replica->name << "'");
                             assert(0==replica->motif->size);
                             source.skip(length);
                         }
@@ -448,14 +448,14 @@ namespace Yttrium
             Message Scanner:: produce(const Token &tkn)
             {
                 assert(0!=code);
-                Y_XMLOG(*(code->xml),"@EMIT '" << tkn.toPrintable() << "'");
+                Y_XMLOG(*(code->xml),"<" << name << "> @EMIT '" << tkn.toPrintable() << "'");
                 return LX_EMIT;
             }
 
             Message Scanner:: newLineAndEmit(const Token &tkn)
             {
                 assert(0!=code);
-                Y_XMLOG(*(code->xml),"@ENDL");
+                Y_XMLOG(*(code->xml),"<" << name << "> @ENDL");
                 return produce(tkn) | LX_ENDL;
             }
 
@@ -466,7 +466,7 @@ namespace Yttrium
 
             Message Scanner:: discard(const Token &tkn)
             {
-                Y_XMLOG(*(code->xml),"@DROP '" << tkn.toPrintable() << "'");
+                Y_XMLOG(*(code->xml),"<" << name << "> @DROP '" << tkn.toPrintable() << "'");
                 return LX_DROP;
             }
 

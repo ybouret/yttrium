@@ -13,6 +13,12 @@ namespace
     public:
         explicit MyLexer() : Lexer("MyLexer")
         {
+            Scanner &self = *this;
+            self("INT","[:digit:]+");
+            self("ID","[:alpha:][:word:]*");
+            self("FLT","[:digit:]+f?");;
+            self("blank","[:blank:]+",false);
+            self.endl("endl", "[:endl:]");
         }
 
         virtual ~MyLexer() noexcept
@@ -29,7 +35,23 @@ Y_UTEST(lexer)
     Lexical::Scanner::Verbose = true;
 
     MyLexer lexer;
-    
+    Lexemes lexemes;
+
+    if(argc>1)
+    {
+        Source  src( Jive::Module::Open(argv[1]) );
+        Lexeme *lxm = 0;
+        while( 0 != (lxm=lexer.get(src) ) )
+        {
+            lexemes.pushTail(lxm);
+        }
+
+        for(const Lexical::Unit *unit=lexemes.head;unit;unit=unit->next)
+        {
+            std::cerr << *unit << std::endl;
+        }
+    }
+
 
 }
 Y_UDONE()

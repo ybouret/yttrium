@@ -52,7 +52,7 @@ namespace Yttrium
 
             //! read-only inner module access
             const Module * operator->() const noexcept;
-
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Source);
