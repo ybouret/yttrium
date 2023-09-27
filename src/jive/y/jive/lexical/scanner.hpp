@@ -45,7 +45,8 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 static bool Verbose; //!< scanning verbosity for internal XMLog
-
+                typedef ArkPtr<String,Scanner> Pointer;
+                
                 //______________________________________________________________
                 //
                 //

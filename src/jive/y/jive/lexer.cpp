@@ -23,11 +23,10 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Lexical::Scanner              Scanner;
-            typedef ArkPtr<String,Scanner>        ScanPtr;
-            typedef SuffixSet<String,ScanPtr>     ScanDB;
-            typedef ScanDB::Iterator              Iterator;
-            typedef Small::SoloLightList<Scanner> History;
+            typedef Lexical::Scanner                      Scanner;
+            typedef SuffixSet<String,Scanner::Pointer>    ScannerDB;
+            typedef ScannerDB::Iterator                   Iterator;
+            typedef Small::SoloLightList<Scanner>         History;
 
             //__________________________________________________________________
             //
@@ -49,7 +48,7 @@ namespace Yttrium
             xml( genesis.getXMLog() )
             {
 
-                const ScanPtr ptr( &genesis );
+                const Scanner::Pointer ptr( &genesis );
                 if(!content.insert(ptr))
                     throw Specific::Exception(name.c_str(),"Initialization Failure!");
 
@@ -155,7 +154,7 @@ namespace Yttrium
             inline void jump(const String &id)
             {
                 assert(0!=scanner);
-                ScanPtr *sptr = content.search(id);
+                Scanner::Pointer *sptr = content.search(id);
                 if(!sptr) throw Specific::Exception(name.c_str(),"No <%s> to jump to",id());
                 Scanner &target = **sptr;
                 Y_XMLOG(xml, "[jump] from <" << scanner->name << "> to <" << target.name << ">");
@@ -165,7 +164,7 @@ namespace Yttrium
             inline void call(const String &id)
             {
                 assert(0!=scanner);
-                ScanPtr *sptr = content.search(id);
+                Scanner::Pointer *sptr = content.search(id);
                 if(!sptr) throw Specific::Exception(name.c_str(),"No <%s> to call",id());
                 Scanner &target = **sptr;
                 history << *scanner;
@@ -183,6 +182,11 @@ namespace Yttrium
                 scanner = &target;
             }
 
+            inline void submit(const Scanner::Pointer &ptr)
+            {
+                if(!content.insert(ptr))
+                    throw Specific::Exception(name.c_str(),"Multiple <%s>", ptr->name->c_str());
+            }
 
             //__________________________________________________________________
             //
@@ -194,7 +198,7 @@ namespace Yttrium
             Scanner *            scanner; //!< current scanner
             Lexemes              lexemes; //!< lexemes cache
             const StaticRetainer retains; //!< helper
-            ScanDB               content; //!< scanner database
+            ScannerDB            content; //!< scanner database
             History              history; //!< call stack
             const String        &name;    //!< genesis name
             XMLog               &xml;     //!< for verbose output
@@ -240,6 +244,12 @@ namespace Yttrium
         {
             assert(0!=app);
             return app->get(source);
+        }
+
+        void Lexer:: submit(const Scanner::Pointer &ptr)
+        {
+            assert(0!=app);
+            app->submit(ptr);
         }
     }
 

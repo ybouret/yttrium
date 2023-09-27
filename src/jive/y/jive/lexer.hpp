@@ -57,13 +57,25 @@ namespace Yttrium
             void call(const String &); //!< call named scanner
             void back();               //!< back from current scanner
 
+            //! create a zero-argument plugin, derived from scanner
+            template <typename PLUGIN, typename ID>
+            PLUGIN & make(const ID &id)
+            {
+                PLUGIN *plg = new PLUGIN(id);
+                const Scanner::Pointer ptr(plg);
+                submit(ptr);
+                return *plg;
+            }
+
+            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Lexer);
             class App;
             App  *app;
 
             static App *Create(Scanner &self);
-
+            void        submit(const Scanner::Pointer &ptr);
         };
     }
 
