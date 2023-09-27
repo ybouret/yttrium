@@ -79,6 +79,10 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
+                //! submit an action
+                void submitCode(Action::Pointer &which);
+
+
 
                 //______________________________________________________________
                 //
@@ -170,7 +174,6 @@ namespace Yttrium
 
                 static Code *Initialize(const String &, Dictionary * &);
                 static Code *Initialize(const String &, Dictionary * &, const Scanner &parent);
-                void         submitCode(Action::Pointer &which);
             };
 
             

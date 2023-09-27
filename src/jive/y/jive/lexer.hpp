@@ -25,6 +25,8 @@ namespace Yttrium
         class Lexer : public Lexical::Scanner
         {
         public:
+            //typedef void (Lexer::*proc)(const String &);
+
             //__________________________________________________________________
             //
             //
@@ -53,21 +55,19 @@ namespace Yttrium
             void    put(Lexeme *) noexcept;  //!< put back a read lexeme
             void    restart()     noexcept;  //!< restart
 
-            void jump(const String &); //!< jump to named scanner
-            void call(const String &); //!< call named scanner
-            void back();               //!< back from current scanner
-
+            
             //! create a zero-argument plugin, derived from scanner
             template <typename PLUGIN, typename ID>
             PLUGIN & make(const ID &id)
             {
-                PLUGIN *plg = new PLUGIN(id);
+                PLUGIN *               plg = new PLUGIN(id);
                 const Scanner::Pointer ptr(plg);
                 submit(ptr);
                 return *plg;
             }
 
             
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Lexer);

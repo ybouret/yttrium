@@ -14,6 +14,7 @@ namespace Yttrium
     {
 
 
+
         class Lexer:: App : public Object
         {
         public:
@@ -27,6 +28,7 @@ namespace Yttrium
             typedef SuffixSet<String,Scanner::Pointer>    ScannerDB;
             typedef ScannerDB::Iterator                   Iterator;
             typedef Small::SoloLightList<Scanner>         History;
+            typedef void (App::*Branch)(const String &);
 
             //__________________________________________________________________
             //
@@ -205,12 +207,82 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(App);
+
+        public:
+            class Jump
+            {
+            public:
+                inline Jump(App &      who,
+                            const Tag &uid,
+                            const bool emitLexeme,
+                            const bool willReturn) noexcept :
+                app( who ),
+                tag( uid ),
+                msg( Lexical::LX_CNTL | (emitLexeme ? Lexical::LX_EMIT : Lexical::LX_DROP) ),
+                fcn( willReturn ? &App::call : &App::jump)
+                {
+                }
+
+                inline Jump(const Jump &j) noexcept :
+                app( j.app ),
+                tag( j.tag ),
+                msg( j.msg ),
+                fcn( j.fcn )
+                {
+                }
+
+
+                inline Lexical::Message operator()(const Token &)
+                {
+                    (app.*fcn)(*tag);
+                    return msg;
+                }
+
+                inline ~Jump() noexcept {}
+
+
+                App &                  app;
+                const Tag              tag;
+                const Lexical::Message msg;
+                const Branch           fcn;
+
+            private:
+                Y_DISABLE_ASSIGN(Jump);
+            };
+
+#if 0
+            inline void makeJump(const Tag &expr,
+                                 const Tag &uuid,
+                                 const bool emit)
+            {
+                const Motif              motif( RegExp::Compile(*expr, genesis.dict) );
+                const Jump               coded(*this,uuid,emit,false);
+                const Lexical::Callback  doing = coded;
+                const String             named = "jump@" + *uuid;
+                Lexical::Action::Pointer which( new Lexical::Action(named,motif,doing)   );
+                genesis.submitCode(which);
+            }
+
+            inline void makeCall(const Tag &expr,
+                                 const Tag &uuid,
+                                 const bool emit)
+            {
+                const Motif              motif( RegExp::Compile(*expr, genesis.dict) );
+                const Jump               coded(*this,uuid,emit,true);
+                const Lexical::Callback  doing = coded;
+                const String             named = "call@" + *uuid;
+                Lexical::Action::Pointer which( new Lexical::Action(named,motif,doing)   );
+                genesis.submitCode(which);
+            }
+#endif
+
         };
 
         Lexer::App * Lexer::Create(Scanner &self)
         {
             return new App(self);
         }
+
 
     }
 
