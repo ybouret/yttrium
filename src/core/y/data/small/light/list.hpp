@@ -63,19 +63,28 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! pushTail
-            LightList & operator<<( Type &args )
+            inline LightList & operator<<( Type &args )
             {
                 this->pushTail(proxy->produce(args));
                 return *this;
             }
 
             //! pushHead
-            LightList & operator>>( Type &args )
+            inline LightList & operator>>( Type &args )
             {
                 this->pushHead(proxy->produce(args));
                 return *this;
             }
 
+            //! pullTail
+            inline Type & pullTail() noexcept
+            {
+                assert(this->size>0);
+                assert(0!=this->tail);
+                Type &ref = **(this->tail);
+                this->popTail();
+                return ref;
+            }
 
 
 

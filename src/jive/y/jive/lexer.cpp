@@ -79,6 +79,7 @@ namespace Yttrium
 
             inline Lexeme * get(Source &source)
             {
+                Y_XMLOG(xml, "get lexeme");
                 if(lexemes.size)
                 {
                     // use cache
@@ -87,9 +88,42 @@ namespace Yttrium
                 else
                 {
 
+                    
                     return 0;
                 }
 
+            }
+
+
+            inline void jump(const String &id)
+            {
+                assert(0!=scanner);
+                ScanPtr *sptr = content.search(id);
+                if(!sptr) throw Specific::Exception(name.c_str(),"No <%s> to jump to",id());
+                Scanner &target = **sptr;
+                Y_XMLOG(xml, "[jump] from <" << scanner->name << "> to <" << target.name << ">");
+                scanner = & target;
+            }
+
+            inline void call(const String &id)
+            {
+                assert(0!=scanner);
+                ScanPtr *sptr = content.search(id);
+                if(!sptr) throw Specific::Exception(name.c_str(),"No <%s> to call",id());
+                Scanner &target = **sptr;
+                history << *scanner;
+                Y_XMLOG(xml, "[call] from <" << scanner->name << "> to <" << target.name << ">");
+                scanner = &target;
+
+            }
+
+            inline void back()
+            {
+                assert(0!=scanner);
+                if(history.size<=0) throw Specific::Exception(name.c_str(),"cannot come back from <%s>", scanner->name->c_str());
+                Scanner &target = history.pullTail();
+                Y_XMLOG(xml, "[back] from <" << scanner->name << "> to <" << target.name << ">");
+                scanner = &target;
             }
 
 

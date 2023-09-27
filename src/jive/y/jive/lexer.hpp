@@ -33,6 +33,10 @@ namespace Yttrium
             void    put(Lexeme *) noexcept;
             void    restart()     noexcept;
 
+            void jump(const String &);
+            void call(const String &);
+            void back();
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Lexer);
             class App;
