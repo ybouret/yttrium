@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_Lexical_Scanner_Included
-#define Y_Lexical_Scanner_Included 1
+#ifndef Y_Jive_Lexical_Scanner_Included
+#define Y_Jive_Lexical_Scanner_Included 1
 
 #include "y/jive/lexical/action.hpp"
 #include "y/jive/pattern/dictionary.hpp"
@@ -52,13 +52,19 @@ namespace Yttrium
                 //______________________________________________________________
 
                 //! setup with identifier
-                template <typename LABEL>
-                explicit Scanner(const LABEL &usr) :
-                Entity(usr),
-                dict(0),
-                code( Initialize( *name, Coerce(dict) ) )
+                template <typename LABEL> inline
+                explicit Scanner(const LABEL &label) :
+                Entity(label), dict(0), code( Initialize( *name, Coerce(dict) ) )
                 {
                 }
+
+                //! setup with identifier and using shared data from parent
+                template <typename LABEL> inline
+                explicit Scanner(const LABEL &label, const Scanner &parent) :
+                Entity(label), dict(0), code( Initialize( *name, Coerce(dict), parent ) )
+                {
+                }
+
 
                 //! cleanup
                 virtual ~Scanner() noexcept;
@@ -136,10 +142,10 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
                 class Code;
-                Code    *code;
-                //Source  *hsrc;
+                Code *code;
 
                 static Code *Initialize(const String &, Dictionary * &);
+                static Code *Initialize(const String &, Dictionary * &, const Scanner &parent);
                 void         submitCode(Action::Pointer &which);
             };
 

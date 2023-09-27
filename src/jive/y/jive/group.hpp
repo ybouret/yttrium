@@ -11,15 +11,37 @@ namespace Yttrium
     namespace Jive
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Group to help format Entity based output
+        //
+        //
+        //______________________________________________________________________
         class Group
         {
         public:
-            explicit Group() noexcept;
-            virtual ~Group() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Group() noexcept; //!< setup
+            virtual ~Group() noexcept; //!< cleanup
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! update maxNameSize
             void     updateWith(const Entity &) noexcept;
 
-            const size_t maxNameSize;
-
+            //! pad according to entity
             template <typename OSTREAM> inline
             OSTREAM & pad(OSTREAM &os, const Entity &ent) const
             {
@@ -27,6 +49,15 @@ namespace Yttrium
                 for(size_t i=n;i<maxNameSize;++i) os << ' ';
                 return os;
             }
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const size_t maxNameSize; //!< max name size for entities
+
 
 
         private:

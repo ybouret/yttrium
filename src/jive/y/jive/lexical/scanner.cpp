@@ -129,6 +129,8 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
+
+                //! standalone code
                 inline explicit Code(const String &id) :
                 Object(),
                 Plan(),
@@ -137,9 +139,22 @@ namespace Yttrium
                 dict( new Dictionary() ),
                 xml(  new XMLog(Scanner::Verbose) )
                 {
-
                 }
 
+                //! standalone code
+                inline explicit Code(const String &id, const Code &from) :
+                Object(),
+                Plan(),
+                name(id),
+                hub(),
+                dict( from.dict ),
+                xml(  from.xml  )
+                {
+                }
+
+
+
+                //! cleanup
                 inline virtual ~Code() noexcept {}
 
                 //______________________________________________________________
@@ -359,6 +374,14 @@ namespace Yttrium
             Scanner::Code * Scanner:: Initialize(const String &id, Dictionary * &dict)
             {
                 Code *c = new Code(id);
+                dict = & *(c->dict);
+                return c;
+            }
+
+            Scanner::Code * Scanner:: Initialize(const String &id, Dictionary *&dict, const Scanner &parent)
+            {
+                assert(0!=parent.code);
+                Code *c = new Code(id,*parent.code);
                 dict = & *(c->dict);
                 return c;
             }
