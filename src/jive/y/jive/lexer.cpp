@@ -323,6 +323,20 @@ namespace Yttrium
             assert(0!=app);
             app->submit(ptr);
         }
+
+        void Lexer:: jump_(const String &id)
+        {
+            assert(0!=app);
+            app->jump(id);
+        }
+
+        void Lexer:: call_(const String &id)
+        {
+            assert(0!=app);
+            app->call(id);
+        }
+
+
     }
 
 }

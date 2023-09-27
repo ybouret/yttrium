@@ -25,7 +25,7 @@ namespace Yttrium
         class Lexer : public Lexical::Scanner
         {
         public:
-            //typedef void (Lexer::*proc)(const String &);
+            typedef void (Lexer::*Branch)(const String &);
 
             //__________________________________________________________________
             //
@@ -66,7 +66,9 @@ namespace Yttrium
                 return *plg;
             }
 
-            
+            void jump_(const String &);
+            void call_(const String &);
+
 
 
         private:
