@@ -6,6 +6,7 @@
 #include "y/system/exception.hpp"
 #include "y/type/static-retainer.hpp"
 #include "y/data/small/light/list/solo.hpp"
+#include "y/stream/xmlog.hpp"
 
 namespace Yttrium
 {
@@ -19,9 +20,10 @@ namespace Yttrium
             typedef Lexical::Scanner              Scanner;
             typedef ArkPtr<String,Scanner>        ScanPtr;
             typedef SuffixSet<String,ScanPtr>     ScanDB;
+            typedef ScanDB::Iterator              Iterator;
             typedef Small::SoloLightList<Scanner> History;
 
-
+            //! setup with genesis
             inline explicit App(Scanner &self) :
             Object(),
             genesis(  self    ),
@@ -30,7 +32,8 @@ namespace Yttrium
             retains( genesis  ),
             content(),
             history(),
-            name( *self.name )
+            name( *self.name ),
+            xml( genesis.getXMLog() )
             {
 
                 Y_SIZEOF(Lexemes);
@@ -45,6 +48,15 @@ namespace Yttrium
             inline virtual ~App() noexcept {}
 
 
+            inline void restart() noexcept
+            {
+                scanner = &genesis;
+                history.free();      assert(0==history.size);
+                lexemes.release();   assert(0==lexemes.size);
+                for(Iterator it=content.begin();it!=content.end();++it)
+                    (**it).cleanup();
+            }
+
             Scanner &            genesis;
             Scanner *            scanner; //!< current scanner
             Lexemes              lexemes; //!< lexemes cache
@@ -52,6 +64,7 @@ namespace Yttrium
             ScanDB               content; //!< scanner database
             History              history; //!< call stack
             const String        &name;    //!< genesis name
+            XMLog               &xml;     //!< for verbose output
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(App);
@@ -78,7 +91,18 @@ namespace Yttrium
             Nullify(app);
         }
         
+        void Lexer:: restart() noexcept
+        {
+            assert(app);
+            app->restart();
+        }
 
+        void Lexer:: put(Lexeme *lxm) noexcept
+        {
+            assert(0!=lxm);
+            assert(0!=app);
+            app->lexemes.pushHead(lxm);
+        }
     }
 
 }

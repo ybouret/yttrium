@@ -26,11 +26,12 @@ namespace Yttrium
             {
             }
 
+            //! cleanup
             virtual ~Lexer() noexcept;
 
             Lexeme *get();
             void    put(Lexeme *) noexcept;
-            
+            void    restart()     noexcept;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Lexer);

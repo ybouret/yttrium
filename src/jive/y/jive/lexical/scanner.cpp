@@ -371,6 +371,13 @@ namespace Yttrium
         namespace Lexical
         {
 
+            XMLog & Scanner:: getXMLog() noexcept
+            {
+                assert(0!=code);
+                return *(code->xml);
+            }
+
+
             Scanner::Code * Scanner:: Initialize(const String &id, Dictionary * &dict)
             {
                 Code *c = new Code(id);

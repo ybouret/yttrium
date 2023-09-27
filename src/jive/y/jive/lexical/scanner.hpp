@@ -9,6 +9,8 @@
 
 namespace Yttrium
 {
+    class XMLog;
+
     namespace Jive
     {
 
@@ -77,6 +79,8 @@ namespace Yttrium
                 //______________________________________________________________
 
 
+                //______________________________________________________________
+                //
                 //! creating a new action
                 /**
                  \param id   name of the action/resulting Unit
@@ -84,6 +88,7 @@ namespace Yttrium
                  \param host host object
                  \param meth host method pointer
                  */
+                //______________________________________________________________
                 template <typename ID, typename RX, typename HOST, typename METHOD>
                 inline void operator()(const ID &id, const RX &rx, HOST &host, METHOD meth)
                 {
@@ -94,7 +99,10 @@ namespace Yttrium
                 }
 
 
+                //______________________________________________________________
+                //
                 //! create a simple action to produce or discard an unit
+                //______________________________________________________________
                 template <typename ID, typename RX>
                 inline void operator()(const ID &id, const RX &rx, const bool emit = true)
                 {
@@ -102,7 +110,10 @@ namespace Yttrium
                     self(id,rx,self, (emit ? & Scanner::produce : & Scanner::discard) );
                 }
 
+                //______________________________________________________________
+                //
                 //! lexical end line
+                //______________________________________________________________
                 template <typename ID, typename RX>
                 inline void endl(const ID &id, const RX &rx, const bool emit = false)
                 {
@@ -110,26 +121,38 @@ namespace Yttrium
                     self(id,rx,self, (emit ? & Scanner::newLineAndEmit : & Scanner::newLineAndDrop) );
                 }
 
+                //______________________________________________________________
+                //
+                //! iterative cleanup of all motifs
+                //______________________________________________________________
+                void cleanup() noexcept;
 
+                //______________________________________________________________
+                //
+                //! iterative checking, mostly to debug
+                //______________________________________________________________
+                bool isClean() const noexcept;
+
+                //______________________________________________________________
+                //
+                //! find next action from Source
+                //______________________________________________________________
+                ReturnValue probe(Source &, Action * &);
+
+                //______________________________________________________________
+                //
+                // predefined callbacks
+                //______________________________________________________________
                 Message produce(const Token &);        //!< return LX_EMIT
                 Message discard(const Token &);        //!< return LX_DROP
                 Message newLineAndEmit(const Token &); //!< return LX_EMIT | LX_ENDL
                 Message newLineAndDrop(const Token &); //!< return LX_DROP | LX_ENDL
 
-                //! iterative cleanup of all motifs
-                void cleanup() noexcept;
-
-                //! iterative checking
-                bool isClean() const noexcept;
-
                 //______________________________________________________________
                 //
-                //! find next action
+                //! get internal log
                 //______________________________________________________________
-                ReturnValue probe(Source &, Action * &);
-
-
-
+                XMLog & getXMLog() noexcept;
 
                 //______________________________________________________________
                 //
