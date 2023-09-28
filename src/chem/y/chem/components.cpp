@@ -15,7 +15,7 @@ namespace Yttrium
         {
         }
 
-        Components::ConstType & Components::surrogate() const noexcept { return db; }
+        Components::ConstInterface & Components::surrogate() const noexcept { return db; }
 
 
         const char * const Components:: CallSign = "Chemical::Components";

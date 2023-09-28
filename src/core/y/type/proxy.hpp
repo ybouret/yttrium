@@ -16,7 +16,7 @@ namespace Yttrium
     //
     //
     //______________________________________________________________________
-    template <typename T>
+    template <typename INTERFACE>
     class Proxy
     {
     public:
@@ -26,7 +26,7 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        Y_ARGS_EXPOSE(T,Type); //!< aliases
+        Y_ARGS_EXPOSE(INTERFACE,Interface); //!< aliases
 
         //______________________________________________________________________
         //
@@ -34,8 +34,8 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        inline Type *      operator->()       noexcept { return & surrogate(); } //!< access
-        inline ConstType * operator->() const noexcept { return & surrogate(); } //!< access
+        inline Interface *      operator->()       noexcept { return & surrogate(); } //!< access
+        inline ConstInterface * operator->() const noexcept { return & surrogate(); } //!< access
 
         
         //______________________________________________________________________
@@ -50,7 +50,7 @@ namespace Yttrium
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Proxy);
-        virtual ConstType & surrogate() const noexcept = 0;
+        virtual ConstInterface & surrogate() const noexcept = 0;
     };
 
 

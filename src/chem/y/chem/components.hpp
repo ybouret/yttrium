@@ -61,7 +61,7 @@ namespace Yttrium
         private:
             Y_DISABLE_ASSIGN(Components);
             Component::DataBase db;
-            virtual ConstType & surrogate() const noexcept;
+            virtual ConstInterface & surrogate() const noexcept;
 
         };
 
