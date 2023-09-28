@@ -35,7 +35,8 @@ namespace Yttrium
         {
             assert(0!=handle);
             assert(0==quantity());
-
+            Y_GIANT_LOCK();
+            
 #if defined(Y_BSD)
             (void) dlclose(handle);
 #endif
@@ -99,15 +100,24 @@ namespace Yttrium
 
     DLL:: DLL(const String &soname) :
     code( new Code(soname.c_str()) )
-    {
-        code->withhold();
-    }
+    { code->withhold(); }
 
-    DLL:: DLL(const DLL &dll) noexcept :
-    code( dll.code )
+    DLL:: DLL(const DLL &dll) noexcept : code( dll.code )
+    { assert(0!=code); code->withhold(); }
+
+
+    void * DLL:: symbol(const char *name) noexcept
     {
+        assert(0!=name);
         assert(0!=code);
-        code->withhold();
+#if defined(Y_BSD)
+        return dlsym(code->handle,name);
+#endif
+
+#if defined(Y_WIN)
+        return (void*) ::GetProcAddress(code->handle,name);
+#endif
+
     }
 
 }

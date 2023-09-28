@@ -19,6 +19,9 @@ namespace Yttrium
         DLL(const DLL &) noexcept;
         virtual ~DLL() noexcept;
 
+        void *symbol(const char *name) noexcept;
+        void *symbol(const Core::String<char> &name) noexcept;
+
     private:
         Y_DISABLE_ASSIGN(DLL);
         class Code;
