@@ -32,6 +32,8 @@ target_link_libraries(test-core y-z y-bz2)
 set( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
 set( DATA ${HERE}/../../../var)
 
+add_library(dso MODULE dso.cpp)
+
 enable_testing()
 
 #main
