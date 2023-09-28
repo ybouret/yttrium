@@ -12,6 +12,7 @@ namespace Yttrium
         Entity:: Entity(const Entity &other) :
         Object(), Counted(), name(other.name) {}
         
+        
     }
 
 }

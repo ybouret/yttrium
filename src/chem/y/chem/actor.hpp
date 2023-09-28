@@ -19,13 +19,14 @@ namespace Yttrium
                            const unsigned coeff) noexcept;
             Actor(const Actor &) noexcept;
             virtual ~Actor() noexcept;
-        
+
+            String toString() const;
+
             const Species &sp;
             const unsigned nu; //!< nu > 0
             const unsigned n1; //!< n1=nu-1
-
-            Actor *next;
-            Actor *prev;
+            Actor *        next;
+            Actor *        prev;
 
         private:
             Y_DISABLE_ASSIGN(Actor);    

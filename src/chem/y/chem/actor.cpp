@@ -1,5 +1,3 @@
-
-
 #include "y/chem/actor.hpp"
 
 namespace Yttrium
@@ -29,6 +27,14 @@ namespace Yttrium
         {
         }
 
+        String Actor:: toString() const
+        {
+            String res;
+            if(nu>1)
+                res += FormatString("%u*",nu);
+            res += sp.name;
+            return res;
+        }
 
     }
 

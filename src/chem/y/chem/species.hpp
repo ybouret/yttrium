@@ -37,6 +37,8 @@ namespace Yttrium
             //! cleanup
             virtual ~Species() noexcept;
 
+            String toString() const;
+
             //__________________________________________________________________
             //
             //
