@@ -20,8 +20,10 @@ namespace Yttrium
             public:
                 virtual ~Plugin() noexcept;
 
-                template <typename ID >inline
-                explicit Plugin(const ID &id);
+                template <typename ID> inline
+                explicit Plugin(const ID      &id,
+                                const Scanner &parent);
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Plugin);

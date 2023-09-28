@@ -84,7 +84,6 @@ namespace Yttrium
             //__________________________________________________________________
             inline Lexeme * get(Source &source)
             {
-                //Y_XMLOG(xml, "get lexeme");
                 Y_XML_SECTION_OPT(xml,name, " get");
             PROBE:
                 assert(0!=scanner);
@@ -336,6 +335,11 @@ namespace Yttrium
             app->call(id);
         }
 
+        void Lexer:: back_()
+        {
+            assert(0!=app);
+            app->back();
+        }
 
     }
 
