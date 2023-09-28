@@ -79,6 +79,8 @@ namespace Yttrium
 
 }
 
+#include "y/string.hpp"
+
 namespace Yttrium
 {
     DLL:: ~DLL() noexcept
@@ -92,6 +94,19 @@ namespace Yttrium
     DLL:: DLL(const char *soname) :
     code( new Code(soname) )
     {
+        code->withhold();
+    }
+
+    DLL:: DLL(const String &soname) :
+    code( new Code(soname.c_str()) )
+    {
+        code->withhold();
+    }
+
+    DLL:: DLL(const DLL &dll) noexcept :
+    code( dll.code )
+    {
+        assert(0!=code);
         code->withhold();
     }
 

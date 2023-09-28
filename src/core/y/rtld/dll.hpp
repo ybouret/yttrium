@@ -14,9 +14,11 @@ namespace Yttrium
     public:
         static const char * const CallSign; //! "DLL"
         
-        explicit DLL(const char *soname);
+        explicit DLL(const char *               soname);
+        explicit DLL(const Core::String<char> & soname);
+        DLL(const DLL &) noexcept;
         virtual ~DLL() noexcept;
-        
+
     private:
         Y_DISABLE_ASSIGN(DLL);
         class Code;
