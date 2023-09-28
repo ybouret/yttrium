@@ -198,5 +198,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(woven_indices);
     Y_UTEST(woven_subspace);
 
+    Y_UTEST(rtld_dll);
+
 }
 Y_UTEST_EXEC()

@@ -23,6 +23,7 @@ mkl
 vfs
 information
 woven
+rtld
 )
 
 Y_LinkLibraries(test-core)
@@ -253,4 +254,6 @@ add_test(info:bwt   test-core info_bwt)
 add_test(woven:indices  test-core woven_indices)
 add_test(woven:subspace test-core woven_subspace)
 
+#rtld
+add_test(rtld:dll test-core rtld_dll)
 

@@ -90,6 +90,7 @@ information/bwt
 functor
 woven
 woven/survey
+rtld
 )
 
 source_group(concurrent FILES ${quark})
