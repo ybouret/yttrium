@@ -241,7 +241,7 @@ macro(Y_LinkLibraries target)
     endif()
     
     if(Y_LINUX)
-		list(APPEND libs rt)
+		list(APPEND libs rt dl)
     endif()
 		
 	if(Y_WINDOWS)
@@ -252,6 +252,8 @@ macro(Y_LinkLibraries target)
     
     target_link_libraries(${target} ${ARGN} ${libs} )
 endmacro()
+
+# libm necessary or not
 
 set(Y_NeedsMath OFF)
 
