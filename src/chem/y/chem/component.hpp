@@ -11,20 +11,52 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Component is a species with a not-zero coefficient
+        //
+        //
+        //______________________________________________________________________
         class Component
         {
         public:
-            typedef SuffixSet<String,Component> DataBase;
-            
+            //__________________________________________________________________
+            //
+            //
+            // Definition
+            //
+            //__________________________________________________________________
+            typedef SuffixSet<String,Component> DataBase; //!< alias
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             Component(const Species &which,
-                      const int      coeff) noexcept;
-            ~Component()                    noexcept;
-            Component(const Component &)    noexcept;
+                      const int      coeff) noexcept; //!< setup
+            ~Component()                    noexcept; //!< cleanup
+            Component(const Component &)    noexcept; //!< copy
 
-            const String &key() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            const String &key() const noexcept; //!< species name
 
-            const Species &sp;
-            const int      nu;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const Species &sp; //!< species
+            const int      nu; //!< coefficient
 
         private:
             Y_DISABLE_ASSIGN(Component);

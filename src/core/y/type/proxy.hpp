@@ -8,19 +8,45 @@
 namespace Yttrium
 {
 
+    //______________________________________________________________________
+    //
+    //
+    //
+    //! Proxy pattern
+    //
+    //
+    //______________________________________________________________________
     template <typename T>
     class Proxy
     {
     public:
-        Y_ARGS_EXPOSE(T,Type);
-        inline virtual ~Proxy() noexcept {}
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        Y_ARGS_EXPOSE(T,Type); //!< aliases
 
-        inline Type *      operator->()       noexcept { return & surrogate(); }
-        inline ConstType * operator->() const noexcept { return & surrogate(); }
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        inline Type *      operator->()       noexcept { return & surrogate(); } //!< access
+        inline ConstType * operator->() const noexcept { return & surrogate(); } //!< access
 
-
+        
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        inline virtual ~Proxy() noexcept {} //!< cleanup
     protected:
-        inline explicit Proxy() noexcept {}
+        inline explicit Proxy() noexcept {} //!< setup
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Proxy);

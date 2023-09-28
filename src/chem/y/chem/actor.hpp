@@ -12,21 +12,47 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! an actor is a species with a positive coefficient
+        //
+        //
+        //______________________________________________________________________
         class Actor : public Object
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             explicit Actor(const Species &which,
-                           const unsigned coeff) noexcept;
-            Actor(const Actor &) noexcept;
-            virtual ~Actor() noexcept;
+                           const unsigned coeff) noexcept; //!< setup
+            Actor(const Actor &)                 noexcept; //!< copy
+            virtual ~Actor()                     noexcept; //!< cleanup
 
-            String toString() const;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            String toString() const; //!< convert to string
 
-            const Species &sp;
-            const unsigned nu; //!< nu > 0
-            const unsigned n1; //!< n1=nu-1
-            Actor *        next;
-            Actor *        prev;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const Species &sp;   //!< persistent species
+            const unsigned nu;   //!< nu > 0
+            const unsigned n1;   //!< n1=nu-1
+            Actor *        next; //!< for list
+            Actor *        prev; //!< for list
 
         private:
             Y_DISABLE_ASSIGN(Actor);    

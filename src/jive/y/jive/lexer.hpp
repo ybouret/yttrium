@@ -66,9 +66,9 @@ namespace Yttrium
                 return *plg;
             }
 
-            void jump_(const String &);
-            void call_(const String &);
-            void back_();
+            void jump_(const String &); //!< low-level jump to another scanner
+            void call_(const String &); //!< low-level call to another scanner
+            void back_();               //!< low-level back to calling
 
 
         private:

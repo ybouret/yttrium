@@ -12,21 +12,52 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Components: component as reactants and products
+        //
+        //     
+        //______________________________________________________________________
         class Components : public Proxy<const Component::DataBase>
         {
         public:
-            static const char * const CallSign;
-            
-            explicit Components();
-            virtual ~Components() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< components
 
-            void operator()(const int nu, const Species &sp);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Components();            //!< setup
+            virtual ~Components() noexcept;   //!< cleanup
 
-            String toString() const;
-            
-            const Actors              reac;
-            const Actors              prod;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void operator()(const int nu, const Species &sp); //!< add nu * sp
+            String toString() const;                          //!< convert to string
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const Actors reac; //!< reactants
+            const Actors prod; //!< products
+
         private:
             Y_DISABLE_ASSIGN(Components);
             Component::DataBase db;

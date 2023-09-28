@@ -12,17 +12,42 @@ namespace Yttrium
     namespace Chemical
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! List of Actors
+        //
+        //
+        //______________________________________________________________________
         class Actors : public CxxListOf<Actor>
         {
         public:
-            typedef CxxListOf<Actor> BaseType;
-            
-            explicit Actors() noexcept;
-            virtual ~Actors() noexcept;
-            Actors(const Actors &);
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef CxxListOf<Actor> BaseType; //!< alias
 
-            String toString() const;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Actors() noexcept; //!< setup empty
+            virtual ~Actors() noexcept; //!< cleanup
+            Actors(const Actors &);     //!< copy
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            String toString() const; //!< to string
 
         private:
             Y_DISABLE_ASSIGN(Actors);
