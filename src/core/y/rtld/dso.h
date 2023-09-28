@@ -3,6 +3,7 @@
 #define Y_RTLD_DSO_INCLUDED 1
 
 #include "y/config/starting.h"
+#include "y/config/noexcept.hpp"
 
 #if defined(__cplusplus)
 #define Y_DLL_EXTERN() extern "C" {
