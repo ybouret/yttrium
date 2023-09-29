@@ -4,8 +4,8 @@
 #ifndef Y_Chemical_Components_Included
 #define Y_Chemical_Components_Included 1
 
-#include "y/chem/component.hpp"
-#include "y/chem/actors.hpp"
+#include "y/chem/reactive/component.hpp"
+#include "y/chem/species/actors.hpp"
 #include "y/type/proxy.hpp"
 
 namespace Yttrium

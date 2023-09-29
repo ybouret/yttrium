@@ -1,5 +1,5 @@
 
-#include "y/chem/actors.hpp"
+#include "y/chem/species/actors.hpp"
 
 namespace Yttrium
 {

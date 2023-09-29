@@ -1,4 +1,4 @@
-#include "y/chem/actor.hpp"
+#include "y/chem/species/actor.hpp"
 
 namespace Yttrium
 {

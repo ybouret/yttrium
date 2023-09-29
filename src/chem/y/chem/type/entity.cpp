@@ -1,6 +1,6 @@
 
 
-#include "y/chem/entity.hpp"
+#include "y/chem/type/entity.hpp"
 
 namespace Yttrium
 {

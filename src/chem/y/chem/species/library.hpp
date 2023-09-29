@@ -5,7 +5,7 @@
 #ifndef Y_Chemical_Library_Included
 #define Y_Chemical_Library_Included 1
 
-#include "y/chem/entity.hpp"
+#include "y/chem/type/entity.hpp"
 #include "y/type/proxy.hpp"
 
 namespace Yttrium

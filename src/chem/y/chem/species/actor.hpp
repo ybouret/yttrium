@@ -1,11 +1,10 @@
 //! \file
 
 
-#ifndef Y_Chemical_Actors_Included
-#define Y_Chemical_Actors_Included 1
+#ifndef Y_Chemical_Actor_Included
+#define Y_Chemical_Actor_Included 1
 
-#include "y/chem/actor.hpp"
-#include "y/data/list/cxx.hpp"
+#include "y/chem/species.hpp"
 
 namespace Yttrium
 {
@@ -16,30 +15,23 @@ namespace Yttrium
         //
         //
         //
-        //! List of Actors
+        //! an actor is a species with a positive coefficient
         //
         //
         //______________________________________________________________________
-        class Actors : public CxxListOf<Actor>
+        class Actor : public Object
         {
         public:
-            //__________________________________________________________________
-            //
-            //
-            // Definitions
-            //
-            //__________________________________________________________________
-            typedef CxxListOf<Actor> BaseType; //!< alias
-
             //__________________________________________________________________
             //
             //
             // C++
             //
             //__________________________________________________________________
-            explicit Actors() noexcept; //!< setup empty
-            virtual ~Actors() noexcept; //!< cleanup
-            Actors(const Actors &);     //!< copy
+            explicit Actor(const Species &which,
+                           const unsigned coeff) noexcept; //!< setup
+            Actor(const Actor &)                 noexcept; //!< copy
+            virtual ~Actor()                     noexcept; //!< cleanup
 
             //__________________________________________________________________
             //
@@ -47,14 +39,25 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            String toString() const; //!< to string
+            String toString() const; //!< convert to string
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const Species &sp;   //!< persistent species
+            const unsigned nu;   //!< nu > 0
+            const unsigned n1;   //!< n1=nu-1
+            Actor *        next; //!< for list
+            Actor *        prev; //!< for list
 
         private:
-            Y_DISABLE_ASSIGN(Actors);
+            Y_DISABLE_ASSIGN(Actor);    
         };
 
     }
-
 }
 
 #endif
