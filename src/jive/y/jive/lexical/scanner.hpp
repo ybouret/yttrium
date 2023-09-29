@@ -13,6 +13,7 @@ namespace Yttrium
 
     namespace Jive
     {
+        class Lexer;
 
         namespace Lexical
         {
@@ -152,6 +153,8 @@ namespace Yttrium
                 Message discard(const Token &);        //!< return LX_DROP
                 Message newLineAndEmit(const Token &); //!< return LX_EMIT | LX_ENDL
                 Message newLineAndDrop(const Token &); //!< return LX_DROP | LX_ENDL
+
+                
 
                 //______________________________________________________________
                 //
