@@ -36,8 +36,8 @@ namespace Yttrium
 
                 Lexer &lexer;
 
-                Message enter(const Token &token) { return LX_DROP; }
-                void onLeave(const Token &token);
+                Message enter(const Token & ) { return LX_DROP; }
+                void    onLeave(const Token &token);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Plugin);

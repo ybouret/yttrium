@@ -127,6 +127,13 @@ namespace Yttrium
                     self(id,rx,self, (emit ? & Scanner::newLineAndEmit : & Scanner::newLineAndDrop) );
                 }
 
+                template <typename RX>
+                inline void back(const RX &rx, Lexer &lexer, const bool emit = false)
+                {
+                    const Motif motif( RegExp::Compile(rx, & *dict) );
+                    backOn(motif,lexer);
+                }
+
                 //______________________________________________________________
                 //
                 //! iterative cleanup of all motifs
@@ -154,7 +161,9 @@ namespace Yttrium
                 Message newLineAndEmit(const Token &); //!< return LX_EMIT | LX_ENDL
                 Message newLineAndDrop(const Token &); //!< return LX_DROP | LX_ENDL
 
-                
+
+
+
 
                 //______________________________________________________________
                 //
@@ -177,6 +186,9 @@ namespace Yttrium
 
                 static Code *Initialize(const String &, Dictionary * &);
                 static Code *Initialize(const String &, Dictionary * &, const Scanner &parent);
+
+                void backOn(const Motif &motif, Lexer &lexer);
+                
             };
 
             

@@ -84,8 +84,6 @@ namespace Yttrium
                 Motif            motif; //!< motif to be match
                 Callback         doing; //!< callback to be done upon match
 
-
-
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Action);
 
