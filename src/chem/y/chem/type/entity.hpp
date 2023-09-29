@@ -11,11 +11,12 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //! indexation level
         enum Level
         {
-            TopLevel = 0,
-            SubLevel = 1,
-            Levels
+            TopLevel = 0, //!< top level index
+            SubLevel = 1, //!< sub level index
+            Levels        //!< number of levels
         };
 
         //______________________________________________________________________

@@ -26,7 +26,13 @@ namespace Yttrium
         class Species : public Entity
         {
         public:
-            typedef ArkPtr<String,Species> Pointer;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef ArkPtr<String,Species> Pointer; //!< alias
 
             //__________________________________________________________________
             //
@@ -41,7 +47,7 @@ namespace Yttrium
                              const int   algebraicCharge) :
             Entity(uid), z(algebraicCharge) {}
             virtual ~Species() noexcept; //!< cleanup
-            Y_OSTREAM_PROTO(Species);
+            Y_OSTREAM_PROTO(Species);    //!< display
 
             //__________________________________________________________________
             //

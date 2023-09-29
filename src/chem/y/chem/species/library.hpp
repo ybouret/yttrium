@@ -14,7 +14,10 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //! internal database for library
+        //______________________________________________________________________
         typedef SuffixSet<String,Species::Pointer> SpeciesDB;
 
         //______________________________________________________________________
@@ -28,19 +31,37 @@ namespace Yttrium
         class Library : public Entities, public Proxy<const SpeciesDB>
         {
         public:
-            static const char * const CallSign;
-            typedef SpeciesDB::ConstIterator ConstIterator;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const        CallSign;       //!< Chemical::Library
+            typedef SpeciesDB::ConstIterator ConstIterator;  //!< alias
             
-            explicit Library();
-            explicit Library(const Library &);
-            virtual ~Library() noexcept;
-            Y_OSTREAM_PROTO(Library);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Library();                //!< setup
+            explicit Library(const Library &); //!< copy
+            virtual ~Library() noexcept;       //!< cleanup
+            Y_OSTREAM_PROTO(Library);          //!< display info
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! on the fly create/get species with name/charge
             template <typename NAME>
             const Species & operator()(const NAME &name, const int z)
             { return query(name,z); }
-
-
 
 
         private:

@@ -1,8 +1,7 @@
-
 //! \file
 
 
-#ifndef Y_Chemical_Entitie_Included
+#ifndef Y_Chemical_Entities_Included
 #define Y_Chemical_Entities_Included 1
 
 #include "y/chem/type/entity.hpp"
@@ -22,12 +21,27 @@ namespace Yttrium
         class Entities
         {
         public:
-            explicit Entities() noexcept;
-            virtual ~Entities() noexcept;
-            Entities(const Entities &) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Entities()        noexcept; //!< setup
+            virtual ~Entities()        noexcept; //!< cleanup
+            Entities(const Entities &) noexcept; //!< copy
             
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! record name size
             void updateWith(const Entity &) noexcept;
 
+            //! pad stream
             template <typename OSTREAM> inline
             OSTREAM & pad(OSTREAM &os, const Entity &ent) const
             {
@@ -35,7 +49,13 @@ namespace Yttrium
                 return os;
             }
 
-            const size_t maxNameSize;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const size_t maxNameSize; //!< max name size of entities
 
         private:
             Y_DISABLE_ASSIGN(Entities);
