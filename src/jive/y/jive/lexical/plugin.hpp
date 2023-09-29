@@ -8,7 +8,8 @@
 
 namespace Yttrium
 {
-    class XMLog;
+    //class XMLog;
+    class Lexer;
 
     namespace Jive
     {
@@ -20,10 +21,23 @@ namespace Yttrium
             public:
                 virtual ~Plugin() noexcept;
 
-                template <typename ID> inline
-                explicit Plugin(const ID      &id,
-                                const Scanner &parent);
+                template <
+                typename IDENTIFIER,
+                typename ENTER_EXPR> inline
+                explicit Plugin(Lexer             &lx,
+                                const IDENTIFIER  &id,
+                                const ENTER_EXPR  &enterExpr,
+                                const bool         enterEmit) :
+                Scanner(id),
+                lexer(lx)
+                {
+                    
+                }
 
+                Lexer &lexer;
+
+                Message enter(const Token &token) { return LX_DROP; }
+                void onLeave(const Token &token);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Plugin);
