@@ -38,7 +38,7 @@ message( STATUS  "copy to ${dsoName}" )
 
 add_custom_command(TARGET dso POST_BUILD
 COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE_NAME:dso> ${dsoName}
-COMMENT "[yttrium] copy dso"
+COMMENT "[yttrium] copy dso to ${dsoName}"
 DEPENDS test-core
 VERBATIM)
 
