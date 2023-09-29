@@ -49,6 +49,22 @@ message( STATUS "[yttrium] found C compiler : '${Y_CC}'" )
 message( STATUS "[yttrium] system processor : '${CMAKE_HOST_SYSTEM_PROCESSOR}'" )
 message( STATUS "[yttrium] sizeof(void*)    : '${CMAKE_SIZEOF_VOID_P}'" )
 
+set(Y_BITS "")
+
+if( "${CMAKE_SIZEOF_VOID_P}" STREQUAL "4" )
+	set(Y_BITS "32")
+endif()
+
+if( "${CMAKE_SIZEOF_VOID_P}" STREQUAL "8" )
+	set(Y_BITS "64")
+endif()
+
+if("" STREQUAL "${Y_BITS}")
+	message(FATAL_ERROR "couldn't guess BITS")
+endif()
+
+message( STATUS "[yttrium] native bits      : '${Y_BITS}'" )
+
 string(COMPARE EQUAL "Darwin"  ${CMAKE_SYSTEM_NAME} Y_DARWIN)
 string(COMPARE EQUAL "FreeBSD" ${CMAKE_SYSTEM_NAME} Y_FREEBSD)
 string(COMPARE EQUAL "Linux"   ${CMAKE_SYSTEM_NAME} Y_LINUX)
@@ -230,6 +246,19 @@ set(CMAKE_CXX_FLAGS_DEBUG   ${Y_FLAGS_DEBUG})
 ########################################################################
 ##
 ##
+## creating UUID 
+##
+##
+########################################################################
+set(Y_UUID "-${Y_COMPILERS}${Y_BITS}")
+if(Y_DEBUG)
+	set(Y_UUID "${Y_UUID}d")
+endif()
+message( STATUS "[yttrium] UUID='${Y_UUID}'" )
+
+########################################################################
+##
+##
 ##  Linking
 ##
 ##
@@ -253,8 +282,11 @@ macro(Y_LinkLibraries target)
     target_link_libraries(${target} ${ARGN} ${libs} )
 endmacro()
 
+########################################################
+#
 # libm necessary or not
-
+#
+########################################################
 set(Y_NeedsMath OFF)
 
 if(Y_SUNOS OR Y_LINUX OR Y_FREEBSD)
