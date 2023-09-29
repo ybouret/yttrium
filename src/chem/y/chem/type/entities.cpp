@@ -14,6 +14,11 @@ namespace Yttrium
         {
         }
 
+        Entities:: Entities(const Entities &other) noexcept : maxNameSize(other.maxNameSize)
+        {
+        }
+        
+
         void Entities:: updateWith(const Entity &ent) noexcept
         {
             Coerce(maxNameSize) = Max(maxNameSize,ent.name.size());

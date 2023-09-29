@@ -21,7 +21,10 @@ namespace Yttrium
 
         }
 
-        Library:: Library() : Entities(), Proxy<const SpeciesDB>()
+        Library:: Library() :
+        Entities(),
+        Proxy<const SpeciesDB>(),
+        db()
         {
         }
 
@@ -35,11 +38,19 @@ namespace Yttrium
             const Species::Pointer *pps = db.search(name);
             if(!pps)
             {
+                // create new species
                 Species               *s = new Species(name,z);
                 const Species::Pointer p(s);
                 if(!db.insert(p))
                     throw Specific::Exception(CallSign, "Unexpected insert [%s] failure!", name.c_str());
+
+                // updated entities
                 updateWith(*s);
+
+                // initialize indices
+                const size_t I = (*this)->size();
+                for(unsigned i=0;i<Levels;++i) Coerce(s->indx[i]) = I;
+
                 return *s;
             }
             else

@@ -10,6 +10,14 @@ namespace Yttrium
 {
     namespace Chemical
     {
+
+        enum Level
+        {
+            TopLevel = 0,
+            SubLevel = 1,
+            Levels
+        };
+
         //______________________________________________________________________
         //
         //
@@ -31,7 +39,13 @@ namespace Yttrium
             //! setup from name
             template <typename NAME>
             explicit inline Entity(const NAME &uid) :
-            Object(), Counted(), name(uid) {}
+            Object(), 
+            Counted(),
+            name(uid),
+            indx()
+            {
+                zindx();
+            }
 
             //! copy
             Entity(const Entity &);
@@ -53,10 +67,12 @@ namespace Yttrium
             // Member
             //
             //__________________________________________________________________s
-            const String  name; //!< identifier
-
+            const String  name;          //!< identifier
+            const size_t  indx[Levels];  //!< indices
+            
         private:
             Y_DISABLE_ASSIGN(Entity);
+            void zindx() noexcept;
         };
     }
 }

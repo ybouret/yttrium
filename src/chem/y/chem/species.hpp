@@ -12,11 +12,8 @@ namespace Yttrium
     namespace Chemical
     {
 
-        enum Level
-        {
-            TopLevel = 0,
-            SubLevel = 1
-        };
+       
+
 
         //______________________________________________________________________
         //

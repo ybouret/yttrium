@@ -24,7 +24,8 @@ namespace Yttrium
         public:
             explicit Entities() noexcept;
             virtual ~Entities() noexcept;
-
+            Entities(const Entities &) noexcept;
+            
             void updateWith(const Entity &) noexcept;
 
             template <typename OSTREAM> inline
