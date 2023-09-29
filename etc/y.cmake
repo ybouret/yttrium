@@ -22,7 +22,7 @@ if(Y_DEBUG OR Y_RELEASE)
 else()  
         message( STATUS "[yttrium] CMAKE_BUILD_TYPE fallback to 'Debug'" )
         set(CMAKE_BUILD_TYPE "Debug")
-        set(YACK_DEBUG ON)
+        set(Y_DEBUG ON)
 endif()
 
 # macro to modify flags
@@ -250,7 +250,8 @@ set(CMAKE_CXX_FLAGS_DEBUG   ${Y_FLAGS_DEBUG})
 ##
 ##
 ########################################################################
-set(Y_UUID "-${Y_COMPILERS}${Y_BITS}")
+string(REPLACE " " "" Y_GEN "${CMAKE_GENERATOR}")
+set(Y_UUID "-${Y_GEN}-${Y_COMPILERS}${Y_BITS}")
 if(Y_DEBUG)
 	set(Y_UUID "${Y_UUID}d")
 endif()
@@ -303,6 +304,5 @@ else()
 		message( STATUS "[yttrium] --> ${target} requires libm (IMPLICIT)" )
 	endmacro()
 endif()
-
 
 
