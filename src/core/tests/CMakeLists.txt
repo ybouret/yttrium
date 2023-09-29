@@ -34,10 +34,9 @@ set( DATA ${HERE}/../../../var)
 
 add_library(dso MODULE dso.cpp)
 set(dsoName ${CMAKE_CURRENT_SOURCE_DIR}/../../../dso${Y_UUID}.dll)
-message( STATUS  "copy to ${dsoName}" )
 
 add_custom_command(TARGET dso POST_BUILD
-COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE_NAME:dso> ${dsoName}
+COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:dso> ${dsoName}
 COMMENT "[yttrium] copy dso to ${dsoName}"
 DEPENDS test-core
 VERBATIM)
@@ -265,5 +264,5 @@ add_test(woven:indices  test-core woven_indices)
 add_test(woven:subspace test-core woven_subspace)
 
 #rtld
-add_test(NAME rtld:dll COMMAND test-core rtld_dll $<TARGET_FILE_NAME:dso> COMMAND_EXPAND_LISTS)
+add_test(NAME rtld:dll COMMAND test-core rtld_dll $<TARGET_FILE:dso> COMMAND_EXPAND_LISTS)
 
