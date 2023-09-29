@@ -5,11 +5,19 @@
 #define Y_Chemical_Species_Included 1
 
 #include "y/chem/type/entity.hpp"
+#include "y/ptr/ark.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
+
+        enum Level
+        {
+            TopLevel = 0,
+            SubLevel = 1
+        };
+
         //______________________________________________________________________
         //
         //
@@ -21,6 +29,8 @@ namespace Yttrium
         class Species : public Entity
         {
         public:
+            typedef ArkPtr<String,Species> Pointer;
+
             //__________________________________________________________________
             //
             //
