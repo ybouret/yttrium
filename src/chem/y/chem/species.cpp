@@ -17,6 +17,12 @@ namespace Yttrium
             return res;
         }
 
+        std::ostream & operator<<(std::ostream &os, const Species &s)
+        {
+            os << s.toString();
+            return os;
+        }
+
     }
 
 }

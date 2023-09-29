@@ -1,6 +1,7 @@
 
 #include "y/chem/species/library.hpp"
 #include "y/system/exception.hpp"
+#include <iomanip>
 
 namespace Yttrium
 {
@@ -67,7 +68,20 @@ namespace Yttrium
             return query(_,z);
         }
 
-
+        std::ostream & operator<<(std::ostream &os, const Library &lib)
+        {
+            os << '{' << std::endl;
+            for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
+            {
+                const Species &sp = **it;
+                lib.pad(os << "  " << sp,sp)
+                << " | z=" << std::setw(3) << sp.z
+                << " | i=" << std::setw(3) << sp.indx[TopLevel]
+                << std::endl;
+            }
+            os << '}';
+            return os;
+        }
     }
 
 }

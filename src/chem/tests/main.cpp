@@ -7,6 +7,7 @@ Y_UTEST_DECL(32)
 {
     Y_UTEST(algebraic);
     Y_UTEST(simple);
+    Y_UTEST(lib);
 
 }
 Y_UTEST_EXEC()

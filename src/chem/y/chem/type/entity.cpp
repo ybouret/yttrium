@@ -21,7 +21,12 @@ namespace Yttrium
             memcpy( (void *)&indx[0], &other.indx[0], sizeof(indx) );
         }
 
-        
+        const String & Entity:: key() const noexcept
+        {
+            return name;
+        }
+
+
     }
 
 }

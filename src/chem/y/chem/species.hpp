@@ -12,7 +12,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-       
+
 
 
         //______________________________________________________________________
@@ -40,10 +40,8 @@ namespace Yttrium
             explicit Species(const NAME &uid,
                              const int   algebraicCharge) :
             Entity(uid), z(algebraicCharge) {}
-
-            //! cleanup
-            virtual ~Species() noexcept;
-
+            virtual ~Species() noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Species);
 
             //__________________________________________________________________
             //

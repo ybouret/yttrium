@@ -29,14 +29,18 @@ namespace Yttrium
         {
         public:
             static const char * const CallSign;
-
+            typedef SpeciesDB::ConstIterator ConstIterator;
+            
             explicit Library();
-            Library(const Library &);
+            explicit Library(const Library &);
             virtual ~Library() noexcept;
+            Y_OSTREAM_PROTO(Library);
 
             template <typename NAME>
             const Species & operator()(const NAME &name, const int z)
             { return query(name,z); }
+
+
 
 
         private:

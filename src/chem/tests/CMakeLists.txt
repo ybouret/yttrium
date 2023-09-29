@@ -6,3 +6,4 @@ enable_testing()
 
 add_test(algebraic test-chem algebraic)
 add_test(simple    test-chem simple)
+add_test(lib       test-chem lib)
