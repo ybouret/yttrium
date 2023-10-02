@@ -2,6 +2,50 @@
 #include "y/jive/lexer.hpp"
 #include "y/stream/xmlog.hpp"
 
+
+namespace Yttrium
+{
+    namespace Jive
+    {
+
+        namespace Lexical
+        {
+
+            class Event
+            {
+            public:
+                static const Message LXIO = LX_EMIT | LX_DROP;
+                static const Message MASK = ~LXIO;
+
+                inline virtual ~Event()               noexcept {}
+
+                Message operator()(const Token &token)
+                {
+                    const Message res = hatch(token) & MASK;
+                    unfold();
+                    return res | LX_CNTL;
+                }
+
+            protected:
+                inline explicit Event(Lexer &lx, const Callback &cb) : lexer(lx), hatch(cb) {}
+                inline explicit Event(const Event &_)   : lexer(_.lexer), hatch(_.hatch) {}
+
+
+                Lexer    &lexer;
+                Callback  hatch;
+
+            private:
+                Y_DISABLE_ASSIGN(Event);
+                virtual void unfold() = 0;
+
+            };
+        }
+
+    }
+
+}
+
+
 namespace Yttrium
 {
     namespace Jive
@@ -14,29 +58,19 @@ namespace Yttrium
 
             namespace
             {
-                class Back
+                class Back : public Event
                 {
                 public:
                     // C++
-                    inline  Back(const Callback &cb, Lexer &lx) : leave(cb), lexer(lx) { }
-                    inline  Back(const Back &_) : leave(_.leave), lexer(_.lexer)       { }
-                    inline ~Back() noexcept {}
+                    inline explicit Back(const Callback &cb, Lexer &lx) : Event(lx,cb) { }
+                    inline explicit Back(const Back &_) : Event(_)                     { }
+                    inline virtual ~Back() noexcept {}
 
 
-                    // functor call
-                    inline Message operator()(const Token &token)
-                    {
-                        const Message msg = leave(token);
-                        lexer.back_();
-                        return msg | LX_CNTL;
-                    }
-
-
-                    Callback leave; //!< todo before leave
-                    Lexer   &lexer; //!< lexer
 
                 private:
                     Y_DISABLE_ASSIGN(Back);
+                    virtual void unfold() { lexer.back_(); }
                 };
 
             }
@@ -72,57 +106,51 @@ namespace Yttrium
             const char * const Scanner::JumpPrefix = "jump@";
             const char * const Scanner::CallPrefix = "call@";
 
-            class Jump
+            class Jump : public Event
             {
             public:
-                // C++
-                inline  Jump(const String   &to,
-                             const Callback &cb,
-                             Lexer &         lx,
-                             const bool      isCall) :
+                inline explicit Jump(const Tag      &to,
+                                     const Callback &cb,
+                                     Lexer &         lx,
+                                     const bool      isCall) :
+                Event(lx,cb),
                 where(to),
-                leave(cb),
-                lexer(lx),
                 xcode(isCall ? &Lexer::call_ : &Lexer::jump_ )
                 { }
 
-                inline  Jump(const Jump &_) : 
+                inline  explicit Jump(const Jump &_) :
+                Event(_),
                 where(_.where),
-                leave(_.leave),
-                lexer(_.lexer),
                 xcode(_.xcode)
                 { }
 
-                inline ~Jump() noexcept {}
+                inline virtual ~Jump() noexcept {}
 
 
-                // functor call
-                inline Message operator()(const Token &token)
-                {
-                    const Message msg = leave(token);
-                    lexer.back_();
-                    return msg | LX_CNTL;
-                }
-
-                const String  where; //!< target scanner
-                Callback      leave; //!< todo before leave
-                Lexer        &lexer; //!< lexer
-                Lexer::Branch xcode; //!< to call
 
             private:
                 Y_DISABLE_ASSIGN(Back);
+                const Tag     where; //!< target scanner
+                Lexer::Branch xcode; //!< to call
+
+                virtual void unfold()
+                {
+                    (lexer.*xcode)(*where);
+                }
             };
 
+            
+
             void Scanner:: jumpOn(const Motif    &motif,
-                                  const String   &where,
+                                  const Tag      &where,
                                   const Callback &enter,
                                   Lexer          &lexer,
-                                  const bool      iCall)
+                                  const bool      isCall)
             {
                 assert(lexer.owns(*this));
-                const Jump would(where,enter,lexer,iCall);
+                const Jump       would(where,enter,lexer,isCall);
                 const Callback   doing(would);
-                const String     label = (iCall ? CallPrefix : JumpPrefix) + *name;
+                const String     label = (isCall ? CallPrefix : JumpPrefix) + *where;
                 Action::Pointer  action( new Action(label,motif,doing) );
                 submitCode(action);
             }

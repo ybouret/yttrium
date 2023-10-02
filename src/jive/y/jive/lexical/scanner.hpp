@@ -135,14 +135,42 @@ namespace Yttrium
                 //! create a coming back from this scanner within host's lexer
                 //______________________________________________________________
                 template <typename RX, typename HOST, typename METHOD>
-                inline void makeBack(const RX       &rx,
+                inline void back(const RX       &rx,
                                      Lexer          &lexer,
-                                     HOST           &host,
-                                     METHOD          meth)
+                                 HOST           &host,
+                                 METHOD          meth)
                 {
                     const Motif    motif( RegExp::Compile(rx, & *dict) );
                     const Callback leave(&host,meth);
                     backOn(motif,leave,lexer);
+                }
+
+                //______________________________________________________________
+                //
+                //! create a jump to a lexer[id] upon rx
+                //______________________________________________________________
+                template <typename ID, typename RX, typename HOST, typename METHOD>
+                inline void jump(const ID &id,
+                                 const RX &rx,
+                                 Lexer    &lexer,
+                                 HOST     &host,
+                                 METHOD    meth)
+                {
+                    branch(id,rx,lexer,host,meth,false);
+                }
+
+                //______________________________________________________________
+                //
+                //! create a call to a lexer[id] upon rx
+                //______________________________________________________________
+                template <typename ID, typename RX, typename HOST, typename METHOD>
+                inline void call(const ID &id,
+                                 const RX &rx,
+                                 Lexer    &lexer,
+                                 HOST     &host,
+                                 METHOD    meth)
+                {
+                    branch(id,rx,lexer,host,meth,true);
                 }
 
                 //______________________________________________________________
@@ -203,10 +231,24 @@ namespace Yttrium
                             Lexer          &lexer);
 
                 void jumpOn(const Motif    &motif,
-                            const String   &where,
+                            const Tag      &where,
                             const Callback &enter,
                             Lexer          &lexer,
-                            const bool      iCall);
+                            const bool      isCall);
+                
+                template <typename ID, typename RX, typename HOST, typename METHOD>
+                inline void branch(const ID &id,
+                                   const RX &rx,
+                                   Lexer    &lexer,
+                                   HOST     &host,
+                                   METHOD    meth,
+                                   const bool isCall)
+                {
+                    const Motif    motif( RegExp::Compile(rx, & *dict) );
+                    const Tag      where(id);
+                    const Callback enter(&host,meth);
+                    jumpOn(motif, where, enter, lexer, isCall);
+                }
 
 
             };

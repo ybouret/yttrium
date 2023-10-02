@@ -19,6 +19,13 @@ namespace
             self("FLT","[:digit:]+f?");;
             self("blank","[:blank:]+",false);
             self.endl("endl", "[:endl:]");
+
+            Scanner &com = make<Scanner>("com");
+            self.call("com", "#", *this, self, &Scanner::discard);
+            com("dot",".+",false);
+            com.back("[:endl:]", *this, com, &Scanner::newLineAndDrop);
+
+
         }
 
         virtual ~MyLexer() noexcept

@@ -323,6 +323,14 @@ namespace Yttrium
             app->submit(ptr);
         }
 
+        void Lexer:: submit(Scanner *ptr)
+        {
+            assert(0!=ptr);
+            const Scanner::Pointer _(ptr);
+            submit(_);
+        }
+
+
         void Lexer:: jump_(const String &id)
         {
             assert(0!=app);
