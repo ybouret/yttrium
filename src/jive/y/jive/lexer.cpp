@@ -56,11 +56,9 @@ namespace Yttrium
 
             }
 
+            //! cleanup
             inline virtual ~App() noexcept
             {
-                std::cerr << "~App" << std::endl;
-                std::cerr << "#history = " << history.size << std::endl;
-                std::cerr << "#lexemes = " << lexemes.size << std::endl;
             }
 
             //__________________________________________________________________

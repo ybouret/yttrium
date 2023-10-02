@@ -82,7 +82,7 @@ namespace Yttrium
                 assert(this->size>0);
                 assert(0!=this->tail);
                 Type &ref = **(this->tail);
-                this->popTail();
+                this->cutTail();
                 return ref;
             }
 

@@ -166,19 +166,16 @@ namespace Yttrium
                 Event(lx,cb),
                 where(to)
                 { 
-                    std::cerr << "*Call" << std::endl;
                 }
 
                 inline  explicit Call(const Call &_) :
                 Event(_),
                 where(_.where)
                 { 
-                    std::cerr << "+Call" << std::endl;
                 }
 
                 inline virtual ~Call() noexcept 
                 {
-                    std::cerr << "~Call" << std::endl;
                 }
 
 
@@ -216,7 +213,7 @@ namespace Yttrium
                 assert(lexer.owns(*this));
                 const Call       would(where,enter,lexer);
                 const Callback   doing(would);
-                const String     label = JumpPrefix + *where;
+                const String     label = CallPrefix + *where;
                 Action::Pointer  action( new Action(label,motif,doing) );
                 submitCode(action);
             }
