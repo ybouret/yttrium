@@ -103,54 +103,120 @@ namespace Yttrium
         namespace Lexical
         {
 
+            class JMP : public Event
+            {
+            public:
+                inline virtual ~JMP() noexcept {}
+
+            protected:
+                inline explicit JMP(const Tag      &to,
+                                    const Callback &cb,
+                                    Lexer          &lx) :
+                Event(lx,cb),
+                where(to)
+                {
+                }
+
+                inline explicit JMP(const JMP &_) :
+                Event(_),
+                where(_.where)
+                {
+                }
+
+                const Tag where;
+
+            private:
+                Y_DISABLE_ASSIGN(JMP);
+            };
+
+
+
+
             const char * const Scanner::JumpPrefix = "jump@";
             const char * const Scanner::CallPrefix = "call@";
 
-            class Jump : public Event
+            class Jump : public JMP
             {
             public:
                 inline explicit Jump(const Tag      &to,
                                      const Callback &cb,
-                                     Lexer &         lx,
-                                     const bool      isCall) :
-                Event(lx,cb),
-                where(to),
-                xcode(isCall ? &Lexer::call_ : &Lexer::jump_ )
-                { }
+                                     Lexer &         lx):
+                JMP(to,cb,lx) {}
 
-                inline  explicit Jump(const Jump &_) :
-                Event(_),
-                where(_.where),
-                xcode(_.xcode)
-                { }
-
+                inline explicit Jump(const Jump &_) : JMP(_) {}
                 inline virtual ~Jump() noexcept {}
 
 
 
             private:
                 Y_DISABLE_ASSIGN(Back);
-                const Tag     where; //!< target scanner
-                Lexer::Branch xcode; //!< to call
 
                 virtual void unfold()
                 {
-                    (lexer.*xcode)(*where);
+                    lexer.jump_(*where);
                 }
             };
 
-            
+            class Call : public Event
+            {
+            public:
+                inline explicit Call(const Tag      &to,
+                                     const Callback &cb,
+                                     Lexer &         lx) :
+                Event(lx,cb),
+                where(to)
+                { 
+                    std::cerr << "*Call" << std::endl;
+                }
+
+                inline  explicit Call(const Call &_) :
+                Event(_),
+                where(_.where)
+                { 
+                    std::cerr << "+Call" << std::endl;
+                }
+
+                inline virtual ~Call() noexcept 
+                {
+                    std::cerr << "~Call" << std::endl;
+                }
+
+
+
+            private:
+                Y_DISABLE_ASSIGN(Back);
+                const Tag     where; //!< target scanner
+
+                virtual void unfold()
+                {
+                    lexer.call_(*where);
+                }
+            };
+
+
 
             void Scanner:: jumpOn(const Motif    &motif,
                                   const Tag      &where,
                                   const Callback &enter,
-                                  Lexer          &lexer,
-                                  const bool      isCall)
+                                  Lexer          &lexer )
             {
                 assert(lexer.owns(*this));
-                const Jump       would(where,enter,lexer,isCall);
+                const Jump       would(where,enter,lexer);
                 const Callback   doing(would);
-                const String     label = (isCall ? CallPrefix : JumpPrefix) + *where;
+                const String     label = JumpPrefix + *where;
+                Action::Pointer  action( new Action(label,motif,doing) );
+                submitCode(action);
+            }
+
+            void Scanner:: callOn(const Motif    &motif,
+                                  const Tag      &where,
+                                  const Callback &enter,
+                                  Lexer          &lexer )
+            {
+                assert(lexer.owns(*this));
+                const Call       would(where,enter,lexer);
+                const Callback   doing(would);
+                const String     label = JumpPrefix + *where;
                 Action::Pointer  action( new Action(label,motif,doing) );
                 submitCode(action);
             }

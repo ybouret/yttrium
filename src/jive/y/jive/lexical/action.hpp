@@ -74,6 +74,7 @@ namespace Yttrium
                 //______________________________________________________________
                 Message perform(); //!< doing(*motif), motif->size>0
                 Unit   *produce(); //!< new unit from motif
+                void    cleanup() noexcept;
 
                 //______________________________________________________________
                 //

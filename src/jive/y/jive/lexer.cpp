@@ -56,7 +56,12 @@ namespace Yttrium
 
             }
 
-            inline virtual ~App() noexcept {}
+            inline virtual ~App() noexcept
+            {
+                std::cerr << "~App" << std::endl;
+                std::cerr << "#history = " << history.size << std::endl;
+                std::cerr << "#lexemes = " << lexemes.size << std::endl;
+            }
 
             //__________________________________________________________________
             //
@@ -120,7 +125,8 @@ namespace Yttrium
                             if( 0 != (msg & Lexical::LX_CNTL) )
                             {
                                 assert(0==(msg&(Lexical::LX_EMIT|Lexical::LX_DROP)));
-                                throw Exception("unhandled control!");
+                                action->cleanup();
+                                goto PROBE;
                             }
                             else
                             {
@@ -129,14 +135,13 @@ namespace Yttrium
                                 if( 0 != (msg & Lexical::LX_DROP) )
                                 {
                                     checkNo(Lexical::LX_EMIT,msg);
-                                    action->motif->release();
+                                    action->cleanup();
                                     goto PROBE;
                                 }
 
                                 // check emit
                                 if( 0 != (msg & Lexical::LX_EMIT) )
                                 {
-                                    checkNo(Lexical::LX_DROP,msg);
                                     return action->produce();
                                 }
 

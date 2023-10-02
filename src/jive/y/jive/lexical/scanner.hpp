@@ -136,7 +136,7 @@ namespace Yttrium
                 //______________________________________________________________
                 template <typename RX, typename HOST, typename METHOD>
                 inline void back(const RX       &rx,
-                                     Lexer          &lexer,
+                                 Lexer          &lexer,
                                  HOST           &host,
                                  METHOD          meth)
                 {
@@ -233,9 +233,15 @@ namespace Yttrium
                 void jumpOn(const Motif    &motif,
                             const Tag      &where,
                             const Callback &enter,
-                            Lexer          &lexer,
-                            const bool      isCall);
-                
+                            Lexer          &lexer);
+
+                void callOn(const Motif    &motif,
+                            const Tag      &where,
+                            const Callback &enter,
+                            Lexer          &lexer);
+
+
+
                 template <typename ID, typename RX, typename HOST, typename METHOD>
                 inline void branch(const ID &id,
                                    const RX &rx,
@@ -247,7 +253,8 @@ namespace Yttrium
                     const Motif    motif( RegExp::Compile(rx, & *dict) );
                     const Tag      where(id);
                     const Callback enter(&host,meth);
-                    jumpOn(motif, where, enter, lexer, isCall);
+                    if(isCall) callOn(motif,where,enter,lexer);
+                    else       jumpOn(motif,where,enter,lexer);
                 }
 
 

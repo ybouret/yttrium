@@ -19,6 +19,12 @@ namespace Yttrium
                 return doing(token);
             }
 
+            void Action:: cleanup() noexcept
+            {
+                motif->release();
+            }
+
+
             Unit * Action:: produce()
             {
                 Token &token = *motif;
