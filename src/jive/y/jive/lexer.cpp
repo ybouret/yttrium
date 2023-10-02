@@ -84,7 +84,7 @@ namespace Yttrium
             //__________________________________________________________________
             inline Lexeme * get(Source &source)
             {
-                Y_XML_SECTION_OPT(xml,name, " get");
+                Y_XML_SECTION_OPT(xml,name, " : get next lexeme");
             PROBE:
                 assert(0!=scanner);
                 assert(scanner->isClean());
@@ -111,15 +111,39 @@ namespace Yttrium
                             assert(0!=action);
                             const Lexical::Message msg = action->perform();
 
-                            if(msg & Lexical::LX_DROP)
+                            // always check for newline
+                            if( 0!= (msg & Lexical::LX_ENDL) )
                             {
-                                action->motif->release();
-                                goto PROBE;
+                                source.newLine();
                             }
 
-                            if(msg & Lexical::LX_EMIT) return action->produce();
+                            if( 0 != (msg & Lexical::LX_CNTL) )
+                            {
+                                assert(0==(msg&(Lexical::LX_EMIT|Lexical::LX_DROP)));
+                                throw Exception("unhandled control!");
+                            }
+                            else
+                            {
 
-                            throw Exception("unhandled message");
+                                // check drop
+                                if( 0 != (msg & Lexical::LX_DROP) )
+                                {
+                                    checkNo(Lexical::LX_EMIT,msg);
+                                    action->motif->release();
+                                    goto PROBE;
+                                }
+
+                                // check emit
+                                if( 0 != (msg & Lexical::LX_EMIT) )
+                                {
+                                    checkNo(Lexical::LX_DROP,msg);
+                                    return action->produce();
+                                }
+
+                                throw Exception("unhandled message");
+                            }
+
+
                         }
 
                         case Lexical::ReturnFailure: {
@@ -151,6 +175,10 @@ namespace Yttrium
 
             }
 
+            inline void checkNo(const Lexical::Message flag, const Lexical::Message msg) const
+            {
+                if( 0 != (msg&flag) ) throw Specific::Exception( name.c_str(), "invalid lexical message");
+            }
 
             inline void jump(const String &id)
             {
@@ -206,75 +234,6 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(App);
-
-        public:
-            class Jump
-            {
-            public:
-                inline Jump(App &      who,
-                            const Tag &uid,
-                            const bool emitLexeme,
-                            const bool willReturn) noexcept :
-                app( who ),
-                tag( uid ),
-                msg( Lexical::LX_CNTL | (emitLexeme ? Lexical::LX_EMIT : Lexical::LX_DROP) ),
-                fcn( willReturn ? &App::call : &App::jump)
-                {
-                }
-
-                inline Jump(const Jump &j) noexcept :
-                app( j.app ),
-                tag( j.tag ),
-                msg( j.msg ),
-                fcn( j.fcn )
-                {
-                }
-
-
-                inline Lexical::Message operator()(const Token &)
-                {
-                    (app.*fcn)(*tag);
-                    return msg;
-                }
-
-                inline ~Jump() noexcept {}
-
-
-                App &                  app;
-                const Tag              tag;
-                const Lexical::Message msg;
-                const Branch           fcn;
-
-            private:
-                Y_DISABLE_ASSIGN(Jump);
-            };
-
-#if 0
-            inline void makeJump(const Tag &expr,
-                                 const Tag &uuid,
-                                 const bool emit)
-            {
-                const Motif              motif( RegExp::Compile(*expr, genesis.dict) );
-                const Jump               coded(*this,uuid,emit,false);
-                const Lexical::Callback  doing = coded;
-                const String             named = "jump@" + *uuid;
-                Lexical::Action::Pointer which( new Lexical::Action(named,motif,doing)   );
-                genesis.submitCode(which);
-            }
-
-            inline void makeCall(const Tag &expr,
-                                 const Tag &uuid,
-                                 const bool emit)
-            {
-                const Motif              motif( RegExp::Compile(*expr, genesis.dict) );
-                const Jump               coded(*this,uuid,emit,true);
-                const Lexical::Callback  doing = coded;
-                const String             named = "call@" + *uuid;
-                Lexical::Action::Pointer which( new Lexical::Action(named,motif,doing)   );
-                genesis.submitCode(which);
-            }
-#endif
-
         };
 
         Lexer::App * Lexer::Create(Scanner &self)
