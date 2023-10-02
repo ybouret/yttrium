@@ -37,7 +37,8 @@ set(dsoName ${CMAKE_CURRENT_SOURCE_DIR}/../../../dso${Y_UUID}.dll)
 
 add_custom_command(TARGET dso POST_BUILD
 COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:dso> ${dsoName}
-COMMENT "[yttrium] copy dso to ${dsoName}"
+COMMAND test-core rtld_dll ${dsoName}
+COMMENT "[yttrium] using ${dsoName}"
 DEPENDS test-core
 VERBATIM)
 
