@@ -216,8 +216,6 @@ namespace Yttrium
                 //______________________________________________________________
                 inline ReturnValue  probe(Source &source, Action * &primary)
                 {
-                    //Y_XML_SECTION_OPT(*xml, name, " probe='" << size() << "'");
-
                     assert(0==primary);
                     //----------------------------------------------------------
                     //

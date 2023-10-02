@@ -53,6 +53,8 @@ namespace Yttrium
                                   const Callback &leave,
                                   Lexer          &lexer)
             {
+                assert(lexer.owns(*this));
+                
                 const Back       would(leave,lexer);
                 const Callback   doing(would);
                 const String     label = "back$" + *name;

@@ -53,9 +53,11 @@ namespace Yttrium
             //__________________________________________________________________
             Lexeme *get(Source &);           //!< get next lexeme from source
             void    put(Lexeme *) noexcept;  //!< put back a read lexeme
-            void    restart()     noexcept;  //!< restart
-
+            void    set()         noexcept;  //!< full reset
             
+            bool     owns(const Scanner &) const noexcept;
+            Scanner *query(const String &s)      noexcept;
+
             //! create a zero-argument plugin, derived from scanner
             template <typename PLUGIN, typename ID>
             PLUGIN & make(const ID &id)

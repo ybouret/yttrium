@@ -127,15 +127,21 @@ namespace Yttrium
                     self(id,rx,self, (emit ? & Scanner::newLineAndEmit : & Scanner::newLineAndDrop) );
                 }
 
-                template <typename RX>
-                inline void back(const RX       &rx,
-                                 const Callback &leave,
-                                 Lexer          &lexer)
+                //______________________________________________________________
+                //
+                //! create a coming back from this scanner within host's lexer
+                //______________________________________________________________
+                template <typename RX, typename HOST, typename METHOD>
+                inline void makeBack(const RX       &rx,
+                                     Lexer          &lexer,
+                                     HOST           &host,
+                                     METHOD          meth)
                 {
-                    const Motif motif( RegExp::Compile(rx, & *dict) );
+                    const Motif    motif( RegExp::Compile(rx, & *dict) );
+                    const Callback leave(&host,meth);
                     backOn(motif,leave,lexer);
                 }
-                
+
                 //______________________________________________________________
                 //
                 //! iterative cleanup of all motifs

@@ -69,7 +69,7 @@ namespace Yttrium
             //
             //! restart all
             //__________________________________________________________________
-            inline void restart() noexcept
+            inline void set() noexcept
             {
                 scanner = &genesis;
                 history.free();      assert(0==history.size);
@@ -298,10 +298,10 @@ namespace Yttrium
             Nullify(app);
         }
         
-        void Lexer:: restart() noexcept
+        void Lexer:: set() noexcept
         {
             assert(app);
-            app->restart();
+            app->set();
         }
 
         void Lexer:: put(Lexeme *lxm) noexcept
@@ -340,6 +340,30 @@ namespace Yttrium
             assert(0!=app);
             app->back();
         }
+
+        bool Lexer:: owns(const Scanner &scanner) const noexcept
+        {
+            assert(0!=app);
+            const Scanner::Pointer *sptr = app->content.search(*scanner.name);
+            if(!sptr)                return false;
+            if(& **sptr == &scanner) return true;
+            return false;
+        }
+
+        Lexical::Scanner *Lexer:: query(const String &id) noexcept
+        {
+            assert(0!=app);
+            Scanner::Pointer *sptr = app->content.search(id);
+            if(sptr)
+            {
+                return & **sptr;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
 
     }
 
