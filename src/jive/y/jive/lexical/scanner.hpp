@@ -128,12 +128,14 @@ namespace Yttrium
                 }
 
                 template <typename RX>
-                inline void back(const RX &rx, Lexer &lexer, const bool emit = false)
+                inline void back(const RX       &rx,
+                                 const Callback &leave,
+                                 Lexer          &lexer)
                 {
                     const Motif motif( RegExp::Compile(rx, & *dict) );
-                    backOn(motif,lexer);
+                    backOn(motif,leave,lexer);
                 }
-
+                
                 //______________________________________________________________
                 //
                 //! iterative cleanup of all motifs
@@ -187,8 +189,10 @@ namespace Yttrium
                 static Code *Initialize(const String &, Dictionary * &);
                 static Code *Initialize(const String &, Dictionary * &, const Scanner &parent);
 
-                void backOn(const Motif &motif, Lexer &lexer);
-                
+                void backOn(const Motif    &motif,
+                            const Callback &leave,
+                            Lexer          &lexer);
+
             };
 
             

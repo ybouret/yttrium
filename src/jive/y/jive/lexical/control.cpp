@@ -16,27 +16,32 @@ namespace Yttrium
                 class Back
                 {
                 public:
-                    inline Back(Lexer &lx) noexcept :
+                    inline Back(const Callback &cb,
+                                Lexer          &lx) :
+                    leave(cb),
                     lexer(lx)
                     {
                     }
 
                     inline ~Back() noexcept {}
 
-                    inline Back(const Back &other) noexcept :
-                    lexer(other.lexer)
+                    inline Back(const Back &_) :
+                    leave(_.leave),
+                    lexer(_.lexer)
                     {
                     }
 
 
 
-                    Message operator()(const Token &)
+                    Message operator()(const Token &token)
                     {
+                        const Message msg = leave(token);
                         lexer.back_();
-                        return LX_CNTL;
+                        return msg | LX_CNTL;
                     }
 
-                    Lexer &lexer;
+                    Callback leave;
+                    Lexer   &lexer;
 
                 private:
                     Y_DISABLE_ASSIGN(Back);
@@ -44,10 +49,12 @@ namespace Yttrium
 
             }
 
-            void Scanner:: backOn(const Motif &motif, Lexer &lexer)
+            void Scanner:: backOn(const Motif    &motif,
+                                  const Callback &leave,
+                                  Lexer          &lexer)
             {
-                const Back       _back(lexer);
-                const Callback   doing( _back );
+                const Back       would(leave,lexer);
+                const Callback   doing(would);
                 const String     label = "back$" + *name;
                 Action::Pointer  action( new Action(label,motif,doing) );
                 submitCode(action);

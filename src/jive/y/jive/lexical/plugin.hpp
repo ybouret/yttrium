@@ -25,9 +25,7 @@ namespace Yttrium
                 typename IDENTIFIER,
                 typename ENTER_EXPR> inline
                 explicit Plugin(Lexer             &lx,
-                                const IDENTIFIER  &id,
-                                const ENTER_EXPR  &enterExpr,
-                                const bool         enterEmit) :
+                                const IDENTIFIER  &id) :
                 Scanner(id),
                 lexer(lx)
                 {
