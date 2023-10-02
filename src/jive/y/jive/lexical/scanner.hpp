@@ -45,8 +45,11 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                static bool                    Verbose; //!< scanning verbosity for internal XMLog
-                typedef ArkPtr<String,Scanner> Pointer; //!< alias
+                static bool                    Verbose;    //!< scanning verbosity for internal XMLog
+                typedef ArkPtr<String,Scanner> Pointer;    //!< alias
+                static const char * const      BackPrefix; //!< to name back controls
+                static const char * const      JumpPrefix; //!< to name jump controls
+                static const char * const      CallPrefix; //!< to name call controls
 
                 //______________________________________________________________
                 //
@@ -198,6 +201,13 @@ namespace Yttrium
                 void backOn(const Motif    &motif,
                             const Callback &leave,
                             Lexer          &lexer);
+
+                void jumpOn(const Motif    &motif,
+                            const String   &where,
+                            const Callback &enter,
+                            Lexer          &lexer,
+                            const bool      iCall);
+
 
             };
 
