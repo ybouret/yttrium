@@ -14,12 +14,34 @@ namespace Yttrium
 
         namespace Lexical
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Single Line Comment (interruptible by EOS)
+            //
+            //
+            //__________________________________________________________________
             class SingleLineComment : public Plugin
             {
             public:
-                virtual ~SingleLineComment() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                virtual ~SingleLineComment() noexcept; //!< cleanup
 
+                //______________________________________________________________
+                //
+                //! setup, returning on newline, discarding otherwise
+                /**
+                 \param lx parent lexer/scanner
+                 \param id plugin's name
+                 \param rx regular expression triggering call to plugin
+                 */
+                //______________________________________________________________
                 template <typename IDENTIFIER, typename ENTER_EXPR> inline
                 explicit SingleLineComment(Lexer            &lx,
                                            const IDENTIFIER &id,
@@ -33,6 +55,12 @@ namespace Yttrium
                 virtual Message leave(const Token &) noexcept; //!< return LX_ENDL
             };
 
+            //__________________________________________________________________
+            //
+            //
+            //! helper to create single line comments
+            //
+            //__________________________________________________________________
 #define Y_JIVE_SINGLE_LINE_COMMENT(NAME,EXPR)             \
 class NAME : public Jive::Lexical::SingleLineComment {    \
 /**/ public:                                              \
@@ -44,7 +72,9 @@ class NAME : public Jive::Lexical::SingleLineComment {    \
 /**/     Y_DISABLE_COPY_AND_ASSIGN(NAME);                 \
 }
 
-            Y_JIVE_SINGLE_LINE_COMMENT(CxxComment, "//");
+            Y_JIVE_SINGLE_LINE_COMMENT(CxxComment,     "//"); //!< C++ comment
+            Y_JIVE_SINGLE_LINE_COMMENT(HashTagComment, '#');  //!< Shell/Julia comment
+            Y_JIVE_SINGLE_LINE_COMMENT(LuaComment,     "--"); //!< Lua Comments
 
         }
 

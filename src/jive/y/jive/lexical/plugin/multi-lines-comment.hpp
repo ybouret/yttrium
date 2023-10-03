@@ -16,11 +16,35 @@ namespace Yttrium
         namespace Lexical
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Multi Lines Comment between delimiter expressions
+            //
+            //
+            //__________________________________________________________________
             class MultiLinesComment : public Plugin
             {
             public:
-                virtual ~MultiLinesComment() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                virtual ~MultiLinesComment() noexcept; //!< cleanup
 
+                //______________________________________________________________
+                //
+                //! initialize, counting newlines and discarding other
+                /**
+                 \param lx parent lexer/scanner
+                 \param id plugin's name
+                 \param erx entry on regular expression
+                 \param lrx leave on regular expression
+                 */
+                //______________________________________________________________
                 template <
                 typename IDENTIFIER,
                 typename ENTER_EXPR,
@@ -40,20 +64,25 @@ namespace Yttrium
 
             };
 
-#if 0
-#define Y_JIVE_MULTI_LINES_COMMENT(NAME,EXPR)             \
-class NAME : public Jive::Lexical::SingleLineComment {    \
-/**/ public:                                              \
-/**/     inline virtual ~NAME() noexcept {}               \
-/**/     template <typename IDENTIFIER> inline            \
-/**/     explicit NAME(Lexer &lx, const IDENTIFIER &id) : \
-/**/     Jive::Lexical::SingleLineComment(lx,id,EXPR) {}  \
-/**/ private:                                             \
-/**/     Y_DISABLE_COPY_AND_ASSIGN(NAME);                 \
+            //__________________________________________________________________
+            //
+            //
+            //! helper to create multi-lines comment
+            //
+            //__________________________________________________________________
+#define Y_JIVE_MULTI_LINES_COMMENT(NAME,ENTER,LEAVE)             \
+class NAME : public Jive::Lexical::MultiLinesComment {           \
+/**/ public:                                                     \
+/**/     inline virtual ~NAME() noexcept {}                      \
+/**/     template <typename IDENTIFIER> inline                   \
+/**/     explicit NAME(Lexer &lx, const IDENTIFIER &id) :        \
+/**/     Jive::Lexical::MultiLinesComment(lx,id,ENTER,LEAVE) {}  \
+/**/ private:                                                    \
+/**/     Y_DISABLE_COPY_AND_ASSIGN(NAME);                        \
 }
 
-            Y_JIVE_SINGLE_LINE_COMMENT(CxxComment, "//");
-#endif
+            Y_JIVE_MULTI_LINES_COMMENT(C_Comment,   "/\\*","\\*/"); //!< C   Comment
+            Y_JIVE_MULTI_LINES_COMMENT(XML_Comment, "<!--","-->");  //!< XML Comment
 
         }
 

@@ -28,7 +28,7 @@ namespace Yttrium
             void MultiLinesComment:: setup()
             {
                 endl("endl","[:endl:]");
-                drop(".",".");
+                drop("comment",".+");
             }
 
 

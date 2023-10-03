@@ -3,6 +3,7 @@
 #include "y/utest/run.hpp"
 #include "y/jive/source.hpp"
 #include "y/jive/lexical/plugin/single-line-comment.hpp"
+#include "y/jive/lexical/plugin/multi-lines-comment.hpp"
 
 using namespace Yttrium;
 using namespace Jive;
@@ -22,6 +23,7 @@ namespace
 
             plug<Lexical::CxxComment>("CxxComment");
             plug<Lexical::SingleLineComment>("ShellComment",'#');
+            plug<Lexical::MultiLinesComment>("C_Comment","/\\*","\\*/");
 
 
 

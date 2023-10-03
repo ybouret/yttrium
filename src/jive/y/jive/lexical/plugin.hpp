@@ -14,12 +14,35 @@ namespace Yttrium
         
         namespace Lexical
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Plugin: a pre-defined scanner
+            //
+            //
+            //__________________________________________________________________
             class Plugin : public Scanner
             {
             public:
-                virtual ~Plugin() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                virtual ~Plugin() noexcept; //!< cleanup
 
+                //______________________________________________________________
+                //
+                //! setup plugin, sharing data with parent lexer/scanner
+                /**
+                 \param lx parent lexer
+                 \param id plugin name for lexer's call
+                 \param rx regular expression triggering plugin call
+                 \param ep policy upon unfinished plugin execution
+                 */
+                //______________________________________________________________
                 template <
                 typename IDENTIFIER,
                 typename ENTER_EXPR> inline
@@ -34,13 +57,26 @@ namespace Yttrium
                     root->call(name, rx, lexer, *this, & Plugin::onEnter );
                 }
 
-                virtual Message enter(const Token &) = 0;
-                virtual Message leave(const Token &) = 0;
+                //______________________________________________________________
+                //
+                //
+                // Interface
+                //
+                //______________________________________________________________
+                virtual Message enter(const Token &) = 0; //!< initialize plugin upon enter token
+                virtual Message leave(const Token &) = 0; //!< finalize plugin upon leave token
 
-
-                Lexer                   &lexer;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                Lexer                   &lexer; //!< parent lexer
 
             protected:
+
+                //! create a return from call upon regular expression
                 template <typename RX> inline
                 void ret(const RX &rx)
                 { back(rx,lexer, *this, & Plugin::onLeave); }
@@ -48,8 +84,8 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Plugin);
                 static Scanner &L2S(Lexer &) noexcept;
-                Message onEnter(const Token &token);
-                Message onLeave(const Token &token);
+                Message onEnter(const Token &token); //!< wrapper to call enter
+                Message onLeave(const Token &token); //!< wrapper to call leave
             };
         }
 

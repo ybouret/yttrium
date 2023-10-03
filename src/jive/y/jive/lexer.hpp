@@ -95,6 +95,15 @@ namespace Yttrium
             }
 
 
+            //! plug a two-args plugin
+            template <typename PLUGIN, typename IDENTIFIER, typename ENTER_EXPR, typename LEAVE_EXPR>
+            void plug(const IDENTIFIER &id, const ENTER_EXPR &erx, const LEAVE_EXPR &lrx)
+            {
+                PLUGIN *plg = new PLUGIN(*this,id,erx,lrx);
+                submit(plg);
+            }
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Lexer);
