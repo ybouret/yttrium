@@ -14,11 +14,6 @@ namespace Yttrium
         
         namespace Lexical
         {
-            enum EndOfStreamPolicy
-            {
-                RejectEndOfStream,
-                AcceptEndOfStream
-            };
 
             class Plugin : public Scanner
             {
@@ -31,12 +26,11 @@ namespace Yttrium
                 explicit Plugin(Lexer                   &lx,
                                 const IDENTIFIER        &id,
                                 const ENTER_EXPR        &rx,
-                                const EndOfStreamPolicy &ep) :
-                Scanner(id),
-                parent(lx),
-                policy(ep)
+                                const EndOfStreamPolicy  ep) :
+                Scanner(id,L2S(lx),ep), parent(lx)
                 {
-                    L2S(parent).call(name, rx, parent, *this, & Plugin::onEnter );
+                    assert(0!=root);
+                    root->call(name, rx, parent, *this, & Plugin::onEnter );
                 }
 
                 Message onEnter(const Token &token)
@@ -45,7 +39,6 @@ namespace Yttrium
                 }
 
                 Lexer                   &parent;
-                const EndOfStreamPolicy  policy;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Plugin);

@@ -30,6 +30,16 @@ namespace Yttrium
 
             //__________________________________________________________________
             //
+            //! End Of Stream Policy
+            //__________________________________________________________________
+            enum EndOfStreamPolicy
+            {
+                RejectEndOfStream,
+                AcceptEndOfStream
+            };
+
+            //__________________________________________________________________
+            //
             //
             //
             //! Lexical Scanner: produce units from Source
@@ -60,15 +70,26 @@ namespace Yttrium
 
                 //! setup with identifier
                 template <typename LABEL> inline
-                explicit Scanner(const LABEL &label) :
-                Entity(label), dict(0), code( Initialize( *name, Coerce(dict) ) )
+                explicit Scanner(const LABEL             &label,
+                                 const EndOfStreamPolicy  scheme = AcceptEndOfStream) :
+                Entity(label),
+                dict(0),
+                root(0),
+                _eos(scheme),
+                code( Initialize( *name, Coerce(dict) ) )
                 {
                 }
 
-                //! setup with identifier and using shared data from parent
+                //! setup with identifier and using SHARED data from parent
                 template <typename LABEL> inline
-                explicit Scanner(const LABEL &label, const Scanner &parent) :
-                Entity(label), dict(0), code( Initialize( *name, Coerce(dict), parent ) )
+                explicit Scanner(const LABEL            &label,
+                                 Scanner                &parent,
+                                 const EndOfStreamPolicy scheme) :
+                Entity(label),
+                dict(0),
+                root(&parent),
+                _eos(scheme),
+                code( Initialize( *name, Coerce(dict), parent ) )
                 {
                 }
 
@@ -213,7 +234,9 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                Dictionary * const dict; //!< internal dictionary
+                Dictionary * const      dict;   //!< internal dictionary
+                Scanner    * const      root;   //!< if root
+                const EndOfStreamPolicy _eos;   //!< behavior on EOS
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);

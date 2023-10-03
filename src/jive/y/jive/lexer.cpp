@@ -200,6 +200,10 @@ namespace Yttrium
                     //
                     //----------------------------------------------------------
                     assert(0!=scanner);
+                    if( &genesis != scanner )
+                    {
+                        std::cerr << "Not in Original State!!" << std::endl;
+                    }
                     return 0;
                 }
 

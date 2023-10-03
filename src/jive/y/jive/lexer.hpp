@@ -42,7 +42,7 @@ namespace Yttrium
             //! setup with identifier
             template <typename LABEL> inline
             explicit Lexer(const LABEL &usr) :
-            Scanner(usr),
+            Scanner(usr,Lexical::AcceptEndOfStream),
             app( Create(*this) )
             {
             }
