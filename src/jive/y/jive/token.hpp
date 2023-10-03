@@ -42,6 +42,7 @@ namespace Yttrium
             String toString(const size_t skip=0,const size_t trim=0) const; //!< convert to string with optional clipping
             String toPrintable() const; //!< convert to printable string
 
+            Token & operator<<(const Token &);
 
         private:
             Y_DISABLE_ASSIGN(Token);

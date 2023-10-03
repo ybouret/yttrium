@@ -179,14 +179,16 @@ namespace Yttrium
                             {
                                 assert(bad.size>0);
                                 assert(0!=bad.head);
-                                const String info  = bad.toPrintable();
-                                Exception    excp =  Specific::Exception( name.c_str(), "syntax error '%s'", info.c_str());
-                                throw bad.head->stamp(excp);
+                                const String        info = bad.toPrintable();
+                                Specific::Exception excp( scanner->name->c_str(), "syntax error '%s'", info.c_str());
+                                bad.head->stamp(excp);
+                                throw excp;
                             }
                             else
                             {
-                                Exception excp = Specific::Exception( name.c_str(), "forbidden trailing blanks");
-                                throw source->stamp(excp);
+                                Specific::Exception excp( scanner->name->c_str(), "forbidden trailing blanks");
+                                source->stamp(excp);
+                                throw excp;
                             }
                         }
 

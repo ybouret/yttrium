@@ -47,6 +47,13 @@ namespace Yttrium
             return res;
         }
 
+        Token & Token:: operator<<(const Token &token)
+        {
+            Token     theCopy(token);
+            mergeTail(theCopy);
+            return *this;
+        }
+
 
     }
 
