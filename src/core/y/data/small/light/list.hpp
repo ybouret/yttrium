@@ -86,6 +86,16 @@ namespace Yttrium
                 return ref;
             }
 
+            //! pullHead
+            inline Type & pullHead() noexcept
+            {
+                assert(this->size>0);
+                assert(0!=this->head);
+                Type &ref = **(this->head);
+                this->cutHead();
+                return ref;
+            }
+
 
 
         private:

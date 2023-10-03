@@ -11,34 +11,56 @@ namespace Yttrium
         namespace Lexical
         {
 
-            class Event
+            namespace
             {
-            public:
-                static const Message LXIO = LX_EMIT | LX_DROP;
-                static const Message MASK = ~LXIO;
-
-                inline virtual ~Event()               noexcept {}
-
-                Message operator()(const Token &token)
+                //______________________________________________________________
+                //
+                //
+                //! Base class for a control event
+                //
+                //______________________________________________________________
+                class Event
                 {
-                    const Message res = hatch(token) & MASK;
-                    unfold();
-                    return res | LX_CNTL;
-                }
+                public:
+                    //__________________________________________________________
+                    //
+                    // Defintions
+                    //__________________________________________________________
+                    static const Message LXIO = LX_EMIT | LX_DROP; //!< non-control flags
+                    static const Message MASK = ~LXIO;             //!< mask to exclude I/O flags
 
-            protected:
-                inline explicit Event(Lexer &lx, const Callback &cb) : lexer(lx), hatch(cb) {}
-                inline explicit Event(const Event &_)   : lexer(_.lexer), hatch(_.hatch) {}
+                    //__________________________________________________________
+                    //
+                    //! process token and unfold event
+                    //__________________________________________________________
+                    Message operator()(const Token &token)
+                    {
+                        const Message res = hatch(token) & MASK;
+                        unfold();
+                        return res | LX_CNTL;
+                    }
+
+                    //__________________________________________________________
+                    //
+                    // C++
+                    //__________________________________________________________
+                    inline virtual ~Event()               noexcept {}
+
+                protected:
+                    inline explicit Event(Lexer &lx, const Callback &cb) : lexer(lx), hatch(cb) {}
+                    inline explicit Event(const Event &_)   : lexer(_.lexer), hatch(_.hatch) {}
 
 
-                Lexer    &lexer;
-                Callback  hatch;
+                    Lexer    &lexer;
+                    Callback  hatch;
 
-            private:
-                Y_DISABLE_ASSIGN(Event);
-                virtual void unfold() = 0;
+                private:
+                    Y_DISABLE_ASSIGN(Event);
+                    virtual void unfold() = 0;
 
-            };
+                };
+            }
+
         }
 
     }
@@ -58,19 +80,31 @@ namespace Yttrium
 
             namespace
             {
+                //______________________________________________________________
+                //
+                //
+                //! Back event: process token and come back
+                //
+                //______________________________________________________________
                 class Back : public Event
                 {
                 public:
+                    //__________________________________________________________
+                    //
                     // C++
+                    //__________________________________________________________
                     inline explicit Back(const Callback &cb, Lexer &lx) : Event(lx,cb) { }
                     inline explicit Back(const Back &_) : Event(_)                     { }
                     inline virtual ~Back() noexcept {}
 
 
-
+                    //__________________________________________________________
+                    //
+                    // methods
+                    //__________________________________________________________
                 private:
                     Y_DISABLE_ASSIGN(Back);
-                    virtual void unfold() { lexer.back_(); }
+                    inline virtual void unfold() { lexer.back_(); }
                 };
 
             }
@@ -103,6 +137,12 @@ namespace Yttrium
         namespace Lexical
         {
 
+            //______________________________________________________________
+            //
+            //
+            //! base class for Jump/Call
+            //
+            //______________________________________________________________
             class JMP : public Event
             {
             public:
@@ -133,7 +173,6 @@ namespace Yttrium
 
 
             const char * const Scanner::JumpPrefix = "jump@";
-            const char * const Scanner::CallPrefix = "call@";
 
             class Jump : public JMP
             {
@@ -157,6 +196,8 @@ namespace Yttrium
                 }
             };
 
+            const char * const Scanner::CallPrefix = "call@";
+            
             class Call : public Event
             {
             public:
