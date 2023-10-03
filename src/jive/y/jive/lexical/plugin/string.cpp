@@ -90,6 +90,7 @@ namespace Yttrium
             {
                 content << token;
                 Y_XMLOG( getXMLog(), "<" << name << "> = " << content.toPrintable());
+                pushUnit(content);
                 return 0;
             }
 

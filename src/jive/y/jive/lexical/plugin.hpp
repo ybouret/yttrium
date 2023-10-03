@@ -81,6 +81,9 @@ namespace Yttrium
                 void ret(const RX &rx)
                 { back(rx,lexer, *this, & Plugin::onLeave); }
 
+                //! make an unit from plugin's name and content, put into lexer
+                void pushUnit(Token &content);
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Plugin);
                 static Scanner &L2S(Lexer &) noexcept;

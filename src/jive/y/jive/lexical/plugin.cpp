@@ -42,6 +42,18 @@ namespace Yttrium
                 return lexer;
             }
 
+            void Plugin:: pushUnit(Token &content)
+            {
+                assert(content.size>0);
+                assert(0!=content.head);
+                const Entity  &ent = *this;
+                const Context &ctx = *content.head;
+
+                Unit *unit = new Unit(ent,ctx);
+                unit->swapWith(content);
+                lexer.put(unit);
+
+            }
 
         }
 
