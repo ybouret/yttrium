@@ -19,8 +19,6 @@ namespace Yttrium
 
             const char *  String_:: GetEntryRX(const Kind sk) noexcept
             {
-                //static const char *tab[] = { "", "", "" };
-
                 switch(sk)
                 {
                     case DQUOTES:  return DQUOTES_RX;
@@ -43,6 +41,7 @@ namespace Yttrium
 
             void String_:: initialize(const Kind sk)
             {
+                // coming back !
                 switch(sk)
                 {
                     case DQUOTES:  ret(DQUOTES_RX); break;
@@ -50,8 +49,28 @@ namespace Yttrium
                     case BRACKETS: ret(">");       break;
                 }
 
+                // common to everyone
                 String_ &self = *this;
                 self("com",Com, self, & String_::onCom);
+
+                // adding authorized
+                switch(sk)
+                {
+                    case DQUOTES:
+                        self("oth","['<>]", self, &String_::onCom);
+                        break;
+
+                    case QUOTES:
+                        self("oth","[\"<>]", self, &String_::onCom);
+                        break;
+
+                    case BRACKETS:
+                        self("oth","['\"]", self, &String_::onCom);
+                }
+
+                // adding escaped
+
+
             }
 
             Message String_:: onCom(const Token &token)
