@@ -78,6 +78,16 @@ namespace Yttrium
             void back_();               //!< low-level back to calling
 
 
+            template <
+            typename PLUGIN,
+            typename IDENTIFIER>
+            void plug(const IDENTIFIER &id)
+            {
+                PLUGIN *plg = new PLUGIN(*this,id);
+                submit(plg);
+                
+            }
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Lexer);
             class App;

@@ -2,6 +2,7 @@
 #include "y/jive/lexer.hpp"
 #include "y/utest/run.hpp"
 #include "y/jive/source.hpp"
+#include "y/jive/lexical/plugin/single-line-comment.hpp"
 
 using namespace Yttrium;
 using namespace Jive;
@@ -20,10 +21,16 @@ namespace
             self("blank","[:blank:]+",false);
             self.endl("endl", "[:endl:]");
 
+#if 1
             Scanner &com = make<Scanner>("com");
             self.call("com", "#", *this, self, &Scanner::discard);
             com("dot",".+",false);
             com.back("[:endl:]", *this, com, &Scanner::newLineAndDrop);
+#endif
+
+            plug<Lexical::CxxComment>("CxxComment");
+
+
 
 
         }

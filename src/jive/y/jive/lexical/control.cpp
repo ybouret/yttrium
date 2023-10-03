@@ -113,7 +113,7 @@ namespace Yttrium
                                   const Callback &leave,
                                   Lexer          &lexer)
             {
-                assert(lexer.owns(*this));
+                //assert(lexer.owns(*this));
 
                 const Back       would(leave,lexer);
                 const Callback   doing(would);
@@ -238,7 +238,7 @@ namespace Yttrium
                                   const Callback &enter,
                                   Lexer          &lexer )
             {
-                assert(lexer.owns(*this));
+                //assert(lexer.owns(*this));
                 const Jump       would(where,enter,lexer);
                 const Callback   doing(would);
                 const String     label = JumpPrefix + *where;
@@ -251,7 +251,7 @@ namespace Yttrium
                                   const Callback &enter,
                                   Lexer          &lexer )
             {
-                assert(lexer.owns(*this));
+                //assert(lexer.owns(*this));
                 const Call       would(where,enter,lexer);
                 const Callback   doing(would);
                 const String     label = CallPrefix + *where;

@@ -199,16 +199,13 @@ namespace Yttrium
                 Message discard(const Token &);        //!< return LX_DROP
                 Message newLineAndEmit(const Token &); //!< return LX_EMIT | LX_ENDL
                 Message newLineAndDrop(const Token &); //!< return LX_DROP | LX_ENDL
-
-
-
-
-
                 //______________________________________________________________
                 //
                 //! get internal log
                 //______________________________________________________________
                 XMLog & getXMLog() noexcept;
+
+                
 
                 //______________________________________________________________
                 //

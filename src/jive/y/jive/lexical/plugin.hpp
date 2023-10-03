@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Jive_Lexical_Plugin_Included
@@ -8,14 +7,19 @@
 
 namespace Yttrium
 {
-    //class XMLog;
-    class Lexer;
 
     namespace Jive
     {
-
+        class Lexer;
+        
         namespace Lexical
         {
+            enum EndOfStreamPolicy
+            {
+                RejectEndOfStream,
+                AcceptEndOfStream
+            };
+
             class Plugin : public Scanner
             {
             public:
@@ -24,21 +28,28 @@ namespace Yttrium
                 template <
                 typename IDENTIFIER,
                 typename ENTER_EXPR> inline
-                explicit Plugin(Lexer             &lx,
-                                const IDENTIFIER  &id) :
+                explicit Plugin(Lexer                   &lx,
+                                const IDENTIFIER        &id,
+                                const ENTER_EXPR        &rx,
+                                const EndOfStreamPolicy &ep) :
                 Scanner(id),
-                lexer(lx)
+                parent(lx),
+                policy(ep)
                 {
-                    
+                    L2S(parent).call(name, rx, parent, *this, & Plugin::onEnter );
                 }
 
-                Lexer &lexer;
+                Message onEnter(const Token &token)
+                {
+                    return 0;
+                }
 
-                Message enter(const Token & ) { return LX_DROP; }
-                void    onLeave(const Token &token);
+                Lexer                   &parent;
+                const EndOfStreamPolicy  policy;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Plugin);
+                static Scanner &L2S(Lexer &) noexcept;
             };
         }
 

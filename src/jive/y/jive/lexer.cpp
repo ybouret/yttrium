@@ -91,7 +91,7 @@ namespace Yttrium
 
                 //--------------------------------------------------------------
                 //
-                // probing after a drop or a control
+                // (re) probing after a drop or a control
                 //
                 //--------------------------------------------------------------
             PROBE:
@@ -199,6 +199,7 @@ namespace Yttrium
                     // end of stream
                     //
                     //----------------------------------------------------------
+                    assert(0!=scanner);
                     return 0;
                 }
 

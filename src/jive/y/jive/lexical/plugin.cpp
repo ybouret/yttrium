@@ -3,8 +3,6 @@
 
 namespace Yttrium
 {
-    class XMLog;
-
     namespace Jive
     {
         namespace Lexical
@@ -14,6 +12,27 @@ namespace Yttrium
             {
             }
             
+
+        }
+
+    }
+
+}
+
+#include "y/jive/lexer.hpp"
+
+namespace Yttrium
+{
+    namespace Jive
+    {
+        namespace Lexical
+        {
+
+            Scanner & Plugin:: L2S(Lexer &lexer) noexcept
+            {
+                return lexer;
+            }
+
 
         }
 
