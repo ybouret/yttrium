@@ -27,22 +27,29 @@ namespace Yttrium
                                 const IDENTIFIER        &id,
                                 const ENTER_EXPR        &rx,
                                 const EndOfStreamPolicy  ep) :
-                Scanner(id,L2S(lx),ep), parent(lx)
+                Scanner(id,L2S(lx),ep),
+                lexer(lx)
                 {
                     assert(0!=root);
-                    root->call(name, rx, parent, *this, & Plugin::onEnter );
+                    root->call(name, rx, lexer, *this, & Plugin::onEnter );
                 }
 
-                Message onEnter(const Token &token)
-                {
-                    return 0;
-                }
+                virtual Message enter(const Token &) = 0;
+                virtual Message leave(const Token &) = 0;
 
-                Lexer                   &parent;
+
+                Lexer                   &lexer;
+
+            protected:
+                template <typename RX> inline
+                void ret(const RX &rx)
+                { back(rx,lexer, *this, & Plugin::onLeave); }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Plugin);
                 static Scanner &L2S(Lexer &) noexcept;
+                Message onEnter(const Token &token);
+                Message onLeave(const Token &token);
             };
         }
 

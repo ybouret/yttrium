@@ -202,7 +202,13 @@ namespace Yttrium
                     assert(0!=scanner);
                     if( &genesis != scanner )
                     {
-                        std::cerr << "Not in Original State!!" << std::endl;
+                        switch(scanner->_eos)
+                        {
+                            case Lexical::AcceptEndOfStream:
+                                break;
+                            case Lexical::RejectEndOfStream:
+                                throw Specific::Exception(name.c_str(), "unfinished <%s>", scanner->name->c_str());
+                        }
                     }
                     return 0;
                 }

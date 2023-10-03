@@ -131,14 +131,27 @@ namespace Yttrium
 
                 //______________________________________________________________
                 //
-                //! create a simple action to produce or discard an unit
+                //! create a simple action to produce an unit
                 //______________________________________________________________
                 template <typename ID, typename RX>
-                inline void operator()(const ID &id, const RX &rx, const bool emit = true)
+                inline void emit(const ID &id, const RX &rx)
                 {
                     Scanner &self = *this;
-                    self(id,rx,self, (emit ? & Scanner::produce : & Scanner::discard) );
+                    self(id,rx,self,& Scanner::produce);
                 }
+
+                //______________________________________________________________
+                //
+                //! create a simple action to   discard an unit
+                //______________________________________________________________
+                template <typename ID, typename RX>
+                inline void drop(const ID &id, const RX &rx)
+                {
+                    Scanner &self = *this;
+                    self(id,rx,self,& Scanner::discard);
+                }
+
+
 
                 //______________________________________________________________
                 //

@@ -11,7 +11,16 @@ namespace Yttrium
             Plugin:: ~Plugin() noexcept
             {
             }
-            
+
+            Message Plugin:: onEnter(const Token &token)
+            {
+                return enter(token);
+            }
+
+            Message Plugin:: onLeave(const Token &token)
+            {
+                return leave(token);
+            }
 
         }
 

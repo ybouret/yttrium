@@ -76,7 +76,7 @@ namespace Yttrium
         namespace Lexical
         {
 
-            const char * const Scanner:: BackPrefix = "back$";
+            const char * const Scanner:: BackPrefix = "<==";
 
             namespace
             {
@@ -172,7 +172,7 @@ namespace Yttrium
 
 
 
-            const char * const Scanner::JumpPrefix = "jump@";
+            const char * const Scanner::JumpPrefix = "-->";
 
             class Jump : public JMP
             {
@@ -196,7 +196,7 @@ namespace Yttrium
                 }
             };
 
-            const char * const Scanner::CallPrefix = "call@";
+            const char * const Scanner::CallPrefix = "==>";
             
             class Call : public Event
             {

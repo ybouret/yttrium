@@ -16,10 +16,10 @@ Y_UTEST(scanner)
     Y_SIZEOF(Lexical::Callback);
     
 
-    scanner("INT","[:digit:]+");
-    scanner("ID","[:alpha:][:word:]*");
-    scanner("FLT","[:digit:]+f?");;
-    scanner("blank","[:blank:]+",false);
+    scanner.emit("INT","[:digit:]+");
+    scanner.emit("ID","[:alpha:][:word:]*");
+    scanner.emit("FLT","[:digit:]+f?");;
+    scanner.drop("blank","[:blank:]+");
     scanner.endl("endl", "[:endl:]");
 
     scanner.cleanup();

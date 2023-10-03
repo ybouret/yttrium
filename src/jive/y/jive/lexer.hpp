@@ -78,15 +78,23 @@ namespace Yttrium
             void back_();               //!< low-level back to calling
 
 
-            template <
-            typename PLUGIN,
-            typename IDENTIFIER>
+            //! plug a zero-arg plugin
+            template <typename PLUGIN, typename IDENTIFIER>
             void plug(const IDENTIFIER &id)
             {
                 PLUGIN *plg = new PLUGIN(*this,id);
                 submit(plg);
-                
             }
+
+            //! plug a one-arg plugin
+            template <typename PLUGIN, typename IDENTIFIER, typename ENTER_EXPR>
+            void plug(const IDENTIFIER &id, const ENTER_EXPR &rx)
+            {
+                PLUGIN *plg = new PLUGIN(*this,id,rx);
+                submit(plg);
+            }
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Lexer);

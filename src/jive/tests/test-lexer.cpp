@@ -14,22 +14,14 @@ namespace
     public:
         explicit MyLexer() : Lexer("MyLexer")
         {
-            Scanner &self = *this;
-            self("INT","[:digit:]+");
-            self("ID","[:alpha:][:word:]*");
-            self("FLT","[:digit:]+f?");;
-            self("blank","[:blank:]+",false);
-            self.endl("endl", "[:endl:]");
-
-#if 1
-            Scanner &com = make<Scanner>("com");
-            self.call("com", "#", *this, self, &Scanner::discard);
-            com("dot",".+",false);
-            com.back("[:endl:]", *this, com, &Scanner::newLineAndDrop);
-#endif
+            emit("INT","[:digit:]+");
+            emit("ID","[:alpha:][:word:]*");
+            emit("FLT","[:digit:]+f?");;
+            drop("blank","[:blank:]+");
+            endl("endl", "[:endl:]");
 
             plug<Lexical::CxxComment>("CxxComment");
-
+            plug<Lexical::SingleLineComment>("ShellComment",'#');
 
 
 

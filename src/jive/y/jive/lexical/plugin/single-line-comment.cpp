@@ -1,5 +1,6 @@
 
 #include "y/jive/lexical/plugin/single-line-comment.hpp"
+#include "y/stream/xmlog.hpp"
 
 namespace Yttrium
 {
@@ -15,12 +16,25 @@ namespace Yttrium
 
             }
 
+            Message SingleLineComment:: leave(const Token &) noexcept
+            {
+                Y_XMLOG( getXMLog(), "<" << name << "> Leave");
+                return LX_ENDL;
+            }
+
+            Message SingleLineComment:: enter(const Token &) noexcept
+            {
+                Y_XMLOG( getXMLog(), "<" << name << "> Enter");
+                return 0;
+            }
+
             void SingleLineComment:: setup()
             {
-                Scanner &self = *this;
-                back("[:endl:]", parent, self, & Scanner::newLineAndDrop);
-                self("any",".+",false);
+                ret("[:endl:]");
+                drop("comment",".+");
             }
+
+            
 
         }
 
