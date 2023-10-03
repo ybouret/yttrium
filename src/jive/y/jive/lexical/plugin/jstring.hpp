@@ -14,11 +14,20 @@ namespace Yttrium
 
         namespace Lexical
         {
-            
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Just a String (JSON/C style)
+            //
+            //
+            //__________________________________________________________________
             class JString : public String_
             {
             public:
 
+                //! setup
                 template <typename ID> inline
                 explicit JString(Lexer &    lx,
                                  const ID & id) :
@@ -27,6 +36,7 @@ namespace Yttrium
 
                 }
 
+                //! cleanup
                 virtual ~JString() noexcept;
 
             private:

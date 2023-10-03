@@ -16,10 +16,19 @@ namespace Yttrium
         namespace Lexical
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Raw string, single quote-separated
+            //
+            //
+            //__________________________________________________________________
             class RString : public String_
             {
             public:
 
+                //! setup
                 template <typename ID> inline
                 explicit RString(Lexer &    lx,
                                  const ID & id) :
@@ -28,6 +37,7 @@ namespace Yttrium
 
                 }
 
+                //! cleanup
                 virtual ~RString() noexcept;
 
             private:

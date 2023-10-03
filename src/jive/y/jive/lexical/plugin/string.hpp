@@ -19,24 +19,41 @@ namespace Yttrium
             //
             //
             //
-            //! ...
+            //! base class for Lexical String
             //
             //
             //__________________________________________________________________
             class String_ : public Plugin
             {
             public:
-                static const char * const Com;;
-                
+                //__________________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //__________________________________________________________________
+                static const char * const Com; //!< common 7-bits chars
+
+                //! Kind of string
                 enum Kind
                 {
-                    DQUOTES,
-                    QUOTES,
-                    BRACKETS
+                    DQUOTES, //!< double quotes separated
+                    QUOTES,  //!< single quotes separated
+                    BRACKETS //!< braket separated
                 };
+
+                //__________________________________________________________________
+                //
+                //
+                // C++
+                //
+                //__________________________________________________________________
+
+                //! cleanup
                 virtual ~String_() noexcept;
 
             protected:
+                //! setup
                 template <typename ID> inline
                 explicit String_(Lexer       &lx,
                                  const ID    &id,

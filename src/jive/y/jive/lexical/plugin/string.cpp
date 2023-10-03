@@ -21,10 +21,12 @@ namespace Yttrium
             {
                 switch(sk)
                 {
-                    case DQUOTES:  return DQUOTES_RX;
+                    case DQUOTES: break;
                     case QUOTES:   return "'";
                     case BRACKETS: return "<";
                 }
+
+                return DQUOTES_RX;
             }
 
 
