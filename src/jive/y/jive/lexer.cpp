@@ -88,6 +88,12 @@ namespace Yttrium
             inline Lexeme * get(Source &source)
             {
                 Y_XML_SECTION_OPT(xml,name, " : get next lexeme");
+
+                //--------------------------------------------------------------
+                //
+                // probing after a drop or a control
+                //
+                //--------------------------------------------------------------
             PROBE:
                 assert(0!=scanner);
                 assert(scanner->isClean());
@@ -111,19 +117,33 @@ namespace Yttrium
                     switch( scanner->probe(source,action) )
                     {
                         case Lexical::ReturnSuccess: {
+                            //==================================================
+                            //
+                            // process success
+                            //
+                            //==================================================
                             assert(0!=action);
                             const Lexical::Message msg = action->perform();
 
+                            //--------------------------------------------------
+                            //
                             // always check for newline
+                            //
+                            //--------------------------------------------------
                             if( 0!= (msg & Lexical::LX_ENDL) )
                             {
                                 source.newLine();
                             }
 
+                            //--------------------------------------------------
+                            //
+                            // then process output or control
+                            //
+                            //--------------------------------------------------
                             if( 0 != (msg & Lexical::LX_CNTL) )
                             {
                                 assert(0==(msg&(Lexical::LX_EMIT|Lexical::LX_DROP)));
-                                action->cleanup();
+                                action->motif->release();
                                 goto PROBE;
                             }
                             else
@@ -132,8 +152,8 @@ namespace Yttrium
                                 // check drop
                                 if( 0 != (msg & Lexical::LX_DROP) )
                                 {
-                                    checkNo(Lexical::LX_EMIT,msg);
-                                    action->cleanup();
+                                    checkNoFlags(Lexical::LX_EMIT,msg);
+                                    action->motif->release();
                                     goto PROBE;
                                 }
 
@@ -143,16 +163,22 @@ namespace Yttrium
                                     return action->produce();
                                 }
 
-                                throw Exception("unhandled message");
+                                // shouldn't happen
+                                throw Specific::Exception( name.c_str(),"invalid message 0x%x", msg);
                             }
-
-
                         }
 
                         case Lexical::ReturnFailure: {
+                            //==================================================
+                            //
+                            // process failure
+                            //
+                            //==================================================
                             Token bad;
                             if(source.guess(bad))
                             {
+                                assert(bad.size>0);
+                                assert(0!=bad.head);
                                 const String info  = bad.toPrintable();
                                 Exception    excp =  Specific::Exception( name.c_str(), "syntax error '%s'", info.c_str());
                                 throw bad.head->stamp(excp);
@@ -178,17 +204,11 @@ namespace Yttrium
 
             }
 
-            inline void checkNo(const Lexical::Message flag, const Lexical::Message msg) const
-            {
-                if( 0 != (msg&flag) ) throw Specific::Exception( name.c_str(), "invalid lexical message");
-            }
 
             inline void jump(const String &id)
             {
                 assert(0!=scanner);
-                Scanner::Pointer *sptr = content.search(id);
-                if(!sptr) throw Specific::Exception(name.c_str(),"No <%s> to jump to",id());
-                Scanner &target = **sptr;
+                Scanner &target = get(id,"jump to");
                 Y_XMLOG(xml, "[jump] from <" << scanner->name << "> to <" << target.name << ">");
                 scanner = & target;
             }
@@ -196,9 +216,7 @@ namespace Yttrium
             inline void call(const String &id)
             {
                 assert(0!=scanner);
-                Scanner::Pointer *sptr = content.search(id);
-                if(!sptr) throw Specific::Exception(name.c_str(),"No <%s> to call",id());
-                Scanner &target = **sptr;
+                Scanner &target = get(id,"call");
                 history << *scanner;
                 Y_XMLOG(xml, "[call] from <" << scanner->name << "> to <" << target.name << ">");
                 scanner = &target;
@@ -237,6 +255,20 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(App);
+
+            inline void checkNoFlags(const Lexical::Message flag, const Lexical::Message msg) const
+            {
+                if( 0 != (msg&flag) ) throw Specific::Exception( name.c_str(), "invalid lexical message");
+            }
+
+            inline Scanner & get(const String &id, const char *text)
+            {
+                assert(0!=text);
+                Scanner::Pointer *pp = content.search(id);
+                if(!pp) throw Specific::Exception(name.c_str(),"No <%s> to %s",id(),text);
+                return **pp;
+            }
+
         };
 
         Lexer::App * Lexer::Create(Scanner &self)

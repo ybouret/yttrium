@@ -18,12 +18,7 @@ namespace Yttrium
                 assert(token.size>0);
                 return doing(token);
             }
-
-            void Action:: cleanup() noexcept
-            {
-                motif->release();
-            }
-
+            
 
             Unit * Action:: produce()
             {
