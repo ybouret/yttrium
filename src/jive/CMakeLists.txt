@@ -10,6 +10,7 @@ jive/pattern/alter
 jive/pattern/regexp
 jive/lexical
 jive/lexical/plugin
+jive/syntax
 )
 
 add_subdirectory(tests)
