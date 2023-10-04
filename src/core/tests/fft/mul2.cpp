@@ -32,6 +32,12 @@ static inline void show(const Readable<uint8_t> &arr)
     std::cerr << std::endl;
 }
 
+typedef Complex<double> cplx;
+
+static Hexadecimal D2H(const cplx &z)
+{
+    return Hexadecimal( unsigned(z.re), Hexadecimal::Compact);
+}
 
 Y_UTEST(fft_mul2)
 {
@@ -56,12 +62,70 @@ Y_UTEST(fft_mul2)
         const uint64_t W = uint64_t(U) * uint64_t(V);
         std::cerr << "W= 0x" << Hexadecimal(W) << " = " << W << std::endl;
 
-        size_t          nn = 1;
+        size_t          nr = 1;
         const size_t    mn = Max(n,m);
-        while (nn < mn) nn <<= 1;
-        nn <<= 1;
-        std::cerr << "#nn=" << nn << std::endl;
+        while (nr < mn) nr <<= 1;
+        nr <<= 1;
+        std::cerr << "nr=" << nr << std::endl;
+        CxxArray<cplx> fft1(nr);
+        CxxArray<cplx> fft2(nr);
+        for(size_t i=1;i<=n;++i)
+        {
+            fft1[i].re = u[n+1-i];
+        }
+
+        for(size_t i=1; i<=m;++i)
+        {
+            fft2[i].re = v[m+1-i];
+        }
+
+
+        Core::Display(std::cerr << "fft1 = ", &fft1[1],nr, D2H) << std::endl;
+        Core::Display(std::cerr << "fft2 = ", &fft2[1],nr, D2H) << std::endl;
+
+        FFT::Forward(&(fft1[1].re)-1,nr);
+        FFT::Forward(&(fft2[1].re)-1,nr);
+
+        for(size_t i=nr;i>0;--i)
+        {
+            fft1[i] *= fft2[i];
+        }
+
+        FFT::Reverse(&(fft1[1].re)-1,nr);
+
+        //Core::Display(std::cerr << "z1   = ", &fft1[1],nr) << std::endl;
+
+        static const double RX = 256.0;
+        //const size_t        nh = nn>>1;
+
+        double cy=0.0;
+        for(size_t j=nr;j>=1;j--)
+        {
+            const double t =  floor(fft1[j].re/nr+cy+0.5);
+            cy=(unsigned long) (t/RX);
+            //std::cerr << "t=" << t << ", cy=" << cy << std::endl;
+            fft1[j].re=uint8_t(t-cy*RX);
+        }
         
+        CxxArray<uint8_t> w(m+n);
+        if(m+n>0)
+        {
+            w[1]=(unsigned char) cy;
+            for (size_t j=2;j<=n+m;j++)
+                w[j]=(unsigned char) (fft1[j-1].re);
+            //show(w);
+        }
+
+        uint64_t res = 0;
+        for(size_t i=1;i<=m+n;++i)
+        {
+            res <<= 8;
+            res |= w[i];
+        }
+        std::cerr << "p=" << res << std::endl;
+
+
+
 
 
 
