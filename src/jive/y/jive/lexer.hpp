@@ -11,9 +11,7 @@ namespace Yttrium
     namespace Jive
     {
 
-        typedef Lexical::Unit  Lexeme;    //!< alias
-        typedef Lexical::Units Lexemes;   //!< alias
-
+        
         //______________________________________________________________________
         //
         //

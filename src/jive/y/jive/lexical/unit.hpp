@@ -56,6 +56,9 @@ namespace Yttrium
 
         }
 
+        typedef Lexical::Unit  Lexeme;     //!< alias
+        typedef Lexical::Units Lexemes;    //!< alias
+
     }
 }
 

@@ -15,7 +15,7 @@ Y_UTEST_DECL(32)
     Y_UTEST(scanner);
     Y_UTEST(match);
     Y_UTEST(lexer);
-
+    Y_UTEST(grammar);
 }
 Y_UTEST_EXEC()
 

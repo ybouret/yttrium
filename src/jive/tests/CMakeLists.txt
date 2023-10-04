@@ -15,4 +15,4 @@ add_test(rx      test-jive rx)
 add_test(scanner test-jive scanner)
 add_test(match   test-jive match)
 add_test(lexer   test-jive lexer)
-
+add_test(grammar test-jive grammar)
