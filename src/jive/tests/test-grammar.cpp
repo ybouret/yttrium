@@ -12,7 +12,7 @@ Y_UTEST(grammar)
     Y_SIZEOF(Lexical::Unit);
     Y_SIZEOF(Syntax::XNode::List);
 
-    AutoPtr<Syntax::XNode> xn = Syntax::XNode::Create();
+    //AutoPtr<Syntax::XNode> xn = Syntax::XNode::Create();
 
 }
 Y_UDONE()
