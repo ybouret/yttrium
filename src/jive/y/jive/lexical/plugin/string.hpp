@@ -58,7 +58,8 @@ namespace Yttrium
                 explicit String_(Lexer       &lx,
                                  const ID    &id,
                                  const Kind   sk) :
-                Plugin(lx,id,GetEntryRX(sk),RejectEndOfStream)
+                Plugin(lx,id,GetEntryRX(sk),RejectEndOfStream),
+                content()
                 {
                     initialize(sk);
                 }
@@ -67,10 +68,9 @@ namespace Yttrium
                 Y_DISABLE_COPY_AND_ASSIGN(String_);
                 static const char *   GetEntryRX(const Kind) noexcept;
                 void                  initialize(const Kind sk);
-
-                virtual Message enter(const Token &);
-                virtual Message leave(const Token &);
-                Message         onCom(const Token &);
+                virtual Message       enter(const Token &);
+                virtual Message       leave(const Token &);
+                Message               onCom(const Token &);
 
                 Token content;
             };
