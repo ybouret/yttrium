@@ -34,7 +34,7 @@ namespace Yttrium
                 //__________________________________________________________________
                 static const char * const Com; //!< common 7-bits chars
 
-                //! Kind of string
+                //! kind of string
                 enum Kind
                 {
                     DQUOTES, //!< double quotes separated

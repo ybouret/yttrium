@@ -4,6 +4,7 @@
 #include "y/utest/timing.hpp"
 #include "y/type/utils.hpp"
 #include "y/memory/buffer/of.hpp"
+#include "y/container/cxx/array.hpp"
 
 using namespace Yttrium;
 
@@ -14,35 +15,49 @@ namespace
     template <typename T>
     static inline void CheckFFT2(const unsigned shift)
     {
-        const size_t size = 1 << shift;
+        const size_t nr = 1 << shift;
+        const size_t nc = nr << 1;
 
-        Memory::BufferOf< Complex<T> > fft1(size);
-        Memory::BufferOf< Complex<T> > fft2(size);
-        Memory::BufferOf< T >          data1(size);
-        Memory::BufferOf< T >          data2(size);
-        Memory::BufferOf< Complex<T> > cplx1(size);
+        CxxArray<T> data1(nr);
+        CxxArray<T> data2(nr);
 
-        T *f1 = (&fft1[0].re)-1;
-        T *f2 = (&fft2[0].re)-1;
-        T *c1 = (&cplx1[0].re)-1;
-
-        T *d1 = &data1[0] - 1;
-        T *d2 = &data2[0] - 1;
-
-        for(size_t i=1;i<=size;++i)
+        for(size_t i=1;i<=nr;++i)
         {
-            d1[i] = T(i);
-            d2[i] = 1+size-i;
-            cplx1[i-1] = d1[i];
+            data1[i] = T(i);
+            data2[i] = T(nr+1-i);
         }
 
-        Core::Display(std::cerr,&data1[0],size) << std::endl;
-        Core::Display(std::cerr,&data2[0],size) << std::endl;
-        Core::Display(std::cerr,&cplx1[0],size) << std::endl;
+        Core::Display(std::cerr << "data1=", &data1[1], nr) << std::endl;
+        Core::Display(std::cerr << "data2=", &data2[1], nr) << std::endl;
 
-        FFT::Forward(f1, f2, d1, d2, size);
-        FFT::Forward(c1,size);
-        Core::Display(std::cerr<<"cpx1  = ",c1+1,2*size) << std::endl;
+
+        CxxArray<T> fft1a(nc);
+        CxxArray<T> fft2a(nc);
+        CxxArray<T> fft1b(nc);
+        CxxArray<T> fft2b(nc);
+
+        for(size_t i=1;i<=nr;++i)
+        {
+            const size_t j = 1 + (i-1)*2;
+            fft1a[j] = data1[i];
+            fft2a[j] = data2[i];
+        }
+
+        std::cerr << "original:" << std::endl;
+        Core::Display(std::cerr << "fft1a=", &fft1a[1], nc) << std::endl;
+        Core::Display(std::cerr << "fft2a=", &fft2a[1], nc) << std::endl;
+
+        FFT::Forward(fft1a.legacy(),nr);
+        FFT::Forward(fft2a.legacy(),nr);
+
+        std::cerr << "single x 2:" << std::endl;
+        Core::Display(std::cerr << "fft1a=", &fft1a[1], nc) << std::endl;
+        Core::Display(std::cerr << "fft2a=", &fft2a[1], nc) << std::endl;
+
+        FFT::Forward(fft1b.legacy(), fft2b.legacy(), data1.legacy(), data2.legacy(), nr);
+        std::cerr << "Dual:" << std::endl;
+        Core::Display(std::cerr << "fft1b=", &fft1b[1], nc) << std::endl;
+        Core::Display(std::cerr << "fft2b=", &fft2b[1], nc) << std::endl;
 
     }
 
@@ -52,6 +67,9 @@ Y_UTEST(fft2)
 {
     {
         CheckFFT2<float>(3);
+        CheckFFT2<double>(3);
+        CheckFFT2<long double>(3);
+
     }
 
 }
