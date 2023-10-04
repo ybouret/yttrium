@@ -51,7 +51,7 @@ namespace Yttrium
             if(0==h) throw Specific::Exception("Jive::Source","NULL module");
             AutoPtr<Module> guard(h);
             code = new Code(h);
-            (void) guard.yield();
+            guard.relax();
         }
 
 

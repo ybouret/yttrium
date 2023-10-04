@@ -4,6 +4,7 @@
 #define Y_Jive_Syntax_Node_Included 1
 
 #include "y/jive/lexical/unit.hpp"
+#include "y/calculus/align.hpp"
 
 namespace Yttrium
 {
@@ -12,28 +13,43 @@ namespace Yttrium
 
         namespace Syntax
         {
+            enum Feature
+            {
+                IsTerminal,
+                IsInternal
+            };
 
             class XNode : public Object
             {
             public:
-                typedef CxxListOf<XNode> List_;
-                class List : public Object, public List_
-                {
-                public:
-                    explicit List() noexcept;
-                    List(const List &);
-                    virtual ~List() noexcept;
+                typedef CxxListOf<XNode> List;
 
-                private:
-                    Y_DISABLE_ASSIGN(List);
-                };
 
-                XNode *next;
-                XNode *prev;
-                XNode *parent;
+                virtual ~XNode() noexcept;
+                static   XNode * Create();
+                static   XNode * Create(Lexeme *);
+
+                const Feature type;
+                XNode        *next;
+                XNode        *prev;
+                XNode        *sire;
+                
             private:
-                Y_DISABLE_ASSIGN(XNode);
+                Y_DISABLE_COPY_AND_ASSIGN(XNode);
+                explicit XNode()         noexcept;
+                explicit XNode(Lexeme *) noexcept;
+                union
+                {
+                    Lexeme *lptr;
+                    void   *wksp[Y_WORDS_FOR(List)];
+                };
+                List       &list_;
+
+
             };
+
+            typedef XNode::List XList;
+            
 
         }
 

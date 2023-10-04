@@ -59,7 +59,7 @@ namespace Yttrium
                 indices |= source->indices; // merge  indices
                 staying |= source->staying; // merge  staying
                 staying ^= indices;         // update staying
-                source.dismiss();
+                source.erase();
                 return true;
             }
 
