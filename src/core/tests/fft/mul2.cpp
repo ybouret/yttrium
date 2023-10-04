@@ -93,17 +93,14 @@ Y_UTEST(fft_mul2)
 
         FFT::Reverse(&(fft1[1].re)-1,nr);
 
-        //Core::Display(std::cerr << "z1   = ", &fft1[1],nr) << std::endl;
 
         static const double RX = 256.0;
-        //const size_t        nh = nn>>1;
 
         double cy=0.0;
         for(size_t j=nr;j>=1;j--)
         {
             const double t =  floor(fft1[j].re/nr+cy+0.5);
             cy=(unsigned long) (t/RX);
-            //std::cerr << "t=" << t << ", cy=" << cy << std::endl;
             fft1[j].re=uint8_t(t-cy*RX);
         }
         
