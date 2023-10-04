@@ -90,19 +90,7 @@ namespace Yttrium
             else            os << Nil;
             return os;
         }
-
-        //! test handles equality
-        inline friend bool operator==(const Ptr &lhs, const Ptr &rhs) noexcept
-        {
-            return lhs.handle == rhs.handle;
-        }
-
-        //! test handles difference
-        inline friend bool operator!=(const Ptr &lhs, const Ptr &rhs) noexcept
-        {
-            return lhs.handle != rhs.handle;
-        }
-
+        
 
 
     protected:
