@@ -123,6 +123,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(fft1);
     Y_UTEST(fft2);
     Y_UTEST(fft_mul);
+    Y_UTEST(fft_mul2);
     Y_UTEST(fft_xbr);
 
     Y_UTEST(strings);
