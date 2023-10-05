@@ -28,7 +28,9 @@ namespace Yttrium
                 static const uint32_t UUID = Y_FOURCC('A','L','T',':'); //!< alias
                 virtual ~Alternate() noexcept;                          //!< cleanup
 
-                
+                //! accept the first rule on manifest
+                virtual bool accepts(Y_JIVE_SYNTAX_RULE_API) const;
+
             protected:
                 //! forward name and uuid
                 template <typename ID>
