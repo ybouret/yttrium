@@ -4,7 +4,9 @@
 #ifndef Y_Jive_Syntax_Grammar_Included
 #define Y_Jive_Syntax_Grammar_Included 1
 
-#include "y/jive/syntax/rule.hpp"
+#include "y/jive/syntax/terminal.hpp"
+#include "y/jive/syntax/compound/aggregate.hpp"
+#include "y/jive/syntax/compound/alternate.hpp"
 
 namespace Yttrium
 {
@@ -25,6 +27,16 @@ namespace Yttrium
             class Grammar : public Entity
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef Syntax::Rule Rule;
+                typedef Aggregate    Agg;
+                typedef Alternate    Alt;
+
                 //______________________________________________________________
                 //
                 //

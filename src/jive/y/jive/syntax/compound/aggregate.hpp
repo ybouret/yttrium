@@ -26,9 +26,9 @@ namespace Yttrium
             class Aggregate : public Compound
             {
             public:
-                static const uint32_t UUID = Y_FOURCC('A','G','G',':');
-                virtual ~Aggregate() noexcept; //!< cleanup
-
+                static const uint32_t UUID = Y_FOURCC('A','G','G',':'); //!< alias
+                virtual ~Aggregate() noexcept;                          //!< cleanup
+                
 
             protected:
                 //! forward name and uuid

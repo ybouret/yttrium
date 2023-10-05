@@ -25,10 +25,10 @@ namespace Yttrium
             class Alternate : public Compound
             {
             public:
-                static const uint32_t UUID = Y_FOURCC('A','L','T',':');
-                virtual ~Alternate() noexcept; //!< cleanup
+                static const uint32_t UUID = Y_FOURCC('A','L','T',':'); //!< alias
+                virtual ~Alternate() noexcept;                          //!< cleanup
 
-
+                
             protected:
                 //! forward name and uuid
                 template <typename ID>

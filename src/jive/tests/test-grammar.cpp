@@ -1,6 +1,5 @@
 
 #include "y/jive/syntax/grammar.hpp"
-#include "y/jive/syntax/terminal.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
@@ -15,6 +14,8 @@ namespace
     public:
         explicit MyGrammar() : Syntax::Grammar("MyGrammar")
         {
+            const Rule &INT = add( new Syntax::Terminal("INT") );
+            
         }
 
 
@@ -39,7 +40,7 @@ Y_UTEST(grammar)
 
     MyGrammar G;
 
-    G.add( new Syntax::Terminal("INT") );
+
 
     //AutoPtr<Syntax::XNode> xn = Syntax::XNode::Create();
 
