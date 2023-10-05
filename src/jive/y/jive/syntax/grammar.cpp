@@ -1,5 +1,4 @@
-
-#include "y/jive/syntax/rule.hpp"
+#include "y/jive/syntax/grammar.hpp"
 
 namespace Yttrium
 {
@@ -8,11 +7,15 @@ namespace Yttrium
 
         namespace Syntax
         {
- 
-            Rule:: ~Rule() noexcept {}
+
+            Grammar:: ~Grammar() noexcept
+            {
+            }
             
+
         }
 
     }
 
 }
+

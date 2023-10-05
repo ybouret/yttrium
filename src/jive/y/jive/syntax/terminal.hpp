@@ -23,7 +23,7 @@ namespace Yttrium
                 template <typename ID>
                 explicit Terminal( const ID &id ) : Rule(id,UUID)
                 {
-                    I_am<Terminal>();
+                    I_am<Terminal>(this);
                 }
 
                 virtual ~Terminal() noexcept;

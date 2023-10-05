@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Jive_Syntax_Rule_Included
@@ -27,7 +26,7 @@ namespace Yttrium
             protected:
                 template <typename ID> inline
                 explicit Rule(const ID &id, const uint32_t dw) :
-                Entity(id), uuid(dw), self(0) {}
+                Entity(id), uuid(dw), self(0), next(0), prev(0) {}
 
             public:
                 virtual ~Rule() noexcept;
@@ -60,11 +59,17 @@ namespace Yttrium
 
 
                 //! helper to set internal type
-                template <typename T> inline
-                void I_am() noexcept { assert(0==self); T *here = this; Coerce(self) = here; }
+                template <typename T> static inline
+                void I_am(T *rule) noexcept {
+                    assert(0==rule->self);
+                    Coerce(rule->self) = rule;
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Rule);
+            public:
+                Rule *next;
+                Rule *prev;
             };
         }
 
