@@ -14,8 +14,13 @@ namespace
     public:
         explicit MyGrammar() : Syntax::Grammar("MyGrammar")
         {
-            const Rule &INT = add( new Syntax::Terminal("INT") );
-            
+
+            Agg        &EXPR = add( new Agg("EXPR") );
+            const Rule &INT  = add( new Syntax::Terminal("INT") );
+            const Rule &SEP  = add( new Syntax::Terminal("SEP") );
+
+            EXPR << INT << SEP;
+
         }
 
 

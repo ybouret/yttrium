@@ -27,15 +27,18 @@ namespace Yttrium
             {
             public:
                 static const uint32_t UUID = Y_FOURCC('A','G','G',':'); //!< alias
-                virtual ~Aggregate() noexcept;                          //!< cleanup
-                
 
-            protected:
+
                 //! forward name and uuid
                 template <typename ID>
-                explicit Aggregate(const ID &id) : Compound(id,UUID)
-                {
-                }
+                explicit Aggregate(const ID &id) : Compound(id,UUID) {}
+
+                //! cleanup
+                virtual ~Aggregate() noexcept;
+
+
+                //! accept all rules on manifest
+                virtual bool accepts(Y_JIVE_SYNTAX_RULE_API) const;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Aggregate);

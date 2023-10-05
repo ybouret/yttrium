@@ -68,7 +68,9 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 static   void    Expand(Tree &  tree,  XNode *node) noexcept; //!< expand tree
+                static   void    Expand(Tree &  tree,  Tree  &sub ) noexcept; //!< expand tree
                 static   void    BackTo(Lexer & lexer, XNode *node) noexcept; //!< node back to lexer
+                static   void    BackTo(Lexer & lexer, Tree  &tree) noexcept; //!< return content of tree
 
                 const List   & branch() const noexcept; //!< if internal
                 const Lexeme & lexeme();                //!< if terminal

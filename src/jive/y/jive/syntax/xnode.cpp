@@ -73,6 +73,13 @@ namespace Yttrium
                 }
             }
 
+            void XNode:: Expand(Tree &tree, Tree &sub) noexcept
+            {
+                assert(sub.isValid());
+                Expand(tree,sub.yield());
+            }
+
+
             void XNode:: BackTo(Lexer &lexer, XNode *node) noexcept
             {
                 assert(0!=node);
@@ -91,7 +98,11 @@ namespace Yttrium
                 }
 
                 delete node;
+            }
 
+            void XNode::BackTo(Lexer &lexer, Tree &tree) noexcept
+            {
+                BackTo(lexer,tree.yield());
             }
 
 
