@@ -7,55 +7,57 @@
 #include "y/jive/syntax/terminal.hpp"
 #include "y/jive/syntax/compound/aggregate.hpp"
 #include "y/jive/syntax/compound/alternate.hpp"
+#include "y/jive/syntax/wildcard/optional.hpp"
 
 namespace Yttrium
 {
     namespace Jive
     {
 
-        //__________________________________________________________________
+        //______________________________________________________________________
         //
         //
         //
         //! Grammar is a set of rules
         //
         //
-        //__________________________________________________________________
+        //______________________________________________________________________
         class Grammar : public Entity
         {
         public:
-            //______________________________________________________________
+            //__________________________________________________________________
             //
             //
             // Definitions
             //
-            //______________________________________________________________
-            typedef Syntax::Rule         Rule;
-            typedef Syntax::Aggregate    Agg;
-            typedef Syntax::Alternate    Alt;
-            
+            //__________________________________________________________________
+            typedef Syntax::Rule         Rule; //!< alias
+            typedef Syntax::Aggregate    Agg;  //!< alias
+            typedef Syntax::Alternate    Alt;  //!< alias
+            typedef Syntax::Optional     Opt;  //!< alias
 
-            //______________________________________________________________
+
+            //__________________________________________________________________
             //
             //
             // C++
             //
-            //______________________________________________________________
+            //__________________________________________________________________
             virtual ~Grammar() noexcept; //!< cleanup
 
-            //! setup
+            //! setup with name
             template <typename ID> inline
             explicit Grammar(const ID &id) :
             Entity(id), code( Initialize(name) )
             {}
 
-            //______________________________________________________________
+            //__________________________________________________________________
             //
             //
             // Methods
             //
-            //______________________________________________________________
-
+            //__________________________________________________________________
+            
             //! generic add a newly created rule
             template <typename RULE> inline
             RULE & add(RULE *rule)

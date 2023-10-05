@@ -4,10 +4,11 @@
 #define Y_Jive_Syntax_Rule_Included 1
 
 #include "y/jive/syntax/xnode.hpp"
-#include "y/associative/address-book.hpp"
 
 namespace Yttrium
 {
+    class AddressBook;
+
     namespace Jive
     {
 

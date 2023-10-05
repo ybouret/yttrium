@@ -1,6 +1,7 @@
 
 
 #include "y/jive/syntax/terminal.hpp"
+#include "y/associative/address-book.hpp"
 
 namespace Yttrium
 {

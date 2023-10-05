@@ -35,11 +35,12 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Tag(const char *  );       //!< new string from test
-            explicit Tag(const String &);       //!< new string from string
-            explicit Tag(const char);           //!< new string from char
-            explicit Tag(const Tag &) noexcept; //!< shared copy
-            virtual ~Tag() noexcept;            //!< cleanup
+            explicit Tag(const char *  );          //!< new string from test
+            explicit Tag(const String *) noexcept; //!< direct
+            explicit Tag(const String &);          //!< new string from string
+            explicit Tag(const char);              //!< new string from char
+            explicit Tag(const Tag &) noexcept;    //!< shared copy
+            virtual ~Tag() noexcept;               //!< cleanup
 
         private:
             Y_DISABLE_ASSIGN(Tag);

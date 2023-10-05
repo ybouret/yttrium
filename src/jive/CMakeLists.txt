@@ -12,6 +12,7 @@ jive/lexical
 jive/lexical/plugin
 jive/syntax
 jive/syntax/compound
+jive/syntax/wildcard
 )
 
 add_subdirectory(tests)

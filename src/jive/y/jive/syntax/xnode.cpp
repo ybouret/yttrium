@@ -75,8 +75,8 @@ namespace Yttrium
 
             void XNode:: Expand(Tree &tree, Tree &sub) noexcept
             {
-                assert(sub.isValid());
-                Expand(tree,sub.yield());
+                if(sub.isValid())
+                    Expand(tree,sub.yield());
             }
 
 
