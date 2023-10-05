@@ -17,7 +17,7 @@ namespace Yttrium
             {
 
                 XTree localTree = XNode::Create(*this);
-                for(const RNode *node=head;node;node=node->next)
+                for(const NodeType *node=head;node;node=node->next)
                 {
                     const Rule &rule = **node;
                     if( !rule.accepts(lexer, source, localTree) )

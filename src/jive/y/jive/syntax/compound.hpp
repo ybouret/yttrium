@@ -34,7 +34,6 @@ namespace Yttrium
             class Compound : public Internal, public Manifest
             {
             public:
-                typedef Manifest::NodeType RNode;
                 virtual ~Compound() noexcept; //!< cleanup
 
 

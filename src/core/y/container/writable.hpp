@@ -46,7 +46,8 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        virtual Type & operator[](const size_t) noexcept = 0; //!< access in [1..size()]
+        virtual ConstType & operator[](const size_t) const noexcept = 0; //!< access in [1..size()], avoids overload warning
+        virtual Type &      operator[](const size_t) noexcept       = 0; //!< access in [1..size()]
 
         //! load same value(s)
         inline void ld(ParamType sameValue)

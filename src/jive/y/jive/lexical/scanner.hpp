@@ -142,7 +142,7 @@ namespace Yttrium
 
                 //______________________________________________________________
                 //
-                //! create a simple action to   discard an unit
+                //! create a simple action to discard an unit
                 //______________________________________________________________
                 template <typename ID, typename RX>
                 inline void drop(const ID &id, const RX &rx)
@@ -150,6 +150,18 @@ namespace Yttrium
                     Scanner &self = *this;
                     self(id,rx,self,& Scanner::discard);
                 }
+
+                //______________________________________________________________
+                //
+                //! create a simple action to discard an unit, name = expression
+                //______________________________________________________________
+                template <typename RX>
+                inline void drop(const RX &rx)
+                {
+                    Scanner &self = *this;
+                    self(rx,rx,self,& Scanner::discard);
+                }
+
 
 
 
@@ -163,6 +175,18 @@ namespace Yttrium
                     Scanner &self = *this;
                     self(id,rx,self, (emit ? & Scanner::newLineAndEmit : & Scanner::newLineAndDrop) );
                 }
+
+                //______________________________________________________________
+                //
+                //! lexical end line, name=expression
+                //______________________________________________________________
+                template < typename RX>
+                inline void endl(const RX &rx, const bool emit = false)
+                {
+                    Scanner &self = *this;
+                    self(rx,rx,self, (emit ? & Scanner::newLineAndEmit : & Scanner::newLineAndDrop) );
+                }
+
 
                 //______________________________________________________________
                 //

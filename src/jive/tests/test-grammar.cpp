@@ -1,5 +1,5 @@
 
-#include "y/jive/syntax/grammar.hpp"
+#include "y/jive/grammar.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
@@ -9,10 +9,10 @@ using namespace Jive;
 
 namespace
 {
-    class MyGrammar : public Syntax::Grammar
+    class MyGrammar : public  Grammar
     {
     public:
-        explicit MyGrammar() : Syntax::Grammar("MyGrammar")
+        explicit MyGrammar() :  Grammar("MyGrammar")
         {
 
             Agg        &EXPR = add( new Agg("EXPR") );
@@ -36,8 +36,17 @@ namespace
     class MyLexer : public Lexer
     {
     public:
-        explicit MyLexer() : Lexer("MyLexer") {}
+        explicit MyLexer() : Lexer("MyLexer") 
+        {
+            emit("INT","[0-9]+");
+            emit("SEP",';');
+            endl("[:endl:]");
+            drop("[:blank:]");
+        }
+
         virtual ~MyLexer() noexcept {}
+
+
 
     private:
         Y_DISABLE_ASSIGN(MyLexer);
@@ -49,6 +58,7 @@ Y_UTEST(grammar)
 
 
     MyGrammar G;
+    MyLexer   L;
 
 
 
