@@ -29,6 +29,9 @@ namespace Yttrium
     class AddressBook : public AddressMap
     {
     public:
+        using AddressMap::search; // to avoid overloaded virtual
+        using AddressMap::insert; // to avoid overloaded virtual
+
         //______________________________________________________________________
         //
         //
