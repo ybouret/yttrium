@@ -71,6 +71,9 @@ namespace Yttrium
                 Rule *next;
                 Rule *prev;
             };
+
+            typedef CxxListOf<Rule> Rules;
+
         }
 
     }
