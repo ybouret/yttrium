@@ -44,10 +44,9 @@ Y_UTEST(grammar)
     const Syntax::Terminal term("INT");
 
     MyGrammar G;
+    
 
 
-
-    //AutoPtr<Syntax::XNode> xn = Syntax::XNode::Create();
 
 
 
