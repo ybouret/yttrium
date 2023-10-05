@@ -4,6 +4,7 @@
 #define Y_Jive_Syntax_Rule_Included 1
 
 #include "y/jive/syntax/xnode.hpp"
+#include "y/associative/address-book.hpp"
 
 namespace Yttrium
 {
@@ -73,6 +74,9 @@ namespace Yttrium
                 //! interface
                 virtual bool accepts(Y_JIVE_SYNTAX_RULE_API) const = 0;
 
+                //! endorse in book
+                virtual void endorse(AddressBook &book)      const = 0;
+
                 //______________________________________________________________
                 //
                 //
@@ -93,7 +97,6 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Rule);
-
             };
 
             

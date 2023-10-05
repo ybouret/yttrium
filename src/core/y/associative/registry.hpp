@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_Associative_Glossary_Included
-#define Y_Associative_Glossary_Included 1
+#ifndef Y_Associative_Registry_Included
+#define Y_Associative_Registry_Included 1
 
 #include "y/associative/interface.hpp"
 

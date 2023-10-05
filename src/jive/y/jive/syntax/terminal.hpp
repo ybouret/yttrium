@@ -53,6 +53,9 @@ namespace Yttrium
 
                 //! accept a terminal: lexeme with same name
                 virtual bool accepts(Y_JIVE_SYNTAX_RULE_API) const;
+                
+                //! insert this in book
+                virtual void endorse(AddressBook &book)      const;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);

@@ -32,6 +32,13 @@ namespace Yttrium
                 }
             }
 
+            void Terminal:: endorse(AddressBook &book) const
+            {
+                const Rule &rule = *this;
+                book |= rule;
+            }
+
+            
         }
 
     }
