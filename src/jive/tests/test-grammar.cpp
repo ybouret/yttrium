@@ -32,19 +32,24 @@ namespace
     private:
         Y_DISABLE_COPY_AND_ASSIGN(MyGrammar);
     };
+
+    class MyLexer : public Lexer
+    {
+    public:
+        explicit MyLexer() : Lexer("MyLexer") {}
+        virtual ~MyLexer() noexcept {}
+
+    private:
+        Y_DISABLE_ASSIGN(MyLexer);
+    };
 }
 
 Y_UTEST(grammar)
 {
-    Y_SIZEOF(Syntax::XNode);
-    Y_SIZEOF(Lexical::Unit);
-    Y_SIZEOF(Syntax::XNode::List);
 
-
-    const Syntax::Terminal term("INT");
 
     MyGrammar G;
-    
+
 
 
 
