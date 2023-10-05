@@ -13,10 +13,34 @@ namespace Yttrium
         namespace Syntax
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //! helper for Rule API
+            //
+            //__________________________________________________________________
 #define Y_JIVE_SYNTAX_RULE_API Lexer &lexer, Source &source, XTree &tree
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Syntax Rule
+            //
+            //
+            //__________________________________________________________________
             class Rule : public Entity
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef ArkPtr<String,Rule> Pointer; //!< alias
+
+
                 //______________________________________________________________
                 //
                 //
@@ -24,9 +48,10 @@ namespace Yttrium
                 //
                 //______________________________________________________________
             protected:
+                //! create with name and uuid
                 template <typename ID> inline
                 explicit Rule(const ID &id, const uint32_t dw) :
-                Entity(id), uuid(dw), self(0), next(0), prev(0) {}
+                Entity(id), uuid(dw), self(0)  {}
 
             public:
                 virtual ~Rule() noexcept;
@@ -45,6 +70,7 @@ namespace Yttrium
                     return static_cast<const T*>(self);
                 }
 
+                //! interface
                 virtual bool accepts(Y_JIVE_SYNTAX_RULE_API) const = 0;
 
                 //______________________________________________________________
@@ -67,13 +93,10 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Rule);
-            public:
-                Rule *next;
-                Rule *prev;
+
             };
 
-            typedef CxxListOf<Rule> Rules;
-
+            
         }
 
     }

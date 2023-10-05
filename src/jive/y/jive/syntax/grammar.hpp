@@ -14,22 +14,50 @@ namespace Yttrium
         namespace Syntax
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Grammar is a set of rules
+            //
+            //
+            //__________________________________________________________________
             class Grammar : public Entity
             {
             public:
-                virtual ~Grammar() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                virtual ~Grammar() noexcept; //!< cleanup
 
+                //! setup
                 template <typename ID> inline
                 explicit Grammar(const ID &id) :
                 Entity(id), code( Initialize(name) )
                 {}
                 
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                //! generic add a newly created rule
                 template <typename RULE> inline
-                RULE & add(RULE *rule) {
+                RULE & add(RULE *rule) 
+                {
                     assert(0!=rule);
                     add( static_cast<Rule *>(rule) );
                     return *rule;
                 }
+                
+                void         topLevel(const Rule &);            //!< set top-level rule
+                const Rule & topLevel()                  const; //!< get top-level rule
+                const Rule & operator[](const String & ) const; //!< get rule by name
 
 
             private:

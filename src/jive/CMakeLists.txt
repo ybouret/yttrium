@@ -11,6 +11,7 @@ jive/pattern/regexp
 jive/lexical
 jive/lexical/plugin
 jive/syntax
+jive/syntax/compound
 )
 
 add_subdirectory(tests)

@@ -11,13 +11,13 @@ namespace Yttrium
         namespace Syntax
         {
 
+            typedef SuffixSet<String,Rule::Pointer> Rules;
 
             class Grammar:: Code : public Object, public Rules
             {
             public:
-                typedef ArkPtr<String,Rule> RulePtr;
 
-                explicit Code(const Tag &id) noexcept:
+                inline explicit Code(const Tag &id) :
                 Object(),
                 Rules(),
                 name(*id),
@@ -25,29 +25,32 @@ namespace Yttrium
                 {
                 }
 
-                virtual ~Code() noexcept
+                inline virtual ~Code() noexcept
                 {
-                    
+
                 }
 
                 void add(Rule *rule)
                 {
                     assert(0!=rule);
-                    {
-                        AutoPtr<Rule> guard(rule);
-                        const String &ruleName = *(rule->name);
-                        for(const Rule *mine=head;mine;mine=mine->next)
-                        {
-                            const String &rid = *(mine->name);
-                            if(rid==ruleName)
-                                throw Specific::Exception(name.c_str(), "multiple rule [%s]",ruleName.c_str());
-                        }
-                        pushTail(guard.yield());
-                    }
 
-                    //const RulePtr tmp(rule);
-
+                    const Rule::Pointer ptr(rule);
+                    if(!insert(ptr))
+                        throw Specific::Exception(name.c_str(), "multiple rule [%s]",rule->name->c_str());
+                    if(!entry)
+                        entry = rule;
                 }
+
+                inline void top(const Rule &rule)
+                {
+                    const Rule::Pointer *ppR = search( *(rule.name) );
+                    if(!ppR) throw Specific::Exception(name.c_str(), "no rule [%s]", rule.name->c_str() );
+                    const Rule &mine = **ppR;
+                    if( &mine != &rule) throw Specific::Exception(name.c_str(), "foreign rule [%s]", rule.name->c_str() );
+                    entry = & Coerce(mine);
+                }
+
+
 
                 const String &name;
                 Rule         *entry;
@@ -87,6 +90,30 @@ namespace Yttrium
                 assert(0!=code);
                 code->add(rule);
             }
+
+            void Grammar:: topLevel(const Rule &rule)
+            {
+                assert(0!=code);
+                code->top(rule);
+            }
+
+            const Rule & Grammar:: topLevel() const
+            {
+                assert(0!=code);
+                if(0==code->entry) throw Specific::Exception( name->c_str(), "empty grammar, no top-level rule");
+                return *(code->entry);
+            }
+
+
+            const Rule & Grammar:: operator[](const String &ruleName) const
+            {
+                assert(0!=code);
+                const Rule::Pointer *ppR = code->search( ruleName );
+                if(!ppR) throw Specific::Exception( name->c_str(), "no rule [%s]", ruleName.c_str() );
+                return **ppR;
+            }
+
+
         }
 
     }

@@ -19,51 +19,93 @@ namespace Yttrium
             class Internal;
             class Rule;
 
-
+            //__________________________________________________________________
+            //
+            //
+            //! Feature for XNode
+            //
+            //__________________________________________________________________
             enum Feature
             {
-                IsTerminal,
-                IsInternal
+                IsTerminal, //!< a  terminal node
+                IsInternal  //!< an internal node
             };
 
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! SyntaX-Tree node
+            //
+            //
+            //__________________________________________________________________
             class XNode : public Object
             {
             public:
-                typedef CxxListOf<XNode> List;
-                typedef AutoPtr<XNode>   Tree;
+                //______________________________________________________________
+                //
+                //
+                // Defintions
+                //
+                //______________________________________________________________
+                typedef CxxListOf<XNode> List; //!< alias
+                typedef AutoPtr<XNode>   Tree; //!< alias
 
-                virtual ~XNode() noexcept;
-                static   XNode * Create(const Internal &);
-                static   XNode * Create(const Terminal &,Lexeme *);
-                static   void    Expand(Tree &  tree,  XNode *node) noexcept;
-                static   void    BackTo(Lexer & lexer, XNode *node) noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                virtual ~XNode() noexcept;                             //!< cleanup
+                static   XNode * Create(const Internal &);             //!< create internal
+                static   XNode * Create(const Terminal &, Lexeme *);   //!< create terminal
 
-                const List   & branch() const noexcept;
-                const Lexeme & lexeme();
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                static   void    Expand(Tree &  tree,  XNode *node) noexcept; //!< expand tree
+                static   void    BackTo(Lexer & lexer, XNode *node) noexcept; //!< node back to lexer
 
-                const Rule   &rule;
-                const Feature type;
-                XNode        *next;
-                XNode        *prev;
-                XNode        *sire;
-                
+                const List   & branch() const noexcept; //!< if internal
+                const Lexeme & lexeme();                //!< if terminal
+
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const Rule   &rule; //!< creating rule
+                const Feature type; //!< feature
+                XNode        *next; //!< for list
+                XNode        *prev; //!< for list
+                XNode        *sire; //!< for tree
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(XNode);
                 explicit XNode(const Rule &)           noexcept;
                 explicit XNode(const Rule &, Lexeme *) noexcept;
                 union
                 {
-                    Lexeme *lptr;
-                    void   *wksp[Y_WORDS_FOR(List)];
+                    Lexeme *lptr;                    //!< lexeme (auto) pointer
+                    void   *wksp[Y_WORDS_FOR(List)]; //!< workspace for list
                 };
-                List       &chld;
-
+                List       &chld;                    //!< alias to child
 
             };
 
-            typedef XNode::List    XList;
-            typedef XNode::Tree    XTree;
+            //__________________________________________________________________
+            //
+            //
+            // Global definitions
+            //
+            //__________________________________________________________________
+            typedef XNode::List    XList; //!< alias
+            typedef XNode::Tree    XTree; //!< alias
 
         }
 

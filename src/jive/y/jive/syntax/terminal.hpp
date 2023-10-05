@@ -15,20 +15,43 @@ namespace Yttrium
         namespace Syntax
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Terminal rule
+            //
+            //
+            //__________________________________________________________________
             class Terminal : public Rule
             {
             public:
-                static const uint32_t UUID = Y_FOURCC('T','E','R','M');
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                static const uint32_t UUID = Y_FOURCC('T','E','R','M'); //!< alias
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! create a new terminal
                 template <typename ID>
                 explicit Terminal( const ID &id ) : Rule(id,UUID)
                 {
                     I_am<Terminal>(this);
                 }
 
+                //! cleanup
                 virtual ~Terminal() noexcept;
-                
-                //! accept a terminal with same name
+
+                //! accept a terminal: lexeme with same name
                 virtual bool accepts(Y_JIVE_SYNTAX_RULE_API) const;
 
             private:
