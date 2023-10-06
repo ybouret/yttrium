@@ -1,5 +1,6 @@
 
 #include "y/jive/syntax/compound/aggregate.hpp"
+#include "y/stream/xmlog.hpp"
 
 namespace Yttrium
 {
@@ -13,14 +14,16 @@ namespace Yttrium
             {
             }
 
+            const char * const Aggregate:: CallSign = "Aggregate";
+
             bool Aggregate:: accepts(Y_JIVE_SYNTAX_RULE_API) const
             {
-
+                Y_XML_SECTION_OPT(xml,CallSign, " name='" << name << "' size='" << size << "'");
                 XTree localTree = XNode::Create(*this);
                 for(const NodeType *sub=head;sub;sub=sub->next)
                 {
                     const Rule &rule = **sub;
-                    if( !rule.accepts(lexer, source, localTree,xml) )
+                    if( !rule.accepts(lexer,source,localTree,xml) )
                     {
                         XNode::BackTo(lexer,localTree);
                         return false;

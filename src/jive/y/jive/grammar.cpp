@@ -356,7 +356,7 @@ namespace Yttrium
             if(0==code->entry) throw Specific::Exception( name->c_str(), "empty grammar...");
             if(!code->locked)
             {
-                // WARNING
+                Y_XMLOG(code->xml, "*** WARNING: not validated!!");
             }
 
             XTree tree = 0;

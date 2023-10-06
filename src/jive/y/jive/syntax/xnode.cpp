@@ -86,12 +86,12 @@ namespace Yttrium
                 
                 switch(node->type)
                 {
-                    case IsTerminal:
+                    case IsInternal:
                         while(node->chld.size)
                             BackTo(lexer,node->chld.popTail());
                         break;
 
-                    case IsInternal:
+                    case IsTerminal:
                         assert(0!=node->lptr);
                         lexer.put(node->lptr);
                         node->lptr = 0;

@@ -15,14 +15,16 @@ namespace Yttrium
             {
             }
 
+            const char * const Terminal::CallSign = "Terminal";
+            
             bool Terminal:: accepts(Y_JIVE_SYNTAX_RULE_API) const
             {
-                Y_XML_SECTION_OPT(xml,"Terminal"," name='" << name << "'");
+                Y_XML_SECTION_OPT(xml,CallSign," name='" << name << "'");
 
                 Lexeme *lexeme = lexer.get(source);
                 if(0==lexeme)
                 {
-                    Y_XMLOG(xml, "@EOS");
+                    Y_XMLOG(xml, "<EOS>");
                     return false; // End Of Stream
                 }
                 else
@@ -31,13 +33,13 @@ namespace Yttrium
                     assert(0==lexeme->prev);
                     if( *(lexeme->name) == *name )
                     {
-                        Y_XMLOG(xml, "success");
+                        Y_XMLOG(xml, "<success>");
                         XNode::Expand(tree, XNode::Create(*this,lexeme) );
                         return true;
                     }
                     else
                     {
-                        Y_XMLOG(xml, "failure, got [" << lexeme->name << "]");
+                        Y_XMLOG(xml, "<failure/> (got [" << lexeme->name << "])");
                         lexer.put(lexeme);
                         return false;
                     }

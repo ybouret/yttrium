@@ -1,4 +1,5 @@
 #include "y/jive/syntax/wildcard/repeat.hpp"
+#include "y/stream/xmlog.hpp"
 
 namespace Yttrium
 {
@@ -34,21 +35,27 @@ namespace Yttrium
             }
 
 
+            const char * const Repeat:: CallSign = "Repeat";
+
             bool Repeat:: accepts(Y_JIVE_SYNTAX_RULE_API) const
             {
+                Y_XML_SECTION_OPT(xml,CallSign, " name='" << name << "'");
                 XTree    sub = XNode::Create(*this);
                 unsigned num = 0;
                 while( rule.accepts(lexer,source,sub,xml) )
                 {
                     ++num;
                 }
+                Y_XMLOG(xml, "-- repeat=" << num << "/" << atLeast);
                 if(num>=atLeast)
                 {
+                    Y_XMLOG(xml, "<success/>");
                     XNode::Expand(tree,sub);
                     return true;
                 }
                 else
                 {
+                    Y_XMLOG(xml, "<failure/>");
                     XNode::BackTo(lexer,sub);
                     return false;
                 }

@@ -1,5 +1,6 @@
 
 #include "y/jive/syntax/wildcard/option.hpp"
+#include "y/stream/xmlog.hpp"
 
 namespace Yttrium
 {
@@ -27,13 +28,20 @@ namespace Yttrium
             {
             }
 
+            const char * const Option:: CallSign = "Option";
 
             bool Option:: accepts(Y_JIVE_SYNTAX_RULE_API) const
             {
+                Y_XML_SECTION_OPT(xml,CallSign, " name='" << name << "'");
                 XTree localTree = 0;
                 if(rule.accepts(lexer,source,localTree,xml))
                 {
+                    Y_XMLOG(xml, "<found/>");
                     XNode::Expand(tree,localTree);
+                }
+                else
+                {
+                    Y_XMLOG(xml, "<!found/>");
                 }
                 return true;
             }

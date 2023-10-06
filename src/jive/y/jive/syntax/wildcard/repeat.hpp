@@ -31,7 +31,8 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                static const uint32_t UUID = Y_FOURCC('R','E','P',':'); //!< alias
+                static const uint32_t     UUID = Y_FOURCC('R','E','P',':'); //!< alias
+                static const char * const CallSign;                         //!< Repeast
 
                 //______________________________________________________________
                 //
