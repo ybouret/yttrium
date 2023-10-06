@@ -59,6 +59,9 @@ namespace Yttrium
                 //! accept all rules on manifest
                 virtual bool accepts(Y_JIVE_SYNTAX_RULE_API) const;
 
+                //! GraphViz
+                virtual void vizCore(OutputStream &) const;
+                
                 //! helper
                 Aggregate & operator +=(const Rule &);
 

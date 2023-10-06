@@ -33,6 +33,9 @@ namespace Yttrium
                 //! endorse this and rule
                 virtual void endorse(AddressBook &book) const;
 
+                //! link this to rule
+                virtual void vizLink(OutputStream &)    const;
+
                 //______________________________________________________________
                 //
                 //

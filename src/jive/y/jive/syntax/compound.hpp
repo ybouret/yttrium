@@ -37,6 +37,7 @@ namespace Yttrium
                 virtual ~Compound() noexcept; //!< cleanup
 
                 virtual void endorse(AddressBook &book) const; //!< endorse manifest
+                virtual void vizLink(OutputStream &)    const; //!< this to manifest
 
             protected:
                 //! forward name and uuid

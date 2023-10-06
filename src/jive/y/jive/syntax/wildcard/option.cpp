@@ -34,6 +34,14 @@ namespace Yttrium
                 }
                 return true;
             }
+
+            void Option:: vizCore(OutputStream &fp) const
+            {
+                node(fp) << '[';
+                Label(fp,*name);
+                fp << ']';
+                Endl(fp);
+            }
         }
 
     }

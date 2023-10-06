@@ -50,6 +50,14 @@ namespace Yttrium
                     return false;
                 }
             }
+
+            void Repeat:: vizCore(OutputStream &fp) const
+            {
+                node(fp) << '[';
+                Label(fp,*name);
+                fp << ']';
+                Endl(fp);
+            }
         }
 
     }

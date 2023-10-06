@@ -60,7 +60,7 @@ Y_UTEST(grammar)
     MyGrammar G;
     MyLexer   L;
 
-
+    Vizible::GraphViz("grammar.dot", G, true);
 
 
 

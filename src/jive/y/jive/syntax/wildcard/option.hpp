@@ -51,7 +51,9 @@ namespace Yttrium
                 //! always return true
                 virtual bool accepts(Y_JIVE_SYNTAX_RULE_API) const;
 
-
+                //! GraphViz
+                virtual void vizCore(OutputStream &) const;
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Option);
 

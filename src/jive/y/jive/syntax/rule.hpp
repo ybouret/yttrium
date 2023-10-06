@@ -4,6 +4,7 @@
 #define Y_Jive_Syntax_Rule_Included 1
 
 #include "y/jive/syntax/xnode.hpp"
+#include "y/graphviz/vizible.hpp"
 
 namespace Yttrium
 {
@@ -31,7 +32,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Rule : public Entity
+            class Rule : public Entity, public Vizible
             {
             public:
                 //______________________________________________________________
@@ -42,8 +43,7 @@ namespace Yttrium
                 //______________________________________________________________
                 typedef ArkPtr<String,Rule> Pointer; //!< alias
 
-                //weak;
-                
+
                 //______________________________________________________________
                 //
                 //
@@ -78,6 +78,12 @@ namespace Yttrium
 
                 //! endorse in book
                 virtual void endorse(AddressBook &book)      const = 0;
+
+                //! core GraphViz code: type, properties...
+                virtual void vizCore(OutputStream &)       const = 0;
+
+                //! post GraphViz code: linkage...
+                virtual void vizLink(OutputStream &)       const = 0;
 
                 //______________________________________________________________
                 //

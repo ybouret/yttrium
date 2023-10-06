@@ -56,6 +56,9 @@ namespace Yttrium
                 
                 //! insert this in book
                 virtual void endorse(AddressBook &book)      const;
+                
+                virtual void vizCore(OutputStream &) const;
+                virtual void vizLink(OutputStream &) const;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);

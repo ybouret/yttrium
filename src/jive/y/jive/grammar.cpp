@@ -28,7 +28,7 @@ namespace Yttrium
 
             }
 
-            void add(Rule *rule)
+            void ins(Rule *rule)
             {
                 assert(0!=rule);
 
@@ -48,6 +48,26 @@ namespace Yttrium
                 entry = & Coerce(mine);
             }
 
+            void makeGraphViz(OutputStream &fp) const
+            {
+                fp << "digraph " << name << " {\n";
+
+                // output core code
+                for(ConstIterator it=begin();it!=end();++it)
+                {
+                    const Rule &rule = **it;
+                    rule.vizCore(fp);
+                }
+
+                // output link code
+                for(ConstIterator it=begin();it!=end();++it)
+                {
+                    const Rule &rule = **it;
+                    rule.vizLink(fp);
+                }
+
+                fp << "}\n";
+            }
 
 
             const String &name;
@@ -80,17 +100,23 @@ namespace Yttrium
             Nullify(code);
         }
 
-        void Grammar:: add(Rule *rule)
+        void Grammar:: ins(Rule *rule)
         {
             assert(0!=rule);
             assert(0!=code);
-            code->add(rule);
+            code->ins(rule);
         }
 
         void Grammar:: topLevel(const Rule &rule)
         {
             assert(0!=code);
             code->top(rule);
+        }
+
+        void Grammar:: graphViz(OutputStream &fp) const
+        {
+            assert(0!=code);
+            code->makeGraphViz(fp);
         }
 
         const Syntax::Rule & Grammar:: topLevel() const
@@ -121,7 +147,7 @@ namespace Yttrium
         }
 
 
-        String * Grammar:: MakeNameFor(const Syntax::Manifest &m, const char sep)
+        String * Grammar:: UID(const Syntax::Manifest &m, const char sep)
         {
             AutoPtr<String> res = new String;
             {
@@ -141,6 +167,52 @@ namespace Yttrium
             }
             return res.yield();
         }
+
+        const Syntax::Rule & Grammar:: agg(Syntax::Manifest &manifest)
+        {
+            Agg & res = add( new Agg( UID(manifest,'#') ) );
+            res.swapWith(manifest);
+            return res;
+        }
+
+        const Syntax::Rule & Grammar:: Cat(const Rule &a, const Rule &b)
+        {
+            Syntax::Manifest manifest;
+            manifest << a << b;
+            return agg(manifest);
+        }
+
+        const Syntax::Rule & Grammar:: Cat(const Rule &a, const Rule &b, const Rule &c)
+        {
+            Syntax::Manifest manifest;
+            manifest << a << b << c;
+            return agg(manifest);
+        }
+
+
+        const Syntax::Rule & Grammar:: alt(Syntax::Manifest &manifest)
+        {
+            Alt & res = add( new Alt( UID(manifest,'|') ) );
+            res.swapWith(manifest);
+            return res;
+        }
+
+        const Syntax::Rule & Grammar:: Pick(const Rule &a, const Rule &b)
+        {
+            Syntax::Manifest manifest;
+            manifest << a << b;
+            return alt(manifest);
+        }
+
+        const Syntax::Rule & Grammar:: Pick(const Rule &a, const Rule &b, const Rule &c)
+        {
+            Syntax::Manifest manifest;
+            manifest << a << b << c;
+            return alt(manifest);
+        }
+
+
+
 
     }
 

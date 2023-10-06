@@ -20,7 +20,12 @@ namespace Yttrium
                 if(book.insert(self))
                     rule.endorse(book);
             }
-            
+
+
+            void Wildcard:: vizLink(OutputStream &fp) const
+            {
+                arrow(fp, &rule);
+            }
         }
 
     }

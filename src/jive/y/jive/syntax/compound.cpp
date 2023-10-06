@@ -18,10 +18,26 @@ namespace Yttrium
                 const Rule &rule = *this;
                 if(book.insert(rule))
                 {
-                    for(const NodeType *node = head; node; node=node->next)
+                    for(const NodeType *sub = head; sub; sub=sub->next)
                     {
-                        (**node).endorse(book);
+                        (**sub).endorse(book);
                     }
+                }
+            }
+
+            void Compound:: vizLink(OutputStream &fp) const
+            {
+                unsigned   idx  = 1;
+                const bool show = size>1;
+                for(const NodeType *sub = head; sub; sub=sub->next, ++idx)
+                {
+                    const Rule &r = **sub;
+                    arrow(fp, &r);
+                    if(show)
+                    {
+                        fp("[label=\"%u\"]",idx);
+                    }
+                    Endl(fp);
                 }
             }
 

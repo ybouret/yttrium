@@ -39,6 +39,18 @@ namespace Yttrium
                 book |= rule;
             }
 
+            void Terminal:: vizCore(OutputStream &fp) const
+            {
+                node(fp) << '[';
+                Label(fp,*name);
+                fp << ']';
+                Endl(fp);
+            }
+
+            void Terminal:: vizLink(OutputStream &) const
+            {
+                
+            }
             
         }
 

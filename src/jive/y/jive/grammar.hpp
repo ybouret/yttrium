@@ -65,7 +65,7 @@ namespace Yttrium
             RULE & add(RULE *rule)
             {
                 assert(0!=rule);
-                add( static_cast<Rule *>(rule) );
+                ins( static_cast<Rule *>(rule) );
                 return *rule;
             }
 
@@ -82,16 +82,25 @@ namespace Yttrium
             const Rule & ZOM(const Rule&); //!< Zero Or More rule
             const Rule & OOM(const Rule&); //!< One  Or More rule
 
-            static String *MakeNameFor(const Syntax::Manifest &, const char sep);
 
+            const Rule &Cat(const Rule &a, const Rule &b);
+            const Rule &Cat(const Rule &a, const Rule &b, const Rule &c);
+            const Rule &Pick(const Rule &a, const Rule &b);
+            const Rule &Pick(const Rule &a, const Rule &b, const Rule &c);
+
+            void graphViz(OutputStream &fp) const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Grammar);
             class Code;
             Code *code;
 
-            static Code *Initialize(const Tag &);
-            void         add(Rule *);
+            static Code *  Initialize(const Tag &);
+            void           ins(Rule *);
+            static String *UID(const Syntax::Manifest &, const char sep);
+            const Rule    &agg(Syntax::Manifest &);
+            const Rule    &alt(Syntax::Manifest &);
+
         };
 
 

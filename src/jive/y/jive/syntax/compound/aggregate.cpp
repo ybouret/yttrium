@@ -36,6 +36,13 @@ namespace Yttrium
                 return *this;
             }
 
+            void Aggregate:: vizCore(OutputStream &fp) const
+            {
+                node(fp) << '[';
+                Label(fp,*name);
+                fp << ']';
+                Endl(fp);
+            }
         }
 
     }
