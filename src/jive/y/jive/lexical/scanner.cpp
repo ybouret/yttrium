@@ -399,12 +399,13 @@ namespace Yttrium
                 Nullify(code);
             }
 
-            void Scanner:: submitCode(Action::Pointer &which)
+            const Action & Scanner:: submitCode(Action::Pointer &which)
             {
                 assert(0!=code);
                 if(which->motif->isFragile())
                     throw Specific::Exception(name->c_str(), "pattern '%s' if fragile", which->name->c_str());
                 code->add(which);
+                return *which;
             }
 
             void Scanner:: cleanup() noexcept

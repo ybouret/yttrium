@@ -105,7 +105,7 @@ namespace Yttrium
                 //______________________________________________________________
 
                 //! submit an action
-                void submitCode(Action::Pointer &which);
+                const Action &submitCode(Action::Pointer &which);
 
 
 

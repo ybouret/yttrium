@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_Jive_Syntax_Grammar_Included
-#define Y_Jive_Syntax_Grammar_Included 1
+#ifndef Y_Jive_Grammar_Included
+#define Y_Jive_Grammar_Included 1
 
 #include "y/jive/syntax/terminal.hpp"
 #include "y/jive/syntax/compound/aggregate.hpp"
@@ -39,7 +39,8 @@ namespace Yttrium
             typedef Syntax::Repeat       Rep;   //!< alias
             typedef Syntax::XNode        XNode; //!< alias
             typedef Syntax::XTree        XTree; //!< alias
-
+            typedef Syntax::Terminal     Term;  //!< alias
+            
             //__________________________________________________________________
             //
             //
