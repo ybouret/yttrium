@@ -173,9 +173,9 @@ namespace Yttrium
             }
 
 
-            const String &name;
-            Rule         *entry;
-            bool          locked;
+            const String &name;     //!< reference to grammar name
+            Rule         *entry;    //!< top-level rule
+            bool          locked;   //!< status
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);

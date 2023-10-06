@@ -42,7 +42,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 typedef ArkPtr<String,Rule> Pointer; //!< alias
-
+                static bool                 Verbose; //!< global verbosity for rules
 
                 //______________________________________________________________
                 //
