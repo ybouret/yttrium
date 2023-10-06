@@ -24,7 +24,10 @@ namespace Yttrium
 
             Repeat:: Repeat(const Rule &rr, const unsigned nmin) :
             Wildcard( MakeRepeatName(rr,nmin), UUID, rr),
-            atLeast(nmin ){}
+            atLeast(nmin )
+            {
+                I_am<Repeat>(this);
+            }
 
             Repeat:: ~Repeat() noexcept
             {

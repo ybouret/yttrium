@@ -2,6 +2,8 @@
 #include "y/type/nullify.hpp"
 #include "y/system/exception.hpp"
 #include "y/associative/suffix/set.hpp"
+#include "y/associative/address-book.hpp"
+#include "y/text/plural.hpp"
 
 namespace Yttrium
 {
@@ -19,7 +21,8 @@ namespace Yttrium
             Object(),
             Rules(),
             name(*id),
-            entry(0)
+            entry(0),
+            locked(false)
             {
             }
 
@@ -28,17 +31,29 @@ namespace Yttrium
 
             }
 
-            void ins(Rule *rule)
+            //__________________________________________________________________
+            //
+            //! insert a newly created rule
+            //__________________________________________________________________
+            inline void ins(Rule *rule)
             {
                 assert(0!=rule);
 
                 const Rule::Pointer ptr(rule);
+                if(locked)
+                    throw Specific::Exception(name.c_str(), "locked while inserting [%s]!", rule->name->c_str());
+
                 if(!insert(ptr))
                     throw Specific::Exception(name.c_str(), "multiple rule [%s]",rule->name->c_str());
+
                 if(!entry)
                     entry = rule;
             }
 
+            //__________________________________________________________________
+            //
+            //! make an existing rule the top-level rule
+            //__________________________________________________________________
             inline void top(const Rule &rule)
             {
                 const Rule::Pointer *ppR = search( *(rule.name) );
@@ -48,18 +63,106 @@ namespace Yttrium
                 entry = & Coerce(mine);
             }
 
+            //__________________________________________________________________
+            //
+            //! validation
+            //__________________________________________________________________
+            inline void validate()
+            {
+                //--------------------------------------------------------------
+                // must not be locked
+                //--------------------------------------------------------------
+                if(locked)
+                    throw Specific::Exception(name.c_str(), "locked while validating!");
+
+                //--------------------------------------------------------------
+                // must not be empty
+                //--------------------------------------------------------------
+                if(!entry)
+                    throw Specific::Exception(name.c_str(), "empty grammar...");
+
+                //--------------------------------------------------------------
+                // check if all rules are accessible from top-level
+                //--------------------------------------------------------------
+                {
+                    AddressBook book;
+                    String      orphan;
+                    unsigned    numBad = 0;
+                    entry->endorse(book);
+                    for(Iterator it=begin();it!=end();++it)
+                    {
+                        const Rule &rule = **it;
+                        if(!book.search(rule))
+                        {
+                            ++numBad;
+                            orphan += " [";
+                            orphan += *rule.name;
+                            orphan += "]";
+                        }
+                    }
+
+                    if(numBad)
+                        throw Specific::Exception(name.c_str(), "%u orphan%s:%s", numBad, Plural::s(numBad), orphan.c_str());
+                }
+
+                //--------------------------------------------------------------
+                // check consistentcy of derived rules
+                //--------------------------------------------------------------
+                for(Iterator it=begin();it!=end();++it)
+                {
+                    const Rule &       rule = **it;
+                    const char * const that = rule.name->c_str();
+                    const uint32_t     uuid = rule.uuid;
+                    switch(uuid)
+                    {
+                        case Syntax::Terminal::UUID:
+                            break;
+
+                        case Syntax::Aggregate::UUID:
+                            if( rule.as<Syntax::Aggregate>()->size <= 0)
+                                throw Specific::Exception( name.c_str(), "empty aggregate [%s]", that);
+                            break;
+
+                        case Syntax::Alternate::UUID:
+                            if( rule.as<Syntax::Alternate>()->size <= 0)
+                                throw Specific::Exception( name.c_str(), "empty alternate [%s]", that);
+                            break;
+
+                        case Syntax::Option::UUID:
+                            if( rule.as<Syntax::Option>()->rule.isFrail())
+                                throw Specific::Exception( name.c_str(), "frail option [%s]",that);
+                            break;
+
+                        case Syntax::Repeat::UUID:
+                            if( rule.as<Syntax::Repeat>()->rule.isFrail())
+                                throw Specific::Exception( name.c_str(), "frail repeat [%s]",that);
+                            break;
+
+                        default:
+                            throw Specific::Exception( name.c_str(), "unknown rule [%s] (%s)", that, FourCC::ToText(uuid));
+                    }
+                }
+
+                locked = true;
+
+            }
+
+            //__________________________________________________________________
+            //
+            //! output GraphViz
+            //__________________________________________________________________
             void makeGraphViz(OutputStream &fp) const
             {
                 fp << "digraph " << name << " {\n";
 
-                // output core code
+                // output 1/2: core code
                 for(ConstIterator it=begin();it!=end();++it)
                 {
                     const Rule &rule = **it;
                     rule.vizCore(fp);
                 }
 
-                // output link code
+                // output 2/2: link code
                 for(ConstIterator it=begin();it!=end();++it)
                 {
                     const Rule &rule = **it;
@@ -72,6 +175,7 @@ namespace Yttrium
 
             const String &name;
             Rule         *entry;
+            bool          locked;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
@@ -211,7 +315,11 @@ namespace Yttrium
             return alt(manifest);
         }
 
-
+        void Grammar:: validate()
+        {
+            assert(0!=code);
+            code->validate();
+        }
 
 
     }

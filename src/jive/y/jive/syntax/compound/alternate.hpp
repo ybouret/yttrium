@@ -44,6 +44,7 @@ namespace Yttrium
                 template <typename ID>
                 explicit Alternate(const ID &id) : Compound(id,UUID)
                 {
+                    I_am<Alternate>(this);
                 }
 
                 //! cleanup

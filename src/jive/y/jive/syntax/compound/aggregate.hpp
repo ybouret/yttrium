@@ -44,7 +44,10 @@ namespace Yttrium
 
                 //! forward name and uuid
                 template <typename ID>
-                explicit Aggregate(const ID &id) : Compound(id,UUID) {}
+                explicit Aggregate(const ID &id) : Compound(id,UUID)
+                {
+                    I_am<Aggregate>(this);
+                }
 
                 //! cleanup
                 virtual ~Aggregate() noexcept;

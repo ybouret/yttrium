@@ -52,7 +52,8 @@ namespace Yttrium
                                   const uint32_t  dw,
                                   const Rule    & rr) noexcept :
                 Internal(id,dw), rule(rr) {}
-                
+
+            public:
                 //______________________________________________________________
                 //
                 //

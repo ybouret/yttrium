@@ -9,7 +9,7 @@ namespace Yttrium
 {
     static bool isAuthorized(const char c) noexcept
     {
-        static const char extra[] = "-_";
+        static const char extra[] = "-_:";
         return 0 != strchr(extra,c);
     }
 

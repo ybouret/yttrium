@@ -19,8 +19,11 @@ namespace
             const Rule &INT  = add( new Syntax::Terminal("INT") );
             const Rule &SEP  = add( new Syntax::Terminal("SEP") );
 
-            EXPR << INT << SEP;
+            const Rule &ID   = add( new Syntax::Terminal("ID") );
 
+            EXPR << Pick(INT,ID) << SEP;
+
+            validate();
         }
 
 
@@ -40,6 +43,7 @@ namespace
         {
             emit("INT","[0-9]+");
             emit("SEP",';');
+            emit("ID","[:word:]+");
             endl("[:endl:]");
             drop("[:blank:]");
         }

@@ -18,7 +18,10 @@ namespace Yttrium
             }
 
             Option:: Option(const Rule &rr) :
-            Wildcard( MakeOptionName(rr),UUID,rr) {}
+            Wildcard( MakeOptionName(rr),UUID,rr)
+            {
+                I_am<Option>(this);
+            }
 
             Option:: ~Option() noexcept
             {
