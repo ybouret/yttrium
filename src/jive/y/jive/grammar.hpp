@@ -7,7 +7,7 @@
 #include "y/jive/syntax/terminal.hpp"
 #include "y/jive/syntax/compound/aggregate.hpp"
 #include "y/jive/syntax/compound/alternate.hpp"
-#include "y/jive/syntax/wildcard/optional.hpp"
+#include "y/jive/syntax/wildcard/option.hpp"
 
 namespace Yttrium
 {
@@ -34,7 +34,7 @@ namespace Yttrium
             typedef Syntax::Rule         Rule; //!< alias
             typedef Syntax::Aggregate    Agg;  //!< alias
             typedef Syntax::Alternate    Alt;  //!< alias
-            typedef Syntax::Optional     Opt;  //!< alias
+            typedef Syntax::Option       Opt;  //!< alias
 
 
             //__________________________________________________________________

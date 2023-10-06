@@ -1,8 +1,7 @@
-
 //! \file
 
-#ifndef Y_Jive_Syntax_Optional_Included
-#define Y_Jive_Syntax_Optional_Included 1
+#ifndef Y_Jive_Syntax_Option_Included
+#define Y_Jive_Syntax_Option_Included 1
 
 #include "y/jive/syntax/wildcard.hpp"
 #include "y/type/fourcc.hpp"
@@ -18,11 +17,11 @@ namespace Yttrium
             //
             //
             //
-            //! Optional result
+            //! Rule is an option
             //
             //
             //__________________________________________________________________
-            class Optional : public Wildcard
+            class Option : public Wildcard
             {
             public:
                 //______________________________________________________________
@@ -39,8 +38,8 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                explicit Optional(const Rule &); //!< setup from rule
-                virtual ~Optional() noexcept;    //!< cleanup
+                explicit Option(const Rule &); //!< setup from rule
+                virtual ~Option() noexcept;    //!< cleanup
                 
                 //______________________________________________________________
                 //
@@ -54,7 +53,7 @@ namespace Yttrium
 
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Optional);
+                Y_DISABLE_COPY_AND_ASSIGN(Option);
 
                
 
