@@ -32,12 +32,13 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Syntax::Rule         Rule; //!< alias
-            typedef Syntax::Aggregate    Agg;  //!< alias
-            typedef Syntax::Alternate    Alt;  //!< alias
-            typedef Syntax::Option       Opt;  //!< alias
-            typedef Syntax::Repeat       Rep;  //!< alias
-
+            typedef Syntax::Rule         Rule;  //!< alias
+            typedef Syntax::Aggregate    Agg;   //!< alias
+            typedef Syntax::Alternate    Alt;   //!< alias
+            typedef Syntax::Option       Opt;   //!< alias
+            typedef Syntax::Repeat       Rep;   //!< alias
+            typedef Syntax::XNode        XNode; //!< alias
+            typedef Syntax::XTree        XTree; //!< alias
 
             //__________________________________________________________________
             //
@@ -59,7 +60,11 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            
+
+            //! parse UNTOUCHED lexer using source
+            XNode *parse(Lexer &lexer, Source &source);
+
+
             //! generic add a newly created rule
             template <typename RULE> inline
             RULE & add(RULE *rule)
@@ -69,7 +74,7 @@ namespace Yttrium
                 return *rule;
             }
 
-            void         validate();
+            void         validate();                        //!< validate and lock grammar
             void         topLevel(const Rule &);            //!< set top-level rule
             const Rule & topLevel()                  const; //!< get top-level rule
             const Rule & operator[](const String & ) const; //!< get rule by name
@@ -80,15 +85,14 @@ namespace Yttrium
             // Design helpers
             //
             //__________________________________________________________________
-            const Rule & ZOM(const Rule&); //!< Zero Or More rule
-            const Rule & OOM(const Rule&); //!< One  Or More rule
+            const Rule & ZOM(const Rule &);                                 //!< Zero Or More rule
+            const Rule & OOM(const Rule &);                                 //!< One  Or More rule
+            const Rule & Cat(const Rule  &a, const Rule &b);                //!< catenate a and b
+            const Rule & Cat(const Rule  &a, const Rule &b, const Rule &c); //!< catenate a and b and c
+            const Rule & Pick(const Rule &a, const Rule &b);                //!< pick a or b
+            const Rule & Pick(const Rule &a, const Rule &b, const Rule &c); //!< pick a or b of c
 
-
-            const Rule &Cat(const Rule &a, const Rule &b);
-            const Rule &Cat(const Rule &a, const Rule &b, const Rule &c);
-            const Rule &Pick(const Rule &a, const Rule &b);
-            const Rule &Pick(const Rule &a, const Rule &b, const Rule &c);
-
+            //! output GraphViz
             void graphViz(OutputStream &fp) const;
 
         private:

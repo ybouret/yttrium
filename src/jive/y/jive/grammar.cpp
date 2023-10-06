@@ -204,6 +204,9 @@ namespace Yttrium
             Nullify(code);
         }
 
+
+
+
         void Grammar:: ins(Rule *rule)
         {
             assert(0!=rule);
@@ -321,6 +324,37 @@ namespace Yttrium
             code->validate();
         }
 
+
+    }
+
+}
+
+
+namespace Yttrium
+{
+    namespace Jive
+    {
+
+        Syntax::XNode * Grammar:: parse(Lexer &lexer, Source &source)
+        {
+            assert(0!=code);
+            if(0==code->entry) throw Specific::Exception( name->c_str(), "empty grammar...");
+            if(!code->locked)
+            {
+                // WARNING
+            }
+
+            XTree tree = 0;
+            if(code->entry->accepts(lexer, source, tree) )
+            {
+
+                return tree.yield();;
+            }
+            else
+            {
+                return 0;
+            }
+        }
 
     }
 
