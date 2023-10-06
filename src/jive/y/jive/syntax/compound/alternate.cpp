@@ -1,5 +1,3 @@
-
-
 #include "y/jive/syntax/compound/alternate.hpp"
 
 namespace Yttrium
@@ -22,7 +20,7 @@ namespace Yttrium
 
             bool Alternate:: accepts(Y_JIVE_SYNTAX_RULE_API) const
             {
-
+                
                 return false;
             }
             
