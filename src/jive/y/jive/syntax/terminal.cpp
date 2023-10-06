@@ -51,7 +51,13 @@ namespace Yttrium
             {
                 
             }
+
             
+            bool Terminal:: isFrail() const noexcept
+            {
+                return false;
+            }
+
         }
 
     }

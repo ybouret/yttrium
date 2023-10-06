@@ -61,7 +61,10 @@ namespace Yttrium
 
                 //! GraphViz
                 virtual void vizCore(OutputStream &) const;
-                
+
+                //! frail if ALL manifest is frail
+                virtual bool isFrail() const noexcept;
+
                 //! helper
                 Aggregate & operator +=(const Rule &);
 

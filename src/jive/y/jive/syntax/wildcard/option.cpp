@@ -42,6 +42,11 @@ namespace Yttrium
                 fp << ']';
                 Endl(fp);
             }
+
+            bool Option:: isFrail() const noexcept
+            {
+                return true;
+            }
         }
 
     }

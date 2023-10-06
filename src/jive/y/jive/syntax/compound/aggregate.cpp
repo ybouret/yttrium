@@ -17,9 +17,9 @@ namespace Yttrium
             {
 
                 XTree localTree = XNode::Create(*this);
-                for(const NodeType *node=head;node;node=node->next)
+                for(const NodeType *sub=head;sub;sub=sub->next)
                 {
-                    const Rule &rule = **node;
+                    const Rule &rule = **sub;
                     if( !rule.accepts(lexer, source, localTree) )
                     {
                         XNode::BackTo(lexer,localTree);
@@ -42,6 +42,19 @@ namespace Yttrium
                 Label(fp,*name);
                 fp << ']';
                 Endl(fp);
+            }
+
+
+            bool Aggregate:: isFrail() const noexcept
+            {
+                if(size<=0)
+                    return false;
+
+                for(const NodeType *sub=head;sub;sub=sub->next)
+                {
+                    if( (**sub).isTough() ) return false;
+                }
+                return true;
             }
         }
 

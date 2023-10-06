@@ -54,11 +54,11 @@ namespace Yttrium
                 //! accept a terminal: lexeme with same name
                 virtual bool accepts(Y_JIVE_SYNTAX_RULE_API) const;
                 
-                //! insert this in book
-                virtual void endorse(AddressBook &book)      const;
-                
-                virtual void vizCore(OutputStream &) const;
-                virtual void vizLink(OutputStream &) const;
+
+                virtual void endorse(AddressBook &book) const; //! insert this in book
+                virtual void vizCore(OutputStream &)    const;
+                virtual void vizLink(OutputStream &)    const;
+                virtual bool isFrail()         const noexcept; //!< false
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);

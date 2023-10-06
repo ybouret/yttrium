@@ -10,7 +10,13 @@ namespace Yttrium
         {
  
             Rule:: ~Rule() noexcept {}
-            
+
+
+            bool Rule:: isTough() const noexcept
+            {
+                return !isFrail();
+            }
+
         }
 
     }

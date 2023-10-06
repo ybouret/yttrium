@@ -62,6 +62,9 @@ namespace Yttrium
                 //! GraphViz
                 virtual void vizCore(OutputStream &) const;
 
+                //! frail is one rule is frail
+                virtual bool isFrail() const noexcept;
+
 
                 //! helper
                 Alternate & operator |=(const Rule &);

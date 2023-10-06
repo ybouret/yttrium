@@ -52,9 +52,13 @@ namespace Yttrium
                 //! always return true
                 virtual bool accepts(Y_JIVE_SYNTAX_RULE_API) const;
 
+                //! frail if atLeast<=0>
+                virtual bool isFrail() const noexcept;
+                
+                
                 //! GraphViz
                 virtual void vizCore(OutputStream &) const;
-                
+
                 //______________________________________________________________
                 //
                 //

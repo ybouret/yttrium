@@ -58,6 +58,11 @@ namespace Yttrium
                 fp << ']';
                 Endl(fp);
             }
+
+            bool Repeat:: isFrail() const noexcept
+            {
+                return atLeast <= 0;
+            }
         }
 
     }

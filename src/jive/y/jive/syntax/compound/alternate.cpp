@@ -22,9 +22,9 @@ namespace Yttrium
             {
                 XTree subTree = 0;
                 bool  success = false;
-                for(const NodeType *node=head;node;node=node->next)
+                for(const NodeType *sub=head;sub;sub=sub->next)
                 {
-                    const Rule &subRule = **node;
+                    const Rule &subRule = **sub;
                     if( subRule.accepts(lexer,source,subTree) )
                     {
                         success = true;
@@ -33,11 +33,11 @@ namespace Yttrium
                             XNode::Expand(tree,subTree.yield());
                             return true;
                         }
-                        // else it was a feable rule: success but try again
+                        // else it was a frail rule: success but try again
                     }
                 }
                 
-                // a feable rule matched
+                // a frail rule matched, or empty
                 return success;
             }
 
@@ -49,6 +49,16 @@ namespace Yttrium
                 fp << ']';
                 Endl(fp);
             }
+
+            bool Alternate:: isFrail() const noexcept
+            {
+                for(const NodeType *sub=head;sub;sub=sub->next)
+                {
+                    if( (**sub).isFrail() ) return true;
+                }
+                return false;
+            }
+
         }
 
     }

@@ -69,6 +69,7 @@ namespace Yttrium
                 return *rule;
             }
 
+            void         validate();
             void         topLevel(const Rule &);            //!< set top-level rule
             const Rule & topLevel()                  const; //!< get top-level rule
             const Rule & operator[](const String & ) const; //!< get rule by name
