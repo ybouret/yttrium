@@ -93,9 +93,10 @@ namespace Yttrium
             const Rule & pick(const Rule &a, const Rule &b, const Rule &c); //!< pick a or b of c
             const Rule & opt(const Rule &);                                 //!< make optional rule
 
-            //! output GraphViz
-            void graphViz(OutputStream &fp) const;
 
+            void    graphViz(OutputStream &fp) const; //!< output GraphViz
+            XMLog & getXMLog()        const noexcept; //!< get code xml
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Grammar);
             class Code;

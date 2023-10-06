@@ -4,6 +4,7 @@
 #include "y/associative/suffix/set.hpp"
 #include "y/associative/address-book.hpp"
 #include "y/text/plural.hpp"
+#include "y/stream/xmlog.hpp"
 
 namespace Yttrium
 {
@@ -22,7 +23,8 @@ namespace Yttrium
             Rules(),
             name(*id),
             entry(0),
-            locked(false)
+            locked(false),
+            xml( Syntax::Rule::Verbose )
             {
             }
 
@@ -176,6 +178,7 @@ namespace Yttrium
             const String &name;     //!< reference to grammar name
             Rule         *entry;    //!< top-level rule
             bool          locked;   //!< status
+            XMLog         xml;      //!< tracing
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
@@ -224,6 +227,12 @@ namespace Yttrium
         {
             assert(0!=code);
             code->makeGraphViz(fp);
+        }
+
+        XMLog & Grammar:: getXMLog() const noexcept
+        {
+            assert(0!=code);
+            return code->xml;
         }
 
         const Syntax::Rule & Grammar:: topLevel() const
@@ -343,6 +352,7 @@ namespace Yttrium
         Syntax::XNode * Grammar:: parse(Lexer &lexer, Source &source)
         {
             assert(0!=code);
+            Y_XML_SECTION(code->xml,*name);
             if(0==code->entry) throw Specific::Exception( name->c_str(), "empty grammar...");
             if(!code->locked)
             {
@@ -350,10 +360,10 @@ namespace Yttrium
             }
 
             XTree tree = 0;
-            if(code->entry->accepts(lexer, source, tree) )
+            if(code->entry->accepts(lexer, source, tree, code->xml) )
             {
 
-                return tree.yield();;
+                return tree.yield();
             }
             else
             {

@@ -69,12 +69,15 @@ Y_UTEST(grammar)
     MyGrammar G;
     MyLexer   L;
 
+    Jive::Syntax::Rule::Verbose = true;
+
     Vizible::GraphViz("grammar.dot", G, true);
 
     if(argc>1)
     {
         Jive::Source source( Jive::Module::Open(argv[1]) );
         AutoPtr<Syntax::XNode> tree = G.parse(L,source);
+        std::cerr << "tree isValid=" << tree.isValid() << std::endl;
     }
 
 

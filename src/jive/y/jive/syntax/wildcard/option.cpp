@@ -31,7 +31,7 @@ namespace Yttrium
             bool Option:: accepts(Y_JIVE_SYNTAX_RULE_API) const
             {
                 XTree localTree = 0;
-                if(rule.accepts(lexer,source,localTree))
+                if(rule.accepts(lexer,source,localTree,xml))
                 {
                     XNode::Expand(tree,localTree);
                 }

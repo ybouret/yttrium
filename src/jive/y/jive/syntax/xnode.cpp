@@ -83,6 +83,7 @@ namespace Yttrium
             void XNode:: BackTo(Lexer &lexer, XNode *node) noexcept
             {
                 assert(0!=node);
+                
                 switch(node->type)
                 {
                     case IsTerminal:

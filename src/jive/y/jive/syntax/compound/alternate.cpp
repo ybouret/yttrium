@@ -25,7 +25,7 @@ namespace Yttrium
                 for(const NodeType *sub=head;sub;sub=sub->next)
                 {
                     const Rule &subRule = **sub;
-                    if( subRule.accepts(lexer,source,subTree) )
+                    if( subRule.accepts(lexer,source,subTree,xml) )
                     {
                         success = true;
                         if(subTree.isValid())

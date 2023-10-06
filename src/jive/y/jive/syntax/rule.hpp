@@ -22,7 +22,7 @@ namespace Yttrium
             //! helper for Rule API
             //
             //__________________________________________________________________
-#define Y_JIVE_SYNTAX_RULE_API Lexer &lexer, Source &source, XTree &tree
+#define Y_JIVE_SYNTAX_RULE_API Lexer &lexer, Source &source, XTree &tree, XMLog &xml
 
             //__________________________________________________________________
             //

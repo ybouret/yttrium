@@ -20,7 +20,7 @@ namespace Yttrium
                 for(const NodeType *sub=head;sub;sub=sub->next)
                 {
                     const Rule &rule = **sub;
-                    if( !rule.accepts(lexer, source, localTree) )
+                    if( !rule.accepts(lexer, source, localTree,xml) )
                     {
                         XNode::BackTo(lexer,localTree);
                         return false;

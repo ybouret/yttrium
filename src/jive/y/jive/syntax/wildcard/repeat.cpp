@@ -38,7 +38,7 @@ namespace Yttrium
             {
                 XTree    sub = XNode::Create(*this);
                 unsigned num = 0;
-                while( rule.accepts(lexer,source,sub) )
+                while( rule.accepts(lexer,source,sub,xml) )
                 {
                     ++num;
                 }
