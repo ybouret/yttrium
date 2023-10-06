@@ -12,8 +12,8 @@ namespace Yttrium
             static inline
             String * MakeOptionalName(const Rule &rr)
             {
-                AutoPtr<String> res = new String('?');
-                (*res) += *(rr.name);
+                AutoPtr<String> res = new String(*(rr.name));
+                (*res) += '?';
                 return res.yield();
             }
 
