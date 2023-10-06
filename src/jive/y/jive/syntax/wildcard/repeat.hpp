@@ -66,7 +66,7 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                const unsigned atLeast;
+                const unsigned atLeast; //!< minimal count
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Repeat);

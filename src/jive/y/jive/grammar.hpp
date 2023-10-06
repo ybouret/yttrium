@@ -95,7 +95,6 @@ namespace Yttrium
 
 
             void    graphViz(OutputStream &fp) const; //!< output GraphViz
-            XMLog & getXMLog()        const noexcept; //!< get code xml
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Grammar);

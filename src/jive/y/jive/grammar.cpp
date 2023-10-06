@@ -229,11 +229,7 @@ namespace Yttrium
             code->makeGraphViz(fp);
         }
 
-        XMLog & Grammar:: getXMLog() const noexcept
-        {
-            assert(0!=code);
-            return code->xml;
-        }
+        
 
         const Syntax::Rule & Grammar:: topLevel() const
         {
