@@ -242,15 +242,20 @@ namespace Yttrium
             return **ppR;
         }
 
-        const Syntax::Rule & Grammar:: ZOM(const Rule &rr)
+        const Syntax::Rule & Grammar:: zom(const Rule &rr)
         {
             return add( new Rep(rr,0) );
         }
 
 
-        const Syntax::Rule & Grammar:: OOM(const Rule &rr)
+        const Syntax::Rule & Grammar:: oom(const Rule &rr)
         {
             return add( new Rep(rr,1) );
+        }
+
+        const Syntax::Rule & Grammar:: opt(const Rule &rr)
+        {
+            return add( new Opt(rr) );
         }
 
 
@@ -282,14 +287,14 @@ namespace Yttrium
             return res;
         }
 
-        const Syntax::Rule & Grammar:: Cat(const Rule &a, const Rule &b)
+        const Syntax::Rule & Grammar:: cat(const Rule &a, const Rule &b)
         {
             Syntax::Manifest manifest;
             manifest << a << b;
             return agg(manifest);
         }
 
-        const Syntax::Rule & Grammar:: Cat(const Rule &a, const Rule &b, const Rule &c)
+        const Syntax::Rule & Grammar:: cat(const Rule &a, const Rule &b, const Rule &c)
         {
             Syntax::Manifest manifest;
             manifest << a << b << c;
@@ -304,14 +309,14 @@ namespace Yttrium
             return res;
         }
 
-        const Syntax::Rule & Grammar:: Pick(const Rule &a, const Rule &b)
+        const Syntax::Rule & Grammar:: pick(const Rule &a, const Rule &b)
         {
             Syntax::Manifest manifest;
             manifest << a << b;
             return alt(manifest);
         }
 
-        const Syntax::Rule & Grammar:: Pick(const Rule &a, const Rule &b, const Rule &c)
+        const Syntax::Rule & Grammar:: pick(const Rule &a, const Rule &b, const Rule &c)
         {
             Syntax::Manifest manifest;
             manifest << a << b << c;

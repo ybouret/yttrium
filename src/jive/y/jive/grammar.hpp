@@ -85,12 +85,13 @@ namespace Yttrium
             // Design helpers
             //
             //__________________________________________________________________
-            const Rule & ZOM(const Rule &);                                 //!< Zero Or More rule
-            const Rule & OOM(const Rule &);                                 //!< One  Or More rule
-            const Rule & Cat(const Rule  &a, const Rule &b);                //!< catenate a and b
-            const Rule & Cat(const Rule  &a, const Rule &b, const Rule &c); //!< catenate a and b and c
-            const Rule & Pick(const Rule &a, const Rule &b);                //!< pick a or b
-            const Rule & Pick(const Rule &a, const Rule &b, const Rule &c); //!< pick a or b of c
+            const Rule & zom(const Rule &);                                 //!< Zero Or More rule
+            const Rule & oom(const Rule &);                                 //!< One  Or More rule
+            const Rule & cat(const Rule  &a, const Rule &b);                //!< catenate a and b
+            const Rule & cat(const Rule  &a, const Rule &b, const Rule &c); //!< catenate a and b and c
+            const Rule & pick(const Rule &a, const Rule &b);                //!< pick a or b
+            const Rule & pick(const Rule &a, const Rule &b, const Rule &c); //!< pick a or b of c
+            const Rule & opt(const Rule &);                                 //!< make optional rule
 
             //! output GraphViz
             void graphViz(OutputStream &fp) const;

@@ -4,6 +4,9 @@
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
 
+#include "y/jive/lexical/plugin/single-line-comment.hpp"
+
+
 using namespace Yttrium;
 using namespace Jive;
 
@@ -21,7 +24,7 @@ namespace
 
             const Rule &ID   = add( new Syntax::Terminal("ID") );
 
-            EXPR << Pick(INT,ID) << SEP;
+            EXPR << pick(INT,ID) << opt(SEP);
 
             validate();
         }
@@ -46,6 +49,7 @@ namespace
             emit("ID","[:word:]+");
             endl("[:endl:]");
             drop("[:blank:]");
+            plug<Lexical::HashTagComment>("com");
         }
 
         virtual ~MyLexer() noexcept {}
@@ -57,6 +61,7 @@ namespace
     };
 }
 
+#include "y/jive/source.hpp"
 Y_UTEST(grammar)
 {
 
@@ -65,6 +70,12 @@ Y_UTEST(grammar)
     MyLexer   L;
 
     Vizible::GraphViz("grammar.dot", G, true);
+
+    if(argc>1)
+    {
+        Jive::Source source( Jive::Module::Open(argv[1]) );
+        AutoPtr<Syntax::XNode> tree = G.parse(L,source);
+    }
 
 
 

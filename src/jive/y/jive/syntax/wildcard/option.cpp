@@ -42,6 +42,7 @@ namespace Yttrium
             {
                 node(fp) << '[';
                 Label(fp,*name);
+                fp << ",shape=diamond";
                 fp << ']';
                 Endl(fp);
             }
