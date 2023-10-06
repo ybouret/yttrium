@@ -8,6 +8,7 @@
 #include "y/jive/syntax/compound/aggregate.hpp"
 #include "y/jive/syntax/compound/alternate.hpp"
 #include "y/jive/syntax/wildcard/option.hpp"
+#include "y/jive/syntax/wildcard/repeat.hpp"
 
 namespace Yttrium
 {
@@ -35,6 +36,7 @@ namespace Yttrium
             typedef Syntax::Aggregate    Agg;  //!< alias
             typedef Syntax::Alternate    Alt;  //!< alias
             typedef Syntax::Option       Opt;  //!< alias
+            typedef Syntax::Repeat       Rep;  //!< alias
 
 
             //__________________________________________________________________
@@ -70,6 +72,17 @@ namespace Yttrium
             void         topLevel(const Rule &);            //!< set top-level rule
             const Rule & topLevel()                  const; //!< get top-level rule
             const Rule & operator[](const String & ) const; //!< get rule by name
+
+            //__________________________________________________________________
+            //
+            //
+            // Design helpers
+            //
+            //__________________________________________________________________
+            const Rule & ZOM(const Rule&); //!< Zero Or More rule
+            const Rule & OOM(const Rule&); //!< One  Or More rule
+
+            static String *MakeNameFor(const Syntax::Manifest &, const char sep);
 
 
         private:

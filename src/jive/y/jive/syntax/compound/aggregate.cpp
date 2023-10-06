@@ -29,6 +29,13 @@ namespace Yttrium
                 XNode::Expand(tree,localTree);
                 return true;
             }
+
+            Aggregate & Aggregate:: operator +=(const Rule &rr)
+            {
+                (*this) << rr;
+                return *this;
+            }
+
         }
 
     }

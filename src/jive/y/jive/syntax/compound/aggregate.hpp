@@ -26,8 +26,21 @@ namespace Yttrium
             class Aggregate : public Compound
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
                 static const uint32_t UUID = Y_FOURCC('A','G','G',':'); //!< alias
 
+
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
 
                 //! forward name and uuid
                 template <typename ID>
@@ -36,9 +49,19 @@ namespace Yttrium
                 //! cleanup
                 virtual ~Aggregate() noexcept;
 
+                //______________________________________________________________
+                //
+                //
+                // Method
+                //
+                //______________________________________________________________
 
                 //! accept all rules on manifest
                 virtual bool accepts(Y_JIVE_SYNTAX_RULE_API) const;
+
+                //! helper
+                Aggregate & operator +=(const Rule &);
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Aggregate);

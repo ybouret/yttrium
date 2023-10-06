@@ -109,7 +109,38 @@ namespace Yttrium
             return **ppR;
         }
 
+        const Syntax::Rule & Grammar:: ZOM(const Rule &rr)
+        {
+            return add( new Rep(rr,0) );
+        }
 
+
+        const Syntax::Rule & Grammar:: OOM(const Rule &rr)
+        {
+            return add( new Rep(rr,1) );
+        }
+
+
+        String * Grammar:: MakeNameFor(const Syntax::Manifest &m, const char sep)
+        {
+            AutoPtr<String> res = new String;
+            {
+                String         &s   = *res;
+                s += '(';
+                const Syntax::Manifest::NodeType *node = m.head;
+                if(node)
+                {
+                    s += *((**node).name);
+                    for(node=node->next;node;node=node->next)
+                    {
+                        s += sep;
+                        s += *((**node).name);
+                    }
+                }
+                s += ')';
+            }
+            return res.yield();
+        }
 
     }
 

@@ -33,8 +33,22 @@ namespace Yttrium
 
             bool Repeat:: accepts(Y_JIVE_SYNTAX_RULE_API) const
             {
-                
-                return false;
+                XTree    sub = XNode::Create(*this);
+                unsigned num = 0;
+                while( rule.accepts(lexer,source,sub) )
+                {
+                    ++num;
+                }
+                if(num>=atLeast)
+                {
+                    XNode::Expand(tree,sub);
+                    return true;
+                }
+                else
+                {
+                    XNode::BackTo(lexer,sub);
+                    return false;
+                }
             }
         }
 

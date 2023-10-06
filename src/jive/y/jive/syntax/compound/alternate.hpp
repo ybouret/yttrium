@@ -25,18 +25,43 @@ namespace Yttrium
             class Alternate : public Compound
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
                 static const uint32_t UUID = Y_FOURCC('A','L','T',':'); //!< alias
-                virtual ~Alternate() noexcept;                          //!< cleanup
 
-                //! accept the first rule on manifest
-                virtual bool accepts(Y_JIVE_SYNTAX_RULE_API) const;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
 
-            protected:
-                //! forward name and uuid
+                //! name and uuid
                 template <typename ID>
                 explicit Alternate(const ID &id) : Compound(id,UUID)
                 {
                 }
+
+                //! cleanup
+                virtual ~Alternate() noexcept;
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                //! accept the first matching rule on manifest
+                virtual bool accepts(Y_JIVE_SYNTAX_RULE_API) const;
+
+
+                //! helper
+                Alternate & operator |=(const Rule &);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Alternate);
