@@ -33,7 +33,14 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 static const uint32_t     UUID = Y_FOURCC('T','E','R','M'); //!< alias
-                static const char * const CallSign;                        //!< Terminal
+                static const char * const CallSign;                         //!< Terminal
+
+                enum Property
+                {
+                    IsRegular,
+                    IsDivider
+                };
+
 
                 //______________________________________________________________
                 //
@@ -44,13 +51,25 @@ namespace Yttrium
 
                 //! create a new terminal
                 template <typename ID>
-                explicit Terminal( const ID &id ) : Rule(id,UUID)
+                explicit Terminal(const ID      &tid,
+                                  const Property ppty = IsRegular,
+                                  const bool     uniq = false) :
+                Rule(tid,UUID),
+                property(ppty),
+                univocal(uniq)
                 {
                     I_am<Terminal>(this);
                 }
 
                 //! cleanup
                 virtual ~Terminal() noexcept;
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
 
                 //! accept a terminal: lexeme with same name
                 virtual bool accepts(Y_JIVE_SYNTAX_RULE_API) const;
@@ -60,6 +79,9 @@ namespace Yttrium
                 virtual void vizCore(OutputStream &)    const;
                 virtual void vizLink(OutputStream &)    const;
                 virtual bool isFrail()         const noexcept; //!< false
+
+                const Property property;
+                const bool     univocal;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);
