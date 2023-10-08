@@ -120,12 +120,12 @@ namespace Yttrium
                  */
                 //______________________________________________________________
                 template <typename ID, typename RX, typename HOST, typename METHOD>
-                inline void operator()(const ID &id, const RX &rx, HOST &host, METHOD meth)
+                inline const Action& operator()(const ID &id, const RX &rx, HOST &host, METHOD meth)
                 {
                     const Motif     motif( RegExp::Compile(rx, & *dict) );
                     const Callback  doing( &host, meth );
                     Action::Pointer which( new Action(id,motif,doing)   );
-                    submitCode(which);
+                    return submitCode(which);
                 }
 
 
@@ -134,10 +134,10 @@ namespace Yttrium
                 //! create a simple action to produce an unit
                 //______________________________________________________________
                 template <typename ID, typename RX>
-                inline void emit(const ID &id, const RX &rx)
+                inline const Action &emit(const ID &id, const RX &rx)
                 {
                     Scanner &self = *this;
-                    self(id,rx,self,& Scanner::produce);
+                    return self(id,rx,self,& Scanner::produce);
                 }
 
                 //______________________________________________________________
@@ -145,10 +145,10 @@ namespace Yttrium
                 //! create a simple action to discard an unit
                 //______________________________________________________________
                 template <typename ID, typename RX>
-                inline void drop(const ID &id, const RX &rx)
+                inline const Action &drop(const ID &id, const RX &rx)
                 {
                     Scanner &self = *this;
-                    self(id,rx,self,& Scanner::discard);
+                    return self(id,rx,self,& Scanner::discard);
                 }
 
                 //______________________________________________________________
@@ -156,13 +156,11 @@ namespace Yttrium
                 //! create a simple action to discard an unit, name = expression
                 //______________________________________________________________
                 template <typename RX>
-                inline void drop(const RX &rx)
+                inline const Action &drop(const RX &rx)
                 {
                     Scanner &self = *this;
-                    self(rx,rx,self,& Scanner::discard);
+                    return self(rx,rx,self,& Scanner::discard);
                 }
-
-
 
 
                 //______________________________________________________________
@@ -170,10 +168,10 @@ namespace Yttrium
                 //! lexical end line
                 //______________________________________________________________
                 template <typename ID, typename RX>
-                inline void endl(const ID &id, const RX &rx, const bool emit = false)
+                inline const Action &endl(const ID &id, const RX &rx, const bool emit = false)
                 {
                     Scanner &self = *this;
-                    self(id,rx,self, (emit ? & Scanner::newLineAndEmit : & Scanner::newLineAndDrop) );
+                    return self(id,rx,self, (emit ? & Scanner::newLineAndEmit : & Scanner::newLineAndDrop) );
                 }
 
                 //______________________________________________________________
@@ -181,10 +179,10 @@ namespace Yttrium
                 //! lexical end line, name=expression
                 //______________________________________________________________
                 template < typename RX>
-                inline void endl(const RX &rx, const bool emit = false)
+                inline const Action &endl(const RX &rx, const bool emit = false)
                 {
                     Scanner &self = *this;
-                    self(rx,rx,self, (emit ? & Scanner::newLineAndEmit : & Scanner::newLineAndDrop) );
+                    return self(rx,rx,self, (emit ? & Scanner::newLineAndEmit : & Scanner::newLineAndDrop) );
                 }
 
 

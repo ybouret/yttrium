@@ -48,9 +48,24 @@ namespace Yttrium
             template <typename ID, typename RX>
             const Rule & term(const ID &id, const RX &rx)
             {
-                const Lexical::Action &action = lexer.emit(id,rx);
-                return add( new Term(action.name,Term::IsRegular,action.motif->isUnivocal()) );
+                return term_(lexer.emit(id,rx),Term::IsRegular);
             }
+
+            //! create a divider
+            template <typename ID, typename RX>
+            const Rule & mark(const ID &id, const RX &rx)
+            {
+                return term_(lexer.emit(id,rx),Term::IsDivider);
+            }
+
+            //! create a divider, name=expression
+            template <typename RX>
+            const Rule & mark(const RX &rx)
+            {
+                return term_(lexer.emit(rx,rx),Term::IsDivider);
+            }
+
+
 
             //! parse the module
             XNode * operator()(Jive::Module *);
@@ -67,6 +82,8 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);
+            const Rule & term_(const Lexical::Action &action, const Term::Property &ppty);
+
         };
 
     }

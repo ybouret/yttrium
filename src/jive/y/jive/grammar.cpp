@@ -229,6 +229,8 @@ namespace Yttrium
             code->makeGraphViz(fp);
         }
 
+
+
         
 
         const Syntax::Rule & Grammar:: topLevel() const
@@ -264,7 +266,7 @@ namespace Yttrium
         }
 
 
-        String * Grammar:: UID(const Syntax::Manifest &m, const char sep)
+        String * Grammar:: UID_(const Syntax::Manifest &m, const char sep)
         {
             AutoPtr<String> res = new String;
             {
@@ -285,9 +287,9 @@ namespace Yttrium
             return res.yield();
         }
 
-        const Syntax::Rule & Grammar:: agg(Syntax::Manifest &manifest)
+        const Syntax::Rule & Grammar:: agg_(Syntax::Manifest &manifest)
         {
-            Agg & res = add( new Agg( UID(manifest,'#') ) );
+            Agg & res = add( new Agg( UID_(manifest,'#') ) );
             res.swapWith(manifest);
             return res;
         }
@@ -296,20 +298,20 @@ namespace Yttrium
         {
             Syntax::Manifest manifest;
             manifest << a << b;
-            return agg(manifest);
+            return agg_(manifest);
         }
 
         const Syntax::Rule & Grammar:: cat(const Rule &a, const Rule &b, const Rule &c)
         {
             Syntax::Manifest manifest;
             manifest << a << b << c;
-            return agg(manifest);
+            return agg_(manifest);
         }
 
 
-        const Syntax::Rule & Grammar:: alt(Syntax::Manifest &manifest)
+        const Syntax::Rule & Grammar:: alt_(Syntax::Manifest &manifest)
         {
-            Alt & res = add( new Alt( UID(manifest,'|') ) );
+            Alt & res = add( new Alt( UID_(manifest,'|') ) );
             res.swapWith(manifest);
             return res;
         }
@@ -318,14 +320,14 @@ namespace Yttrium
         {
             Syntax::Manifest manifest;
             manifest << a << b;
-            return alt(manifest);
+            return alt_(manifest);
         }
 
         const Syntax::Rule & Grammar:: pick(const Rule &a, const Rule &b, const Rule &c)
         {
             Syntax::Manifest manifest;
             manifest << a << b << c;
-            return alt(manifest);
+            return alt_(manifest);
         }
 
         void Grammar:: validate()
@@ -333,6 +335,7 @@ namespace Yttrium
             assert(0!=code);
             code->validate();
         }
+
 
 
     }
@@ -371,3 +374,18 @@ namespace Yttrium
 
 }
 
+#include "y/vfs/vfs.hpp"
+
+namespace Yttrium
+{
+    namespace Jive
+    {
+        void Grammar:: renderGraphViz() const
+        {
+            assert(0!=code);
+            const String      dotFileName = VFS::ChangeExtension("dot", *name);
+            Vizible::GraphViz(dotFileName,*this);
+        }
+    }
+
+}

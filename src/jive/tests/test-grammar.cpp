@@ -71,8 +71,8 @@ Y_UTEST(grammar)
 
     Jive::Syntax::Rule::Verbose = true;
 
-    Vizible::GraphViz("grammar.dot", G, true);
-
+    G.renderGraphViz();
+    
     if(argc>1)
     {
         Jive::Source source( Jive::Module::Open(argv[1]) );

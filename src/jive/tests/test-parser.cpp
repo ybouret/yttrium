@@ -16,6 +16,16 @@ namespace
 
         explicit JSON() : Jive::Parser("JSON")
         {
+            const Rule & NUMBER  = term("Number","[:digit:]+");
+            const Rule & COMMA   = mark(',');
+            const Rule & LBRACK  = mark("[", "\\[");
+            const Rule & RBRACK  = mark("]","\\]");
+
+            {
+                const Rule &EmptyArray = ( agg("EmptyArray") );
+            }
+
+            renderGraphViz();
         }
 
 

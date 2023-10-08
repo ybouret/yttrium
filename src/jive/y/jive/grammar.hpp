@@ -94,9 +94,16 @@ namespace Yttrium
             const Rule & pick(const Rule &a, const Rule &b, const Rule &c); //!< pick a or b of c
             const Rule & opt(const Rule &);                                 //!< make optional rule
 
+            template <typename ID>
+            inline Agg &agg(const ID &id) { return add ( new Agg(id) ); }
+
+            template <typename ID>
+            inline Alt &alt(const ID &id) { return add ( new Alt(id) ); }
+
 
             void    graphViz(OutputStream &fp) const; //!< output GraphViz
-            
+            void    renderGraphViz() const;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Grammar);
             class Code;
@@ -104,9 +111,9 @@ namespace Yttrium
 
             static Code *  Initialize(const Tag &);
             void           ins(Rule *);
-            static String *UID(const Syntax::Manifest &, const char sep);
-            const Rule    &agg(Syntax::Manifest &);
-            const Rule    &alt(Syntax::Manifest &);
+            static String *UID_(const Syntax::Manifest &, const char sep);
+            const Rule    &agg_(Syntax::Manifest &);
+            const Rule    &alt_(Syntax::Manifest &);
 
         };
 
