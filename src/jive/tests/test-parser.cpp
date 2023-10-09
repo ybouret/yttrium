@@ -17,7 +17,7 @@ namespace
         explicit JSON() : Jive::Parser("JSON")
         {
             Alt        & G       = alt(name);
-            Agg        & VALUE   = agg("VALUE");
+            Alt        & VALUE   = alt("VALUE");
             const Rule & COMMA   = mark(',');
             const Rule & LBRACK  = mark("[", "\\[");
             const Rule & RBRACK  = mark("]","\\]");

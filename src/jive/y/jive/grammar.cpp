@@ -378,11 +378,11 @@ namespace Yttrium
 
             if(lx)
             {
-                Y_XMLOG(code->xml, "** extraneous '" << lx->name << "' = '" << lx->toPrintable() << "'");;
-                const String data = lx->toPrintable();
+                cleanup(&Coerce(*lx));
                 Specific::Exception excp(name->c_str(),"extraneous ");
                 lx->stamp(excp);
                 lx->publishIn(excp);
+                Y_XMLOG(code->xml, "** " << excp.when() );
                 throw excp;
             }
 
@@ -411,6 +411,7 @@ namespace Yttrium
                     excp.add(" after ");
                     prev->publishIn(excp);
                 }
+                Y_XMLOG(code->xml, "** " << excp.when() );
                 throw excp;
             }
 
