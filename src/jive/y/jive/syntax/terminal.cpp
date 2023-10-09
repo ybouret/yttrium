@@ -59,11 +59,29 @@ namespace Yttrium
                 fp << ",shape=box";
                 if(univocal)
                 {
-                    fp << ",style=rounded";
+                    switch(property)
+                    {
+                        case IsRegular:
+                            fp << ",style=\"rounded,filled\"";
+                            break;
+
+                        case IsDivider:
+                            fp << ",style=\"rounded,dotted\"";
+                            break;
+                    }
                 }
                 else
                 {
+                    switch(property)
+                    {
+                        case IsRegular:
+                            fp << ",style=\"filled\"";
+                            break;
 
+                        case IsDivider:
+                            fp << ",style=\"dotted\"";
+                            break;
+                    }
                 }
                 fp << ']';
                 Endl(fp);
