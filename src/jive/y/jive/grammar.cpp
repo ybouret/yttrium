@@ -382,7 +382,7 @@ namespace Yttrium
                 Specific::Exception excp(name->c_str(),"extraneous ");
                 lx->stamp(excp);
                 lx->publishIn(excp);
-                Y_XMLOG(code->xml, "** " << excp.when() );
+                Y_XMLOG(code->xml, "*** " << excp.when() );
                 throw excp;
             }
 
@@ -411,7 +411,7 @@ namespace Yttrium
                     excp.add(" after ");
                     prev->publishIn(excp);
                 }
-                Y_XMLOG(code->xml, "** " << excp.when() );
+                Y_XMLOG(code->xml, "*** " << excp.when() );
                 throw excp;
             }
 
