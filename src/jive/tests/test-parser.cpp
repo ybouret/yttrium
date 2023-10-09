@@ -22,17 +22,26 @@ namespace
             const Rule & LBRACK  = mark("[", "\\[");
             const Rule & RBRACK  = mark("]","\\]");
 
-            VALUE << term("NUMBER","[:digit:]+") << plug<Jive::Lexical::JString>("STRING");
-
+            VALUE 
+            << term("NUMBER","[:digit:]+")
+            << plug<Jive::Lexical::JString>("STRING")
+            << term("true")
+            << term("false")
+            << term("null")
+            ;
+            
             Alt & ARRAY = alt("ARRAY");
             {
                 ARRAY << ( agg("EmptyArray") << LBRACK << RBRACK);
-                Agg &HeavyArray = agg("HeavyArray");
-                HeavyArray << LBRACK;
-                HeavyArray << VALUE;
-                HeavyArray << zom( agg("ExtraValue") << COMMA << VALUE );
-                HeavyArray << RBRACK;
-                ARRAY << HeavyArray;
+                {
+                    Agg &HeavyArray = agg("HeavyArray");
+                    HeavyArray << LBRACK;
+                    HeavyArray << VALUE;
+                    HeavyArray << zom( agg("ExtraValue") << COMMA << VALUE );
+                    HeavyArray << RBRACK;
+                    ARRAY << HeavyArray;
+                }
+                VALUE << ARRAY;
             }
             G << ARRAY;
 

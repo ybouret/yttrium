@@ -52,6 +52,14 @@ namespace Yttrium
                 return term_(lexer.emit(id,rx),Term::IsRegular);
             }
 
+            //! create a terminal name=expression
+            template < typename RX>
+            const Rule & term(const RX &rx)
+            {
+                return term_(lexer.emit(rx,rx),Term::IsRegular);
+            }
+
+
             //! create a divider
             template <typename ID, typename RX>
             const Rule & mark(const ID &id, const RX &rx)
