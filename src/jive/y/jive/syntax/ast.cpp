@@ -1,5 +1,6 @@
 #include "y/jive/syntax/xnode.hpp"
 #include "y/jive/syntax/terminal.hpp"
+#include "y/jive/syntax/compound/aggregate.hpp"
 
 
 namespace Yttrium
