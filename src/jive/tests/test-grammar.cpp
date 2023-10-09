@@ -20,7 +20,7 @@ namespace
 
             Agg        &EXPR = add( new Agg("EXPR") );
             const Rule &INT  = add( new Syntax::Terminal("INT") );
-            const Rule &SEP  = add( new Syntax::Terminal("SEP") );
+            const Rule &SEP  = add( new Syntax::Terminal("SEP",Term::IsDivider,true) );
 
             const Rule &ID   = add( new Syntax::Terminal("ID") );
 
@@ -72,7 +72,7 @@ Y_UTEST(grammar)
     Jive::Syntax::Rule::Verbose = true;
 
     G.renderGraphViz(true);
-    
+
     if(argc>1)
     {
         Jive::Source source( Jive::Module::Open(argv[1]) );

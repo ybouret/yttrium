@@ -19,10 +19,6 @@ namespace Yttrium
 
             void XNode:: viz(OutputStream &fp) const
             {
-                Node(fp,this) << '[';
-                Label(fp,*(rule.name));
-                fp << ']';
-                Endl(fp);
 
                 switch(type)
                 {
@@ -33,11 +29,34 @@ namespace Yttrium
 
             void XNode:: vizTerminal(OutputStream &fp) const
             {
+                Node(fp,this) << '[';
+                if(Terminal::UUID==rule.uuid)
+                {
+                    const Terminal &t = *rule.as<Terminal>();
+                    if(t.univocal)
+                    {
+                        Label(fp,*(rule.name));
+                    }
+                    else
+                    {
+                        const String title = *(rule.name) + '=' + '\'' + lptr->toString() + '\'';
+                        Label(fp,title);
+                    }
 
+                    fp << ", shape=box";
+                    
+                }
+                fp << ']';
+                Endl(fp);
             }
 
             void XNode :: vizInternal(OutputStream &fp) const
             {
+                Node(fp,this) << '[';
+                Label(fp,*(rule.name));
+                fp << ']';
+                Endl(fp);
+
                 unsigned   idx  = 1;
                 const bool show = chld.size>1;
                 for(const XNode *sub = chld.head; sub; sub=sub->next, ++idx)
