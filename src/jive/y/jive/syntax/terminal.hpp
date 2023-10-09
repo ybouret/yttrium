@@ -35,10 +35,11 @@ namespace Yttrium
                 static const uint32_t     UUID = Y_FOURCC('T','E','R','M'); //!< alias
                 static const char * const CallSign;                         //!< Terminal
 
+                //! Property for a terminal
                 enum Property
                 {
-                    IsRegular,
-                    IsDivider
+                    IsRegular, //!< used in AST
+                    IsDivider  //!< helper only
                 };
 
 
@@ -80,8 +81,9 @@ namespace Yttrium
                 virtual void vizLink(OutputStream &)    const;
                 virtual bool isFrail()         const noexcept; //!< false
 
-                const Property property;
-                const bool     univocal;
+                const Property property; //!< Property
+                const bool     univocal; //!< univocal from corresponding pattern            Y_XML_SECTION(code->xml, "CheckAccepted");
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);

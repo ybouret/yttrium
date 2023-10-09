@@ -94,15 +94,17 @@ namespace Yttrium
             const Rule & pick(const Rule &a, const Rule &b, const Rule &c); //!< pick a or b of c
             const Rule & opt(const Rule &);                                 //!< make optional rule
 
+            //! helper to create a named aggregate
             template <typename ID>
             inline Agg &agg(const ID &id) { return add ( new Agg(id) ); }
 
+            //! helper to create a named alternate
             template <typename ID>
             inline Alt &alt(const ID &id) { return add ( new Alt(id) ); }
 
 
-            void    graphViz(OutputStream &fp) const; //!< output GraphViz
-            void    renderGraphViz(const bool keepDot=false) const;
+            void    graphViz(OutputStream &)                 const; //!< output GraphViz code
+            void    renderGraphViz(const bool keepDot=false) const; //!< render graphViz code name.dot -> name.png
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Grammar);

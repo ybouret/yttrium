@@ -31,9 +31,10 @@ namespace Yttrium
             //__________________________________________________________________
             virtual ~Parser() noexcept;
 
+            //! setup with id
             template <typename ID> inline
             explicit Parser(const ID &id) :
-            Grammar(id), lexer(id)
+            Grammar(id), lexer(name)
             {
             }
 
@@ -77,7 +78,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
         protected:
-            Lexer lexer;
+            Lexer lexer; //!< internal lexer
 
 
         private:
