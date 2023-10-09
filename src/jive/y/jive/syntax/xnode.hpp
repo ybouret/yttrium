@@ -72,13 +72,17 @@ namespace Yttrium
                 static   void    Expand(Tree &  tree,  Tree  &sub ) noexcept; //!< expand tree
                 static   void    BackTo(Lexer & lexer, XNode *node) noexcept; //!< node back to lexer
                 static   void    BackTo(Lexer & lexer, Tree  &tree) noexcept; //!< return content of tree
+                const List   &   branch() const noexcept; //!< if internal
+                const Lexeme &   lexeme() const noexcept; //!< if terminal
+                size_t           weight() const noexcept; //!< number of terminals inside
 
-                const List   & branch() const noexcept; //!< if internal
-                const Lexeme & lexeme();                //!< if terminal
-
-
-                void viz(OutputStream &) const; //!< output code
-
+                //______________________________________________________________
+                //
+                //
+                // GraphViz
+                //
+                //______________________________________________________________
+                void viz(OutputStream &)      const; //!< output code
                 void graphViz(OutputStream &) const; //!< digraph { viz };
 
 

@@ -37,6 +37,8 @@ namespace Yttrium
                 virtual ~Unit() noexcept;                       //!< cleanup
                 Y_OSTREAM_PROTO(Unit);                          //!< display
 
+                void publishIn(Exception &) const;
+
                 //______________________________________________________________
                 //
                 //

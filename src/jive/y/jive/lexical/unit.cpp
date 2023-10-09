@@ -10,7 +10,7 @@ namespace Yttrium
         {
             Unit:: ~Unit() noexcept {}
 
-            Unit:: Unit(const Entity &ent,
+            Unit:: Unit(const Entity  &ent,
                         const Context &ctx) noexcept :
             Entity(ent),
             Context(ctx),
@@ -32,10 +32,24 @@ namespace Yttrium
 
             std::ostream & operator<<(std::ostream &os, const Unit &unit)
             {
-                os << "@" << unit.tag << ':' << unit.line << ':' << unit.column;
+                os << "@"   << unit.tag  << ':' << unit.line << ':' << unit.column;
                 os << ": '" << unit.name << "'='" << unit.toPrintable() << "'";
                 return os;
             }
+
+            void Unit:: publishIn(Exception &excp) const
+            {
+                if(size>0)
+                {
+                    const String data = toPrintable();
+                    excp.add("'%s'='%s'", name->c_str(), data.c_str());
+                }
+                else
+                {
+                    excp.add("'%s'",name->c_str());
+                }
+            }
+
         }
         
 

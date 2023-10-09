@@ -39,6 +39,37 @@ namespace Yttrium
             }
 
 
+            size_t XNode:: weight() const noexcept
+            {
+                switch(type)
+                {
+                    case IsTerminal: return 1;
+                    case IsInternal: break;
+                }
+                size_t w = 0;
+                for(const XNode *sub=chld.head;sub;sub=sub->next)
+                {
+                    assert(this==sub->sire);
+                    w += sub->weight();
+                }
+                return w;
+            }
+
+            const Lexeme & XNode:: lexeme() const noexcept
+            {
+                assert(IsTerminal==type);
+                assert(0!=lptr);
+                return *lptr;
+            }
+
+            const XList & XNode:: branch() const noexcept
+            {
+                assert(IsInternal==type);
+                return chld;
+            }
+
+
+
 
             XNode:: ~XNode() noexcept
             {

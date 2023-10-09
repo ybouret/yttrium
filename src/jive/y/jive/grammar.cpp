@@ -231,7 +231,7 @@ namespace Yttrium
 
 
 
-        
+
 
         const Syntax::Rule & Grammar:: topLevel() const
         {
@@ -380,8 +380,9 @@ namespace Yttrium
             {
                 Y_XMLOG(code->xml, "** extraneous '" << lx->name << "' = '" << lx->toPrintable() << "'");;
                 const String data = lx->toPrintable();
-                Specific::Exception excp(name->c_str(),"extraneous '%s'='%s'", lx->name->c_str(), data.c_str());
+                Specific::Exception excp(name->c_str(),"extraneous ");
                 lx->stamp(excp);
+                lx->publishIn(excp);
                 throw excp;
             }
 
@@ -391,16 +392,44 @@ namespace Yttrium
         void Grammar:: rejected(Lexer &lexer, Source &source)
         {
             Y_XML_SECTION(code->xml, "CheckRejected");
-            const Lexeme *first = lexer.peek(source);
-            if(!first)
+            if(!lexer.peek(source))
             {
                 Y_XMLOG(code->xml,"empty content");
                 throw Specific::Exception(name->c_str(), "empty content is not supported");
             }
 
+            const Lexeme *last  = lexer.last(); assert(0!=last);
+            {
+                cleanup(&Coerce(*last));
+                Specific::Exception excp(name->c_str(),"invalid ");
+                last->stamp(excp);
+                last->publishIn(excp);
+                const Lexeme *prev = last->prev;
+                if(prev)
+                {
+                    cleanup(&Coerce(*prev));
+                    excp.add(" after ");
+                    prev->publishIn(excp);
+                }
+                throw excp;
+            }
+
 
             throw Specific::Exception(name->c_str(),"Unhandled error");
         }
+
+
+        void Grammar:: cleanup(Lexeme *lexeme) const
+        {
+            assert(0!=code);
+            assert(0!=lexeme);
+            const String        &lid = lexeme->key();
+            const Rule::Pointer *ppR = code->search(lid); if(!ppR)     throw Specific::Exception(name->c_str(), "no rule matching '%s'",  lid());
+            const Rule          &rlx = **ppR; if(Term::UUID!=rlx.uuid) throw Specific::Exception(name->c_str(), "[%s] is not a Terminal", lid());
+            if(rlx.as<Term>()->univocal)
+                lexeme->release();
+        }
+
 
     }
 

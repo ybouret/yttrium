@@ -62,11 +62,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! parse UNTOUCHED lexer using source
+            //! parse current lexer using current source
             XNode *parse(Lexer &lexer, Source &source);
 
-
-            //! generic add a newly created rule
+            //! add a generic newly created rule
             template <typename RULE> inline
             RULE & add(RULE *rule)
             {
@@ -102,7 +101,15 @@ namespace Yttrium
             template <typename ID>
             inline Alt &alt(const ID &id) { return add ( new Alt(id) ); }
 
+            //! cleanup univocal lexemes
+            void cleanup(Lexeme *lexeme) const;
 
+            //__________________________________________________________________
+            //
+            //
+            // GraphViz
+            //
+            //__________________________________________________________________
             void    graphViz(OutputStream &)                 const; //!< output GraphViz code
             void    renderGraphViz(const bool keepDot=false) const; //!< render graphViz code name.dot -> name.png
 
