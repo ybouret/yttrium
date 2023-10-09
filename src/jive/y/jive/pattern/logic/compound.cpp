@@ -79,7 +79,7 @@ namespace Yttrium
             for(const Pattern *p=patterns.head;p;p=p->next)
             {
                 p->viz(fp);
-                Endl(arrow(fp, & *p));
+                Endl(Arrow(fp, this, & *p));
             }
         }
 

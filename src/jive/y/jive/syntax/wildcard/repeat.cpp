@@ -63,7 +63,7 @@ namespace Yttrium
 
             void Repeat:: vizCore(OutputStream &fp) const
             {
-                node(fp) << '[';
+                Node(fp,this) << '[';
                 Label(fp,*name);
                 fp << ']';
                 Endl(fp);

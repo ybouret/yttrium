@@ -85,7 +85,7 @@ namespace Yttrium
         void Guest::vizLink(OutputStream &fp) const
         {
             motif->viz(fp);
-            Endl(arrow(fp, & *motif));
+            Endl(Arrow(fp, this, & *motif));
         }
     }
 

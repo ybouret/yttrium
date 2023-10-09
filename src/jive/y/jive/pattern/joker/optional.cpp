@@ -69,7 +69,7 @@ namespace Yttrium
 
         void Optional:: viz(OutputStream &fp) const
         {
-            node(fp) << '[';
+            Node(fp,this) << '[';
             const char msg[4] = { '?', 0,0,0 };
             Label(fp, msg) << ",shape=circle";
             fp << ']';

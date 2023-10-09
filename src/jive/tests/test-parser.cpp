@@ -48,9 +48,14 @@ namespace
 
 Y_UTEST(parser)
 {
+    Jive::Syntax::Rule::Verbose = true;
 
     JSON json;
     std::cerr << json.name << std::endl;
+    if(argc>1)
+    {
+        Jive::Syntax::XTree ast = json( Jive::Module::Open( argv[1]) );
+    }
 
 }
 Y_UDONE()

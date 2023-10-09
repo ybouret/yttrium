@@ -71,7 +71,7 @@ namespace Yttrium
 
         void Range:: viz(OutputStream &fp) const
         {
-            node(fp) << '[';
+            Node(fp,this) << '[';
             const char msg[8] = { '[', char(lower), '-', char(upper), ']',0,0,0 };
             Label(fp, msg,5) << ",shape=box";
             fp << ']';

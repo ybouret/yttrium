@@ -63,9 +63,7 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        OutputStream & node(OutputStream &) const;                    //!< emit self uuid
-        OutputStream & arrow(OutputStream &f, const Vizible *) const; //!< arrow from self to other
-
+        
 
         //! save and render any CLASS with a graphViz(OutputStream &) methods
         template <typename CLASS>

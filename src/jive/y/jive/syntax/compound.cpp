@@ -32,7 +32,7 @@ namespace Yttrium
                 for(const NodeType *sub = head; sub; sub=sub->next, ++idx)
                 {
                     const Rule &r = **sub;
-                    arrow(fp, &r);
+                    Arrow(fp, this, &r);
                     if(show)
                     {
                         fp("[label=\"%u\"]",idx);

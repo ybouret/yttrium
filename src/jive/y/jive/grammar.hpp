@@ -102,7 +102,7 @@ namespace Yttrium
 
 
             void    graphViz(OutputStream &fp) const; //!< output GraphViz
-            void    renderGraphViz() const;
+            void    renderGraphViz(const bool keepDot=false) const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Grammar);

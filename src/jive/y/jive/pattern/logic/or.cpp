@@ -99,7 +99,7 @@ namespace Yttrium
 
         void Or:: viz(OutputStream &fp) const
         {
-            node(fp) << '[';
+            Node(fp,this) << '[';
             Label(fp, "||") << ",shape=box";
             fp << ']';
             Endl(fp);

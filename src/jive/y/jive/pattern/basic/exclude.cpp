@@ -69,7 +69,7 @@ namespace Yttrium
 
         void Exclude:: viz(OutputStream &fp) const
         {
-            node(fp) << '[';
+            Node(fp,this) << '[';
             Label(fp, &code, 1) << ",shape=invtriangle";
             fp << ']';
             Endl(fp);

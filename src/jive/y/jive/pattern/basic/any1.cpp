@@ -64,7 +64,7 @@ namespace Yttrium
 
         void Any1:: viz(OutputStream &fp) const
         {
-            node(fp) << '[';
+            Node(fp,this) << '[';
             Label(fp, "any1") << ",shape=circle";
             fp << ']';
             Endl(fp);

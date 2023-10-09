@@ -6,6 +6,7 @@
 #include "y/jive/lexer.hpp"
 #include "y/calculus/align.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/graphviz/vizible.hpp"
 
 namespace Yttrium
 {
@@ -39,7 +40,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class XNode : public Object
+            class XNode : public Object, public Vizible
             {
             public:
                 //______________________________________________________________
@@ -75,6 +76,12 @@ namespace Yttrium
                 const List   & branch() const noexcept; //!< if internal
                 const Lexeme & lexeme();                //!< if terminal
 
+
+                void viz(OutputStream &) const; //!< output code
+
+                void graphViz(OutputStream &) const; //!< digraph { viz };
+
+
                 //______________________________________________________________
                 //
                 //
@@ -97,6 +104,9 @@ namespace Yttrium
                     void   *wksp[Y_WORDS_FOR(List)]; //!< workspace for list
                 };
                 List       &chld;                    //!< alias to child
+
+                void vizTerminal(OutputStream &) const;
+                void vizInternal(OutputStream &) const;
 
             };
 

@@ -380,11 +380,11 @@ namespace Yttrium
 {
     namespace Jive
     {
-        void Grammar:: renderGraphViz() const
+        void Grammar:: renderGraphViz(const bool keepDot) const
         {
             assert(0!=code);
             const String      dotFileName = VFS::ChangeExtension("dot", *name);
-            Vizible::GraphViz(dotFileName,*this);
+            Vizible::GraphViz(dotFileName,*this,keepDot);
         }
     }
 

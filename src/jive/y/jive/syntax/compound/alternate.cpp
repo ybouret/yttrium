@@ -58,7 +58,7 @@ namespace Yttrium
 
             void Alternate:: vizCore(OutputStream &fp) const
             {
-                node(fp) << '[';
+                Node(fp,this) << '[';
                 Label(fp,*name);
                 fp << ", shape=egg";
                 fp << ']';

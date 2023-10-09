@@ -136,7 +136,7 @@ namespace Yttrium
 
         void Repeating:: viz(OutputStream &fp) const
         {
-            node(fp) << '[';
+            Node(fp,this) << '[';
             switch(atLeast)
             {
                 case 0: Label(fp,"*"); break;

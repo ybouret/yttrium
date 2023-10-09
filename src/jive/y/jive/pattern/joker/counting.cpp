@@ -104,7 +104,7 @@ namespace Yttrium
 
         void Counting:: viz(OutputStream &fp) const
         {
-            node(fp) << '[';
+            Node(fp,this) << '[';
             const String msg = (minCount<maxCount) ? FormatString("(%u:%u)x",unsigned(minCount),unsigned(maxCount)) : FormatString("%ux", unsigned(minCount));
             Label(fp, msg) << ",shape=oval";
             fp << ']';

@@ -79,19 +79,7 @@ namespace Yttrium
         return Node(Node(fp,src) << " -> ",dst);
     }
 
-
-    OutputStream & Vizible:: node(OutputStream &fp) const
-    {
-        return Node(fp,this);
-    }
-
-    OutputStream & Vizible:: arrow(OutputStream &fp, const Vizible *dst) const
-    {
-        return Arrow(fp,this,dst);
-    }
-
-
-
+    
     static inline
     void emitLabel(OutputStream &fp, const char *msg, size_t len)
     {

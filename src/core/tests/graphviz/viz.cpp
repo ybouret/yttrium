@@ -13,15 +13,15 @@ Y_UTEST(graphviz)
         Libc::OutputFile fp("viz.dot");
         Vizible::Enter(fp, "G");
 
-        A.node(fp);
+        Vizible::Node(fp,&A); //A.node(fp);
         fp << "[";
         Vizible::Label(fp, "A");
         fp << "]";
         Vizible::Endl(fp);
 
-        Vizible::Endl(Vizible::Label(B.node(fp) << "[","B") << "]");
+        Vizible::Endl(Vizible::Label( Vizible::Node(fp,&B) << "[","B") << "]");
 
-        Vizible::Endl(A.arrow(fp,&B));
+        Vizible::Endl( Vizible::Arrow(fp,&A,&B) );
 
         Vizible::Leave(fp);
     }

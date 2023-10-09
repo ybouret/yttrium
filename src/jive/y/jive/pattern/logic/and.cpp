@@ -94,7 +94,7 @@ namespace Yttrium
 
         void And:: viz(OutputStream &fp) const
         {
-            node(fp) << '[';
+            Node(fp,this) << '[';
             Label(fp, "&&") << ",shape=box";
             fp << ']';
             Endl(fp);

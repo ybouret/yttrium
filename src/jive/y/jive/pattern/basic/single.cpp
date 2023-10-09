@@ -68,7 +68,7 @@ namespace Yttrium
 
         void Single:: viz(OutputStream &fp) const
         {
-            node(fp) << '[';
+            Node(fp,this) << '[';
             Label(fp, &code, 1) << ",shape=box";
             fp << ']';
             Endl(fp);
