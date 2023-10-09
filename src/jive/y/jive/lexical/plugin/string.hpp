@@ -73,6 +73,7 @@ namespace Yttrium
                 Message               onCom(const Token &);
                 Message               eEcho(const Token &); //!< escape echo
                 Message               eCode(const Token &); //!< escape code : \n,\r,\t...
+                Message               eHexa(const Token &); //!< escape hexa
                 Token content;
             };
 

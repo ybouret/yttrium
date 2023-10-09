@@ -2,6 +2,7 @@
 #include "y/system/exception.hpp"
 #include "y/stream/xmlog.hpp"
 #include "y/text/ascii/printable.hpp"
+#include "y/text/hexadecimal.hpp"
 
 namespace Yttrium
 {
@@ -103,8 +104,9 @@ namespace Yttrium
                         break;
                 }
 
-                self("esc1","\\x5c[\\x5c\\x2f]",self, & String_::eEcho);
-                self("esc2","\\x5c[nrtfb]",     self, & String_::eCode);
+                self("esc1","\\x5c[\\x5c\\x2f]",         self, & String_::eEcho);
+                self("esc2","\\x5c[nrtfb]",              self, & String_::eCode);
+                self("escH","\\x5cx[:xdigit:][:xdigit:]", self, & String_::eHexa);
 
             }
 
@@ -147,6 +149,34 @@ namespace Yttrium
                         throw Specific::Exception(name->c_str(), "invalid escaped char '%s'", ASCII::Printable::Char[select]);
 
                 }
+                return LX_DROP;
+            }
+
+            
+            static inline uint8_t getHexa(const Char *ch,
+                                          const char *which,
+                                          const char *callSign)
+            {
+                assert(0!=ch);
+                assert(0!=which);
+                const uint8_t c = **ch;
+                const int     h = Hexadecimal::ToDecimal( **ch );
+                if(h<0)
+                    throw Specific::Exception(callSign,"invalid %s hexadecimal '%s'", which, ASCII::Printable::Char[c]);
+                return uint8_t(h);
+            }
+
+            Message String_:: eHexa(const Token &token)
+            {
+                assert(4==token.size);
+                const Char *ch = token.head; assert(0!=ch); assert('\\' == **ch);
+                ch = ch->next;               assert(0!=ch); assert('x'  == **ch);
+                ch = ch->next;               assert(0!=ch);
+                const uint8_t hi = getHexa(ch,"first",name->c_str());
+
+                ch = ch->next;               assert(0!=ch);
+                const uint8_t lo = getHexa(ch,"second",name->c_str());;
+                grow(content,token.head, (hi<<4) | lo );
                 return LX_DROP;
             }
 
