@@ -399,7 +399,12 @@ namespace Yttrium
                     return 0;
                 }
             }
+        }
 
+        const Lexeme * Lexer:: last() const noexcept
+        {
+            assert(0!=app);
+            return app->lexemes.tail;
         }
 
     }

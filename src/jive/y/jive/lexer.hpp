@@ -59,6 +59,7 @@ namespace Yttrium
             void          put(Lexeme *) noexcept;  //!< put back a read lexeme
             void          set()         noexcept;  //!< full reset
             const Lexeme *peek(Source &);          //!< cached or next lexeme
+            const Lexeme *last() const noexcept;   //!< last cached lexeme
 
             bool     owns(const Scanner &) const noexcept; //!< check lexer ownership
             Scanner *query(const String &s)      noexcept; //!< query sub-scanner by name
