@@ -26,7 +26,7 @@ namespace
             const Rule &EmptyArray = ( agg("EmptyArray") << LBRACK << RBRACK);
 
             G << EmptyArray;
-
+            
 
             renderGraphViz();
         }

@@ -71,7 +71,8 @@ namespace Yttrium
                 virtual Message       enter(const Token &);
                 virtual Message       leave(const Token &);
                 Message               onCom(const Token &);
-
+                Message               eEcho(const Token &); //!< escape echo
+                Message               eCode(const Token &); //!< escape code : \n,\r,\t...
                 Token content;
             };
 
