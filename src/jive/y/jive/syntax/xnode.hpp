@@ -72,9 +72,10 @@ namespace Yttrium
                 static   void    Expand(Tree &  tree,  Tree  &sub ) noexcept; //!< expand tree
                 static   void    BackTo(Lexer & lexer, XNode *node) noexcept; //!< node back to lexer
                 static   void    BackTo(Lexer & lexer, Tree  &tree) noexcept; //!< return content of tree
-                const List   &   branch() const noexcept; //!< if internal
-                const Lexeme &   lexeme() const noexcept; //!< if terminal
-                size_t           weight() const noexcept; //!< number of terminals inside
+                void             fusion(Tree &tree)                 noexcept; //!< fusion tree content within chld
+                const List   &   branch()                     const noexcept; //!< if internal
+                const Lexeme &   lexeme()                     const noexcept; //!< if terminal
+                size_t           weight()                     const noexcept; //!< number of terminals inside
 
                 //______________________________________________________________
                 //
@@ -84,6 +85,14 @@ namespace Yttrium
                 //______________________________________________________________
                 void viz(OutputStream &)      const; //!< output code
                 void graphViz(OutputStream &) const; //!< digraph { viz };
+
+                //______________________________________________________________
+                //
+                //
+                // AST transformation
+                //
+                //______________________________________________________________
+                static XNode *AST(XNode *root) noexcept;
 
 
                 //______________________________________________________________
@@ -109,8 +118,10 @@ namespace Yttrium
                 };
                 List       &chld;                    //!< alias to child
 
-                void vizTerminal(OutputStream &) const;
-                void vizInternal(OutputStream &) const;
+                void          vizTerminal(OutputStream &) const; //!< viz for Terminal
+                void          vizInternal(OutputStream &) const; //!< viz for Internal
+                static XNode *astTerminal(XNode *node) noexcept; //!< transform terminal node
+                static XNode *astInternal(XNode *node) noexcept; //!< transform internal node
 
             };
 

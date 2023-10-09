@@ -386,7 +386,7 @@ namespace Yttrium
                 throw excp;
             }
 
-            return tree.yield();
+            return XNode::AST( tree.yield() );
         }
 
         void Grammar:: rejected(Lexer &lexer, Source &source)

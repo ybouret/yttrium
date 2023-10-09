@@ -68,7 +68,21 @@ namespace Yttrium
                 return chld;
             }
 
+            void XNode:: fusion(Tree &tree) noexcept
+            {
+                assert(tree.isValid());
+                assert(IsInternal==type);
+                switch(tree->type)
+                {
+                    case IsTerminal:
+                        chld.pushTail( tree.yield() );
+                        break;
 
+                    case IsInternal:
+                        chld.mergeTail( tree->chld );
+                        break;
+                }
+            }
 
 
             XNode:: ~XNode() noexcept

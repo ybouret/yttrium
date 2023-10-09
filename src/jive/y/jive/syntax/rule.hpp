@@ -72,6 +72,14 @@ namespace Yttrium
                     return static_cast<const T*>(self);
                 }
 
+                //! check derived type
+                template <typename T> inline
+                bool is() const noexcept {
+                    assert(0!=self);
+                    return T::UUID == uuid;
+                }
+
+
                 //! interface
                 virtual bool accepts(Y_JIVE_SYNTAX_RULE_API) const = 0;
 

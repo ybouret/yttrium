@@ -50,7 +50,15 @@ namespace Yttrium
                 if(num>=atLeast)
                 {
                     Y_XMLOG(xml, "<success/>");
-                    XNode::Expand(tree,sub);
+                    if(tree.isValid())
+                    {
+                        assert(tree->type==IsInternal);
+                        tree->fusion(sub);
+                    }
+                    else
+                    {
+                        tree = sub; // badly designed grammar...
+                    }
                     return true;
                 }
                 else
