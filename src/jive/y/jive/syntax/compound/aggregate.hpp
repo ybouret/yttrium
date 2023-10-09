@@ -35,6 +35,16 @@ namespace Yttrium
                 static const uint32_t     UUID = Y_FOURCC('A','G','G',':'); //!< alias
                 static const char * const CallSign;                         //!< "Aggregate"
 
+                //! possible properties
+                enum Property
+                {
+                    IsDesigning, //!< regular aggregate, design of grammar
+                    IsSurrogate, //!< fusion content is single node
+                    IsTransient  //!< never appears, used only for grouping
+                };
+
+
+
                 //______________________________________________________________
                 //
                 //

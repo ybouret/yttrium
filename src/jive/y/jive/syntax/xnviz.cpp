@@ -30,7 +30,7 @@ namespace Yttrium
             void XNode:: vizTerminal(OutputStream &fp) const
             {
                 Node(fp,this) << '[';
-                if(Terminal::UUID==rule.uuid)
+                if(rule.is<Terminal>())
                 {
                     const Terminal &t = *rule.as<Terminal>();
                     if(t.univocal)
