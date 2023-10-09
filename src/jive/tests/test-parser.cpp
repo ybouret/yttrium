@@ -37,7 +37,7 @@ namespace
                     Agg &HeavyArray = agg("HeavyArray");
                     HeavyArray << LBRACK;
                     HeavyArray << VALUE;
-                    HeavyArray << zom( agg("ExtraValue") << COMMA << VALUE );
+                    HeavyArray << zom( cat(COMMA,VALUE) );
                     HeavyArray << RBRACK;
                     ARRAY << HeavyArray;
                 }

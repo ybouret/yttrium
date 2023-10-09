@@ -38,9 +38,9 @@ namespace Yttrium
                 //! possible properties
                 enum Property
                 {
-                    IsDesigning, //!< regular aggregate, design of grammar
-                    IsSurrogate, //!< fusion content is single node
-                    IsTransient  //!< never appears, used only for grouping
+                    Permanent, //!< permanent aggregate, design of grammar
+                    Surrogate, //!< fusion content if single node
+                    Transient  //!< never appears, used only for grouping
                 };
 
 
@@ -54,7 +54,8 @@ namespace Yttrium
 
                 //! forward name and uuid
                 template <typename ID>
-                explicit Aggregate(const ID &id) : Compound(id,UUID)
+                explicit Aggregate(const ID &id, const Property ppty) :
+                Compound(id,UUID), property(ppty)
                 {
                     I_am<Aggregate>(this);
                 }
@@ -84,6 +85,13 @@ namespace Yttrium
                 //! helper
                 Aggregate & operator +=(const Rule &);
 
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const Property property;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Aggregate);

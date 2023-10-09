@@ -18,7 +18,7 @@ namespace
         explicit MyGrammar() :  Grammar("MyGrammar")
         {
 
-            Agg        &EXPR = add( new Agg("EXPR") );
+            Agg        &EXPR = agg("EXPR");
             const Rule &INT  = add( new Syntax::Terminal("INT") );
             const Rule &SEP  = add( new Syntax::Terminal("SEP",Term::IsDivider,true) );
 

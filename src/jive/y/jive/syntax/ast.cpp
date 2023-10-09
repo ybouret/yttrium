@@ -33,7 +33,6 @@ namespace Yttrium
                 }
 
                 return root;
-
             }
 
             XNode * XNode:: astInternal(XNode *root) noexcept

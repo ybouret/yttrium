@@ -120,7 +120,7 @@ namespace Yttrium
 
                 void          vizTerminal(OutputStream &) const; //!< viz for Terminal
                 void          vizInternal(OutputStream &) const; //!< viz for Internal
-                static XNode *astTerminal(XNode *node) noexcept; //!< transform terminal node
+                static XNode *astTerminal(XNode *node) noexcept; //!< transform terminal node, may delete it!
                 static XNode *astInternal(XNode *node) noexcept; //!< transform internal node
 
             };

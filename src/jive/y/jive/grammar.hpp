@@ -93,9 +93,19 @@ namespace Yttrium
             const Rule & pick(const Rule &a, const Rule &b, const Rule &c); //!< pick a or b of c
             const Rule & opt(const Rule &);                                 //!< make optional rule
 
-            //! helper to create a named aggregate
+            //! helper to create a named permanent aggregate
             template <typename ID>
-            inline Agg &agg(const ID &id) { return add ( new Agg(id) ); }
+            inline Agg &agg(const ID &id) { return add ( new Agg(id, Agg::Permanent) ); }
+
+            //! helper to create a named surrogate aggregate
+            template <typename ID>
+            inline Agg &act(const ID &id) { return add ( new Agg(id, Agg::Surrogate) ); }
+
+            //! helper to create a named transient aggregate
+            template <typename ID>
+            inline Agg &grp(const ID &id) { return add ( new Agg(id, Agg::Surrogate) ); }
+
+
 
             //! helper to create a named alternate
             template <typename ID>
