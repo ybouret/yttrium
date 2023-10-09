@@ -379,6 +379,28 @@ namespace Yttrium
             }
         }
 
+        const Lexeme * Lexer:: peek(Source &source)
+        {
+            assert(0!=app);
+            if(app->lexemes.size)
+            {
+                assert(0!=app->lexemes.head);
+                return app->lexemes.head;
+            }
+            else
+            {
+                Lexeme *lexeme = app->get(source);
+                if(lexeme)
+                {
+                    return app->lexemes.pushHead(lexeme);
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+
+        }
 
     }
 

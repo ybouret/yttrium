@@ -342,6 +342,7 @@ namespace Yttrium
 
 }
 
+#include "y/jive/source.hpp"
 
 namespace Yttrium
 {
@@ -361,11 +362,14 @@ namespace Yttrium
             XTree tree = 0;
             if(code->entry->accepts(lexer, source, tree, code->xml) )
             {
-
+                Y_XMLOG(code->xml, "<accepted/>");
+                
                 return tree.yield();
             }
             else
             {
+                Y_XMLOG(code->xml, "<rejected/>");
+                // can we find the reason ?
                 return 0;
             }
         }

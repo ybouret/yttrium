@@ -55,12 +55,13 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            Lexeme *get(Source &);           //!< get next lexeme from source
-            void    put(Lexeme *) noexcept;  //!< put back a read lexeme
-            void    set()         noexcept;  //!< full reset
-            
+            Lexeme *      get(Source &);           //!< get next lexeme from source
+            void          put(Lexeme *) noexcept;  //!< put back a read lexeme
+            void          set()         noexcept;  //!< full reset
+            const Lexeme *peek(Source &);          //!< cached or next lexeme
+
             bool     owns(const Scanner &) const noexcept; //!< check lexer ownership
-            Scanner *query(const String &s)      noexcept; //!< query by name
+            Scanner *query(const String &s)      noexcept; //!< query sub-scanner by name
 
             //! create a zero-argument scanner
             template <typename SCANNER, typename ID>

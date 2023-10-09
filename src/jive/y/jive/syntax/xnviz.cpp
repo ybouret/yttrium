@@ -36,11 +36,31 @@ namespace Yttrium
                     if(t.univocal)
                     {
                         Label(fp,*(rule.name));
+                        switch(t.property)
+                        {
+                            case Terminal::IsRegular:
+                                fp << ",style=\"rounded,filled\"";
+                                break;
+
+                            case Terminal::IsDivider:
+                                fp << ",style=\"rounded,dotted\"";
+                                break;
+                        }
                     }
                     else
                     {
                         const String title = *(rule.name) + '=' + '\'' + lptr->toString() + '\'';
                         Label(fp,title);
+                        switch(t.property)
+                        {
+                            case Terminal::IsRegular:
+                                fp << ",style=\"filled\"";
+                                break;
+
+                            case Terminal::IsDivider:
+                                fp << ",style=\"dotted\"";
+                                break;
+                        }
                     }
 
                     fp << ", shape=box";
@@ -54,6 +74,7 @@ namespace Yttrium
             {
                 Node(fp,this) << '[';
                 Label(fp,*(rule.name));
+                fp << ", shape=box";
                 fp << ']';
                 Endl(fp);
 
