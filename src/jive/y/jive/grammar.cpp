@@ -360,18 +360,14 @@ namespace Yttrium
             }
 
             XTree tree = 0;
-            if(code->entry->accepts(lexer, source, tree, code->xml) )
+            if(!code->entry->accepts(lexer, source, tree, code->xml) )
             {
-
-
-                return accepted(lexer,source,tree);
+                rejected(lexer,source);
+                assert( Say("never get here") );
             }
-            else
-            {
-                Y_XMLOG(code->xml, "<rejected/>");
-                // can we find the reason ?
-                return 0;
-            }
+
+            return accepted(lexer,source,tree);
+
         }
 
         Syntax::XNode *Grammar:: accepted(Lexer &lexer, Source &source, XTree &tree)
@@ -388,10 +384,23 @@ namespace Yttrium
                 lx->stamp(excp);
                 throw excp;
             }
-            
+
             return tree.yield();
         }
 
+        void Grammar:: rejected(Lexer &lexer, Source &source)
+        {
+            Y_XML_SECTION(code->xml, "CheckRejected");
+            const Lexeme *first = lexer.peek(source);
+            if(!first)
+            {
+                Y_XMLOG(code->xml,"empty content");
+                throw Specific::Exception(name->c_str(), "empty content is not supported");
+            }
+
+
+            throw Specific::Exception(name->c_str(),"Unhandled error");
+        }
 
     }
 

@@ -116,7 +116,7 @@ namespace Yttrium
             const Rule    &alt_(Syntax::Manifest &);
 
             XNode *accepted(Lexer &, Source &, XTree &);
-            
+            void   rejected(Lexer &, Source &);
 
         };
 
