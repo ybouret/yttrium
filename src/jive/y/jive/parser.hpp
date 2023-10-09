@@ -67,6 +67,13 @@ namespace Yttrium
             }
 
 
+            //! make a terminal from a plugin
+            template <typename PLUGIN, typename ID>
+            const Rule & plug(const ID &id)
+            {
+                const Lexical::Scanner &scanner = lexer.plug<PLUGIN,ID>(id);
+                return add( new Term(scanner.name,Term::IsRegular,false) );
+            }
 
             //! parse the module
             XNode * operator()(Jive::Module *);

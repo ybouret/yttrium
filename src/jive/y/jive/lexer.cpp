@@ -324,17 +324,20 @@ namespace Yttrium
             return app->get(source);
         }
 
+#if 0
         void Lexer:: submit(const Scanner::Pointer &ptr)
         {
             assert(0!=app);
             app->submit(ptr);
         }
+#endif
 
-        void Lexer:: submit(Scanner *ptr)
+        const Lexical::Scanner & Lexer:: submit(Scanner *ptr)
         {
             assert(0!=ptr);
             const Scanner::Pointer _(ptr);
-            submit(_);
+            app->submit(_);
+            return *_;
         }
 
 

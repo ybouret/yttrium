@@ -140,7 +140,7 @@ namespace Yttrium
     OutputStream * Vizible:: OpenFile(const String &dotFile)
     {
         const String ext = VFS::Extension(dotFile);
-        if(ext != ".dot") throw Specific::Exception("Vizible","invalud extension '%s'", ext() );
+        if(ext != ".dot") throw Specific::Exception("Vizible::OpenFile","invalid extension '%s'", ext() );
         return new Libc::OutputFile(dotFile);
     }
 

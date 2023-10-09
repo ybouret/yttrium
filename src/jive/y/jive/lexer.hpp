@@ -80,27 +80,27 @@ namespace Yttrium
 
             //! plug a zero-arg plugin
             template <typename PLUGIN, typename IDENTIFIER>
-            void plug(const IDENTIFIER &id)
+            const Scanner & plug(const IDENTIFIER &id)
             {
                 PLUGIN *plg = new PLUGIN(*this,id);
-                submit(plg);
+                return submit(plg);
             }
 
             //! plug a one-arg plugin
             template <typename PLUGIN, typename IDENTIFIER, typename ENTER_EXPR>
-            void plug(const IDENTIFIER &id, const ENTER_EXPR &rx)
+            const Scanner & plug(const IDENTIFIER &id, const ENTER_EXPR &rx)
             {
                 PLUGIN *plg = new PLUGIN(*this,id,rx);
-                submit(plg);
+                return submit(plg);
             }
 
 
             //! plug a two-args plugin
             template <typename PLUGIN, typename IDENTIFIER, typename ENTER_EXPR, typename LEAVE_EXPR>
-            void plug(const IDENTIFIER &id, const ENTER_EXPR &erx, const LEAVE_EXPR &lrx)
+            const Scanner & plug(const IDENTIFIER &id, const ENTER_EXPR &erx, const LEAVE_EXPR &lrx)
             {
                 PLUGIN *plg = new PLUGIN(*this,id,erx,lrx);
-                submit(plg);
+                return submit(plg);
             }
 
 
@@ -110,9 +110,9 @@ namespace Yttrium
             class App;
             App  *app;
 
-            static App *Create(Scanner &self);
-            void        submit(const Scanner::Pointer &ptr);
-            void        submit(Scanner *); //!< submit a newly created scanner
+            static App *    Create(Scanner &self);
+            //void            submit(const Scanner::Pointer &ptr);
+            const Scanner & submit(Scanner *); //!< submit a newly created scanner
         };
     }
 

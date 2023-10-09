@@ -22,7 +22,7 @@ namespace
             const Rule & LBRACK  = mark("[", "\\[");
             const Rule & RBRACK  = mark("]","\\]");
 
-            VALUE << term("NUMBER","[:digit:]+");
+            VALUE << term("NUMBER","[:digit:]+") << plug<Jive::Lexical::JString>("STRING");
 
             Alt & ARRAY = alt("ARRAY");
             {
@@ -36,6 +36,9 @@ namespace
             }
             G << ARRAY;
 
+
+            lexer.drop("[:blank:]");
+            lexer.endl("[:endl:]");
 
             renderGraphViz();
         }
@@ -55,6 +58,10 @@ Y_UTEST(parser)
     if(argc>1)
     {
         Jive::Syntax::XTree ast = json( Jive::Module::Open( argv[1]) );
+        if(ast.isValid())
+        {
+            Vizible::GraphViz( *json.name + "-ast.dot", *ast);
+        }
     }
 
 }
