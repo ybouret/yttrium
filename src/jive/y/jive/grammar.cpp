@@ -353,7 +353,7 @@ namespace Yttrium
         {
             assert(0!=code);
             Y_XML_SECTION(code->xml,*name);
-            if(0==code->entry) throw Specific::Exception( name->c_str(), "empty grammar...");
+            if(0==code->entry) throw Specific::Exception( name->c_str(), "empty grammar");
             if(!code->locked)
             {
                 Y_XMLOG(code->xml, "*** WARNING: not validated!!");
@@ -362,9 +362,9 @@ namespace Yttrium
             XTree tree = 0;
             if(code->entry->accepts(lexer, source, tree, code->xml) )
             {
-                Y_XMLOG(code->xml, "<accepted/>");
-                
-                return tree.yield();
+
+
+                return accepted(lexer,source,tree);
             }
             else
             {
@@ -373,6 +373,25 @@ namespace Yttrium
                 return 0;
             }
         }
+
+        Syntax::XNode *Grammar:: accepted(Lexer &lexer, Source &source, XTree &tree)
+        {
+            assert(0!=code);
+            Y_XML_SECTION(code->xml, "CheckAccepted");
+            const Lexeme *lx = lexer.peek(source);
+
+            if(lx)
+            {
+                Y_XMLOG(code->xml, "** extraneous '" << lx->name << "' = '" << lx->toPrintable() << "'");;
+                const String data = lx->toPrintable();
+                Specific::Exception excp(name->c_str(),"extraneous '%s'='%s'", lx->name->c_str(), data.c_str());
+                lx->stamp(excp);
+                throw excp;
+            }
+            
+            return tree.yield();
+        }
+
 
     }
 

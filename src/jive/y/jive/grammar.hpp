@@ -115,6 +115,9 @@ namespace Yttrium
             const Rule    &agg_(Syntax::Manifest &);
             const Rule    &alt_(Syntax::Manifest &);
 
+            XNode *accepted(Lexer &, Source &, XTree &);
+            
+
         };
 
 
