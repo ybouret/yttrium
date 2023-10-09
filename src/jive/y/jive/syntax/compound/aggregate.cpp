@@ -39,10 +39,18 @@ namespace Yttrium
                 return *this;
             }
 
+            Aggregate & Aggregate:: operator <<(const Rule &rr)
+            {
+                Manifest &self = *this;
+                self << rr;
+                return *this;
+            }
+
             void Aggregate:: vizCore(OutputStream &fp) const
             {
                 node(fp) << '[';
                 Label(fp,*name);
+                fp << ",shape=house";
                 fp << ']';
                 Endl(fp);
             }

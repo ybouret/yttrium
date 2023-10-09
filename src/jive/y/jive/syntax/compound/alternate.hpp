@@ -67,6 +67,8 @@ namespace Yttrium
                 //! frail is one rule is frail
                 virtual bool isFrail() const noexcept;
 
+                //! forward to manifest
+                Alternate & operator<<(const Rule &rr);
 
                 //! helper
                 Alternate & operator |=(const Rule &);

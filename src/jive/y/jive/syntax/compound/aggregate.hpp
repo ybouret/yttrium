@@ -68,6 +68,9 @@ namespace Yttrium
                 //! frail if ALL manifest is frail
                 virtual bool isFrail() const noexcept;
 
+                //! forward to manifest
+                Aggregate & operator<<(const Rule &);
+
                 //! helper
                 Aggregate & operator +=(const Rule &);
 

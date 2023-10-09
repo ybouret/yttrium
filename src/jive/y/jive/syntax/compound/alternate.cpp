@@ -13,6 +13,14 @@ namespace Yttrium
             {
             }
 
+
+            Alternate & Alternate:: operator <<(const Rule &rr)
+            {
+                Manifest &self = *this;
+                self << rr;
+                return *this;
+            }
+
             Alternate & Alternate:: operator |=(const Rule &rr)
             {
                 (*this) << rr;
@@ -52,6 +60,7 @@ namespace Yttrium
             {
                 node(fp) << '[';
                 Label(fp,*name);
+                fp << ", shape=egg";
                 fp << ']';
                 Endl(fp);
             }

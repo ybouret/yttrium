@@ -56,6 +56,15 @@ namespace Yttrium
             {
                 node(fp) << '[';
                 Label(fp,*name);
+                fp << ",shape=box";
+                if(univocal)
+                {
+                    fp << ",style=rounded";
+                }
+                else
+                {
+
+                }
                 fp << ']';
                 Endl(fp);
             }
