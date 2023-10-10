@@ -57,7 +57,8 @@ namespace Yttrium
                     }
                     else
                     {
-                        tree = sub; // badly designed grammar...
+                        Y_XMLOG(xml, "-- badly designed grammar!");
+                        tree = sub;
                     }
                     return true;
                 }

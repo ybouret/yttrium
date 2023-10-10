@@ -18,18 +18,20 @@ namespace Yttrium
                 assert(IsTerminal == root->type);
 
                 const Rule &r = root->rule;
+                // rule should be terminal, but could change
+
                 if(r.is<Terminal>())
                 {
                     const Terminal &t = * r.as<Terminal>();
                     switch(t.property)
                     {
-                        case Terminal::IsDivider:
+                        case Terminal::IsDivider: // terminate
                             delete root;
                             return 0;
 
-                        case Terminal::IsRegular:
+                        case Terminal::IsRegular: // cleanup
                             if(t.univocal) root->lptr->release();
-                            return root;
+                            break;
                     }
                 }
 
