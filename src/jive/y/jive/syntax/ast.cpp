@@ -15,13 +15,11 @@ namespace Yttrium
             XNode * XNode:: AST(XNode *root) noexcept
             {
                 assert(0!=root);
-
                 switch(root->type)
                 {
                     case IsTerminal: return astTerminal(root);
                     case IsInternal: return astInternal(root);
                 }
-
                 return root;
             }
 
@@ -60,39 +58,62 @@ namespace Yttrium
                 assert(0!=root);
                 assert(IsInternal==root->type);
 
-                XList  target;
-                XList &source = root->chld;
-                while(source.size>0)
+                //--------------------------------------------------------------
+                //
+                // pre-process child(ren)
+                //
+                //--------------------------------------------------------------
                 {
-                    AutoPtr<XNode> node = AST( source.popHead() );
-
-                    if(node.isEmpty()) continue;
-                    const Rule &rule = node->rule;
-                    if(rule.is<Aggregate>() )
+                    XList  target;
+                    XList &source = root->chld;
+                    while(source.size>0)
                     {
-                        assert(IsInternal==node->type);
-                        switch( rule.as<Aggregate>()->property )
+                        AutoPtr<XNode> node = AST( source.popHead() );
+
+                        if(node.isEmpty()) continue;
+                        const Rule &rule = node->rule;
+                        if(rule.is<Aggregate>() )
                         {
-                            case Aggregate::Permanent:
-                                // do nothing
-                                break;
+                            assert(IsInternal==node->type);
+                            switch( rule.as<Aggregate>()->property )
+                            {
+                                case Aggregate::Permanent:
+                                    // do nothing
+                                    break;
 
-                            case Aggregate::Transient:
-                                target.mergeTail(node->chld);
-                                continue; // will delete node
-
-                            case Aggregate::Surrogate:
-                                if(node->chld.size<=1)
-                                {
+                                case Aggregate::Transient:
                                     target.mergeTail(node->chld);
-                                    continue;
-                                }
-                                break;
+                                    continue; // will delete node
+
+                                case Aggregate::Surrogate:
+                                    if(node->chld.size<=1)
+                                    {
+                                        target.mergeTail(node->chld);
+                                        continue;
+                                    }
+                                    break;
+                            }
                         }
+                        target.pushTail(node.yield());
                     }
-                    target.pushTail(node.yield());
+                    target.swapWith(source);
                 }
-                target.swapWith(source);
+
+                //--------------------------------------------------------------
+                //
+                // post-process transformed root
+                //
+                //--------------------------------------------------------------
+                {
+                    const Rule &rule = root->rule;
+                    if(rule.is<Aggregate>()                                   &&
+                       rule.as<Aggregate>()->property != Aggregate::Permanent &&
+                       1 == root->chld.size)
+                    {
+                        const AutoPtr<XNode> guard(root);
+                        return root->chld.popHead();
+                    }
+                }
 
                 return root;
             }
