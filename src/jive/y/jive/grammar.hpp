@@ -103,7 +103,7 @@ namespace Yttrium
 
             //! helper to create a named transient aggregate
             template <typename ID>
-            inline Agg &grp(const ID &id) { return add ( new Agg(id, Agg::Surrogate) ); }
+            inline Agg &grp(const ID &id) { return add ( new Agg(id, Agg::Transient) ); }
 
 
 

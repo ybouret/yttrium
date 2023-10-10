@@ -21,10 +21,10 @@ namespace
             const Rule & COMMA   = mark(',');
             const Rule & LBRACK  = mark("[", "\\[");
             const Rule & RBRACK  = mark("]","\\]");
-
+            const Rule & STRING  = plug<Jive::Lexical::JString>("STRING");
             VALUE 
             << term("NUMBER","[:digit:]+")
-            << plug<Jive::Lexical::JString>("STRING")
+            << STRING
             << term("true")
             << term("false")
             << term("null")
@@ -45,11 +45,34 @@ namespace
             }
             G << ARRAY;
 
+            const Rule & LBRACE = mark('{',"\\{");
+            const Rule & RBRACE = mark('}',"\\}");
+
+
+            Alt & OBJECT = alt("OBJECT");
+            {
+                OBJECT |= ( agg("EmptyObject") << LBRACE << RBRACE);
+                {
+                    Agg &HeavyObject = agg("HeavyObject");
+                    HeavyObject += LBRACE;
+                    const Rule &Pair = agg("Pair") << STRING << mark(':') << STRING;
+                    HeavyObject += Pair;
+                    HeavyObject += zom( cat(COMMA,Pair) );
+                    HeavyObject += RBRACE;
+
+                    OBJECT |= HeavyObject;
+                }
+
+                VALUE << OBJECT;
+            }
+
+            G << OBJECT;
 
             lexer.drop("[:blank:]");
             lexer.endl("[:endl:]");
 
-            renderGraphViz();
+            renderGraphViz(true);
+            validate();
         }
 
 

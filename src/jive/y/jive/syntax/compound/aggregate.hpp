@@ -91,7 +91,7 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                const Property property;
+                const Property property; //!< behavior
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Aggregate);

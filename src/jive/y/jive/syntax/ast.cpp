@@ -12,57 +12,6 @@ namespace Yttrium
         {
 
 
-            XNode * XNode:: astTerminal(XNode *root) noexcept
-            {
-                assert(0!=root);
-                assert(IsTerminal == root->type);
-
-                const Rule &r = root->rule;
-                // rule should be terminal, but could change
-
-                if(r.is<Terminal>())
-                {
-                    const Terminal &t = * r.as<Terminal>();
-                    switch(t.property)
-                    {
-                        case Terminal::IsDivider: // terminate
-                            delete root;
-                            return 0;
-
-                        case Terminal::IsRegular: // cleanup
-                            if(t.univocal) root->lptr->release();
-                            break;
-                    }
-                }
-
-                return root;
-            }
-
-            XNode * XNode:: astInternal(XNode *root) noexcept
-            {
-                assert(0!=root);
-                assert(IsInternal == root->type);
-
-                XList   target;
-                XList & source = root->chld;
-                while(source.size>0)
-                {
-                    XNode *node = source.popHead();
-                    switch(node->type)
-                    {
-                        case IsTerminal:
-                            if( 0 != (node=astTerminal(node)) ) target.pushTail(node);
-                            break;
-
-                        case IsInternal:
-                            target.pushTail( astInternal(node) );
-                            break;
-                    }
-                }
-                source.swapWith(target);
-                return root;
-            }
-
             XNode * XNode:: AST(XNode *root) noexcept
             {
                 assert(0!=root);
@@ -70,9 +19,82 @@ namespace Yttrium
                 switch(root->type)
                 {
                     case IsTerminal: return astTerminal(root);
-                    case IsInternal: break;
+                    case IsInternal: return astInternal(root);
                 }
-                return astInternal(root);
+
+                return root;
+            }
+
+            XNode *XNode:: astTerminal(XNode *root) noexcept
+            {
+                assert(0!=root);
+                assert(IsTerminal==root->type);
+
+                const Rule &rule = root->rule;
+                if(rule.is<Terminal>())
+                {
+                    const Terminal &term = *rule.as<Terminal>();
+                    switch( term.property )
+                    {
+                        case Terminal::IsRegular:
+                            if(term.univocal) root->lptr->release();
+                            return root;
+
+                        case Terminal::IsDivider:
+                            if(root->sire)
+                            {
+                                assert(IsInternal==root->sire->type);
+                                delete root;
+                                return 0;
+                            }
+                            return root;
+                    }
+                }
+
+                // otherwise, return untouched
+                return root;
+            }
+
+            XNode *XNode:: astInternal(XNode *root) noexcept
+            {
+                assert(0!=root);
+                assert(IsInternal==root->type);
+
+                XList  target;
+                XList &source = root->chld;
+                while(source.size>0)
+                {
+                    AutoPtr<XNode> node = AST( source.popHead() );
+
+                    if(node.isEmpty()) continue;
+                    const Rule &rule = node->rule;
+                    if(rule.is<Aggregate>() )
+                    {
+                        assert(IsInternal==node->type);
+                        switch( rule.as<Aggregate>()->property )
+                        {
+                            case Aggregate::Permanent:
+                                // do nothing
+                                break;
+
+                            case Aggregate::Transient:
+                                target.mergeTail(node->chld);
+                                continue; // will delete node
+
+                            case Aggregate::Surrogate:
+                                if(node->chld.size<=1)
+                                {
+                                    target.mergeTail(node->chld);
+                                    continue;
+                                }
+                                break;
+                        }
+                    }
+                    target.pushTail(node.yield());
+                }
+                target.swapWith(source);
+
+                return root;
             }
 
         }

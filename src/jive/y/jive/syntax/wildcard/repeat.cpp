@@ -74,6 +74,7 @@ namespace Yttrium
             {
                 Node(fp,this) << '[';
                 Label(fp,*name);
+                fp << ",shape=octagon";
                 fp << ']';
                 Endl(fp);
             }

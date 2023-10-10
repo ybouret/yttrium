@@ -25,6 +25,7 @@ namespace Yttrium
             void Wildcard:: vizLink(OutputStream &fp) const
             {
                 Arrow(fp, this, &rule);
+                Endl(fp);
             }
         }
 

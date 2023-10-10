@@ -289,7 +289,6 @@ namespace Yttrium
 
         const Syntax::Rule & Grammar:: agg_(Syntax::Manifest &manifest)
         {
-            //Agg & res = add( new Agg( UID_(manifest,'#'), Agg::Transient ) );
             Agg & res = grp( UID_(manifest,' ') );
             res.swapWith(manifest);
             return res;

@@ -51,6 +51,20 @@ namespace Yttrium
                 Node(fp,this) << '[';
                 Label(fp,*name);
                 fp << ",shape=house";
+                switch(property)
+                {
+                    case Permanent:
+                        fp << ",style=filled";
+                        break;
+
+                    case Surrogate:
+                        fp << ",style=\"filled,dashed\"";
+                        break;
+
+                    case Transient:
+                        fp << ",style=dashed";
+                        break;
+                }
                 fp << ']';
                 Endl(fp);
             }
