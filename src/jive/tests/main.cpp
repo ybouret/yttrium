@@ -17,6 +17,7 @@ Y_UTEST_DECL(32)
     Y_UTEST(lexer);
     Y_UTEST(grammar);
     Y_UTEST(parser);
+    Y_UTEST(eval);
 }
 Y_UTEST_EXEC()
 
