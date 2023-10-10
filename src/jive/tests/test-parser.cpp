@@ -55,7 +55,7 @@ namespace
                 {
                     Agg &HeavyObject = agg("HeavyObject");
                     HeavyObject += LBRACE;
-                    const Rule &Pair = agg("Pair") << STRING << mark(':') << STRING;
+                    const Rule &Pair = agg("Pair") << STRING << mark(':') << VALUE;
                     HeavyObject += Pair;
                     HeavyObject += zom( cat(COMMA,Pair) );
                     HeavyObject += RBRACE;
