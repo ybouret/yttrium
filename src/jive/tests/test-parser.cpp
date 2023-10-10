@@ -54,6 +54,7 @@ namespace
                 OBJECT |= ( agg("EmptyObject") << LBRACE << RBRACE);
                 {
                     Agg &HeavyObject = agg("HeavyObject");
+
                     HeavyObject += LBRACE;
                     const Rule &Pair = agg("Pair") << STRING << mark(':') << VALUE;
                     HeavyObject += Pair;
@@ -71,7 +72,7 @@ namespace
             lexer.drop("[:blank:]");
             lexer.endl("[:endl:]");
 
-            renderGraphViz(true);
+            renderGraphViz();
             validate();
         }
 
