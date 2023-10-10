@@ -5,6 +5,7 @@
 //#include "y/jive/lexical/plugin/jstring.hpp"
 #include "y/jive/lexical/plugin/single-line-comment.hpp"
 #include "y/jive/lexical/plugin/multi-lines-comment.hpp"
+#include "y/jive/syntax/analyzer.hpp"
 
 using namespace Yttrium;
 
@@ -66,10 +67,15 @@ namespace
 Y_UTEST(eval)
 {
     Eval eval;
-    Jive::Syntax::XTree ast = eval( Jive::Module::Open( argv[1]) );
-    if(ast.isValid())
+    if(argc>1)
     {
-        Vizible::GraphViz( *eval.name + "-ast.dot", *ast);
+        Jive::Syntax::XTree ast = eval( Jive::Module::Open( argv[1]) );
+        if(ast.isValid())
+        {
+            Vizible::GraphViz( *eval.name + "-ast.dot", *ast);
+            Jive::Syntax::Analyzer  analyzer;
+            analyzer.run(*ast);
+        }
     }
 }
 Y_UDONE()
