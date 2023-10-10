@@ -14,24 +14,54 @@ namespace Yttrium
         namespace Syntax
         {
 
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Syntax Analyzer to walk down and process AST
+            //
+            //
+            //__________________________________________________________________
             class Analyzer
             {
             public:
-                virtual ~Analyzer() noexcept;
-                explicit Analyzer() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                virtual ~Analyzer() noexcept; //!< cleanup
+                explicit Analyzer() noexcept; //!< setup
 
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                //! what to do when a  terminal is encountered
                 virtual void onTerminal(const String &name,
                                         const Token  &data);
-                
+
+                //! what to do when an internal is encoutered
                 virtual void onInternal(const String &name,
                                         const size_t  size);
 
-                void  run(const XNode &root);
+                //! reset depth, walk from root
+                void           run(const XNode &root);
 
+                //! helper to indent std::cerr using depth
                 std::ostream & indent() const;
 
-                const unsigned depth;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const unsigned depth; //!< current depth
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Analyzer);
                 void walk(const XNode *root);
