@@ -62,6 +62,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 const unsigned depth; //!< current depth
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Analyzer);
                 void walk(const XNode *root);

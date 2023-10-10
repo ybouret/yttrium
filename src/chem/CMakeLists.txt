@@ -6,6 +6,7 @@ chem/type
 chem/species
 chem/reactive
 chem/algebraic
+chem/lang
 )
 
 add_subdirectory(tests)
