@@ -21,6 +21,35 @@ namespace
     public:
         explicit Eval() : Jive::Parser("Eval")
         {
+            Agg &        ADDOP  = act("ADDOP");
+            Agg &        MULOP  = act("MULOP");
+            Agg &        POWER  = act("POWER");
+            const Rule & ID     = term("ID","[:alpha:][:word:]*");
+            const Rule & INT    = term("INT","[:digit:]+");
+            const Rule & LPAREN = mark('(',"\\(");
+            const Rule & RPAREN = mark(')',"\\)");
+            const Rule & PLUS   = term('+',"\\+");
+            const Rule & MINUS  = term('-');
+            const Rule & MUL    = term('*',"\\*");
+            const Rule & DIV    = term('/');
+            const Rule & POW    = mark('^');
+
+            Alt &ATOM  = alt("ATOM") << ID << INT << cat(LPAREN,ADDOP,RPAREN);
+
+            ADDOP += MULOP;
+            ADDOP += zom(cat( pick(PLUS,MINUS), MULOP ));
+
+            MULOP += POWER;
+            ADDOP += zom(cat( pick(MUL,DIV), POWER ));
+
+            POWER += ATOM;
+            POWER += opt( cat(POW,POWER) );
+
+            lexer.drop("[:blank:]+");
+            lexer.endl("[:endl:]");
+
+            renderGraphViz();
+            validate();
         }
 
         virtual ~Eval() noexcept
@@ -37,7 +66,11 @@ namespace
 Y_UTEST(eval)
 {
     Eval eval;
-    
+    Jive::Syntax::XTree ast = eval( Jive::Module::Open( argv[1]) );
+    if(ast.isValid())
+    {
+        Vizible::GraphViz( *eval.name + "-ast.dot", *ast);
+    }
 }
 Y_UDONE()
 
