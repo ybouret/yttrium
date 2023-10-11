@@ -87,6 +87,7 @@ namespace Yttrium
             //__________________________________________________________________
             const Rule & zom(const Rule &);                                 //!< Zero Or More rule
             const Rule & oom(const Rule &);                                 //!< One  Or More rule
+            const Rule & rep(const Rule &, const unsigned n);               //!< repeated rule
             const Rule & cat(const Rule  &a, const Rule &b);                //!< catenate a and b
             const Rule & cat(const Rule  &a, const Rule &b, const Rule &c); //!< catenate a and b and c
             const Rule & pick(const Rule &a, const Rule &b);                //!< pick a or b

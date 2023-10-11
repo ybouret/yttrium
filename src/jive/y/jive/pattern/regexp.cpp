@@ -1,6 +1,7 @@
 
 #include "y/jive/pattern/regexp.hpp"
 #include "y/jive/pattern/regexp/compiler.hpp"
+#include "y/jive/pattern/basic/single.hpp"
 
 namespace Yttrium
 {
@@ -15,6 +16,11 @@ namespace Yttrium
         {
             const String _(rx);
             return Compile(_,dict);
+        }
+
+        Pattern * RegExp:: Compile(const char    ch, const Dictionary *)
+        {
+            return new Single(ch);
         }
     }
 

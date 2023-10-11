@@ -22,7 +22,8 @@ namespace Yttrium
         struct RegExp
         {
             static Pattern *Compile(const String &rx, const Dictionary *dict =0); //!< compile regular expression
-            static Pattern *Compile(const char   *rx, const Dictionary *dict =0); //!< compuler rgular expression
+            static Pattern *Compile(const char   *rx, const Dictionary *dict =0); //!< compile regular expression
+            static Pattern *Compile(const char    ch, const Dictionary *dict =0); //!< single whatever cher
         };
     }
 

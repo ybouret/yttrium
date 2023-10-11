@@ -260,10 +260,19 @@ namespace Yttrium
             return add( new Rep(rr,1) );
         }
 
+
+        const Syntax::Rule & Grammar:: rep(const Rule &rr, const unsigned n)
+        {
+            return add( new Rep(rr,n) );
+
+        }
+
         const Syntax::Rule & Grammar:: opt(const Rule &rr)
         {
             return add( new Opt(rr) );
         }
+
+
 
 
         String * Grammar:: UID_(const Syntax::Manifest &m, const char sep)

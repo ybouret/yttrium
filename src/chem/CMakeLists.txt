@@ -1,4 +1,4 @@
-include_directories(. ../core ../mkl) 
+include_directories(. ../core ../mkl ../jive) 
 
 Y_CreateLibrary(y-chem
 chem
