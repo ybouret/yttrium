@@ -8,9 +8,17 @@ namespace Yttrium
         {
         }
 
-        Linker:: Linker() noexcept : Jive::Syntax::Analyzer()
+        Linker:: Linker() noexcept : Jive::Syntax::Translator()
         {
         }
+
+        void Linker:: operator()(const XNode &root,
+                                 Library     &lib,
+                                 Equilibria  &eqs)
+        {
+            
+        }
+
     }
 
 }

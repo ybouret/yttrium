@@ -52,9 +52,6 @@ namespace Yttrium
                 //! helper to indent std::cerr using depth
                 std::ostream & indent() const;
 
-                //! reset depth, walk from root
-                void           run(const XNode &root);
-
                 //______________________________________________________________
                 //
                 //
@@ -62,7 +59,11 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 const unsigned depth; //!< current depth
-                
+
+            protected:
+                //! reset depth, walk from root
+                void           run(const XNode &root);
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Analyzer);
                 void walk(const XNode *root);

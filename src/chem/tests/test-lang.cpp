@@ -17,7 +17,7 @@ Y_UTEST(lang)
         {
             Vizible::GraphViz( "chem.dot", *ast);
             Chemical::Linker linker;
-            linker.run(*ast);
+            linker.translate(*ast);
         }
     }
 

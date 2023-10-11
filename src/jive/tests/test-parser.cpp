@@ -4,7 +4,7 @@
 #include "y/ptr/auto.hpp"
 
 #include "y/jive/lexical/plugin/jstring.hpp"
-#include "y/jive/syntax/analyzer.hpp"
+#include "y/jive/syntax/translator.hpp"
 
 using namespace Yttrium;
 
@@ -95,8 +95,8 @@ Y_UTEST(parser)
         if(ast.isValid())
         {
             Vizible::GraphViz( *json.name + "-ast.dot", *ast);
-            Jive::Syntax::Analyzer  analyzer;
-            analyzer.run(*ast);
+            Jive::Syntax::Translator  analyzer;
+            analyzer.translate(*ast);
         }
     }
 
