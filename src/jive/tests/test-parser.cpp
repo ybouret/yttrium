@@ -96,7 +96,7 @@ Y_UTEST(parser)
         {
             Vizible::GraphViz( *json.name + "-ast.dot", *ast);
             Jive::Syntax::Translator  analyzer;
-            analyzer.translate(*ast);
+            analyzer.translate(*ast,Yttrium::Jive::Syntax::Permissive);
         }
     }
 

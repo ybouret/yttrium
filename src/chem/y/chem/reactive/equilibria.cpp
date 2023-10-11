@@ -34,6 +34,9 @@ namespace Yttrium
             // initial indices
             const size_t idx = db.size();
             for(unsigned i=0;i<Levels;++i) Coerce(eq->indx[i]) = idx;
+
+            // for format
+            updateWith(*eq);
         }
 
     }

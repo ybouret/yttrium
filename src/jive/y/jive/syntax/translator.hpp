@@ -17,14 +17,22 @@ namespace Yttrium
             typedef Functor<void,TL1(const Token&)> TerminalCallback;
             typedef Functor<void,TL1(size_t)>       InternalCallback;
 
+            enum Translation
+            {
+                Permissive,
+                Restricted
+            };
+
             class Translator : public Analyzer
             {
             public:
+                static const char * const CallSign;
+                
                 explicit Translator();
                 virtual ~Translator() noexcept;
 
                 template <typename ID, typename HOST, typename METH> inline
-                void doTerminal(const ID &id, HOST &host, METH &meth)
+                void forTerminal(const ID &id, HOST &host, METH meth)
                 {
                     assert(0!=meth);
                     const Tag              tag(id);
@@ -34,7 +42,7 @@ namespace Yttrium
 
 
                 template <typename ID, typename HOST, typename METH> inline
-                void doInternal(const ID &id, HOST &host, METH &meth)
+                void forInternal(const ID &id, HOST &host, METH meth)
                 {
                     assert(0!=meth);
                     const Tag              tag(id);
@@ -42,16 +50,16 @@ namespace Yttrium
                     submit(tag,icb);
                 }
 
-                void translate(const XNode &root);
+                void translate(const XNode &root, const Translation flag);
 
 
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Translator);
-
                 SuffixMap<String,TerminalCallback> tdb;
                 SuffixMap<String,InternalCallback> idb;
+                Translation                        how;
 
                 void         submit(const Tag &tag, const TerminalCallback &tcb);
                 void         submit(const Tag &tag, const InternalCallback &icb);

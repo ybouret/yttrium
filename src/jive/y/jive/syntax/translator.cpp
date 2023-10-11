@@ -17,6 +17,8 @@ namespace Yttrium
             {
             }
 
+            const char * const Translator:: CallSign = "Translator";
+
             void Translator:: onTerminal(const String &name, const Token &data)
             {
                 TerminalCallback *cb = tdb.search(name);
@@ -26,7 +28,12 @@ namespace Yttrium
                 }
                 else
                 {
-                    Analyzer::onTerminal(name,data);
+                    switch(how)
+                    {
+                        case Permissive: Analyzer::onTerminal(name,data); break;
+                        case Restricted:
+                            throw Specific::Exception(CallSign,"no callback for terminal '%s'", name.c_str());
+                    }
                 }
             }
 
@@ -39,21 +46,27 @@ namespace Yttrium
                 }
                 else
                 {
-                    Analyzer::onInternal(name,size);
+
+                    switch(how)
+                    {
+                        case Permissive: Analyzer::onInternal(name,size);; break;
+                        case Restricted:
+                            throw Specific::Exception(CallSign,"no callback for internal '%s'", name.c_str());
+                    }
                 }
             }
 
             void Translator:: submit(const Tag &tag, const TerminalCallback &tcb)
             {
                 if( !tdb.insert(*tag,tcb) )
-                    throw Specific::Exception("Jive::Translator","multiple terminal callback for '%s'", tag->c_str());
+                    throw Specific::Exception("Jive::Translator","multiple callback for terminal '%s'", tag->c_str());
             }
 
 
             void Translator:: submit(const Tag &tag, const InternalCallback &icb)
             {
                 if( !idb.insert(*tag,icb) )
-                    throw Specific::Exception("Jive::Translator","multiple internal callback for '%s'", tag->c_str());
+                    throw Specific::Exception("Jive::Translator","multiple callback for terminal '%s'", tag->c_str());
             }
 
             void Translator:: initialize()
@@ -61,8 +74,9 @@ namespace Yttrium
 
             }
 
-            void Translator:: translate(const XNode &root)
+            void Translator:: translate(const XNode &root, const Translation flag)
             {
+                how = flag;
                 initialize();
                 run(root);
             }

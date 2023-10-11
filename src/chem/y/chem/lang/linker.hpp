@@ -7,6 +7,8 @@
 #include "y/jive/syntax/translator.hpp"
 #include "y/chem/species/library.hpp"
 #include "y/chem/reactive/equilibria.hpp"
+#include "y/data/small/heavy/list/solo.hpp"
+#include "y/data/small/light/list/solo.hpp"
 
 namespace Yttrium
 {
@@ -18,6 +20,7 @@ namespace Yttrium
         public:
             typedef Jive::Syntax::XNode XNode;
             typedef Jive::Syntax::XList XList;
+            typedef Jive::Token         Token;
 
             explicit Linker() noexcept;
             virtual ~Linker() noexcept;
@@ -29,6 +32,23 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Linker);
+
+            virtual void initialize(); //!< reset all internal data
+            
+            void onUID(const Jive::Token &); //!< store on UID
+            void onSGN(const Jive::Token &); //!< drop sign
+            void onZP(const size_t);         //!< store Z+
+            void onZM(const size_t);         //!< store Z-
+            void onSpecies(const size_t);    //!< query/create specues, store on SP
+
+
+            Library                      *pLib;
+            Equilibria                   *pEqs;
+            Small::SoloHeavyList<String>  UID;
+            Small::SoloHeavyList<int>     Z;
+            Small::SoloLightList<const Species> SP;
+
+
         };
 
     }

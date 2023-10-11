@@ -8,7 +8,9 @@ using namespace Yttrium;
 
 Y_UTEST(lang)
 {
-    Chemical::Parser chemlang;
+    Chemical::Parser     chemlang;
+    Chemical::Library    lib;
+    Chemical::Equilibria eqs;
 
     if(argc>1)
     {
@@ -17,9 +19,11 @@ Y_UTEST(lang)
         {
             Vizible::GraphViz( "chem.dot", *ast);
             Chemical::Linker linker;
-            linker.translate(*ast);
+            linker(*ast,lib,eqs);
         }
     }
+
+    std::cerr << "lib=" << lib << std::endl;
 
 }
 Y_UDONE()
