@@ -151,7 +151,6 @@ namespace Yttrium
                 BackTo(lexer,tree.yield());
             }
 
-
         }
 
     }
@@ -182,6 +181,21 @@ namespace Yttrium
                 XNode *xn = new XNode(from,lx);
                 guard.relax();
                 return xn;
+            }
+
+            void XNode:: remove(const Tag &tag) noexcept
+            {
+                assert(IsInternal==type);
+                XList  target;
+                XList &source = chld;
+                while(source.size>0)
+                {
+                    AutoPtr<XNode> node = source.popHead();
+                    if(*(node->rule.name) == *tag)
+                        continue;
+                    target.pushTail(node.yield());
+                }
+                source.swapWith(target);
             }
         }
     }

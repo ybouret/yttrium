@@ -62,8 +62,11 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! parse current lexer using current source
-            XNode *parse(Lexer &lexer, Source &source);
+            //! parse current lexer using current source, return prune(AST(root))
+            XNode         *parse(Lexer &lexer, Source &source);
+
+            //! post-processing if needed, default is do nothing
+            virtual XNode *prune(XNode *ast) noexcept;
 
             //! add a generic newly created rule
             template <typename RULE> inline

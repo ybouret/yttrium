@@ -76,7 +76,8 @@ namespace Yttrium
                 const List   &   branch()                     const noexcept; //!< if internal
                 const Lexeme &   lexeme()                     const noexcept; //!< if terminal
                 size_t           weight()                     const noexcept; //!< number of terminals inside
-
+                void             remove(const Tag &tag)             noexcept; //!< return intenal node matching tag
+                
                 //______________________________________________________________
                 //
                 //

@@ -13,12 +13,19 @@ namespace Yttrium
         class Parser : public Jive::Parser
         {
         public:
+            typedef Jive::Syntax::XNode XNode;
+
             explicit Parser();
             virtual ~Parser() noexcept;
 
+            const Jive::Tag reac;
+            const Jive::Tag prod;
+            const Jive::Tag plus;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);
+            XNode *prune(XNode *) noexcept;
+            void scrub(XNode *)   noexcept;
         };
 
     }

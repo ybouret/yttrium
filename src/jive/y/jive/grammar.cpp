@@ -379,6 +379,12 @@ namespace Yttrium
 
         }
 
+        Syntax::XNode *Grammar:: prune(XNode *ast) noexcept
+        {
+            assert(0!=ast);
+            return ast;
+        }
+
         Syntax::XNode *Grammar:: accepted(Lexer &lexer, Source &source, XTree &tree)
         {
             assert(0!=code);
@@ -395,7 +401,7 @@ namespace Yttrium
                 throw excp;
             }
 
-            return XNode::AST( tree.yield() );
+            return prune( XNode::AST( tree.yield() ) );
         }
 
         void Grammar:: rejected(Lexer &lexer, Source &source)
