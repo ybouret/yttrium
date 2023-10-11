@@ -8,9 +8,9 @@ using namespace Yttrium;
 
 Y_UTEST(lang)
 {
-    Chemical::Parser     chemlang;
-    Chemical::Library    lib;
-    Chemical::Equilibria eqs;
+    Chemical::Parser        chemlang;
+    Chemical::Library       lib;
+    Chemical::LuaEquilibria eqs;
 
     if(argc>1)
     {

@@ -1,10 +1,11 @@
-include_directories(. ../core ../mkl ../jive) 
+include_directories(. .. ../core ../mkl ../jive ../lua++)
 
 Y_CreateLibrary(y-chem
 chem
 chem/type
 chem/species
 chem/reactive
+chem/reactive/lua
 chem/algebraic
 chem/lang
 )

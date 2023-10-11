@@ -14,26 +14,43 @@ namespace Yttrium
         Linker:: Linker() noexcept :
         Jive::Syntax::Translator(),
         pLib(0),
-        pEqs(0)
+        pEqs(0),
+        UID(),
+        SPZ(),
+        SPR(),
+        COF(),
+        ACL(),
+        ACR(),
+        ACP(),
+        KEQ()
         {
 
             forTerminal("UID",   *this, & Linker:: onUID);
             forTerminal("+",     *this, & Linker:: onSGN);
             forTerminal("-",     *this, & Linker:: onSGN);
             forTerminal("COEFF", *this, & Linker:: onCOEFF);
+            forTerminal("K",     *this, & Linker:: onK);
 
-            forInternal("Z+", *this, & Linker:: onZP);
-            forInternal("Z-", *this, & Linker:: onZM);
-            forInternal("SPECIES", *this, & Linker::onSpecies);
+            forInternal("Z+",      *this, & Linker:: onZP);
+            forInternal("Z-",      *this, & Linker:: onZM);
+            forInternal("SPECIES", *this, & Linker:: onSpecies);
+            forInternal("ACTOR",   *this, & Linker:: onACTOR);
+            forInternal("REAC",    *this, & Linker:: onREAC);
+            forInternal("PROD",    *this, & Linker:: onPROD);
+            forInternal("EQ",      *this, & Linker:: onEQ);
 
         }
 
         void Linker:: initialize()
         {
             UID.free();
-            Z.free();
-            SP.free();
-            COEFF.free();
+            SPZ.free();
+            SPR.free();
+            COF.free();
+            ACL.free();
+            ACR.free();
+            ACP.free();
+            KEQ.free();
         }
 
         void Linker:: onUID(const Token &token)
@@ -44,14 +61,14 @@ namespace Yttrium
 
         void Linker:: onZP(const size_t z)
         {
-            Z << int(z);
-            indent() << "Z=" << UID << std::endl;
+            SPZ << int(z);
+            indent() << "SPZ=" << UID << std::endl;
         }
 
         void Linker:: onZM(const size_t z)
         {
-            Z << -int(z);
-            indent() << "Z=" << Z << std::endl;
+            SPZ << -int(z);
+            indent() << "SPZ=" << SPZ << std::endl;
         }
 
         void Linker:: onSGN(const Token &)
@@ -67,23 +84,52 @@ namespace Yttrium
                 res *= 10;
                 res += (**ch) - '0';
             }
-            COEFF << res.cast<unsigned>("COEFF");
-            indent() << "COEFF=" << COEFF << std::endl;
+            COF << res.cast<unsigned>("COEFF");
+            indent() << "COF=" << COF << std::endl;
         }
+
+        void Linker:: onACTOR(const size_t n)
+        {
+            assert(SPR.size>0);
+            const Species &sp = SPR.pullTail();
+            unsigned       nu = 1;
+
+            switch(n)
+            {
+                case 1: // no coeff
+                    break;
+
+                case 2: assert(COF.size>0);
+                    nu = COF.pullTail();
+                    break;
+
+                default:
+                    throw Specific::Exception("Linker::Actor","invalid arguments");
+            }
+            const Actor ac(sp,nu);
+            ACL << ac;
+            indent() << "ACL=" << ACL << std::endl;
+        }
+
+
 
         void Linker:: onSpecies(const size_t n)
         {
             assert(UID.size>0);
+
+            // initialize
             String name = UID.pullTail(); 
             int    z    = 0;
+
+            // select charge
             switch(n)
             {
                 case 1: // no charge
                     break;
 
                 case 2: // with charge
-                    assert(Z.size>0);
-                    z = Z.pullTail();
+                    assert(SPZ.size>0);
+                    z = SPZ.pullTail();
                     break;
 
                 default:
@@ -106,20 +152,104 @@ namespace Yttrium
             assert(pLib);
 
             // query/create species
-            const Species &sp = (*pLib)(name,z);
-            SP << sp;
+            SPR << (*pLib)(name,z);
 
-            indent() << "SP=" << SP << std::endl;
+            indent() << "SPR=" << SPR << std::endl;
 
         }
 
 
-        void Linker:: operator()(const XNode &root,
-                                 Library     &lib,
-                                 Equilibria  &eqs)
+        void Linker:: extract(Actors &dest, const size_t n)
         {
-            const Temporary<Library*>    tmpLib(pLib,&lib);
-            const Temporary<Equilibria*> tmpEqs(pEqs,&eqs);
+            assert(ACL.size>=n);
+            for(size_t i=n;i>0;--i)
+            {
+                const Actor ac = ACL.pullTail();
+                dest.pushHead( new Actor(ac) );
+            }
+        }
+
+
+        void Linker:: onPROD(const size_t n)
+        {
+            assert(ACL.size>=n);
+            Actors prod;
+            extract(prod,n);
+            ACP << prod;
+            indent() << "ACP=" << ACP << std::endl;
+        }
+
+        void Linker:: onREAC(const size_t n)
+        {
+            assert(ACL.size>=n);
+            Actors reac;
+            extract(reac,n);
+            ACR << reac;
+            indent() << "ACR=" << ACR << std::endl;
+        }
+
+        void Linker:: onK(const Token &token)
+        {
+            const String s = token.toString(1,1);
+            KEQ << s;
+            indent() << "KEQ=" << KEQ << std::endl;
+        }
+
+
+        void Linker:: onEQ(const size_t n)
+        {
+            if(4!=n)
+                throw Specific::Exception("Linker::Equilibrium","invalid arguments");
+
+            // select data
+            const String &eid  = **UID.tail;
+            const Actors &reac = **ACR.tail;
+            const Actors &prod = **ACP.tail;
+            const String &Kstr = **KEQ.tail;
+
+            indent() << " (*) " << eid << " : " << reac << " <=> " << prod << " : '" << Kstr << "'" << std::endl;
+
+            if(reac.size+prod.size <=0 ) throw Specific::Exception(eid.c_str(),"empty equilibrium");
+            if(Kstr.size()<=0)           throw Specific::Exception(eid.c_str(),"empty constant string");
+
+            AutoPtr<Equilibrium> pEq = 0;
+
+
+            if(isdigit(Kstr[1]))
+            {
+                const double k = pEqs->vm->eval<lua_Number>(Kstr);
+                pEq = new ConstEquilibrium(eid,k);
+                goto ASSEMBLE;
+            }
+
+            throw Specific::Exception(eid.c_str(),"unhandle K='%s'", Kstr.c_str());
+        ASSEMBLE:
+            assert(pEq.isValid());
+            {
+                Equilibrium &eq = *pEq;
+                for(const Actor *a=reac.head;a;a=a->next) eq(-int(a->nu),a->sp);
+                for(const Actor *a=prod.head;a;a=a->next) eq(a->nu,a->sp);
+            }
+
+            assert(0!=pEqs);
+
+            (*pEqs)(pEq.yield());
+            
+
+
+            // cleanup
+            UID.cutTail();
+            ACR.cutTail();
+            ACP.cutTail();
+            KEQ.cutTail();
+        }
+
+        void Linker:: operator()(const XNode   &root,
+                                 Library        &lib,
+                                 LuaEquilibria  &eqs)
+        {
+            const Temporary<Library*>       tmpLib(pLib,&lib);
+            const Temporary<LuaEquilibria*> tmpEqs(pEqs,&eqs);
             translate(root,Jive::Syntax::Permissive);
         }
 

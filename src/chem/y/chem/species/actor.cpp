@@ -32,9 +32,16 @@ namespace Yttrium
         {
             String res;
             if(nu>1)
-                res += FormatString("%u*",nu);
-            res += sp.name;
+                res += FormatString("%u",nu);
+            res += sp.toString();
             return res;
+        }
+
+        std::ostream & operator<<(std::ostream &os, const Actor &ac)
+        {
+            const String s = ac.toString();
+            os << s;
+            return os;
         }
 
     }

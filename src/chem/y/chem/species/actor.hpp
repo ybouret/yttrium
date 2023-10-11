@@ -33,7 +33,8 @@ namespace Yttrium
                            const unsigned coeff) noexcept; //!< setup
             Actor(const Actor &)                 noexcept; //!< copy
             virtual ~Actor()                     noexcept; //!< cleanup
-
+            Y_OSTREAM_PROTO(Actor);
+            
             //__________________________________________________________________
             //
             //
@@ -41,6 +42,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             String toString() const; //!< convert to string
+
 
             //__________________________________________________________________
             //

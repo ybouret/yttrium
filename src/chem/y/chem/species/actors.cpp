@@ -28,7 +28,13 @@ namespace Yttrium
             return res;
         }
 
+        std::ostream & operator<<(std::ostream &os, const Actors &A)
+        {
+            const String s = A.toString();
+            return os << s;
+        }
     }
+
 
 }
 
