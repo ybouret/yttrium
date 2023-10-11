@@ -60,7 +60,6 @@ namespace Yttrium
             const Rule &DECL = grp("DECL") << ITEM << opt(END);
             TOPO << zom(DECL);
 
-            renderGraphViz(true);
 
             // lexical only
             lexer.plug<Jive::Lexical::C_Comment>("COM1");
@@ -68,6 +67,7 @@ namespace Yttrium
             lexer.drop("[:blank:]");
             lexer.endl("[:endl:]");
 
+            // validate
             validate();
         }
 

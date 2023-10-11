@@ -133,7 +133,7 @@ namespace Yttrium
     {
     public:
         static const char * const      CallSign;
-        static const AtExit::Longevity LifeTime = 0;
+        static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 11;
 
         typedef ArcPtr<RTTI>            RTTIptr;
         typedef HashMap<String,RTTIptr> RTTImap;

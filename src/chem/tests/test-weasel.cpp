@@ -1,28 +1,28 @@
 
-#include "y/chem/lang/parser.hpp"
-#include "y/chem/lang/linker.hpp"
 
+#include "y/chem/weasel.hpp"
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;
 
-Y_UTEST(lang)
+Y_UTEST(weasel)
 {
-    Chemical::Parser        chemlang;
+    Chemical::Weasel       &wsl = Chemical::Weasel::Instance();
     Chemical::Library       lib;
     Chemical::LuaEquilibria eqs;
 
-    chemlang.renderGraphViz();
 
     if(argc>1)
     {
-        Jive::Syntax::XTree ast = chemlang( Jive::Module::Open( argv[1]) );
-        if(ast.isValid())
+#if 0
+        //Jive::Syntax::XTree ast = chemlang( Jive::Module::Open( argv[1]) );
+        //if(ast.isValid())
         {
             Vizible::GraphViz( "chem.dot", *ast);
             Chemical::Linker linker;
             linker(*ast,lib,eqs);
         }
+#endif
     }
 
     std::cerr << "lib=" << lib << std::endl;
