@@ -10,17 +10,43 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Parse species/equilibria
+        //
+        //
+        //______________________________________________________________________
         class Parser : public Jive::Parser
         {
         public:
-            typedef Jive::Syntax::XNode XNode;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef Jive::Syntax::XNode XNode; //!< alias
 
-            explicit Parser();
-            virtual ~Parser() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Parser();           //!< create parse/lexer
+            virtual ~Parser() noexcept;  //!< cleanup
 
-            const Jive::Tag reac;
-            const Jive::Tag prod;
-            const Jive::Tag plus;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const Jive::Tag reac; //!< "REAC"
+            const Jive::Tag prod; //!< "PROD"
+            const Jive::Tag plus; //!< "+"
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);

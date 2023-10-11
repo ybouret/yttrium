@@ -19,6 +19,7 @@ namespace Yttrium
         }
 
         Actor:: Actor(const Actor &a) noexcept :
+        Object(),
         sp( a.sp ),
         nu( a.nu ),
         n1( a.n1 ),

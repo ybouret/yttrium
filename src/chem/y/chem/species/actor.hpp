@@ -5,6 +5,7 @@
 #define Y_Chemical_Actor_Included 1
 
 #include "y/chem/species.hpp"
+#include "y/chem/type/defs.hpp"
 
 namespace Yttrium
 {
