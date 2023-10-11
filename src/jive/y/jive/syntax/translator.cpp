@@ -13,7 +13,10 @@ namespace Yttrium
             {
             }
 
-            Translator:: Translator()
+            Translator:: Translator() :
+            tdb(),
+            idb(),
+            how(Permissive)
             {
             }
 

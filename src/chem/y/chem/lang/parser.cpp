@@ -20,6 +20,7 @@ namespace Yttrium
         prod("PROD"),
         plus("+")
         {
+            // top level
             Agg &TOPO = agg(name);
 
             //__________________________________________________________________
