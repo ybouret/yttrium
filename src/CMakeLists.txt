@@ -78,6 +78,7 @@ endmacro()
 add_subdirectory(core)
 add_subdirectory(jive)
 add_subdirectory(mkl)
+add_subdirectory(lua++)
 add_subdirectory(chem)
 
 ################################################################################
