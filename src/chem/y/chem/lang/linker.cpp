@@ -1,6 +1,7 @@
 #include "y/chem/lang/linker.hpp"
 #include "y/type/temporary.hpp"
 #include "y/system/exception.hpp"
+#include "y/apex/natural.hpp"
 
 namespace Yttrium
 {
@@ -16,9 +17,10 @@ namespace Yttrium
         pEqs(0)
         {
 
-            forTerminal("UID", *this, & Linker:: onUID);
-            forTerminal("+",   *this, & Linker:: onSGN);
-            forTerminal("-",   *this, & Linker:: onSGN);
+            forTerminal("UID",   *this, & Linker:: onUID);
+            forTerminal("+",     *this, & Linker:: onSGN);
+            forTerminal("-",     *this, & Linker:: onSGN);
+            forTerminal("COEFF", *this, & Linker:: onCOEFF);
 
             forInternal("Z+", *this, & Linker:: onZP);
             forInternal("Z-", *this, & Linker:: onZM);
@@ -31,9 +33,10 @@ namespace Yttrium
             UID.free();
             Z.free();
             SP.free();
+            COEFF.free();
         }
 
-        void Linker:: onUID(const Jive::Token &token)
+        void Linker:: onUID(const Token &token)
         {
             UID << token.toString();
             indent() << "UID=" << UID << std::endl;
@@ -51,9 +54,21 @@ namespace Yttrium
             indent() << "Z=" << Z << std::endl;
         }
 
-        void Linker:: onSGN(const Jive::Token&)
+        void Linker:: onSGN(const Token &)
         {
 
+        }
+
+        void Linker:: onCOEFF(const Token &coeff)
+        {
+            apn res = 0;
+            for(const Jive::Char *ch=coeff.head;ch;ch=ch->next)
+            {
+                res *= 10;
+                res += (**ch) - '0';
+            }
+            COEFF << res.cast<unsigned>("COEFF");
+            indent() << "COEFF=" << COEFF << std::endl;
         }
 
         void Linker:: onSpecies(const size_t n)

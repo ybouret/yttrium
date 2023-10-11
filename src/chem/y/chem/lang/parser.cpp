@@ -52,7 +52,7 @@ namespace Yttrium
                 const Rule &ACTORS = zom(grp("ACTORS") << ACTOR << zom( cat(PLUS,ACTOR) ));
                 const Rule &REAC   = agg(reac) << ACTORS;
                 const Rule &PROD   = agg(prod) << ACTORS;
-                EQ << REAC << mark("<=>") << PROD << SEP << plug<Jive::Lexical::RString>("CONST");
+                EQ << REAC << mark("<=>") << PROD << SEP << plug<Jive::Lexical::RString>("K");
             }
 
             const Rule &ITEM = alt("ITEM") << SPECIES << EQ;

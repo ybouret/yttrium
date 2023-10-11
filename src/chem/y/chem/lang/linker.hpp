@@ -35,19 +35,20 @@ namespace Yttrium
 
             virtual void initialize(); //!< reset all internal data
             
-            void onUID(const Jive::Token &); //!< store on UID
-            void onSGN(const Jive::Token &); //!< drop sign
-            void onZP(const size_t);         //!< store Z+
-            void onZM(const size_t);         //!< store Z-
-            void onSpecies(const size_t);    //!< query/create specues, store on SP
-
+            void onUID(const Token &); //!< store on UID
+            void onSGN(const Token &); //!< drop sign
+            void onZP(const size_t);      //!< store Z+
+            void onZM(const size_t);      //!< store Z-
+            void onSpecies(const size_t); //!< query/create specues, store on SP
+            void onCOEFF(const Token &);  //!< store info COEFF;
 
             Library                      *pLib;
             Equilibria                   *pEqs;
-            Small::SoloHeavyList<String>  UID;
-            Small::SoloHeavyList<int>     Z;
+            Small::SoloHeavyList<String>        UID;
+            Small::SoloHeavyList<int>           Z;
             Small::SoloLightList<const Species> SP;
-
+            Small::SoloHeavyList<unsigned>      COEFF;
+            
 
         };
 
