@@ -49,11 +49,11 @@ namespace Yttrium
                 virtual void onInternal(const String &name,
                                         const size_t  size);
 
-                //! reset depth, walk from root
-                void           run(const XNode &root);
-
                 //! helper to indent std::cerr using depth
                 std::ostream & indent() const;
+
+                //! reset depth, walk from root
+                void           run(const XNode &root);
 
                 //______________________________________________________________
                 //

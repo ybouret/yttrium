@@ -1,6 +1,7 @@
 
 #include "y/chem/lang/parser.hpp"
-#include "y/jive/syntax/analyzer.hpp"
+#include "y/chem/lang/linker.hpp"
+
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;
@@ -15,8 +16,8 @@ Y_UTEST(lang)
         if(ast.isValid())
         {
             Vizible::GraphViz( "chem.dot", *ast);
-            Jive::Syntax::Analyzer  analyzer;
-            analyzer.run(*ast);
+            Chemical::Linker linker;
+            linker.run(*ast);
         }
     }
 

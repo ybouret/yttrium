@@ -51,7 +51,7 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);
             XNode *prune(XNode *) noexcept;
-            void scrub(XNode *)   noexcept;
+            void   scrub(XNode *) noexcept;
         };
 
     }
