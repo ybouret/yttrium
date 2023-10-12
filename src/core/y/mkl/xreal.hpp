@@ -24,6 +24,14 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
+        // Definitions
+        //
+        //______________________________________________________________________
+        typedef T Type;
+
+        //______________________________________________________________________
+        //
+        //
         // C++
         //
         //______________________________________________________________________
@@ -44,7 +52,7 @@ namespace Yttrium
         inline friend std::ostream &operator<<(std::ostream &os, const XReal &xr)
         { xr.display(os); return os; }
 
-        //! retrieveing floaint point
+        //! retrieveing floating point value
         operator T() const;
 
         //! absolute value
@@ -52,6 +60,9 @@ namespace Yttrium
 
         //! square root
         XReal sqrt() const;
+
+        //! log10
+        T     l10() const;
 
 
         //______________________________________________________________________
