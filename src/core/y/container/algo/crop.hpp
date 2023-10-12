@@ -2,10 +2,11 @@
 
 //! \file
 
-#ifndef Y_Container_Algo_Skip_Included
-#define Y_Container_Algo_Skip_Included 1
+#ifndef Y_Container_Algo_Crop_Included
+#define Y_Container_Algo_Crop_Included 1
 
-#include "y/sequence/interface.hpp"
+#include "y/container/algo/trim.hpp"
+#include "y/container/algo/skip.hpp"
 
 namespace Yttrium
 {
@@ -14,14 +15,13 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        //! Skip first bad items
+        //! Trim last bad items
         //
         //______________________________________________________________________
         template <typename SEQUENCE, typename IS_BAD>
-        inline SEQUENCE &Skip(SEQUENCE &seq, IS_BAD &is_bad)
+        inline SEQUENCE &Crop(SEQUENCE &seq, IS_BAD &bad)
         {
-            while( seq.size() && is_bad(seq.head())) seq.popHead();
-            return seq;
+            return Skip(Trim(seq,bad),bad);
         }
     }
 
