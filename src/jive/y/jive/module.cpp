@@ -86,6 +86,8 @@ namespace Yttrium
 
         Module * Module:: OpenData_(const Context &ctx, const char *text)
         {
+            std::cerr << "data: '" << text << "'" << std::endl;
+            
             const Input   inp = new InputDataStream(text,StringLength(text));
             return new Module(ctx,inp);
         }

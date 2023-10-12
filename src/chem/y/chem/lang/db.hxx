@@ -1,4 +1,4 @@
-"water   : [H+]+[HO-] : '1e-14'",
+"water   : <=> [H+]+[HO-] : '1e-14'",
 "acetic  : [EtCOOH]  <=> [H+] + [EtCOO-]  : '10^(-4.76)'",
 "benzoic : [PhiCOOH] <=> [H+] + [PhiCOO-] : '10^(-4.20)'",
 "formic  : [MeCOOH]  <=> [H+] + [MeCOO-]  : '10^(-3.75)'",

@@ -21,6 +21,8 @@ namespace Yttrium
             typedef Jive::Syntax::XNode XNode;
             typedef Jive::Syntax::XList XList;
             typedef Jive::Token         Token;
+            typedef Small::SoloHeavyList<const String> StringList;
+            typedef StringList::NodeType               StringNode;
 
             explicit Linker() noexcept;
             virtual ~Linker() noexcept;
@@ -63,9 +65,10 @@ namespace Yttrium
             Small::SoloHeavyList<Actor>         ACL; //!< actor list
             Small::SoloHeavyList<Actors>        ACR; //!< actors for reac
             Small::SoloHeavyList<Actors>        ACP; //!< actors for products
-            Small::SoloHeavyList<String>        KEQ; //!< constant strings
+            StringList                          KEQ; //!< constant strings
+
         public:
-            Small::SoloHeavyList<String>        RXP; //!< constant strings
+            StringList                           RXP; //!< regular expressions to match built-in
 
         };
 
