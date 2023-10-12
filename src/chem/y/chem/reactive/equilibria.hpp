@@ -70,6 +70,8 @@ namespace Yttrium
             //! update maxReac and maxProd
             void updateMaxSizes() noexcept;
 
+            Iterator begin() noexcept { return db.begin(); }
+            Iterator end()   noexcept { return db.end();   }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
