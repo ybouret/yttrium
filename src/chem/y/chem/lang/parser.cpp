@@ -21,7 +21,7 @@ namespace Yttrium
         plus("+")
         {
             // top level
-            Agg &TOPO = agg(name);
+            Agg &TOPO = agg("Weasel");
 
             //__________________________________________________________________
             //
@@ -56,7 +56,14 @@ namespace Yttrium
                 EQ << REAC << mark("<=>") << PROD << SEP << plug<Jive::Lexical::RString>("K");
             }
 
-            const Rule &ITEM = alt("ITEM") << SPECIES << EQ;
+            //__________________________________________________________________
+            //
+            //
+            // BuiltIn
+            //
+            //__________________________________________________________________
+            const Rule &RXP  = term("RXP","@[\\x21-\\x7f]+");
+            const Rule &ITEM = alt("ITEM") << SPECIES << EQ << RXP;
             const Rule &DECL = grp("DECL") << ITEM << opt(END);
             TOPO << zom(DECL);
 

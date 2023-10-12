@@ -29,7 +29,9 @@ namespace Yttrium
                             Library        &lib,
                             LuaEquilibria  &eqs);
 
-
+            //! clean all but RXP
+            void clean() noexcept;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Linker);
 
@@ -46,7 +48,9 @@ namespace Yttrium
             void onPROD(const size_t);    //!< build some PRODucts
             void onK(const Token &);      //!< store a new constant value
             void onEQ(const size_t n);    //!< create a new equilibrium
-
+            void onRXP(const Token &);    //!< store RXP for further processing
+            void onEND(const size_t);     //!< top level parser rule
+        
             void extract(Actors &dest, const size_t n);
 
 
@@ -60,6 +64,8 @@ namespace Yttrium
             Small::SoloHeavyList<Actors>        ACR; //!< actors for reac
             Small::SoloHeavyList<Actors>        ACP; //!< actors for products
             Small::SoloHeavyList<String>        KEQ; //!< constant strings
+        public:
+            Small::SoloHeavyList<String>        RXP; //!< constant strings
 
         };
 

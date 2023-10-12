@@ -22,7 +22,8 @@ namespace Yttrium
         ACL(),
         ACR(),
         ACP(),
-        KEQ()
+        KEQ(),
+        RXP()
         {
 
             forTerminal("UID",   *this, & Linker:: onUID);
@@ -30,6 +31,7 @@ namespace Yttrium
             forTerminal("-",     *this, & Linker:: onSGN);
             forTerminal("COEFF", *this, & Linker:: onCOEFF);
             forTerminal("K",     *this, & Linker:: onK);
+            forTerminal("RXP",   *this, & Linker:: onRXP);
 
             forInternal("Z+",      *this, & Linker:: onZP);
             forInternal("Z-",      *this, & Linker:: onZM);
@@ -38,10 +40,11 @@ namespace Yttrium
             forInternal("REAC",    *this, & Linker:: onREAC);
             forInternal("PROD",    *this, & Linker:: onPROD);
             forInternal("EQ",      *this, & Linker:: onEQ);
+            forInternal("Weasel",  *this, & Linker:: onEND);
 
         }
 
-        void Linker:: initialize()
+        void Linker:: clean() noexcept
         {
             UID.free();
             SPZ.free();
@@ -51,6 +54,17 @@ namespace Yttrium
             ACR.free();
             ACP.free();
             KEQ.free();
+        }
+
+        void Linker:: initialize()
+        {
+            clean();
+            RXP.free();
+        }
+
+        void Linker:: onEND(const size_t)
+        {
+            clean();
         }
 
         void Linker:: onUID(const Token &token)
@@ -195,6 +209,13 @@ namespace Yttrium
             indent() << "KEQ=" << KEQ << std::endl;
         }
 
+        void Linker:: onRXP(const Token &token)
+        {
+            assert(token.size>=2);
+            const String rxp = token.toString(1,0);
+            RXP << rxp;
+            indent() << "RXP=" << RXP << std::endl;
+        }
 
         void Linker:: onEQ(const size_t n)
         {
@@ -250,7 +271,9 @@ namespace Yttrium
         {
             const Temporary<Library*>       tmpLib(pLib,&lib);
             const Temporary<LuaEquilibria*> tmpEqs(pEqs,&eqs);
-            translate(root,Jive::Syntax::Permissive);
+            //translate(root,Jive::Syntax::Permissive);
+            translate(root,Jive::Syntax::Restricted);
+
         }
 
     }

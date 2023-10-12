@@ -12,6 +12,8 @@ Y_UTEST(lang)
     Chemical::Library       lib;
     Chemical::LuaEquilibria eqs;
 
+    Jive::Syntax::Rule::Verbose = true;
+
     chemlang.renderGraphViz();
 
     if(argc>1)
