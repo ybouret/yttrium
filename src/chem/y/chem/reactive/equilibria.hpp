@@ -37,10 +37,10 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const char * const CallSign; //!< Equilibria
-            typedef EqDB::ConstIterator ConstIterator;
-            typedef EqDB::Iterator      Iterator;
-            
+            static const char * const   CallSign;      //!< Equilibria
+            typedef EqDB::ConstIterator ConstIterator; //!< alias
+            typedef EqDB::Iterator      Iterator;      //!< alias
+
             //__________________________________________________________________
             //
             //
@@ -49,7 +49,7 @@ namespace Yttrium
             //__________________________________________________________________
             explicit Equilibria();           //!< setup empty
             virtual ~Equilibria() noexcept;  //!< cleanup
-            Y_OSTREAM_PROTO(Equilibria);
+            Y_OSTREAM_PROTO(Equilibria);     //!< pretty display
 
             //__________________________________________________________________
             //
@@ -67,6 +67,7 @@ namespace Yttrium
                 return *eq;
             }
 
+            //! update maxReac and maxProd
             void updateMaxSizes() noexcept;
 
 
@@ -83,8 +84,8 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const Entities maxReac;
-            const Entities maxProd;
+            const Entities maxReac; //!< helper to display
+            const Entities maxProd; //!< helper to display
         };
 
     }

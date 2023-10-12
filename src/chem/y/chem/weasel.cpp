@@ -59,16 +59,14 @@ namespace Yttrium
                 for(const Linker::StringNode *sn=xlink.RXP.head;sn;sn=sn->next)
                 {
                     const String &rxp = **sn;
-                    std::cerr << "-- using '" << rxp << "'" << std::endl;
                     Jive::Matcher match( rxp );
                     size_t        count = 0;
                     unsigned      i     = 0;
                     for(const NameNode *who=names.head;who;who=who->next,++i)
                     {
                         const String &eid = **who;
-                        if( match.somehow(eid,eid) )
+                        if( match.exactly(eid,eid) )
                         {
-                            std::cerr << "matching <" << eid << ">" << std::endl;
                             ++count;
                             iset |= i;
                         }
@@ -77,15 +75,16 @@ namespace Yttrium
                 }
                 xlink.RXP.free();
 
+
                 for(ISet::ConstIterator it=iset.begin();it!=iset.end();++it)
                 {
                     const unsigned  i   = *it;
                     const char     *txt = BuiltInEqs[i];
-                    const String   &eid  = **names.fetch(i+1);
-                    std::cerr << " adding '" << txt << "'" << " / " << eid << std::endl;
+                    const String   &eid = **names.fetch(i+1);
                     populate_( Jive::Module::OpenData(eid,txt), lib, eqs);
                 }
 
+                // prepare for formatting
                 eqs.updateMaxSizes();
             }
 
@@ -147,11 +146,6 @@ namespace Yttrium
                 Code_ = 0;
                 throw;
             }
-            for(unsigned i=0;i<BuiltInNum;++i)
-            {
-                std::cerr << "-- '" << BuiltInEqs[i] << "'" << std::endl;
-            }
-
         }
 
         void Weasel:: operator()(Jive::Module *m, Library &lib, LuaEquilibria &eqs)

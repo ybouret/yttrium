@@ -14,19 +14,46 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Linker to translate an AST into species/equilbria
+        //
+        //
+        //______________________________________________________________________
         class Linker : public Jive::Syntax::Translator
         {
         public:
-            typedef Jive::Syntax::XNode XNode;
-            typedef Jive::Syntax::XList XList;
-            typedef Jive::Token         Token;
-            typedef Small::SoloHeavyList<const String> StringList;
-            typedef StringList::NodeType               StringNode;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef Jive::Syntax::XNode                XNode;      //!<alias
+            typedef Jive::Syntax::XList                XList;      //!<alias
+            typedef Jive::Token                        Token;      //!<alias
+            typedef Small::SoloHeavyList<const String> StringList; //!<alias
+            typedef StringList::NodeType               StringNode; //!<alias
 
-            explicit Linker() noexcept;
-            virtual ~Linker() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            explicit Linker() noexcept; //!< setup
+            virtual ~Linker() noexcept; //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! parse the root
             void operator()(const XNode    &root,
                             Library        &lib,
                             LuaEquilibria  &eqs);

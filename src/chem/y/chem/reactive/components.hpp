@@ -29,7 +29,8 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const char * const CallSign; //!< components
+            static const char * const                  CallSign;       //!< Components
+            typedef Component::DataBase::ConstIterator ConstIterator;  //!< alias
 
             //__________________________________________________________________
             //
@@ -48,6 +49,19 @@ namespace Yttrium
             //__________________________________________________________________
             void operator()(const int nu, const Species &sp); //!< add nu * sp
             String toString() const;                          //!< convert to string
+
+            //! fill one line of topology
+            template <typename T> inline
+            void fill(Writable<T> &nu, const Level level) const
+            {
+                for(ConstIterator it=db.begin();it!=db.end();++it)
+                {
+                    const Component &cc = *it;
+                    nu[ cc.sp.indx[level] ] = cc.nu;
+                }
+            }
+
+
 
             //__________________________________________________________________
             //

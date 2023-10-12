@@ -214,4 +214,13 @@ namespace Yttrium
         return Sign::Of(delta.mantissa);
     }
 
+
+    template <>
+    real_t XReal<real_t>:: log10() const
+    {
+        static const real_t l10r = std::log10(  MKL::Numeric<real_t>::RADIX );
+        if(mantissa<=0) throw Libc::Exception(EDOM, "XReal::log10()");
+        return std::log10(mantissa) + exponent * l10r;
+    }
+
 }

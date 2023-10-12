@@ -24,10 +24,24 @@ namespace Yttrium
         class Weasel : public Singleton<Weasel>
         {
         public:
-            static const char * const      CallSign;
-            static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 12;
-            class Code;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const      CallSign; //!< "Weasel"
+            static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 12; //!< alias
+            class Code;  // forward declaration
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! compile a module into species and equilibria
             void operator()(Jive::Module *, Library &, LuaEquilibria &);
 
         private:

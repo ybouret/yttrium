@@ -40,7 +40,7 @@ namespace Yttrium
             explicit Actors() noexcept; //!< setup empty
             virtual ~Actors() noexcept; //!< cleanup
             Actors(const Actors &);     //!< copy
-            Y_OSTREAM_PROTO(Actors);
+            Y_OSTREAM_PROTO(Actors);    //!< display using string
             
             //__________________________________________________________________
             //

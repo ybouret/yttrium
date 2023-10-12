@@ -11,14 +11,20 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Equilibria with a Lua Virtual Machine inside
+        //
+        //
+        //______________________________________________________________________
         class LuaEquilibria : public Equilibria
         {
         public:
-            explicit LuaEquilibria();
-            virtual ~LuaEquilibria() noexcept;
-
-            Lua::VM vm;
+            explicit LuaEquilibria();          //!< setup
+            virtual ~LuaEquilibria() noexcept; //!< cleanup
+            Lua::VM vm;                        //!< shared lua state
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(LuaEquilibria);

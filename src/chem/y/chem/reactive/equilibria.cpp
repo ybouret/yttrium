@@ -74,7 +74,7 @@ namespace Yttrium
                     eqs.maxProd.pad(os << s,s.size());
                 }
                 os << " : ";
-                os << Coerce(eq).K(0);
+                os << "10^" << Coerce(eq).K(0).log10();
                 os << std::endl;
             }
             os << '}';

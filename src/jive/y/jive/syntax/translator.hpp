@@ -14,23 +14,58 @@ namespace Yttrium
         namespace Syntax
         {
 
-            typedef Functor<void,TL1(const Token&)> TerminalCallback;
-            typedef Functor<void,TL1(size_t)>       InternalCallback;
 
+            typedef Functor<void,TL1(const Token&)> TerminalCallback; //!< alias
+            typedef Functor<void,TL1(size_t)>       InternalCallback; //!< alias
+
+            //__________________________________________________________________
+            //
+            //
+            //! Control translation state
+            //
+            //__________________________________________________________________
             enum Translation
             {
-                Permissive,
-                Restricted
+                Permissive, //!< call analyzer if no matching callback
+                Restricted  //!< raise an exception if no matching callback
             };
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Tanslator by table of callbacks
+            //
+            //
+            //__________________________________________________________________
             class Translator : public Analyzer
             {
             public:
-                static const char * const CallSign;
-                
-                explicit Translator();
-                virtual ~Translator() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                static const char * const CallSign; //!< "Translator""
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Translator();           //!< setup
+                virtual ~Translator() noexcept;  //!< cleanup
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                //! define a callback for a named Terminal
                 template <typename ID, typename HOST, typename METH> inline
                 void forTerminal(const ID &id, HOST &host, METH meth)
                 {
@@ -40,7 +75,7 @@ namespace Yttrium
                     submit(tag,tcb);
                 }
 
-
+                //! define a callaback for a named Internal
                 template <typename ID, typename HOST, typename METH> inline
                 void forInternal(const ID &id, HOST &host, METH meth)
                 {
@@ -50,11 +85,9 @@ namespace Yttrium
                     submit(tag,icb);
                 }
 
+                //! analyze/translate the root AST
                 void translate(const XNode &root, const Translation flag);
-
-
-
-
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Translator);
                 SuffixMap<String,TerminalCallback> tdb;
