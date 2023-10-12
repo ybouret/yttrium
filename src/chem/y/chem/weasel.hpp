@@ -13,7 +13,14 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
         //! WEASEL is Equilbria And Species Elementary Language
+        //
+        //
+        //______________________________________________________________________
         class Weasel : public Singleton<Weasel>
         {
         public:

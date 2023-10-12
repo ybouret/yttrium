@@ -14,15 +14,7 @@ Y_UTEST(weasel)
 
     if(argc>1)
     {
-#if 0
-        //Jive::Syntax::XTree ast = chemlang( Jive::Module::Open( argv[1]) );
-        //if(ast.isValid())
-        {
-            Vizible::GraphViz( "chem.dot", *ast);
-            Chemical::Linker linker;
-            linker(*ast,lib,eqs);
-        }
-#endif
+        wsl( Jive::Module::OpenFile(argv[1]), lib, eqs);
     }
 
     std::cerr << "lib=" << lib << std::endl;
