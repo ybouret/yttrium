@@ -12,13 +12,6 @@ namespace Yttrium
     namespace Chemical
     {
 
-        //______________________________________________________________________
-        //
-        //
-        //! database of equilibria
-        //
-        //______________________________________________________________________
-        typedef SuffixSet<String,Equilibrium::Pointer> EqDB;
 
         //______________________________________________________________________
         //
@@ -28,7 +21,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Equilibria : public Entities, public Proxy<const EqDB>
+        class Equilibria : public Entities, public Proxy<const Equilibrium::DataBase>
         {
         public:
             //__________________________________________________________________
@@ -38,8 +31,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const char * const   CallSign;      //!< Equilibria
-            typedef EqDB::ConstIterator ConstIterator; //!< alias
-            typedef EqDB::Iterator      Iterator;      //!< alias
+            typedef Equilibrium::DataBase::Iterator      Iterator;
+            typedef Equilibrium::DataBase::ConstIterator ConstIterator;
 
             //__________________________________________________________________
             //
@@ -75,9 +68,9 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
-            virtual ConstInterface & surrogate() const noexcept;
             void                     submit(Equilibrium *eq);
-            EqDB db;
+            virtual ConstInterface & surrogate() const noexcept;
+            Equilibrium::DataBase  db;
 
         public:
             //__________________________________________________________________

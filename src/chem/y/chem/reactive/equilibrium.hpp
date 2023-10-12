@@ -29,7 +29,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef ArkPtr<String,Equilibrium> Pointer; //!< alias
-
+            typedef SuffixSet<String,Pointer>  DataBase; //!< alias
+            
             //__________________________________________________________________
             //
             //

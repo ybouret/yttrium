@@ -40,7 +40,16 @@ Y_UTEST(weasel)
 
         Matrix<unsigned> Q;
         Chemical::Algebraic::Compute(Q,Nu,xml);
+ 
+        Chemical::Algebraic::Weight::List W;
+        Chemical::Algebraic::Compute(W,Nu,xml);
+        std::cerr << "W=" << std::endl;
+        for(Chemical::Algebraic::Weight *w=W.head;w;w=w->next)
+        {
+            std::cerr << *w << " => " << w->stoi << std::endl;
+        }
         std::cerr << "Q=" << Q << std::endl;
+
     }
 
 }
