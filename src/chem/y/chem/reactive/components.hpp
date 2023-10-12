@@ -57,7 +57,7 @@ namespace Yttrium
             //__________________________________________________________________
             const Actors reac; //!< reactants
             const Actors prod; //!< products
-
+            
         private:
             Y_DISABLE_ASSIGN(Components);
             Component::DataBase db;

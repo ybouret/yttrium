@@ -86,6 +86,7 @@ namespace Yttrium
                     populate_( Jive::Module::OpenData(eid,txt), lib, eqs);
                 }
 
+                eqs.updateMaxSizes();
             }
 
             const NameList names;

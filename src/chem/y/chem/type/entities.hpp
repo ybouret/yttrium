@@ -41,13 +41,25 @@ namespace Yttrium
             //! record name size
             void updateWith(const Entity &) noexcept;
 
+            //! record with size
+            void updateWith(const size_t) noexcept;
+
+
+            //! pad stream
+            template <typename OSTREAM> inline
+            OSTREAM & pad(OSTREAM &os, const size_t n) const
+            {
+                for(size_t i=n;i<maxNameSize;++i) os << ' ';
+                return os;
+            }
+
             //! pad stream
             template <typename OSTREAM> inline
             OSTREAM & pad(OSTREAM &os, const Entity &ent) const
             {
-                for(size_t i=ent.name.size();i<maxNameSize;++i) os << ' ';
-                return os;
+                return pad(os,ent.name.size());
             }
+
 
             //__________________________________________________________________
             //

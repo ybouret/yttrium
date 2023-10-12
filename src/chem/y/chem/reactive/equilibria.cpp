@@ -6,7 +6,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-        Equilibria:: Equilibria() : db() {}
+        Equilibria:: Equilibria() : db(), maxReac(), maxProd() {}
 
         Equilibria:: ~Equilibria() noexcept
         {
@@ -39,6 +39,46 @@ namespace Yttrium
             updateWith(*eq);
         }
 
+        void Equilibria:: updateMaxSizes() noexcept
+        {
+            for(Iterator it=db.begin();it!=db.end();++it)
+            {
+                const Components &eq = **it;
+                {
+                    const String s = eq.reac.toString();
+                    Coerce(maxReac).updateWith(s.size());
+                }
+                {
+                    const String s = eq.prod.toString();
+                    Coerce(maxProd).updateWith(s.size());
+                }
+            }
+        }
+
+
+
+        std::ostream & operator<<(std::ostream &os, const Equilibria &eqs)
+        {
+            os << '{' << std::endl;
+            for(Equilibria::ConstIterator it=eqs->begin();it!=eqs->end();++it)
+            {
+                const Equilibrium &eq = **it;
+                eqs.pad(os << "  <" << eq.name << ">",eq) << " : ";
+                {
+                    const String s = eq.reac.toString();
+                    eqs.maxReac.pad(os << s,s.size());
+                }
+                os << " <=> ";
+                {
+                    const String s = eq.prod.toString();
+                    eqs.maxProd.pad(os << s,s.size());
+                }
+                os << " : ";
+                os << std::endl;
+            }
+            os << '}';
+            return os;
+        }
     }
 
 }

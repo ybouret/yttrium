@@ -38,15 +38,18 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const char * const CallSign; //!< Equilibria
-
+            typedef EqDB::ConstIterator ConstIterator;
+            typedef EqDB::Iterator      Iterator;
+            
             //__________________________________________________________________
             //
             //
-            // Definitions
+            // C++
             //
             //__________________________________________________________________
             explicit Equilibria();           //!< setup empty
             virtual ~Equilibria() noexcept;  //!< cleanup
+            Y_OSTREAM_PROTO(Equilibria);
 
             //__________________________________________________________________
             //
@@ -55,7 +58,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! insert a newly create equiliibriuam and initial indices
+            //! insert a newly created equilibrium and initial indices
             template <typename EQ> inline
             EQ & operator()(EQ *eq)
             {
@@ -64,6 +67,7 @@ namespace Yttrium
                 return *eq;
             }
 
+            void updateMaxSizes() noexcept;
 
 
         private:
@@ -71,6 +75,16 @@ namespace Yttrium
             virtual ConstInterface & surrogate() const noexcept;
             void                     submit(Equilibrium *eq);
             EqDB db;
+
+        public:
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const Entities maxReac;
+            const Entities maxProd;
         };
 
     }
