@@ -24,7 +24,7 @@ namespace Yttrium
                 // make orthospace
                 Matrix<apz> O;
                 if(!MKL::OrthoSpace::Make(O,Nu))
-                    throw Specific::Exception("Chemica::Algebraic::Conservation","Singular Topology");
+                    throw Specific::Exception("Chemical::Algebraic::Conservation","Singular Topology");
 
                 // explore all ortho space
                 WOVEn::Explore(O,survey,true,xml);

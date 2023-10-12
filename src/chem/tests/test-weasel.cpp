@@ -3,6 +3,7 @@
 #include "y/chem/weasel.hpp"
 #include "y/container/matrix.hpp"
 #include "y/utest/run.hpp"
+#include "y/chem/algebraic.hpp"
 
 using namespace Yttrium;
 
@@ -34,6 +35,12 @@ Y_UTEST(weasel)
             eq.fill(Nu[eq.indx[Chemical::TopLevel]], Chemical::TopLevel);
         }
         std::cerr << "Nu=" << Nu << std::endl;
+        bool  verbose = true;
+        XMLog xml(verbose);
+
+        Matrix<unsigned> Q;
+        Chemical::Algebraic::Compute(Q,Nu,xml);
+        std::cerr << "Q=" << Q << std::endl;
     }
 
 }
