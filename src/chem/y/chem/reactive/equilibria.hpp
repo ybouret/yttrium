@@ -21,7 +21,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Equilibria : public Entities, public Proxy<const Equilibrium::DataBase>
+        class Equilibria : public Object, public Entities, public Proxy<const Equilibrium::DataBase>
         {
         public:
             //__________________________________________________________________
@@ -30,7 +30,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const char * const   CallSign;      //!< Equilibria
+            static const char * const                    CallSign;      //!< Equilibria
             typedef Equilibrium::DataBase::Iterator      Iterator;
             typedef Equilibrium::DataBase::ConstIterator ConstIterator;
 
@@ -59,7 +59,7 @@ namespace Yttrium
                 submit(eq);
                 return *eq;
             }
-
+            
             //! update maxReac and maxProd
             void updateMaxSizes() noexcept;
 
@@ -68,9 +68,10 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
-            void                     submit(Equilibrium *eq);
-            virtual ConstInterface & surrogate() const noexcept;
-            Equilibrium::DataBase  db;
+            void                     submit(Equilibrium *eq);     //!< insert newly created equilibrium
+            virtual ConstInterface & surrogate() const noexcept;  //!< for Proxy
+
+            Equilibrium::DataBase  db; //!< databse
 
         public:
             //__________________________________________________________________

@@ -47,6 +47,28 @@ namespace Yttrium
             return res;
         }
 
+        bool Components:: linkedTo(const Components &other) const noexcept
+        {
+            if( &other == this )
+            {
+                return true;
+            }
+            else
+            {
+                const ConstIterator last = other.db.end();
+                for(ConstIterator it=other.db.begin();it!=last;++it)
+                {
+                    const Component &cc = *it;
+                    const Component *pc = db.search(cc.sp.name);
+                    if(pc)
+                    {
+                        assert( & (pc->sp) == & (cc.sp) );
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
 
 
     }

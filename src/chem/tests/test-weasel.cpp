@@ -49,8 +49,10 @@ Y_UTEST(weasel)
             std::cerr << *w << " => " << w->stoi << std::endl;
         }
         std::cerr << "Q=" << Q << std::endl;
-
+        
     }
+
+    Y_SIZEOF(Chemical::Equilibria);
 
 }
 Y_UDONE()

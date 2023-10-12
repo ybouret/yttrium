@@ -61,6 +61,8 @@ namespace Yttrium
                 }
             }
 
+            bool linkedTo(const Components &other) const noexcept;
+
 
 
             //__________________________________________________________________
