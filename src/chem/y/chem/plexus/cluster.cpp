@@ -10,7 +10,7 @@ namespace Yttrium
         }
 
         Cluster:: Cluster(const Equilibrium &first) :
-        Object(), eqs(), lib(), next(0), prev(0)
+        Object(), eqs(), lib(), Nu(), next(0), prev(0)
         {
             enroll(first);
         }
@@ -86,7 +86,7 @@ namespace Yttrium
                     eq.fill(nu[ eq.indx[SubLevel]], SubLevel);
                 }
             }
-            Y_XMLOG(xml,"Nu="<<Nu);
+            Y_XMLOG(xml,"Nu = "<<Nu);
 
         }
 
