@@ -10,7 +10,7 @@ namespace Yttrium
         }
 
         Cluster:: Cluster(const Equilibrium &first) :
-        Object(), eqs(), lib(), Nu(), next(0), prev(0)
+        Object(), eqs(), lib(), edb(0), sdb(0), Nu(), next(0), prev(0)
         {
             enroll(first);
         }
@@ -50,6 +50,16 @@ namespace Yttrium
             return false;
         }
 
+    }
+
+}
+
+#include "y/chem/algebraic.hpp"
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
         void Cluster:: compile(Equilibria &all, XMLog &xml)
         {
             Y_XML_SECTION_OPT(xml,"Cluster"," size='" << eqs.size << "'");
@@ -60,23 +70,35 @@ namespace Yttrium
 
             const size_t N  = eqs.size;
             const size_t M  = lib.size;
+            EqArray     *E = new EqArray(N); Coerce(edb) = E;
+            SpArray     *S = new SpArray(M); Coerce(sdb) = S;
+
+            //------------------------------------------------------------------
+            // indexing
+            //------------------------------------------------------------------
             {
                 size_t i=0;
                 for(EqNode *node=eqs.head;node;node=node->next)
                 {
                     const Equilibrium &eq = **node;
                     Coerce(eq.indx[SubLevel]) = ++i;
+                    Coerce((*E)[i]) = &Coerce(eq);
                 }
             }
+
             {
                 size_t j=0;
                 for(SpNode *node=lib.head;node;node=node->next)
                 {
                     const Species &sp = **node;
                     Coerce(sp.indx[SubLevel]) = ++j;
+                    Coerce((*S)[j]) = &Coerce(sp);
                 }
             }
 
+            //------------------------------------------------------------------
+            // main topology
+            //------------------------------------------------------------------
             {
                 Matrix<int> &nu = Coerce(Nu);
                 nu.make(N,M);
@@ -88,6 +110,14 @@ namespace Yttrium
             }
             Y_XMLOG(xml,"Nu = "<<Nu);
 
+            //------------------------------------------------------------------
+            // conservations
+            //------------------------------------------------------------------
+            
+            Chemical::Algebraic::Compute(Coerce(Qm),Nu,xml);
+            Y_XMLOG(xml,"Nu = "<<Nu);
+            Y_XMLOG(xml,"Qm = "<<Qm);
+            buildConservations(xml);
         }
 
 

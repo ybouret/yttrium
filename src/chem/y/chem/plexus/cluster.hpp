@@ -7,6 +7,7 @@
 #include "y/data/small/light/list/bare.hpp"
 #include "y/stream/xmlog.hpp"
 #include "y/container/matrix.hpp"
+#include "y/container/cxx/array.hpp"
 
 namespace Yttrium
 {
@@ -17,6 +18,9 @@ namespace Yttrium
 
         typedef Small::BareLightList<const Equilibrium> EqRepo;
         typedef EqRepo::NodeType                        EqNode;
+
+        typedef CxxArray<Equilibrium * const> EqArray;
+        typedef CxxArray<Species     * const> SpArray;
 
         class Cluster : public Object
         {
@@ -30,14 +34,19 @@ namespace Yttrium
             void compile(Equilibria &all, XMLog &);
 
 
-            const EqRepo      eqs;
-            const SpRepo      lib;
-            const Matrix<int> Nu;
+            const EqRepo                 eqs;
+            const SpRepo                 lib;
+            const AutoPtr<const EqArray> edb;
+            const AutoPtr<const SpArray> sdb;
+
+            const Matrix<int>      Nu;    //!< topology
+            const Matrix<unsigned> Qm;    //!< conservation matrix
             Cluster *         next;
             Cluster *         prev;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
+            void buildConservations(XMLog &);
         };
 
         typedef CxxListOf<Cluster> Clusters;
