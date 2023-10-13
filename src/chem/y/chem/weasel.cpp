@@ -135,7 +135,7 @@ namespace Yttrium
             Memory::OutOfReach::Naught(Code_);
         }
 
-        Weasel:: Weasel()
+        Weasel:: Weasel() : verbose( Linker::Verbose )
         {
             try
             {

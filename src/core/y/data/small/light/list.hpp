@@ -96,6 +96,17 @@ namespace Yttrium
                 return ref;
             }
 
+            //! sequential look up
+            inline bool has(ConstType &obj) const noexcept
+            {
+                for(const NodeType *node=this->head;node;node=node->next)
+                {
+                    ConstType &ref = **node;
+                    if( &ref == &obj ) return true;
+                }
+                return false;
+            }
+
 
 
         private:

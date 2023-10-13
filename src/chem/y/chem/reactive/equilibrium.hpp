@@ -37,8 +37,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            virtual ~Equilibrium() noexcept; //!< cleanuo
-
+            virtual ~Equilibrium() noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Equilibrium);    //!< "<name>"
         protected:
             //! setup with identifier
             template <typename ID> inline
@@ -51,7 +51,6 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-
             xreal K(double t); //!< check the return value of internal getK(t)
 
         private:

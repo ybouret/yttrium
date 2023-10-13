@@ -44,6 +44,14 @@ namespace Yttrium
             //! compile a module into species and equilibria
             void operator()(Jive::Module *, Library &, LuaEquilibria &);
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            bool & verbose;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Weasel);
             friend class Singleton<Weasel>;

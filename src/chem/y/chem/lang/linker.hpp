@@ -36,6 +36,7 @@ namespace Yttrium
             typedef Jive::Token                        Token;      //!<alias
             typedef Small::SoloHeavyList<const String> StringList; //!<alias
             typedef StringList::NodeType               StringNode; //!<alias
+            static  bool                               Verbose;    //!< verbosity
 
             //__________________________________________________________________
             //

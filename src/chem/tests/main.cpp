@@ -10,7 +10,7 @@ Y_UTEST_DECL(32)
     Y_UTEST(lib);
     Y_UTEST(lang);
     Y_UTEST(weasel);
-
+    Y_UTEST(plexus);
 }
 Y_UTEST_EXEC()
 

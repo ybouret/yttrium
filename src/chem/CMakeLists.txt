@@ -8,6 +8,7 @@ chem/reactive
 chem/reactive/lua
 chem/algebraic
 chem/lang
+chem/plexus
 )
 
 add_subdirectory(tests)

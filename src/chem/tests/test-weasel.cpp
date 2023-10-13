@@ -1,5 +1,3 @@
-
-
 #include "y/chem/weasel.hpp"
 #include "y/container/matrix.hpp"
 #include "y/utest/run.hpp"
@@ -14,7 +12,7 @@ Y_UTEST(weasel)
     Chemical::Library       lib;
     Chemical::LuaEquilibria eqs;
 
-
+    wsl.verbose = true;
     if(argc>1)
     {
         wsl( Jive::Module::OpenFile(argv[1]), lib, eqs);

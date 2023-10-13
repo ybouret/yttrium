@@ -7,6 +7,9 @@ namespace Yttrium
 {
     namespace Chemical
     {
+
+        bool Linker:: Verbose = false;
+
         Linker:: ~Linker() noexcept
         {
         }
@@ -70,19 +73,19 @@ namespace Yttrium
         void Linker:: onUID(const Token &token)
         {
             UID << token.toString();
-            indent() << "UID=" << UID << std::endl;
+            if(Verbose) indent() << "UID=" << UID << std::endl;
         }
 
         void Linker:: onZP(const size_t z)
         {
             SPZ << int(z);
-            indent() << "SPZ=" << UID << std::endl;
+            if(Verbose) indent() << "SPZ=" << UID << std::endl;
         }
 
         void Linker:: onZM(const size_t z)
         {
             SPZ << -int(z);
-            indent() << "SPZ=" << SPZ << std::endl;
+            if(Verbose) indent() << "SPZ=" << SPZ << std::endl;
         }
 
         void Linker:: onSGN(const Token &)
@@ -99,7 +102,7 @@ namespace Yttrium
                 res += (**ch) - '0';
             }
             COF << res.cast<unsigned>("COEFF");
-            indent() << "COF=" << COF << std::endl;
+            if(Verbose) indent() << "COF=" << COF << std::endl;
         }
 
         void Linker:: onACTOR(const size_t n)
@@ -122,7 +125,7 @@ namespace Yttrium
             }
             const Actor ac(sp,nu);
             ACL << ac;
-            indent() << "ACL=" << ACL << std::endl;
+            if(Verbose) indent() << "ACL=" << ACL << std::endl;
         }
 
 
@@ -168,7 +171,7 @@ namespace Yttrium
             // query/create species
             SPR << (*pLib)(name,z);
 
-            indent() << "SPR=" << SPR << std::endl;
+            if(Verbose) indent() << "SPR=" << SPR << std::endl;
 
         }
 
@@ -190,7 +193,7 @@ namespace Yttrium
             Actors prod;
             extract(prod,n);
             ACP << prod;
-            indent() << "ACP=" << ACP << std::endl;
+            if(Verbose) indent() << "ACP=" << ACP << std::endl;
         }
 
         void Linker:: onREAC(const size_t n)
@@ -199,14 +202,14 @@ namespace Yttrium
             Actors reac;
             extract(reac,n);
             ACR << reac;
-            indent() << "ACR=" << ACR << std::endl;
+            if(Verbose) indent() << "ACR=" << ACR << std::endl;
         }
 
         void Linker:: onK(const Token &token)
         {
             const String s = token.toString(1,1);
             KEQ << s;
-            indent() << "KEQ=" << KEQ << std::endl;
+            if(Verbose) indent() << "KEQ=" << KEQ << std::endl;
         }
 
         void Linker:: onRXP(const Token &token)
@@ -214,7 +217,7 @@ namespace Yttrium
             assert(token.size>=2);
             const String rxp = token.toString(1,0);
             RXP << rxp;
-            indent() << "RXP=" << RXP << std::endl;
+            if(Verbose) indent() << "RXP=" << RXP << std::endl;
         }
 
         void Linker:: onEQ(const size_t n)
@@ -228,7 +231,7 @@ namespace Yttrium
             const Actors &prod = **ACP.tail;
             const String &Kstr = **KEQ.tail;
 
-            indent() << " (*) " << eid << " : " << reac << " <=> " << prod << " : '" << Kstr << "'" << std::endl;
+            if(Verbose) indent() << " (*) " << eid << " : " << reac << " <=> " << prod << " : '" << Kstr << "'" << std::endl;
 
             if(reac.size+prod.size <=0 ) throw Specific::Exception(eid.c_str(),"empty equilibrium");
             if(Kstr.size()<=0)           throw Specific::Exception(eid.c_str(),"empty constant string");
@@ -271,9 +274,7 @@ namespace Yttrium
         {
             const Temporary<Library*>       tmpLib(pLib,&lib);
             const Temporary<LuaEquilibria*> tmpEqs(pEqs,&eqs);
-            //translate(root,Jive::Syntax::Permissive);
             translate(root,Jive::Syntax::Restricted);
-
         }
 
     }
