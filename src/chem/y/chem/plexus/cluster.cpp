@@ -117,7 +117,7 @@ namespace Yttrium
             Chemical::Algebraic::Compute(Coerce(Qm),Nu,xml);
             Y_XMLOG(xml,"Nu = "<<Nu);
             Y_XMLOG(xml,"Qm = "<<Qm);
-            buildConservations(xml);
+            createCons(xml);
         }
 
 

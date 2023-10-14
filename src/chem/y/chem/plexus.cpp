@@ -9,7 +9,8 @@ namespace Yttrium
         {
         }
 
-        Plexus:: Plexus(Equilibria &eqs, XMLog &xml)
+        Plexus:: Plexus(Equilibria &eqs, XMLog &xml) :
+        clusters()
         {
             Y_XML_SECTION(xml,"Plexus");
             buildClusters(eqs,xml);

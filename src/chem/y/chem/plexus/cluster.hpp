@@ -90,7 +90,8 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
-            void buildConservations(XMLog &);
+            void createCons(XMLog &);
+            void makeCanons(XMLog &);
         };
 
         typedef CxxListOf<Cluster> Clusters; //!< alias

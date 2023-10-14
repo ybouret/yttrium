@@ -5,7 +5,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        void Cluster:: buildConservations(XMLog &xml)
+        void Cluster:: createCons(XMLog &xml)
         {
             const size_t Nc = Qm.rows;
             const size_t M  = Qm.cols;
