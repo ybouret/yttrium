@@ -50,7 +50,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            bool & verbose;
+            bool & verbose; //!< alias to Linker::Verbose
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Weasel);

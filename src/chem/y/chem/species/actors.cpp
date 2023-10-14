@@ -33,6 +33,16 @@ namespace Yttrium
             const String s = A.toString();
             return os << s;
         }
+
+        bool Actors:: has(const Species &sp) const noexcept
+        {
+            for(const Actor *a=head;a;a=a->next)
+            {
+                if( &sp == & (a->sp) ) return true;
+            }
+            return false;
+        }
+
     }
 
 

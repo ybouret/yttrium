@@ -31,8 +31,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const char * const                    CallSign;      //!< Equilibria
-            typedef Equilibrium::DataBase::Iterator      Iterator;
-            typedef Equilibrium::DataBase::ConstIterator ConstIterator;
+            typedef Equilibrium::DataBase::Iterator      Iterator;      //!< alias
+            typedef Equilibrium::DataBase::ConstIterator ConstIterator; //!< alias
 
             //__________________________________________________________________
             //
@@ -63,7 +63,10 @@ namespace Yttrium
             //! update maxReac and maxProd
             void updateMaxSizes() noexcept;
 
+            //! helper
             Iterator begin() noexcept { return db.begin(); }
+
+            //! helper
             Iterator end()   noexcept { return db.end();   }
 
         private:

@@ -10,17 +10,46 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Conservation law
+        //
+        //
+        //______________________________________________________________________
         class Conservation : public Object, public Proxy<const Actors>
         {
         public:
-            typedef CxxListOf<Conservation> List;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            virtual ~Conservation() noexcept; //!< cleanup
+            explicit Conservation() noexcept; //!< setup empty
+            Y_OSTREAM_PROTO(Conservation);    //!< display
 
-            virtual ~Conservation() noexcept;
-            explicit Conservation() noexcept;
-            Y_OSTREAM_PROTO(Conservation);
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! add (nu != 0) * [sp] to constraint
             void add(const unsigned nu, const Species &sp);
 
+            //! check if linked to another
+            bool linkedTo(const Conservation &) noexcept;
+            
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Conservation);
@@ -28,9 +57,10 @@ namespace Yttrium
             Actors actors;
 
         public:
-            Conservation *next;
-            Conservation *prev;
+            Conservation *next; //!< for list
+            Conservation *prev; //!< for list
         };
+
 
        
 

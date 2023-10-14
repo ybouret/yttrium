@@ -43,6 +43,15 @@ namespace Yttrium
             actors.pushTail( new Actor(sp,nu) );
         }
 
+        bool Conservation:: linkedTo(const Conservation &other) noexcept
+        {
+            for(const Actor *ac=other->head;ac;ac=ac->next)
+            {
+                if(actors.has( ac->sp) ) return true;
+            }
+            return false;
+        }
+
 
     }
 

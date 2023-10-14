@@ -48,7 +48,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            String toString() const; //!< to string
+            String toString()                    const; //!< to string
+            bool   has(const Species &) const noexcept; //!< check 
 
         private:
             Y_DISABLE_ASSIGN(Actors);

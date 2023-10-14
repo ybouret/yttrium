@@ -10,6 +10,7 @@ chem/algebraic
 chem/lang
 chem/plexus
 chem/plexus/cluster
+chem/plexus/conservation
 )
 
 add_subdirectory(tests)

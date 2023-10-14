@@ -61,6 +61,7 @@ namespace Yttrium
                 }
             }
 
+            //! check is sharing a species with other
             bool linkedTo(const Components &other) const noexcept;
 
 

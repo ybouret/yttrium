@@ -5,7 +5,7 @@
 
 #include "y/chem/reactive/equilibria.hpp"
 #include "y/data/small/light/list/bare.hpp"
-#include "y/chem/plexus/conservations.hpp"
+#include "y/chem/plexus/conservation.hpp"
 #include "y/stream/xmlog.hpp"
 
 #include "y/container/matrix.hpp"
@@ -15,45 +15,85 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        typedef Small::BareLightList<const Species>     SpRepo;
-        typedef SpRepo::NodeType                        SpNode;
+        //----------------------------------------------------------------------
+        //
+        // List of species
+        //
+        //----------------------------------------------------------------------
+        typedef Small::BareLightList<const Species>     SpRepo; //!< alias
+        typedef SpRepo::NodeType                        SpNode; //!< alias
 
-        typedef Small::BareLightList<const Equilibrium> EqRepo;
-        typedef EqRepo::NodeType                        EqNode;
+        //----------------------------------------------------------------------
+        //
+        // List of equilibria
+        //
+        //----------------------------------------------------------------------
+        typedef Small::BareLightList<const Equilibrium> EqRepo; //!< alias
+        typedef EqRepo::NodeType                        EqNode; //!< alias
 
-        typedef CxxArray<Equilibrium * const>           EqArray;
-        typedef CxxArray<Species     * const>           SpArray;
+        //----------------------------------------------------------------------
+        //
+        // Arrays for direct acces
+        //
+        //----------------------------------------------------------------------
+        typedef CxxArray<Equilibrium * const>           EqArray; //!< alias
+        typedef CxxArray<Species     * const>           SpArray; //!< alias
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Cluster of dependent species and equilibria
+        //
+        //
+        //______________________________________________________________________
         class Cluster : public Object
         {
         public:
-            explicit Cluster(const Equilibrium &first);
-            virtual ~Cluster() noexcept;
-            
-            bool tiedTo(const Equilibrium &) const noexcept;
-            bool tiedTo(const Cluster &)     const noexcept;
-            void enroll(const Equilibrium &);
-            void compile(Equilibria &all, XMLog &);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Cluster(const Equilibrium &first); //!< setup non empty
+            virtual ~Cluster() noexcept;                //!< clenaup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            bool tiedTo(const Equilibrium &) const noexcept; //!< check common species
+            bool tiedTo(const Cluster &)     const noexcept; //!< check common species
+            void enroll(const Equilibrium &);                //!< load eq+species
+            void compile(Equilibria &all, XMLog &);          //!< post build
 
-            const EqRepo                 eqs; //!< list of eqs
-            const SpRepo                 lib; //!< list of active species
-            const AutoPtr<const EqArray> edb; //!< equilibria database
-            const AutoPtr<const SpArray> sdb; //!< species database
-            const Conservations          cll; //!< conservation law list
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const EqRepo                  eqs; //!< list of eqs
+            const SpRepo                  lib; //!< list of active species
+            const AutoPtr<const EqArray>  edb; //!< equilibria database
+            const AutoPtr<const SpArray>  sdb; //!< species database
+            const CxxListOf<Conservation> cll; //!< conservation law list
             
 
             const Matrix<int>      Nu;    //!< topology
             const Matrix<unsigned> Qm;    //!< conservation matrix
-            Cluster *              next;
-            Cluster *              prev;
+            Cluster *              next;  //!< for list
+            Cluster *              prev;  //!< for list
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
             void buildConservations(XMLog &);
         };
 
-        typedef CxxListOf<Cluster> Clusters;
+        typedef CxxListOf<Cluster> Clusters; //!< alias
     }
 }
 
