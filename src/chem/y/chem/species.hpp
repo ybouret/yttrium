@@ -62,6 +62,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             const int z; //!< algebraic charge
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Species);

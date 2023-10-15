@@ -1,4 +1,3 @@
-
 #include "y/chem/plexus/cluster.hpp"
 
 namespace Yttrium
@@ -9,7 +8,6 @@ namespace Yttrium
         {
             Y_XML_SECTION_OPT(xml, "Canons", " conservations='" << cll.size << "'");
             ListOf<Canon> &L = Coerce(law);
-
 
             {
                 Y_XMLOG(xml, "Gathering");

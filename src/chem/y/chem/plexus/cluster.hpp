@@ -23,6 +23,17 @@ namespace Yttrium
         typedef Small::BareLightList<const Species>     SpRepo; //!< alias
         typedef SpRepo::NodeType                        SpNode; //!< alias
 
+        class SpTier
+        {
+        public:
+            explicit SpTier() noexcept {}
+            virtual ~SpTier() noexcept {}
+            const SpRepo regular;
+            const SpRepo roaming;
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(SpTier);
+        };
+
         //----------------------------------------------------------------------
         //
         // List of equilibria
@@ -76,22 +87,24 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const EqRepo                  eqs; //!< list of eqs
-            const SpRepo                  lib; //!< list of active species
-            const AutoPtr<const EqArray>  edb; //!< equilibria database
-            const AutoPtr<const SpArray>  sdb; //!< species database
-            const CxxListOf<Conservation> cll; //!< conservation law list
-            const CxxListOf<Canon>        law; //!< list of parallel canons
-
-            const Matrix<int>      Nu;    //!< topology
-            const Matrix<unsigned> Qm;    //!< conservation matrix
-            Cluster *              next;  //!< for list
-            Cluster *              prev;  //!< for list
+            const EqRepo                  eqs;  //!< list of eqs
+            const SpRepo                  lib;  //!< list of active species
+            const AutoPtr<const EqArray>  edb;  //!< equilibria database
+            const AutoPtr<const SpArray>  sdb;  //!< species database
+            const CxxListOf<Conservation> cll;  //!< conservation law list
+            const CxxListOf<Canon>        law;  //!< list of parallel canons
+            const SpTier                  tier; //!< species tier
+            
+            const Matrix<int>             Nu;    //!< topology
+            const Matrix<unsigned>        Qm;    //!< conservation matrix
+            Cluster *                     next;  //!< for list
+            Cluster *                     prev;  //!< for list
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
             void createCons(XMLog &);
             void makeCanons(XMLog &);
+            void doClassify(XMLog &);
         };
 
         typedef CxxListOf<Cluster> Clusters; //!< alias
