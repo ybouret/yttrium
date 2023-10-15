@@ -38,7 +38,11 @@ namespace Yttrium
         {
             for(const Actor *a=head;a;a=a->next)
             {
-                if( &sp == & (a->sp) ) return true;
+                if( &sp == & (a->sp) )
+                {
+                    //std::cerr << "found same " << sp << std::endl;
+                    return true;
+                }
             }
             return false;
         }

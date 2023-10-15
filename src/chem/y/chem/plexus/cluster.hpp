@@ -5,7 +5,7 @@
 
 #include "y/chem/reactive/equilibria.hpp"
 #include "y/data/small/light/list/bare.hpp"
-#include "y/chem/plexus/conservation.hpp"
+#include "y/chem/plexus/conservation/canon.hpp"
 #include "y/stream/xmlog.hpp"
 
 #include "y/container/matrix.hpp"
@@ -81,7 +81,7 @@ namespace Yttrium
             const AutoPtr<const EqArray>  edb; //!< equilibria database
             const AutoPtr<const SpArray>  sdb; //!< species database
             const CxxListOf<Conservation> cll; //!< conservation law list
-            
+            const CxxListOf<Canon>        law; //!< list of parallel canons
 
             const Matrix<int>      Nu;    //!< topology
             const Matrix<unsigned> Qm;    //!< conservation matrix

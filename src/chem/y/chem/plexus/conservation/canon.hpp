@@ -13,13 +13,15 @@ namespace Yttrium
     {
         typedef Small::BareLightList<const Conservation> Conservations;
 
-
         class Canon : public Object, public Conservations
         {
         public:
             explicit Canon(const Conservation &first);
             virtual ~Canon() noexcept;
 
+            bool accepts(const Conservation &) const noexcept;
+            bool accepts(const Canon &)        const noexcept;
+            
             Canon *next;
             Canon *prev;
             

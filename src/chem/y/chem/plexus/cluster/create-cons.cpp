@@ -32,6 +32,7 @@ namespace Yttrium
                     }
                     Y_XMLOG(xml, "-- " << *l);
                 }
+                makeCanons(xml);
             }
             else
             {

@@ -42,7 +42,7 @@ namespace Yttrium
             void add(const unsigned nu, const Species &sp);
 
             //! check if linked to another
-            bool linkedTo(const Conservation &) noexcept;
+            bool linkedTo(const Conservation &) const noexcept;
             
             //__________________________________________________________________
             //

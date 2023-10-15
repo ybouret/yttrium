@@ -10,7 +10,7 @@ namespace Yttrium
         }
 
         Cluster:: Cluster(const Equilibrium &first) :
-        Object(), eqs(), lib(), edb(0), sdb(0), Nu(), next(0), prev(0)
+        Object(), eqs(), lib(), edb(0), sdb(0), cll(), law(), Nu(), Qm(), next(0), prev(0)
         {
             enroll(first);
         }
