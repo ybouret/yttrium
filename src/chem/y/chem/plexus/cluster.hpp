@@ -23,15 +23,15 @@ namespace Yttrium
         typedef Small::BareLightList<const Species>     SpRepo; //!< alias
         typedef SpRepo::NodeType                        SpNode; //!< alias
 
-        class SpTier
+        class Tier
         {
         public:
-            explicit SpTier() noexcept {}
-            virtual ~SpTier() noexcept {}
+            explicit Tier() noexcept {}
+            virtual ~Tier() noexcept {}
             const SpRepo regular;
             const SpRepo roaming;
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(SpTier);
+            Y_DISABLE_COPY_AND_ASSIGN(Tier);
         };
 
         //----------------------------------------------------------------------
@@ -93,8 +93,8 @@ namespace Yttrium
             const AutoPtr<const SpArray>  sdb;  //!< species database
             const CxxListOf<Conservation> cll;  //!< conservation law list
             const CxxListOf<Canon>        law;  //!< list of parallel canons
-            const SpTier                  tier; //!< species tier
-            
+            const Tier                    tier; //!< species tier
+
             const Matrix<int>             Nu;    //!< topology
             const Matrix<unsigned>        Qm;    //!< conservation matrix
             Cluster *                     next;  //!< for list

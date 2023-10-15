@@ -33,11 +33,32 @@ namespace Yttrium
                     Y_XMLOG(xml, "-- " << *l);
                 }
                 makeCanons(xml);
+
+                for(const SpNode *node=lib.head;node;node=node->next)
+                {
+                    const Species &sp = **node;
+                    if(conserved.search(sp))
+                    {
+                        Coerce(tier.regular) << **node;
+                    }
+                    else
+                    {
+                        Coerce(tier.roaming) << **node;
+                    }
+                }
             }
             else
             {
                 Y_XMLOG(xml,"-- No conserved species...");
+                for(const SpNode *node=lib.head;node;node=node->next)
+                {
+                    Coerce(tier.roaming) << **node;
+                }
             }
+
+            Y_XMLOG(xml, "-- regular: " << tier.regular);
+            Y_XMLOG(xml, "-- roaming: " << tier.roaming);
+
         }
     }
 
