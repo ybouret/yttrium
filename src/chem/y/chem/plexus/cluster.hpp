@@ -95,16 +95,16 @@ namespace Yttrium
             const CxxListOf<Canon>        law;  //!< list of parallel canons
             const Tier                    tier; //!< species tier
 
-            const Matrix<int>             Nu;    //!< topology
+            const Matrix<int>             Nu;    //!< main topology
             const Matrix<unsigned>        Qm;    //!< conservation matrix
             Cluster *                     next;  //!< for list
             Cluster *                     prev;  //!< for list
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
-            void createCons(XMLog &);
-            void makeCanons(XMLog &);
-            void doClassify(XMLog &);
+            void createCons(XMLog &);               //!< create all conservation laws
+            void makeCanons(XMLog &);               //!< create canons of conserved laws
+            void connectAll(XMLog &, Equilibria &); //!<
         };
 
         typedef CxxListOf<Cluster> Clusters; //!< alias
