@@ -1,65 +1,65 @@
 #include "y/chem/plexus/cluster.hpp"
 #include "y/chem/algebraic.hpp"
+#include "y/calculus/ipower.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
 
-
-        static inline String FirstCof(const int nu)
-        {
-            switch(nu)
-            {
-                case -1: return String('-');
-                case  1: return String();
-            }
-            assert(abs(nu)>1);
-            return FormatString("%d*",nu);
-        }
-
-        static inline String ExtraCof(const int nu)
-        {
-            switch(nu)
-            {
-                case -1: return String('-');
-                case  1: return String('+');
-            }
-            assert(abs(nu)>1);
-            if(nu < -1)
-                return FormatString("%d*",nu);
-            assert(nu>1);
-            return FormatString("+%d*",nu);
-        }
-
-        static inline String MakeName(const EqArray       & eqs,
-                                      const Readable<int> & cof)
-        {
-            assert(eqs.size()>=cof.size());
-            String name;
-            bool   first = true;
-            for(size_t i=1;i<=cof.size();++i)
-            {
-                const int nu = cof[i];
-                if(0==nu) continue;
-                if(first)
-                {
-                    name += FirstCof(nu);
-                    first = false;
-                }
-                else
-                {
-                    name += ExtraCof(nu);
-                }
-                name += eqs[i]->name;
-            }
-
-            return name;
-        }
-
-
         namespace
         {
+
+            static inline String FirstCof(const int nu)
+            {
+                switch(nu)
+                {
+                    case -1: return String('-');
+                    case  1: return String();
+                }
+                assert(abs(nu)>1);
+                return FormatString("%d*",nu);
+            }
+
+            static inline String ExtraCof(const int nu)
+            {
+                switch(nu)
+                {
+                    case -1: return String('-');
+                    case  1: return String('+');
+                }
+                assert(abs(nu)>1);
+                if(nu < -1)
+                    return FormatString("%d*",nu);
+                assert(nu>1);
+                return FormatString("+%d*",nu);
+            }
+
+            static inline String MakeName(const EqArray       & eqs,
+                                          const Readable<int> & cof)
+            {
+                assert(eqs.size()>=cof.size());
+                String name;
+                bool   first = true;
+                for(size_t i=1;i<=cof.size();++i)
+                {
+                    const int nu = cof[i];
+                    if(0==nu) continue;
+                    if(first)
+                    {
+                        name += FirstCof(nu);
+                        first = false;
+                    }
+                    else
+                    {
+                        name += ExtraCof(nu);
+                    }
+                    name += eqs[i]->name;
+                }
+
+                return name;
+            }
+
             class MixedEquilibrium : public Equilibrium
             {
             public:
@@ -108,7 +108,7 @@ namespace Yttrium
 #endif
                 }
 
-
+                //! cleanup
                 inline virtual ~MixedEquilibrium() noexcept
                 {
                 }
@@ -138,7 +138,6 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-
             Chemical::Algebraic::Weight::List W;
             Chemical::Algebraic::Compute(W,Nu,xml);
 
@@ -163,13 +162,22 @@ namespace Yttrium
             const SpArray &sa  = *sdb;
             for(const Algebraic::Weight *w=W.head;w;w=w->next)
             {
+                //--------------------------------------------------------------
+                //
+                // create equilibrium
+                //
+                //--------------------------------------------------------------
                 const Readable<int>           &cof = *w;
                 const String                   eid = MakeName(ea,cof);                         // make the name
                 MixedEquilibrium              &eq  = all( new MixedEquilibrium(eid,cof,Ksh) ); // initialize mixed equilibrium
                 const Algebraic::Coefficients &st  = w->stoi;                                  // get stoichiometry
                 std::cerr << cof << " #" << w->nEqs << " => " << eid << std::endl;
 
+                //--------------------------------------------------------------
+                //
                 // populate equilibrium
+                //
+                //--------------------------------------------------------------
                 for(size_t i=1;i<=st.size();++i)
                 {
                     const int      nu =  st[i]; if(nu==0) continue;
@@ -177,7 +185,11 @@ namespace Yttrium
                     eq(nu,sp);
                 }
 
+                //--------------------------------------------------------------
+                //
                 // record and update
+                //
+                //--------------------------------------------------------------
                 assert(all->size()==eq.indx[TopLevel]);
                 Coerce(eqs) << eq;
                 Coerce(eq.indx[SubLevel]) = eqs.size;
