@@ -131,32 +131,58 @@ namespace Yttrium
         {
             Y_XML_SECTION(xml, "ConnectAll");
 
+            //------------------------------------------------------------------
+            //
+            //
             // calling Algebraic
+            //
+            //
+            //------------------------------------------------------------------
+
             Chemical::Algebraic::Weight::List W;
             Chemical::Algebraic::Compute(W,Nu,xml);
 
+            //------------------------------------------------------------------
+            //
+            //
             // initalize local indices
+            //
+            //
+            //------------------------------------------------------------------
             const EqArray &ea = *edb;
             for(size_t i=edb->size();i>0;--i)
                 Coerce(ea[i]->indx[SubLevel]) = i;
 
+            //------------------------------------------------------------------
+            //
+            //
             // append new algebraic/mixed equilibria
+            //
+            //
+            //------------------------------------------------------------------
+            const SpArray &sa  = *sdb;
             for(const Algebraic::Weight *w=W.head;w;w=w->next)
             {
                 const Readable<int>           &cof = *w;
-                const String                   eid = MakeName(ea,cof);
-                MixedEquilibrium              &eq  = all( new MixedEquilibrium(eid,cof,Ksh) );
-                const Algebraic::Coefficients &st  = w->stoi;
-                const SpArray                 &sa  = *sdb;
+                const String                   eid = MakeName(ea,cof);                         // make the name
+                MixedEquilibrium              &eq  = all( new MixedEquilibrium(eid,cof,Ksh) ); // initialize mixed equilibrium
+                const Algebraic::Coefficients &st  = w->stoi;                                  // get stoichiometry
                 std::cerr << cof << " #" << w->nEqs << " => " << eid << std::endl;
+
+                // populate equilibrium
                 for(size_t i=1;i<=st.size();++i)
                 {
                     const int      nu =  st[i]; if(nu==0) continue;
                     const Species &sp = *sa[i]; assert(i==sp.indx[SubLevel]);
                     eq(nu,sp);
                 }
+
+                // record and update
+                assert(all->size()==eq.indx[TopLevel]);
+                Coerce(eqs) << eq;
+                Coerce(eq.indx[SubLevel]) = eqs.size;
             }
-            
+
 
         }
     }

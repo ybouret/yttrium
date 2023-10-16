@@ -89,7 +89,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const EqRepo                  eqs;  //!< list of eqs
+            const EqRepo                  eqs;  //!< list of primary equilibria
             const SpRepo                  lib;  //!< list of active species
             const AutoPtr<const EqArray>  edb;  //!< equilibria database
             const AutoPtr<const SpArray>  sdb;  //!< species database
