@@ -99,7 +99,6 @@ namespace Yttrium
                 //! initialize
                 //______________________________________________________________
                 inline explicit MixedEquilibrium(const String          &eid,
-                                                 const Readable<int>   &cof,
                                                  const Readable<xreal> &Ksh) :
                 Equilibrium(eid),
                 coef(),
@@ -107,16 +106,7 @@ namespace Yttrium
                 xmul(),
                 xone(1)
                 {
-                    // compile coefficients
-                    const size_t N = cof.size();
-                    for(size_t i=1;i<=N;++i)
-                    {
-                        const int n = cof[i];
-                        if(n!=0)
-                            Coerce(coef).pushTail( new Node(i,n) );
-                    }
-                    assert(coef.size>1);
-                    
+
                 }
 
                 //______________________________________________________________
@@ -182,7 +172,8 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             const EqArray &ea = *edb;
-            for(size_t i=edb->size();i>0;--i)
+            const size_t   N  = ea.size();
+            for(size_t i=N;i>0;--i)
                 Coerce(ea[i]->indx[SubLevel]) = i;
 
             //------------------------------------------------------------------
@@ -201,10 +192,26 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 const Readable<int>           &cof = *w;
-                const String                   eid = MakeName(ea,cof);                         // make the name
-                MixedEquilibrium              &eq  = all( new MixedEquilibrium(eid,cof,Ksh) ); // initialize mixed equilibrium
-                const Algebraic::Coefficients &st  = w->stoi;                                  // get stoichiometry
+                const String                   eid = MakeName(ea,cof);                     // make the name
+                MixedEquilibrium              &eq  = all( new MixedEquilibrium(eid,Ksh) ); // initialize mixed equilibrium
+                const Algebraic::Coefficients &st  = w->stoi;                              // get stoichiometry
                 //std::cerr << cof << " #" << w->nEqs << " => " << eid << std::endl;
+
+
+                //--------------------------------------------------------------
+                //
+                // populate coefficients wit TopLevel indices
+                //
+                //--------------------------------------------------------------
+                for(size_t i=1;i<=N;++i)
+                {
+                    const int nu = cof[i];
+                    if(0==nu) continue;;
+                    const size_t I = ea[i]->indx[TopLevel];
+                    Coerce(eq.coef).pushTail( new MixedEquilibrium::Node(I,nu) );
+                }
+
+                assert(eq.coef.size==w->nEqs);
 
                 //--------------------------------------------------------------
                 //
@@ -229,12 +236,10 @@ namespace Yttrium
             }
 
             {
-                //const size_t N = ea.size();
                 size_t       i = 1;
                 for(const EqNode *node=eqs.head;node;node=node->next,++i)
                 {
                     const Equilibrium &eq = **node;
-                    Y_XMLOG(xml, eq.name << " top=" << eq.indx[TopLevel] << ", sub=" << eq.indx[SubLevel]);
                     if(i!=eq.indx[SubLevel])
                         throw Specific::Exception("Chemical::Cluster", "<%s> bad id!", eq.name.c_str());
                 }
