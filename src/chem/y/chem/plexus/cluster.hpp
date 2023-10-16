@@ -26,8 +26,8 @@ namespace Yttrium
         class Tier
         {
         public:
-            explicit Tier() noexcept {}
-            virtual ~Tier() noexcept {}
+            explicit Tier() noexcept;
+            virtual ~Tier() noexcept;
             const SpRepo regular;
             const SpRepo roaming;
         private:

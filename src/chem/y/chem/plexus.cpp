@@ -17,6 +17,7 @@ namespace Yttrium
             Y_XML_SECTION(xml,"Plexus");
             buildClusters(all,xml);
             all.updateMaxSizes();
+            shared_K.adjust(all->size(),0);
         }
 
         Plexus::ConstInterface & Plexus:: surrogate() const noexcept
