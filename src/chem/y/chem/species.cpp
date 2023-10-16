@@ -23,6 +23,16 @@ namespace Yttrium
             return os;
         }
 
+        void Species:: viz(OutputStream &fp) const
+        {
+            Node(fp,this);
+            fp << '[';
+            Label(fp,name);
+            fp << ", shape=oval";
+            fp << ']';
+            Endl(fp);
+        }
+
     }
 
 }

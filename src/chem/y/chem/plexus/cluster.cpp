@@ -78,6 +78,7 @@ namespace Yttrium
 }
 
 #include "y/chem/algebraic.hpp"
+#include "y/associative/address-book.hpp"
 
 namespace Yttrium
 {
@@ -162,6 +163,21 @@ namespace Yttrium
                 Equilibrium &eq = Coerce(**node);
                 K[eq.indx[TopLevel]] = eq.K(t);
             }
+        }
+
+
+        void  Cluster:: vizSp(OutputStream &fp, const size_t order) const
+        {
+            AddressBook book;
+
+            if(order<=0)
+            {
+                for(size_t i=1;i<= edb->size(); ++i)
+                {
+                    const Equilibrium &eq = * (*edb)[i];
+                }
+            }
+
         }
 
     }

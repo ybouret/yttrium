@@ -28,6 +28,8 @@ Y_UTEST(lang)
     }
 
     std::cerr << "lib=" << lib << std::endl;
+    
+
 
 }
 Y_UDONE()

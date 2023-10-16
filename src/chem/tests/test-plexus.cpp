@@ -28,6 +28,12 @@ Y_UTEST(plexus)
 
     std::cerr << eqs << std::endl;
 
+    if(eqs->size())
+    {
+        Vizible::GraphViz("eq.dot", **(eqs->begin()));
+    }
+
+
 }
 Y_UDONE()
 

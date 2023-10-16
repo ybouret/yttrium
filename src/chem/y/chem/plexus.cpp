@@ -49,6 +49,27 @@ namespace Yttrium
             return clusters;
         }
 
+
+        void Plexus:: graphViz(OutputStream &fp) const
+        {
+            Enter(fp,"Plexus");
+
+            unsigned ic=0;
+            for(const Cluster *cluster=clusters.head;cluster;cluster=cluster->next,++ic)
+            {
+                fp("subgraph cluster_%u{n",ic);
+
+                cluster->vizSp(fp,0);
+
+                fp("}\n");
+
+            }
+
+
+            Leave(fp);
+        }
+
+
     }
 
 }

@@ -88,6 +88,9 @@ namespace Yttrium
             //! update primary then replica
             void updateK(Writable<xreal> &K, const double t);
 
+
+            void vizSp(OutputStream &fp, const size_t order) const;
+
             //__________________________________________________________________
             //
             //

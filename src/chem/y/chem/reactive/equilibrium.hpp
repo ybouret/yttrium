@@ -51,7 +51,11 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            xreal K(double t); //!< check the return value of internal getK(t)
+            xreal K(double t);               //!< check the return value of internal getK(t)
+            void  viz(OutputStream &) const; //!< name + links
+
+            void  graphViz(OutputStream &fp) const; //!< all species + this
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);

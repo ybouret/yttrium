@@ -20,7 +20,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Plexus : public Proxy<const Clusters>
+        class Plexus : public Proxy<const Clusters>, public Vizible
         {
         public:
             //__________________________________________________________________
@@ -36,6 +36,8 @@ namespace Yttrium
             
             const Readable<xreal> &K() const noexcept;
             const Readable<xreal> &K(double);
+
+            void graphViz(OutputStream &fp) const;
 
 
         private:
