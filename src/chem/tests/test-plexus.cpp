@@ -24,7 +24,7 @@ Y_UTEST(plexus)
 
     bool  verbose = true;
     XMLog xml(verbose);
-    Chemical::Plexus plexus(eqs,xml);
+    Chemical::Plexus plexus(eqs,xml,0.0);
 
     std::cerr << eqs << std::endl;
 

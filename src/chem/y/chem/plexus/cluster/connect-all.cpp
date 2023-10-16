@@ -63,11 +63,18 @@ namespace Yttrium
             class MixedEquilibrium : public Equilibrium
             {
             public:
+
+                //______________________________________________________________
+                //
+                //
+                //! compile node: index+coeff
+                //
+                //______________________________________________________________
                 class Node : public Object
                 {
                 public:
                     inline explicit Node(const size_t i, const int n) noexcept : 
-                    id(i), nu(n), next(0), prev(0) { assert(nu!=0); }
+                    id(i), nu(n),  next(0), prev(0) { assert(nu!=0); }
                     inline virtual ~Node() noexcept {}
 
                     const size_t id;
@@ -78,18 +85,29 @@ namespace Yttrium
                     Y_DISABLE_COPY_AND_ASSIGN(Node);
                 };
 
+                //______________________________________________________________
+                //
+                //
+                //! list of compiled coefficients
+                //
+                //______________________________________________________________
                 typedef CxxListOf<Node> List;
 
 
+                //______________________________________________________________
+                //
                 //! initialize
+                //______________________________________________________________
                 inline explicit MixedEquilibrium(const String          &eid,
                                                  const Readable<int>   &cof,
                                                  const Readable<xreal> &Ksh) :
                 Equilibrium(eid),
                 coef(),
-                allK(Ksh)
+                allK(Ksh),
+                xmul(),
+                xone(1)
                 {
-                    // compiling coefficient
+                    // compile coefficients
                     const size_t N = cof.size();
                     for(size_t i=1;i<=N;++i)
                     {
@@ -97,6 +115,7 @@ namespace Yttrium
                         if(n!=0)
                             Coerce(coef).pushTail( new Node(i,n) );
                     }
+                    assert(coef.size>1);
 
 #if 0
                     std::cerr << "coef: ";
@@ -108,19 +127,41 @@ namespace Yttrium
 #endif
                 }
 
+                //______________________________________________________________
+                //
                 //! cleanup
+                //______________________________________________________________
                 inline virtual ~MixedEquilibrium() noexcept
                 {
                 }
 
                 const List              coef;
                 const Readable<xreal> & allK;
+                XMul                    xmul;
+                const xreal             xone;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(MixedEquilibrium);
+
                 virtual xreal getK(double)
                 {
-                    return 1;
+                    xmul.free();
+                    for(const Node *node=coef.head;node;node=node->next)
+                    {
+                        const xreal k = allK[node->id];
+                        const int   n = node->nu;
+                        if(n<0)
+                        {
+                            const xreal ik = xone/k;
+                            xmul.insert(ik,-n);
+                        }
+                        else
+                        {
+                            assert(n>0);
+                            xmul.insert(k,n);
+                        }
+                    }
+                    return xmul.product();
                 }
             };
         }

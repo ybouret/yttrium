@@ -23,6 +23,7 @@ namespace Yttrium
         Object(),
         eqs(),
         lib(),
+        last(0),
         edb(0),
         sdb(0),
         cll(),
@@ -145,8 +146,22 @@ namespace Yttrium
             // connection
             //------------------------------------------------------------------
             connectAll(xml,all,Ks);
+
+            //------------------------------------------------------------------
+            // update status
+            //------------------------------------------------------------------
+            Coerce(last) = ListOps::Next(eqs.head,N);
+
         }
 
+        void Cluster:: updateK(Writable<xreal> &K, const double t)
+        {
+            for(EqNode *node=eqs.head;node;node=node->next)
+            {
+                Equilibrium &eq = Coerce(**node);
+                K[eq.indx[TopLevel]] = eq.K(t);
+            }
+        }
 
     }
 

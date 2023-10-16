@@ -306,30 +306,30 @@ namespace Yttrium
 
         //______________________________________________________________________
         //
-        //! move node to next count
+        //! move node to next count, may return NULL=last
         //______________________________________________________________________
         template <typename NODE> static inline
         NODE *Next(NODE *node, size_t count) noexcept
         {
-            assert(node);
             while(count-- > 0)
             {
-                node = node->next; assert(0!=node);
+                assert(0!=node);
+                node = node->next;
             }
             return node;
         }
 
         //______________________________________________________________________
         //
-        //! move node to prev count
+        //! move node to prev count, may return NULL=last
         //______________________________________________________________________
         template <typename NODE> static inline
         NODE *Prev(NODE *node, size_t count) noexcept
         {
-            assert(node);
             while(count-- > 0)
             {
-                node = node->prev; assert(0!=node);
+                assert(0!=node);
+                node = node->prev;
             }
             return node;
         }

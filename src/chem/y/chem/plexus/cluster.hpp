@@ -83,6 +83,9 @@ namespace Yttrium
                          const Readable<xreal> & Ks,
                          XMLog                 & xml);               //!< post build
 
+            //! update primary then replica
+            void updateK(Writable<xreal> &K, const double t);
+
             //__________________________________________________________________
             //
             //
@@ -91,6 +94,7 @@ namespace Yttrium
             //__________________________________________________________________
             const EqRepo                  eqs;  //!< list of primary equilibria
             const SpRepo                  lib;  //!< list of active species
+            const EqNode * const          last; //!< first NOT PRIMARY equilibrium
             const AutoPtr<const EqArray>  edb;  //!< equilibria database
             const AutoPtr<const SpArray>  sdb;  //!< species database
             const CxxListOf<Conservation> cll;  //!< conservation law list

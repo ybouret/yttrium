@@ -30,16 +30,25 @@ namespace Yttrium
             //
             //__________________________________________________________________
             explicit Plexus(Equilibria    & Eqs,
-                            XMLog         & xml); //!< setup
-            virtual ~Plexus() noexcept;           //!< cleanup
+                            XMLog         & xml,
+                            const double    t0); //!< setup
+            virtual ~Plexus() noexcept;          //!< cleanup
+            
+            const Readable<xreal> &K() const noexcept;
+            const Readable<xreal> &K(double);
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Plexus);
             virtual ConstInterface & surrogate() const noexcept;
-            void buildClusters(Equilibria & all,
-                               XMLog &      xml);
+            void buildClusters(Equilibria & all, XMLog & xml);
+            void updateK(const double);
+
             Clusters      clusters;
             Vector<xreal> shared_K;
+            const size_t  N;
+
+
         };
     }
 
