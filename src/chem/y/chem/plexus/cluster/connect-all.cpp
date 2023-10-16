@@ -162,8 +162,11 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             Chemical::Algebraic::Weight::List W;
-            Chemical::Algebraic::Compute(W,Nu,xml);
-
+            {
+                const size_t nmax = Chemical::Algebraic::Compute(W,Nu,xml);
+                Coerce(meg) = new EqGroup(nmax);
+            }
+            EqGroup &eg = Coerce(*meg);
             //------------------------------------------------------------------
             //
             //
@@ -195,7 +198,6 @@ namespace Yttrium
                 const String                   eid = MakeName(ea,cof);                     // make the name
                 MixedEquilibrium              &eq  = all( new MixedEquilibrium(eid,Ksh) ); // initialize mixed equilibrium
                 const Algebraic::Coefficients &st  = w->stoi;                              // get stoichiometry
-                //std::cerr << cof << " #" << w->nEqs << " => " << eid << std::endl;
 
 
                 //--------------------------------------------------------------
@@ -231,7 +233,9 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 assert(all->size()==eq.indx[TopLevel]);
-                Coerce(eqs) << eq;
+                assert(w->nEqs<=eg.size());
+                Coerce(eqs)         << eq;
+                Coerce(eg[w->nEqs]) << eq;
                 Coerce(eq.indx[SubLevel]) = eqs.size;
             }
 

@@ -49,6 +49,8 @@ namespace Yttrium
         //----------------------------------------------------------------------
         typedef CxxArray<Equilibrium * const>           EqArray; //!< alias
         typedef CxxArray<Species     * const>           SpArray; //!< alias
+        typedef CxxArray<const EqRepo>                  EqGroup; //!< alias
+
 
         //______________________________________________________________________
         //
@@ -103,6 +105,7 @@ namespace Yttrium
 
             const Matrix<int>             Nu;    //!< main topology
             const Matrix<unsigned>        Qm;    //!< conservation matrix
+            const AutoPtr<const EqGroup>  meg;   //!< Mixed Equilibria Groups
             Cluster *                     next;  //!< for list
             Cluster *                     prev;  //!< for list
 

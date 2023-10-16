@@ -15,6 +15,7 @@ namespace Yttrium
         Entity:: Entity(const Entity &other) :
         Object(), 
         Counted(),
+        Vizible(),
         name(other.name),
         indx()
         {

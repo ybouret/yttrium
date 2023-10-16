@@ -87,9 +87,10 @@ namespace Yttrium
              \param W   output list of algebraic weights to make new equilibria
              \param Nu  input topology matrix
              \param xml tracing operations
+             \return max |nEqs|
              */
             //__________________________________________________________________
-            static void Compute(Weight::List     &W, const Matrix<int> &Nu, XMLog &xml);
+            static size_t Compute(Weight::List     &W, const Matrix<int> &Nu, XMLog &xml);
         };
 
     }

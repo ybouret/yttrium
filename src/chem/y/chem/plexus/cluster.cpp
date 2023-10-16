@@ -31,6 +31,7 @@ namespace Yttrium
         tier(),
         Nu(),
         Qm(),
+        meg(0),
         next(0),
         prev(0)
         {

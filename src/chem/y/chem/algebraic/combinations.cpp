@@ -4,19 +4,21 @@
 #include "y/apex/mylar.hpp"
 #include "y/woven/subspaces.hpp"
 #include "y/woven/survey/integer.hpp"
+#include "y/type/utils.hpp"
 
 namespace Yttrium
 {
 
     namespace Chemical
     {
-        void Algebraic:: Compute(Weight::List &wl, const Matrix<int> &Nu, XMLog &xml)
+        size_t Algebraic:: Compute(Weight::List &wl, const Matrix<int> &Nu, XMLog &xml)
         {
             Y_XML_SECTION(xml, "Algebraic::ComputeCombinations");
 
             //------------------------------------------------------------------
             // initialize lists
             //------------------------------------------------------------------
+            size_t res = 0;
             wl.release();
             WOVEn:: IntegerSurvey survey(xml);
 
@@ -104,13 +106,14 @@ namespace Yttrium
 
                     Y_XMLOG(xml, " (+) " << W << " -> " << W->stoi <<", missing=" << incoming);
 
-                    wl.pushTail( W.yield() );
+                    res = Max(res,wl.pushTail( W.yield() )->nEqs);
                 DONE:
                     ;
                 }
                 Y_XMLOG(xml," (*) #combination = " << wl.size << " / " << survey.size);
-
             }
+            Y_XMLOG(xml, "=> maximum order=" << res);
+            return res;
         }
     }
 

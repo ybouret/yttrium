@@ -4,7 +4,7 @@
 #ifndef Y_Chemical_Entity_Included
 #define Y_Chemical_Entity_Included 1
 
-#include "y/string.hpp"
+#include "y/graphviz/vizible.hpp"
 
 namespace Yttrium
 {
@@ -27,7 +27,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Entity : public Object, public Counted
+        class Entity : public Object, public Counted, public Vizible
         {
         public:
             //__________________________________________________________________
