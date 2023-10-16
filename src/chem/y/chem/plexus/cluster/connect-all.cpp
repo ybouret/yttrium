@@ -1,6 +1,6 @@
 #include "y/chem/plexus/cluster.hpp"
 #include "y/chem/algebraic.hpp"
-#include "y/calculus/ipower.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -116,15 +116,7 @@ namespace Yttrium
                             Coerce(coef).pushTail( new Node(i,n) );
                     }
                     assert(coef.size>1);
-
-#if 0
-                    std::cerr << "coef: ";
-                    for(const Node *node=coef.head;node;node=node->next)
-                    {
-                        std::cerr << " (" << node->id <<  "," << node->nu << ")";
-                    }
-                    std::cerr << std::endl;
-#endif
+                    
                 }
 
                 //______________________________________________________________
@@ -212,7 +204,7 @@ namespace Yttrium
                 const String                   eid = MakeName(ea,cof);                         // make the name
                 MixedEquilibrium              &eq  = all( new MixedEquilibrium(eid,cof,Ksh) ); // initialize mixed equilibrium
                 const Algebraic::Coefficients &st  = w->stoi;                                  // get stoichiometry
-                std::cerr << cof << " #" << w->nEqs << " => " << eid << std::endl;
+                //std::cerr << cof << " #" << w->nEqs << " => " << eid << std::endl;
 
                 //--------------------------------------------------------------
                 //
@@ -235,6 +227,19 @@ namespace Yttrium
                 Coerce(eqs) << eq;
                 Coerce(eq.indx[SubLevel]) = eqs.size;
             }
+
+            {
+                //const size_t N = ea.size();
+                size_t       i = 1;
+                for(const EqNode *node=eqs.head;node;node=node->next,++i)
+                {
+                    const Equilibrium &eq = **node;
+                    Y_XMLOG(xml, eq.name << " top=" << eq.indx[TopLevel] << ", sub=" << eq.indx[SubLevel]);
+                    if(i!=eq.indx[SubLevel])
+                        throw Specific::Exception("Chemical::Cluster", "<%s> bad id!", eq.name.c_str());
+                }
+            }
+
 
 
         }
