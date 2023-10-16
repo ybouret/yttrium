@@ -79,7 +79,9 @@ namespace Yttrium
             bool tiedTo(const Equilibrium &) const noexcept; //!< check common species
             bool tiedTo(const Cluster &)     const noexcept; //!< check common species
             void enroll(const Equilibrium &);                //!< load eq+species
-            void compile(Equilibria &all, XMLog &);          //!< post build
+            void compile(Equilibria            & Eqs,
+                         const Readable<xreal> & Ks,
+                         XMLog                 & xml);               //!< post build
 
             //__________________________________________________________________
             //
@@ -104,7 +106,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
             void createCons(XMLog &);               //!< create all conservation laws
             void makeCanons(XMLog &);               //!< create canons of conserved laws
-            void connectAll(XMLog &, Equilibria &); //!<
+            void connectAll(XMLog &, Equilibria &, const Readable<xreal> &); //!<
         };
 
         typedef CxxListOf<Cluster> Clusters; //!< alias

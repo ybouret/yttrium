@@ -69,7 +69,7 @@ namespace Yttrium
             Y_XMLOG(xml, "#cluster=" << clusters.size);
             for(Cluster *cluster=clusters.head;cluster;cluster=cluster->next)
             {
-                cluster->compile(eqs,xml);
+                cluster->compile(eqs,shared_K,xml);
             }
 
         }

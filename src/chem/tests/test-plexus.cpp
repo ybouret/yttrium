@@ -26,6 +26,7 @@ Y_UTEST(plexus)
     XMLog xml(verbose);
     Chemical::Plexus plexus(eqs,xml);
 
+    std::cerr << eqs << std::endl;
 
 }
 Y_UDONE()

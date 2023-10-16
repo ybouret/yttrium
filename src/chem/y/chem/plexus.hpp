@@ -5,6 +5,7 @@
 
 #include "y/chem/reactive/equilibria.hpp"
 #include "y/chem/plexus/cluster.hpp"
+#include "y/sequence/vector.hpp"
 
 namespace Yttrium
 {
@@ -28,14 +29,17 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Plexus(Equilibria &, XMLog &); //!< setup
-            virtual ~Plexus() noexcept;             //!< cleanup
+            explicit Plexus(Equilibria    & Eqs,
+                            XMLog         & xml); //!< setup
+            virtual ~Plexus() noexcept;           //!< cleanup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Plexus);
             virtual ConstInterface & surrogate() const noexcept;
-            void buildClusters(Equilibria &, XMLog &xml);
-            Clusters clusters;
+            void buildClusters(Equilibria & all,
+                               XMLog &      xml);
+            Clusters      clusters;
+            Vector<xreal> shared_K;
         };
     }
 

@@ -9,11 +9,13 @@ namespace Yttrium
         {
         }
 
-        Plexus:: Plexus(Equilibria &eqs, XMLog &xml) :
-        clusters()
+        Plexus:: Plexus(Equilibria    &all,
+                        XMLog &        xml) :
+        clusters(),
+        shared_K()
         {
             Y_XML_SECTION(xml,"Plexus");
-            buildClusters(eqs,xml);
+            buildClusters(all,xml);
         }
 
         Plexus::ConstInterface & Plexus:: surrogate() const noexcept

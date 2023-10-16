@@ -32,8 +32,8 @@ namespace Yttrium
             return FormatString("+%d*",nu);
         }
 
-        static inline String MakeName(const EqArray &                 eqs,
-                                      const Algebraic::Coefficients & cof)
+        static inline String MakeName(const EqArray       & eqs,
+                                      const Readable<int> & cof)
         {
             assert(eqs.size()>=cof.size());
             String name;
@@ -57,19 +57,106 @@ namespace Yttrium
             return name;
         }
 
-        void Cluster:: connectAll(XMLog &      xml,
-                                  Equilibria & all)
+
+        namespace
+        {
+            class MixedEquilibrium : public Equilibrium
+            {
+            public:
+                class Node : public Object
+                {
+                public:
+                    inline explicit Node(const size_t i, const int n) noexcept : 
+                    id(i), nu(n), next(0), prev(0) { assert(nu!=0); }
+                    inline virtual ~Node() noexcept {}
+
+                    const size_t id;
+                    const int    nu;
+                    Node        *next;
+                    Node        *prev;
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Node);
+                };
+
+                typedef CxxListOf<Node> List;
+
+
+                //! initialize
+                inline explicit MixedEquilibrium(const String          &eid,
+                                                 const Readable<int>   &cof,
+                                                 const Readable<xreal> &Ksh) :
+                Equilibrium(eid),
+                coef(),
+                allK(Ksh)
+                {
+                    // compiling coefficient
+                    const size_t N = cof.size();
+                    for(size_t i=1;i<=N;++i)
+                    {
+                        const int n = cof[i];
+                        if(n!=0)
+                            Coerce(coef).pushTail( new Node(i,n) );
+                    }
+
+#if 0
+                    std::cerr << "coef: ";
+                    for(const Node *node=coef.head;node;node=node->next)
+                    {
+                        std::cerr << " (" << node->id <<  "," << node->nu << ")";
+                    }
+                    std::cerr << std::endl;
+#endif
+                }
+
+
+                inline virtual ~MixedEquilibrium() noexcept
+                {
+                }
+
+                const List              coef;
+                const Readable<xreal> & allK;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(MixedEquilibrium);
+                virtual xreal getK(double)
+                {
+                    return 1;
+                }
+            };
+        }
+
+        void Cluster:: connectAll(XMLog &                 xml,
+                                  Equilibria            & all,
+                                  const Readable<xreal> & Ksh)
         {
             Y_XML_SECTION(xml, "ConnectAll");
+
+            // calling Algebraic
             Chemical::Algebraic::Weight::List W;
             Chemical::Algebraic::Compute(W,Nu,xml);
 
+            // initalize local indices
+            const EqArray &ea = *edb;
+            for(size_t i=edb->size();i>0;--i)
+                Coerce(ea[i]->indx[SubLevel]) = i;
+
+            // append new algebraic/mixed equilibria
             for(const Algebraic::Weight *w=W.head;w;w=w->next)
             {
-
-                const String eid = MakeName(*edb,*w);
-                std::cerr << *w << " #" << w->nEqs << " => " << eid << std::endl;
+                const Readable<int>           &cof = *w;
+                const String                   eid = MakeName(ea,cof);
+                MixedEquilibrium              &eq  = all( new MixedEquilibrium(eid,cof,Ksh) );
+                const Algebraic::Coefficients &st  = w->stoi;
+                const SpArray                 &sa  = *sdb;
+                std::cerr << cof << " #" << w->nEqs << " => " << eid << std::endl;
+                for(size_t i=1;i<=st.size();++i)
+                {
+                    const int      nu =  st[i]; if(nu==0) continue;
+                    const Species &sp = *sa[i]; assert(i==sp.indx[SubLevel]);
+                    eq(nu,sp);
+                }
             }
+            
 
         }
     }

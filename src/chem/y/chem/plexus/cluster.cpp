@@ -60,7 +60,9 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        void Cluster:: compile(Equilibria &all, XMLog &xml)
+        void Cluster:: compile(Equilibria            &all,
+                               const Readable<xreal> &Ks,
+                               XMLog                 &xml)
         {
             Y_XML_SECTION_OPT(xml,"Cluster"," size='" << eqs.size << "'");
             assert(eqs.size>0);
@@ -121,7 +123,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             // connection
             //------------------------------------------------------------------
-            connectAll(xml,all);
+            connectAll(xml,all,Ks);
         }
 
 
