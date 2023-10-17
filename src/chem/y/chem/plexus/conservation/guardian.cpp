@@ -38,7 +38,9 @@ namespace Yttrium
 
                 inline Excess(const Conservation &h,
                               const xreal        &d) noexcept :
-                host(h), data(d)
+                host(h),
+                data(d),
+                rank((d*d)/h.nrm2)
                 {
                 }
 
@@ -48,13 +50,21 @@ namespace Yttrium
 
                 Excess(const Excess &other) noexcept :
                 host(other.host),
-                data(other.data)
+                data(other.data),
+                rank(other.rank)
                 {
+                }
+
+                inline friend std::ostream & operator<<(std::ostream &os, const Excess &xs)
+                {
+                    os << xs.host << "=" << double(xs.data) << ":rank=" << double(xs.rank);
+                    return os;
                 }
 
 
                 const Conservation &host;
-                xreal               data;
+                const xreal         data;
+                const xreal         rank;
 
             private:
                 Y_DISABLE_ASSIGN(Excess);
@@ -81,7 +91,7 @@ namespace Yttrium
                 // prepare monitors
                 make(canon.repo.size);
 
-                // hook monitors
+                // link monitors
                 assert(mlist.size==canon.repo.size);
                 Monitor *mine = mlist.head;
                 for(const SpNode *node=canon.repo.head;node;node=node->next)
@@ -98,7 +108,11 @@ namespace Yttrium
                 Y_XML_SECTION_OPT(xml, "Guardian", " size='" << canon.size << "'");
                 setup(canon);
 
+                //--------------------------------------------------------------
+                //
                 // first pass
+                //
+                //--------------------------------------------------------------
                 issue.free();
                 for(const Canon::NodeType *node=canon.head;node;node=node->next)
                 {
@@ -112,10 +126,45 @@ namespace Yttrium
                     }
                 }
 
-                if(issue.size<=0)
-                    return;
-                
 
+                if(issue.size<=0)
+                {
+                    Y_XMLOG(xml, "==> no issue found");
+                    return;
+                }
+
+                //--------------------------------------------------------------
+                //
+                // find smallest rank
+                //
+                //--------------------------------------------------------------
+                XsNode *best = issue.head; assert(0!=best);
+                for(XsNode *node=best->next;node;node=node->next)
+                {
+                    assert(0!=node);
+                    if( (**node).rank < (**best).rank )
+                    {
+                        best = node;
+                    }
+                }
+                Y_XMLOG(xml, "best: " << *best);
+
+                //--------------------------------------------------------------
+                //
+                // compute correction
+                //
+                //--------------------------------------------------------------
+                const Excess       &the =    **best;
+                const Conservation &cns =  the.host;
+                const xreal         num = -the.data;
+                const xreal         den =  cns.nrm2;
+                for(const Actor *a=cns->head;a;a=a->next)
+                {
+                    const xreal    dC = (a->xn * num)/den;
+                    const Species &sp = a->sp;
+                    C0[sp.indx[TopLevel]] += dC;
+                }
+                std::cerr << "new xs: " << cns.excess(C0,xadd) << std::endl;
 
 
             }

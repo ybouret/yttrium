@@ -40,12 +40,15 @@ namespace Yttrium
 
             //! add (nu != 0) * [sp] to constraint
             void add(const unsigned nu, const Species &sp);
+            
+
 
             //! check if linked to another
             bool linkedTo(const Conservation &) const noexcept;
 
             //! compute excess
             xreal excess(const Readable<xreal> &C0, XAdd &xadd) const;
+
 
             //__________________________________________________________________
             //
@@ -57,11 +60,13 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Conservation);
             virtual ConstInterface & surrogate() const noexcept;
-            Actors actors;
+            Actors   actors;
+            unsigned normSq;
 
         public:
-            Conservation *next; //!< for list
-            Conservation *prev; //!< for list
+            const xreal   nrm2;  //!< |this|^2
+            Conservation *next;  //!< for list
+            Conservation *prev;  //!< for list
         };
 
 

@@ -13,6 +13,8 @@ namespace Yttrium
         Object(),
         Proxy<const Actors>(),
         actors(),
+        normSq(0),
+        nrm2(0),
         next(0),
         prev(0)
         {
@@ -41,6 +43,8 @@ namespace Yttrium
                     throw Specific::Exception("Conservation","multiple species '%s'",sp.name.c_str());
             }
             actors.pushTail( new Actor(sp,nu) );
+            normSq      += nu*nu;
+            Coerce(nrm2) = double(normSq);
         }
 
         bool Conservation:: linkedTo(const Conservation &other) const noexcept
