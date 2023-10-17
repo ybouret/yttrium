@@ -59,13 +59,15 @@ namespace Yttrium
 
             {
                 Y_XML_SECTION_OPT(xml, "Law", " canons='" << law.size << "'");
-                for(const Canon *canon=law.head;canon;canon=canon->next)
+                for(Canon *canon=law.head;canon;canon=canon->next)
                 {
                     Y_XML_SECTION_OPT(xml, "Canon", " size='" << canon->size << "'");
+                    canon->compile();
                     for(const Canon::NodeType *cons=canon->head;cons;cons=cons->next)
                     {
-                        Y_XMLOG(xml,**cons);
+                        Y_XMLOG(xml, " (*) " << **cons);
                     }
+                    Y_XMLOG(xml,     "  |__" << canon->repo);
                 }
             }
 

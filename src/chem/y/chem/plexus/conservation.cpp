@@ -20,7 +20,7 @@ namespace Yttrium
 
         std::ostream & operator<<(std::ostream &os, const Conservation &cons)
         {
-            os << "0=d_(";
+            os << "d_(";
             os << cons.actors.toString();
             os << ")";
             return os;
@@ -51,6 +51,18 @@ namespace Yttrium
                 if( actors.has(ac->sp) ) return true;
             }
             return false;
+        }
+
+
+        xreal Conservation:: excess(const Readable<xreal> &C0, XAdd &xadd) const
+        {
+            xadd.free();
+            for(const Actor *ac=actors.head;ac;ac=ac->next)
+            {
+                const Species &sp = ac->sp;
+                xadd.insert( C0[sp.indx[TopLevel]] * ac->xn );
+            }
+            return xadd.sum();
         }
 
 

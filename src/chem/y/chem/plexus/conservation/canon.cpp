@@ -39,6 +39,22 @@ namespace Yttrium
             return false;
         }
 
+        void Canon:: compile()
+        {
+            SpRepo &here = Coerce(repo);
+            for(const NodeType *node=head;node;node=node->next)
+            {
+                const Conservation &cons = **node;
+                for(const Actor *a=cons->head;a;a=a->next)
+                {
+                    const Species &sp = a->sp;
+                    if(here.has(sp)) continue;
+                    here << sp;
+                }
+            }
+            SortIncreasing(here);
+        }
+
 
     }
 

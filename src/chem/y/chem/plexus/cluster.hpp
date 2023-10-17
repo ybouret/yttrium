@@ -4,7 +4,6 @@
 #define Y_Chemical_Cluster_Included 1
 
 #include "y/chem/reactive/equilibria.hpp"
-#include "y/data/small/light/list/bare.hpp"
 #include "y/chem/plexus/conservation/canon.hpp"
 #include "y/stream/xmlog.hpp"
 
@@ -15,14 +14,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        //______________________________________________________________________
-        //
-        //
-        // List of species
-        //
-        //______________________________________________________________________
-        typedef Small::BareLightList<const Species>     SpRepo; //!< alias
-        typedef SpRepo::NodeType                        SpNode; //!< alias
+
 
         //______________________________________________________________________
         //
@@ -128,7 +120,6 @@ namespace Yttrium
             const CxxListOf<Conservation> cll;  //!< conservation law list
             const CxxListOf<Canon>        law;  //!< list of parallel canons
             const Tier                    tier; //!< species tier
-
             const Matrix<int>             Nu;    //!< main topology
             const Matrix<unsigned>        Qm;    //!< conservation matrix
             const AutoPtr<const EqGroup>  meg;   //!< Mixed Equilibria Groups

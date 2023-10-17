@@ -12,6 +12,7 @@ namespace Yttrium
         sp( which ),
         nu( coeff ),
         n1( nu-1  ),
+        xn( nu ),
         next(0),
         prev(0)
         {
@@ -23,6 +24,7 @@ namespace Yttrium
         sp( a.sp ),
         nu( a.nu ),
         n1( a.n1 ),
+        xn( a.xn ),
         next(0),
         prev(0)
         {

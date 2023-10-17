@@ -43,7 +43,10 @@ namespace Yttrium
 
             //! check if linked to another
             bool linkedTo(const Conservation &) const noexcept;
-            
+
+            //! compute excess
+            xreal excess(const Readable<xreal> &C0, XAdd &xadd) const;
+
             //__________________________________________________________________
             //
             //

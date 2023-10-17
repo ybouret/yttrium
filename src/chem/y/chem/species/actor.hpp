@@ -53,6 +53,7 @@ namespace Yttrium
             const Species &sp;   //!< persistent species
             const unsigned nu;   //!< nu > 0
             const unsigned n1;   //!< n1=nu-1
+            const xreal    xn;   //!< nu as xreal
             Actor *        next; //!< for list
             Actor *        prev; //!< for list
 

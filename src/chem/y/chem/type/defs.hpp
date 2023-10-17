@@ -16,6 +16,13 @@ namespace Yttrium
         typedef MKL::Antelope::Mul<xreal> XMul;  //!< precise mul
         typedef MKL::Antelope::Add<xreal> XAdd;  //!< precise add
 
+        //! conversion helper to display
+        struct Conv
+        {
+            //! xreal to double
+            static inline double X2R(const xreal &x) { return double(x); }
+        };
+
 
     }
 }

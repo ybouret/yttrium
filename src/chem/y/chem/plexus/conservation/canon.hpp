@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Chemical_Conservation_Canon_Included
@@ -6,11 +5,40 @@
 
 #include "y/chem/plexus/conservation.hpp"
 #include "y/data/small/light/list/bare.hpp"
+#include "y/sort/merge.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
+
+        //______________________________________________________________________
+        //
+        //
+        // List of species
+        //
+        //______________________________________________________________________
+        typedef Small::BareLightList<const Species>     SpRepo; //!< alias
+        typedef SpRepo::NodeType                        SpNode; //!< alias
+
+        //! compare Entity-based node by their top-level indices
+        template <typename NODE> static inline
+        SignType CompareSmallNodes(const NODE *lhs, const NODE *rhs)
+        {
+            const Entity &L = **lhs;
+            const Entity &R = **rhs;
+            return Sign::Of(L.indx[TopLevel], R.indx[TopLevel]);
+        }
+
+        //! sort any repository of Entity-based nodes
+        template <typename LIST> static inline
+        void SortIncreasing(LIST &repo)
+        {
+            MergeSort::Call(repo, CompareSmallNodes<typename LIST::NodeType> );
+        }
+
+
+
         //______________________________________________________________________
         //
         //
@@ -18,7 +46,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         typedef Small::BareLightList<const Conservation> Conservations;
-
+        
         //______________________________________________________________________
         //
         //
@@ -48,6 +76,7 @@ namespace Yttrium
             //__________________________________________________________________
             bool accepts(const Conservation &) const noexcept; //!< true if sharing a species
             bool accepts(const Canon &)        const noexcept; //!< true if sharing a species
+            void compile();                                    //!< make repo
 
             //__________________________________________________________________
             //
@@ -55,8 +84,9 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            Canon *next; //!< for list
-            Canon *prev; //!< for list
+            const SpRepo repo; //!< involved species
+            Canon *      next; //!< for list
+            Canon *      prev; //!< for list
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Canon);

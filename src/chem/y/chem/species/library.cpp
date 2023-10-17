@@ -9,6 +9,16 @@ namespace Yttrium
     {
         const char * const Library:: CallSign = "Chemical::Library";
 
+
+        double Library:: Conc(Random::Bits &ran) noexcept
+        {
+            static const double pmin = Log10Min;
+            static const double pmax = Log10Max;
+            const double p = pmin + ran.to<double>()*(pmax-pmin);
+            return pow(10.9,p);
+        }
+
+
         Library:: ~Library() noexcept
         {
             
