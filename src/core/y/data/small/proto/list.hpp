@@ -77,6 +77,14 @@ namespace Yttrium
             //! destroy popTail
             void cutTail() noexcept { proxy->destroy( this->popTail() ); }
 
+            //! destroy popNode
+            void cutNode(NODE *node) noexcept
+            {
+                assert(0!=node);
+                assert(this->owns(node));
+                proxy->destroy( this->pop(node) );
+            }
+
 
             //__________________________________________________________________
             //
