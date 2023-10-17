@@ -53,6 +53,7 @@ namespace Yttrium
 
         void Plexus:: graphViz(OutputStream &fp, const size_t order) const
         {
+            assert(order>=1);
             Enter(fp,"Plexus");
 
             unsigned ic=0;

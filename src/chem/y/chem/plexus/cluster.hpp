@@ -131,7 +131,6 @@ namespace Yttrium
 
             const Matrix<int>             Nu;    //!< main topology
             const Matrix<unsigned>        Qm;    //!< conservation matrix
-            const EqRepo                  pre;   //!< PRIMARY equilibria
             const AutoPtr<const EqGroup>  meg;   //!< Mixed Equilibria Groups
             Cluster *                     next;  //!< for list
             Cluster *                     prev;  //!< for list

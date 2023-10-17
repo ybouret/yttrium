@@ -163,7 +163,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             Chemical::Algebraic::Weight::List W;
             {
-                const size_t nmax = Chemical::Algebraic::Compute(W,Nu,xml);
+                const size_t nmax = Max<size_t>(1,Chemical::Algebraic::Compute(W,Nu,xml));
                 Coerce(meg) = new EqGroup(nmax);
             }
             EqGroup &eg = Coerce(*meg);
@@ -176,9 +176,13 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             const EqArray &ea = *edb;
-            const size_t   N  = ea.size(); assert(N==pre.size);
+            const size_t   N  = ea.size();
             for(size_t i=N;i>0;--i)
-                Coerce(ea[i]->indx[SubLevel]) = i;
+            {
+                Equilibrium &eq = * ea[i];
+                Coerce(eq.indx[SubLevel]) = i;
+                Coerce(eg[1]) >> eq;
+            }
 
             //------------------------------------------------------------------
             //
@@ -252,7 +256,6 @@ namespace Yttrium
 
             {
                 Y_XML_SECTION_OPT(xml,"Hierarchy"," order='" << meg->size() << "'");
-                Y_XMLOG(xml,pre);
                 for(size_t i=1;i<=meg->size();++i)
                 {
                     Y_XMLOG(xml,(*meg)[i]);

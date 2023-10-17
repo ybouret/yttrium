@@ -44,7 +44,7 @@ namespace Yttrium
             const Readable<xreal> &K(double);          //!< update K
 
             //! produce GrapViz code for a given order
-            void graphViz(OutputStream &fp, const size_t order=0) const;
+            void graphViz(OutputStream &fp, const size_t order=1) const;
 
 
         private:

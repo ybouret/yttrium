@@ -31,7 +31,6 @@ namespace Yttrium
         tier(),
         Nu(),
         Qm(),
-        pre(),
         meg(0),
         next(0),
         prev(0)
@@ -109,7 +108,6 @@ namespace Yttrium
                     const Equilibrium &eq = **node;
                     Coerce(eq.indx[SubLevel]) = ++i;
                     Coerce((*E)[i]) = &Coerce(eq);
-                    Coerce(pre) << eq;
                 }
             }
 
@@ -169,21 +167,9 @@ namespace Yttrium
 
         void  Cluster:: viz(OutputStream &fp, const size_t order) const
         {
-            const EqRepo *repo = 0;
-            AddressBook   book;
-
-            // guess repo
-            if(order<=0)
-            {
-                repo = &pre;
-            }
-            else
-            {
-                assert(order<=meg->size());
-                repo = & ((*meg)[order]);
-            }
-
-            assert(0!=repo);
+            assert(order<=meg->size());
+            const EqRepo * const repo = & ((*meg)[order]);
+            AddressBook          book;
 
             // fill species
             for(const EqNode *node=repo->head;node;node=node->next)

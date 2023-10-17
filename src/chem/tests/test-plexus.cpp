@@ -28,7 +28,7 @@ Y_UTEST(plexus)
 
     std::cerr << eqs << std::endl;
 
-    for(size_t order=0;order<=plexus.maxOrder;++order)
+    for(size_t order=1;order<=plexus.maxOrder;++order)
     {
         const String id = FormatString("plexus%u.dot",unsigned(order));
         Vizible::GraphVizEx(id,plexus,order);
