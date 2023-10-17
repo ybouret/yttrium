@@ -167,6 +167,7 @@ namespace Yttrium
                 Coerce(meg) = new EqGroup(nmax);
             }
             EqGroup &eg = Coerce(*meg);
+
             //------------------------------------------------------------------
             //
             //
@@ -175,7 +176,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             const EqArray &ea = *edb;
-            const size_t   N  = ea.size();
+            const size_t   N  = ea.size(); assert(N==pre.size);
             for(size_t i=N;i>0;--i)
                 Coerce(ea[i]->indx[SubLevel]) = i;
 
@@ -202,7 +203,7 @@ namespace Yttrium
 
                 //--------------------------------------------------------------
                 //
-                // populate coefficients wit TopLevel indices
+                // populate coefficients wit TopLevel indices to compute K
                 //
                 //--------------------------------------------------------------
                 for(size_t i=1;i<=N;++i)
@@ -249,7 +250,14 @@ namespace Yttrium
                 }
             }
 
-
+            {
+                Y_XML_SECTION_OPT(xml,"Hierarchy"," order='" << meg->size() << "'");
+                Y_XMLOG(xml,pre);
+                for(size_t i=1;i<=meg->size();++i)
+                {
+                    Y_XMLOG(xml,(*meg)[i]);
+                }
+            }
 
         }
     }
