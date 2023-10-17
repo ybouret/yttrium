@@ -71,10 +71,9 @@ namespace Yttrium
                     const xreal         xs   = cons.excess(C0,xadd);
                     Y_XMLOG(xml, std::setw(15) << double(xs) << " = " << cons);
                 }
-
-
             }
 
+            
             XAdd          xadd;
             Monitor::List mlist;
             Monitor::Pool mpool;
