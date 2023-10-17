@@ -1,0 +1,49 @@
+\documentclass[aps,12pt]{revtex4}
+\usepackage[a4paper]{geometry}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{chemarr}
+\usepackage{mathptmx}
+\usepackage{bookman}
+
+  	 
+\begin{document}
+
+
+\section{Correcting Conservation}
+
+Let $\vec{\alpha}\in\mathbb{R}_+^M$ be a conservation vector, meaning that for any $\vec{C}_0$:
+\begin{equation}
+d\,\left(\langle \vec{\alpha} \vert \vec{C}_0 \rangle\right) = 0.
+\end{equation}
+In particular:
+\begin{equation}
+	\langle \vec{\alpha} \vert \vec{C}_0 \rangle \geq 0.
+\end{equation}
+
+Let us assume that we start from:
+\begin{equation}
+	\langle \vec{\alpha} \vert \vec{C}_0 \rangle < 0.
+\end{equation}
+We compute the smallest numerical correction $\delta\vec{C}$ such that:
+\begin{equation}
+	\langle \vec{\alpha} \vert \vec{C}_0 + \delta\vec{C} \rangle = 0.
+\end{equation}
+We find:
+\begin{equation}
+	\delta\vec{C} =
+	 -\dfrac{\langle \vec{\alpha} \vert \vec{C}_0 \rangle}{\vec{\alpha}^2}
+	  \vec{\alpha}.
+\end{equation}
+
+\begin{equation}
+	\delta\vec{C}^2 = \dfrac{\langle \vec{\alpha} \vert \vec{C}_0 \rangle^2}{\vec{\alpha}^2}
+\end{equation}
+	
+\begin{equation}
+	\vert\delta\vec{C}\vert = \dfrac{-\langle \vec{\alpha} \vert \vec{C}_0 \rangle}{\vert \vec{\alpha} \vert}
+\end{equation}	
+
+\end{document}
