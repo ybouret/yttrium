@@ -6,7 +6,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        Tier::  Tier() noexcept :regular(),  roaming() {}
+        Tier::  Tier() noexcept : limited(),  roaming() {}
         Tier:: ~Tier() noexcept {}
     }
 
@@ -21,7 +21,7 @@ namespace Yttrium
 
         Cluster:: Cluster(const Equilibrium &first) :
         Object(),
-        eqs(),
+        all(),
         lib(),
         last(0),
         edb(0),
@@ -31,6 +31,7 @@ namespace Yttrium
         tier(),
         Nu(),
         Qm(),
+        pre(),
         meg(0),
         next(0),
         prev(0)
@@ -40,8 +41,8 @@ namespace Yttrium
 
         void Cluster:: enroll(const Equilibrium &eq)
         {
-            assert(!eqs.has(eq));
-            Coerce(eqs) << eq;
+            assert(!all.has(eq));
+            Coerce(all) << eq;
             for(Equilibrium::ConstIterator it = eq->begin(); it != eq->end(); ++it)
             {
                 const Species &sp = (*it).sp;
@@ -51,7 +52,7 @@ namespace Yttrium
 
         bool Cluster:: tiedTo(const Equilibrium &eq) const noexcept
         {
-            for(const EqNode *node=eqs.head;node;node=node->next)
+            for(const EqNode *node=all.head;node;node=node->next)
             {
                 const Equilibrium &mine = **node;
                 if(mine.linkedTo(eq))
@@ -64,7 +65,7 @@ namespace Yttrium
         bool Cluster:: tiedTo(const Cluster &other) const noexcept
         {
 
-            for(const EqNode *node=other.eqs.head;node;node=node->next)
+            for(const EqNode *node=other.all.head;node;node=node->next)
             {
                 const Equilibrium &otherEq = **node;
                 if(tiedTo(otherEq))
@@ -78,37 +79,37 @@ namespace Yttrium
 }
 
 #include "y/chem/algebraic.hpp"
-#include "y/associative/address-book.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
-        void Cluster:: compile(Equilibria            &all,
+        void Cluster:: compile(Equilibria            &Eqs,
                                const Readable<xreal> &Ks,
                                XMLog                 &xml)
         {
-            Y_XML_SECTION_OPT(xml,"Cluster"," size='" << eqs.size << "'");
-            assert(eqs.size>0);
+            Y_XML_SECTION_OPT(xml,"Cluster"," size='" << all.size << "'");
+            assert(all.size>0);
             assert(lib.size>0);
-            Y_XMLOG(xml, "eqs: " << eqs);
+            Y_XMLOG(xml, "all: " << all);
             Y_XMLOG(xml, "lib: " << lib);
 
-            const size_t N  = eqs.size;
+            const size_t N  = all.size;
             const size_t M  = lib.size;
             EqArray     *E = new EqArray(N); Coerce(edb) = E;
             SpArray     *S = new SpArray(M); Coerce(sdb) = S;
 
             //------------------------------------------------------------------
-            // indexing
+            // start indexing
             //------------------------------------------------------------------
             {
                 size_t i=0;
-                for(EqNode *node=eqs.head;node;node=node->next)
+                for(EqNode *node=all.head;node;node=node->next)
                 {
                     const Equilibrium &eq = **node;
                     Coerce(eq.indx[SubLevel]) = ++i;
                     Coerce((*E)[i]) = &Coerce(eq);
+                    Coerce(pre) << eq;
                 }
             }
 
@@ -128,7 +129,7 @@ namespace Yttrium
             {
                 Matrix<int> &nu = Coerce(Nu);
                 nu.make(N,M);
-                for(EqNode *node=eqs.head;node;node=node->next)
+                for(EqNode *node=all.head;node;node=node->next)
                 {
                     const Equilibrium &eq = **node;
                     eq.fill(nu[ eq.indx[SubLevel]], SubLevel);
@@ -147,18 +148,18 @@ namespace Yttrium
             //------------------------------------------------------------------
             // connection
             //------------------------------------------------------------------
-            connectAll(xml,all,Ks);
+            connectAll(xml,Eqs,Ks);
 
             //------------------------------------------------------------------
             // update status
             //------------------------------------------------------------------
-            Coerce(last) = ListOps::Next(eqs.head,N);
+            Coerce(last) = ListOps::Next(all.head,N);
 
         }
 
         void Cluster:: updateK(Writable<xreal> &K, const double t)
         {
-            for(EqNode *node=eqs.head;node;node=node->next)
+            for(EqNode *node=all.head;node;node=node->next)
             {
                 Equilibrium &eq = Coerce(**node);
                 K[eq.indx[TopLevel]] = eq.K(t);
@@ -166,17 +167,44 @@ namespace Yttrium
         }
 
 
-        void  Cluster:: vizSp(OutputStream &fp, const size_t order) const
+        void  Cluster:: viz(OutputStream &fp, const size_t order) const
         {
-            AddressBook book;
+            const EqRepo *repo = 0;
+            AddressBook   book;
 
+            // guess repo
             if(order<=0)
             {
-                for(size_t i=1;i<= edb->size(); ++i)
-                {
-                    const Equilibrium &eq = * (*edb)[i];
-                }
+                repo = &pre;
             }
+            else
+            {
+                assert(order<=meg->size());
+                repo = & ((*meg)[order]);
+            }
+
+            assert(0!=repo);
+
+            // fill species
+            for(const EqNode *node=repo->head;node;node=node->next)
+            {
+                const Equilibrium &eq = **node;
+                eq.insertSpeciesIn(book);
+            }
+
+            // write all species
+            for(AddressBook::Iterator it=book.begin();it!=book.end();++it)
+            {
+                const Species &sp = *static_cast<const Species *>(*it);
+                sp.viz(fp);
+            }
+
+            // write all eqs
+            for(EqNode *node=repo->head;node;node=node->next)
+            {
+                (**node).viz(fp);
+            }
+            
 
         }
 

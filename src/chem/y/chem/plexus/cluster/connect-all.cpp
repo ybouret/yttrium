@@ -149,7 +149,7 @@ namespace Yttrium
         }
 
         void Cluster:: connectAll(XMLog &                 xml,
-                                  Equilibria            & all,
+                                  Equilibria            & Eqs,
                                   const Readable<xreal> & Ksh)
         {
             Y_XML_SECTION(xml, "ConnectAll");
@@ -196,7 +196,7 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 const Readable<int>           &cof = *w;
                 const String                   eid = MakeName(ea,cof);                     // make the name
-                MixedEquilibrium              &eq  = all( new MixedEquilibrium(eid,Ksh) ); // initialize mixed equilibrium
+                MixedEquilibrium              &eq  = Eqs( new MixedEquilibrium(eid,Ksh) ); // initialize mixed equilibrium
                 const Algebraic::Coefficients &st  = w->stoi;                              // get stoichiometry
 
 
@@ -232,16 +232,16 @@ namespace Yttrium
                 // record and update
                 //
                 //--------------------------------------------------------------
-                assert(all->size()==eq.indx[TopLevel]);
+                assert(Eqs->size()==eq.indx[TopLevel]);
                 assert(w->nEqs<=eg.size());
-                Coerce(eqs)         << eq;
+                Coerce(all)         << eq;
                 Coerce(eg[w->nEqs]) << eq;
-                Coerce(eq.indx[SubLevel]) = eqs.size;
+                Coerce(eq.indx[SubLevel]) = all.size;
             }
 
             {
                 size_t       i = 1;
-                for(const EqNode *node=eqs.head;node;node=node->next,++i)
+                for(const EqNode *node=all.head;node;node=node->next,++i)
                 {
                     const Equilibrium &eq = **node;
                     if(i!=eq.indx[SubLevel])

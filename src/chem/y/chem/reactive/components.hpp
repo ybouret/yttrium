@@ -6,10 +6,13 @@
 
 #include "y/chem/reactive/component.hpp"
 #include "y/chem/species/actors.hpp"
+#include "y/associative/address-book.hpp"
 #include "y/type/proxy.hpp"
 
 namespace Yttrium
 {
+    class AddressBook;
+
     namespace Chemical
     {
         //______________________________________________________________________
@@ -61,9 +64,11 @@ namespace Yttrium
                 }
             }
 
-            //! check is sharing a species with other
+            //! check if sharing a species with other
             bool linkedTo(const Components &other) const noexcept;
 
+            //! insert species in book
+            void insertSpeciesIn(AddressBook &book) const;
 
 
             //__________________________________________________________________

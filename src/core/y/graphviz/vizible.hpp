@@ -79,6 +79,21 @@ namespace Yttrium
         }
 
 
+        //! save and render any CLASS with a graphViz(OutputStream &,param) methods
+        template <typename CLASS, typename PARAM>
+        static inline void GraphVizEx(const String &dotFile,
+                                      CLASS        &vizible,
+                                      const PARAM  &paramEx,
+                                      const bool    keepDot = false)
+        {
+            {
+                AutoPtr<OutputStream> fp = OpenFile(dotFile);
+                vizible.graphViz(*fp,paramEx);
+            }
+            RenderPNG(dotFile,keepDot);
+        }
+
+
 
 
     private:

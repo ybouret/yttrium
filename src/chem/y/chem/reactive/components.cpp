@@ -70,6 +70,16 @@ namespace Yttrium
             }
         }
 
+        
+        void Components:: insertSpeciesIn(AddressBook &book) const
+        {
+            const ConstIterator last = db.end();
+            for(ConstIterator it = db.begin();it!=last;++it)
+            {
+                const Species &sp = (*it).sp;
+                book |= sp;
+            }
+        }
 
     }
 

@@ -15,38 +15,60 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        //----------------------------------------------------------------------
+        //______________________________________________________________________
+        //
         //
         // List of species
         //
-        //----------------------------------------------------------------------
+        //______________________________________________________________________
         typedef Small::BareLightList<const Species>     SpRepo; //!< alias
         typedef SpRepo::NodeType                        SpNode; //!< alias
 
+        //______________________________________________________________________
+        //
+        //
+        //! Tier of species
+        //
+        //______________________________________________________________________
         class Tier
         {
         public:
-            explicit Tier() noexcept;
-            virtual ~Tier() noexcept;
-            const SpRepo regular;
-            const SpRepo roaming;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Tier() noexcept; //!< setup empty
+            virtual ~Tier() noexcept; //!< cleanup
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const SpRepo limited; //!< limited concentrations
+            const SpRepo roaming; //!< roaming concentrations
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tier);
         };
 
-        //----------------------------------------------------------------------
+        //______________________________________________________________________
+        //
         //
         // List of equilibria
         //
-        //----------------------------------------------------------------------
+        //______________________________________________________________________
         typedef Small::BareLightList<const Equilibrium> EqRepo; //!< alias
         typedef EqRepo::NodeType                        EqNode; //!< alias
 
-        //----------------------------------------------------------------------
+        //______________________________________________________________________
+        //
         //
         // Arrays for direct acces
         //
-        //----------------------------------------------------------------------
+        //______________________________________________________________________
         typedef CxxArray<Equilibrium * const>           EqArray; //!< alias
         typedef CxxArray<Species     * const>           SpArray; //!< alias
         typedef CxxArray<const EqRepo>                  EqGroup; //!< alias
@@ -89,7 +111,8 @@ namespace Yttrium
             void updateK(Writable<xreal> &K, const double t);
 
 
-            void vizSp(OutputStream &fp, const size_t order) const;
+            //! viz equilibria and species at a give order in 0..meg->size()
+            void viz(OutputStream &fp, const size_t order) const;
 
             //__________________________________________________________________
             //
@@ -97,10 +120,10 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const EqRepo                  eqs;  //!< list of primary equilibria
+            const EqRepo                  all;  //!< list of ALL equilibria
             const SpRepo                  lib;  //!< list of active species
             const EqNode * const          last; //!< first NOT PRIMARY equilibrium
-            const AutoPtr<const EqArray>  edb;  //!< equilibria database
+            const AutoPtr<const EqArray>  edb;  //!< PRIMARY equilibria database
             const AutoPtr<const SpArray>  sdb;  //!< species database
             const CxxListOf<Conservation> cll;  //!< conservation law list
             const CxxListOf<Canon>        law;  //!< list of parallel canons
@@ -108,6 +131,7 @@ namespace Yttrium
 
             const Matrix<int>             Nu;    //!< main topology
             const Matrix<unsigned>        Qm;    //!< conservation matrix
+            const EqRepo                  pre;   //!< PRIMARY equilibria
             const AutoPtr<const EqGroup>  meg;   //!< Mixed Equilibria Groups
             Cluster *                     next;  //!< for list
             Cluster *                     prev;  //!< for list
@@ -116,7 +140,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
             void createCons(XMLog &);               //!< create all conservation laws
             void makeCanons(XMLog &);               //!< create canons of conserved laws
-            void connectAll(XMLog &, Equilibria &, const Readable<xreal> &); //!<
+            void connectAll(XMLog &, Equilibria &, const Readable<xreal> &); //!< connect all
         };
 
         typedef CxxListOf<Cluster> Clusters; //!< alias

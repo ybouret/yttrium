@@ -39,7 +39,7 @@ namespace Yttrium
                     const Species &sp = **node;
                     if(conserved.search(sp))
                     {
-                        Coerce(tier.regular) << **node;
+                        Coerce(tier.limited) << **node;
                     }
                     else
                     {
@@ -56,7 +56,7 @@ namespace Yttrium
                 }
             }
 
-            Y_XMLOG(xml, "-- regular: " << tier.regular);
+            Y_XMLOG(xml, "-- limited: " << tier.limited);
             Y_XMLOG(xml, "-- roaming: " << tier.roaming);
 
         }

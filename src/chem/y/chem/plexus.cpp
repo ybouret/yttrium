@@ -14,7 +14,8 @@ namespace Yttrium
                         const double   t0) :
         clusters(),
         shared_K(),
-        N(all->size())
+        primaryN(all->size()),
+        maxOrder(0)
         {
             Y_XML_SECTION(xml,"Plexus");
             buildClusters(all,xml);
@@ -50,21 +51,20 @@ namespace Yttrium
         }
 
 
-        void Plexus:: graphViz(OutputStream &fp) const
+        void Plexus:: graphViz(OutputStream &fp, const size_t order) const
         {
             Enter(fp,"Plexus");
 
             unsigned ic=0;
             for(const Cluster *cluster=clusters.head;cluster;cluster=cluster->next,++ic)
             {
-                fp("subgraph cluster_%u{n",ic);
-
-                cluster->vizSp(fp,0);
-
-                fp("}\n");
-
+                if(order<=cluster->meg->size())
+                {
+                    fp("subgraph cluster_%u{\n",ic);
+                    cluster->viz(fp,order);
+                    fp("}\n");
+                }
             }
-
 
             Leave(fp);
         }

@@ -46,7 +46,7 @@ namespace Yttrium
                             if(rhs->tiedTo(*lhs))
                             {
                                 Y_XMLOG(xml, " (-^-)");
-                                Coerce(rhs->eqs).mergeTail( Coerce(lhs->eqs) );
+                                Coerce(rhs->all).mergeTail( Coerce(lhs->all) );
                                 lhs = 0;
                                 assert(lhs.isEmpty());
                                 break;
@@ -70,7 +70,9 @@ namespace Yttrium
             for(Cluster *cluster=clusters.head;cluster;cluster=cluster->next)
             {
                 cluster->compile(eqs,shared_K,xml);
+                Coerce(maxOrder) = Max(maxOrder,cluster->meg->size());
             }
+            Y_XMLOG(xml, "maxOrder=" << maxOrder);
 
         }
     }
