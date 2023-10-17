@@ -13,20 +13,46 @@ namespace Yttrium
         namespace ODE
         {
 
-          
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! adaptive, controled step
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             class RK45 : public Actuator<T>
             {
             public:
-                typedef typename Named<T>::Equation   Equation;
-                typedef typename Named<T>::Callback   Callback;
-                typedef typename RK45_Step<T>::Handle StepType;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef typename Named<T>::Equation   Equation; //!< alias
+                typedef typename Named<T>::Callback   Callback; //!< alias
+                typedef typename RK45_Step<T>::Handle StepType; //!< alias
 
-                explicit RK45(const StepType &s) noexcept;
-                explicit RK45(const StepType &s, const size_t n);
-                virtual ~RK45() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit RK45(const StepType &s) noexcept;        //!< setup empty
+                explicit RK45(const StepType &s, const size_t n); //!< setup for dim=n
+                virtual ~RK45() noexcept;                         //!< cleanup
 
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
 
+                //! move y to a new controlled value
                 virtual void move(Writable<T>  &       y,
                                   const Readable<T>  & dydx,
                                   T                  & x,
