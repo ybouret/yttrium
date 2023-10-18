@@ -41,14 +41,14 @@ namespace Yttrium
             //! optimized sorting
             inline void makeIncreasing()
             {
-                NetworkSort::Algo<SIZE,Type>::Increasing(*this);
+                NetworkSort::Algo<SIZE>::Increasing(*this);
             }
 
             //! optimized co-sorting
             template <typename U>
             inline void makeIncreasingWith(Triplet<U> &other)
             {
-                NetworkSort::Algo<SIZE,Type>::Increasing(*this,other);
+                NetworkSort::Algo<SIZE>::Increasing(*this,other);
             }
 
             //! check if ordinates form a local minimum

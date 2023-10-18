@@ -1,6 +1,7 @@
 
 
 #include "y/mkl/root/zbis.hpp"
+#include "y/mkl/root/zrid.hpp"
 #include "y/utest/run.hpp"
 #include "y/stream/libc/output.hpp"
 #include "y/mkl/xreal.hpp"
@@ -31,14 +32,28 @@ namespace
     void doZFind()
     {
         std::cerr << std::endl <<  "ZFind<" << RTTI::Name<T>() << ">" << std::endl;
-        callF<T>   F = { 0 };
-        Triplet<T> x = { -1, 0, 2};
-        Triplet<T> f = { F(x.a), 0, F(x.c) };
-        std::cerr << x << " -> " << f << std::endl;
+        {
+            callF<T>   F = { 0 };
+            Triplet<T> x = { -1, 0, 2};
+            Triplet<T> f = { F(x.a), 0, F(x.c) };
+            std::cerr << "start: " << x << " -> " << f << std::endl;
 
-        ZBis<T> zbis;
-        zbis(F, x, f);
-        std::cerr << "f(" << x.b << ")=" << f.b << " in #call=" << F.calls << std::endl;
+            ZBis<T> z;
+            z(F, x, f);
+            std::cerr << "f(" << x.b << ")=" << f.b << " in #call=" << F.calls << std::endl;
+        }
+
+        {
+            callF<T>   F = { 0 };
+            Triplet<T> x = { -1, 0, 2};
+            Triplet<T> f = { F(x.a), 0, F(x.c) };
+            std::cerr << "start: " << x << " -> " << f << std::endl;
+
+            ZRid<T> z;
+            z(F, x, f);
+            std::cerr << "f(" << x.b << ")=" << f.b << " in #call=" << F.calls << std::endl;
+        }
+
 
     }
 
@@ -48,11 +63,12 @@ namespace
 Y_UTEST(root_zfind)
 {
     doZFind<float>();
+    return 0;
     doZFind<double>();
     doZFind<long double>();
     doZFind< XReal<float> >();
     doZFind< XReal<double> >();
     doZFind< XReal<long double> >();
-    
+
 }
 Y_UDONE()

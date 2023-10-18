@@ -6,6 +6,7 @@
 
 #include "y/mkl/triplet.hpp"
 #include "y/mkl/function-wrapper-1d.hpp"
+#include "y/type/identifiable.hpp"
 
 namespace Yttrium
 {
@@ -13,7 +14,7 @@ namespace Yttrium
     {
 
         template <typename T>
-        class ZFind
+        class ZFind : public Identifiable
         {
         public:
             //__________________________________________________________________
@@ -23,6 +24,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef Function<T,T> FunctionType; //!< alias
+            struct  Handle {
+                T *neg;
+                T *pos;
+            };
 
 
             virtual void lookup(Triplet<T> &x, Triplet<T> &f, FunctionType &F) = 0;
@@ -38,6 +43,12 @@ namespace Yttrium
 
         protected:
             explicit ZFind() noexcept;
+            const T half;
+            //! return true if initial value is zero
+            bool found(Handle &xp, Handle &fp, Triplet<T> &x, Triplet<T> &f, FunctionType &F);
+
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ZFind);

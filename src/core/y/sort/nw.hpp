@@ -98,7 +98,7 @@ const unsigned * const start = table.index
         //
         //
         //______________________________________________________________________
-        template <size_t N, typename T>
+        template <size_t N>
         struct Algo
         {
             //! make increasing ARRAY[1..N]
@@ -130,7 +130,6 @@ const unsigned * const start = table.index
         };
 
         //! AdHoc algorithms
-        template <typename T>
         struct Make
         {
             //! make increasing arr[1..n]

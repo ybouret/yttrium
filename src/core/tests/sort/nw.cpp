@@ -23,11 +23,11 @@ namespace
         }
 
         std::cerr << "arr=" << arr << std::endl;
-        NetworkSort::Algo<N,T>::Increasing(arr);
+        NetworkSort::Algo<N>::Increasing(arr);
         std::cerr << "inc=" << arr << std::endl;
         Y_CHECK(Comparison::IsIncreasing(arr,N));
 
-        NetworkSort::Algo<N,T>::Decreasing(arr);
+        NetworkSort::Algo<N>::Decreasing(arr);
         std::cerr << "dec=" << arr << std::endl;
         Y_CHECK(Comparison::IsDecreasing(arr,N));
 
