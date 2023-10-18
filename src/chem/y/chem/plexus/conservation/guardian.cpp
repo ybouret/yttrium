@@ -55,10 +55,10 @@ namespace Yttrium
 
                 inline friend std::ostream & operator<<(std::ostream &os, const Excess &xs)
                 {
-                    os << xs.host << "=" << double(xs.data) << ":rank=" << double(xs.rank);
+                    os << std::setw(15) << double(xs.data) << " = " << xs.host;
+                    //os << xs.host << "=" << double(xs.data) << ":rank=" << double(xs.rank);
                     return os;
                 }
-
 
 
                 const Conservation &host;
@@ -153,7 +153,7 @@ namespace Yttrium
                         C0[sp.indx[TopLevel]] += dC;
                         accum[sp.indx[AuxLevel]]->insert(dC);
                     }
-                    Y_XMLOG(xml, "  |-- " << double(num) << " -> " << cns.excess(C0,xadd) );
+                    Y_XMLOG(xml, "  |-- " << double(num) << " -> " << double(cns.excess(C0,xadd)) );
                 }
 
                 //--------------------------------------------------------------

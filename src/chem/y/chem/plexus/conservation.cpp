@@ -20,13 +20,19 @@ namespace Yttrium
         {
         }
 
+
+        String Conservation:: toString() const
+        {
+            return "d_(" + actors.toString() + ")";
+        }
+
         std::ostream & operator<<(std::ostream &os, const Conservation &cons)
         {
-            os << "d_(";
-            os << cons.actors.toString();
-            os << ")";
-            return os;
+            return os << cons.toString();
         }
+
+
+
 
         Conservation::ConstInterface & Conservation:: surrogate() const noexcept
         {

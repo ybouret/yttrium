@@ -51,8 +51,10 @@ namespace Yttrium
                     if(here.has(sp)) continue;
                     here << sp;
                 }
+                
             }
             SortIncreasing(here);
+            
             size_t      indx=1;
             for(SpNode *node=here.head;node;node=node->next,++indx)
             {

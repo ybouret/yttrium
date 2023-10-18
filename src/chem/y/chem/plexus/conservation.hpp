@@ -41,7 +41,8 @@ namespace Yttrium
             //! add (nu != 0) * [sp] to constraint
             void add(const unsigned nu, const Species &sp);
             
-
+            //! make a string from actors
+            String toString() const;
 
             //! check if linked to another
             bool linkedTo(const Conservation &) const noexcept;
