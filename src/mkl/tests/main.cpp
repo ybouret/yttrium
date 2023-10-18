@@ -28,6 +28,8 @@ Y_UTEST_DECL(32)
 
     Y_UTEST(filter_smooth);
 
+    Y_UTEST(root_zfind);
+
 }
 Y_UTEST_EXEC()
 

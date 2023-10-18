@@ -5,7 +5,9 @@ algebra
 drvs
 interp
 io
-filter)
+filter
+root
+)
 
 set( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
 set( DATA ${HERE}/../../../var)
@@ -37,3 +39,5 @@ add_test(interp:ratio test-mkl interp_ratio)
 add_test(io:data-stream test-mkl io_data_stream ${DATA}/sample.txt)
 
 add_test(filter:smooth  test-mkl filter_smooth)
+
+add_test(root:zfind     test-mkl root_zfind)

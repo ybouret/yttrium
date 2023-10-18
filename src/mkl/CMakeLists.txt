@@ -9,6 +9,7 @@ mkl/derivatives
 mkl/interpolation
 mkl/io
 mkl/filter
+mkl/root
 )
 
 add_subdirectory(tests)
