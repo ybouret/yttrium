@@ -11,7 +11,7 @@ namespace Yttrium
         }
 
         Canon:: Canon(const Conservation &first) :
-        Object(), Conservations(), next(0), prev(0)
+        Object(), Conservations(), repo(), next(0), prev(0)
         {
             (*this) << first;
         }
