@@ -38,19 +38,13 @@ Y_UTEST(guardian)
     lib(std::cerr << "Corg=","  [",C0,"]",Chemical::Conv::X2R);
 
 
-    Chemical::Guardian guardian;
-    for(const Chemical::Cluster *cluster=plexus->head;cluster;cluster=cluster->next)
-    {
-        Y_XML_SECTION(xml, "Cluster");
-        for(const Chemical::Canon *canon=cluster->law.head;canon;canon=canon->next)
-        {
-            guardian.corrected(*canon,C0,Cerr,xml);
-        }
-    }
+    Chemical::Guardian      guardian;
+    const Chemical::SpList &corrected =  guardian(plexus,C0,Cerr,xml);
+
 
     lib(std::cerr << "Corg=","  [",C0,  "]",Chemical::Conv::X2R);
     lib(std::cerr << "Cerr=","  [",Cerr,"]",Chemical::Conv::X2R);
-
+    std::cerr << "corrected = " << corrected << std::endl;
 
 
 }

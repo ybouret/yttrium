@@ -1,11 +1,9 @@
-
 //! \file
 
 #ifndef Y_Chemical_Conservation_Guardian_Included
 #define Y_Chemical_Conservation_Guardian_Included 1
 
-#include "y/chem/plexus/conservation/canon.hpp"
-#include "y/chem/species/library.hpp"
+#include "y/chem/plexus.hpp"
 #include "y/stream/xmlog.hpp"
 
 namespace Yttrium
@@ -39,16 +37,27 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! TODO
-            bool corrected(const Canon     &canon,
-                           Writable<xreal> &Corg,
-                           Writable<xreal> &Cerr,
-                           XMLog           &xml);
+            const SpList & operator()(const Plexus    &plexus,
+                                      Writable<xreal> &Corg,
+                                      Writable<xreal> &Cerr,
+                                      XMLog           &xml);
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Guardian);
             class Code;
             Code *code;
+
+            void correct(const Canon     &canon,
+                         Writable<xreal> &Corg,
+                         Writable<xreal> &Cerr,
+                         XMLog           &xml);
+
+            void correct(const Cluster   &cluster,
+                         Writable<xreal> &Corg,
+                         Writable<xreal> &Cerr,
+                         XMLog           &xml);
+
         };
 
     }

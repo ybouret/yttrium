@@ -3,6 +3,7 @@
 #include "y/type/nullify.hpp"
 #include "y/data/pool/cxx.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/associative/address-book.hpp"
 
 #include <iomanip>
 
@@ -73,23 +74,39 @@ namespace Yttrium
         class Guardian:: Code : public Object
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             typedef Small::SoloHeavyList<Excess> XsList;
             typedef XsList::NodeType             XsNode;
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            inline explicit Code() : Object(), issue(), xadd(), accum(), sbook(), slist(), mlist(), mpool() {}
             inline virtual ~Code() noexcept {}
 
-            inline explicit Code() : Object(), issue(), xadd(), accum(), mlist(), mpool()
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! assume sbook is ok
+            inline void correct(const Canon     &canon,
+                                Writable<xreal> &Corg,
+                                Writable<xreal> &Cerr,
+                                XMLog           &xml)
             {
-            }
-
-
-
-            inline bool corrected(const Canon     &canon,
-                                  Writable<xreal> &Corg,
-                                  Writable<xreal> &Cerr,
-                                  XMLog           &xml)
-            {
-                Y_XML_SECTION_OPT(xml, "Guardian", " size='" << canon.size << "'");
                 setup(canon);
 
                 //--------------------------------------------------------------
@@ -127,7 +144,7 @@ namespace Yttrium
                             const Species &sp = **node;
                             Cerr[sp.indx[TopLevel]] = accum[i]->sum();
                         }
-                        return true;
+                        return;
                     }
                     else
                     {
@@ -137,8 +154,9 @@ namespace Yttrium
                             const Species &sp = **node;
                             Cerr[sp.indx[TopLevel]] = 0;
                         }
-                        return false;
+                        return;
                     }
+
                 }
 
                 Y_XMLOG(xml, "  |-- processing #issue=" << issue.size);
@@ -176,6 +194,7 @@ namespace Yttrium
                         Y_XMLOG(xml, "  |-- [+" << std::setw(15) << double(dC) << "] @" << sp);
                         Corg[sp.indx[TopLevel]] += dC;
                         accum[sp.indx[AuxLevel]]->insert(dC);
+                        sbook |= sp;
                     }
                     Y_XMLOG(xml, "  |-- " << double(num) << " -> " << double(cns.excess(Corg,xadd)) );
                 }
@@ -217,12 +236,24 @@ namespace Yttrium
                     issue.swapWith(target);
                 }
                 goto CYCLE;
+            }
 
+            const SpList  &sendBookToList()
+            {
+                slist.free();
+                const AddressBook::Iterator last = sbook.end();
+                for(AddressBook::Iterator it=sbook.begin(); it!=last; ++it)
+                {
+                    slist << * static_cast<const Species *>( *it );
+                }
+                return slist;
             }
 
             XsList         issue;
             XAdd           xadd;
             Vector<XAdd *> accum;
+            AddressBook    sbook;
+            SpList         slist;
             Monitor::List  mlist;
             Monitor::Pool  mpool;
 
@@ -278,16 +309,43 @@ namespace Yttrium
 
         }
 
-        bool Guardian:: corrected(const Canon     &canon,
-                                  Writable<xreal> &Corg,
-                                  Writable<xreal> &Cerr,
-                                  XMLog           &xml)
+        void Guardian:: correct(const Canon     &canon,
+                                Writable<xreal> &Corg,
+                                Writable<xreal> &Cerr,
+                                XMLog           &xml)
         {
             assert(0!=code);
-            return code->corrected(canon, Corg, Cerr, xml);
+            Y_XML_SECTION_OPT(xml, "Guardian::Canon", " size='" << canon.size << "'");
+            code->correct(canon, Corg, Cerr, xml);
         }
 
+        void Guardian:: correct(const Cluster   &cluster,
+                                Writable<xreal> &Corg,
+                                Writable<xreal> &Cerr,
+                                XMLog           &xml)
+        {
+            Y_XML_SECTION_OPT(xml, "Guardian::Cluster", " #law='" << cluster.law.size << "'");
+            for(const Chemical::Canon *canon=cluster.law.head;canon;canon=canon->next)
+            {
+                correct(*canon,Corg,Cerr,xml);
+            }
+        }
 
+        const SpList & Guardian:: operator()(const Plexus    &plexus,
+                                             Writable<xreal> &Corg,
+                                             Writable<xreal> &Cerr,
+                                             XMLog           &xml)
+        {
+            assert(0!=code);
+            Y_XML_SECTION_OPT(xml, "Guardian::Plexus", " #cluster='" << plexus->size << "'");
+
+            code->sbook.free();
+            for(const Cluster *cluster=plexus->head;cluster;cluster=cluster->next)
+            {
+                correct(*cluster,Corg,Cerr,xml);
+            }
+            return code->sendBookToList();
+        }
     }
 
 }

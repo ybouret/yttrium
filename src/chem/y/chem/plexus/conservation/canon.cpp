@@ -41,6 +41,7 @@ namespace Yttrium
 
         void Canon:: compile()
         {
+            // record repository
             SpRepo &here = Coerce(repo);
             for(const NodeType *node=head;node;node=node->next)
             {
@@ -53,8 +54,11 @@ namespace Yttrium
                 }
                 
             }
+
+            // sort by increasing top-level index
             SortIncreasing(here);
             
+            // make aux-level indices
             size_t      indx=1;
             for(SpNode *node=here.head;node;node=node->next,++indx)
             {
