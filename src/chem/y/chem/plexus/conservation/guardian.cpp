@@ -60,6 +60,7 @@ namespace Yttrium
                 }
 
 
+
                 const Conservation &host;
                 const xreal         data;
                 const xreal         rank;
@@ -109,13 +110,16 @@ namespace Yttrium
                     }
                 }
 
-
+            CYCLE:
                 if(issue.size<=0)
                 {
-                    Y_XMLOG(xml, "==> no issue found");
+                    Y_XMLOG(xml, "  |-- no issue found");
                     return;
                 }
-
+                else
+                {
+                    Y_XMLOG(xml, "  |-- processing #issue=" << issue.size);
+                }
                 //--------------------------------------------------------------
                 //
                 // find smallest rank
@@ -130,25 +134,65 @@ namespace Yttrium
                         best = node;
                     }
                 }
-                Y_XMLOG(xml, "best: " << *best);
+                Y_XMLOG(xml, "  |-- best: " << *best);
 
                 //--------------------------------------------------------------
                 //
                 // compute correction
                 //
                 //--------------------------------------------------------------
-                const Excess       &the =    **best;
-                const Conservation &cns =  the.host;
-                const xreal         num = -the.data;
-                const xreal         den =  cns.nrm2;
-                for(const Actor *a=cns->head;a;a=a->next)
                 {
-                    const xreal    dC = (a->xn * num)/den;
-                    const Species &sp = a->sp;
-                    C0[sp.indx[TopLevel]] += dC;
+                    const Excess       &the =    **best;
+                    const Conservation &cns =  the.host;
+                    const xreal         num = -the.data;
+                    const xreal         den =  cns.nrm2;
+                    for(const Actor *a=cns->head;a;a=a->next)
+                    {
+                        const xreal    dC = (a->xn * num)/den;
+                        const Species &sp = a->sp;
+                        C0[sp.indx[TopLevel]] += dC;
+                        accum[sp.indx[AuxLevel]]->insert(dC);
+                    }
+                    Y_XMLOG(xml, "  |-- " << double(num) << " -> " << cns.excess(C0,xadd) );
                 }
-                std::cerr << "new xs: " << cns.excess(C0,xadd) << std::endl;
 
+                //--------------------------------------------------------------
+                //
+                // no more issue
+                //
+                //--------------------------------------------------------------
+                issue.cutNode(best);
+
+                //--------------------------------------------------------------
+                //
+                // check remaining issues
+                //
+                //--------------------------------------------------------------
+                {
+                    XsList target;
+                    while(issue.size>0)
+                    {
+                        XsNode     *node = issue.head;
+                        Excess     &temp = (**node);
+                        const xreal left = temp.host.excess(C0,xadd);
+                        if(left.mantissa<0)
+                        {
+                            // still active
+                            Coerce(temp.data) = left;
+                            Coerce(temp.rank) = (left*left)/temp.host.nrm2;
+                            target.pushTail(issue.popHead());
+                            Y_XMLOG(xml, " (-) " << temp);
+                        }
+                        else
+                        {
+                            // solved
+                            issue.cutHead();
+                            Y_XMLOG(xml, " (+) " << temp.host);
+                        }
+                    }
+                    issue.swapWith(target);
+                }
+                goto CYCLE;
 
             }
 
