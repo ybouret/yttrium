@@ -1,0 +1,67 @@
+\documentclass[aps,12pt]{revtex4}
+\usepackage[a4paper]{geometry}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{chemarr}
+\usepackage{mathptmx}
+\usepackage{bookman}
+
+  	 
+\begin{document}
+
+We assume that $f(x)$ is continuous on $[a:c],\;a<c$ 
+and:
+\begin{equation}
+	f(a).f(c) < 0
+\end{equation}
+Let us compute:
+\begin{equation}
+	f\left(b=\frac{a+c}{2}\right)
+\end{equation}
+
+We define:
+\begin{equation}
+	h(x) = f(x) e^{\alpha(x-b)}
+\end{equation}
+such that $h(b)$ is aligned with $h(a)$ and $h(c)$:
+\begin{equation}
+\begin{array}{rcl}
+	h(b) = \dfrac{h(a)+h(c)}{2} & \implies & f(b) = \dfrac{1}{2} \left[ f(a) e^{-q}+ f(c) e^{q}\right], \;\; q=\alpha\dfrac{c-a}{2}\\
+	& \implies & e^{2q} f(c) - 2 f(b) e^q + f(a) = 0\\
+\end{array}
+\end{equation}
+	
+\begin{equation}
+e^q_\epsilon = \dfrac{f_b+\epsilon\sqrt\Delta}{f_c}, \;\; \Delta=f_b^2 - f_a f_c > 0
+\end{equation}
+
+\begin{equation}
+	h(x) \simeq h_b + \dfrac{x-b}{c-a} (h_c-h_a) \implies x_0 = b - \dfrac{(c-a)}{2} \dfrac{h_c+h_a}{h_c-h_a}
+\end{equation}
+
+\begin{equation}
+	h_c = f_c e^q_\epsilon = f_b + \epsilon \sqrt\Delta
+\end{equation}
+
+\begin{equation}
+	h_a = f_a  e^{-q}_\epsilon = \dfrac{f_a f_c}{f_b+\epsilon\sqrt\Delta} = f_a f_c \dfrac{f_b-\epsilon\sqrt\Delta}{(f_b+\epsilon\sqrt\Delta)(f_b-\epsilon\sqrt\Delta)}
+	= f_b - \epsilon \sqrt\Delta
+\end{equation}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	h_c + h_a & = &  2 f_b\\
+	h_c - h_a & = & 2 \epsilon \sqrt\Delta\\
+\end{array}
+\right.
+\end{equation}
+
+\begin{equation}
+	x_0 = b - \epsilon \dfrac{(c-a)}{2} \dfrac{f_b}{\sqrt\Delta}, \;\; \epsilon =  \mathrm{sign}(f_c-f_a)
+\end{equation}
+
+
+\end{document}

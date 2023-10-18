@@ -15,26 +15,55 @@ namespace Yttrium
         namespace
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //! persistent XAdd
+            //
+            //__________________________________________________________________
             class Monitor : public Object, public XAdd
             {
             public:
+                //______________________________________________________________
+                //
+                // Definitions
+                //______________________________________________________________
                 typedef CxxListOf<Monitor> List;
                 typedef CxxPoolOf<Monitor> Pool;
 
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
                 inline explicit Monitor() : Object(), XAdd(), next(0), prev(0) {}
                 inline virtual ~Monitor() noexcept { }
 
-                Monitor *      next;
-                Monitor *      prev;
+                //______________________________________________________________
+                //
+                // Members
+                //______________________________________________________________
+                Monitor *      next; //!< for list/pool
+                Monitor *      prev; //!< for list/pool
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Monitor);
             };
 
+
+
+            //__________________________________________________________________
+            //
+            //
+            //! store conservation excess
+            //
+            //__________________________________________________________________
             class Excess
             {
             public:
-
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
                 inline Excess(const Conservation &h,
                               const xreal        &d) noexcept :
                 host(h),
@@ -60,10 +89,13 @@ namespace Yttrium
                     return os;
                 }
 
-
-                const Conservation &host;
-                const xreal         data;
-                const xreal         rank;
+                //______________________________________________________________
+                //
+                // member
+                //______________________________________________________________
+                const Conservation &host; //!< unbalanced conservation
+                const xreal         data; //!< raw excess (negative)
+                const xreal         rank; //!< rank
 
             private:
                 Y_DISABLE_ASSIGN(Excess);
@@ -71,6 +103,15 @@ namespace Yttrium
 
         }
 
+
+        //__________________________________________________________________
+        //
+        //
+        //
+        //! Guardian Code
+        //
+        //
+        //__________________________________________________________________
         class Guardian:: Code : public Object
         {
         public:
@@ -100,18 +141,29 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-
-            //! assume sbook is ok
+         
+            //__________________________________________________________________
+            //
+            //
+            //! iterative corrections, assuming sbook in valid state
+            //
+            //__________________________________________________________________
             inline void correct(const Canon     &canon,
                                 Writable<xreal> &Corg,
                                 Writable<xreal> &Cerr,
                                 XMLog           &xml)
             {
+
+                //--------------------------------------------------------------
+                //
+                // prepare monitors
+                //
+                //--------------------------------------------------------------
                 setup(canon);
 
                 //--------------------------------------------------------------
                 //
-                // first pass : populate issue and clear error
+                // first pass : populate issues
                 //
                 //--------------------------------------------------------------
                 bool modified = false;
@@ -130,14 +182,20 @@ namespace Yttrium
                 }
 
 
-
+                //--------------------------------------------------------------
+                //
+                // second pass : reduce issues
+                //
+                //--------------------------------------------------------------
+                size_t cycle = 0;
             CYCLE:
+                ++cycle;
                 if(issue.size<=0)
                 {
                     if(modified)
                     {
-                        Y_XMLOG(xml, "  |-- no more issue found");
                         // expand errors
+                        Y_XMLOG(xml, "  |-- no more issue found @cycle=" << cycle);
                         size_t i = 1;
                         for(const SpNode *node=canon.repo.head;node;node=node->next,++i)
                         {
@@ -148,6 +206,7 @@ namespace Yttrium
                     }
                     else
                     {
+                        // clear errors
                         Y_XMLOG(xml, "  |-- no issue found");
                         for(const SpNode *node=canon.repo.head;node;node=node->next)
                         {
@@ -159,7 +218,7 @@ namespace Yttrium
 
                 }
 
-                Y_XMLOG(xml, "  |-- processing #issue=" << issue.size);
+                Y_XMLOG(xml, "  |-- processing #issue=" << issue.size << " @cycle=" << cycle);
 
                 //--------------------------------------------------------------
                 //
@@ -175,7 +234,7 @@ namespace Yttrium
                         best = node;
                     }
                 }
-                Y_XMLOG(xml, "  |-- best: " << *best);
+                Y_XMLOG(xml, "  |-- selected: " << *best);
 
                 //--------------------------------------------------------------
                 //

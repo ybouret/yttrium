@@ -14,7 +14,7 @@ namespace Yttrium
         //
         //
         //
-        //! Guardian of conservation laws
+        //! Guardian of conservation laws, numerical correction
         //
         //
         //______________________________________________________________________
@@ -35,6 +35,19 @@ namespace Yttrium
             //
             // Methods
             //
+            //__________________________________________________________________
+
+            //__________________________________________________________________
+            //
+            //
+            //! correct all concentration to follow conservation laws
+            /**
+             \param plexus a computed plexus
+             \param Corg   initial/final concenrtation
+             \param Cerr   cumulative corrections
+             \param xml    for verbosity
+             \return a list of corrected species
+             */
             //__________________________________________________________________
 
             const SpList & operator()(const Plexus    &plexus,
