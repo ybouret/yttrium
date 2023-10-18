@@ -1,9 +1,9 @@
 
 #include "y/chem/plexus/conservation/guardian.hpp"
-//#include "y/data/small/light/list/solo.hpp"
-
 #include "y/type/nullify.hpp"
 #include "y/data/pool/cxx.hpp"
+#include "y/sequence/vector.hpp"
+
 #include <iomanip>
 
 namespace Yttrium
@@ -20,11 +20,9 @@ namespace Yttrium
                 typedef CxxListOf<Monitor> List;
                 typedef CxxPoolOf<Monitor> Pool;
 
-                inline explicit Monitor() : Object(), XAdd(), species(0), next(0), prev(0) {}
+                inline explicit Monitor() : Object(), XAdd(), next(0), prev(0) {}
                 inline virtual ~Monitor() noexcept { }
 
-
-                const Species *species;
                 Monitor *      next;
                 Monitor *      prev;
 
@@ -80,26 +78,11 @@ namespace Yttrium
 
             inline virtual ~Code() noexcept {}
 
-            inline explicit Code() : Object(), xadd(), mlist(), mpool()
+            inline explicit Code() : Object(), xadd(), accum(), mlist(), mpool()
             {
             }
 
-            inline void setup(const Canon &canon)
-            {
-                assert(canon.repo.size>0);
 
-                // prepare monitors
-                make(canon.repo.size);
-
-                // link monitors
-                assert(mlist.size==canon.repo.size);
-                Monitor *mine = mlist.head;
-                for(const SpNode *node=canon.repo.head;node;node=node->next)
-                {
-                    mine->species = & **node;
-                    mine->free();
-                }
-            }
 
             inline void run(const Canon     &canon,
                             Writable<xreal> &C0,
@@ -169,16 +152,28 @@ namespace Yttrium
 
             }
 
-            XsList        issue;
-            XAdd          xadd;
-            Monitor::List mlist;
-            Monitor::Pool mpool;
+            XsList         issue;
+            XAdd           xadd;
+            Vector<XAdd *> accum;
+            Monitor::List  mlist;
+            Monitor::Pool  mpool;
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
-            inline void make(const size_t ns)
+            inline void setup(const Canon &canon)
             {
+                assert(canon.repo.size>0);
+                const size_t ns = canon.repo.size;
+
+                //--------------------------------------------------------------
+                // adjust accum
+                //--------------------------------------------------------------
+                accum.adjust(ns,0);
+
+                //--------------------------------------------------------------
+                // prepare monitors
+                //--------------------------------------------------------------
                 while(mlist.size>ns)
                     mpool.store(mlist.popTail());
 
@@ -189,7 +184,19 @@ namespace Yttrium
                     else
                         mlist.pushTail( new Monitor() );
                 }
+
+                //--------------------------------------------------------------
+                // link monitors
+                //--------------------------------------------------------------
+                assert(mlist.size==canon.repo.size);
+                assert(mlist.size==accum.size());
+
+                size_t i = 1;
+                for(Monitor *m=mlist.head;m;m=m->next,++i)
+                    (accum[i] = m)->free();
             }
+
+
         };
 
         Guardian:: ~Guardian() noexcept

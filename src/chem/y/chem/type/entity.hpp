@@ -14,8 +14,9 @@ namespace Yttrium
         //! indexation level
         enum Level
         {
-            TopLevel = 0, //!< top level index
-            SubLevel = 1, //!< sub level index
+            TopLevel = 0, //!< top level index, within library/equilibria
+            SubLevel = 1, //!< sub level index, within cluster
+            AuxLevel = 2, //!< aux level index, within conservations
             Levels        //!< number of levels
         };
 

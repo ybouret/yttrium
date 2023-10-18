@@ -53,6 +53,12 @@ namespace Yttrium
                 }
             }
             SortIncreasing(here);
+            size_t      indx=1;
+            for(SpNode *node=here.head;node;node=node->next,++indx)
+            {
+                const Species &sp = **node;
+                Coerce(sp.indx[AuxLevel]) = indx;
+            }
         }
 
 

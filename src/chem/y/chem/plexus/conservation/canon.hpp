@@ -76,7 +76,7 @@ namespace Yttrium
             //__________________________________________________________________
             bool accepts(const Conservation &) const noexcept; //!< true if sharing a species
             bool accepts(const Canon &)        const noexcept; //!< true if sharing a species
-            void compile();                                    //!< make repo
+            void compile();                                    //!< make repo/aux indices
 
             //__________________________________________________________________
             //
