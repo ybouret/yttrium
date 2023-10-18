@@ -56,7 +56,6 @@ namespace Yttrium
                 inline friend std::ostream & operator<<(std::ostream &os, const Excess &xs)
                 {
                     os << std::setw(15) << double(xs.data) << " = " << xs.host;
-                    //os << xs.host << "=" << double(xs.data) << ":rank=" << double(xs.rank);
                     return os;
                 }
 
@@ -79,47 +78,71 @@ namespace Yttrium
 
             inline virtual ~Code() noexcept {}
 
-            inline explicit Code() : Object(), xadd(), accum(), mlist(), mpool()
+            inline explicit Code() : Object(), issue(), xadd(), accum(), mlist(), mpool()
             {
             }
 
 
 
-            inline void run(const Canon     &canon,
-                            Writable<xreal> &C0,
-                            XMLog           &xml)
+            inline bool corrected(const Canon     &canon,
+                                  Writable<xreal> &Corg,
+                                  Writable<xreal> &Cerr,
+                                  XMLog           &xml)
             {
                 Y_XML_SECTION_OPT(xml, "Guardian", " size='" << canon.size << "'");
                 setup(canon);
 
                 //--------------------------------------------------------------
                 //
-                // first pass
+                // first pass : populate issue and clear error
                 //
                 //--------------------------------------------------------------
+                bool modified = false;
                 issue.free();
                 for(const Canon::NodeType *node=canon.head;node;node=node->next)
                 {
                     const Conservation &cons = **node;
-                    const xreal         xs   = cons.excess(C0,xadd);
+                    const xreal         xs   = cons.excess(Corg,xadd);
                     const bool          bad  = xs.mantissa<0;
                     Y_XMLOG(xml, (bad? " (-) " : " (+) " ) << std::setw(15) << double(xs) << " = " << cons);
                     if(bad)
                     {
                         issue << Excess(cons,xs);
+                        modified = true;
                     }
                 }
+
+
 
             CYCLE:
                 if(issue.size<=0)
                 {
-                    Y_XMLOG(xml, "  |-- no issue found");
-                    return;
+                    if(modified)
+                    {
+                        Y_XMLOG(xml, "  |-- no more issue found");
+                        // expand errors
+                        size_t i = 1;
+                        for(const SpNode *node=canon.repo.head;node;node=node->next,++i)
+                        {
+                            const Species &sp = **node;
+                            Cerr[sp.indx[TopLevel]] = accum[i]->sum();
+                        }
+                        return true;
+                    }
+                    else
+                    {
+                        Y_XMLOG(xml, "  |-- no issue found");
+                        for(const SpNode *node=canon.repo.head;node;node=node->next)
+                        {
+                            const Species &sp = **node;
+                            Cerr[sp.indx[TopLevel]] = 0;
+                        }
+                        return false;
+                    }
                 }
-                else
-                {
-                    Y_XMLOG(xml, "  |-- processing #issue=" << issue.size);
-                }
+
+                Y_XMLOG(xml, "  |-- processing #issue=" << issue.size);
+
                 //--------------------------------------------------------------
                 //
                 // find smallest rank
@@ -150,10 +173,11 @@ namespace Yttrium
                     {
                         const xreal    dC = (a->xn * num)/den;
                         const Species &sp = a->sp;
-                        C0[sp.indx[TopLevel]] += dC;
+                        Y_XMLOG(xml, "  |-- [+" << std::setw(15) << double(dC) << "] @" << sp);
+                        Corg[sp.indx[TopLevel]] += dC;
                         accum[sp.indx[AuxLevel]]->insert(dC);
                     }
-                    Y_XMLOG(xml, "  |-- " << double(num) << " -> " << double(cns.excess(C0,xadd)) );
+                    Y_XMLOG(xml, "  |-- " << double(num) << " -> " << double(cns.excess(Corg,xadd)) );
                 }
 
                 //--------------------------------------------------------------
@@ -174,7 +198,7 @@ namespace Yttrium
                     {
                         XsNode     *node = issue.head;
                         Excess     &temp = (**node);
-                        const xreal left = temp.host.excess(C0,xadd);
+                        const xreal left = temp.host.excess(Corg,xadd);
                         if(left.mantissa<0)
                         {
                             // still active
@@ -251,16 +275,16 @@ namespace Yttrium
 
         Guardian:: Guardian() : code( new Code() )
         {
-            std::cerr << "sizeof(Guadian::Code)=" << sizeof(Code) << std::endl;
-            std::cerr << "sizeof(Monitor)      =" << sizeof(Monitor) << std::endl;
+
         }
 
-        void Guardian:: run(const Canon     &canon,
-                            Writable<xreal> &C0,
-                            XMLog           &xml)
+        bool Guardian:: corrected(const Canon     &canon,
+                                  Writable<xreal> &Corg,
+                                  Writable<xreal> &Cerr,
+                                  XMLog           &xml)
         {
             assert(0!=code);
-            code->run(canon, C0, xml);
+            return code->corrected(canon, Corg, Cerr, xml);
         }
 
 

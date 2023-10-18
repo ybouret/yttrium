@@ -40,9 +40,10 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! TODO
-            void run(const Canon     &canon,
-                     Writable<xreal> &C0,
-                     XMLog           &xml);
+            bool corrected(const Canon     &canon,
+                           Writable<xreal> &Corg,
+                           Writable<xreal> &Cerr,
+                           XMLog           &xml);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Guardian);

@@ -29,14 +29,13 @@ Y_UTEST(guardian)
     XMLog            xml(verbose);
     Chemical::Plexus plexus(eqs,xml,0.0);
 
-    Vector<Chemical::xreal> C0(lib->size(),0);
+    Vector<Chemical::xreal> C0(lib->size(),0), Cerr(lib->size(),0);
     lib.fill(C0, ran);
     for(size_t i=C0.size();i>0;--i)
     {
         if( ran.to<double>() > 0.7 ) C0[i] = -C0[i];
     }
-    //lib(std::cerr << "C0=","  [",C0,"]");
-    lib(std::cerr << "C0=","  [",C0,"]",Chemical::Conv::X2R);
+    lib(std::cerr << "Corg=","  [",C0,"]",Chemical::Conv::X2R);
 
 
     Chemical::Guardian guardian;
@@ -45,9 +44,13 @@ Y_UTEST(guardian)
         Y_XML_SECTION(xml, "Cluster");
         for(const Chemical::Canon *canon=cluster->law.head;canon;canon=canon->next)
         {
-            guardian.run(*canon,C0,xml);
+            guardian.corrected(*canon,C0,Cerr,xml);
         }
     }
+
+    lib(std::cerr << "Corg=","  [",C0,  "]",Chemical::Conv::X2R);
+    lib(std::cerr << "Cerr=","  [",Cerr,"]",Chemical::Conv::X2R);
+
 
 
 }
