@@ -28,6 +28,8 @@ Y_UTEST(plexus)
 
     std::cerr << eqs << std::endl;
 
+    plexus.graphViz();
+    
     for(size_t order=1;order<=plexus.maxOrder;++order)
     {
         const String id = FormatString("plexus%u.dot",unsigned(order));

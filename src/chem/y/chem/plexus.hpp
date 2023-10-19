@@ -47,6 +47,9 @@ namespace Yttrium
             void graphViz(OutputStream &fp, const size_t order=1) const;
 
 
+            //! render all orders
+            void graphViz() const;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Plexus);
             virtual ConstInterface & surrogate() const noexcept;
