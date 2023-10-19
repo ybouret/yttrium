@@ -86,8 +86,8 @@ namespace Yttrium
             const CxxListOf<Conservation> cll;  //!< conservation law list
             const CxxListOf<Canon>        law;  //!< list of parallel canons
             const AutoPtr<const Tier>     tier; //!< species tier
+            
             const AutoPtr<const Army>     army; //!< equilibria army
-
             const Matrix<int>             Nu;    //!< main topology
             const Matrix<unsigned>        Qm;    //!< conservation matrix
             const AutoPtr<const EqGroup>  meg;   //!< Mixed Equilibria Groups

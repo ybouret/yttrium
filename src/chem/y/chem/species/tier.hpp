@@ -5,6 +5,7 @@
 #define Y_Chemical_Species_Tier_Included 1
 
 #include "y/chem/species.hpp"
+#include "y/associative/address-book.hpp"
 
 namespace Yttrium
 {
@@ -34,8 +35,9 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const SpRepo limited; //!< limited concentrations
-            const SpRepo roaming; //!< roaming concentrations
+            const AddressBook limited; //!< limited concentrations
+            const AddressBook roaming; //!< roaming concentrations
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tier);
         };

@@ -244,16 +244,48 @@ namespace Yttrium
                 Coerce(eq.indx[SubLevel]) = all.size;
             }
 
+            //--------------------------------------------------------------
+            //
+            // checking and building armies
+            //
+            //--------------------------------------------------------------
             {
+                Y_XML_SECTION(xml, "Army");
                 size_t       i = 1;
                 for(const EqNode *node=all.head;node;node=node->next,++i)
                 {
                     const Equilibrium &eq = **node;
                     if(i!=eq.indx[SubLevel])
                         throw Specific::Exception("Chemical::Cluster", "<%s> bad id!", eq.name.c_str());
+
+                    static const unsigned HasReac = 0x01;
+                    static const unsigned HasProd = 0x02;
+                    static const unsigned HasBoth = HasReac | HasProd;
+                    unsigned              flag    = 0x00;
+
+                    if(eq.reac.size>0) flag |= HasReac;
+                    if(eq.prod.size>0) flag |= HasProd;
+                    
+                    switch( flag )
+                    {
+                        case 0x00:    throw Specific::Exception(eq.name.c_str(), "unexpected empty equilibrium");
+                        case HasProd: Coerce(army->prodOnly) << eq; break;
+                        case HasReac: Coerce(army->reacOnly) << eq; break;
+                        case HasBoth:
+                            break;
+                    }
+
                 }
+                Y_XMLOG(xml,"ProdOnly: " << army->prodOnly);
+                Y_XMLOG(xml,"ReacOnly: " << army->reacOnly);
+
             }
 
+            //--------------------------------------------------------------
+            //
+            // hierarchy
+            //
+            //--------------------------------------------------------------
             {
                 Y_XML_SECTION_OPT(xml,"Hierarchy"," order='" << meg->size() << "'");
                 for(size_t i=1;i<=meg->size();++i)
@@ -261,6 +293,10 @@ namespace Yttrium
                     Y_XMLOG(xml,(*meg)[i]);
                 }
             }
+
+            Y_XMLOG(xml, "-- connected: from " << N << " to " << all.size);
+
+
 
         }
     }

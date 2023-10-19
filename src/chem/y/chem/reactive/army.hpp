@@ -10,13 +10,15 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        class Army
+        class Army : public Object
         {
         public:
             explicit Army() noexcept;
             virtual ~Army() noexcept;
             
-
+            const EqRepo prodOnly;
+            const EqRepo reacOnly;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Army);
         };

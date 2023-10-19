@@ -29,6 +29,8 @@ Y_UTEST(guardian)
     XMLog            xml(verbose);
     Chemical::Plexus plexus(eqs,xml,0.0);
 
+    std::cerr << "eqs=" << eqs << std::endl;
+
     Vector<Chemical::xreal> C0(lib->size(),0), Cerr(lib->size(),0);
     lib.fill(C0, ran);
     for(size_t i=C0.size();i>0;--i)

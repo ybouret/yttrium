@@ -15,6 +15,12 @@ namespace Yttrium
                 assert(sdb->size()==M);
 
                 Y_XML_SECTION_OPT(xml, "Conservation", " count='" << Nc << "'");
+
+                //--------------------------------------------------------------
+                //
+                // probe conservation matrix
+                //
+                //--------------------------------------------------------------
                 AddressBook conserved;
                 for(size_t i=1;i<=Nc;++i)
                 {
@@ -34,16 +40,23 @@ namespace Yttrium
                 }
                 makeCanons(xml);
 
+                //--------------------------------------------------------------
+                //
+                // dispatch species
+                //
+                //--------------------------------------------------------------
                 for(const SpNode *node=lib.head;node;node=node->next)
                 {
                     const Species &sp = **node;
                     if(conserved.search(sp))
                     {
-                        Coerce(tier->limited) << **node;
+                        Coerce(tier->limited) += sp;
+                        Y_XMLOG(xml, "  --> limited " << sp);
                     }
                     else
                     {
-                        Coerce(tier->roaming) << **node;
+                        Coerce(tier->roaming) += sp;
+                        Y_XMLOG(xml, "  --> roaming " << sp);
                     }
                 }
             }
@@ -52,12 +65,10 @@ namespace Yttrium
                 Y_XMLOG(xml,"-- No conserved species...");
                 for(const SpNode *node=lib.head;node;node=node->next)
                 {
-                    Coerce(tier->roaming) << **node;
+                    Coerce(tier->roaming) += **node;
                 }
             }
 
-            Y_XMLOG(xml, "-- limited: " << tier->limited);
-            Y_XMLOG(xml, "-- roaming: " << tier->roaming);
 
         }
     }
