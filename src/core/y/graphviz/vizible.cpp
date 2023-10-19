@@ -79,7 +79,7 @@ namespace Yttrium
         return Node(Node(fp,src) << " -> ",dst);
     }
 
-    
+
     static inline
     void emitLabel(OutputStream &fp, const char *msg, size_t len)
     {
@@ -108,7 +108,52 @@ namespace Yttrium
         return fp;
     }
 
+}
 
+
+#include "y/text/ascii/convert.hpp"
+
+namespace Yttrium
+{
+
+    OutputStream &Vizible:: Color(OutputStream &fp, const String &scheme, unsigned indx)
+    {
+        const size_t len = scheme.size();
+        fp << '"';
+        if(len>0)
+        {
+            String num;
+            for(size_t i=len;i>0;--i)
+            {
+                const char c = scheme[i];
+                if(isdigit(c)) 
+                {
+                    num.pushHead(c);
+                    continue;
+                }
+                break;
+            }
+            if(num.size()>0)
+            {
+                const unsigned total = ASCII::Convert::To<unsigned>(num,"color range");
+                if(total>0)
+                {
+                    indx = indx%total;
+                    if(indx<=0) indx=total;
+                }
+            }
+            fp << '/' << scheme << '/';
+        }
+        fp("%u", indx);
+        fp << '"';
+        return fp;
+    }
+
+    OutputStream &Vizible:: Color(OutputStream &fp, const char *scheme, unsigned indx)
+    {
+        const String _(scheme);
+        return Color(fp,_,indx);
+    }
 
 }
 

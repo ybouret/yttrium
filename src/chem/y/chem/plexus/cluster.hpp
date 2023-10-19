@@ -114,12 +114,14 @@ namespace Yttrium
             //__________________________________________________________________
             const EqRepo                  all;  //!< list of ALL equilibria
             const SpRepo                  lib;  //!< list of active species
-            const EqNode * const          last; //!< first NOT PRIMARY equilibrium
+            const EqNode * const          last; //!< first NOT PRIMARY equilibrium in all
             const AutoPtr<const EqArray>  edb;  //!< PRIMARY equilibria database
             const AutoPtr<const SpArray>  sdb;  //!< species database
+
             const CxxListOf<Conservation> cll;  //!< conservation law list
             const CxxListOf<Canon>        law;  //!< list of parallel canons
             const Tier                    tier; //!< species tier
+            
             const Matrix<int>             Nu;    //!< main topology
             const Matrix<unsigned>        Qm;    //!< conservation matrix
             const AutoPtr<const EqGroup>  meg;   //!< Mixed Equilibria Groups

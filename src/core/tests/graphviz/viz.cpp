@@ -16,6 +16,7 @@ Y_UTEST(graphviz)
         Vizible::Node(fp,&A); //A.node(fp);
         fp << "[";
         Vizible::Label(fp, "A");
+        Vizible::Color(fp << ", color=", "accent5", 4);
         fp << "]";
         Vizible::Endl(fp);
 
@@ -26,8 +27,8 @@ Y_UTEST(graphviz)
         Vizible::Leave(fp);
     }
 
-    Vizible::Render("viz.png", "viz.dot");
-    
+    Vizible::Render("viz.png", "viz.dot", true);
+
 
 
 }

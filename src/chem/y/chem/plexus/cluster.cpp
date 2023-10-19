@@ -171,21 +171,33 @@ namespace Yttrium
             const EqRepo * const repo = & ((*meg)[order]);
             AddressBook          book;
 
+            //------------------------------------------------------------------
+            //
             // fill species
+            //
+            //------------------------------------------------------------------
             for(const EqNode *node=repo->head;node;node=node->next)
             {
                 const Equilibrium &eq = **node;
                 eq.insertSpeciesIn(book);
             }
 
+            //------------------------------------------------------------------
+            //
             // write all species
+            //
+            //------------------------------------------------------------------
             for(AddressBook::Iterator it=book.begin();it!=book.end();++it)
             {
                 const Species &sp = *static_cast<const Species *>(*it);
                 sp.viz(fp);
             }
 
+            //------------------------------------------------------------------
+            //
             // write all eqs
+            //
+            //------------------------------------------------------------------
             for(EqNode *node=repo->head;node;node=node->next)
             {
                 (**node).viz(fp);

@@ -46,7 +46,8 @@ namespace Yttrium
         static OutputStream &Label(OutputStream &, const void   *, const size_t);           //!< label="...
         static OutputStream &Label(OutputStream &, const String &);                         //!< label="..."
         static OutputStream &Label(OutputStream &, const char   *);                         //!< label="...
-
+        static OutputStream &Color(OutputStream &, const String &scheme, unsigned indx);    //!< emit \"/schemeXX/indx\" or \"indx\"
+        static OutputStream &Color(OutputStream &, const char   *scheme, unsigned indx);    //!< emit \"/schemeXX/indx\" or \"indx\"
 
         static void Enter(OutputStream &fp, const String &graphName); //!< start  a directed graph
         static void Enter(OutputStream &fp, const char   *graphName); //!< start  a directed graph
