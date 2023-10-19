@@ -6,7 +6,11 @@ namespace Yttrium
     namespace Chemical
     {
 
-        Army:: Army() noexcept : Object(), prodOnly(), reacOnly()
+        Army:: Army() noexcept : 
+        Object(),
+        prodOnly(),
+        reacOnly(),
+        spurious()
         {
         }
 

@@ -16,9 +16,10 @@ namespace Yttrium
             explicit Army() noexcept;
             virtual ~Army() noexcept;
             
-            const EqRepo prodOnly;
-            const EqRepo reacOnly;
-            
+            const EqRepo prodOnly; //!< with only (roaming) product  species
+            const EqRepo reacOnly; //!< with only (roaming) reactant species
+            const EqRepo spurious; //!< with both side of roaming species
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Army);
         };

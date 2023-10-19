@@ -272,7 +272,9 @@ namespace Yttrium
                         case HasProd: Coerce(army->prodOnly) << eq; break;
                         case HasReac: Coerce(army->reacOnly) << eq; break;
                         case HasBoth:
+
                             break;
+                            
                     }
 
                 }
