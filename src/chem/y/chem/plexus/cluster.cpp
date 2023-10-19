@@ -203,7 +203,14 @@ namespace Yttrium
                 (**node).viz(fp);
             }
             
-
+            if(1==order)
+            {
+                size_t indx=1;
+                for(const Canon *canon=law.head;canon;canon=canon->next)
+                {
+                    canon->viz(fp,indx);
+                }
+            }
         }
 
     }

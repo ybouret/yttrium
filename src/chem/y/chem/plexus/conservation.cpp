@@ -33,7 +33,6 @@ namespace Yttrium
 
 
 
-
         Conservation::ConstInterface & Conservation:: surrogate() const noexcept
         {
             return actors;
@@ -55,7 +54,6 @@ namespace Yttrium
 
         bool Conservation:: linkedTo(const Conservation &other) const noexcept
         {
-            //std::cerr << "check " << *this << " and " << other << std::endl;
             for(const Actor *ac=other->head;ac;ac=ac->next)
             {
                 if( actors.has(ac->sp) ) return true;
@@ -75,7 +73,38 @@ namespace Yttrium
             return xadd.sum();
         }
 
+        const char * const Conservation:: SchemeId = "set19";
 
+        void Conservation:: lnk(OutputStream &fp, const Actor *h, const Actor *t, const size_t indx) const
+        {
+            Arrow(fp, &(h->sp), &(t->sp));
+            fp << '[';
+            fp << "dir=both";
+            fp << ", arrowhead=odot";
+            fp << ", arrowtail=odot";
+            fp << ", style=\"dashed,bold\"";
+            Color(fp<< ", color=", SchemeId, indx);
+            fp << ']';
+            Endl(fp);
+        }
+
+
+        void Conservation:: viz(OutputStream &fp, const size_t indx) const
+        {
+            const Actor *h = actors.head; if(!h) return;
+        LOOP:
+            const Actor * const t = h->next;
+            if(!t) goto CYCLIC;
+            lnk(fp,h,t,indx);
+            h = t;
+            goto LOOP;
+
+        CYCLIC:
+            if(actors.size>2)
+            {
+                lnk(fp,actors.tail,actors.head,indx);
+            }
+        }
     }
 
 }

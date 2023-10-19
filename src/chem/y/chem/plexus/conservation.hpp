@@ -18,9 +18,11 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Conservation : public Object, public Proxy<const Actors>
+        class Conservation : public Object, public Proxy<const Actors>, public GraphViz::Vizible
         {
         public:
+            static const char * const SchemeId; //!< default color scheme
+
             //__________________________________________________________________
             //
             //
@@ -50,6 +52,8 @@ namespace Yttrium
             //! compute excess
             xreal excess(const Readable<xreal> &C0, XAdd &xadd) const;
 
+            //! display links between species
+            void viz(OutputStream &, const size_t indx) const;
 
             //__________________________________________________________________
             //
@@ -61,6 +65,8 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Conservation);
             virtual ConstInterface & surrogate() const noexcept;
+            void    lnk(OutputStream &, const Actor *h, const Actor *t, const size_t indx) const;
+
             Actors   actors;
             unsigned normSq;
 

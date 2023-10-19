@@ -26,8 +26,11 @@ Y_GV_CS_3_8(NAME),        \
             Y_GV_CS_3_8(dark2),
             Y_GV_CS_3_9(blues),
             Y_GV_CS_3_9(greens),
-            Y_GV_CS_3_9(oranges)
-
+            Y_GV_CS_3_9(oranges),
+            Y_GV_CS_3_9(pastel1),
+            Y_GV_CS_3_8(pastel2),
+            Y_GV_CS_3_9(set1),
+            Y_GV_CS_3_8(set2)
         };
 
         const size_t ColorScheme:: Count = sizeof(Table)/sizeof(Table[0]);

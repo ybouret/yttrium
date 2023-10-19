@@ -67,6 +67,14 @@ namespace Yttrium
             }
         }
 
+        void Canon:: viz(OutputStream &fp, size_t &indx) const
+        {
+            for(const NodeType *node=head;node;node=node->next,++indx)
+            {
+                const Conservation &cons = **node;
+                cons.viz(fp,indx);
+            }
+        }
 
     }
 
