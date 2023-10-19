@@ -10,7 +10,8 @@ namespace Yttrium
         Object(),
         prodOnly(),
         reacOnly(),
-        spurious()
+        spurious(),
+        definite()
         {
         }
 

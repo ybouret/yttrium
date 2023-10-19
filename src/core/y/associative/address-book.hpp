@@ -54,7 +54,7 @@ namespace Yttrium
 
 
         //! search an object's address
-        template <typename T> inline bool search(T &obj) { return search_( &obj ); }
+        template <typename T> inline bool search(T &obj) const { return search_( &obj ); }
 
         //! insert a new object's address
         template <typename T> inline bool insert(T &obj) { return insert_( &obj ); }

@@ -35,9 +35,9 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const AddressBook limited; //!< limited concentrations
-            const AddressBook roaming; //!< roaming concentrations
-            
+            const AddressBook conserved; //!< conserved species
+            const AddressBook unbounded; //!< unbounded species
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tier);
         };

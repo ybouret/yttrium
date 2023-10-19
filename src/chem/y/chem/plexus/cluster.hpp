@@ -99,6 +99,7 @@ namespace Yttrium
             void createCons(XMLog &);               //!< create all conservation laws
             void makeCanons(XMLog &);               //!< create canons of conserved laws
             void connectAll(XMLog &, Equilibria &, const Readable<xreal> &); //!< connect all
+            void createArmy(XMLog &);
         };
 
         typedef CxxListOf<Cluster> Clusters; //!< alias

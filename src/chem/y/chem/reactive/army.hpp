@@ -19,6 +19,7 @@ namespace Yttrium
             const EqRepo prodOnly; //!< with only (roaming) product  species
             const EqRepo reacOnly; //!< with only (roaming) reactant species
             const EqRepo spurious; //!< with both side of roaming species
+            const EqRepo definite; //!< at least one conserved on each side
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Army);
