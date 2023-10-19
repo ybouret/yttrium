@@ -1,4 +1,5 @@
 #include "y/graphviz/vizible.hpp"
+#include "y/graphviz/color-scheme.hpp"
 #include "y/utest/run.hpp"
 #include "y/stream/libc/output.hpp"
 #include <cstdlib>
@@ -30,6 +31,7 @@ Y_UTEST(graphviz)
 
     Vizible::Render("viz.png", "viz.dot", true);
 
+    std::cerr << "#ColorScheme: " << ColorScheme::Count << std::endl;
 
 
 }

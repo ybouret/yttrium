@@ -50,7 +50,7 @@ namespace Yttrium
             bool accepts(const Conservation &) const noexcept; //!< true if sharing a species
             bool accepts(const Canon &)        const noexcept; //!< true if sharing a species
             void compile();                                    //!< make repo and build aux-level indices
-            void viz(OutputStream &fp, size_t &indx) const;
+            void viz(OutputStream &fp, size_t &indx) const;    //!< display conservation, increase indices
 
             //__________________________________________________________________
             //

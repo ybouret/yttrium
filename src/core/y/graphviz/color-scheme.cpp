@@ -20,6 +20,18 @@ namespace Yttrium
 Y_GV_CS_3_8(NAME),        \
 { #NAME "9", 9 }
 
+#define Y_GV_CS_3_10(NAME) \
+Y_GV_CS_3_9(NAME),         \
+{ #NAME "10", 10 }
+
+#define Y_GV_CS_3_11(NAME) \
+Y_GV_CS_3_10(NAME),        \
+{ #NAME "11", 11 }
+
+#define Y_GV_CS_3_12(NAME) \
+Y_GV_CS_3_11(NAME),        \
+{ #NAME "12", 12 }
+
         const ColorScheme ColorScheme::Table[] =
         {
             Y_GV_CS_3_8(accent),
@@ -30,7 +42,9 @@ Y_GV_CS_3_8(NAME),        \
             Y_GV_CS_3_9(pastel1),
             Y_GV_CS_3_8(pastel2),
             Y_GV_CS_3_9(set1),
-            Y_GV_CS_3_8(set2)
+            Y_GV_CS_3_8(set2),
+            Y_GV_CS_3_12(set3),
+            Y_GV_CS_3_11(spectral)
         };
 
         const size_t ColorScheme:: Count = sizeof(Table)/sizeof(Table[0]);
