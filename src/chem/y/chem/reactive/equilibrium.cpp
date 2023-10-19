@@ -21,6 +21,36 @@ namespace Yttrium
             return os << '<' << eq.name << '>';
         }
 
+        const char * const Equilibrium:: SchemeId = "dark27";
+
+        void Equilibrium:: vizColor(OutputStream &fp) const
+        {
+            Color(fp << "color=",     SchemeId, indx[SubLevel]);
+            Color(fp << ", fontcolor=", SchemeId, indx[SubLevel]);
+        }
+
+        void Equilibrium:: vizArrow(OutputStream &fp, const Vizible *v, const bool to, const unsigned nu) const
+        {
+            assert(0!=v);
+            if(to)
+            {
+                Arrow(fp,this,v);
+            }
+            else
+            {
+                Arrow(fp,v,this);
+            }
+            fp << '[';
+            vizColor(fp);
+            if(nu>1)
+            {
+                fp(", label=\"%u\"",nu);
+            }
+            fp << ']';
+            Endl(fp);
+        }
+
+
         void Equilibrium:: viz(OutputStream &fp) const
         {
             Node(fp,this);
@@ -32,33 +62,23 @@ namespace Yttrium
             if(prod.size<=0)
                 shape = "trapezium";
             fp << ", shape=" << shape;
+            vizColor(fp<<", ");
+
             fp << ']';
             Endl(fp);
 
             for(const Actor *a=reac.head;a;a=a->next)
-            {
-                Arrow(fp, &(a->sp), this);
-                if(a->nu>1)
-                {
-                    fp("[label=\"%u\"]",a->nu);
-                }
-                Endl(fp);
-            }
+                vizArrow(fp, &(a->sp), false, a->nu);
 
             for(const Actor *a=prod.head;a;a=a->next)
-            {
-                Arrow(fp, this, &(a->sp) );
-                if(a->nu>1)
-                {
-                    fp("[label=\"%u\"]",a->nu);
-                }
-                Endl(fp);
-            }
+                vizArrow(fp, &(a->sp), true, a->nu);
+
         }
 
         void Equilibrium:: graphViz(OutputStream &fp) const
         {
             Enter(fp,name);
+
             for(const Actor *a=reac.head;a;a=a->next)
             {
                 a->sp.viz(fp);

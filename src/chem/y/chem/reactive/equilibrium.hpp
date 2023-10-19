@@ -28,9 +28,10 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef ArkPtr<String,Equilibrium> Pointer; //!< alias
+            typedef ArkPtr<String,Equilibrium> Pointer;  //!< alias
             typedef SuffixSet<String,Pointer>  DataBase; //!< alias
-            
+            static const char * const          SchemeId; //!< default GraphViz scheme
+
             //__________________________________________________________________
             //
             //
@@ -39,6 +40,7 @@ namespace Yttrium
             //__________________________________________________________________
             virtual ~Equilibrium() noexcept; //!< cleanup
             Y_OSTREAM_PROTO(Equilibrium);    //!< "<name>"
+     
         protected:
             //! setup with identifier
             template <typename ID> inline
@@ -51,15 +53,16 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            xreal K(double t);               //!< check the return value of internal getK(t)
-            void  viz(OutputStream &) const; //!< name + links
-
+            xreal K(double t);                      //!< check the return value of internal getK(t)
+            void  viz(OutputStream &)        const; //!< name + links
             void  graphViz(OutputStream &fp) const; //!< all species + this
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);
             virtual xreal getK(double) = 0;
+            void    vizColor(OutputStream &fp) const;
+            void    vizArrow(OutputStream &fp, const Vizible *v, const bool to, const unsigned nu) const;
         };
 
 

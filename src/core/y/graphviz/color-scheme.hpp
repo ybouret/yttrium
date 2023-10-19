@@ -17,7 +17,7 @@ namespace Yttrium
         struct ColorScheme
         {
             const char * const         name;    //!< names
-            const unsigned             size;    //!< colors per name
+            const size_t               size;    //!< colors per name
             static const ColorScheme   Table[]; //!< global table
             static const size_t        Count;   //!< number of available schemes
 
