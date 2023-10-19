@@ -10,18 +10,25 @@ namespace Yttrium
 {
     namespace MKL
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Bisection+Ridder's Method
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class ZRid : public ZFind<T>
         {
         public:
-            typedef typename ZFind<T>::FunctionType FunctionType;
+            typedef typename ZFind<T>::FunctionType FunctionType; //!< alias
 
-            explicit ZRid() noexcept;
-            virtual ~ZRid() noexcept;
+            explicit ZRid() noexcept; //!< setup
+            virtual ~ZRid() noexcept; //!< cleanup
 
-            virtual const char *callSign() const noexcept;
-            virtual void        lookup(Triplet<T> &x, Triplet<T> &f, FunctionType &F);
+            virtual const char *callSign() const noexcept;                             //!< "MKL::ZRid"
+            virtual void        lookup(Triplet<T> &x, Triplet<T> &f, FunctionType &F); //!< algorithm
 
 
         private:

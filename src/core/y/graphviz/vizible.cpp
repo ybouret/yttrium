@@ -114,7 +114,7 @@ namespace Yttrium
 }
 
 
-#include "y/text/ascii/convert.hpp"
+#include "y/graphviz/color-scheme.hpp"
 
 namespace Yttrium
 {
@@ -122,35 +122,21 @@ namespace Yttrium
     {
         OutputStream &Vizible:: Color(OutputStream &fp, const String &scheme, unsigned indx)
         {
-            const size_t len = scheme.size();
             fp << '"';
+            const size_t len = scheme.size();
             if(len>0)
             {
-                String num;
-                for(size_t i=len;i>0;--i)
-                {
-                    const char c = scheme[i];
-                    if(isdigit(c))
-                    {
-                        num.pushHead(c);
-                        continue;
-                    }
-                    break;
-                }
-                if(num.size()>0)
-                {
-                    const unsigned total = ASCII::Convert::To<unsigned>(num,"color range");
-                    if(total>0)
-                    {
-                        indx = indx%total;
-                        if(indx<=0) indx=total;
-                    }
-                }
+                const ColorScheme *s = ColorScheme::Get(scheme.c_str()); assert(0!=s); assert(scheme==s->name);
+                const unsigned     n = s->size;
+                indx = indx%n;
+                if(indx<=0) indx=n;
                 fp << '/' << scheme << '/';
             }
             fp("%u", indx);
+
             fp << '"';
             return fp;
+            
         }
 
         OutputStream &Vizible:: Color(OutputStream &fp, const char *scheme, unsigned indx)
@@ -188,14 +174,14 @@ namespace Yttrium
                 }
             }
         }
-        
+
         OutputStream * Vizible:: OpenFile(const String &dotFile)
         {
             const String ext = VFS::Extension(dotFile);
             if(ext != ".dot") throw Specific::Exception("Vizible::OpenFile","invalid extension '%s'", ext() );
             return new Libc::OutputFile(dotFile);
         }
-        
+
         void Vizible:: RenderPNG(const String &dotFile, const bool keepDot)
         {
             String pngFile = VFS::ChangeExtension("png", dotFile);
