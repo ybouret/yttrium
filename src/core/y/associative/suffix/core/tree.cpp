@@ -13,7 +13,7 @@ namespace Yttrium
         {
             class                      SuffixNode;
             typedef ListOf<SuffixNode> SuffixList;
-
+            using namespace            GraphViz;
             //__________________________________________________________________
             //
             //

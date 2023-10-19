@@ -461,7 +461,7 @@ namespace Yttrium
         {
             assert(0!=code);
             const String      dotFileName = VFS::ChangeExtension("dot", *name);
-            Vizible::GraphViz(dotFileName,*this,keepDot);
+            GraphViz::Vizible::DotToPng(dotFileName,*this,keepDot);
         }
     }
 

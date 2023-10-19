@@ -4,6 +4,7 @@
 #include <cstdlib>
 
 using namespace Yttrium;
+using namespace GraphViz;
 
 Y_UTEST(graphviz)
 {

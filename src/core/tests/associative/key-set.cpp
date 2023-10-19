@@ -51,7 +51,7 @@ Y_UTEST(associative_key_set)
     kset.add(1);
     kset.add(2);
     kset.add(3);
-    Vizible::GraphViz("kset.dot", kset, true);
+    GraphViz::Vizible::DotToPng("kset.dot", kset, true);
 
     std::cerr << kset << std::endl;
 

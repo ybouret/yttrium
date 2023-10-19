@@ -80,7 +80,7 @@ Y_UTEST(grammar)
         std::cerr << "tree isValid=" << tree.isValid() << std::endl;
         if(tree.isValid())
         {
-            Vizible::GraphViz("grammar-tree.dot",*tree,true);
+            GraphViz::Vizible::DotToPng("grammar-tree.dot",*tree,true);
         }
     }
 

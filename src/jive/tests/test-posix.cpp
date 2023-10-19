@@ -30,7 +30,7 @@ void testPosix( Jive::Pattern *p, const char *id)
     }
 
     const String dotFile = root + ".dot";
-    Vizible::GraphViz(dotFile,*p);
+    GraphViz::Vizible::DotToPng(dotFile,*p);
 
 }
 

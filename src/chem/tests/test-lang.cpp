@@ -21,7 +21,7 @@ Y_UTEST(lang)
         Jive::Syntax::XTree ast = chemlang( Jive::Module::Open( argv[1]) );
         if(ast.isValid())
         {
-            Vizible::GraphViz( "chem.dot", *ast);
+            GraphViz::Vizible::DotToPng( "chem.dot", *ast);
             Chemical::Linker linker;
             linker(*ast,lib,eqs);
         }

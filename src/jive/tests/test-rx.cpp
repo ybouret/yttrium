@@ -27,7 +27,7 @@ Y_UTEST(rx)
         std::cerr << "-- saving..." << std::endl;
         P->toBinary("rx.dat");
         std::cerr << "-- rendering..." << std::endl;
-        Vizible::GraphViz("rx.dot",*P);
+        GraphViz::Vizible::DotToPng("rx.dot",*P);
         Jive::FirstChars fc;
         P->query(fc);
 
@@ -36,7 +36,7 @@ Y_UTEST(rx)
         {
             std::cerr << "-- rendering..." << std::endl;
             const AutoPtr<Jive::Pattern> q = fc.makeOr();
-            Vizible::GraphViz("fc.dot",*q);
+            GraphViz::Vizible::DotToPng("fc.dot",*q);
         }
     }
 

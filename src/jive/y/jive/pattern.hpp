@@ -27,7 +27,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Pattern : public Object, public Counted, public Token, public Serializable, public Vizible
+        class Pattern : public Object, public Counted, public Token, public Serializable, public GraphViz:: Vizible
         {
         public:
             //__________________________________________________________________

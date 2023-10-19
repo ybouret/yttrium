@@ -40,7 +40,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class XNode : public Object, public Vizible
+            class XNode : public Object, public GraphViz:: Vizible
             {
             public:
                 //______________________________________________________________

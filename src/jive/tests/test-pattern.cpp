@@ -37,7 +37,7 @@ static inline void testPattern(Pattern &p)
 
 
     const String dotName = root + ".dot";
-    Vizible::GraphViz(dotName,p);
+    GraphViz::Vizible::DotToPng(dotName,p);
 
 
     std::cerr << std::endl;

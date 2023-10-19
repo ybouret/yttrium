@@ -7,107 +7,110 @@
 
 namespace Yttrium
 {
-    Vizible:: ~Vizible() noexcept
+    namespace GraphViz
     {
-    }
-
-    Vizible:: Vizible() noexcept
-    {
-    }
-
-    void Vizible:: Enter(OutputStream &fp, const String &graphName)
-    {
-        fp << "digraph " << graphName << " {\n";
-    }
-
-    void Vizible:: Enter(OutputStream &fp, const char *graphName)
-    {
-        const String _(graphName);
-        Enter(fp,_);
-    }
-
-    void Vizible:: Leave(OutputStream &fp)
-    {
-        fp << "}\n";
-    }
-
-
-    OutputStream & Vizible:: Addr(OutputStream &fp, const void *ptr)
-    {
-        return fp << 'n' << Hexadecimal::Address(ptr);
-    }
-
-    OutputStream & Vizible:: Node(OutputStream &fp, const Vizible *viz)
-    {
-        return Addr(fp,viz);
-    }
-
-
-    OutputStream & Vizible:: Endl(OutputStream &fp)
-    {
-        return fp << ";\n";
-    }
-
-    static inline
-    void emitASCII(OutputStream &fp, const char *msg, size_t len)
-    {
-        assert(Good(msg,len));
-        while(len-- > 0)
+        Vizible:: ~Vizible() noexcept
         {
-            const uint8_t byte = uint8_t(*(msg++));
-            const char   *data =ASCII::Embedding::Char[byte];
-            //std::cerr << "emit '" << data << "'" << std::endl;
-            fp << data;
         }
+
+        Vizible:: Vizible() noexcept
+        {
+        }
+
+        void Vizible:: Enter(OutputStream &fp, const String &graphName)
+        {
+            fp << "digraph " << graphName << " {\n";
+        }
+
+        void Vizible:: Enter(OutputStream &fp, const char *graphName)
+        {
+            const String _(graphName);
+            Enter(fp,_);
+        }
+
+        void Vizible:: Leave(OutputStream &fp)
+        {
+            fp << "}\n";
+        }
+
+
+        OutputStream & Vizible:: Addr(OutputStream &fp, const void *ptr)
+        {
+            return fp << 'n' << Hexadecimal::Address(ptr);
+        }
+
+        OutputStream & Vizible:: Node(OutputStream &fp, const Vizible *viz)
+        {
+            return Addr(fp,viz);
+        }
+
+
+        OutputStream & Vizible:: Endl(OutputStream &fp)
+        {
+            return fp << ";\n";
+        }
+
+        static inline
+        void emitASCII(OutputStream &fp, const char *msg, size_t len)
+        {
+            assert(Good(msg,len));
+            while(len-- > 0)
+            {
+                const uint8_t byte = uint8_t(*(msg++));
+                const char   *data =ASCII::Embedding::Char[byte];
+                //std::cerr << "emit '" << data << "'" << std::endl;
+                fp << data;
+            }
+        }
+
+        OutputStream & Vizible:: Text(OutputStream &fp, const String &s)
+        {
+            emitASCII(fp,s(),s.size());
+            return fp;
+        }
+
+        OutputStream & Vizible:: Text(OutputStream &fp, const char *msg)
+        {
+            emitASCII(fp,msg,StringLength(msg));
+            return fp;
+        }
+
+
+        OutputStream & Vizible:: Arrow(OutputStream &fp, const Vizible *src, const Vizible *dst)
+        {
+            return Node(Node(fp,src) << " -> ",dst);
+        }
+
+
+        static inline
+        void emitLabel(OutputStream &fp, const char *msg, size_t len)
+        {
+            assert(Good(msg,len));
+            fp << "label=\"";
+            emitASCII(fp,msg,len);
+            fp << "\"";
+        }
+
+        OutputStream  & Vizible::Label(OutputStream &fp, const String &id)
+        {
+            emitLabel(fp,id(),id.size());
+            return fp;
+        }
+
+        OutputStream  & Vizible::Label(OutputStream &fp, const char *id)
+        {
+            emitLabel(fp,id,StringLength(id));
+            return fp;
+        }
+
+        OutputStream  & Vizible::Label(OutputStream &fp, const void *msg, const size_t len)
+        {
+            assert(Good(msg,len));
+            emitLabel(fp,static_cast<const char*>(msg),len);
+            return fp;
+        }
+
     }
-
-    OutputStream & Vizible:: Text(OutputStream &fp, const String &s)
-    {
-        emitASCII(fp,s(),s.size());
-        return fp;
-    }
-
-    OutputStream & Vizible:: Text(OutputStream &fp, const char *msg)
-    {
-        emitASCII(fp,msg,StringLength(msg));
-        return fp;
-    }
-
-
-    OutputStream & Vizible:: Arrow(OutputStream &fp, const Vizible *src, const Vizible *dst)
-    {
-        return Node(Node(fp,src) << " -> ",dst);
-    }
-
-
-    static inline
-    void emitLabel(OutputStream &fp, const char *msg, size_t len)
-    {
-        assert(Good(msg,len));
-        fp << "label=\"";
-        emitASCII(fp,msg,len);
-        fp << "\"";
-    }
-
-    OutputStream  & Vizible::Label(OutputStream &fp, const String &id)
-    {
-        emitLabel(fp,id(),id.size());
-        return fp;
-    }
-
-    OutputStream  & Vizible::Label(OutputStream &fp, const char *id)
-    {
-        emitLabel(fp,id,StringLength(id));
-        return fp;
-    }
-
-    OutputStream  & Vizible::Label(OutputStream &fp, const void *msg, const size_t len)
-    {
-        assert(Good(msg,len));
-        emitLabel(fp,static_cast<const char*>(msg),len);
-        return fp;
-    }
-
 }
 
 
@@ -115,46 +118,48 @@ namespace Yttrium
 
 namespace Yttrium
 {
-
-    OutputStream &Vizible:: Color(OutputStream &fp, const String &scheme, unsigned indx)
+    namespace GraphViz
     {
-        const size_t len = scheme.size();
-        fp << '"';
-        if(len>0)
+        OutputStream &Vizible:: Color(OutputStream &fp, const String &scheme, unsigned indx)
         {
-            String num;
-            for(size_t i=len;i>0;--i)
+            const size_t len = scheme.size();
+            fp << '"';
+            if(len>0)
             {
-                const char c = scheme[i];
-                if(isdigit(c)) 
+                String num;
+                for(size_t i=len;i>0;--i)
                 {
-                    num.pushHead(c);
-                    continue;
+                    const char c = scheme[i];
+                    if(isdigit(c))
+                    {
+                        num.pushHead(c);
+                        continue;
+                    }
+                    break;
                 }
-                break;
-            }
-            if(num.size()>0)
-            {
-                const unsigned total = ASCII::Convert::To<unsigned>(num,"color range");
-                if(total>0)
+                if(num.size()>0)
                 {
-                    indx = indx%total;
-                    if(indx<=0) indx=total;
+                    const unsigned total = ASCII::Convert::To<unsigned>(num,"color range");
+                    if(total>0)
+                    {
+                        indx = indx%total;
+                        if(indx<=0) indx=total;
+                    }
                 }
+                fp << '/' << scheme << '/';
             }
-            fp << '/' << scheme << '/';
+            fp("%u", indx);
+            fp << '"';
+            return fp;
         }
-        fp("%u", indx);
-        fp << '"';
-        return fp;
-    }
 
-    OutputStream &Vizible:: Color(OutputStream &fp, const char *scheme, unsigned indx)
-    {
-        const String _(scheme);
-        return Color(fp,_,indx);
-    }
+        OutputStream &Vizible:: Color(OutputStream &fp, const char *scheme, unsigned indx)
+        {
+            const String _(scheme);
+            return Color(fp,_,indx);
+        }
 
+    }
 }
 
 #include "y/vfs/local-fs.hpp"
@@ -163,36 +168,38 @@ namespace Yttrium
 
 namespace Yttrium
 {
-    void Vizible:: Render(const String &pngFile,
-                          const String &dotFile,
-                          const bool    keepDot)
+    namespace GraphViz
     {
-        String cmd = "dot -T png -o " + pngFile + " " + dotFile;
-        if( 0 != system( cmd() ) )
+        void Vizible:: Render(const String &pngFile,
+                              const String &dotFile,
+                              const bool    keepDot)
         {
-            std::cerr << "*** failure to execute [" << cmd << "]" << std::endl;
-        }
-        else
-        {
-            if(!keepDot)
+            String cmd = "dot -T png -o " + pngFile + " " + dotFile;
+            if( 0 != system( cmd() ) )
             {
-                static VFS &fs = LocalFS::Instance();
-                (void) fs.tryRemove(dotFile);
+                std::cerr << "*** failure to execute [" << cmd << "]" << std::endl;
+            }
+            else
+            {
+                if(!keepDot)
+                {
+                    static VFS &fs = LocalFS::Instance();
+                    (void) fs.tryRemove(dotFile);
+                }
             }
         }
+        
+        OutputStream * Vizible:: OpenFile(const String &dotFile)
+        {
+            const String ext = VFS::Extension(dotFile);
+            if(ext != ".dot") throw Specific::Exception("Vizible::OpenFile","invalid extension '%s'", ext() );
+            return new Libc::OutputFile(dotFile);
+        }
+        
+        void Vizible:: RenderPNG(const String &dotFile, const bool keepDot)
+        {
+            String pngFile = VFS::ChangeExtension("png", dotFile);
+            Render(pngFile,dotFile,keepDot);
+        }
     }
-
-    OutputStream * Vizible:: OpenFile(const String &dotFile)
-    {
-        const String ext = VFS::Extension(dotFile);
-        if(ext != ".dot") throw Specific::Exception("Vizible::OpenFile","invalid extension '%s'", ext() );
-        return new Libc::OutputFile(dotFile);
-    }
-
-    void Vizible:: RenderPNG(const String &dotFile, const bool keepDot)
-    {
-        String pngFile = VFS::ChangeExtension("png", dotFile);
-        Render(pngFile,dotFile,keepDot);
-    }
-
 }

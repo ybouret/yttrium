@@ -31,7 +31,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Rule : public Entity, public Vizible
+            class Rule : public Entity, public GraphViz::Vizible
             {
             public:
                 //______________________________________________________________

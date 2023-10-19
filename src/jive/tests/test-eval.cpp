@@ -72,7 +72,7 @@ Y_UTEST(eval)
         Jive::Syntax::XTree ast = eval( Jive::Module::Open( argv[1]) );
         if(ast.isValid())
         {
-            Vizible::GraphViz( *eval.name + "-ast.dot", *ast);
+            GraphViz::Vizible::DotToPng( *eval.name + "-ast.dot", *ast);
             Jive::Syntax::Translator  analyzer;
             analyzer.translate(*ast,Yttrium::Jive::Syntax::Permissive);
         }

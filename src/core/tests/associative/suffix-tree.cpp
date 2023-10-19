@@ -8,6 +8,7 @@
 
 
 using namespace Yttrium;
+using namespace GraphViz;
 
 Y_UTEST(associative_suffix_tree)
 {
@@ -27,7 +28,7 @@ Y_UTEST(associative_suffix_tree)
                 std::cerr << "path = " << tree.pathOf(addr[i]) << std::endl;
             }
 
-            Vizible::GraphViz("tree.dot",tree);
+            Vizible::DotToPng("tree.dot",tree);
         }
 
         addr.free();
@@ -57,7 +58,7 @@ Y_UTEST(associative_suffix_tree)
                 Y_ASSERT(&data == tree.search(path) );
             }
 
-            Vizible::GraphViz("input.dot",tree);
+            Vizible::DotToPng("input.dot",tree);
 
         }
     }
@@ -72,11 +73,11 @@ Y_UTEST(associative_suffix_tree)
         void  *node2 = tree.insert(key2,&data);
         void  *node3 = tree.insert(key3,&data);
 
-        Vizible::GraphViz("full.dot",tree);
+        Vizible::DotToPng("full.dot",tree);
         tree.loosen(node3);
-        Vizible::GraphViz("cut1.dot",tree);
+        Vizible::DotToPng("cut1.dot",tree);
         tree.loosen(node2);
-        Vizible::GraphViz("cut2.dot",tree);
+        Vizible::DotToPng("cut2.dot",tree);
         tree.loosen(node1);
         
 

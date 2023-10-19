@@ -28,7 +28,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Entity : public Object, public Counted, public Vizible
+        class Entity : public Object, public Counted, public GraphViz:: Vizible
         {
         public:
             //__________________________________________________________________

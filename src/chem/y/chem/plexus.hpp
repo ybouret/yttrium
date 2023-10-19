@@ -20,7 +20,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Plexus : public Proxy<const Clusters>, public Vizible
+        class Plexus : public Proxy<const Clusters>, public GraphViz::Vizible
         {
         public:
             //__________________________________________________________________

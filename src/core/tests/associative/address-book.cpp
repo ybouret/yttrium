@@ -13,7 +13,7 @@ Y_UTEST(associative_addrbook)
     Y_CHECK(book.insert(a));
     Y_CHECK(book.insert(b));
 
-    Vizible::GraphViz("book.dot", book);
+    GraphViz::Vizible::DotToPng("book.dot", book);
 
     for(AddressBook::Iterator it=book.begin();it!=book.end();++it)
     {
