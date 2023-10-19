@@ -4,6 +4,9 @@
 #define Y_Chemical_Cluster_Included 1
 
 #include "y/chem/reactive/equilibria.hpp"
+#include "y/chem/species/tier.hpp"
+#include "y/chem/reactive/army.hpp"
+
 #include "y/chem/plexus/conservation/canon.hpp"
 #include "y/stream/xmlog.hpp"
 
@@ -15,46 +18,8 @@ namespace Yttrium
     namespace Chemical
     {
 
-
-        //______________________________________________________________________
-        //
-        //
-        //! Tier of species
-        //
-        //______________________________________________________________________
-        class Tier
-        {
-        public:
-            //__________________________________________________________________
-            //
-            //
-            // C++
-            //
-            //__________________________________________________________________
-            explicit Tier() noexcept; //!< setup empty
-            virtual ~Tier() noexcept; //!< cleanup
-
-            //__________________________________________________________________
-            //
-            //
-            // Members
-            //
-            //__________________________________________________________________
-            const SpRepo limited; //!< limited concentrations
-            const SpRepo roaming; //!< roaming concentrations
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Tier);
-        };
-
-        //______________________________________________________________________
-        //
-        //
-        // List of equilibria
-        //
-        //______________________________________________________________________
-        typedef Small::BareLightList<const Equilibrium> EqRepo; //!< alias
-        typedef EqRepo::NodeType                        EqNode; //!< alias
-
+        
+       
         //______________________________________________________________________
         //
         //
@@ -120,8 +85,9 @@ namespace Yttrium
 
             const CxxListOf<Conservation> cll;  //!< conservation law list
             const CxxListOf<Canon>        law;  //!< list of parallel canons
-            const Tier                    tier; //!< species tier
-            
+            const AutoPtr<const Tier>     tier; //!< species tier
+            const AutoPtr<const Army>     army; //!< equilibria army
+
             const Matrix<int>             Nu;    //!< main topology
             const Matrix<unsigned>        Qm;    //!< conservation matrix
             const AutoPtr<const EqGroup>  meg;   //!< Mixed Equilibria Groups

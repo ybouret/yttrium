@@ -65,6 +65,16 @@ namespace Yttrium
             void    vizArrow(OutputStream &fp, const Vizible *v, const bool to, const unsigned nu) const;
         };
 
+        //______________________________________________________________________
+        //
+        //
+        // List of equilibria
+        //
+        //______________________________________________________________________
+        typedef Small::BareLightList<const Equilibrium> EqRepo; //!< alias
+        typedef EqRepo::NodeType                        EqNode; //!< alias
+
+
 
         //______________________________________________________________________
         //

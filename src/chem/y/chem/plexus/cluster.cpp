@@ -6,15 +6,6 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        Tier::  Tier() noexcept : limited(),  roaming() {}
-        Tier:: ~Tier() noexcept {}
-    }
-
-}
-namespace Yttrium
-{
-    namespace Chemical
-    {
         Cluster:: ~Cluster() noexcept
         {
         }
@@ -28,7 +19,8 @@ namespace Yttrium
         sdb(0),
         cll(),
         law(),
-        tier(),
+        tier( new Tier() ),
+        army( new Army() ),
         Nu(),
         Qm(),
         meg(0),

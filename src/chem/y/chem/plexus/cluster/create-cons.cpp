@@ -39,11 +39,11 @@ namespace Yttrium
                     const Species &sp = **node;
                     if(conserved.search(sp))
                     {
-                        Coerce(tier.limited) << **node;
+                        Coerce(tier->limited) << **node;
                     }
                     else
                     {
-                        Coerce(tier.roaming) << **node;
+                        Coerce(tier->roaming) << **node;
                     }
                 }
             }
@@ -52,12 +52,12 @@ namespace Yttrium
                 Y_XMLOG(xml,"-- No conserved species...");
                 for(const SpNode *node=lib.head;node;node=node->next)
                 {
-                    Coerce(tier.roaming) << **node;
+                    Coerce(tier->roaming) << **node;
                 }
             }
 
-            Y_XMLOG(xml, "-- limited: " << tier.limited);
-            Y_XMLOG(xml, "-- roaming: " << tier.roaming);
+            Y_XMLOG(xml, "-- limited: " << tier->limited);
+            Y_XMLOG(xml, "-- roaming: " << tier->roaming);
 
         }
     }
