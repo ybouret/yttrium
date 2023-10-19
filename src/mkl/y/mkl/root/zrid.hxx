@@ -70,7 +70,11 @@ void ZRid<real_t>:: lookup(Triplet<real_t> &x, Triplet<real_t> &f, FunctionType 
 {
     static const real_t zero(0);
 
-    // order
+    //--------------------------------------------------------------------------
+    //
+    // increasing order a->c
+    //
+    //--------------------------------------------------------------------------
     if(x.a>x.c)
     {
         Swap(x.a,x.c);
@@ -78,7 +82,11 @@ void ZRid<real_t>:: lookup(Triplet<real_t> &x, Triplet<real_t> &f, FunctionType 
     }
     assert(x.a<=x.c);
 
+    //--------------------------------------------------------------------------
+    //
     // init
+    //
+    //--------------------------------------------------------------------------
     Handle xp = {0,0}, fp = {0,0};
     if( found(xp,fp,x,f,F)) return;
 
@@ -104,6 +112,7 @@ void ZRid<real_t>:: lookup(Triplet<real_t> &x, Triplet<real_t> &f, FunctionType 
         const real_t Delta = fbfb-fafc;
         if(Delta<=fbfb)
         {
+            // rounding error
             goto BISECTION;
         }
         else
