@@ -7,21 +7,27 @@ namespace Yttrium
 {
     namespace GraphViz
     {
+
+#define Y_GV_CS_3_8(NAME) \
+{ #NAME "3", 3 },         \
+{ #NAME "4", 4 },         \
+{ #NAME "5", 5 },         \
+{ #NAME "6", 6 },         \
+{ #NAME "7", 7 },         \
+{ #NAME "8", 8 }
+
+#define Y_GV_CS_3_9(NAME) \
+Y_GV_CS_3_8(NAME),        \
+{ #NAME "9", 9 }
+
         const ColorScheme ColorScheme::Table[] =
         {
-            { "accent3", 3 },
-            { "accent4", 4 },
-            { "accent5", 5 },
-            { "accent6", 6 },
-            { "accent7", 7 },
-            { "accent8", 8 },
+            Y_GV_CS_3_8(accent),
+            Y_GV_CS_3_8(dark2),
+            Y_GV_CS_3_9(blues),
+            Y_GV_CS_3_9(greens),
+            Y_GV_CS_3_9(oranges)
 
-            { "dark23", 3 },
-            { "dark24", 4 },
-            { "dark25", 5 },
-            { "dark26", 6 },
-            { "dark27", 7 },
-            { "dark28", 8 }
         };
 
         const size_t ColorScheme:: Count = sizeof(Table)/sizeof(Table[0]);
