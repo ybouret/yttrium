@@ -103,7 +103,10 @@ namespace Yttrium
             bool         isReg()    const noexcept; //!< type == IsReg
             bool         isDir()    const noexcept; //!< type == IsDir
 
+            //! lexicographic path comparison
             static SignType CompareByPath(const Entry *lhs, const Entry *rhs) noexcept;
+
+            //! lexicographic base comparison
             static SignType CompareByName(const Entry *lhs, const Entry *rhs) noexcept;
 
 
