@@ -28,7 +28,8 @@ namespace Yttrium
         Qm(),
         meb(0),
         next(0),
-        prev(0)
+        prev(0),
+        eqfm()
         {
             enroll(first);
         }

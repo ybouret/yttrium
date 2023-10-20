@@ -34,10 +34,16 @@ namespace Yttrium
         class ArrayOf : public Object, public CxxArray<T>
         {
         public:
+            //! aliases
             Y_ARGS_DECL(T,Type);
 
+            //! setup with default value
             inline explicit ArrayOf(const size_t n) : Object(), CxxArray<T>(n) {}
+
+            //! setup with given value
             inline explicit ArrayOf(const size_t n, ParamType x) : Object(), CxxArray<T>(n,x) {}
+
+            //! cleanup
             inline virtual ~ArrayOf() noexcept {}
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ArrayOf);

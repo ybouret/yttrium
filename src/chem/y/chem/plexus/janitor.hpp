@@ -14,7 +14,7 @@ namespace Yttrium
         //
         //
         //
-        //! Conservation law
+        //! Cleanup negative concentrations
         //
         //
         //______________________________________________________________________
@@ -27,8 +27,6 @@ namespace Yttrium
             void process(const Cluster   &cluster,
                          Writable<xreal> &Corg);
 
-
-            EqList el;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Janitor);

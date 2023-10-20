@@ -15,9 +15,12 @@ namespace Yttrium
         }
 
 
-        void Janitor:: process(const Cluster &cluster, Writable<xreal> &Corg)
+        void Janitor:: process(const Cluster   &cluster,
+                               Writable<xreal> &Corg)
         {
+
             
+
         }
     }
 
