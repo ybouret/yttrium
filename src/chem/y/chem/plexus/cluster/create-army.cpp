@@ -96,6 +96,12 @@ namespace Yttrium
 
                 }
 
+                size_t jndx = 1;
+                for(const EqNode *node=army->definite.head;node;node=node->next,++jndx)
+                {
+                    Coerce( (**node).indx[AuxLevel] ) = jndx;
+                }
+
 
             }
             Y_XMLOG(xml,"  |-#ProdOnly: " << army->prodOnly.size);

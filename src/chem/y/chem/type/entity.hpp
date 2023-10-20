@@ -16,7 +16,7 @@ namespace Yttrium
         {
             TopLevel = 0, //!< top level index, within library/equilibria
             SubLevel = 1, //!< sub level index, within cluster
-            AuxLevel = 2, //!< aux level index, within conservations
+            AuxLevel = 2, //!< aux level index: conservation for species, definitie for equilibria
             Levels        //!< number of levels
         };
 

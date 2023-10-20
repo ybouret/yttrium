@@ -245,6 +245,10 @@ namespace Yttrium
                 Coerce(eq.indx[SubLevel]) = all.size;
             }
 
+            for(const EqNode *node=all.head;node;node=node->next)
+            {
+                Coerce(eqfm).updateWith(**node);
+            }
             //--------------------------------------------------------------
             //
             // checking and building armies
@@ -272,6 +276,8 @@ namespace Yttrium
                 Y_XMLOG(xml, " (*) final equilibria : " << all.size);
             }
 
+
+            makeGroups(xml);
 
         }
     }

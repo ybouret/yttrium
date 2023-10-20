@@ -107,13 +107,16 @@ namespace Yttrium
             const AutoPtr<const EqGroup>  meg;   //!< Mixed Equilibria Groups
             Cluster *                     next;  //!< for list
             Cluster *                     prev;  //!< for list
-
+            const Entities                eqfm;  //!< format data from eqs
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
             void createCons(XMLog &);               //!< create all conservation laws
             void makeCanons(XMLog &);               //!< create canons of conserved laws
             void connectAll(XMLog &, Equilibria &, const Readable<xreal> &); //!< connect all
             void createArmy(XMLog &);
+            void makeGroups(XMLog &);
+            
         };
 
         typedef CxxListOf<Cluster> Clusters; //!< alias
