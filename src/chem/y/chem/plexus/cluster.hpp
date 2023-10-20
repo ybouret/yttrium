@@ -18,7 +18,12 @@ namespace Yttrium
     namespace Chemical
     {
 
-        //! CxxArray to be allocated
+        //______________________________________________________________________
+        //
+        //
+        //! CxxArray to be allocated, based on Object
+        //
+        //______________________________________________________________________
         template <typename T>
         class ArrayOf : public Object, public CxxArray<T>
         {
@@ -39,9 +44,9 @@ namespace Yttrium
         // Arrays for direct acces
         //
         //______________________________________________________________________
-        typedef ArrayOf<Equilibrium * const>           EqArray; //!< alias
-        typedef ArrayOf<Species     * const>           SpArray; //!< alias
-        typedef ArrayOf<const EqRepo>                  EqGroup; //!< alias
+        typedef ArrayOf<Equilibrium * const>           EqArray;  //!< alias
+        typedef ArrayOf<Species     * const>           SpArray;  //!< alias
+        typedef ArrayOf<const EqRepo>                  EqBatch;  //!< alias
         typedef ArrayOf<const bool>                    Booleans; //!< alias
 
         //______________________________________________________________________
@@ -104,7 +109,7 @@ namespace Yttrium
             const AutoPtr<const Army>     army; //!< equilibria army
             const Matrix<int>             Nu;    //!< main topology
             const Matrix<unsigned>        Qm;    //!< conservation matrix
-            const AutoPtr<const EqGroup>  meg;   //!< Mixed Equilibria Groups
+            const AutoPtr<const EqBatch>  meb;   //!< Mixed Equilibria Batchs
             Cluster *                     next;  //!< for list
             Cluster *                     prev;  //!< for list
             const Entities                eqfm;  //!< format data from eqs

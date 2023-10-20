@@ -59,7 +59,7 @@ namespace Yttrium
             unsigned ic=0;
             for(const Cluster *cluster=clusters.head;cluster;cluster=cluster->next,++ic)
             {
-                if(order<=cluster->meg->size())
+                if(order<=cluster->meb->size())
                 {
                     fp("subgraph cluster_%u{\n",ic);
                     cluster->viz(fp,order);

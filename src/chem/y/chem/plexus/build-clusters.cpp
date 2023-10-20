@@ -70,7 +70,7 @@ namespace Yttrium
             for(Cluster *cluster=clusters.head;cluster;cluster=cluster->next)
             {
                 cluster->compile(eqs,shared_K,xml);
-                Coerce(maxOrder) = Max(maxOrder,cluster->meg->size());
+                Coerce(maxOrder) = Max(maxOrder,cluster->meb->size());
             }
             Y_XMLOG(xml, "maxOrder=" << maxOrder);
         }

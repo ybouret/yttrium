@@ -165,9 +165,9 @@ namespace Yttrium
             Chemical::Algebraic::Weight::List W;
             {
                 const size_t nmax = Max<size_t>(1,Chemical::Algebraic::Compute(W,Nu,xml));
-                Coerce(meg) = new EqGroup(nmax);
+                Coerce(meb) = new EqBatch(nmax);
             }
-            EqGroup &eg = Coerce(*meg);
+            EqBatch &batch = Coerce(*meb);
 
             //------------------------------------------------------------------
             //
@@ -182,7 +182,7 @@ namespace Yttrium
             {
                 Equilibrium &eq = * ea[i];
                 Coerce(eq.indx[SubLevel]) = i;
-                Coerce(eg[1]) >> eq;
+                Coerce(batch[1]) >> eq;
             }
 
             //------------------------------------------------------------------
@@ -239,9 +239,9 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 assert(Eqs->size()==eq.indx[TopLevel]);
-                assert(w->nEqs<=eg.size());
-                Coerce(all)         << eq;
-                Coerce(eg[w->nEqs]) << eq;
+                assert(w->nEqs<=batch.size());
+                Coerce(all)            << eq;
+                Coerce(batch[w->nEqs]) << eq;
                 Coerce(eq.indx[SubLevel]) = all.size;
             }
 
@@ -262,10 +262,10 @@ namespace Yttrium
             //
             //--------------------------------------------------------------
             {
-                Y_XML_SECTION_OPT(xml,"Cluster::Hierarchy"," maxOrder='" << meg->size() << "'");
-                for(size_t i=1;i<=meg->size();++i)
+                Y_XML_SECTION_OPT(xml,"Cluster::Hierarchy"," maxOrder='" << meb->size() << "'");
+                for(size_t i=1;i<=meb->size();++i)
                 {
-                    Y_XMLOG(xml," -- #order " << std::setw(4) << i << " : " << std::setw(8) << (*meg)[i].size);
+                    Y_XMLOG(xml," -- #order " << std::setw(4) << i << " : " << std::setw(8) << (*meb)[i].size);
                 }
             }
 

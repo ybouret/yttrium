@@ -24,7 +24,7 @@ namespace Yttrium
         army( new Army()     ),
         Nu(),
         Qm(),
-        meg(0),
+        meb(0),
         next(0),
         prev(0)
         {
@@ -160,8 +160,8 @@ namespace Yttrium
 
         void  Cluster:: viz(OutputStream &fp, const size_t order) const
         {
-            assert(order<=meg->size());
-            const EqRepo * const repo = & ((*meg)[order]);
+            assert(order<=meb->size());
+            const EqRepo * const repo = & ((*meb)[order]);
             AddressBook          book;
 
             //------------------------------------------------------------------

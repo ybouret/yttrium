@@ -49,7 +49,7 @@ namespace Yttrium
             }
 
 
-            static inline bool AreConnected(const Equilibrium &lhs, const Equilibrium &rhs) noexcept
+            static inline bool areConnected(const Equilibrium &lhs, const Equilibrium &rhs) noexcept
             {
                 return lhs.linkedTo(rhs);
             }
@@ -96,7 +96,7 @@ namespace Yttrium
                 const size_t N = all.size; assert(all.size>0);
                 Y_XML_SECTION_OPT(xml, "Solving", " count='" << N << "'");
                 Matrix<bool> conn;
-                BuildConn(conn,all, SubLevel, AreConnected);
+                BuildConn(conn,all, SubLevel, areConnected);
                 PrintConn(conn,all, SubLevel, eqfm, xml);
 
             }
