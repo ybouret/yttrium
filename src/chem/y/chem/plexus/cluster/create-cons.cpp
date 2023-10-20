@@ -45,18 +45,25 @@ namespace Yttrium
                 // dispatch species
                 //
                 //--------------------------------------------------------------
-                for(const SpNode *node=lib.head;node;node=node->next)
+                Coerce(kept) = new Booleans(lib.size);
                 {
-                    const Species &sp = **node;
-                    if(conserved.search(sp))
+                    Writable<const bool> &flag=Coerce(*kept);
+                    size_t                indx=1;
+                    for(const SpNode *node=lib.head;node;node=node->next,++indx)
                     {
-                        Coerce(tier->conserved) += sp;
-                        Y_XMLOG(xml, "  --> conserved " << sp);
-                    }
-                    else
-                    {
-                        Coerce(tier->unbounded) += sp;
-                        Y_XMLOG(xml, "  --> unbounded " << sp);
+                        const Species &sp = **node; assert(sp.indx[SubLevel]==indx);
+                        if(conserved.search(sp))
+                        {
+                            Coerce(tier->conserved) += sp;
+                            Y_XMLOG(xml, "  --> conserved " << sp);
+                            Coerce(flag[indx]) = true;
+                        }
+                        else
+                        {
+                            Coerce(tier->unbounded) += sp;
+                            Y_XMLOG(xml, "  --> unbounded " << sp);
+                            Coerce(flag[indx]) = false;
+                        }
                     }
                 }
             }

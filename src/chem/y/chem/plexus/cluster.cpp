@@ -20,6 +20,7 @@ namespace Yttrium
         cll(),
         law(),
         tier( new Tier()     ),
+        kept( 0 ),
         army( new Army()     ),
         Nu(),
         Qm(),

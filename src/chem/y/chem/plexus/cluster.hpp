@@ -18,6 +18,16 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //! CxxArray to be allocated
+        template <typename T>
+        class ArrayOf : public Object, public CxxArray<T>
+        {
+        public:
+            inline explicit ArrayOf(const size_t n) : Object(), CxxArray<T>(n) {}
+            inline virtual ~ArrayOf() noexcept {}
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(ArrayOf);
+        };
         
        
         //______________________________________________________________________
@@ -26,10 +36,10 @@ namespace Yttrium
         // Arrays for direct acces
         //
         //______________________________________________________________________
-        typedef CxxArray<Equilibrium * const>           EqArray; //!< alias
-        typedef CxxArray<Species     * const>           SpArray; //!< alias
-        typedef CxxArray<const EqRepo>                  EqGroup; //!< alias
-
+        typedef ArrayOf<Equilibrium * const>           EqArray; //!< alias
+        typedef ArrayOf<Species     * const>           SpArray; //!< alias
+        typedef ArrayOf<const EqRepo>                  EqGroup; //!< alias
+        typedef ArrayOf<const bool>                    Booleans; //!< alias
 
         //______________________________________________________________________
         //
@@ -86,7 +96,8 @@ namespace Yttrium
             const CxxListOf<Conservation> cll;  //!< conservation law list
             const CxxListOf<Canon>        law;  //!< list of parallel canons
             const AutoPtr<const Tier>     tier; //!< species tier
-            
+            const AutoPtr<const Booleans> kept; //!< conserved flag
+
             const AutoPtr<const Army>     army; //!< equilibria army
             const Matrix<int>             Nu;    //!< main topology
             const Matrix<unsigned>        Qm;    //!< conservation matrix
