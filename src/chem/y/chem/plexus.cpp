@@ -76,7 +76,7 @@ namespace Yttrium
 
 
 #include "y/vfs/local-fs.hpp"
-#include "y/jive/pattern/matcher.hpp"
+#include "y/jive/pattern/vfs.hpp"
 
 namespace Yttrium
 {
@@ -84,30 +84,17 @@ namespace Yttrium
     {
         void Plexus:: graphViz() const
         {
-            Jive::Matcher         match = "(plexus[:digit:]*[.]png)&";
-            GraphViz::Vizible::DotToPng("match.dot", *(match.motif) );
-
-            VFS                  &fs = LocalFS::Instance();
-            VFS::Entries          png;
-            AutoPtr<VFS::Scanner> scan = fs.openDirectory(".");
-            AutoPtr<VFS::Entry>   ep = 0;
-            while( (ep=scan->get()).isValid() )
+            static VFS   &theFS = LocalFS::Instance();
+            Jive::Matcher match = "(plexus[:digit:]*[.]png)&";//GraphViz::Vizible::DotToPng("match.dot", *(match.motif) );
+            VFS::Entries  elist;
+            Jive::VirtualFileSystem::Find(theFS,".", elist, match);
+            while(elist.size>0)
             {
-                if(ep->type!=VFS::IsReg) continue;
-                //std::cerr << ep->base << std::endl;
-                const String baseName = ep->base;
-                Jive::Source source( Jive::Module::OpenData(baseName,baseName) );
-                if( match.exactly(source) )
-                {
-                    std::cerr << "(+) " << ep->path << std::endl;
-                    png.pushTail(ep.yield());
-                }
-            }
-            while(png.size>0)
-            {
-                const AutoPtr<VFS::Entry> ep = png.popTail();
+                const AutoPtr<VFS::Entry> ep = elist.popTail();
                 std::cerr << "rm " << ep->path << std::endl;
             }
+
+
         }
 
     }

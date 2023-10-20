@@ -24,14 +24,6 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        // Definitions
-        //
-        //______________________________________________________________________
-        static const char  EmptyName[]; //!< ""
-
-        //______________________________________________________________________
-        //
-        //
         // File Names
         //
         //______________________________________________________________________
@@ -51,6 +43,25 @@ namespace Yttrium
                                       const size_t       size);
         static String ChangeExtension(const char * const  newExt, const String & path); //!< change extension
         static String ChangeExtension(const String      & newExt, const String & path); //!< change extension
+
+        //______________________________________________________________________
+        //
+        //
+        // Directory Name
+        //
+        //______________________________________________________________________
+        static String MakeDirName(const char *const path, const size_t size);
+        static String MakeDirName(const char *const path);
+        static String MakeDirName(const String &    path);
+
+
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        static const char  EmptyName[]; //!< ""
 
         //! admitted entry type
         enum EntryType
@@ -82,13 +93,15 @@ namespace Yttrium
             explicit Entry(const VFS &, const char   *); //!< setup
             virtual ~Entry() noexcept;                   //!< cleanup
             Entry(const Entry &);                        //!< duplicate
+            Y_OSTREAM_PROTO(Entry);                      //!< full display
 
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
             const char * typeText() const noexcept; //!< EntryTypeText(type)
-            Y_OSTREAM_PROTO(Entry);                 //!< full display
+            bool         isReg()    const noexcept; //!< type == IsReg
+            bool         isDir()    const noexcept; //!< type == IsDir
 
             //__________________________________________________________________
             //

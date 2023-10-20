@@ -125,6 +125,61 @@ namespace Yttrium
 
 }
 
+namespace Yttrium
+{
+
+
+    String VFS:: MakeDirName(const char *const path, const size_t size)
+    {
+        assert(Good(path,size));
+        if(size<=0)
+        {
+            return String("./");
+        }
+        else
+        {
+
+            String dirName(size,AsCapacity,false);
+            const char *       curr = path;
+            const char * const last = path + size;
+
+            while(curr<last)
+            {
+                if(IsSeparator(*curr))
+                {
+                    // skip successive separators
+                    while(++curr<last && IsSeparator(*curr))
+                        ;
+                    dirName += '/';
+                }
+                else
+                {
+                    // save successive not-sep
+                    do
+                    {
+                        dirName += *curr;
+                    } while(++curr<last && !IsSeparator(*curr) );
+                }
+            }
+
+            if(dirName.size()<=0 || !IsSeparator(dirName.tail()) )
+                dirName += '/';
+
+            return dirName;
+        }
+    }
+
+    String VFS:: MakeDirName(const char *const path)
+    {
+        return MakeDirName(path,StringLength(path));
+    }
+
+    String VFS:: MakeDirName(const String &path)
+    {
+        return MakeDirName(path.c_str(),path.size());
+    }
+
+}
 
 namespace Yttrium
 {

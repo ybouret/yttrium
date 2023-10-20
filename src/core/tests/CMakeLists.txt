@@ -254,6 +254,8 @@ add_test(graphviz test-core graphviz)
 add_test(vfs:names test-core vfs_names)
 add_test(vfs:entry test-core vfs_entry)
 add_test(vfs:scan  test-core vfs_scan)
+add_test(vfs:dname test-core vfs_dname)
+
 
 #Information
 add_test(info:mtf   test-core info_mtf)

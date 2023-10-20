@@ -95,7 +95,7 @@ FINISH:
 
 inline void ignoreCase(Patterns &patterns)
 {
-    std::cerr << "ignoring case..." << std::endl;
+    //std::cerr << "ignoring case..." << std::endl;
     if( patterns.size <=0 ) throw Specific::Exception(CallSign,"no pattern before '&' in '%s'",expr);
     patterns.pushTail( Pattern::IgnoreCase(patterns.popTail()) );
 }

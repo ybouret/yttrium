@@ -10,7 +10,18 @@ namespace Yttrium
 {
     namespace Jive
     {
-
+        struct VirtualFileSystem
+        {
+            static void Find(VFS          &vfs,
+                             const String &dname,
+                             VFS::Entries &elist,
+                             Matcher      &match);
+            
+            static void Find(VFS          &       vfs,
+                             const char   * const dname,
+                             VFS::Entries &       elist,
+                             Matcher      &       match);
+        };
     }
 }
 
