@@ -73,7 +73,6 @@ namespace Yttrium
                 Coerce(maxOrder) = Max(maxOrder,cluster->meg->size());
             }
             Y_XMLOG(xml, "maxOrder=" << maxOrder);
-
         }
     }
 
