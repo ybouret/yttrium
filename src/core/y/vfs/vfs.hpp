@@ -50,9 +50,11 @@ namespace Yttrium
         // Directory Name
         //
         //______________________________________________________________________
+
+        //! make simplified, separator ending directory name
         static String MakeDirName(const char *const path, const size_t size);
-        static String MakeDirName(const char *const path);
-        static String MakeDirName(const String &    path);
+        static String MakeDirName(const char *const path); //!< alias
+        static String MakeDirName(const String &    path); //!< alias
 
 
         //______________________________________________________________________

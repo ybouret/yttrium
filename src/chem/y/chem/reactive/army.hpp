@@ -10,12 +10,32 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Army with different components
+        //
+        //
+        //______________________________________________________________________
         class Army : public Object
         {
         public:
-            explicit Army() noexcept;
-            virtual ~Army() noexcept;
-            
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Army() noexcept; //!< setup
+            virtual ~Army() noexcept; //!< cleanup
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
             const EqRepo prodOnly; //!< with only (roaming) product  species
             const EqRepo reacOnly; //!< with only (roaming) reactant species
             const EqRepo spurious; //!< with both side of roaming species
