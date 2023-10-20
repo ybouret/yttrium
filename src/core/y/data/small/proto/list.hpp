@@ -6,6 +6,7 @@
 #include "y/data/small/proto/linked.hpp"
 #include "y/data/list.hpp"
 #include "y/container/iterator/linked.hpp"
+#include "y/type/copy.hpp"
 
 namespace Yttrium
 {
@@ -72,18 +73,26 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! destroy popHead
-            void cutHead() noexcept { proxy->destroy( this->popHead() ); }
+            inline void cutHead() noexcept { proxy->destroy( this->popHead() ); }
 
             //! destroy popTail
-            void cutTail() noexcept { proxy->destroy( this->popTail() ); }
+            inline void cutTail() noexcept { proxy->destroy( this->popTail() ); }
 
             //! destroy popNode
-            void cutNode(NODE *node) noexcept
+            inline void cutNode(NODE *node) noexcept
             {
                 assert(0!=node);
                 assert(this->owns(node));
                 proxy->destroy( this->pop(node) );
             }
+
+            //! add a copy of other
+            inline void growTail(const CopyOf_ &, const ProtoList &other)
+            {
+                ProtoList temp(other);
+                this->mergeTail(temp);
+            }
+
 
 
             //__________________________________________________________________

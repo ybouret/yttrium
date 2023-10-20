@@ -57,7 +57,11 @@ namespace Yttrium
                 }
             }
 
+            //------------------------------------------------------------------
+            //
             // compilation
+            //
+            //------------------------------------------------------------------
             {
                 Y_XML_SECTION_OPT(xml, "Law", " canons='" << law.size << "'");
                 for(Canon *canon=law.head;canon;canon=canon->next)

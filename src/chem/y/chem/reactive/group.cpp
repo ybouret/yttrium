@@ -1,25 +1,25 @@
 
-#include "y/chem/plexus/janitor/group.hpp"
+#include "y/chem/reactive/group.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
 
-        JGroup:: ~JGroup() noexcept
+        EqGroup:: ~EqGroup() noexcept
         {
         }
 
-        JGroup:: JGroup() noexcept :
+        EqGroup:: EqGroup(const Equilibrium &first)  :
         Object(),
         EqRepo(),
         next(0),
         prev(0)
         {
-
+            (*this) << first;
         }
 
-        JGroup:: JGroup(const JGroup &other) :
+        EqGroup:: EqGroup(const EqGroup &other) :
         Object(),
         EqRepo(other),
         next(0),
@@ -35,11 +35,11 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        JGroups:: JGroups() noexcept : Object(), JGroup::List()
+        EqGroups:: EqGroups() noexcept : Object(), EqGroup::List()
         {
         }
 
-        JGroups:: ~JGroups() noexcept
+        EqGroups:: ~EqGroups() noexcept
         {
         }
 

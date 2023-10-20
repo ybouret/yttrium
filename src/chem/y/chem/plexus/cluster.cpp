@@ -22,6 +22,8 @@ namespace Yttrium
         tier( new Tier()     ),
         kept( 0 ),
         army( new Army()     ),
+        sGrp( new EqGroups() ),
+        jGrp( new EqGroups() ),
         Nu(),
         Qm(),
         meb(0),

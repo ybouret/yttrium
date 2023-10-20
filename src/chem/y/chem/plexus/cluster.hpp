@@ -8,7 +8,7 @@
 #include "y/chem/reactive/army.hpp"
 
 #include "y/chem/plexus/conservation/canon.hpp"
-#include "y/chem/plexus/janitor/group.hpp"
+#include "y/chem/reactive/group.hpp"
 
 
 #include "y/container/matrix.hpp"
@@ -112,8 +112,10 @@ namespace Yttrium
             const AutoPtr<const Tier>     tier; //!< species tier
             const AutoPtr<const Booleans> kept; //!< conserved flag
 
-            const AutoPtr<const Army>     army; //!< equilibria army
-            
+            const AutoPtr<const Army>      army; //!< equilibria army
+            const AutoPtr<const EqGroups>  sGrp; //!< solving groups
+            const AutoPtr<const EqGroups>  jGrp; //!< janitor groups
+
             const Matrix<int>             Nu;    //!< main topology
             const Matrix<unsigned>        Qm;    //!< conservation matrix
             const AutoPtr<const EqBatch>  meb;   //!< Mixed Equilibria Batchs
