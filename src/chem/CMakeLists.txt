@@ -11,6 +11,7 @@ chem/lang
 chem/plexus
 chem/plexus/cluster
 chem/plexus/conservation
+chem/plexus/janitor
 )
 
 add_subdirectory(tests)

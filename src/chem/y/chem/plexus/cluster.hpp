@@ -8,15 +8,21 @@
 #include "y/chem/reactive/army.hpp"
 
 #include "y/chem/plexus/conservation/canon.hpp"
-#include "y/stream/xmlog.hpp"
+#include "y/chem/plexus/janitor/group.hpp"
+
 
 #include "y/container/matrix.hpp"
 #include "y/container/cxx/array.hpp"
+
+#include "y/stream/xmlog.hpp"
+
 
 namespace Yttrium
 {
     namespace Chemical
     {
+
+
 
         //______________________________________________________________________
         //
@@ -107,6 +113,7 @@ namespace Yttrium
             const AutoPtr<const Booleans> kept; //!< conserved flag
 
             const AutoPtr<const Army>     army; //!< equilibria army
+            
             const Matrix<int>             Nu;    //!< main topology
             const Matrix<unsigned>        Qm;    //!< conservation matrix
             const AutoPtr<const EqBatch>  meb;   //!< Mixed Equilibria Batchs
