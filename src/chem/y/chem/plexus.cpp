@@ -92,7 +92,7 @@ namespace Yttrium
                 while(elist.size>0)
                 {
                     const AutoPtr<VFS::Entry> ep = elist.popTail();
-                    // std::cerr << "rm " << ep->path << std::endl;
+                    std::cerr << "rm " << ep->path << std::endl;
                     theFS.tryRemove(ep->path);
                 }
             }

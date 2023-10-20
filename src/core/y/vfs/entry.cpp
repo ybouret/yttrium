@@ -1,4 +1,5 @@
 #include "y/vfs/vfs.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
@@ -80,6 +81,23 @@ namespace Yttrium
         }
         return os;
     }
+
+    SignType VFS:: Entry:: CompareByPath(const Entry *lhs, const Entry *rhs) noexcept
+    {
+        assert(0!=lhs);
+        assert(0!=rhs);
+        return String::Compare(lhs->path,rhs->path);
+    }
+
+    SignType VFS:: Entry:: CompareByName(const Entry *lhs, const Entry *rhs) noexcept
+    {
+        assert(0!=lhs);
+        assert(0!=rhs);
+        const int res = strcmp(lhs->base,rhs->base);
+        return Sign::Of(res);
+    }
+
+
 
 }
 

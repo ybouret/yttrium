@@ -85,8 +85,6 @@ namespace Yttrium
         class Entry : public Object
         {
         public:
-
-
             //__________________________________________________________________
             //
             // C++
@@ -104,6 +102,10 @@ namespace Yttrium
             const char * typeText() const noexcept; //!< EntryTypeText(type)
             bool         isReg()    const noexcept; //!< type == IsReg
             bool         isDir()    const noexcept; //!< type == IsDir
+
+            static SignType CompareByPath(const Entry *lhs, const Entry *rhs) noexcept;
+            static SignType CompareByName(const Entry *lhs, const Entry *rhs) noexcept;
+
 
             //__________________________________________________________________
             //

@@ -1,5 +1,6 @@
 
 #include "y/jive/pattern/vfs.hpp"
+#include "y/sort/merge.hpp"
 
 namespace Yttrium
 {
@@ -22,7 +23,7 @@ namespace Yttrium
                     elist.pushTail( ep.yield() );
                 }
             }
-
+            MergeSort::Call(elist,VFS::Entry::CompareByName);
         }
 
         void VirtualFileSystem:: Find(VFS          &       vfs,
