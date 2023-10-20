@@ -24,6 +24,12 @@ namespace Yttrium
             explicit Janitor();
             virtual ~Janitor() noexcept;
 
+            void process(const Cluster   &cluster,
+                         Writable<xreal> &Corg);
+
+
+            EqList el;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Janitor);
         };

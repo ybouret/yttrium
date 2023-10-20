@@ -73,6 +73,7 @@ namespace Yttrium
         //______________________________________________________________________
         typedef Small::BareLightList<const Equilibrium> EqRepo; //!< alias
         typedef EqRepo::NodeType                        EqNode; //!< alias
+        typedef Small::SoloLightList<const Equilibrium> EqList; //!< alias
 
 
 

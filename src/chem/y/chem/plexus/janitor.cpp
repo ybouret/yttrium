@@ -8,7 +8,17 @@ namespace Yttrium
         Janitor:: ~Janitor() noexcept
         {
         }
-        
+
+        Janitor:: Janitor()
+        {
+
+        }
+
+
+        void Janitor:: process(const Cluster &cluster, Writable<xreal> &Corg)
+        {
+            
+        }
     }
 
 }
