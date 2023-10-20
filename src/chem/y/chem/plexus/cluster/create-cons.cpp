@@ -70,6 +70,7 @@ namespace Yttrium
             else
             {
                 Y_XMLOG(xml,"-- No conserved species...");
+                Coerce(kept) = new Booleans(lib.size,false);
                 for(const SpNode *node=lib.head;node;node=node->next)
                     Coerce(tier->unbounded) += **node;
             }
