@@ -8,6 +8,7 @@
 #include "y/ptr/ark.hpp"
 #include "y/data/small/light/list/bare.hpp"
 #include "y/data/small/light/list/solo.hpp"
+#include "y/data/small/light/list/coop.hpp"
 #include "y/sort/merge.hpp"
 
 namespace Yttrium
@@ -82,6 +83,9 @@ namespace Yttrium
         typedef Small::BareLightList<const Species>     SpRepo; //!< alias
         typedef Small::SoloLightList<const Species>     SpList; //!< alias
         typedef SpRepo::NodeType                        SpNode; //!< alias
+        typedef Small::CoopLightList<const Species>     SpStrip; //!< alias
+        typedef SpStrip::CacheType                      SpCache;
+        typedef SpStrip::ProxyType                      SpProxy;
 
         //! compare Entity-based node by their top-level indices
         template <typename NODE> static inline

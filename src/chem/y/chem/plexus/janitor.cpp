@@ -15,6 +15,20 @@ namespace Yttrium
         }
 
 
+        class Cursor
+        {
+        public:
+            xreal   xi;
+            SpStrip sp;
+
+            Cursor(const SpProxy &_) : xi(0), sp(_) {}
+            ~Cursor() noexcept {}
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Cursor);
+        };
+
+
         void Janitor:: process(const Cluster   &cluster,
                                Writable<xreal> &Corg)
         {
