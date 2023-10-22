@@ -19,7 +19,13 @@ namespace Yttrium
                                Writable<xreal> &Corg)
         {
 
-            
+            const EqRepo &repo = cluster.army->definite;
+            for(const EqNode *en=repo.head;en;en=en->next)
+            {
+                const Equilibrium &eq = **en;
+                
+            }
+
 
         }
     }
