@@ -97,7 +97,7 @@ namespace Yttrium
                         const xreal c = Corg[sp.indx[TopLevel]];
                         if(c.mantissa>=0)
                         {
-                            // limiting
+                            // limiting concentration
                             const xreal xi = c/a->xn;
                             //std::cerr << "limiting by xi_" << sp.name << " = " << double(xi) << std::endl;
 
@@ -118,18 +118,13 @@ namespace Yttrium
 
                             }
 
-
-
-
                         }
                         else
                         {
-                            // equating
+                            // equating concentration
                             const xreal xi = (-c)/a->xn;
-                            std::cerr << "equating by xi_" << sp.name << " = " << double(xi) << std::endl;
-                            Cursor cr(limiting.proxy);
-                            cr.xi = xi;
-                            cr << sp;
+                            //std::cerr << "equating by xi_" << sp.name << " = " << double(xi) << std::endl;
+                            Cursor cr(limiting.proxy,sp,xi);
                             updateEquatingWith(cr);
                         }
                     }
@@ -151,6 +146,7 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Inquiry);
+
                 inline void updateEquatingWith(Cursor &cr)
                 {
                     for(Cursors::NodeType *node=equating.head;node;node=node->next)
