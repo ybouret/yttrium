@@ -12,6 +12,7 @@ Y_UTEST(custodian)
     Chemical::Weasel       &wsl = Chemical::Weasel::Instance();
     Chemical::Library       lib;
     Chemical::LuaEquilibria eqs;
+    Random::Rand            ran;
 
     for(int i=1;i<argc;++i)
     {
@@ -36,6 +37,17 @@ Y_UTEST(custodian)
     custodian.prepare(plexus,xml);
     custodian.enter();
     
+    Vector<Chemical::xreal> Corg(lib->size(),0), Cerr(lib->size(),0);
+    lib.fill(Corg, ran);
+    for(size_t i=Corg.size();i>0;--i)
+    {
+        if( ran.to<double>() > 0.7 ) Corg[i] = -Corg[i];
+    }
+    lib(std::cerr << "Corg=","  [",Corg,"]",Chemical::Conv::X2R);
+
+    custodian(plexus,Corg,xml);
+
+
 }
 Y_UDONE()
 

@@ -23,11 +23,21 @@ namespace Yttrium
             //! cleanup all accumulators
             void enter() noexcept;
 
+            //! apply the law for a given cluster
+            void operator()(const Cluster   &cluster,
+                            Writable<xreal> &Corg,
+                            XMLog           &xml);
+
+            //! apply the law for a prepared plexus
+            void operator()(const Plexus    &plexus,
+                            Writable<xreal> &Corg,
+                            XMLog           &xml);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Custodian);
             class Code;
             Code *code;
+
         };
 
     }
