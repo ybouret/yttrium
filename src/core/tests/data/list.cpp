@@ -121,7 +121,46 @@ Y_UTEST(data_list)
             while(iList.size) delete iList.popTail();
         }
     }
-    
+
+    {
+        std::cerr << "Insert After/Before" << std::endl;
+        for(size_t cycle=0;cycle<=1000;++cycle)
+        {
+            for(size_t n=1;n<=10;++n)
+            {
+                for(size_t i=0;i<n;++i)
+                {
+                    if( ran.choice()  )
+                        iList.pushTail( new iNode() );
+                    else
+                        iList.pushHead( new iNode() );
+                }
+                Y_ASSERT(n==iList.size);
+
+                for(size_t iter=0;iter<10;++iter)
+                {
+                    iNode *mine = iList.fetch( ran.in<size_t>(1,iList.size) );
+                    Y_ASSERT(iList.owns(mine));
+                    iNode *node = new iNode();
+                    if( ran.choice() )
+                    {
+                        iList.insertAfter(mine,node);
+                        Y_ASSERT(mine->next == node);
+                        Y_ASSERT(node->prev == mine);
+                    }
+                    else
+                    {
+                        iList.insertBefore(mine,node);
+                        Y_ASSERT(mine->prev == node);
+                        Y_ASSERT(node->next == mine);
+                    }
+                }
+
+                while(iList.size) delete iList.popTail();
+            }
+        }
+    }
+
 }
 Y_UDONE()
 

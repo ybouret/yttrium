@@ -99,6 +99,22 @@ namespace Yttrium
             next->prev = node;
         }
 
+        //______________________________________________________________________
+        //
+        //! put before a regular node
+        //______________________________________________________________________
+        template <typename NODE> static inline
+        void PutBefore_(NODE *mine, NODE *node) noexcept
+        {
+            assert(0!=mine);
+            assert(0!=mine->prev);
+            NODE *prev = mine->prev;
+            node->next = mine;
+            node->prev = prev;
+            prev->next = node;
+            mine->prev = node;
+        }
+
     public:
 
         //______________________________________________________________________
@@ -270,6 +286,31 @@ namespace Yttrium
             }
             return Upgraded_(L,node);
         }
+
+        //______________________________________________________________________
+        //
+        //! insert node before L.mine
+        //______________________________________________________________________
+        template <typename LIST, typename NODE> static inline
+        NODE *InsertBefore(LIST &L, NODE *mine, NODE *node) noexcept
+        {
+            assert(OwnedBy(L,mine));
+            assert(0!=node);
+            assert(0==node->next);
+            assert(0==node->prev);
+            if(0==mine->prev)
+            {
+                assert(mine == L.head);
+                PushHead_(L,node);
+            }
+            else
+            {
+                PutBefore_(mine,node);
+            }
+            return Upgraded_(L,node);
+        }
+
+
 
 
         //______________________________________________________________________

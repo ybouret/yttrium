@@ -57,6 +57,13 @@ namespace Yttrium
             return ListOps:: InsertAfter(*this,mine,node);
         }
 
+        //! insert node before mine
+        inline NODE *insertBefore(NODE *mine, NODE *node) noexcept
+        {
+            return ListOps:: InsertBefore(*this,mine,node);
+        }
+
+        
         //! insert node by increasing address
         inline NODE *insertByIncreasingAddress(NODE *node) noexcept
         {

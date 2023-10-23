@@ -11,14 +11,27 @@ namespace Yttrium
         namespace
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //! Cursor for vanishing value/species
+            //
+            //__________________________________________________________________
             class Cursor : public SpStrip
             {
             public:
-                xreal   xi; //!< xi value
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
                 inline explicit Cursor(const SpProxy &_) : SpStrip(_), xi(0) {}
                 inline          Cursor(const Cursor  &cursor) : SpStrip(cursor), xi(cursor.xi) {}
                 inline virtual ~Cursor() noexcept {}
 
+                //______________________________________________________________
+                //
+                // Methods
+                //______________________________________________________________
                 inline void reset() noexcept { xi = 0; free(); }
                 inline void start(const xreal &x, const Species &s)
                 {
@@ -38,16 +51,29 @@ namespace Yttrium
                     }
                     return os;
                 }
+
+                //______________________________________________________________
+                //
+                // Members
+                //______________________________________________________________
+                xreal   xi; //!< xi value
+
+
             private:
                 Y_DISABLE_ASSIGN(Cursor);
             };
 
 
+            typedef Small::CoopHeavyList<Cursor> Cursors;
+            typedef Cursors::ProxyType           CursorsProxy;
+
             class Inquiry
             {
             public:
-                inline   Inquiry(const SpProxy &sprx) noexcept :
-                limiting(sprx)
+                inline   Inquiry(const SpProxy      &sprx,
+                                 const CursorsProxy &cprx) noexcept :
+                limiting(sprx),
+                equating(cprx)
                 {
                 }
 
@@ -55,7 +81,8 @@ namespace Yttrium
                 {
                 }
 
-                Cursor limiting;
+                Cursor  limiting;
+                Cursors equating;
 
                 inline void probe(const Actors          &actors,
                                   const Readable<xreal> &Corg,
@@ -99,6 +126,10 @@ namespace Yttrium
                             // equating
                             const xreal xi = (-c)/a->xn;
                             std::cerr << "equating by xi_" << sp.name << " = " << double(xi) << std::endl;
+                            Cursor cr(limiting.proxy);
+                            cr.xi = xi;
+                            cr << sp;
+                            updateEquatingWith(cr);
                         }
                     }
                 }
@@ -107,41 +138,33 @@ namespace Yttrium
                 {
                     if(self.limiting.size>0)
                     {
-                        os << "limiting: " << self.limiting;
+                        os << " | limiting: " << self.limiting;
                     }
-
+                    if(self.equating.size>0)
+                    {
+                        os << " | equating: " << self.equating;
+                    }
 
                     return os;
                 }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Inquiry);
+                inline void updateEquatingWith(const Cursor &cr)
+                {
+                    for(Cursors::NodeType *node=equating.head;node;node=node->next)
+                    {
+                        Cursor &it = **node;
+                        switch( Sign::Of(cr.xi,it.xi) )
+                        {
+                                
+                        }
+                    }
+                    equating << cr;
+                }
             };
 
 
-#if 0
-            typedef Small::CoopHeavyList<Cursor> Cursors;
-            typedef Cursors::ProxyType           CursorsProxy;
-            typedef Cursors::NodeType            CursorNode;
-
-            class Inquiry
-            {
-            public:
-                inline explicit Inquiry(const CursorsProxy &_) noexcept : limiting(_), equating(_) { }
-                inline virtual ~Inquiry()                      noexcept {}
-
-
-                Cursor  limiting;
-                Cursors equating;
-
-
-
-
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Inquiry);
-            };
-#endif
 
         }
 
@@ -149,7 +172,7 @@ namespace Yttrium
         //
         //
         //
-        //! Janitro Code
+        //! Janitor Code
         //
         //
         //______________________________________________________________________
@@ -165,8 +188,8 @@ namespace Yttrium
             inline explicit Code() :
             Object(),
             sprx(),
-            reac(sprx),
-            prod(sprx)
+            reac(sprx,cprx),
+            prod(sprx,cprx)
             {
             }
 
@@ -186,8 +209,8 @@ namespace Yttrium
                 Y_XMLOG(xml, "probing " << eq);
                 reac.probe(eq.reac, Corg, kept);
                 prod.probe(eq.prod, Corg, kept);
-                Y_XMLOG(xml," reac: " << reac);
-                Y_XMLOG(xml," prod: " << prod);
+                Y_XMLOG(xml," reac" << reac);
+                Y_XMLOG(xml," prod" << prod);
             }
 
 
@@ -197,7 +220,8 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            SpProxy sprx;
+            SpProxy      sprx;
+            CursorsProxy cprx;
             Inquiry reac;
             Inquiry prod;
 

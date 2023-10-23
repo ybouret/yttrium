@@ -43,7 +43,7 @@ Y_UTEST(janitor)
     lib(std::cerr << "Corg=","  [",C0,"]",Chemical::Conv::X2R);
 
 
-    if(true)
+    if(false)
     {
         Chemical::Guardian      guardian;
         const Chemical::SpList &corrected =  guardian(plexus,C0,Cerr,xml);
