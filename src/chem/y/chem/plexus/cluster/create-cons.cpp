@@ -57,6 +57,8 @@ namespace Yttrium
                             Coerce(tier->conserved) += sp;
                             Y_XMLOG(xml, "  --> conserved " << sp);
                             Coerce(flag[indx]) = true;
+                            Coerce(knum)++;
+                            Coerce(kmsi) = Max(kmsi,sp.indx[TopLevel]);
                         }
                         else
                         {
@@ -66,6 +68,9 @@ namespace Yttrium
                         }
                     }
                 }
+                Y_XMLOG(xml, "  ==> #kept = " << knum);
+                Y_XMLOG(xml, "  ==> #kmsi = " << kmsi);
+
             }
             else
             {

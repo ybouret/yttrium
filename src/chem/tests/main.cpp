@@ -13,6 +13,9 @@ Y_UTEST_DECL(32)
     Y_UTEST(plexus);
     Y_UTEST(guardian);
     Y_UTEST(janitor);
+    
+    Y_UTEST(custodian);
+
 }
 Y_UTEST_EXEC()
 

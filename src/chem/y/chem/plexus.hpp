@@ -58,6 +58,7 @@ namespace Yttrium
 
             Clusters      clusters; //!< independent clusters
             Vector<xreal> shared_K; //!< top-level constants
+            
         public:
             const size_t  primaryN; //!< primary equilibria
             const size_t  maxOrder; //!< clusters' max order, start at 1, even if empty

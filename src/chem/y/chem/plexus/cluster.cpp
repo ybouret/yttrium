@@ -21,6 +21,8 @@ namespace Yttrium
         law(),
         tier( new Tier()     ),
         kept( 0 ),
+        knum( 0 ),
+        kmsi( 0 ),
         army( new Army()     ),
         sGrp( new EqGroups() ),
         jGrp( new EqGroups() ),
@@ -41,7 +43,10 @@ namespace Yttrium
             for(Equilibrium::ConstIterator it = eq->begin(); it != eq->end(); ++it)
             {
                 const Species &sp = (*it).sp;
-                if(!lib.has(sp)) Coerce(lib) << sp;
+                if(!lib.has(sp)) 
+                {
+                    Coerce(lib) << sp;
+                }
             }
         }
 
@@ -138,6 +143,8 @@ namespace Yttrium
             Y_XMLOG(xml,"Nu = "<<Nu);
             Y_XMLOG(xml,"Qm = "<<Qm);
             createCons(xml);
+
+
 
             //------------------------------------------------------------------
             // connection
