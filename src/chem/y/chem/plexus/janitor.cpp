@@ -33,12 +33,17 @@ namespace Yttrium
                 //
                 // Methods
                 //______________________________________________________________
+
+                //! full reset
                 inline void reset() noexcept { xi = 0; free(); }
+
+                //! set one species at given extent
                 inline void start(const xreal &x, const Species &s)
                 {
                     free(); xi = x; (*this) << s;
                 }
 
+                //! display
                 friend inline std::ostream & operator<<(std::ostream &os, const Cursor &self)
                 {
                     if(self.size>0)
@@ -135,15 +140,9 @@ namespace Yttrium
 
                 friend inline std::ostream & operator<<(std::ostream &os, const Inquiry &self)
                 {
-                    if(self.limiting.size>0)
-                    {
-                        os << " | limiting: " << self.limiting;
-                    }
+                    os << " | limiting: " << self.limiting;
                     if(self.negative.size>0)
-                    {
                         os << " | negative: " << self.negative;
-                    }
-
                     return os;
                 }
 
@@ -201,6 +200,7 @@ namespace Yttrium
             inline explicit Code() :
             Object(),
             sprx(),
+            cprx(),
             reac(sprx,cprx),
             prod(sprx,cprx)
             {
