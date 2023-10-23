@@ -41,14 +41,14 @@ namespace Yttrium
             //__________________________________________________________________
         protected:
             //! setup with [no|auto] proxy
-            explicit ProtoLinked() : LINKED(), proxy() {}
+            inline explicit ProtoLinked() : LINKED(), proxy() {}
 
             //! setup with proxy (manual or copy)
-            explicit ProtoLinked(const ProxyType &_) noexcept : LINKED(), proxy(_) {}
+            inline explicit ProtoLinked(const ProxyType &_) noexcept : LINKED(), proxy(_) {}
 
         public:
             //! cleanup
-            virtual ~ProtoLinked() noexcept {  free_(); }
+            inline virtual ~ProtoLinked() noexcept {  free_(); }
 
             //__________________________________________________________________
             //
@@ -58,9 +58,12 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! send items to proxy
-            virtual void free() noexcept {  free_(); }
+            inline virtual void free() noexcept {  free_(); }
 
-            
+            //! generic new node production
+            template <typename ARGS> inline
+            NODE *generate(ARGS &args) { return proxy->produce(args); }
+
         protected:
             //! non-virtual release
             inline void free_() noexcept { proxy->destroy(*this); }

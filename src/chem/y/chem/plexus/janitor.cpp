@@ -25,6 +25,7 @@ namespace Yttrium
                 // C++
                 //______________________________________________________________
                 inline explicit Cursor(const SpProxy &_) : SpStrip(_), xi(0) {}
+                inline explicit Cursor(const SpProxy &_, const Species &s, const xreal &x) : SpStrip(_), xi(x) { (*this) << s; }
                 inline          Cursor(const Cursor  &cursor) : SpStrip(cursor), xi(cursor.xi) {}
                 inline virtual ~Cursor() noexcept {}
 
@@ -150,16 +151,29 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Inquiry);
-                inline void updateEquatingWith(const Cursor &cr)
+                inline void updateEquatingWith(Cursor &cr)
                 {
                     for(Cursors::NodeType *node=equating.head;node;node=node->next)
                     {
                         Cursor &it = **node;
                         switch( Sign::Of(cr.xi,it.xi) )
                         {
-                                
+                            case Negative: 
+                                // smaller thant current value => before
+                                equating.insertBefore(node, equating.generate(cr) );
+                                return;
+
+                            case __Zero__: 
+                                // same than current value => merge
+                                it.mergeTail(cr);
+                                return;
+
+                            case Positive: 
+                                // greater thant current value => after
+                                continue;
                         }
                     }
+                    // bigger than all
                     equating << cr;
                 }
             };
