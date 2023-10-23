@@ -26,6 +26,21 @@ namespace Yttrium
 #endif
 
 #if defined(Y_WIN)
+		DWORD dw = ::GetEnvironmentVariable(name.c_str(), 0, 0);
+		if (dw <= 0) return false;
+		//std::cerr << "dw=" << dw << std::endl;
+		String res(dw-1, AsCapacity, true);
+		const DWORD rd = ::GetEnvironmentVariable(name.c_str(), &res[1], dw);
+		//std::cerr << "rd=" << rd << std::endl;
+		//std::cerr << "id='" << res << "'" << std::endl;
+		if (rd <= 0)
+			throw Exception("unexpected vanished '%s'", name.c_str());
+		value.swapWith(res);
+		return true;
+#endif
+
+#if 0
+#if defined(Y_WIN)
         LPCH es = ::GetEnvironmentStrings();
         if (!es) throw Win32::Exception(::GetLastError(), "GetEnvironmentStrings()");
 
@@ -78,7 +93,7 @@ namespace Yttrium
         ::FreeEnvironmentStrings(es);
         return false;
 #endif
-
+#endif
 
     }
 
@@ -122,7 +137,7 @@ namespace Yttrium
             }
         }
 
-        throw Specific::Exception("Environment::Flag","invalid value = '%s", value.c_str());
+        throw Specific::Exception("Environment::Flag","invalid value = '%s'", value.c_str());
 
     }
 
