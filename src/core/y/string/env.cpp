@@ -28,73 +28,13 @@ namespace Yttrium
 #if defined(Y_WIN)
 		DWORD dw = ::GetEnvironmentVariable(name.c_str(), 0, 0);
 		if (dw <= 0) return false;
-		//std::cerr << "dw=" << dw << std::endl;
-		String res(dw-1, AsCapacity, true);
+        String res(dw-1, AsCapacity, true);
 		const DWORD rd = ::GetEnvironmentVariable(name.c_str(), &res[1], dw);
-		//std::cerr << "rd=" << rd << std::endl;
-		//std::cerr << "id='" << res << "'" << std::endl;
-		if (rd <= 0)
+        if (rd <= 0)
 			throw Exception("unexpected vanished '%s'", name.c_str());
 		value.swapWith(res);
 		return true;
 #endif
-
-#if 0
-#if defined(Y_WIN)
-        LPCH es = ::GetEnvironmentStrings();
-        if (!es) throw Win32::Exception(::GetLastError(), "GetEnvironmentStrings()");
-
-        try
-        {
-            const char* curr = es;
-
-
-        CYCLE:
-            const char* next = curr;
-            while (0 != *(++next))
-                ;
-
-            const size_t size = (next - curr);
-
-
-            //std::cerr << "size=" << size << std::endl;
-            if ( size <= 1 && 0 == *next)
-            {
-                // std::cerr << "done" << std::endl;
-                return false;
-            }
-			const String content(curr, size);
-			std::cerr << "content=" << content << std::endl;
-            const char * const sep = strchr(curr, '=');
-            if (0==sep) throw Win32::Exception(ERROR_NO_DATA, "while parsing environment strings");
-            const String uuid(curr, sep - curr);
-            if (uuid == name)
-            {
-				const char * const ini = sep + 1;
-                const String data(ini, next - ini);
-                value = data;
-                return true;
-            }
-            
-           //std::cerr << "|_uuid='" << uuid << "'" << std::endl;
-            //std::cerr << "|_data='" << data << "'" << std::endl;
-
-            //const String content(curr, size);
-            //std::cerr << "|_[" << content << "]" << std::endl;
-            curr = ++next;
-            goto CYCLE;
-        }
-        catch (...)
-        {
-            ::FreeEnvironmentStrings(es);
-            throw;
-        }
-
-        ::FreeEnvironmentStrings(es);
-        return false;
-#endif
-#endif
-
     }
 
     bool Environment:: Get(String &value, const char * const name)
