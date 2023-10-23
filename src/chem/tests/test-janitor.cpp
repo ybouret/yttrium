@@ -4,6 +4,7 @@
 #include "y/chem/plexus.hpp"
 #include "y/chem/plexus/conservation/guardian.hpp"
 #include "y/chem/plexus/janitor.hpp"
+#include "y/string/env.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -43,7 +44,7 @@ Y_UTEST(janitor)
     lib(std::cerr << "Corg=","  [",C0,"]",Chemical::Conv::X2R);
 
 
-    if(false)
+    if(Environment::Flag("GUARDIAN"))
     {
         Chemical::Guardian      guardian;
         const Chemical::SpList &corrected =  guardian(plexus,C0,Cerr,xml);
