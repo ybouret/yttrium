@@ -271,9 +271,9 @@ namespace Yttrium
 
             {
                 Y_XML_SECTION(xml,"Cluster::Summary");
-                Y_XMLOG(xml, " (*) involved species : " << lib.size);
-                Y_XMLOG(xml, " (*) start equilibria : " << N);
-                Y_XMLOG(xml, " (*) final equilibria : " << all.size);
+                Y_XMLOG(xml, " (*) involved species : " << lib.size );
+                Y_XMLOG(xml, " (*) start equilibria : " << N        );
+                Y_XMLOG(xml, " (*) final equilibria : " << all.size );
             }
 
 

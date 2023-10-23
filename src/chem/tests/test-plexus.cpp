@@ -30,11 +30,6 @@ Y_UTEST(plexus)
 
     plexus.graphViz();
     
-    for(size_t order=1;order<=plexus.maxOrder;++order)
-    {
-        const String id = FormatString("plexus%u.dot",unsigned(order));
-        GraphViz::Vizible::DotToPngEx(id,plexus,order);
-    }
 
     
 

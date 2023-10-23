@@ -25,7 +25,8 @@ namespace Yttrium
             virtual ~Janitor() noexcept;
 
             void process(const Cluster   &cluster,
-                         Writable<xreal> &Corg);
+                         Writable<xreal> &Corg,
+                         XMLog           &xml);
 
 
         private:
