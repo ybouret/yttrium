@@ -74,7 +74,7 @@ namespace Yttrium
                 inline   Inquiry(const SpProxy      &sprx,
                                  const CursorsProxy &cprx) noexcept :
                 limiting(sprx),
-                equating(cprx)
+                negative(cprx)
                 {
                 }
 
@@ -83,7 +83,7 @@ namespace Yttrium
                 }
 
                 Cursor  limiting;
-                Cursors equating;
+                Cursors negative;
 
                 inline void probe(const Actors          &actors,
                                   const Readable<xreal> &Corg,
@@ -94,12 +94,14 @@ namespace Yttrium
                     {
                         const Species &sp = a->sp;
                         if(!kept[sp.indx[SubLevel]]) continue;
+
                         const xreal c = Corg[sp.indx[TopLevel]];
                         if(c.mantissa>=0)
                         {
+                            //--------------------------------------------------
                             // limiting concentration
+                            //--------------------------------------------------
                             const xreal xi = c/a->xn;
-                            //std::cerr << "limiting by xi_" << sp.name << " = " << double(xi) << std::endl;
 
                             switch(limiting.size)
                             {
@@ -121,11 +123,12 @@ namespace Yttrium
                         }
                         else
                         {
+                            //--------------------------------------------------
                             // equating concentration
+                            //--------------------------------------------------
                             const xreal xi = (-c)/a->xn;
-                            //std::cerr << "equating by xi_" << sp.name << " = " << double(xi) << std::endl;
-                            Cursor cr(limiting.proxy,sp,xi);
-                            updateEquatingWith(cr);
+                            Cursor      cr(limiting.proxy,sp,xi);
+                            upgradeWith(cr);
                         }
                     }
                 }
@@ -136,9 +139,9 @@ namespace Yttrium
                     {
                         os << " | limiting: " << self.limiting;
                     }
-                    if(self.equating.size>0)
+                    if(self.negative.size>0)
                     {
-                        os << " | equating: " << self.equating;
+                        os << " | negative: " << self.negative;
                     }
 
                     return os;
@@ -147,16 +150,16 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Inquiry);
 
-                inline void updateEquatingWith(Cursor &cr)
+                inline void upgradeWith(Cursor &cr)
                 {
-                    for(Cursors::NodeType *node=equating.head;node;node=node->next)
+                    for(Cursors::NodeType *node=negative.head;node;node=node->next)
                     {
                         Cursor &it = **node;
                         switch( Sign::Of(cr.xi,it.xi) )
                         {
                             case Negative: 
-                                // smaller thant current value => before
-                                equating.insertBefore(node, equating.generate(cr) );
+                                // smaller than current value => before
+                                negative.insertBefore(node, negative.generate(cr) );
                                 return;
 
                             case __Zero__: 
@@ -169,8 +172,8 @@ namespace Yttrium
                                 continue;
                         }
                     }
-                    // bigger than all
-                    equating << cr;
+                    // bigger than all, append a copy
+                    negative << cr;
                 }
             };
 
@@ -232,8 +235,8 @@ namespace Yttrium
             //__________________________________________________________________
             SpProxy      sprx;
             CursorsProxy cprx;
-            Inquiry reac;
-            Inquiry prod;
+            Inquiry      reac;
+            Inquiry      prod;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
