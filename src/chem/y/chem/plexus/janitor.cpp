@@ -20,7 +20,24 @@ namespace Yttrium
                 inline virtual ~Cursor() noexcept {}
 
                 inline void reset() noexcept { xi = 0; free(); }
+                inline void start(const xreal &x, const Species &s)
+                {
+                    free(); xi = x; (*this) << s;
+                }
 
+                friend inline std::ostream & operator<<(std::ostream &os, const Cursor &self)
+                {
+                    if(self.size>0)
+                    {
+                        const SpStrip &me = self;
+                        os << me << "@" << double(self.xi);
+                    }
+                    else
+                    {
+                        os << "none";
+                    }
+                    return os;
+                }
             private:
                 Y_DISABLE_ASSIGN(Cursor);
             };
@@ -54,7 +71,7 @@ namespace Yttrium
                         {
                             // limiting
                             const xreal xi = c/a->xn;
-                            std::cerr << "limiting by xi_" << sp.name << " = " << double(xi) << std::endl;
+                            //std::cerr << "limiting by xi_" << sp.name << " = " << double(xi) << std::endl;
 
                             switch(limiting.size)
                             {
@@ -64,7 +81,13 @@ namespace Yttrium
                                     break;
 
                                 default:
-                                    ;
+                                    switch( Sign::Of(xi,limiting.xi))
+                                    {
+                                        case Negative: limiting.start(xi,sp); break; // new winner
+                                        case Positive: break;                        // not better
+                                        case __Zero__: limiting << sp; break;        // multiple winner
+                                    }
+
                             }
 
 
