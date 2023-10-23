@@ -21,8 +21,8 @@ namespace Yttrium
             class Accumulator : public Object, public XAdd
             {
             public:
-                typedef CxxListOf<Accumulator> List;
-                typedef CxxPoolOf<Accumulator> Pool;
+                typedef CxxListOf<Accumulator> List; //!< alias
+                typedef CxxPoolOf<Accumulator> Pool; //!< alias
 
                 inline explicit Accumulator() : Object(), XAdd(), host(0), next(0), prev(0) {}
                 inline virtual ~Accumulator() noexcept {}
@@ -155,22 +155,26 @@ namespace Yttrium
                 while(xlist.size>nsp) xpool.store(xlist.popTail())->free();
                 while(xlist.size<nsp) xlist.pushTail( (xpool.size>0) ? xpool.query() : new Accumulator() );
 
+                assert(nsp==xlist.size);
+
                 // link accumulator in given slot
                 accum.ld(0);
-                Accumulator *acc = xlist.head;
-                for(const Cluster *cluster=plexus->head;cluster;cluster=cluster->next)
                 {
-                    const Booleans &  kept = *(cluster->kept);
-                    for(const SpNode *node = cluster->lib.head;node;node=node->next)
+                    Accumulator *acc = xlist.head;
+                    for(const Cluster *cluster=plexus->head;cluster;cluster=cluster->next)
                     {
-                        const Species &sp = **node;
-                        if(! kept[ sp.indx[SubLevel]] ) continue;
+                        const Booleans &  kept = *(cluster->kept);
+                        for(const SpNode *node = cluster->lib.head;node;node=node->next)
+                        {
+                            const Species &sp = **node;
+                            if(! kept[ sp.indx[SubLevel]] ) continue;
 
-                        assert(sp.indx[TopLevel] <= accum.size());
-                        assert(0!=acc);
-
-                        (accum[sp.indx[TopLevel]] = acc)->host = &sp;
-                        acc = acc->next;
+                            assert(sp.indx[TopLevel] <= accum.size());
+                            assert(0!=acc);
+                            assert(0==accum[sp.indx[TopLevel]]);
+                            (accum[sp.indx[TopLevel]] = acc)->host = &sp;
+                            acc = acc->next;
+                        }
                     }
                 }
             }
