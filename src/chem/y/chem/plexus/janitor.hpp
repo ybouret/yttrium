@@ -31,6 +31,8 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Janitor);
+            class Code;
+            Code  *code;
         };
 
     }
