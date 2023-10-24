@@ -107,7 +107,7 @@ namespace Yttrium
                             break;
                     }
 
-                    // look up
+                    // look up in pre-ordered list
                     for(CursorNode *node=head;node;node=node->next)
                     {
                         Cursor  &here= **node;
