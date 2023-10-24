@@ -119,7 +119,7 @@ namespace Yttrium
             const AutoPtr<const Booleans> kept; //!< conserved flag
             const AutoPtr<const Army>     army; //!< equilibria army
             const AutoPtr<const EqGroups> sGrp; //!< solving groups
-            const AutoPtr<const EqGroups> jGrp; //!< janitor groups
+            const AutoPtr<const EqGroups> eGrp; //!< equalizing groups
 
             const Matrix<int>             Nu;    //!< main topology
             const Matrix<unsigned>        Qm;    //!< conservation matrix

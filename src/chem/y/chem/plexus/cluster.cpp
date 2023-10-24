@@ -23,7 +23,7 @@ namespace Yttrium
         kept( 0 ),
         army( new Army()     ),
         sGrp( new EqGroups() ),
-        jGrp( new EqGroups() ),
+        eGrp( new EqGroups() ),
         Nu(),
         Qm(),
         meb(0),

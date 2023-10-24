@@ -225,15 +225,15 @@ namespace Yttrium
             }
 
             {
-                const size_t NJ = army->definite.size;
-                Y_XML_SECTION_OPT(xml, "Janitor", " count='" << NJ << "'");
+                const size_t NJ= army->definite.size;
+                Y_XML_SECTION_OPT(xml, "Equalizer", " count='" << NJ << "'");
                 if(NJ>0)
                 {
                     const AreDependent areDependent = { *kept };
                     Matrix<bool> conn;
                     BuildConn(conn,army->definite, AuxLevel, areDependent);
                     PrintConn(conn,army->definite, AuxLevel, eqfm, xml);
-                    SetGroups(conn,army->definite, AuxLevel, Coerce(*jGrp), xml );
+                    SetGroups(conn,army->definite, AuxLevel, Coerce(*eGrp), xml );
                 }
             }
 
