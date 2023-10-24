@@ -35,7 +35,7 @@ Y_UTEST(custodian)
 
     Chemical::Custodian custodian;
     custodian.prepare(plexus,xml);
-    custodian.enter();
+    custodian.startup();
     
     Vector<Chemical::xreal> Corg(lib->size(),0), Cerr(lib->size(),0);
     lib.fill(Corg, ran);
@@ -48,6 +48,10 @@ Y_UTEST(custodian)
     custodian(plexus,Corg,xml);
 
     custodian.query(xml,lib);
+    const Chemical::SpList &modified = custodian.collect(Cerr);
+    std::cerr << "modified: " << modified  << std::endl;
+    lib(std::cerr << "Cerr=","  [",Cerr,"]",Chemical::Conv::X2R);
+
 
 }
 Y_UDONE()

@@ -124,7 +124,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            inline explicit Code() : issue(), xadd(), accum(), sbook(), xlist(), xpool() {}
+            inline explicit Code() : issue(), slist(), xadd(), accum(), sbook(), xlist(), xpool() {}
             inline virtual ~Code() noexcept {}
 
             //__________________________________________________________________
@@ -297,6 +297,19 @@ namespace Yttrium
 
             }
 
+            inline const SpList & collect(Writable<xreal> &Cerr)
+            {
+                slist.free();
+                for(Accumulator *acc=xlist.head;acc;acc=acc->next)
+                {
+                    if(acc->size()<=0) continue;
+                    const Species &sp = *(acc->host);
+                    slist << sp;
+                    Cerr[ sp.indx[TopLevel] ] = acc->sum();
+                }
+                return slist;
+            }
+
             //__________________________________________________________________
             //
             //
@@ -304,6 +317,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             XsList                               issue;
+            SpList                               slist;
             XAdd                                 xadd;
             Vector<Accumulator *,Memory::Dyadic> accum; //!< dispatched accumulator for species top-level
             AddressBook                          sbook; //!< modified species
@@ -342,7 +356,7 @@ namespace Yttrium
             code->prepare(plexus,xml);
         }
 
-        void Custodian:: enter() noexcept
+        void Custodian:: startup() noexcept
         {
             assert(0!=code);
             for(Accumulator *acc=code->xlist.head;acc;acc=acc->next)
@@ -392,9 +406,13 @@ namespace Yttrium
                     const Species &sp = *(acc->host);
                     spfm.pad( xml() << sp,sp) << " : " << *acc << std::endl;
                 }
-                //Y_XMLOG(xml,(*acc->host));
             }
+        }
 
+        const SpList & Custodian:: collect(Writable<xreal> &Cerr)
+        {
+            assert(0!=code);
+            return code->collect(Cerr);
         }
 
     }

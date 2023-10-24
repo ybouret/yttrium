@@ -37,12 +37,10 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+            void           prepare(const Plexus &, XMLog &); //!< prepare accumulator for each species conserved species
+            void           startup() noexcept;               //!< cleanup all accumulators
+            const SpList & collect(Writable<xreal> &Cerr);   //!< collect all errors of MODIFIED species
 
-            //! prepare accumulator for each species conserved species
-            void prepare(const Plexus &, XMLog &);
-
-            //! cleanup all accumulators
-            void enter() noexcept;
 
             //! apply the law for a given cluster
             void operator()(const Cluster   &cluster,
