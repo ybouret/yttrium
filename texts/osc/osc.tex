@@ -1,0 +1,82 @@
+\documentclass[aps,12pt]{revtex4}
+\usepackage[a4paper]{geometry}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{chemarr}
+\usepackage{mathptmx}
+\usepackage{bookman}
+
+  	 
+\begin{document}
+
+
+\section{Species to monitor}
+\begin{equation*}
+\begin{array}{|c|l|}
+\hline
+	cAMP & \text{cyclic AMP}\\
+	Ca_i & \text{internal Calcium}\\
+    Ch^\ast & \text{active channel}\\
+    E     & \text{Cyclase} \\	
+\hline
+\end{array}
+\end{equation*}
+
+\section{Accountable Species/Variables before kinetic constants}
+
+\begin{equation*}
+\begin{array}{|c|l|}
+\hline
+	Ca_e. & \text{external Calcium}\\
+    Ch    & \text{inactive channel}\\
+    Ch_0  & \text{total channel}\\
+    E_0   & \text{total cyclase} \\	
+    ECa_i & \text{calcium-inhibited cyclase}\\
+    \zeta & \text{reduced membrane potential}\\
+    P_{Ca}(\zeta) & \text{Calcium permeability, GHK}\\
+\hline
+\end{array}
+\end{equation*}
+
+\section{Kinetic equations}
+\begin{itemize}
+\item $[cAMP]$ (no conservation):
+	\begin{equation}
+	\partial_t [cAMP] = \underbrace{k_{ATP} [ATP] [E]}_{\text{production}} 
+	- \underbrace{k_{PDE} [PDE] [cAMP]}_{\text{lysis}}
+	\underbrace{-k_a [cAMP][Ch] + k_r [Ch^\ast]}_{\text{activation}}
+	\end{equation}
+	
+\item $[Ca_i]$ (no conservation):
+	\begin{equation}
+		\partial_t [Ca_i] = 
+		\underbrace{P_{Ca}(\zeta) [Ch^\ast] ([Ca_e]e^{-2\zeta}-[Ca_i])}_{\text{channel}}
+		\underbrace{ - k_f [E] [Ca_i]  + k_d [ECa_i] }_{\text{cyclase}}
+		\underbrace{-k_p [Ca_i]}_{\text{pump}}
+	\end{equation}
+	
+\item $[Ch^\ast]$:
+	\begin{equation}
+	\left\lbrace
+	\begin{array}{rcl}
+		\partial_t[Ch^\ast] &= &k_a [cAMP][Ch] - k_r [Ch^\ast]\\
+	 		Ch_0 & = & [Ch] + [Ch^\star]\\
+	\end{array}
+	\right.
+	\end{equation}
+	
+\item $[E]$
+	\begin{equation}
+	\left\lbrace
+	\begin{array}{rcl}
+		\partial_t [E] & = & - k_f [E] [Ca_i]  + k_d [ECa_i]\\
+		E_0 & = & [E] + [ECa_i]\\
+	\end{array}
+	\right.
+	\end{equation}
+\end{itemize}
+
+
+\end{document}
