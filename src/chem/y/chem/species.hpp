@@ -80,12 +80,12 @@ namespace Yttrium
         // List of species
         //
         //______________________________________________________________________
-        typedef Small::BareLightList<const Species>     SpRepo; //!< alias
-        typedef Small::SoloLightList<const Species>     SpList; //!< alias
-        typedef SpRepo::NodeType                        SpNode; //!< alias
+        typedef Small::BareLightList<const Species>     SpRepo;  //!< alias
+        typedef Small::SoloLightList<const Species>     SpList;  //!< alias
+        typedef SpRepo::NodeType                        SpNode;  //!< alias
         typedef Small::CoopLightList<const Species>     SpStrip; //!< alias
-        typedef SpStrip::CacheType                      SpCache;
-        typedef SpStrip::ProxyType                      SpProxy;
+        typedef SpStrip::CacheType                      SpCache; //!< alias
+        typedef SpStrip::ProxyType                      SpProxy; //!< alias
 
         //! compare Entity-based node by their top-level indices
         template <typename NODE> static inline
