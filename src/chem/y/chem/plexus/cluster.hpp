@@ -117,8 +117,6 @@ namespace Yttrium
             const CxxListOf<Canon>        law;  //!< list of parallel canons
             const AutoPtr<const Tier>     tier; //!< species tier
             const AutoPtr<const Booleans> kept; //!< conserved flag
-            const size_t                  knum; //!< |kept==true|
-            const size_t                  kmsi; //!< kept max species index (top-level)
             const AutoPtr<const Army>     army; //!< equilibria army
             const AutoPtr<const EqGroups> sGrp; //!< solving groups
             const AutoPtr<const EqGroups> jGrp; //!< janitor groups

@@ -54,6 +54,9 @@ namespace Yttrium
                             Writable<xreal> &Corg,
                             XMLog           &xml);
 
+            //! mostly for debug
+            void query(XMLog &xml,const Entities &spfm) const;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Custodian);
             class Code;

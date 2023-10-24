@@ -2,7 +2,6 @@
 
 #include "y/chem/weasel.hpp"
 #include "y/chem/plexus.hpp"
-#include "y/chem/plexus/conservation/guardian.hpp"
 #include "y/chem/plexus/janitor.hpp"
 #include "y/string/env.hpp"
 
@@ -44,6 +43,7 @@ Y_UTEST(janitor)
     lib(std::cerr << "Corg=","  [",C0,"]",Chemical::Conv::X2R);
 
 
+#if 0
     if(Environment::Flag("GUARDIAN"))
     {
         Chemical::Guardian      guardian;
@@ -54,7 +54,7 @@ Y_UTEST(janitor)
         lib(std::cerr << "Cerr=","  [",Cerr,"]",Chemical::Conv::X2R);
         std::cerr << "corrected = " << corrected << std::endl;
     }
-
+#endif
 
     Chemical::Janitor J;
     if(plexus->head) J.process(*(plexus->head),C0,xml);

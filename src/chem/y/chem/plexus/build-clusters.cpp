@@ -1,5 +1,6 @@
 
 #include "y/chem/plexus.hpp"
+#include <iomanip>
 
 namespace Yttrium
 {
@@ -66,6 +67,11 @@ namespace Yttrium
                 }
             }
 
+            //------------------------------------------------------------------
+            //
+            // compile clusters
+            //
+            //------------------------------------------------------------------
             Y_XMLOG(xml, "#cluster=" << clusters.size);
             for(Cluster *cluster=clusters.head;cluster;cluster=cluster->next)
             {
@@ -73,6 +79,29 @@ namespace Yttrium
                 Coerce(maxOrder) = Max(maxOrder,cluster->meb->size());
             }
             Y_XMLOG(xml, "maxOrder=" << maxOrder);
+
+            //------------------------------------------------------------------
+            //
+            // collect kept species per cluster
+            //
+            //------------------------------------------------------------------
+            {
+                Y_XML_SECTION(xml, "Plexus::KeptSpecies");
+                size_t kndx = 1;
+                for(Cluster *cluster=clusters.head;cluster;cluster=cluster->next)
+                {
+                    const Booleans &  kept = *(cluster->kept);
+                    for(const SpNode *node = cluster->lib.head; node; node=node->next)
+                    {
+                        const Species &sp = **node;
+                        if( !kept[sp.indx[SubLevel]]) continue;
+                        Coerce(sp.indx[AuxLevel]) = kndx++;
+                        Coerce(kSpecies) << sp;
+                        Y_XMLOG(xml, "#" << std::setw(3) << sp.indx[AuxLevel] << " @" << sp);
+                    }
+                }
+            }
+
         }
     }
 

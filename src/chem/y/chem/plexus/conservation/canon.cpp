@@ -57,7 +57,8 @@ namespace Yttrium
 
             // sort by increasing top-level index
             SortIncreasing(here);
-            
+
+#if 0
             // make aux-level indices
             size_t      indx=1;
             for(SpNode *node=here.head;node;node=node->next,++indx)
@@ -65,6 +66,7 @@ namespace Yttrium
                 const Species &sp = **node;
                 Coerce(sp.indx[AuxLevel]) = indx;
             }
+#endif
         }
 
         void Canon:: viz(OutputStream &fp, size_t &indx) const

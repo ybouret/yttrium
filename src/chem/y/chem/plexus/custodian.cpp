@@ -124,7 +124,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            inline explicit Code() : issue(), accum(), sbook(), xlist(), xpool() {}
+            inline explicit Code() : issue(), xadd(), accum(), sbook(), xlist(), xpool() {}
             inline virtual ~Code() noexcept {}
 
             //__________________________________________________________________
@@ -138,18 +138,9 @@ namespace Yttrium
             inline void prepare(const Plexus &plexus, XMLog &xml)
             {
                 Y_XML_SECTION(xml, "Custodian::Prepare");
-                size_t msi = 0;
-                size_t nsp = 0;
-                for(const Cluster *cluster=plexus->head;cluster;cluster=cluster->next)
-                {
-                    msi  = Max(cluster->kmsi,msi);
-                    nsp += cluster->knum;
-                }
-                Y_XMLOG(xml, "-- Max Kept Species Index = " << msi);
-                Y_XMLOG(xml, "-- All Kept Species Count = " << nsp);
+                const size_t nsp = plexus.kSpecies.size;
 
-                // prepare vector of accumulator pointers
-                accum.adjust(msi,0);
+                accum.adjust(nsp,0);
 
                 // prepare accumulators
                 while(xlist.size>nsp) xpool.store(xlist.popTail())->free();
@@ -159,24 +150,17 @@ namespace Yttrium
 
                 // link accumulator in given slot
                 accum.ld(0);
+                Accumulator *      acc = xlist.head;
+                for(const SpNode * spn = plexus.kSpecies.head;spn;spn=spn->next)
                 {
-                    Accumulator *acc = xlist.head;
-                    for(const Cluster *cluster=plexus->head;cluster;cluster=cluster->next)
-                    {
-                        const Booleans &  kept = *(cluster->kept);
-                        for(const SpNode *node = cluster->lib.head;node;node=node->next)
-                        {
-                            const Species &sp = **node;
-                            if(! kept[ sp.indx[SubLevel]] ) continue;
-
-                            assert(sp.indx[TopLevel] <= accum.size());
-                            assert(0!=acc);
-                            assert(0==accum[sp.indx[TopLevel]]);
-                            (accum[sp.indx[TopLevel]] = acc)->host = &sp;
-                            acc = acc->next;
-                        }
-                    }
+                    const Species &sp = **spn;
+                    const size_t   sj = sp.indx[AuxLevel];
+                    assert(sj>=1);
+                    assert(sj<=nsp);
+                    (accum[sj]=acc)->host = &sp;
+                    acc = acc->next;
                 }
+                
             }
 
 
@@ -263,7 +247,7 @@ namespace Yttrium
                     {
                         const xreal    dC = (a->xn * num)/den;
                         const Species &sp = a->sp;
-                        const size_t   sj = sp.indx[TopLevel];
+                        const size_t   sj = sp.indx[AuxLevel];
                         Y_XMLOG(xml, "  |-- [+" << std::setw(15) << double(dC) << "] @" << sp);
                         assert(0!=accum[sj]);
                         Corg[sj] += dC;
@@ -395,6 +379,24 @@ namespace Yttrium
                 (*this)(*cluster,Corg,xml);
             }
         }
+
+        void Custodian:: query(XMLog &xml, const Entities &spfm) const
+        {
+            Y_XML_SECTION(xml, "Custodian::Query");
+            assert(0!=code);
+            for(Accumulator *acc=code->xlist.head;acc;acc=acc->next)
+            {
+                assert(0!=acc->host);
+                if(xml.verbose)
+                {
+                    const Species &sp = *(acc->host);
+                    spfm.pad( xml() << sp,sp) << " : " << *acc << std::endl;
+                }
+                //Y_XMLOG(xml,(*acc->host));
+            }
+
+        }
+
     }
 
 }

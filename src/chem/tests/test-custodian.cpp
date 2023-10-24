@@ -47,6 +47,7 @@ Y_UTEST(custodian)
 
     custodian(plexus,Corg,xml);
 
+    custodian.query(xml,lib);
 
 }
 Y_UDONE()

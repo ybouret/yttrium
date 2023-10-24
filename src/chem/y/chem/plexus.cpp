@@ -15,7 +15,8 @@ namespace Yttrium
         clusters(),
         shared_K(),
         primaryN(all->size()),
-        maxOrder(1)
+        maxOrder(1),
+        kSpecies()
         {
             Y_XML_SECTION(xml,"Plexus");
             buildClusters(all,xml);
@@ -43,8 +44,7 @@ namespace Yttrium
             }
         }
 
-
-
+        
         Plexus::ConstInterface & Plexus:: surrogate() const noexcept
         {
             return clusters;

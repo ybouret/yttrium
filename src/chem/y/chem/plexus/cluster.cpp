@@ -21,8 +21,6 @@ namespace Yttrium
         law(),
         tier( new Tier()     ),
         kept( 0 ),
-        knum( 0 ),
-        kmsi( 0 ),
         army( new Army()     ),
         sGrp( new EqGroups() ),
         jGrp( new EqGroups() ),
