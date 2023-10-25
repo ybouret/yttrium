@@ -85,14 +85,17 @@ namespace Yttrium
         void Plexus:: graphViz() const
         {
             static VFS   &theFS = LocalFS::Instance();
+
+            std::cerr << "Plexus::GraphViz" << std::endl;
+
             {
-                Jive::Matcher match = "(plexus[:digit:]*[.]png)&";//GraphViz::Vizible::DotToPng("match.dot", *(match.motif) );
+                Jive::Matcher match = "(plexus[:digit:]*[.]png)&"; 
                 VFS::Entries  elist;
                 Jive::VirtualFileSystem::Find(theFS,".", elist, match);
                 while(elist.size>0)
                 {
                     const AutoPtr<VFS::Entry> ep = elist.popTail();
-                    std::cerr << "rm " << ep->path << std::endl;
+                    //std::cerr << "rm " << ep->path << std::endl;
                     theFS.tryRemove(ep->path);
                 }
             }
@@ -100,7 +103,7 @@ namespace Yttrium
             for(size_t order=1;order<=maxOrder;++order)
             {
                 const String id = FormatString("plexus%u.dot",unsigned(order));
-                std::cerr << "saving " << id << std::endl;
+                //std::cerr << "saving " << id << std::endl;
                 GraphViz::Vizible::DotToPngEx(id,*this,order);
             }
 

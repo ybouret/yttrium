@@ -46,13 +46,15 @@ Y_UTEST(equalizer)
     }
     lib(std::cerr << "Corg=","  [",Corg,"]",Chemical::Conv::X2R);
 
-#if 0
-    custodian(plexus,Corg,xml);
-    custodian.query(xml,lib);
-    const Chemical::SpList &modified = custodian.collect(Cerr);
-    std::cerr << "modified: " << modified  << std::endl;
-    lib(std::cerr << "Cerr=","  [",Cerr,"]",Chemical::Conv::X2R);
-#endif
+    if(true)
+    {
+        custodian(plexus,Corg,xml);
+        custodian.query(xml,lib);
+        const Chemical::SpList &modified = custodian.collect(Cerr);
+        std::cerr << "modified: " << modified  << std::endl;
+        lib(std::cerr << "Cerr=","  [",Cerr,"]",Chemical::Conv::X2R);
+        lib(std::cerr << "Corg=","  [",Corg,"]",Chemical::Conv::X2R);
+    }
 
     Chemical::Equalizer equalizer;
     if(plexus->size)

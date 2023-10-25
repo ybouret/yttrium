@@ -172,7 +172,8 @@ namespace Yttrium
 
                 inline friend std::ostream & operator<<(std::ostream &os, const Boundary &self)
                 {
-                    os << " | lim:" << self.lim << " | eqz:" << self.eqz;
+                    os << " | lim:" << self.lim << " | eqz:";
+                    if(self.eqz.size>0) os << self.eqz; else os << "none";
                     return os;
                 }
 

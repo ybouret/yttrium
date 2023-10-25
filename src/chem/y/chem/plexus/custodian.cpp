@@ -247,11 +247,10 @@ namespace Yttrium
                     {
                         const xreal    dC = (a->xn * num)/den;
                         const Species &sp = a->sp;
-                        const size_t   sj = sp.indx[AuxLevel];
                         Y_XMLOG(xml, "  |-- [+" << std::setw(15) << double(dC) << "] @" << sp);
-                        assert(0!=accum[sj]);
-                        Corg[sj] += dC;
-                        accum[sj]->insert(dC);
+                        assert(0!=accum[sp.indx[AuxLevel]]);
+                        Corg[  sp.indx[TopLevel] ] += dC;
+                        accum[ sp.indx[AuxLevel] ]->insert(dC);
                         sbook |= sp;
                     }
                     Y_XMLOG(xml, "  |-- " << double(num) << " -> " << double(cns.excess(Corg,xadd)) );
