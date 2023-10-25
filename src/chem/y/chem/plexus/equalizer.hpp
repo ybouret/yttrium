@@ -24,6 +24,8 @@ namespace Yttrium
             explicit Equalizer();
             virtual ~Equalizer() noexcept;
 
+            void prepare(const Plexus &, XMLog &); //!< prepare memory
+
             void run(const Cluster   &cluster,
                      Writable<xreal> &Corg,
                      XMLog           &xml);

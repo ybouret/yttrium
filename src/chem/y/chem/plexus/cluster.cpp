@@ -101,6 +101,7 @@ namespace Yttrium
             // start indexing
             //------------------------------------------------------------------
             {
+                SortIncreasing(Coerce(all));
                 size_t i=0;
                 for(EqNode *node=all.head;node;node=node->next)
                 {
@@ -111,6 +112,7 @@ namespace Yttrium
             }
 
             {
+                SortIncreasing(Coerce(lib));
                 size_t j=0;
                 for(SpNode *node=lib.head;node;node=node->next)
                 {

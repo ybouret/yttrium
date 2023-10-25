@@ -198,10 +198,12 @@ namespace Yttrium
             {}
             inline virtual ~Code() noexcept {}
 
-            SpProxy      sprx;
-            CursorsProxy cprx;
-            Boundary     reac;
-            Boundary     prod;
+            inline void prepare(const Plexus &plexus, XMLog &xml)
+            {
+                Y_XML_SECTION(xml,"Equalizer::Prepare");
+
+
+            }
 
             inline void run(const Cluster   &cluster,
                             Writable<xreal> &Corg,
@@ -224,6 +226,13 @@ namespace Yttrium
                 }
 
             }
+
+            SpProxy      sprx;
+            CursorsProxy cprx;
+            Boundary     reac;
+            Boundary     prod;
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
@@ -258,6 +267,13 @@ namespace Yttrium
         {
             assert(0!=code);
             code->run(cluster,Corg,xml);
+        }
+
+
+        void Equalizer:: prepare(const Plexus &plexus, XMLog &xml)
+        {
+            assert(0!=code);
+            code->prepare(plexus,xml);
         }
     }
 
