@@ -73,7 +73,7 @@ namespace Yttrium
         {
         public:
             static const char * const CallSign; //!< "Cluster"
-            
+
             //__________________________________________________________________
             //
             //
@@ -128,7 +128,7 @@ namespace Yttrium
             const AutoPtr<const EqBatch>  meb;   //!< Mixed Equilibria Batchs
             Cluster *                     next;  //!< for list
             Cluster *                     prev;  //!< for list
-            const Entities                eqfm;  //!< format data from eqs
+            const Entities                eqfm;  //!< format data from all
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
