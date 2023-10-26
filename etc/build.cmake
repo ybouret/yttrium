@@ -34,7 +34,7 @@ foreach(buildDir ${buildDirs})
 		
 		# Visual Studio
 		if(EXISTS "${buildDir}/yttrium.sln")
-			set(BUILD_ON)
+			set(BUILD ON)
 			execute_process(COMMAND "${CMAKE_COMMAND}" "--build" "${buildDir}" "--target" "ALL_BUILD" "--config" "Release" #"--parallel" ${N}
 							COMMAND_ECHO      STDERR)
 		endif()
