@@ -76,11 +76,15 @@ namespace Yttrium
             for(Cluster *cluster=clusters.head;cluster;cluster=cluster->next)
             {
                 cluster->compile(eqs,shared_K,xml);
+                const SpRepo &lib = cluster->lib;
                 Coerce(maxOrder) = Max(maxOrder,cluster->meb->size());
-                Coerce(topIndex) = Max(topIndex, (**(cluster->lib.tail)).indx[TopLevel] );
+                Coerce(topIndex) = Max(topIndex, (**(lib.tail)).indx[TopLevel] );
+                Coerce(subIndex) = Max(subIndex, lib.size);
+                assert(cluster->lib.size == (**(lib.tail)).indx[SubLevel]);
             }
             Y_XMLOG(xml, "maxOrder=" << maxOrder);
             Y_XMLOG(xml, "topIndex=" << topIndex);
+            Y_XMLOG(xml, "subIndex=" << subIndex);
 
 
             //------------------------------------------------------------------

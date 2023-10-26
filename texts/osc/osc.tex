@@ -96,6 +96,7 @@
 \end{equation}
 
 \section{Steady State}
+\subsection{Equations}
 \begin{equation}
 \left\lbrace
 \begin{array}{lcl}
@@ -107,6 +108,7 @@
 \right.
 \end{equation}
 
+\subsection{Raw conditions}
 \begin{equation}
 \left\lbrace
 \begin{array}{lcl}
@@ -116,11 +118,89 @@
 \\
 ~[\overline{cAMP}] & = & \dfrac{\alpha}{\beta}[\overline{E}] \\
 \\
-~[\overline{Ca_i}] & = & \dfrac{p[\overline{Ch^\ast}]}{k_p+p[\overline{Ch^\ast}]} [Ca_e] e^{-2\zeta}
+~[\overline{Ca_i}] & = & \dfrac{p[\overline{Ch^\ast}]}{k_p+p[\overline{Ch^\ast}]} \underbrace{[Ca_e] e^{-2\zeta}}_{[Ca_e']}
+\end{array}
+\right.
+\end{equation}
+	
+\subsection{Rewriting}	
+\begin{equation}
+\left\lbrace
+\begin{array}{lcl}
+~[\overline{cAMP}] & = & \dfrac{\alpha}{\beta}[\overline{E}] \\
+\\
+~[ \overline{Ch^\ast} ] & = & \dfrac{k_a'[\overline{E}]}{k_a'[\overline{E}]+k_r} Ch_0\\
+\\
+~[\overline{Ca_i}] & = & \dfrac{p[\overline{Ch^\ast}]}{k_p+p[\overline{Ch^\ast}]} [Ca_e']\\
+\\
+~[\overline{E}] & = & \dfrac{k_d}{k_d+k_f[\overline{Ca_i}]} E_0\\
+\end{array}
+\right.
+\end{equation}
+Highly non-linear, unreadable solution..
+
+\subsection{First hypothesis: nul electro-osmotic return}
+\begin{equation}
+\left\lbrace
+\begin{array}{lcl}
+~[\overline{cAMP}] & = & \dfrac{\alpha}{\beta}[\overline{E}] \\
+\\
+~[ \overline{Ch^\ast} ] & = & \dfrac{k_a'[\overline{E}]}{k_a'[\overline{E}]+k_r} Ch_0\\
+\\
+~[\overline{Ca_i}] & = & \dfrac{p}{k_p}[\overline{Ch^\ast}] [Ca_e']\\
+\\
+~[\overline{E}] & = & \dfrac{k_d}{k_d+k_f[\overline{Ca_i}]} E_0\\
 \end{array}
 \right.
 \end{equation}
 
+Still non linear but easier.
+\begin{equation}
+\left\lbrace
+\begin{array}{lcl}
+K_c & = & \dfrac{k_a'}{k_r} \\
+\\
+K_p & = & \dfrac{p}{k_p} \\
+\\
+K_m & = & \dfrac{k_f}{k_d}\\
+\end{array}
+\right.
+\end{equation}
+
+\begin{equation}
+K_c(1+[Ca_e'] Ch_0 K_m K_p) [\overline{E}]^2 + (1-E_0K_c) [\overline{E}] - E_0 = 0
+\end{equation}
+
+\begin{equation}
+	\Delta =	(1+E_0 K_c)^2 + 4 (E_0 K_c) [Ca_e'] Ch_0    K_m  K_p > 0
+\end{equation}
+
+\begin{equation}
+\boxed{
+	[\overline{E}] = \dfrac{E_0 K_c + \left(\sqrt{\Delta} - 1\right)}
+	{
+	2 K_c(1+[Ca_e'] Ch_0 K_m K_p)
+	}
+}
+\end{equation}
+
+\begin{equation}
+	\underbrace{\dfrac{E_0}{1+[Ca_e'] Ch_0 K_m K_p}}_{\text{for large $E_0$}}
+		\leq	[\overline{E}] \leq \underbrace{E_0}_{\text{for small $E_0$}}
+\end{equation}
+
+And all other steady-state values depends only on it.
+There is only one steady state value: stable or not ?
+
+\section{Linearisation}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{lcl}
+~[E] & = & [\overline{E}] + x\\
+\end{array}
+\right.
+\end{equation}
 
 
 \end{document}
