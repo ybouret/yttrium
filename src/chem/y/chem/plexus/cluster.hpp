@@ -118,7 +118,7 @@ namespace Yttrium
             const CxxListOf<Conservation> cll;  //!< conservation law list
             const CxxListOf<Canon>        law;  //!< list of parallel canons
             const AutoPtr<const Tier>     tier; //!< species tier
-            const AutoPtr<const Booleans> kept; //!< conserved flag
+            const AutoPtr<const Booleans> kept; //!< conserved flag for all species in lib
             const AutoPtr<const Army>     army; //!< equilibria army
             const AutoPtr<const EqGroups> sGrp; //!< solving groups
             const AutoPtr<const EqGroups> eGrp; //!< equalizing groups

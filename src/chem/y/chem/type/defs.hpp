@@ -21,6 +21,10 @@ namespace Yttrium
         {
             //! xreal to double
             static inline double X2R(const xreal &x) { return double(x); }
+
+            //! identify
+            template <typename T>
+            static inline const T &Id(const T &x) { return x; }
         };
 
 

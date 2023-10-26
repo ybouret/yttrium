@@ -194,16 +194,17 @@ namespace Yttrium
             sprx(),
             cprx(),
             reac(sprx,cprx),
-            prod(sprx,cprx)
+            prod(sprx,cprx),
+            Ctry()
             {}
+
             inline virtual ~Code() noexcept {}
 
             inline void prepare(const Plexus &plexus, 
                                 XMLog        &xml)
             {
                 Y_XML_SECTION(xml,"Equalizer::Prepare");
-                
-
+                Ctry.make(plexus.maxEqzSz,plexus.maxSubId);
             }
 
             inline void run(const Cluster   &cluster,
@@ -219,20 +220,22 @@ namespace Yttrium
                     reac.probe(eq.reac,kept,Corg);
                     prod.probe(eq.prod,kept,Corg);
 
-                    Y_XMLOG(xml,eq);
+                    Y_XMLOG(xml,eq << " @aux=" << eq.indx[AuxLevel]);
                     Y_XMLOG(xml, "|_reac: " << reac);
                     Y_XMLOG(xml, "|_prod: " << prod);
+
+                    eq.display(std::cerr,Corg,TopLevel,Conv::X2R) << std::endl;
 
 
                 }
 
             }
 
-            SpProxy      sprx;
-            CursorsProxy cprx;
-            Boundary     reac;
-            Boundary     prod;
-
+            SpProxy       sprx;
+            CursorsProxy  cprx;
+            Boundary      reac;
+            Boundary      prod;
+            Matrix<xreal> Ctry;
 
 
         private:

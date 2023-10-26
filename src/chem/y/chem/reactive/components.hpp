@@ -70,6 +70,45 @@ namespace Yttrium
             //! insert species in book
             void insertSpeciesIn(AddressBook &book) const;
 
+            template <typename ARRAY, typename PROC> inline
+            std::ostream &display(std::ostream &os, ARRAY &arr, const Level lvl, PROC proc) const
+            {
+                os << '{';
+
+                for(const Actor *a=reac.head;a;a=a->next)
+                {
+                    os << ' ' << a->sp << '=' << proc(arr[a->sp.indx[lvl]]);
+                }
+
+                for(const Actor *a=prod.head;a;a=a->next)
+                {
+                    os << ' ' << a->sp << '=' << proc(arr[a->sp.indx[lvl]]);
+                }
+
+                os << ' ' << '}';
+                return os;
+            }
+
+            template <typename ARRAY> inline
+            std::ostream &display(std::ostream &os, ARRAY &arr, const Level lvl) const
+            {
+                return display(os,arr,lvl,Conv::Id<typename ARRAY::MutableType>);
+            }
+
+
+            template <typename TARGET,typename SOURCE>
+            inline void transfer(TARGET &target, const Level targetLevel,
+                                 SOURCE &source, const Level sourceLevel) const
+            {
+                size_t        n = db.size();
+                ConstIterator i = db.begin();
+                while(n-- > 0)
+                {
+                    const Species   &sp = (*i).sp;
+                    target[ sp.indx[targetLevel] ] = source[ sp.indx[sourceLevel] ];
+                    ++i;
+                }
+            }
 
             //__________________________________________________________________
             //
