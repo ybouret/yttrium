@@ -57,6 +57,8 @@ Y_UTEST(equalizer)
     }
 
     Chemical::Equalizer equalizer;
+    equalizer.prepare(plexus,xml);
+    
     for(const Chemical::Cluster *cluster=plexus->head;cluster;cluster=cluster->next)
     {
         equalizer.run(*cluster, Corg, xml);

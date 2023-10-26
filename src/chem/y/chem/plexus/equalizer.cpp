@@ -214,6 +214,7 @@ namespace Yttrium
                 const EqRepo   &repo = cluster.army->definite;
                 const Booleans &kept = *cluster.kept;
                 Y_XML_SECTION_OPT(xml, "Equalize::Cluster", " definite='" << repo.size << "'");
+                Ctry.ld(0);
                 for(const EqNode *en=repo.head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en;
@@ -225,7 +226,8 @@ namespace Yttrium
                     Y_XMLOG(xml, "|_prod: " << prod);
 
                     eq.display(std::cerr,Corg,TopLevel,Conv::X2R) << std::endl;
-
+                    eq.transfer(Ctry[eq.indx[AuxLevel]],SubLevel,Corg,TopLevel);
+                    eq.display(std::cerr,Ctry[eq.indx[AuxLevel]],SubLevel,Conv::X2R) << std::endl;
 
                 }
 
@@ -235,7 +237,7 @@ namespace Yttrium
             CursorsProxy  cprx;
             Boundary      reac;
             Boundary      prod;
-            Matrix<xreal> Ctry;
+            Matrix<xreal> Ctry; //! each row[AuxLevel for equilibria], SubLevel for species
 
 
         private:
