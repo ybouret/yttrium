@@ -95,6 +95,32 @@
 \right.
 \end{equation}
 
+\section{Steady State}
+\begin{equation}
+\left\lbrace
+\begin{array}{lcl}
+0 & = & k_d E_0 - (k_f[Ca_i]+k_d)[E]\\
+0 & = & k_a [cAMP] Ch_0 - (k_r+k_a[cAMP]) [Ch^\ast]\\
+0  & = & \alpha [E] - \beta [cAMP]   \\
+0  & = & p [Ch^\ast] [Ca_e] e^{-2\zeta}  - (p[Ch^\ast]+k_p) [Ca_i]  \\
+\end{array}
+\right.
+\end{equation}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{lcl}
+~[\overline{E}] & = & \dfrac{k_d}{k_d+k_f[\overline{Ca_i}]} E_0\\
+\\
+~[ \overline{Ch^\ast} ] & = & \dfrac{k_a[\overline{cAMP}]}{k_a[\overline{cAMP}]+k_r} Ch_0\\
+\\
+~[\overline{cAMP}] & = & \dfrac{\alpha}{\beta}[\overline{E}] \\
+\\
+~[\overline{Ca_i}] & = & \dfrac{p[\overline{Ch^\ast}]}{k_p+p[\overline{Ch^\ast}]} [Ca_e] e^{-2\zeta}
+\end{array}
+\right.
+\end{equation}
+
 
 
 \end{document}

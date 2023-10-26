@@ -18,10 +18,10 @@ foreach(buildDir ${buildDirs})
 		if(NOT BUILD)
 			message( STATUS "*** build system not recognized" )
 		else()
-			set(CMD "${CMAKE_COMMAND} --build . --target ${PARAM}")
+			set(CMD "${CMAKE_COMMAND} --build ${buildDir} --target ${PARAM}")
 			#message(STATUS "running '${CMD}'")
 			execute_process(COMMAND           ${CMD} 
-							WORKING_DIRECTORY ${buildDir}
+							#WORKING_DIRECTORY ${buildDir}
 							COMMAND_ECHO      STDERR)
 		endif()
 			
