@@ -18,7 +18,7 @@
 \hline
 	cAMP & \text{cyclic AMP}\\
 	Ca_i & \text{internal Calcium}\\
-    Ch^\ast & \text{active channel}\\
+    Ch^\ast & \text{active channel=}cAMPCh\\
     E     & \text{Cyclase} \\	
 \hline
 \end{array}
@@ -29,18 +29,22 @@
 \begin{equation*}
 \begin{array}{|c|l|}
 \hline
-	Ca_e. & \text{external Calcium}\\
+	Ca_e & \text{external Calcium}\\
     Ch    & \text{inactive channel}\\
     Ch_0  & \text{total channel}\\
     E_0   & \text{total cyclase} \\	
     ECa_i & \text{calcium-inhibited cyclase}\\
     \zeta & \text{reduced membrane potential}\\
-    P_{Ca}(\zeta) & \text{Calcium permeability, GHK}\\
+    P_{Ca}(\zeta) & \text{molar permeability, GHK}\\
 \hline
 \end{array}
 \end{equation*}
 
+
 \section{Kinetic equations}
+
+\subsection{Full Writing}
+
 \begin{itemize}
 \item $[cAMP]$ (no conservation):
 	\begin{equation}
@@ -77,6 +81,19 @@
 	\right.
 	\end{equation}
 \end{itemize}
+
+\subsection{Compact Writing}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{lcl}
+\partial_t [E] & = & k_d E_0 - (k_f[Ca_i]+k_d)[E]\\
+\partial_t [Ch^\ast] & = & k_a [cAMP] Ch_0 - (k_r+k_a[cAMP]) Ch^\ast\\
+\partial_t [cAMP]    & = & \alpha [E] - \beta [cAMP] + \partial_t [Ch^\ast] \\
+\end{array}
+\right.
+\end{equation}
+
 
 
 \end{document}
