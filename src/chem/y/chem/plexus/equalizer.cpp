@@ -201,7 +201,7 @@ namespace Yttrium
             inline void prepare(const Plexus &plexus, XMLog &xml)
             {
                 Y_XML_SECTION(xml,"Equalizer::Prepare");
-
+                
 
             }
 

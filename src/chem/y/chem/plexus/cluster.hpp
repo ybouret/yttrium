@@ -72,6 +72,8 @@ namespace Yttrium
         class Cluster : public Object
         {
         public:
+            static const char * const CallSign; //!< "Cluster"
+            
             //__________________________________________________________________
             //
             //

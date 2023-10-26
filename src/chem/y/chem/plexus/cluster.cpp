@@ -6,6 +6,9 @@ namespace Yttrium
 {
     namespace Chemical
     {
+
+        const char * const Cluster::CallSign = "Cluster";
+
         Cluster:: ~Cluster() noexcept
         {
         }
@@ -77,6 +80,7 @@ namespace Yttrium
 }
 
 #include "y/chem/algebraic.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -86,7 +90,7 @@ namespace Yttrium
                                const Readable<xreal> &Ks,
                                XMLog                 &xml)
         {
-            Y_XML_SECTION_OPT(xml,"Cluster"," size='" << all.size << "'");
+            Y_XML_SECTION_OPT(xml,CallSign," size='" << all.size << "'");
             assert(all.size>0);
             assert(lib.size>0);
             Y_XMLOG(xml, "all: " << all);
@@ -102,6 +106,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             {
                 SortIncreasing(Coerce(all));
+                if(!CheckDistinctIncreasing(all)) throw Specific::Exception(CallSign,"invalid equilibria list");
                 size_t i=0;
                 for(EqNode *node=all.head;node;node=node->next)
                 {
@@ -113,13 +118,17 @@ namespace Yttrium
 
             {
                 SortIncreasing(Coerce(lib));
+                if(!CheckDistinctIncreasing(lib)) throw Specific::Exception(CallSign,"invalid species list");
                 size_t j=0;
                 for(SpNode *node=lib.head;node;node=node->next)
                 {
                     const Species &sp = **node;
                     Coerce(sp.indx[SubLevel]) = ++j;
                     Coerce((*S)[j]) = &Coerce(sp);
+                    
                 }
+
+
             }
 
             //------------------------------------------------------------------

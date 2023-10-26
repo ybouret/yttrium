@@ -103,6 +103,23 @@ namespace Yttrium
             MergeSort::Call(repo, CompareSmallNodes<typename LIST::NodeType> );
         }
 
+        //! check that any repository is made of uniq, increasing top-level indices entity
+        template <typename LIST> static inline
+        bool CheckDistinctIncreasing(const LIST &repo) noexcept
+        {
+            for(const typename LIST::NodeType *node=repo.head;node;node=node->next)
+            {
+                const typename LIST::NodeType * const next = node->next;
+                if(next)
+                {
+                    const Entity &lhs = **node;
+                    const Entity &rhs = **next;
+                    if(lhs.indx[TopLevel]>=rhs.indx[TopLevel]) return false;
+                }
+            }
+            return true;
+        }
+
     }
 }
 
