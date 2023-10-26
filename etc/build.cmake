@@ -35,12 +35,12 @@ foreach(buildDir ${buildDirs})
 		# Visual Studio
 		if(EXISTS "${buildDir}/yttrium.sln")
 			set(BUILD_ON)
-			execute_process(COMMAND "${CMAKE_COMMAND}" "--build" "${buildDir}" "--target" "ALL_BUILD" "--config" "Release" "--parallel" ${N}
+			execute_process(COMMAND "${CMAKE_COMMAND}" "--build" "${buildDir}" "--target" "ALL_BUILD" "--config" "Release" #"--parallel" ${N}
 							COMMAND_ECHO      STDERR)
 		endif()
 		
 		if(NOT BUILD)
-			message( STATUS "*** build system not recognized" )
+			message( STATUS "*** build system not recognized in ${buildDir}" )
 		endif()
 			
 		
