@@ -62,6 +62,7 @@ namespace Yttrium
         public:
             const size_t  primaryN; //!< primary equilibria
             const size_t  maxOrder; //!< clusters' max order, start at 1, even if empty
+            const size_t  topIndex; //!< maximum top-level species index
             const SpRepo  kSpecies; //!< kept species
         };
     }

@@ -16,6 +16,7 @@ namespace Yttrium
         shared_K(),
         primaryN(all->size()),
         maxOrder(1),
+        topIndex(0),
         kSpecies()
         {
             Y_XML_SECTION(xml,"Plexus");

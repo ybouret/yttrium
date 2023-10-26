@@ -77,8 +77,11 @@ namespace Yttrium
             {
                 cluster->compile(eqs,shared_K,xml);
                 Coerce(maxOrder) = Max(maxOrder,cluster->meb->size());
+                Coerce(topIndex) = Max(topIndex, (**(cluster->lib.tail)).indx[TopLevel] );
             }
             Y_XMLOG(xml, "maxOrder=" << maxOrder);
+            Y_XMLOG(xml, "topIndex=" << topIndex);
+
 
             //------------------------------------------------------------------
             //
@@ -100,6 +103,7 @@ namespace Yttrium
                         Y_XMLOG(xml, "#" << std::setw(3) << sp.indx[AuxLevel] << " @" << sp);
                     }
                 }
+                SortIncreasing(Coerce(kSpecies));
             }
 
         }
