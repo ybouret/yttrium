@@ -198,7 +198,8 @@ namespace Yttrium
             {}
             inline virtual ~Code() noexcept {}
 
-            inline void prepare(const Plexus &plexus, XMLog &xml)
+            inline void prepare(const Plexus &plexus, 
+                                XMLog        &xml)
             {
                 Y_XML_SECTION(xml,"Equalizer::Prepare");
                 

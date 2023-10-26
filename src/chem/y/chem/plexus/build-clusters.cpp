@@ -1,5 +1,7 @@
 
 #include "y/chem/plexus.hpp"
+#include "y/system/exception.hpp"
+
 #include <iomanip>
 
 namespace Yttrium
@@ -69,7 +71,7 @@ namespace Yttrium
 
             //------------------------------------------------------------------
             //
-            // compile clusters
+            // compile clusters and update information
             //
             //------------------------------------------------------------------
             Y_XMLOG(xml, "#cluster=" << clusters.size);
@@ -78,13 +80,15 @@ namespace Yttrium
                 cluster->compile(eqs,shared_K,xml);
                 const SpRepo &lib = cluster->lib;
                 Coerce(maxOrder) = Max(maxOrder,cluster->meb->size());
-                Coerce(topIndex) = Max(topIndex, (**(lib.tail)).indx[TopLevel] );
-                Coerce(subIndex) = Max(subIndex, lib.size);
+                Coerce(maxTopId) = Max(maxTopId, (**(lib.tail)).indx[TopLevel] );
+                Coerce(maxSubId) = Max(maxSubId, lib.size);
+                Coerce(maxEqzSz) = Max(maxEqzSz,cluster->army->definite.size);
                 assert(cluster->lib.size == (**(lib.tail)).indx[SubLevel]);
             }
             Y_XMLOG(xml, "maxOrder=" << maxOrder);
-            Y_XMLOG(xml, "topIndex=" << topIndex);
-            Y_XMLOG(xml, "subIndex=" << subIndex);
+            Y_XMLOG(xml, "maxTopId=" << maxTopId);
+            Y_XMLOG(xml, "maxSubId=" << maxSubId);
+            Y_XMLOG(xml, "maxEqzSz=" << maxEqzSz);
 
 
             //------------------------------------------------------------------
@@ -110,6 +114,9 @@ namespace Yttrium
                 SortIncreasing(Coerce(kSpecies));
             }
 
+            if( (kSpecies.size>0 && maxEqzSz<=0) || (kSpecies.size<=0 && maxEqzSz>0) )
+                throw Specific::Exception(CallSign,"corrupted kept species/definite equilibria");
+            
         }
     }
 

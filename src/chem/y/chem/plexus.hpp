@@ -23,6 +23,8 @@ namespace Yttrium
         class Plexus : public Proxy<const Clusters>, public GraphViz::Vizible
         {
         public:
+            static const char * const CallSign; //!< "Plexus"
+
             //__________________________________________________________________
             //
             //
@@ -62,9 +64,10 @@ namespace Yttrium
         public:
             const size_t  primaryN; //!< primary equilibria
             const size_t  maxOrder; //!< clusters' max order, start at 1, even if empty
-            const size_t  topIndex; //!< maximum top-level species index
-            const size_t  subIndex; //!< maximum sub-level species index = max cluster->lib->size
-            const SpRepo  kSpecies; //!< kept species
+            const size_t  maxTopId; //!< maximum top-level species index
+            const size_t  maxSubId; //!< maximum sub-level species index = max cluster->lib->size = active species
+            const size_t  maxEqzSz; //!< maximum number of definite equilibria in a cluster
+            const SpRepo  kSpecies; //!< all kept species in definite equilibria
         };
     }
 

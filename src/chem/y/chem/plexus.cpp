@@ -5,6 +5,9 @@ namespace Yttrium
 
     namespace Chemical
     {
+        const char * const Plexus::CallSign = "Plexus";
+
+
         Plexus:: ~Plexus() noexcept
         {
         }
@@ -16,11 +19,12 @@ namespace Yttrium
         shared_K(),
         primaryN(all->size()),
         maxOrder(1),
-        topIndex(0),
-        subIndex(0),
+        maxTopId(0),
+        maxSubId(0),
+        maxEqzSz(0),
         kSpecies()
         {
-            Y_XML_SECTION(xml,"Plexus");
+            Y_XML_SECTION(xml,CallSign);
             buildClusters(all,xml);
             all.updateMaxSizes();
             shared_K.adjust(all->size(),0);
@@ -56,7 +60,7 @@ namespace Yttrium
         void Plexus:: graphViz(OutputStream &fp, const size_t order) const
         {
             assert(order>=1);
-            Enter(fp,"Plexus");
+            Enter(fp,CallSign);
 
             unsigned ic=0;
             for(const Cluster *cluster=clusters.head;cluster;cluster=cluster->next,++ic)
