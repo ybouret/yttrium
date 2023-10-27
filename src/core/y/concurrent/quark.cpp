@@ -20,12 +20,11 @@ typedef pthread_mutex_t MutexType;
 #    define WIN32_LEAN_AND_MEAN
 #    include <windows.h>
 typedef CRITICAL_SECTION MutexType;
+#include "y/concurrent/win32-semaphore.hpp"
 #endif
 
 
 #include "mutex.hxx"
-
-#include "y/concurrent/win32-semaphore.hpp"
 #include "condition.hxx"
 
 #include "y/system/at-exit.hpp"
