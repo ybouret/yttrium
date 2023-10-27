@@ -21,7 +21,7 @@ namespace Yttrium
         //
         //! Components: component as reactants and products
         //
-        //     
+        //
         //______________________________________________________________________
         class Components : public Proxy<const Component::DataBase>
         {
@@ -70,32 +70,25 @@ namespace Yttrium
             //! insert species in book
             void insertSpeciesIn(AddressBook &book) const;
 
+            //! display compact values from array using species level
             template <typename ARRAY, typename PROC> inline
             std::ostream &display(std::ostream &os, ARRAY &arr, const Level lvl, PROC proc) const
             {
                 os << '{';
-
-                for(const Actor *a=reac.head;a;a=a->next)
-                {
-                    os << ' ' << a->sp << '=' << proc(arr[a->sp.indx[lvl]]);
-                }
-
-                for(const Actor *a=prod.head;a;a=a->next)
-                {
-                    os << ' ' << a->sp << '=' << proc(arr[a->sp.indx[lvl]]);
-                }
-
+                display(os,reac,arr,lvl,proc);
+                display(os,prod,arr,lvl,proc);
                 os << ' ' << '}';
                 return os;
             }
 
+            //! default display
             template <typename ARRAY> inline
             std::ostream &display(std::ostream &os, ARRAY &arr, const Level lvl) const
             {
                 return display(os,arr,lvl,Conv::Id<typename ARRAY::MutableType>);
             }
 
-
+            //! transfert source to target using species levels
             template <typename TARGET,typename SOURCE>
             inline void transfer(TARGET &target, const Level targetLevel,
                                  SOURCE &source, const Level sourceLevel) const
@@ -118,16 +111,22 @@ namespace Yttrium
             //__________________________________________________________________
             const Actors reac; //!< reactants
             const Actors prod; //!< products
-            
+
         private:
             Y_DISABLE_ASSIGN(Components);
             Component::DataBase db;
             virtual ConstInterface & surrogate() const noexcept;
 
+            template <typename ARRAY, typename PROC> inline
+            static void display(std::ostream &os, const Actors &actors, ARRAY &arr, const Level lvl, PROC proc)
+            {
+                for(const Actor *a=actors.head;a;a=a->next)
+                    os << ' ' << a->sp << '=' << proc(arr[a->sp.indx[lvl]]);
+            }
         };
 
     }
-
+    
 }
 
 #endif
