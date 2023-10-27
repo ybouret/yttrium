@@ -14,22 +14,40 @@ namespace Yttrium
         namespace Nucleus
         {
             class Condition;
-            class Quark;
         }
 
-        class Condition
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Condition variable
+        //
+        //
+        //______________________________________________________________________
+        class Condition : public Primitive
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             explicit Condition();
             virtual ~Condition() noexcept;
 
-            void wait(Mutex &) noexcept; //!< wait on a LOCKED mutex
+            //__________________________________________________________________
+            //
+            //
+            // API
+            //
+            //__________________________________________________________________
+            void wait(Mutex &) noexcept; //!< wait on a LOCKED mutex, that will return unlocked
             void signal()      noexcept; //!< signal    one waiting mutex
             void broadcast()   noexcept; //!< broadcast all waiting mutex(es)
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Condition);
-            Nucleus::Quark     &quark;
             Nucleus::Condition *cond;
         };
 

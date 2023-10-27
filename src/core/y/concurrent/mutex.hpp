@@ -6,6 +6,7 @@
 
 
 #include "y/lockable.hpp"
+#include "y/concurrent/primitive.hpp"
 
 namespace Yttrium
 {
@@ -15,7 +16,6 @@ namespace Yttrium
         namespace Nucleus
         {
             class Mutex;
-            class Quark;
         }
 
         //______________________________________________________________________
@@ -26,7 +26,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class MutexProto : public Lockable
+        class MutexProto : public Primitive, public Lockable
         {
             //__________________________________________________________________
             //
@@ -49,15 +49,7 @@ namespace Yttrium
             //__________________________________________________________________
             virtual Nucleus::Mutex & operator*() noexcept = 0; //!< access internal mutex
 
-
-            //__________________________________________________________________
-            //
-            //
-            // Members
-            //
-            //__________________________________________________________________
-        protected:
-            Nucleus::Quark &quark; //!< internal uniq Quark
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MutexProto);

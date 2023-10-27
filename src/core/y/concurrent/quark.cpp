@@ -173,6 +173,18 @@ namespace Yttrium
 }
 
 
+namespace Yttrium
+{
+    namespace Concurrent
+    {
+        Primitive:: Primitive() : quark( Nucleus::QuarkInstance() )
+        {
+        }
+
+    }
+
+}
+
 
 namespace Yttrium
 {
@@ -191,8 +203,8 @@ namespace Yttrium
         }
 
         MutexProto:: MutexProto(const char *id) :
-        Lockable(id),
-        quark( Nucleus::QuarkInstance() )
+        Primitive(),
+        Lockable(id)
         {
             //std::cerr << "+MutexProto[" << uuid << "]" << std::endl;
         }
@@ -271,7 +283,7 @@ namespace Yttrium
     {
 
         Condition:: Condition() :
-        quark( Nucleus::QuarkInstance() ),
+        Primitive(),
         cond( quark.createCondition()   )
         {
         }
