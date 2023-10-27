@@ -118,6 +118,9 @@ namespace Yttrium
 #endif
                 }
 
+                //! syntax helper for conditions
+                inline MutexType * operator*() noexcept { return &m; }
+
                 MutexType m;
 
             private:

@@ -22,7 +22,11 @@ typedef pthread_mutex_t MutexType;
 typedef CRITICAL_SECTION MutexType;
 #endif
 
+
 #include "mutex.hxx"
+
+#include "y/concurrent/win32-semaphore.hpp"
+#include "condition.hxx"
 
 #include "y/system/at-exit.hpp"
 #include "y/calculus/align.hpp"
