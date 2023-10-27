@@ -130,8 +130,10 @@ add_test(calculus:ipower test-core calculus_ipower)
 add_test(calculus:xlog2  test-core calculus_xlog2)
 
 #concurrent
-add_test(concurrent:mutex  test-core concurrent_mutex)
-add_test(concurrent:thread test-core concurrent_thread)
+add_test(concurrent:mutex     test-core concurrent_mutex)
+add_test(concurrent:thread    test-core concurrent_thread)
+add_test(concurrent:condition test-core concurrent_condition)
+
 
 #random
 add_test(random:bits     test-core random_bits)
