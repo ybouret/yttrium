@@ -15,18 +15,43 @@ namespace Yttrium
 
     namespace Win32
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Win32 semaphore for legacy condition variables on Windows
+        //
+        //
+        //______________________________________________________________________
         class Semaphore
         {
         public:
-            static const long lMinCount = 0;
-            static const long lMaxCount = 65535;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const long lMinCount = 0;       //!< alias
+            static const long lMaxCount = 65535;   //!< alias
 
-            Semaphore();
-            ~Semaphore() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            Semaphore();            //!< setup
+            ~Semaphore() noexcept;  //!< cleanup
 
-            void wait() noexcept;
-            void post() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void wait() noexcept; //!< wait
+            void post() noexcept; //!< post
 
 
         private:
