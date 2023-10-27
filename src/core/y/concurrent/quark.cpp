@@ -263,6 +263,7 @@ namespace Yttrium
 
 
 #include "y/concurrent/condition.hpp"
+
 namespace Yttrium
 {
 
@@ -280,6 +281,26 @@ namespace Yttrium
             assert(0!=cond);
             quark.deleteCondition(cond);
         }
+
+        void Condition:: signal() noexcept
+        {
+            assert(0!=cond);
+            cond->signal();
+        }
+
+
+        void Condition:: broadcast() noexcept
+        {
+            assert(0!=cond);
+            cond->broadcast();
+        }
+
+        void Condition:: wait(Mutex &mutex) noexcept
+        {
+            assert(0!=cond);
+            cond->wait( *mutex );
+        }
+
     }
 
 }

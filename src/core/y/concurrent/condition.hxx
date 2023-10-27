@@ -33,10 +33,9 @@ namespace Yttrium
 					if (res != 0)  Libc::CriticalError(res, "pthread_cond_destroy");
 				}
 
-				inline void wait(Mutex *m) noexcept
+				inline void wait(Mutex &m) noexcept
 				{
-					assert(0 != m);
-					const int res = pthread_cond_wait(&cond, **m);
+                    const int res = pthread_cond_wait(&cond, *m);
 					if (res != 0) Libc::CriticalError(res, "pthread_cond_wait");
 				}
 
@@ -84,10 +83,9 @@ namespace Yttrium
 				inline ~Condition() noexcept
 				{}
 
-				inline void wait(Mutex *m) noexcept
+				inline void wait(Mutex &m) noexcept
 				{
-                    assert(0!=m);
-					/* Obtain the protection mutex, and increment the number of waiters.
+                    /* Obtain the protection mutex, and increment the number of waiters.
 					 This allows the signal mechanism to only perform a signal if there
 					 are waiting threads.
 					 */
@@ -96,7 +94,7 @@ namespace Yttrium
 					cv_lock.unlock();
 
 					/* Unlock the mutex, as is required by condition variable semantics */
-					m->unlock();
+					m.unlock();
 					//mutex_api::unlock(m);
 
 
@@ -122,7 +120,7 @@ namespace Yttrium
 					cv_lock.unlock();
 
 					/* Lock the mutex, as is required by condition variable semantics */
-					m->lock();
+					m.lock();
 					//mutex_api::lock(m);
 				}
 

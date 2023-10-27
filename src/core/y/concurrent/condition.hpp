@@ -23,6 +23,10 @@ namespace Yttrium
             explicit Condition();
             virtual ~Condition() noexcept;
 
+            void wait(Mutex &) noexcept; //!< wait on a LOCKED mutex
+            void signal()      noexcept; //!< signal    one waiting mutex
+            void broadcast()   noexcept; //!< broadcast all waiting mutex(es)
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Condition);
             Nucleus::Quark     &quark;
