@@ -14,6 +14,7 @@ namespace Yttrium
         namespace Nucleus
         {
             class Condition;
+            class Quark;
         }
 
         class Condition
@@ -24,7 +25,8 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Condition);
-            Nucleus::Condition *self;
+            Nucleus::Quark     &quark;
+            Nucleus::Condition *cond;
         };
 
     }

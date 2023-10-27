@@ -86,6 +86,7 @@ namespace Yttrium
 
 				inline void wait(Mutex *m) noexcept
 				{
+                    assert(0!=m);
 					/* Obtain the protection mutex, and increment the number of waiters.
 					 This allows the signal mechanism to only perform a signal if there
 					 are waiting threads.

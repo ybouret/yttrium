@@ -66,6 +66,7 @@ namespace Yttrium
                 giant(param),
                 album(*this),
                 mutexes(album),
+                conditions(album),
                 blocks(album),
                 straps(album),
                 quanta(blocks,straps),
@@ -80,22 +81,37 @@ namespace Yttrium
 
                 inline void deleteMutex(Mutex * &mutex) noexcept
                 {
+                    assert(0!=mutex);
                     mutexes.eradicate(mutex);
                     mutex = 0;
                 }
+
+                inline Condition *createCondition()
+                {
+                    return conditions.construct();
+                }
+
+                inline void deleteCondition(Condition * &cond) noexcept
+                {
+                    assert(0!=cond);
+                    conditions.eradicate(cond);
+                    cond = 0;
+                }
+
 
                 virtual const char *       callSign() const noexcept { return CallSign; }
                 virtual AtExit::Longevity  lifeTime() const noexcept { return LifeTime; }
 
                 
-                MutexAttribute       param;
-                Mutex                giant;
-                Memory::Album        album;
-                Memory::Guild<Mutex> mutexes;
-                Memory::Blocks       blocks;
-                Memory::Straps       straps;
-                Memory::Quanta       quanta;
-                Memory::Corpus       corpus;
+                MutexAttribute           param;
+                Mutex                    giant;
+                Memory::Album            album;
+                Memory::Guild<Mutex>     mutexes;
+                Memory::Guild<Condition> conditions;
+                Memory::Blocks           blocks;
+                Memory::Straps           straps;
+                Memory::Quanta           quanta;
+                Memory::Corpus           corpus;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Quark);
@@ -185,7 +201,7 @@ namespace Yttrium
 
     namespace Concurrent
     {
-        NucleusMutex:: NucleusMutex(const char *id) : MutexProto(id) {}
+        NucleusMutex::  NucleusMutex(const char *id) : MutexProto(id) {}
         NucleusMutex:: ~NucleusMutex() noexcept {}
 
         void NucleusMutex:: doLock() noexcept {
@@ -243,6 +259,29 @@ namespace Yttrium
             return *mutex;
         }
     }
+}
+
+
+#include "y/concurrent/condition.hpp"
+namespace Yttrium
+{
+
+    namespace Concurrent
+    {
+
+        Condition:: Condition() :
+        quark( Nucleus::QuarkInstance() ),
+        cond( quark.createCondition()   )
+        {
+        }
+
+        Condition:: ~Condition() noexcept
+        {
+            assert(0!=cond);
+            quark.deleteCondition(cond);
+        }
+    }
+
 }
 
 #include "y/concurrent/memory.hpp"
