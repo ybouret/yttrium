@@ -52,7 +52,7 @@ namespace Yttrium
             class Quark : public Lockable, public Singulet
             {
             public:
-                static const char * const       CallSign;
+                static const char * const      CallSign;
                 static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity;
 
                 inline virtual ~Quark() noexcept {}
