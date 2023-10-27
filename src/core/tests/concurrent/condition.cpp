@@ -13,7 +13,7 @@ Y_UTEST(concurrent_condition)
 {
 
     Concurrent::Condition cond;
-    
+
 }
 Y_UDONE()
 
