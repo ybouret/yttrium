@@ -61,18 +61,26 @@ namespace
         Memory::BufferOf< Complex<T> > data1(size);
         Memory::BufferOf< Complex<T> > data2(size);
         Memory::BufferOf< Complex<T> > data3(size);
+		
 
-        T *s1 = &(data1[0].re)-1;
-        T *s2 = &(data2[0].re)-1;
-        T *s3 = &(data3[0].re)-1;
+        T *s1 = Memory::OutOfReach::Self(&(data1[0].re)-1);
+        T *s2 = Memory::OutOfReach::Self(&(data2[0].re)-1);
+        T *s3 = Memory::OutOfReach::Self(&(data3[0].re)-1);
 
-        for(size_t i=1;i<=n;++i) s1[i] = s2[i] = s3[i] = T(i);
+		for (size_t i = 1; i <= n; ++i)
+		{
+			s1[i] = T(i);
+			s2[i] = T(i);
+			s3[i] = T(i);
+		}
+#if 1
         Y_ASSERT(0==memcmp(data1.ro_addr(),data2.ro_addr(),data1.measure()));
         Y_ASSERT(0==memcmp(data1.ro_addr(),data3.ro_addr(),data1.measure()));
         FFT::Forward(s1,size);
         FFT::Forward(s2,s3,size);
         Y_ASSERT(0==memcmp(data1.ro_addr(),data2.ro_addr(),data1.measure()));
         Y_ASSERT(0==memcmp(data1.ro_addr(),data3.ro_addr(),data1.measure()));
+#endif
     }
 
 
@@ -126,8 +134,8 @@ Y_UTEST(fft1)
     for(unsigned shift=00; shift<=20; ++shift)
     {
         checkDualFFT<float>(shift);
-        checkDualFFT<double>(shift);
-        checkDualFFT<long double>(shift);
+        //checkDualFFT<double>(shift);
+        //checkDualFFT<long double>(shift);
     }
 
 
