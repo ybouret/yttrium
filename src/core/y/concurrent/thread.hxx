@@ -20,7 +20,7 @@ namespace Yttrium
 
                 explicit Thread() : thr(0)
 #if defined(Y_WIN)
-                tid(0)
+                , tid(0)
 #endif
                 {
                 }
