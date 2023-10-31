@@ -3,15 +3,18 @@
 
 
 #include "y/concurrent/mutex.hpp"
+#include "y/concurrent/thread.hpp"
 #include "y/utest/run.hpp"
 #include "y/system/exception.hpp"
 #include "y/system/error.hpp"
 #include <cerrno>
 
+#if 0
 #if defined(Y_BSD)
 #include <pthread.h>
-
 using namespace Yttrium;
+
+
 
 class Thread : public Concurrent::NucleusMutex
 {
@@ -74,6 +77,7 @@ public:
 
 #endif
 
+#endif
 
 using namespace Yttrium;
 
@@ -95,7 +99,7 @@ Y_UTEST(concurrent_thread)
     Lockable &access = Lockable::Giant();
 
 #if defined(Y_BSD)
-    Thread thr(myProc,&access);
+    //Thread thr(myProc,&access);
 #endif
 
 }

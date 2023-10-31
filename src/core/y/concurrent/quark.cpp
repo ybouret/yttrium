@@ -317,6 +317,23 @@ namespace Yttrium
 
 }
 
+#include "y/concurrent/thread.hpp"
+
+namespace Yttrium
+{
+    namespace Concurrent
+    {
+        Thread:: ~Thread() noexcept
+        {
+
+        }
+        
+
+    }
+
+}
+
+
 #include "y/concurrent/memory.hpp"
 
 
