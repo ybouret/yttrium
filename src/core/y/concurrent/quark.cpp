@@ -26,6 +26,7 @@ typedef CRITICAL_SECTION MutexType;
 
 #include "mutex.hxx"
 #include "condition.hxx"
+#include "thread.hxx"
 
 #include "y/system/at-exit.hpp"
 #include "y/calculus/align.hpp"
