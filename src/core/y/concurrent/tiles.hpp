@@ -9,6 +9,7 @@
 #include "y/mkl/v2d.hpp"
 #include "y/concurrent/split.hpp"
 #include "y/type/utils.hpp"
+#include "y/type/div.hpp"
 
 namespace Yttrium
 {
@@ -48,11 +49,14 @@ namespace Yttrium
         class Tiles
         {
         public:
+            typedef V2D<T>  VTX;
+
             template <typename U>
             inline explicit Tiles(const U size,
-                                 V2D<T>  lower,
-                                 V2D<T>  upper)
+                                  VTX  lower,
+                                  VTX  upper)
             {
+
                 // setup layout
                 if(upper.x<lower.x) Swap(upper.x,lower.x);
                 if(upper.y<lower.y) Swap(upper.y,lower.y);
@@ -68,10 +72,15 @@ namespace Yttrium
                     T length = items;
                     Split::With(count, rank, length, offset); assert(length>0);
                     std::cerr << "\trank=" << rank << " : @" << offset << " +" << length << std::endl;
-                    const T finish = length + offset - 1;
+                    const T   finish = length + offset - 1;
+                    const VTX v_ini  = idx2vtx(offset,width.x);
+                    const VTX v_end  = idx2vtx(finish,width.x);
+                    const T   n_seg  = v_end.y-v_ini.y+1;
+
                     for(T p=offset;p<=finish;++p)
                     {
-                        
+                        const VTX v = idx2vtx(p,width.x);
+                        std::cerr << v << std::endl;
                     }
 
                 }
@@ -83,6 +92,14 @@ namespace Yttrium
 
         private:
             Y_DISABLE_ASSIGN(Tiles);
+            static inline VTX idx2vtx(const T p, const T w) noexcept
+            {
+                static const Div<T> divAPI;
+                const typename Div<T>::Type dv = divAPI.call(p,w);
+                return VTX(dv.rem,dv.quot);
+            }
+
+
         };
 
 
