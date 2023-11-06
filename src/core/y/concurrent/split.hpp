@@ -11,9 +11,14 @@ namespace Yttrium
     namespace Concurrent
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! Split linear task
+        //
+        //______________________________________________________________________
         struct Split
         {
-
             //! from total length and offset, return parameters for size.rank
             template <typename T, typename U> static inline
             void With(const T size, const T rank, U &length, U &offset) noexcept
