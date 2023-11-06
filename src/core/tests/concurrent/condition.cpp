@@ -1,8 +1,6 @@
 
-
-
-
 #include "y/concurrent/condition.hpp"
+#include "y/concurrent/wire.hpp"
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;
@@ -29,7 +27,28 @@ namespace
         Y_DISABLE_COPY_AND_ASSIGN(Barrier);
     };
 
-    
+    static inline void MyProc(Barrier &barrier)
+    {
+        {
+            Y_LOCK(barrier.mutex);
+            std::cerr << "Thread with barrier @" << barrier.count << std::endl;
+            if(--barrier.count>0)
+            {
+                barrier.cond.wait(barrier.mutex);
+                // wake up on a locked mutex
+                std::cerr << "Waking up!" << std::endl;
+            }
+            else
+            {
+                // mutex is locked
+                std::cerr << "Will launch computation!" << std::endl;
+                barrier.cond.broadcast();
+            }
+        }
+
+
+    }
+
 
 }
 
@@ -38,6 +57,10 @@ Y_UTEST(concurrent_condition)
 {
 
     Barrier barrier(3);
+
+    Concurrent::Wire    w1(MyProc,barrier);
+    Concurrent::Wire    w2(MyProc,barrier);
+    Concurrent::Wire    w3(MyProc,barrier);
 
 
 }
