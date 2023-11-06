@@ -11,12 +11,12 @@ namespace Yttrium
     namespace Concurrent
     {
 
-        struct Split
+        struct Split1D
         {
 
             //! from total length and offset, return parameters for size.rank
             template <typename T, typename U> static inline
-            void In1D(const T size, const T rank, U &length, U &offset) noexcept
+            void With(const T size, const T rank, U &length, U &offset) noexcept
             {
                 assert(size>0);
                 assert(rank<size);

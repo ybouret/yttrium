@@ -1,5 +1,5 @@
 
-#include "y/concurrent/split.hpp"
+#include "y/concurrent/split1d.hpp"
 #include "y/utest/run.hpp"
 
 
@@ -7,7 +7,7 @@ using namespace Yttrium;
 
 
 
-Y_UTEST(concurrent_split)
+Y_UTEST(concurrent_split1d)
 {
 
     size_t Offset = 0;
@@ -21,7 +21,7 @@ Y_UTEST(concurrent_split)
             size_t offset = Offset;
             size_t length = Length;
 
-            Concurrent::Split::In1D(size, rank, length, offset);
+            Concurrent::Split1D::With(size, rank, length, offset);
             std::cerr << "  " << size << "." << rank << " : @" << offset << " +" << length << std::endl;
         }
     }
