@@ -83,7 +83,7 @@ using namespace Yttrium;
 
 
 
-static inline void myProc(void *args)
+static inline void theProc(void *args)
 {
     assert(0!=args);
     Lockable &access = *(Lockable *)args;
@@ -96,11 +96,8 @@ static inline void myProc(void *args)
 Y_UTEST(concurrent_thread)
 {
 
-    Lockable &access = Lockable::Giant();
-
-#if defined(Y_BSD)
-    //Thread thr(myProc,&access);
-#endif
+    Lockable          &access = Lockable::Giant();
+    Concurrent::Thread thr(theProc,&access);
 
 }
 Y_UDONE()
