@@ -1,5 +1,5 @@
 
-#include "y/concurrent/split1d.hpp"
+#include "y/concurrent/split.hpp"
 #include "y/text/ascii/convert.hpp"
 #include "y/utest/run.hpp"
 
@@ -28,7 +28,7 @@ Y_UTEST(concurrent_split1d)
             int length = Length;
             int offset = Offset;
 
-            Concurrent::Split1D::With(size, rank, length, offset);
+            Concurrent::Split::With(size, rank, length, offset);
             std::cerr << "  " << size << "." << rank << " : @" << offset << " +" << length << std::endl;
         }
     }

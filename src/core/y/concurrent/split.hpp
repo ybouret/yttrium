@@ -11,7 +11,7 @@ namespace Yttrium
     namespace Concurrent
     {
 
-        struct Split1D
+        struct Split
         {
 
             //! from total length and offset, return parameters for size.rank
@@ -33,7 +33,7 @@ namespace Yttrium
                 length = todo;
             }
             
-
+            
         };
 
     }

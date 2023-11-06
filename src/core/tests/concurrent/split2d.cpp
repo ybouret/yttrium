@@ -8,32 +8,16 @@ using namespace Yttrium;
 
 
 
-Y_UTEST(concurrent_split1d)
+Y_UTEST(concurrent_split2d)
 {
 
-#if 0
-    int Length = 100;
-    int Offset = 0;
-
-    if(argc>1) Length = ASCII::Convert::To<int>(argv[1],"Length");
-    if(argc>2) Offset = ASCII::Convert::To<int>(argv[2],"Offset");
-
-
-
-
-    for(size_t size=1;size<=3;++size)
+    for(unsigned size=1;size<=3;++size)
     {
         std::cerr << "size=" << size << std::endl;
-        for(size_t rank=0;rank<size;++rank)
-        {
-            int length = Length;
-            int offset = Offset;
-
-            Concurrent::Split1D::With(size, rank, length, offset);
-            std::cerr << "  " << size << "." << rank << " : @" << offset << " +" << length << std::endl;
-        }
+        Concurrent::Tiles<int> tiles(size, V2D<int>(1,1), V2D<int>(10,20) );
     }
-#endif
+
+
 
 }
 Y_UDONE()
