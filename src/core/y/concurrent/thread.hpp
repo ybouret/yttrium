@@ -17,6 +17,8 @@ namespace Yttrium
         class Thread : public Primitive
         {
         public:
+            typedef void (*Proc)(void *);
+
             explicit Thread();
             virtual ~Thread() noexcept;
 

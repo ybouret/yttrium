@@ -76,6 +76,14 @@ namespace Yttrium
                 catch(...) {  releaseBlock(blockAddr); throw; }
             }
 
+            //! construct with 2-arguments constructor
+            template <typename U, typename V>
+            inline T *construct(U &first, V &second) {
+                void *blockAddr = acquireBlock();
+                try { return new (blockAddr) T(first,second); }
+                catch(...) {  releaseBlock(blockAddr); throw; }
+            }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Guild);
