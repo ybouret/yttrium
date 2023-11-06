@@ -116,9 +116,9 @@ namespace Yttrium
                 // Thread
                 //
                 //--------------------------------------------------------------
-                inline Thread *createThread()
+                inline Thread *createThread(ThreadProc proc, void *args)
                 {
-                    return threads.construct();
+                    return threads.construct(proc,args);
                 }
 
                 inline void deleteThread(Thread * &thread) noexcept
@@ -362,12 +362,12 @@ namespace Yttrium
 {
     namespace Concurrent
     {
-        Thread:: Thread() :
+        Thread:: Thread(ThreadProc proc, void *args) :
         Primitive(),
-        thread( quark.createThread() )
+        thread( quark.createThread(proc,args) )
         {
         }
-        
+
 
         Thread:: ~Thread() noexcept
         {

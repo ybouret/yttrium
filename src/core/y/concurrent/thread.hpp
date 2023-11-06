@@ -4,6 +4,7 @@
 #define Y_Thread_Included 1
 
 #include "y/concurrent/primitive.hpp"
+#include "y/concurrent/thread-proc.hpp"
 
 namespace Yttrium
 {
@@ -17,9 +18,8 @@ namespace Yttrium
         class Thread : public Primitive
         {
         public:
-            typedef void (*Proc)(void *);
 
-            explicit Thread();
+            explicit Thread(ThreadProc proc, void *args);
             virtual ~Thread() noexcept;
 
         private:

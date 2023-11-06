@@ -1,3 +1,4 @@
+#include "y/concurrent/thread-proc.hpp"
 
 
 namespace Yttrium
@@ -18,16 +19,20 @@ namespace Yttrium
 
             public:
 
-                explicit Thread() : thr(0)
+                explicit Thread(ThreadProc proc, void *args) : thr(0)
 #if defined(Y_WIN)
                 , tid(0)
 #endif
                 {
+                    assert(0!=proc);
+
                 }
 
 
                 inline ~Thread() noexcept 
-                {}
+                {
+
+                }
 
 #if defined(Y_BSD)
                 pthread_t thr;
