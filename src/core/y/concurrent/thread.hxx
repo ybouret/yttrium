@@ -34,6 +34,7 @@ namespace Yttrium
 
 				{
 					assert(0 != proc);
+                    Y_GIANT_LOCK();
 
 #if defined(Y_BSD)
 					const int err = pthread_create(&thr, NULL, launch, this);
