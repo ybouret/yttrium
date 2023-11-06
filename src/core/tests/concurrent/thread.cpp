@@ -1,103 +1,39 @@
-
-
-
-
 #include "y/concurrent/mutex.hpp"
 #include "y/concurrent/thread.hpp"
 #include "y/utest/run.hpp"
-#include "y/system/exception.hpp"
-#include "y/system/error.hpp"
-#include <cerrno>
 
-#if 0
-#if defined(Y_BSD)
-#include <pthread.h>
-using namespace Yttrium;
-
-
-
-class Thread : public Concurrent::NucleusMutex
-{
-public:
-    typedef void (*Proc)(void *);
-
-
-
-
-    Thread(Proc userProc, void *userArgs) :
-    Concurrent::NucleusMutex(),
-    handle(),
-    proc(userProc),
-    args(userArgs)
-    {
-        assert(0!=proc);
-        Y_LOCK(*this);
-        (std::cerr << "creating thread..." << std::endl).flush();
-        const int err = pthread_create(&handle,NULL,launch,this);
-        if(0!=err) throw Libc::Exception(errno,"pthread_create");
-    }
-
-    virtual ~Thread() noexcept
-    {
-        {
-            Y_LOCK(*this);
-            (std::cerr << "waiting for thread..." << std::endl).flush();
-        }
-        void     *ret = 0;
-        const int err = pthread_join(handle,&ret);
-        if(0!=err) Libc::CriticalError(err, "pthread_join");
-    }
-
-    pthread_t handle;
-
-
-    static void * launch(void *param) noexcept
-    {
-        assert(0!=param);
-        static_cast<Thread *>(param)->call();
-        return 0;
-    }
-
-    Proc               proc;
-    void              *args;
-
-    void call() noexcept
-    {
-        try
-        {
-
-            assert(0!=proc);
-            proc(args);
-        }
-        catch(...)
-        {
-        }
-    }
-};
-
-#endif
-
-#endif
 
 using namespace Yttrium;
 
 
-
-static inline void theProc(void *args)
+namespace
 {
-    assert(0!=args);
-    Lockable &access = *(Lockable *)args;
 
-    Y_LOCK(access);
-    std::cerr << "in thread..." << std::endl;
+    struct Param
+    {
+        Lockable &access;
+        size_t    value;
+    };
+
+    static inline void theProc(void *args)
+    {
+        assert(0!=args);
+        Param &param = *static_cast<Param *>(args);
+
+        Y_LOCK(param.access);
+        std::cerr << "in thread #" << param.value << std::endl;
+    }
+
 }
-
 
 Y_UTEST(concurrent_thread)
 {
 
     Lockable          &access = Lockable::Giant();
-    Concurrent::Thread thr(theProc,&access);
+    Param              p1 = { access, 1 };
+    Param              p2 = { access, 2 };
+    Concurrent::Thread t1(theProc,&p1);
+    Concurrent::Thread t2(theProc,&p2);
 
 }
 Y_UDONE()
