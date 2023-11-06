@@ -9,13 +9,13 @@ namespace Yttrium
         {
 
 #if defined(Y_BSD)
-#define Y_THREAD pthread_t
+#define Y_THREAD   pthread_t
 #define Y_LAUNCH() void * launch(void *param)
 #endif
 
 #if defined(Y_WIN)
-#define Y_THREAD HANDLE
-#define Y_LAUNCH WORD WINAPI launch(LPVOID param)
+#define Y_THREAD   HANDLE
+#define Y_LAUNCH() DWORD WINAPI launch(LPVOID param)
 #endif
 
             //__________________________________________________________________
