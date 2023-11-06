@@ -16,7 +16,7 @@ namespace Yttrium
             typedef div_t  Type;                //!< alias
             typedef int    Args;                //!< alias
             typedef Type (*Proc)(Args,Args);    //!< alias
-            static const   Proc   Call;         //!< alias
+            static  Proc const  Call;           //!< alias
         };
 
         //! using ldiv_t/ldiv
@@ -26,7 +26,7 @@ namespace Yttrium
             typedef ldiv_t Type;                //!< alias
             typedef long   Args;                //!< alias
             typedef Type (*Proc)(Args,Args);    //!< alias
-            static const   Proc   Call;         //!< alias
+            static  Proc const Call;            //!< alias
         };
 
         //! using lldiv_t/lldiv
@@ -36,7 +36,7 @@ namespace Yttrium
             typedef lldiv_t   Type;             //!< alias
             typedef long long Args;             //!< alias
             typedef Type (*Proc)(Args,Args);    //!< alias
-            static const   Proc   Call;         //!< alias
+            static  Proc   const Call;          //!< alias
         };
     }
 

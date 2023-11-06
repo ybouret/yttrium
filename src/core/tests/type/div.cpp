@@ -14,7 +14,7 @@ namespace
         std::cerr << std::endl;
         std::cerr << std::setw(8) << className << " => ";
         typedef typename Div<T>::API DivAPI;
-        std::cerr << DivAPI::CallSign << std::endl;
+        std::cerr << "using " << DivAPI::CallSign << std::endl;
         const T numer = 100;
         const T denom = 13;
         const typename Div<T>::Type dv = DivAPI::Call(numer,denom);
