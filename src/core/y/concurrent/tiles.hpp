@@ -73,15 +73,10 @@ namespace Yttrium
                     Split::With(count, rank, length, offset); assert(length>0);
                     std::cerr << "\trank=" << rank << " : @" << offset << " +" << length << std::endl;
                     const T   finish = length + offset - 1;
-                    const VTX v_ini  = idx2vtx(offset,width.x);
-                    const VTX v_end  = idx2vtx(finish,width.x);
+                    const VTX v_ini  = idx2vtx(offset,width.x) + lower; // starting reduced coordinates
+                    const VTX v_end  = idx2vtx(finish,width.x) + lower; // final coordinates
                     const T   n_seg  = v_end.y-v_ini.y+1;
-
-                    for(T p=offset;p<=finish;++p)
-                    {
-                        const VTX v = idx2vtx(p,width.x);
-                        std::cerr << v << std::endl;
-                    }
+                    std::cerr << "#seg=" << n_seg << std::endl;
 
                 }
 
