@@ -10,34 +10,69 @@ namespace Yttrium
     namespace Core
     {
         //! using  div_t/div
-        struct DivInt
+        class DivInt
         {
+        public:
             static const char * const CallSign; //!< "DivInt"
             typedef div_t  Type;                //!< alias
             typedef int    Args;                //!< alias
             typedef Type (*Proc)(Args,Args);    //!< alias
-            static  Proc const  Call;           //!< alias
+            
+            explicit DivInt()  noexcept;
+            virtual ~DivInt() noexcept;
+
+            Proc const call;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(DivInt);
         };
 
         //! using ldiv_t/ldiv
-        struct DivLong
+        class DivLong
         {
+        public:
             static const char * const CallSign; //!< "DivLong"
             typedef ldiv_t Type;                //!< alias
             typedef long   Args;                //!< alias
             typedef Type (*Proc)(Args,Args);    //!< alias
-            static  Proc const Call;            //!< alias
+
+            explicit DivLong() noexcept;
+            virtual ~DivLong() noexcept;
+
+            Proc const call;            //!< alias
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(DivLong);
         };
 
         //! using lldiv_t/lldiv
-        struct DivLongLong
+        class DivLongLong
         {
+        public:
             static const char * const CallSign; //!< "DivLongLong"
             typedef lldiv_t   Type;             //!< alias
             typedef long long Args;             //!< alias
             typedef Type (*Proc)(Args,Args);    //!< alias
-            static  Proc   const Call;          //!< alias
+
+            explicit DivLongLong() noexcept;
+            virtual ~DivLongLong() noexcept;
+
+            Proc const call;
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(DivLongLong);
         };
+
+        template <typename T> struct DivSelect
+        {
+            static const bool   ChooseInt     = sizeof(T) <= sizeof(int);  //!< alias
+            static const bool   ChooseLong    = sizeof(T) <= sizeof(long); //!< alias
+
+            //! optimized API computation
+            typedef typename Pick<ChooseInt,
+            Core::DivInt,
+            typename Pick<ChooseLong,Core::DivLong,Core::DivLongLong>::Type >::Type API;
+        };
+
     }
 
 
@@ -47,9 +82,11 @@ namespace Yttrium
     //! selecting and using the proper div_t/div
     //
     //__________________________________________________________________________
+#if 0
     template <typename T>
-    struct Div
+    class Div
     {
+    public:
         static const bool   ChooseInt     = sizeof(T) <= sizeof(int);  //!< alias
         static const bool   ChooseLong    = sizeof(T) <= sizeof(long); //!< alias
 
@@ -57,14 +94,30 @@ namespace Yttrium
         typedef typename Pick<ChooseInt,
         Core::DivInt,
         typename Pick<ChooseLong,Core::DivLong,Core::DivLongLong>::Type >::Type API;
-
         typedef typename      API::Type Type; //!< alias
         static const typename API::Proc Call; //!< alias
+
+        inline  Div() noexcept : api() {}
+        inline ~Div() noexcept {}
+
+        const API api;
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(Div);
+    };
+#endif
+
+    template <typename T>
+    class Div : public Core::DivSelect<T>::API
+    {
+    public:
+        inline explicit Div() noexcept : Core::DivSelect<T>::API() {}
+        inline virtual ~Div() noexcept {}
+        
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(Div);
     };
 
-    //! instance
-    template <typename T>
-    const typename Div<T>::API::Proc Div<T>::Call = API::Call;
 
 }
 

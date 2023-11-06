@@ -9,9 +9,17 @@ namespace Yttrium
 		const char * const DivLong::CallSign = "DivLong";
 		const char * const DivLongLong::CallSign = "DivLongLong";
 
-		DivInt::Proc     const DivInt::Call = div;
-		DivLong::Proc     const DivLong::Call = ldiv;
-		DivLongLong::Proc const DivLongLong::Call = lldiv;
+        DivInt::  DivInt() noexcept : call(div) {}
+        DivInt:: ~DivInt() noexcept {}
+
+
+
+        DivLong::  DivLong() noexcept : call(ldiv) {}
+        DivLong:: ~DivLong() noexcept {}
+
+        
+        DivLongLong::  DivLongLong() noexcept : call(lldiv) {}
+        DivLongLong:: ~DivLongLong() noexcept {}
 
 	}
 }
