@@ -22,7 +22,7 @@ namespace Yttrium
         //! using ldiv_t/ldiv
         struct DivLong
         {
-            static const char * const CallSign; //!< "DivInt"
+            static const char * const CallSign; //!< "DivLong"
             typedef ldiv_t Type;                //!< alias
             typedef long   Args;                //!< alias
             typedef Type (*Proc)(Args,Args);    //!< alias
@@ -32,7 +32,7 @@ namespace Yttrium
         //! using lldiv_t/lldiv
         struct DivLongLong
         {
-            static const char * const CallSign; //!< "DivInt"
+            static const char * const CallSign; //!< "DivLongLong"
             typedef lldiv_t   Type;             //!< alias
             typedef long long Args;             //!< alias
             typedef Type (*Proc)(Args,Args);    //!< alias
