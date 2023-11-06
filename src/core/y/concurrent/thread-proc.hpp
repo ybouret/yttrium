@@ -10,7 +10,8 @@ namespace Yttrium
 {
     namespace Concurrent
     {
-        typedef void (*ThreadProc)(void *);
+
+        typedef void (*ThreadProc)(void *); //!< generic parallel function
     }
 
 }

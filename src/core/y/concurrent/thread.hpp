@@ -15,12 +15,19 @@ namespace Yttrium
             class Thread;
         }
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Basic thread wrapper
+        //
+        //
+        //______________________________________________________________________
         class Thread : public Primitive
         {
         public:
-
-            explicit Thread(ThreadProc proc, void *args);
-            virtual ~Thread() noexcept;
+            explicit Thread(ThreadProc proc, void *args); //!< launch proc(args)
+            virtual ~Thread() noexcept;                   //!< join
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Thread);
