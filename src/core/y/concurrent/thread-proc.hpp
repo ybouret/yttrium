@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Thread_Proc_Included
