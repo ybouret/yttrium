@@ -88,6 +88,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(concurrent_thread);
     Y_UTEST(concurrent_condition);
     Y_UTEST(concurrent_split1d);
+    Y_UTEST(concurrent_split2d);
 
 
     Y_UTEST(hashing_mix64);

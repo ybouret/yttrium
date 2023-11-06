@@ -133,7 +133,8 @@ add_test(calculus:xlog2  test-core calculus_xlog2)
 add_test(concurrent:mutex     test-core concurrent_mutex)
 add_test(concurrent:thread    test-core concurrent_thread)
 add_test(concurrent:condition test-core concurrent_condition)
-add_test(concurretn:split1d   test-core concurrent_split1d)
+add_test(concurrent:split1d   test-core concurrent_split1d)
+add_test(concurrent:split2d   test-core concurrent_split2d)
 
 
 #random
