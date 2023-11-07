@@ -2,8 +2,12 @@
 
 #include "y/concurrent/condition.hpp"
 #include "y/concurrent/wire.hpp"
+#include "y/concurrent/topology.hpp"
 #include "y/system/hw.hpp"
 #include "y/utest/run.hpp"
+#include "y/data/list/cxx.hpp"
+#include "y/random/bits.hpp"
+#include "y/text/ascii/convert.hpp"
 
 using namespace Yttrium;
 
@@ -12,7 +16,7 @@ namespace
     class Barrier
     {
     public:
-        explicit Barrier(const size_t ini)  : mutex(), cond(), count(ini)
+        explicit Barrier()  : mutex(), cond(), count(0), ran(), sum(0), meg(50)
         {
         }
 
@@ -20,10 +24,18 @@ namespace
         {
         }
 
+        bool ready(const size_t nt) noexcept
+        {
+            Y_LOCK(mutex);
+            return count >= nt;
+        }
 
         Concurrent::Mutex     mutex;
         Concurrent::Condition cond;
         size_t                count;
+        Random::Rand          ran;
+        double                sum;
+        size_t                meg;
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Barrier);
@@ -31,25 +43,45 @@ namespace
 
     static inline void MyProc(Barrier &barrier)
     {
+        volatile double sum = 0;
+
         {
             Y_LOCK(barrier.mutex);
+            ++barrier.count;
             std::cerr << "Thread with barrier @" << barrier.count << std::endl;
-            if(--barrier.count>0)
-            {
-                barrier.cond.wait(barrier.mutex);
-                // wake up on a locked mutex
-                std::cerr << "Waking up!" << std::endl;
-            }
-            else
-            {
-                // mutex is locked
-                std::cerr << "Will launch computation!" << std::endl;
-                barrier.cond.broadcast();
-            }
+            barrier.cond.wait(barrier.mutex);// waiting on a locked mutex
+            std::cerr << "Computing..." << std::endl;
         }
 
+        // unlocked computation
+        for(size_t i=barrier.meg * 1000000;i>0;--i)
+        {
+            sum += cos(100*barrier.ran.to<double>());
+        }
 
+        {
+            Y_LOCK(barrier.mutex);
+            barrier.sum += sum;
+        }
     }
+
+    class Worker : public Object, public Concurrent::Wire
+    {
+    public:
+        explicit Worker(Barrier &barrier) : Object(), Concurrent::Wire(MyProc,barrier), next(0), prev(0)
+        {
+        }
+
+        virtual ~Worker() noexcept
+        {
+        }
+
+        Worker *next;
+        Worker *prev;
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(Worker);
+    };
 
 
 }
@@ -57,9 +89,31 @@ namespace
 
 Y_UTEST(concurrent_topo)
 {
+    const Concurrent::Topology topology;
+    std::cerr << topology << std::endl;
+    if(topology.size<=0) throw Exception("empty topology");
 
-    std::cerr << "#procs=" << Hardware::NumProcs() << std::endl;
+    const size_t      nt = topology.size;
+    Barrier           barrier;
+    CxxListOf<Worker> crew;
+    for(size_t i=0;i<nt;++i)
+    {
+        crew.pushTail( new Worker(barrier) );
+    }
 
+    while( !barrier.ready(nt) )
+        ;
+
+    std::cerr << "-- ready!" << std::endl;
+
+    topology.assign(crew);
+
+    if(argc>1)
+    {
+        barrier.meg = ASCII::Convert::To<size_t>(argv[1],"mega cycles");
+    }
+
+    barrier.cond.broadcast();
 
 
 }
