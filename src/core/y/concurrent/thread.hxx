@@ -85,6 +85,8 @@ namespace Yttrium
 
                 }
 
+                void assign(const size_t j);
+
                 //______________________________________________________________
                 //
                 //
@@ -129,7 +131,90 @@ namespace Yttrium
                 }
 
             };
+
+#if defined Y_THREAD_AFFINITY
+#error "Y_THREAD_AFFINITY shouldn't be defined"
+#endif
+
+#if defined(Y_Darwin)
+#define Y_THREAD_AFFINITY 1
+#include <mach/thread_policy.h>
+#include <mach/thread_act.h>
+
+            void Thread:: assign(const size_t j)
+            {
+                thread_affinity_policy_data_t policy_data = { int(j) };
+                mach_port_t                   mach_thread = pthread_mach_thread_np(thr);
+                const int                     mach_result = thread_policy_set(mach_thread, THREAD_AFFINITY_POLICY, (thread_policy_t)&policy_data, THREAD_AFFINITY_POLICY_COUNT);
+                if( KERN_SUCCESS != mach_result )
+                {
+                    throw Mach::Exception(mach_result,"thread_policy_set");
+                }
+
+            }
+
+#endif
+
+#if defined(Y_Linux)|| defined(Y_FreeBSD)
+#   define Y_THREAD_AFFINITY 1
+#   if defined(Y_FreeBSD)
+#      include <pthread_np.h>
+#      define Y_CPU_SET cpuset_t
+#   else
+#      define Y_CPU_SET cpu_set_t
+#   endif
+
+            void   Thread:: assign(const size_t j)
+            {
+                Y_CPU_SET the_cpu_set;
+                CPU_ZERO(  &the_cpu_set );
+                CPU_SET(j, &the_cpu_set );
+                const int err = pthread_setaffinity_np(thr, sizeof(Y_CPU_SET), &the_cpu_set );
+                if( err != 0 )
+                    throw Libc::Exception( err, "pthread_setaffinity_np" );
+            }
+
+#endif
+
+#if defined(Y_WIN)
+#   define Y_THREAD_AFFINITY 1
+            void Thread:: assign(const size_t j)
+            {
+                const DWORD_PTR mask = DWORD_PTR(1) << j;
+                if( ! ::SetThreadAffinityMask( thr, mask ) )
+                {
+                    const DWORD err = ::GetLastError();
+                    throw Win32::Exception( err, "::SetThreadAffinityMask" );
+                }
+            }
+#endif
+
+#if defined(Y_SunOS)
+#   define Y_THREAD_AFFINITY 1
+#include <sys/types.h>
+#include <sys/processor.h>
+#include <sys/procset.h>
+
+            void Thread::assign(const size_t j)
+            {
+                const int res = processor_bind(P_LWPID,idtype_t(thr),j,NULL);
+                if(0!=res) throw Exception("processor_bind failure");
+            }
+
+#endif
+
+
+#if ! defined(Y_THREAD_AFFINITY)
+#warning "No Thread Affinity"
+            void Thread::assign(const size_t)
+            {
+            }
+#endif
+
+
         }
+
+
 
     }
 

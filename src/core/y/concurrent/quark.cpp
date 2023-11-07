@@ -375,7 +375,11 @@ namespace Yttrium
             quark.deleteThread(thread);
         }
         
-
+        void Thread:: assign(const size_t j)
+        {
+            assert(0!=thread);
+            thread->assign(j);
+        }
     }
 
 }

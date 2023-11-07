@@ -26,8 +26,22 @@ namespace Yttrium
         class Thread : public Primitive
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             explicit Thread(ThreadProc proc, void *args); //!< launch proc(args)
             virtual ~Thread() noexcept;                   //!< join
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void     assign(const size_t j); //!< best effort thread placement
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Thread);
