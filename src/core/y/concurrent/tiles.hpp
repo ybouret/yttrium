@@ -28,7 +28,7 @@ namespace Yttrium
         class Segment
         {
         public:
-            typedef Memory::Wad<Segment<T>,Memory::Pooled> WadType;
+            typedef Memory::Wad<Segment<T>,Memory::Pooled> Strip;
 
             //__________________________________________________________________
             //
@@ -66,7 +66,17 @@ namespace Yttrium
             Y_DISABLE_ASSIGN(Segment);
         };
 
-        
+        template <typename T>
+        class Tile : public Segment<T>::Strip
+        {
+        public:
+            explicit Tile();
+            virtual ~Tile() noexcept;
+            
+        private:
+            Y_DISABLE_ASSIGN(Tile);
+        };
+
 
         //______________________________________________________________________
         //
