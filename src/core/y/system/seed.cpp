@@ -5,6 +5,7 @@
 #include "y/check/crc32.hpp"
 #include "y/system/pid.hpp"
 #include "y/type/bitlib.hpp"
+#include "y/lockable.hpp"
 
 #include <iostream>
 
@@ -13,6 +14,7 @@ namespace Yttrium
 
     uint32_t SystemSeed:: Get()
     {
+        Y_GIANT_LOCK();
         union
         {
             uint64_t qw[2];

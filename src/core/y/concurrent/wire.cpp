@@ -9,7 +9,7 @@ namespace Yttrium
         {
             WireData:: ~WireData() noexcept {
                 Coerce(procAddr) = 0;
-                Coerce(argsAddr) = 0;
+                Coerce(arg1Addr) = 0;
             }
 
             void * WireData:: Args() noexcept { return this; }

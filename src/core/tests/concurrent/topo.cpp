@@ -16,7 +16,7 @@ namespace
     class Barrier
     {
     public:
-        explicit Barrier()  : mutex(), cond(), count(0), ran(), sum(0), meg(50)
+        explicit Barrier()  : mutex(), cond(), count(0), sum(0), meg(50)
         {
         }
 
@@ -33,7 +33,6 @@ namespace
         Concurrent::Mutex     mutex;
         Concurrent::Condition cond;
         size_t                count;
-        Random::Rand          ran;
         double                sum;
         size_t                meg;
 
@@ -43,6 +42,8 @@ namespace
 
     static inline void MyProc(Barrier &barrier)
     {
+
+        Random::Rand ran;
 
         {
             Y_LOCK(barrier.mutex);
@@ -60,7 +61,7 @@ namespace
         double sum = 0;
         for(size_t i=barrier.meg * 1000000;i>0;--i)
         {
-            sum += cos(100*barrier.ran.to<double>());
+            sum += cos(100*ran.to<double>());
         }
 
         {
