@@ -11,7 +11,7 @@
 #include <windows.h>
 #endif
 
-#if defined(Y_Linux) || defined(Y_FreeBSD) || defined(YACK_SunOS) || defined(Y_OpenBSD)
+#if defined(Y_Linux) || defined(Y_FreeBSD) || defined(Y_SunOS) || defined(Y_OpenBSD)
 #include <unistd.h>
 #endif
 
@@ -39,7 +39,7 @@ size_t Yttrium_Hardware_NumProcs()
     return n <= 1 ? 1:n;
 #endif
 
-#if defined(Y_Linux) || defined(Y_FreeBSD) || defined(YACK_SunOS) || defined(Y_OpenBSD)
+#if defined(Y_Linux) || defined(Y_FreeBSD) || defined(Y_SunOS) || defined(Y_OpenBSD)
     const long n = sysconf( _SC_NPROCESSORS_ONLN );
     return n <= 0  ? 1 : n;
 #endif
