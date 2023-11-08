@@ -382,7 +382,7 @@ namespace Yttrium
 
 
         private:
-            Y_DISABLE_ASSIGN(Tiles);
+            Y_DISABLE_COPY_AND_ASSIGN(Tiles);
             Tile<T> *       const rwTile;
             const Tile<T> * const roTile;
 
