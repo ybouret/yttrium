@@ -16,17 +16,32 @@ namespace Yttrium
 
     namespace Concurrent
     {
-
-        //! segment
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Horizontal Segment
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class Segment
         {
         public:
             typedef Memory::Wad<Segment<T>,Memory::Pooled> WadType;
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup at position + width
             inline Segment(const T X, const T W) noexcept :
             lower(X), width(W), upper(lower+width-1) { assert(width>0); }
 
+            //! copy
             inline Segment(const Segment &other) noexcept :
             lower(other.lower),
             width(other.width),
@@ -34,35 +49,72 @@ namespace Yttrium
             {}
 
 
+            //! cleanup
             inline ~Segment() noexcept {}
 
-            const T lower;
-            const T width;
-            const T upper;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const T lower; //!< lower=starting position
+            const T width; //!< number of values
+            const T upper; //!< upper=final position
 
         private:
             Y_DISABLE_ASSIGN(Segment);
         };
 
+        
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Collection to Tiles
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class Tiles
         {
         public:
-            typedef V2D<T>  VTX;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef V2D<T>  VTX; //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! create tiles for AT MOST 'size' processors, are lower to upper
             template <typename U>
             inline explicit Tiles(const U size,
-                                  VTX  lower,
-                                  VTX  upper)
+                                  VTX     lower,
+                                  VTX     upper)
             {
-
+                //--------------------------------------------------------------
+                //
                 // setup layout
+                //
+                //--------------------------------------------------------------
                 if(upper.x<lower.x) Swap(upper.x,lower.x);
                 if(upper.y<lower.y) Swap(upper.y,lower.y);
                 const V2D<T> width(1+upper.x-lower.x,1+upper.y-lower.y);
 
-                // compute items and matching count of tiles
+                //--------------------------------------------------------------
+                //
+                // compute items and matching count of tiles (less than 'size'!)
+                //
+                //--------------------------------------------------------------
                 const T      items = width.x * width.y;
                 const size_t count = Min<U>(size,items);
                 std::cerr << "size=" << size << " => count=" << count << " for #items=" << items << std::endl;

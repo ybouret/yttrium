@@ -7,9 +7,18 @@
 
 namespace Yttrium
 {
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Horizontal Segment
+    //
+    //
+    //__________________________________________________________________________
     struct Hardware
     {
-        static size_t NumProcs();
+
+        static size_t NumProcs(); //!< number of logical processors
     };
 }
 

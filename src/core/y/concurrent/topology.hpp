@@ -10,24 +10,52 @@ namespace Yttrium
 {
     namespace Concurrent
     {
-        typedef Small::BareHeavyList<size_t> CPUs;
-        typedef CPUs::NodeType               CPU;
+        typedef Small::BareHeavyList<size_t> CPUs; //!< alias
+        typedef CPUs::NodeType               CPU;  //!< alias
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Topology to bind CPUs
+        //
+        //
+        //______________________________________________________________________
         class Topology :  public CPUs
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             static const char * const      EnvName;  //!< Y_NUM_THREADS
             static const char * const      CallSign; //!< "Topology"
             
-            virtual ~Topology() noexcept;
-            explicit Topology();
-            explicit Topology(const String &);
-            explicit Topology(const char   *);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             explicit Topology(const size_t nproc,
                               const size_t start=0,
-                              const size_t every=1);
-            Topology(const Topology &);
+                              const size_t every=1); //!< setup with parameters
+            explicit Topology();                     //!< setup to Hardware::NumProcs() or Y_NUM_THREADS
+            explicit Topology(const String &);       //!< parse string
+            explicit Topology(const char   *);       //!< parse text
+            virtual ~Topology() noexcept;            //!< cleanup
+            Topology(const Topology &);              //!< hard copy
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! assign to a list of 
             template <typename LIST> inline
             void assign(LIST &crew) const
             {

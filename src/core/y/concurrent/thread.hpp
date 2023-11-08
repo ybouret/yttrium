@@ -26,7 +26,7 @@ namespace Yttrium
         class Thread : public Primitive
         {
         public:
-            static bool Verbose;
+            static bool Verbose; //!< global verbosity if needed
 
             //__________________________________________________________________
             //
