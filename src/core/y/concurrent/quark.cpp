@@ -362,10 +362,17 @@ namespace Yttrium
 {
     namespace Concurrent
     {
+        bool Thread::Verbose = false;
+
         Thread:: Thread(ThreadProc proc, void *args) :
         Primitive(),
         thread( quark.createThread(proc,args) )
         {
+            if(Verbose)
+            {
+                Y_LOCK(quark);
+                std::cerr << "[Thread] create @" << handle() << std::endl;
+            }
         }
 
 
@@ -374,12 +381,31 @@ namespace Yttrium
             assert(0!=thread);
             quark.deleteThread(thread);
         }
-        
+
         void Thread:: assign(const size_t j)
         {
             assert(0!=thread);
             thread->assign(j);
         }
+
+        const void * Thread:: handle() const noexcept
+        {
+            assert(0!=thread);
+            return static_cast<const void*>(thread->thr);
+        }
+
+        const void * Thread:: CurrentHandle() noexcept
+        {
+#if defined(Y_BSD)
+            pthread_t thr = pthread_self();
+            return static_cast<const void*>(thr);
+#endif
+
+#if defined(Y_WIN)
+            return static_cast<const void*>( ::GetCurrentThread() );
+#endif
+        }
+
     }
 
 }

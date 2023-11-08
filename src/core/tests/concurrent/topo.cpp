@@ -43,17 +43,21 @@ namespace
 
     static inline void MyProc(Barrier &barrier)
     {
-        volatile double sum = 0;
 
         {
             Y_LOCK(barrier.mutex);
+
             ++barrier.count;
-            std::cerr << "Thread with barrier @" << barrier.count << std::endl;
+            {
+                Y_GIANT_LOCK();
+                std::cerr << "Thread with barrier @" << barrier.count << std::endl;
+            }
             barrier.cond.wait(barrier.mutex);// waiting on a locked mutex
-            std::cerr << "Computing..." << std::endl;
+            std::cerr << "Computing in thread @" << Concurrent::Thread::CurrentHandle() << std::endl;
         }
 
-        // unlocked computation
+        // UNLOCKED computation
+        double sum = 0;
         for(size_t i=barrier.meg * 1000000;i>0;--i)
         {
             sum += cos(100*barrier.ran.to<double>());
@@ -61,6 +65,7 @@ namespace
 
         {
             Y_LOCK(barrier.mutex);
+            std::cerr << "Done Computing..." << std::endl;
             barrier.sum += sum;
         }
     }
@@ -70,14 +75,16 @@ namespace
     public:
         explicit Worker(Barrier &barrier) : Object(), Concurrent::Wire(MyProc,barrier), next(0), prev(0)
         {
+            Y_GIANT_LOCK();
+            std::cerr << "[Worker]        @" << handle() << std::endl;
         }
 
         virtual ~Worker() noexcept
         {
         }
 
-        Worker *next;
-        Worker *prev;
+        Worker  *next;
+        Worker  *prev;
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Worker);
@@ -89,9 +96,14 @@ namespace
 
 Y_UTEST(concurrent_topo)
 {
+    Concurrent::Thread::Verbose = true;
     const Concurrent::Topology topology;
     std::cerr << topology << std::endl;
+
     if(topology.size<=0) throw Exception("empty topology");
+
+
+    std::cerr << "Master Thread   @" << Concurrent::Thread::CurrentHandle() << std::endl;
 
     const size_t      nt = topology.size;
     Barrier           barrier;

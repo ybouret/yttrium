@@ -26,6 +26,8 @@ namespace Yttrium
         class Thread : public Primitive
         {
         public:
+            static bool Verbose;
+
             //__________________________________________________________________
             //
             //
@@ -41,7 +43,9 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void     assign(const size_t j); //!< best effort thread placement
+            void                assign(const size_t j);   //!< best effort thread placement
+            const void *        handle()  const noexcept; //!< system thread handle
+            static const void * CurrentHandle() noexcept; //!< current handle
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Thread);
