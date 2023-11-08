@@ -421,7 +421,7 @@ namespace Yttrium
         {
             assert(0!=thread);
 #if defined(Y_BSD)
-
+            return pthread2pointer(thread->thr);
 #endif
 
 #if defined(Y_WIN)
@@ -433,7 +433,7 @@ namespace Yttrium
         const void * Thread:: CurrentHandle() noexcept
         {
 #if defined(Y_BSD)
-            
+            return pthread2pointer( pthread_self() );
 #endif
 
 #if defined(Y_WIN)
