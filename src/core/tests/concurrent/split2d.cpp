@@ -23,7 +23,7 @@ Y_UTEST(concurrent_split2d)
     if(argc>1) X = ASCII::Convert::To<int>(argv[1],"X");
     if(argc>2) Y = ASCII::Convert::To<int>(argv[2],"Y");
 
-    const V2D<int> area(X,Y);
+    const V2D<int> area( Max<int>(X,1), Max<int>(Y,1) );
     std::cerr << "Splitting " << area << std::endl;
 
     for(unsigned size=1;size<=3;++size)

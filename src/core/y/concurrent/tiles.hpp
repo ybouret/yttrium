@@ -77,8 +77,8 @@ namespace Yttrium
             const VTX q; //!< quit position
         private:
             Y_DISABLE_ASSIGN(Segment);
-
         };
+
 
         template <typename T>
         class Tile : public Segment<T>::Strip
@@ -90,8 +90,9 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef typename Segment<T>::Strip Segments; //!< alias
-            typedef V2D<T>                     VTX;      //!< alias
+            typedef Memory::Wad<Tile<T>,Memory::Pooled> Paving;   //!< allias
+            typedef typename Segment<T>::Strip          Segments; //!< alias
+            typedef V2D<T>                              VTX;      //!< alias
 
             //__________________________________________________________________
             //
@@ -102,8 +103,8 @@ namespace Yttrium
             inline explicit Tile(const size_t maxSegments) :
             Segments(maxSegments),
             size(0),
-            items(0),
-            segment( static_cast<Segment<T> *>(this->workspace) )
+            segment( static_cast<Segment<T> *>(this->workspace) ),
+            items(0)
             {}
 
             inline virtual ~Tile() noexcept 
@@ -134,25 +135,82 @@ namespace Yttrium
             //
             //__________________________________________________________________
             const size_t size;
-            const size_t items;
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tile);
             Segment<T> *segment;
+
+        public:
+            const size_t items;
+
         };
 
+
+        template <typename T>
+        class TilesLayout
+        {
+        public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef V2D<T>  VTX; //!< alias
+
+            inline virtual ~TilesLayout() noexcept {}
+
+            template <typename U>
+            inline explicit TilesLayout(const U  nproc,
+                                        VTX     &lower,
+                                        VTX     &upper) :
+            size(0),
+            items(0),
+            width(0)
+            {
+                //--------------------------------------------------------------
+                //
+                //
+                // setup layout
+                //
+                //
+                //--------------------------------------------------------------
+                if(upper.x<lower.x) Swap(upper.x,lower.x);
+                if(upper.y<lower.y) Swap(upper.y,lower.y);
+                const V2D<T> area(1+upper.x-lower.x,1+upper.y-lower.y);
+
+                //--------------------------------------------------------------
+                //
+                //
+                // compute items and matching count of tiles (less than 'size'!)
+                //
+                //
+                //--------------------------------------------------------------
+                Coerce(width) = area.x;
+                Coerce(items) = area.x * area.y;
+                Coerce(size)  = Min<U>(nproc,items);
+                std::cerr << "nproc=" << nproc << " => size=" << size << " for #items=" << items << std::endl;
+            }
+
+            const size_t size;    //!< less or equal to user's CPU count
+            const T      items;   //!< total number of point to dispatch
+            const T      width;   //!< bulk width
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(TilesLayout);
+        };
 
         //______________________________________________________________________
         //
         //
         //
-        //! Collection to Tiles
+        //! Collection of Tiles
         //
         //
         //______________________________________________________________________
         template <typename T>
-        class Tiles
+        class Tiles : public TilesLayout<T>, public Tile<T>::Paving
         {
         public:
             //__________________________________________________________________
@@ -172,113 +230,115 @@ namespace Yttrium
 
             //! create tiles for AT MOST 'size' processors, are lower to upper
             template <typename U>
-            inline explicit Tiles(const U size,
+            inline explicit Tiles(const U nproc,
                                   VTX     lower,
-                                  VTX     upper)
+                                  VTX     upper) :
+            TilesLayout<T>(nproc,lower,upper),
+            Tile<T>::Paving(this->size),
+            tile( static_cast<Tile<T> *>(this->workspace) )
             {
-                //--------------------------------------------------------------
-                //
-                //
-                // setup layout
-                //
-                //
-                //--------------------------------------------------------------
-                if(upper.x<lower.x) Swap(upper.x,lower.x);
-                if(upper.y<lower.y) Swap(upper.y,lower.y);
-                const V2D<T> width(1+upper.x-lower.x,1+upper.y-lower.y);
 
-                //--------------------------------------------------------------
-                //
-                //
-                // compute items and matching count of tiles (less than 'size'!)
-                //
-                //
-                //--------------------------------------------------------------
-                const T      items = width.x * width.y;
-                const size_t count = Min<U>(size,items);
-                std::cerr << "size=" << size << " => count=" << count << " for #items=" << items << std::endl;
-              
+                size_t   built = 0;
+                try{
 
-                //--------------------------------------------------------------
-                //
-                //
-                // build count tiles
-                //
-                //
-                //--------------------------------------------------------------
-                for(size_t rank=0;rank<count;++rank)
+                    //--------------------------------------------------------------
+                    //
+                    //
+                    // build count tiles
+                    //
+                    //
+                    //--------------------------------------------------------------
+                    for(size_t rank=0;rank<this->size;++rank)
+                    {
+                        //------------------------------------------------------
+                        //
+                        // compute items for this rank
+                        //
+                        //------------------------------------------------------
+                        T offset = 0;
+                        T length = this->items;
+                        Split::With(this->size, rank, length, offset); assert(length>0);
+                        std::cerr << "\trank=" << rank << " : @" << offset << " +" << length << std::endl;
+
+                        //------------------------------------------------------
+                        //
+                        // deduce coordinates and number of segments
+                        //
+                        //------------------------------------------------------
+                        const T       finish = length + offset - 1;
+                        const VTX     v_ini  = idx2vtx(offset,this->width) + lower; // starting reduced coordinates
+                        const VTX     v_end  = idx2vtx(finish,this->width) + lower; // final coordinates
+                        const size_t  n_seg  = v_end.y-v_ini.y+1;               // corresponding segments
+
+                        //------------------------------------------------------
+                        //
+                        // build tile
+                        //
+                        //------------------------------------------------------
+                        //Tile<T> t(n_seg);
+                        Tile<T> &t = * ( new( &tile[built] ) Tile<T>(n_seg) );
+                        ++built;
+                        assert(t.capacity>=n_seg);
+                        if(n_seg<=1)
+                        {
+                            assert(1==n_seg);
+                            assert(v_ini.y==v_end.y);
+                            //--------------------------------------------------
+                            // single segment
+                            //--------------------------------------------------
+                            t.add(v_ini,1+v_end.x-v_ini.x);
+                            assert(t.items==size_t(length));
+                        }
+                        else
+                        {
+                            assert(n_seg>1);
+                            //--------------------------------------------------
+                            // first segment
+                            //--------------------------------------------------
+                            t.add(v_ini,1+upper.x-v_ini.x);
+
+                            //--------------------------------------------------
+                            // bulk segment(s)
+                            //--------------------------------------------------
+                            for(T y=v_ini.y+1;y<v_end.y;++y)
+                                t.add( VTX(lower.x,y), this->width);
+
+                            //--------------------------------------------------
+                            // last segment
+                            //--------------------------------------------------
+                            t.add( VTX(lower.x,v_end.y), 1+v_end.x - lower.x);
+                            assert(t.items==size_t(length));
+                        }
+                    }
+                    assert(this->size==built);
+                }
+                catch(...)
                 {
-                    //----------------------------------------------------------
-                    //
-                    // compute items for this rank
-                    //
-                    //----------------------------------------------------------
-                    T offset = 0;
-                    T length = items;
-                    Split::With(count, rank, length, offset); assert(length>0);
-                    std::cerr << "\trank=" << rank << " : @" << offset << " +" << length << std::endl;
-
-                    //----------------------------------------------------------
-                    //
-                    // deduce coordinates and number of segments
-                    //
-                    //----------------------------------------------------------
-                    const T       finish = length + offset - 1;
-                    const VTX     v_ini  = idx2vtx(offset,width.x) + lower; // starting reduced coordinates
-                    const VTX     v_end  = idx2vtx(finish,width.x) + lower; // final coordinates
-                    const size_t  n_seg  = v_end.y-v_ini.y+1;               // corresponding segments
-
-                    //----------------------------------------------------------
-                    //
-                    // build tile
-                    //
-                    //----------------------------------------------------------
-                    Tile<T> tile(n_seg); assert(tile.capacity>=n_seg);
-                    if(n_seg<=1)
-                    {
-                        assert(1==n_seg);
-                        assert(v_ini.y==v_end.y);
-                        //------------------------------------------------------
-                        // single segment
-                        //------------------------------------------------------
-                        tile.add(v_ini,1+v_end.x-v_ini.x);
-                        assert(tile.items==size_t(length));
-                    }
-                    else
-                    {
-                        assert(n_seg>1);
-                        //------------------------------------------------------
-                        // first segment
-                        //------------------------------------------------------
-                        tile.add(v_ini,1+upper.x-v_ini.x);
-
-                        //------------------------------------------------------
-                        // bulk segment(s)
-                        //------------------------------------------------------
-                        for(T y=v_ini.y+1;y<v_end.y;++y)
-                            tile.add( VTX(lower.x,y), width.x);
-
-                        //------------------------------------------------------
-                        // last segment
-                        //------------------------------------------------------
-                        tile.add( VTX(lower.x,v_end.y), 1+v_end.x - lower.x);
-
-                        assert(tile.items==size_t(length));
-                    }
-
+                    erase(built);
+                    throw;
                 }
 
 
             }
 
-            inline virtual ~Tiles() noexcept {}
+            inline virtual ~Tiles() noexcept 
+            {
+                erase( Coerce(this->size) );
+            }
 
         private:
             Y_DISABLE_ASSIGN(Tiles);
+            Tile<T> *tile;
+
+            inline void erase(size_t &built) noexcept
+            {
+                while(built>0) Destruct( &tile[--built] );
+            }
+
             static inline VTX idx2vtx(const T p, const T w) noexcept
             {
-                static const Div<T> divAPI;
-                const typename Div<T>::Type dv = divAPI.call(p,w);
+                static const   Div<T> api;
+                const typename Div<T>::Type dv = api.call(p,w);
                 return VTX(dv.rem,dv.quot);
             }
 
