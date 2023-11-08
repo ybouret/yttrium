@@ -10,6 +10,7 @@
 #include "y/concurrent/split.hpp"
 #include "y/type/utils.hpp"
 #include "y/type/div.hpp"
+#include "y/container/readable.hpp"
 
 namespace Yttrium
 {
@@ -34,8 +35,8 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Memory::Wad<Segment<T>,Memory::Pooled> Strip;
-            typedef V2D<T>                                 VTX; //!< alias
+            typedef Memory::Wad<Segment<T>,Memory::Pooled> Strip; //!< alias
+            typedef V2D<T>                                 VTX;   //!< alias
 
             //__________________________________________________________________
             //
@@ -59,7 +60,7 @@ namespace Yttrium
             //! cleanup
             inline ~Segment() noexcept {}
 
-            //! diplay
+            //! display
             inline friend std::ostream & operator<<(std::ostream &os, const Segment &s)
             {
                 os << "|" << s.p << "->" << s.q << "|=" << s.w;
@@ -75,13 +76,21 @@ namespace Yttrium
             const VTX p; //!< starting position
             const T   w; //!< width
             const VTX q; //!< quit position
+
         private:
             Y_DISABLE_ASSIGN(Segment);
         };
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Strip of segments
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
-        class Tile : public Segment<T>::Strip
+        class Tile : public Segment<T>::Strip, public Readable< const Segment<T> >
         {
         public:
             //__________________________________________________________________
@@ -90,7 +99,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Memory::Wad<Tile<T>,Memory::Pooled> Paving;   //!< allias
+            typedef Memory::Wad<Tile<T>,Memory::Pooled> Paving;   //!< alias
             typedef typename Segment<T>::Strip          Segments; //!< alias
             typedef V2D<T>                              VTX;      //!< alias
 
@@ -100,16 +109,22 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
+          
+            //! allocate blank segments
             inline explicit Tile(const size_t maxSegments) :
             Segments(maxSegments),
-            size(0),
-            segment( static_cast<Segment<T> *>(this->workspace) ),
+            count(0),
+            rwSeg( static_cast<Segment<T> *>(this->workspace) ),
+            roSeg( rwSeg-1 ),
             items(0)
             {}
 
-            inline virtual ~Tile() noexcept 
-            {
-                while(size>0) Destruct(&segment[--Coerce(size)]);
+            //! cleanup
+            inline virtual ~Tile() noexcept {
+                while(count>0) Destruct(&rwSeg[--Coerce(count)]);
+                Coerce(items) = 0;
+                Coerce(rwSeg) = 0;
+                Coerce(roSeg) = 0;
             }
 
             //__________________________________________________________________
@@ -118,15 +133,36 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
+            //! add a new segment to the tile
             inline void add(const VTX start, const T width) noexcept
             {
                 assert(width>0);
-                assert(size<this->capacity);
-                Segment<T> *seg = &segment[Coerce(size)++];
+                assert(count<this->capacity);
+                Segment<T> *seg = &rwSeg[Coerce(count)++];
                 new (seg) Segment<T>(start,width);
-                std::cerr << *seg << std::endl;
+                //std::cerr << *seg << std::endl;
                 Coerce(items) += seg->w;
             }
+
+            inline virtual size_t size() const noexcept
+            {
+                return count;
+            }
+
+            inline virtual const Segment<T> & operator[](const size_t iseg) const noexcept
+            {
+                assert(iseg>0);
+                assert(iseg<=count);
+                return roSeg[iseg];
+            }
+
+            inline virtual const char * callSign() const noexcept
+            {
+                return "Tile";
+            }
+
+
 
             //__________________________________________________________________
             //
@@ -134,21 +170,22 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const size_t size;
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tile);
-            Segment<T> *segment;
+            const size_t             count;   //!< number of segments
+            Segment<T>       * const rwSeg;   //!< r/w segments
+            const Segment<T> * const roSeg;   //!< rwSeg-1
 
         public:
-            const size_t items;
+            const size_t items; //!< number of target items
 
         };
 
 
         template <typename T>
-        class TilesLayout
+        class TilesLayout : public Readable< const Tile<T> >
         {
         public:
             //__________________________________________________________________
@@ -165,7 +202,7 @@ namespace Yttrium
             inline explicit TilesLayout(const U  nproc,
                                         VTX     &lower,
                                         VTX     &upper) :
-            size(0),
+            count(0),
             items(0),
             width(0)
             {
@@ -189,11 +226,17 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 Coerce(width) = area.x;
                 Coerce(items) = area.x * area.y;
-                Coerce(size)  = Min<U>(nproc,items);
-                std::cerr << "nproc=" << nproc << " => size=" << size << " for #items=" << items << std::endl;
+                Coerce(count) = Min<U>(nproc,items);
+                std::cerr << "nproc=" << nproc << " => count=" << count << " for #items=" << items << std::endl;
             }
 
-            const size_t size;    //!< less or equal to user's CPU count
+
+            virtual size_t size()           const noexcept { return count;   }
+            virtual const char * callSign() const noexcept { return "Tiles"; }
+
+
+
+            const size_t count;    //!< less or equal to user's CPU count
             const T      items;   //!< total number of point to dispatch
             const T      width;   //!< bulk width
 
@@ -210,7 +253,9 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename T>
-        class Tiles : public TilesLayout<T>, public Tile<T>::Paving
+        class Tiles : 
+        public TilesLayout<T>,
+        public Tile<T>::Paving
         {
         public:
             //__________________________________________________________________
@@ -234,8 +279,9 @@ namespace Yttrium
                                   VTX     lower,
                                   VTX     upper) :
             TilesLayout<T>(nproc,lower,upper),
-            Tile<T>::Paving(this->size),
-            tile( static_cast<Tile<T> *>(this->workspace) )
+            Tile<T>::Paving(this->count),
+            rwTile( static_cast<Tile<T> *>(this->workspace) ),
+            roTile( rwTile - 1 )
             {
 
                 size_t   built = 0;
@@ -248,7 +294,7 @@ namespace Yttrium
                     //
                     //
                     //--------------------------------------------------------------
-                    for(size_t rank=0;rank<this->size;++rank)
+                    for(size_t rank=0;rank<this->count;++rank)
                     {
                         //------------------------------------------------------
                         //
@@ -257,8 +303,8 @@ namespace Yttrium
                         //------------------------------------------------------
                         T offset = 0;
                         T length = this->items;
-                        Split::With(this->size, rank, length, offset); assert(length>0);
-                        std::cerr << "\trank=" << rank << " : @" << offset << " +" << length << std::endl;
+                        Split::With(this->count, rank, length, offset); assert(length>0);
+                        //std::cerr << "\trank=" << rank << " : @" << offset << " +" << length << std::endl;
 
                         //------------------------------------------------------
                         //
@@ -276,7 +322,7 @@ namespace Yttrium
                         //
                         //------------------------------------------------------
                         //Tile<T> t(n_seg);
-                        Tile<T> &t = * ( new( &tile[built] ) Tile<T>(n_seg) );
+                        Tile<T> &t = * ( new( &rwTile[built] ) Tile<T>(n_seg) );
                         ++built;
                         assert(t.capacity>=n_seg);
                         if(n_seg<=1)
@@ -309,30 +355,40 @@ namespace Yttrium
                             t.add( VTX(lower.x,v_end.y), 1+v_end.x - lower.x);
                             assert(t.items==size_t(length));
                         }
+                        std::cerr << "tile" << this->count << "." << rank << " = " << t << " #" << t.items << std::endl;
                     }
-                    assert(this->size==built);
+                    assert(this->count==built);
                 }
                 catch(...)
                 {
                     erase(built);
                     throw;
                 }
-
-
             }
 
-            inline virtual ~Tiles() noexcept 
+
+            inline virtual ~Tiles() noexcept
             {
-                erase( Coerce(this->size) );
+                erase( Coerce(this->count) );
             }
+
+
+            inline virtual const Tile<T> & operator[](const size_t itile) const noexcept
+            {
+                assert(itile>=1);
+                assert(itile<=this->count);
+                return roTile[itile];
+            }
+
 
         private:
             Y_DISABLE_ASSIGN(Tiles);
-            Tile<T> *tile;
+            Tile<T> *       const rwTile;
+            const Tile<T> * const roTile;
 
             inline void erase(size_t &built) noexcept
             {
-                while(built>0) Destruct( &tile[--built] );
+                while(built>0) Destruct( &rwTile[--built] );
             }
 
             static inline VTX idx2vtx(const T p, const T w) noexcept
