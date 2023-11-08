@@ -364,6 +364,16 @@ namespace Yttrium
     {
         bool Thread::Verbose = false;
 
+        static inline const void * Thr2Ptr(const Y_THREAD thr) noexcept
+        {
+            union
+            {
+                const Y_THREAD t;
+                const void    *p;
+            } alias = { thr };
+            return alias.p;
+        }
+
         Thread:: Thread(ThreadProc proc, void *args) :
         Primitive(),
         thread( quark.createThread(proc,args) )
@@ -388,21 +398,23 @@ namespace Yttrium
             thread->assign(j);
         }
 
+        
+
+
         const void * Thread:: handle() const noexcept
         {
             assert(0!=thread);
-            return static_cast<const void*>(thread->thr);
+            return Thr2Ptr(thread->thr);
         }
 
         const void * Thread:: CurrentHandle() noexcept
         {
 #if defined(Y_BSD)
-            pthread_t thr = pthread_self();
-            return static_cast<const void*>(thr);
+            return Thr2Ptr( pthread_self() );
 #endif
 
 #if defined(Y_WIN)
-            return static_cast<const void*>( ::GetCurrentThread() );
+            return Thr2Ptr( ::GetCurrentThread() );
 #endif
         }
 
