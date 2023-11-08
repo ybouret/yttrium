@@ -363,17 +363,7 @@ namespace Yttrium
     namespace Concurrent
     {
         bool Thread::Verbose = false;
-
-        static inline const void * Thr2Ptr(const Y_THREAD thr) noexcept
-        {
-            union
-            {
-                const Y_THREAD t;
-                const void    *p;
-            } alias = { thr };
-            return alias.p;
-        }
-
+	
         Thread:: Thread(ThreadProc proc, void *args) :
         Primitive(),
         thread( quark.createThread(proc,args) )
@@ -398,23 +388,56 @@ namespace Yttrium
             thread->assign(j);
         }
 
-        
+#if defined(Y_BSD)
+		static inline const void * pthread2pointer(const pthread_t thr) noexcept
+		{
+			union {
+				const pthread_t t;
+				const void      *p;
+			} alias = { thr };
+			return alias.p;
+		}
+#endif
+
+#if defined(Y_WIN)
+		static inline const void * dword2pointer(const DWORD dw) noexcept
+		{
+			static const unsigned lpSize = sizeof(void *);
+			static const unsigned dwSize = sizeof(DWORD);
+			static const unsigned dpp = lpSize / dwSize;
+			union
+			{
+				const void *lp;
+				DWORD       dw[dpp];
+			} alias = { 0 };
+			assert(sizeof(alias) == sizeof(void*));
+			for (unsigned i = 0; i < dpp; ++i) alias.dw[i] = dw;
+			return alias.lp;
+		}
+#endif
 
 
         const void * Thread:: handle() const noexcept
         {
             assert(0!=thread);
-            return Thr2Ptr(thread->thr);
+#if defined(Y_BSD)
+
+#endif
+
+#if defined(Y_WIN)
+			return dword2pointer(thread->tid);
+#endif
+
         }
 
         const void * Thread:: CurrentHandle() noexcept
         {
 #if defined(Y_BSD)
-            return Thr2Ptr( pthread_self() );
+            
 #endif
 
 #if defined(Y_WIN)
-            return Thr2Ptr( ::GetCurrentThread() );
+			return dword2pointer( ::GetCurrentThreadId() );
 #endif
         }
 
