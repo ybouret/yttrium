@@ -70,11 +70,13 @@ namespace Yttrium
         class Tile : public Segment<T>::Strip
         {
         public:
-            explicit Tile();
-            virtual ~Tile() noexcept;
-            
+            typedef typename Segment<T>::Strip Segments;
+
+            inline explicit Tile(const size_t maxSegments) : Segments(maxSegments) {}
+            inline virtual ~Tile() noexcept {}
+
         private:
-            Y_DISABLE_ASSIGN(Tile);
+            Y_DISABLE_COPY_AND_ASSIGN(Tile);
         };
 
 
@@ -139,6 +141,8 @@ namespace Yttrium
                     const VTX v_end  = idx2vtx(finish,width.x) + lower; // final coordinates
                     const T   n_seg  = v_end.y-v_ini.y+1;
                     std::cerr << "#seg=" << n_seg << std::endl;
+                    Tile<T> tile(n_seg);
+
 
                 }
 
