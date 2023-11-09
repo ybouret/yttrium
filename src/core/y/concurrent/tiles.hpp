@@ -109,7 +109,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-          
+
             //! setup with capacity and rank
             inline explicit Tile(const size_t maxSegments, const size_t r) :
             segments(maxSegments),
@@ -145,9 +145,107 @@ namespace Yttrium
         public:
             Tile *       next;  //!< for list
             Tile *       prev;  //!< for list
-            const T      items; //!< for list
-            const size_t rank;  //!< rank in list  [0..size-1]
-            const size_t indx;  //!< index in list [1..size]
+            const T      items; //!< number of items
+            const size_t rank;  //!< rank  in tiles
+            const size_t indx;  //!< index in tiles
+
+            //__________________________________________________________________
+            //
+            //
+            //! Compound iterator over a Tile
+            //
+            //__________________________________________________________________
+            class Iterator
+            {
+            public:
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+
+                //! initialize from a first segment and Tile's count
+                inline Iterator(const Segment<T> * const first,
+                                const size_t             count) :
+                curr(first), last(curr+count), pos(0,0), num(0)
+                { 
+                    if(0!=first) { pos = first->start; num = first->width; }
+                }
+
+                //! cleanup
+                inline ~Iterator() noexcept {}
+
+                //! copy
+                inline  Iterator(const Iterator &it) noexcept :
+                curr(it.curr),
+                last(it.last),
+                pos(it.pos),
+                num(it.num)
+                {
+                }
+
+                //______________________________________________________________
+                //
+                // Methods
+                //______________________________________________________________
+                inline V2D<T> operator*() const noexcept { return pos; } //!< access
+
+                //! prefix increment operator.
+                inline Iterator & operator++() noexcept { move(); return *this; }
+
+                //!   postfix increment operator.
+                inline Iterator operator++(int) noexcept { const Iterator temp = *this; move(); return temp; }
+
+                //! testing difference
+                inline friend bool operator != (const Iterator &lhs, const Iterator &rhs) noexcept
+                {
+                    if(lhs.curr!=rhs.curr)
+                        return true;
+                    else
+                        return lhs.pos != rhs.pos;
+                }
+
+                
+
+            private:
+                Y_DISABLE_ASSIGN(Iterator);
+                const Segment<T> * curr; //!< current segment
+                const Segment<T> * last; //!< first invalid segment
+                V2D<T>             pos;  //!< computed positions
+                T                  num;  //!< remaining valid positions
+
+                //! forwarding position
+                inline void move() noexcept
+                {
+                    assert(curr<last);
+                    assert(num>0);
+                    if(--num<=0)
+                    {
+                        if(++curr>=last)
+                        {
+                            curr  = last  = 0;
+                            pos.x = pos.y = 0;
+                        }
+                        else
+                        {
+                            pos = curr->start;
+                            num = curr->width;
+                        }
+                    }
+                    else
+                    {
+                        ++pos.x;
+                    }
+                }
+            };
+
+            //! beginning of Tile
+            inline Iterator begin() const noexcept { return Iterator( &segments[1], segments.size() ); }
+
+            //! dummy invalid iterator
+            inline Iterator end()   const noexcept { return Iterator(0,0); }
+
+
+
         };
 
         //______________________________________________________________________
@@ -190,7 +288,7 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 //
                 //
-                // setup layout
+                // setup area
                 //
                 //
                 //--------------------------------------------------------------
@@ -234,16 +332,15 @@ namespace Yttrium
                     //
                     //----------------------------------------------------------
                     const T       finish = length + offset - 1;
-                    const V2D<T>  v_ini  = idx2vtx(offset,width) + lower; // starting reduced coordinates
+                    const V2D<T>  v_ini  = idx2vtx(offset,width) + lower; // starting coordinates
                     const V2D<T>  v_end  = idx2vtx(finish,width) + lower; // final coordinates
-                    const size_t  n_seg  = v_end.y-v_ini.y+1;             // corresponding segments
+                    const size_t  n_seg  = v_end.y-v_ini.y+1;             // corresponding number of segments
 
                     //----------------------------------------------------------
                     //
-                    // build tile
+                    // build new Tile
                     //
                     //----------------------------------------------------------
-                    //Tile<T> t(n_seg);
                     Tile<T> &t = * tiling.pushTail( new  Tile<T>(n_seg,rank) );
                     if(n_seg<=1)
                     {
@@ -296,13 +393,13 @@ namespace Yttrium
                 const size_t sz = tiles->size;
                 for(const Tile<T> *t=tiles->head;t;t=t->next)
                 {
-                    os << "  tile" << sz << "." << t->rank << ":" << *t << " : #" << t->items << std::endl;
+                    os << "  " << sz << "." << t->rank << ":" << *t << " : #" << t->items << std::endl;
                 }
                 os << '}';
                 return os;
             }
 
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tiles);
             Tiling tiling;

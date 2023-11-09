@@ -13,13 +13,6 @@ using namespace Yttrium;
 Y_UTEST(concurrent_split2d)
 {
 
-    Y_SIZEOF(Concurrent::Segment<int8_t>);
-    Y_SIZEOF(Concurrent::Segment<int16_t>);
-    Y_SIZEOF(Concurrent::Segment<int32_t>);
-    Y_SIZEOF(Concurrent::Segment<int64_t>);
-
-
-
     int X = 10;
     int Y = 20;
     if(argc>1) X = ASCII::Convert::To<int>(argv[1],"X");
@@ -34,7 +27,29 @@ Y_UTEST(concurrent_split2d)
         std::cerr << "size="      << size << std::endl;
         Concurrent::Tiles<int> tiles(size, V2D<int>(1,1), area );
         std::cerr << tiles << std::endl;
+        for(const Concurrent::Tile<int> *t = tiles->head; t; t=t->next )
+        {
+
+            for( Concurrent::Tile<int>::Iterator it = t->begin(); it != t->end(); ++it)
+            {
+                std::cerr << "/" << *it;
+            }
+            std::cerr << std::endl;
+        }
+        std::cerr << std::endl;
     }
+
+    std::cerr << std::endl;
+    Y_SIZEOF(Concurrent::Segment<int8_t>);
+    Y_SIZEOF(Concurrent::Segment<int16_t>);
+    Y_SIZEOF(Concurrent::Segment<int32_t>);
+    Y_SIZEOF(Concurrent::Segment<int64_t>);
+
+    std::cerr << std::endl;
+    Y_SIZEOF(Concurrent::Tile<int8_t>);
+    Y_SIZEOF(Concurrent::Tile<int16_t>);
+    Y_SIZEOF(Concurrent::Tile<int32_t>);
+    Y_SIZEOF(Concurrent::Tile<int64_t>);
 
     
 
