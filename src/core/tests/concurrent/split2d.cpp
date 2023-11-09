@@ -28,21 +28,15 @@ Y_UTEST(concurrent_split2d)
     const V2D<int> area( Max<int>(X,1), Max<int>(Y,1) );
     std::cerr << "Splitting " << area << std::endl;
 
-#if 0
     for(unsigned size=1;size<=8;++size)
     {
         std::cerr << "Splitting " << area << " in at most " << size << " tile" << Plural::s(size) << std::endl;
         std::cerr << "size="      << size << std::endl;
         Concurrent::Tiles<int> tiles(size, V2D<int>(1,1), area );
+        std::cerr << tiles << std::endl;
     }
-#endif
 
-    Concurrent::Tile<int> tile(12);
-
-    tile.push(area, 10);
-    tile.push(area, 12);
-    std::cerr << "#items=" << tile.items << std::endl;
-    std::cerr << tile << std::endl;
+    
 
 }
 Y_UDONE()

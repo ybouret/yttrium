@@ -160,13 +160,12 @@ namespace Yttrium
         MutableType * const entry; //!< memory for [1..count]
         const size_t        count; //!< built objecct
         const size_t        total; //!< initial capacity
-
-
-
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(CxxSeries);
         inline void trim_() noexcept { assert(count>0); MemOps::Naught( &entry[ Coerce(count)-- ]); }
         inline void free_() noexcept { while(count>0) trim_(); }
+
         virtual ConstType *getBaseForward() const noexcept { return cdata; }
         virtual ConstType *getLastForward() const noexcept { return cdata+count; }
 
