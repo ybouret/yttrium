@@ -10,13 +10,76 @@
 #include "y/concurrent/split.hpp"
 #include "y/type/utils.hpp"
 #include "y/type/div.hpp"
-#include "y/container/readable.hpp"
+#include "y/container/cxx/series.hpp"
+#include "y/type/proxy.hpp"
 
 namespace Yttrium
 {
 
     namespace Concurrent
     {
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Horizontal Segment
+        //
+        //
+        //______________________________________________________________________
+        template <typename T>
+        class Segment
+        {
+        public:
+            typedef CxxSeries< const Segment<T> > Series;
+
+            inline  Segment(const V2D<T> p, const T w) noexcept : start(p),       width(w),       x_end(1+start.x-width) { assert(width>0); } //!< setup
+            inline  Segment(const Segment &s)          noexcept : start(s.start), width(s.width), x_end(s.x_end) {}                           //!< copy
+            inline ~Segment()                          noexcept {} //!< cleanup
+
+            inline friend std::ostream & operator<<(std::ostream &os, const Segment &s)
+            {
+                const V2D<T> q(s.x_end,s.start.y);
+                os << "|#" << s.width << ":" << s.start << "->" << q <<"|";
+                return os;
+            }
+
+            const V2D<T> start; //!< start coordinate
+            const T      width; //!< width = items
+            const T      x_end; //!< ending x position
+
+        private:
+            Y_DISABLE_ASSIGN(Segment);
+        };
+
+
+        template <typename T>
+        class Tile : public Proxy< typename Segment<T>::Series >
+        {
+        public:
+            typedef typename Segment<T>::Series Segments;
+            typedef Proxy<Segments>             TileBase;
+
+            inline explicit Tile(const size_t maxSegments) : segments(maxSegments), items(0)       {}
+            inline          Tile(const Tile &t)            : segments(t.segments),  items(t.items) {}
+            inline virtual ~Tile() noexcept {}
+
+            inline void push(const V2D<T> p, const T w) {
+                const Segment<T> _(p,w);
+                segments.pushTail(_);
+                Coerce(items) += _.width;
+            }
+
+        private:
+            Y_DISABLE_ASSIGN(Tile);
+            Segments     segments;
+            typename TileBase::ConstInterface & surrogate() const noexcept { return segments; }
+
+        public:
+            const T items;
+        };
+
+#if 0
         //______________________________________________________________________
         //
         //
@@ -400,6 +463,7 @@ namespace Yttrium
 
 
         };
+#endif
 
 
     }

@@ -89,8 +89,8 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        inline virtual size_t       size()     const noexcept { return count; } //!< fixed size
-        inline virtual size_t       capacity() const noexcept { return total; } //!< fixed capacity
+        inline virtual size_t       size()     const noexcept { return count;    } //!< fixed size
+        inline virtual size_t       capacity() const noexcept { return total;    } //!< fixed capacity
         inline virtual const char * callSign() const noexcept { return CallSign; }
 
         //! access
