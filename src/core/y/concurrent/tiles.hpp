@@ -39,7 +39,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef CxxSeries< const Segment<T> > Series;
+            typedef CxxSeries< const Segment<T> > Series; //!< alias
 
             //__________________________________________________________________
             //
@@ -98,9 +98,9 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef typename Segment<T>::Series Segments;
-            typedef Proxy<Segments>             TileBase;
-            typedef CxxListOf<Tile>             List;
+            typedef typename Segment<T>::Series Segments; //!< alias
+            typedef Proxy<Segments>             TileBase; //!< alias
+            typedef CxxListOf<Tile>             List;     //!< alias
 
 
             //__________________________________________________________________
@@ -109,14 +109,18 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
+          
+            //! setup with capacity and rank
             inline explicit Tile(const size_t maxSegments, const size_t r) :
             segments(maxSegments),
             next(0),
             prev(0),
             items(0),
-            rank(r)
+            rank(r),
+            indx(rank+1)
             {}
 
+            //! cleanup
             inline virtual ~Tile() noexcept {}
 
             //__________________________________________________________________
@@ -125,6 +129,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
+            //! add a new segment
             inline void add(const V2D<T> p, const T w) {
                 const Segment<T> _(p,w);
                 segments.pushTail(_);
@@ -137,10 +143,11 @@ namespace Yttrium
             typename TileBase::ConstInterface & surrogate() const noexcept { return segments; }
 
         public:
-            Tile *       next;
-            Tile *       prev;
-            const T      items;
-            const size_t rank;
+            Tile *       next;  //!< for list
+            Tile *       prev;  //!< for list
+            const T      items; //!< for list
+            const size_t rank;  //!< rank in list  [0..size-1]
+            const size_t indx;  //!< index in list [1..size]
         };
 
         //______________________________________________________________________
@@ -161,8 +168,8 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef typename Tile<T>::List Tiling;
-            typedef Proxy<const Tiling>    TProxy;
+            typedef typename Tile<T>::List Tiling; //!< alias
+            typedef Proxy<const Tiling>    TProxy; //!< alias
 
             //__________________________________________________________________
             //
@@ -170,6 +177,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
+
+            //! setup for maximum nproc>0
             template <typename U>
             inline explicit Tiles(const U  nproc,
                                   V2D<T>   lower,
@@ -177,6 +186,7 @@ namespace Yttrium
             TProxy(),
             tiling()
             {
+                assert(nproc>0);
                 //--------------------------------------------------------------
                 //
                 //
@@ -292,6 +302,7 @@ namespace Yttrium
                 return os;
             }
 
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tiles);
             Tiling tiling;
