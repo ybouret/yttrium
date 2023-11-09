@@ -16,6 +16,7 @@ namespace
     {
         std::cerr << "-- using " << RTTI::Name<T>() << std::endl;
         typedef typename ScalarFor<T>::Type ScalarType;
+        const ScalarType s0 = 0;
 
         for(size_t n=3;n<=nmax;++n)
         {
@@ -32,7 +33,11 @@ namespace
                 for(size_t i=1;i<=n;++i)
                 {
                     cy.a[i] = Bring<T>::Get(ran);
-                    cy.b[i] = Bring<T>::Get(ran);
+                    do
+                    {
+                        cy.b[i] = Bring<T>::Get(ran);
+                    }
+                    while( Fabs<T>::Of(cy.b[i]) <= s0 );
                     cy.c[i] = Bring<T>::Get(ran);
                     r[i]    = Bring<T>::Get(ran);
                 }
