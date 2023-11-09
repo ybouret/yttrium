@@ -1,0 +1,98 @@
+\documentclass[aps,11pt]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{chemarr}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{mathptmx}
+\usepackage{xfrac}
+\usepackage{bookman}
+
+\newcommand{\mychem}[1]{\mathtt{#1}}
+\newcommand{\myconc}[1]{\left\lbrack{#1}\right\rbrack}
+\newcommand{\plus}{\mychem{+}}
+\newcommand{\proton}{\mychem{H}^\plus}
+
+\begin{document}
+
+\title{Fluorimetry}
+\maketitle
+
+\section{Local Fluorescence Intensity from Chemistry}
+\noindent Let us assume that we have a fluorescent probe with an acidic form $\alpha$ and a basic form $\beta$ related by the following equilibrium:
+\begin{equation}
+	\alpha \xrightleftharpoons{} \beta + \proton, \;\; K = \dfrac{\myconc{\beta}\myconc{\proton}}{ \myconc{\alpha} }.
+\end{equation}
+If the local concentration of the probe is $C_0$, then the concentrations of both specie are, as a function of $h   =   \myconc{\proton} $:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	
+	 \myconc{\alpha}  & = & C_0 \dfrac{h}{K+h}\\
+	 \\
+	 \myconc{\beta}   & = & C_0 \dfrac{K}{K+h}.\\
+\end{array}
+\right.
+\end{equation}
+We now   define the respective fluorescence intensities of each species for a wavelength $\lambda$ as $\phi_\alpha(\lambda)$ and $\phi_\beta(\lambda)$,
+so that the total fluorescence intensity emitted by a volume $V$ is:
+\begin{equation}
+\begin{array}{rcl}
+	I(h,\lambda,C_0) & = & V \left( \phi_\alpha(\lambda) \myconc{\alpha}  + \phi_\beta(\lambda) \myconc{\beta} \right)\\
+	\\
+	& = & V C_0 \left[ \phi_\alpha(\lambda) \dfrac{h}{K+h} + \phi_\beta(\lambda) \dfrac{K}{K+h}\right].\\
+\end{array}
+\end{equation}
+In particular, we define of the isobestic wavelength $\lambda_{iso}$ such that:
+\begin{equation}
+\phi_\alpha(\lambda_{iso})=\phi_\beta(\lambda_{iso})=\phi_{iso}.
+\end{equation}
+For this particular wavelength, we get:
+\begin{equation}
+I(h,\lambda_{iso},C_0) = VC_0\phi_{iso},
+\end{equation}
+which is independent of $h$ and is used as a normalisation factor to define the measured fluorescence, for a chosen wavelength $\lambda_0$:
+\begin{equation}
+	F(h) = \dfrac{I(h,\lambda_0,C_0)}{I(h,\lambda_{iso},C_0)} = \dfrac{h\Phi_\alpha + K\Phi_\beta}{h+K},
+\end{equation}
+with:
+\begin{equation}
+	\Phi_\alpha = \dfrac{\phi_\alpha(\lambda_0)}{\phi_{iso}},\;\;\Phi_\beta = \dfrac{\phi_\beta(\lambda_0)}{\phi_{iso}}.
+\end{equation}
+
+\section{Calibration}
+The measure fluorescence depends on two previous coefficients \textit{(fluorescence factors)} that are computed using two different, known $h$ values, for example $h_a$ (for acidic conditions) and $h_b$ (for basic conditions).
+In that case:
+\begin{equation}
+\left\lbrace
+	\begin{array}{rcl}
+	F(h_a) = F_a & = & \dfrac{h_a\Phi_\alpha + K\Phi_\beta}{h_a+K}\\
+	\\
+	F(h_b) = F_b & = & \dfrac{h_b\Phi_\alpha + K\Phi_\beta}{h_b+K}.\\
+	\end{array}
+\right.
+\end{equation}
+We obtain the fluorescence factors:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\Phi_\alpha & = & \dfrac{1}{h_a-h_b}\left[ K(F_a-F_b) + (F_ah_a-F_bh_b)\right]\\
+	\\
+	\Phi_\beta & = & \dfrac{1}{h_a-h_b}\left[ \dfrac{h_ah_b}{K} (F_a-F_b) + K(F_bh_a-F_ah_b)\right].\\
+\end{array}
+\right.
+\end{equation}
+
+\section{pH Expression}
+We deduce the proton concentration as:
+\begin{equation}
+h=K\left[\dfrac{\Phi_\beta-F}{F-\Phi_\alpha}\right].
+\end{equation}
+Accordingly, we express the local pH as a function of the measured fluorescence:
+\begin{equation}
+	\mathrm{pH} = \mathrm{pK} + \log  \left[ \dfrac{F-\Phi_\alpha}{\Phi_\beta-F}\right].
+\end{equation}
+Using this expression, the pH is evaluated for any fluorescence between $F_a$ and $F_b$ without any singularity.
+Obviously, one must wisely choose
+the calibration range to avoid the saturations effects: namely, the fluorescence should still vary with $h$ around $h_a$ and $h_b$, while keeping $h_a$ and $h_b$ as separated as possible.
+\end{document}
