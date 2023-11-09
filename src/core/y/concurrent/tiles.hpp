@@ -33,12 +33,32 @@ namespace Yttrium
         class Segment
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             typedef CxxSeries< const Segment<T> > Series;
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             inline  Segment(const V2D<T> p, const T w) noexcept : start(p),       width(w),       x_end(start.x+width-1) { assert(width>0); } //!< setup
             inline  Segment(const Segment &s)          noexcept : start(s.start), width(s.width), x_end(s.x_end) {}                           //!< copy
             inline ~Segment()                          noexcept {} //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! display
             inline friend std::ostream & operator<<(std::ostream &os, const Segment &s)
             {
                 const V2D<T> q(s.x_end,s.start.y);
@@ -46,6 +66,12 @@ namespace Yttrium
                 return os;
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
             const V2D<T> start; //!< start coordinate
             const T      width; //!< width = items
             const T      x_end; //!< ending x position
@@ -54,16 +80,35 @@ namespace Yttrium
             Y_DISABLE_ASSIGN(Segment);
         };
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Series of Segments
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class Tile : public Object, public Proxy< typename Segment<T>::Series >
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             typedef typename Segment<T>::Series Segments;
             typedef Proxy<Segments>             TileBase;
             typedef CxxListOf<Tile>             List;
 
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             inline explicit Tile(const size_t maxSegments, const size_t r) :
             segments(maxSegments),
             next(0),
@@ -74,6 +119,12 @@ namespace Yttrium
 
             inline virtual ~Tile() noexcept {}
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
             inline void add(const V2D<T> p, const T w) {
                 const Segment<T> _(p,w);
                 segments.pushTail(_);
@@ -92,14 +143,33 @@ namespace Yttrium
             const size_t rank;
         };
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! List of Tiles
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class Tiles : public Proxy< const typename Tile<T>::List >
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             typedef typename Tile<T>::List Tiling;
             typedef Proxy<const Tiling>    TProxy;
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             template <typename U>
             inline explicit Tiles(const U  nproc,
                                   V2D<T>   lower,
@@ -179,18 +249,18 @@ namespace Yttrium
                     {
                         assert(n_seg>1);
                         //------------------------------------------------------
-                        // first segment
+                        // first segment, partial width
                         //------------------------------------------------------
                         t.add(v_ini,1+upper.x-v_ini.x);
 
                         //------------------------------------------------------
-                        // bulk segment(s)
+                        // bulk segment(s), full width
                         //------------------------------------------------------
                         for(T y=v_ini.y+1;y<v_end.y;++y)
                             t.add( V2D<T>(lower.x,y),width);
 
                         //------------------------------------------------------
-                        // last segment
+                        // last segment, partial width
                         //------------------------------------------------------
                         t.add( V2D<T>(lower.x,v_end.y), 1+v_end.x - lower.x);
                         assert(t.items==length);
@@ -202,7 +272,14 @@ namespace Yttrium
             //! cleanup
             inline virtual ~Tiles() noexcept {}
 
-#if 1
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! display
             inline friend std::ostream & operator<<(std::ostream &os, const Tiles &tiles)
             {
                 os << '{' << std::endl;
@@ -214,16 +291,18 @@ namespace Yttrium
                 os << '}';
                 return os;
             }
-#endif
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tiles);
             Tiling tiling;
 
+            //! proxy behavior
             inline virtual
             typename TProxy::ConstInterface & surrogate() const noexcept { return tiling; }
 
-            static inline V2D<T> idx2vtx(const T p, const T w) noexcept
+            //! index to vertex using integer division
+            static inline
+            V2D<T> idx2vtx(const T p, const T w) noexcept
             {
                 static const   Div<T> api;
                 const typename Div<T>::Type dv = api.call(p,w);
