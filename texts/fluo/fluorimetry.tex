@@ -1,11 +1,104 @@
-\documentclass[11pt]{article}
+\documentclass[12pt]{article}
+%\usepackage{fullpage}
 \usepackage{chemarr}
+%\usepackage{pslatex}
 
 \begin{document}
 
-During the fluorimetry
+\paragraph{Fluorescence Intensity.}
+\noindent During the fluorimetry experiments, we use BCECF as $\alpha$
+and its deprotonated form as $\beta$, with a $pK_a$ of 6.97 and the corresponding
+dissociation constant $K_a$:
 \begin{equation}
-FluoH \xrightleftharpoons{} Fluo^- + H^+
+\alpha \xrightleftharpoons{} \beta + H^+, \;\; K_a = 10^{-pK_a} \approx 1.07 \cdot 10^{-7}  = \dfrac{[\beta][H^+]}{[\alpha]}.
 \end{equation}
+
+\noindent For a locally conserved concentration $C_0 = [\alpha] + [\beta]$ at a given ${pH=-\log [H^+]}$, and using $h=[H^+]$, we obtain the individual concentrations:
+\begin{equation}
+	[\alpha] = C_0 \dfrac{h}{h+K_a}, \;\; \beta = C_0 \dfrac{K_a}{h+K_a}.
+\end{equation}
+
+\noindent We define the respective fluorescence intensities of $\alpha$ and $\beta$ per unit of volume and per unit of concentration, and for a given illumination wavelength $\lambda$, as $\phi_\alpha(\lambda)$ and $\phi_\beta(\lambda)$.
+Accordingly, an observed volume $V$ emits the fluorescence intensity $I$ following:
+\begin{equation}
+\begin{array}{rcl}
+		I(h,\lambda,C_0)  & = & \left( \phi_\alpha(\lambda) [\alpha]  + \phi_\beta(\lambda) [\beta] \right) V\\
+		\\
+		& = &  \left( \phi_\alpha(\lambda) \dfrac{h}{h+K_a} + \phi_\beta(\lambda) \dfrac{K_a}{h+K_a} \right) V C_0\\
+\end{array}
+\end{equation}
+
+\paragraph{Isobestic point.}
+\noindent Let us define $\lambda_{iso}$ the isobestic wavelength such that both fluorescence intensities are equal to $\phi_{iso}$:
+\begin{equation}
+\phi_\alpha(\lambda_{iso})=\phi_\beta(\lambda_{iso})=\phi_{iso}.
+\end{equation}
+For this particular wavelength we get:
+\begin{equation}
+I(h,\lambda_{iso},C_0) = \phi_{iso}V C_0,
+\end{equation}
+that is independent of $h$ and is used as a normalisation factor. 
+For BCECF, $\lambda_{iso}\simeq439 \mathrm{nm}$.
+
+\paragraph{Intensity Ratio.}
+\noindent Let us use a working wavelength $\lambda_0$, and the define the \textit{(reduced) fluorescence} as:
+\begin{equation}
+	F(h) = \dfrac{I(h,\lambda_0,C_0)}{I(h,\lambda_{iso},C_0)}.
+\end{equation}
+We express $F(h)$ with   two   \textit{fluorescence factors}:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\Phi_\alpha & = &  \dfrac{\phi_\alpha(\lambda_0)}{\phi_{iso}},\\
+	\\
+	\Phi_\beta  & = &  \dfrac{\phi_\beta(\lambda_0)}{\phi_{iso}},\\
+\end{array}
+\right.
+\end{equation}
+so that we rewrite:
+\begin{equation}
+\label{eq:F}
+	F(h) = \dfrac{h\Phi_\alpha + K_a\Phi_\beta}{h+K_a},
+\end{equation}
+Hence we obtain higher sensitivity with respect to $h$ for distant values of $\Phi_\alpha$ and $\Phi_\beta$.
+this is achieved by choosing $\lambda_0\simeq 490 \mathrm{nm}$ near the maximum emission
+of the base form of BCECF (a.k.a $\beta$).
+
+\paragraph{Calibration.}
+\noindent We need to compute the effective values of $\Phi_\alpha$ and $\Phi_\beta$ since their value
+depends on the final optical setup. For that purpose, we perform two controlled measures the fluorescence.
+firstly in acidic conditions ($h=h_a$), then in basic conditions ($h=h_b$).
+We deduce the following equalities: 
+\begin{equation}
+\left\lbrace
+	\begin{array}{rcl}
+	F(h_a) = F_a & = & \dfrac{h_a\Phi_\alpha + K_a\Phi_\beta}{h_a+K_a}\\
+	\\
+	F(h_b) = F_b & = & \dfrac{h_b\Phi_\alpha + K_a\Phi_\beta}{h_b+K_a}.\\
+	\end{array}
+\right.
+\end{equation}
+We solve the system above to get the fluorescence factors:
+\begin{equation}
+\left\lbrace
+\begin{array}{rclcl}
+	\Phi_\alpha & = & \dfrac{1}{h_a-h_b}\left[ K_a(F_a-F_b) + (F_ah_a-F_bh_b)\right] & \not= & F_a \\
+	\\
+	\Phi_\beta & = & \dfrac{1}{h_a-h_b}\left[ \dfrac{h_ah_b}{K_a} (F_a-F_b) + K_a(F_bh_a-F_ah_b)\right]  & \not= & F_b.\\
+\end{array}
+\right.
+\end{equation}
+
+\paragraph{pH Expression}
+We deduce the proton concentration as:
+\begin{equation}
+h=K\left[\dfrac{\Phi_\beta-F}{F-\Phi_\alpha}\right].
+\end{equation}
+Accordingly, we express the local pH as a function of the measured fluorescence:
+\begin{equation}
+	\mathrm{pH} = \mathrm{pK} + \log  \left[ \dfrac{F-\Phi_\alpha}{\Phi_\beta-F}\right].
+\end{equation}
+Using this expression, the pH is evaluated for any fluorescence between $\Phi_a$ and $\Phi_b$ without any singularity,
+as ensured by the expression of $F$ in \eqref{eq:F}.
 
 \end{document}
