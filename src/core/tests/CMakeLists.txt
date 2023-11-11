@@ -136,6 +136,7 @@ add_test(concurrent:condition test-core concurrent_condition)
 add_test(concurrent:split1d   test-core concurrent_split1d)
 add_test(concurrent:split2d   test-core concurrent_split2d)
 add_test(concurrent:topo      test-core concurrent_topo)
+add_test(concurrent:queue     test-core concurrent_queue)
 
 
 #random
