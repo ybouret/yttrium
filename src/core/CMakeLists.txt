@@ -8,6 +8,7 @@ set(srcs ${quark})
 
 Y_CreateLibrary(y
 .
+concurrent/quark
 locking
 config
 check
