@@ -16,11 +16,14 @@ namespace Yttrium
 {
     namespace Concurrent
     {
+        typedef uint32_t JobID;
 
         class Worker : public Object
         {
         public:
 
+            Worker *next;
+            Worker *prev;
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Worker);
         };
