@@ -20,7 +20,7 @@ namespace Yttrium
 #endif
 
 #if defined(Y_WIN)
-            typedef DWORD Type;
+            typedef uint32_t Type;
 #endif
             static const size_t BufferSize = Base64::Encode::OutputLengthFor<sizeof(Type)>::Value;
 

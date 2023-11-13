@@ -29,8 +29,7 @@ namespace Yttrium
         {
         public:
             static bool          Verbose; //!< global verbosity if needed
-            //static const size_t  HHRSize = Base64::Encode::OutputLengthFor<sizeof(void*)>::Value;  //!< Handel Human Readadble Size
-
+            
             //__________________________________________________________________
             //
             //
