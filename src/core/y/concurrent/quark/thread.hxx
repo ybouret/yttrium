@@ -1,4 +1,4 @@
-#include "y/concurrent/thread-proc.hpp"
+#include "y/concurrent/thread/proc.hpp"
 #include "y/text/base64/encode.hpp"
 
 namespace Yttrium

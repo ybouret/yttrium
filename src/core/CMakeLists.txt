@@ -9,6 +9,7 @@ set(srcs ${quark})
 Y_CreateLibrary(y
 .
 concurrent/quark
+concurrent/thread
 locking
 config
 check

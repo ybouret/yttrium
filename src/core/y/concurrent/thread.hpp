@@ -4,7 +4,7 @@
 #define Y_Thread_Included 1
 
 #include "y/concurrent/primitive.hpp"
-#include "y/concurrent/thread-proc.hpp"
+#include "y/concurrent/thread/proc.hpp"
 #include <iosfwd>
 
 namespace Yttrium
