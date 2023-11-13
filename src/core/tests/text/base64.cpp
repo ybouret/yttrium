@@ -62,5 +62,16 @@ Y_UTEST(text_base64)
     }
     std::cerr << "count=" << count << std::endl;
 
+    std::cerr << "LengthFor(1)=" << Base64::Encode::LengthFor(1,false) << std::endl;
+    std::cerr << "LengthFor(2)=" << Base64::Encode::LengthFor(2,false) << std::endl;
+    std::cerr << "LengthFor(4)=" << Base64::Encode::LengthFor(4,false) << std::endl;
+    std::cerr << "LengthFor(8)=" << Base64::Encode::LengthFor(8,false) << std::endl;
+
+    std::cerr << "With Padding: " << std::endl;
+    std::cerr << "LengthFor(1)=" << Base64::Encode::LengthFor(1,true) << std::endl;
+    std::cerr << "LengthFor(2)=" << Base64::Encode::LengthFor(2,true) << std::endl;
+    std::cerr << "LengthFor(4)=" << Base64::Encode::LengthFor(4,true) << std::endl;
+    std::cerr << "LengthFor(8)=" << Base64::Encode::LengthFor(8,true) << std::endl;
+
 }
 Y_UDONE()

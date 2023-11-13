@@ -1,5 +1,6 @@
 #include "y/text/base64/encode.hpp"
 #include "y/text/hexadecimal.hpp"
+#include "y/type/div.hpp"
 #include <iostream>
 
 namespace Yttrium
@@ -84,6 +85,55 @@ namespace Yttrium
             return 4;
         }
 
+
+        size_t Encode:: LengthFor(const size_t inputSize, const bool pad) noexcept
+        {
+            if(inputSize<=0)
+            {
+                return 0;
+            }
+            else
+            {
+                static const Div<size_t> api;
+                Div<size_t>::Type        dv = api.call(inputSize,3);
+                size_t                   res = 0;
+                switch(dv.rem)
+                {
+                    case 1: res = (pad?4:2); break;
+                    case 2: res = (pad?4:3); break;
+                    default: assert(0==dv.rem); break;
+                }
+                res += 4 * dv.quot;
+                return res;
+            }
+
+        }
+
+        size_t Encode:: To(char * output, const void *buffer, const size_t length, const bool pad) noexcept
+        {
+            assert( Good(buffer,length) );
+            size_t         res = 0;
+            size_t         todo = length;
+            const uint8_t *code = static_cast<const uint8_t *>(buffer);
+
+            while(todo>=3)
+            {
+                res    += _3(output, code[0], code[1], code[2]); //4
+                code   += 3;
+                output += 4;
+                todo   -= 3;
+            }
+
+            assert(todo<3);
+            switch(todo)
+            {
+                case 1: res += _1(output,code[0],pad);         break;
+                case 2: res += _2(output,code[0],code[1],pad); break;
+                default: assert(0==todo); break;
+            }
+
+            return res;
+        }
 
     }
 

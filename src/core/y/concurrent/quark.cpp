@@ -7,6 +7,7 @@
 
 #include <cstring>
 #include <new>
+#include <iostream>
 
 #if defined(Y_BSD)
 #    if !defined(__USE_UNIX98)
@@ -441,6 +442,29 @@ namespace Yttrium
 #endif
         }
 
+        std::ostream & Thread:: ShowHandle(std::ostream &os, const void * const handle)
+        {
+#if defined(Y_BSD)
+            char buffer[ Base64::Encode::OutputLengthFor< sizeof(handle) >::Value];
+            memset(buffer,0,sizeof(buffer));
+            Base64::Encode::To(buffer,&handle,sizeof(handle),false);
+#endif
+
+#if defined(Y_WIN)
+            union  alias
+            {
+                const void *lp;
+                DWORD       dw;
+
+            } = { handle };
+            char buffer[ Base64::Encode::OutputLengthFor< sizeof(DWORD) >::Value];
+            memset(buffer,0,sizeof(buffer));
+            Base64::Encode::To(buffer,&handle.dw,sizeof(DWORD),false);
+#endif
+            return os << buffer;
+        }
+
+        
     }
 
 }

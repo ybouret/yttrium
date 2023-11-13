@@ -12,11 +12,32 @@ namespace Yttrium
 
     namespace Base64
     {
+        //______________________________________________________________________
+        //
+        //
+        //! Base64 Encode operations
+        //
+        //______________________________________________________________________
         struct Encode
         {
-            static const char Table[64];
-            static const char Padding = '=';
+            static const char Table[64];       //!< encoding table
+            static const char Padding = '=';   //!< padding char
 
+            template <size_t> struct OutputLengthFor;
+
+            //! raw char buffer length for 1 byte
+            template <> struct OutputLengthFor<1> { enum { Value= 4 }; };
+
+            //! raw char buffer length for 2 bytes
+            template <> struct OutputLengthFor<2> { enum { Value= 4 }; };
+
+            //! raw char buffer length for 4 bytes
+            template <> struct OutputLengthFor<4> { enum { Value= 8 }; };
+
+            //! raw char buffer length for 8 bytes
+            template <> struct OutputLengthFor<8> { enum { Value=12 }; };
+
+            //! show internal data, mostly to debug
             static void   ShowInfo();
 
             //! 1 code => 2 chars, 4 chars with padding
@@ -28,6 +49,12 @@ namespace Yttrium
             //! 3 codes => 4 chaers
             static size_t _3(char *ouput, const uint8_t c0, const uint8_t c1, const uint8_t c2) noexcept;
 
+            //! output size for input Size
+            static size_t LengthFor(const size_t inputSize, const bool pad) noexcept;
+
+            //! encode buffer length in output with size >= LengthFor(length,pad)
+            static size_t To(char * output, const void *buffer, const size_t length, const bool pad) noexcept;
+            
 
         };
     }
