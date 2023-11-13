@@ -18,6 +18,7 @@ namespace Yttrium
     {
         typedef uint32_t JobID;
 
+
         class Worker : public Object
         {
         public:
@@ -27,6 +28,30 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Worker);
         };
+
+        class Queue
+        {
+        public:
+            explicit Queue(const Topology &topo);
+            virtual ~Queue() noexcept;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Queue);
+            Mutex     access;
+            Condition waitCV;
+        };
+
+        Queue:: Queue(const Topology &topo) :
+        access(),
+        waitCV()
+        {
+
+        }
+
+        Queue:: ~Queue() noexcept
+        {
+            
+        }
 
     }
 }

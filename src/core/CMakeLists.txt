@@ -28,6 +28,7 @@ stream/hash
 stream/char
 text
 text/ascii
+text/base64
 data
 data/list
 data/pool
