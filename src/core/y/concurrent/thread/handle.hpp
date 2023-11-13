@@ -12,22 +12,44 @@ namespace Yttrium
     namespace Concurrent
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Human Readable, System dependant Thread Handle
+        //
+        //
+        //______________________________________________________________________
         class ThreadHandle
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
 #if defined(Y_BSD)
-            typedef void *Type;
+            typedef void *Type; //!< internal type
 #endif
 
 #if defined(Y_WIN)
-            typedef uint32_t Type;
+            typedef uint32_t Type; //!< internal type
 #endif
+            //! no-padding base64 buffer size
             static const size_t BufferSize = Base64::Encode::OutputLengthFor<sizeof(Type)>::Value;
 
-            ThreadHandle(const ThreadHandle &)             noexcept;
-            ThreadHandle & operator=(const ThreadHandle &) noexcept;
-            ~ThreadHandle()                                noexcept;
-            
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            ThreadHandle(const ThreadHandle &)             noexcept; //!< copy
+            ThreadHandle & operator=(const ThreadHandle &) noexcept; //!< assign
+            ~ThreadHandle()                                noexcept; //!< cleanup
+
+            //! setup by shadowing
             template <typename T>
             inline ThreadHandle(const T &args) noexcept :
             buffer()
@@ -41,10 +63,16 @@ namespace Yttrium
                 write(&alias.mine);
             }
 
-            const char * c_str() const noexcept;
-            friend std::ostream & operator<<(std::ostream &, const ThreadHandle &);
-            friend bool           operator==(const ThreadHandle &, const ThreadHandle &) noexcept;
-            friend bool           operator!=(const ThreadHandle &, const ThreadHandle &) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            friend std::ostream & operator<<(std::ostream &, const ThreadHandle &);                //!< display
+            friend bool           operator==(const ThreadHandle &, const ThreadHandle &) noexcept; //!< equality
+            friend bool           operator!=(const ThreadHandle &, const ThreadHandle &) noexcept; //!< difference
+            const char *          c_str()                                          const noexcept; //!< legacy access
 
         private:
             char buffer[BufferSize];
