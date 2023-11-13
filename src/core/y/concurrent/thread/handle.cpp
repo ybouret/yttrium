@@ -38,9 +38,12 @@ namespace Yttrium
             clear();
         }
 
-        void ThreadHandle:: write(const void *data) noexcept
+        void ThreadHandle:: write(const void *data, const size_t size) noexcept
         {
-            Base64::Encode::To(buffer, data, sizeof(Type), false);
+            assert(size<=sizeof(Type));
+            assert(BufferSize>Base64::Encode::LengthFor(size,false));
+            clear();
+            Base64::Encode::To(buffer, data, size, false);
         }
 
         bool operator==(const ThreadHandle &lhs, const ThreadHandle &rhs) noexcept

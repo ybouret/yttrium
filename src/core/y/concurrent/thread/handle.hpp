@@ -29,13 +29,10 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-#if defined(Y_BSD)
-            typedef void *Type; //!< internal type
-#endif
+            
+            //! maximum type size
+            typedef void *Type;
 
-#if defined(Y_WIN)
-            typedef uint32_t Type; //!< internal type
-#endif
             //! no-padding base64 buffer size
             static const size_t BufferSize = Base64::Encode::OutputLengthFor<sizeof(Type)>::Value;
 
@@ -54,13 +51,8 @@ namespace Yttrium
             inline ThreadHandle(const T &args) noexcept :
             buffer()
             {
-                //Y_STATIC_CHECK(sizeof(T)==sizeof(Type),ThreadHandleSize)
-                clear();
-                union  {
-                    T    user;
-                    Type mine;
-                } alias = { args };
-                write(&alias.mine);
+                Y_STATIC_CHECK(sizeof(T)<=sizeof(Type),ThreadHandleSize)
+                write(&args,sizeof(T));
             }
 
             //__________________________________________________________________
@@ -77,7 +69,7 @@ namespace Yttrium
         private:
             char buffer[BufferSize];
             void clear() noexcept;
-            void write(const void *) noexcept;
+            void write(const void *, const size_t) noexcept;
         };
 
     }
