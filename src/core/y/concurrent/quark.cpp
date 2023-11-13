@@ -373,6 +373,7 @@ namespace Yttrium
             {
                 Y_LOCK(quark);
                 std::cerr << "[Thread] create @" << handle() << std::endl;
+                std::cerr << "sizeof(thread)=" << sizeof(Y_THREAD) << std::endl;
             }
         }
 
