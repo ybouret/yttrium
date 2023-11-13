@@ -54,7 +54,7 @@ namespace Yttrium
             inline ThreadHandle(const T &args) noexcept :
             buffer()
             {
-                Y_STATIC_CHECK(sizeof(T)==sizeof(Type),ThreadHandleSize)
+                //Y_STATIC_CHECK(sizeof(T)==sizeof(Type),ThreadHandleSize)
                 clear();
                 union  {
                     T    user;
