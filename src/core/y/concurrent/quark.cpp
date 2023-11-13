@@ -389,36 +389,84 @@ namespace Yttrium
             thread->assign(j);
         }
 
+
+#if 0
+        ThreadHandle:: ThreadHandle(const void *args) noexcept:
+        buffer()
+        {
+            assert(0!=args);
+            memset(buffer,0,BufferSize);
+
 #if defined(Y_BSD)
-		static inline const void * pthread2pointer(const pthread_t thr) noexcept
-		{
-			union {
-				const pthread_t t;
-				const void      *p;
-			} alias = { thr };
-			return alias.p;
-		}
+            const pthread_t &data = *static_cast<const pthread_t *>(args);
+            const size_t     size = sizeof(pthread_t);
 #endif
 
 #if defined(Y_WIN)
-		static inline const void * dword2pointer(const DWORD dw) noexcept
-		{
-			static const unsigned lpSize = sizeof(void *);
-			static const unsigned dwSize = sizeof(DWORD);
-			static const unsigned dpp = lpSize / dwSize;
-			union
-			{
-				const void *lp;
-				DWORD       dw[dpp];
-			} alias = { 0 };
-			assert(sizeof(alias) == sizeof(void*));
-			for (unsigned i = 0; i < dpp; ++i) alias.dw[i] = dw;
-			return alias.lp;
-		}
+            const DWORD &data = *static_cast<const DWORD *>(args);
+            const size_t size = sizeof(DWORD);
+#endif
+            Base64::Encode::To(buffer, &data, size, false);
+        }
 #endif
 
+        ThreadHandle Thread::handle() const noexcept
+        {
+            assert(0!=thread);
+#if defined(Y_BSD)
+            return ThreadHandle(thread->thr);
+#endif
 
-        const void * Thread:: handle() const noexcept
+#if defined(Y_WIN)
+            return ThreadHandle(thread->tid);
+#endif
+        }
+
+
+        ThreadHandle Thread:: CurrentHandle() noexcept
+        {
+#if defined(Y_BSD)
+            const pthread_t thr = pthread_self();
+#endif
+
+#if defined(Y_WIN)
+            const DWORD thr =  ::GetCurrentThreadId();
+#endif
+            return ThreadHandle(thr);
+
+        }
+
+#if 0
+
+#if defined(Y_BSD)
+        static inline const void * pthread2pointer(const pthread_t thr) noexcept
+        {
+            union {
+                const pthread_t t;
+                const void      *p;
+            } alias = { thr };
+            return alias.p;
+        }
+#endif
+
+#if defined(Y_WIN)
+        static inline const void * dword2pointer(const DWORD dw) noexcept
+        {
+            static const unsigned lpSize = sizeof(void *);
+            static const unsigned dwSize = sizeof(DWORD);
+            static const unsigned dpp = lpSize / dwSize;
+            union
+            {
+                const void *lp;
+                DWORD       dw[dpp];
+            } alias = { 0 };
+            assert(sizeof(alias) == sizeof(void*));
+            for (unsigned i = 0; i < dpp; ++i) alias.dw[i] = dw;
+            return alias.lp;
+        }
+#endif
+
+        const void * Thread:: handle_() const noexcept
         {
             assert(0!=thread);
 #if defined(Y_BSD)
@@ -431,7 +479,7 @@ namespace Yttrium
 
         }
 
-        const void * Thread:: CurrentHandle() noexcept
+        const void * Thread:: CurrentHandle_() noexcept
         {
 #if defined(Y_BSD)
             return pthread2pointer( pthread_self() );
@@ -463,8 +511,8 @@ namespace Yttrium
 #endif
             return os << buffer;
         }
+#endif
 
-        
     }
 
 }

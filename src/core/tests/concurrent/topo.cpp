@@ -77,7 +77,7 @@ namespace
         explicit Worker(Barrier &barrier) : Object(), Concurrent::Wire(MyProc,barrier), next(0), prev(0)
         {
             Y_GIANT_LOCK();
-            Thread::ShowHandle(std::cerr << "[Worker]        @", handle()) << std::endl;
+            std::cerr << "[Worker]        @" << handle() << std::endl;
         }
 
         virtual ~Worker() noexcept

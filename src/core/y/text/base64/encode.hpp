@@ -24,19 +24,7 @@ namespace Yttrium
             static const char Padding = '=';   //!< padding char
 
             template <size_t> struct OutputLengthFor;
-
-            //! raw char buffer length for 1 byte
-            template <> struct OutputLengthFor<1> { enum { Value= 4 }; };
-
-            //! raw char buffer length for 2 bytes
-            template <> struct OutputLengthFor<2> { enum { Value= 4 }; };
-
-            //! raw char buffer length for 4 bytes
-            template <> struct OutputLengthFor<4> { enum { Value= 8 }; };
-
-            //! raw char buffer length for 8 bytes
-            template <> struct OutputLengthFor<8> { enum { Value=12 }; };
-
+            
             //! show internal data, mostly to debug
             static void   ShowInfo();
 
@@ -57,6 +45,19 @@ namespace Yttrium
             
 
         };
+
+        //! raw char buffer length for 1 byte
+        template <> struct Encode::OutputLengthFor<1> { enum { Value= 4 }; };
+
+        //! raw char buffer length for 2 bytes
+        template <> struct Encode::OutputLengthFor<2> { enum { Value= 4 }; };
+
+        //! raw char buffer length for 4 bytes
+        template <> struct Encode::OutputLengthFor<4> { enum { Value= 8 }; };
+
+        //! raw char buffer length for 8 bytes
+        template <> struct Encode::OutputLengthFor<8> { enum { Value=12 }; };
+
     }
 
 }

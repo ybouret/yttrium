@@ -5,6 +5,7 @@
 
 #include "y/concurrent/primitive.hpp"
 #include "y/concurrent/thread/proc.hpp"
+#include "y/concurrent/thread/handle.hpp"
 #include <iosfwd>
 
 namespace Yttrium
@@ -45,10 +46,11 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void                  assign(const size_t j);   //!< best effort thread placement
-            const void *          handle()  const noexcept; //!< system thread handle
-            static const void *   CurrentHandle() noexcept; //!< current handle
-            static std::ostream & ShowHandle(std::ostream &os, const void * const handle);
+            void                  assign(const size_t j);          //!< best effort thread placement
+            ThreadHandle          handle()         const noexcept; //!< Human Readadble Thread Handle
+            static ThreadHandle   CurrentHandle()        noexcept; //!< Human Readadble Thread Handle
+
+      
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Thread);
