@@ -46,6 +46,16 @@ namespace Yttrium
             Base64::Encode::To(buffer, data, size, false);
         }
 
+        const void * ThreadHandle:: ro_addr() const noexcept
+        {
+            return buffer;
+        }
+
+        size_t ThreadHandle::measure() const noexcept
+        {
+            return 0;
+        }
+
         bool operator==(const ThreadHandle &lhs, const ThreadHandle &rhs) noexcept
         {
             return 0 == memcmp(lhs.buffer, rhs.buffer, ThreadHandle::BufferSize);
@@ -55,6 +65,7 @@ namespace Yttrium
         {
             return 0 != memcmp(lhs.buffer, rhs.buffer, ThreadHandle::BufferSize);
         }
+
 
 
     }

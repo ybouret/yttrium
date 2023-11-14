@@ -5,6 +5,7 @@
 
 #include "y/text/base64/encode.hpp"
 #include "y/check/static.hpp"
+#include "y/memory/buffer/ro.hpp"
 #include <iosfwd>
 
 namespace Yttrium
@@ -20,7 +21,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class ThreadHandle
+        class ThreadHandle : public Memory::ReadOnlyBuffer
         {
         public:
             //__________________________________________________________________
@@ -44,7 +45,7 @@ namespace Yttrium
             //__________________________________________________________________
             ThreadHandle(const ThreadHandle &)             noexcept; //!< copy
             ThreadHandle & operator=(const ThreadHandle &) noexcept; //!< assign
-            ~ThreadHandle()                                noexcept; //!< cleanup
+            virtual ~ThreadHandle()                        noexcept; //!< cleanup
 
             //! setup by shadowing
             template <typename T>
@@ -66,10 +67,14 @@ namespace Yttrium
             friend bool           operator!=(const ThreadHandle &, const ThreadHandle &) noexcept; //!< difference
             const char *          c_str()                                          const noexcept; //!< legacy access
 
+            virtual size_t measure() const noexcept;
+
+
         private:
             char buffer[BufferSize];
             void clear() noexcept;
             void write(const void *, const size_t) noexcept;
+            virtual const void * ro_addr() const noexcept;
         };
 
     }

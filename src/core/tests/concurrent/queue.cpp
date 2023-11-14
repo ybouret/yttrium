@@ -67,7 +67,7 @@ Y_UTEST(concurrent_queue)
 
 
     std::cerr << "Master Thread   @" << Concurrent::Thread::CurrentHandle() << std::endl;
-
+    Y_SIZEOF(Concurrent::ThreadHandle);
 
 }
 Y_UDONE()
