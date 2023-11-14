@@ -50,6 +50,7 @@ namespace Yttrium
             //! setup by shadowing
             template <typename T>
             inline ThreadHandle(const T &args) noexcept :
+            buflen(0),
             buffer()
             {
                 Y_STATIC_CHECK(sizeof(T)<=sizeof(Type),ThreadHandleSize)
@@ -71,7 +72,8 @@ namespace Yttrium
 
 
         private:
-            char buffer[BufferSize];
+            size_t buflen;
+            char   buffer[BufferSize];
             void clear() noexcept;
             void write(const void *, const size_t) noexcept;
             virtual const void * ro_addr() const noexcept;

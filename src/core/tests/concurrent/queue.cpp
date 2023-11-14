@@ -41,7 +41,7 @@ namespace Yttrium
             Condition waitCV;
         };
 
-        Queue:: Queue(const Topology &topo) :
+        Queue:: Queue(const Topology &) :
         access(),
         waitCV()
         {
@@ -66,9 +66,10 @@ Y_UTEST(concurrent_queue)
     if(topology.size<=0) throw Exception("empty topology");
 
 
-    std::cerr << "Master Thread   @" << Concurrent::Thread::CurrentHandle() << std::endl;
+    const Concurrent::ThreadHandle th = Concurrent::Thread::CurrentHandle();
+    std::cerr << "Master Thread   @" << th << std::endl;
     Y_SIZEOF(Concurrent::ThreadHandle);
-
+    
 }
 Y_UDONE()
 

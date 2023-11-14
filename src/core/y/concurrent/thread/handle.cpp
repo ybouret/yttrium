@@ -7,6 +7,8 @@ namespace Yttrium
     namespace Concurrent
     {
         ThreadHandle:: ThreadHandle(const ThreadHandle &other) noexcept :
+        Memory::ReadOnlyBuffer(),
+        buflen(other.buflen),
         buffer()
         {
             memcpy(buffer,other.buffer,BufferSize);
@@ -14,6 +16,7 @@ namespace Yttrium
 
         ThreadHandle & ThreadHandle:: operator=(const ThreadHandle &other) noexcept
         {
+            buflen = other.buflen;
             memmove(buffer, other.buffer, BufferSize);
             return *this;
         }
@@ -43,7 +46,8 @@ namespace Yttrium
             assert(size<=sizeof(Type));
             assert(BufferSize>Base64::Encode::LengthFor(size,false));
             clear();
-            Base64::Encode::To(buffer, data, size, false);
+            buflen = Base64::Encode::To(buffer, data, size, false);
+            assert(strlen(buffer)==buflen);
         }
 
         const void * ThreadHandle:: ro_addr() const noexcept
@@ -53,7 +57,7 @@ namespace Yttrium
 
         size_t ThreadHandle::measure() const noexcept
         {
-            return 0;
+            return buflen;
         }
 
         bool operator==(const ThreadHandle &lhs, const ThreadHandle &rhs) noexcept
