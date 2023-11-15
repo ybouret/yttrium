@@ -90,9 +90,24 @@ namespace Yttrium
         };
 
 
-        class Worker : public Object
+        class Queue;
+
+        class Worker : public Object, public Context
         {
         public:
+            typedef CxxListOf<Worker> List;
+            explicit Worker(const Context &ctx) :
+            Object(),
+            Context(ctx),
+            next(0),
+            prev(0)
+            {
+            }
+
+            virtual ~Worker() noexcept
+            {
+            }
+
             Worker *next;
             Worker *prev;
         private:
@@ -105,22 +120,53 @@ namespace Yttrium
             explicit Queue(const Topology &topo);
             virtual ~Queue() noexcept;
 
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Queue);
-            Mutex     access;
-            Condition waitCV;
+            Mutex        access;
+            Condition    waitCV;
+            Worker::List ready;
+
+            void run() noexcept;
+            static void  Launch( Queue &Q )
+            {
+                Q.run();
+            }
+
+
         };
 
-        Queue:: Queue(const Topology &) :
+        Queue:: Queue(const Topology &topo) :
         access(),
-        waitCV()
+        waitCV(),
+        ready()
         {
+
+            try {
+                // creating workers
+                const size_t sz = topo.size;
+                for(size_t rk=0;rk<topo.size;++rk)
+                {
+                    const Context ctx(access,sz,rk);
+
+                }
+            }
+            catch(...)
+            {
+
+                throw;
+            }
 
         }
 
         Queue:: ~Queue() noexcept
         {
             
+        }
+
+        void Queue:: run() noexcept
+        {
+
         }
 
     }
