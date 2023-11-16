@@ -6,6 +6,7 @@
 #include "y/concurrent/primitive.hpp"
 #include "y/concurrent/thread/proc.hpp"
 #include "y/concurrent/thread/handle.hpp"
+#include "y/lockable.hpp"
 #include <iosfwd>
 
 namespace Yttrium
@@ -57,5 +58,7 @@ namespace Yttrium
         };
     }
 }
+
+#define Y_THREAD_MSG(MSG) do { if(Yttrium::Concurrent::Thread::Verbose) std::cerr << MSG << std::endl; } while(false)
 
 #endif

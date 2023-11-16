@@ -27,18 +27,25 @@ namespace Yttrium
         Agency(topology.size),
         access(),
         waitCV(),
+        doneCV(),
         size(0),
         crew( lead() ),
         nrun(0)
         {
-            if(Thread::Verbose)
-            {
-                Y_GIANT_LOCK();
-                std::cerr << "[Threads] initialize for Topology=" << topology << ", #" << topology.size << std::endl;
-            }
 
-            try {
+
+            try 
+            {
+
+
+                //--------------------------------------------------------------
+                //
+                // setting goal
+                //
+                //--------------------------------------------------------------
                 const size_t goal = topology.size;
+                Y_THREAD_MSG( "[Threads] -------- initialize for Topology=" << topology << ", #" << goal);
+
                 while(size<goal)
                 {
                     Agent *a = new (&crew[size]) Agent(goal,size,access,*this);
@@ -54,38 +61,34 @@ namespace Yttrium
                         doneCV.wait(access);
                         access.unlock();
                     }
+
                     ++size;
                 }
+
+                Y_THREAD_MSG( "[Threads] -------- ready and waiting #" << size );
             }
             catch(...)
             {
-
+                quit();
                 throw;
             }
-            if(Thread::Verbose)
-            {
-                Y_GIANT_LOCK();
-                std::cerr << "[Threads] ready and waiting" << std::endl;
-            }
+
+
         }
 
 
         void Threads:: quit() noexcept
         {
-            if(Thread::Verbose)
-            {
-                Y_GIANT_LOCK();
-                std::cerr << "[Threads] quit #" << size << std::endl;
-            }
+            Y_THREAD_MSG("[Threads] -------- quit #" << size);
 
             // wake up all threads
             waitCV.broadcast();
 
-            // and join
+            // and join while destructing
             while(size>0)
-            {
                 Memory::OutOfReach::Naught( &crew[--size] );
-            }
+
+            Y_THREAD_MSG("[Threads] -------- done");
         }
 
         Threads:: ~Threads() noexcept
