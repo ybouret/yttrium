@@ -29,7 +29,13 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Crew);
             virtual ConstType & operator[](const size_t) const noexcept;
+            Condition           start;
+            size_t              ready;
             const Agent * const item; //!< offset Threads agents
+            Kernel              code;
+
+            void  kMain(const ThreadContext &) noexcept;
+
         };
 
     }

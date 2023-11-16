@@ -23,6 +23,7 @@ namespace Yttrium
         access(),
         level(0),
         agent( lead() ),
+        kmain(0),
         done_(0),
         waitCV(),
         doneCV()
@@ -93,9 +94,14 @@ namespace Yttrium
 
             //------------------------------------------------------------------
             //
-            // wake up all threads
+            // wake up all threads if needed
             //
             //------------------------------------------------------------------
+            {
+                Y_LOCK(access);
+                kmain = 0;
+            }
+            
             waitCV.broadcast();
 
             //------------------------------------------------------------------
@@ -149,12 +155,24 @@ namespace Yttrium
             // wake on a LOCKED mutex
             //
             //------------------------------------------------------------------
-            Y_THREAD_MSG("[Threads] woke up " << agent.name);
-
-
+            Y_THREAD_MSG("[Threads] woke up " << agent.name << " @kernel=" << kmain);
             access.unlock();
+            if(0!=kmain)
+            {
+                (*kmain)(agent);
+            }
+
         }
 
+        void Threads:: once(Kernel &kernel) noexcept
+        {
+            assert(0==kmain);
+            Y_LOCK(access);
+            std::cerr << "Calling Kernel!" << std::endl;
+            kmain = &kernel;
+            waitCV.broadcast();
+
+        }
 
     }
 

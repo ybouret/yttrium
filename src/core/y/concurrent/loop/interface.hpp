@@ -4,7 +4,6 @@
 #define Y_Concurrent_Loop_Included 1
 
 #include "y/concurrent/thread/context.hpp"
-#include "y/functor.hpp"
 #include "y/container/readable.hpp"
 
 namespace Yttrium
@@ -21,8 +20,7 @@ namespace Yttrium
         protected:
             explicit Loop() noexcept;
             
-
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Loop);
         };

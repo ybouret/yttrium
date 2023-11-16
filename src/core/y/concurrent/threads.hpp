@@ -13,6 +13,8 @@
 #include "y/memory/wad.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 
+#include "y/functor.hpp"
+
 namespace Yttrium
 {
     namespace Concurrent
@@ -21,18 +23,24 @@ namespace Yttrium
       
         typedef Memory::Wad<Agent,Memory::Dyadic> Agency;
 
+        
+        typedef Functor<void,TL1(const ThreadContext &)> Kernel;
+
         class Threads : public Agency
         {
         public:
             explicit Threads(const Topology &);
             virtual ~Threads() noexcept;
 
+
             Mutex     access;
 
         protected:
             const size_t  level;
             Agent * const agent;
-            
+            Kernel       *kmain;
+            void          once(Kernel &) noexcept;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Threads);
             friend class Agent;
