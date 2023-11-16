@@ -59,6 +59,6 @@ namespace Yttrium
     }
 }
 
-#define Y_THREAD_MSG(MSG) do { if(Yttrium::Concurrent::Thread::Verbose) std::cerr << MSG << std::endl; } while(false)
+#define Y_THREAD_MSG(MSG) do { if(Yttrium::Concurrent::Thread::Verbose) { Y_GIANT_LOCK(); std::cerr << MSG << std::endl; } } while(false)
 
 #endif

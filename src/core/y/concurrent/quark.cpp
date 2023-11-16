@@ -369,28 +369,21 @@ namespace Yttrium
         Primitive(),
         thread( quark.createThread(proc,args) )
         {
-            if(Verbose)
-            {
-                Y_LOCK(quark);
-                std::cerr << "[Thread]+ @" << handle() << std::endl;
-            }
+            Y_THREAD_MSG("[+Thread] @" << handle() );
         }
 
 
         Thread:: ~Thread() noexcept
         {
             assert(0!=thread);
-            if(Verbose)
-            {
-                Y_LOCK(quark);
-                std::cerr << "[Thread]- @" << handle() << std::endl;
-            }
+            Y_THREAD_MSG("[-Thread] @" << handle() );
             quark.deleteThread(thread);
         }
 
         void Thread:: assign(const size_t j)
         {
             assert(0!=thread);
+            Y_THREAD_MSG("[*Thread] @" << handle() << " => CPU #" << j);
             thread->assign(j);
         }
 

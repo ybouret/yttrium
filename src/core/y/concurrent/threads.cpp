@@ -46,25 +46,36 @@ namespace Yttrium
                 const size_t goal = topology.size;
                 Y_THREAD_MSG( "[Threads] -------- initialize for Topology=" << topology << ", #" << goal);
 
-                while(size<goal)
                 {
-                    Agent *a = new (&crew[size]) Agent(goal,size,access,*this);
-
-                    access.lock();
-                    if(nrun>size)
+                    const Topology::NodeType *node = topology.head;
+                    while(size<goal)
                     {
-                        access.unlock();
-                    }
-                    else
-                    {
-                        // wait one done
-                        doneCV.wait(access);
-                        access.unlock();
-                    }
+                        assert(0!=node);
+                        Agent *a = new (&crew[size]) Agent(goal,size,access,*this);
 
-                    ++size;
+                        access.lock();
+                        if(nrun>size)
+                        {
+                            access.unlock();
+                        }
+                        else
+                        {
+                            // wait one done
+                            doneCV.wait(access);
+                            access.unlock();
+                        }
+
+                        ++size;
+                        a->assign(**node);
+                        node=node->next;
+                    }
                 }
 
+                //--------------------------------------------------------------
+                //
+                // all set!
+                //
+                //--------------------------------------------------------------
                 Y_THREAD_MSG( "[Threads] -------- ready and waiting #" << size );
             }
             catch(...)
@@ -81,10 +92,18 @@ namespace Yttrium
         {
             Y_THREAD_MSG("[Threads] -------- quit #" << size);
 
+            //------------------------------------------------------------------
+            //
             // wake up all threads
+            //
+            //------------------------------------------------------------------
             waitCV.broadcast();
 
-            // and join while destructing
+            //------------------------------------------------------------------
+            //
+            // join in destructor
+            //
+            //------------------------------------------------------------------
             while(size>0)
                 Memory::OutOfReach::Naught( &crew[--size] );
 
@@ -98,29 +117,37 @@ namespace Yttrium
 
 
 
-        void Threads:: Launch(Threads &threads, Agent &agent) noexcept { threads.loop(agent); }
+        void Threads:: Launch(Threads &threads, Agent &agent) noexcept { threads.mainLoop(agent); }
 
-        void Threads:: loop(Agent &agent) noexcept
+        void Threads:: mainLoop(Agent &agent) noexcept
         {
-
+            //------------------------------------------------------------------
+            //
             // initializing thread
+            //
+            //------------------------------------------------------------------
             access.lock();
             ++nrun;
-            {
-                Y_GIANT_LOCK();
-                std::cerr << "[Threads] locked by " << agent.name << std::endl;
-            }
+            Y_THREAD_MSG("[Threads] startup " << agent.name);
 
+
+            //------------------------------------------------------------------
+            //
+            // signaling Threads
+            //
+            //------------------------------------------------------------------
             if(nrun>size) doneCV.signal();
 
+            //------------------------------------------------------------------
+            //
             // wait on a LOCKED mutex
+            //
+            //------------------------------------------------------------------
             waitCV.wait(access);
 
             // wake on a LOCKED mutex
-            {
-                Y_GIANT_LOCK();
-                std::cerr << "[Threads] woke up " << agent.name << std::endl;
-            }
+            Y_THREAD_MSG("[Threads] woke up " << agent.name);
+
 
             access.unlock();
 
