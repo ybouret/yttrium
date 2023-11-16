@@ -29,6 +29,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             explicit Context(const size_t sz, const size_t rk) noexcept; //!< size.rank
+            explicit Context()                                 noexcept; //!< 1.0
             virtual ~Context()                                 noexcept; //!< cleanup
             Context(const Context &)                           noexcept; //!< copy
 

@@ -39,6 +39,18 @@ namespace Yttrium
             assert(len_ == strlen(name) );
         }
 
+        Context:: Context() noexcept :
+        Memory::ReadOnlyBuffer(),
+        size(1),
+        rank(0),
+        indx(1),
+        name(),
+        len_( FormatContext(name,sizeof(name),size,rank) )
+        {
+            assert(len_ == strlen(name) );
+        }
+
+
         Context:: Context(const Context &other) noexcept :
         Memory::ReadOnlyBuffer(),
         size(other.size),
