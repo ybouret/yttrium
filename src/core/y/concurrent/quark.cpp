@@ -372,10 +372,7 @@ namespace Yttrium
             if(Verbose)
             {
                 Y_LOCK(quark);
-                std::cerr << "[Thread] create @" << handle() << std::endl;
-                std::cerr << "  sizeof(thread)=" << sizeof(Y_THREAD) << std::endl;
-                std::cerr << "  sizeof(void *)=" << sizeof(void*) << std::endl;
-
+                std::cerr << "[Thread]+ @" << handle() << std::endl;
             }
         }
 
@@ -383,6 +380,11 @@ namespace Yttrium
         Thread:: ~Thread() noexcept
         {
             assert(0!=thread);
+            if(Verbose)
+            {
+                Y_LOCK(quark);
+                std::cerr << "[Thread]- @" << handle() << std::endl;
+            }
             quark.deleteThread(thread);
         }
 

@@ -22,28 +22,78 @@ namespace Yttrium
 
     namespace Concurrent
     {
-        Threads:: ~Threads() noexcept
-        {
-        }
 
-        Threads:: Threads(const Topology &topo) :
-        Agency(topo.size),
+        Threads:: Threads(const Topology &topology) :
+        Agency(topology.size),
         access(),
         waitCV(),
         size(0),
         crew( lead() ),
         nrun(0)
         {
-
-            while(size<topo.size)
+            if(Thread::Verbose)
             {
-                Agent *a = new (&crew[size]) Agent(topo.size,size,access,*this);
-                ++size;
+                Y_GIANT_LOCK();
+                std::cerr << "[Threads] initialize for Topology=" << topology << ", #" << topology.size << std::endl;
             }
 
+            try {
+                const size_t goal = topology.size;
+                while(size<goal)
+                {
+                    Agent *a = new (&crew[size]) Agent(goal,size,access,*this);
 
+                    access.lock();
+                    if(nrun>size)
+                    {
+                        access.unlock();
+                    }
+                    else
+                    {
+                        // wait one done
+                        doneCV.wait(access);
+                        access.unlock();
+                    }
+                    ++size;
+                }
+            }
+            catch(...)
+            {
 
+                throw;
+            }
+            if(Thread::Verbose)
+            {
+                Y_GIANT_LOCK();
+                std::cerr << "[Threads] ready and waiting" << std::endl;
+            }
         }
+
+
+        void Threads:: quit() noexcept
+        {
+            if(Thread::Verbose)
+            {
+                Y_GIANT_LOCK();
+                std::cerr << "[Threads] quit #" << size << std::endl;
+            }
+
+            // wake up all threads
+            waitCV.broadcast();
+
+            // and join
+            while(size>0)
+            {
+                Memory::OutOfReach::Naught( &crew[--size] );
+            }
+        }
+
+        Threads:: ~Threads() noexcept
+        {
+            quit();
+        }
+
+
 
         void Threads:: Launch(Threads &threads, Agent &agent) noexcept { threads.loop(agent); }
 
@@ -52,11 +102,24 @@ namespace Yttrium
 
             // initializing thread
             access.lock();
-            std::cerr << "locked by " << agent.name << std::endl;
+            ++nrun;
+            {
+                Y_GIANT_LOCK();
+                std::cerr << "[Threads] locked by " << agent.name << std::endl;
+            }
 
-            // first wait
+            if(nrun>size) doneCV.signal();
+
+            // wait on a LOCKED mutex
             waitCV.wait(access);
 
+            // wake on a LOCKED mutex
+            {
+                Y_GIANT_LOCK();
+                std::cerr << "[Threads] woke up " << agent.name << std::endl;
+            }
+
+            access.unlock();
 
         }
 

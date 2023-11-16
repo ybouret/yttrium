@@ -46,13 +46,14 @@ namespace Yttrium
             friend class Agent;
 
             Condition     waitCV;
+            Condition     doneCV;
             size_t        size;
             Agent * const crew;
             size_t        nrun;
 
             void          loop(Agent &agent) noexcept;
             static void   Launch(Threads &threads, Agent &agent) noexcept;
-
+            void          quit() noexcept;
         };
 
     }
