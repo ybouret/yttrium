@@ -29,12 +29,15 @@ namespace Yttrium
 
             Mutex     access;
 
+        protected:
+            const size_t  level;
+            Agent * const agent;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Threads);
             friend class Agent;
-            const size_t  size;
-            Agent * const crew;
-            size_t        done;
+
+            size_t        done_;
             Condition     waitCV;
             Condition     doneCV;
 

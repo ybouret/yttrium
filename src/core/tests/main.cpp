@@ -94,6 +94,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(concurrent_topo);
     Y_UTEST(concurrent_queue);
     Y_UTEST(concurrent_context);
+    Y_UTEST(concurrent_loop);
 
 
     Y_UTEST(hashing_mix64);

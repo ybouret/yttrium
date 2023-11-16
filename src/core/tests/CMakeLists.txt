@@ -140,6 +140,7 @@ add_test(concurrent:split2d   test-core concurrent_split2d)
 add_test(concurrent:topo      test-core concurrent_topo)
 add_test(concurrent:queue     test-core concurrent_queue)
 add_test(concurrent:context   test-core concurrent_context)
+add_test(concurrent:loop      test-core concurrent_loop)
 
 
 #random

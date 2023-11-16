@@ -21,9 +21,9 @@ namespace Yttrium
         Threads:: Threads(const Topology &topology) :
         Agency(topology.size),
         access(),
-        size(0),
-        crew( lead() ),
-        done(0),
+        level(0),
+        agent( lead() ),
+        done_(0),
         waitCV(),
         doneCV()
         {
@@ -43,13 +43,13 @@ namespace Yttrium
 
                 {
                     const Topology::NodeType *node = topology.head;
-                    while(size<goal)
+                    while(level<goal)
                     {
                         assert(0!=node);
-                        Agent *a = new (&crew[size]) Agent(goal,size,access,*this);
+                        Agent *a = new (&agent[level]) Agent(goal,level,access,*this);
 
                         access.lock();
-                        if(done>size)
+                        if(done_>level)
                         {
                             // already done
                             access.unlock();
@@ -61,7 +61,7 @@ namespace Yttrium
                             access.unlock();
                         }
                         // update
-                        ++Coerce(size);
+                        ++Coerce(level);
 
                         // assign
                         a->assign(**node);
@@ -75,7 +75,7 @@ namespace Yttrium
                 // all set!
                 //
                 //--------------------------------------------------------------
-                Y_THREAD_MSG( "[Threads] -------- ready and waiting #" << size );
+                Y_THREAD_MSG( "[Threads] -------- ready and waiting #" << level );
             }
             catch(...)
             {
@@ -89,7 +89,7 @@ namespace Yttrium
 
         void Threads:: quit() noexcept
         {
-            Y_THREAD_MSG("[Threads] -------- quit #" << size);
+            Y_THREAD_MSG("[Threads] -------- quit #" << level);
 
             //------------------------------------------------------------------
             //
@@ -103,8 +103,8 @@ namespace Yttrium
             // join in destructor
             //
             //------------------------------------------------------------------
-            while(size>0)
-                Memory::OutOfReach::Naught( &crew[--Coerce(size)] );
+            while(level>0)
+                Memory::OutOfReach::Naught( &agent[--Coerce(level)] );
 
             Y_THREAD_MSG("[Threads] -------- done...");
         }
@@ -126,7 +126,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             access.lock();
-            ++done;
+            ++done_;
             Y_THREAD_MSG("[Threads] startup " << agent.name);
 
 
@@ -135,7 +135,7 @@ namespace Yttrium
             // signaling Threads that this thread was successfully built!
             //
             //------------------------------------------------------------------
-            if(done>size) doneCV.signal();
+            if(done_>level) doneCV.signal();
 
             //------------------------------------------------------------------
             //

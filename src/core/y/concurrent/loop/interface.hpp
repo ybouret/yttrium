@@ -5,13 +5,14 @@
 
 #include "y/concurrent/thread/context.hpp"
 #include "y/functor.hpp"
+#include "y/container/readable.hpp"
 
 namespace Yttrium
 {
     namespace Concurrent
     {
 
-        class Loop
+        class Loop : public Readable<const ThreadContext>
         {
         public:
             virtual ~Loop() noexcept;

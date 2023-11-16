@@ -16,11 +16,18 @@ namespace Yttrium
         class Mono : public Loop
         {
         public:
+            static const char * const CallSign;
+
             explicit Mono(const char *id=0) noexcept;
             virtual ~Mono() noexcept;
 
+            virtual const char * callSign() const noexcept;
+            virtual size_t       size()     const noexcept;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Mono);
+            virtual ConstType & operator[](const size_t) const noexcept;
+
             FakeLock      access;
             ThreadContext context;
         };

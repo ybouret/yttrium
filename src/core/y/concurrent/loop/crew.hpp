@@ -18,12 +18,18 @@ namespace Yttrium
         class Crew : public Loop, public Threads
         {
         public:
+            static const char * const CallSign;
+
             explicit Crew(const Topology &);
             virtual ~Crew() noexcept;
 
+            virtual const char * callSign() const noexcept;
+            virtual size_t       size()     const noexcept;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Crew);
-            Threads threads;
+            virtual ConstType & operator[](const size_t) const noexcept;
+            const Agent * const item; //!< offset Threads agents
         };
 
     }

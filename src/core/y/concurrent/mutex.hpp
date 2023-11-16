@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Yttrium_Concurrent_Fake_Lock_Included
-#define Yttrium_Concurrent_Fake_Lock_Included 1
+#ifndef Yttrium_Concurrent_Mutex_Included
+#define Yttrium_Concurrent_Mutex_Included 1
 
 
 #include "y/lockable.hpp"
