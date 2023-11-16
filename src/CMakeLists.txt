@@ -102,7 +102,7 @@ add_subdirectory(y)
 ##
 ################################################################################
 find_program(doxygen doxygen)
-if("${doxygen}" EQUAL "doxygen-NOTFOUND" )
+if("${doxygen}" STREQUAL "doxygen-NOTFOUND" )
     message( STATUS "missing Doxygen")
 else()
     message( STATUS "found Doxygen at ${doxygen}")

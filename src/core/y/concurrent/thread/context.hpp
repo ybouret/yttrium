@@ -27,7 +27,6 @@ namespace Yttrium
         public:
             explicit ThreadContext(const size_t sz, const size_t rk, Lockable &mx) noexcept; //!< setup
             explicit ThreadContext(const ThreadContext &) noexcept;                          //!< copy
-            explicit ThreadContext(Lockable &) noexcept;                                     //!< setup
             virtual ~ThreadContext() noexcept;                                               //!< cleanup
 
             Lockable &sync; //!< shared sync object reference

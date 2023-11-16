@@ -1,15 +1,8 @@
 
 
 
-#include "y/concurrent/condition.hpp"
-#include "y/concurrent/wire.hpp"
-#include "y/concurrent/topology.hpp"
-#include "y/system/hw.hpp"
+#include "y/concurrent/threads.hpp"
 #include "y/utest/run.hpp"
-#include "y/data/list/cxx.hpp"
-#include "y/random/bits.hpp"
-#include "y/text/ascii/convert.hpp"
-#include "y/functor.hpp"
 
 using namespace Yttrium;
 
@@ -36,6 +29,8 @@ Y_UTEST(concurrent_queue)
     std::cerr << "Master Thread   @" << th << std::endl;
     Y_SIZEOF(Concurrent::ThreadHandle);
     
+    Concurrent::Threads threads(topology);
+
 }
 Y_UDONE()
 

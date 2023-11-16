@@ -9,6 +9,8 @@
 #include "y/concurrent/mutex.hpp"
 #include "y/concurrent/condition.hpp"
 #include "y/concurrent/thread/context.hpp"
+#include "y/concurrent/wire.hpp"
+
 #include "y/memory/wad.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 
@@ -17,12 +19,12 @@ namespace Yttrium
     namespace Concurrent
     {
 
+        class Threads;
 
-        class Agent : public ThreadContext
+        class Agent : public ThreadContext, public Wire
         {
         public:
-
-            explicit Agent(const size_t sz, const size_t rk, Lockable &mx);
+            explicit Agent(const size_t sz, const size_t rk, Lockable &mx, Threads &);
             virtual ~Agent() noexcept;
 
         private:
@@ -41,9 +43,16 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Threads);
-            Condition waitCV;
-            size_t    agents;
-            Agent * const agent;
+            friend class Agent;
+
+            Condition     waitCV;
+            size_t        size;
+            Agent * const crew;
+            size_t        nrun;
+
+            void          loop(Agent &agent) noexcept;
+            static void   Launch(Threads &threads, Agent &agent) noexcept;
+
         };
 
     }
