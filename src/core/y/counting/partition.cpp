@@ -106,7 +106,7 @@ namespace Yttrium
         inline explicit Code(const size_t n) :
         Object(),
         WadType(n),
-        data( static_cast<size_t*>(workspace) - 1),
+        data( lead() - 1),
         part()
         {
             assert(n>0);

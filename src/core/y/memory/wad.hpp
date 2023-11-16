@@ -94,7 +94,8 @@ namespace Yttrium
                 returnTo(_);
             }
 
-
+        protected:
+            inline T *lead() noexcept { return static_cast<T *>(workspace); }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Wad);

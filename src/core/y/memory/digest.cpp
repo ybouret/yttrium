@@ -50,7 +50,7 @@ namespace  Yttrium
         typedef Memory::Wad<uint8_t,Memory::Dyadic> WadType;
     }
 
-#define Y_DIGEST_CODE_CTOR(N) Object(), HexaLen(), Metrics(N), WadType(size), data( static_cast<uint8_t *>(workspace) ), item(data-1)
+#define Y_DIGEST_CODE_CTOR(N) Object(), HexaLen(), Metrics(N), WadType(size), data( lead() ), item(data-1)
 
     class Digest:: Code :
     public Object,

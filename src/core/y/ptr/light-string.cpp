@@ -48,7 +48,7 @@ namespace Yttrium
         Counted(),
         Metrics( StringLength(lhs), 0),
         WadType( size+1 ),
-        data( static_cast<char *>(workspace) )
+        data( lead() )
         {
             memcpy(workspace,lhs,lsize);
         }
@@ -58,10 +58,10 @@ namespace Yttrium
         Counted(),
         Metrics( StringLength(lhs), StringLength(rhs) ),
         WadType( size+1 ),
-        data( static_cast<char *>(workspace) )
+        data( lead() )
         {
             memcpy(workspace,lhs,lsize);
-            memcpy(static_cast<char*>(workspace)+lsize,rhs,rsize);
+            memcpy(lead()+lsize,rhs,rsize);
         }
 
         virtual ~Code() noexcept

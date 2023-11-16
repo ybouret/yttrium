@@ -48,7 +48,7 @@ Serializable()
 #define Y_STRING_CODE(NUM_CHARS)               \
 Object(),                                      \
 WadType( StringCommon::BlocksFor(NUM_CHARS) ), \
-data(    static_cast<CH*>(workspace)        ), \
+data(    this->lead()        ),                \
 item(data-1), size(0), maxi(capacity-1)
 
 #define CH char

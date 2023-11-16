@@ -74,7 +74,7 @@ namespace Yttrium
         inline explicit Code(const size_t sz ) :
         Metrics(sz),
         WadType(size),
-        slot( static_cast<Slot *>(workspace) )
+        slot( lead() )
         { setup(); }
 
 

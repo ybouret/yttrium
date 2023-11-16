@@ -31,7 +31,7 @@ namespace Yttrium
         inline explicit Code(const size_t n) :
         Object(),
         WadType(n),
-        indx( static_cast<size_t *>(workspace) - 1),
+        indx( lead() - 1 ),
         perm()
         {
             Y_Perm_Init(&perm,n);

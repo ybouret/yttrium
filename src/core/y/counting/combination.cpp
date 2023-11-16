@@ -41,7 +41,7 @@ namespace Yttrium
                              const size_t k) :
         Object(),
         WadType(k),
-        indx( static_cast<size_t *>(workspace) - 1),
+        indx( lead() - 1),
         comb()
         {
             Y_Comb_Init(&comb,n,k);
