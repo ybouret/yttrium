@@ -49,9 +49,7 @@ namespace Yttrium
             void                  assign(const size_t j);          //!< best effort thread placement
             ThreadHandle          handle()         const noexcept; //!< Human Readadble Thread Handle
             static ThreadHandle   CurrentHandle()        noexcept; //!< Human Readadble Thread Handle
-
-      
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Thread);
             Nucleus::Thread *thread;
