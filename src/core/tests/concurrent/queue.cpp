@@ -31,6 +31,8 @@ Y_UTEST(concurrent_queue)
     
     Concurrent::Threads threads(topology);
 
+    Y_SIZEOF(Concurrent::Agent);
+
 }
 Y_UDONE()
 

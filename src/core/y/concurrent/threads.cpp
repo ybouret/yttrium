@@ -1,15 +1,10 @@
-
-
 #include "y/concurrent/threads.hpp"
 
 namespace Yttrium
 {
     namespace Concurrent
     {
-        Agent:: ~Agent() noexcept
-        {
-
-        }
+       
 
         Agent:: Agent(const size_t sz, const size_t rk, Lockable &mx, Threads &threads) :
         ThreadContext(sz,rk,mx),
@@ -26,11 +21,11 @@ namespace Yttrium
         Threads:: Threads(const Topology &topology) :
         Agency(topology.size),
         access(),
-        waitCV(),
-        doneCV(),
         size(0),
         crew( lead() ),
-        nrun(0)
+        done(0),
+        waitCV(),
+        doneCV()
         {
 
 
@@ -54,22 +49,27 @@ namespace Yttrium
                         Agent *a = new (&crew[size]) Agent(goal,size,access,*this);
 
                         access.lock();
-                        if(nrun>size)
+                        if(done>size)
                         {
+                            // already done
                             access.unlock();
                         }
                         else
                         {
-                            // wait one done
+                            // wait for done (a.k.a thread is up)
                             doneCV.wait(access);
                             access.unlock();
                         }
+                        // update
+                        ++Coerce(size);
 
-                        ++size;
+                        // assign
                         a->assign(**node);
                         node=node->next;
                     }
                 }
+
+                done = 0;
 
                 //--------------------------------------------------------------
                 //
@@ -105,9 +105,9 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             while(size>0)
-                Memory::OutOfReach::Naught( &crew[--size] );
+                Memory::OutOfReach::Naught( &crew[--Coerce(size)] );
 
-            Y_THREAD_MSG("[Threads] -------- done");
+            Y_THREAD_MSG("[Threads] -------- done...");
         }
 
         Threads:: ~Threads() noexcept
@@ -127,16 +127,16 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             access.lock();
-            ++nrun;
+            ++done;
             Y_THREAD_MSG("[Threads] startup " << agent.name);
 
 
             //------------------------------------------------------------------
             //
-            // signaling Threads
+            // signaling Threads that this thread was successfully built!
             //
             //------------------------------------------------------------------
-            if(nrun>size) doneCV.signal();
+            if(done>size) doneCV.signal();
 
             //------------------------------------------------------------------
             //
@@ -145,12 +145,15 @@ namespace Yttrium
             //------------------------------------------------------------------
             waitCV.wait(access);
 
+            //------------------------------------------------------------------
+            //
             // wake on a LOCKED mutex
+            //
+            //------------------------------------------------------------------
             Y_THREAD_MSG("[Threads] woke up " << agent.name);
 
-
+            
             access.unlock();
-
         }
 
 
