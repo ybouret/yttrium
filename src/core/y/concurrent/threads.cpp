@@ -6,6 +6,10 @@ namespace Yttrium
 {
     namespace Concurrent
     {
+        Threads:: ~Threads() noexcept
+        {
+        }
+        
     }
 
 }
