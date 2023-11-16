@@ -27,7 +27,7 @@ namespace Yttrium
             return DigitsForU64(u);
         }
 
-        //! "C" string format '%0xxu'
+        //! "C" string format '%0xxu', max to '%020u'
         class Format
         {
         public:
