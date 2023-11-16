@@ -1,6 +1,7 @@
 
 #include "y/calculus/base10.hpp"
-#include "y/type/utils.hpp"
+#include <cstring>
+#include <cstdio>
 
 namespace Yttrium
 {
@@ -16,7 +17,32 @@ namespace Yttrium
             u = quot;
         }
 
-        return Max<unsigned>(res,1);
+        return res;
+    }
+
+    Base10:: Format:: Format(const uint64_t u) noexcept :
+    buffer()
+    {
+        memset(buffer,0,sizeof(buffer));
+        const unsigned n = DigitsForU64(u);
+        //std::cerr << n << " digits for  " << u << std::endl;
+        snprintf(buffer, sizeof(buffer)-1, "%%0%uu", n);
+    }
+
+    Base10:: Format:: ~Format() noexcept
+    {
+        memset(buffer,0,sizeof(buffer));
+    }
+
+    Base10:: Format:: Format(const Format &fmt) noexcept :
+    buffer()
+    {
+        memcpy(buffer,fmt.buffer,sizeof(buffer));
+    }
+
+    const char * Base10:: Format:: operator*() const noexcept
+    {
+        return buffer;
     }
 
 }
