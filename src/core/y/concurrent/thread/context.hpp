@@ -25,8 +25,9 @@ namespace Yttrium
         class ThreadContext : public Context
         {
         public:
-            explicit ThreadContext(const size_t sz, const size_t rk, Lockable &mx) noexcept; //!< setup
+            explicit ThreadContext(const size_t sz, const size_t rk, Lockable &mx) noexcept; //!< setup for parallel/sequential
             explicit ThreadContext(const ThreadContext &) noexcept;                          //!< copy
+            explicit ThreadContext(Lockable &)            noexcept;                          //!< for sequential
             virtual ~ThreadContext() noexcept;                                               //!< cleanup
 
             Lockable &sync; //!< shared sync object reference

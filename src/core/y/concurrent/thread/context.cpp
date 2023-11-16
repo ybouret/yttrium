@@ -21,6 +21,12 @@ namespace Yttrium
         {
         }
 
+
+        ThreadContext:: ThreadContext(Lockable &mx) noexcept :
+        Context(), sync(mx)
+        {
+        }
+
         
     }
 

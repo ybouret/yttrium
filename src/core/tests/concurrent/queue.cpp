@@ -29,10 +29,14 @@ Y_UTEST(concurrent_queue)
     std::cerr << "Master Thread   @" << th << std::endl;
     Y_SIZEOF(Concurrent::ThreadHandle);
     
-    Concurrent::Threads threads(topology);
+    {
+        Concurrent::Threads threads(topology);
+
+    }
+
 
     Y_SIZEOF(Concurrent::Agent);
-
+    
 }
 Y_UDONE()
 

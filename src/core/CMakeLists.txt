@@ -10,6 +10,7 @@ Y_CreateLibrary(y
 .
 concurrent/quark
 concurrent/thread
+concurrent/loop
 locking
 config
 check

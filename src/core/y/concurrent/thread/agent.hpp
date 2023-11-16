@@ -6,7 +6,6 @@
 
 #include "y/concurrent/thread/context.hpp"
 #include "y/concurrent/wire.hpp"
-#include "y/functor.hpp"
 
 
 namespace Yttrium
@@ -16,7 +15,6 @@ namespace Yttrium
 
         class Threads;
 
-        typedef Functor<void,TL1(const ThreadContext&)> Kernel;
 
         class Agent : public ThreadContext, public Wire
         {

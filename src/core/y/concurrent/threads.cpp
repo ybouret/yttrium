@@ -69,8 +69,7 @@ namespace Yttrium
                     }
                 }
 
-                done = 0;
-
+                
                 //--------------------------------------------------------------
                 //
                 // all set!
@@ -152,7 +151,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             Y_THREAD_MSG("[Threads] woke up " << agent.name);
 
-            
+
             access.unlock();
         }
 
