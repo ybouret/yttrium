@@ -11,18 +11,35 @@ namespace Yttrium
 {
     namespace Concurrent
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! a kernel to run within a Thread
+        //
+        //
+        //______________________________________________________________________
         typedef Functor<void,TL1(const ThreadContext&)> Kernel;
 
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Interface to Loop a kernel in single/multiple thread
+        //
+        //
+        //______________________________________________________________________
         class Loop : public Readable<const ThreadContext>
         {
         public:
-            virtual ~Loop() noexcept;
-
+            //! execute the kernel, return when all done
             virtual void operator()(Kernel &) noexcept = 0;
 
+
+            virtual ~Loop() noexcept; //!< cleanup
         protected:
-            explicit Loop() noexcept;
+            explicit Loop() noexcept; //!< setup
             
             
         private:

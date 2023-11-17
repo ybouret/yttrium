@@ -13,24 +13,50 @@ namespace Yttrium
     namespace Concurrent
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Interface to single (main) thread loop
+        //
+        //
+        //______________________________________________________________________
         class Mono : public Loop
         {
         public:
-            static const char * const CallSign;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< Concurrent::Mono
 
-            explicit Mono(const char *id=0) noexcept;
-            virtual ~Mono() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Mono(const char *id=0) noexcept; //!< setup with optional lock name
+            virtual ~Mono() noexcept;                 //!< cleanup
 
-            virtual const char * callSign()               const noexcept;
-            virtual size_t       size()                   const noexcept;
-            virtual ConstType &  operator[](const size_t) const noexcept;
-            virtual void         operator()(Kernel &)           noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            virtual const char * callSign()               const noexcept; //!< CallSign
+            virtual size_t       size()                   const noexcept; //!< 1
+            virtual ConstType &  operator[](const size_t) const noexcept; //!< self
+            virtual void         operator()(Kernel &)           noexcept; //!< direct call
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Mono);
 
-            FakeLock      access;
-            ThreadContext context;
+            FakeLock      sync;
+            ThreadContext self;
         };
 
     }

@@ -14,20 +14,45 @@ namespace Yttrium
 {
     namespace Concurrent
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Crew of multiple threads
+        //
+        //
+        //______________________________________________________________________
         class Crew : public Loop
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             class Code;
-            static const char * const CallSign;
+            static const char * const CallSign; //!< Concurrent::Crew
 
-            explicit Crew(const Topology &);
-            virtual ~Crew() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Crew(const Topology &); //!< setup from topology
+            virtual ~Crew() noexcept;        //!< cleanup
 
-            virtual const char * callSign()               const noexcept;
-            virtual size_t       size()                   const noexcept;
-            virtual ConstType &  operator[](const size_t) const noexcept;
-            virtual void         operator()(Kernel &)           noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            virtual const char * callSign()               const noexcept; //!< CallSign
+            virtual size_t       size()                   const noexcept; //!< number of internal threads
+            virtual ConstType &  operator[](const size_t) const noexcept; //!< access
+            virtual void         operator()(Kernel &)           noexcept; //!< dispatch/run kernel for every thread
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Crew);

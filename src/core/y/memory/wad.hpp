@@ -95,6 +95,7 @@ namespace Yttrium
             }
 
         protected:
+            //! cast workspace to pointed type
             inline T *lead() noexcept { return static_cast<T *>(workspace); }
 
         private:

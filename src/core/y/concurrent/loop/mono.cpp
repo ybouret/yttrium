@@ -12,8 +12,8 @@ namespace Yttrium
         }
 
         Mono:: Mono(const char *id) noexcept :
-        access(id),
-        context(access)
+        sync(id),
+        self(sync)
         {
         }
 
@@ -34,7 +34,7 @@ namespace Yttrium
                                             ) const noexcept
         {
             assert(1==indx);
-            return context;
+            return self;
         }
 
 
@@ -42,7 +42,7 @@ namespace Yttrium
         {
             try 
             {
-                kernel(context);
+                kernel(self);
             }
             catch(...)
             {
