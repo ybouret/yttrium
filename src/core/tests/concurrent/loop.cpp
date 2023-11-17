@@ -1,5 +1,6 @@
 #include "y/concurrent/loop/mono.hpp"
 #include "y/concurrent/loop/crew.hpp"
+#include "y/concurrent/thread.hpp"
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;
@@ -8,13 +9,10 @@ using namespace Yttrium;
 Y_UTEST(concurrent_loop)
 {
     Concurrent::Thread::Verbose = true;
-    
     Concurrent::Mono           mono("mono");
     const Concurrent::Topology topo;
     Concurrent::Crew           crew(topo);
-
     Y_THREAD_MSG("now in main...");
-
 
 }
 Y_UDONE()

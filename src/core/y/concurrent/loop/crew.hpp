@@ -7,7 +7,7 @@
 #define Y_Concurrent_Crew_Included 1
 
 #include "y/concurrent/loop/interface.hpp"
-#include "y/concurrent/threads.hpp"
+#include "y/concurrent/topology.hpp"
 
 
 namespace Yttrium
@@ -15,9 +15,10 @@ namespace Yttrium
     namespace Concurrent
     {
 
-        class Crew : public Loop, public Threads
+        class Crew : public Loop
         {
         public:
+            class Code;
             static const char * const CallSign;
 
             explicit Crew(const Topology &);
@@ -25,16 +26,12 @@ namespace Yttrium
 
             virtual const char * callSign() const noexcept;
             virtual size_t       size()     const noexcept;
+            virtual ConstType &  operator[](const size_t) const noexcept;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Crew);
-            virtual ConstType & operator[](const size_t) const noexcept;
-            Condition           start;
-            size_t              ready;
-            const Agent * const item; //!< offset Threads agents
-            Kernel              code;
+            Code *code;
 
-            void  kMain(const ThreadContext &) noexcept;
 
         };
 
