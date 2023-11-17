@@ -21,9 +21,10 @@ namespace Yttrium
             explicit Mono(const char *id=0) noexcept;
             virtual ~Mono() noexcept;
 
-            virtual const char * callSign() const noexcept;
-            virtual size_t       size()     const noexcept;
-            virtual ConstType & operator[](const size_t) const noexcept;
+            virtual const char * callSign()               const noexcept;
+            virtual size_t       size()                   const noexcept;
+            virtual ConstType &  operator[](const size_t) const noexcept;
+            virtual void         operator()(Kernel &)           noexcept;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Mono);

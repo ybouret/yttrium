@@ -38,6 +38,18 @@ namespace Yttrium
         }
 
 
+        void Mono:: operator()(Kernel &kernel) noexcept
+        {
+            try 
+            {
+                kernel(context);
+            }
+            catch(...)
+            {
+
+            }
+        }
+
     }
 
 }

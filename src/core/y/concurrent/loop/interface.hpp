@@ -19,6 +19,7 @@ namespace Yttrium
         public:
             virtual ~Loop() noexcept;
 
+            virtual void operator()(Kernel &) noexcept = 0;
 
         protected:
             explicit Loop() noexcept;

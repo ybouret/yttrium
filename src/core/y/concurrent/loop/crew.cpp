@@ -3,6 +3,7 @@
 #include "y/memory/wad.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/concurrent/condition.hpp"
+#include "y/type/temporary.hpp"
 
 namespace Yttrium
 {
@@ -10,44 +11,71 @@ namespace Yttrium
     namespace Concurrent
     {
 
-
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! a Player is a Thread with a Context
+        //
+        //
+        //______________________________________________________________________
         class Player : public ThreadContext, public Wire
         {
         public:
+
+            //! setup and start thread, up to fist sync
             inline explicit Player(const size_t  sz,
                                    const size_t  rk,
                                    Lockable     &mx,
                                    Crew::Code   &code) :
-            ThreadContext(sz,rk,mx),
-            Wire(Launch,code,*this)
+            ThreadContext(sz,rk,mx), Wire(Launch,code,*this)
             {
 
             }
 
-            inline virtual ~Player() noexcept 
-            {
-
-            }
+            //! cleanup: join thread
+            inline virtual ~Player() noexcept {}
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Player);
 
-            //! code.call(player)
+            //! entry point to run code.call(player) in this thread
             static void Launch(Crew::Code &code, const Player &player) noexcept;
 
         };
 
+        //______________________________________________________________________
+        //
+        //! alias
+        //______________________________________________________________________
         typedef Memory::Wad<Player,Memory::Dyadic> Team;
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! a Crew is a Team of Player with concurrent primitives
+        //
+        //
+        //______________________________________________________________________
         class Crew :: Code : public Object, public Team
         {
         public:
+            typedef const Temporary<Kernel *> SetKernel;
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup and synchronize threads
             explicit Code(const Topology &topology) :
             Object(),
             Team(topology.size),
-            access(),
+            kRun(0),
+            sync(),
             size(0),
             team( lead() ),
             item( team-1 ),
@@ -58,7 +86,7 @@ namespace Yttrium
                 const size_t goal = topology.size;
                 assert(capacity>=goal);
                 Y_THREAD_MSG("[Threads] -------- topology = " << topology << " #" << goal);
-                Y_THREAD_MSG("[Threads] sizeof(Player)=" << sizeof(Player) );
+                Y_THREAD_MSG("[Threads] sizeof(Player)    = " << sizeof(Player) );
 
                 try
                 {
@@ -67,15 +95,22 @@ namespace Yttrium
                     {
                         assert(0!=node);
 
+                        //------------------------------------------------------
                         // start building player
-                        Player *player = new ( &team[size] ) Player(goal,size,access,*this);
+                        //------------------------------------------------------
+                        Player *player = new ( &team[size] ) Player(goal,size,sync,*this);
 
+                        //------------------------------------------------------
                         // wait for synchronization
+                        //------------------------------------------------------
                         {
-                            Y_LOCK(access);
-                            if(done<=size) doneCV.wait(access);
+                            Y_LOCK(sync);
+                            if(done<=size) doneCV.wait(sync);
                         }
 
+                        //------------------------------------------------------
+                        // update status
+                        //------------------------------------------------------
                         ++Coerce(size);
                         player->assign( **node );
                         node = node->next;
@@ -83,7 +118,6 @@ namespace Yttrium
 
                     Y_THREAD_MSG("[Threads] -------- first ready #" << size);
                     done = 0;
-
                 }
                 catch(...)
                 {
@@ -92,12 +126,34 @@ namespace Yttrium
                 }
             }
 
-            virtual ~Code() noexcept
+            virtual ~Code() noexcept { quit(); }
+
+            //__________________________________________________________________
+            //
+            //
+            //! perform kernel in parallel
+            //
+            //__________________________________________________________________
+            inline void cycle(Kernel &kernel) noexcept
             {
-                quit();
+                assert(0==done);
+                assert(0==kRun);
+
+                SetKernel k(kRun, &kernel);                        // setting the kernel to run
+                waitCV.broadcast();                                // wake up everyone
+                { Y_LOCK(sync); if(done<size) doneCV.wait(sync); } // synchronize
+                assert(size==done); done = 0;                      // done
             }
 
-            Mutex                access;
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            Kernel              *kRun;
+            Mutex                sync;
             const size_t         size;
             Player * const       team;
             const Player * const item;
@@ -120,14 +176,15 @@ namespace Yttrium
                 Y_THREAD_MSG("[Threads] -------- done");
             }
 
-            //! parallel code
+            //! parallel code assigned to a given player
             inline void call(const Player &player) noexcept
             {
+                const char *id = player.name;
                 //--------------------------------------------------------------
                 // LOCK mutex
                 //--------------------------------------------------------------
-                access.lock();
-                Y_THREAD_MSG("[Threads] startup @" << player.name);
+                sync.lock();
+                Y_THREAD_MSG("[Threads] " << id << " startup");
 
                 //--------------------------------------------------------------
                 // update #done and signal Crew this player is OK
@@ -138,11 +195,31 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 // wait on a LOCKED mutex
                 //--------------------------------------------------------------
-                waitCV.wait(access);
-                Y_THREAD_MSG("[Threads] woke up @" << player.name);
+            CYCLE:
+                waitCV.wait(sync);
+                //Y_THREAD_MSG("[Threads] " << id << " woke up");
 
-
-                access.unlock();
+                if(0==kRun)
+                {
+                    //----------------------------------------------------------
+                    Y_THREAD_MSG("[Threads] " << id << " returning...");
+                    //----------------------------------------------------------
+                    sync.unlock();
+                    return;
+                }
+                else
+                {
+                    //----------------------------------------------------------
+                    // running unlocked
+                    Y_THREAD_MSG("[Threads] " << id << " running...");
+                    //----------------------------------------------------------
+                    sync.unlock();
+                    try        { (*kRun)(player); }
+                    catch(...) { }
+                    sync.lock();
+                    if(++done>=size) doneCV.signal();
+                    goto CYCLE;
+                }
             }
 
         };
@@ -183,12 +260,18 @@ namespace Yttrium
         size_t             Crew:: size()     const noexcept { assert(0!=code); return code->size; }
         Crew::ConstType &  Crew:: operator[](const size_t indx) const noexcept
         {
+            assert(0!=code);
             assert(indx>=1);
             assert(indx<=size());
             assert(indx==code->item[indx].indx);
             return code->item[indx];
         }
 
+        void Crew:: operator()(Kernel &kernel) noexcept
+        {
+            assert(0!=code);
+            code->cycle(kernel);
+        }
 
     }
 
