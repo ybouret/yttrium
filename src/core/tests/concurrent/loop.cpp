@@ -13,6 +13,8 @@ Y_UTEST(concurrent_loop)
     const Concurrent::Topology topo;
     Concurrent::Crew           crew(topo);
 
+    Y_THREAD_MSG("now in main...");
+
 
 }
 Y_UDONE()
