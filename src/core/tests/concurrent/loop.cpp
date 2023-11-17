@@ -77,7 +77,7 @@ Y_UTEST(concurrent_loop)
     const double   sumCrew = demo.getFrom(crew);
     const uint64_t tmxCrew = WallTime::Ticks() - mark;
 
-
+    std::cerr << "par: " << crew.size() << std::endl;
     std::cerr << "sum: " << std::setw(15) << sumMono << " / " << std::setw(15)  << sumCrew << std::endl;
     std::cerr << "tmx: " <<  std::setw(15) << HumanReadable(tmxMono) << " / " <<  std::setw(15) << HumanReadable(tmxCrew) << std::endl;
     const double speedUp = double(tmxMono)/double(tmxCrew);
