@@ -57,7 +57,9 @@ namespace Yttrium
             {
                 const size_t goal = topology.size;
                 assert(capacity>=goal);
-                Y_THREAD_MSG("[Threads] topology = " << topology << " #" << goal);
+                Y_THREAD_MSG("[Threads] -------- topology = " << topology << " #" << goal);
+                Y_THREAD_MSG("[Threads] sizeof(Player)=" << sizeof(Player) );
+
                 try
                 {
                     const Topology::NodeType *node = topology.head;
@@ -79,7 +81,7 @@ namespace Yttrium
                         node = node->next;
                     }
 
-                    Y_THREAD_MSG("[Threads] ready #" << size);
+                    Y_THREAD_MSG("[Threads] -------- first ready #" << size);
 
 
                 }
@@ -95,9 +97,9 @@ namespace Yttrium
                 quit();
             }
 
-            Mutex          access;
-            const size_t   size;
-            Player * const team;
+            Mutex                access;
+            const size_t         size;
+            Player * const       team;
             const Player * const item;
 
         private:
@@ -110,13 +112,12 @@ namespace Yttrium
 
             inline void quit() noexcept
             {
-                Y_THREAD_MSG("[Threads] quit #" << size);
-
+                // assuming everyone is waiting
+                Y_THREAD_MSG("[Threads] -------- quit #" << size);
                 waitCV.broadcast();
                 while(size>0)
                     Memory::OutOfReach::Naught( &team[--Coerce(size)] );
-
-
+                Y_THREAD_MSG("[Threads] -------- done");
             }
 
             //! parallel code
@@ -138,6 +139,8 @@ namespace Yttrium
                 // wait on a LOCKED mutex
                 //--------------------------------------------------------------
                 waitCV.wait(access);
+
+
                 Y_THREAD_MSG("[Threads] woke up @" << player.name);
 
 
