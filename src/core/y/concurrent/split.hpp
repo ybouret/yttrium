@@ -3,7 +3,7 @@
 #ifndef Y_Concurrent_Split_Included
 #define Y_Concurrent_Split_Included 1
 
-#include "y/config/starting.hpp"
+#include "y/concurrent/context.hpp"
 
 namespace Yttrium
 {
@@ -37,7 +37,15 @@ namespace Yttrium
                 }
                 length = todo;
             }
-            
+
+            //! split for a given context
+            template <typename U> static inline
+            void For(const Context &ctx, U &length, U &offset) noexcept
+            {
+                With(ctx.size,ctx.rank,length,offset);
+            }
+
+
         };
 
     }

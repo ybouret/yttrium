@@ -82,7 +82,7 @@ namespace Yttrium
                     }
 
                     Y_THREAD_MSG("[Threads] -------- first ready #" << size);
-
+                    done = 0;
 
                 }
                 catch(...)
@@ -139,8 +139,6 @@ namespace Yttrium
                 // wait on a LOCKED mutex
                 //--------------------------------------------------------------
                 waitCV.wait(access);
-
-
                 Y_THREAD_MSG("[Threads] woke up @" << player.name);
 
 

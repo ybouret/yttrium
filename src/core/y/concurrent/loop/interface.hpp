@@ -5,11 +5,14 @@
 
 #include "y/concurrent/thread/context.hpp"
 #include "y/container/readable.hpp"
+#include "y/functor.hpp"
 
 namespace Yttrium
 {
     namespace Concurrent
     {
+
+        typedef Functor<void,TL1(const ThreadContext&)> Kernel;
 
         class Loop : public Readable<const ThreadContext>
         {
