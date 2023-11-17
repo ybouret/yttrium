@@ -7,6 +7,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/system/wtime.hpp"
 #include "y/text/human-readable.hpp"
+#include "y/string/env.hpp"
 
 #include <cmath>
 
@@ -29,10 +30,7 @@ namespace   {
             uint32_t offset = 1;
             uint32_t length = count;
             Concurrent::Split::For(ctx, length, offset);
-            {
-                Y_LOCK(ctx.sync);
-                std::cerr << "In " << ctx.name << ": from " << offset << " +" << length << std::endl;
-            }
+            Y_THREAD_MSG("In " << ctx.name << ": from " << offset << " +" << length);
             double sum = 0;
             for(;length>0;++offset,--length)
             {
@@ -57,7 +55,7 @@ namespace   {
 
 Y_UTEST(concurrent_loop)
 {
-    Concurrent::Thread::Verbose = true;
+    Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
     Demo                       demo;
     Concurrent::Kernel         kernel(&demo, & Demo::run);
     Concurrent::Mono           mono("mono");
