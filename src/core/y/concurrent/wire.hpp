@@ -94,7 +94,7 @@ namespace Yttrium
         //
         //
         //
-        //! wrapper to execute function on object
+        //! wrapper to execute threaded function on object
         //
         //
         //______________________________________________________________________
@@ -115,8 +115,7 @@ namespace Yttrium
             Nucleus:: WireData(proc,arg1,arg2), Thread(Call2<PROC,ARG1,ARG2>, Args() )
             {
             }
-
-
+            
 
             //! cleanup
             virtual ~Wire() noexcept;
