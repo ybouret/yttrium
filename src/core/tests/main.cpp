@@ -84,6 +84,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(calculus_isqrt);
     Y_UTEST(calculus_ipower);
     Y_UTEST(calculus_xlog2);
+    Y_UTEST(calculus_gray);
 
 
     Y_UTEST(concurrent_mutex);
