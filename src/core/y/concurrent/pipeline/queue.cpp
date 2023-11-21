@@ -13,6 +13,7 @@ namespace Yttrium
     {
         namespace
         {
+            //! Worker handled by Queue
             class Worker : public Object, public ThreadContext
             {
             public:
@@ -38,8 +39,20 @@ namespace Yttrium
         class Queue :: Code : public Object
         {
         public:
-            typedef CxxArray<Worker *,Memory::Dyadic> Meta;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef CxxArray<Worker *,Memory::Dyadic> Meta; //!< array of worker indices
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             inline explicit Code(const Topology &topology) :
             Object(),
             sync(),
@@ -52,7 +65,7 @@ namespace Yttrium
                     for(const Topology::NodeType *node=topology.head;node;node=node->next)
                     {
                         const size_t rk = team.size;
-                        Worker      *wk = team.pushTail( new Worker(sz,rk,sync));
+                        Worker      *wk = team.pushTail( new Worker(sz,rk,sync) );
                         Coerce(meta[team.size]) = wk;
                     }
                 }
@@ -66,9 +79,23 @@ namespace Yttrium
 
             inline virtual ~Code() noexcept {}
 
-            Mutex             sync;
-            CxxListOf<Worker> team;
-            const Meta        meta;
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            Mutex             sync; //!< shared mutex
+            CxxListOf<Worker> team; //!< all workers
+            const Meta        meta; //!< store addresses
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
