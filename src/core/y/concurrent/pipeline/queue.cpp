@@ -3,6 +3,8 @@
 
 #include "y/concurrent/pipeline/queue.hpp"
 #include "y/concurrent/condition.hpp"
+#include "y/concurrent/wire.hpp"
+
 #include "y/data/list/cxx.hpp"
 #include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
@@ -17,21 +19,28 @@ namespace Yttrium
             class Worker : public Object, public ThreadContext
             {
             public:
-                explicit Worker(const size_t sz,
+                explicit Worker(Queue::Code &code,
+                                const size_t sz,
                                 const size_t rk,
                                 Lockable    &mx) :
                 Object(),
                 ThreadContext(sz,rk,mx),
                 next(0),
-                prev(0)
+                prev(0),
+                cond(),
+                wire(Launch,code,*this)
                 {
                 }
 
-                Worker *next;
-                Worker *prev;
+
+                Worker    *next;
+                Worker    *prev;
+                Condition  cond;
+                Wire       wire;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Worker);
+                static void Launch(Queue::Code &, Worker &) noexcept;
             };
         }
 
@@ -65,7 +74,7 @@ namespace Yttrium
                     for(const Topology::NodeType *node=topology.head;node;node=node->next)
                     {
                         const size_t rk = team.size;
-                        Worker      *wk = team.pushTail( new Worker(sz,rk,sync) );
+                        Worker      *wk = team.pushTail( new Worker(*this,sz,rk,sync) );
                         Coerce(meta[team.size]) = wk;
                     }
                 }
@@ -79,13 +88,13 @@ namespace Yttrium
 
             inline virtual ~Code() noexcept {}
 
-
             //__________________________________________________________________
             //
             //
-            // C++
+            // Methods
             //
             //__________________________________________________________________
+            void run(Worker &) noexcept;
 
             //__________________________________________________________________
             //
@@ -100,6 +109,22 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
         };
+
+        namespace
+        {
+            void Worker:: Launch(Queue::Code &code, Worker &worker) noexcept
+            {
+                code.run(worker);
+            }
+        }
+
+        void Queue:: Code:: run(Worker &worker) noexcept
+        {
+            //------------------------------------------------------------------
+            // entering thread with worker!!
+            //------------------------------------------------------------------
+
+        }
 
     }
 
@@ -122,7 +147,8 @@ namespace Yttrium
         Pipeline(),
         code( new Code(topology) )
         {
-            
+            std::cerr << "sizeof(Code)=" << sizeof(Code) << std::endl;
+            std::cerr << "sizeof(Worker)=" << sizeof(Worker) << std::endl;
         }
 
 
