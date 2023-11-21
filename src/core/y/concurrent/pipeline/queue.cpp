@@ -5,9 +5,10 @@
 #include "y/concurrent/condition.hpp"
 #include "y/concurrent/wire.hpp"
 
-#include "y/data/list/cxx.hpp"
+#include "y/data/list.hpp"
 #include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
+#include "y/sort/merge.hpp"
 
 namespace Yttrium
 {
@@ -45,7 +46,7 @@ namespace Yttrium
         }
 
 
-        class Queue :: Code : public Object
+        class Queue :: Code : public Object, public ListOf<Worker>
         {
         public:
             //__________________________________________________________________
@@ -64,29 +65,42 @@ namespace Yttrium
             //__________________________________________________________________
             inline explicit Code(const Topology &topology) :
             Object(),
+            ListOf<Worker>(),
             sync(),
-            team(),
-            meta(topology.size)
+            meta(topology.size),
+            count(0),
+            fence()
             {
+                Y_THREAD_MSG("[Queue] creating " << topology);
                 const size_t sz = topology.size;
                 try
                 {
                     for(const Topology::NodeType *node=topology.head;node;node=node->next)
                     {
-                        const size_t rk = team.size;
-                        Worker      *wk = team.pushTail( new Worker(*this,sz,rk,sync) );
-                        Coerce(meta[team.size]) = wk;
+                        const size_t rk = size;
+                        Worker      *wk = pushTail( new Worker(*this,sz,rk,sync) );
+                        Coerce(meta[size]) = wk;
+                        {
+                            Y_LOCK(sync);
+                            if(count<size) fence.wait(sync);
+                        }
+                        wk->wire.assign(**node);
                     }
                 }
                 catch(...)
                 {
+                    quit();
                     throw;
                 }
+
+                Y_THREAD_MSG("[Queue] synchronized #" << size);
 
             }
 
 
-            inline virtual ~Code() noexcept {}
+            inline virtual ~Code() noexcept {
+                quit();
+            }
 
             //__________________________________________________________________
             //
@@ -102,17 +116,33 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            Mutex             sync; //!< shared mutex
-            CxxListOf<Worker> team; //!< all workers
-            const Meta        meta; //!< store addresses
+            Mutex          sync;  //!< shared mutex
+            const Meta     meta;  //!< store addresses
+            size_t         count; //!< counter
+            Condition      fence;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
+            inline void quit() noexcept
+            {
+                Y_THREAD_MSG("[Queue] quit...");
+
+                //--------------------------------------------------------------
+                // then release all waiting
+                //--------------------------------------------------------------
+                MergeSort::ByIncreasingAddress(*this);
+                while(size>0)
+                {
+                    Worker *w = popTail();
+                    w->cond.broadcast();
+                    delete w;
+                }
+            }
         };
 
         namespace
         {
-            void Worker:: Launch(Queue::Code &code, Worker &worker) noexcept
+            inline void Worker:: Launch(Queue::Code &code, Worker &worker) noexcept
             {
                 code.run(worker);
             }
@@ -121,9 +151,17 @@ namespace Yttrium
         void Queue:: Code:: run(Worker &worker) noexcept
         {
             //------------------------------------------------------------------
-            // entering thread with worker!!
+            // First Synchronization
             //------------------------------------------------------------------
+            sync.lock();
+            if(++count>=size) fence.signal();
 
+            //------------------------------------------------------------------
+            // wait on a LOCKED mutex
+            //------------------------------------------------------------------
+            worker.cond.wait(sync);
+            Y_THREAD_MSG("[Queue] waking up " << worker.name);
+            sync.unlock();
         }
 
     }
@@ -159,7 +197,7 @@ namespace Yttrium
         size_t Queue:: size() const noexcept
         {
             assert(0!=code);
-            return code->team.size;
+            return code->size;
         }
 
         Queue::ConstType & Queue:: operator[](const size_t indx) const noexcept
