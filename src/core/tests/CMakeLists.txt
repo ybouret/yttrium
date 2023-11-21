@@ -65,6 +65,7 @@ add_test(text:justify        test-core text_justify)
 add_test(text:convert        test-core text_convert)
 add_test(text:convflt        test-core text_convflt)
 add_test(text:base64         test-core text_base64)
+add_test(text:binary         test-core text_binary)
 
 
 

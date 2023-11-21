@@ -38,7 +38,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Queue(const Topology &);
+            explicit Queue(const Topology &); //!< setup from topology
             virtual ~Queue() noexcept;        //!< cleanup
 
             //__________________________________________________________________

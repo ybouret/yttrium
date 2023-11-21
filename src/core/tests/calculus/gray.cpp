@@ -1,7 +1,7 @@
 #include "y/calculus/gray.hpp"
 #include "y/type/ints.hpp"
 #include "y/utest/run.hpp"
-#include "y/text/hexadecimal.hpp"
+#include "y/text/binary.hpp"
 #include "y/random/bits.hpp"
 
 using namespace Yttrium;
@@ -25,7 +25,7 @@ void testGray(Random::Bits &ran)
     }
     else
     {
-        for(uint64_t i=0;i< IntegerFor<T>::Maximum;i += 1+ran.leq(127))
+        for(uint64_t i=0;i< IntegerFor<T>::Maximum;i += 1+ran.leq(1023))
         {
             const T n   = static_cast<T>(i);
             const T enc = Gray::Encode(n);
@@ -42,6 +42,13 @@ Y_UTEST(calculus_gray)
     testGray<uint8_t>(ran);
     testGray<uint16_t>(ran);
     testGray<uint32_t>(ran);
+
+    for(uint8_t u=0;u<=10;++u)
+    {
+        const uint8_t g = Gray::Encode(u);
+        std::cerr << Binary(u) << " => " << Binary(g) << std::endl;
+    }
+
 
 }
 Y_UDONE()
