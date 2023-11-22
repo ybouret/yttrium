@@ -11,9 +11,9 @@ def evolution(t, z, a, b, c, d):
     x, y = z
     return [a*x - b*x*y,  c*x*y - d*y]
 
-# using SciPy Ivitial Value Problem solver
+# using SciPy Initial Value Problem solver
 tmax = 15
-sol  = solve_ivp(evolution, [0,tmax], [10, 5], args=(1.5, 1, 1, 3),
+sol  = solve_ivp(evolution, [0,tmax], [10, 5], args=(3, 1, 1, 3),
                 dense_output=True);
 
 # using result to draw something
