@@ -127,7 +127,6 @@ namespace Yttrium
             meta(topology.size),
             tasks(),
             tpool(),
-            jobID(1),
             count(0),
             fence()
             {
@@ -176,7 +175,6 @@ namespace Yttrium
                 Task *task = tpool.size>0 ? tpool.query() : new Task();
                 assert(0!=task);
                 assert(0==task->job);
-
             }
 
             //__________________________________________________________________
@@ -189,7 +187,6 @@ namespace Yttrium
             const Meta     meta;  //!< store addresses
             Task::List     tasks; //!< loaded tasks
             Task::Pool     tpool; //!< empty  tasks
-            JobID          jobID; //!< job counter
             size_t         count; //!< counter
             Condition      fence; //!< condition to use count
 

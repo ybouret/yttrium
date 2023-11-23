@@ -55,6 +55,10 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Queue);
             Code *code;
+
+            virtual void   suspend() noexcept;
+            virtual JobID  enqueue(Job *, const JobID);
+            virtual void   restart() noexcept;
         };
     }
 

@@ -52,10 +52,13 @@ namespace Yttrium
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alone);
-
             FakeLock      sync;
             ThreadContext self;
-            JobID         jndx;
+
+            virtual void   suspend() noexcept;
+            virtual void   restart() noexcept;
+            virtual JobID  enqueue(Job *, const JobID);
+
         };
     }
 

@@ -14,8 +14,7 @@ namespace Yttrium
 
         Alone:: Alone(const char *id) noexcept :
         sync(id),
-        self(sync),
-        jndx(1)
+        self(sync) 
         {
         }
 
@@ -40,7 +39,23 @@ namespace Yttrium
         }
 
         
+        void Alone:: suspend() noexcept
+        {
+            sync.lock();
+        }
 
+        void Alone:: restart() noexcept
+        {
+            sync.unlock();
+        }
+
+        JobID Alone:: enqueue(Job *J, const JobID j)
+        {
+            assert(0!=J);
+            const AutoPtr<Job> keep(J);
+            (*J)(self);
+            return j;
+        }
 
     }
 

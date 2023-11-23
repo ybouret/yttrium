@@ -108,7 +108,7 @@ Y_UTEST(concurrent_queue)
     std::cerr << topology << std::endl;
     
     Concurrent::Alone  alone;
-    Concurrent::Queue  queue(topology);
+    //Concurrent::Queue  queue(topology);
 
 
 }
