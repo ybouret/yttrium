@@ -16,10 +16,19 @@ namespace Yttrium
     {
         namespace
         {
+            //__________________________________________________________________
+            //
+            //
+            //
             //! Worker handled by Queue
+            //
+            //
+            //__________________________________________________________________
             class Worker : public Object, public ThreadContext
             {
             public:
+
+                //! setup context and launch code->run(*this) in thread
                 explicit Worker(Queue::Code &code,
                                 const size_t sz,
                                 const size_t rk,
@@ -33,11 +42,14 @@ namespace Yttrium
                 {
                 }
 
+                //! wait for thread to return
+                inline virtual ~Worker() noexcept {}
 
-                Worker    *next;
-                Worker    *prev;
-                Condition  cond;
-                Wire       wire;
+
+                Worker    *next; //!< for list
+                Worker    *prev; //!< for list
+                Condition  cond; //!< self waiting condition
+                Wire       wire; //!< thread
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Worker);
