@@ -169,13 +169,7 @@ namespace Yttrium
             //__________________________________________________________________
             void run(Worker &) noexcept;
 
-            inline void load(const Job &J)
-            {
 
-                Task *task = tpool.size>0 ? tpool.query() : new Task();
-                assert(0!=task);
-                assert(0==task->job);
-            }
 
             //__________________________________________________________________
             //
@@ -278,6 +272,18 @@ namespace Yttrium
         {
             assert(0!=code);
             return *(code->meta[indx]);
+        }
+
+        void Queue:: suspend() noexcept
+        {
+            assert(0!=code);
+            code->sync.lock();
+        }
+
+        void Queue:: restart() noexcept
+        {
+            assert(0!=code);
+            code->sync.unlock();
         }
 
 

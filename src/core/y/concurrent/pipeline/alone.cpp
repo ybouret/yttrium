@@ -49,13 +49,7 @@ namespace Yttrium
             sync.unlock();
         }
 
-        JobID Alone:: enqueue(Job *J, const JobID j)
-        {
-            assert(0!=J);
-            const AutoPtr<Job> keep(J);
-            (*J)(self);
-            return j;
-        }
+        
 
     }
 

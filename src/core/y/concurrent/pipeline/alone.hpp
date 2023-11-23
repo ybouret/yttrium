@@ -57,8 +57,7 @@ namespace Yttrium
 
             virtual void   suspend() noexcept;
             virtual void   restart() noexcept;
-            virtual JobID  enqueue(Job *, const JobID);
-
+            
         };
     }
 

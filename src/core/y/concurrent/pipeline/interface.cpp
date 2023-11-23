@@ -21,6 +21,7 @@ namespace Yttrium
             Coerce(jobID) = Max<JobID>(j1,j1+jobID);
         }
 
+#if 0
         JobID Pipeline:: push(Job *J)
         {
             assert(0!=J);
@@ -38,7 +39,8 @@ namespace Yttrium
             }
 
         }
-
+#endif
+        
 
     }
 

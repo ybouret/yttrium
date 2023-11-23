@@ -3,17 +3,17 @@
 #ifndef Y_Concurrent_Interface_Included
 #define Y_Concurrent_Interface_Included 1
 
-#include "y/concurrent/thread/context.hpp"
+#include "y/concurrent/runnable.hpp"
 #include "y/container/readable.hpp"
-#include "y/functor.hpp"
+#include "y/ptr/arc.hpp"
 
 namespace Yttrium
 {
     namespace Concurrent
     {
 
-        typedef uint32_t                                 JobID;
-        typedef Functor<void,TL1(const ThreadContext &)> Job;
+        typedef uint32_t         JobID;
+        typedef ArcPtr<Runnable> Job;
 
         
 
@@ -31,17 +31,6 @@ namespace Yttrium
             virtual ~Pipeline() noexcept; //!< cleanup
 
 
-            //! suspend, enqueue, restart
-            JobID    push(Job *);
-
-            template <
-            typename OBJECT,
-            typename METHOD
-            > inline JobID push(OBJECT &host, METHOD meth)
-            {
-                push( new Job(&host,meth) );
-            }
-
 
         protected:
             explicit Pipeline() noexcept; //!< setup
@@ -54,8 +43,7 @@ namespace Yttrium
 
             virtual void   suspend() noexcept          = 0; //!< suspend mechanism
             virtual void   restart() noexcept          = 0; //!< restart mechanism
-            virtual JobID  enqueue(Job *, const JobID) = 0; //!< enqueue a new job, taken care of
-
+            
         };
 
     }
