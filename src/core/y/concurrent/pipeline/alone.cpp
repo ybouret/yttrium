@@ -1,7 +1,7 @@
 
 
 #include "y/concurrent/pipeline/alone.hpp"
-
+#include "y/ptr/auto.hpp"
 
 namespace Yttrium
 {
@@ -14,7 +14,8 @@ namespace Yttrium
 
         Alone:: Alone(const char *id) noexcept :
         sync(id),
-        self(sync)
+        self(sync),
+        jndx(1)
         {
         }
 
@@ -38,7 +39,7 @@ namespace Yttrium
             return self;
         }
 
-
+        
 
 
     }

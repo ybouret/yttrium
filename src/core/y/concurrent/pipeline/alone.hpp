@@ -49,11 +49,13 @@ namespace Yttrium
             virtual size_t       size()                   const noexcept; //!< 1
             virtual ConstType &  operator[](const size_t) const noexcept; //!< self
 
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alone);
 
             FakeLock      sync;
             ThreadContext self;
+            JobID         jndx;
         };
     }
 

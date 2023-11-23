@@ -11,11 +11,17 @@ namespace Yttrium
 {
     namespace Concurrent
     {
+
+        typedef uint32_t                                  JobID;
+        typedef Functor<void,TL1(const ThreadContext &)> Job;
+
+        
+
         //______________________________________________________________________
         //
         //
         //
-        //! Interface to a Pipeline to process tasks
+        //! Interface to a Pipeline to process jobs
         //
         //
         //______________________________________________________________________
@@ -23,6 +29,9 @@ namespace Yttrium
         {
         public:
             virtual ~Pipeline() noexcept; //!< cleanup
+
+
+
 
         protected:
             explicit Pipeline() noexcept; //!< setup

@@ -5,10 +5,14 @@
 #include "y/concurrent/condition.hpp"
 #include "y/concurrent/wire.hpp"
 
-#include "y/data/list.hpp"
+#include "y/data/list/cxx.hpp"
+#include "y/data/pool/cxx.hpp"
+
 #include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/sort/merge.hpp"
+#include "y/ptr/auto.hpp"
+
 
 namespace Yttrium
 {
@@ -58,6 +62,47 @@ namespace Yttrium
         }
 
 
+        namespace
+        {
+            class Task : public Object
+            {
+            public:
+                typedef CxxListOf<Task> List;
+                typedef CxxPoolOf<Task> Pool;
+
+                inline explicit Task() noexcept  :
+                next(0), prev(0), job(0), jid(0)
+                {
+                }
+
+
+                inline virtual ~Task() noexcept
+                {
+                    erase();
+                }
+
+                inline void erase() noexcept
+                {
+                    if(0!=job) delete job;
+                    job = 0;
+                    jid = 0;
+                }
+
+
+                Task  *next;
+                Task  *prev;
+
+                Job   *job;
+                JobID  jid;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Task);
+            };
+
+
+
+        }
+
         class Queue :: Code : public Object, public ListOf<Worker>
         {
         public:
@@ -80,6 +125,9 @@ namespace Yttrium
             ListOf<Worker>(),
             sync(),
             meta(topology.size),
+            tasks(),
+            tpool(),
+            jobID(1),
             count(0),
             fence()
             {
@@ -122,6 +170,15 @@ namespace Yttrium
             //__________________________________________________________________
             void run(Worker &) noexcept;
 
+            inline void load(const Job &J)
+            {
+
+                Task *task = tpool.size>0 ? tpool.query() : new Task();
+                assert(0!=task);
+                assert(0==task->job);
+
+            }
+
             //__________________________________________________________________
             //
             //
@@ -130,8 +187,11 @@ namespace Yttrium
             //__________________________________________________________________
             Mutex          sync;  //!< shared mutex
             const Meta     meta;  //!< store addresses
+            Task::List     tasks; //!< loaded tasks
+            Task::Pool     tpool; //!< empty  tasks
+            JobID          jobID; //!< job counter
             size_t         count; //!< counter
-            Condition      fence;
+            Condition      fence; //!< condition to use count
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
@@ -139,8 +199,10 @@ namespace Yttrium
             {
                 Y_THREAD_MSG("[Queue] quit...");
 
+
+
                 //--------------------------------------------------------------
-                // then release all waiting
+                // Then release all waiting
                 //--------------------------------------------------------------
                 MergeSort::ByIncreasingAddress(*this);
                 while(size>0)
@@ -150,6 +212,9 @@ namespace Yttrium
                     delete w;
                 }
             }
+
+
+
         };
 
         namespace
@@ -197,8 +262,8 @@ namespace Yttrium
         Pipeline(),
         code( new Code(topology) )
         {
-            std::cerr << "sizeof(Code)=" << sizeof(Code) << std::endl;
-            std::cerr << "sizeof(Worker)=" << sizeof(Worker) << std::endl;
+            std::cerr << " *** sizeof(Code)   = " << sizeof(Code) << std::endl;
+            std::cerr << " *** sizeof(Worker) = " << sizeof(Worker) << std::endl;
         }
 
 
