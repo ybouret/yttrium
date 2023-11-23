@@ -1,4 +1,6 @@
 #include "y/concurrent/thread/handle.hpp"
+#include "y/container/algo/reverse.hpp"
+
 #include <cstring>
 #include <iostream>
 
@@ -47,6 +49,8 @@ namespace Yttrium
             assert(BufferSize>Base64::Encode::LengthFor(size,false));
             clear();
             buflen = Base64::Encode::To(buffer, data, size, false);
+            assert(strlen(buffer)==buflen);
+            Algo::Reverse(buffer,buflen);    // TODO: depends on endianess ?
             assert(strlen(buffer)==buflen);
         }
 
