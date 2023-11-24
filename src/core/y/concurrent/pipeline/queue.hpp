@@ -1,5 +1,3 @@
-
-
 //! \file
 
 #ifndef Y_Concurrent_Queue_Included
