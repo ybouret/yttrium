@@ -112,6 +112,11 @@ namespace Yttrium
                 }
 
 
+                inline TaskID enqueue(const Task  &task,
+                                    const TaskID uuid)
+                {
+                    return pushTail( new (zpool.size > 0 ? zpool.query() : Object::zacquire<Job>()) Job(task,uuid) )->uuid;
+                }
 
                 inline void dismiss(Job *active) noexcept
                 {
@@ -311,8 +316,8 @@ namespace Yttrium
         TaskID Queue:: enqueue(const Task &task, const TaskID uuid)
         {
             // assuming LOCKED mutex
-
-
+            JList jobs;
+            return jobs.enqueue(task,uuid);
         }
 
 
