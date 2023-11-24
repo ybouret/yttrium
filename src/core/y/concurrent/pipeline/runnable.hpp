@@ -11,14 +11,34 @@ namespace Yttrium
 {
     namespace Concurrent
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Runnable code for Pipeline
+        //
+        //
+        //______________________________________________________________________
         class Runnable : public Object, public Counted
         {
         public:
-            virtual void run(const ThreadContext &) = 0;
+            //__________________________________________________________________
+            //
+            //
+            // interface
+            //
+            //__________________________________________________________________
+            virtual void run(const ThreadContext &) = 0; //!< running code on a given context
 
-            virtual ~Runnable() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            virtual ~Runnable() noexcept; //!< cleanup
         protected:
-            explicit Runnable() noexcept;
+            explicit Runnable() noexcept; //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Runnable);

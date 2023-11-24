@@ -10,15 +10,34 @@ namespace Yttrium
 {
     namespace Concurrent
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! interface to SYNCHRONOUS kernel for Loop
+        //
+        //
+        //______________________________________________________________________
         class Kernel
         {
         public:
-            virtual void operator()(const ThreadContext &) = 0;
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual void operator()(const ThreadContext &) = 0; //!< call
 
-            virtual ~Kernel() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            virtual ~Kernel() noexcept; //!< cleanup
         protected:
-            explicit Kernel() noexcept;
+            explicit Kernel() noexcept; //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Kernel);

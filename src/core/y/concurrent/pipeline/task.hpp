@@ -12,21 +12,42 @@ namespace Yttrium
 {
     namespace Concurrent
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Encapsulate all different Runnable for Pipeline
+        //
+        //
+        //______________________________________________________________________
         class Task
         {
         public:
-            Task(Runnable *)   noexcept;
-            Task(const Task &) noexcept;
-            ~Task()            noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            Task(Runnable *)   noexcept; //!< setup from user's runnable code
+            Task(const Task &) noexcept; //!< copy, shared copy
+            ~Task()            noexcept; //!< cleanup
 
+            //! create from function/functionoid (full copy)
             template <typename FUNCTION> inline
             Task(const FUNCTION &fn) : code( new Callback<FUNCTION>(fn) )       { initialize(); }
 
+            //! create from object+method
             template <typename OBJECT, typename METHOD> inline
             Task(OBJECT &o, METHOD m) : code( new Command<OBJECT,METHOD>(o,m) ) { initialize(); }
 
-            void process(const ThreadContext &);
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void process(const ThreadContext &); //!< run code on given context
 
 
         private:

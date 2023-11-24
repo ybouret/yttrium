@@ -11,17 +11,23 @@ namespace Yttrium
 {
     namespace Concurrent
     {
+        //______________________________________________________________________
+        //
+        //
         //! function or functionoid, using copy/copy constructor
+        //
+        //______________________________________________________________________
         template <typename FUNCTION>
         class Callback : public Runnable
         {
         public:
-            inline explicit Callback(const FUNCTION &fn) : Runnable(), function(fn) {}
-            inline virtual ~Callback() noexcept {}
-            virtual void run(const ThreadContext &context) { function(context); }
+            inline explicit Callback(const FUNCTION &fn) : Runnable(), function(fn) {} //!< setup
+            inline virtual ~Callback() noexcept {}                                     //!< cleanup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Callback);
+            virtual void run(const ThreadContext &context) { function(context); }
+
             FUNCTION function;
         };
     }

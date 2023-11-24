@@ -31,8 +31,7 @@ namespace Yttrium
         {
         public:
             virtual ~Pipeline() noexcept; //!< cleanup
-
-
+            
 
         protected:
             explicit Pipeline() noexcept; //!< setup
