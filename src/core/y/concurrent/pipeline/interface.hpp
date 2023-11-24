@@ -15,8 +15,8 @@ namespace Yttrium
     namespace Concurrent
     {
 
-        typedef uint32_t         JobID;
-       
+        typedef uint32_t TaskID;
+
 
 
         //______________________________________________________________________
@@ -31,20 +31,23 @@ namespace Yttrium
         {
         public:
             virtual ~Pipeline() noexcept; //!< cleanup
-            
+
+            TaskID push(const Task &task);
+
+
 
         protected:
             explicit Pipeline() noexcept; //!< setup
             void     upgrade()  noexcept; //!< jobID++, controlled
 
-            const JobID jobID;
+            const TaskID tid;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pipeline);
 
             virtual void   suspend() noexcept          = 0; //!< suspend mechanism
             virtual void   restart() noexcept          = 0; //!< restart mechanism
-            
+            virtual TaskID enqueue(const Task &, const TaskID) = 0;
         };
 
     }

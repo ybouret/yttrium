@@ -11,23 +11,21 @@ namespace Yttrium
         {
         }
 
-        Pipeline:: Pipeline() noexcept : jobID(0)
+        Pipeline:: Pipeline() noexcept : tid(1)
         {
         }
 
         void Pipeline:: upgrade() noexcept
         {
-            static const JobID j1 = 1;
-            Coerce(jobID) = Max<JobID>(j1,j1+jobID);
+            static const TaskID j1 = 1;
+            Coerce(tid) = Max<TaskID>(j1,j1+tid);
         }
 
-#if 0
-        JobID Pipeline:: push(Job *J)
+        TaskID Pipeline:: push(const Task &task)
         {
-            assert(0!=J);
             try {
                 suspend(); // no-throw
-                const JobID ans = enqueue(J,jobID);
+                const TaskID ans = enqueue(task,tid);
                 restart(); // no-throw
                 upgrade(); // no-throw
                 return ans;
@@ -39,8 +37,7 @@ namespace Yttrium
             }
 
         }
-#endif
-        
+
 
     }
 

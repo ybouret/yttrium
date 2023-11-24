@@ -49,7 +49,13 @@ namespace Yttrium
             sync.unlock();
         }
 
-        
+
+        TaskID Alone:: enqueue(const Task &task, const TaskID tid)
+        {
+            Coerce(task).process(self);
+            return tid;
+        }
+
 
     }
 
