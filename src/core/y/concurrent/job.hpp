@@ -8,7 +8,7 @@
 
 namespace Yttrium
 {
-    namespace Concurent
+    namespace Concurrent
     {
         class Job : public ArcPtr<Runnable>
         {
