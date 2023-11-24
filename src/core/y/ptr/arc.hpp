@@ -74,7 +74,7 @@ namespace Yttrium
         //______________________________________________________________________
         inline virtual ~ArcPtr() noexcept
         {
-            assert(handle);
+            assert(0!=handle);
             if(handle->liberate()) { delete handle;}
             handle=0;
         }

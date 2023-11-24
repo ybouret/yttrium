@@ -6,100 +6,36 @@
 
 using namespace Yttrium;
 
-namespace Yttrium
+namespace
 {
-    namespace Concurrent
+    class Demo
     {
+    public:
+        inline  Demo(const int args) : param(args) {}
+        inline ~Demo() noexcept {}
+        inline  Demo(const Demo &dem) noexcept : param(dem.param) {}
 
-#if 0
-        class Queue;
 
-        class Worker : public Object
+        inline void unfold(const Concurrent::ThreadContext &ctx)
         {
-        public:
-            explicit Worker(Queue &Q) :
-            Object(),
-            myCV(),
-            wire(Launch,Q,*this),
-            next(0),
-            prev(0)
             {
+                Y_LOCK(ctx.sync);
+                (std::cerr << "demo #" << param << " in " << ctx.name << std::endl).flush();
             }
-
-            Condition myCV;
-            Wire      wire;
-            Worker   *next;
-            Worker   *prev;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Worker);
-            void enroll(Queue &Q) noexcept;
-
-            static
-            void Launch(Queue &Q, Worker &w) noexcept
-            {
-                w.enroll(Q);
-            }
-        };
-
-        class Queue
-        {
-        public:
-            explicit Queue(const Topology &topo) :
-            sync(),
-            idle(),
-            done(0),
-            doneCV()
-            {
-                Y_THREAD_MSG("+Queue");
-                try
-                {
-                    for(const Topology::NodeType *node=topo.head;node;node=node->next)
-                    {
-                        Worker *w = idle.pushTail( new Worker(*this) );
-
-                        {
-                            Y_LOCK(sync);
-                            if(done<idle.size) doneCV.wait(sync);
-                        }
-                        Y_THREAD_MSG("ready ");
-
-                    }
-                }
-                catch(...)
-                {
-                    throw;
-                }
-
-            }
-
-            virtual ~Queue() noexcept
-            {
-                Y_THREAD_MSG("~Queue");
-            }
-
-            Mutex             sync;
-            CxxListOf<Worker> idle;
-            size_t            done;
-            Condition         doneCV;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Queue);
-        };
-
-        void Worker:: enroll(Queue &Q) noexcept
-        {
-            Mutex &sync = Q.sync;
-
-            sync.lock();
-            if(++Q.done>=Q.idle.size) Q.doneCV.signal();
-
-            myCV.wait(sync);
         }
-#endif
-    }
-}
 
+        inline void operator()(const Concurrent::ThreadContext &ctx)
+        {
+            unfold(ctx);
+        }
+
+
+        int param;
+
+    private:
+        Y_DISABLE_ASSIGN(Demo);
+    };
+}
 
 Y_UTEST(concurrent_queue)
 {
@@ -107,7 +43,22 @@ Y_UTEST(concurrent_queue)
     const Concurrent::Topology topology;
     std::cerr << topology << std::endl;
     
+    Demo  dem(3);
+
+    Concurrent::Task task1(dem);
+    Concurrent::Task task2(dem, & Demo::unfold);
+    Concurrent::Task task3 = task1;
+    Concurrent::Task task4 = task2;
+
+    dem.param = 7;
+
     Concurrent::Alone  alone;
+
+    task1.process( alone[1] );
+    task2.process( alone[1] );
+    task3.process( alone[1] );
+    task4.process( alone[1] );
+
     //Concurrent::Queue  queue(topology);
 
 
