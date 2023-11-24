@@ -24,7 +24,7 @@ namespace   {
         uint32_t       count;
         Vector<double> partial;
 
-        inline void run(const Concurrent::ThreadContext &ctx)
+        inline void operator()(const Concurrent::ThreadContext &ctx)
         {
             assert(partial.size()>=ctx.size);
             uint32_t offset = 1;
@@ -57,7 +57,7 @@ Y_UTEST(concurrent_loop)
 {
     Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
     Demo                       demo;
-    Concurrent::ThreadKernel         kernel(&demo, & Demo::run);
+    //Concurrent::ThreadKernel         kernel(&demo, & Demo::run);
     Concurrent::Mono           mono("mono");
     const Concurrent::Topology topo;
     Concurrent::Crew           crew(topo);
@@ -65,15 +65,14 @@ Y_UTEST(concurrent_loop)
 
     Y_THREAD_MSG("now in main...");
 
-
     demo.partial.adjust(crew.size(),0);
     uint64_t mark = WallTime::Ticks();
-    mono(kernel);
+    mono(demo);
     const double   sumMono = demo.getFrom(mono);
     const uint64_t tmxMono = WallTime::Ticks() - mark;
 
     mark = WallTime::Ticks();
-    crew(kernel);
+    crew(demo);
     const double   sumCrew = demo.getFrom(crew);
     const uint64_t tmxCrew = WallTime::Ticks() - mark;
 
@@ -82,7 +81,6 @@ Y_UTEST(concurrent_loop)
     std::cerr << "tmx: " <<  std::setw(15) << HumanReadable(tmxMono) << " / " <<  std::setw(15) << HumanReadable(tmxCrew) << std::endl;
     const double speedUp = double(tmxMono)/double(tmxCrew);
     std::cerr << "spd: " << speedUp << std::endl;
-
 }
 Y_UDONE()
 

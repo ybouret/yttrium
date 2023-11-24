@@ -61,7 +61,7 @@ namespace Yttrium
         class Crew :: Code : public Object, public Team
         {
         public:
-            typedef const Temporary<ThreadKernel *> SetKernel;
+            typedef const Temporary<Kernel *> SetKernel;
 
             //__________________________________________________________________
             //
@@ -134,7 +134,7 @@ namespace Yttrium
             //! perform kernel in parallel
             //
             //__________________________________________________________________
-            inline void cycle(ThreadKernel &kernel) noexcept
+            inline void cycle(Kernel &kernel) noexcept
             {
                 assert(0==done);
                 assert(0==kRun);
@@ -152,7 +152,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            ThreadKernel              *kRun;
+            Kernel              *kRun;
             Mutex                sync;
             const size_t         size;
             Player * const       team;
@@ -267,7 +267,7 @@ namespace Yttrium
             return code->item[indx];
         }
 
-        void Crew:: operator()(ThreadKernel &kernel) noexcept
+        void Crew:: run(Kernel &kernel) noexcept
         {
             assert(0!=code);
             code->cycle(kernel);

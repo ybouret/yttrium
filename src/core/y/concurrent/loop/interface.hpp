@@ -3,24 +3,35 @@
 #ifndef Y_Concurrent_Loop_Included
 #define Y_Concurrent_Loop_Included 1
 
-#include "y/concurrent/thread/context.hpp"
+#include "y/concurrent/loop/kernel.hpp"
 #include "y/container/readable.hpp"
-#include "y/functor.hpp"
 
 namespace Yttrium
 {
     namespace Concurrent
     {
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! a kernel to run within a Thread
-        //
-        //
-        //______________________________________________________________________
-        typedef Functor<void,TL1(const ThreadContext&)> ThreadKernel;
 
+        namespace Nucleus
+        {
+            //__________________________________________________________________
+            //
+            //
+            //! Wrapper to call any kernel-like function/object
+            //
+            //__________________________________________________________________
+            template <typename KERNEL>
+            class Crux : public Kernel
+            {
+            public:
+                inline explicit Crux(KERNEL &k) noexcept : Kernel(), kernel(k) {}         //!< setup
+                inline virtual ~Crux()          noexcept {}                               //!< cleanup
+                inline virtual void operator()(const ThreadContext &ctx) { kernel(ctx); } //!< call wrapper
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Crux);
+                KERNEL &kernel;
+            };
+        }
 
         //______________________________________________________________________
         //
@@ -33,10 +44,29 @@ namespace Yttrium
         class Loop : public Readable<const ThreadContext>
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+       
             //! execute the kernel, return when all done
-            virtual void operator()(ThreadKernel &) noexcept = 0;
+            virtual void run(Kernel &) noexcept = 0;
 
+            //! wrapper to any kernel(context) interface
+            template <typename KERNEL> inline
+            void operator()(KERNEL &kernel) {
+                Nucleus::Crux<KERNEL> k(kernel);
+                run(k);
+            }
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             virtual ~Loop() noexcept; //!< cleanup
         protected:
             explicit Loop() noexcept; //!< setup
