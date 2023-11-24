@@ -64,40 +64,6 @@ namespace Yttrium
 
         namespace
         {
-            class Task : public Object
-            {
-            public:
-                typedef CxxListOf<Task> List;
-                typedef CxxPoolOf<Task> Pool;
-
-                inline explicit Task() noexcept  :
-                next(0), prev(0), job(0), jid(0)
-                {
-                }
-
-
-                inline virtual ~Task() noexcept
-                {
-                    erase();
-                }
-
-                inline void erase() noexcept
-                {
-                    if(0!=job) delete job;
-                    job = 0;
-                    jid = 0;
-                }
-
-
-                Task  *next;
-                Task  *prev;
-
-                Job   *job;
-                JobID  jid;
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Task);
-            };
 
 
 
@@ -125,8 +91,6 @@ namespace Yttrium
             ListOf<Worker>(),
             sync(),
             meta(topology.size),
-            tasks(),
-            tpool(),
             count(0),
             fence()
             {
@@ -179,8 +143,6 @@ namespace Yttrium
             //__________________________________________________________________
             Mutex          sync;  //!< shared mutex
             const Meta     meta;  //!< store addresses
-            Task::List     tasks; //!< loaded tasks
-            Task::Pool     tpool; //!< empty  tasks
             size_t         count; //!< counter
             Condition      fence; //!< condition to use count
 

@@ -25,7 +25,7 @@ namespace Yttrium
             public:
                 inline explicit Crux(KERNEL &k) noexcept : Kernel(), kernel(k) {}         //!< setup
                 inline virtual ~Crux()          noexcept {}                               //!< cleanup
-                inline virtual void operator()(const ThreadContext &ctx) { kernel(ctx); } //!< call wrapper
+                inline virtual void operator()(const ThreadContext &ctx) { kernel(ctx); } //!< forward call
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Crux);
@@ -37,7 +37,7 @@ namespace Yttrium
         //
         //
         //
-        //! Interface to Loop a kernel in single/multiple thread
+        //! Interface to Loop a SYNCHRONOUS kernel in single/multiple thread
         //
         //
         //______________________________________________________________________

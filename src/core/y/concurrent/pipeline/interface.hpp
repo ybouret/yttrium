@@ -3,7 +3,7 @@
 #ifndef Y_Concurrent_Interface_Included
 #define Y_Concurrent_Interface_Included 1
 
-#include "y/concurrent/runnable.hpp"
+#include "y/concurrent/thread/context.hpp"
 #include "y/container/readable.hpp"
 #include "y/ptr/arc.hpp"
 
@@ -13,9 +13,8 @@ namespace Yttrium
     {
 
         typedef uint32_t         JobID;
-        typedef ArcPtr<Runnable> Job;
 
-        
+
 
         //______________________________________________________________________
         //
