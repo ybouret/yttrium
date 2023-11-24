@@ -204,6 +204,13 @@ namespace Yttrium
             void run(Worker &) noexcept; //!< entry point
 
 
+            void primaryRestart() noexcept
+            {
+                // called on a LOCKED mutex
+
+                // and UNLOCK
+                sync.unlock();
+            }
 
 
 
@@ -326,7 +333,7 @@ namespace Yttrium
         void Queue:: restart() noexcept
         {
             assert(0!=code);
-            code->sync.unlock();
+            code->primaryRestart();
         }
 
         TaskID Queue:: enqueue(const Task &task, const TaskID uuid)
