@@ -77,7 +77,7 @@ namespace Yttrium
                 inline  Job(const Task &t, const TaskID u) noexcept :
                 next(0),
                 prev(0),
-                task(t), 
+                task(t),
                 uuid(u)
                 {}
 
@@ -105,15 +105,22 @@ namespace Yttrium
                 }
 
 
-                inline virtual ~JList() noexcept 
+
+                inline virtual ~JList() noexcept
                 {
-                    while( size>0 )        Object::zrelease( Destructed( popTail() ) );
-                    while( zpool.size>0 ) Object::zrelease( zpool.query() );
+                    crush();
+                    prune();
                 }
 
 
+                inline void clear() noexcept { while(size>0)         dismiss( popTail() );                        } //!< dismiss list, keep memory in pool
+                inline void prune() noexcept { while( size>0 )       Object::zrelease( Destructed( popTail() ) ); } //!< delete list
+                inline void crush() noexcept { while( zpool.size>0 ) Object::zrelease( zpool.query() );           } //!< delete pool
+
+
+
                 inline TaskID enqueue(const Task  &task,
-                                    const TaskID uuid)
+                                      const TaskID uuid)
                 {
                     return pushTail( new (zpool.size > 0 ? zpool.query() : Object::zacquire<Job>()) Job(task,uuid) )->uuid;
                 }
@@ -198,6 +205,8 @@ namespace Yttrium
 
 
 
+
+
             //__________________________________________________________________
             //
             //
@@ -206,6 +215,7 @@ namespace Yttrium
             //__________________________________________________________________
             Mutex          sync;  //!< shared mutex
             const Meta     meta;  //!< store addresses
+            JList          jobs;  //!< list of jobs to do
             size_t         count; //!< counter
             Condition      fence; //!< condition to use count
 
@@ -215,7 +225,13 @@ namespace Yttrium
             {
                 Y_THREAD_MSG("[Queue] quit...");
 
-
+                //--------------------------------------------------------------
+                // Deleting waiting jobs
+                //--------------------------------------------------------------
+                {
+                    Y_LOCK(sync);
+                    jobs.crush();
+                }
 
                 //--------------------------------------------------------------
                 // Then release all waiting
@@ -281,7 +297,7 @@ namespace Yttrium
             std::cerr << " *** sizeof(Code)   = " << sizeof(Code)   << std::endl;
             std::cerr << " *** sizeof(Worker) = " << sizeof(Worker) << std::endl;
             std::cerr << " *** sizeof(Job)    = " << sizeof(Job)    << std::endl;
-            
+
         }
 
 
@@ -316,8 +332,8 @@ namespace Yttrium
         TaskID Queue:: enqueue(const Task &task, const TaskID uuid)
         {
             // assuming LOCKED mutex
-            JList jobs;
-            return jobs.enqueue(task,uuid);
+            assert(0!=code);
+            return code->jobs.enqueue(task,uuid);
         }
 
 
