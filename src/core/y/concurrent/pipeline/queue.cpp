@@ -297,6 +297,9 @@ namespace Yttrium
             }
         }
 
+
+
+        // threaded code
         void Queue:: Code:: run(Worker &worker) noexcept
         {
             //------------------------------------------------------------------
@@ -324,6 +327,7 @@ namespace Yttrium
             }
         }
 
+        // called from primary
         void Queue:: Code:: restart() noexcept
         {
             // called on a LOCKED mutex
