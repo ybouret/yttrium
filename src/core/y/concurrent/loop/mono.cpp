@@ -38,7 +38,7 @@ namespace Yttrium
         }
 
 
-        void Mono:: operator()(Kernel &kernel) noexcept
+        void Mono:: operator()(ThreadKernel &kernel) noexcept
         {
             try 
             {

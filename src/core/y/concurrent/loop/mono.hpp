@@ -50,7 +50,7 @@ namespace Yttrium
             virtual const char * callSign()               const noexcept; //!< CallSign
             virtual size_t       size()                   const noexcept; //!< 1
             virtual ConstType &  operator[](const size_t) const noexcept; //!< self
-            virtual void         operator()(Kernel &)           noexcept; //!< direct call
+            virtual void         operator()(ThreadKernel &)           noexcept; //!< direct call
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Mono);

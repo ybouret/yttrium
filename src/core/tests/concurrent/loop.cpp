@@ -57,7 +57,7 @@ Y_UTEST(concurrent_loop)
 {
     Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
     Demo                       demo;
-    Concurrent::Kernel         kernel(&demo, & Demo::run);
+    Concurrent::ThreadKernel         kernel(&demo, & Demo::run);
     Concurrent::Mono           mono("mono");
     const Concurrent::Topology topo;
     Concurrent::Crew           crew(topo);

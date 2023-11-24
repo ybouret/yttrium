@@ -19,7 +19,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        typedef Functor<void,TL1(const ThreadContext&)> Kernel;
+        typedef Functor<void,TL1(const ThreadContext&)> ThreadKernel;
 
 
         //______________________________________________________________________
@@ -34,7 +34,7 @@ namespace Yttrium
         {
         public:
             //! execute the kernel, return when all done
-            virtual void operator()(Kernel &) noexcept = 0;
+            virtual void operator()(ThreadKernel &) noexcept = 0;
 
 
             virtual ~Loop() noexcept; //!< cleanup
