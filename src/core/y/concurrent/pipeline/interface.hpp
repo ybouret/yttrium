@@ -5,9 +5,7 @@
 
 #include "y/concurrent/pipeline/task.hpp"
 #include "y/container/readable.hpp"
-
-#include "y/object.hpp"
-#include "y/counted.hpp"
+#include "y/type/ints.hpp"
 
 
 namespace Yttrium
@@ -15,8 +13,7 @@ namespace Yttrium
     namespace Concurrent
     {
 
-        typedef uint32_t TaskID;
-
+        typedef UnsignedInt<sizeof(void*)>::Type TaskID;
 
 
         //______________________________________________________________________

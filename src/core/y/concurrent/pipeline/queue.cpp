@@ -1,6 +1,3 @@
-
-
-
 #include "y/concurrent/pipeline/queue.hpp"
 #include "y/concurrent/condition.hpp"
 #include "y/concurrent/wire.hpp"
@@ -11,7 +8,8 @@
 #include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/sort/merge.hpp"
-#include "y/ptr/auto.hpp"
+
+#include "y/memory/out-of-reach.hpp"
 
 
 namespace Yttrium
@@ -65,6 +63,67 @@ namespace Yttrium
         namespace
         {
 
+            class Job
+            {
+            public:
+                typedef ListOf<Job> List;
+                typedef PoolOf<Job> Pool;
+
+                Job         *next;
+                Job         *prev;
+                const Task   task;
+                const TaskID uuid;
+
+                inline  Job(const Task &t, const TaskID u) noexcept :
+                next(0),
+                prev(0),
+                task(t), 
+                uuid(u)
+                {}
+
+                inline ~Job() noexcept {}
+
+
+
+                static inline Job *Zombify(Job *active) noexcept
+                {
+                    assert(0!=active); assert(0==active->next); assert(0==active->prev);
+                    return static_cast<Job *>( Memory::OutOfReach::Naught(active) );
+                }
+
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Job);
+            };
+
+            class JList : public Job::List
+            {
+            public:
+                inline explicit JList() noexcept : Job::List(), zpool()
+                {
+
+                }
+
+
+                inline virtual ~JList() noexcept 
+                {
+                    while( size>0 )        Object::zrelease( Destructed( popTail() ) );
+                    while( zpool.size>0 ) Object::zrelease( zpool.query() );
+                }
+
+
+
+                inline void dismiss(Job *active) noexcept
+                {
+                    zpool.store( Job::Zombify(active) );
+                }
+
+                Job::Pool zpool;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(JList);
+            };
+
 
 
         }
@@ -115,7 +174,6 @@ namespace Yttrium
                     quit();
                     throw;
                 }
-
                 Y_THREAD_MSG("[Queue] synchronized #" << size);
 
             }
@@ -131,7 +189,7 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void run(Worker &) noexcept;
+            void run(Worker &) noexcept; //!< entry point
 
 
 
@@ -215,8 +273,10 @@ namespace Yttrium
         Pipeline(),
         code( new Code(topology) )
         {
-            std::cerr << " *** sizeof(Code)   = " << sizeof(Code) << std::endl;
+            std::cerr << " *** sizeof(Code)   = " << sizeof(Code)   << std::endl;
             std::cerr << " *** sizeof(Worker) = " << sizeof(Worker) << std::endl;
+            std::cerr << " *** sizeof(Job)    = " << sizeof(Job)    << std::endl;
+            
         }
 
 
@@ -248,6 +308,12 @@ namespace Yttrium
             code->sync.unlock();
         }
 
+        TaskID Queue:: enqueue(const Task &task, const TaskID uuid)
+        {
+            // assuming LOCKED mutex
+
+
+        }
 
 
 

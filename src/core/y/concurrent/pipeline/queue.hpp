@@ -56,6 +56,8 @@ namespace Yttrium
 
             virtual void   suspend() noexcept;
             virtual void   restart() noexcept;
+            virtual TaskID enqueue(const Task &task, const TaskID uuid);
+            
         };
     }
 
