@@ -54,11 +54,12 @@ Y_UTEST(concurrent_queue)
 
     Concurrent::Alone  alone;
 
-    task1.process( alone[1] );
-    task2.process( alone[1] );
-    task3.process( alone[1] );
-    task4.process( alone[1] );
-
+    Concurrent::TaskID tid = 0;
+    tid = alone.push(task1); std::cerr << "tid = " << tid << std::endl;
+    tid = alone.push(task2); std::cerr << "tid = " << tid << std::endl;
+    tid = alone.push(task3); std::cerr << "tid = " << tid << std::endl;
+    tid = alone.push(task4); std::cerr << "tid = " << tid << std::endl;
+    
     //Concurrent::Queue  queue(topology);
 
 
