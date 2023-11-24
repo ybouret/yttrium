@@ -104,7 +104,6 @@ Y_UTEST(concurrent_topo)
     if(topology.size<=0) throw Exception("empty topology");
 
 
-    std::cerr << "Master Thread   @" << Concurrent::Thread::CurrentHandle() << std::endl;
 
     const size_t      nt = topology.size;
     Barrier           barrier;
@@ -126,6 +125,10 @@ Y_UTEST(concurrent_topo)
         barrier.meg = ASCII::Convert::To<size_t>(argv[1],"mega cycles");
     }
 
+    {
+        Y_GIANT_LOCK();
+        std::cerr << "Master Thread   @" << Concurrent::Thread::CurrentHandle() << std::endl;
+    }
     barrier.cond.broadcast();
 
 

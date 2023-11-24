@@ -16,7 +16,107 @@ namespace Yttrium
 {
     namespace Concurrent
     {
+
         namespace
+        {
+
+            //__________________________________________________________________
+            //
+            //
+            //! a Job stores a Task and its ID
+            //
+            //__________________________________________________________________
+            class Job
+            {
+            public:
+                //______________________________________________________________
+                //
+                // Definitions
+                //______________________________________________________________
+                typedef ListOf<Job> List; //!< alias
+                typedef PoolOf<Job> Pool; //!< alias
+
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                inline  Job(const Task &t, const TaskID u) noexcept : next(0), prev(0), task(t), uuid(u) {} //!< setup
+                inline ~Job() noexcept {} //!< cleanup
+
+                //______________________________________________________________
+                //
+                // Methods
+                //______________________________________________________________
+
+                //! helper to cleanup completed job
+                static inline Job *Zombified(Job *active) noexcept
+                {
+                    assert(0!=active); assert(0==active->next); assert(0==active->prev);
+                    return static_cast<Job *>( Memory::OutOfReach::Naught(active) );
+                }
+
+                //______________________________________________________________
+                //
+                // Members
+                //______________________________________________________________
+                Job         *next; //!< for list
+                Job         *prev; //!< for list
+                const Task   task; //!< shared task
+                const TaskID uuid; //!< task UUID
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Job);
+            };
+
+            //__________________________________________________________________
+            //
+            //
+            //! self-container list of jobs
+            //
+            //__________________________________________________________________
+            class JList : public Job::List
+            {
+            public:
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                inline explicit JList() noexcept : Job::List(), zpool() {} //!< setup empty
+                inline virtual ~JList() noexcept { crush(); prune(); }     //!< cleanup
+
+                //______________________________________________________________
+                //
+                // <ethods
+                //______________________________________________________________
+                inline void clear() noexcept { while(size>0)         dismiss( popTail() );                        } //!< dismiss list, keep memory in pool
+                inline void prune() noexcept { while( size>0 )       Object::zrelease( Destructed( popTail() ) ); } //!< delete list
+                inline void crush() noexcept { while( zpool.size>0 ) Object::zrelease( zpool.query() );           } //!< delete pool
+
+
+                //! enqueue a new task
+                inline TaskID enqueue(const Task  &task,
+                                      const TaskID uuid)
+                {
+                    return pushTail( new (zpool.size > 0 ? zpool.query() : Object::zacquire<Job>()) Job(task,uuid) )->uuid;
+                }
+
+                //! cleanup and store job in zpool
+                inline void dismiss(Job *active) noexcept { zpool.store( Job::Zombified(active) ); }
+
+                //______________________________________________________________
+                //
+                // Members
+                //______________________________________________________________
+                Job::Pool zpool; //!< pool of zombi jobs
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(JList);
+            };
+
+        }
+
+        namespace
+        
         {
             //__________________________________________________________________
             //
@@ -29,6 +129,8 @@ namespace Yttrium
             class Worker : public Object, public ThreadContext
             {
             public:
+                typedef ListOf<Worker> List;
+
 
                 //! setup context and launch code->run(*this) in thread
                 explicit Worker(Queue::Code &code,
@@ -39,6 +141,7 @@ namespace Yttrium
                 ThreadContext(sz,rk,mx),
                 next(0),
                 prev(0),
+                duty(0),
                 cond(),
                 wire(Launch,code,*this)
                 {
@@ -50,6 +153,7 @@ namespace Yttrium
 
                 Worker    *next; //!< for list
                 Worker    *prev; //!< for list
+                Job       *duty; //!< job to do
                 Condition  cond; //!< self waiting condition
                 Wire       wire; //!< thread
 
@@ -60,87 +164,16 @@ namespace Yttrium
         }
 
 
-        namespace
-        {
 
-            class Job
-            {
-            public:
-                typedef ListOf<Job> List;
-                typedef PoolOf<Job> Pool;
-
-                Job         *next;
-                Job         *prev;
-                const Task   task;
-                const TaskID uuid;
-
-                inline  Job(const Task &t, const TaskID u) noexcept :
-                next(0),
-                prev(0),
-                task(t),
-                uuid(u)
-                {}
-
-                inline ~Job() noexcept {}
-
-
-
-                static inline Job *Zombify(Job *active) noexcept
-                {
-                    assert(0!=active); assert(0==active->next); assert(0==active->prev);
-                    return static_cast<Job *>( Memory::OutOfReach::Naught(active) );
-                }
-
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Job);
-            };
-
-            class JList : public Job::List
-            {
-            public:
-                inline explicit JList() noexcept : Job::List(), zpool()
-                {
-
-                }
-
-
-
-                inline virtual ~JList() noexcept
-                {
-                    crush();
-                    prune();
-                }
-
-
-                inline void clear() noexcept { while(size>0)         dismiss( popTail() );                        } //!< dismiss list, keep memory in pool
-                inline void prune() noexcept { while( size>0 )       Object::zrelease( Destructed( popTail() ) ); } //!< delete list
-                inline void crush() noexcept { while( zpool.size>0 ) Object::zrelease( zpool.query() );           } //!< delete pool
-
-
-
-                inline TaskID enqueue(const Task  &task,
-                                      const TaskID uuid)
-                {
-                    return pushTail( new (zpool.size > 0 ? zpool.query() : Object::zacquire<Job>()) Job(task,uuid) )->uuid;
-                }
-
-                inline void dismiss(Job *active) noexcept
-                {
-                    zpool.store( Job::Zombify(active) );
-                }
-
-                Job::Pool zpool;
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(JList);
-            };
-
-
-
-        }
-
-        class Queue :: Code : public Object, public ListOf<Worker>
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Queue is a Waiting list of Workers
+        //
+        //
+        //______________________________________________________________________
+        class Queue :: Code : public Object, public Worker::List
         {
         public:
             //__________________________________________________________________
@@ -159,9 +192,11 @@ namespace Yttrium
             //__________________________________________________________________
             inline explicit Code(const Topology &topology) :
             Object(),
-            ListOf<Worker>(),
+            Worker::List(),
             sync(),
             meta(topology.size),
+            busy(),
+            jobs(),
             count(0),
             fence()
             {
@@ -202,16 +237,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             void run(Worker &) noexcept; //!< entry point
-
-
-            void primaryRestart() noexcept
-            {
-                // called on a LOCKED mutex
-
-                // and UNLOCK
-                sync.unlock();
-            }
-
+            void restart()     noexcept; //!< restart after enqueueing some tasks
 
 
             //__________________________________________________________________
@@ -222,6 +248,7 @@ namespace Yttrium
             //__________________________________________________________________
             Mutex          sync;  //!< shared mutex
             const Meta     meta;  //!< store addresses
+            Worker::List   busy;  //!< working
             JList          jobs;  //!< list of jobs to do
             size_t         count; //!< counter
             Condition      fence; //!< condition to use count
@@ -238,7 +265,13 @@ namespace Yttrium
                 {
                     Y_LOCK(sync);
                     jobs.crush();
+
                 }
+
+                //--------------------------------------------------------------
+                // waiting for busy workers to complete...
+                //--------------------------------------------------------------
+
 
                 //--------------------------------------------------------------
                 // Then release all waiting
@@ -276,9 +309,29 @@ namespace Yttrium
             // wait on a LOCKED mutex
             //------------------------------------------------------------------
             worker.cond.wait(sync);
+
+            //------------------------------------------------------------------
+            // waking on a LOCKED mutex
+            //------------------------------------------------------------------
             Y_THREAD_MSG("[Queue] waking up " << worker.name);
+            if(0!=worker.duty)
+            {
+            }
+            else
+            {
+                Y_THREAD_MSG("[Queue] returning from " << worker.name);
+                sync.unlock();
+            }
+        }
+
+        void Queue:: Code:: restart() noexcept
+        {
+            // called on a LOCKED mutex
+
+            // and UNLOCK
             sync.unlock();
         }
+
 
     }
 
@@ -333,7 +386,7 @@ namespace Yttrium
         void Queue:: restart() noexcept
         {
             assert(0!=code);
-            code->primaryRestart();
+            code->restart();
         }
 
         TaskID Queue:: enqueue(const Task &task, const TaskID uuid)
