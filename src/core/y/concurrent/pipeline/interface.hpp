@@ -3,10 +3,7 @@
 #ifndef Y_Concurrent_Interface_Included
 #define Y_Concurrent_Interface_Included 1
 
-#include "y/concurrent/thread/context.hpp"
-#include "y/concurrent/pipeline/callback.hpp"
-#include "y/concurrent/pipeline/command.hpp"
-
+#include "y/concurrent/pipeline/task.hpp"
 #include "y/container/readable.hpp"
 
 #include "y/object.hpp"
@@ -19,60 +16,7 @@ namespace Yttrium
     {
 
         typedef uint32_t         JobID;
-
-     
-
-     
-
        
-        class Task
-        {
-        public:
-            Task(Runnable *userCode) noexcept : code( userCode ) {
-                assert(0!=code); // do error
-                code->withhold();
-            }
-
-            Task(const Task &task) noexcept : code( task.code )
-            {
-                assert(0!=code);
-                code->withhold();
-            }
-
-
-            template <typename FUNCTION> inline
-            Task(const FUNCTION &fn) : code( new Callback<FUNCTION>(fn) )
-            {
-                assert(0!=code);
-                code->withhold();
-            }
-
-            template <typename OBJECT, typename METHOD> inline
-            Task(OBJECT &o, METHOD m) : code( new Command<OBJECT,METHOD>(o,m) )
-            {
-                assert(0!=code);
-                code->withhold();
-            }
-
-
-            ~Task() noexcept {
-                assert(0!=code);
-                if(code->liberate())
-                    delete code;
-                code=0;
-            }
-
-            void process(const ThreadContext &ctx)
-            {
-                assert(0!=code);
-                code->run(ctx);
-            }
-
-        private:
-            Y_DISABLE_ASSIGN(Task);
-            Runnable *code;
-        };
-
 
 
         //______________________________________________________________________
