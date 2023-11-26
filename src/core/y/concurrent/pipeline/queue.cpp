@@ -147,6 +147,12 @@ namespace Yttrium
                 {
                 }
 
+
+                inline void resume() noexcept
+                {
+                    cond.broadcast();
+                }
+
                 //! wait for thread to return
                 inline virtual ~Worker() noexcept {}
 
@@ -279,9 +285,9 @@ namespace Yttrium
                 MergeSort::ByIncreasingAddress(*this);
                 while(size>0)
                 {
-                    Worker *w = popTail();
-                    w->cond.broadcast();
-                    delete w;
+                    Worker *w = popTail(); // remove from queue
+                    w->resume();           // resume worker
+                    delete w;              // join and delete
                 }
             }
 
@@ -298,8 +304,13 @@ namespace Yttrium
         }
 
 
-
+        //----------------------------------------------------------------------
+        //
+        //
         // threaded code
+        //
+        //
+        //----------------------------------------------------------------------
         void Queue:: Code:: run(Worker &worker) noexcept
         {
             //------------------------------------------------------------------
@@ -331,6 +342,16 @@ namespace Yttrium
         void Queue:: Code:: restart() noexcept
         {
             // called on a LOCKED mutex
+
+            // dispatching enqueue jobs
+
+            while(jobs.size>0 && size>0)
+            {
+                assert(0==tail->duty);
+                Worker *w = busy.pushHead(popTail());
+                w->duty   = jobs.popHead();
+                w->resume();
+            }
 
             // and UNLOCK
             sync.unlock();

@@ -67,9 +67,8 @@ namespace Yttrium
             friend bool           operator==(const ThreadHandle &, const ThreadHandle &) noexcept; //!< equality
             friend bool           operator!=(const ThreadHandle &, const ThreadHandle &) noexcept; //!< difference
             const char *          c_str()                                          const noexcept; //!< legacy access
-
-            virtual size_t measure() const noexcept;
-
+            size_t                sharedWith(const ThreadHandle &)                 const noexcept;
+            virtual size_t        measure() const noexcept;
 
         private:
             size_t buflen;

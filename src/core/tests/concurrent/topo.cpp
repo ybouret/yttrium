@@ -74,7 +74,11 @@ namespace
     class Worker : public Object, public Concurrent::Wire
     {
     public:
-        explicit Worker(Barrier &barrier) : Object(), Concurrent::Wire(MyProc,barrier), next(0), prev(0)
+        explicit Worker(Barrier &barrier) :
+        Object(),
+        Concurrent::Wire(MyProc,barrier),
+        uuid( handle() ),
+        next(0), prev(0)
         {
             Y_GIANT_LOCK();
             std::cerr << "[Worker]        @" << handle() << std::endl;
@@ -84,6 +88,7 @@ namespace
         {
         }
 
+        const Concurrent::ThreadHandle uuid;
         Worker  *next;
         Worker  *prev;
 
@@ -124,10 +129,10 @@ Y_UTEST(concurrent_topo)
     {
         barrier.meg = ASCII::Convert::To<size_t>(argv[1],"mega cycles");
     }
-
+    const Concurrent::ThreadHandle primary = Concurrent::Thread::CurrentHandle();
     {
         Y_GIANT_LOCK();
-        std::cerr << "Master Thread   @" << Concurrent::Thread::CurrentHandle() << std::endl;
+        std::cerr << "Master Thread   @" << primary << std::endl;
     }
     barrier.cond.broadcast();
 
