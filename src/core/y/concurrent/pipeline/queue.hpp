@@ -54,9 +54,9 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Queue);
             Code *code;
 
-            virtual void   suspend() noexcept;
-            virtual void   restart() noexcept;
-            virtual TaskID enqueue(const Task &task, const TaskID uuid);
+            virtual void     suspend() noexcept;
+            virtual void     restart() noexcept;
+            virtual Task::ID enqueue(const Task &task, const Task::ID uuid);
             
         };
     }

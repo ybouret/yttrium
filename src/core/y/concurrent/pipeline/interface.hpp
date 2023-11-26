@@ -5,7 +5,6 @@
 
 #include "y/concurrent/pipeline/task.hpp"
 #include "y/container/readable.hpp"
-#include "y/type/ints.hpp"
 
 
 namespace Yttrium
@@ -13,7 +12,6 @@ namespace Yttrium
     namespace Concurrent
     {
 
-        typedef UnsignedInt<sizeof(void*)>::Type TaskID;
 
 
         //______________________________________________________________________
@@ -29,7 +27,7 @@ namespace Yttrium
         public:
             virtual ~Pipeline() noexcept; //!< cleanup
 
-            TaskID push(const Task &task);
+            Task::ID push(const Task &task);
 
 
 
@@ -37,14 +35,14 @@ namespace Yttrium
             explicit Pipeline() noexcept; //!< setup
             void     upgrade()  noexcept; //!< jobID++, controlled
 
-            const TaskID tid;
+            const Task::ID tid;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pipeline);
 
-            virtual void   suspend() noexcept          = 0; //!< suspend mechanism
-            virtual void   restart() noexcept          = 0; //!< restart mechanism
-            virtual TaskID enqueue(const Task &, const TaskID) = 0;
+            virtual void     suspend() noexcept          = 0; //!< suspend mechanism
+            virtual void     restart() noexcept          = 0; //!< restart mechanism
+            virtual Task::ID enqueue(const Task &, const Task::ID) = 0;
         };
 
     }

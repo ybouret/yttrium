@@ -6,6 +6,7 @@
 
 #include "y/concurrent/pipeline/command.hpp"
 #include "y/concurrent/pipeline/callback.hpp"
+#include "y/type/ints.hpp"
 
 
 namespace Yttrium
@@ -23,6 +24,15 @@ namespace Yttrium
         class Task
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef UnsignedInt<sizeof(void*)>::Type ID;
+
+
             //__________________________________________________________________
             //
             //

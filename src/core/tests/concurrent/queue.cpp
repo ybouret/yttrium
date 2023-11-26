@@ -54,7 +54,7 @@ Y_UTEST(concurrent_queue)
 
     Concurrent::Alone  alone;
 
-    Concurrent::TaskID tid = 0;
+    Concurrent::Task::ID tid = 0;
     tid = alone.push(task1); std::cerr << "tid = " << tid << std::endl;
     tid = alone.push(task2); std::cerr << "tid = " << tid << std::endl;
     tid = alone.push(task3); std::cerr << "tid = " << tid << std::endl;

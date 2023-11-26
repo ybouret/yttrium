@@ -54,9 +54,9 @@ namespace Yttrium
             FakeLock      sync;
             ThreadContext self;
 
-            virtual void   suspend() noexcept;
-            virtual void   restart() noexcept;
-            virtual TaskID enqueue(const Task &, const TaskID);
+            virtual void     suspend() noexcept;
+            virtual void     restart() noexcept;
+            virtual Task::ID enqueue(const Task &, const Task::ID);
 
         };
     }

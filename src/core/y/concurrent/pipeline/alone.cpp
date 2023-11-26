@@ -50,7 +50,7 @@ namespace Yttrium
         }
 
 
-        TaskID Alone:: enqueue(const Task &task, const TaskID tid)
+        Task::ID Alone:: enqueue(const Task &task, const Task::ID tid)
         {
             Coerce(task).process(self);
             return tid;

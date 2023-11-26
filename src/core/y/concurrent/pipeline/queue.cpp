@@ -40,7 +40,7 @@ namespace Yttrium
                 //
                 // C++
                 //______________________________________________________________
-                inline  Job(const Task &t, const TaskID u) noexcept : next(0), prev(0), task(t), uuid(u) {} //!< setup
+                inline  Job(const Task &t, const Task::ID u) noexcept : next(0), prev(0), task(t), uuid(u) {} //!< setup
                 inline ~Job() noexcept {} //!< cleanup
 
                 //______________________________________________________________
@@ -59,10 +59,10 @@ namespace Yttrium
                 //
                 // Members
                 //______________________________________________________________
-                Job         *next; //!< for list
-                Job         *prev; //!< for list
-                const Task   task; //!< shared task
-                const TaskID uuid; //!< task UUID
+                Job           *next; //!< for list
+                Job           *prev; //!< for list
+                const Task     task; //!< shared task
+                const Task::ID uuid; //!< task UUID
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Job);
@@ -94,8 +94,8 @@ namespace Yttrium
 
 
                 //! enqueue a new task
-                inline TaskID enqueue(const Task  &task,
-                                      const TaskID uuid)
+                inline Task::ID enqueue(const Task    &task,
+                                        const Task::ID uuid)
                 {
                     return pushTail( new (zpool.size > 0 ? zpool.query() : Object::zacquire<Job>()) Job(task,uuid) )->uuid;
                 }
@@ -393,7 +393,7 @@ namespace Yttrium
             code->restart();
         }
 
-        TaskID Queue:: enqueue(const Task &task, const TaskID uuid)
+        Task::ID Queue:: enqueue(const Task &task, const Task::ID uuid)
         {
             // assuming LOCKED mutex
             assert(0!=code);
