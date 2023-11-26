@@ -291,12 +291,11 @@ namespace Yttrium
                 Y_LOCK(sync);
                 Y_THREAD_MSG("[Queue] crushing #jobs=" << jobs.size);
                 jobs.crush();
+                assert(0==jobs.size);
 
-                //--------------------------------------------------------------
-                // waiting for busy workers to complete...
-                //--------------------------------------------------------------
-                if(busy.size>0) fence.wait(sync);
             }
+
+            flush();
             assert(0==busy.size);
 
 
@@ -367,10 +366,11 @@ namespace Yttrium
 
                 sync.lock();
                 //--------------------------------------------------------------
-                // done job and LOCKED
+                // LOCKED : dismiss job
                 //--------------------------------------------------------------
                 Y_THREAD_MSG("[Queue]  " << worker.name << ": done  job#" << worker.duty->uuid);
                 jobs.dismiss(worker.duty);
+
                 //--------------------------------------------------------------
                 // check what's next
                 //--------------------------------------------------------------
@@ -383,7 +383,8 @@ namespace Yttrium
                 {
                     worker.duty = 0;
                     pushTail(busy.pop(&worker));
-                    fence.signal(); // signal main thread
+                    if(busy.size<=0)
+                        fence.signal(); // signal main thread
                     goto CYCLE;
                 }
 

@@ -3,6 +3,7 @@
 #include "y/concurrent/thread.hpp"
 #include "y/utest/run.hpp"
 #include "y/string/env.hpp"
+#include "y/system/wtime.hpp"
 
 using namespace Yttrium;
 
@@ -22,6 +23,8 @@ namespace
                 Y_LOCK(ctx.sync);
                 (std::cerr << "demo #" << param << " in " << ctx.name << std::endl).flush();
             }
+            WallTime tmx;
+            tmx.wait(0.1);
         }
 
         inline void operator()(const Concurrent::ThreadContext &ctx)
