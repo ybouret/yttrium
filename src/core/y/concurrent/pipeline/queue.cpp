@@ -147,11 +147,8 @@ namespace Yttrium
                 {
                 }
 
-
-                inline void resume() noexcept
-                {
-                    cond.broadcast();
-                }
+                //! resume from waiting state
+                inline void resume() noexcept { cond.broadcast(); }
 
                 //! wait for thread to return
                 inline virtual ~Worker() noexcept {}
@@ -231,10 +228,8 @@ namespace Yttrium
 
             }
 
-
-            inline virtual ~Code() noexcept {
-                quit();
-            }
+            //! cleanup
+            inline virtual ~Code() noexcept { quit(); }
 
             //__________________________________________________________________
             //
@@ -261,35 +256,9 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
-            inline void quit() noexcept
-            {
-                Y_THREAD_MSG("[Queue] quit...");
-
-                //--------------------------------------------------------------
-                // Deleting waiting jobs
-                //--------------------------------------------------------------
-                {
-                    Y_LOCK(sync);
-                    jobs.crush();
-
-                }
-
-                //--------------------------------------------------------------
-                // waiting for busy workers to complete...
-                //--------------------------------------------------------------
+            void quit() noexcept;
 
 
-                //--------------------------------------------------------------
-                // Then release all waiting
-                //--------------------------------------------------------------
-                MergeSort::ByIncreasingAddress(*this);
-                while(size>0)
-                {
-                    Worker *w = popTail(); // remove from queue
-                    w->resume();           // resume worker
-                    delete w;              // join and delete
-                }
-            }
 
 
 
@@ -303,6 +272,39 @@ namespace Yttrium
             }
         }
 
+
+        inline void Queue::Code:: quit() noexcept
+        {
+            Y_THREAD_MSG("[Queue] quit...");
+
+            //------------------------------------------------------------------
+            // Deleting waiting jobs
+            //------------------------------------------------------------------
+            {
+                Y_LOCK(sync);
+                jobs.crush();
+
+            }
+
+            //------------------------------------------------------------------
+            // waiting for busy workers to complete...
+            //------------------------------------------------------------------
+            while(busy.size>0)
+            {
+            }
+
+
+            //--------------------------------------------------------------
+            // Then release all waiting
+            //--------------------------------------------------------------
+            MergeSort::ByIncreasingAddress(*this);
+            while(size>0)
+            {
+                Worker *w = popTail(); // remove from queue
+                w->resume();           // resume worker
+                delete w;              // join and delete
+            }
+        }
 
         //----------------------------------------------------------------------
         //
@@ -327,9 +329,10 @@ namespace Yttrium
             //------------------------------------------------------------------
             // waking on a LOCKED mutex
             //------------------------------------------------------------------
-            Y_THREAD_MSG("[Queue] waking up " << worker.name);
             if(0!=worker.duty)
             {
+                Y_THREAD_MSG("[Queue] waikng up " << worker.name << " to job#" << worker.duty->uuid);
+                assert(busy.owns(&worker));
             }
             else
             {
@@ -343,13 +346,13 @@ namespace Yttrium
         {
             // called on a LOCKED mutex
 
-            // dispatching enqueue jobs
-
+            // dispatching enqueued jobs
             while(jobs.size>0 && size>0)
             {
                 assert(0==tail->duty);
                 Worker *w = busy.pushHead(popTail());
                 w->duty   = jobs.popHead();
+                Y_THREAD_MSG("assign job#" << w->duty->uuid << " @" << w->name);
                 w->resume();
             }
 
