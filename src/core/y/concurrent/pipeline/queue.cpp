@@ -240,6 +240,12 @@ namespace Yttrium
             void run(Worker &) noexcept; //!< entry point
             void restart()     noexcept; //!< restart after enqueueing some tasks
 
+            inline void flush() noexcept
+            {
+                Y_LOCK(sync);
+                if(busy.size>0) fence.wait(sync);
+            }
+
 
             //__________________________________________________________________
             //
@@ -283,6 +289,7 @@ namespace Yttrium
                 // Deleting waiting jobs
                 //--------------------------------------------------------------
                 Y_LOCK(sync);
+                Y_THREAD_MSG("[Queue] crushing #jobs=" << jobs.size);
                 jobs.crush();
 
                 //--------------------------------------------------------------
@@ -339,6 +346,8 @@ namespace Yttrium
             //------------------------------------------------------------------
             if(0!=worker.duty)
             {
+            WORK:
+                assert(0!=worker.duty);
                 Y_THREAD_MSG("[Queue]  " << worker.name << ": start job#" << worker.duty->uuid);
                 assert(busy.owns(&worker));
 
@@ -355,17 +364,28 @@ namespace Yttrium
                 {
 
                 }
-                //--------------------------------------------------------------
-                // done job
-                //--------------------------------------------------------------
+
                 sync.lock();
+                //--------------------------------------------------------------
+                // done job and LOCKED
+                //--------------------------------------------------------------
                 Y_THREAD_MSG("[Queue]  " << worker.name << ": done  job#" << worker.duty->uuid);
-                // check what's next
                 jobs.dismiss(worker.duty);
-                worker.duty = 0;
-                pushTail(busy.pop(&worker));
-                fence.signal();
-                goto CYCLE;
+                //--------------------------------------------------------------
+                // check what's next
+                //--------------------------------------------------------------
+                if(jobs.size>0)
+                {
+                    worker.duty = jobs.popHead();
+                    goto WORK;
+                }
+                else
+                {
+                    worker.duty = 0;
+                    pushTail(busy.pop(&worker));
+                    fence.signal(); // signal main thread
+                    goto CYCLE;
+                }
 
             }
             else
@@ -458,6 +478,12 @@ namespace Yttrium
             return code->jobs.enqueue(task,uuid);
         }
 
+
+        void Queue:: flush() noexcept
+        {
+            assert(0!=code);
+            code->flush();
+        }
 
 
     }

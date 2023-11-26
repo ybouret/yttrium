@@ -27,7 +27,8 @@ namespace Yttrium
         public:
             virtual ~Pipeline() noexcept; //!< cleanup
 
-            Task::ID push(const Task &task);
+            Task::ID     push(const Task &task);
+            virtual void flush() noexcept = 0;
 
 
 

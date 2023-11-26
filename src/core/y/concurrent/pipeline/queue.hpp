@@ -37,7 +37,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             explicit Queue(const Topology &); //!< setup from topology
-            virtual ~Queue() noexcept;        //!< cleanup
+            virtual ~Queue() noexcept;        //!< cleanup, crushing unprocessed task(s)
 
             //__________________________________________________________________
             //
@@ -48,6 +48,7 @@ namespace Yttrium
             virtual const char * callSign()               const noexcept; //!< CallSign
             virtual size_t       size()                   const noexcept; //!< 1
             virtual ConstType &  operator[](const size_t) const noexcept; //!< self
+            virtual void         flush()                        noexcept; //!< wait for jobs to complete.
 
             
         private:

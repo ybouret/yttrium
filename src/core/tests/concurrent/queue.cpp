@@ -61,7 +61,12 @@ Y_UTEST(concurrent_queue)
     tid = alone.push(task4); std::cerr << "tid = " << tid << std::endl;
     
     Concurrent::Queue  queue(topology);
-    tid = queue.push(task1); 
+    for(size_t i=0;i<18;++i)
+    {
+        tid = queue.push(task1);
+    }
+
+    queue.flush();
 
 
 }

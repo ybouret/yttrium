@@ -56,6 +56,10 @@ namespace Yttrium
             return tid;
         }
 
+        void Alone:: flush() noexcept
+        {
+            
+        }
 
     }
 

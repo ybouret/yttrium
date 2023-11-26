@@ -48,7 +48,8 @@ namespace Yttrium
             virtual const char * callSign()               const noexcept; //!< CallSign
             virtual size_t       size()                   const noexcept; //!< 1
             virtual ConstType &  operator[](const size_t) const noexcept; //!< self
-
+            virtual void         flush()                        noexcept; //!< do nothing...
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alone);
             FakeLock      sync;
