@@ -61,7 +61,7 @@ namespace Yttrium
                 //______________________________________________________________
                 Job           *next; //!< for list
                 Job           *prev; //!< for list
-                const Task     task; //!< shared task
+                Task           task; //!< shared task
                 const Task::ID uuid; //!< task UUID
 
             private:
@@ -277,21 +277,22 @@ namespace Yttrium
         {
             Y_THREAD_MSG("[Queue] quit...");
 
-            //------------------------------------------------------------------
-            // Deleting waiting jobs
-            //------------------------------------------------------------------
+
             {
+                //--------------------------------------------------------------
+                // Deleting waiting jobs
+                //--------------------------------------------------------------
                 Y_LOCK(sync);
                 jobs.crush();
 
+                //--------------------------------------------------------------
+                // waiting for busy workers to complete...
+                //--------------------------------------------------------------
+                if(busy.size>0) fence.wait(sync);
             }
+            assert(0==busy.size);
 
-            //------------------------------------------------------------------
-            // waiting for busy workers to complete...
-            //------------------------------------------------------------------
-            while(busy.size>0)
-            {
-            }
+
 
 
             //--------------------------------------------------------------
@@ -316,23 +317,56 @@ namespace Yttrium
         void Queue:: Code:: run(Worker &worker) noexcept
         {
             //------------------------------------------------------------------
+            //
             // First Synchronization
+            //
             //------------------------------------------------------------------
             sync.lock();
             if(++count>=size) fence.signal();
 
             //------------------------------------------------------------------
+            //
             // wait on a LOCKED mutex
+            //
             //------------------------------------------------------------------
+        CYCLE:
             worker.cond.wait(sync);
 
             //------------------------------------------------------------------
+            //
             // waking on a LOCKED mutex
+            //
             //------------------------------------------------------------------
             if(0!=worker.duty)
             {
-                Y_THREAD_MSG("[Queue] waikng up " << worker.name << " to job#" << worker.duty->uuid);
+                Y_THREAD_MSG("[Queue]  " << worker.name << ": start job#" << worker.duty->uuid);
                 assert(busy.owns(&worker));
+
+                //--------------------------------------------------------------
+                // perform UNLOCKED task
+                //--------------------------------------------------------------
+                sync.unlock();
+                try
+                {
+                    Task &task = worker.duty->task;
+                    task.process(worker);
+                }
+                catch(...)
+                {
+
+                }
+                //--------------------------------------------------------------
+                // done job
+                //--------------------------------------------------------------
+                sync.lock();
+                Y_THREAD_MSG("[Queue]  " << worker.name << ": done  job#" << worker.duty->uuid);
+                // check what's next
+                jobs.dismiss(worker.duty);
+                worker.duty = 0;
+                pushTail(busy.pop(&worker));
+                fence.signal();
+                goto CYCLE;
+
             }
             else
             {
