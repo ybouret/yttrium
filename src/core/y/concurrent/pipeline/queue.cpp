@@ -289,8 +289,8 @@ namespace Yttrium
                 // Deleting waiting jobs
                 //--------------------------------------------------------------
                 Y_LOCK(sync);
-                Y_THREAD_MSG("[Queue] crushing #jobs=" << jobs.size);
-                jobs.crush();
+                Y_THREAD_MSG("[Queue] ---- clear #jobs=" << jobs.size);
+                jobs.clear();
                 assert(0==jobs.size);
 
             }
@@ -407,7 +407,7 @@ namespace Yttrium
                 assert(0==tail->duty);
                 Worker *w = busy.pushHead(popTail());
                 w->duty   = jobs.popHead();
-                Y_THREAD_MSG("assign job#" << w->duty->uuid << " @" << w->name);
+                Y_THREAD_MSG("[Queue] assign job#" << w->duty->uuid << " @" << w->name);
                 w->resume();
             }
 

@@ -49,7 +49,7 @@ namespace Yttrium
             virtual size_t       size()                   const noexcept; //!< 1
             virtual ConstType &  operator[](const size_t) const noexcept; //!< self
             virtual void         flush()                        noexcept; //!< do nothing...
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alone);
             FakeLock      sync;
@@ -58,7 +58,6 @@ namespace Yttrium
             virtual void     suspend() noexcept;
             virtual void     restart() noexcept;
             virtual Task::ID enqueue(const Task &, const Task::ID);
-
         };
     }
 

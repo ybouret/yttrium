@@ -2,6 +2,7 @@
 #include "y/concurrent/pipeline/task.hpp"
 #include "y/system/error.hpp"
 #include <cerrno>
+#include <iostream>
 
 namespace Yttrium
 {

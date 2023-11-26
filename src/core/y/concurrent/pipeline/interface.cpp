@@ -23,6 +23,7 @@ namespace Yttrium
 
         Task::ID Pipeline:: push(const Task &task)
         {
+            assert(tid>0);
             try {
                 suspend(); // no-throw
                 const Task::ID ans = enqueue(task,tid);
@@ -36,6 +37,13 @@ namespace Yttrium
                 throw;
             }
 
+        }
+
+        void Pipeline:: reset() noexcept
+        {
+            suspend();
+            Coerce(tid) = 1;
+            restart();
         }
 
 

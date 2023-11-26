@@ -40,7 +40,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             Task(Runnable *)   noexcept; //!< setup from user's runnable code
-            Task(const Task &) noexcept; //!< copy, shared copy
+            Task(const Task &) noexcept; //!< shared copy
             ~Task()            noexcept; //!< cleanup
 
             //! create from function/functionoid (full copy)
@@ -59,7 +59,7 @@ namespace Yttrium
             //__________________________________________________________________
             void process(const ThreadContext &); //!< run code on given context
 
-
+            
         private:
             Y_DISABLE_ASSIGN(Task);
             void initialize() noexcept;

@@ -4,6 +4,7 @@
 #include "y/utest/run.hpp"
 #include "y/string/env.hpp"
 #include "y/system/wtime.hpp"
+#include "y/sequence/vector.hpp"
 
 using namespace Yttrium;
 
@@ -12,16 +13,24 @@ namespace
     class Demo
     {
     public:
-        inline  Demo(const int args) : param(args) {}
+        inline  Demo(const int args) : param(args)
+        {
+            std::cerr << "[+Demo] @" << param << std::endl;
+        }
+
         inline ~Demo() noexcept {}
-        inline  Demo(const Demo &dem) noexcept : param(dem.param) {}
+        inline  Demo(const Demo &dem) noexcept :
+        param(dem.param)
+        {
+            std::cerr << "[#Demo] @" << param << std::endl;
+        }
 
 
         inline void unfold(const Concurrent::ThreadContext &ctx)
         {
             {
                 Y_LOCK(ctx.sync);
-                (std::cerr << "demo #" << param << " in " << ctx.name << std::endl).flush();
+                (std::cerr << "[*Demo] @" << param << " in " << ctx.name << std::endl).flush();
             }
             WallTime tmx;
             tmx.wait(0.1);
@@ -57,18 +66,35 @@ Y_UTEST(concurrent_queue)
 
     Concurrent::Alone  alone;
 
-    Concurrent::Task::ID tid = 0;
-    tid = alone.push(task1); std::cerr << "tid = " << tid << std::endl;
-    tid = alone.push(task2); std::cerr << "tid = " << tid << std::endl;
-    tid = alone.push(task3); std::cerr << "tid = " << tid << std::endl;
-    tid = alone.push(task4); std::cerr << "tid = " << tid << std::endl;
-    
+    {
+        Concurrent::Task::ID tid = 0;
+        tid = alone.push(task1); std::cerr << "tid = " << tid << std::endl;
+        tid = alone.push(task2); std::cerr << "tid = " << tid << std::endl;
+        tid = alone.push(task3); std::cerr << "tid = " << tid << std::endl;
+        tid = alone.push(task4); std::cerr << "tid = " << tid << std::endl;
+    }
+
     Concurrent::Queue  queue(topology);
     for(size_t i=0;i<18;++i)
     {
-        tid = queue.push(task1);
+        (void) queue.push(task1);
     }
 
+    queue.flush();
+
+    queue.reset();
+    Y_THREAD_MSG("Ready to restart");
+    Vector<Concurrent::Task>     tsk;
+    Vector<Concurrent::Task::ID> tid;
+    for(int i=0;i<10;++i)
+    {
+        const Demo             todo(i);
+        const Concurrent::Task task(todo);
+        tsk << task;
+    }
+
+    queue.push(tid,tsk);
+    
     queue.flush();
 
 
