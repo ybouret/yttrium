@@ -68,16 +68,16 @@ namespace Yttrium
             friend bool           operator==(const ThreadHandle &, const ThreadHandle &) noexcept; //!< equality
             friend bool           operator!=(const ThreadHandle &, const ThreadHandle &) noexcept; //!< difference
             const char *          c_str()                                          const noexcept; //!< legacy access
-            virtual size_t        measure() const noexcept;
-            void                  skip(const size_t prefix) noexcept;
-
+            virtual size_t        measure()                                        const noexcept; //!< buflen=strlen(buffer)
+            void                  skip(const size_t prefix)                              noexcept; //!< skip first prefix chars
+            
 
         private:
             size_t buflen;
             char   buffer[BufferSize];
-            void clear() noexcept;
-            void write(const void *, const size_t) noexcept;
-            virtual const void * ro_addr() const noexcept;
+            void clear()                           noexcept; //!< erase
+            void write(const void *, const size_t) noexcept; //!< format
+            virtual const void * ro_addr()   const noexcept; //!< buffer
         };
 
     }
