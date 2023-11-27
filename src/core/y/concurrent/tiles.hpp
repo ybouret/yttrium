@@ -25,7 +25,7 @@ namespace Yttrium
         //
         //
         //
-        //! Horizontal Segment
+        //! Horizontal Segment, basic brick of a Tile
         //
         //
         //______________________________________________________________________
@@ -120,8 +120,21 @@ namespace Yttrium
             indx(rank+1)
             {}
 
+            inline explicit Tile(const Tile &tile) :
+            segments(tile.segments),
+            next(0),
+            prev(0),
+            items(tile.items),
+            rank(tile.rank),
+            indx(tile.indx)
+            {
+            }
+
+
             //! cleanup
             inline virtual ~Tile() noexcept {}
+
+
 
             //__________________________________________________________________
             //
@@ -129,6 +142,11 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
+            inline Tile * clone() const
+            {
+                return new Tile(*this);
+            }
 
             //! add a new segment
             inline void add(const V2D<T> p, const T w) {
@@ -138,7 +156,7 @@ namespace Yttrium
             }
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Tile);
+            Y_DISABLE_ASSIGN(Tile);
             Segments     segments;
             typename TileBase::ConstInterface & surrogate() const noexcept { return segments; }
 
@@ -187,7 +205,9 @@ namespace Yttrium
                 //
                 // Methods
                 //______________________________________________________________
-                inline V2D<T> operator*() const noexcept { return pos; } //!< access
+
+                //! access current position
+                inline V2D<T> operator*() const noexcept { return pos; }
 
                 //! prefix increment operator.
                 inline Iterator & operator++() noexcept { move(); return *this; }
@@ -239,7 +259,11 @@ namespace Yttrium
             };
 
             //! beginning of Tile
-            inline Iterator begin() const noexcept { return Iterator( &segments[1], segments.size() ); }
+            inline Iterator begin() const noexcept {
+                assert(segments.size()>0);
+                return Iterator( &segments[1], segments.size() );
+
+            }
 
             //! dummy invalid iterator
             inline Iterator end()   const noexcept { return Iterator(0,0); }
@@ -399,6 +423,7 @@ namespace Yttrium
                 return os;
             }
 
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tiles);

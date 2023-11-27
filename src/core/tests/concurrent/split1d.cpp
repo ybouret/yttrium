@@ -20,7 +20,7 @@ Y_UTEST(concurrent_split1d)
 
 
 
-    for(size_t size=1;size<=3;++size)
+    for(size_t size=1;size<=10;++size)
     {
         std::cerr << "size=" << size << std::endl;
         for(size_t rank=0;rank<size;++rank)

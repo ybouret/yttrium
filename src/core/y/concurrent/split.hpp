@@ -20,6 +20,14 @@ namespace Yttrium
         struct Split
         {
             //! from total length and offset, return parameters for size.rank
+            /**
+             \param size number of worker
+             \param rank in [0:size-1]
+             \param length input: total length. output: worker length
+             \param offset input: global offset. output: local offset
+
+             a zero length means nothing to locally do.
+             */
             template <typename T, typename U> static inline
             void With(const T size, const T rank, U &length, U &offset) noexcept
             {

@@ -4,7 +4,7 @@
 #include "y/text/plural.hpp"
 
 #include "y/utest/run.hpp"
-
+#include "y/ptr/auto.hpp"
 
 using namespace Yttrium;
 
@@ -30,6 +30,7 @@ Y_UTEST(concurrent_split2d)
         for(const Concurrent::Tile<int> *t = tiles->head; t; t=t->next )
         {
 
+            AutoPtr< Concurrent::Tile<int> > ptr = t->clone();
             for( Concurrent::Tile<int>::Iterator it = t->begin(); it != t->end(); ++it)
             {
                 std::cerr << "/" << *it;
@@ -51,7 +52,11 @@ Y_UTEST(concurrent_split2d)
     Y_SIZEOF(Concurrent::Tile<int32_t>);
     Y_SIZEOF(Concurrent::Tile<int64_t>);
 
-    
+    Y_SIZEOF(Concurrent::Tiles<int8_t>);
+    Y_SIZEOF(Concurrent::Tiles<int16_t>);
+    Y_SIZEOF(Concurrent::Tiles<int32_t>);
+    Y_SIZEOF(Concurrent::Tiles<int64_t>);
+
 
 }
 Y_UDONE()

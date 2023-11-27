@@ -81,6 +81,27 @@ namespace Yttrium
         {
         }
 
+        //! duplicate
+        inline CxxSeries(const CxxSeries &other) :
+        WadType( other.size() ),
+        Writable<T>(),
+        Sequence<T>(),
+        Core::CxxSeries(),
+        cdata( static_cast<MutableType *>(this->workspace)),
+        entry( cdata-1 ),
+        count( 0 ),
+        total( SetCapa::From(other.size(),*this) )
+        {
+            try
+            {
+                assert( capacity() >= other.size() );
+                const size_t n = other.size();
+                for(size_t i=1;i<=n;++i)
+                   grow_( other[i] );
+            }
+            catch(...) { free_(); throw; }
+        }
+
         inline virtual ~CxxSeries() noexcept { free_(); }
 
         //______________________________________________________________________
@@ -122,10 +143,7 @@ namespace Yttrium
         //! push args at tail
         inline virtual void pushTail(ParamType args)
         {
-            assert(count<total);
-            assert(0!=entry);
-            new ( & entry[count+1] ) MutableType(args);
-            ++Coerce(count);
+            grow_(args);
         }
 
         //! push args at head
@@ -162,9 +180,15 @@ namespace Yttrium
         const size_t        total; //!< initial capacity
         
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(CxxSeries);
+        Y_DISABLE_ASSIGN(CxxSeries);
         inline void trim_() noexcept { assert(count>0); MemOps::Naught( &entry[ Coerce(count)-- ]); }
         inline void free_() noexcept { while(count>0) trim_(); }
+        inline void grow_(ConstType &args) {
+            assert(count<total);
+            assert(0!=entry);
+            new ( & entry[count+1] ) MutableType(args);
+            ++Coerce(count);
+        }
 
         virtual ConstType *getBaseForward() const noexcept { return cdata; }
         virtual ConstType *getLastForward() const noexcept { return cdata+count; }

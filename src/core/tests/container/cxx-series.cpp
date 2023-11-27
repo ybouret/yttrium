@@ -35,6 +35,10 @@ Y_UTEST(container_cxx_series)
 
             Iterating::DisplayAll::Of(arr);
 
+            CxxSeries<apn,Memory::Pooled> dup(arr);
+            Iterating::DisplayAll::Of(dup);
+
+
             while(arr.size())
             {
                 if( ran.choice() )
