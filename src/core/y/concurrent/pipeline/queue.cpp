@@ -328,7 +328,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             sync.lock();
-            if(++count>=size) fence.signal();
+            if(++count>=size) fence.signal(); // signal main thread we are done
 
             //------------------------------------------------------------------
             //
@@ -384,7 +384,7 @@ namespace Yttrium
                     worker.duty = 0;
                     pushTail(busy.pop(&worker));
                     if(busy.size<=0)
-                        fence.signal(); // signal main thread
+                        fence.signal(); // signal main thread no more busy worker
                     goto CYCLE;
                 }
 
