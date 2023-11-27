@@ -85,8 +85,7 @@ namespace Yttrium
             {
                 const size_t goal = topology.size;
                 assert(capacity>=goal);
-                Y_THREAD_MSG("[Threads] -------- topology = " << topology << " #" << goal);
-                Y_THREAD_MSG("[Threads] sizeof(Player)    = " << sizeof(Player) );
+                Y_THREAD_MSG("[Crew] -------- topology     =" << topology << " #" << goal);
 
                 try
                 {
@@ -116,7 +115,7 @@ namespace Yttrium
                         node = node->next;
                     }
 
-                    Y_THREAD_MSG("[Threads] -------- first ready #" << size);
+                    Y_THREAD_MSG("[Crew] -------- synchronized #" << size);
                     done = 0;
                 }
                 catch(...)
@@ -169,22 +168,22 @@ namespace Yttrium
             inline void quit() noexcept
             {
                 // assuming everyone is waiting
-                Y_THREAD_MSG("[Threads] -------- quit #" << size);
+                Y_THREAD_MSG("[Crew] -------- quit #" << size);
                 waitCV.broadcast();
                 while(size>0)
                     Memory::OutOfReach::Naught( &team[--Coerce(size)] );
-                Y_THREAD_MSG("[Threads] -------- done");
+                Y_THREAD_MSG("[Crew] -------- done");
             }
 
             //! parallel code assigned to a given player
             inline void call(const Player &player) noexcept
             {
-                const char *id = player.name;
+                const char * const id = player.name;
                 //--------------------------------------------------------------
                 // LOCK mutex
                 //--------------------------------------------------------------
                 sync.lock();
-                Y_THREAD_MSG("[Threads] " << id << " startup");
+                Y_THREAD_MSG("[Crew@" << id << "] startup");
 
                 //--------------------------------------------------------------
                 // update #done and signal Crew this player is OK
@@ -202,7 +201,7 @@ namespace Yttrium
                 if(0==kRun)
                 {
                     //----------------------------------------------------------
-                    Y_THREAD_MSG("[Threads] " << id << " returning...");
+                    Y_THREAD_MSG("[Crew@" << id << "] returning...");
                     //----------------------------------------------------------
                     sync.unlock();
                     return;
@@ -211,7 +210,7 @@ namespace Yttrium
                 {
                     //----------------------------------------------------------
                     // running unlocked
-                    Y_THREAD_MSG("[Threads] " << id << " running...");
+                    Y_THREAD_MSG("[Crew@" << id << "] running...");
                     //----------------------------------------------------------
                     sync.unlock();
                     try        { (*kRun)(player); }
