@@ -84,7 +84,20 @@ namespace Yttrium
             return 0 != memcmp(lhs.buffer, rhs.buffer, ThreadHandle::BufferSize);
         }
 
-        
+        void ThreadHandle:: skip(const size_t prefix) noexcept
+        {
+            assert(prefix<=buflen);
+
+            {
+                const size_t       newlen = buflen-prefix;
+                char *       const target = buffer;
+                const char * const source = buffer + prefix;
+                memmove(target,source,newlen);
+                buflen = newlen;
+            }
+            memset(buffer+buflen,0,BufferSize-buflen);
+            assert(strlen(buffer)==buflen);
+        }
 
     }
 

@@ -132,7 +132,7 @@ Y_UTEST(concurrent_topo)
     {
         barrier.meg = ASCII::Convert::To<size_t>(argv[1],"mega cycles");
     }
-    const Concurrent::ThreadHandle primary = Concurrent::Thread::CurrentHandle();
+    Concurrent::ThreadHandle primary = Concurrent::Thread::CurrentHandle();
     {
         Y_GIANT_LOCK();
         std::cerr << "Master Thread   @" << primary << std::endl;
@@ -152,6 +152,13 @@ Y_UTEST(concurrent_topo)
         thz.loadPrimary();
         const size_t homology2 = thz.homology();
         std::cerr << "Homology2 = " << homology2 << std::endl;
+
+        primary.skip(homology2);
+        std::cerr << "New Primary: " << primary << std::endl;
+
+        thz.unloadPrimary();
+        assert(thz.homology() == homology1);
+        thz.compress(homology1);
 
     }
 

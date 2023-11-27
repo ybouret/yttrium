@@ -26,6 +26,28 @@ namespace Yttrium
             (*this) << primary;
         }
 
+        void  ThreadHandleZip:: compress(const size_t prefix) const noexcept
+        {
+            for(const NodeType *node=head;node;node=node->next)
+            {
+                const ThreadHandle &h = **node;
+                Coerce(h).skip(prefix);
+            }
+        }
+
+        void ThreadHandleZip:: unloadPrimary() noexcept
+        {
+            const ThreadHandle * const lhs = &primary;
+            for(NodeType *node=head;node;node=node->next)
+            {
+                const ThreadHandle * const rhs = & (**node);
+                if(lhs == rhs)
+                {
+                    cutNode(node);
+                    return;
+                }
+            }
+        }
 
     }
 

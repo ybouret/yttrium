@@ -12,18 +12,52 @@ namespace Yttrium
     namespace Concurrent
     {
 
+        //______________________________________________________________________
+        //
+        //! alias to store references to thread handles
+        //______________________________________________________________________
         typedef Small::SoloLightList<const ThreadHandle> ThreadHandleList;
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Reducing thread handle complexity by removing homology
+        //
+        //
+        //______________________________________________________________________
         class ThreadHandleZip : public ThreadHandleList
         {
         public:
-            explicit ThreadHandleZip() noexcept;
-            virtual ~ThreadHandleZip() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit ThreadHandleZip() noexcept; //!< setup empty
+            virtual ~ThreadHandleZip() noexcept; //!< cleanup
 
-            size_t homology() const noexcept;
-            void   loadPrimary();
 
-            const ThreadHandle primary;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            size_t homology() const noexcept;                    //!< current homology
+            void   loadPrimary();                                //!< append primary thread handle
+            void   unloadPrimary() noexcept;                     //!< ensure no primary in list
+            void   compress(const size_t prefix) const noexcept; //!< enforce skip on all handles
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const ThreadHandle primary; //!< primary thread handle if necessary
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ThreadHandleZip);
 
