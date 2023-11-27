@@ -226,7 +226,7 @@ namespace Yttrium
                     throw;
                 }
                 Y_THREAD_MSG("[Queue] synchronized #" << size);
-
+                tryZip();
             }
 
             //! cleanup
@@ -265,9 +265,19 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Code);
             void quit() noexcept;
 
-            void tryZip() noexcept
+            inline void tryZip() noexcept
             {
-
+                try
+                {
+                    ThreadHandleZip thz( size );
+                    for(const Worker *w=head;w;w=w->next)
+                        thz << w->wire.handle;
+                    thz.compress( thz.homology() );
+                }
+                catch(...)
+                {
+                    Y_THREAD_MSG("[Queue] Failure to ThreadHandleZip");
+                }
             }
 
         };

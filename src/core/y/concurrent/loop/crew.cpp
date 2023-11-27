@@ -4,6 +4,7 @@
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/concurrent/condition.hpp"
 #include "y/type/temporary.hpp"
+#include "y/concurrent/thread/handle-zip.hpp"
 
 namespace Yttrium
 {
@@ -123,6 +124,7 @@ namespace Yttrium
                     quit();
                     throw;
                 }
+                tryZip();
             }
 
             virtual ~Code() noexcept { quit(); }
@@ -179,11 +181,13 @@ namespace Yttrium
             inline void call(const Player &player) noexcept
             {
                 const char * const id = player.name;
+                const char * const h  = player.handle.c_str();
+
                 //--------------------------------------------------------------
                 // LOCK mutex
                 //--------------------------------------------------------------
                 sync.lock();
-                Y_THREAD_MSG("[Crew@" << id << "] startup");
+                Y_THREAD_MSG("[Crew:" << h << "@" << id << "] startup");
 
                 //--------------------------------------------------------------
                 // update #done and signal Crew this player is OK
@@ -196,12 +200,11 @@ namespace Yttrium
                 //--------------------------------------------------------------
             CYCLE:
                 waitCV.wait(sync);
-                //Y_THREAD_MSG("[Threads] " << id << " woke up");
 
                 if(0==kRun)
                 {
                     //----------------------------------------------------------
-                    Y_THREAD_MSG("[Crew@" << id << "] returning...");
+                    Y_THREAD_MSG("[Crew:" << h << "@" << id << "] returning...");
                     //----------------------------------------------------------
                     sync.unlock();
                     return;
@@ -210,7 +213,7 @@ namespace Yttrium
                 {
                     //----------------------------------------------------------
                     // running unlocked
-                    Y_THREAD_MSG("[Crew@" << id << "] running...");
+                    Y_THREAD_MSG("[Crew:" << h << "@" << id << "] running...");
                     //----------------------------------------------------------
                     sync.unlock();
                     try        { (*kRun)(player); }
@@ -218,6 +221,23 @@ namespace Yttrium
                     sync.lock();
                     if(++done>=size) doneCV.signal();
                     goto CYCLE;
+                }
+            }
+
+            inline void tryZip() noexcept
+            {
+                try
+                {
+                    ThreadHandleZip thz(size);
+                    for(size_t i=0;i<size;++i)
+                    {
+                        thz << team[i].handle;
+                    }
+                    thz.compress( thz.homology() );
+                }
+                catch(...)
+                {
+                    Y_THREAD_MSG("[Crew] ThreadHandleZip failure");
                 }
             }
 
