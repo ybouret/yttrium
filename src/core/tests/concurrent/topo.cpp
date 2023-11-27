@@ -2,6 +2,7 @@
 
 #include "y/concurrent/condition.hpp"
 #include "y/concurrent/wire.hpp"
+#include "y/concurrent/thread/handle-zip.hpp"
 
 #include "y/concurrent/topology.hpp"
 #include "y/system/hw.hpp"
@@ -136,6 +137,25 @@ Y_UTEST(concurrent_topo)
         Y_GIANT_LOCK();
         std::cerr << "Master Thread   @" << primary << std::endl;
     }
+
+    {
+        Concurrent::ThreadHandleZip thz;
+        for(const Worker *w=crew.head;w;w=w->next)
+        {
+            thz << w->handle;
+        }
+
+        std::cerr << "#Handles = " << thz.size << std::endl;
+        const size_t homology1 = thz.homology();
+        std::cerr << "Homology1 = " << homology1 << std::endl;
+
+        thz.loadPrimary();
+        const size_t homology2 = thz.homology();
+        std::cerr << "Homology2 = " << homology2 << std::endl;
+
+    }
+
+
     barrier.cond.broadcast();
 
     {

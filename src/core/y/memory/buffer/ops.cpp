@@ -6,7 +6,7 @@ namespace Yttrium
 
     namespace Memory
     {
-
+#if 0
         static inline size_t homology(const BufferOps::BufferNode *lhs,
                                       const BufferOps::BufferNode *rhs) noexcept
         {
@@ -14,6 +14,7 @@ namespace Yttrium
             assert(0!=rhs);
             return (**lhs).maxSameContentThan(**rhs);
         }
+
 
         size_t BufferOps:: Homology(const BufferList &blist) noexcept
         {
@@ -38,5 +39,13 @@ namespace Yttrium
 
             return len;
         }
+#endif
+        
+        size_t BufferOps:: PairHomology(const ReadOnlyBuffer &lhs,
+                                        const ReadOnlyBuffer &rhs) noexcept
+        {
+            return lhs.maxSameContentThan(rhs);
+        }
+
     }
 }
