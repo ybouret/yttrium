@@ -75,22 +75,7 @@ namespace Yttrium
             return 0 != memcmp(lhs.buffer, rhs.buffer, ThreadHandle::BufferSize);
         }
 
-        size_t ThreadHandle:: sharedWith(const ThreadHandle &other) const noexcept
-        {
-            if( this == &other )
-                return 0;
-            else
-            {
-                size_t len = 0;
-                const char *lhs = buffer;
-                const char *rhs = other.buffer;
-                for(size_t i=Min(buflen,other.buflen);i>0;--i,++lhs,++rhs,++len)
-                {
-                    if( *lhs != *rhs ) break;
-                }
-                return len;
-            }
-        }
+        
 
     }
 

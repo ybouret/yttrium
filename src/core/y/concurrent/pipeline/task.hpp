@@ -30,7 +30,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef UnsignedInt<sizeof(void*)>::Type ID;
+            typedef UnsignedInt<sizeof(void*)>::Type ID; //!< identifier
 
 
             //__________________________________________________________________

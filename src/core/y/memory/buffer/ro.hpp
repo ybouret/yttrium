@@ -35,15 +35,27 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // Methods
+            // Interface
             //
             //__________________________________________________________________
             virtual const void *ro_addr() const noexcept = 0; //!< readable memory
             virtual size_t      measure() const noexcept = 0; //!< number of readable bytes
 
-            //! compare byte-wise contents
-            bool HasSameContentThan(const ReadOnlyBuffer &) const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            bool   hasSameContentThan(const ReadOnlyBuffer &) const noexcept; //!< compare byte-wise contents
+            size_t maxSameContentThan(const ReadOnlyBuffer &) const noexcept; //!< maximum byte-wise same content
 
+            //__________________________________________________________________
+            //
+            //
+            // Ouput helpers
+            //
+            //__________________________________________________________________
             std::ostream & displayHexadecimal(std::ostream &) const; //!< helper
             OutputStream & displayHexadecimal(OutputStream &) const; //!< helper
 

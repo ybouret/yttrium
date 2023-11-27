@@ -1,6 +1,8 @@
 #include "y/memory/buffer/ro.hpp"
 #include "y/text/hexadecimal.hpp"
 #include "y/stream/output.hpp"
+#include "y/type/utils.hpp"
+
 #include <iostream>
 #include <cstring>
 
@@ -17,7 +19,7 @@ namespace Yttrium
         }
 
 
-        bool ReadOnlyBuffer:: HasSameContentThan(const ReadOnlyBuffer &other) const noexcept
+        bool ReadOnlyBuffer:: hasSameContentThan(const ReadOnlyBuffer &other) const noexcept
         {
             const size_t n = measure();
             if(n!=other.measure()) return false;
@@ -44,6 +46,19 @@ namespace Yttrium
                 os << Hexadecimal::Text[p[i]];
             }
             return os;
+        }
+
+
+        size_t ReadOnlyBuffer:: maxSameContentThan(const ReadOnlyBuffer &other) const noexcept
+        {
+            const uint8_t *lhs = static_cast<const uint8_t *>( ro_addr() );
+            const uint8_t *rhs = static_cast<const uint8_t *>( other.ro_addr() );
+            size_t         ans = 0;
+            for(size_t i=Min( measure(), other.measure());i>0;--i,++lhs,++rhs,++ans )
+            {
+                if( *lhs != *rhs ) break;
+            }
+            return ans;
         }
 
     }

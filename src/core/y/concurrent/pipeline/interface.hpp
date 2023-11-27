@@ -11,9 +11,7 @@ namespace Yttrium
 {
     namespace Concurrent
     {
-
-
-
+        
         //______________________________________________________________________
         //
         //
@@ -25,12 +23,19 @@ namespace Yttrium
         class Pipeline : public Readable<const ThreadContext>
         {
         public:
-            virtual ~Pipeline() noexcept; //!< cleanup
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            virtual void flush() noexcept = 0; //!< wait for all jobs to complete
+            void         reset() noexcept;     //!< reset tid
 
-            virtual void flush() noexcept = 0;
-            void         reset() noexcept; //!< reset tid
-
+            //! push ONE task, retrieve its ID
             Task::ID     push(const Task &task);
+
+            //! push a range of tasks, append their IDs
             template < typename SEQUENCE, typename ITERATOR>
             inline void push(SEQUENCE &tids,
                              ITERATOR  curr,
@@ -54,21 +59,28 @@ namespace Yttrium
                 }
             }
 
+            //! push a full sequence of tasks, append their IDs
             template <typename SEQUENCE, typename TASKS>
             inline void push(SEQUENCE &tids, TASKS tasks)
             {
                 push(tids,tasks.begin(),tasks.size());
             }
 
-
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            virtual ~Pipeline() noexcept; //!< cleanup
         protected:
             explicit Pipeline() noexcept; //!< setup
 
-            const Task::ID tid;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pipeline);
-            void             upgrade() noexcept; //!< jobID++, controlled
+            const Task::ID   tid;                                       //!< auto-incremented counter
+            void             upgrade() noexcept;                        //!< tid++, controlled
             virtual void     suspend() noexcept                    = 0; //!< suspend mechanism
             virtual void     restart() noexcept                    = 0; //!< restart mechanism
             virtual Task::ID enqueue(const Task &, const Task::ID) = 0; //!< enqueue a single task in a LOCKED pipeline
