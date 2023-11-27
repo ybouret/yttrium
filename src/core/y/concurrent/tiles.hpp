@@ -112,6 +112,8 @@ namespace Yttrium
 
             //! setup with capacity and rank
             inline explicit Tile(const size_t maxSegments, const size_t r) :
+            Object(),
+            TileBase(),
             segments(maxSegments),
             next(0),
             prev(0),
@@ -121,13 +123,16 @@ namespace Yttrium
             {}
 
             inline explicit Tile(const Tile &tile) :
-            segments(tile.segments),
+            Object(),
+            TileBase(),
+            segments(CopyOf,tile.segments),
             next(0),
             prev(0),
             items(tile.items),
             rank(tile.rank),
             indx(tile.indx)
             {
+                assert( countItems() == items );
             }
 
 
@@ -143,10 +148,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            inline Tile * clone() const
-            {
-                return new Tile(*this);
-            }
+            inline Tile * clone() const { return new Tile(*this); }
 
             //! add a new segment
             inline void add(const V2D<T> p, const T w) {
@@ -158,7 +160,15 @@ namespace Yttrium
         private:
             Y_DISABLE_ASSIGN(Tile);
             Segments     segments;
-            typename TileBase::ConstInterface & surrogate() const noexcept { return segments; }
+            inline typename TileBase::ConstInterface & surrogate() const noexcept { return segments; }
+
+            inline T countItems() const noexcept
+            {
+                T res = 0;
+                for(size_t i=segments.size();i>0;--i)
+                    res += segments[i].width;
+                return res;
+            }
 
         public:
             Tile *       next;  //!< for list
@@ -170,7 +180,7 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            //! Compound iterator over a Tile
+            //! Compound Iterator over a Tile
             //
             //__________________________________________________________________
             class Iterator
@@ -267,8 +277,6 @@ namespace Yttrium
 
             //! dummy invalid iterator
             inline Iterator end()   const noexcept { return Iterator(0,0); }
-
-
 
         };
 

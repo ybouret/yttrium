@@ -10,6 +10,7 @@
 #include "y/container/recyclable.hpp"
 #include "y/container/iterator/writable-contiguous.hpp"
 #include "y/memory/allocator/pooled.hpp"
+#include "y/type/copy.hpp"
 
 namespace Yttrium
 {
@@ -82,7 +83,7 @@ namespace Yttrium
         }
 
         //! duplicate
-        inline CxxSeries(const CxxSeries &other) :
+        inline CxxSeries(const CopyOf_ &, const CxxSeries &other) :
         WadType( other.size() ),
         Writable<T>(),
         Sequence<T>(),
@@ -141,8 +142,7 @@ namespace Yttrium
         }
 
         //! push args at tail
-        inline virtual void pushTail(ParamType args)
-        {
+        inline virtual void pushTail(ParamType args) {
             grow_(args);
         }
 
@@ -180,10 +180,12 @@ namespace Yttrium
         const size_t        total; //!< initial capacity
         
     private:
-        Y_DISABLE_ASSIGN(CxxSeries);
+        Y_DISABLE_COPY_AND_ASSIGN(CxxSeries);
         inline void trim_() noexcept { assert(count>0); MemOps::Naught( &entry[ Coerce(count)-- ]); }
         inline void free_() noexcept { while(count>0) trim_(); }
-        inline void grow_(ConstType &args) {
+
+        template <typename U>
+        inline void grow_(const U &args) {
             assert(count<total);
             assert(0!=entry);
             new ( & entry[count+1] ) MutableType(args);

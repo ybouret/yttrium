@@ -35,7 +35,7 @@ Y_UTEST(container_cxx_series)
 
             Iterating::DisplayAll::Of(arr);
 
-            CxxSeries<apn,Memory::Pooled> dup(arr);
+            CxxSeries<apn,Memory::Pooled> dup(CopyOf,arr);
             Iterating::DisplayAll::Of(dup);
 
 
