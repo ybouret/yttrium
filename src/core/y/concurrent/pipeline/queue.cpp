@@ -1,6 +1,7 @@
 #include "y/concurrent/pipeline/queue.hpp"
 #include "y/concurrent/condition.hpp"
 #include "y/concurrent/wire.hpp"
+#include "y/concurrent/thread/handle-zip.hpp"
 
 #include "y/data/list/cxx.hpp"
 #include "y/data/pool/cxx.hpp"
@@ -264,9 +265,10 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Code);
             void quit() noexcept;
 
+            void tryZip() noexcept
+            {
 
-
-
+            }
 
         };
 

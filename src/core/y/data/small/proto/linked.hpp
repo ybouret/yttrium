@@ -60,6 +60,9 @@ namespace Yttrium
             //! send items to proxy
             inline virtual void free() noexcept {  free_(); }
 
+            //! reserve memory from proxy
+            inline void reserve(size_t n) { proxy->reserve(n); }
+
             //! generic new node production
             template <typename ARGS> inline
             NODE *generate(ARGS &args) { return proxy->produce(args); }

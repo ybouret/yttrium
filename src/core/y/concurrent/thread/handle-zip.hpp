@@ -35,8 +35,9 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit ThreadHandleZip() noexcept; //!< setup empty
-            virtual ~ThreadHandleZip() noexcept; //!< cleanup
+            explicit ThreadHandleZip() noexcept;    //!< setup empty
+            explicit ThreadHandleZip(const size_t); //!< setup with capacity
+            virtual ~ThreadHandleZip() noexcept;    //!< cleanup
 
 
             //__________________________________________________________________

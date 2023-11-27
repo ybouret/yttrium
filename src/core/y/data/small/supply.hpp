@@ -98,13 +98,13 @@ namespace Yttrium
             template <typename NODE> inline
             void destroy(NODE *node) noexcept { putFlat( Destructed(node) ); }
 
-            //! helper to destroy of full live list
+            //! helper to destroy of full LIVE list
             template <typename NODE> inline
             void destroy(ListOf<NODE> &linked) noexcept {
                 while(linked.size>0) destroy( linked.popTail() );
             }
 
-            //! helper to destroy a full live pool
+            //! helper to destroy a full LIVE pool
             template <typename NODE> inline
             void destroy(PoolOf<NODE> &linked) noexcept {
                 while(linked.size>0) destroy( linked.query() );

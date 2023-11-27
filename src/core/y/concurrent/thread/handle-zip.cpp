@@ -16,6 +16,14 @@ namespace Yttrium
             
         }
 
+        ThreadHandleZip:: ThreadHandleZip(const size_t n) :
+        ThreadHandleList(),
+        primary( Thread::CurrentHandle() )
+        {
+            reserve(n);
+        }
+
+
         size_t ThreadHandleZip:: homology() const noexcept
         {
             return Memory::BufferOps::Homology(*this);

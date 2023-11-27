@@ -54,7 +54,7 @@ namespace Yttrium
             //! cleanup
             inline virtual ~ProtoList() noexcept {}
 
-            //! copy constructor, using proxy->replicat
+            //! copy constructor, using proxy->replica(...)
             inline ProtoList(const ProtoList &other) : ProtoType(other.proxy)
             {
                 try
