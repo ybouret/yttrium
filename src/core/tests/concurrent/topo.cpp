@@ -2,6 +2,8 @@
 
 #include "y/concurrent/condition.hpp"
 #include "y/concurrent/wire.hpp"
+#include "y/concurrent/thread/named.hpp"
+
 #include "y/concurrent/topology.hpp"
 #include "y/system/hw.hpp"
 #include "y/utest/run.hpp"
@@ -54,7 +56,10 @@ namespace
                 std::cerr << "Thread with barrier @" << barrier.count << std::endl;
             }
             barrier.cond.wait(barrier.mutex);// waiting on a locked mutex
-            std::cerr << "Computing in thread @" << Concurrent::Thread::CurrentHandle() << std::endl;
+            {
+                Y_GIANT_LOCK();
+                std::cerr << "Computing in thread @" << Concurrent::Thread::CurrentHandle() << std::endl;
+            }
         }
 
         // UNLOCKED computation
@@ -65,7 +70,7 @@ namespace
         }
 
         {
-            Y_LOCK(barrier.mutex);
+            Y_GIANT_LOCK();
             std::cerr << "Done Computing..." << std::endl;
             barrier.sum += sum;
         }
@@ -81,7 +86,7 @@ namespace
         next(0), prev(0)
         {
             Y_GIANT_LOCK();
-            std::cerr << "[Worker]        @" << handle() << std::endl;
+            (std::cerr << "[Worker]        @" << handle() << std::endl).flush();
         }
 
         virtual ~Worker() noexcept
@@ -136,6 +141,13 @@ Y_UTEST(concurrent_topo)
     }
     barrier.cond.broadcast();
 
+    {
+        Y_GIANT_LOCK();
+        Y_SIZEOF(Concurrent::Thread);
+        Y_SIZEOF(Concurrent::NamedThread);
+        Y_SIZEOF(Concurrent::Wire);
+        
+    }
 
 }
 Y_UDONE()

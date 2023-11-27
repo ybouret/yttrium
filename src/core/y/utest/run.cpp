@@ -15,6 +15,7 @@ namespace Yttrium
         for(size_t i=length;i<Width;++i) std::cerr << ' ';
         std::cerr << " = ";
         std::cerr << std::setw(6) << classSize << std::endl;
+        std::cerr.flush();
     }
 
     void UnitTestDisplay::AsU64(const char    *field,
@@ -26,6 +27,7 @@ namespace Yttrium
         for(size_t i=length;i<Width+8;++i) std::cerr << ' ';
         std::cerr << " = ";
         std::cerr << std::setw(18) << value << std::endl;
+        std::cerr.flush();
     }
 
 }
