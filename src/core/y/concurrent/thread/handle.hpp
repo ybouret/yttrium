@@ -6,6 +6,7 @@
 #include "y/text/base64/encode.hpp"
 #include "y/check/static.hpp"
 #include "y/memory/buffer/ro.hpp"
+#include "y/type/copy.hpp"
 #include <iosfwd>
 
 namespace Yttrium
@@ -43,10 +44,11 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            ThreadHandle(const ThreadHandle &)             noexcept; //!< copy
-            ThreadHandle & operator=(const ThreadHandle &) noexcept; //!< assign
-            virtual ~ThreadHandle()                        noexcept; //!< cleanup
-            explicit ThreadHandle()                        noexcept; //!< setup empty
+            ThreadHandle(const ThreadHandle &)                        noexcept; //!< copy
+            ThreadHandle & operator=(const ThreadHandle &)            noexcept; //!< assign
+            virtual ~ThreadHandle()                                   noexcept; //!< cleanup
+            explicit ThreadHandle()                                   noexcept; //!< setup empty
+            explicit ThreadHandle(const CopyOf_ &,const char * const) noexcept; //!< setup with strlen(args) < BufferSize
 
             //! setup by shadowing
             template <typename T>
@@ -68,16 +70,24 @@ namespace Yttrium
             friend bool           operator==(const ThreadHandle &, const ThreadHandle &) noexcept; //!< equality
             friend bool           operator!=(const ThreadHandle &, const ThreadHandle &) noexcept; //!< difference
             const char *          c_str()                                          const noexcept; //!< legacy access
-            virtual size_t        measure()                                        const noexcept; //!< buflen=strlen(buffer)
             void                  skip(const size_t prefix)                              noexcept; //!< skip first prefix chars
-            
+            void                  swapWith(ThreadHandle &)                               noexcept; //!< no-throw swap
+
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual const void * ro_addr() const noexcept; //!< buffer
+            virtual size_t       measure() const noexcept; //!< buflen=strlen(buffer)
+
 
         private:
             size_t buflen;
             char   buffer[BufferSize];
             void clear()                           noexcept; //!< erase
             void write(const void *, const size_t) noexcept; //!< format
-            virtual const void * ro_addr()   const noexcept; //!< buffer
         };
 
     }

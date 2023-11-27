@@ -18,7 +18,7 @@ namespace
     class Barrier
     {
     public:
-        explicit Barrier()  : mutex(), cond(), count(0), sum(0), meg(50)
+        explicit Barrier()  : mutex(), cond(), count(0), sum(0), meg(10)
         {
         }
 
@@ -138,6 +138,8 @@ Y_UTEST(concurrent_topo)
         std::cerr << "Master Thread   @" << primary << std::endl;
     }
 
+
+    if(true)
     {
         Concurrent::ThreadHandleZip thz;
         for(const Worker *w=crew.head;w;w=w->next)
@@ -158,9 +160,10 @@ Y_UTEST(concurrent_topo)
 
         thz.unloadPrimary();
         assert(thz.homology() == homology1);
-        thz.compress(homology1);
-
+        Y_CHECK(thz.compress(homology1));
     }
+
+
 
 
     barrier.cond.broadcast();

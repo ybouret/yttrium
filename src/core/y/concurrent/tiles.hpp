@@ -49,7 +49,7 @@ namespace Yttrium
             //__________________________________________________________________
             inline  Segment(const V2D<T> p, const T w) noexcept : start(p),       width(w),       x_end(start.x+width-1) { assert(width>0); } //!< setup
             inline  Segment(const Segment &s)          noexcept : start(s.start), width(s.width), x_end(s.x_end) {}                           //!< copy
-            inline ~Segment()                          noexcept {} //!< cleanup
+            inline ~Segment()                          noexcept {}                                                                            //!< cleanup
 
             //__________________________________________________________________
             //

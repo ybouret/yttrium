@@ -1,6 +1,7 @@
 #include "y/concurrent/thread/handle.hpp"
 #include "y/container/algo/reverse.hpp"
 #include "y/type/utils.hpp"
+#include "y/text/ops.hpp"
 
 #include <cstring>
 #include <iostream>
@@ -18,6 +19,16 @@ namespace Yttrium
             clear();
         }
 
+        ThreadHandle:: ThreadHandle(const CopyOf_ &, const char * const data) noexcept:
+        Memory::ReadOnlyBuffer(),
+        buflen( StringLength(data) ),
+        buffer()
+        {
+            clear();
+            assert(buflen<BufferSize);
+            memcpy(buffer,data,buflen);
+        }
+
         ThreadHandle:: ThreadHandle(const ThreadHandle &other) noexcept :
         Memory::ReadOnlyBuffer(),
         buflen(other.buflen),
@@ -26,10 +37,21 @@ namespace Yttrium
             memcpy(buffer,other.buffer,BufferSize);
         }
 
+
+        void ThreadHandle:: swapWith(ThreadHandle &other) noexcept
+        {
+            Swap(buflen,other.buflen);
+            Memory::OutOfReach::Swap(buffer,other.buffer,BufferSize);
+        }
+
         ThreadHandle & ThreadHandle:: operator=(const ThreadHandle &other) noexcept
         {
-            buflen = other.buflen;
-            memmove(buffer, other.buffer, BufferSize);
+            {
+                ThreadHandle tmp(other);
+                swapWith(tmp);
+            }
+            assert(buflen == other.buflen);
+            assert(*this  == other);
             return *this;
         }
 

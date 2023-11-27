@@ -107,6 +107,37 @@ namespace Yttrium
                 return false;
             }
 
+            //! remove multiple references
+            inline void noMultiple() noexcept
+            {
+                ListOf<NodeType> tmp;
+                while(this->size>0)
+                {
+                    NodeType *  node  = this->tail;
+                    ConstType & lhs   = **node;
+                    bool        found = false;
+
+                    for(const NodeType *scan=tmp.head;scan;scan=scan->next)
+                    {
+                        ConstType & rhs = **scan;
+                        if( &lhs == &rhs )
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(found)
+                    {
+                        this->cutTail();
+                    }
+                    else
+                    {
+                        tmp.pushHead( this->popTail() );
+                    }
+                }
+                tmp.swapWith(*this);
+            }
+
 
 
         private:
