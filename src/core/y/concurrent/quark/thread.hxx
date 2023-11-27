@@ -1,4 +1,5 @@
 #include "y/concurrent/thread/proc.hpp"
+#include "y/concurrent/thread/handle.hpp"
 #include "y/text/base64/encode.hpp"
 
 namespace Yttrium
@@ -36,7 +37,8 @@ namespace Yttrium
                 //! start thread
                 //
                 //______________________________________________________________
-                explicit Thread(ThreadProc proc, void *args) : thr(0),
+                explicit Thread(ThreadProc proc, void *args, ThreadHandle &uuid) :
+                thr(0),
 #if defined(Y_WIN)
                 tid(0),
 #endif
@@ -50,6 +52,7 @@ namespace Yttrium
 #if defined(Y_BSD)
                     const int err = pthread_create(&thr, NULL, launch, this);
                     if (0 != err) throw Libc::Exception(err, "pthread_create");
+                    const ThreadHandle h(thr);
 #endif
 
 #if defined(Y_WIN)
@@ -61,7 +64,9 @@ namespace Yttrium
                                        0,           // use default creation flags
                                        &tid);       // returns the thread identifier
                     if (0 == thr) throw Win32::Exception(::GetLastError(), "::CreateThread");
+                    const ThreadHandle h(tid);
 #endif
+                    uuid = h;
                 }
 
                 //______________________________________________________________

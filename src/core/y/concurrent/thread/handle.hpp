@@ -46,6 +46,7 @@ namespace Yttrium
             ThreadHandle(const ThreadHandle &)             noexcept; //!< copy
             ThreadHandle & operator=(const ThreadHandle &) noexcept; //!< assign
             virtual ~ThreadHandle()                        noexcept; //!< cleanup
+            explicit ThreadHandle()                        noexcept; //!< setup empty
 
             //! setup by shadowing
             template <typename T>

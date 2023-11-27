@@ -9,6 +9,15 @@ namespace Yttrium
 {
     namespace Concurrent
     {
+
+        ThreadHandle::ThreadHandle() noexcept :
+        Memory::ReadOnlyBuffer(),
+        buflen(0),
+        buffer()
+        {
+            clear();
+        }
+
         ThreadHandle:: ThreadHandle(const ThreadHandle &other) noexcept :
         Memory::ReadOnlyBuffer(),
         buflen(other.buflen),

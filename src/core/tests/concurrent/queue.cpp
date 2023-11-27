@@ -86,7 +86,7 @@ Y_UTEST(concurrent_queue)
     Y_THREAD_MSG("Ready to restart");
     Vector<Concurrent::Task>     tsk;
     Vector<Concurrent::Task::ID> tid;
-    for(int i=0;i<40;++i)
+    for(int i=1;i<=40;++i)
     {
         const Demo             todo(i);
         const Concurrent::Task task(todo);

@@ -327,7 +327,8 @@ namespace Yttrium
             // First Synchronization
             //
             //------------------------------------------------------------------
-            const char * const id = worker.name;
+            const char * const  id = worker.name;
+            const ThreadHandle &h  = worker.wire.handle;
             sync.lock();
             if(++count>=size) fence.signal(); // signal main thread we are done
 
@@ -348,7 +349,7 @@ namespace Yttrium
             {
             WORK:
                 assert(0!=worker.duty);
-                Y_THREAD_MSG("[Queue@" << id << "] start job#" << worker.duty->uuid);
+                Y_THREAD_MSG("[Q:" << h << "@" << id << "] start job#" << worker.duty->uuid);
                 assert(busy.owns(&worker));
 
                 //--------------------------------------------------------------
@@ -369,7 +370,7 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 // LOCKED : dismiss job
                 //--------------------------------------------------------------
-                Y_THREAD_MSG("[Queue@" << id << "] done  job#" << worker.duty->uuid);
+                Y_THREAD_MSG("[Q:" << h << "@" << id << "] done  job#" << worker.duty->uuid);
                 jobs.dismiss(worker.duty);
 
                 //--------------------------------------------------------------
@@ -392,7 +393,7 @@ namespace Yttrium
             }
             else
             {
-                Y_THREAD_MSG("[Queue@" << id << "] returning");
+                Y_THREAD_MSG("[Q:" << h << "@" << id << "] returning");
                 sync.unlock();
             }
         }
@@ -408,8 +409,8 @@ namespace Yttrium
                 assert(0==tail->duty);
                 Worker *w = busy.pushHead(popTail());
                 w->duty   = jobs.popHead();
-                Y_THREAD_MSG("[Queue@" << w->name << "] assigned job#" << w->duty->uuid);
-                w->resume();
+                Y_THREAD_MSG("[Q:" << w->wire.handle << "@" << w->name << "] assigned job#" << w->duty->uuid);
+                 w->resume();
             }
 
             // and UNLOCK

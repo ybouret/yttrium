@@ -2,7 +2,6 @@
 
 #include "y/concurrent/condition.hpp"
 #include "y/concurrent/wire.hpp"
-#include "y/concurrent/thread/named.hpp"
 
 #include "y/concurrent/topology.hpp"
 #include "y/system/hw.hpp"
@@ -82,18 +81,16 @@ namespace
         explicit Worker(Barrier &barrier) :
         Object(),
         Concurrent::Wire(MyProc,barrier),
-        uuid( handle() ),
         next(0), prev(0)
         {
             Y_GIANT_LOCK();
-            (std::cerr << "[Worker]        @" << handle() << std::endl).flush();
+            (std::cerr << "[Worker] " << handle << std::endl).flush();
         }
 
         virtual ~Worker() noexcept
         {
         }
 
-        const Concurrent::ThreadHandle uuid;
         Worker  *next;
         Worker  *prev;
 
@@ -144,9 +141,8 @@ Y_UTEST(concurrent_topo)
     {
         Y_GIANT_LOCK();
         Y_SIZEOF(Concurrent::Thread);
-        Y_SIZEOF(Concurrent::NamedThread);
         Y_SIZEOF(Concurrent::Wire);
-        
+
     }
 
 }

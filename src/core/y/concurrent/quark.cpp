@@ -117,9 +117,11 @@ namespace Yttrium
                 // Thread
                 //
                 //--------------------------------------------------------------
-                inline Thread *createThread(ThreadProc proc, void *args)
+                inline Thread *createThread(ThreadProc   proc,
+                                            void         *args,
+                                            ThreadHandle &uuid)
                 {
-                    return threads.construct(proc,args);
+                    return threads.construct(proc,args,uuid);
                 }
 
                 inline void deleteThread(Thread * &thread) noexcept
@@ -367,47 +369,28 @@ namespace Yttrium
 	
         Thread:: Thread(ThreadProc proc, void *args) :
         Primitive(),
-        thread( quark.createThread(proc,args) )
+        handle(),
+        thread( quark.createThread(proc,args,Coerce(handle)) )
         {
-            Y_THREAD_MSG("[+Thread] @" << handle() );
+            Y_THREAD_MSG("[+Thread:" << handle << "]");
         }
 
 
         Thread:: ~Thread() noexcept
         {
             assert(0!=thread);
-            Y_THREAD_MSG("[-Thread] @" << handle() );
+            Y_THREAD_MSG("[-Thread:" << handle << "]");
             quark.deleteThread(thread);
         }
 
         void Thread:: assign(const size_t j)
         {
             assert(0!=thread);
-            Y_THREAD_MSG("[*Thread] @" << handle() << " => CPU #" << j);
+            Y_THREAD_MSG("[*Thread:" << handle << "] => CPU #" << j);
             thread->assign(j);
         }
 
-
 #if 0
-        ThreadHandle:: ThreadHandle(const void *args) noexcept:
-        buffer()
-        {
-            assert(0!=args);
-            memset(buffer,0,BufferSize);
-
-#if defined(Y_BSD)
-            const pthread_t &data = *static_cast<const pthread_t *>(args);
-            const size_t     size = sizeof(pthread_t);
-#endif
-
-#if defined(Y_WIN)
-            const DWORD &data = *static_cast<const DWORD *>(args);
-            const size_t size = sizeof(DWORD);
-#endif
-            Base64::Encode::To(buffer, &data, size, false);
-        }
-#endif
-
         ThreadHandle Thread::handle() const noexcept
         {
             assert(0!=thread);
@@ -419,6 +402,7 @@ namespace Yttrium
             return ThreadHandle(thread->tid);
 #endif
         }
+#endif
 
 
         ThreadHandle Thread:: CurrentHandle() noexcept
