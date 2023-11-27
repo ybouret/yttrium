@@ -230,10 +230,8 @@ namespace Yttrium
                 {
                     ThreadHandleZip thz(size);
                     for(size_t i=0;i<size;++i)
-                    {
                         thz << team[i].handle;
-                    }
-                    thz.compress( thz.homology() );
+                    thz.compress();
                 }
                 catch(...)
                 {

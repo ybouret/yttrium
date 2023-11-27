@@ -57,6 +57,11 @@ namespace Yttrium
             }
         }
 
+        void  ThreadHandleZip:: compress( ) const noexcept
+        {
+            compress( homology() );
+        }
+
     }
 
 }

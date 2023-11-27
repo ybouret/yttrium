@@ -272,7 +272,7 @@ namespace Yttrium
                     ThreadHandleZip thz( size );
                     for(const Worker *w=head;w;w=w->next)
                         thz << w->wire.handle;
-                    thz.compress( thz.homology() );
+                    thz.compress();
                 }
                 catch(...)
                 {

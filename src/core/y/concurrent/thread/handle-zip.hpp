@@ -46,11 +46,12 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            size_t homology() const noexcept;                    //!< current homology
+            size_t homology()                    const noexcept; //!< current homology
             void   loadPrimary();                                //!< append primary thread handle
-            void   unloadPrimary() noexcept;                     //!< ensure no primary in list
+            void   unloadPrimary()                     noexcept; //!< ensure no primary in list
             void   compress(const size_t prefix) const noexcept; //!< enforce skip on all handles
-
+            void   compress()                    const noexcept; //!< compress( homology() )
+            
             //__________________________________________________________________
             //
             //
