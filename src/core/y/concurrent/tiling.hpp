@@ -329,6 +329,13 @@ namespace Yttrium
                 //______________________________________________________________
                 typedef Proxy<const typename Tile::List> TProxy; //!< alias
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
                 //! setup for maximum nproc>0
                 inline explicit Tiles(const size_t nproc,
                                       Vertex       lower,
@@ -337,90 +344,88 @@ namespace Yttrium
                 tiling()
                 {
                     assert(nproc>0);
-                    //--------------------------------------------------------------
+                    //----------------------------------------------------------
                     //
                     //
                     // setup area
                     //
                     //
-                    //--------------------------------------------------------------
-                    if(upper.x<lower.x) Swap(upper.x,lower.x);
-                    if(upper.y<lower.y) Swap(upper.y,lower.y);
-                    const Area area(1+upper.x-lower.x,1+upper.y-lower.y);
+                    //----------------------------------------------------------
+                    const Area area = MakeArea(lower,upper);
 
-                    //--------------------------------------------------------------
+                    //----------------------------------------------------------
                     //
                     //
                     // compute items and matching count of tiles (less than 'size'!)
                     //
                     //
-                    //--------------------------------------------------------------
+                    //----------------------------------------------------------
                     const Size   width = area.x;
                     const Size   items = area.x * area.y;
                     const size_t count = Min<size_t>(nproc,items);
 
 
-                    //--------------------------------------------------------------
+                    //----------------------------------------------------------
                     //
                     //
                     // create tiles
                     //
                     //
-                    //--------------------------------------------------------------
+                    //----------------------------------------------------------
                     for(size_t rank=0;rank<count;++rank)
                     {
-                        //----------------------------------------------------------
+                        //------------------------------------------------------
                         //
                         // compute items for this rank
                         //
-                        //----------------------------------------------------------
+                        //------------------------------------------------------
                         Size offset = 0;
                         Size length = items;
                         Split::With(count, rank, length, offset); assert(length>0);
 
-                        //----------------------------------------------------------
+                        //------------------------------------------------------
                         //
                         // deduce coordinates and number of segments
                         //
-                        //----------------------------------------------------------
+                        //------------------------------------------------------
                         const T       finish = length + offset - 1;
                         const Vertex  v_ini  = idx2vtx(offset,width) + lower; // starting coordinates
                         const Vertex  v_end  = idx2vtx(finish,width) + lower; // final coordinates
                         const size_t  n_seg  = v_end.y-v_ini.y+1;             // corresponding number of segments
 
-                        //----------------------------------------------------------
+                        //------------------------------------------------------
                         //
                         // build new Tile
                         //
-                        //----------------------------------------------------------
+                        //------------------------------------------------------
                         Tile &t = * tiling.pushTail( new  Tile(n_seg) );
                         if(n_seg<=1)
                         {
                             assert(1==n_seg);
                             assert(v_ini.y==v_end.y);
-                            //------------------------------------------------------
+                            //--------------------------------------------------
                             // single segment
-                            //------------------------------------------------------
+                            //--------------------------------------------------
                             t.add(v_ini,1+v_end.x-v_ini.x);
                             assert(t.items==length);
                         }
                         else
                         {
                             assert(n_seg>1);
-                            //------------------------------------------------------
+                            //--------------------------------------------------
                             // first segment, partial width
-                            //------------------------------------------------------
+                            //--------------------------------------------------
                             t.add(v_ini,1+upper.x-v_ini.x);
 
-                            //------------------------------------------------------
+                            //--------------------------------------------------
                             // bulk segment(s), full width
-                            //------------------------------------------------------
+                            //--------------------------------------------------
                             for(T y=v_ini.y+1;y<v_end.y;++y)
                                 t.add( Vertex(lower.x,y),width);
 
-                            //------------------------------------------------------
+                            //--------------------------------------------------
                             // last segment, partial width
-                            //------------------------------------------------------
+                            //--------------------------------------------------
                             t.add( Vertex(lower.x,v_end.y), 1+v_end.x - lower.x);
                             assert(t.items==length);
                         }
@@ -429,6 +434,15 @@ namespace Yttrium
 
                 //! cleanup
                 virtual ~Tiles() noexcept {}
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Tiles);
@@ -444,10 +458,15 @@ namespace Yttrium
                 {
                     assert(w>0);
                     return Vertex(p%w,p/w);
-                    //static const   Div<T> api;
-                    //const typename Div<T>::Type dv = api.call(p,w);
-                    //return V2D<T>(dv.rem,dv.quot);
                 }
+
+                static inline Area MakeArea(Vertex &lower, Vertex &upper) noexcept
+                {
+                    if(upper.x<lower.x) Swap(upper.x,lower.x);
+                    if(upper.y<lower.y) Swap(upper.y,lower.y);
+                    return Area(1+upper.x-lower.x,1+upper.y-lower.y);
+                }
+
             };
 
 
