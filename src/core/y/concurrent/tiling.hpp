@@ -151,6 +151,8 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
+                inline Tile * clone() const { return new Tile(*this); }
+
                 //! add a new segment
                 inline void add(const Vertex p, const Size w)
                 {
@@ -182,8 +184,21 @@ namespace Yttrium
                 const size_t items;  //!< total items of original region
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Tile);
+                Y_DISABLE_ASSIGN(Tile);
                 Segment * const base;
+
+                inline Tile(const Tile &tile) :
+                Object(),
+                Segments(tile.size),
+                size(tile.size),
+                items(tile.items),
+                base( this->lead() ),
+                next(0),
+                prev(0)
+                {
+                    Memory::OutOfReach::Copy(base, tile.base, size*sizeof(Segment) );
+                }
+
             public:
                 Tile *next; //!< for list
                 Tile *prev; //!< for list

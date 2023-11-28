@@ -48,7 +48,7 @@ Y_UTEST(concurrent_split2d)
 
         for(const Concurrent::Tiling<int>::Tile *t = tiles->head; t; t=t->next )
         {
-            //AutoPtr< Concurrent::Tile<int> > ptr = t->clone();
+            AutoPtr< Concurrent::Tiling<int>::Tile > ptr = t->clone();
             std::cerr << "#tile=" << t->items << std::endl;
             size_t count = 0;
             for( Concurrent::Tiling<int>::Iterator it = t->begin(); it != t->end(); ++it)
