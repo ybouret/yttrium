@@ -1,5 +1,5 @@
 
-#include "y/concurrent/tiles.hpp"
+#include "y/concurrent/tiling.hpp"
 #include "y/text/ascii/convert.hpp"
 #include "y/text/plural.hpp"
 
@@ -19,43 +19,48 @@ Y_UTEST(concurrent_split2d)
     if(argc>2) Y = ASCII::Convert::To<int>(argv[2],"Y");
 
     const V2D<int> area( Max<int>(X,1), Max<int>(Y,1) );
+
+
     std::cerr << "Splitting " << area << std::endl;
+
+
+    UnitTestDisplay::Width = 40;
+
+    Y_SIZEOF(Concurrent::Tiling<int8_t>::Segment);
+    Y_SIZEOF(Concurrent::Tiling<int16_t>::Segment);
+    Y_SIZEOF(Concurrent::Tiling<int32_t>::Segment);
+    Y_SIZEOF(Concurrent::Tiling<int64_t>::Segment);
+
+    std::cerr << std::endl;
+    Y_SIZEOF(Concurrent::Tiling<int8_t>::Tile);
+    Y_SIZEOF(Concurrent::Tiling<int16_t>::Tile);
+    Y_SIZEOF(Concurrent::Tiling<int32_t>::Tile);
+    Y_SIZEOF(Concurrent::Tiling<int64_t>::Tile);
+
 
     for(unsigned size=1;size<=8;++size)
     {
         std::cerr << "Splitting " << area << " in at most " << size << " tile" << Plural::s(size) << std::endl;
         std::cerr << "size="      << size << std::endl;
-        Concurrent::Tiles<int> tiles(size, V2D<int>(1,1), area );
-        std::cerr << tiles << std::endl;
-        for(const Concurrent::Tile<int> *t = tiles->head; t; t=t->next )
-        {
 
-            AutoPtr< Concurrent::Tile<int> > ptr = t->clone();
-            for( Concurrent::Tile<int>::Iterator it = t->begin(); it != t->end(); ++it)
+        Concurrent::Tiling<int>::Tiles tiles(size, V2D<int>(1,1), area );
+        std::cerr << tiles << std::endl;
+
+        for(const Concurrent::Tiling<int>::Tile *t = tiles->head; t; t=t->next )
+        {
+            //AutoPtr< Concurrent::Tile<int> > ptr = t->clone();
+            std::cerr << "#tile=" << t->items << std::endl;
+            size_t count = 0;
+            for( Concurrent::Tiling<int>::Iterator it = t->begin(); it != t->end(); ++it)
             {
+                ++count;
                 std::cerr << "/" << *it;
             }
             std::cerr << std::endl;
+            Y_CHECK(t->items==count);
         }
         std::cerr << std::endl;
     }
-
-    std::cerr << std::endl;
-    Y_SIZEOF(Concurrent::Segment<int8_t>);
-    Y_SIZEOF(Concurrent::Segment<int16_t>);
-    Y_SIZEOF(Concurrent::Segment<int32_t>);
-    Y_SIZEOF(Concurrent::Segment<int64_t>);
-
-    std::cerr << std::endl;
-    Y_SIZEOF(Concurrent::Tile<int8_t>);
-    Y_SIZEOF(Concurrent::Tile<int16_t>);
-    Y_SIZEOF(Concurrent::Tile<int32_t>);
-    Y_SIZEOF(Concurrent::Tile<int64_t>);
-
-    Y_SIZEOF(Concurrent::Tiles<int8_t>);
-    Y_SIZEOF(Concurrent::Tiles<int16_t>);
-    Y_SIZEOF(Concurrent::Tiles<int32_t>);
-    Y_SIZEOF(Concurrent::Tiles<int64_t>);
 
 
 }

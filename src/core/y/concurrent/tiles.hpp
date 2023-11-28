@@ -122,6 +122,7 @@ namespace Yttrium
             indx(rank+1)
             {}
 
+            //! copy
             inline explicit Tile(const Tile &tile) :
             Object(),
             TileBase(),
@@ -148,6 +149,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //! clone
             inline Tile * clone() const { return new Tile(*this); }
 
             //! add a new segment
