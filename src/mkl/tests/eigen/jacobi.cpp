@@ -2,17 +2,40 @@
 #include "y/utest/run.hpp"
 #include "y/random/bits.hpp"
 #include "y/system/rtti.hpp"
+#include "y/sequence/vector.hpp"
+#include "../../../core/tests/main.hpp"
 
 using namespace Yttrium;
 
 namespace
 {
     template <typename T>
-    static inline void doJacobi(Random::Bits & )
+    static inline void doJacobi(Random::Bits &ran)
     {
         const String &ts = RTTI::Name<T>();
         std::cerr << "Jacobi<" << ts << ">" << std::endl;
         MKL::Jacobi<T> J;
+
+        for(size_t n=1;n<=3;++n)
+        {
+            Matrix<T> a(n,n);
+            Matrix<T> v(n,n);
+            Vector<T> d(n,0);
+
+            FillMatrix(a,ran);
+            for(size_t i=1;i<=n;++i)
+                for(size_t j=1;j<=i;++j)
+                    a[i][j] = a[j][i];
+
+            std::cerr << "a=" << a << std::endl;
+            if(!J.build(a,d,v))
+                std::cerr << "Failure!" << std::endl;
+            std::cerr << "d=diagm(" << d << ")" << std::endl;
+            std::cerr << "v=" << v << std::endl;
+
+            std::cerr << std::endl;
+        }
+
     }
 }
 
