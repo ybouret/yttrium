@@ -13,6 +13,7 @@
 #include "y/object.hpp"
 #include "y/data/list/cxx.hpp"
 #include "y/type/ints.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace Yttrium
 {
@@ -151,6 +152,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
+                //! clone this tile
                 inline Tile * clone() const { return new Tile(*this); }
 
                 //! add a new segment
@@ -364,7 +366,6 @@ namespace Yttrium
                     const Size   items = area.x * area.y;
                     const size_t count = Min<size_t>(nproc,items);
 
-
                     //----------------------------------------------------------
                     //
                     //
@@ -382,23 +383,107 @@ namespace Yttrium
                         Size offset = 0;
                         Size length = items;
                         Split::With(count, rank, length, offset); assert(length>0);
+                        tiling.pushTail( MakeTile(lower, upper, width, offset, length) );
+                    }
+                }
 
-                        //------------------------------------------------------
-                        //
-                        // deduce coordinates and number of segments
-                        //
-                        //------------------------------------------------------
-                        const T       finish = length + offset - 1;
-                        const Vertex  v_ini  = idx2vtx(offset,width) + lower; // starting coordinates
-                        const Vertex  v_end  = idx2vtx(finish,width) + lower; // final coordinates
-                        const size_t  n_seg  = v_end.y-v_ini.y+1;             // corresponding number of segments
+                //! cleanup
+                virtual ~Tiles() noexcept {}
 
-                        //------------------------------------------------------
-                        //
-                        // build new Tile
-                        //
-                        //------------------------------------------------------
-                        Tile &t = * tiling.pushTail( new  Tile(n_seg) );
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                //! create tile matching context, can be NULL
+                static inline Tile *For(const Context &ctx,
+                                        Vertex         lower,
+                                        Vertex         upper)
+                {
+                    //----------------------------------------------------------
+                    //
+                    // setup area
+                    //
+                    //----------------------------------------------------------
+                    const Area area = MakeArea(lower,upper);
+
+                    //----------------------------------------------------------
+                    //
+                    // compute items and matching count of tiles
+                    //
+                    //----------------------------------------------------------
+                    const Size   width = area.x;
+                    const Size   items = area.x * area.y;
+                    if(items<ctx.size)
+                        return 0;
+
+                    //----------------------------------------------------------
+                    //
+                    // compute items for this rank
+                    //
+                    //----------------------------------------------------------
+                    Size offset = 0;
+                    Size length = items;
+                    Split::For(ctx,length,offset); assert(length>0);
+
+                    //----------------------------------------------------------
+                    //
+                    // return matching Tile
+                    //
+                    //----------------------------------------------------------
+                    return MakeTile(lower, upper, width, offset, length);
+                }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Tiles);
+                typename Tile::List tiling;
+                
+                inline virtual
+                typename TProxy::ConstInterface & surrogate() const noexcept
+                { return tiling; }
+
+                //! index to vertex using integer division
+                static inline
+                Vertex idx2vtx(const Size p, const Size w) noexcept
+                {
+                    assert(w>0);
+                    return Vertex(p%w,p/w);
+                }
+
+                static inline Area MakeArea(Vertex &lower, Vertex &upper) noexcept
+                {
+                    if(upper.x<lower.x) Swap(upper.x,lower.x);
+                    if(upper.y<lower.y) Swap(upper.y,lower.y);
+                    return Area(1+upper.x-lower.x,1+upper.y-lower.y);
+                }
+
+                static inline Tile *MakeTile(const Vertex &lower,
+                                             const Vertex &upper,
+                                             const Size    width,
+                                             const Size    offset,
+                                             const Size    length)
+
+                {
+                    //------------------------------------------------------
+                    //
+                    // deduce coordinates and number of segments
+                    //
+                    //------------------------------------------------------
+                    const T       finish = length + offset - 1;
+                    const Vertex  v_ini  = idx2vtx(offset,width) + lower; // starting coordinates
+                    const Vertex  v_end  = idx2vtx(finish,width) + lower; // final coordinates
+                    const size_t  n_seg  = v_end.y-v_ini.y+1;             // corresponding number of segments
+
+                    //------------------------------------------------------
+                    //
+                    // build new Tile
+                    //
+                    //------------------------------------------------------
+                    AutoPtr<Tile> guard = new Tile(n_seg);
+                    {
+                        Tile &t = *guard;
                         if(n_seg<=1)
                         {
                             assert(1==n_seg);
@@ -430,41 +515,7 @@ namespace Yttrium
                             assert(t.items==length);
                         }
                     }
-                }
-
-                //! cleanup
-                virtual ~Tiles() noexcept {}
-
-                //______________________________________________________________
-                //
-                //
-                // Methods
-                //
-                //______________________________________________________________
-
-
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Tiles);
-                typename Tile::List tiling;
-                
-                inline virtual
-                typename TProxy::ConstInterface & surrogate() const noexcept
-                { return tiling; }
-
-                //! index to vertex using integer division
-                static inline
-                Vertex idx2vtx(const Size p, const Size w) noexcept
-                {
-                    assert(w>0);
-                    return Vertex(p%w,p/w);
-                }
-
-                static inline Area MakeArea(Vertex &lower, Vertex &upper) noexcept
-                {
-                    if(upper.x<lower.x) Swap(upper.x,lower.x);
-                    if(upper.y<lower.y) Swap(upper.y,lower.y);
-                    return Area(1+upper.x-lower.x,1+upper.y-lower.y);
+                    return guard.yield();
                 }
 
             };
