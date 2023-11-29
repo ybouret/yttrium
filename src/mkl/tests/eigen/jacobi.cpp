@@ -1,3 +1,4 @@
+#include "y/mkl/eigen/sort.hpp"
 #include "y/mkl/eigen/jacobi.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/bits.hpp"
@@ -16,7 +17,7 @@ namespace
         std::cerr << "Jacobi<" << ts << ">" << std::endl;
         MKL::Jacobi<T> J;
 
-        for(size_t n=1;n<=3;++n)
+        for(size_t n=1;n<=4;++n)
         {
             Matrix<T> a(n,n);
             Matrix<T> v(n,n);
@@ -29,9 +30,15 @@ namespace
 
             std::cerr << "a=" << a << std::endl;
             if(!J.build(a,d,v))
+            {
                 std::cerr << "Failure!" << std::endl;
+                continue;
+            }
+            MKL::EigenSort(d,v, Comparison::Decreasing<T>);
+
             std::cerr << "d=diagm(" << d << ")" << std::endl;
             std::cerr << "v=" << v << std::endl;
+            std::cerr << "v*d*v'-a" << std::endl;
 
             std::cerr << std::endl;
         }
@@ -45,6 +52,7 @@ Y_UTEST(eigen_jacobi)
     doJacobi<float>(ran);
     doJacobi<double>(ran);
     doJacobi<long double>(ran);
+    //doJacobi< XReal<float> >(ran);
 
 }
 Y_UDONE()

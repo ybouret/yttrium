@@ -138,8 +138,6 @@ namespace Yttrium
         //
         //______________________________________________________________________
 
-
-
         inline virtual size_t       size()     const noexcept { return rows;     } //!< rows
         inline virtual const char * callSign() const noexcept { return CallSign; } //!< CallSign
 
@@ -170,6 +168,16 @@ namespace Yttrium
         {
             Matrix &self = *this;
             Memory::OutOfReach::Swap(&self[a][1], &self[b][1], code->stride );
+        }
+
+        //! swap cols
+        inline void swapCols(const size_t a, const size_t b) noexcept
+        {
+            Matrix &self = *this;
+            for(size_t i=rows;i>0;--i)
+            {
+                Memory::OutOfReach::Swap(&self[i][a], &self[i][b], sizeof(T) );
+            }
         }
 
         //! assign matrices with same metrics
