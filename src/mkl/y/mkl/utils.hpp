@@ -11,8 +11,9 @@ namespace Yttrium
     {
         struct OutOfReach
         {
-            template <typename T> static
-            T Add(const T &lhs, const T &rhs);
+            template <typename T> static T Add(const T &lhs, const T &rhs);
+            template <typename T> static T Sub(const T &lhs, const T &rhs);
+
         };
 
 
@@ -24,7 +25,8 @@ namespace Yttrium
             const scalar lhs   = Fabs<T>::Of(value);
             const scalar rhs   = Fabs<T>::Of(added);
             const scalar dif   = lhs-rhs;
-            return Fabs<scalar>::Of(dif) <= 0;
+            const scalar _0_   = 0;
+            return Fabs<scalar>::Of(dif) <= _0_;
         }
 
     }
