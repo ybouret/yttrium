@@ -197,9 +197,6 @@ namespace Yttrium
                         d[ip]=b[ip];
                         z[ip]=zero;
                     }
-
-
-
                 }
 
                 return false;
