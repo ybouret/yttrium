@@ -10,6 +10,7 @@ mkl/interpolation
 mkl/io
 mkl/filter
 mkl/root
+mkl/eigen
 )
 
 add_subdirectory(tests)

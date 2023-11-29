@@ -7,6 +7,7 @@ interp
 io
 filter
 root
+eigen
 )
 
 set( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
@@ -16,8 +17,9 @@ Y_LinkLibraries(test-mkl y-mkl)
 
 enable_testing()
 
-add_test(triplet test-mkl triplet)
+add_test(triplet  test-mkl triplet)
 add_test(interval test-mkl interval)
+add_test(utils    test-mkl utils)
 
 add_test(ode:rk4 test-mkl ode_rk4)
 add_test(odeint  test-mkl odeint)
@@ -41,3 +43,5 @@ add_test(io:data-stream test-mkl io_data_stream ${DATA}/sample.txt)
 add_test(filter:smooth  test-mkl filter_smooth)
 
 add_test(root:zfind     test-mkl root_zfind)
+
+add_test(eigen:jacobi   test-mkl eigen_jacobi)

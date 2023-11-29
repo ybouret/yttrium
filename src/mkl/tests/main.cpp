@@ -5,6 +5,7 @@ Y_UTEST_DECL(32)
 {
     Y_UTEST(triplet);    
     Y_UTEST(interval);
+    Y_UTEST(utils);
     
     Y_UTEST(ode_rk4);
     Y_UTEST(odeint);
@@ -29,6 +30,9 @@ Y_UTEST_DECL(32)
     Y_UTEST(filter_smooth);
 
     Y_UTEST(root_zfind);
+
+
+    Y_UTEST(eigen_jacobi);
 
 }
 Y_UTEST_EXEC()
