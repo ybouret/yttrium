@@ -3,6 +3,7 @@
 #include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/concurrent/split.hpp"
+#include "y/type/nullify.hpp"
 
 namespace Yttrium
 {
@@ -12,13 +13,19 @@ namespace Yttrium
         Range::  Range() noexcept : length(0), offset(0) {}
         Range:: ~Range() noexcept {}
 
-        typedef CxxArray<const Range,Memory::Dyadic> Ranges;
+        std::ostream & operator<<(std::ostream &os, const Range &range)
+        {
+            os << "[@" << range.offset << "+" << range.length << "]";
+            return os;
+        }
 
-        class SIMD:: Code : public Object, public Ranges
+        typedef CxxArray<const Range,Memory::Dyadic> CxxRanges;
+
+        class SIMD:: Code : public Object, public CxxRanges
         {
         public:
             explicit Code(const Loop &loop) :
-            Object(), Ranges(loop.size())
+            Object(), CxxRanges(loop.size())
             {
             }
 
@@ -35,20 +42,24 @@ namespace Yttrium
 
         SIMD:: ~SIMD() noexcept
         {
+            assert(0!=code);
+            Nullify(code);
         }
 
         SIMD:: SIMD(const SharedLoop &team) :
-        Readable<const Range>(), Range(),
+        Readable<const Range>(),
         loop( team ),
-        code( new Code(*loop) )
+        code( new Code(*loop) ),
+        full()
         {
         }
         
 
         SIMD:: SIMD(Loop *team) :
-        Readable<const Range>(), Range(),
+        Readable<const Range>(),
         loop( team ),
-        code( new Code(*loop) )
+        code( new Code(*loop) ),
+        full()
         {
         }
        
@@ -69,7 +80,10 @@ namespace Yttrium
                 Split::With(size_,rank,rangeLength,rangeOffset);
                 if(rangeLength>0) ++ans;
             }
-            
+
+            Coerce(full.offset) = dataOffset;
+            Coerce(full.length) = dataLength;
+
             return ans;
         }
 
@@ -89,6 +103,22 @@ namespace Yttrium
         {
             assert(0!=code);
             return (*code)[indx];
+        }
+
+
+        void SIMD:: Call0:: operator()(const ThreadContext &ctx) const
+        {
+            const Range &range = ranges[ctx.indx];
+            Y_LOCK(ctx.sync);
+            (std::cerr << SIMD::CallSign << "::Range " << range << std::endl).flush();
+
+        }
+
+
+        void SIMD:: operator()(void) noexcept
+        {
+            const Call0 call = { *this };
+            (*loop)(call);
         }
 
     }

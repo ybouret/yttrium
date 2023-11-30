@@ -28,9 +28,15 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit SVD();
-            virtual ~SVD() noexcept;
+            explicit SVD();          //!< setup
+            virtual ~SVD() noexcept; //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            //! build SVD decomposition
+            //
+            //__________________________________________________________________
             bool build(Matrix<T> &a, Writable<T> &w, Matrix<T> &v);
 
         private:

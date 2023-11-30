@@ -51,7 +51,7 @@ namespace Yttrium
                 assert(0!=pfx);
                 assert(strlen(pfx)==len);
 
-                std::cerr << "recomposing handles with '" << pfx << "'" << std::endl;
+                //std::cerr << "recomposing handles with '" << pfx << "'" << std::endl;
                 for(const ThreadHandleList::NodeType *node=hl.head;node;node=node->next)
                 {
                     const ThreadHandle &h = **node;
@@ -89,7 +89,7 @@ namespace Yttrium
                 for(NodeType *node=head;node;node=node->next)
                 {
                     const ThreadHandle &h = **node;
-                    std::cerr << "removing " << pfx << " from " << h.c_str() << std::endl;
+                    //std::cerr << "removing " << pfx << " from " << h.c_str() << std::endl;
                     assert( 0 == memcmp(pfx,h.c_str(),prefix) );
                     Coerce(h).skip(prefix);
                 }
@@ -104,7 +104,7 @@ namespace Yttrium
                     {
                         if( **lhs == **rhs )
                         {
-                            std::cerr << "produced same handles!!" << std::endl;
+                            //std::cerr << "produced same handles!!" << std::endl;
                             RecomposeHandlesWithPrefix(pfx,prefix,*this);
                             return false;
                         }

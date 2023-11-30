@@ -9,14 +9,15 @@ namespace Yttrium
 {
     namespace MKL
     {
+        //! performing out of reach operations to avoid compiler optimization
         struct OutOfReach
         {
-            template <typename T> static T Add(const T &lhs, const T &rhs);
-            template <typename T> static T Sub(const T &lhs, const T &rhs);
-
+            template <typename T> static T Add(const T &lhs, const T &rhs); //!< lhs+rhs
+            template <typename T> static T Sub(const T &lhs, const T &rhs); //!< lhs-rhs
         };
 
 
+        //! TODO: useful ?
         template <typename T> inline
         bool IsUnchanged(const T &value, const T &delta)
         {

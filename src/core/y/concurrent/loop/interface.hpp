@@ -79,6 +79,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Loop);
         };
 
+        //! using a loop as a shared resource
         typedef ArcPtr<Loop> SharedLoop;
 
     }

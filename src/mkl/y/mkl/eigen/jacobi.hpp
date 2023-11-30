@@ -14,13 +14,35 @@ namespace Yttrium
 
         namespace Eigen
         {
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Jacobi method for [float|double|long double] and XReal
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             class Jacobi
             {
             public:
-                explicit Jacobi();
-                virtual ~Jacobi() noexcept;
-                
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Jacobi();           //!< setup
+                virtual ~Jacobi() noexcept;  //!< cleanup
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
                 //! diagonalize a
                 /**
                  \param a squared (digonal) matrux
