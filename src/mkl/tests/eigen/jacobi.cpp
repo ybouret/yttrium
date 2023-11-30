@@ -15,7 +15,7 @@ namespace
     {
         const String &ts = RTTI::Name<T>();
         std::cerr << "Jacobi<" << ts << ">" << std::endl;
-        MKL::Jacobi<T> J;
+        MKL::Eigen::Jacobi<T> J;
 
         for(size_t n=1;n<=4;++n)
         {
@@ -34,7 +34,7 @@ namespace
                 std::cerr << "Failure!" << std::endl;
                 continue;
             }
-            MKL::EigenSort(d,v, Comparison::Decreasing<T>);
+            MKL::Eigen::Sort(d,v, Comparison::Decreasing<T>);
 
             std::cerr << "d=diagm(" << d << ")" << std::endl;
             std::cerr << "v=" << v << std::endl;

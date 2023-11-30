@@ -11,27 +11,31 @@ namespace Yttrium
 
     namespace MKL
     {
-        template <typename T>
-        class Jacobi
+
+        namespace Eigen
         {
-        public:
-            explicit Jacobi();
-            virtual ~Jacobi() noexcept;
-
-            //! diagonalize a
-            /**
-             \param a squared (digonal) matrux
-             \param d eigenvalues
-             \param v eigenvectors
-             */
-            bool build(Matrix<T> &a, Writable<T> &d, Matrix<T> &v);
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Jacobi);
-            class Code;
-            Code *code;
-        };
+            template <typename T>
+            class Jacobi
+            {
+            public:
+                explicit Jacobi();
+                virtual ~Jacobi() noexcept;
+                
+                //! diagonalize a
+                /**
+                 \param a squared (digonal) matrux
+                 \param d eigenvalues
+                 \param v eigenvectors
+                 */
+                bool build(Matrix<T> &a, Writable<T> &d, Matrix<T> &v);
+                
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Jacobi);
+                class Code;
+                Code *code;
+            };
+        }
     }
 
 }

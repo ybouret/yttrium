@@ -187,18 +187,20 @@ namespace Yttrium
             const T one(1);
             const T absa=Fabs<T>::Of(a);
             const T absb=Fabs<T>::Of(b);
-            if (absa > absb)
+            if(absa > absb)
             {
+                // |a| > |b|
                 const T rho = absb/absa;
                 const T arg = one + rho*rho;
                 return absa*Sqrt<T>::Of(arg);
             }
             else
             {
+                // |a| <= |b|
                 const T zero(0);
                 if(absb<=zero)
                 {
-                    return T(0);
+                    return zero;
                 }
                 else
                 {
@@ -245,6 +247,19 @@ namespace Yttrium
             //! use built-in function
             static inline T Of(const Complex<T> &z) noexcept { return z.mod2(); }
         };
+
+        //______________________________________________________________________
+        //
+        //
+        //! return the signed value of a w.r.t the sign of b
+        //
+        //______________________________________________________________________
+        template <typename T, typename U>
+        inline T Sgn(T a, U b) throw()
+        {
+            const U zero(0);
+            return (b >= zero) ? Fabs<T>::Of(a) : -Fabs<T>::Of(a);
+        }
 
 
     }
