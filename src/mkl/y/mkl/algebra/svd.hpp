@@ -32,7 +32,7 @@ namespace Yttrium
             virtual ~SVD() noexcept;
 
             bool build(Matrix<T> &a, Writable<T> &w, Matrix<T> &v);
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SVD);
             class Code;

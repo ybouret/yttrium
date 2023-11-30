@@ -52,8 +52,9 @@ Y_UTEST(eigen_jacobi)
     doJacobi<float>(ran);
     doJacobi<double>(ran);
     doJacobi<long double>(ran);
-    //doJacobi< XReal<float> >(ran);
-
+    doJacobi< XReal<float> >(ran);
+    doJacobi< XReal<double> >(ran);
+    doJacobi< XReal<long double> >(ran);
 }
 Y_UDONE()
 
