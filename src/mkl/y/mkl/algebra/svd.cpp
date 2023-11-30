@@ -32,6 +32,13 @@ namespace Yttrium
             static inline T FabsOf(const T x) { return Fabs<T>::Of(x); }
             static inline T SqrtOf(const T x) { return Sqrt<T>::Of(x); }
 
+            inline bool unchanged(const T &lhs, const T &rhs) const
+            {
+                const T added = Fabs<T>::Of(lhs) + rhs;
+                const T delta = FabsOf(added-rhs);
+                return delta <= zero;
+            }
+
             //! singular value decomposition
             /**
              -Given a matrix a[1..m][1..n], this routine computes its singular value
@@ -172,20 +179,23 @@ namespace Yttrium
                     unsigned its=0;
                     for(its=1;its<=MAX_ITS;its++)
                     {
-                        int   flag = 1;
-                        size_t nm  = 0;
+                        int    flag = 1;
+                        size_t nm   = 0;
                         for (l=k;l>=1;l--)
                         {
                             /* Test for splitting. */
                             nm=l-1;
 
                             /* Note that rv1[1] is always zero. */
-                            if ((T)(FabsOf(rv1[l])+anorm) == anorm)
+                            //if ((T)(FabsOf(rv1[l])+anorm) == anorm)
+                            if( unchanged(rv1[l],anorm) )
                             {
                                 flag=0;
                                 break;
                             }
-                            if ((T)(FabsOf(w[nm])+anorm) == anorm) break;
+
+                            //if ((T)(FabsOf(w[nm])+anorm) == anorm) break;
+                            if( unchanged(w[nm],anorm)) break;
                         }
                         if (flag)
                         {
@@ -194,7 +204,8 @@ namespace Yttrium
                             for(size_t i=l;i<=k;i++) {
                                 f=s*rv1[i];
                                 rv1[i]=c*rv1[i];
-                                if ((T)(FabsOf(f)+anorm) == anorm) break;
+                                //if ((T)(FabsOf(f)+anorm) == anorm) break;
+                                if( unchanged(f,anorm)) break;
                                 g=w[i];
                                 h=Hypotenuse(f,g);
                                 w[i]=h;
