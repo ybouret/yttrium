@@ -12,7 +12,17 @@
 using namespace Yttrium;
 using namespace MKL;
 
+namespace
+{
+    template <typename TARGET, typename SOURCE>   inline
+    void Load(TARGET &target, SOURCE &source, Concurrent::SIMD &simd)
+    {
+        assert(target.size()<=source.size());
 
+        for(size_t i=target.size();i>0;--i)
+            target[i] = source[i];
+    }
+}
 
 Y_UTEST(tao)
 {

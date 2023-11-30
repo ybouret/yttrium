@@ -26,14 +26,14 @@ namespace Yttrium
              \param length input: total length. output: worker length
              \param offset input: global offset. output: local offset
 
-             a zero length means nothing to locally do.
+             a zero length means nothing to locally do, and offset is reset
              */
             template <typename T, typename U> static inline
             void With(const T size, const T rank, U &length, U &offset) noexcept
             {
                 assert(size>0);
                 assert(rank<size);
-
+                const U origin = offset;
                 T left = size;
                 U todo = length/left;
                 for(T r=0;r<rank;++r)
@@ -43,7 +43,7 @@ namespace Yttrium
                     offset += todo;
                     todo    = length/left;
                 }
-                length = todo;
+                if( (length = todo) <= 0 ) offset = origin;
             }
 
             //! split for a given context

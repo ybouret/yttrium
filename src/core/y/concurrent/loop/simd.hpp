@@ -69,7 +69,7 @@ namespace Yttrium
             //__________________________________________________________________
             explicit SIMD(const SharedLoop &); //!< setup from shared loop
             explicit SIMD(Loop             *); //!< setup from new loop
-            virtual ~SIMD() noexcept;
+            virtual ~SIMD()          noexcept; //!< cleanup
 
             //__________________________________________________________________
             //
@@ -82,14 +82,39 @@ namespace Yttrium
             /**
              \param dataLength global data length
              \param dataOffset global data offset
-             \return number of active ranges
              */
-            size_t dispatch(const size_t dataLength, const size_t dataOffset=1) noexcept;
+            void dispatch(const size_t dataLength, const size_t dataOffset=1) noexcept;
 
             //! test call
             void operator()(void) noexcept;
 
             
+            //! proc(range,args)
+            template <typename PROC, typename ARGS> inline
+            void operator()(PROC &proc, ARGS &args)
+            {
+                Call1<PROC,ARGS> call = { *this, proc, args };
+                (*loop)(call);
+            }
+
+            //! proc(range,arg1,arg2)
+            template <typename PROC, typename ARG1, typename ARG2> inline
+            void operator()(PROC &proc, ARG1 &arg1, ARG2 &arg2)
+            {
+                Call2<PROC,ARG1,ARG2> call = { *this, proc, arg1, arg2 };
+                (*loop)(call);
+            }
+
+            //! proc(range,arg1,arg2,arg3)
+            template <typename PROC, typename ARG1, typename ARG2, typename ARG3> inline
+            void operator()(PROC &proc, ARG1 &arg1, ARG2 &arg2, ARG3 &arg3)
+            {
+                Call3<PROC,ARG1,ARG2,ARG3> call = { *this, proc, arg1, arg2, arg3 };
+                (*loop)(call);
+            }
+
+
+
 
             //__________________________________________________________________
             //
@@ -107,11 +132,40 @@ namespace Yttrium
             SharedLoop  loop;
             Code       *code;
 
-            struct Call0
-            {
+            struct CallMe {
                 const Ranges &ranges;
                 void operator()(const ThreadContext &ctx) const;
             };
+
+
+            template <typename PROC, typename ARGS>
+            struct Call1 {
+                const Ranges &ranges;
+                PROC         &proc;
+                ARGS         &args;
+                inline void operator()(const ThreadContext &ctx) { proc(ranges[ctx.indx],args); }
+            };
+
+            template <typename PROC, typename ARG1, typename ARG2>
+            struct Call2 {
+                const Ranges &ranges;
+                PROC         &proc;
+                ARG1         &arg1;
+                ARG2         &arg2;
+                inline void operator()(const ThreadContext &ctx) { proc(ranges[ctx.indx],arg1,arg2); }
+            };
+
+
+            template <typename PROC, typename ARG1, typename ARG2, typename ARG3>
+            struct Call3 {
+                const Ranges &ranges;
+                PROC         &proc;
+                ARG1         &arg1;
+                ARG2         &arg2;
+                ARG3         &arg3;
+                inline void operator()(const ThreadContext &ctx) { proc(ranges[ctx.indx],arg1,arg2,arg3); }
+            };
+
 
 
         public:

@@ -63,14 +63,13 @@ namespace Yttrium
         {
         }
        
-        size_t SIMD:: dispatch(const size_t dataLength, const size_t dataOffset) noexcept
+        void SIMD:: dispatch(const size_t dataLength, const size_t dataOffset) noexcept
         {
             assert(0!=code);
             assert( loop->size() == code->size() );
 
             const Readable<const Range> &self  = *code;
             const size_t                 size_ = self.size();
-            size_t                       ans   = 0;
             
             for(size_t rank=0,indx=1;rank<size_;++rank,++indx)
             {
@@ -78,13 +77,11 @@ namespace Yttrium
                 size_t      &rangeLength = (Coerce(range.length)=dataLength);
                 size_t      &rangeOffset = (Coerce(range.offset)=dataOffset);
                 Split::With(size_,rank,rangeLength,rangeOffset);
-                if(rangeLength>0) ++ans;
             }
 
             Coerce(full.offset) = dataOffset;
             Coerce(full.length) = dataLength;
 
-            return ans;
         }
 
         size_t SIMD:: size() const noexcept
@@ -106,7 +103,7 @@ namespace Yttrium
         }
 
 
-        void SIMD:: Call0:: operator()(const ThreadContext &ctx) const
+        void SIMD:: CallMe:: operator()(const ThreadContext &ctx) const
         {
             const Range &range = ranges[ctx.indx];
             Y_LOCK(ctx.sync);
@@ -117,7 +114,7 @@ namespace Yttrium
 
         void SIMD:: operator()(void) noexcept
         {
-            const Call0 call = { *this };
+            const CallMe call = { *this };
             (*loop)(call);
         }
 
