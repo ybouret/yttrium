@@ -4,7 +4,7 @@
 #include "../../../core/tests/main.hpp"
 #include "y/container/cxx/array.hpp"
 #include "y/system/rtti.hpp"
-#include "y/mkl/tao.hpp"
+#include "y/mkl/tao/level1.hpp"
 
 using namespace Yttrium;
 using namespace MKL;

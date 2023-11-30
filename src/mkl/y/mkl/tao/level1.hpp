@@ -10,14 +10,14 @@ namespace Yttrium
     namespace MKL
     {
 
-        //! Template Algebraic Operations
-        struct Tao
+        // //! Template Algebraic Operations
+        namespace Tao
         {
             //__________________________________________________________________
             //
             //! target[1..target.size()] = source[1..target.size()]
             //__________________________________________________________________
-            template <typename TARGET, typename SOURCE> static inline
+            template <typename TARGET, typename SOURCE>   inline
             void Load(TARGET &target, SOURCE &source)
             {
                 assert(target.size()<=source.size());
@@ -29,7 +29,7 @@ namespace Yttrium
             //
             //! target[1..source.size()] = source[1..source.size()]
             //__________________________________________________________________
-            template <typename TARGET, typename SOURCE> static inline
+            template <typename TARGET, typename SOURCE>   inline
             void Save(TARGET &target, SOURCE &source)
             {
                 assert(target.size()>=source.size());
@@ -41,7 +41,7 @@ namespace Yttrium
             //
             //! target += source
             //__________________________________________________________________
-            template <typename TARGET, typename SOURCE> static inline
+            template <typename TARGET, typename SOURCE>   inline
             void Add( TARGET &target, SOURCE &source )
             {
                 assert(target.size()==source.size());
@@ -54,7 +54,7 @@ namespace Yttrium
             //
             //! target += factor * source
             //__________________________________________________________________
-            template <typename TARGET, typename T, typename SOURCE> static inline
+            template <typename TARGET, typename T, typename SOURCE>   inline
             void Add( TARGET &target, T factor, SOURCE &source )
             {
                 assert(target.size()==source.size());
@@ -66,7 +66,7 @@ namespace Yttrium
             //
             //! target = source + factor * vector
             //__________________________________________________________________
-            template <typename TARGET, typename SOURCE, typename T, typename VECTOR> static inline
+            template <typename TARGET, typename SOURCE, typename T, typename VECTOR>   inline
             void Add( TARGET &target, SOURCE &source, T factor, VECTOR &vector)
             {
                 assert(target.size()==source.size());
@@ -79,7 +79,7 @@ namespace Yttrium
             //
             //! |source|^2
             //__________________________________________________________________
-            template <typename SOURCE> static inline
+            template <typename SOURCE>   inline
             typename ScalarFor< typename SOURCE::Type >::Type Mod2(SOURCE &source)
             {
                 typename ScalarFor< typename SOURCE::Type >::Type res(0);
@@ -92,7 +92,7 @@ namespace Yttrium
             //
             //! |primary-replica|^2
             //__________________________________________________________________
-            template <typename PRIMARY, typename REPLICA> static inline
+            template <typename PRIMARY, typename REPLICA>   inline
             typename ScalarFor<typename PRIMARY::Type>::Type Mod2(PRIMARY &primary, REPLICA &replica)
             {
                 assert(primary.size()==replica.size());
