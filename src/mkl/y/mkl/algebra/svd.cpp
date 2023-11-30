@@ -17,6 +17,7 @@ namespace Yttrium
             Object(),
             zero(0),
             one(1),
+            two(2),
             rv1()
             {
             }
@@ -25,6 +26,7 @@ namespace Yttrium
 
             const T   zero;
             const T   one;
+            const T   two;
             Vector<T> rv1;
 
             static const size_t MAX_ITS = 1024; //!< maximum iterations
@@ -85,7 +87,7 @@ namespace Yttrium
                             a[i][i]=f-g;
                             for(size_t j=l;j<=n;++j)
                             {
-                                for(s=0.0,k=i;k<=m;++k)
+                                for(s=zero,k=i;k<=m;++k)
                                     s += a[k][i]*a[k][j];
                                 f=s/h;
                                 for(k=i;k<=m;++k)
@@ -137,7 +139,7 @@ namespace Yttrium
                                 v[j][i]=(a[i][j]/a[i][l])/g;
                             for(size_t j=l;j<=n;j++)
                             {
-                                for (s=0.0,k=l;k<=n;++k)
+                                for (s=zero,k=l;k<=n;++k)
                                     s += a[i][k]*v[k][j];
                                 for (k=l;k<=n;++k)
                                     v[k][j] += s*v[k][i];
@@ -159,10 +161,10 @@ namespace Yttrium
                         a[i][j]=zero;
                     if(FabsOf(g)>zero)
                     {
-                        g=T(1)/g;
+                        g=one/g;
                         for(size_t j=l;j<=n;j++)
                         {
-                            for (s=0,k=l;k<=m;k++) s += a[k][i]*a[k][j];
+                            for (s=zero,k=l;k<=m;k++) s += a[k][i]*a[k][j];
                             f=(s/a[i][i])*g;
                             for (k=i;k<=m;k++) a[k][j] += f*a[k][i];
                         }
@@ -237,10 +239,10 @@ namespace Yttrium
                         y=w[nm];
                         g=rv1[nm];
                         h=rv1[k];
-                        f=((y-z)*(y+z)+(g-h)*(g+h))/(T(2)*h*y);
-                        g=Hypotenuse(f,T(1));
+                        f=((y-z)*(y+z)+(g-h)*(g+h))/(two*h*y);
+                        g=Hypotenuse(f,one);
                         f=((x-z)*(x+z)+h*((y/(f+Sgn(g,f)))-h))/x;
-                        c=s=1; /* Next QR transformation: */
+                        c=s=one; /* Next QR transformation: */
                         for(size_t j=l;j<=nm;j++)
                         {
                             const size_t i=j+1;
@@ -266,7 +268,7 @@ namespace Yttrium
                             z=Hypotenuse(f,h);
                             w[j]=z; /* Rotation can be arbitrary if z = 0. */
                             if(z>zero) {
-                                z=T(1)/z;
+                                z=one/z;
                                 c=f*z;
                                 s=h*z;
                             }
