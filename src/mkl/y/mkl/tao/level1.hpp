@@ -1,5 +1,5 @@
-#ifndef Y_MKL_Tao_Included
-#define Y_MKL_Tao_Included 1
+#ifndef Y_MKL_Tao1_Included
+#define Y_MKL_Tao1_Included 1
 
 
 #include "y/mkl/api.hpp"
@@ -10,7 +10,6 @@ namespace Yttrium
     namespace MKL
     {
 
-        // //! Template Algebraic Operations
         namespace Tao
         {
             //__________________________________________________________________

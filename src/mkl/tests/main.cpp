@@ -6,6 +6,7 @@ Y_UTEST_DECL(32)
     Y_UTEST(triplet);    
     Y_UTEST(interval);
     Y_UTEST(utils);
+    Y_UTEST(tao);
     
     Y_UTEST(ode_rk4);
     Y_UTEST(odeint);

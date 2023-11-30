@@ -5,6 +5,9 @@
 
 #include "y/concurrent/loop/kernel.hpp"
 #include "y/container/readable.hpp"
+#include "y/object.hpp"
+#include "y/counted.hpp"
+#include "y/ptr/arc.hpp"
 
 namespace Yttrium
 {
@@ -41,7 +44,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Loop : public Readable<const ThreadContext>
+        class Loop : public Object, public Counted, public Readable<const ThreadContext>
         {
         public:
             //__________________________________________________________________
@@ -75,6 +78,8 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Loop);
         };
+
+        typedef ArcPtr<Loop> SharedLoop;
 
     }
 
