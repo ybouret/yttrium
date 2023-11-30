@@ -6,6 +6,8 @@
 
 #include "y/concurrent/thread.hpp"
 #include "y/string/env.hpp"
+#include "y/sequence/vector.hpp"
+
 
 #include "y/utest/run.hpp"
 
@@ -18,9 +20,22 @@ namespace
     void Load(TARGET &target, SOURCE &source, Concurrent::SIMD &simd)
     {
         assert(target.size()<=source.size());
+        struct Work
+        {
+            void operator()(const Concurrent::Range &range, TARGET &target, SOURCE &source)
+            {
+                for(size_t i=range.offset,k=range.length;k>0;--k,++i)
+                {
+                    target[i] = source[i];
+                }
+            }
+        };
 
-        for(size_t i=target.size();i>0;--i)
-            target[i] = source[i];
+        Work todo = {};
+        simd(todo,target,source);
+
+
+        // for(size_t i=target.size();i>0;--i)             target[i] = source[i];
     }
 }
 
@@ -42,6 +57,13 @@ Y_UTEST(tao)
     par();
 
     std::cerr << std::endl;
+
+    Vector<double> v(5,0);
+    Vector<int>    u(5,0);
+
+    Load(v,u,seq);
+    
+
 
 
 }
