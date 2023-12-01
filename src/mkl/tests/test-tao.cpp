@@ -25,7 +25,23 @@ namespace
     private:
         Y_DISABLE_COPY_AND_ASSIGN(TaoRes1D);
 
-        virtual void attach()
+        virtual void attach(const Concurrent::ThreadContext &)
+        {
+
+        }
+    };
+
+
+    class TaoRes2D : public Concurrent::Resource2D<size_t>
+    {
+    public:
+        explicit TaoRes2D() noexcept {}
+        virtual ~TaoRes2D() noexcept {}
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(TaoRes2D);
+
+        virtual void attach(const Concurrent::ThreadContext &)
         {
 
         }
@@ -64,11 +80,18 @@ Y_UTEST(tao)
     Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
     const Concurrent::Topology topo;
 
-    typedef Concurrent::SIMD<size_t,TaoRes1D> TaoSIMD;
+    typedef Concurrent::SIMD<size_t,TaoRes1D> Tao1D;
+    typedef Concurrent::SIMD<size_t,TaoRes2D> Tao2D;
 
-    TaoSIMD seq( new Concurrent::Mono()     );
-    TaoSIMD par( new Concurrent::Crew(topo) );
+    Concurrent::SharedLoop seqLoop = new Concurrent::Mono();
+    Concurrent::SharedLoop parLoop = new Concurrent::Crew(topo);
+
+    Tao1D seq( seqLoop );
+    Tao1D par( parLoop );
+    
     size_t n = 4;
+    size_t m = 5;
+
 
     std::cerr << std::endl;
     std::cerr << "seq=" << seq << std::endl;
@@ -79,6 +102,12 @@ Y_UTEST(tao)
     std::cerr << "par=" << par << std::endl;
     par.dispatch(1,n,1);
     std::cerr << "par=" << par << std::endl;
+
+    Tao2D seq2d( seqLoop );
+    std::cerr << std::endl;
+    std::cerr << "seq2d=" << seq2d << std::endl;
+    seq2d.dispatch(V2D<size_t>(1,1),V2D<size_t>(n,m));
+    std::cerr << "seq2d=" << seq2d << std::endl;
 
 
 

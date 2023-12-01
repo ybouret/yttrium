@@ -168,10 +168,14 @@ namespace Yttrium
                 //! display as an array of segments
                 inline friend std::ostream & operator<<(std::ostream &os, const Tile &tile)
                 {
+                    const size_t n  = tile.size;
+                    const size_t nm = n-1;
                     os << '{' << std::endl;
-                    for(size_t i=0;i<tile.size;++i)
+                    for(size_t i=0;i<n;++i)
                     {
-                        os << ' ' << tile.base[i] << std::endl;
+                        os << ' ' << tile.base[i];
+                        if(nm==i) os << " @total=" << tile.items;
+                        os << std::endl;
                     }
                     return os << '}';
                 }
@@ -427,8 +431,8 @@ namespace Yttrium
                     // compute items for this rank
                     //
                     //----------------------------------------------------------
-                    Size offset = 0;
-                    Size length = items;
+                    //Size offset = 0;
+                    //Size length = items;
                     //Split::For(ctx,length,offset); assert(length>0);
                     const Size start = 0;
                     //const Size length = items;

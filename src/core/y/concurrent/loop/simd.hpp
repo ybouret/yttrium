@@ -5,10 +5,11 @@
 #define Y_Concurrent_SIMD_Included 1
 
 #include "y/concurrent/loop/interface.hpp"
-#include "y/concurrent/split/for-loop.hpp"
+#include "y/concurrent/split/tiling.hpp"
 #include "y/ostream-proto.hpp"
 #include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
+#include "y/type/nullify.hpp"
 
 namespace Yttrium
 {
@@ -44,7 +45,7 @@ namespace Yttrium
 
         protected:
             explicit Resource() noexcept {}
-            virtual  void attach() = 0;
+            virtual  void attach(const ThreadContext &) = 0;
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Resource);
         };
@@ -61,14 +62,44 @@ namespace Yttrium
             {
                 ForLoop<T> trek = Split::For(cntx,head,tail,step);
                 this->swapWith(trek);
-                attach();
+                attach(cntx);
             }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Resource1D);
         };
 
-        
+        template <typename T>
+        class Resource2D : public Resource
+        {
+        public:
+            typedef typename Tiling<T>::Tile Tile;
+            inline explicit Resource2D() noexcept : tile(0) {}
+            inline virtual ~Resource2D() noexcept {}
+
+            void setup(const ThreadContext &cntx, 
+                       const V2D<T>        &lower,
+                       const V2D<T>        &upper)
+            {
+                Tile *tmp = Tiling<T>::Tiles::For(cntx,lower,upper);
+                tile = tmp;
+                attach(cntx);
+            }
+
+            inline friend std::ostream & operator<<(std::ostream &os, const Resource2D &self)
+            {
+                os << self.tile;
+                return os;
+            }
+
+
+        private:
+            AutoPtr<Tile> tile;
+            Y_DISABLE_COPY_AND_ASSIGN(Resource2D);
+        };
+
+
+
 
 
         template <typename T, typename RESOURCE>
@@ -93,13 +124,24 @@ namespace Yttrium
                 }
             }
 
+            void dispatch(const V2D<T> lower, const V2D<T> upper)
+            {
+                Resources  &self = *this;
+                const Loop &team = *loop; assert( team.size() == self.size() );
+                for(size_t i=team.size();i>0;--i)
+                {
+                    Resource2D<T> &resource = self[i];
+                    resource.setup(team[i],lower,upper);
+                }
+            }
+
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SIMD);
         };
 
-        
+
 
 
     }
