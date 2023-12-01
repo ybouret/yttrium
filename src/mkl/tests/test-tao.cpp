@@ -16,6 +16,23 @@ using namespace MKL;
 
 namespace
 {
+    class TaoRes1D : public Concurrent::Resource1D<size_t>
+    {
+    public:
+        explicit TaoRes1D() noexcept {}
+        virtual ~TaoRes1D() noexcept {}
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(TaoRes1D);
+
+        virtual void attach()
+        {
+
+        }
+    };
+
+
+
 #if 0
     template <typename TARGET, typename SOURCE>   inline
     void Load(TARGET &target, SOURCE &source, Concurrent::SIMD &simd)
@@ -46,6 +63,25 @@ Y_UTEST(tao)
 {
     Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
     const Concurrent::Topology topo;
+
+    typedef Concurrent::SIMD<size_t,TaoRes1D> TaoSIMD;
+
+    TaoSIMD seq( new Concurrent::Mono()     );
+    TaoSIMD par( new Concurrent::Crew(topo) );
+    size_t n = 4;
+
+    std::cerr << std::endl;
+    std::cerr << "seq=" << seq << std::endl;
+    seq.dispatch(1,n,1);
+    std::cerr << "seq=" << seq << std::endl;
+
+    std::cerr << std::endl;
+    std::cerr << "par=" << par << std::endl;
+    par.dispatch(1,n,1);
+    std::cerr << "par=" << par << std::endl;
+
+
+
 
 #if 0
     Concurrent::SIMD<size_t> seq( new Concurrent::Mono()     );

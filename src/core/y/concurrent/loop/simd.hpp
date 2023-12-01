@@ -8,6 +8,7 @@
 #include "y/concurrent/split/for-loop.hpp"
 #include "y/ostream-proto.hpp"
 #include "y/container/cxx/array.hpp"
+#include "y/memory/allocator/dyadic.hpp"
 
 namespace Yttrium
 {
@@ -21,6 +22,7 @@ namespace Yttrium
             class SIMD
             {
             public:
+                typedef Memory::Dyadic Model;
                 virtual ~SIMD() noexcept;
 
             protected:
@@ -31,63 +33,74 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(SIMD);
             };
+
         }
 
-#if 0
-        template <typename T>
-        class SIMD : public Nucleus::SIMD, public CxxArray< const ForLoop<T> >
+
+        class Resource
         {
         public:
-            typedef CxxArray< const ForLoop<T> > Ranges;
+            virtual ~Resource() noexcept {}
 
-            inline explicit SIMD(const SharedLoop &team) :
-            Nucleus::SIMD(team), Ranges(loop->size())
+        protected:
+            explicit Resource() noexcept {}
+            virtual  void attach() = 0;
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Resource);
+        };
+
+
+        template <typename T>
+        class Resource1D : public Resource, public ForLoop<T>
+        {
+        public:
+            inline explicit Resource1D() noexcept : ForLoop<T>() {}
+            inline virtual ~Resource1D() noexcept {}
+
+            void setup(const ThreadContext &cntx, const T head, const T tail, const T step)
             {
+                ForLoop<T> trek = Split::For(cntx,head,tail,step);
+                this->swapWith(trek);
+                attach();
             }
 
-            inline explicit SIMD(Loop *team) :
-            Nucleus::SIMD(team), Ranges(loop->size())
-            {
-            }
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Resource1D);
+        };
 
-            inline void dispatch(const T head, const T tail, const T step)
+        
+
+
+        template <typename T, typename RESOURCE>
+        class SIMD : public Nucleus::SIMD, public CxxArray<RESOURCE,Nucleus::SIMD::Model>
+        {
+        public:
+            typedef CxxArray<RESOURCE,Model> Resources;
+
+            inline explicit SIMD(const SharedLoop &team) : Nucleus::SIMD(team), Resources(loop->size()) {}
+            inline explicit SIMD(Loop *            team) : Nucleus::SIMD(team), Resources(loop->size()) {}
+            
+            inline virtual ~SIMD() noexcept {}
+
+            void dispatch(const T head, const T tail, const T step)
             {
-                const Readable<const ThreadContext> &cntx = *loop;
-                Writable<const ForLoop<T> >         &self = *this; assert(self.size()==cntx.size());
-                for(size_t i=cntx.size();i>0;--i)
+                Resources  &self = *this;
+                const Loop &team = *loop; assert( team.size() == self.size() );
+                for(size_t i=team.size();i>0;--i)
                 {
-                    ForLoop<T> trek = Split::For(cntx[i],head,tail,step);
-                    Coerce(self[i]).swapWith(trek);
+                    Resource1D<T> &resource = self[i];
+                    resource.setup(team[i], head, tail, step);
                 }
             }
-
-            inline void operator()(void) {
-                const CallMe call = { *this };
-                (*loop)(call);
-            }
-
-
 
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SIMD);
-
-            struct CallMe
-            {
-                const Ranges &self;
-                void operator()(const ThreadContext &ctx) const
-                {
-                    const ForLoop<T> &trek = self[ctx.indx];
-                    Y_LOCK(ctx.sync);
-                    std::cerr << "SIMD @" << trek << std::endl;
-                }
-            };
-
-
         };
-#endif
- 
+
+        
+
 
     }
 
