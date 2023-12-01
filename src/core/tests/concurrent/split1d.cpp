@@ -19,7 +19,7 @@ Y_UTEST(concurrent_split1d)
 
 
     int head = 1;
-    int tail = 3;
+    int tail = 10;
     int step = 1;
     if(argc>1) head = ASCII::Convert::To<int>(argv[1],"head");
     if(argc>2) tail = ASCII::Convert::To<int>(argv[2],"tail");

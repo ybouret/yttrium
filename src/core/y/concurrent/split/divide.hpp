@@ -13,28 +13,59 @@ namespace Yttrium
 
     namespace Concurrent
     {
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Trek of precomputed indices
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class TrekOf : public Trek
         {
         public:
-            typedef T                                     Type;
-            typedef typename UnsignedInt<sizeof(T)>::Type Size;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef T                                     Type; //!< alias
+            typedef typename UnsignedInt<sizeof(T)>::Type Size; //!< unsigned alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup
+            /**
+             \param start first index
+             \param count number of indices: zero means empty
+             \param delta step between each index
+             \param stop  final reached index
+             */
             inline TrekOf(const Type start,
                           const Size count,
                           const Type delta,
-                          const Type stop_) noexcept :
+                          const Type stop) noexcept:
             Trek( GetKind(delta) ),
             offset(start),
             length(count),
             update(delta),
-            latest(stop_)
+            latest(stop)
             {
                 assert(0!=update);
 
             }
 
-            inline TrekOf(const TrekOf &trek) noexcept :
+
+            //! copy
+            inline TrekOf(const TrekOf &trek) noexcept:
             Trek(trek),
             offset(trek.offset),
             length(trek.length),
@@ -43,8 +74,10 @@ namespace Yttrium
             {
             }
 
+            //! cleanup
             inline ~TrekOf() noexcept {}
 
+            //! display
             inline friend std::ostream & operator<<(std::ostream &os, const TrekOf &trek)
             {
                 os << '#';
@@ -60,8 +93,14 @@ namespace Yttrium
                 return os;
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
             const Type offset; //!< initial value
-            const Size length; //!< number of stops
+            const Size length; //!< number of indices
             const Type update; //!< step
             const Type latest; //!< final value
 
@@ -86,9 +125,18 @@ namespace Yttrium
 
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Dividing loops into treks
+        //
+        //
+        //______________________________________________________________________
         struct Divide
         {
 
+            //! for(T i=head;i<=tail;i += step) => Trek for size.rank
             template <typename T, typename U> static inline
             TrekOf<T> For(const U &size,
                           const U &rank,
@@ -153,6 +201,8 @@ namespace Yttrium
                 }
             }
 
+
+            //! for(T i=head;i<=tail;i += step) => Trek for context
             template <typename T> static inline
             TrekOf<T> For(const Context & cntx,
                           const T &       head,
@@ -163,6 +213,7 @@ namespace Yttrium
             }
 
 
+            //! V count=length; for(T i=offset;count>0;++i,--count) => Trek for size.rank
             template <typename T,typename U,typename V> static inline
             TrekOf<T> Using(const U &size,
                             const U &rank,
@@ -181,6 +232,7 @@ namespace Yttrium
                 }
             }
 
+            //! V count=length; for(T i=offset;count>0;++i,--count) => Trek for context
             template <typename T, typename V> static inline
             TrekOf<T> Using(const Context &cntx,
                             const V       &length,
@@ -189,6 +241,7 @@ namespace Yttrium
                 return Using(cntx.size,cntx.rank,length,offset);
             }
 
+            //! for(size_t i=1;i<=seq.size();++i) => Trek for size.rank
             template <typename U, typename SEQUENCE> static inline
             TrekOf<size_t> Part(const U &size, const U &rank, SEQUENCE &seq)
             {
@@ -197,7 +250,7 @@ namespace Yttrium
                 return Using(size,rank,length,offset);
             }
 
-
+            //! for(size_t i=1;i<=seq.size();++i) => Trek for context
             template <typename SEQUENCE> static inline
             TrekOf<size_t> Part(const Context &ctx, SEQUENCE &seq)
             {

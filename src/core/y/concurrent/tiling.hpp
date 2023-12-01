@@ -7,7 +7,7 @@
 #include "y/memory/wad.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/mkl/v2d.hpp"
-#include "y/concurrent/split.hpp"
+#include "y/concurrent/split/divide.hpp"
 #include "y/type/utils.hpp"
 #include "y/type/proxy.hpp"
 #include "y/object.hpp"
@@ -380,10 +380,13 @@ namespace Yttrium
                         // compute items for this rank
                         //
                         //------------------------------------------------------
-                        Size offset = 0;
-                        Size length = items;
-                        Split::With(count, rank, length, offset); assert(length>0);
-                        tiling.pushTail( MakeTile(lower, upper, width, offset, length) );
+                        const Size start = 0;
+                        //const Size length = items;
+                        const TrekOf<Size> trek = Divide::Using(count, rank, items, start);
+                        assert(trek.length>0);
+                        //Split::With(count, rank, length, offset); assert(length>0);
+
+                        tiling.pushTail( MakeTile(lower, upper, width, trek.offset, trek.length) );
                     }
                 }
 
@@ -426,14 +429,18 @@ namespace Yttrium
                     //----------------------------------------------------------
                     Size offset = 0;
                     Size length = items;
-                    Split::For(ctx,length,offset); assert(length>0);
+                    //Split::For(ctx,length,offset); assert(length>0);
+                    const Size start = 0;
+                    //const Size length = items;
+                    const TrekOf<Size> trek = Divide::Using(ctx, items, start); 
+                    assert(trek.length>0);
 
                     //----------------------------------------------------------
                     //
                     // return matching Tile
                     //
                     //----------------------------------------------------------
-                    return MakeTile(lower, upper, width, offset, length);
+                    return MakeTile(lower, upper, width, trek.offset, trek.length);
                 }
 
             private:

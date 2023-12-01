@@ -1,7 +1,7 @@
 #include "y/concurrent/loop/mono.hpp"
 #include "y/concurrent/loop/crew.hpp"
 #include "y/concurrent/thread.hpp"
-#include "y/concurrent/split.hpp"
+#include "y/concurrent/split/divide.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/utils.hpp"
 #include "y/sequence/vector.hpp"
@@ -27,14 +27,15 @@ namespace   {
         inline void operator()(const Concurrent::ThreadContext &ctx)
         {
             assert(partial.size()>=ctx.size);
-            uint32_t offset = 1;
-            uint32_t length = count;
-            Concurrent::Split::For(ctx, length, offset);
-            Y_THREAD_MSG("In " << ctx.name << ": from " << offset << " +" << length);
+            const uint32_t offset = 1;
+            const uint32_t length = count;
+            const Concurrent::TrekOf<uint32_t> trek = Concurrent::Divide::Using(ctx, length, offset);
+            Y_ASSERT(Concurrent::Trek::Increase==trek.kind);
+            Y_THREAD_MSG("In " << ctx.name << ": from " << trek);
             double sum = 0;
-            for(;length>0;++offset,--length)
+            for(uint32_t i=trek.offset,j=trek.length;j>0;--j,++i)
             {
-                sum += 1.0 / Squared( double(offset) );
+                sum += 1.0 / Squared( double(i) );
             }
             partial[ctx.indx] = sum;
         }
@@ -57,7 +58,6 @@ Y_UTEST(concurrent_loop)
 {
     Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
     Demo                       demo;
-    //Concurrent::ThreadKernel         kernel(&demo, & Demo::run);
     Concurrent::Mono           mono("mono");
     const Concurrent::Topology topo;
     Concurrent::Crew           crew(topo);
