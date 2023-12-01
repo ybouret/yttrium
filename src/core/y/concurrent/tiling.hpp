@@ -382,7 +382,7 @@ namespace Yttrium
                         //------------------------------------------------------
                         const Size start = 0;
                         //const Size length = items;
-                        const TrekOf<Size> trek = Divide::Using(count, rank, items, start);
+                        const ForLoop<Size> trek = Divide::Using(count, rank, items, start);
                         assert(trek.length>0);
                         //Split::With(count, rank, length, offset); assert(length>0);
 
@@ -432,7 +432,7 @@ namespace Yttrium
                     //Split::For(ctx,length,offset); assert(length>0);
                     const Size start = 0;
                     //const Size length = items;
-                    const TrekOf<Size> trek = Divide::Using(ctx, items, start); 
+                    const ForLoop<Size> trek = Divide::Using(ctx, items, start); 
                     assert(trek.length>0);
 
                     //----------------------------------------------------------

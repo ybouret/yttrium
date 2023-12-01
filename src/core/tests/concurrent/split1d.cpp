@@ -12,11 +12,6 @@ Y_UTEST(concurrent_split1d)
 {
 
 
-    Y_SIZEOF(Concurrent::TrekOf<int8_t>);
-    Y_SIZEOF(Concurrent::TrekOf<int16_t>);
-    Y_SIZEOF(Concurrent::TrekOf<int32_t>);
-    Y_SIZEOF(Concurrent::TrekOf<int64_t>);
-
 
     int head = 1;
     int tail = 10;
@@ -33,7 +28,7 @@ Y_UTEST(concurrent_split1d)
         std::cerr << "size=" << size << std::endl;
         for(size_t rank=0;rank<size;++rank)
         {
-            Concurrent::TrekOf<int> trek = Concurrent::Divide::For(size,rank, head, tail, step);
+            Concurrent::ForLoop<int> trek = Concurrent::Divide::For(size,rank, head, tail, step);
             std::cerr << "->" << trek << std::endl;
         }
     }

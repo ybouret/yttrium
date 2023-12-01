@@ -3,7 +3,6 @@
 #ifndef Y_Concurrent_Split_Divide_Included
 #define Y_Concurrent_Split_Divide_Included 1
 
-#include "y/concurrent/split/trek.hpp"
 #include "y/concurrent/context.hpp"
 #include "y/type/ints.hpp"
 #include <iostream>
@@ -14,6 +13,13 @@ namespace Yttrium
     namespace Concurrent
     {
 
+        enum ForLoopFamily
+        {
+            ForLoopIncrease, //!< step=1, may use prefix ++
+            ForLoopDecrease, //!< step=-1, may use prefix --
+            ForLoopStandard  //!< |step| > 1
+        };
+
         //______________________________________________________________________
         //
         //
@@ -23,7 +29,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename T>
-        class TrekOf : public Trek
+        class ForLoop
         {
         public:
             //__________________________________________________________________
@@ -49,15 +55,15 @@ namespace Yttrium
              \param delta step between each index
              \param stop  final reached index
              */
-            inline TrekOf(const Type start,
-                          const Size count,
-                          const Type delta,
-                          const Type stop) noexcept:
-            Trek( GetKind(delta) ),
+            inline ForLoop(const Type start,
+                           const Size count,
+                           const Type delta,
+                           const Type stop) noexcept:
             offset(start),
             length(count),
             update(delta),
-            latest(stop)
+            latest(stop),
+            family(Qualify(update))
             {
                 assert(0!=update);
 
@@ -65,20 +71,20 @@ namespace Yttrium
 
 
             //! copy
-            inline TrekOf(const TrekOf &trek) noexcept:
-            Trek(trek),
+            inline ForLoop(const ForLoop &trek) noexcept:
             offset(trek.offset),
             length(trek.length),
             update(trek.update),
-            latest(trek.latest)
+            latest(trek.latest),
+            family(trek.family)
             {
             }
 
             //! cleanup
-            inline ~TrekOf() noexcept {}
+            inline virtual ~ForLoop() noexcept {}
 
             //! display
-            inline friend std::ostream & operator<<(std::ostream &os, const TrekOf &trek)
+            inline friend std::ostream & operator<<(std::ostream &os, const ForLoop &trek)
             {
                 os << '#';
                 os << '[';
@@ -99,28 +105,28 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const Type offset; //!< initial value
-            const Size length; //!< number of indices
-            const Type update; //!< step
-            const Type latest; //!< final value
-
+            const Type          offset; //!< initial value
+            const Size          length; //!< number of indices
+            const Type          update; //!< step
+            const Type          latest; //!< final value
+            const ForLoopFamily family;
         private:
-            Y_DISABLE_ASSIGN(TrekOf);
+            Y_DISABLE_ASSIGN(ForLoop);
 
-            inline Kind GetKind(const T &step) noexcept {
+            inline ForLoopFamily Qualify(const T &step) noexcept {
                 static const Int2Type<IsSigned<T>::Value> choice = {};
-                return GetKind(choice,step);
+                return Qualify(choice,step);
             }
 
-            inline Kind GetKind(const Int2Type<false> &, const T &step) noexcept {
-                if(1==step) return Increase;
-                return Standard;
+            inline ForLoopFamily Qualify(const Int2Type<false> &, const T &step) noexcept {
+                if(1==step) return ForLoopIncrease;
+                return ForLoopStandard;
             }
 
-            inline Kind GetKind(const Int2Type<true> &, const T &step) noexcept {
-                if( 1 == step) return Increase;
-                if(-1 == step) return Decrease;
-                return Standard;
+            inline ForLoopFamily Qualify(const Int2Type<true> &, const T &step) noexcept {
+                if( 1 == step) return ForLoopIncrease;
+                if(-1 == step) return ForLoopDecrease;
+                return ForLoopStandard;
             }
 
         };
@@ -129,7 +135,7 @@ namespace Yttrium
         //
         //
         //
-        //! Dividing loops into treks
+        //! Dividing Global Loop into local ForLoops
         //
         //
         //______________________________________________________________________
@@ -138,11 +144,11 @@ namespace Yttrium
 
             //! for(T i=head;i<=tail;i += step) => Trek for size.rank
             template <typename T, typename U> static inline
-            TrekOf<T> For(const U &size,
-                          const U &rank,
-                          const T &head,
-                          const T &tail,
-                          const T &step)
+            ForLoop<T> For(const U &size,
+                           const U &rank,
+                           const T &head,
+                           const T &tail,
+                           const T &step)
             {
                 assert(size>0);
                 assert(rank<size);
@@ -160,7 +166,7 @@ namespace Yttrium
                     // empty Trek, level-1
                     //
                     //----------------------------------------------------------
-                    return TrekOf<T>(head,0,step,head);
+                    return ForLoop<T>(head,0,step,head);
                 }
                 else
                 {
@@ -187,7 +193,7 @@ namespace Yttrium
                         //------------------------------------------------------
                         // empty Trek, level-2
                         //------------------------------------------------------
-                        return TrekOf<T>(head,0,step,head);
+                        return ForLoop<T>(head,0,step,head);
                     }
                     else
                     {
@@ -196,7 +202,7 @@ namespace Yttrium
                         //------------------------------------------------------
                         const T start = head  + offset * step;
                         const T stop_ = start + (length-1) * step;
-                        return TrekOf<T>(start,length,step,stop_);
+                        return ForLoop<T>(start,length,step,stop_);
                     }
                 }
             }
@@ -204,10 +210,10 @@ namespace Yttrium
 
             //! for(T i=head;i<=tail;i += step) => Trek for context
             template <typename T> static inline
-            TrekOf<T> For(const Context & cntx,
-                          const T &       head,
-                          const T &       tail,
-                          const T &       step)
+            ForLoop<T> For(const Context & cntx,
+                           const T &       head,
+                           const T &       tail,
+                           const T &       step)
             {
                 return Using(cntx.size,cntx.rank,head,tail,step);
             }
@@ -215,15 +221,15 @@ namespace Yttrium
 
             //! V count=length; for(T i=offset;count>0;++i,--count) => Trek for size.rank
             template <typename T,typename U,typename V> static inline
-            TrekOf<T> Using(const U &size,
-                            const U &rank,
-                            const V &length,
-                            const T &offset)
+            ForLoop<T> Using(const U &size,
+                             const U &rank,
+                             const V &length,
+                             const T &offset)
             {
                 const T stride = 1;
                 if(length<=0)
                 {
-                    return TrekOf<T>(offset, 0, stride, offset);
+                    return ForLoop<T>(offset, 0, stride, offset);
                 }
                 else
                 {
@@ -234,16 +240,16 @@ namespace Yttrium
 
             //! V count=length; for(T i=offset;count>0;++i,--count) => Trek for context
             template <typename T, typename V> static inline
-            TrekOf<T> Using(const Context &cntx,
-                            const V       &length,
-                            const T       &offset)
+            ForLoop<T> Using(const Context &cntx,
+                             const V       &length,
+                             const T       &offset)
             {
                 return Using(cntx.size,cntx.rank,length,offset);
             }
 
             //! for(size_t i=1;i<=seq.size();++i) => Trek for size.rank
             template <typename U, typename SEQUENCE> static inline
-            TrekOf<size_t> Part(const U &size, const U &rank, SEQUENCE &seq)
+            ForLoop<size_t> Part(const U &size, const U &rank, SEQUENCE &seq)
             {
                 const size_t offset = 1;
                 const size_t length = seq.size();
@@ -252,7 +258,7 @@ namespace Yttrium
 
             //! for(size_t i=1;i<=seq.size();++i) => Trek for context
             template <typename SEQUENCE> static inline
-            TrekOf<size_t> Part(const Context &ctx, SEQUENCE &seq)
+            ForLoop<size_t> Part(const Context &ctx, SEQUENCE &seq)
             {
                 return Part(ctx.size,ctx.rank,seq);
             }
