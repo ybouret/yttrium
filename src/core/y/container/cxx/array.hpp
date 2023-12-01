@@ -33,6 +33,21 @@ namespace Yttrium
 
     }
 
+
+    //__________________________________________________________________________
+    //
+    //
+    //! helper to setup CxxArray
+    //
+    //__________________________________________________________________________
+#define Y_CxxArray_Ctor_Com(CAPACITY)                 \
+Writable<T>(),                                        \
+WritableContiguous<T>(),                              \
+Core::CxxArray(),                                     \
+cdata( static_cast<MutableType *>(this->workspace) ), \
+entry( cdata-1    ),\
+count( CAPACITY   )
+
     //__________________________________________________________________________
     //
     //
@@ -41,13 +56,8 @@ namespace Yttrium
     //__________________________________________________________________________
 #define Y_CxxArray_Ctor(CAPACITY)                     \
 OpsType(this->workspace,CAPACITY),                    \
-Writable<T>(),                                        \
-WritableContiguous<T>(),                              \
-Core::CxxArray(),                                     \
-cdata( static_cast<MutableType *>(this->workspace) ), \
-entry( cdata-1    ),\
-count( CAPACITY   )
-    
+Y_CxxArray_Ctor_Com(CAPACITY)
+
 
     //__________________________________________________________________________
     //
@@ -101,6 +111,15 @@ count( CAPACITY   )
                 Coerce(self[i]) = value;
         }
 
+        //! setup with 1-arg constructor [1:[n|nmax] objets
+        template <typename U>
+        inline explicit CxxArray(const size_t n, const CopyOf_ &, U &args ) :
+        WadType(n),
+        OpsType(this->workspace,SetCapa::From(n,*this),args),
+        Y_CxxArray_Ctor_Com(SetCapa::From(n,*this))
+        {
+
+        }
 
         //! setup from any compatible
         template <typename SOURCE>

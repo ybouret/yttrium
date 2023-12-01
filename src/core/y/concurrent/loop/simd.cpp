@@ -2,7 +2,6 @@
 #include "y/concurrent/loop/simd.hpp"
 #include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
-#include "y/concurrent/split.hpp"
 #include "y/type/nullify.hpp"
 
 namespace Yttrium
@@ -10,6 +9,7 @@ namespace Yttrium
     namespace Concurrent
     {
 
+#if 0
         Range::  Range() noexcept : length(0), offset(0) {}
         Range:: ~Range() noexcept {}
 
@@ -115,7 +115,7 @@ namespace Yttrium
             const CallMe call = { *this };
             (*loop)(call);
         }
-
+#endif
     }
 
 }

@@ -50,12 +50,13 @@ namespace Yttrium
             virtual const char * callSign()               const noexcept; //!< CallSign
             virtual size_t       size()                   const noexcept; //!< 1
             virtual ConstType &  operator[](const size_t) const noexcept; //!< self
-            virtual void         run(Kernel &)                  noexcept; //!< direct call
+            virtual void         run1(Kernel &)                 noexcept; //!< direct call
+            virtual Lockable &   sync()                         noexcept; //!< shared sync
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Mono);
 
-            FakeLock      sync;
+            FakeLock      mock;
             ThreadContext self;
         };
 

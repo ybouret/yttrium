@@ -12,8 +12,8 @@ namespace Yttrium
         }
 
         Mono:: Mono(const char *id) noexcept :
-        sync(id),
-        self(sync)
+        mock(id),
+        self(mock)
         {
         }
 
@@ -38,7 +38,7 @@ namespace Yttrium
         }
 
 
-        void Mono:: run(Kernel &kernel) noexcept
+        void Mono:: run1(Kernel &kernel) noexcept
         {
             try 
             {
@@ -50,6 +50,10 @@ namespace Yttrium
             }
         }
 
+        Lockable &  Mono:: sync() noexcept
+        {
+            return mock;
+        }
     }
 
 }

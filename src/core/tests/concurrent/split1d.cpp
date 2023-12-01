@@ -1,5 +1,5 @@
 
-#include "y/concurrent/split/divide.hpp"
+#include "y/concurrent/split/for-loop.hpp"
 #include "y/text/ascii/convert.hpp"
 #include "y/utest/run.hpp"
 
@@ -28,7 +28,7 @@ Y_UTEST(concurrent_split1d)
         std::cerr << "size=" << size << std::endl;
         for(size_t rank=0;rank<size;++rank)
         {
-            Concurrent::ForLoop<int> trek = Concurrent::Divide::For(size,rank, head, tail, step);
+            Concurrent::ForLoop<int> trek = Concurrent::Split::For(size,rank, head, tail, step);
             std::cerr << "->" << trek << std::endl;
         }
     }

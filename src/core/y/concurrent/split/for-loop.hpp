@@ -1,7 +1,7 @@
 
 
-#ifndef Y_Concurrent_Split_Divide_Included
-#define Y_Concurrent_Split_Divide_Included 1
+#ifndef Y_Concurrent_Split_For_Loop_Included
+#define Y_Concurrent_Split_For_Loop_Included 1
 
 #include "y/concurrent/context.hpp"
 #include "y/type/ints.hpp"
@@ -69,6 +69,16 @@ namespace Yttrium
 
             }
 
+            //! default setup empty
+            inline ForLoop() noexcept :
+            offset(0),
+            length(0),
+            update(1),
+            latest(0),
+            family(ForLoopIncrease)
+            {
+
+            }
 
             //! copy
             inline ForLoop(const ForLoop &trek) noexcept:
@@ -82,6 +92,13 @@ namespace Yttrium
 
             //! cleanup
             inline virtual ~ForLoop() noexcept {}
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
             //! display
             inline friend std::ostream & operator<<(std::ostream &os, const ForLoop &trek)
@@ -97,6 +114,16 @@ namespace Yttrium
                 os << '=';
                 os << trek.length;
                 return os;
+            }
+
+            //! no-throw exchange
+            inline void swapWith(ForLoop &trek) noexcept
+            {
+                CoerceSwap(offset,trek.offset);
+                CoerceSwap(length,trek.length);
+                CoerceSwap(update,trek.update);
+                CoerceSwap(latest,trek.latest);
+                CoerceSwap(family,trek.family);
             }
 
             //__________________________________________________________________
@@ -135,11 +162,11 @@ namespace Yttrium
         //
         //
         //
-        //! Dividing Global Loop into local ForLoops
+        //! Split Global Loop into Local Loop(s)
         //
         //
         //______________________________________________________________________
-        struct Divide
+        struct Split
         {
 
             //! for(T i=head;i<=tail;i += step) => Trek for size.rank
@@ -215,7 +242,7 @@ namespace Yttrium
                            const T &       tail,
                            const T &       step)
             {
-                return Using(cntx.size,cntx.rank,head,tail,step);
+                return For(cntx.size,cntx.rank,head,tail,step);
             }
 
 

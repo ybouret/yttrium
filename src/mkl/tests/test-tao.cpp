@@ -16,6 +16,7 @@ using namespace MKL;
 
 namespace
 {
+#if 0
     template <typename TARGET, typename SOURCE>   inline
     void Load(TARGET &target, SOURCE &source, Concurrent::SIMD &simd)
     {
@@ -37,19 +38,33 @@ namespace
 
         // for(size_t i=target.size();i>0;--i)             target[i] = source[i];
     }
+#endif
+
 }
 
 Y_UTEST(tao)
 {
     Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
     const Concurrent::Topology topo;
-    Concurrent::SIMD par( new Concurrent::Crew(topo) );
-    Concurrent::SIMD seq( new Concurrent::Mono()     );
+
+    Concurrent::SIMD<size_t> seq( new Concurrent::Mono()     );
+    Concurrent::SIMD<size_t> par( new Concurrent::Crew(topo) );
+
+
 
     size_t n = 4;
-    seq.dispatch(n);
-    par.dispatch(n);
+    seq.dispatch(1,n,1);
+    std::cerr << "seq=" << seq << std::endl;
+    par.dispatch(1,n,1);
+    std::cerr << "par=" << par << std::endl;
 
+    std::cerr << std::endl;
+    seq();
+
+    std::cerr << std::endl;
+    par();
+    
+#if 0
     std::cerr << std::endl;
     seq();
 
@@ -63,6 +78,7 @@ Y_UTEST(tao)
 
     Load(v,u,seq);
     
+#endif
 
 
 

@@ -52,7 +52,8 @@ namespace Yttrium
             virtual const char * callSign()               const noexcept; //!< CallSign
             virtual size_t       size()                   const noexcept; //!< number of internal threads
             virtual ConstType &  operator[](const size_t) const noexcept; //!< access
-            virtual void         run(Kernel &)                  noexcept; //!< dispatch/run kernel for every thread
+            virtual void         run1(Kernel &)                 noexcept; //!< dispatch/run kernel for every thread
+            virtual Lockable &   sync()                         noexcept; //!< shared sync
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Crew);

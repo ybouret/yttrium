@@ -284,10 +284,16 @@ namespace Yttrium
             return code->item[indx];
         }
 
-        void Crew:: run(Kernel &kernel) noexcept
+        void Crew:: run1(Kernel &kernel) noexcept
         {
             assert(0!=code);
             code->cycle(kernel);
+        }
+
+        Lockable & Crew:: sync() noexcept
+        {
+            assert(0!=code);
+            return code->sync;
         }
 
     }

@@ -55,13 +55,14 @@ namespace Yttrium
             //__________________________________________________________________
        
             //! execute the kernel, return when all done
-            virtual void run(Kernel &) noexcept = 0;
+            virtual void       run1(Kernel &) noexcept = 0;
+            virtual Lockable & sync()         noexcept = 0;
 
             //! wrapper to any kernel(context) interface
             template <typename KERNEL> inline
             void operator()(KERNEL &kernel) {
                 Nucleus::Crux<KERNEL> k(kernel);
-                run(k);
+                run1(k);
             }
 
             //__________________________________________________________________
