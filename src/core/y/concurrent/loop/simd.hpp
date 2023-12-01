@@ -21,8 +21,8 @@ namespace Yttrium
         class Range
         {
         public:
-            inline  Range() noexcept; //!< setup zero
-            inline ~Range() noexcept; //!< cleanup
+            explicit Range() noexcept; //!< setup zero
+            virtual ~Range() noexcept; //!< cleanup
             Y_OSTREAM_PROTO(Range);
 
             const size_t length; //!< number of indices
@@ -50,7 +50,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class SIMD : public Ranges
+        class SIMD : public Ranges, public Range
         {
         public:
             //__________________________________________________________________
@@ -166,10 +166,7 @@ namespace Yttrium
                 inline void operator()(const ThreadContext &ctx) { proc(ranges[ctx.indx],arg1,arg2,arg3); }
             };
 
-
-
-        public:
-            const Range full; //!< last global matching range
+            
         };
 
     }

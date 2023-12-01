@@ -28,12 +28,12 @@ namespace Yttrium
 
              a zero length means nothing to locally do, and offset is reset
              */
-            template <typename T, typename U> static inline
-            void With(const T size, const T rank, U &length, U &offset) noexcept
+            template <typename T, typename U, typename V> static inline
+            void With(const T size, const T rank, U &length, V &offset) noexcept
             {
                 assert(size>0);
                 assert(rank<size);
-                const U origin = offset;
+                const V origin = offset;
                 T left = size;
                 U todo = length/left;
                 for(T r=0;r<rank;++r)
@@ -47,8 +47,8 @@ namespace Yttrium
             }
 
             //! split for a given context
-            template <typename U> static inline
-            void For(const Context &ctx, U &length, U &offset) noexcept
+            template <typename U, typename V> static inline
+            void For(const Context &ctx, U &length, V &offset) noexcept
             {
                 With(ctx.size,ctx.rank,length,offset);
             }

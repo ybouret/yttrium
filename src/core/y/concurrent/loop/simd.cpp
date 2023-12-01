@@ -47,19 +47,17 @@ namespace Yttrium
         }
 
         SIMD:: SIMD(const SharedLoop &team) :
-        Readable<const Range>(),
+        Readable<const Range>(), Range(),
         loop( team ),
-        code( new Code(*loop) ),
-        full()
+        code( new Code(*loop) )
         {
         }
         
 
         SIMD:: SIMD(Loop *team) :
-        Readable<const Range>(),
+        Readable<const Range>(), Range(),
         loop( team ),
-        code( new Code(*loop) ),
-        full()
+        code( new Code(*loop) )
         {
         }
        
@@ -79,8 +77,8 @@ namespace Yttrium
                 Split::With(size_,rank,rangeLength,rangeOffset);
             }
 
-            Coerce(full.offset) = dataOffset;
-            Coerce(full.length) = dataLength;
+            Coerce(offset) = dataOffset;
+            Coerce(length) = dataLength;
 
         }
 
