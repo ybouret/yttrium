@@ -9,6 +9,7 @@ set(srcs ${quark})
 Y_CreateLibrary(y
 .
 concurrent/quark
+concurrent/split
 concurrent/thread
 concurrent/loop
 concurrent/pipeline
