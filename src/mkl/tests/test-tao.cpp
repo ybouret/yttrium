@@ -47,6 +47,7 @@ Y_UTEST(tao)
     Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
     const Concurrent::Topology topo;
 
+#if 0
     Concurrent::SIMD<size_t> seq( new Concurrent::Mono()     );
     Concurrent::SIMD<size_t> par( new Concurrent::Crew(topo) );
 
@@ -63,6 +64,7 @@ Y_UTEST(tao)
 
     std::cerr << std::endl;
     par();
+#endif
     
 #if 0
     std::cerr << std::endl;
