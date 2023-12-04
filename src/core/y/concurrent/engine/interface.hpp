@@ -56,7 +56,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename MAPPING>
-        class Engine : public Nucleus::Engine
+        class Engine : public Nucleus::Engine, public MAPPING
         {
         public:
             //__________________________________________________________________
@@ -77,16 +77,10 @@ namespace Yttrium
             //! forward display to mapping object
             inline friend std::ostream & operator<<(std::ostream &os, const Engine &self)
             {
-                return os << self.mapping;
+                const Mapping &_ = self;
+                return os << _;
             }
-
-            //__________________________________________________________________
-            //
-            //
-            // Members
-            //
-            //__________________________________________________________________
-            Mapping mapping; //!< NoMapping, ForLoop, Tile, ...
+            
 
             //__________________________________________________________________
             //
@@ -100,12 +94,12 @@ namespace Yttrium
 
         protected:
             //! default setup, mapping is empty
-            inline explicit Engine() noexcept : mapping() {}
+            inline explicit Engine() noexcept : Mapping() {}
 
             //! update the mapping to new value, and call active with context
             inline void initiate(const ThreadContext &cntx, Mapping &temp)
             {
-                mapping.xch(temp);
+                this->xch(temp);
                 activate(cntx);
             }
 

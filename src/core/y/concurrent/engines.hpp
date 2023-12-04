@@ -61,7 +61,10 @@ namespace Yttrium
             };
         }
 
-
+        //______________________________________________________________________
+        //
+        //! helper to setup engines
+        //______________________________________________________________________
 #define Y_CONCURRENT_ENGINES_SETUP(CODE)    \
 assert(this->size()==contexts->size());     \
 const ThreadContexts &cntx = *contexts;     \
@@ -90,11 +93,11 @@ for(size_t i=1;i<=n;++i) self[i].start CODE
             // Definitions
             //
             //__________________________________________________________________
-            typedef ENGINE                                   EngineType;
-            typedef Writable<EngineType>                     Propulsion;
-            typedef CxxArray<ENGINE,Nucleus::Engines::Model> CxxEngines; //!< alias
+            typedef ENGINE                                   EngineType; //!< alias
+            typedef Writable<EngineType>                     Propulsion; //!< array of engines
+            typedef CxxArray<ENGINE,Nucleus::Engines::Model> CxxEngines; //!< alias for base class
             typedef typename ENGINE::Type                    Type;       //!< alias to int, size_t...
-            typedef V2D<Type>                                Vertex;     //!< alias for 2D
+            typedef V2D<Type>                                Vertex;     //!< alias for V2D
 
             //__________________________________________________________________
             //
@@ -103,7 +106,7 @@ for(size_t i=1;i<=n;++i) self[i].start CODE
             //
             //__________________________________________________________________
 
-            //! setup from a derived class (Pipeline/Loop)
+            //! setup from a derived class (Pipeline 0D/Loop [1|2]D)
             template <typename DERIVED>
             inline explicit Engines(const ArcPtr<DERIVED> &stc) :
             Nucleus::Engines(stc), CxxEngines( contexts->size() )

@@ -18,16 +18,30 @@ namespace Yttrium
     class Tao1D : public Concurrent::Engine1D<size_t>
     {
     public:
-        explicit Tao1D() noexcept {}
+        explicit Tao1D() noexcept : sync(0) {}
         virtual ~Tao1D() noexcept {}
+
+        Lockable * const sync;
+
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Tao1D);
+
         virtual void activate(const Concurrent::ThreadContext &cntx)
         {
             std::cerr << "Activating Context " << cntx.name << std::endl;
+            Coerce(sync) = & cntx.sync;
         }
     };
+
+    inline void DoSomething(Tao1D &range)
+    {
+        assert(0!=range.sync);
+        Y_LOCK(*(range.sync));
+        (std::cerr << "DoSomething(" << range << ")" << std::endl).flush();
+    }
+
+
 }
 
 Y_UTEST(concurrent_simd)
@@ -47,11 +61,15 @@ Y_UTEST(concurrent_simd)
     std::cerr << "seq=" << seq << std::endl;
     seq();
 
+    seq( DoSomething );
+
+
     std::cerr << std::endl;
     std::cerr << "par=" << par << std::endl;
     par.dispatch(1,10,1);
     std::cerr << "par=" << par << std::endl;
     par();
+    par( DoSomething );
 
 
 

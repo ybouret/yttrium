@@ -12,14 +12,21 @@ namespace Yttrium
     namespace Concurrent
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! SIMD for 1D/2D
+        //
+        //
+        //______________________________________________________________________
         template <typename MAPPING>
         class SIMD : public Engines<MAPPING>
         {
         public:
             typedef Engines<MAPPING>               MyEngines;  //!< alias
-            typedef typename MyEngines::EngineType EngineType; //!< alias
-            typedef typename MyEngines::Propulsion Propulsion; //!< Writable engones
+            typedef typename MyEngines::EngineType EngineType; //!< alias Engine[1|2]D
+            typedef typename MyEngines::Propulsion Propulsion; //!< Writable engines to access resources
 
             inline virtual ~SIMD() noexcept {}
 
@@ -36,6 +43,15 @@ namespace Yttrium
                 (*loop)(call);
             }
 
+            //! no-arg call proc(engine)
+            template <typename PROC>
+            inline void operator()(PROC &proc)
+            {
+                Call0<PROC> call = { *this, proc };
+                (*loop)(call);
+            }
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SIMD);
@@ -43,12 +59,23 @@ namespace Yttrium
 
             struct CallMe
             {
-                const Propulsion &engines;
+                const Propulsion &self;
                 inline void operator()(const ThreadContext &ctx) const
                 {
-                    const EngineType &engine = engines[ctx.indx];
+                    const EngineType &engine = self[ctx.indx];
                     Y_LOCK(ctx.sync);
                     (std::cerr << "SIMD: in engine " << ctx.name << " : " << engine << std::endl).flush();
+                }
+            };
+
+            template <typename PROC>
+            struct Call0
+            {
+                Propulsion &self;
+                PROC       &proc;
+                inline void operator()(const ThreadContext &ctx) const
+                {
+                    proc(self[ctx.indx]);
                 }
             };
 
