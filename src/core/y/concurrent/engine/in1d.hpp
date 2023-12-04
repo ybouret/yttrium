@@ -13,21 +13,49 @@ namespace Yttrium
     namespace Concurrent
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! 1D engine: based of ForLoop<T>
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class Engine1D : public Engine< ForLoop<T> >
         {
         public:
-            typedef ForLoop<T>       Mapping;
-            typedef Engine<Mapping>  EngineType;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef ForLoop<T>       Mapping;    //!< alias
+            typedef Engine<Mapping>  EngineType; //!< alias
+            typedef T                Type;       //!< alias
 
-            inline virtual ~Engine1D() noexcept {}
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
+            //! start engine: compute loop then initiate/activate
             inline void start(const ThreadContext &cntx, const T head, const T tail, const T step)
             {
                 Mapping temp = Split::For(cntx,head,tail,step);
                 this->initiate(cntx,temp);
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            inline virtual ~Engine1D() noexcept {}
         protected:
             inline explicit Engine1D() noexcept : EngineType() {}
 

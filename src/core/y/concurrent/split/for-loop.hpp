@@ -136,7 +136,8 @@ namespace Yttrium
             const Size          length; //!< number of indices
             const Type          update; //!< step
             const Type          latest; //!< final value
-            const ForLoopFamily family;
+            const ForLoopFamily family; //!< for specific code
+            
         private:
             Y_DISABLE_ASSIGN(ForLoop);
 

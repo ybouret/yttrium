@@ -92,6 +92,10 @@ namespace Yttrium
             handle->withhold();
         }
 
+        //______________________________________________________________________
+        //
+        //! copy using derived class
+        //______________________________________________________________________
         template <typename U>
         inline ArcPtr(const CopyOf_ &, const ArcPtr<U> &other) noexcept :
         Core::ArcPtr(),

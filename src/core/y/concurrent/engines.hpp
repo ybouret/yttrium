@@ -5,13 +5,20 @@
 #define Y_Concurrent_Engines_Included 1
 
 #include "y/concurrent/engine/interface.hpp"
+#include "y/concurrent/thread/contexts.hpp"
+
 #include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
+
+#include "y/ptr/arc.hpp"
+#include "y/mkl/v2d.hpp"
 
 namespace Yttrium
 {
     namespace Concurrent
     {
+
+        typedef ArcPtr<ThreadContexts> SharedThreadContexts;
 
         namespace Nucleus
         {
@@ -21,12 +28,88 @@ namespace Yttrium
                 typedef Memory::Dyadic Model;
 
                 virtual ~Engines() noexcept;
-                explicit Engines() noexcept;
-                
+
+            protected:
+                template <typename DERIVED>
+                explicit Engines(const ArcPtr<DERIVED> &stc) noexcept :
+                contexts(CopyOf,stc)
+                {
+                }
+
+
+                SharedThreadContexts contexts;
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Engines);
             };
         }
+
+
+        template <typename ENGINE>
+        class Engines : 
+        public Nucleus::Engines, 
+        public CxxArray<ENGINE,Nucleus::Engines::Model>
+        {
+        public:
+            typedef CxxArray<ENGINE,Nucleus::Engines::Model> Propulsion;
+            typedef typename ENGINE::Type                    Type;
+            typedef V2D<Type>                                Vertex;
+
+            inline virtual ~Engines() noexcept {}
+
+            template <typename DERIVED>
+            inline explicit Engines(const ArcPtr<DERIVED> &stc) :
+            Nucleus::Engines(stc), Propulsion( contexts->size() )
+            {
+            }
+
+
+            //! 1D API
+            inline void operator()(const Type head, const Type tail, const Type step)
+            {
+                assert(this->size()==contexts->size());
+                const ThreadContexts &cntx = *contexts;
+                Writable<ENGINE>     &self = *this;
+                const size_t          n    = self.size();
+                for(size_t i=1;i<=n;++i)
+                {
+                    self[i].start(cntx[i],head,tail,step);
+                }
+            }
+
+            //! 2D API
+            inline void operator()(const Vertex lower, const Vertex upper)
+            {
+                assert(this->size()==contexts->size());
+                const ThreadContexts &cntx = *contexts;
+                Writable<ENGINE>     &self = *this;
+                const size_t          n    = self.size();
+                for(size_t i=1;i<=n;++i)
+                {
+                    self[i].start(cntx[i],lower,upper);
+                }
+            }
+
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Engines);
+
+#if 0
+            inline void fire()
+            {
+                assert(this->size()==contexts->size());
+                const ThreadContexts &cntx = *contexts;
+                Writable<ENGINE>     &self = *this;
+                const size_t          n    = self.size();
+                for(size_t i=1;i<=n;++i)
+                {
+                    self[i].initiate( cntx[i] );
+                }
+            }
+#endif
+
+        };
+
 
     }
 

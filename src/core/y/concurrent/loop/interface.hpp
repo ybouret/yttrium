@@ -5,6 +5,7 @@
 
 #include "y/concurrent/loop/kernel.hpp"
 #include "y/concurrent/thread/contexts.hpp"
+#include "y/ptr/arc.hpp"
 
 namespace Yttrium
 {
@@ -53,7 +54,7 @@ namespace Yttrium
        
             //! execute the kernel, return when all done
             virtual void       run1(Kernel &) noexcept = 0;
-            virtual Lockable & sync()         noexcept = 0;
+            virtual Lockable & sync()         noexcept = 0; //!< synchronzing object
 
             //! wrapper to any kernel(context) interface
             template <typename KERNEL> inline
@@ -77,6 +78,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Loop);
         };
 
+        typedef ArcPtr<Loop> SharedLoop;
 
 
     }

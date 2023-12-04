@@ -13,22 +13,51 @@ namespace Yttrium
 {
     namespace Concurrent
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! 2D Engine: based of AutoPtr<Tile>
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class Engine2D : public Engine< AutoPtr<typename Tiling<T>::Tile> >
         {
         public:
-            typedef typename Tiling<T>::Tile   Tile;
-            typedef AutoPtr<Tile>              Mapping;
-            typedef Engine<Mapping>            EngineType;
-            typedef typename Tiling<T>::Vertex Vertex;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef typename Tiling<T>::Tile   Tile;        //!< alias
+            typedef AutoPtr<Tile>              Mapping;     //!< alias
+            typedef Engine<Mapping>            EngineType;  //!< alias
+            typedef typename Tiling<T>::Vertex Vertex;      //!< alias
+            typedef T                          Type;        //!< alias
 
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+        
+            //! start engine: compute tile then initiate/activate
             inline void start(const ThreadContext &cntx, Vertex lower, Vertex upper)
             {
                 Mapping temp = Tiling<T>::Tiles::For(cntx,lower,upper);
                 this->initiate(cntx,temp);
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             inline virtual ~Engine2D() noexcept {}
             
         protected:

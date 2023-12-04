@@ -15,16 +15,24 @@ namespace Yttrium
     namespace Concurrent
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! base class for a group of contexts
+        //
+        //
+        //______________________________________________________________________
         class ThreadContexts :
         public Object,
         public Counted,
         public Readable<const ThreadContext>
         {
         public:
-            virtual ~ThreadContexts() noexcept;
+            virtual ~ThreadContexts() noexcept; //!< cleanup
 
         protected:
-            explicit ThreadContexts() noexcept;
+            explicit ThreadContexts() noexcept; //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ThreadContexts);
