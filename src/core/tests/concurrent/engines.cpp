@@ -1,6 +1,7 @@
 #include "y/concurrent/engines.hpp"
 #include "y/concurrent/engine/in1d.hpp"
 #include "y/concurrent/engine/in2d.hpp"
+#include "y/concurrent/engine/queue.hpp"
 
 #include "y/concurrent/loop/mono.hpp"
 #include "y/concurrent/loop/crew.hpp"
@@ -44,6 +45,8 @@ namespace
         }
     };
 
+
+    class EQ :
 
 }
 
