@@ -18,9 +18,12 @@ namespace Yttrium
             {
             public:
                 virtual void start(const ThreadContext &) = 0;
-                
+
                 virtual ~Engine() noexcept;
 
+            protected:
+                explicit Engine() noexcept {}
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Engine);
             };

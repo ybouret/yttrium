@@ -7,8 +7,11 @@ namespace Yttrium
     namespace Concurrent
     {
 
-        Engine:: ~Engine() noexcept {}
-        
+        namespace Nucleus
+        {
+            Engine:: ~Engine() noexcept {}
+            
+        }
 
     }
 
