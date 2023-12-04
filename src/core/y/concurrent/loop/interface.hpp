@@ -5,7 +5,6 @@
 
 #include "y/concurrent/loop/kernel.hpp"
 #include "y/concurrent/thread/contexts.hpp"
-#include "y/ptr/arc.hpp"
 
 namespace Yttrium
 {
@@ -78,8 +77,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Loop);
         };
 
-        //! using a loop as a shared resource
-        typedef ArcPtr<Loop> SharedLoop;
+
 
     }
 

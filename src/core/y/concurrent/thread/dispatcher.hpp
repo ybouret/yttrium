@@ -21,7 +21,8 @@ namespace Yttrium
         {
         public:
             virtual ~ThreadDispatcher() noexcept;
-
+            explicit ThreadDispatcher(const SharedThreadContexts &) noexcept;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ThreadDispatcher);
         };
