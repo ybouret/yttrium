@@ -90,9 +90,11 @@ for(size_t i=1;i<=n;++i) self[i].start CODE
             // Definitions
             //
             //__________________________________________________________________
-            typedef CxxArray<ENGINE,Nucleus::Engines::Model> Propulsion; //!< alias
-            typedef typename ENGINE::Type                    Type;       //!< alias
-            typedef V2D<Type>                                Vertex;     //!< alias
+            typedef ENGINE                                   EngineType;
+            typedef Writable<EngineType>                     Propulsion;
+            typedef CxxArray<ENGINE,Nucleus::Engines::Model> CxxEngines; //!< alias
+            typedef typename ENGINE::Type                    Type;       //!< alias to int, size_t...
+            typedef V2D<Type>                                Vertex;     //!< alias for 2D
 
             //__________________________________________________________________
             //
@@ -104,7 +106,7 @@ for(size_t i=1;i<=n;++i) self[i].start CODE
             //! setup from a derived class (Pipeline/Loop)
             template <typename DERIVED>
             inline explicit Engines(const ArcPtr<DERIVED> &stc) :
-            Nucleus::Engines(stc), Propulsion( contexts->size() )
+            Nucleus::Engines(stc), CxxEngines( contexts->size() )
             {
             }
 
@@ -120,19 +122,19 @@ for(size_t i=1;i<=n;++i) self[i].start CODE
             //__________________________________________________________________
 
             //! 0D API
-            inline void operator()(void)
+            inline void dispatch(void)
             {
                 Y_CONCURRENT_ENGINES_SETUP( (cntx[i]) );
             }
 
             //! 1D API
-            inline void operator()(const Type head, const Type tail, const Type step)
+            inline void dispatch(const Type head, const Type tail, const Type step)
             {
                 Y_CONCURRENT_ENGINES_SETUP( (cntx[i],head,tail,step) );
             }
 
             //! 2D API
-            inline void operator()(const Vertex lower, const Vertex upper)
+            inline void dispatch(const Vertex lower, const Vertex upper)
             {
                 Y_CONCURRENT_ENGINES_SETUP(  (cntx[i],lower,upper) );
             }

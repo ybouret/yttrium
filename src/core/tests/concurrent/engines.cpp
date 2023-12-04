@@ -91,35 +91,35 @@ Y_UTEST(concurrent_engines)
 
     std::cerr << std::endl;
     std::cerr << "seqE1=" << seqE1 << std::endl;
-    seqE1(1,20,2);
+    seqE1.dispatch(1,20,2);
     std::cerr << "seqE1=" << seqE1 << std::endl;
 
     std::cerr << std::endl;
     std::cerr << "parE1=" << parE1 << std::endl;
-    parE1(1,20,2);
+    parE1.dispatch(1,20,2);
     std::cerr << "parE1=" << parE1 << std::endl;
 
     const V2D<int> lower(1,1), upper(10,20);
 
     std::cerr << std::endl;
     std::cerr << "seqE2=" << seqE2 << std::endl;
-    seqE2(lower,upper);
+    seqE2.dispatch(lower,upper);
     std::cerr << "seqE2=" << seqE2 << std::endl;
 
 
     std::cerr << std::endl;
     std::cerr << "parE2=" << parE2 << std::endl;
-    parE2(lower,upper);
+    parE2.dispatch(lower,upper);
     std::cerr << "parE2=" << parE2 << std::endl;
 
     std::cerr << std::endl;
     std::cerr << "seqE0=" << seqE0 << std::endl;
-    seqE0();
+    seqE0.dispatch();
     std::cerr << "seqE0=" << seqE0 << std::endl;
 
     std::cerr << std::endl;
     std::cerr << "parE0=" << parE0 << std::endl;
-    parE0();
+    parE0.dispatch();
     std::cerr << "parE0=" << parE0 << std::endl;
 }
 Y_UDONE()

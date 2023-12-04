@@ -86,7 +86,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            Mapping mapping; //!< ForLoop, Tile, ...
+            Mapping mapping; //!< NoMapping, ForLoop, Tile, ...
 
             //__________________________________________________________________
             //
