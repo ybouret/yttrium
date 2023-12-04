@@ -61,7 +61,7 @@ namespace Yttrium
             void setup(const ThreadContext &cntx, const T head, const T tail, const T step)
             {
                 ForLoop<T> trek = Split::For(cntx,head,tail,step);
-                this->swapWith(trek);
+                this->xch(trek);
                 attach(cntx);
             }
 

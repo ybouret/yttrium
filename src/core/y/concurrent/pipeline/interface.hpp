@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_Concurrent_Interface_Included
-#define Y_Concurrent_Interface_Included 1
+#ifndef Y_Concurrent_Pipeline_Included
+#define Y_Concurrent_Pipeline_Included 1
 
 #include "y/concurrent/pipeline/task.hpp"
 #include "y/container/readable.hpp"

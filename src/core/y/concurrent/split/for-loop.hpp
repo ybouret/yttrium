@@ -117,7 +117,7 @@ namespace Yttrium
             }
 
             //! no-throw exchange
-            inline void swapWith(ForLoop &trek) noexcept
+            inline void xch(ForLoop &trek) noexcept
             {
                 CoerceSwap(offset,trek.offset);
                 CoerceSwap(length,trek.length);

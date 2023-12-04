@@ -13,6 +13,7 @@ concurrent/split
 concurrent/thread
 concurrent/loop
 concurrent/pipeline
+concurrent/engine
 locking
 config
 check

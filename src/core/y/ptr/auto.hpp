@@ -59,9 +59,15 @@ namespace Yttrium
 
         //______________________________________________________________________
         //
+        //! setup with NULL content
+        //______________________________________________________________________
+        inline          AutoPtr() noexcept : Core::AutoPtr(), SelfType(0) {}
+
+        //______________________________________________________________________
+        //
         //! setup, accept any pointer
         //______________________________________________________________________
-        inline          AutoPtr(Type *ptr) noexcept : Core::AutoPtr(),SelfType(ptr) { }
+        inline          AutoPtr(Type *ptr) noexcept : Core::AutoPtr(), SelfType(ptr) { }
 
         //______________________________________________________________________
         //
