@@ -152,9 +152,9 @@ Y_CxxArray_Ctor_Com(CAPACITY)
         // Methods
         //
         //______________________________________________________________________
-        inline virtual size_t       size()           const noexcept { return count; } //!< fixed size
-        inline virtual size_t       capacity() const noexcept { return count; } //!< fixed capacity
-        inline virtual const char * callSign() const noexcept { return CallSign; }
+        inline virtual size_t       size()     const noexcept { return count; }    //!< fixed size
+        inline virtual size_t       capacity() const noexcept { return count; }    //!< fixed capacity
+        inline virtual const char * callSign() const noexcept { return CallSign; } //!< CallSign
 
         //! access
         inline virtual Type & operator[](const size_t i) noexcept {

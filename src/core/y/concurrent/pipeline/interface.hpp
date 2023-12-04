@@ -5,7 +5,7 @@
 
 #include "y/concurrent/pipeline/task.hpp"
 #include "y/concurrent/thread/contexts.hpp"
-
+#include "y/ptr/arc.hpp"
 
 namespace Yttrium
 {
@@ -84,8 +84,13 @@ namespace Yttrium
             virtual void     suspend() noexcept                    = 0; //!< suspend mechanism
             virtual void     restart() noexcept                    = 0; //!< restart mechanism
             virtual Task::ID enqueue(const Task &, const Task::ID) = 0; //!< enqueue a single task in a LOCKED pipeline
-            
         };
+
+        //______________________________________________________________________
+        //
+        //! alias to share Pipeline in Engines
+        //______________________________________________________________________
+        typedef ArcPtr<Pipeline> SharedPipeline;
 
     }
 

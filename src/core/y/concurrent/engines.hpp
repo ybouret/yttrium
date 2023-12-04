@@ -18,25 +18,43 @@ namespace Yttrium
     namespace Concurrent
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Agnostic Shared ThreadContexts to setup Engine(s)
+        //
+        //
+        //______________________________________________________________________
         typedef ArcPtr<ThreadContexts> SharedThreadContexts;
 
         namespace Nucleus
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Base class to convert Derived class (Loops/Pipelines)
+            //
+            //
+            //__________________________________________________________________
             class Engines
             {
             public:
-                typedef Memory::Dyadic Model;
+                typedef Memory::Dyadic Model; //!< Memory Model
 
-                virtual ~Engines() noexcept;
+
+                virtual ~Engines() noexcept; //!< cleanup
 
             protected:
+                //! setup with pointer conversion
                 template <typename DERIVED>
                 explicit Engines(const ArcPtr<DERIVED> &stc) noexcept :
                 contexts(CopyOf,stc)
                 {
                 }
 
-
+                //! local shared contexts
                 SharedThreadContexts contexts;
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Engines);
@@ -44,24 +62,67 @@ namespace Yttrium
         }
 
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Engines to associate resources per thread context
+        //
+        //
+        //______________________________________________________________________
         template <typename ENGINE>
-        class Engines : 
-        public Nucleus::Engines, 
+        class Engines :
+        public Nucleus::Engines,
         public CxxArray<ENGINE,Nucleus::Engines::Model>
         {
         public:
-            typedef CxxArray<ENGINE,Nucleus::Engines::Model> Propulsion;
-            typedef typename ENGINE::Type                    Type;
-            typedef V2D<Type>                                Vertex;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef CxxArray<ENGINE,Nucleus::Engines::Model> Propulsion; //!< alias
+            typedef typename ENGINE::Type                    Type;       //!< alias
+            typedef V2D<Type>                                Vertex;     //!< alias
 
-            inline virtual ~Engines() noexcept {}
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
+            //! setup from a derived class (Pipeline/Loop)
             template <typename DERIVED>
             inline explicit Engines(const ArcPtr<DERIVED> &stc) :
             Nucleus::Engines(stc), Propulsion( contexts->size() )
             {
             }
 
+            //! cleanup
+            inline virtual ~Engines() noexcept {}
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! 0D api
+            inline void operator()(void)
+            {
+                assert(this->size()==contexts->size());
+                const ThreadContexts &cntx = *contexts;
+                Writable<ENGINE>     &self = *this;
+                const size_t          n    = self.size();
+                for(size_t i=1;i<=n;++i)
+                {
+                    self[i].start(cntx[i]);
+                }
+            }
 
             //! 1D API
             inline void operator()(const Type head, const Type tail, const Type step)
@@ -93,21 +154,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Engines);
-
-#if 0
-            inline void fire()
-            {
-                assert(this->size()==contexts->size());
-                const ThreadContexts &cntx = *contexts;
-                Writable<ENGINE>     &self = *this;
-                const size_t          n    = self.size();
-                for(size_t i=1;i<=n;++i)
-                {
-                    self[i].initiate( cntx[i] );
-                }
-            }
-#endif
-
+            
         };
 
 

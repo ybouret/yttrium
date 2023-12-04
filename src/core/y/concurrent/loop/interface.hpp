@@ -78,6 +78,10 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Loop);
         };
 
+        //______________________________________________________________________
+        //
+        //! alias to share Loop in Engines
+        //______________________________________________________________________
         typedef ArcPtr<Loop> SharedLoop;
 
 

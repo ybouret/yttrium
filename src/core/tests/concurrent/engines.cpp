@@ -1,10 +1,13 @@
 #include "y/concurrent/engines.hpp"
 #include "y/concurrent/engine/in1d.hpp"
 #include "y/concurrent/engine/in2d.hpp"
-#include "y/concurrent/engine/queue.hpp"
+#include "y/concurrent/engine/in0d.hpp"
 
 #include "y/concurrent/loop/mono.hpp"
 #include "y/concurrent/loop/crew.hpp"
+
+#include "y/concurrent/pipeline/alone.hpp"
+#include "y/concurrent/pipeline/queue.hpp"
 
 #include "y/concurrent/topology.hpp"
 #include "y/concurrent/thread.hpp"
@@ -46,7 +49,19 @@ namespace
     };
 
 
-    class EQ :
+    class E0 : public Concurrent::Engine0D
+    {
+    public:
+        inline explicit E0() noexcept {}
+        inline virtual ~E0() noexcept {}
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(E0);
+        virtual void activate(const Concurrent::ThreadContext &cntx)
+        {
+            std::cerr << "activating E0 for " << cntx.name << std::endl;
+        }
+    };
 
 }
 
@@ -54,14 +69,25 @@ namespace
 Y_UTEST(concurrent_engines)
 {
     Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
+   
     const Concurrent::Topology topo;
     Concurrent::SharedLoop     seqLoop = new Concurrent::Mono();
     Concurrent::SharedLoop     parLoop = new Concurrent::Crew(topo);
+
+    Concurrent::SharedPipeline seqQ    = new Concurrent::Alone();
+    Concurrent::SharedPipeline parQ    = new Concurrent::Queue(topo);
+
+
+
     Concurrent::Engines<E1>    seqE1(seqLoop);
     Concurrent::Engines<E1>    parE1(parLoop);
 
     Concurrent::Engines<E2>    seqE2(seqLoop);
     Concurrent::Engines<E2>    parE2(parLoop);
+
+
+    Concurrent::Engines<E0>    seqE0(seqQ);
+    Concurrent::Engines<E0>    parE0(parQ);
 
     std::cerr << std::endl;
     std::cerr << "seqE1=" << seqE1 << std::endl;
@@ -85,6 +111,16 @@ Y_UTEST(concurrent_engines)
     std::cerr << "parE2=" << parE2 << std::endl;
     parE2(lower,upper);
     std::cerr << "parE2=" << parE2 << std::endl;
+
+    std::cerr << std::endl;
+    std::cerr << "seqE0=" << seqE0 << std::endl;
+    seqE0();
+    std::cerr << "seqE0=" << seqE0 << std::endl;
+
+    std::cerr << std::endl;
+    std::cerr << "parE0=" << parE0 << std::endl;
+    parE0();
+    std::cerr << "parE0=" << parE0 << std::endl;
 }
 Y_UDONE()
 
