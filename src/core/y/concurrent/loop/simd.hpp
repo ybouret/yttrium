@@ -32,7 +32,7 @@ namespace Yttrium
 
             inline SIMD(const SharedLoop &team) :
             MyEngines(team),
-            loop(team)
+            loop( Coerce(*team) )
             {
             }
 
@@ -40,7 +40,7 @@ namespace Yttrium
             void operator()(void)  
             {
                 const CallMe call = { *this };
-                (*loop)(call);
+                loop(call);
             }
 
             //! no-arg call proc(engine)
@@ -48,14 +48,38 @@ namespace Yttrium
             inline void operator()(PROC &proc)
             {
                 Call0<PROC> call = { *this, proc };
-                (*loop)(call);
+                loop(call);
+            }
+
+            //! 1-arg call proc(engine,arg1)
+            template <typename PROC, typename ARG1>
+            inline void operator()(PROC &proc, ARG1 &arg1)
+            {
+                Call1<PROC,ARG1> call = { *this, proc, arg1 };
+                loop(call);
+            }
+
+            //! 2-args call proc(engine,arg1,arg2)
+            template <typename PROC, typename ARG1, typename ARG2>
+            inline void operator()(PROC &proc, ARG1 &arg1, ARG2 &arg2)
+            {
+                Call2<PROC,ARG1,ARG2> call = { *this, proc, arg1, arg2 };
+                loop(call);
+            }
+
+            //! 3-args call proc(engine,arg1,arg2,arg3)
+            template <typename PROC, typename ARG1, typename ARG2, typename ARG3>
+            inline void operator()(PROC &proc, ARG1 &arg1, ARG2 &arg2, ARG3 &arg3)
+            {
+                Call3<PROC,ARG1,ARG2,ARG3> call = { *this, proc, arg1, arg2, arg3 };
+                loop(call);
             }
 
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SIMD);
-            SharedLoop loop;
+            Loop &loop;
 
             struct CallMe
             {
@@ -78,6 +102,48 @@ namespace Yttrium
                     proc(self[ctx.indx]);
                 }
             };
+
+            template <typename PROC,typename ARG1>
+            struct Call1
+            {
+                Propulsion &self;
+                PROC       &proc;
+                ARG1       &arg1;
+                inline void operator()(const ThreadContext &ctx) const
+                {
+                    proc(self[ctx.indx],arg1);
+                }
+            };
+
+            template <typename PROC,typename ARG1, typename ARG2>
+            struct Call2
+            {
+                Propulsion &self;
+                PROC       &proc;
+                ARG1       &arg1;
+                ARG2       &arg2;
+                inline void operator()(const ThreadContext &ctx) const
+                {
+                    proc(self[ctx.indx],arg1,arg2);
+                }
+            };
+
+            template <typename PROC,typename ARG1, typename ARG2, typename ARG3>
+            struct Call3
+            {
+                Propulsion &self;
+                PROC       &proc;
+                ARG1       &arg1;
+                ARG2       &arg2;
+                ARG3       &arg3;
+                inline void operator()(const ThreadContext &ctx) const
+                {
+                    proc(self[ctx.indx],arg1,arg2,arg3);
+                }
+            };
+
+
+
 
         };
 

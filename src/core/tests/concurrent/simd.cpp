@@ -41,8 +41,46 @@ namespace Yttrium
         (std::cerr << "DoSomething(" << range << ")" << std::endl).flush();
     }
 
+    class Working
+    {
+    public:
+
+        explicit Working() noexcept {}
+        virtual ~Working() noexcept {}
+
+        inline void operator()(Tao1D &range, const int a)
+        {
+            assert(0!=range.sync);
+            Y_LOCK(*(range.sync));
+            (std::cerr << "Working(" << range << "," << a << ")" << std::endl).flush();
+        }
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(Working);
+    };
+
+
+    template <typename TARGET, typename SOURCE>
+    inline void Load(Tao1D &range, TARGET &target, SOURCE &source)
+    {
+        assert(0!=range.sync);
+        {
+            Y_LOCK(*(range.sync));
+            (std::cerr << "Load(" << range << ")" << std::endl).flush();
+            Tao1D::Type i = range.offset;
+            for(Tao1D::Size j=range.length;j>0;--j,++i)
+            {
+                target[i] = source[i];
+            }
+        }
+
+    }
+
+
 
 }
+
+#include <cstring>
 
 Y_UTEST(concurrent_simd)
 {
@@ -71,6 +109,28 @@ Y_UTEST(concurrent_simd)
     par();
     par( DoSomething );
 
+
+    Working   w;
+    const int n = 3;
+    seq(w,n);
+    par(w,n);
+
+    CxxArray<double> target(30);
+    CxxArray<int>    source(20);
+    for(size_t i=1;i<=source.size();++i)
+    {
+        source[i] = int(i);
+    }
+
+    seq.dispatch(1,source.size(),1);
+    seq(Load< Writable<double>,const Readable<int> >,target,source);
+    std::cerr << "target=" << target << std::endl;
+
+    memset( &target[1], 0, sizeof(double)*target.size() );
+    std::cerr << "target=" << target << std::endl;
+    par.dispatch(1,source.size(),1);
+    par(Load< Writable<double>,const Readable<int> >,target,source);
+    std::cerr << "target=" << target << std::endl;
 
 
 }
