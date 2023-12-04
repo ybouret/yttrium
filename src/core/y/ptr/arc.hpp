@@ -4,6 +4,7 @@
 #define Y_Arc_Ptr_Included 1
 
 #include "y/ptr/ptr.hpp"
+#include "y/type/copy.hpp"
 
 namespace Yttrium
 {
@@ -84,6 +85,15 @@ namespace Yttrium
         //! copy handle and increase refcount
         //______________________________________________________________________
         inline ArcPtr(const ArcPtr &other) noexcept :
+        Core::ArcPtr(),
+        SelfType(other.handle)
+        {
+            assert(0!=handle || Die("invalid other"));
+            handle->withhold();
+        }
+
+        template <typename U>
+        inline ArcPtr(const CopyOf_ &, const ArcPtr<U> &other) noexcept :
         Core::ArcPtr(),
         SelfType(other.handle)
         {

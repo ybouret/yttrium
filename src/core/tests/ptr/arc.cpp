@@ -14,10 +14,25 @@ namespace
         explicit Dummy() noexcept : Object(), Counted() {}
         virtual ~Dummy() noexcept {}
 
+        virtual const char *name() const noexcept { return "Dummy"; }
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Dummy);
     };
+
+    class Derived : public Dummy
+    {
+    public:
+        explicit Derived() noexcept : Dummy() {}
+        virtual ~Derived() noexcept {}
+
+        virtual const char *name() const noexcept { return "Derived"; }
+
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(Derived);
+    };
+
 }
 Y_UTEST(ptr_arc)
 {
@@ -27,6 +42,12 @@ Y_UTEST(ptr_arc)
             const ArcPtr<Dummy> q(p);
             p = q;
         }
+    }
+
+    {
+        const ArcPtr<Derived> derived = new Derived();
+        const ArcPtr<Dummy>   dummy(CopyOf,derived);
+        std::cerr << "name: " << dummy->name() << std::endl;
     }
 
 }
