@@ -11,7 +11,9 @@ namespace Yttrium
         {
         }
 
-        Pipeline:: Pipeline() noexcept : tid(1)
+        Pipeline:: Pipeline() noexcept :
+        ThreadContexts(),
+        tid(1)
         {
         }
 

@@ -4,7 +4,7 @@
 #define Y_Concurrent_Pipeline_Included 1
 
 #include "y/concurrent/pipeline/task.hpp"
-#include "y/container/readable.hpp"
+#include "y/concurrent/thread/contexts.hpp"
 
 
 namespace Yttrium
@@ -20,7 +20,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Pipeline : public Readable<const ThreadContext>
+        class Pipeline : public ThreadContexts
         {
         public:
             //__________________________________________________________________

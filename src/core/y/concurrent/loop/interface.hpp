@@ -4,9 +4,7 @@
 #define Y_Concurrent_Loop_Included 1
 
 #include "y/concurrent/loop/kernel.hpp"
-#include "y/container/readable.hpp"
-#include "y/object.hpp"
-#include "y/counted.hpp"
+#include "y/concurrent/thread/contexts.hpp"
 #include "y/ptr/arc.hpp"
 
 namespace Yttrium
@@ -44,7 +42,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Loop : public Object, public Counted, public Readable<const ThreadContext>
+        class Loop : public ThreadContexts
         {
         public:
             //__________________________________________________________________

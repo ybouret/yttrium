@@ -10,7 +10,7 @@ namespace Yttrium
         {
         }
 
-        Loop:: Loop() noexcept
+        Loop:: Loop() noexcept : ThreadContexts()
         {
         }
         
