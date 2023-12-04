@@ -55,9 +55,9 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Nucleus::NoMapping  Mapping;    //!< alias
-            typedef Engine<Mapping>     EngineType; //!< alias
-            typedef int                 Type;       //!< alias
+            typedef Nucleus::NoMapping         Mapping;    //!< alias
+            typedef Engine<Nucleus::NoMapping> EngineType; //!< alias
+            typedef int                        Type;       //!< alias
 
             //__________________________________________________________________
             //
