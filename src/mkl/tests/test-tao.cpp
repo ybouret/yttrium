@@ -16,6 +16,7 @@ using namespace MKL;
 
 namespace
 {
+#if 0
     class TaoRes1D : public Concurrent::Resource1D<size_t>
     {
     public:
@@ -46,7 +47,7 @@ namespace
 
         }
     };
-
+#endif
 
 
 #if 0
@@ -80,73 +81,11 @@ Y_UTEST(tao)
     Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
     const Concurrent::Topology topo;
 
-    typedef Concurrent::SIMD<size_t,TaoRes1D> Tao1D;
-    typedef Concurrent::SIMD<size_t,TaoRes2D> Tao2D;
 
     Concurrent::SharedLoop seqLoop = new Concurrent::Mono();
     Concurrent::SharedLoop parLoop = new Concurrent::Crew(topo);
 
-    Tao1D seq( seqLoop );
-    Tao1D par( parLoop );
     
-    size_t n = 4;
-    size_t m = 5;
-
-
-    std::cerr << std::endl;
-    std::cerr << "seq=" << seq << std::endl;
-    seq.dispatch(1,n,1);
-    std::cerr << "seq=" << seq << std::endl;
-
-    std::cerr << std::endl;
-    std::cerr << "par=" << par << std::endl;
-    par.dispatch(1,n,1);
-    std::cerr << "par=" << par << std::endl;
-
-    Tao2D seq2d( seqLoop );
-    std::cerr << std::endl;
-    std::cerr << "seq2d=" << seq2d << std::endl;
-    seq2d.dispatch(V2D<size_t>(1,1),V2D<size_t>(n,m));
-    std::cerr << "seq2d=" << seq2d << std::endl;
-
-
-
-
-#if 0
-    Concurrent::SIMD<size_t> seq( new Concurrent::Mono()     );
-    Concurrent::SIMD<size_t> par( new Concurrent::Crew(topo) );
-
-
-
-    size_t n = 4;
-    seq.dispatch(1,n,1);
-    std::cerr << "seq=" << seq << std::endl;
-    par.dispatch(1,n,1);
-    std::cerr << "par=" << par << std::endl;
-
-    std::cerr << std::endl;
-    seq();
-
-    std::cerr << std::endl;
-    par();
-#endif
-    
-#if 0
-    std::cerr << std::endl;
-    seq();
-
-    std::cerr << std::endl;
-    par();
-
-    std::cerr << std::endl;
-
-    Vector<double> v(5,0);
-    Vector<int>    u(5,0);
-
-    Load(v,u,seq);
-    
-#endif
-
 
 
 }

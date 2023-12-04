@@ -145,6 +145,7 @@ add_test(concurrent:context   test-core concurrent_context)
 add_test(concurrent:loop      test-core concurrent_loop)
 add_test(concurrent:engine1d  test-core concurrent_engine1d)
 add_test(concurrent:engine2d  test-core concurrent_engine2d)
+add_test(concurrent:simd      test-core concurrent_simd)
 
 
 

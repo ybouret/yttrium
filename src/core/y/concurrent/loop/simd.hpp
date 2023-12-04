@@ -38,66 +38,6 @@ namespace Yttrium
         }
 
 
-        class Resource
-        {
-        public:
-            virtual ~Resource() noexcept {}
-
-        protected:
-            explicit Resource() noexcept {}
-            virtual  void attach(const ThreadContext &) = 0;
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Resource);
-        };
-
-
-        template <typename T>
-        class Resource1D : public Resource, public ForLoop<T>
-        {
-        public:
-            inline explicit Resource1D() noexcept : ForLoop<T>() {}
-            inline virtual ~Resource1D() noexcept {}
-
-            void setup(const ThreadContext &cntx, const T head, const T tail, const T step)
-            {
-                ForLoop<T> trek = Split::For(cntx,head,tail,step);
-                this->xch(trek);
-                attach(cntx);
-            }
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Resource1D);
-        };
-
-        template <typename T>
-        class Resource2D : public Resource
-        {
-        public:
-            typedef typename Tiling<T>::Tile Tile;
-            inline explicit Resource2D() noexcept : tile(0) {}
-            inline virtual ~Resource2D() noexcept {}
-
-            void setup(const ThreadContext &cntx, 
-                       const V2D<T>        &lower,
-                       const V2D<T>        &upper)
-            {
-                Tile *tmp = Tiling<T>::Tiles::For(cntx,lower,upper);
-                tile = tmp;
-                attach(cntx);
-            }
-
-            inline friend std::ostream & operator<<(std::ostream &os, const Resource2D &self)
-            {
-                os << self.tile;
-                return os;
-            }
-
-
-        private:
-            AutoPtr<Tile> tile;
-            Y_DISABLE_COPY_AND_ASSIGN(Resource2D);
-        };
-
 
 
 
@@ -113,6 +53,7 @@ namespace Yttrium
             
             inline virtual ~SIMD() noexcept {}
 
+#if 0
             void dispatch(const T head, const T tail, const T step)
             {
                 Resources  &self = *this;
@@ -134,7 +75,7 @@ namespace Yttrium
                     resource.setup(team[i],lower,upper);
                 }
             }
-
+#endif
 
 
         private:
