@@ -62,6 +62,14 @@ namespace Yttrium
         }
 
 
+#define Y_CONCURRENT_ENGINES_SETUP(CODE)    \
+assert(this->size()==contexts->size());     \
+const ThreadContexts &cntx = *contexts;     \
+Writable<ENGINE>     &self = *this;         \
+const size_t          n    = self.size();   \
+for(size_t i=1;i<=n;++i) self[i].start CODE
+
+
         //______________________________________________________________________
         //
         //
@@ -114,40 +122,19 @@ namespace Yttrium
             //! 0D API
             inline void operator()(void)
             {
-                assert(this->size()==contexts->size());
-                const ThreadContexts &cntx = *contexts;
-                Writable<ENGINE>     &self = *this;
-                const size_t          n    = self.size();
-                for(size_t i=1;i<=n;++i)
-                {
-                    self[i].start(cntx[i]);
-                }
+                Y_CONCURRENT_ENGINES_SETUP( (cntx[i]) );
             }
 
             //! 1D API
             inline void operator()(const Type head, const Type tail, const Type step)
             {
-                assert(this->size()==contexts->size());
-                const ThreadContexts &cntx = *contexts;
-                Writable<ENGINE>     &self = *this;
-                const size_t          n    = self.size();
-                for(size_t i=1;i<=n;++i)
-                {
-                    self[i].start(cntx[i],head,tail,step);
-                }
+                Y_CONCURRENT_ENGINES_SETUP( (cntx[i],head,tail,step) );
             }
 
             //! 2D API
             inline void operator()(const Vertex lower, const Vertex upper)
             {
-                assert(this->size()==contexts->size());
-                const ThreadContexts &cntx = *contexts;
-                Writable<ENGINE>     &self = *this;
-                const size_t          n    = self.size();
-                for(size_t i=1;i<=n;++i)
-                {
-                    self[i].start(cntx[i],lower,upper);
-                }
+                Y_CONCURRENT_ENGINES_SETUP(  (cntx[i],lower,upper) );
             }
 
 
