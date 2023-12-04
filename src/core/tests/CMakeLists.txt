@@ -143,6 +143,9 @@ add_test(concurrent:topo      test-core concurrent_topo)
 add_test(concurrent:queue     test-core concurrent_queue)
 add_test(concurrent:context   test-core concurrent_context)
 add_test(concurrent:loop      test-core concurrent_loop)
+add_test(concurrent:engine1d  test-core concurrent_engine1d)
+add_test(concurrent:engine2d  test-core concurrent_engine2d)
+
 
 
 #random

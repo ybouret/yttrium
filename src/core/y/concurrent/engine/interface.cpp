@@ -10,7 +10,7 @@ namespace Yttrium
         namespace Nucleus
         {
             Engine:: ~Engine() noexcept {}
-            
+            Engine::  Engine() noexcept {}
         }
 
     }
