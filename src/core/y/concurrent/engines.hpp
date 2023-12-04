@@ -111,7 +111,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! 0D api
+            //! 0D API
             inline void operator()(void)
             {
                 assert(this->size()==contexts->size());
@@ -154,7 +154,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Engines);
-            
+
         };
 
 
