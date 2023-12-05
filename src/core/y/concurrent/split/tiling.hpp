@@ -138,6 +138,7 @@ namespace Yttrium
                 size(0),
                 items(0),
                 base( this->lead() ),
+                //scxx( base-1       ),
                 next(0),
                 prev(0)
                 {}
@@ -180,6 +181,13 @@ namespace Yttrium
                     return os << '}';
                 }
 
+                //! access segment in [0..size-1]
+                inline const Segment & operator[](const size_t i) const noexcept
+                {
+                    assert(i<size);
+                    return base[i];
+                }
+
                 //______________________________________________________________
                 //
                 //
@@ -191,7 +199,8 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_ASSIGN(Tile);
-                Segment * const base;
+                Segment *       const base;
+                //const Segment * const scxx;
 
                 inline Tile(const Tile &tile) :
                 Object(),
@@ -199,6 +208,7 @@ namespace Yttrium
                 size(tile.size),
                 items(tile.items),
                 base( this->lead() ),
+                //scxx( base-1       ),
                 next(0),
                 prev(0)
                 {

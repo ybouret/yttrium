@@ -103,7 +103,33 @@ namespace Yttrium
         Y_LOCK(*(range.sync));
         (std::cerr << "DoSomething2D(" << range << ")" << std::endl).flush();
 
+        //const Concurrent::Tiling<size_t>::Tile &tile = *range;
+        const Tao2D::Tile &tile = *range;
+        for(size_t j=0;j<tile.size;++j)
+        {
+            const Tao2D::Segment &s = tile[j];
+            size_t       x = s.start.x;
+            const size_t y = s.start.y;
+            for(size_t i=s.width;i>0;--i,++x)
+            {
+
+            }
+        }
+
+        for(Tao2D::Iterator it=range->begin();it!=range->end();++it)
+        {
+            
+        }
+
     }
+
+#if 0
+    template <typename T>
+    inline void CopyMatrix(Tao2D &range, Matrix<T> &target, const Matrix<T> &source)
+    {
+
+    }
+#endif
 
 
 }
@@ -167,8 +193,11 @@ Y_UTEST(concurrent_simd)
         Concurrent::SIMD<Tao2D>    seq( seqLoop );
         Concurrent::SIMD<Tao2D>    par( parLoop );
 
+        const size_t rows = 8;
+        const size_t cols = 5;
         V2D<size_t> lower(1,1);
-        V2D<size_t> upper(5,8);
+        V2D<size_t> upper(cols,rows);
+
 
         seq.dispatch(lower,upper);
         par.dispatch(lower,upper);

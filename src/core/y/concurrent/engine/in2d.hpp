@@ -31,11 +31,13 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef typename Tiling<T>::Tile   Tile;        //!< alias
-            typedef AutoPtr<Tile>              Mapping;     //!< alias
-            typedef Engine<Mapping>            EngineType;  //!< alias
-            typedef typename Tiling<T>::Vertex Vertex;      //!< alias
-            typedef T                          Type;        //!< alias
+            typedef typename Tiling<T>::Tile     Tile;       //!< alias
+            typedef typename Tiling<T>::Segment  Segment;    //!< alias
+            typedef typename Tiling<T>::Iterator Iterator;   //!< alias
+            typedef AutoPtr<Tile>                Mapping;    //!< alias
+            typedef Engine<Mapping>              EngineType; //!< alias
+            typedef typename Tiling<T>::Vertex   Vertex;     //!< alias
+            typedef T                            Type;       //!< alias
 
 
             //__________________________________________________________________

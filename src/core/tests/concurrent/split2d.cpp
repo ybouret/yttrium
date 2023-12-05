@@ -26,16 +26,7 @@ Y_UTEST(concurrent_split2d)
 
     UnitTestDisplay::Width = 40;
 
-    Y_SIZEOF(Concurrent::Tiling<int8_t>::Segment);
-    Y_SIZEOF(Concurrent::Tiling<int16_t>::Segment);
-    Y_SIZEOF(Concurrent::Tiling<int32_t>::Segment);
-    Y_SIZEOF(Concurrent::Tiling<int64_t>::Segment);
 
-    std::cerr << std::endl;
-    Y_SIZEOF(Concurrent::Tiling<int8_t>::Tile);
-    Y_SIZEOF(Concurrent::Tiling<int16_t>::Tile);
-    Y_SIZEOF(Concurrent::Tiling<int32_t>::Tile);
-    Y_SIZEOF(Concurrent::Tiling<int64_t>::Tile);
 
 
     for(unsigned size=1;size<=8;++size)
@@ -62,6 +53,17 @@ Y_UTEST(concurrent_split2d)
         std::cerr << std::endl;
     }
 
+    std::cerr << std::endl;
+    Y_SIZEOF(Concurrent::Tiling<int8_t>::Segment);
+    Y_SIZEOF(Concurrent::Tiling<int16_t>::Segment);
+    Y_SIZEOF(Concurrent::Tiling<int32_t>::Segment);
+    Y_SIZEOF(Concurrent::Tiling<int64_t>::Segment);
+
+    std::cerr << std::endl;
+    Y_SIZEOF(Concurrent::Tiling<int8_t>::Tile);
+    Y_SIZEOF(Concurrent::Tiling<int16_t>::Tile);
+    Y_SIZEOF(Concurrent::Tiling<int32_t>::Tile);
+    Y_SIZEOF(Concurrent::Tiling<int64_t>::Tile);
 
 }
 Y_UDONE()
