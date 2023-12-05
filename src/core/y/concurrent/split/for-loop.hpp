@@ -107,9 +107,9 @@ namespace Yttrium
                 os << '[';
                 os << trek.offset;
                 os << ':';
-                os << trek.update;
-                os << ':';
                 os << trek.latest;
+                os << ':';
+                os << trek.update;
                 os << ']';
                 os << '=';
                 os << trek.length;

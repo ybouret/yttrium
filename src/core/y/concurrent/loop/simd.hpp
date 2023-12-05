@@ -24,17 +24,39 @@ namespace Yttrium
         class SIMD : public Engines<MAPPING>
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             typedef Engines<MAPPING>               MyEngines;  //!< alias
             typedef typename MyEngines::EngineType EngineType; //!< alias Engine[1|2]D
             typedef typename MyEngines::Propulsion Propulsion; //!< Writable engines to access resources
 
-            inline virtual ~SIMD() noexcept {}
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
-            inline SIMD(const SharedLoop &team) :
-            MyEngines(team),
-            loop( Coerce(*team) )
+
+            //! create default engines according to team->size()
+            inline explicit SIMD(const SharedLoop &team) :
+            MyEngines(team), loop( Coerce(*team) )
             {
             }
+
+            //! cleanup
+            inline virtual ~SIMD() noexcept {}
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
             //! testing
             void operator()(void)  
