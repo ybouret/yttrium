@@ -101,6 +101,7 @@ namespace Yttrium
     {
         assert(0!=range.sync);
         Y_LOCK(*(range.sync));
+        (std::cerr << "DoSomething2D(" << range << ")" << std::endl).flush();
 
     }
 
@@ -171,7 +172,8 @@ Y_UTEST(concurrent_simd)
 
         seq.dispatch(lower,upper);
         par.dispatch(lower,upper);
-
+        seq(DoSomething2D);
+        par(DoSomething2D);
 
     }
 
