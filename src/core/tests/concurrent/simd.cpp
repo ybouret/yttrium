@@ -21,10 +21,9 @@ namespace Yttrium
     class Tao1D : public Concurrent::Engine1D<size_t>
     {
     public:
-        explicit Tao1D() noexcept : sync(0) {}
+        explicit Tao1D() noexcept  {}
         virtual ~Tao1D() noexcept {}
 
-        Lockable * const sync;
 
 
     private:
@@ -33,14 +32,13 @@ namespace Yttrium
         virtual void activate(const Concurrent::ThreadContext &cntx)
         {
             std::cerr << "Activating Context " << cntx.name << std::endl;
-            Coerce(sync) = & cntx.sync;
         }
     };
 
     inline void DoSomething(Tao1D &range)
     {
-        assert(0!=range.sync);
-        Y_LOCK(*(range.sync));
+
+        Y_LOCK(range.sync());
         (std::cerr << "DoSomething(" << range << ")" << std::endl).flush();
     }
 
@@ -53,8 +51,7 @@ namespace Yttrium
 
         inline void operator()(Tao1D &range, const int a)
         {
-            assert(0!=range.sync);
-            Y_LOCK(*(range.sync));
+            Y_LOCK(range.sync());
             (std::cerr << "Working(" << range << "," << a << ")" << std::endl).flush();
         }
 
@@ -66,9 +63,8 @@ namespace Yttrium
     template <typename TARGET, typename SOURCE>
     inline void Load(Tao1D &range, TARGET &target, SOURCE &source)
     {
-        assert(0!=range.sync);
         {
-            Y_LOCK(*(range.sync));
+            Y_LOCK(range.sync());
             (std::cerr << "Load(" << range << ")" << std::endl).flush();
             Tao1D::Type i = range.offset;
             for(Tao1D::Size j=range.length;j>0;--j,++i)
@@ -83,33 +79,33 @@ namespace Yttrium
     class Tao2D : public Concurrent::Engine2D<size_t>
     {
     public:
-        explicit Tao2D() noexcept : sync(0) {}
+        explicit Tao2D() noexcept {}
         virtual ~Tao2D() noexcept {}
 
-        Lockable * const sync;
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Tao2D);
         virtual void activate(const Concurrent::ThreadContext &cntx)
         {
             std::cerr << "Activating 2D Context " << cntx.name << ": " << *this << std::endl;
-            Coerce(sync) = & cntx.sync;
         }
     };
 
     inline void DoSomething2D(Tao2D &range)
     {
-        assert(0!=range.sync);
-        Y_LOCK(*(range.sync));
-        (std::cerr << "DoSomething2D(" << range << ")" << std::endl).flush();
 
+        {
+            Y_LOCK(range.sync());
+            (std::cerr << "DoSomething2D(" << range << ")" << std::endl).flush();
+        }
+        
         //const Concurrent::Tiling<size_t>::Tile &tile = *range;
         const Tao2D::Tile &tile = *range;
         for(size_t j=0;j<tile.size;++j)
         {
             const Tao2D::Segment &s = tile[j];
             size_t       x = s.start.x;
-            const size_t y = s.start.y;
+            //const size_t y = s.start.y;
             for(size_t i=s.width;i>0;--i,++x)
             {
 

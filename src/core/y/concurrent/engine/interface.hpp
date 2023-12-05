@@ -25,6 +25,14 @@ namespace Yttrium
                 //______________________________________________________________
                 //
                 //
+                // Methods
+                //
+                //______________________________________________________________
+                Lockable & sync() const noexcept; //!< access after activation
+
+                //______________________________________________________________
+                //
+                //
                 // C++
                 //
                 //______________________________________________________________
@@ -41,6 +49,14 @@ namespace Yttrium
 
                 //! acquire local memory to associate to a thread context
                 virtual void activate(const ThreadContext &) = 0;
+
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                Lockable * const access; //!< shared access
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Engine);
@@ -65,7 +81,7 @@ namespace Yttrium
             // Definition
             //
             //__________________________________________________________________
-            typedef MAPPING Mapping; //!< alias
+            typedef MAPPING Mapping; //!< alias to ForLoop<>, Tile, ...
 
             //__________________________________________________________________
             //
@@ -100,6 +116,7 @@ namespace Yttrium
             inline void initiate(const ThreadContext &cntx, Mapping &temp)
             {
                 this->xch(temp);
+                Coerce(access) = & cntx.sync;
                 activate(cntx);
             }
 
