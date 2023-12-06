@@ -25,10 +25,10 @@ namespace Yttrium
             class NoMapping
             {
             public:
-                NoMapping()                       noexcept; //!< setup false
-                NoMapping(const Int2Type<true> &) noexcept; //!< setup true
-                ~NoMapping()                      noexcept; //!< cleanup
-                void xch(NoMapping &)             noexcept; //!< no-throw swap
+                explicit NoMapping()                       noexcept; //!< setup false
+                explicit NoMapping(const Int2Type<true> &) noexcept; //!< setup true
+                virtual ~NoMapping()                       noexcept; //!< cleanup
+                void xch(NoMapping &)                      noexcept; //!< no-throw swap
                 friend std::ostream & operator<<(std::ostream &, const NoMapping &); //!< display
 
                 const bool activated; //!< helper flag
