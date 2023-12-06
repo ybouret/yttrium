@@ -57,7 +57,8 @@ namespace Yttrium
             //__________________________________________________________________
             typedef Nucleus::NoMapping          Mapping;    //!< alias
             typedef Concurrent::Engine<Mapping> EngineType; //!< alias
-            typedef int                         Type;       //!< alias
+            typedef int                         Type;       //!< alias, N/A
+            typedef int                         Locus;      //!< alias, N/A
 
             //__________________________________________________________________
             //

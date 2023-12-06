@@ -41,6 +41,20 @@ namespace Yttrium
             typedef T                                     Type; //!< alias
             typedef typename UnsignedInt<sizeof(T)>::Type Size; //!< unsigned alias
 
+            class Locus
+            {
+            public:
+                inline  Locus(const T &h, const T &t, const T &s) noexcept : head(h), tail(t), step(s) {}
+                inline  Locus(const Locus &_)                     noexcept : head(_.head), tail(_.tail), step(_.step) {}
+                inline ~Locus()                                   noexcept {}
+
+                const T head;
+                const T tail;
+                const T step;
+            private:
+                Y_DISABLE_ASSIGN(Locus);
+            };
+
             //__________________________________________________________________
             //
             //

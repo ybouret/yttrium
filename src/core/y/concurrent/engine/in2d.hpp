@@ -38,6 +38,7 @@ namespace Yttrium
             typedef Engine<Mapping>              EngineType; //!< alias
             typedef typename Tiling<T>::Vertex   Vertex;     //!< alias
             typedef T                            Type;       //!< alias
+            typedef typename Tiling<T>::Locus    Locus;
 
 
             //__________________________________________________________________

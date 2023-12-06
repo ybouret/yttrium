@@ -33,6 +33,8 @@ Y_UTEST(concurrent_engine1d)
 
     std::cerr << engine << std::endl;
 
+    Concurrent::ForLoop<int>::Locus l(1,10,1);
+
 }
 Y_UDONE()
 

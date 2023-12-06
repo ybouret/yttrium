@@ -9,9 +9,11 @@
 
 #include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
+#include "y/memory/solitary/workspace.hpp"
 
 #include "y/ptr/arc.hpp"
 #include "y/mkl/v2d.hpp"
+
 
 namespace Yttrium
 {
@@ -98,6 +100,7 @@ for(size_t i=1;i<=n;++i) self[i].start CODE
             typedef CxxArray<ENGINE,Nucleus::Engines::Model> CxxEngines; //!< alias for base class
             typedef typename ENGINE::Type                    Type;       //!< alias to int, size_t...
             typedef V2D<Type>                                Vertex;     //!< alias for V2D
+            typedef typename ENGINE::Locus                   Locus;      //!< alias for Locus (a.k.a full range, N/A in 0D)
 
             //__________________________________________________________________
             //
@@ -146,6 +149,7 @@ for(size_t i=1;i<=n;++i) self[i].start CODE
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Engines);
+            Memory::Workspace<Locus> locus;
 
         };
 

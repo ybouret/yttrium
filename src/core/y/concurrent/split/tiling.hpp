@@ -326,6 +326,27 @@ namespace Yttrium
             typedef typename Tile::Iterator Iterator; //!< syntax alias
 
 
+            class Locus
+            {
+            public:
+                inline explicit Locus(const Vertex &org, const Vertex &end) noexcept :
+                lower(org),
+                upper(end)
+                {
+                    assert(lower.x<=upper.x);
+                    assert(lower.y<=upper.y);
+                }
+
+                inline  Locus(const Locus &_) noexcept : lower(_.lower), upper(_.upper) {}
+                inline ~Locus() noexcept {}
+
+                const Vertex lower;
+                const Vertex upper;
+
+            private:
+                Y_DISABLE_ASSIGN(Locus);
+            };
+
             //__________________________________________________________________
             //
             //
@@ -441,12 +462,8 @@ namespace Yttrium
                     // compute items for this rank
                     //
                     //----------------------------------------------------------
-                    //Size offset = 0;
-                    //Size length = items;
-                    //Split::For(ctx,length,offset); assert(length>0);
                     const Size start = 0;
-                    //const Size length = items;
-                    const ForLoop<Size> trek = Split::Using(ctx, items, start); 
+                    const ForLoop<Size> trek = Split::Using(ctx, items, start);
                     assert(trek.length>0);
 
                     //----------------------------------------------------------
