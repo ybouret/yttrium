@@ -17,6 +17,9 @@ namespace Yttrium
         //
         //
         //! SIMD for 1D/2D
+        /**
+         Execute samed code for different user defined resources
+         */
         //
         //
         //______________________________________________________________________

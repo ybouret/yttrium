@@ -147,6 +147,8 @@ add_test(concurrent:engine1d  test-core concurrent_engine1d)
 add_test(concurrent:engine2d  test-core concurrent_engine2d)
 add_test(concurrent:simd      test-core concurrent_simd)
 add_test(concurrent:engines   test-core concurrent_engines)
+add_test(concurrent:simt1d    test-core concurrent_simt1d)
+add_test(concurrent:simt2d    test-core concurrent_simt2d)
 
 
 

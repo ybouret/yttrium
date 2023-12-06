@@ -197,5 +197,6 @@ Y_UTEST(concurrent_simd)
 
     }
 
+
 }
 Y_UDONE()
