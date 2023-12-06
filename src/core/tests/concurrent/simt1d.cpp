@@ -33,6 +33,9 @@ namespace
             std::cerr << "in " << cntx.name << " : " << *this << std::endl;
         }
     };
+
+    
+
 }
 
 
@@ -47,7 +50,6 @@ Y_UTEST(concurrent_simt1d)
     Concurrent::SIMT1D<Tao1D> par( parLoop );
 
     seq.dispatch(1,100,2);
-
     par.dispatch(1,100,2);
 
 
