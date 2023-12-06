@@ -44,7 +44,10 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! start engine: compute loop then initiate/activate
-            inline void start(const ThreadContext &cntx, const T head, const T tail, const T step)
+            inline void start(const ThreadContext &cntx,
+                              const T head,
+                              const T tail,
+                              const T step)
             {
                 Mapping temp = Split::For(cntx,head,tail,step);
                 this->initiate(cntx,temp);
