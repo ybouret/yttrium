@@ -34,7 +34,7 @@ namespace Yttrium
             typedef ForLoop<T>                 Mapping;    //!< alias
             typedef Engine<Mapping>            EngineType; //!< alias
             typedef T                          Type;       //!< alias
-            typedef typename ForLoop<T>::Locus Locus;
+            typedef typename ForLoop<T>::Locus Locus;      //!< alias
 
             //__________________________________________________________________
             //

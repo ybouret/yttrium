@@ -33,6 +33,7 @@ namespace Yttrium
             static void         Lift(void *addr, size_t size, const size_t blockSize)             noexcept; //!< addr+size -> addr+size+blockSize, addr[blockSize] = 0
             static void         Fill(void *tgt, const size_t, const void *src, const size_t)      noexcept; //!< fill tgt with copy(ies) of src
             static void         Move(void *a, void *b, const void *c, const size_t size)          noexcept; //!< a=b,b=c
+            static int          Comp(const void *a, const void *b, const size_t size)             noexcept; //!< memcmp(a,b,n)
 
             //! zeroed, destructed item
             template <typename T> static inline

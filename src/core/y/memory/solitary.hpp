@@ -63,6 +63,20 @@ namespace Yttrium
                 return *( data = new ( get() ) T(args) );
             }
 
+            //! build with two arguments
+            template <typename U, typename V>
+            inline Type &build(U &argu, V &argv) {
+                erase();
+                return *( data = new ( get() ) T(argu,argv) );
+            }
+
+            //! build with thhree arguments
+            template <typename U, typename V, typename W>
+            inline Type &build(U &argu, V &argv, W &argw) {
+                erase();
+                return *( data = new ( get() ) T(argu,argv,argw) );
+            }
+
             //! dismiss content, assuming it was copied elsewhere
             inline void dismiss() noexcept {
                 (void) Memory::OutOfReach::Zero(data,sizeof(T));

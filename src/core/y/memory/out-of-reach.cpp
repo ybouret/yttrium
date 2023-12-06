@@ -43,6 +43,12 @@ namespace Yttrium
             return target;
         }
 
+        int OutOfReach:: Comp(const void *a, const void *b, const size_t size) noexcept
+        {
+            assert(Good(a,size));
+            assert(Good(b,size));
+            return memcmp(a,b,size);
+        }
 
         void * OutOfReach:: Swap(void *target, void *source, const size_t size) noexcept
         {

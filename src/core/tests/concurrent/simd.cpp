@@ -186,8 +186,8 @@ Y_UTEST(concurrent_simd)
 
         const size_t rows = 8;
         const size_t cols = 5;
-        V2D<size_t> lower(1,1);
-        V2D<size_t> upper(cols,rows);
+        V2D<size_t>  lower(1,1);
+        V2D<size_t>  upper(cols,rows);
 
 
         seq.dispatch(lower,upper);

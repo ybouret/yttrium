@@ -131,25 +131,30 @@ for(size_t i=1;i<=n;++i) self[i].start CODE
             inline void dispatch(void)
             {
                 Y_CONCURRENT_ENGINES_SETUP( (cntx[i]) );
+                static const int one = 1;
+                locus.build(one);
             }
 
             //! 1D API
             inline void dispatch(const Type head, const Type tail, const Type step)
             {
                 Y_CONCURRENT_ENGINES_SETUP( (cntx[i],head,tail,step) );
+                locus.build(head,tail,step);
             }
 
             //! 2D API
             inline void dispatch(const Vertex lower, const Vertex upper)
             {
                 Y_CONCURRENT_ENGINES_SETUP(  (cntx[i],lower,upper) );
+                locus.build(lower,upper);
             }
 
 
+        protected:
+            Memory::Workspace<Locus> locus; //!< full range
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Engines);
-            Memory::Workspace<Locus> locus;
 
         };
 
