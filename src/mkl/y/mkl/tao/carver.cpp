@@ -20,19 +20,26 @@ namespace Yttrium
             
             void Carver:: setup(const size_t n)
             {
-                if(!in1d.matches(1,n,1))
+                if(n<=0)
+                    in1d.turnOff();
+                else
                 {
-                    in1d.dispatch(1,n,1);
+                    if(!in1d.matches(1,n,1))
+                        in1d.dispatch(1,n,1);
                 }
             }
 
             void Carver:: setup(const MatrixMetrics &M)
             {
                 const Vertex vtx(M.cols,M.rows);
-                if(!in2d.matches(org,vtx))
+                if(vtx == org)
+                    in2d.turnOff();
+                else
                 {
-                    in2d.dispatch(org,vtx);
+                    if(!in2d.matches(org,vtx))
+                        in2d.dispatch(org,vtx);
                 }
+
             }
 
 
