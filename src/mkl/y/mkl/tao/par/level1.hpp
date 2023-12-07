@@ -24,19 +24,24 @@ namespace Yttrium
                 assert(target.size()<=source.size());
                 carver.setup(target.size());
                 struct Todo {
-                    inline void operator()(Motor1D &range)
+                    inline void operator()(Motor1D &range, 
+                                           TARGET  &target,
+                                           SOURCE  &source)
                     {
-                        Y_LOCK(range.sync());
-                        std::cerr << "todo : " << range << std::endl;
+                        {
+                            Y_LOCK(range.sync());
+                            assert(Concurrent::ForLoopIncrease==range.family);
+                            assert(range.offset>0);
+                            std::cerr << "todo : " << range << " in Thread" <<  std::endl;
+                        }
+                        for(size_t i=range.latest;i>=range.offset;--i)
+                        {
+                            target[i] = source[i];
+                        }
                     }
                 };
                 Todo todo = {};
-                carver.in1d(todo);
-
-#if 0
-                for(size_t i=target.size();i>0;--i)
-                    target[i] = source[i];
-#endif
+                carver.in1d(todo,target,source);
             }
         }
 

@@ -26,9 +26,10 @@ Y_UTEST(tao)
 
 
     Concurrent::SharedLoop seqLoop = new Concurrent::Mono();
-    //Concurrent::SharedLoop parLoop = new Concurrent::Crew(topo);
+    Concurrent::SharedLoop parLoop = new Concurrent::Crew(topo);
 
     Tao::Carver seq(seqLoop);
+    Tao::Carver par(parLoop);
 
     Vector<double> target(8,0);
     Vector<int>    source(10,0);
@@ -42,6 +43,12 @@ Y_UTEST(tao)
     std::cerr << "target=" << target << std::endl;
     Tao::Load(target,source,seq);
     std::cerr << "target=" << target << std::endl;
+    target.ld(0);
+    Tao::Load(target,source,par);
+    std::cerr << "target=" << target << std::endl;
+
+
+
 
 
 }
