@@ -17,10 +17,10 @@ namespace Yttrium
         class SIMT2D : public SIMD<ENGINE>
         {
         public:
-            typedef ENGINE                 EngineType;
-            typedef SIMD<ENGINE>           Processors;
-            typedef typename ENGINE::Type  Type;
-            typedef typename ENGINE::Locus Locus;
+            typedef ENGINE                  EngineType;
+            typedef SIMD<ENGINE>            Processors;
+            typedef typename ENGINE::Type   Type;
+            typedef typename ENGINE::Locus  Locus;
             typedef typename ENGINE::Vertex Vertex;
 
             inline explicit SIMT2D(const SharedLoop &loop) : Processors(loop) {}
