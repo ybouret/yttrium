@@ -44,6 +44,7 @@ Y_UTEST(tao)
     Tao::Load(target,source,seq);
     std::cerr << "target=" << target << std::endl;
     target.ld(0);
+    std::cerr << "target=" << target << std::endl;
     Tao::Load(target,source,par);
     std::cerr << "target=" << target << std::endl;
 
