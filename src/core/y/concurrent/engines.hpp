@@ -79,7 +79,7 @@ for(size_t i=1;i<=n;++i) self[i].start CODE
         //
         //
         //
-        //! Engines to associate resources per thread context
+        //! Engines to associate one ENGINE per thread context
         //
         //
         //______________________________________________________________________
