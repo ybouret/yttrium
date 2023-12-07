@@ -31,8 +31,8 @@ namespace Yttrium
                 };
 #endif
 
-                template <typename TARGET, typename SOURCE>
-                inline void Load(Motor1D &range, TARGET &target, SOURCE &source)
+                template <typename TARGET, typename SOURCE> inline
+                 void Load(Motor1D &range, TARGET &target, SOURCE &source)
                 {
                     for(size_t i=range.latest;i>=range.offset;--i)
                         target[i] = source[i];
@@ -58,11 +58,13 @@ namespace Yttrium
         {
             namespace Parallel
             {
-                template <typename TARGET, typename SOURCE>
-                struct Save
+                template <typename TARGET, typename SOURCE> inline
+                void Save(Motor1D &range, TARGET &target, SOURCE &source)
                 {
-                    inline void operator()(void) {}
-                };
+                    for(size_t i=range.latest;i>=range.offset;--i)
+                        target[i] = source[i];
+                }
+
             }
 
             //__________________________________________________________________
@@ -74,9 +76,7 @@ namespace Yttrium
             {
                 assert(target.size()>=source.size());
                 carver.setup(source.size());
-
-                for(size_t i=source.size();i>0;--i)
-                    target[i] = source[i];
+                carver.in1d(Parallel::Save<TARGET,SOURCE>,target,source);
             }
 
         }
