@@ -3,6 +3,8 @@ include_directories(. ../core)
 Y_CreateLibrary(y-mkl
 mkl
 mkl/tao
+mkl/tao/seq
+mkl/tao/par
 mkl/ode
 mkl/opt
 mkl/algebra
