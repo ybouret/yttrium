@@ -17,6 +17,7 @@ namespace Yttrium
 
             namespace Parallel
             {
+#if 0
                 template <typename TARGET, typename SOURCE>
                 struct Load
                 {
@@ -24,19 +25,19 @@ namespace Yttrium
                                            TARGET  &target,
                                            SOURCE  &source)
                     {
-                        {
-                            Y_LOCK(range.sync());
-                            assert(Concurrent::ForLoopIncrease==range.family);
-                            assert(range.offset>0);
-                            std::cerr << "todo : " << range << " in Thread" <<  std::endl;
-                        }
                         for(size_t i=range.latest;i>=range.offset;--i)
-                        {
                             target[i] = source[i];
-                        }
                     }
-
                 };
+#endif
+
+                template <typename TARGET, typename SOURCE>
+                inline void Load(Motor1D &range, TARGET &target, SOURCE &source)
+                {
+                    for(size_t i=range.latest;i>=range.offset;--i)
+                        target[i] = source[i];
+                }
+
             }
 
             //__________________________________________________________________
@@ -48,11 +49,38 @@ namespace Yttrium
             {
                 assert(target.size()<=source.size());
                 carver.setup(target.size());
-                Parallel::Load<TARGET,SOURCE> code = {};
-                carver.in1d(code,target,source);
-
+                carver.in1d(Parallel::Load<TARGET,SOURCE>,target,source);
             }
+
         }
+
+        namespace Tao
+        {
+            namespace Parallel
+            {
+                template <typename TARGET, typename SOURCE>
+                struct Save
+                {
+                    inline void operator()(void) {}
+                };
+            }
+
+            //__________________________________________________________________
+            //
+            //! target[1..source.size()] = source[1..source.size()]
+            //__________________________________________________________________
+            template <typename TARGET, typename SOURCE>   inline
+            void Save(TARGET &target, SOURCE &source, Carver &carver)
+            {
+                assert(target.size()>=source.size());
+                carver.setup(source.size());
+
+                for(size_t i=source.size();i>0;--i)
+                    target[i] = source[i];
+            }
+
+        }
+
 
     }
 
