@@ -96,11 +96,11 @@ Y_UTEST(concurrent_simt2d)
     par.dispatch(lower,upper);
 
     std::cerr << "seq: " << std::endl;
-    seq( DoSomething );
+    seq.call( DoSomething );
 
     std::cerr << std::endl;
     std::cerr << "par: " << std::endl;
-    par( DoSomething );
+    par.call( DoSomething );
 
     std::cerr << std::endl;
 
