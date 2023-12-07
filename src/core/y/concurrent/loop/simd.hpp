@@ -62,7 +62,7 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! testing
-            inline void call(void)
+            inline void operator()(void)
             {
                 const CallMe me = { *this };
                 loop(me);
@@ -70,7 +70,7 @@ namespace Yttrium
 
             //! no-arg call proc(engine)
             template <typename PROC>
-            inline void call(PROC &proc)
+            inline void operator()(PROC &proc)
             {
                 Call0<PROC> me = { *this, proc };
                 loop(me);
@@ -78,7 +78,7 @@ namespace Yttrium
 
             //! 1-arg call proc(engine,arg1)
             template <typename PROC, typename ARG1>
-            inline void call(PROC &proc, ARG1 &arg1)
+            inline void operator()(PROC &proc, ARG1 &arg1)
             {
                 Call1<PROC,ARG1> me = { *this, proc, arg1 };
                 loop(me);
@@ -86,7 +86,7 @@ namespace Yttrium
 
             //! 2-args call proc(engine,arg1,arg2)
             template <typename PROC, typename ARG1, typename ARG2>
-            inline void call(PROC &proc, ARG1 &arg1, ARG2 &arg2)
+            inline void operator()(PROC &proc, ARG1 &arg1, ARG2 &arg2)
             {
                 Call2<PROC,ARG1,ARG2> me = { *this, proc, arg1, arg2 };
                 loop(me);
@@ -94,7 +94,7 @@ namespace Yttrium
 
             //! 3-args call proc(engine,arg1,arg2,arg3)
             template <typename PROC, typename ARG1, typename ARG2, typename ARG3>
-            inline void call(PROC &proc, ARG1 &arg1, ARG2 &arg2, ARG3 &arg3)
+            inline void operator()(PROC &proc, ARG1 &arg1, ARG2 &arg2, ARG3 &arg3)
             {
                 Call3<PROC,ARG1,ARG2,ARG3> me = { *this, proc, arg1, arg2, arg3 };
                 loop(me);

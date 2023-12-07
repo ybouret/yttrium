@@ -149,22 +149,22 @@ Y_UTEST(concurrent_simd)
         std::cerr << "seq=" << seq << std::endl;
         seq.dispatch(1,10,1);
         std::cerr << "seq=" << seq << std::endl;
-        seq.call();
-        seq.call( DoSomething );
+        seq();
+        seq( DoSomething );
 
 
         std::cerr << std::endl;
         std::cerr << "par=" << par << std::endl;
         par.dispatch(1,10,1);
         std::cerr << "par=" << par << std::endl;
-        par.call();
-        par.call( DoSomething );
+        par();
+        par( DoSomething );
 
 
         Working   w;
         const int n = 3;
-        seq.call(w,n);
-        par.call(w,n);
+        seq(w,n);
+        par(w,n);
 
         CxxArray<double> target(30);
         CxxArray<int>    source(20);
@@ -174,13 +174,13 @@ Y_UTEST(concurrent_simd)
         }
 
         seq.dispatch(1,source.size(),1);
-        seq.call(Load< Writable<double>,const Readable<int> >,target,source);
+        seq(Load< Writable<double>,const Readable<int> >,target,source);
         std::cerr << "target=" << target << std::endl;
 
         memset( &target[1], 0, sizeof(double)*target.size() );
         std::cerr << "target=" << target << std::endl;
         par.dispatch(1,source.size(),1);
-        par.call(Load< Writable<double>,const Readable<int> >,target,source);
+        par(Load< Writable<double>,const Readable<int> >,target,source);
         std::cerr << "target=" << target << std::endl;
     }
 
@@ -197,8 +197,8 @@ Y_UTEST(concurrent_simd)
 
         seq.dispatch(lower,upper);
         par.dispatch(lower,upper);
-        seq.call(DoSomething2D);
-        par.call(DoSomething2D);
+        seq(DoSomething2D);
+        par(DoSomething2D);
 
     }
 

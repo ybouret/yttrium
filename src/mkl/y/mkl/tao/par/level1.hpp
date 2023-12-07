@@ -49,7 +49,7 @@ namespace Yttrium
                 assert(target.size()<=source.size());
                 carver.setup(target.size());
                 Parallel::Load<TARGET,SOURCE> code = {};
-                carver.in1d.call(code,target,source);
+                carver.in1d(code,target,source);
 
             }
         }
