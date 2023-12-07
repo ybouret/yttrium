@@ -14,6 +14,22 @@ namespace Yttrium
 
         namespace Tao
         {
+
+            namespace Bof
+            {
+                template <typename TARGET, typename SOURCE>
+                struct Todo
+                {
+                    inline void operator()(Motor1D &range,
+                                           TARGET  &target,
+                                           SOURCE  &source)
+                    {
+
+                    }
+
+                };
+            }
+
             //__________________________________________________________________
             //
             //! target[1..target.size()] = source[1..target.size()]
@@ -22,6 +38,10 @@ namespace Yttrium
             void Load(TARGET &target, SOURCE &source, Carver &carver)
             {
                 assert(target.size()<=source.size());
+                Bof::Todo<TARGET,SOURCE> todo = {};
+                carver.in1d.call(todo,target,source);
+
+#if 0
                 carver.setup(target.size());
                 struct Todo {
                     inline void operator()(Motor1D &range, 
@@ -43,6 +63,7 @@ namespace Yttrium
                 Todo todo = {};
                 Carver::Proc1D &proc = carver.in1d;
                 proc.template call<Todo,TARGET,SOURCE>(todo,target,source);
+#endif
             }
         }
 
