@@ -20,6 +20,7 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Motor1D);
+                virtual void activate(const Concurrent::ThreadContext &);
             };
         }
     }

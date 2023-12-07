@@ -82,10 +82,12 @@ Y_UTEST(tao)
     const Concurrent::Topology topo;
 
 
-    //Concurrent::SharedLoop seqLoop = new Concurrent::Mono();
+    Concurrent::SharedLoop seqLoop = new Concurrent::Mono();
     //Concurrent::SharedLoop parLoop = new Concurrent::Crew(topo);
 
-    
+    Tao::Carver seq(seqLoop);
+
+
 
 
 }

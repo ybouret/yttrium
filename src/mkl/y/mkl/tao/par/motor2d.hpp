@@ -13,6 +13,15 @@ namespace Yttrium
     {
         namespace Tao
         {
+            struct Strip
+            {
+                size_t icol;
+                size_t irow;
+                size_t ncol;
+                size_t cend;
+                friend std::ostream &operator<<(std::ostream &os, const Strip &s);
+            };
+
             class Motor2D : public Concurrent::Engine2D<size_t>
             {
             public:
@@ -21,6 +30,9 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Motor2D);
+                const Strip * const strip;
+                virtual void activate(const Concurrent::ThreadContext &);
+
             };
         }
     }

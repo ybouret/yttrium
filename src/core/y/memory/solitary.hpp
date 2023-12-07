@@ -83,6 +83,8 @@ namespace Yttrium
                 data = 0;
             }
 
+            inline Type      & operator*()       noexcept { assert(0!=data); return *data; } //!< access built content
+            inline ConstType & operator*() const noexcept { assert(0!=data); return *data; } //!< access built content
 
             //__________________________________________________________________
             //
