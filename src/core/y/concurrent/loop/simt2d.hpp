@@ -55,9 +55,14 @@ namespace Yttrium
             //! check that request matches current locus
             inline bool matches(const Vertex lower, const Vertex upper) const noexcept
             {
-                const Locus &lhs = *(this->locus);
-                const Locus  rhs(lower,upper);
-                return lhs == rhs;
+                if( this->locus.isValid() )
+                {
+                    const Locus &lhs = *(this->locus);
+                    const Locus  rhs(lower,upper);
+                    return lhs == rhs;
+                }
+                else
+                    return false;
             }
 
 

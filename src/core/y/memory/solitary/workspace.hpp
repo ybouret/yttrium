@@ -4,6 +4,7 @@
 #define Y_Memory_Workspace_Included 1
 
 #include "y/memory/solitary.hpp"
+#include "y/calculus/align.hpp"
 
 namespace Yttrium
 {

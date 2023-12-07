@@ -4,9 +4,8 @@
 #ifndef Y_Memory_Solitary_Included
 #define Y_Memory_Solitary_Included 1
 
-#include "y/calculus/align.hpp"
 #include "y/memory/out-of-reach.hpp"
-#include "y/type/args.hpp"
+#include "y/ptr/ptr.hpp"
 
 namespace Yttrium
 {
@@ -23,7 +22,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename T>
-        class Solitary
+        class Solitary : public Ptr<T,Immediate>
         {
         public:
             //__________________________________________________________________
@@ -32,7 +31,10 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
+            typedef Ptr<T,Immediate> PtrType;
+
             Y_ARGS_EXPOSE(T,Type); //!< aliases
+            using PtrType::handle;
 
             //__________________________________________________________________
             //
@@ -43,48 +45,46 @@ namespace Yttrium
 
             //! erase content
             inline void erase() noexcept {
-                if(0!=data)
+                if(0!=handle)
                 {
-                    Memory::OutOfReach::Naught(data);
-                    data = 0;
+                    Memory::OutOfReach::Naught(handle);
+                    handle = 0;
                 }
             }
 
             //! build with default argument
             inline Type & build() {
                 erase();
-                return *( data = new ( get() ) T() );
+                return *( handle = new ( get() ) T() );
             }
 
             //! build with one argument
             template <typename U>
             inline Type &build(U &args) {
                 erase();
-                return *( data = new ( get() ) T(args) );
+                return *( handle = new ( get() ) T(args) );
             }
 
             //! build with two arguments
             template <typename U, typename V>
             inline Type &build(U &argu, V &argv) {
                 erase();
-                return *( data = new ( get() ) T(argu,argv) );
+                return *( handle = new ( get() ) T(argu,argv) );
             }
 
             //! build with thhree arguments
             template <typename U, typename V, typename W>
             inline Type &build(U &argu, V &argv, W &argw) {
                 erase();
-                return *( data = new ( get() ) T(argu,argv,argw) );
+                return *( handle = new ( get() ) T(argu,argv,argw) );
             }
 
             //! dismiss content, assuming it was copied elsewhere
             inline void dismiss() noexcept {
-                (void) Memory::OutOfReach::Zero(data,sizeof(T));
-                data = 0;
+                (void) Memory::OutOfReach::Zero(handle,sizeof(T));
+                handle = 0;
             }
 
-            inline Type      & operator*()       noexcept { assert(0!=data); return *data; } //!< access built content
-            inline ConstType & operator*() const noexcept { assert(0!=data); return *data; } //!< access built content
 
             //__________________________________________________________________
             //
@@ -92,18 +92,15 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            inline virtual ~Solitary() noexcept { assert(0 == data); }
+            
+            //! cleanup, handle must be taken care of beforehand
+            inline virtual ~Solitary() noexcept { assert(0 == handle); }
 
         protected:
-            inline explicit Solitary() noexcept :data(0) {}
+            //! setup
+            inline explicit Solitary() noexcept : PtrType(0) {}
 
-            //__________________________________________________________________
-            //
-            //
-            // Members
-            //
-            //__________________________________________________________________
-            MutableType *data; //!< (constructed) data
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solitary);
