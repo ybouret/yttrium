@@ -41,7 +41,7 @@ namespace Yttrium
                     }
                 };
                 Todo todo = {};
-                carver.in1d.call(todo,target,source);
+                carver.in1d.template call(todo,target,source);
             }
         }
 
