@@ -104,7 +104,7 @@ namespace Yttrium
 
             };
 
-            inline explicit Smooth() : code(0)
+            inline explicit Smooth() : code(0), xadd(), lu()
             {
             }
 
