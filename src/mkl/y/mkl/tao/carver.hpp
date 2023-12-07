@@ -36,7 +36,9 @@ namespace Yttrium
                 typedef Concurrent::SIMT1D<Motor1D> In1D;   //!< alias
                 typedef Concurrent::SIMT2D<Motor2D> In2D;   //!< alias
                 typedef In2D::Vertex                Vertex; //!< alias
-
+                typedef In1D::Processors            Proc1D; //!< alias
+                typedef In2D::Processors            Proc2D; //!< alias
+                
                 //______________________________________________________________
                 //
                 //

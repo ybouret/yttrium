@@ -41,7 +41,8 @@ namespace Yttrium
                     }
                 };
                 Todo todo = {};
-                carver.in1d.template call<Todo,TARGET,SOURCE>(todo,target,source);
+                Carver::Proc1D &proc = carver.in1d;
+                proc.template call<Todo,TARGET,SOURCE>(todo,target,source);
             }
         }
 
