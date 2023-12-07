@@ -101,7 +101,7 @@ namespace Yttrium
 
             //const Concurrent::Tiling<size_t>::Tile &tile = *range;
             const Tao2D::Tile &tile = *range;
-            for(size_t j=0;j<tile.size;++j)
+            for(size_t j=1;j<=tile.size;++j)
             {
                 const Tao2D::Segment &s = tile[j];
                 size_t       x = s.start.x;

@@ -14,6 +14,7 @@
 #include "y/data/list/cxx.hpp"
 #include "y/type/ints.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/check/static.hpp"
 
 namespace Yttrium
 {
@@ -138,7 +139,7 @@ namespace Yttrium
                 size(0),
                 items(0),
                 base( this->lead() ),
-                //scxx( base-1       ),
+                scxx( base-1       ),
                 next(0),
                 prev(0)
                 {}
@@ -181,11 +182,23 @@ namespace Yttrium
                     return os << '}';
                 }
 
-                //! access segment in [0..size-1]
+                //! access segment in [1..size]
                 inline const Segment & operator[](const size_t i) const noexcept
                 {
-                    assert(i<size);
-                    return base[i];
+                    assert(i>=1);
+                    assert(i<=size);
+                    return scxx[i];
+                }
+
+                //! convert Segment to binary compatible strip
+                /**
+                 STRIP[1..size]
+                 */
+                template <typename STRIP> inline
+                const STRIP * as() const noexcept
+                {
+                    Y_STATIC_CHECK(sizeof(STRIP)==sizeof(Segment),ErrorStripSize);
+                    return Memory::OutOfReach::Cast<const STRIP,const Segment>(scxx);
                 }
 
                 //______________________________________________________________
@@ -200,7 +213,7 @@ namespace Yttrium
             private:
                 Y_DISABLE_ASSIGN(Tile);
                 Segment *       const base;
-                //const Segment * const scxx;
+                const Segment * const scxx;
 
                 inline Tile(const Tile &tile) :
                 Object(),
@@ -208,7 +221,7 @@ namespace Yttrium
                 size(tile.size),
                 items(tile.items),
                 base( this->lead() ),
-                //scxx( base-1       ),
+                scxx( base-1       ),
                 next(0),
                 prev(0)
                 {

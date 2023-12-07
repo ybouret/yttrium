@@ -112,7 +112,7 @@ for(size_t i=1;i<=n;++i) self[i].start CODE
             //! setup from a derived class (Pipeline 0D/Loop [1|2]D)
             template <typename DERIVED>
             inline explicit Engines(const ArcPtr<DERIVED> &stc) :
-            Nucleus::Engines(stc), CxxEngines( contexts->size() )
+            Nucleus::Engines(stc), CxxEngines( contexts->size() ), locus()
             {
             }
 

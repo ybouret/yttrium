@@ -31,10 +31,11 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef ForLoop<T>                 Mapping;    //!< alias
-            typedef Engine<Mapping>            EngineType; //!< alias
-            typedef T                          Type;       //!< alias
-            typedef typename ForLoop<T>::Locus Locus;      //!< alias
+            typedef ForLoop<T>              Mapping;    //!< alias
+            typedef Engine<Mapping>         EngineType; //!< alias
+            typedef T                       Type;       //!< alias
+            typedef typename Mapping::Size  Size;       //!< alias
+            typedef typename Mapping::Locus Locus;      //!< alias
 
             //__________________________________________________________________
             //

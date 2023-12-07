@@ -19,7 +19,7 @@ namespace
     class Tao1D : public Concurrent::Engine1D<size_t>
     {
     public:
-        explicit Tao1D() noexcept {}
+        explicit Tao1D() noexcept : data() {}
         virtual ~Tao1D() noexcept {}
 
     private:

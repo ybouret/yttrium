@@ -23,13 +23,31 @@ namespace
     class Tao2D : public Concurrent::Engine2D<size_t>
     {
     public:
-        explicit Tao2D() noexcept {}
+        struct Strip
+        {
+            Type icol;
+            Type irow;
+            Size ncol;
+            Type cend;
+        };
+
+        explicit Tao2D() noexcept : strip(0) {}
         virtual ~Tao2D() noexcept {}
 
+        inline const Strip & operator()(const size_t indx) const noexcept
+        {
+            assert(0!=strip);
+            assert(indx>0); assert(indx<=(*this)->size);
+            return strip[indx];
+        }
+
     private:
+        Y_DISABLE_COPY_AND_ASSIGN(Tao2D);
+        const Strip *strip;
         virtual void activate(const Concurrent::ThreadContext &cntx)
         {
             std::cerr << "in " << cntx.name << " : " << *this << std::endl;
+            strip = (*this)->as<Strip>();
         }
     };
 
@@ -37,11 +55,10 @@ namespace
     {
         Y_LOCK( range.sync() );
         std::cerr << "In " << Concurrent::Thread::CurrentHandle() << std::endl;
-        const Tao2D::Tile &tile = *range;
-        for(size_t i=0;i<tile.size;++i)
+        for(size_t i=range->size;i>0;--i)
         {
-            const Tao2D::Segment &s = tile[i];
-            std::cerr << "\t" << s << std::endl;
+            //const Tao2D::Segment &s = tile[i];
+            //std::cerr << "\t" << s << std::endl;
         }
     }
 }
