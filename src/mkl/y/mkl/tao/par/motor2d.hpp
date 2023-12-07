@@ -28,6 +28,8 @@ namespace Yttrium
                 explicit Motor2D() noexcept;
                 virtual ~Motor2D() noexcept;
 
+                const Strip & operator()(const size_t indx) const noexcept;
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Motor2D);
                 const Strip * const strip;

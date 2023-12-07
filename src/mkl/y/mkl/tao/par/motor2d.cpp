@@ -24,6 +24,14 @@ namespace Yttrium
                 const Tile &tile = **this;
                 Coerce(strip) = tile.as<Strip>(); assert(0!=strip);
             }
+
+            const Strip & Motor2D:: operator()(const size_t indx) const noexcept
+            {
+                assert(0!=strip);
+                assert(indx>=1);
+                assert(indx<=(**this).size);
+                return strip[indx];
+            }
         }
     }
 }
