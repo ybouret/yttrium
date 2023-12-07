@@ -11,21 +11,48 @@ namespace Yttrium
 {
     namespace Concurrent
     {
-
-        //! assuming Engine derives from Engine2D<Type>
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! assuming ENGINE derives from Engine2D<Type>
+        //
+        //
+        //______________________________________________________________________
         template <class ENGINE>
         class SIMT2D : public SIMD<ENGINE>
         {
         public:
-            typedef ENGINE                  EngineType;
-            typedef SIMD<ENGINE>            Processors;
-            typedef typename ENGINE::Type   Type;
-            typedef typename ENGINE::Locus  Locus;
-            typedef typename ENGINE::Vertex Vertex;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef ENGINE                  EngineType; //!< alias to individual engine
+            typedef SIMD<ENGINE>            Processors; //!< alias to base class
+            typedef typename ENGINE::Type   Type;       //!< alias
+            typedef typename ENGINE::Size   Size;       //!< alias
+            typedef typename ENGINE::Locus  Locus;      //!< alias
+            typedef typename ENGINE::Vertex Vertex;     //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             inline explicit SIMT2D(const SharedLoop &loop) : Processors(loop) {}
             inline virtual ~SIMT2D() noexcept {}
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! check that request matches current locus
             inline bool matches(const Vertex lower, const Vertex upper) const noexcept
             {
                 const Locus &lhs = *(this->locus);

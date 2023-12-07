@@ -11,19 +11,51 @@ namespace Yttrium
     namespace Concurrent
     {
 
-        //! assuming Engine derives from Engine1D<Type>
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! assuming ENGINE derives from Engine1D<Type>
+        //
+        //
+        //______________________________________________________________________
         template <class ENGINE>
         class SIMT1D : public SIMD<ENGINE>
         {
-        public:
-            typedef ENGINE                 EngineType;
-            typedef SIMD<ENGINE>           Processors;
-            typedef typename ENGINE::Type  Type;
-            typedef typename ENGINE::Locus Locus;
+        public: 
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef ENGINE                 EngineType; //!< alias to individual engine
+            typedef SIMD<ENGINE>           Processors; //!< alias to base class
+            typedef typename ENGINE::Type  Type;       //!< alias
+            typedef typename ENGINE::Size  Size;       //!< alias
+            typedef typename ENGINE::Locus Locus;      //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup
             inline explicit SIMT1D(const SharedLoop &loop) : Processors(loop) {}
+
+            //! cleanup
             inline virtual ~SIMT1D() noexcept {}
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+           
+            //! check request match current locus=
             inline bool matches(const Type head, const Type tail, const Type step) const noexcept
             {
                 const Locus &lhs = *(this->locus);
