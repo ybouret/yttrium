@@ -62,7 +62,7 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! testing
-            void operator()(void)  
+            inline void operator()(void)  
             {
                 const CallMe call = { *this };
                 loop(call);
