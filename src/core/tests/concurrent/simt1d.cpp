@@ -52,6 +52,14 @@ Y_UTEST(concurrent_simt1d)
     seq.dispatch(1,100,2);
     par.dispatch(1,100,2);
 
+    std::cerr << "seq=" << seq << std::endl;
+    std::cerr << "par=" << par << std::endl;
+
+
+    seq.turnOff();
+    par.turnOff();
+    std::cerr << "seq=" << seq << std::endl;
+    std::cerr << "par=" << par << std::endl;
 
 }
 Y_UDONE()

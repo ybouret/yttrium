@@ -96,6 +96,17 @@ Y_UTEST(concurrent_simt2d)
     std::cerr << "par: " << std::endl;
     par( DoSomething );
 
+    std::cerr << std::endl;
+
+    std::cerr << "seq=" << seq << std::endl;
+    std::cerr << "par=" << par << std::endl;
+
+
+    seq.turnOff();
+    par.turnOff();
+    std::cerr << "seq=" << seq << std::endl;
+    std::cerr << "par=" << par << std::endl;
+
 
 }
 Y_UDONE()

@@ -121,6 +121,13 @@ Y_UTEST(concurrent_engines)
     std::cerr << "parE0=" << parE0 << std::endl;
     parE0.dispatch();
     std::cerr << "parE0=" << parE0 << std::endl;
+
+    seqE0.turnOff();
+    parE0.turnOff();
+    seqE1.turnOff();
+    parE1.turnOff();
+    seqE2.turnOff();
+    parE2.turnOff();
 }
 Y_UDONE()
 

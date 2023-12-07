@@ -97,6 +97,10 @@ namespace Yttrium
                 return os << _;
             }
             
+            inline void stall() noexcept
+            {
+                this->shutDown();
+            }
 
             //__________________________________________________________________
             //
@@ -119,6 +123,14 @@ namespace Yttrium
                 Coerce(access) = & cntx.sync;
                 activate(cntx);
             }
+
+            inline void shutDown() noexcept
+            {
+                Mapping nil;
+                this->xch(nil);
+            }
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Engine);
