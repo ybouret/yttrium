@@ -29,6 +29,11 @@ namespace
             Type irow;
             Size ncol;
             Type cend;
+            inline friend std::ostream &operator<<(std::ostream &os, const Strip &s)
+            {
+                os << "@row=" << s.irow << ",col=" << s.icol << " : +" << s.ncol;
+                return os;
+            }
         };
 
         explicit Tao2D() noexcept : strip(0) {}
@@ -55,10 +60,12 @@ namespace
     {
         Y_LOCK( range.sync() );
         std::cerr << "In " << Concurrent::Thread::CurrentHandle() << std::endl;
+        const Tao2D::Tile &tile = *range;
         for(size_t i=range->size;i>0;--i)
         {
-            //const Tao2D::Segment &s = tile[i];
-            //std::cerr << "\t" << s << std::endl;
+            const Tao2D::Segment &S = tile[i];
+            const Tao2D::Strip   &s = range(i);
+            std::cerr << "\t" << S << " => " << s << std::endl;
         }
     }
 }
