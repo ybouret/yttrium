@@ -12,9 +12,14 @@ namespace Yttrium
             Motor1D:: ~Motor1D() noexcept {}
 
 
-            void Motor1D::activate(const Concurrent::ThreadContext &ctx)
+            void Motor1D:: activate(const Concurrent::ThreadContext &)
             {
                 
+            }
+
+            void Motor1D:: shutdown() noexcept
+            {
+
             }
         }
     }

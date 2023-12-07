@@ -19,7 +19,7 @@ namespace Yttrium
             Motor2D::  Motor2D() noexcept : strip(0) {}
             Motor2D:: ~Motor2D() noexcept {}
 
-            void Motor2D:: activate(const Concurrent::ThreadContext &ctx)
+            void Motor2D:: activate(const Concurrent::ThreadContext &)
             {
                 const Tile &tile = **this;
                 Coerce(strip) = tile.as<Strip>(); assert(0!=strip);
@@ -32,6 +32,12 @@ namespace Yttrium
                 assert(indx<=(**this).size);
                 return strip[indx];
             }
+
+            void Motor2D:: shutdown() noexcept
+            {
+                Coerce(strip) = 0;
+            }
+
         }
     }
 }

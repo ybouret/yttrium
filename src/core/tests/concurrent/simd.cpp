@@ -33,6 +33,9 @@ namespace Yttrium
         {
             std::cerr << "Activating Context " << cntx.name << std::endl;
         }
+
+        virtual void shutdown() noexcept {}
+
     };
 
     inline void DoSomething(Tao1D &range)
@@ -89,6 +92,9 @@ namespace Yttrium
         {
             std::cerr << "Activating 2D Context " << cntx.name << ": " << *this << std::endl;
         }
+
+        virtual void shutdown() noexcept {}
+
     };
 
     inline void DoSomething2D(Tao2D &range)

@@ -42,8 +42,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            inline explicit SIMT2D(const SharedLoop &loop) : Processors(loop) {}
-            inline virtual ~SIMT2D() noexcept {}
+            inline explicit SIMT2D(const SharedLoop &loop) : Processors(loop) {} //!< setup
+            inline virtual ~SIMT2D() noexcept {}                                 //!< cleanup
 
             //__________________________________________________________________
             //

@@ -31,6 +31,9 @@ namespace
         {
             std::cerr << "activating E1 for " << cntx.name << std::endl;
         }
+
+        virtual void shutdown() noexcept {}
+
     };
 
 
@@ -46,6 +49,9 @@ namespace
         {
             std::cerr << "activating E2 for " << cntx.name << std::endl;
         }
+
+        virtual void shutdown() noexcept {}
+
     };
 
 
@@ -61,6 +67,9 @@ namespace
         {
             std::cerr << "activating E0 for " << cntx.name << std::endl;
         }
+
+        virtual void shutdown() noexcept {}
+
     };
 
 }

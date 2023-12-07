@@ -12,15 +12,31 @@ namespace Yttrium
     {
         namespace Tao
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! 1D engines for [1..size()] objects
+            //
+            //
+            //__________________________________________________________________
             class Motor1D : public Concurrent::Engine1D<size_t>
             {
             public:
-                explicit Motor1D() noexcept;
-                virtual ~Motor1D() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Motor1D() noexcept; //!< setup
+                virtual ~Motor1D() noexcept; //!< cleanup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Motor1D);
                 virtual void activate(const Concurrent::ThreadContext &);
+                virtual void shutdown() noexcept;
+
             };
         }
     }

@@ -22,6 +22,9 @@ namespace
         {
 
         }
+
+        virtual void shutdown() noexcept {}
+
     };
 }
 

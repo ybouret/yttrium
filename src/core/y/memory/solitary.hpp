@@ -31,9 +31,8 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Ptr<T,Immediate> PtrType;
-
-            Y_ARGS_EXPOSE(T,Type); //!< aliases
+            typedef Ptr<T,Immediate> PtrType; //!< alias
+            Y_ARGS_EXPOSE(T,Type);            //!< aliases
             using PtrType::handle;
 
             //__________________________________________________________________

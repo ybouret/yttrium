@@ -149,15 +149,14 @@ for(size_t i=1;i<=n;++i) self[i].start CODE
                 locus.build(lower,upper);
             }
 
+            //! turn off all engines and erase locus
             inline void turnOff() noexcept
             {
                 locus.erase();
                 Writable<ENGINE>     &self = *this;
                 for(size_t i=self.size();i>0;--i) self[i].stall();
             }
-
-
-
+            
 
         protected:
             Memory::Workspace<Locus> locus; //!< full range

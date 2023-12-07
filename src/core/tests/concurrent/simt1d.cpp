@@ -32,6 +32,9 @@ namespace
             data.adjust(n,0);
             std::cerr << "in " << cntx.name << " : " << *this << std::endl;
         }
+
+        virtual void shutdown() noexcept {}
+
     };
 
     

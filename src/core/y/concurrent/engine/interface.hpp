@@ -47,8 +47,9 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
-                //! acquire local memory to associate to a thread context
-                virtual void activate(const ThreadContext &) = 0;
+
+                virtual void activate(const ThreadContext &) = 0;  //!< acquire local resources to associate to a thread context
+                virtual void shutdown()             noexcept = 0;  //!< cleanup resources on stall
 
                 //______________________________________________________________
                 //
@@ -97,9 +98,12 @@ namespace Yttrium
                 return os << _;
             }
             
+            //! stall engine: shutdown and reset mapping
             inline void stall() noexcept
             {
-                this->shutDown();
+                shutdown();
+                Mapping nil;
+                this->xch(nil);
             }
 
             //__________________________________________________________________
@@ -124,11 +128,6 @@ namespace Yttrium
                 activate(cntx);
             }
 
-            inline void shutDown() noexcept
-            {
-                Mapping nil;
-                this->xch(nil);
-            }
 
 
 

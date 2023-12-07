@@ -54,6 +54,12 @@ namespace
             std::cerr << "in " << cntx.name << " : " << *this << std::endl;
             strip = (*this)->as<Strip>();
         }
+
+        virtual void shutdown() noexcept 
+        {
+            strip = 0;
+        }
+
     };
 
     inline void DoSomething(Tao2D &range)
