@@ -61,13 +61,15 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+#if 0
             //! testing
-            inline void operator()(void)  
+            inline void operator()(void)
             {
                 const CallMe call = { *this };
                 loop(call);
             }
-
+#endif
+            
             //! no-arg call proc(engine)
             template <typename PROC>
             inline void operator()(PROC &proc)

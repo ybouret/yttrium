@@ -149,7 +149,7 @@ Y_UTEST(concurrent_simd)
         std::cerr << "seq=" << seq << std::endl;
         seq.dispatch(1,10,1);
         std::cerr << "seq=" << seq << std::endl;
-        seq();
+        //seq();
 
         seq( DoSomething );
 
@@ -158,7 +158,7 @@ Y_UTEST(concurrent_simd)
         std::cerr << "par=" << par << std::endl;
         par.dispatch(1,10,1);
         std::cerr << "par=" << par << std::endl;
-        par();
+        //par();
         par( DoSomething );
 
 
