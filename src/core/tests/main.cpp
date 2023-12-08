@@ -103,6 +103,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(concurrent_engines);
     Y_UTEST(concurrent_simt1d);
     Y_UTEST(concurrent_simt2d);
+    Y_UTEST(concurrent_resource);
 
 
     Y_UTEST(hashing_mix64);

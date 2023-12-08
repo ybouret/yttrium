@@ -80,6 +80,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
+           
+            //! alias to produce mutable lead type
             typedef typename TypeTraits<T>::MutableType LeadType;
 
             //! acquire at least numbBlocks
@@ -96,7 +98,7 @@ namespace Yttrium
             }
 
         protected:
-            //! cast workspace to pointed type
+            //! cast workspace to mutable pointed type
             inline LeadType *lead() noexcept { return static_cast<LeadType *>(workspace); }
 
         private:

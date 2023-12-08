@@ -14,6 +14,7 @@ concurrent/thread
 concurrent/loop
 concurrent/pipeline
 concurrent/engine
+concurrent/resource
 locking
 config
 check
