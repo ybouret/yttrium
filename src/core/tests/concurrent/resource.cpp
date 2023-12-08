@@ -109,6 +109,15 @@ Y_UTEST(concurrent_resource)
     std::cerr << "par2=" << par2 << std::endl;
 
 
+    Res2::Vertex bad(0,0);
+    seq2.init(lower,bad);
+    par2.init(lower,bad);
+    std::cerr << "seq2=" << seq2 << std::endl;
+    std::cerr << "par2=" << par2 << std::endl;
+
+
+
+
 
 }
 Y_UDONE()
