@@ -21,7 +21,10 @@ namespace Yttrium
 
             protected:
                 explicit Resource(const ThreadContext &) noexcept;
-                
+
+                virtual void activate()          = 0; //!< activate local resources
+                virtual void shutdown() noexcept = 0; //!< shutdown local resources
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Resource);
             };

@@ -21,7 +21,7 @@ namespace Yttrium
                 explicit Ponctual() noexcept;
                 virtual ~Ponctual() noexcept;
                 friend std::ostream & operator<<(std::ostream &, const Ponctual &); //!< display
-
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Ponctual);
             };
@@ -32,11 +32,18 @@ namespace Yttrium
         public:
             typedef Resource<Nucleus::Ponctual> BaseType;
             typedef BaseType::Mapping           Mapping;
-           
+            typedef int                         Type;       //!< alias, N/A
+            typedef int                         Locus;      //!< alias, N/A
+          
             virtual ~Resource0D() noexcept;
+
+
+            inline void init() { this->activate(); }
+            inline void quit() { this->shutdown(); }
 
         protected:
             explicit  Resource0D(const ThreadContext &);
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Resource0D);

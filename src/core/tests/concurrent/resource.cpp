@@ -28,6 +28,8 @@ namespace
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Res0);
+        virtual void activate() {}
+        virtual void shutdown() noexcept {}
     };
 
     class Res1 : public Concurrent::Resource1D<int>
@@ -38,6 +40,8 @@ namespace
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Res1);
+        virtual void activate() {}
+        virtual void shutdown() noexcept {}
     };
 
     class Res2 : public Concurrent::Resource2D<int>
@@ -48,6 +52,8 @@ namespace
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Res2);
+        virtual void activate() {}
+        virtual void shutdown() noexcept {}
     };
 
 

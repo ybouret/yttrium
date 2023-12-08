@@ -23,6 +23,24 @@ namespace Yttrium
             typedef typename BaseType::Mapping Mapping;
             typedef typename Tiling<T>::Type   Type;
             typedef typename Tiling<T>::Size   Size;
+            typedef typename Tiling<T>::Locus  Locus;      //!< alias
+            typedef typename Tiling<T>::Vertex Vertex;     //!< alias
+
+            //! init: compute tile then  activate
+            inline void init(Vertex lower, Vertex upper)
+            {
+                Mapping temp = Tiling<T>::Tiles::For(*this,lower,upper);
+                this->xch(temp);
+                this->activate();
+            }
+
+            inline void quit() noexcept
+            {
+                Mapping temp;
+                this->xch(temp);
+                this->shutdown();
+            }
+
 
             inline virtual ~Resource2D() noexcept {}
 

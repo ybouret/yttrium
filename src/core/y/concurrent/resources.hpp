@@ -70,20 +70,61 @@ namespace Yttrium
         {
         public:
             typedef CxxArray<RESOURCE,Nucleus::Resources::Model> CxxResources;
+            typedef Writable<RESOURCE>                           WritableResources;
+            typedef typename RESOURCE::Locus                     Locus;
+            typedef typename RESOURCE::Type                      Type;
 
             //! setup from a derived class (Pipeline 0D/Loop [1|2]D)
             template <typename DERIVED>
             inline explicit Resources(const ArcPtr<DERIVED> &stc) :
             Nucleus::Resources(stc),
-            CxxResources(CopyOf,*contexts)
+            CxxResources(CopyOf,*contexts),
+            fullRange()
             {
             }
 
             inline virtual ~Resources() noexcept {}
             
+            //! 0D setup
+            inline void init()
+            {
+                if(fullRange.isEmpty())
+                {
+                    WritableResources &r = *this;
+                    const size_t       n = r.size();
+                    try
+                    {
+                        for(size_t i=1;i<=n;++i) r[i].init();
+                        const int one = 1;
+                        fullRange.build(one);
+                    }
+                    catch(...)
+                    {
+                        quit();
+                        throw;
+                    }
+                }
+            }
+
+            //! 1D setup
+            inline void init(const Type head, const Type tail, const Type step)
+            {
+
+            }
+
+
+            //! cleanup/shutdown resources
+            inline void quit() noexcept
+            {
+                WritableResources &r = *this;
+                for(size_t i=r.size();i>0;--i) r[i].quit();
+                fullRange.erase();
+            }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Resources);
+            Memory::Workspace<Locus> fullRange;
         };
 
 
