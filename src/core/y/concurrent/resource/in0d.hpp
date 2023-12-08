@@ -31,7 +31,6 @@ namespace Yttrium
         {
         public:
             typedef Resource<Nucleus::Ponctual> BaseType;
-            typedef BaseType::Mapping           Mapping;
             typedef int                         Type;       //!< alias, N/A
             typedef int                         Locus;      //!< alias, N/A
           
