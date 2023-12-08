@@ -489,8 +489,8 @@ namespace Yttrium
 
                 //! create tile matching context, can be NULL
                 static inline Tile *For(const Context &ctx,
-                                        const Vertex lower,
-                                        const Vertex upper)
+                                        const Vertex   lower,
+                                        const Vertex   upper)
                 {
                    
                     if(upper.x<lower.x||upper.y<lower.y) return 0;
@@ -508,8 +508,9 @@ namespace Yttrium
                     //
                     //----------------------------------------------------------
                     const Size   width = area.x;
-                    const Size   items = area.x * area.y;
-                    if(items<ctx.size)
+                    const Size   items = area.x * area.y;  
+                    const size_t count = Min<size_t>(ctx.size,items);
+                    if(ctx.indx>count)
                         return 0;
 
                     //----------------------------------------------------------
@@ -518,7 +519,7 @@ namespace Yttrium
                     //
                     //----------------------------------------------------------
                     const Size start = 0;
-                    const ForLoop<Size> trek = Split::Using(ctx, items, start);
+                    const ForLoop<Size> trek = Split::Using(count,ctx.rank,items, start);
                     assert(trek.length>0);
 
                     //----------------------------------------------------------
