@@ -10,7 +10,7 @@ namespace Yttrium
         class Operating:: Code : public Object
         {
         public:
-            void *       entry;
+            void * const entry;
             const size_t width;
             size_t       built;
             Smash const  erase;
@@ -84,6 +84,40 @@ namespace Yttrium
                 }
             }
 
+            inline explicit Code(void        *blockAddr,
+                                 const size_t numBlocks,
+                                 const size_t blockSize,
+                                 XProc        xproc,
+                                 void        *param,
+                                 Smash        smash) :
+            Object(),
+            entry(blockAddr),
+            width(blockSize),
+            built(0),
+            erase(smash)
+            {
+                assert(0!=entry);
+                assert(0!=erase);
+                assert(0!=xproc);
+                assert(0!=param);
+                assert(width>0);
+
+                try {
+                    uint8_t       *tgt = static_cast<uint8_t *>(entry);
+                    while(built<numBlocks) {
+                        xproc(tgt,param,built+1);
+                        tgt += width;
+                        ++built;
+                    }
+                }
+                catch(...)
+                {
+                    release();
+                    throw;
+                }
+            }
+
+
 
             inline virtual ~Code() noexcept { release(); }
 
@@ -124,6 +158,17 @@ namespace Yttrium
                               Smash            smash) :
         code( new Code(blockAddr,blockSize,source.code,xcopy,smash) )
         {
+        }
+
+        Operating:: Operating(void *       blockAddr,
+                              const size_t numBlocks,
+                              const size_t blockSize,
+                              XProc        xproc,
+                              void        *param,
+                              Smash        smash) :
+        code( new Code(blockAddr,numBlocks,blockSize,xproc,param,smash) )
+        {
+
         }
 
 

@@ -8,7 +8,6 @@
 #include "y/container/iterator/writable-contiguous.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/memory/wad.hpp"
-#include "y/type/copy.hpp"
 
 namespace Yttrium
 {
@@ -122,14 +121,16 @@ count( COUNT )
 
         //! setup DEFAULT then convert from any compatible
         template <typename SOURCE>
-        inline explicit CxxArray(const CopyOf_ &, SOURCE &src) :
+        inline explicit CxxArray(const CopyOf_ &copying, SOURCE &src) :
         Y_CxxArray_Prolog(src.size()),
-        OpsType(this->workspace,src.size()),
+        OpsType(this->workspace,copying,src),
         Y_CxxArray_Epilog(src.size())
         {
+#if 0
             Writable<T> &self = *this;
             for(size_t i=src.size();i>0;--i)
                 Coerce(self[i]) = src[i];
+#endif
         }
 
         //! copy

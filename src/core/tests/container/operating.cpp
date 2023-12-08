@@ -20,11 +20,14 @@ Y_UTEST(container_operating)
     void *wksp2[100];
     void *wksp3[100];
     void *wksp4[100];
+    void *wksp5[100];
+
 
     Random::Fill::Block(wksp1,sizeof(wksp1),ran,1);
     Random::Fill::Block(wksp2,sizeof(wksp2),ran,1);
     Random::Fill::Block(wksp3,sizeof(wksp3),ran,1);
     Random::Fill::Block(wksp4,sizeof(wksp4),ran,1);
+    Random::Fill::Block(wksp5,sizeof(wksp5),ran,1);
 
 
     const size_t    n = 10;
@@ -56,6 +59,10 @@ Y_UTEST(container_operating)
     LightArray<apn> a4( op4(), op4.blocks() );
     std::cerr << a4 << std::endl;
 
+
+    Operating<apn>  op5(wksp5,CopyOf,a4);
+    LightArray<apn> a5( op5(), op5.blocks() );
+    std::cerr << a5 << std::endl;
 
 
 

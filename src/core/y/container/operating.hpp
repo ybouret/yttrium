@@ -4,6 +4,7 @@
 
 #include "y/container/writable.hpp"
 #include "y/type/destruct.hpp"
+#include "y/type/copy.hpp"
 
 namespace Yttrium
 {
@@ -28,10 +29,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
             class Code;
-            typedef void (*Build)(void *, void *);       //!< constructor prototype
-            typedef void (*XCopy)(void *, const void *); //!< copy prototype
-            typedef void (*Smash)(void *);               //!< destructor  prototype
-
+            typedef void (*Build)(void *, void *);               //!< constructor prototype
+            typedef void (*XCopy)(void *, const void *);         //!< copy prototype
+            typedef void (*Smash)(void *);                       //!< destructor  prototype
+            typedef void (*XProc)(void *, void *, const size_t); //!< procedural constructor
             //__________________________________________________________________
             //
             //
@@ -55,12 +56,20 @@ namespace Yttrium
                                void        *param,
                                Smash        smash);
 
-            //! setup with copy
+            //! setup with copy of another operating and XCopy(T *, const U*)
             explicit Operating(void            *blockAddr,
                                const size_t     blockSize,
                                const Operating &source,
                                XCopy            xcopy,
                                Smash            smash);
+
+            //! setup with procedural call: xproc(addr,param,indx)
+            explicit Operating(void *       blockAddr,
+                               const size_t numBlocks,
+                               const size_t blockSize,
+                               XProc        xproc,
+                               void        *param,
+                               Smash        smash);
 
         public:
             virtual ~Operating() noexcept; //!< cleanup, release all
@@ -134,6 +143,14 @@ namespace Yttrium
         {
         }
 
+        //! building from a (foreign) sequence
+        template <typename SEQUENCE>
+        inline explicit Operating(void *target, const CopyOf_ &, SEQUENCE &source) :
+        Core::Operating(target,source.size(),sizeof(T),XProcAny<SEQUENCE>,(void*) &source,SelfSmash)
+        {
+
+        }
+
 
         //______________________________________________________________________
         //
@@ -175,7 +192,19 @@ namespace Yttrium
             assert(0!=from);
             new (addr) MutableType( *static_cast<const typename TypeTraits<U>::MutableType *>(from) );
         }
-        
+
+        template <typename SEQUENCE>
+        static inline void XProcAny(void *addr, void *user, const size_t indx)
+        {
+            assert(0!=addr);
+            assert(0!=user);
+            SEQUENCE &source = *static_cast<SEQUENCE *>(user);
+            assert(indx>=1);
+            assert(indx<=source.size());
+            new (addr) MutableType( source[indx] );
+        }
+
+
     };
 }
 

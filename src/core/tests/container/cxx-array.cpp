@@ -3,6 +3,7 @@
 #include "y/apex/natural.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/container/iterator/display-all.hpp"
+#include "y/sequence/vector.hpp"
 
 using namespace Yttrium;
 
@@ -29,6 +30,14 @@ Y_UTEST(container_cxx_array)
         Iterating::DisplayAll::Of(brr);
         Y_CHECK(arr==brr);
     }
+
+    Vector<size_t> iv;
+    for(size_t i=10;i>0;--i) iv.pushTail(i);
+    std::cerr << "iv =" << iv << std::endl;
+    IArray vrr(CopyOf,iv);
+    std::cerr << "vrr=" << vrr << std::endl;
+
+
 
 
 }
