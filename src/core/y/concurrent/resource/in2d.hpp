@@ -27,9 +27,9 @@ namespace Yttrium
             typedef typename Tiling<T>::Vertex Vertex;     //!< alias
 
             //! init: compute tile then  activate
-            inline void init(Vertex lower, Vertex upper)
+            inline void init(const Vertex lower, const Vertex upper)
             {
-                Mapping temp = Tiling<T>::Tiles::For(*this,lower,upper);
+                Mapping temp = Tiling<T>::Tiles::For(*this,lower,upper); // may be NULL
                 this->xch(temp);
                 this->activate();
             }

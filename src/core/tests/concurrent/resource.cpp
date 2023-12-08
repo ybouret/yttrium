@@ -100,6 +100,16 @@ Y_UTEST(concurrent_resource)
     Concurrent::Resources<Res2> par2(parLoop);
     std::cerr << "seq2=" << seq2 << std::endl;
     std::cerr << "par2=" << par2 << std::endl;
+
+    Res2::Vertex lower(1,1);
+    Res2::Vertex upper(4,5);
+    seq2.init(lower,upper);
+    par2.init(lower,upper);
+    std::cerr << "seq2=" << seq2 << std::endl;
+    std::cerr << "par2=" << par2 << std::endl;
+
+
+
 }
 Y_UDONE()
 

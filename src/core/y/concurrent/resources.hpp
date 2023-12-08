@@ -69,11 +69,18 @@ namespace Yttrium
         public CxxArray<RESOURCE,Nucleus::Resources::Model>
         {
         public:
-            typedef CxxArray<RESOURCE,Nucleus::Resources::Model> CxxResources;
-            typedef Writable<RESOURCE>                           WritableResources;
-            typedef typename RESOURCE::Locus                     Locus;
-            typedef typename RESOURCE::Type                      Type;
+            typedef CxxArray<RESOURCE,Nucleus::Resources::Model> CxxResources;      //!< alias
+            typedef Writable<RESOURCE>                           WritableResources; //!< alias
+            typedef typename RESOURCE::Locus                     Locus;             //!< resource Locus
+            typedef typename RESOURCE::Type                      Type;              //!< resource unit type
+            typedef V2D<Type>                                    Vertex;            //!< alias whenever 2D is used
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             //! setup from a derived class (Pipeline 0D/Loop [1|2]D)
             template <typename DERIVED>
             inline explicit Resources(const ArcPtr<DERIVED> &stc) :
@@ -84,8 +91,18 @@ namespace Yttrium
             }
 
             inline virtual ~Resources() noexcept {}
-            
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //__________________________________________________________________
+            //
             //! 0D setup
+            //__________________________________________________________________
             inline void init()
             {
                 if(fullRange.isEmpty())
@@ -106,7 +123,10 @@ namespace Yttrium
                 }
             }
 
+            //__________________________________________________________________
+            //
             //! 1D setup
+            //__________________________________________________________________
             inline void init(const Type head, const Type tail, const Type step)
             {
                 const Locus here(head,tail,step);
@@ -127,8 +147,35 @@ namespace Yttrium
                 }
             }
 
+            //__________________________________________________________________
+            //
+            //! 2D setup
+            //__________________________________________________________________
+            inline void init(const Vertex lower, const Vertex upper)
+            {
+                const Locus here(lower,upper);
+                if( fullRange.isEmpty() || here != *fullRange )
+                {
+                    WritableResources &r = *this;
+                    const size_t       n = r.size();
+                    try
+                    {
+                        for(size_t i=1;i<=n;++i) r[i].init(lower,upper);
+                        fullRange.build(here);
+                    }
+                    catch(...)
+                    {
+                        quit();
+                        throw;
+                    }
+                }
+            }
+            
 
+            //__________________________________________________________________
+            //
             //! cleanup/shutdown resources
+            //__________________________________________________________________
             inline void quit() noexcept
             {
                 WritableResources &r = *this;

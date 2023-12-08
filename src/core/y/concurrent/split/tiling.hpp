@@ -357,9 +357,6 @@ namespace Yttrium
                 lower(org),
                 upper(end)
                 {
-                    if(lower.x>upper.x) CoerceSwap(lower.x,upper.x);
-                    if(lower.y>upper.y) CoerceSwap(lower.y,upper.y);
-
                 }
 
                 //! copy
@@ -431,12 +428,14 @@ namespace Yttrium
 
                 //! setup for maximum nproc>0
                 inline explicit Tiles(const size_t nproc,
-                                      Vertex       lower,
-                                      Vertex       upper) :
+                                      const Vertex lower,
+                                      const Vertex upper) :
                 TProxy(),
                 tiling()
                 {
                     assert(nproc>0);
+                    assert(lower.x<=upper.x);
+                    assert(lower.y<=upper.y);
                     //----------------------------------------------------------
                     //
                     //
@@ -472,11 +471,8 @@ namespace Yttrium
                         //
                         //------------------------------------------------------
                         const Size start = 0;
-                        //const Size length = items;
                         const ForLoop<Size> trek = Split::Using(count, rank, items, start);
                         assert(trek.length>0);
-                        //Split::With(count, rank, length, offset); assert(length>0);
-
                         tiling.pushTail( MakeTile(lower, upper, width, trek.offset, trek.length) );
                     }
                 }
@@ -493,15 +489,18 @@ namespace Yttrium
 
                 //! create tile matching context, can be NULL
                 static inline Tile *For(const Context &ctx,
-                                        Vertex         lower,
-                                        Vertex         upper)
+                                        const Vertex lower,
+                                        const Vertex upper)
                 {
+                   
+                    if(upper.x<lower.x||upper.y<lower.y) return 0;
+
                     //----------------------------------------------------------
                     //
                     // setup area
                     //
                     //----------------------------------------------------------
-                    const Area area = MakeArea(lower,upper);
+                    const Area area = MakeArea(lower,upper); assert(area.x>0); assert(area.y>0);
 
                     //----------------------------------------------------------
                     //
@@ -546,10 +545,10 @@ namespace Yttrium
                     return Vertex(p%w,p/w);
                 }
 
-                static inline Area MakeArea(Vertex &lower, Vertex &upper) noexcept
+                static inline Area MakeArea(const Vertex &lower, const Vertex &upper) noexcept
                 {
-                    if(upper.x<lower.x) Swap(upper.x,lower.x);
-                    if(upper.y<lower.y) Swap(upper.y,lower.y);
+                    assert(lower.x<=upper.x);
+                    assert(lower.y<=upper.y);
                     return Area(1+upper.x-lower.x,1+upper.y-lower.y);
                 }
 
