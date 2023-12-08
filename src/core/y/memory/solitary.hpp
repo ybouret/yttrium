@@ -43,44 +43,44 @@ namespace Yttrium
 
             //! erase content
             inline void erase() noexcept {
-                if(0!=this->handle)
+                if(0!=handle)
                 {
-                    Memory::OutOfReach::Naught(this->handle);
-                    this->handle = 0;
+                    Memory::OutOfReach::Naught(handle);
+                    handle = 0;
                 }
             }
 
             //! build with default argument
             inline Type & build() {
                 erase();
-                return *( this->handle = new ( get() ) T() );
+                return *( handle = new ( get() ) T() );
             }
 
             //! build with one argument
             template <typename U>
             inline Type &build(U &args) {
                 erase();
-                return *( this->handle = new ( get() ) T(args) );
+                return *( handle = new ( get() ) T(args) );
             }
 
             //! build with two arguments
             template <typename U, typename V>
             inline Type &build(U &argu, V &argv) {
                 erase();
-                return *( this->handle = new ( get() ) T(argu,argv) );
+                return *( handle = new ( get() ) T(argu,argv) );
             }
 
             //! build with thhree arguments
             template <typename U, typename V, typename W>
             inline Type &build(U &argu, V &argv, W &argw) {
                 erase();
-                return *( this->handle = new ( get() ) T(argu,argv,argw) );
+                return *( handle = new ( get() ) T(argu,argv,argw) );
             }
 
             //! dismiss content, assuming it was copied elsewhere
             inline void dismiss() noexcept {
-                (void) Memory::OutOfReach::Zero(this->handle,sizeof(T));
-                this->handle = 0;
+                (void) Memory::OutOfReach::Zero(handle,sizeof(T));
+                handle = 0;
             }
 
 
@@ -92,7 +92,7 @@ namespace Yttrium
             //__________________________________________________________________
             
             //! cleanup, handle must be taken care of beforehand
-            inline virtual ~Solitary() noexcept { assert(0 == this->handle); }
+            inline virtual ~Solitary() noexcept { assert(0 == handle); }
 
         protected:
             //! setup
