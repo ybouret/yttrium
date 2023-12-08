@@ -4,7 +4,6 @@
 
 #include "y/container/writable.hpp"
 #include "y/type/destruct.hpp"
-#include "y/type/copy.hpp"
 
 namespace Yttrium
 {
@@ -134,6 +133,7 @@ namespace Yttrium
         Core::Operating(target,sizeof(T),source,XCopyAny<U>,SelfSmash)
         {
         }
+
 
         //______________________________________________________________________
         //

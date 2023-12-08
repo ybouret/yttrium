@@ -38,27 +38,9 @@ namespace Yttrium
     //__________________________________________________________________________
     //
     //
-    //! helper to setup CxxArray
+    //! CxxArray constructor prolog
     //
     //__________________________________________________________________________
-#define Y_CxxArray_Ctor_Com(CAPACITY)                 \
-Writable<T>(),                                        \
-WritableContiguous<T>(),                              \
-Core::CxxArray(),                                     \
-cdata( static_cast<MutableType *>(this->workspace) ), \
-entry( cdata-1    ),\
-count( CAPACITY   )
-
-    //__________________________________________________________________________
-    //
-    //
-    //! helper to setup CxxArray
-    //
-    //__________________________________________________________________________
-#define Y_CxxArray_Ctor(CAPACITY)                     \
-OpsType(this->workspace,CAPACITY),                    \
-Y_CxxArray_Ctor_Com(CAPACITY)
-
 #define Y_CxxArray_Prolog(COUNT) \
 Identifiable(), Collection(),    \
 Writable<T>(),                   \
@@ -66,6 +48,12 @@ WritableContiguous<T>(),         \
 Core::CxxArray(),                \
 WadType(COUNT)
 
+    //__________________________________________________________________________
+    //
+    //
+    //! CxxArray constructor epilog
+    //
+    //__________________________________________________________________________
 #define Y_CxxArray_Epilog(COUNT) \
 cdata( this->lead() ),           \
 entry( cdata-1      ),           \
@@ -119,7 +107,7 @@ count( COUNT )
         OpsType(this->workspace,n,value),
         Y_CxxArray_Epilog(n)
         {
-            
+
         }
 
         //! setup with 1-arg constructor [1:[n|nmax] objets
@@ -132,19 +120,17 @@ count( COUNT )
 
         }
 
-#if 1
-        //! setup from any compatible
+        //! setup DEFAULT then convert from any compatible
         template <typename SOURCE>
         inline explicit CxxArray(const CopyOf_ &, SOURCE &src) :
-        WadType(src.size()),
-        //OpsType(this->workspace,src.size()),
-        Y_CxxArray_Ctor(src.size())
+        Y_CxxArray_Prolog(src.size()),
+        OpsType(this->workspace,src.size()),
+        Y_CxxArray_Epilog(src.size())
         {
             Writable<T> &self = *this;
             for(size_t i=src.size();i>0;--i)
                 Coerce(self[i]) = src[i];
         }
-#endif
 
         //! copy
         inline explicit CxxArray(const CxxArray &src) :
