@@ -106,7 +106,6 @@ namespace Yttrium
                     for(size_t i=range.latest;i>=range.offset;--i)
                         target[i] += factor * source[i];
                 }
-
             }
 
             //__________________________________________________________________
