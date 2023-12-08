@@ -109,11 +109,12 @@ namespace Yttrium
                 const Tao2D::Segment &s = tile[j];
                 size_t       x = s.start.x;
                 const size_t y = s.start.y;
-                std::cerr << "y=" << y << std::endl;
+                std::cerr << "y=" << y << ":";
                 for(size_t i=s.width;i>0;--i,++x)
                 {
-                    std::cerr << "\tx=" << x << std::endl;
+                    std::cerr << " " << x;
                 }
+                std::cerr << std::endl;
             }
 
             for(Tao2D::Iterator it=range->begin();it!=range->end();++it)
@@ -189,25 +190,22 @@ Y_UTEST(concurrent_simd)
         std::cerr << "target=" << target << std::endl;
     }
 
-#if 0
     std::cerr << std::endl;
     {
         Concurrent::SIMD<Tao2D>    seq( seqLoop );
         Concurrent::SIMD<Tao2D>    par( parLoop );
 
-        const size_t rows = 8;
-        const size_t cols = 5;
+        const size_t rows = 5;
+        const size_t cols = 4;
         V2D<size_t>  lower(1,1);
         V2D<size_t>  upper(cols,rows);
 
-
-        seq.dispatch(lower,upper);
-        par.dispatch(lower,upper);
+        seq.init(lower,upper);
+        par.init(lower,upper);
         seq(DoSomething2D);
         par(DoSomething2D);
 
     }
-#endif
 
 }
 Y_UDONE()
