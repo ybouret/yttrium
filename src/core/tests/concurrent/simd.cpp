@@ -39,7 +39,6 @@ namespace Yttrium
 
     inline void DoSomething(Tao1D &range)
     {
-
         Y_LOCK(range.sync);
         (std::cerr << "DoSomething(" << range << ")" << std::endl).flush();
     }
@@ -139,30 +138,35 @@ Y_UTEST(concurrent_simd)
     Concurrent::SharedLoop     seqLoop = new Concurrent::Mono();
     Concurrent::SharedLoop     parLoop = new Concurrent::Crew(topo);
 
-#if 0
     {
         Concurrent::SIMD<Tao1D>    seq( seqLoop );
         Concurrent::SIMD<Tao1D>    par( parLoop );
 
+
         std::cerr << std::endl;
-        std::cerr << "seq=" << seq << std::endl;
-        seq.dispatch(1,10,1);
-        std::cerr << "seq=" << seq << std::endl;
+        std::cerr << "(-) seq=" << seq << std::endl;
+        std::cerr << "(-) par=" << par << std::endl;
+        seq.init(1, 10, 1);
+        par.init(1, 10, 1);
+        std::cerr << "(+) seq=" << seq << std::endl;
+        std::cerr << "(+) par=" << par << std::endl;
+        std::cerr << "---- seq()" << std::endl;
         seq();
-        seq( DoSomething );
-
-
-        std::cerr << std::endl;
-        std::cerr << "par=" << par << std::endl;
-        par.dispatch(1,10,1);
-        std::cerr << "par=" << par << std::endl;
+        std::cerr << "---- par()" << std::endl;
         par();
-        par( DoSomething );
+        std::cerr << "---- seq(DoSometing)" << std::endl;
+        seq(DoSomething);
+        std::cerr << "---- par(DoSometing)" << std::endl;
+        par(DoSomething);
+
+
 
 
         Working   w;
         const int n = 3;
+        std::cerr << "---- seq(working,n)" << std::endl;
         seq(w,n);
+        std::cerr << "---- par(working,n)" << std::endl;
         par(w,n);
 
         CxxArray<double> target(30);
@@ -172,17 +176,20 @@ Y_UTEST(concurrent_simd)
             source[i] = int(i);
         }
 
-        seq.dispatch(1,source.size(),1);
+        std::cerr << "---- seq(Load)" << std::endl;
+        seq.init(1,source.size(),1);
         seq(Load< Writable<double>,const Readable<int> >,target,source);
         std::cerr << "target=" << target << std::endl;
 
+        std::cerr << "---- par(Load)" << std::endl;
         memset( &target[1], 0, sizeof(double)*target.size() );
         std::cerr << "target=" << target << std::endl;
-        par.dispatch(1,source.size(),1);
+        par.init(1,source.size(),1);
         par(Load< Writable<double>,const Readable<int> >,target,source);
         std::cerr << "target=" << target << std::endl;
     }
 
+#if 0
     std::cerr << std::endl;
     {
         Concurrent::SIMD<Tao2D>    seq( seqLoop );

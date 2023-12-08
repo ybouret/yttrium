@@ -12,7 +12,6 @@ namespace Yttrium
     namespace Concurrent
     {
 
-#if 0
         //______________________________________________________________________
         //
         //
@@ -24,8 +23,8 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        template <typename MAPPING>
-        class SIMD : public Engines<MAPPING>
+        template <typename RESOURCE>
+        class SIMD : public Resources<RESOURCE>
         {
         public:
             //__________________________________________________________________
@@ -34,9 +33,9 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Engines<MAPPING>               MyEngines;  //!< alias
-            typedef typename MyEngines::EngineType EngineType; //!< alias Engine[1|2]D
-            typedef typename MyEngines::Propulsion Propulsion; //!< Writable engines to access resources
+            typedef RESOURCE               ResourceType;   //!< alias
+            typedef Resources<RESOURCE>    ResourcesType;  //!< alias
+            typedef Writable<ResourceType> Ranges;
 
             //__________________________________________________________________
             //
@@ -48,7 +47,7 @@ namespace Yttrium
 
             //! create default engines according to team->size()
             inline explicit SIMD(const SharedLoop &team) :
-            MyEngines(team), loop( Coerce(*team) )
+            ResourcesType(team), loop( Coerce(*team) )
             {
             }
 
@@ -68,6 +67,7 @@ namespace Yttrium
                 const CallMe me = { *this };
                 loop(me);
             }
+
 
             //! no-arg call proc(engine)
             template <typename PROC>
@@ -102,27 +102,27 @@ namespace Yttrium
             }
 
 
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SIMD);
             Loop &loop;
 
             struct CallMe
             {
-                const Propulsion &self;
+                const ResourcesType &self;
                 inline void operator()(const ThreadContext &ctx) const
                 {
-                    const EngineType &engine = self[ctx.indx];
-                    Y_LOCK(ctx.sync);
-                    (std::cerr << "SIMD: in engine " << ctx.name << " : " << engine << std::endl).flush();
+                    const ResourceType &resource = self[ctx.indx];
+                    Y_LOCK(resource.sync);
+                    (std::cerr << "SIMD: in resource: " << resource << std::endl).flush();
                 }
             };
+
 
             template <typename PROC>
             struct Call0
             {
-                Propulsion &self;
-                PROC       &proc;
+                ResourcesType &self;
+                PROC          &proc;
                 inline void operator()(const ThreadContext &ctx) const
                 {
                     proc(self[ctx.indx]);
@@ -132,9 +132,9 @@ namespace Yttrium
             template <typename PROC,typename ARG1>
             struct Call1
             {
-                Propulsion &self;
-                PROC       &proc;
-                ARG1       &arg1;
+                ResourcesType &self;
+                PROC          &proc;
+                ARG1          &arg1;
                 inline void operator()(const ThreadContext &ctx) const
                 {
                     proc(self[ctx.indx],arg1);
@@ -144,10 +144,10 @@ namespace Yttrium
             template <typename PROC,typename ARG1, typename ARG2>
             struct Call2
             {
-                Propulsion &self;
-                PROC       &proc;
-                ARG1       &arg1;
-                ARG2       &arg2;
+                ResourcesType &self;
+                PROC          &proc;
+                ARG1          &arg1;
+                ARG2          &arg2;
                 inline void operator()(const ThreadContext &ctx) const
                 {
                     proc(self[ctx.indx],arg1,arg2);
@@ -157,11 +157,11 @@ namespace Yttrium
             template <typename PROC,typename ARG1, typename ARG2, typename ARG3>
             struct Call3
             {
-                Propulsion &self;
-                PROC       &proc;
-                ARG1       &arg1;
-                ARG2       &arg2;
-                ARG3       &arg3;
+                ResourcesType &self;
+                PROC          &proc;
+                ARG1          &arg1;
+                ARG2          &arg2;
+                ARG3          &arg3;
                 inline void operator()(const ThreadContext &ctx) const
                 {
                     proc(self[ctx.indx],arg1,arg2,arg3);
@@ -170,11 +170,9 @@ namespace Yttrium
 
 
 
-
         };
 
         
-#endif
 
 
     }
