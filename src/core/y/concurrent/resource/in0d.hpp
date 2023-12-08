@@ -42,7 +42,7 @@ namespace Yttrium
             inline void quit() { this->shutdown(); }
 
         protected:
-            explicit  Resource0D(const ThreadContext &);
+            explicit  Resource0D(const ThreadContext &) noexcept;
 
 
         private:

@@ -45,7 +45,7 @@ namespace Yttrium
             inline virtual ~Resource1D() noexcept {}
 
         protected:
-            inline explicit Resource1D(const ThreadContext &ctx) : BaseType(ctx) {}
+            inline explicit Resource1D(const ThreadContext &ctx) noexcept : BaseType(ctx) {}
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Resource1D);

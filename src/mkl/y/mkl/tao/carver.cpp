@@ -14,18 +14,19 @@ namespace Yttrium
             in1d(loop),
             in2d(loop),
             one(1),
-            org(1,1)
+            org(one,one)
             {
             }
             
             void Carver:: setup(const size_t n)
             {
                 if(n<=0)
-                    in1d.turnOff();
+                {
+                    in1d.quit();
+                }
                 else
                 {
-                    if(!in1d.matches(1,n,1))
-                        in1d.dispatch(1,n,1);
+                    in1d.init(one,n,one);
                 }
             }
 
@@ -33,11 +34,12 @@ namespace Yttrium
             {
                 const Vertex vtx(M.cols,M.rows);
                 if(vtx == org)
-                    in2d.turnOff();
+                    in2d.quit();
                 else
                 {
-                    if(!in2d.matches(org,vtx))
-                        in2d.dispatch(org,vtx);
+                    assert(vtx.x>=1);
+                    assert(vtx.y>=1);
+                    in2d.init(org,vtx);
                 }
 
             }

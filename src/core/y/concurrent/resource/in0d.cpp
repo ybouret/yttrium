@@ -21,7 +21,7 @@ namespace Yttrium
 
         Resource0D:: ~Resource0D() noexcept {}
 
-        Resource0D:: Resource0D(const ThreadContext &ctx) : BaseType(ctx) {}
+        Resource0D:: Resource0D(const ThreadContext &ctx) noexcept : BaseType(ctx) {}
 
     }
 

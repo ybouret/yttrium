@@ -1,10 +1,10 @@
 
 //! \file
 
-#ifndef Y_MKL_TAO_Motor1D_Included
-#define Y_MKL_TAO_Motor1D_Included 1
+#ifndef Y_MKL_TAO_Engine1D_Included
+#define Y_MKL_TAO_Engine1D_Included 1
 
-#include "y/concurrent/engine/in1d.hpp"
+#include "y/concurrent/resource/in1d.hpp"
 
 namespace Yttrium
 {
@@ -20,7 +20,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Motor1D : public Concurrent::Engine1D<size_t>
+            class Engine1D : public Concurrent::Resource1D<size_t>
             {
             public:
                 //______________________________________________________________
@@ -29,12 +29,12 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                explicit Motor1D() noexcept; //!< setup
-                virtual ~Motor1D() noexcept; //!< cleanup
+                explicit Engine1D(const Concurrent::ThreadContext &) noexcept; //!< setup
+                virtual ~Engine1D() noexcept; //!< cleanup
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Motor1D);
-                virtual void activate(const Concurrent::ThreadContext &);
+                Y_DISABLE_COPY_AND_ASSIGN(Engine1D);
+                virtual void activate();
                 virtual void shutdown() noexcept;
 
             };

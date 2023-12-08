@@ -3,10 +3,9 @@
 #ifndef Y_MKL_TAO_Carver_Included
 #define Y_MKL_TAO_Carver_Included 1
 
-#include "y/concurrent/loop/simt1d.hpp"
-#include "y/concurrent/loop/simt2d.hpp"
-#include "y/mkl/tao/par/motor1d.hpp"
-#include "y/mkl/tao/par/motor2d.hpp"
+#include "y/concurrent/loop/simd.hpp"
+#include "y/mkl/tao/par/engine1d.hpp"
+#include "y/mkl/tao/par/engine2d.hpp"
 #include "y/container/matrix/metrics.hpp"
 
 namespace Yttrium
@@ -33,12 +32,12 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef Concurrent::SIMT1D<Motor1D> In1D;   //!< alias
-                typedef Concurrent::SIMT2D<Motor2D> In2D;   //!< alias
-                typedef In2D::Vertex                Vertex; //!< alias
-                typedef In1D::Processors            Proc1D; //!< alias
-                typedef In2D::Processors            Proc2D; //!< alias
-                
+                typedef Concurrent::SIMD<Engine1D> In1D;   //!< alias
+                typedef Concurrent::SIMD<Engine2D> In2D;   //!< alias
+                typedef In2D::Vertex               Vertex; //!< alias
+                //typedef In1D::Processors            Proc1D; //!< alias
+                //typedef In2D::Processors            Proc2D; //!< alias
+
                 //______________________________________________________________
                 //
                 //

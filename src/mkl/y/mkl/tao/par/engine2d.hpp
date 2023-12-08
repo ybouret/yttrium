@@ -2,10 +2,10 @@
 
 //! \file
 
-#ifndef Y_MKL_TAO_Motor2D_Included
-#define Y_MKL_TAO_Motor2D_Included 1
+#ifndef Y_MKL_TAO_Engine2D_Included
+#define Y_MKL_TAO_Engine2D_Included 1
 
-#include "y/concurrent/engine/in2d.hpp"
+#include "y/concurrent/resource/in2d.hpp"
 
 namespace Yttrium
 {
@@ -40,7 +40,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Motor2D : public Concurrent::Engine2D<size_t>
+            class Engine2D : public Concurrent::Resource2D<size_t>
             {
             public:
                 //______________________________________________________________
@@ -49,8 +49,8 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                explicit Motor2D() noexcept; //!< setup
-                virtual ~Motor2D() noexcept; //!< cleanup
+                explicit Engine2D(const Concurrent::ThreadContext &) noexcept; //!< setup
+                virtual ~Engine2D() noexcept; //!< cleanup
 
                 //______________________________________________________________
                 //
@@ -63,9 +63,9 @@ namespace Yttrium
                 const Strip & operator()(const size_t indx) const noexcept;
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Motor2D);
+                Y_DISABLE_COPY_AND_ASSIGN(Engine2D);
                 const Strip * const strip;
-                virtual void activate(const Concurrent::ThreadContext &); //!< link strip
+                virtual void activate();          //!< link strip
                 virtual void shutdown() noexcept; //!< unlink strip
             };
         }

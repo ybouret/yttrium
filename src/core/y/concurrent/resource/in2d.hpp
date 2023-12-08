@@ -47,7 +47,7 @@ namespace Yttrium
             inline virtual ~Resource2D() noexcept {}
 
         protected:
-            inline explicit Resource2D(const ThreadContext &ctx) : BaseType(ctx) {}
+            inline explicit Resource2D(const ThreadContext &ctx) noexcept : BaseType(ctx) {}
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Resource2D);

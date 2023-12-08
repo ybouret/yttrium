@@ -47,7 +47,7 @@ namespace Yttrium
 
         protected:
             //! assign resource to context
-            inline explicit Resource(const ThreadContext &ctx) :
+            inline explicit Resource(const ThreadContext &ctx) noexcept :
             Nucleus::Resource(ctx),
             Mapping()
             {
