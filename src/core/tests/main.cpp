@@ -97,12 +97,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(concurrent_queue);
     Y_UTEST(concurrent_context);
     Y_UTEST(concurrent_loop);
-    Y_UTEST(concurrent_engine1d);
-    Y_UTEST(concurrent_engine2d);
     Y_UTEST(concurrent_simd);
-    Y_UTEST(concurrent_engines);
-    Y_UTEST(concurrent_simt1d);
-    Y_UTEST(concurrent_simt2d);
     Y_UTEST(concurrent_resource);
 
 

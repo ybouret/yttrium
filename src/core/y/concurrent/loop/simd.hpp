@@ -5,13 +5,14 @@
 #define Y_Concurrent_SIMD_Included 1
 
 #include "y/concurrent/loop/interface.hpp"
-#include "y/concurrent/engines.hpp"
+#include "y/concurrent/resources.hpp"
 
 namespace Yttrium
 {
     namespace Concurrent
     {
 
+#if 0
         //______________________________________________________________________
         //
         //
@@ -173,7 +174,7 @@ namespace Yttrium
         };
 
         
-
+#endif
 
 
     }

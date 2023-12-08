@@ -3,8 +3,8 @@
 #include "y/concurrent/loop/mono.hpp"
 #include "y/concurrent/loop/crew.hpp"
 
-#include "y/concurrent/engine/in1d.hpp"
-#include "y/concurrent/engine/in2d.hpp"
+#include "y/concurrent/resource/in1d.hpp"
+#include "y/concurrent/resource/in2d.hpp"
 
 #include "y/concurrent/topology.hpp"
 #include "y/concurrent/thread.hpp"
@@ -18,10 +18,12 @@ using namespace Yttrium;
 
 namespace Yttrium
 {
-    class Tao1D : public Concurrent::Engine1D<size_t>
+    class Tao1D : public Concurrent::Resource1D<size_t>
     {
     public:
-        explicit Tao1D() noexcept  {}
+        explicit Tao1D(const Concurrent::ThreadContext &ctx) :
+        Concurrent::Resource1D<size_t>(ctx)
+        {}
         virtual ~Tao1D() noexcept {}
 
 
@@ -29,10 +31,7 @@ namespace Yttrium
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Tao1D);
 
-        virtual void activate(const Concurrent::ThreadContext &cntx)
-        {
-            std::cerr << "Activating Context " << cntx.name << std::endl;
-        }
+        virtual void activate( ) {}
 
         virtual void shutdown() noexcept {}
 
@@ -41,7 +40,7 @@ namespace Yttrium
     inline void DoSomething(Tao1D &range)
     {
 
-        Y_LOCK(range.sync());
+        Y_LOCK(range.sync);
         (std::cerr << "DoSomething(" << range << ")" << std::endl).flush();
     }
 
@@ -54,7 +53,7 @@ namespace Yttrium
 
         inline void operator()(Tao1D &range, const int a)
         {
-            Y_LOCK(range.sync());
+            Y_LOCK(range.sync);
             (std::cerr << "Working(" << range << "," << a << ")" << std::endl).flush();
         }
 
@@ -67,7 +66,7 @@ namespace Yttrium
     inline void Load(Tao1D &range, TARGET &target, SOURCE &source)
     {
         {
-            Y_LOCK(range.sync());
+            Y_LOCK(range.sync);
             (std::cerr << "Load(" << range << ")" << std::endl).flush();
             Tao1D::Type i = range.offset;
             for(Tao1D::Size j=range.length;j>0;--j,++i)
@@ -79,18 +78,17 @@ namespace Yttrium
     }
 
 
-    class Tao2D : public Concurrent::Engine2D<size_t>
+    class Tao2D : public Concurrent::Resource2D<size_t>
     {
     public:
-        explicit Tao2D() noexcept {}
+        explicit Tao2D(const Concurrent::ThreadContext &cntx) : Concurrent::Resource2D<size_t>(cntx) {}
         virtual ~Tao2D() noexcept {}
 
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Tao2D);
-        virtual void activate(const Concurrent::ThreadContext &cntx)
+        virtual void activate()
         {
-            std::cerr << "Activating 2D Context " << cntx.name << ": " << *this << std::endl;
         }
 
         virtual void shutdown() noexcept {}
@@ -101,7 +99,7 @@ namespace Yttrium
     {
 
         {
-            Y_LOCK(range.sync());
+            Y_LOCK(range.sync);
             (std::cerr << "DoSomething2D(" << range << ")" << std::endl).flush();
 
 
@@ -141,6 +139,7 @@ Y_UTEST(concurrent_simd)
     Concurrent::SharedLoop     seqLoop = new Concurrent::Mono();
     Concurrent::SharedLoop     parLoop = new Concurrent::Crew(topo);
 
+#if 0
     {
         Concurrent::SIMD<Tao1D>    seq( seqLoop );
         Concurrent::SIMD<Tao1D>    par( parLoop );
@@ -201,7 +200,7 @@ Y_UTEST(concurrent_simd)
         par(DoSomething2D);
 
     }
-
+#endif
 
 }
 Y_UDONE()
