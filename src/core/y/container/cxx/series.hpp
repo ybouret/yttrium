@@ -3,7 +3,7 @@
 #ifndef Y_Cxx_Series_Included
 #define Y_Cxx_Series_Included 1
 
-#include "y/container/cxx/capacity.hpp"
+#include "y/memory/wad.hpp"
 #include "y/memory/solitary/workspace.hpp"
 #include "y/container/writable.hpp"
 #include "y/sequence/interface.hpp"
@@ -41,7 +41,7 @@ namespace Yttrium
     //
     //
     //__________________________________________________________________________
-    template <typename T, typename ALLOCATOR = Memory::Pooled, CxxCapacity CAPA = CxxRequiredCapacity >
+    template <typename T, typename ALLOCATOR = Memory::Pooled >
     class CxxSeries :
     public Memory::Wad<T,ALLOCATOR>,
     public Writable<T>,
@@ -59,7 +59,6 @@ namespace Yttrium
         //______________________________________________________________________
         typedef Memory::Wad<T,ALLOCATOR> WadType; //!< alias
         typedef Memory::OutOfReach       MemOps;  //!< alias
-        typedef CxxSetCapacity<CAPA>     SetCapa; //!< decide capacity
         Y_ARGS_DECL(T,Type);                      //!< aliases
 
         //______________________________________________________________________
@@ -75,23 +74,24 @@ namespace Yttrium
         Writable<T>(),
         Sequence<T>(),
         Core::CxxSeries(),
-        cdata( static_cast<MutableType *>(this->workspace)),
-        entry( cdata-1 ),
+        cdata( this->lead() ),
+        entry( cdata-1      ),
         count( 0 ),
-        total( SetCapa::From(n,*this) )
+        total( n )
         {
         }
 
         //! duplicate
-        inline CxxSeries(const CopyOf_ &, const CxxSeries &other) :
+        template <typename SOURCE>
+        inline CxxSeries(const CopyOf_ &, SOURCE &other) :
         WadType( other.size() ),
         Writable<T>(),
         Sequence<T>(),
         Core::CxxSeries(),
-        cdata( static_cast<MutableType *>(this->workspace)),
-        entry( cdata-1 ),
+        cdata( this->lead() ),
+        entry( cdata-1      ),
         count( 0 ),
-        total( SetCapa::From(other.size(),*this) )
+        total( other.size() )
         {
             try
             {
