@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Concurrent_Engines_Included

@@ -1,9 +1,16 @@
 #include "y/concurrent/resource/in0d.hpp"
 #include "y/concurrent/resource/in1d.hpp"
 #include "y/concurrent/resource/in2d.hpp"
+#include "y/concurrent/resources.hpp"
 
 #include "y/concurrent/pipeline/alone.hpp"
+#include "y/concurrent/pipeline/queue.hpp"
+
 #include "y/concurrent/loop/mono.hpp"
+#include "y/concurrent/loop/crew.hpp"
+
+#include "y/concurrent/thread.hpp"
+#include "y/string/env.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -49,17 +56,31 @@ namespace
 
 Y_UTEST(concurrent_resource)
 {
-    Concurrent::Mono  mono;
-    Concurrent::Alone alone;
+    Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
+    const Concurrent::Topology topo;
 
-    Res0 r0( alone[1] );
-    Res1 r1( mono[1]  );
-    Res2 r2( mono[1]  );
+    Concurrent::SharedLoop     seqLoop = new Concurrent::Mono();
+    Concurrent::SharedLoop     parLoop = new Concurrent::Crew(topo);
+    Concurrent::SharedPipeline seqPipe = new Concurrent::Alone();
+    Concurrent::SharedPipeline parPipe = new Concurrent::Queue(topo);
 
-    std::cerr << "r0: " << r0 << std::endl;
-    std::cerr << "r1: " << r1 << std::endl;
-    std::cerr << "r2: " << r2 << std::endl;
+    std::cerr << std::endl;
+    Concurrent::Resources<Res0> seq0(seqPipe);
+    Concurrent::Resources<Res0> par0(parPipe);
+    std::cerr << "seq0=" << seq0 << std::endl;
+    std::cerr << "par0=" << par0 << std::endl;
 
+    std::cerr << std::endl;
+    Concurrent::Resources<Res1> seq1(seqLoop);
+    Concurrent::Resources<Res1> par1(parLoop);
+    std::cerr << "seq1=" << seq1 << std::endl;
+    std::cerr << "par1=" << par1 << std::endl;
+
+    std::cerr << std::endl;
+    Concurrent::Resources<Res2> seq2(seqLoop);
+    Concurrent::Resources<Res2> par2(parLoop);
+    std::cerr << "seq2=" << seq2 << std::endl;
+    std::cerr << "par2=" << par2 << std::endl;
 }
 Y_UDONE()
 

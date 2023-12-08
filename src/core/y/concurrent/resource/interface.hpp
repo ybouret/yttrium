@@ -37,7 +37,7 @@ namespace Yttrium
             typedef MAPPING Mapping; //!< ForLoop<>, Tile,
 
             inline friend std::ostream & operator<<(std::ostream &os, const Resource &self) {
-                return os << "@" << self.name << " : " << static_cast<const Mapping &>(self);
+                return os << "@" << self.name << ":" << static_cast<const Mapping &>(self);
             }
 
             inline virtual ~Resource() noexcept {}
