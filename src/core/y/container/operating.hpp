@@ -4,6 +4,7 @@
 
 #include "y/container/writable.hpp"
 #include "y/type/destruct.hpp"
+#include "y/type/copy.hpp"
 
 namespace Yttrium
 {
@@ -127,7 +128,7 @@ namespace Yttrium
         {
         }
 
-        //! copy objects with [copy|manual] constructor
+        //! copy objects with [copy|manual]
         template <typename U>
         inline explicit Operating(void *target, const Operating<U> &source) :
         Core::Operating(target,sizeof(T),source,XCopyAny<U>,SelfSmash)

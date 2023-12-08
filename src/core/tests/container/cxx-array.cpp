@@ -10,7 +10,8 @@ using namespace Yttrium;
 
 Y_UTEST(container_cxx_array)
 {
-    CxxArray<apn,Memory::Pooled> arr(5);
+    typedef CxxArray<apn,Memory::Pooled> IArray;
+    IArray arr(5);
     Y_CHECK(5==arr.size());
 
     arr[1] = 2;
@@ -19,10 +20,16 @@ Y_UTEST(container_cxx_array)
     
     std::cerr << arr << std::endl;
 
+    std::cerr << "arr:" << std::endl;
     Iterating::DisplayAll::Of(arr);
 
-    CxxArray<int,Memory::Pooled,CxxAcquiredCapacity> brr(5);
-    std::cerr << "size: 5->" << brr.size() << std::endl;
+    {
+        IArray brr(arr);
+        std::cerr << "brr:" << std::endl;
+        Iterating::DisplayAll::Of(brr);
+        Y_CHECK(arr==brr);
+    }
+
 
 }
 Y_UDONE()

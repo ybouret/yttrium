@@ -5,9 +5,9 @@
 
 #include "y/container/writable.hpp"
 #include "y/container/operating.hpp"
-#include "y/container/cxx/capacity.hpp"
 #include "y/container/iterator/writable-contiguous.hpp"
 #include "y/memory/allocator/pooled.hpp"
+#include "y/memory/wad.hpp"
 #include "y/type/copy.hpp"
 
 namespace Yttrium
@@ -34,6 +34,7 @@ namespace Yttrium
     }
 
 
+
     //__________________________________________________________________________
     //
     //
@@ -58,6 +59,17 @@ count( CAPACITY   )
 OpsType(this->workspace,CAPACITY),                    \
 Y_CxxArray_Ctor_Com(CAPACITY)
 
+#define Y_CxxArray_Prolog(COUNT) \
+Identifiable(), Collection(),    \
+Writable<T>(),                   \
+WritableContiguous<T>(),         \
+Core::CxxArray(),                \
+WadType(COUNT)
+
+#define Y_CxxArray_Epilog(COUNT) \
+cdata( this->lead() ),           \
+entry( cdata-1      ),           \
+count( COUNT )
 
     //__________________________________________________________________________
     //
@@ -67,13 +79,13 @@ Y_CxxArray_Ctor_Com(CAPACITY)
     //
     //
     //__________________________________________________________________________
-    template <typename T, typename ALLOCATOR = Memory::Pooled, CxxCapacity CAPA = CxxRequiredCapacity >
+    template <typename T, typename ALLOCATOR = Memory::Pooled>
     class CxxArray :
-    public Memory::Wad<T,ALLOCATOR>,
-    public Operating<T>,
     public Writable<T>,
     public WritableContiguous<T>,
-    public Core::CxxArray
+    public Core::CxxArray,
+    public Memory::Wad<T,ALLOCATOR>,
+    public Operating<T>
     {
     public:
         //______________________________________________________________________
@@ -84,7 +96,6 @@ Y_CxxArray_Ctor_Com(CAPACITY)
         //______________________________________________________________________
         typedef Memory::Wad<T,ALLOCATOR>             WadType; //!< alias
         typedef Operating<T>                         OpsType; //!< alias
-        typedef CxxSetCapacity<CAPA>                 SetCapa; //!< decide capacity
         Y_ARGS_DECL(T,Type);                                //!< aliases
 
         //______________________________________________________________________
@@ -94,53 +105,53 @@ Y_CxxArray_Ctor_Com(CAPACITY)
         //
         //______________________________________________________________________
 
-        //! setup with default [1:[n|max]] objects
+        //! setup with DEFAULT  objects[1:n]
         inline explicit CxxArray(const size_t n) :
-        WadType(n),
-        Y_CxxArray_Ctor(SetCapa::From(n,*this))
+        Y_CxxArray_Prolog(n),
+        OpsType(this->workspace,n),
+        Y_CxxArray_Epilog(n)
         {
         }
 
-        //! setup with default [1:[n|max]] objects, and set to value
+        //! setup with same value objects[1:n]
         inline explicit CxxArray(const size_t n, ParamType value) :
-        WadType(n),
-        Y_CxxArray_Ctor(SetCapa::From(n,*this))
+        Y_CxxArray_Prolog(n),
+        OpsType(this->workspace,n,value),
+        Y_CxxArray_Epilog(n)
         {
-            Writable<T> &self = *this;
-            for(size_t i=self.size();i>0;--i)
-                Coerce(self[i]) = value;
+            
         }
 
         //! setup with 1-arg constructor [1:[n|nmax] objets
         template <typename U>
         inline explicit CxxArray(const size_t n, const CopyOf_ &, U &args ) :
-        WadType(n),
-        OpsType(this->workspace,SetCapa::From(n,*this),args),
-        Y_CxxArray_Ctor_Com(SetCapa::From(n,*this))
+        Y_CxxArray_Prolog(n),
+        OpsType(this->workspace,n,args),
+        Y_CxxArray_Epilog(n)
         {
 
         }
 
+#if 1
         //! setup from any compatible
         template <typename SOURCE>
         inline explicit CxxArray(const CopyOf_ &, SOURCE &src) :
         WadType(src.size()),
+        //OpsType(this->workspace,src.size()),
         Y_CxxArray_Ctor(src.size())
         {
             Writable<T> &self = *this;
             for(size_t i=src.size();i>0;--i)
                 Coerce(self[i]) = src[i];
         }
+#endif
 
         //! copy
         inline explicit CxxArray(const CxxArray &src) :
-        Identifiable(), Collection(),
-        WadType(src.size()),
-        Y_CxxArray_Ctor(src.size())
+        Y_CxxArray_Prolog(src.size()),
+        OpsType(this->workspace,src),
+        Y_CxxArray_Epilog(src.size())
         {
-            Writable<T> &self = *this;
-            for(size_t i=src.size();i>0;--i)
-                Coerce(self[i]) = src[i];
         }
 
         //! cleanup

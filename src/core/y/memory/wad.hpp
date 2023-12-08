@@ -80,6 +80,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
+            typedef typename TypeTraits<T>::MutableType LeadType;
 
             //! acquire at least numbBlocks
             inline explicit Wad(const size_t numBlocks) :
@@ -96,7 +97,7 @@ namespace Yttrium
 
         protected:
             //! cast workspace to pointed type
-            inline T *lead() noexcept { return static_cast<T *>(workspace); }
+            inline LeadType *lead() noexcept { return static_cast<LeadType *>(workspace); }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Wad);
