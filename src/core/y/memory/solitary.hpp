@@ -31,9 +31,8 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Ptr<T,Immediate> PtrType; //!< alias
+            //typedef Ptr<T,Immediate> PtrType; //!< alias
             Y_ARGS_EXPOSE(T,Type);            //!< aliases
-            using PtrType::handle;
 
             //__________________________________________________________________
             //
@@ -97,7 +96,7 @@ namespace Yttrium
 
         protected:
             //! setup
-            inline explicit Solitary() noexcept : PtrType(0) {}
+            inline explicit Solitary() noexcept : Ptr<T, Immediate>(0) {}
 
 
 
