@@ -21,8 +21,8 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        template <typename T>
-        class Solitary : public Ptr<T,Immediate>
+        template <typename T, template <typename> class Policy = Immediate >
+        class Solitary : public Ptr<T,Policy>
         {
         public:
             //__________________________________________________________________
@@ -96,7 +96,7 @@ namespace Yttrium
 
         protected:
             //! setup
-            inline explicit Solitary() noexcept : Ptr<T, Immediate>(0) {}
+            inline explicit Solitary() noexcept : Ptr<T,Policy>(0) {}
 
 
 
