@@ -96,7 +96,32 @@ namespace Yttrium
 
         }
 
+        namespace Tao
+        {
+            namespace Parallel
+            {
+                template <typename TARGET, typename T, typename SOURCE> inline
+                void Add(Engine1D &range, TARGET &target, const T &factor, SOURCE &source)
+                {
+                    for(size_t i=range.latest;i>=range.offset;--i)
+                        target[i] += factor * source[i];
+                }
 
+            }
+
+            //__________________________________________________________________
+            //
+            //! target += factor * source
+            //__________________________________________________________________
+            template <typename TARGET, typename T, typename SOURCE>   inline
+            void Add( TARGET &target, T factor, SOURCE &source, Carver &carver)
+            {
+                assert(target.size()==source.size());
+                carver.setup(target.size());
+                carver.in1d(Parallel::Add<TARGET,T,SOURCE>,target,factor,source);
+            }
+
+        }
 
     }
 

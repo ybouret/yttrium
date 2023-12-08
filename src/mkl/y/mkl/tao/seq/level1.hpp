@@ -74,6 +74,7 @@ namespace Yttrium
                     target[i] += source[i] + factor * vector[i];
             }
 
+#if 1
             //__________________________________________________________________
             //
             //! |source|^2
@@ -103,7 +104,7 @@ namespace Yttrium
                 }
                 return res;
             }
-
+#endif
 
         };
     }
