@@ -75,12 +75,25 @@ Y_UTEST(concurrent_resource)
     Concurrent::Resources<Res0> par0(parPipe);
     std::cerr << "seq0=" << seq0 << std::endl;
     std::cerr << "par0=" << par0 << std::endl;
+    seq0.init();
+    par0.init();
+    std::cerr << "seq0=" << seq0 << std::endl;
+    std::cerr << "par0=" << par0 << std::endl;
+
 
     std::cerr << std::endl;
     Concurrent::Resources<Res1> seq1(seqLoop);
     Concurrent::Resources<Res1> par1(parLoop);
     std::cerr << "seq1=" << seq1 << std::endl;
     std::cerr << "par1=" << par1 << std::endl;
+
+    seq1.init(1,100,2);
+    par1.init(1,100,2);
+    std::cerr << "seq1=" << seq1 << std::endl;
+    std::cerr << "par1=" << par1 << std::endl;
+
+
+
 
     std::cerr << std::endl;
     Concurrent::Resources<Res2> seq2(seqLoop);

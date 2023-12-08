@@ -109,7 +109,22 @@ namespace Yttrium
             //! 1D setup
             inline void init(const Type head, const Type tail, const Type step)
             {
-
+                const Locus here(head,tail,step);
+                if( fullRange.isEmpty() || here != *fullRange )
+                {
+                    WritableResources &r = *this;
+                    const size_t       n = r.size();
+                    try
+                    {
+                        for(size_t i=1;i<=n;++i) r[i].init(head,tail,step);
+                        fullRange.build(here);
+                    }
+                    catch(...)
+                    {
+                        quit();
+                        throw;
+                    }
+                }
             }
 
 
