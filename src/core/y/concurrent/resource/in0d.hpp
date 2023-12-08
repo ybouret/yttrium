@@ -31,9 +31,9 @@ namespace Yttrium
         {
         public:
             typedef Concurrent::Resource<Nucleus::Ponctual> BaseType;
-            typedef int                         Type;       //!< alias, N/A
-            typedef int                         Locus;      //!< alias, N/A
-          
+            typedef int                                     Type;       //!< alias, N/A
+            typedef int                                     Locus;      //!< alias, N/A
+
             virtual ~Resource0D() noexcept;
 
 
