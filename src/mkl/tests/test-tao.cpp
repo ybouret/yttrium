@@ -64,10 +64,13 @@ Y_UTEST(tao)
     Y_SIZEOF(Tao::DynamicAdd< Complex< XReal<double> > >);
     Y_SIZEOF(Tao::DynamicAdd< Complex< XReal<long double> > >);
 
-    Y_SIZEOF(Tao::DynamicAdd< apn >);
-    Y_SIZEOF(Tao::DynamicAdd< apz >);
-    Y_SIZEOF(Tao::DynamicAdd< apq >);
+    Y_SIZEOF( Tao::DynamicAdd< apn > );
+    Y_SIZEOF( Tao::DynamicAdd< apz > );
+    Y_SIZEOF( Tao::DynamicAdd< apq > );
 
+    Tao::Multifold<float> mf;
+
+    mf.setup(2,10);
 
 
 }
