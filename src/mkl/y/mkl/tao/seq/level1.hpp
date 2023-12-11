@@ -126,42 +126,79 @@ namespace Yttrium
 
         namespace Tao
         {
+            //__________________________________________________________________
+            //
+            //
+            //! dot product resulting in T
+            //
+            //__________________________________________________________________
             template <typename T>
             struct DotProduct
             {
+                //______________________________________________________________
+                //
+                //! internal computation helper
+                //______________________________________________________________
                 typedef Antelope::Add<T> XAdd;
 
+                //______________________________________________________________
+                //
+                //! compute with prepared xadd
+                //______________________________________________________________
                 template <typename LHS, typename RHS>
-                inline T Of(LHS &lhs, RHS &rhs, XAdd &xadd)
+                inline T Of_(LHS &lhs, RHS &rhs, XAdd &xadd)
                 {
-                    assert(lhs.size()==rhs.size());
                     const size_t size = lhs.size();
+                    assert(lhs.size()==rhs.size());
+                    assert(xadd.isEmpty());
+                    assert(xadd.accepts(size));
+
                     for(size_t i=size;i>0;--i) {
                         const T prod = lhs[i] * rhs[i];
                         xadd << prod;
                     }
                     return xadd.sum();
                 }
+
+                //______________________________________________________________
+                //
+                //! compute with any xadd
+                //______________________________________________________________
+                template <typename LHS, typename RHS>
+                inline T Of(LHS &lhs, RHS &rhs, XAdd &xadd)
+                {
+                    assert(lhs.size()==rhs.size());
+                    xadd.make(lhs.size());
+                    return Of_(lhs,rhs,xadd);
+                }
+
             };
 
         }
 
         namespace Tao
         {
+            //__________________________________________________________________
+            //
+            //
+            //! Squared Norm resulting in Scalar Type of T
+            //
+            //__________________________________________________________________
             template <typename T>
             struct SquaredNorm
             {
-                typedef T                              Type;
-                typedef typename ScalarFor<Type>::Type ScalarType;
-                typedef Antelope::Add<ScalarType>      XAdd;
+                typedef T                              Type;        //!< alias
+                typedef typename ScalarFor<Type>::Type ScalarType;  //!< alias
+                typedef Antelope::Add<ScalarType>      XAdd;        //!< alias
 
                 template <typename LHS>
                 inline ScalarType Of(LHS &lhs)
                 {
 
                 }
-
             };
+
+
         }
 
 

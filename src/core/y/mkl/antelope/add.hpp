@@ -3,6 +3,7 @@
 #ifndef Y_MKL_Antelope_Add_Included
 #define Y_MKL_Antelope_Add_Included 1
 
+#include "y/mkl/antelope/interface.hpp"
 #include "y/mkl/antelope/wary.hpp"
 #include "y/mkl/api.hpp"
 #include "y/comparison.hpp"
@@ -17,8 +18,6 @@ namespace Yttrium
         namespace Antelope
         {
             template <typename T,const bool> struct AddProxy;
-
-            
 
         }
     }
@@ -145,7 +144,7 @@ namespace Yttrium
                 //
                 //
                 //______________________________________________________________
-                class Code : public Heap<Unit,typename Unit::Buffer, typename Unit::Comparator>
+                class Code : public Interface, public Heap<Unit,typename Unit::Buffer, typename Unit::Comparator>
                 {
                 public:
                     //__________________________________________________________
@@ -183,9 +182,13 @@ namespace Yttrium
                     // Methods
                     //
                     //__________________________________________________________
-                    inline bool isZero() const noexcept
-                    {
+                    inline virtual bool isEmpty() const noexcept {
+                        return size() <= 0;
+                    }
 
+                    inline virtual bool accepts(const size_t n) const noexcept
+                    {
+                        return this->capacity() >= n;
                     }
 
                     //__________________________________________________________
@@ -295,7 +298,7 @@ namespace Yttrium
                 //
                 //
                 //______________________________________________________________
-                class Code
+                class Code : public Interface
                 {
                 public:
                     //__________________________________________________________
@@ -324,9 +327,18 @@ namespace Yttrium
                     inline void make(size_t) noexcept { acc.zset(); } //!< initialize, whatever the size
                     inline void free()       noexcept { acc.zset(); } //!< set to zero
 
-                    inline bool isZero() const noexcept {
+
+                    //! here, zero <=> empty
+                    inline virtual bool isEmpty() const noexcept {
                         return __0 == acc;
                     }
+
+                    //! always accepts
+                    inline virtual bool accepts(const size_t) const noexcept
+                    {
+                        return true;
+                    }
+
 
                     //! return computed sum, reset
                     inline T    sum()
