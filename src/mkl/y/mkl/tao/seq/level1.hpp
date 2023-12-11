@@ -36,6 +36,11 @@ namespace Yttrium
                     target[i] = source[i];
             }
 
+        }
+
+
+        namespace Tao
+        {
             //__________________________________________________________________
             //
             //! target += source
@@ -74,6 +79,10 @@ namespace Yttrium
                     target[i] += source[i] + factor * vector[i];
             }
 
+        }
+
+        namespace Tao
+        {
 #if 0
             //__________________________________________________________________
             //
@@ -88,7 +97,7 @@ namespace Yttrium
                 return res;
             }
 #endif
-            
+
             //__________________________________________________________________
             //
             //! |source|^2
