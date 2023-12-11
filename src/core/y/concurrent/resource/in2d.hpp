@@ -14,19 +14,40 @@ namespace Yttrium
     namespace Concurrent
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! 2D Resource for Loop
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class Resource2D : public Resource< AutoPtr< typename Tiling<T>::Tile > >
         {
-        public:
-            typedef typename Tiling<T>::Tile     Tile;
-            typedef Resource< AutoPtr<Tile> >    BaseType;
-            typedef typename BaseType::Mapping   Mapping;
-            typedef typename Tiling<T>::Type     Type;
-            typedef typename Tiling<T>::Size     Size;
-            typedef typename Tiling<T>::Locus    Locus;      //!< alias
-            typedef typename Tiling<T>::Vertex   Vertex;     //!< alias
-            typedef typename Tiling<T>::Segment  Segment;
-            typedef typename Tiling<T>::Iterator Iterator;
+        public: 
+            //__________________________________________________________________
+            //
+            //
+            // Definition
+            //
+            //__________________________________________________________________
+            typedef typename Tiling<T>::Tile     Tile;      //!< alias
+            typedef Resource< AutoPtr<Tile> >    BaseType;  //!< alias
+            typedef typename BaseType::Mapping   Mapping;   //!< alias
+            typedef typename Tiling<T>::Type     Type;      //!< alias
+            typedef typename Tiling<T>::Size     Size;      //!< alias
+            typedef typename Tiling<T>::Locus    Locus;     //!< alias
+            typedef typename Tiling<T>::Vertex   Vertex;    //!< alias
+            typedef typename Tiling<T>::Segment  Segment;   //!< alias
+            typedef typename Tiling<T>::Iterator Iterator;  //!< alias
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
             //! init: compute tile then  activate
             inline void init(const Vertex lower, const Vertex upper)
@@ -36,6 +57,7 @@ namespace Yttrium
                 this->activate();
             }
 
+            //! quit: erase tile then shutdown
             inline void quit() noexcept
             {
                 Mapping temp;
@@ -44,9 +66,16 @@ namespace Yttrium
             }
 
 
-            inline virtual ~Resource2D() noexcept {}
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            inline virtual ~Resource2D() noexcept {} //!< cleanup
 
         protected:
+            //! setup
             inline explicit Resource2D(const ThreadContext &ctx) noexcept : BaseType(ctx) {}
 
         private:

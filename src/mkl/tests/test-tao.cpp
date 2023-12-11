@@ -7,7 +7,7 @@
 #include "y/concurrent/thread.hpp"
 #include "y/string/env.hpp"
 #include "y/sequence/vector.hpp"
-
+#include "y/system/rtti.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -16,7 +16,16 @@ using namespace MKL;
 
 namespace
 {
-    
+    template <typename T> static inline
+    void testTAO()
+    {
+        std::cerr << "Tao<" << RTTI::Name<T>() << ">" << std::endl;
+        Tao::Multifold<T> mf;
+        mf.make(2,10);
+
+
+        std::cerr << std::endl;
+    }
 }
 
 Y_UTEST(tao)
@@ -68,11 +77,13 @@ Y_UTEST(tao)
     Y_SIZEOF( Tao::DynamicAdd< apz > );
     Y_SIZEOF( Tao::DynamicAdd< apq > );
 
-    Tao::Multifold<float> mf;
-
-    mf.setup(2,10);
-
-
+    testTAO<float>();
+    testTAO<double>();
+    testTAO<long double>();
+    testTAO< XReal<float>  >();
+    testTAO< XReal<double> >();
+    testTAO< XReal<long double> >();
+    testTAO< apq >();
 }
 Y_UDONE()
 

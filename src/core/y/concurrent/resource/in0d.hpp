@@ -15,11 +15,19 @@ namespace Yttrium
 
         namespace Nucleus
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! do-nothing class for 0D resource
+            //
+            //
+            //__________________________________________________________________
             class Ponctual
             {
             public:
-                explicit Ponctual() noexcept;
-                virtual ~Ponctual() noexcept;
+                explicit Ponctual() noexcept; //!< setup
+                virtual ~Ponctual() noexcept; //!< cleanup
                 friend std::ostream & operator<<(std::ostream &, const Ponctual &); //!< display
                 
             private:
@@ -27,21 +35,45 @@ namespace Yttrium
             };
         }
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Ponctual Resource for Pipeline
+        //
+        //
+        //______________________________________________________________________
         class Resource0D : public Resource<Nucleus::Ponctual>
         {
         public:
-            typedef Concurrent::Resource<Nucleus::Ponctual> BaseType;
+            //__________________________________________________________________
+            //
+            //
+            // Definition
+            //
+            //__________________________________________________________________
+            typedef Concurrent::Resource<Nucleus::Ponctual> BaseType;   //!< alias
             typedef int                                     Type;       //!< alias, N/A
             typedef int                                     Locus;      //!< alias, N/A
 
-            virtual ~Resource0D() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            inline void init() { this->activate(); } //!< activate
+            inline void quit() { this->shutdown(); } //!< shutdown
 
-
-            inline void init() { this->activate(); }
-            inline void quit() { this->shutdown(); }
-
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            virtual ~Resource0D() noexcept; //!< cleanup
         protected:
-            explicit  Resource0D(const ThreadContext &) noexcept;
+            explicit Resource0D(const ThreadContext &) noexcept; //!< setup
 
 
         private:

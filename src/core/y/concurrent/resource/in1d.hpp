@@ -14,15 +14,29 @@ namespace Yttrium
     namespace Concurrent
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! 1D Resource for Loop
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class Resource1D : public Resource< ForLoop<T> >
         {
         public:
-            typedef Resource< ForLoop<T> >     BaseType;
-            typedef typename BaseType::Mapping Mapping;
-            typedef typename Mapping::Type     Type;
-            typedef typename Mapping::Size     Size;
-            typedef typename Mapping::Locus    Locus;      //!< alias
+            //__________________________________________________________________
+            //
+            //
+            // Definition
+            //
+            //__________________________________________________________________
+            typedef Resource< ForLoop<T> >     BaseType; //!< alias
+            typedef typename BaseType::Mapping Mapping;  //!< alias
+            typedef typename Mapping::Type     Type;     //!< alias
+            typedef typename Mapping::Size     Size;     //!< alias
+            typedef typename Mapping::Locus    Locus;    //!< alias
 
 
             //! init: compute ForLoop then activate
@@ -35,6 +49,7 @@ namespace Yttrium
                 this->activate();
             }
 
+            //! quit: erase ForLoop and shutdown
             inline void quit() noexcept
             {
                 Mapping temp;
@@ -42,10 +57,15 @@ namespace Yttrium
                 this->shutdown();
             }
 
-            inline virtual ~Resource1D() noexcept {}
-
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            inline virtual ~Resource1D() noexcept {} //!< cleanup
         protected:
-            inline explicit Resource1D(const ThreadContext &ctx) noexcept : BaseType(ctx) {}
+            inline explicit Resource1D(const ThreadContext &ctx) noexcept : BaseType(ctx) {} //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Resource1D);
