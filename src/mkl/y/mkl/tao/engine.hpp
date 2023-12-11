@@ -54,14 +54,32 @@ namespace Yttrium
                 void setup(const size_t         n); //!< setup in1d(1,n,1)
                 void setup(const MatrixMetrics &M); //!< setup in2d( (1,1) -> (cols,rows)
 
+                template <typename NODE> inline
+                void link1D(NODE *node)
+                {
+                    for(size_t i=in1D.size();i>0;--i,node=node->next)
+                    {
+                        assert(0!=node);
+                        in1D[i].anonymous = node;
+                    }
+                }
+
+                void free1D() noexcept
+                {
+                    for(size_t i=in1D.size();i>0;--i)
+                    {
+                        in1D[i].anonymous = 0;
+                    }
+                }
+
                 //______________________________________________________________
                 //
                 //
                 // Members
                 //
                 //______________________________________________________________
-                In1D in1d; //!< 1D engines
-                In2D in2d; //!< 2D engines
+                In1D in1D; //!< 1D engines
+                In2D in2D; //!< 2D engines
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Engine);

@@ -9,7 +9,8 @@ namespace Yttrium
         namespace Tao
         {
             Engine1D::  Engine1D(const Concurrent::ThreadContext &_) noexcept :
-            Concurrent::Resource1D<size_t>(_)
+            Concurrent::Resource1D<size_t>(_),
+            anonymous(0)
             {}
             
             Engine1D:: ~Engine1D() noexcept {}

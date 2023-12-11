@@ -11,8 +11,8 @@ namespace Yttrium
             Engine:: ~Engine() noexcept {}
 
             Engine:: Engine(const Concurrent::SharedLoop &loop) :
-            in1d(loop),
-            in2d(loop),
+            in1D(loop),
+            in2D(loop),
             one(1),
             org(one,one)
             {
@@ -22,11 +22,11 @@ namespace Yttrium
             {
                 if(n<=0)
                 {
-                    in1d.quit();
+                    in1D.quit();
                 }
                 else
                 {
-                    in1d.init(one,n,one);
+                    in1D.init(one,n,one);
                 }
             }
 
@@ -34,12 +34,12 @@ namespace Yttrium
             {
                 const Vertex vtx(M.cols,M.rows);
                 if(vtx == org)
-                    in2d.quit();
+                    in2D.quit();
                 else
                 {
                     assert(vtx.x>=1);
                     assert(vtx.y>=1);
-                    in2d.init(org,vtx);
+                    in2D.init(org,vtx);
                 }
 
             }

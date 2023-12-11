@@ -10,7 +10,7 @@
 #include "y/system/rtti.hpp"
 
 #include "y/utest/run.hpp"
-#include "y/random/bits.hpp"
+#include "../../core/tests/main.hpp"
 
 using namespace Yttrium;
 using namespace MKL;

@@ -191,11 +191,13 @@ namespace Yttrium
                 typedef typename ScalarFor<Type>::Type ScalarType;  //!< alias
                 typedef Antelope::Add<ScalarType>      XAdd;        //!< alias
 
+#if 0
                 template <typename LHS> static inline
                 ScalarType Of(LHS &lhs)
                 {
 
                 }
+#endif
             };
 
 

@@ -18,14 +18,17 @@ namespace Yttrium
             void Mul(TARGET &          target,
                      const Matrix<T>  &M,
                      SOURCE           &source,
-                     Antelope::Add<U> &xadd)
+                     Multifold<U>     &xmf)
             {
                 assert( target.size() == M.rows );
                 assert( source.size() == M.cols );
+                DynamicAdd<U> &xadd = xmf.make(M.cols);
                 for(size_t i=M.rows;i>0;--i)
-                    target[i] = DotProduct<U>::Of(M[i],source,xadd);
+                {
+                    target[i] = DotProduct<U>::Of_(M[i],source,xadd);
+                }
             }
-            
+
 
         }
 

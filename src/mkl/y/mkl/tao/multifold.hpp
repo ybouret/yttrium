@@ -146,7 +146,7 @@ namespace Yttrium
                 }
 
                 //! make(1,dimension)
-                inline XAddType &make(const size_t dimension)
+                inline DynamicAdd<T> &make(const size_t dimension)
                 {
                     return *make(1,dimension);
                 }

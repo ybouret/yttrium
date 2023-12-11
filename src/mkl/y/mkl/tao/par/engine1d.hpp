@@ -30,7 +30,9 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 explicit Engine1D(const Concurrent::ThreadContext &) noexcept; //!< setup
-                virtual ~Engine1D() noexcept; //!< cleanup
+                virtual ~Engine1D() noexcept;                                  //!< cleanup
+
+                void    *anonymous;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Engine1D);

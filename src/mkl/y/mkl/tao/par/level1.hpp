@@ -44,7 +44,7 @@ namespace Yttrium
             {
                 assert(target.size()<=source.size());
                 engine.setup(target.size());
-                engine.in1d(Parallel::Load<TARGET,SOURCE>,target,source);
+                engine.in1D(Parallel::Load<TARGET,SOURCE>,target,source);
             }
 
         }
@@ -71,7 +71,7 @@ namespace Yttrium
             {
                 assert(target.size()>=source.size());
                 engine.setup(source.size());
-                engine.in1d(Parallel::Save<TARGET,SOURCE>,target,source);
+                engine.in1D(Parallel::Save<TARGET,SOURCE>,target,source);
             }
 
         }
@@ -108,7 +108,7 @@ namespace Yttrium
             {
                 assert(target.size()==source.size());
                 engine.setup(target.size());
-                engine.in1d(Parallel::Add<TARGET,SOURCE>,target,source);
+                engine.in1D(Parallel::Add<TARGET,SOURCE>,target,source);
             }
 
         }
@@ -135,7 +135,7 @@ namespace Yttrium
             {
                 assert(target.size()==source.size());
                 engine.setup(target.size());
-                engine.in1d(Parallel::Add<TARGET,T,SOURCE>,target,factor,source);
+                engine.in1D(Parallel::Add<TARGET,T,SOURCE>,target,factor,source);
             }
 
         }
@@ -162,7 +162,7 @@ namespace Yttrium
             {
                 assert(target.size()==source.size());
                 engine.setup(target.size());
-                engine.in1d(Parallel::Add<TARGET,SOURCE,T,VECTOR>,target,source,factor,vector);
+                engine.in1D(Parallel::Add<TARGET,SOURCE,T,VECTOR>,target,source,factor,vector);
             }
 
         }
@@ -200,7 +200,7 @@ namespace Yttrium
             {
                 assert(target.size()==source.size());
                 engine.setup(target.size());
-                engine.in1d(Parallel::Sub<TARGET,SOURCE>,target,source);
+                engine.in1D(Parallel::Sub<TARGET,SOURCE>,target,source);
             }
 
         }
@@ -227,7 +227,7 @@ namespace Yttrium
             {
                 assert(target.size()==source.size());
                 engine.setup(target.size());
-                engine.in1d(Parallel::Sub<TARGET,T,SOURCE>,target,factor,source);
+                engine.in1D(Parallel::Sub<TARGET,T,SOURCE>,target,factor,source);
             }
 
         }
@@ -254,7 +254,7 @@ namespace Yttrium
             {
                 assert(target.size()==source.size());
                 engine.setup(target.size());
-                engine.in1d(Parallel::Sub<TARGET,SOURCE,T,VECTOR>,target,source,factor,vector);
+                engine.in1D(Parallel::Sub<TARGET,SOURCE,T,VECTOR>,target,source,factor,vector);
             }
 
         }
