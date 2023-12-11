@@ -22,7 +22,7 @@ namespace Yttrium
             {
                 assert( target.size() == M.rows );
                 assert( source.size() == M.cols );
-                DynamicAdd<U> &xadd = xmf.make(M.cols);
+                XAdd<U> &xadd = xmf.make(M.cols);
                 for(size_t i=M.rows;i>0;--i)
                 {
                     target[i] = DotProduct<U>::Of_(M[i],source,xadd);

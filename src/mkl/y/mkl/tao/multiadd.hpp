@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_MKL_TAO_Multifold_Included
-#define Y_MKL_TAO_Multifold_Included 1
+#ifndef Y_MKL_TAO_Multiadd_Included
+#define Y_MKL_TAO_Multiadd_Included 1
 
 #include "y/mkl/antelope/add.hpp"
 #include "y/data/list/cxx.hpp"
@@ -24,7 +24,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename T>
-            class DynamicAdd : public Object, public Antelope::Add<T>
+            class XAdd : public Object, public Antelope::Add<T>
             {
             public:
                 //______________________________________________________________
@@ -33,9 +33,8 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef Antelope::Add<T>       XAdd; //!< eXtended addision
-                typedef CxxListOf<DynamicAdd>  List; //!< alias
-                typedef CxxPoolOf<DynamicAdd>  Pool; //!< alias
+                typedef CxxListOf<XAdd>  List; //!< alias
+                typedef CxxPoolOf<XAdd>  Pool; //!< alias
 
                 //______________________________________________________________
                 //
@@ -45,15 +44,15 @@ namespace Yttrium
                 //______________________________________________________________
 
                 //! setup with initial capacity
-                inline explicit DynamicAdd(const size_t n) :
+                inline explicit XAdd(const size_t n) :
                 Object(),
-                XAdd(n),
+                Antelope::Add<T>(n),
                 next(0),
                 prev(0)
                 {}
 
                 //! cleanup
-                inline virtual ~DynamicAdd() noexcept {}
+                inline virtual ~XAdd() noexcept {}
 
                 //______________________________________________________________
                 //
@@ -61,11 +60,11 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                DynamicAdd *next; //!< for list/pool
-                DynamicAdd *prev; //!< for list/pool
+                XAdd *next; //!< for list/pool
+                XAdd *prev; //!< for list/pool
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(DynamicAdd);
+                Y_DISABLE_COPY_AND_ASSIGN(XAdd);
             };
 
             //__________________________________________________________________
@@ -77,7 +76,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename T>
-            class Multifold : public DynamicAdd<T>::List
+            class Multifold : public XAdd<T>::List
             {
             public:
                 //______________________________________________________________
@@ -86,10 +85,8 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef DynamicAdd<T>                NodeType; //!< alias
-                typedef typename DynamicAdd<T>::List ListType; //!< alias
-                typedef typename DynamicAdd<T>::Pool PoolType; //!< alias
-                typedef Antelope::Add<T>             XAddType; //!< alias
+                typedef typename XAdd<T>::List ListType; //!< alias
+                typedef typename XAdd<T>::Pool PoolType; //!< alias
 
                 using ListType::head;
                 using ListType::tail;
@@ -114,7 +111,7 @@ namespace Yttrium
                 //______________________________________________________________
 
                 //! make parallel>0, dimension for each member
-                inline NodeType *make(const size_t parallel, const size_t dimension)
+                inline XAdd<T> *make(const size_t parallel, const size_t dimension)
                 {
                     assert(parallel>0);
 
@@ -124,7 +121,7 @@ namespace Yttrium
                         case Negative: 
                             assert(size<parallel);
                             while(size<parallel && pool.size>0) pushTail( pool.query() );
-                            while(size<parallel) pushTail( new NodeType(dimension) );
+                            while(size<parallel) pushTail( new XAdd<T>(dimension) );
                             break;
                         case __Zero__: break;
                         case Positive: assert(size>parallel);
@@ -134,7 +131,7 @@ namespace Yttrium
                     // adapt capacity
                     assert(size==parallel);
                     assert(0!=head);
-                    for(NodeType *node=head;node;node=node->next)
+                    for(XAdd<T> *node=head;node;node=node->next)
                     {
                         node->make(dimension);
                         assert(node->isEmpty());
@@ -146,7 +143,7 @@ namespace Yttrium
                 }
 
                 //! make(1,dimension)
-                inline DynamicAdd<T> &make(const size_t dimension)
+                inline XAdd<T> &make(const size_t dimension)
                 {
                     return *make(1,dimension);
                 }

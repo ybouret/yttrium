@@ -23,9 +23,9 @@ namespace Yttrium
                 {
                     assert(0!=range.anonymous);
 
-                    DynamicAdd<U> &xadd = *static_cast< DynamicAdd<U> *>(range.anonymous);
-                    size_t         row   = range.latest;
-                    for(size_t     num   = range.length;num>0;--num,--row)
+                    XAdd<U>   &xadd = *static_cast< XAdd<U> *>(range.anonymous);
+                    size_t     row  = range.latest;
+                    for(size_t num  = range.length;num>0;--num,--row)
                     {
                         target[row] = DotProduct<U>::Of_(M[row],source,xadd);
                     }

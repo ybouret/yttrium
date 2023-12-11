@@ -3,7 +3,7 @@
 
 
 #include "y/mkl/api.hpp"
-#include "y/mkl/tao/multifold.hpp"
+#include "y/mkl/tao/multiadd.hpp"
 
 namespace Yttrium
 {
