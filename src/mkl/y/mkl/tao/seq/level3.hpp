@@ -17,26 +17,27 @@ namespace Yttrium
          
 
             template <typename T, typename U, typename V, typename W> static inline
-            void MMul(Matrix<T>       &target,
+            void MMul(Matrix<T>       &tgt,
                       const Matrix<U> &lhs,
                       const Matrix<V> &rhs,
                       MultiAdd<W>     &xma)
             {
-                assert(target.rows==lhs.rows);
-                assert(target.cols==rhs.cols);
+                assert(tgt.rows==lhs.rows);
+                assert(tgt.cols==rhs.cols);
                 assert(lhs.cols==rhs.rows);
-                const size_t ncom = lhs.cols;
-                XAdd<W>     &xadd = xma.make(ncom);
+                const size_t ncol = tgt.cols;
+                const size_t nrun = lhs.cols;
+                XAdd<W>     &xadd = xma.make(nrun);
                 assert(xadd.isEmpty());
                 assert(xadd.accepts(lhs.cols));
 
-                for(size_t i=target.rows;i>0;--i)
+                for(size_t i=tgt.rows;i>0;--i)
                 {
-                    Writable<T>       &tgt_i = target[i];
+                    Writable<T>       &tgt_i = tgt[i];
                     const Readable<U> &lhs_i = lhs[i];
-                    for(size_t j=target.cols;j>0;--j)
+                    for(size_t j=ncol;j>0;--j)
                     {
-                        for(size_t k=ncom;k>0;--k)
+                        for(size_t k=nrun;k>0;--k)
                         {
                             const W p = lhs_i[k] * rhs[k][j];
                             xadd << p;
