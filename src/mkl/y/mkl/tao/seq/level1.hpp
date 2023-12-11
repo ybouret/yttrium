@@ -76,10 +76,53 @@ namespace Yttrium
                 assert(target.size()==source.size());
                 assert(target.size()==vector.size());
                 for(size_t i=target.size();i>0;--i)
-                    target[i] += source[i] + factor * vector[i];
+                    target[i] = source[i] + factor * vector[i];
             }
 
         }
+
+        namespace Tao
+        {
+            //__________________________________________________________________
+            //
+            //! target -= source
+            //__________________________________________________________________
+            template <typename TARGET, typename SOURCE>   inline
+            void Sub(TARGET &target, SOURCE &source)
+            {
+                assert(target.size()==source.size());
+                for(size_t i=target.size();i>0;--i)
+                    target[i] -= source[i];
+            }
+
+
+            //__________________________________________________________________
+            //
+            //! target -= factor * source
+            //__________________________________________________________________
+            template <typename TARGET, typename T, typename SOURCE>   inline
+            void Sub(TARGET &target, T factor, SOURCE &source)
+            {
+                assert(target.size()==source.size());
+                for(size_t i=target.size();i>0;--i)
+                    target[i] -= factor * source[i];
+            }
+
+            //__________________________________________________________________
+            //
+            //! target = source - factor * vector
+            //__________________________________________________________________
+            template <typename TARGET, typename SOURCE, typename T, typename VECTOR>   inline
+            void Sub(TARGET &target, SOURCE &source, T factor, VECTOR &vector)
+            {
+                assert(target.size()==source.size());
+                assert(target.size()==vector.size());
+                for(size_t i=target.size();i>0;--i)
+                    target[i] = source[i] - factor * vector[i];
+            }
+
+        }
+
 
         namespace Tao
         {

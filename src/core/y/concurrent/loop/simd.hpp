@@ -101,6 +101,14 @@ namespace Yttrium
                 loop(me);
             }
 
+            //! 4-args call proc(engine,arg1,arg2,arg3,arg4)
+            template <typename PROC, typename ARG1, typename ARG2, typename ARG3, typename ARG4>
+            inline void operator()(PROC &proc, ARG1 &arg1, ARG2 &arg2, ARG3 &arg3, ARG4 &arg4)
+            {
+                Call4<PROC,ARG1,ARG2,ARG3,ARG4> me = { *this, proc, arg1, arg2, arg3, arg4 };
+                loop(me);
+            }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SIMD);
@@ -165,6 +173,21 @@ namespace Yttrium
                 inline void operator()(const ThreadContext &ctx) const
                 {
                     proc(self[ctx.indx],arg1,arg2,arg3);
+                }
+            };
+
+            template <typename PROC,typename ARG1, typename ARG2, typename ARG3, typename ARG4>
+            struct Call4
+            {
+                ResourcesType &self;
+                PROC          &proc;
+                ARG1          &arg1;
+                ARG2          &arg2;
+                ARG3          &arg3;
+                ARG4          &arg4;
+                inline void operator()(const ThreadContext &ctx) const
+                {
+                    proc(self[ctx.indx],arg1,arg2,arg3,arg4);
                 }
             };
 
