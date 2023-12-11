@@ -25,6 +25,7 @@ Y_UTEST(tao)
     const Concurrent::Topology topo;
 
 
+
     Concurrent::SharedLoop seqLoop = new Concurrent::Mono();
     Concurrent::SharedLoop parLoop = new Concurrent::Crew(topo);
 
@@ -49,6 +50,23 @@ Y_UTEST(tao)
     std::cerr << "target=" << target << std::endl;
 
 
+    Y_SIZEOF(Tao::DynamicAdd<float>);
+    Y_SIZEOF(Tao::DynamicAdd<double>);
+    Y_SIZEOF(Tao::DynamicAdd<long double>);
+    Y_SIZEOF(Tao::DynamicAdd< XReal<float> >);
+    Y_SIZEOF(Tao::DynamicAdd< XReal<double> >);
+    Y_SIZEOF(Tao::DynamicAdd< XReal<long double> >);
+
+    Y_SIZEOF(Tao::DynamicAdd< Complex<float> >);
+    Y_SIZEOF(Tao::DynamicAdd< Complex<double> >);
+    Y_SIZEOF(Tao::DynamicAdd< Complex<long double> >);
+    Y_SIZEOF(Tao::DynamicAdd< Complex< XReal<float> > >);
+    Y_SIZEOF(Tao::DynamicAdd< Complex< XReal<double> > >);
+    Y_SIZEOF(Tao::DynamicAdd< Complex< XReal<long double> > >);
+
+    Y_SIZEOF(Tao::DynamicAdd< apn >);
+    Y_SIZEOF(Tao::DynamicAdd< apz >);
+    Y_SIZEOF(Tao::DynamicAdd< apq >);
 
 
 
