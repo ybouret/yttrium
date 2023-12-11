@@ -4,7 +4,6 @@
 
 
 #include "y/mkl/api.hpp"
-#include "y/mkl/tao/multifold.hpp"
 #include "y/mkl/tao/engine.hpp"
 
 namespace Yttrium

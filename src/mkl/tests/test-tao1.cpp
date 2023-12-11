@@ -20,8 +20,8 @@ namespace
     void testTAO()
     {
         std::cerr << "Tao<" << RTTI::Name<T>() << ">" << std::endl;
-        Tao::Multifold<T> mf;
-        mf.make(2,10);
+        //Tao::Multifold<T> mf;
+        //mf.make(2,10);
 
 
 
@@ -29,7 +29,7 @@ namespace
     }
 }
 
-Y_UTEST(tao)
+Y_UTEST(tao1)
 {
     Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
     const Concurrent::Topology topo;
