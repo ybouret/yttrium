@@ -68,6 +68,17 @@ namespace Yttrium
                 //! reset resource from each engine
                 void free1D() noexcept;
 
+                //! link resource to each engine
+                template <typename NODE> inline
+                void link2D(NODE *node)
+                {
+                    for(size_t i=in2D.size();i>0;--i,node=node->next)
+                    {
+                        assert(0!=node);
+                        in2D[i].anonymous = node;
+                    }
+                }
+
                 //______________________________________________________________
                 //
                 //

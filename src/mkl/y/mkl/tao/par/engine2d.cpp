@@ -27,7 +27,6 @@ namespace Yttrium
             {
                 if(isValid())
                 {
-
                     const Tile &tile = **this;
                     Coerce(strip) = tile.as<Strip>(); assert(0!=strip);
                 }

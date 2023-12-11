@@ -28,14 +28,15 @@ namespace Yttrium
                         Y_LOCK(range.sync);
                         std::cerr << "computing on " << range << std::endl;
                     }
-                    
-#if 0
-                    for(size_t k=range.size;k>0;--k)
+                    if( range.isEmpty() ) return;
+                    assert(0!=range.anonymous);
+                    for(size_t i=range->size;i>0;--i)
                     {
+                        const Strip &s    = range(i);
+                        Writable<T> &t    = tgt[s.irow];
+                        XAdd<U>     &xadd = *static_cast<XAdd<U> *>(range.anonymous);
 
                     }
-#endif
-
                 }
             }
 
@@ -51,7 +52,7 @@ namespace Yttrium
                 assert(lhs.cols==rhs.rows);
 
                 engine.setup(tgt); // parallel tiles of target
-
+                
                 engine.in2D(Parallel::MMul<T,U,V,W>,tgt,lhs,rhs);
 
 
