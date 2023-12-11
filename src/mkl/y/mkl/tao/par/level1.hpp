@@ -163,7 +163,7 @@ namespace Yttrium
             {
                 assert(target.size()==source.size());
                 engine.setup(target.size());
-                engine.in1d(Parallel::Add<TARGET,T,SOURCE,VECTOR>,target,source,factor,vector);
+                engine.in1d(Parallel::Add<TARGET,SOURCE,T,VECTOR>,target,source,factor,vector);
             }
 
         }
