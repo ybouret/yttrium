@@ -74,7 +74,7 @@ namespace Yttrium
                     target[i] += source[i] + factor * vector[i];
             }
 
-#if 1
+#if 0
             //__________________________________________________________________
             //
             //! |source|^2
@@ -87,6 +87,30 @@ namespace Yttrium
                     res += MKL::Mod2<typename SOURCE::Type>::Of(source[i]);
                 return res;
             }
+#endif
+            
+            //__________________________________________________________________
+            //
+            //! |source|^2
+            //__________________________________________________________________
+            template <typename SOURCE>   inline
+            typename ScalarFor< typename SOURCE::Type >::Type
+            Mod2(SOURCE                                                         &source,
+                 Multifold< typename ScalarFor< typename SOURCE::Type >::Type > &xlist)
+            {
+                typedef typename SOURCE::Type           Type;
+                typedef typename ScalarFor<Type >::Type ScalarType;
+                typedef  DynamicAdd<ScalarType>         XNode;
+                typedef  typename XNode::XAdd           XAdd;
+                const size_t  size =  source.size;
+                XAdd         &xadd = *xlist.make(source.size);
+                for(size_t i=size;i>0;--i)
+                {
+                    xadd << MKL::Mod2<Type>::Of(source[i]);
+                }
+                return xadd.sum();
+            }
+
 
             //__________________________________________________________________
             //
@@ -104,7 +128,6 @@ namespace Yttrium
                 }
                 return res;
             }
-#endif
 
         };
     }
