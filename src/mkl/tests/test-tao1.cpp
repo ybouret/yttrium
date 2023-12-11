@@ -10,6 +10,7 @@
 #include "y/system/rtti.hpp"
 
 #include "y/utest/run.hpp"
+#include "y/random/bits.hpp"
 
 using namespace Yttrium;
 using namespace MKL;
@@ -117,6 +118,27 @@ Y_UTEST(tao1)
             Tao::Sub(target,source,factor,vector);     std::cerr << target << std::endl;
             Tao::Sub(seqtgt,source,factor,vector,seq); std::cerr << seqtgt << std::endl; Y_CHECK(seqtgt==target);
             Tao::Sub(partgt,source,factor,vector,par); std::cerr << partgt << std::endl; Y_CHECK(partgt==target);
+        }
+
+
+        Tao::Multifold<int> xmf;
+        const int rawDot = Tao::DotProduct<int>::Of(source,vector,xmf);
+        std::cerr << "rawDot=" << rawDot << std::endl;
+
+        {
+            Random::Rand ran;
+            Vector<apq> lhs;
+            Vector<apq> rhs;
+            Tao::Multifold<apq> amf;
+            for(size_t i=5+ran.leq(10);i>0;--i)
+            {
+                lhs << apq(10,10,ran);
+                rhs << apq(10,10,ran);
+            }
+            std::cerr << "lhs=" << lhs << std::endl;
+            std::cerr << "rhs=" << rhs << std::endl;
+            const apq aDot = Tao::DotProduct<apq>::Of(lhs,rhs,amf);
+            std::cerr << "dot=" << aDot << std::endl;
         }
 
 

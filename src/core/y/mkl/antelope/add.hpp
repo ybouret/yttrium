@@ -3,9 +3,9 @@
 #ifndef Y_MKL_Antelope_Add_Included
 #define Y_MKL_Antelope_Add_Included 1
 
+#include "y/mkl/api.hpp"
 #include "y/mkl/antelope/interface.hpp"
 #include "y/mkl/antelope/wary.hpp"
-#include "y/mkl/api.hpp"
 #include "y/comparison.hpp"
 #include "y/ordered/heap.hpp"
 #include "y/ordered/core/flexible-raw-buffer.hpp"

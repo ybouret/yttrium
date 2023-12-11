@@ -3,7 +3,7 @@
 
 
 #include "y/mkl/api.hpp"
-#include "y/mkl/antelope/add.hpp"
+#include "y/mkl/tao/multifold.hpp"
 
 namespace Yttrium
 {
@@ -139,14 +139,15 @@ namespace Yttrium
                 //
                 //! internal computation helper
                 //______________________________________________________________
+                typedef Multifold<T>     XMF;
                 typedef Antelope::Add<T> XAdd;
 
                 //______________________________________________________________
                 //
                 //! compute with prepared xadd
                 //______________________________________________________________
-                template <typename LHS, typename RHS>
-                inline T Of_(LHS &lhs, RHS &rhs, XAdd &xadd)
+                template <typename LHS, typename RHS> static inline
+                T Of_(LHS &lhs, RHS &rhs, XAdd &xadd)
                 {
                     const size_t size = lhs.size();
                     assert(lhs.size()==rhs.size());
@@ -164,12 +165,11 @@ namespace Yttrium
                 //
                 //! compute with any xadd
                 //______________________________________________________________
-                template <typename LHS, typename RHS>
-                inline T Of(LHS &lhs, RHS &rhs, XAdd &xadd)
+                template <typename LHS, typename RHS> static inline
+                T Of(LHS &lhs, RHS &rhs, XMF &xmf)
                 {
                     assert(lhs.size()==rhs.size());
-                    xadd.make(lhs.size());
-                    return Of_(lhs,rhs,xadd);
+                    return Of_(lhs,rhs,xmf.make(lhs.size()));
                 }
 
             };
@@ -191,8 +191,8 @@ namespace Yttrium
                 typedef typename ScalarFor<Type>::Type ScalarType;  //!< alias
                 typedef Antelope::Add<ScalarType>      XAdd;        //!< alias
 
-                template <typename LHS>
-                inline ScalarType Of(LHS &lhs)
+                template <typename LHS> static inline
+                ScalarType Of(LHS &lhs)
                 {
 
                 }

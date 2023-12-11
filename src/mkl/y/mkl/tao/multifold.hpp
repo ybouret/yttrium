@@ -133,18 +133,22 @@ namespace Yttrium
 
                     // adapt capacity
                     assert(size==parallel);
+                    assert(0!=head);
                     for(NodeType *node=head;node;node=node->next)
                     {
                         node->make(dimension);
+                        assert(node->isEmpty());
+                        assert(node->accepts(dimension));
                     }
+
 
                     return head;
                 }
 
                 //! make(1,dimension)
-                inline NodeType *make(const size_t dimension)
+                inline XAddType &make(const size_t dimension)
                 {
-                    return make(1,dimension);
+                    return *make(1,dimension);
                 }
 
                 //______________________________________________________________
