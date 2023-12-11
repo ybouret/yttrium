@@ -93,7 +93,8 @@ namespace Yttrium
                 template <typename TARGET, typename SOURCE> inline
                 void Add(Engine1D &range, TARGET &target, SOURCE &source)
                 {
-                    for(size_t i=range.latest;i>=range.offset;--i)
+                    size_t     i=range.latest;
+                    for(size_t j=range.length;j>0;--j,--i)
                         target[i] += source[i];
                 }
 
@@ -107,7 +108,7 @@ namespace Yttrium
             void Add( TARGET &target, SOURCE &source, Engine &engine)
             {
                 assert(target.size()==source.size());
-                engine.setup(source.size());
+                engine.setup(target.size());
                 engine.in1d(Parallel::Add<TARGET,SOURCE>,target,source);
             }
 
@@ -120,7 +121,8 @@ namespace Yttrium
                 template <typename TARGET, typename T, typename SOURCE> inline
                 void Add(Engine1D &range, TARGET &target, const T &factor, SOURCE &source)
                 {
-                    for(size_t i=range.latest;i>=range.offset;--i)
+                    size_t     i=range.latest;
+                    for(size_t j=range.length;j>0;--j,--i)
                         target[i] += factor * source[i];
                 }
             }
@@ -146,7 +148,8 @@ namespace Yttrium
                 template <typename TARGET,  typename SOURCE, typename T, typename VECTOR> inline
                 void Add(Engine1D &range, TARGET &target,  SOURCE &source, const T &factor, VECTOR &vector)
                 {
-                    for(size_t i=range.latest;i>=range.offset;--i)
+                    size_t     i=range.latest;
+                    for(size_t j=range.length;j>0;--j,--i)
                         target[i] = source[i] + factor * vector[i];
                 }
             }
