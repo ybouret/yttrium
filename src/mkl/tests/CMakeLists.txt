@@ -22,6 +22,7 @@ add_test(interval test-mkl interval)
 add_test(utils    test-mkl utils)
 add_test(tao1     test-mkl tao1)
 add_test(tao2     test-mkl tao2)
+add_test(tao3     test-mkl tao3)
 
 
 add_test(ode:rk4 test-mkl ode_rk4)

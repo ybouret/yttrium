@@ -1,3 +1,4 @@
+//! \file
 
 #ifndef Y_MKL_ParTao1_Included
 #define Y_MKL_ParTao1_Included 1

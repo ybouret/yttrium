@@ -1,3 +1,4 @@
+//! \file
 
 #ifndef Y_MKL_SeqTao2_Included
 #define Y_MKL_SeqTao2_Included 1
