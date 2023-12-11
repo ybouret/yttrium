@@ -62,6 +62,14 @@ namespace Yttrium
                 //! return Strip[1..size] after activation
                 const Strip & operator()(const size_t indx) const noexcept;
 
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                void * anonymous;
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Engine2D);
                 const Strip * const strip;

@@ -25,8 +25,14 @@ namespace Yttrium
 
             void Engine2D:: activate()
             {
-                const Tile &tile = **this;
-                Coerce(strip) = tile.as<Strip>(); assert(0!=strip);
+                if(isValid())
+                {
+
+                    const Tile &tile = **this;
+                    Coerce(strip) = tile.as<Strip>(); assert(0!=strip);
+                }
+                else
+                    Coerce(strip) = 0;
             }
 
             const Strip & Engine2D:: operator()(const size_t indx) const noexcept

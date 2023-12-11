@@ -30,10 +30,13 @@ Y_UTEST(tao3)
     Tao::Engine par(parLoop);
     Random::Rand ran;
 
-    const size_t nr = 3;
-    const size_t nc = 7;
+    const size_t nr = 4;
+    const size_t nc = 3;
     const size_t ns = 5;
     Matrix<int>  target(nr,nc);
+    Matrix<int>  seqtgt(nr,nc);
+    Matrix<int>  partgt(nr,nc);
+
     Matrix<int>  lhs(nr,ns);
     Matrix<int>  rhs(ns,nc);
     Tao::MultiAdd<int> xma;
@@ -51,6 +54,11 @@ Y_UTEST(tao3)
     Tao::MMul(target,lhs,rhs,xma);
     std::cerr << "target=" << target << std::endl;
 
+    Tao::MMul(seqtgt,lhs,rhs,xma,seq);
+    std::cerr << "seqtgt=" << seqtgt << std::endl;
+
+    Tao::MMul(partgt,lhs,rhs,xma,par);
+    std::cerr << "partgt=" << partgt << std::endl;
 
 
 
