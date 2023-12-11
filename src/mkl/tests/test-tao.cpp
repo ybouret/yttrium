@@ -100,6 +100,26 @@ Y_UTEST(tao)
             Tao::Add(partgt,source,factor,vector,par); std::cerr << partgt << std::endl; Y_CHECK(partgt==target);
         }
 
+        Tao::Sub(target,source);     std::cerr << target << std::endl;
+        Tao::Sub(seqtgt,source,seq); std::cerr << seqtgt << std::endl; Y_CHECK(seqtgt==target);
+        Tao::Sub(partgt,source,par); std::cerr << partgt << std::endl; Y_CHECK(partgt==target);
+
+        {
+            const int factor = 3;
+            Tao::Sub(target,factor,source);     std::cerr << target << std::endl;
+            Tao::Sub(seqtgt,factor,source,seq); std::cerr << seqtgt << std::endl; Y_CHECK(seqtgt==target);
+            Tao::Sub(partgt,factor,source,par); std::cerr << partgt << std::endl; Y_CHECK(partgt==target);
+        }
+
+
+        {
+            const int factor = 7;
+            Tao::Sub(target,source,factor,vector);     std::cerr << target << std::endl;
+            Tao::Sub(seqtgt,source,factor,vector,seq); std::cerr << seqtgt << std::endl; Y_CHECK(seqtgt==target);
+            Tao::Sub(partgt,source,factor,vector,par); std::cerr << partgt << std::endl; Y_CHECK(partgt==target);
+        }
+
+
 
     }
 

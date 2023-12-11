@@ -169,7 +169,96 @@ namespace Yttrium
         }
 
 
-        
+        //--------------------------------------------------------------------//
+        //                                                                    //
+        //                                                                    //
+        //                                                                    //
+        // Sub                                                                //
+        //                                                                    //
+        //                                                                    //
+        //                                                                    //
+        //--------------------------------------------------------------------//
+        namespace Tao
+        {
+            namespace Parallel
+            {
+                template <typename TARGET, typename SOURCE> inline
+                void Sub(Engine1D &range, TARGET &target, SOURCE &source)
+                {
+                    size_t     i=range.latest;
+                    for(size_t j=range.length;j>0;--j,--i)
+                        target[i] -= source[i];
+                }
+
+            }
+
+            //__________________________________________________________________
+            //
+            //! target += source
+            //__________________________________________________________________
+            template <typename TARGET, typename SOURCE>   inline
+            void Sub( TARGET &target, SOURCE &source, Engine &engine)
+            {
+                assert(target.size()==source.size());
+                engine.setup(target.size());
+                engine.in1d(Parallel::Sub<TARGET,SOURCE>,target,source);
+            }
+
+        }
+
+        namespace Tao
+        {
+            namespace Parallel
+            {
+                template <typename TARGET, typename T, typename SOURCE> inline
+                void Sub(Engine1D &range, TARGET &target, const T &factor, SOURCE &source)
+                {
+                    size_t     i=range.latest;
+                    for(size_t j=range.length;j>0;--j,--i)
+                        target[i] -= factor * source[i];
+                }
+            }
+
+            //__________________________________________________________________
+            //
+            //! target += factor * source
+            //__________________________________________________________________
+            template <typename TARGET, typename T, typename SOURCE>   inline
+            void Sub( TARGET &target, T factor, SOURCE &source, Engine &engine)
+            {
+                assert(target.size()==source.size());
+                engine.setup(target.size());
+                engine.in1d(Parallel::Sub<TARGET,T,SOURCE>,target,factor,source);
+            }
+
+        }
+
+        namespace Tao
+        {
+            namespace Parallel
+            {
+                template <typename TARGET,  typename SOURCE, typename T, typename VECTOR> inline
+                void Sub(Engine1D &range, TARGET &target,  SOURCE &source, const T &factor, VECTOR &vector)
+                {
+                    size_t     i=range.latest;
+                    for(size_t j=range.length;j>0;--j,--i)
+                        target[i] = source[i] - factor * vector[i];
+                }
+            }
+
+            //__________________________________________________________________
+            //
+            //! target += factor * source
+            //__________________________________________________________________
+            template <typename TARGET,  typename SOURCE, typename T, typename VECTOR> inline
+            void Sub(TARGET &target,  SOURCE &source, const T &factor, VECTOR &vector, Engine &engine)
+            {
+                assert(target.size()==source.size());
+                engine.setup(target.size());
+                engine.in1d(Parallel::Sub<TARGET,SOURCE,T,VECTOR>,target,source,factor,vector);
+            }
+
+        }
 
     }
 
