@@ -50,15 +50,19 @@ Y_UTEST(tao2)
         std::cerr << "source=" << source << std::endl;
         std::cerr << "M     =" << M << std::endl;
 
-        Tao::Multifold<int> xmf;
-        Tao::Mul(target,M,source,xmf);
+        Tao::MultiAdd<int> xma;
+        Tao::Mul(target,M,source,xma);
         std::cerr << "target=" << target << std::endl;
 
-        Tao::Mul(seqtgt,M,source,xmf,seq);
+        Tao::Mul(seqtgt,M,source,xma,seq);
         std::cerr << "seqtgt=" << seqtgt << std::endl;
+        Y_CHECK(seqtgt==target);
 
-        Tao::Mul(partgt,M,source,xmf,par);
+        Tao::Mul(partgt,M,source,xma,par);
         std::cerr << "partgt=" << partgt << std::endl;
+        Y_CHECK(partgt==target);
+
+
 
     }
 

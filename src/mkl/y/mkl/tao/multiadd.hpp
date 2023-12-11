@@ -71,12 +71,12 @@ namespace Yttrium
             //
             //
             //
-            //! Handling
+            //! Handling multiple eXtende Add
             //
             //
             //__________________________________________________________________
             template <typename T>
-            class Multifold : public XAdd<T>::List
+            class MultiAdd : public XAdd<T>::List
             {
             public:
                 //______________________________________________________________
@@ -100,8 +100,8 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                inline explicit Multifold() noexcept : ListType(), pool() {} //!< setup
-                inline virtual ~Multifold() noexcept                      {} //!< cleanup
+                inline explicit MultiAdd() noexcept : ListType(), pool() {} //!< setup
+                inline virtual ~MultiAdd() noexcept                      {} //!< cleanup
 
                 //______________________________________________________________
                 //
@@ -157,7 +157,7 @@ namespace Yttrium
                 PoolType pool; //!< pool
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Multifold);
+                Y_DISABLE_COPY_AND_ASSIGN(MultiAdd);
             };
 
         }

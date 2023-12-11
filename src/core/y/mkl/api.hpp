@@ -103,6 +103,7 @@ namespace Yttrium
         template <>
         struct Fabs<int>
         {
+            //! abs
             static inline int Of(const int x) noexcept { return abs(x); }
         };
 

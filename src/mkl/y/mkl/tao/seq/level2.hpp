@@ -18,11 +18,11 @@ namespace Yttrium
             void Mul(TARGET &          target,
                      const Matrix<T>  &M,
                      SOURCE           &source,
-                     Multifold<U>     &xmf)
+                     MultiAdd<U>      &xma)
             {
                 assert( target.size() == M.rows );
                 assert( source.size() == M.cols );
-                XAdd<U> &xadd = xmf.make(M.cols);
+                XAdd<U> &xadd = xma.make(M.cols);
                 for(size_t i=M.rows;i>0;--i)
                 {
                     target[i] = DotProduct<U>::Of_(M[i],source,xadd);

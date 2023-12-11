@@ -32,7 +32,13 @@ namespace Yttrium
                 explicit Engine1D(const Concurrent::ThreadContext &) noexcept; //!< setup
                 virtual ~Engine1D() noexcept;                                  //!< cleanup
 
-                void    *anonymous;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                void    *anonymous; //!< pointer to a XAdd<T>
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Engine1D);

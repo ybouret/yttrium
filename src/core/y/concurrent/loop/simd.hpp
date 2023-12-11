@@ -35,7 +35,6 @@ namespace Yttrium
             //__________________________________________________________________
             typedef RESOURCE               ResourceType;   //!< alias
             typedef Resources<RESOURCE>    ResourcesType;  //!< alias
-            typedef Writable<ResourceType> Ranges;
 
             //__________________________________________________________________
             //
@@ -43,7 +42,6 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-
 
             //! create default engines according to team->size()
             inline explicit SIMD(const SharedLoop &team) :

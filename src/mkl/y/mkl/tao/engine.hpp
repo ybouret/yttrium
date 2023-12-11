@@ -54,6 +54,7 @@ namespace Yttrium
                 void setup(const size_t         n); //!< setup in1d(1,n,1)
                 void setup(const MatrixMetrics &M); //!< setup in2d( (1,1) -> (cols,rows)
 
+                //! link resource to each engine
                 template <typename NODE> inline
                 void link1D(NODE *node)
                 {
@@ -64,13 +65,8 @@ namespace Yttrium
                     }
                 }
 
-                void free1D() noexcept
-                {
-                    for(size_t i=in1D.size();i>0;--i)
-                    {
-                        in1D[i].anonymous = 0;
-                    }
-                }
+                //! reset resource from each engine
+                void free1D() noexcept;
 
                 //______________________________________________________________
                 //

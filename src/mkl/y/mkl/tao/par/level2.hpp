@@ -36,7 +36,7 @@ namespace Yttrium
             void Mul(TARGET &          target,
                      const Matrix<T>  &M,
                      SOURCE           &source,
-                     Multifold<U>     &xmf,
+                     MultiAdd<U>      &xma,
                      Engine           &engine)
             {
                 assert( target.size() == M.rows );
@@ -44,7 +44,7 @@ namespace Yttrium
                 const size_t   dims   = M.rows;
                 const size_t   para   = engine.in1D.size();
                 engine.setup(dims);
-                engine.link1D(xmf.make(para,M.cols));
+                engine.link1D(xma.make(para,M.cols));
 
                 try {
                     engine.in1D(Parallel::Mul<TARGET,T,SOURCE,U>,target,M,source);

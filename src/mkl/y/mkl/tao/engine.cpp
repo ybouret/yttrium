@@ -30,6 +30,14 @@ namespace Yttrium
                 }
             }
 
+            void Engine:: free1D() noexcept
+            {
+                for(size_t i=in1D.size();i>0;--i)
+                {
+                    in1D[i].anonymous = 0;
+                }
+            }
+
             void Engine:: setup(const MatrixMetrics &M)
             {
                 const Vertex vtx(M.cols,M.rows);

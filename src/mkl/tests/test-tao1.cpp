@@ -121,15 +121,15 @@ Y_UTEST(tao1)
         }
 
 
-        Tao::Multifold<int> xmf;
+        Tao::MultiAdd<int> xmf;
         const int rawDot = Tao::DotProduct<int>::Of(source,vector,xmf);
         std::cerr << "rawDot=" << rawDot << std::endl;
 
         {
-            Random::Rand ran;
-            Vector<apq> lhs;
-            Vector<apq> rhs;
-            Tao::Multifold<apq> amf;
+            Random::Rand       ran;
+            Vector<apq>        lhs;
+            Vector<apq>        rhs;
+            Tao::MultiAdd<apq> amf;
             for(size_t i=5+ran.leq(10);i>0;--i)
             {
                 lhs << apq(10,10,ran);

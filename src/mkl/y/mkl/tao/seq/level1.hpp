@@ -135,19 +135,13 @@ namespace Yttrium
             template <typename T>
             struct DotProduct
             {
-                //______________________________________________________________
-                //
-                //! internal computation helper
-                //______________________________________________________________
-                typedef Multifold<T>     XMF;
-                typedef Antelope::Add<T> XAdd;
-
+                
                 //______________________________________________________________
                 //
                 //! compute with prepared xadd
                 //______________________________________________________________
                 template <typename LHS, typename RHS> static inline
-                T Of_(LHS &lhs, RHS &rhs, XAdd &xadd)
+                T Of_(LHS &lhs, RHS &rhs, Antelope::Add<T> &xadd)
                 {
                     const size_t size = lhs.size();
                     assert(lhs.size()==rhs.size());
@@ -166,10 +160,10 @@ namespace Yttrium
                 //! compute with any xadd
                 //______________________________________________________________
                 template <typename LHS, typename RHS> static inline
-                T Of(LHS &lhs, RHS &rhs, XMF &xmf)
+                T Of(LHS &lhs, RHS &rhs, MultiAdd<T>  &xma)
                 {
                     assert(lhs.size()==rhs.size());
-                    return Of_(lhs,rhs,xmf.make(lhs.size()));
+                    return Of_(lhs,rhs,xma.make(lhs.size()));
                 }
 
             };
