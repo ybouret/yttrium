@@ -17,6 +17,9 @@ namespace Yttrium
         namespace Antelope
         {
             template <typename T,const bool> struct AddProxy;
+
+            
+
         }
     }
 
@@ -177,6 +180,17 @@ namespace Yttrium
                     //__________________________________________________________
                     //
                     //
+                    // Methods
+                    //
+                    //__________________________________________________________
+                    inline bool isZero() const noexcept
+                    {
+
+                    }
+
+                    //__________________________________________________________
+                    //
+                    //
                     //! Sum algorithm
                     //
                     //__________________________________________________________
@@ -298,8 +312,8 @@ namespace Yttrium
                     // C++
                     //
                     //__________________________________________________________
-                    explicit Code(const size_t =0) : acc(0) {} //!< initialize, whatever the size
-                    virtual ~Code() noexcept                {} //!< cleanup
+                    explicit Code(const size_t =0) : acc(0), __0(acc) {} //!< initialize, whatever the size
+                    virtual ~Code() noexcept                          {} //!< cleanup
 
                     //__________________________________________________________
                     //
@@ -309,6 +323,10 @@ namespace Yttrium
                     //__________________________________________________________
                     inline void make(size_t) noexcept { acc.zset(); } //!< initialize, whatever the size
                     inline void free()       noexcept { acc.zset(); } //!< set to zero
+
+                    inline bool isZero() const noexcept {
+                        return __0 == acc;
+                    }
 
                     //! return computed sum, reset
                     inline T    sum()
@@ -320,8 +338,10 @@ namespace Yttrium
                         acc += args;
                         return *this;
                     }
+
                 private:
-                    T acc;
+                    T       acc;
+                    const T __0;
                 };
 
             };

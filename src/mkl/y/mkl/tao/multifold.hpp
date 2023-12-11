@@ -6,6 +6,7 @@
 
 #include "y/mkl/antelope/add.hpp"
 #include "y/data/list/cxx.hpp"
+#include "y/data/pool/cxx.hpp"
 
 namespace Yttrium
 {
@@ -34,6 +35,7 @@ namespace Yttrium
                 //______________________________________________________________
                 typedef Antelope::Add<T>       XAdd; //!< eXtended addision
                 typedef CxxListOf<DynamicAdd>  List; //!< alias
+                typedef CxxPoolOf<DynamicAdd>  Pool; //!< alias
 
                 //______________________________________________________________
                 //
@@ -84,13 +86,16 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef DynamicAdd<T>                XNode; //!< alias
-                typedef typename DynamicAdd<T>::List XList; //!< alias
-                using XList::head;
-                using XList::tail;
-                using XList::size;
-                using XList::popTail;
-                using XList::pushTail;
+                typedef DynamicAdd<T>                NodeType; //!< alias
+                typedef typename DynamicAdd<T>::List ListType; //!< alias
+                typedef typename DynamicAdd<T>::Pool PoolType; //!< alias
+                typedef Antelope::Add<T>             XAddType; //!< alias
+
+                using ListType::head;
+                using ListType::tail;
+                using ListType::size;
+                using ListType::popTail;
+                using ListType::pushTail;
 
                 //______________________________________________________________
                 //
@@ -98,8 +103,8 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                inline explicit Multifold() noexcept : XList(), pool() {} //!< setup
-                inline virtual ~Multifold() noexcept                   {} //!< cleanup
+                inline explicit Multifold() noexcept : ListType(), pool() {} //!< setup
+                inline virtual ~Multifold() noexcept                      {} //!< cleanup
 
                 //______________________________________________________________
                 //
@@ -109,7 +114,7 @@ namespace Yttrium
                 //______________________________________________________________
 
                 //! make parallel>0, dimension for each member
-                inline XNode *make(const size_t parallel, const size_t dimension)
+                inline NodeType *make(const size_t parallel, const size_t dimension)
                 {
                     assert(parallel>0);
 
@@ -118,17 +123,17 @@ namespace Yttrium
                     {
                         case Negative: 
                             assert(size<parallel);
-                            while(size<parallel && pool.size>0) pushTail( pool.popHead() );
-                            while(size<parallel) pushTail( new XNode(dimension) );
+                            while(size<parallel && pool.size>0) pushTail( pool.query() );
+                            while(size<parallel) pushTail( new NodeType(dimension) );
                             break;
                         case __Zero__: break;
                         case Positive: assert(size>parallel);
-                            while(size>parallel) pool.pushHead( popTail() );
+                            while(size>parallel) pool.store( popTail() );
                     }
 
                     // adapt capacity
                     assert(size==parallel);
-                    for(XNode *node=head;node;node=node->next)
+                    for(NodeType *node=head;node;node=node->next)
                     {
                         node->make(dimension);
                     }
@@ -137,7 +142,7 @@ namespace Yttrium
                 }
 
                 //! make(1,dimension)
-                inline XNode *make(const size_t dimension)
+                inline NodeType *make(const size_t dimension)
                 {
                     return make(1,dimension);
                 }
@@ -148,7 +153,7 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                XList pool; //!< pool
+                PoolType pool; //!< pool
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Multifold);

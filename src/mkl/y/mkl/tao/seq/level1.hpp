@@ -3,7 +3,7 @@
 
 
 #include "y/mkl/api.hpp"
-#include "y/mkl/tao/multifold.hpp"
+#include "y/mkl/antelope/add.hpp"
 
 namespace Yttrium
 {
@@ -126,6 +126,47 @@ namespace Yttrium
 
         namespace Tao
         {
+            template <typename T>
+            struct DotProduct
+            {
+                typedef Antelope::Add<T> XAdd;
+
+                template <typename LHS, typename RHS>
+                inline T Of(LHS &lhs, RHS &rhs, XAdd &xadd)
+                {
+                    assert(lhs.size()==rhs.size());
+                    const size_t size = lhs.size();
+                    for(size_t i=size;i>0;--i) {
+                        const T prod = lhs[i] * rhs[i];
+                        xadd << prod;
+                    }
+                    return xadd.sum();
+                }
+            };
+
+        }
+
+        namespace Tao
+        {
+            template <typename T>
+            struct SquaredNorm
+            {
+                typedef T                              Type;
+                typedef typename ScalarFor<Type>::Type ScalarType;
+                typedef Antelope::Add<ScalarType>      XAdd;
+
+                template <typename LHS>
+                inline ScalarType Of(LHS &lhs)
+                {
+
+                }
+
+            };
+        }
+
+
+        namespace Tao
+        {
 #if 0
             //__________________________________________________________________
             //
@@ -139,7 +180,6 @@ namespace Yttrium
                     res += MKL::Mod2<typename SOURCE::Type>::Of(source[i]);
                 return res;
             }
-#endif
 
             //__________________________________________________________________
             //
@@ -162,6 +202,7 @@ namespace Yttrium
                 }
                 return xadd.sum();
             }
+#endif
 
 
             //__________________________________________________________________
