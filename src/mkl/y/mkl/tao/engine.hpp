@@ -23,7 +23,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Carver
+            class Engine
             {
             public:
                 //______________________________________________________________
@@ -35,8 +35,6 @@ namespace Yttrium
                 typedef Concurrent::SIMD<Engine1D> In1D;   //!< alias
                 typedef Concurrent::SIMD<Engine2D> In2D;   //!< alias
                 typedef In2D::Vertex               Vertex; //!< alias
-                //typedef In1D::Processors            Proc1D; //!< alias
-                //typedef In2D::Processors            Proc2D; //!< alias
 
                 //______________________________________________________________
                 //
@@ -44,8 +42,8 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                explicit Carver(const Concurrent::SharedLoop &); //!< setup engines
-                virtual ~Carver() noexcept;                      //!< cleanup
+                explicit Engine(const Concurrent::SharedLoop &); //!< setup engines
+                virtual ~Engine() noexcept;                      //!< cleanup
 
                 //______________________________________________________________
                 //
@@ -66,7 +64,7 @@ namespace Yttrium
                 In2D in2d; //!< 2D engines
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Carver);
+                Y_DISABLE_COPY_AND_ASSIGN(Engine);
                 const size_t one;
                 const Vertex org;
             };

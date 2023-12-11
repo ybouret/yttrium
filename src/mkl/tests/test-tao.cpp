@@ -38,8 +38,8 @@ Y_UTEST(tao)
     Concurrent::SharedLoop seqLoop = new Concurrent::Mono();
     Concurrent::SharedLoop parLoop = new Concurrent::Crew(topo);
 
-    Tao::Carver seq(seqLoop);
-    Tao::Carver par(parLoop);
+    Tao::Engine seq(seqLoop);
+    Tao::Engine par(parLoop);
 
     Vector<double> target(8,0);
     Vector<int>    source(10,0);
