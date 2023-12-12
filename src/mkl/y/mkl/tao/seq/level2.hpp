@@ -15,6 +15,7 @@ namespace Yttrium
         namespace Tao
         {
 
+            //! target = M*source
             template <typename TARGET, typename T, typename SOURCE, typename U> inline
             void Mul(TARGET &          target,
                      const Matrix<T>  &M,

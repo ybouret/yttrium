@@ -18,12 +18,12 @@ namespace Yttrium
 
             namespace Parallel
             {
+                //! Mul on range
                 template <typename TARGET, typename T, typename SOURCE, typename U> inline
                 void Mul(Engine1D &range, TARGET &target, const Matrix<T> &M, SOURCE &source)
                 {
-                    assert(0!=range.anonymous);
 
-                    XAdd<U>   &xadd = *static_cast< XAdd<U> *>(range.anonymous);
+                    XAdd<U>   &xadd = range.xadd<U>();
                     size_t     row  = range.latest;
                     for(size_t num  = range.length;num>0;--num,--row)
                     {
@@ -32,6 +32,10 @@ namespace Yttrium
                 }
             }
 
+            //__________________________________________________________________
+            //
+            //! target = M*source
+            //__________________________________________________________________
             template <typename TARGET, typename T, typename SOURCE, typename U> inline
             void Mul(TARGET &          target,
                      const Matrix<T>  &M,

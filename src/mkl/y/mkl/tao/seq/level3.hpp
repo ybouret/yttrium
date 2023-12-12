@@ -1,7 +1,7 @@
 //! \file
 
 #ifndef Y_MKL_SeqTao3_Included
-#define Y_MKL_SeqTao2_Included 1
+#define Y_MKL_SeqTao3_Included 1
 
 
 #include "y/mkl/tao/seq/level1.hpp"

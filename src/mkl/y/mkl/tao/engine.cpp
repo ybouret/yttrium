@@ -34,7 +34,7 @@ namespace Yttrium
             {
                 for(size_t i=in1D.size();i>0;--i)
                 {
-                    in1D[i].anonymous = 0;
+                    in1D[i].unlink();
                 }
             }
 

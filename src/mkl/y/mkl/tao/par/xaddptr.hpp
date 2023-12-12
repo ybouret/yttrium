@@ -1,0 +1,68 @@
+//! \file
+
+#ifndef Y_MKL_TAO_XAddPtr_Included
+#define Y_MKL_TAO_XAddPtr_Included 1
+
+#include "y/mkl/tao/multiadd.hpp"
+
+namespace Yttrium
+{
+    namespace MKL
+    {
+        namespace Tao
+        {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! helper to store temporary XAdd pointer
+            //
+            //
+            //__________________________________________________________________
+            class XAddPtr
+            {
+            public:
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit XAddPtr() noexcept; //!< setup
+                virtual ~XAddPtr() noexcept; //!< cleanup
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                //! reset
+                void unlink() noexcept;
+
+                //! link a XAdd
+                template <typename U> inline
+                void link( XAdd<U> &host ) noexcept
+                {
+                    handle = &host;
+                }
+
+                //! cast internal address
+                template <typename U> inline
+                XAdd<U> & xadd() noexcept
+                {
+                    assert(0!=handle);
+                    return * static_cast< XAdd<U> * >(handle);
+                }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(XAddPtr);
+                void *handle;
+            };
+        }
+    }
+}
+
+#endif
+

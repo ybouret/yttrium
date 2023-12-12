@@ -24,18 +24,30 @@ namespace Yttrium
                           const Matrix<U> &lhs,
                           const Matrix<V> &rhs)
                 {
-                    {
-                        Y_LOCK(range.sync);
-                        std::cerr << "computing on " << range << std::endl;
-                    }
+                    
                     if( range.isEmpty() ) return;
-                    assert(0!=range.anonymous);
-                    for(size_t i=range->size;i>0;--i)
-                    {
-                        const Strip &s    = range(i);
-                        Writable<T> &t    = tgt[s.irow];
-                        XAdd<U>     &xadd = *static_cast<XAdd<U> *>(range.anonymous);
 
+                    const size_t nrun = lhs.cols;
+                    XAdd<W>     &xadd = range.xadd<W>();
+                    assert(xadd.isEmpty());
+                    assert(xadd.accepts(nrun));
+
+                    for(size_t s=range->size;s>0;--s)
+                    {
+                        const Strip       &here  = range(s);
+                        const size_t       i     = here.irow;
+                        Writable<T>       &tgt_i = tgt[i];
+                        const Readable<U> &lhs_i = lhs[i];
+                        for(size_t j=here.icol,nc=here.ncol;nc>0;--nc,++j)
+                        {
+                            assert(xadd.isEmpty());
+                            for(size_t k=nrun;k>0;--k)
+                            {
+                                const W p = lhs_i[k] * rhs[k][j];
+                                xadd << p;
+                            }
+                            tgt_i[j] = xadd.sum();
+                        }
                     }
                 }
             }
@@ -51,8 +63,8 @@ namespace Yttrium
                 assert(tgt.cols==rhs.cols);
                 assert(lhs.cols==rhs.rows);
 
-                engine.setup(tgt); // parallel tiles of target
-                
+                engine.setup(tgt);                                    // parallel tiles of target
+                engine.link2D(xma.make(engine.in2D.size(),lhs.cols)); // one xadd per tile
                 engine.in2D(Parallel::MMul<T,U,V,W>,tgt,lhs,rhs);
 
 

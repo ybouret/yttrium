@@ -5,6 +5,7 @@
 #define Y_MKL_TAO_Engine1D_Included 1
 
 #include "y/concurrent/resource/in1d.hpp"
+#include "y/mkl/tao/par/xaddptr.hpp"
 
 namespace Yttrium
 {
@@ -20,7 +21,9 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Engine1D : public Concurrent::Resource1D<size_t>
+            class Engine1D :
+            public Concurrent::Resource1D<size_t>,
+            public XAddPtr
             {
             public:
                 //______________________________________________________________
@@ -32,13 +35,7 @@ namespace Yttrium
                 explicit Engine1D(const Concurrent::ThreadContext &) noexcept; //!< setup
                 virtual ~Engine1D() noexcept;                                  //!< cleanup
 
-                //______________________________________________________________
-                //
-                //
-                // Members
-                //
-                //______________________________________________________________
-                void    *anonymous; //!< pointer to a XAdd<T>
+                
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Engine1D);

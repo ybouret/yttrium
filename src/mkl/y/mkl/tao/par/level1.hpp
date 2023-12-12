@@ -27,8 +27,9 @@ namespace Yttrium
             namespace Parallel
             {
 
+                //! load on range
                 template <typename TARGET, typename SOURCE> inline
-                 void Load(Engine1D &range, TARGET &target, SOURCE &source)
+                void Load(Engine1D &range, TARGET &target, SOURCE &source)
                 {
                     for(size_t i=range.latest;i>=range.offset;--i)
                         target[i] = source[i];
@@ -54,6 +55,7 @@ namespace Yttrium
         {
             namespace Parallel
             {
+                //! save on range
                 template <typename TARGET, typename SOURCE> inline
                 void Save(Engine1D &range, TARGET &target, SOURCE &source)
                 {
@@ -90,6 +92,7 @@ namespace Yttrium
         {
             namespace Parallel
             {
+                //! add on range
                 template <typename TARGET, typename SOURCE> inline
                 void Add(Engine1D &range, TARGET &target, SOURCE &source)
                 {
@@ -118,6 +121,7 @@ namespace Yttrium
         {
             namespace Parallel
             {
+                //! add on range
                 template <typename TARGET, typename T, typename SOURCE> inline
                 void Add(Engine1D &range, TARGET &target, const T &factor, SOURCE &source)
                 {
@@ -145,6 +149,7 @@ namespace Yttrium
         {
             namespace Parallel
             {
+                //! add on range
                 template <typename TARGET,  typename SOURCE, typename T, typename VECTOR> inline
                 void Add(Engine1D &range, TARGET &target,  SOURCE &source, const T &factor, VECTOR &vector)
                 {
@@ -182,6 +187,7 @@ namespace Yttrium
         {
             namespace Parallel
             {
+                //! sub on range
                 template <typename TARGET, typename SOURCE> inline
                 void Sub(Engine1D &range, TARGET &target, SOURCE &source)
                 {
@@ -210,6 +216,7 @@ namespace Yttrium
         {
             namespace Parallel
             {
+                //! sub on range
                 template <typename TARGET, typename T, typename SOURCE> inline
                 void Sub(Engine1D &range, TARGET &target, const T &factor, SOURCE &source)
                 {
@@ -237,6 +244,7 @@ namespace Yttrium
         {
             namespace Parallel
             {
+                //! sub on range
                 template <typename TARGET,  typename SOURCE, typename T, typename VECTOR> inline
                 void Sub(Engine1D &range, TARGET &target,  SOURCE &source, const T &factor, VECTOR &vector)
                 {

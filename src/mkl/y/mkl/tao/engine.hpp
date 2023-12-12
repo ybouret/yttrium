@@ -61,7 +61,7 @@ namespace Yttrium
                     for(size_t i=in1D.size();i>0;--i,node=node->next)
                     {
                         assert(0!=node);
-                        in1D[i].anonymous = node;
+                        in1D[i].link( *node );
                     }
                 }
 
@@ -75,7 +75,7 @@ namespace Yttrium
                     for(size_t i=in2D.size();i>0;--i,node=node->next)
                     {
                         assert(0!=node);
-                        in2D[i].anonymous = node;
+                        in2D[i].link( *node );
                     }
                 }
 

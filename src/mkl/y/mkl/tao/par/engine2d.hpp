@@ -6,6 +6,7 @@
 #define Y_MKL_TAO_Engine2D_Included 1
 
 #include "y/concurrent/resource/in2d.hpp"
+#include "y/mkl/tao/par/xaddptr.hpp"
 
 namespace Yttrium
 {
@@ -40,7 +41,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Engine2D : public Concurrent::Resource2D<size_t>
+            class Engine2D : public Concurrent::Resource2D<size_t>, public XAddPtr
             {
             public:
                 //______________________________________________________________
@@ -62,13 +63,7 @@ namespace Yttrium
                 //! return Strip[1..size] after activation
                 const Strip & operator()(const size_t indx) const noexcept;
 
-                //______________________________________________________________
-                //
-                //
-                // Members
-                //
-                //______________________________________________________________
-                void * anonymous;
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Engine2D);
