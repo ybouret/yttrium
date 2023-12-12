@@ -79,6 +79,9 @@ namespace Yttrium
                     }
                 }
 
+                //! reset resource from each engine
+                void free2D() noexcept;
+
                 //______________________________________________________________
                 //
                 //

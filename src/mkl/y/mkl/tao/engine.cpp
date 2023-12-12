@@ -52,7 +52,13 @@ namespace Yttrium
 
             }
 
-
+            void Engine:: free2D() noexcept
+            {
+                for(size_t i=in2D.size();i>0;--i)
+                {
+                    in2D[i].unlink();
+                }
+            }
 
         }
 

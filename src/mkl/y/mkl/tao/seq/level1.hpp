@@ -49,7 +49,7 @@ namespace Yttrium
             //! target += source
             //__________________________________________________________________
             template <typename TARGET, typename SOURCE>   inline
-            void Add( TARGET &target, SOURCE &source )
+            void Add(TARGET &target, SOURCE &source)
             {
                 assert(target.size()==source.size());
                 for(size_t i=target.size();i>0;--i)
