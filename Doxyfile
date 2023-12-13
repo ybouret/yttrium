@@ -945,7 +945,7 @@ WARN_LOGFILE           =
 
 INPUT                  = src/core/y \
                          src/jive/y \
-                         src/mkl/y \
+                         src/mkl/y  \
                          src/chem/y
 
 # This tag can be used to specify the character encoding of the source files
