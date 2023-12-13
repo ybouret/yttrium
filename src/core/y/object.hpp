@@ -1,4 +1,4 @@
-//!\ file
+//! \file
 
 #ifndef Y_Object_Included
 #define Y_Object_Included 1
