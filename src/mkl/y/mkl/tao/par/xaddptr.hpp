@@ -16,6 +16,10 @@ namespace Yttrium
             //
             //
             //! helper to store temporary XAdd pointer
+            /**
+             as we don't know the type that will be used,
+             we attach the specific XAdd before the computation
+             */
             //
             //
             //__________________________________________________________________

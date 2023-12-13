@@ -110,8 +110,16 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
+                //______________________________________________________________
+                //
                 //! make parallel>0, dimension for each member
-                inline XAdd<T> *make(const size_t parallel, const size_t dimension)
+                /**
+                 \param parallel  number of XAdd to prepare
+                 \param capacity  capacity per dimension
+                 */
+                //______________________________________________________________
+                inline XAdd<T> *make(const size_t parallel,
+                                     const size_t capacity)
                 {
                     assert(parallel>0);
 
@@ -120,8 +128,8 @@ namespace Yttrium
                     {
                         case Negative: 
                             assert(size<parallel);
-                            while(size<parallel && pool.size>0) pushTail( pool.query() );
-                            while(size<parallel) pushTail( new XAdd<T>(dimension) );
+                            while(size<parallel && pool.size>0) pushTail( pool.query()          );
+                            while(size<parallel)                pushTail( new XAdd<T>(capacity) );
                             break;
                         case __Zero__: break;
                         case Positive: assert(size>parallel);
@@ -133,9 +141,9 @@ namespace Yttrium
                     assert(0!=head);
                     for(XAdd<T> *node=head;node;node=node->next)
                     {
-                        node->make(dimension);
+                        node->make(capacity);
                         assert(node->isEmpty());
-                        assert(node->accepts(dimension));
+                        assert(node->accepts(capacity));
                     }
 
 
