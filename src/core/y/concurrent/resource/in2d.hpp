@@ -50,6 +50,9 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! init: compute tile then  activate
+            /**
+             \warning pointed Tile may be NULL
+             */
             inline void init(const Vertex lower, const Vertex upper)
             {
                 Mapping temp = Tiling<T>::Tiles::For(*this,lower,upper); // may be NULL

@@ -44,7 +44,13 @@ namespace Yttrium
                 // Interface
                 //
                 //______________________________________________________________
-                virtual void activate()          = 0; //!< activate local resources
+
+                //! activate local resources
+                /**
+                 called once the mapping of the resource is done, so that
+                 further allocation can be made for use withing thread
+                 */
+                virtual void activate()          = 0; 
                 virtual void shutdown() noexcept = 0; //!< shutdown local resources
 
             private:

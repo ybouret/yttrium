@@ -341,7 +341,7 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            //! record 2D request
+            //! Record FULL 2D request
             //
             //__________________________________________________________________
             class Locus
@@ -357,6 +357,8 @@ namespace Yttrium
                 lower(org),
                 upper(end)
                 {
+                    assert(lower.x<=upper.x);
+                    assert(lower.y<=upper.y);
                 }
 
                 //! copy

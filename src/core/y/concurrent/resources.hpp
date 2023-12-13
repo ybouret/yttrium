@@ -41,6 +41,9 @@ namespace Yttrium
 
             protected:
                 //! setup with pointer conversion
+                /**
+                 DERIVED can be Loop/Mono/Crew or Pipeline/Alone/Queue
+                 */
                 template <typename DERIVED>
                 explicit Resources(const ArcPtr<DERIVED> &stc) noexcept :
                 contexts(CopyOf,stc)
@@ -49,6 +52,10 @@ namespace Yttrium
 
                 //! local shared contexts
                 ArcPtr<ThreadContexts>  contexts;
+
+
+                void throwBadLocus2D() const;
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Resources);
             };
@@ -60,6 +67,9 @@ namespace Yttrium
         //
         //
         //! Resource to associate one RESOURCE per thread context
+        /**
+         RESOURCE should derive from Resource[0D|1D|2D]
+         */
         //
         //
         //______________________________________________________________________
@@ -153,6 +163,10 @@ namespace Yttrium
             //__________________________________________________________________
             inline void init(const Vertex lower, const Vertex upper)
             {
+                // sanity check
+                if(lower.x>upper.x||lower.y>upper.y) throwBadLocus2D();
+
+                // create 2D requested full range
                 const Locus here(lower,upper);
                 if( fullRange.isEmpty() || here != *fullRange )
                 {
@@ -174,7 +188,7 @@ namespace Yttrium
 
             //__________________________________________________________________
             //
-            //! cleanup/shutdown resources
+            //! cleanup/shutdown all resources
             //__________________________________________________________________
             inline void quit() noexcept
             {

@@ -16,9 +16,9 @@ namespace Yttrium
         //
         //
         //
-        //! SIMD for 1D/2D
+        //! SIMD for 0D/1D/2D
         /**
-         Execute samed code for different user defined resources
+         Use Resources<> API to transform user's code into Kernel
          */
         //
         //
@@ -33,8 +33,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef RESOURCE               ResourceType;   //!< alias
-            typedef Resources<RESOURCE>    ResourcesType;  //!< alias
+            typedef Resources<RESOURCE>    MyResources;  //!< alias
 
             //__________________________________________________________________
             //
@@ -43,9 +42,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! create default engines according to team->size()
+            //! create resources according to team->size()
             inline explicit SIMD(const SharedLoop &team) :
-            ResourcesType(team), loop( Coerce(*team) )
+            MyResources(team), loop( Coerce(*team) )
             {
             }
 
@@ -59,15 +58,20 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //__________________________________________________________________
+            //
             //! testing
+            //__________________________________________________________________
             inline void operator()(void)
             {
                 const CallMe me = { *this };
                 loop(me);
             }
 
-
-            //! no-arg call proc(engine)
+            //__________________________________________________________________
+            //
+            //! no-arg: call proc(engine)
+            //__________________________________________________________________
             template <typename PROC>
             inline void operator()(PROC &proc)
             {
@@ -75,7 +79,10 @@ namespace Yttrium
                 loop(me);
             }
 
-            //! 1-arg call proc(engine,arg1)
+            //__________________________________________________________________
+            //
+            //! 1-arg: call proc(engine,arg1)
+            //__________________________________________________________________
             template <typename PROC, typename ARG1>
             inline void operator()(PROC &proc, ARG1 &arg1)
             {
@@ -83,7 +90,10 @@ namespace Yttrium
                 loop(me);
             }
 
-            //! 2-args call proc(engine,arg1,arg2)
+            //__________________________________________________________________
+            //
+            //! 2-args: call proc(engine,arg1,arg2)
+            //__________________________________________________________________
             template <typename PROC, typename ARG1, typename ARG2>
             inline void operator()(PROC &proc, ARG1 &arg1, ARG2 &arg2)
             {
@@ -91,7 +101,10 @@ namespace Yttrium
                 loop(me);
             }
 
-            //! 3-args call proc(engine,arg1,arg2,arg3)
+            //__________________________________________________________________
+            //
+            //! 3-args: call proc(engine,arg1,arg2,arg3)
+            //__________________________________________________________________
             template <typename PROC, typename ARG1, typename ARG2, typename ARG3>
             inline void operator()(PROC &proc, ARG1 &arg1, ARG2 &arg2, ARG3 &arg3)
             {
@@ -99,7 +112,10 @@ namespace Yttrium
                 loop(me);
             }
 
-            //! 4-args call proc(engine,arg1,arg2,arg3,arg4)
+            //__________________________________________________________________
+            //
+            //! 4-args: call proc(engine,arg1,arg2,arg3,arg4)
+            //__________________________________________________________________
             template <typename PROC, typename ARG1, typename ARG2, typename ARG3, typename ARG4>
             inline void operator()(PROC &proc, ARG1 &arg1, ARG2 &arg2, ARG3 &arg3, ARG4 &arg4)
             {
@@ -114,10 +130,10 @@ namespace Yttrium
 
             struct CallMe
             {
-                const ResourcesType &self;
+                const MyResources &self;
                 inline void operator()(const ThreadContext &ctx) const
                 {
-                    const ResourceType &resource = self[ctx.indx];
+                    const RESOURCE &resource = self[ctx.indx];
                     Y_LOCK(resource.sync);
                     (std::cerr << "SIMD: in resource: " << resource << std::endl).flush();
                 }
@@ -127,8 +143,8 @@ namespace Yttrium
             template <typename PROC>
             struct Call0
             {
-                ResourcesType &self;
-                PROC          &proc;
+                MyResources &self;
+                PROC        &proc;
                 inline void operator()(const ThreadContext &ctx) const
                 {
                     proc(self[ctx.indx]);
@@ -138,9 +154,9 @@ namespace Yttrium
             template <typename PROC,typename ARG1>
             struct Call1
             {
-                ResourcesType &self;
-                PROC          &proc;
-                ARG1          &arg1;
+                MyResources &self;
+                PROC        &proc;
+                ARG1        &arg1;
                 inline void operator()(const ThreadContext &ctx) const
                 {
                     proc(self[ctx.indx],arg1);
@@ -150,10 +166,10 @@ namespace Yttrium
             template <typename PROC,typename ARG1, typename ARG2>
             struct Call2
             {
-                ResourcesType &self;
-                PROC          &proc;
-                ARG1          &arg1;
-                ARG2          &arg2;
+                MyResources &self;
+                PROC        &proc;
+                ARG1        &arg1;
+                ARG2        &arg2;
                 inline void operator()(const ThreadContext &ctx) const
                 {
                     proc(self[ctx.indx],arg1,arg2);
@@ -163,11 +179,11 @@ namespace Yttrium
             template <typename PROC,typename ARG1, typename ARG2, typename ARG3>
             struct Call3
             {
-                ResourcesType &self;
-                PROC          &proc;
-                ARG1          &arg1;
-                ARG2          &arg2;
-                ARG3          &arg3;
+                MyResources &self;
+                PROC        &proc;
+                ARG1        &arg1;
+                ARG2        &arg2;
+                ARG3        &arg3;
                 inline void operator()(const ThreadContext &ctx) const
                 {
                     proc(self[ctx.indx],arg1,arg2,arg3);
@@ -177,12 +193,12 @@ namespace Yttrium
             template <typename PROC,typename ARG1, typename ARG2, typename ARG3, typename ARG4>
             struct Call4
             {
-                ResourcesType &self;
-                PROC          &proc;
-                ARG1          &arg1;
-                ARG2          &arg2;
-                ARG3          &arg3;
-                ARG4          &arg4;
+                MyResources &self;
+                PROC        &proc;
+                ARG1        &arg1;
+                ARG2        &arg2;
+                ARG3        &arg3;
+                ARG4        &arg4;
                 inline void operator()(const ThreadContext &ctx) const
                 {
                     proc(self[ctx.indx],arg1,arg2,arg3,arg4);
