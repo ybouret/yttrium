@@ -53,7 +53,7 @@ namespace Yttrium
                 //! local shared contexts
                 ArcPtr<ThreadContexts>  contexts;
 
-
+                //! exception for bad 2D vertices
                 void throwBadLocus2D() const;
 
             private:
@@ -74,8 +74,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename RESOURCE>
-        class Resources :
-        public Nucleus::Resources,
+        class Resources : public Nucleus::Resources,
         public CxxArray<RESOURCE,Nucleus::Resources::Model>
         {
         public:
