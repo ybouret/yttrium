@@ -80,13 +80,13 @@ namespace Yttrium
 
         //! gather host+method and select call
         template <typename HOST, typename METH> inline
-        AutoClean(HOST &host, METH meth) noexcept :
+        explicit AutoClean(HOST &host, METH meth) noexcept :
         args( host, meth), proc( Call<HOST,METH> )
         {
         }
 
         //! cleanup, safe call to host.method()
-        ~AutoClean() noexcept;
+        virtual ~AutoClean() noexcept;
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(AutoClean);

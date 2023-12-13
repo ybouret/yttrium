@@ -23,10 +23,12 @@ namespace Yttrium
                 void Mul(Engine1D &range, TARGET &target, const Matrix<T> &M, SOURCE &source)
                 {
 
+                    if(range.length<=0) return;
+
                     XAdd<U>   &xadd = range.xadd<U>();
-                    size_t     row  = range.latest;
-                    for(size_t num  = range.length;num>0;--num,--row)
+                    for(size_t row  = range.latest; row>=range.offset; --row)
                     {
+                        assert(xadd.isEmpty());
                         target[row] = DotProduct<U>::Of_(M[row],source,xadd);
                     }
                 }
@@ -48,19 +50,10 @@ namespace Yttrium
                 const size_t   para   = engine.in1D.size();
                 engine.setup(M.rows);                      // process rows in parallel
                 engine.in1D.attach(xma.make(para,M.cols)); // with help
-
-                try {
-                    engine.in1D(Parallel::Mul<TARGET,T,SOURCE,U>,target,M,source);
-                    engine.in1D.detach();
-                }
-                catch(...)
                 {
-                    engine.in1D.detach();
-                    throw;
+                    volatile Engine::Clean1D willClean(engine.in1D);
+                    engine.in1D(Parallel::Mul<TARGET,T,SOURCE,U>,target,M,source);
                 }
-
-
-
             }
         }
 

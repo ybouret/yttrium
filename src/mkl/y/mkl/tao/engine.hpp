@@ -35,6 +35,8 @@ namespace Yttrium
                 typedef Concurrent::SIMD<Engine1D> In1D;   //!< alias
                 typedef Concurrent::SIMD<Engine2D> In2D;   //!< alias
                 typedef In2D::Vertex               Vertex; //!< alias
+                typedef In1D::AutoDetach           Clean1D; //!< alias
+                typedef In2D::AutoDetach           Clean2D; //!< alias
 
                 //______________________________________________________________
                 //
@@ -53,7 +55,7 @@ namespace Yttrium
                 //______________________________________________________________
                 void setup(const size_t         n); //!< setup in1d(1,n,1)
                 void setup(const MatrixMetrics &M); //!< setup in2d( (1,1) -> (cols,rows)
-                
+
                 //______________________________________________________________
                 //
                 //

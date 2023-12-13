@@ -6,6 +6,7 @@
 
 #include "y/concurrent/loop/interface.hpp"
 #include "y/concurrent/resources.hpp"
+#include "y/type/auto-clean.hpp"
 
 namespace Yttrium
 {
@@ -34,6 +35,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef Resources<RESOURCE>    MyResources;  //!< alias
+
 
             //__________________________________________________________________
             //
@@ -80,6 +82,15 @@ namespace Yttrium
                 MyResources &self = *this;
                 for(size_t i=self.size();i>0;--i) self[i].detach();
             }
+
+            class AutoDetach : public AutoClean
+            {
+            public:
+                inline explicit AutoDetach(SIMD &simd) : AutoClean(simd, & SIMD::detach ) {}
+                inline virtual ~AutoDetach() noexcept {}
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(AutoDetach);
+            };
 
             //__________________________________________________________________
             //

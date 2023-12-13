@@ -66,17 +66,9 @@ namespace Yttrium
                 engine.setup(tgt);                                         // parallel tiles of target
                 engine.in2D.attach(xma.make(engine.in2D.size(),lhs.cols)); // one xadd per tile
 
-                try {
-                    engine.in2D(Parallel::MMul<T,U,V,W>,tgt,lhs,rhs);
-                    engine.in2D.detach();
-                }
-                catch(...)
-                {
-                    engine.in2D.detach();
-                    throw;
-                }
-
-
+                volatile Engine::Clean2D willClean(engine.in2D);
+                engine.in2D(Parallel::MMul<T,U,V,W>,tgt,lhs,rhs);
+                
             }
         }
 
