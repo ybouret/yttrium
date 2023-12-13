@@ -28,6 +28,7 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
+        typedef void (AutoClean::*Meth)(void);
 
         //______________________________________________________________________
         //
@@ -48,8 +49,14 @@ namespace Yttrium
             //! convert types to anonymous
             template <typename HOST, typename METH>
             inline  Args(HOST &userHost, METH hostMeth)  noexcept :
-            host( &userHost ), meth( (void *)hostMeth )
+            host( &userHost ), meth( 0 )
             {
+                union
+                {
+                    METH user;
+                    Meth mine;
+                } alias = { hostMeth };
+                Coerce(meth) = alias.mine;
             }
 
             //! cleanup
@@ -62,10 +69,12 @@ namespace Yttrium
             //
             //__________________________________________________________________
             void * const host; //!< host address
-            void * const meth; //!< method address
+            Meth         meth; //!< method address
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Args);
+
+
         };
 
         typedef void (*Proc)(Args &); //!< alias
@@ -98,9 +107,13 @@ namespace Yttrium
             try {
                 assert(0!=args.host);
                 assert(0!=args.meth);
-                HOST &host = *(HOST *) (args.host);
-                METH  meth =  (METH  ) (args.meth);
-                (host.*meth)();
+                HOST &host = *static_cast<HOST *>(args.host);
+                union
+                {
+                    Meth mine;
+                    METH meth;
+                } alias = { args.meth };
+                (host.*alias.meth)();
             } catch(...) {}
         }
 
