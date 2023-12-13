@@ -28,7 +28,6 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        typedef void (AutoClean::*Meth)(void); //!< alias
 
         //______________________________________________________________________
         //
@@ -49,7 +48,7 @@ namespace Yttrium
             //! convert types to anonymous
             template <typename HOST, typename METH>
             inline  Args(HOST &userHost, METH hostMeth)  noexcept :
-            host( &userHost ), meth( (Meth)hostMeth )
+            host( &userHost ), meth( (void *)hostMeth )
             {
             }
 
@@ -63,7 +62,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             void * const host; //!< host address
-            Meth         meth; //!< method address
+            void * const meth; //!< method address
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Args);
