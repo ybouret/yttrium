@@ -83,11 +83,13 @@ namespace Yttrium
                 for(size_t i=self.size();i>0;--i) self[i].detach();
             }
 
+
+            //! helper to detach() on leaving a scope
             class AutoDetach : public AutoClean
             {
             public:
-                inline explicit AutoDetach(SIMD &simd) : AutoClean(simd, & SIMD::detach ) {}
-                inline virtual ~AutoDetach() noexcept {}
+                inline explicit AutoDetach(SIMD &simd) noexcept : AutoClean(simd, & SIMD::detach ) {} //!< setup
+                inline virtual ~AutoDetach()           noexcept                                    {} //!< cleanup
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(AutoDetach);
             };

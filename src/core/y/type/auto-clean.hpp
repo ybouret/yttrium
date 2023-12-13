@@ -28,7 +28,7 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        typedef void (AutoClean::*Meth)(void);
+        typedef void (AutoClean::*Meth)(void); //!< alias to a methode pointer
 
         //______________________________________________________________________
         //
@@ -51,12 +51,13 @@ namespace Yttrium
             inline  Args(HOST &userHost, METH hostMeth)  noexcept :
             host( &userHost ), meth( 0 )
             {
+                // transmogriphy
                 union
                 {
                     METH user;
                     Meth mine;
                 } alias = { hostMeth };
-                Coerce(meth) = alias.mine;
+                meth = alias.mine;
             }
 
             //! cleanup
