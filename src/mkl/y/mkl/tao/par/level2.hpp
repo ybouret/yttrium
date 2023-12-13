@@ -46,16 +46,16 @@ namespace Yttrium
                 assert( target.size() == M.rows );
                 assert( source.size() == M.cols );
                 const size_t   para   = engine.in1D.size();
-                engine.setup(M.rows);                   // process rows in parallel
-                engine.link1D(xma.make(para,M.cols));   // with help
+                engine.setup(M.rows);                      // process rows in parallel
+                engine.in1D.attach(xma.make(para,M.cols)); // with help
 
                 try {
                     engine.in1D(Parallel::Mul<TARGET,T,SOURCE,U>,target,M,source);
-                    engine.free1D();
+                    engine.in1D.detach();
                 }
                 catch(...)
                 {
-                    engine.free1D();
+                    engine.in1D.detach();
                     throw;
                 }
 

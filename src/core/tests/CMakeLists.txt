@@ -107,6 +107,7 @@ add_test(type:fourcc     test-core type_fourcc)
 add_test(type:functor    test-core type_functor)
 add_test(type:temporary  test-core type_temporary)
 add_test(type:moniker    test-core type_moniker)
+add_test(type:auto_clean test-core type_auto_clean)
 
 #data
 add_test(data:list            test-core data_list)

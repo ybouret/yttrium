@@ -53,35 +53,7 @@ namespace Yttrium
                 //______________________________________________________________
                 void setup(const size_t         n); //!< setup in1d(1,n,1)
                 void setup(const MatrixMetrics &M); //!< setup in2d( (1,1) -> (cols,rows)
-
-                //! link resource to each engine
-                template <typename NODE> inline
-                void link1D(NODE *node)
-                {
-                    for(size_t i=in1D.size();i>0;--i,node=node->next)
-                    {
-                        assert(0!=node);
-                        in1D[i].link( *node );
-                    }
-                }
-
-                //! reset resource from each engine
-                void free1D() noexcept;
-
-                //! link resource to each engine
-                template <typename NODE> inline
-                void link2D(NODE *node)
-                {
-                    for(size_t i=in2D.size();i>0;--i,node=node->next)
-                    {
-                        assert(0!=node);
-                        in2D[i].link( *node );
-                    }
-                }
-
-                //! reset resource from each engine
-                void free2D() noexcept;
-
+                
                 //______________________________________________________________
                 //
                 //

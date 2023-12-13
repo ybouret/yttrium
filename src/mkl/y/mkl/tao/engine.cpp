@@ -30,6 +30,7 @@ namespace Yttrium
                 }
             }
 
+#if 0
             void Engine:: free1D() noexcept
             {
                 for(size_t i=in1D.size();i>0;--i)
@@ -37,6 +38,7 @@ namespace Yttrium
                     in1D[i].unlink();
                 }
             }
+#endif
 
             void Engine:: setup(const MatrixMetrics &M)
             {
@@ -52,6 +54,7 @@ namespace Yttrium
 
             }
 
+#if 0
             void Engine:: free2D() noexcept
             {
                 for(size_t i=in2D.size();i>0;--i)
@@ -59,7 +62,8 @@ namespace Yttrium
                     in2D[i].unlink();
                 }
             }
-
+#endif
+            
         }
 
     }

@@ -39,11 +39,11 @@ namespace Yttrium
                 //______________________________________________________________
 
                 //! reset
-                void unlink() noexcept;
+                void detach() noexcept;
 
-                //! link a XAdd
+                //! attach a XAdd
                 template <typename U> inline
-                void link( XAdd<U> &host ) noexcept
+                void attach( XAdd<U> &host ) noexcept
                 {
                     handle = &host;
                 }

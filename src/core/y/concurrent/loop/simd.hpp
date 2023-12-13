@@ -54,6 +54,36 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
+            // API
+            //
+            //__________________________________________________________________
+
+            //! propagate attach(*node), node=node->next to each resource
+            /**
+             assuming that RESOURCE posesses a 'attach( *node )' method
+             \param node first node of a least this->size nodes
+             */
+            template <typename NODE>
+            inline void attach(NODE *node) noexcept
+            {
+                MyResources &self = *this;
+                const size_t nres = self.size();
+                for(size_t i=1;i<=nres;++i,node=node->next) {
+                    assert(0!=node);
+                    self[i].attach(*node);
+                }
+            }
+
+            //! propagate detach() to each resource
+            inline void detach() noexcept
+            {
+                MyResources &self = *this;
+                for(size_t i=self.size();i>0;--i) self[i].detach();
+            }
+
+            //__________________________________________________________________
+            //
+            //
             // Methods
             //
             //__________________________________________________________________

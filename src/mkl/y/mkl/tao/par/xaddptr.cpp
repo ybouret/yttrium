@@ -14,7 +14,7 @@ namespace Yttrium
             {
             }
 
-            void XAddPtr:: unlink() noexcept { handle=0; }
+            void XAddPtr:: detach() noexcept { handle=0; }
         }
 
     }

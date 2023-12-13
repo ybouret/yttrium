@@ -63,16 +63,16 @@ namespace Yttrium
                 assert(tgt.cols==rhs.cols);
                 assert(lhs.cols==rhs.rows);
 
-                engine.setup(tgt);                                    // parallel tiles of target
-                engine.link2D(xma.make(engine.in2D.size(),lhs.cols)); // one xadd per tile
+                engine.setup(tgt);                                         // parallel tiles of target
+                engine.in2D.attach(xma.make(engine.in2D.size(),lhs.cols)); // one xadd per tile
 
                 try {
                     engine.in2D(Parallel::MMul<T,U,V,W>,tgt,lhs,rhs);
-                    engine.free2D();
+                    engine.in2D.detach();
                 }
                 catch(...)
                 {
-                    engine.free2D();
+                    engine.in2D.detach();
                     throw;
                 }
 
