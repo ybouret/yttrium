@@ -51,7 +51,7 @@ namespace Yttrium
             inline  Args(HOST &userHost, METH hostMeth)  noexcept :
             host( &userHost ), meth( 0 )
             {
-                // transmogriphy
+                // transmogrify method
                 union
                 {
                     METH user;
@@ -99,7 +99,7 @@ namespace Yttrium
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(AutoClean);
-        Args args;
+        Args       args;
         Proc const proc;
 
         template <typename HOST, typename METH> static inline
