@@ -50,10 +50,9 @@ namespace Yttrium
                 const size_t   para   = engine.in1D.size();
                 engine.setup(M.rows);                      // process rows in parallel
                 engine.in1D.attach(xma.make(para,M.cols)); // with help
-                {
-                    volatile Engine::Clean1D willClean(engine.in1D);
-                    engine.in1D(Parallel::Mul<TARGET,T,SOURCE,U>,target,M,source);
-                }
+                volatile Engine::Clean1D willClean(engine.in1D);
+                engine.in1D(Parallel::Mul<TARGET,T,SOURCE,U>,target,M,source);
+
             }
         }
 
