@@ -12,8 +12,74 @@
 #include "y/utest/run.hpp"
 #include "../../core/tests/main.hpp"
 
+#include "y/type/conversion.hpp"
+
 using namespace Yttrium;
 using namespace MKL;
+
+
+namespace Yttrium
+{
+    namespace MKL
+    {
+        namespace Tao
+        {
+
+
+            namespace Cog
+            {
+                template <typename TARGET, typename SOURCE, bool> class Transmogrify;
+            }
+
+            namespace Cog
+            {
+                //! SOURCE derives from TARGET
+                template <typename TARGET, typename SOURCE>
+                class Transmogrify<TARGET,SOURCE,true>
+                {
+                public:
+                    typedef TARGET & ReturnType;
+                    static inline ReturnType & Get(const SOURCE &source) noexcept { return source; }
+
+                private:
+
+                };
+            }
+
+            namespace Cog
+            {
+                //! SOURCE does NOT derives from TARGET
+                template <typename TARGET, typename SOURCE>
+                class Transmogrify<TARGET,SOURCE,false>
+                {
+                public:
+                    typedef TARGET ReturnType;
+                    static inline  ReturnType Get(const SOURCE &source) noexcept { return TARGET(source); }
+                };
+            }
+
+            template <typename TARGET, typename SOURCE>
+            struct Derived
+            {
+                enum { Flag = Y_Is_SuperSubClass(SOURCE,TARGET) };
+            };
+
+            template <typename TARGET, typename SOURCE>
+            class Transmogrify : public Cog::Transmogrify<TARGET,SOURCE, Derived<TARGET,SOURCE>::Flag >
+            {
+            public:
+                
+            private:
+                
+            };
+
+
+
+
+        }
+    }
+
+}
 
 namespace
 {
@@ -28,6 +94,8 @@ namespace
 
         std::cerr << std::endl;
     }
+
+
 }
 
 Y_UTEST(tao1)
