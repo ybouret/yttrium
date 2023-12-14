@@ -15,8 +15,8 @@ namespace Yttrium
         namespace Tao
         {
          
-
-            template <typename T, typename U, typename V, typename W> static inline
+            
+            template <typename T, typename U, typename V, typename W>  inline
             void MMul(Matrix<T>       &tgt,
                       const Matrix<U> &lhs,
                       const Matrix<V> &rhs,
@@ -28,6 +28,7 @@ namespace Yttrium
                 const size_t ncol = tgt.cols;
                 const size_t nrun = lhs.cols;
                 XAdd<W>     &xadd = xma.make(nrun);
+
                 assert(xadd.isEmpty());
                 assert(xadd.accepts(lhs.cols));
 
@@ -39,7 +40,7 @@ namespace Yttrium
                     {
                         for(size_t k=nrun;k>0;--k)
                         {
-                            const W p = lhs_i[k] * rhs[k][j];
+                            const W p = Transmogrify<W>::Product(lhs_i[k], rhs[k][j]);
                             xadd << p;
                         }
                         tgt_i[j] = xadd.sum();
