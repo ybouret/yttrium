@@ -61,9 +61,6 @@ Y_UTEST(tao2)
         Tao::Mul(partgt,M,source,xma,par);
         std::cerr << "partgt=" << partgt << std::endl;
         Y_CHECK(partgt==target);
-
-
-
     }
 
 }

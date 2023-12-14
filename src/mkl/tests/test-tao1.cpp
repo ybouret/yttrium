@@ -41,7 +41,7 @@ Y_UTEST(tao1)
 {
     Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
     const Concurrent::Topology topo;
-
+    Random::Rand               ran;
 
 
     Concurrent::SharedLoop seqLoop = new Concurrent::Mono();
@@ -133,7 +133,6 @@ Y_UTEST(tao1)
         std::cerr << "rawDot=" << rawDot << std::endl;
 
         {
-            Random::Rand       ran;
             Vector<apq>        lhs;
             Vector<apq>        rhs;
             Tao::MultiAdd<apq> amf;
@@ -149,7 +148,22 @@ Y_UTEST(tao1)
         }
 
 
+    }
 
+    {
+        Vector<double>                 lhs;
+        Vector<float>                  rhs;
+        Tao::MultiAdd< XReal<double> > xmf;
+
+        for(size_t i=5+ran.leq(10);i>0;--i)
+        {
+            lhs << ran.symm<double>();
+            rhs << ran.symm<float>();
+        }
+        std::cerr << "lhs=" << lhs << std::endl;
+        std::cerr << "rhs=" << rhs << std::endl;
+        const double dot = double(Tao::DotProduct< XReal<double> >::Of(lhs,rhs,xmf));
+        std::cerr << "dot=" << dot << std::endl;
     }
 
 
