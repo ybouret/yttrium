@@ -25,17 +25,24 @@ namespace Yttrium
         namespace Tao
         {
 
+            enum Relationship
+            {
+                IsSubClassOf,
+                MustCastFrom
+            };
 
             namespace Cog
             {
-                template <typename TARGET, typename SOURCE, bool> class Transmogrify;
+
+                template <typename TARGET,Relationship,typename SOURCE> class Transmogrify;
+
             }
 
             namespace Cog
             {
                 //! SOURCE derives from TARGET
                 template <typename TARGET, typename SOURCE>
-                class Transmogrify<TARGET,SOURCE,true>
+                class Transmogrify<TARGET,IsSubClassOf,SOURCE>
                 {
                 public:
                     typedef TARGET & ReturnType;
@@ -50,7 +57,7 @@ namespace Yttrium
             {
                 //! SOURCE does NOT derives from TARGET
                 template <typename TARGET, typename SOURCE>
-                class Transmogrify<TARGET,SOURCE,false>
+                class Transmogrify<TARGET,MustCastFrom,SOURCE>
                 {
                 public:
                     typedef TARGET ReturnType;
@@ -58,20 +65,22 @@ namespace Yttrium
                 };
             }
 
+
             template <typename TARGET, typename SOURCE>
-            struct Derived
+            struct Relation
             {
-                enum { Flag = Y_Is_SuperSubClass(SOURCE,TARGET) };
+                static const Relationship Status = Y_Is_SuperSubClass(SOURCE,TARGET) ? IsSubClassOf : MustCastFrom;
             };
 
             template <typename TARGET, typename SOURCE>
-            class Transmogrify : public Cog::Transmogrify<TARGET,SOURCE, Derived<TARGET,SOURCE>::Flag >
+            class Transmogrify : public Cog::Transmogrify<TARGET, Relation<TARGET,SOURCE>::Status, SOURCE>
             {
             public:
 
             private:
                 
             };
+
 
 
 
