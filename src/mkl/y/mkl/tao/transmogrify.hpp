@@ -154,6 +154,7 @@ namespace Yttrium
             };
 
 
+#if 0
             //__________________________________________________________________
             //
             //
@@ -179,7 +180,25 @@ namespace Yttrium
 
 
             };
+#endif
 
+            template <typename RES>
+            struct Transmogrify
+            {
+                typedef typename TypeTraits<RES>::MutableType MutableRES;
+                typedef const    MutableRES                   ConstRES;
+
+                template <typename LHS, typename RHS> static inline
+                ConstRES Product(LHS &lhs, RHS &rhs)
+                {
+                    typedef typename TypeTraits<LHS>::MutableType MutableLHS;
+                    typedef const MutableLHS                      ConstLHS;
+                    ConstLHS product = lhs * To<LHS,RHS>::Get(rhs);
+                    ConstRES result  = To<RES,LHS>::Get(product);
+                    return   result;
+                }
+
+            };
 
 
 

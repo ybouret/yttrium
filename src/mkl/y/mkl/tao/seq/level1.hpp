@@ -66,8 +66,9 @@ namespace Yttrium
             void Add( TARGET &target, T factor, SOURCE &source )
             {
                 assert(target.size()==source.size());
+                typedef typename TARGET::Type TGT;
                 for(size_t i=target.size();i>0;--i)
-                    target[i] += factor * source[i];
+                    target[i] += Transmogrify<TGT>::Product(factor,source[i]);
             }
 
             //__________________________________________________________________
@@ -79,8 +80,10 @@ namespace Yttrium
             {
                 assert(target.size()==source.size());
                 assert(target.size()==vector.size());
+                typedef typename TARGET::Type TGT;
+                typedef typename SOURCE::Type SRC;
                 for(size_t i=target.size();i>0;--i)
-                    target[i] = source[i] + factor * vector[i];
+                    target[i] = To<TGT,SRC>::Get(source[i]) + Transmogrify<TGT>::Product(factor,vector[i]);
             }
 
         }
@@ -108,8 +111,9 @@ namespace Yttrium
             void Sub(TARGET &target, T factor, SOURCE &source)
             {
                 assert(target.size()==source.size());
+                typedef typename TARGET::Type TGT;
                 for(size_t i=target.size();i>0;--i)
-                    target[i] -= factor * source[i];
+                    target[i] -= Transmogrify<TGT>::Product(factor,source[i]);
             }
 
             //__________________________________________________________________
@@ -121,8 +125,10 @@ namespace Yttrium
             {
                 assert(target.size()==source.size());
                 assert(target.size()==vector.size());
+                typedef typename TARGET::Type TGT;
+                typedef typename SOURCE::Type SRC;
                 for(size_t i=target.size();i>0;--i)
-                    target[i] = source[i] - factor * vector[i];
+                    target[i] = To<TGT,SRC>::Get(source[i]) - Transmogrify<TGT>::Product(factor,vector[i]);
             }
 
         }

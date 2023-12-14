@@ -31,6 +31,7 @@ namespace Yttrium
                 template <typename TARGET, typename SOURCE> inline
                 void Load(Engine1D &range, TARGET &target, SOURCE &source)
                 {
+                    if(range.length<=0) return;
                     for(size_t i=range.latest;i>=range.offset;--i)
                         target[i] = source[i];
                 }
@@ -59,6 +60,7 @@ namespace Yttrium
                 template <typename TARGET, typename SOURCE> inline
                 void Save(Engine1D &range, TARGET &target, SOURCE &source)
                 {
+                    if(range.length<=0) return;
                     for(size_t i=range.latest;i>=range.offset;--i)
                         target[i] = source[i];
                 }
@@ -96,8 +98,8 @@ namespace Yttrium
                 template <typename TARGET, typename SOURCE> inline
                 void Add(Engine1D &range, TARGET &target, SOURCE &source)
                 {
-                    size_t     i=range.latest;
-                    for(size_t j=range.length;j>0;--j,--i)
+                    if(range.length<=0) return;
+                    for(size_t i=range.latest;i>=range.offset;--i)
                         target[i] += source[i];
                 }
 
@@ -125,8 +127,8 @@ namespace Yttrium
                 template <typename TARGET, typename T, typename SOURCE> inline
                 void Add(Engine1D &range, TARGET &target, const T &factor, SOURCE &source)
                 {
-                    size_t     i=range.latest;
-                    for(size_t j=range.length;j>0;--j,--i)
+                    if(range.length<=0) return;
+                    for(size_t i=range.latest;i>=range.offset;--i)
                         target[i] += factor * source[i];
                 }
             }
