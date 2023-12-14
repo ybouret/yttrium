@@ -25,6 +25,10 @@ namespace Yttrium
                 {
                 public:
                     static const char *ToText(const Relationship) noexcept;
+                    inline explicit TransmogrifyInfo() noexcept {}
+                    inline virtual ~TransmogrifyInfo() noexcept {}
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(TransmogrifyInfo);
                 };
             }
 
@@ -49,6 +53,12 @@ namespace Yttrium
                 public:
                     typedef TARGET & ReturnType;
                     static inline ReturnType  Get(const SOURCE &source) noexcept { return source; }
+
+                    inline explicit To() noexcept {}
+                    inline virtual ~To() noexcept {}
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(To);
                 };
 
                 //! TARGET does not derive from SOURCE => cast
@@ -58,6 +68,12 @@ namespace Yttrium
                 public:
                     typedef TARGET ReturnType;
                     static inline  ReturnType Get(const SOURCE &source) noexcept { return TARGET(source); }
+
+                    inline explicit To() noexcept {}
+                    inline virtual ~To() noexcept {}
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(To);
                 };
             }
 
@@ -71,7 +87,13 @@ namespace Yttrium
             template <typename TARGET,typename SOURCE>
             class To : public Cog::To<TARGET, Relation<TARGET,SOURCE>::Status, SOURCE>
             {
+            public:
 
+                inline explicit To() noexcept {}
+                inline virtual ~To() noexcept {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(To);
             };
 
             template <typename RES, typename LHS, typename RHS>
