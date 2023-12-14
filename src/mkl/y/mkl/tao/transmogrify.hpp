@@ -4,6 +4,7 @@
 #define Y_MKL_Tao_Transmogrify_Included 1
 
 #include "y/type/conversion.hpp"
+#include "y/type/args.hpp"
 
 namespace Yttrium
 {
@@ -77,8 +78,13 @@ namespace Yttrium
                 class To<TARGET,IsSubClassOf,SOURCE> : public Tao::TransmogrifyInfo<IsSubClassOf>
                 {
                 public:
-                    typedef TARGET & ReturnType;
-                    static inline ReturnType  Get(const SOURCE &source) noexcept { return source; }
+                    typedef typename TypeTraits<TARGET>::MutableType MutableTarget;
+                    typedef const MutableTarget                      ConstTarget;
+                    typedef typename TypeTraits<SOURCE>::MutableType MutableSource;
+                    typedef const MutableSource                      ConstSource;
+
+                    typedef ConstTarget & ReturnType;
+                    static inline ReturnType  Get(ConstSource &source) noexcept { return source; }
 
                     inline explicit To() noexcept {} //!< do nothing
                     inline virtual ~To() noexcept {} //!< do nothing
@@ -97,8 +103,13 @@ namespace Yttrium
                 class To<TARGET,MustCastFrom,SOURCE> : public Tao::TransmogrifyInfo<MustCastFrom>
                 {
                 public:
-                    typedef TARGET ReturnType;
-                    static inline  ReturnType Get(const SOURCE &source) noexcept { return TARGET(source); }
+                    typedef typename TypeTraits<TARGET>::MutableType MutableTarget;
+                    typedef const MutableTarget                      ConstTarget;
+                    typedef typename TypeTraits<SOURCE>::MutableType MutableSource;
+                    typedef const MutableSource                      ConstSource;
+                    typedef ConstTarget ReturnType;
+
+                    static inline  ReturnType Get(ConstSource &source) noexcept { return TARGET(source); }
 
                     inline explicit To() noexcept {} //!< do nothing
                     inline virtual ~To() noexcept {} //!< do nothing
@@ -118,8 +129,10 @@ namespace Yttrium
             template <typename TARGET, typename SOURCE>
             struct Relation
             {
+                typedef typename TypeTraits<TARGET>::MutableType MutableTarget;
+                typedef typename TypeTraits<SOURCE>::MutableType MutableSource;
                 //! alias
-                static const Relationship Status = Y_Is_SuperSubClass(SOURCE,TARGET) ? IsSubClassOf : MustCastFrom;
+                static const Relationship Status = Y_Is_SuperSubClass(MutableSource,MutableTarget) ? IsSubClassOf : MustCastFrom;
             };
 
 
@@ -151,12 +164,16 @@ namespace Yttrium
             struct Transmogrify
             {
 
+                typedef typename TypeTraits<LHS>::MutableType MutableLHS;
+                typedef typename TypeTraits<RHS>::MutableType MutableRHS;
+                typedef typename TypeTraits<RES>::MutableType MutableRES;
+
                 //! product
-                static inline RES Product(const LHS &lhs,
-                                          const RHS &rhs)
+                static inline MutableRES Product(const MutableLHS &lhs,
+                                                 const MutableRHS &rhs)
                 {
-                    const LHS product = lhs * To<LHS,RHS>::Get(rhs);
-                    const RES result  = To<RES,LHS>::Get(product);
+                    const MutableLHS product = lhs * To<LHS,RHS>::Get(rhs);
+                    const MutableRES result  = To<RES,LHS>::Get(product);
                     return    result;
                 }
 
