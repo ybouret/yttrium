@@ -14,8 +14,15 @@ namespace Yttrium
 
         namespace Tao
         {
-         
-            
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Matrix Multiplication
+            //
+            //
+            //__________________________________________________________________
             template <typename T, typename U, typename V, typename W>  inline
             void MMul(Matrix<T>       &tgt,
                       const Matrix<U> &lhs,

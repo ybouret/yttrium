@@ -35,10 +35,9 @@ namespace Yttrium
                 class TransmogrifyInfo
                 {
                 public:
-                    static const char *ToText(const Relationship) noexcept; //!< human readable
-
-                    inline explicit TransmogrifyInfo() noexcept {} //!< do nothing
-                    inline virtual ~TransmogrifyInfo() noexcept {} //!< do nothing
+                    static const char *ToText(const Relationship) noexcept;   //!< human readable
+                    inline explicit    TransmogrifyInfo()         noexcept {} //!< do nothing
+                    inline virtual    ~TransmogrifyInfo()         noexcept {} //!< do nothing
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(TransmogrifyInfo);
                 };
@@ -66,6 +65,7 @@ namespace Yttrium
 
             namespace Cog
             {
+                //  prototype
                 template <typename TARGET,Relationship,typename SOURCE> class To;
 
                 //______________________________________________________________
@@ -78,14 +78,32 @@ namespace Yttrium
                 class To<TARGET,IsSubClassOf,SOURCE> : public Tao::TransmogrifyInfo<IsSubClassOf>
                 {
                 public:
-                    typedef typename TypeTraits<TARGET>::MutableType MutableTarget;
-                    typedef const MutableTarget                      ConstTarget;
-                    typedef typename TypeTraits<SOURCE>::MutableType MutableSource;
-                    typedef const MutableSource                      ConstSource;
+                    //__________________________________________________________
+                    //
+                    //
+                    // Definitions
+                    //
+                    //__________________________________________________________
+                    typedef typename TypeTraits<TARGET>::MutableType MutableTarget; //!< alias
+                    typedef const MutableTarget                      ConstTarget;   //!< alias
+                    typedef typename TypeTraits<SOURCE>::MutableType MutableSource; //!< alias
+                    typedef const MutableSource                      ConstSource;   //!< aluas
+                    typedef ConstTarget &                            ReturnType;    //!< return type
 
-                    typedef ConstTarget & ReturnType;
-                    static inline ReturnType  Get(ConstSource &source) noexcept { return source; }
+                    //__________________________________________________________
+                    //
+                    //
+                    // Functions
+                    //
+                    //__________________________________________________________
+                    static inline ReturnType  Get(ConstSource &source) noexcept { return source; }  //!< source to target
 
+                    //__________________________________________________________
+                    //
+                    //
+                    // C++
+                    //
+                    //__________________________________________________________
                     inline explicit To() noexcept {} //!< do nothing
                     inline virtual ~To() noexcept {} //!< do nothing
 
@@ -103,14 +121,32 @@ namespace Yttrium
                 class To<TARGET,MustCastFrom,SOURCE> : public Tao::TransmogrifyInfo<MustCastFrom>
                 {
                 public:
-                    typedef typename TypeTraits<TARGET>::MutableType MutableTarget;
-                    typedef const MutableTarget                      ConstTarget;
-                    typedef typename TypeTraits<SOURCE>::MutableType MutableSource;
-                    typedef const MutableSource                      ConstSource;
-                    typedef ConstTarget ReturnType;
+                    //__________________________________________________________
+                    //
+                    //
+                    // Definitions
+                    //
+                    //__________________________________________________________
+                    typedef typename TypeTraits<TARGET>::MutableType MutableTarget; //!< alias
+                    typedef const MutableTarget                      ConstTarget;   //!< alias
+                    typedef typename TypeTraits<SOURCE>::MutableType MutableSource; //!< alias
+                    typedef const MutableSource                      ConstSource;   //!< aluas
+                    typedef ConstTarget                              ReturnType;    //!< return type
 
-                    static inline  ReturnType Get(ConstSource &source) noexcept { return TARGET(source); }
+                    //__________________________________________________________
+                    //
+                    //
+                    // Functions
+                    //
+                    //__________________________________________________________
+                    static inline  ReturnType Get(ConstSource &source) noexcept { return TARGET(source); } //!< source to target
 
+                    //__________________________________________________________
+                    //
+                    //
+                    // C++
+                    //
+                    //__________________________________________________________
                     inline explicit To() noexcept {} //!< do nothing
                     inline virtual ~To() noexcept {} //!< do nothing
 
@@ -129,9 +165,16 @@ namespace Yttrium
             template <typename TARGET, typename SOURCE>
             struct Relation
             {
-                typedef typename TypeTraits<TARGET>::MutableType MutableTarget;
-                typedef typename TypeTraits<SOURCE>::MutableType MutableSource;
-                //! alias
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef typename TypeTraits<TARGET>::MutableType MutableTarget; //!< alias
+                typedef typename TypeTraits<SOURCE>::MutableType MutableSource; //!< alias
+
+                //! deduce status
                 static const Relationship Status = Y_Is_SuperSubClass(MutableSource,MutableTarget) ? IsSubClassOf : MustCastFrom;
             };
 
@@ -146,6 +189,12 @@ namespace Yttrium
             class To : public Cog::To<TARGET, Relation<TARGET,SOURCE>::Status, SOURCE>
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
                 inline explicit To() noexcept {} //!< do nothing
                 inline virtual ~To() noexcept {} //!< do nothing
 
@@ -154,40 +203,32 @@ namespace Yttrium
             };
 
 
-#if 0
             //__________________________________________________________________
             //
             //
-            //! High-Level operations
+            //! Cascading transforms to get RES from LHS and RHS
             //
             //__________________________________________________________________
-            template <typename RES, typename LHS, typename RHS>
-            struct Transmogrify
-            {
-
-                typedef typename TypeTraits<LHS>::MutableType MutableLHS;
-                typedef typename TypeTraits<RHS>::MutableType MutableRHS;
-                typedef typename TypeTraits<RES>::MutableType MutableRES;
-
-                //! product
-                static inline MutableRES Product(const MutableLHS &lhs,
-                                                 const MutableRHS &rhs)
-                {
-                    const MutableLHS product = lhs * To<LHS,RHS>::Get(rhs);
-                    const MutableRES result  = To<RES,LHS>::Get(product);
-                    return    result;
-                }
-
-
-            };
-#endif
-
             template <typename RES>
             struct Transmogrify
             {
-                typedef typename TypeTraits<RES>::MutableType MutableRES;
-                typedef const    MutableRES                   ConstRES;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef typename TypeTraits<RES>::MutableType MutableRES; //!< alias
+                typedef const    MutableRES                   ConstRES;   //!< aluas
 
+                //______________________________________________________________
+                //
+                //
+                // Functions
+                //
+                //______________________________________________________________
+
+                //! successive calls to compute product
                 template <typename LHS, typename RHS> static inline
                 ConstRES Product(LHS &lhs, RHS &rhs)
                 {

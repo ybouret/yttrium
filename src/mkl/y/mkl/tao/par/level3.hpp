@@ -18,6 +18,12 @@ namespace Yttrium
 
             namespace Parallel
             {
+                //______________________________________________________________
+                //
+                //
+                //! compute tgt[range]
+                //
+                //______________________________________________________________
                 template <typename T, typename U, typename V, typename W> inline
                 void MMul(Engine2D        &range,
                           Matrix<T>       &tgt,
@@ -53,6 +59,14 @@ namespace Yttrium
                 }
             }
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! parallel matrix multiplication
+            //
+            //
+            //__________________________________________________________________
             template <typename T, typename U, typename V, typename W>  inline
             void MMul(Matrix<T>       &tgt,
                       const Matrix<U> &lhs,
