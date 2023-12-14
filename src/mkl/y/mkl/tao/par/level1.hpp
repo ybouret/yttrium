@@ -225,9 +225,10 @@ namespace Yttrium
                 template <typename TARGET, typename T, typename SOURCE> inline
                 void Sub(Engine1D &range, TARGET &target, const T &factor, SOURCE &source)
                 {
-                    size_t     i=range.latest;
-                    for(size_t j=range.length;j>0;--j,--i)
-                        target[i] -= factor * source[i];
+                    if(range.length<=0) return;
+                    typedef typename TARGET::Type TGT;
+                    for(size_t i=range.latest;i>=range.offset;--i)
+                        target[i] += Transmogrify<TGT>::Product(factor,source[i]);
                 }
             }
 
@@ -253,9 +254,11 @@ namespace Yttrium
                 template <typename TARGET,  typename SOURCE, typename T, typename VECTOR> inline
                 void Sub(Engine1D &range, TARGET &target,  SOURCE &source, const T &factor, VECTOR &vector)
                 {
-                    size_t     i=range.latest;
-                    for(size_t j=range.length;j>0;--j,--i)
-                        target[i] = source[i] - factor * vector[i];
+                    if(range.length<=0) return;
+                    typedef typename TARGET::Type TGT;
+                    typedef typename SOURCE::Type SRC;
+                    for(size_t i=range.latest;i>=range.offset;--i)
+                        target[i] = To<TGT,SRC>::Get(source[i]) - Transmogrify<TGT>::Product(factor,vector[i]);
                 }
             }
 
