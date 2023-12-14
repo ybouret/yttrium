@@ -39,7 +39,7 @@ namespace Yttrium
                 {
                 public:
                     typedef TARGET & ReturnType;
-                    static inline ReturnType & Get(const SOURCE &source) noexcept { return source; }
+                    static inline ReturnType Get(const SOURCE &source) noexcept { return source; }
 
                 private:
 
@@ -68,7 +68,7 @@ namespace Yttrium
             class Transmogrify : public Cog::Transmogrify<TARGET,SOURCE, Derived<TARGET,SOURCE>::Flag >
             {
             public:
-                
+
             private:
                 
             };
