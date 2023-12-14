@@ -159,7 +159,7 @@ namespace Yttrium
                     assert(xadd.accepts(size));
 
                     for(size_t i=size;i>0;--i) {
-                        const T prod = lhs[i] * rhs[i];
+                        const T prod = Transmogrify<T>::Product(lhs[i],rhs[i]);
                         xadd << prod;
                     }
                     return xadd.sum();

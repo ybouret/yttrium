@@ -228,7 +228,7 @@ namespace Yttrium
                     if(range.length<=0) return;
                     typedef typename TARGET::Type TGT;
                     for(size_t i=range.latest;i>=range.offset;--i)
-                        target[i] += Transmogrify<TGT>::Product(factor,source[i]);
+                        target[i] -= Transmogrify<TGT>::Product(factor,source[i]);
                 }
             }
 
