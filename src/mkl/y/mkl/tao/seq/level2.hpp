@@ -5,6 +5,8 @@
 
 
 #include "y/mkl/tao/seq/level1.hpp"
+#include "y/mkl/tao/ops.hpp"
+
 #include "y/container/matrix.hpp"
 
 namespace Yttrium
@@ -15,6 +17,34 @@ namespace Yttrium
         namespace Tao
         {
 
+
+            namespace Cog
+            {
+                //! target = M*source
+                template <
+                typename TARGET,
+                typename T,
+                typename SOURCE,
+                typename U,
+                typename PROC> inline
+                void Mul(TARGET &          target,
+                         const Matrix<T>  &M,
+                         SOURCE           &source,
+                         MultiAdd<U>      &xma,
+                         PROC             &proc)
+                {
+                    assert( target.size() == M.rows );
+                    assert( source.size() == M.cols );
+                    XAdd<U> &xadd = xma.make(M.cols);
+                    for(size_t i=M.rows;i>0;--i)
+                    {
+                        const U rhs = DotProduct<U>::Of_(M[i],source,xadd);
+                        proc(target[i],rhs);
+                    }
+                }
+            }
+
+
             //! target = M*source
             template <typename TARGET, typename T, typename SOURCE, typename U> inline
             void Mul(TARGET &          target,
@@ -24,9 +54,10 @@ namespace Yttrium
             {
                 assert( target.size() == M.rows );
                 assert( source.size() == M.cols );
-                XAdd<U> &xadd = xma.make(M.cols);
-                for(size_t i=M.rows;i>0;--i)
-                    target[i] = DotProduct<U>::Of_(M[i],source,xadd);
+                Cog::Mul(target,M,source,xma,Ops<typename TARGET::Type,U>::Set);
+                //XAdd<U> &xadd = xma.make(M.cols);
+                //for(size_t i=M.rows;i>0;--i)
+                // target[i] = DotProduct<U>::Of_(M[i],source,xadd);
             }
 
 
