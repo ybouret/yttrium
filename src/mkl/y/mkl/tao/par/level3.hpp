@@ -21,7 +21,7 @@ namespace Yttrium
                 //______________________________________________________________
                 //
                 //
-                //! compute tgt[range]
+                //! compute tgt[range] = lhs * rhs
                 //
                 //______________________________________________________________
                 template <typename T, typename U, typename V, typename W> inline
@@ -58,6 +58,8 @@ namespace Yttrium
                 }
             }
 
+
+
             //__________________________________________________________________
             //
             //
@@ -80,8 +82,74 @@ namespace Yttrium
                 engine.setup(tgt);                                         // parallel tiles of target
                 engine.in2D.attach(xma.make(engine.in2D.size(),lhs.cols)); // one xadd per tile
 
-                volatile Engine::Clean2D willClean(engine.in2D);
+                volatile Engine::Clean2D detach(engine.in2D);
                 engine.in2D(Parallel::MatMul<T,U,V,W>,tgt,lhs,rhs);
+            }
+
+
+            namespace Parallel
+            {
+                //______________________________________________________________
+                //
+                //
+                //! compute tgt[range] = lhs * rhs
+                //
+                //______________________________________________________________
+                template <typename T, typename U, typename V, typename W> inline
+                void MatMulRightTranspose(Engine2D        &range,
+                                          Matrix<T>       &tgt,
+                                          const Matrix<U> &lhs,
+                                          const Matrix<V> &rhs)
+                {
+
+                    if( range.isEmpty() ) return;
+
+                    const size_t nrun = lhs.cols;
+                    XAdd<W>     &xadd = range.xadd<W>();
+                    assert(xadd.isEmpty());
+                    assert(xadd.accepts(nrun));
+
+                    for(size_t s=range->size;s>0;--s)
+                    {
+                        const Strip       &here  = range(s);
+                        const size_t       i     = here.irow;
+                        Writable<T>       &tgt_i = tgt[i];
+                        const Readable<U> &lhs_i = lhs[i];
+                        for(size_t j=here.icol,nc=here.ncol;nc>0;--nc,++j)
+                        {
+                            assert(xadd.isEmpty());
+                            assert(xadd.accepts(nrun));
+                            tgt_i[j] = DotProduct<W>::Of_(lhs_i,rhs[j],xadd);
+                        }
+                    }
+                }
+            }
+
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! parallel matrix multiplication
+            //
+            //
+            //__________________________________________________________________
+            template <typename T, typename U, typename V, typename W>  inline
+            void MatMul(Matrix<T>          &tgt,
+                        const Matrix<U>    &lhs,
+                        const TransposeOf_ &,
+                        const Matrix<V>    &rhs,
+                        MultiAdd<W>        &xma,
+                        Engine             &engine)
+            {
+                assert(tgt.rows==lhs.rows);
+                assert(tgt.cols==rhs.rows);
+                assert(lhs.cols==rhs.cols);
+
+                engine.setup(tgt);                                                 // parallel tiles of target
+                engine.in2D.attach(xma.make(engine.in2D.size(),lhs.cols));         // one xadd per tile
+                volatile Engine::Clean2D detach(engine.in2D);                      // cleanup anyhow
+                engine.in2D(Parallel::MatMulRightTranspose<T,U,V,W>,tgt,lhs,rhs);  // call
             }
 
 
