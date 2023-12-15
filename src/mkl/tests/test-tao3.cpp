@@ -89,7 +89,24 @@ Y_UTEST(tao3)
         Tao::MatMul(partgt,lhs,TransposeOf,rhs,xma,seq);
         std::cerr << "partgt=" << seqtgt << std::endl;
         assert(partgt==target);
+    }
 
+    {
+        Matrix<int> rhs(nr,nc);
+        for(size_t i=1;i<=rhs.rows;++i)
+            for(size_t j=1;j<=rhs.cols;++j)
+                rhs[i][j] = ran.in<int>(-10,10);
+        Vector<int> arr(nr,0);
+        for(size_t i=arr.size();i>0;--i)
+        {
+            arr[i] = ran.in<int>(-10,10);
+        }
+
+        target.ld(0);
+        Tao::DiagMatMul(target,arr,rhs);
+        std::cerr << "arr=diagm(" << arr << ")" << std::endl;
+        std::cerr << "rhs=" << rhs << std::endl;
+        std::cerr << "target=" << target << std::endl;
     }
 
 

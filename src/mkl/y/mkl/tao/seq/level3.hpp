@@ -25,9 +25,9 @@ namespace Yttrium
             //__________________________________________________________________
             template <typename T, typename U, typename V, typename W>  inline
             void MatMul(Matrix<T>       &tgt,
-                      const Matrix<U> &lhs,
-                      const Matrix<V> &rhs,
-                      MultiAdd<W>     &xma)
+                        const Matrix<U> &lhs,
+                        const Matrix<V> &rhs,
+                        MultiAdd<W>     &xma)
             {
                 assert(tgt.rows==lhs.rows);
                 assert(tgt.cols==rhs.cols);
@@ -65,15 +65,15 @@ namespace Yttrium
             //__________________________________________________________________
             template <typename T, typename U, typename V, typename W>  inline
             void MatMul(Matrix<T>          &tgt,
-                      const Matrix<U>    &lhs,
-                      const TransposeOf_ &,
-                      const Matrix<V>    &rhs,
-                      MultiAdd<W>        &xma)
+                        const Matrix<U>    &lhs,
+                        const TransposeOf_ &,
+                        const Matrix<V>    &rhs,
+                        MultiAdd<W>        &xma)
             {
                 assert(tgt.rows==lhs.rows);
                 assert(tgt.cols==rhs.rows);
                 assert(lhs.cols==rhs.cols);
-                
+
                 const size_t ncol = tgt.cols;
                 const size_t nrun = lhs.cols;
                 XAdd<W>     &xadd = xma.make(nrun);
@@ -85,6 +85,30 @@ namespace Yttrium
                         tgt_i[j] = DotProduct<W>::Of_(lhs_i,rhs[j],xadd);
                 }
             }
+
+
+            template <typename T, typename ARRAY, typename V>
+            void DiagMatMul(Matrix<T> &tgt, ARRAY &lhs, const Matrix<V> &rhs)
+            {
+                assert( tgt.rows == lhs.size() );
+                assert( tgt.cols == rhs.cols   );
+                typedef typename ARRAY::Type U;
+                typedef To<T,U>              U2T;
+
+                const size_t ncol = tgt.cols;
+                for(size_t i=tgt.rows;i>0;--i)
+                {
+                    typename U2T::ReturnType lambda = U2T::Get(lhs[i]);
+                    Writable<T>            & tgt_i  = tgt[i];
+                    const Readable<V>      & rhs_i  = rhs[i];
+                    for(size_t j=ncol;j>0;--j)
+                    {
+                        tgt_i[j] = lambda * To<T,V>::Get(rhs_i[j]);
+                    }
+                }
+
+            }
+
 
         }
 

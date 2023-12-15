@@ -104,10 +104,9 @@ namespace Yttrium
 
                     if( range.isEmpty() ) return;
 
-                    const size_t nrun = lhs.cols;
                     XAdd<W>     &xadd = range.xadd<W>();
                     assert(xadd.isEmpty());
-                    assert(xadd.accepts(nrun));
+                    assert(xadd.accepts(lhs.cols));
 
                     for(size_t s=range->size;s>0;--s)
                     {
@@ -118,7 +117,7 @@ namespace Yttrium
                         for(size_t j=here.icol,nc=here.ncol;nc>0;--nc,++j)
                         {
                             assert(xadd.isEmpty());
-                            assert(xadd.accepts(nrun));
+                            assert(xadd.accepts(lhs.cols));
                             tgt_i[j] = DotProduct<W>::Of_(lhs_i,rhs[j],xadd);
                         }
                     }
