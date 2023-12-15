@@ -19,7 +19,7 @@ namespace Yttrium
 
             namespace Cog
             {
-                //! target = M*source
+                //! proc(target,M*source)
                 template <
                 typename TARGET,
                 typename T,
