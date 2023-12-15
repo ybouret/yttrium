@@ -129,7 +129,7 @@ namespace Yttrium
             //
             //
             //
-            //! parallel matrix multiplication
+            //! Parallel Matrix Multiplication, right transpose
             //
             //
             //__________________________________________________________________
@@ -151,7 +151,53 @@ namespace Yttrium
                 engine.in2D(Parallel::MatMulRightTranspose<T,U,V,W>,tgt,lhs,rhs);  // call
             }
 
+            namespace Parallel
+            {
+                template <typename T, typename ARRAY, typename V>
+                void DiagMatMul(Engine1D        &range,
+                                Matrix<T>       &tgt,
+                                ARRAY           &lhs,
+                                const Matrix<V> &rhs)
+                {
+                    assert( tgt.rows == lhs.size() );
+                    assert( tgt.cols == rhs.cols   );
 
+                    typedef typename ARRAY::Type U;
+                    typedef To<T,U>              U2T;
+
+                    if(range.length<=0) return;
+                    const size_t ncol = tgt.cols;
+                    for(size_t i=range.latest;i>=range.offset;--i)
+                    {
+                        typename U2T::ReturnType lambda = U2T::Get(lhs[i]);
+                        Writable<T>            & tgt_i  = tgt[i];
+                        const Readable<V>      & rhs_i  = rhs[i];
+                        for(size_t j=ncol;j>0;--j)
+                            tgt_i[j] = lambda * To<T,V>::Get(rhs_i[j]);
+                    }
+                }
+            }
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Diagonal Matrix times Matrix
+            //
+            //
+            //__________________________________________________________________
+            template <typename T, typename ARRAY, typename V>
+            void DiagMatMul(Matrix<T>       &tgt,
+                            ARRAY           &lhs,
+                            const Matrix<V> &rhs,
+                            Engine          &engine)
+            {
+                assert( tgt.rows == lhs.size() );
+                assert( tgt.cols == rhs.cols   );
+                
+                engine.setup(tgt.rows);
+                engine.in1D(Parallel::DiagMatMul<T,ARRAY,V>,tgt,lhs,rhs);
+            }
         }
 
     }

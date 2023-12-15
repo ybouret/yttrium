@@ -86,7 +86,14 @@ namespace Yttrium
                 }
             }
 
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Diagonal Matrix times Matrix
+            //
+            //
+            //__________________________________________________________________
             template <typename T, typename ARRAY, typename V>
             void DiagMatMul(Matrix<T> &tgt, ARRAY &lhs, const Matrix<V> &rhs)
             {
@@ -102,9 +109,7 @@ namespace Yttrium
                     Writable<T>            & tgt_i  = tgt[i];
                     const Readable<V>      & rhs_i  = rhs[i];
                     for(size_t j=ncol;j>0;--j)
-                    {
                         tgt_i[j] = lambda * To<T,V>::Get(rhs_i[j]);
-                    }
                 }
 
             }
