@@ -6,6 +6,8 @@
 #include "../../../core/tests/main.hpp"
 #include "y/container/cxx/array.hpp"
 #include "y/system/rtti.hpp"
+#include "y/mkl/tao/seq/level2.hpp"
+#include "y/mkl/tao/seq/level3.hpp"
 
 using namespace Yttrium;
 using namespace MKL;
@@ -17,9 +19,10 @@ namespace
     static inline void testLU(Random::Bits &ran, const size_t nmax=10)
     {
         std::cerr << "---------- Testing LU< " << TypeName<T>() << " > ----------" << std::endl;
-        MKL::LU<T> lu;
+        MKL::LU<T>       lu;
+        Tao::MultiAdd<T> xm;
 
-#if 0
+#if 1
         for(size_t n=1;n<=nmax;++n)
         {
             std::cerr << "\tn = " << n << std::endl;
@@ -35,7 +38,7 @@ namespace
 
                 CxxArray<T,Memory::Dyadic> r(n); FillWritable(r,ran); // rhs
                 CxxArray<T,Memory::Dyadic> b(r); lu.solve(a,b);       // b = a^-1 * r
-                CxxArray<T,Memory::Dyadic> p(n); a0.mul(p,b);         // p = a*b = r
+                CxxArray<T,Memory::Dyadic> p(n); Tao::Mul(p,a0,b,xm); //a0.mul(p,b);         // p = a*b = r
 
                 typename ScalarFor<T>::Type delta = 0, zero = 0;
                 for(size_t i=n;i>0;--i)
@@ -60,7 +63,8 @@ namespace
                 for(size_t i=1;i<=n;++i) M[i][i] = T(1);
                 lu.solve(a,M);
                 Matrix<T> P(n,n);
-                a0.mmul(P,M);
+                Tao::MatMul(P, a0, M, xm);
+                //a0.mmul(P,M);
                 typename ScalarFor<T>::Type delta = 0, zero = 0;
                 for(size_t i=1;i<=n;++i)
                 {
@@ -95,7 +99,8 @@ namespace
                 Matrix<T> I(n,n);
                 lu.invert(a,I);
                 Matrix<T> P(n,n);
-                a0.mmul(P,I);
+                Tao::MatMul(P,a0,I,xm);
+                //a0.mmul(P,I);
                 typename ScalarFor<T>::Type delta = 0, zero = 0;
                 for(size_t i=1;i<=n;++i)
                 {
@@ -132,7 +137,8 @@ namespace
                 lu.adjoint(adjA,a0);
 
                 Matrix<T> P(n,n);
-                a0.mmul(P,adjA);
+                //a0.mmul(P,adjA);
+                Tao::MatMul(P,a0,adjA,xm);
                 P /= detA;
                 typename ScalarFor<T>::Type delta = 0, zero = 0;
                 for(size_t i=1;i<=n;++i)
