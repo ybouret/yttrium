@@ -24,7 +24,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename T, typename U, typename V, typename W>  inline
-            void MMul(Matrix<T>       &tgt,
+            void MatMul(Matrix<T>       &tgt,
                       const Matrix<U> &lhs,
                       const Matrix<V> &rhs,
                       MultiAdd<W>     &xma)
@@ -64,7 +64,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename T, typename U, typename V, typename W>  inline
-            void MMul(Matrix<T>          &tgt,
+            void MatMul(Matrix<T>          &tgt,
                       const Matrix<U>    &lhs,
                       const TransposeOf_ &,
                       const Matrix<V>    &rhs,
@@ -82,10 +82,7 @@ namespace Yttrium
                     Writable<T>       &tgt_i = tgt[i];
                     const Readable<U> &lhs_i = lhs[i];
                     for(size_t j=ncol;j>0;--j)
-                    {
                         tgt_i[j] = DotProduct<W>::Of_(lhs_i,rhs[j],xadd);
-                    }
-
                 }
             }
 

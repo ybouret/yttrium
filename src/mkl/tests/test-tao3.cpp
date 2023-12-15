@@ -26,9 +26,10 @@ Y_UTEST(tao3)
     Concurrent::SharedLoop seqLoop = new Concurrent::Mono();
     Concurrent::SharedLoop parLoop = new Concurrent::Crew(topo);
 
-    Tao::Engine seq(seqLoop);
-    Tao::Engine par(parLoop);
-    Random::Rand ran;
+    Tao::Engine        seq(seqLoop);
+    Tao::Engine        par(parLoop);
+    Random::Rand       ran;
+    Tao::MultiAdd<int> xma;
 
     const size_t nr = 4;
     const size_t nc = 3;
@@ -39,7 +40,6 @@ Y_UTEST(tao3)
 
 
 
-    Tao::MultiAdd<int> xma;
 
     Matrix<int>  lhs(nr,ns);
     {
@@ -55,13 +55,13 @@ Y_UTEST(tao3)
 
         std::cerr << "lhs=" << lhs << std::endl;
         std::cerr << "rhs=" << rhs << std::endl;
-        Tao::MMul(target,lhs,rhs,xma);
+        Tao::MatMul(target,lhs,rhs,xma);
         std::cerr << "target=" << target << std::endl;
 
-        Tao::MMul(seqtgt,lhs,rhs,xma,seq);
+        Tao::MatMul(seqtgt,lhs,rhs,xma,seq);
         std::cerr << "seqtgt=" << seqtgt << std::endl;
 
-        Tao::MMul(partgt,lhs,rhs,xma,par);
+        Tao::MatMul(partgt,lhs,rhs,xma,par);
         std::cerr << "partgt=" << partgt << std::endl;
     }
 
@@ -72,7 +72,7 @@ Y_UTEST(tao3)
                 rhs[i][j] = ran.in<int>(-10,10);
         std::cerr << "lhs=" << lhs << std::endl;
         std::cerr << "rhs=" << rhs << std::endl;
-        Tao::MMul(target,lhs,TransposeOf,rhs,xma);
+        Tao::MatMul(target,lhs,TransposeOf,rhs,xma);
         std::cerr << "target=" << target << std::endl;
     }
 

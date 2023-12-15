@@ -25,12 +25,12 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 template <typename T, typename U, typename V, typename W> inline
-                void MMul(Engine2D        &range,
-                          Matrix<T>       &tgt,
-                          const Matrix<U> &lhs,
-                          const Matrix<V> &rhs)
+                void MatMul(Engine2D        &range,
+                            Matrix<T>       &tgt,
+                            const Matrix<U> &lhs,
+                            const Matrix<V> &rhs)
                 {
-                    
+
                     if( range.isEmpty() ) return;
 
                     const size_t nrun = lhs.cols;
@@ -50,7 +50,6 @@ namespace Yttrium
                             for(size_t k=nrun;k>0;--k)
                             {
                                 const W p = Transmogrify<W>::Product(lhs_i[k], rhs[k][j]);
-                                //const W p = lhs_i[k] * rhs[k][j];
                                 xadd << p;
                             }
                             tgt_i[j] = xadd.sum();
@@ -68,11 +67,11 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename T, typename U, typename V, typename W>  inline
-            void MMul(Matrix<T>       &tgt,
-                      const Matrix<U> &lhs,
-                      const Matrix<V> &rhs,
-                      MultiAdd<W>     &xma,
-                      Engine          &engine)
+            void MatMul(Matrix<T>       &tgt,
+                        const Matrix<U> &lhs,
+                        const Matrix<V> &rhs,
+                        MultiAdd<W>     &xma,
+                        Engine          &engine)
             {
                 assert(tgt.rows==lhs.rows);
                 assert(tgt.cols==rhs.cols);
@@ -82,9 +81,10 @@ namespace Yttrium
                 engine.in2D.attach(xma.make(engine.in2D.size(),lhs.cols)); // one xadd per tile
 
                 volatile Engine::Clean2D willClean(engine.in2D);
-                engine.in2D(Parallel::MMul<T,U,V,W>,tgt,lhs,rhs);
-                
+                engine.in2D(Parallel::MatMul<T,U,V,W>,tgt,lhs,rhs);
             }
+
+
         }
 
     }
