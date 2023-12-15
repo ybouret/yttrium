@@ -14,7 +14,7 @@ namespace Yttrium
     namespace MKL
     {
 
-     
+
 
         namespace Tao
         {
@@ -147,7 +147,7 @@ namespace Yttrium
             template <typename T>
             struct DotProduct
             {
-                
+
                 //______________________________________________________________
                 //
                 //! compute with prepared xadd
@@ -184,90 +184,98 @@ namespace Yttrium
 
         namespace Tao
         {
+            namespace Cog
+            {
+                //__________________________________________________________________
+                //
+                //
+                //! Squared Norm resulting in Scalar Type of T
+                //
+                //__________________________________________________________________
+                template <typename T>
+                struct SquaredNorm
+                {
+                    typedef T                              Type;        //!< alias
+                    typedef typename ScalarFor<Type>::Type ScalarType;  //!< alias
+
+                    template <typename LHS> static inline
+                    ScalarType Of(LHS &lhs, MultiAdd<ScalarType> &xm)
+                    {
+                        typedef typename LHS::Type          U;
+                        typedef typename ScalarFor<U>::Type ScalarU;
+
+                        const size_t      n    = lhs.size();
+                        XAdd<ScalarType> &xadd = xm.make(n);
+                        for(size_t i=n;i>0;--i)
+                        {
+                            const ScalarU     l2 = MKL::Mod2<U>::Of( lhs[i] );
+                            const ScalarType  x2 = Tao::To<ScalarType,ScalarU>::Get(l2);
+                            xadd << x2;
+                        }
+                        return xadd.sum();
+                    }
+
+                    //! |primary-replica|^2, difference in PRIMARY::Type
+                    template <typename PRIMARY, typename REPLICA> static inline
+                    ScalarType Of(PRIMARY &primary, REPLICA &replica, MultiAdd<ScalarType> &xm)
+                    {
+                        typedef typename PRIMARY::Type                PrimaryType;
+                        typedef typename ScalarFor<PrimaryType>::Type ScalarPrimary;
+
+                        assert(primary.size()==replica.size());
+                        const size_t      n    = primary.size();
+                        XAdd<ScalarType> &xadd = xm.make(n);
+                        for(size_t i=n;i>0;--i)
+                        {
+                            const PrimaryType   dd = primary[i] - Tao::To<PrimaryType,typename REPLICA::Type>::Get(replica[i]);
+                            const ScalarPrimary d2 = MKL::Mod2<PrimaryType>::Of(dd);
+                            const ScalarType    x2 = Tao::To<ScalarType,ScalarPrimary>::Get(d2);
+                            xadd << x2;
+                        }
+                        return xadd.sum();
+                    }
+
+                };
+            }
+
             //__________________________________________________________________
             //
             //
-            //! Squared Norm resulting in Scalar Type of T
+            //! Mod2 wrapper
             //
             //__________________________________________________________________
             template <typename T>
-            struct SquaredNorm
+            class Mod2
             {
-                typedef T                              Type;        //!< alias
-                typedef typename ScalarFor<Type>::Type ScalarType;  //!< alias
-                typedef Antelope::Add<ScalarType>      XAdd;        //!< alias
+            public:
+                typedef Cog::SquaredNorm<T>        SqNrm;
+                typedef typename SqNrm::ScalarType ScalarType;
 
-#if 0
-                template <typename LHS> static inline
-                ScalarType Of(LHS &lhs)
+                inline explicit Mod2() noexcept : sma() {}
+                inline virtual ~Mod2() noexcept {}
+
+                template <typename PRIMARY> inline
+                ScalarType operator()(PRIMARY &primary)
                 {
-
+                    return SqNrm::Of(primary,sma);
                 }
-#endif
+
+                template <typename PRIMARY, typename REPLICA> inline
+                ScalarType operator()(PRIMARY &primary, REPLICA &replica)
+                {
+                    return SqNrm::Of(primary,replica,sma);
+                }
+
+
+                MultiAdd<ScalarType> sma; //!< scalar multi-add
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Mod2);
             };
 
 
         }
 
 
-        namespace Tao
-        {
-#if 0
-            //__________________________________________________________________
-            //
-            //! |source|^2
-            //__________________________________________________________________
-            template <typename SOURCE>   inline
-            typename ScalarFor< typename SOURCE::Type >::Type Mod2(SOURCE &source)
-            {
-                typename ScalarFor< typename SOURCE::Type >::Type res(0);
-                for(size_t i=source.size();i>0;--i)
-                    res += MKL::Mod2<typename SOURCE::Type>::Of(source[i]);
-                return res;
-            }
-
-            //__________________________________________________________________
-            //
-            //! |source|^2
-            //__________________________________________________________________
-            template <typename SOURCE>   inline
-            typename ScalarFor< typename SOURCE::Type >::Type
-            Mod2(SOURCE                                                         &source,
-                 Multifold< typename ScalarFor< typename SOURCE::Type >::Type > &xlist)
-            {
-                typedef typename SOURCE::Type           Type;
-                typedef typename ScalarFor<Type >::Type ScalarType;
-                typedef  DynamicAdd<ScalarType>         XNode;
-                typedef  typename XNode::XAdd           XAdd;
-                const size_t  size =  source.size;
-                XAdd         &xadd = *xlist.make(source.size);
-                for(size_t i=size;i>0;--i)
-                {
-                    xadd << MKL::Mod2<Type>::Of(source[i]);
-                }
-                return xadd.sum();
-            }
-#endif
-
-
-            //__________________________________________________________________
-            //
-            //! |primary-replica|^2
-            //__________________________________________________________________
-            template <typename PRIMARY, typename REPLICA>   inline
-            typename ScalarFor<typename PRIMARY::Type>::Type Mod2(PRIMARY &primary, REPLICA &replica)
-            {
-                assert(primary.size()==replica.size());
-                typename ScalarFor<typename PRIMARY::Type>::Type res(0);
-                for(size_t i=primary.size();i>0;--i)
-                {
-                    typename PRIMARY::Type delta = primary[i] - replica[i];
-                    res += MKL::Mod2<typename PRIMARY::Type>::Of(delta);
-                }
-                return res;
-            }
-
-        };
     }
 
 }

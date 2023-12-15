@@ -161,7 +161,7 @@ namespace Yttrium
                                 }
                                 else
                                 {
-                                    if( FabsOf(a[ip][iq]) > tresh)
+                                    if( Fabs<T>::Of(a[ip][iq]) > tresh)
                                     {
                                         const T hh=d[iq]-d[ip];
                                         if (unchanged(hh,g))
@@ -169,7 +169,7 @@ namespace Yttrium
                                         else
                                         {
                                             const T theta=half*hh/(a[ip][iq]);
-                                            t=one/(FabsOf(theta)+SqrtOf(one+theta*theta));
+                                            t=one/(Fabs<T>::Of(theta)+SqrtOf(one+theta*theta));
                                             if (theta<zero) t = -t;
                                         }
                                         

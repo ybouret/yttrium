@@ -19,7 +19,9 @@ namespace
         std::cerr << "-- using " << RTTI::Name<T>() << std::endl;
         typedef typename ScalarFor<T>::Type ScalarType;
 
+        Tao::Mod2<T>     sq;
         Tao::MultiAdd<T> xm;
+
         for(size_t n=1;n<=nmax;++n)
         {
             std::cerr << "--   n=" << n << std::endl;
@@ -47,8 +49,8 @@ namespace
             Tao::Mul(v, M, u, xm);
             tr.mul(w,u);
 
-            const ScalarType residue1 = Tao::Mod2(v,r);
-            const ScalarType residue2 = Tao::Mod2(w,r);
+            const ScalarType residue1 = sq(v,r);
+            const ScalarType residue2 = sq(w,r);
 
             //std::cerr << "M=" << M << std::endl;
            // std::cerr << "r=" << r << std::endl;

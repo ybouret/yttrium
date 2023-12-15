@@ -166,7 +166,19 @@ Y_UTEST(tao1)
         std::cerr << "dot=" << dot << std::endl;
     }
 
+    {
+        Vector< Complex<float> > v;
+        for(size_t i=5+ran.leq(10);i>0;--i)
+        {
+            const Complex<float> z( ran.symm<float>(), ran.symm<float>() );
+            v << z;
+        }
+        std::cerr << "v=" << v << std::endl;
+        Tao::MultiAdd<double> xm;
+        const double n2 = Tao::Cog::SquaredNorm<double>::Of(v,xm);
+        std::cerr << "n2=" << n2 << std::endl;
 
+    }
 
 
 }

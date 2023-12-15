@@ -5,6 +5,7 @@
 #include "y/system/rtti.hpp"
 #include "y/sequence/vector.hpp"
 #include "../../../core/tests/main.hpp"
+#include "y/mkl/tao/seq/level3.hpp"
 
 using namespace Yttrium;
 
@@ -16,6 +17,7 @@ namespace
         const String &ts = RTTI::Name<T>();
         std::cerr << "Jacobi<" << ts << ">" << std::endl;
         MKL::Eigen::Jacobi<T> J;
+        MKL::Tao::MultiAdd<T> xm;
 
         for(size_t n=1;n<=4;++n)
         {
@@ -39,7 +41,13 @@ namespace
             std::cerr << "d=diagm(" << d << ")" << std::endl;
             std::cerr << "v=" << v << std::endl;
             std::cerr << "v*d*v'-a" << std::endl;
-
+            const Matrix<T> vT(TransposeOf,v);
+            Matrix<T>       dvT(n,n);
+            MKL::Tao::DiagMatMul(dvT,d,vT);
+            Matrix<T>       P(n,n);
+            MKL::Tao::MatMul(P,v, dvT, xm);
+            std::cerr << "P=" << P << std::endl;
+            
             std::cerr << std::endl;
         }
 
