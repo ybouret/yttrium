@@ -5,8 +5,7 @@
 #define Y_MKL_Tao_Ops_Included 1
 
 
-#include "y/mkl/tao/seq/level1.hpp"
-#include "y/container/matrix.hpp"
+#include "y/mkl/tao/transmogrify.hpp"
 
 namespace Yttrium
 {
@@ -19,7 +18,10 @@ namespace Yttrium
             template <typename LHS, typename RHS>
             struct Ops
             {
-                static inline void Set(LHS &lhs, const RHS &rhs) { lhs = rhs; }
+                static inline void Set(LHS &lhs, const RHS &rhs) { lhs  = rhs; }
+                static inline void Add(LHS &lhs, const RHS &rhs) { lhs += rhs; }
+                static inline void Sub(LHS &lhs, const RHS &rhs) { lhs -= rhs; }
+
             };
             
         }
