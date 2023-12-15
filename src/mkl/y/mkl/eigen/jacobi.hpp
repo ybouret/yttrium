@@ -45,12 +45,14 @@ namespace Yttrium
 
                 //! diagonalize a
                 /**
-                 \param a squared (digonal) matrux
+                 \param a squared (digonal) matrix, always regenerated
                  \param d eigenvalues
                  \param v eigenvectors
                  */
-                bool build(Matrix<T> &a, Writable<T> &d, Matrix<T> &v);
-                
+                bool build(Matrix<T>   &a,
+                           Writable<T> &d,
+                           Matrix<T>   &v);
+
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Jacobi);

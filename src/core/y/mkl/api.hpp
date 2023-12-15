@@ -163,18 +163,51 @@ namespace Yttrium
 
 
         
+        //______________________________________________________________________
+        //
+        //
+        //! Sqrt declaration
+        //
+        //______________________________________________________________________
+        template <typename T> struct Sqrt;
 
         //______________________________________________________________________
         //
         //
-        //! Sqrt for <float|double|long double>
+        //! Sqrt for <float>
         //
         //______________________________________________________________________
-        template <typename T> struct Sqrt
+        template <> struct Sqrt<float>
         {
             //! use std function
-            static inline T Of(const T &x) noexcept { return std::sqrt(x); }
+            static inline float Of(const float &x) noexcept { return sqrtf(x); }
         };
+
+        //______________________________________________________________________
+        //
+        //
+        //! Sqrt for <double>
+        //
+        //______________________________________________________________________
+        template <> struct Sqrt<double>
+        {
+            //! use std function
+            static inline double Of(const double &x) noexcept { return sqrt(x); }
+        };
+
+        //______________________________________________________________________
+        //
+        //
+        //! Sqrt for <double>
+        //
+        //______________________________________________________________________
+        template <> struct Sqrt<long double>
+        {
+            //! use std function
+            static inline long double Of(const long double &x) noexcept { return sqrtl(x); }
+        };
+
+
 
         //______________________________________________________________________
         //

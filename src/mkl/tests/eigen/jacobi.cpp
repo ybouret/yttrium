@@ -6,6 +6,7 @@
 #include "y/sequence/vector.hpp"
 #include "../../../core/tests/main.hpp"
 #include "y/mkl/tao/seq/level3.hpp"
+#include "y/mkl/api.hpp"
 
 using namespace Yttrium;
 
@@ -17,6 +18,7 @@ namespace
         const String &ts = RTTI::Name<T>();
         std::cerr << "Jacobi<" << ts << ">" << std::endl;
         MKL::Eigen::Jacobi<T> J;
+        MKL::Tao::Mod2<T>     sq;
         MKL::Tao::MultiAdd<T> xm;
 
         for(size_t n=1;n<=4;++n)
@@ -30,12 +32,13 @@ namespace
                 for(size_t j=1;j<=i;++j)
                     a[i][j] = a[j][i];
 
-            std::cerr << "a=" << a << std::endl;
+            std::cerr << "a =" << a << std::endl;
             if(!J.build(a,d,v))
             {
                 std::cerr << "Failure!" << std::endl;
                 continue;
             }
+            //std::cerr << "a1=" << a << std::endl;
             MKL::Eigen::Sort(d,v, Comparison::Decreasing<T>);
 
             std::cerr << "d=diagm(" << d << ")" << std::endl;
@@ -46,8 +49,16 @@ namespace
             MKL::Tao::DiagMatMul(dvT,d,vT);
             Matrix<T>       P(n,n);
             MKL::Tao::MatMul(P,v, dvT, xm);
-            std::cerr << "P=" << P << std::endl;
-            
+            //std::cerr << "P=" << P << std::endl;
+
+            {
+                const LightArray<T> arr = P.asArray();
+                const LightArray<T> brr = a.asArray();
+                const T             sq2 = sq(arr,brr)/T(n*n);
+                const T             rms = MKL::Sqrt<T>::Of(sq2);
+                std::cerr << "rms=" << rms << std::endl;
+            }
+
             std::cerr << std::endl;
         }
 

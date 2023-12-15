@@ -1,13 +1,14 @@
 
-#include "y/mkl/eigen/sort.hpp"
 #include "y/mkl/algebra/svd.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/bits.hpp"
 #include "y/system/rtti.hpp"
 #include "y/sequence/vector.hpp"
 #include "../../../core/tests/main.hpp"
+#include "y/mkl/tao/seq/level3.hpp"
 
 using namespace Yttrium;
+
 
 namespace
 {
@@ -17,11 +18,12 @@ namespace
         const String &ts = RTTI::Name<T>();
         std::cerr << "SVD<" << ts << ">" << std::endl;
 
-        MKL::SVD<T> svd;
+        MKL::SVD<T>           svd;
+        MKL::Tao::MultiAdd<T> xm;
 
-        for(size_t m=1;m<=2;++m)
+        for(size_t m=1;m<=4;++m)
         {
-            for(size_t n=1;n<=2;++n)
+            for(size_t n=1;n<=4;++n)
             {
                 std::cerr << std::endl;
 
@@ -40,11 +42,19 @@ namespace
                     continue;
                 }
 
+
                 std::cerr << "u=" << u << std::endl;
                 std::cerr << "w=diagm(" << w << ")" << std::endl;
                 std::cerr << "v=" << v << std::endl;
 
+                std::cerr << "a-u*w*v'" << std::endl;
 
+                const Matrix<T> vT(TransposeOf,v);
+                Matrix<T>       wvT(n,n);
+                MKL::Tao::DiagMatMul(wvT,w,vT);
+                Matrix<T> P(m,n);
+                MKL::Tao::MatMul(P,u,wvT,xm);
+                std::cerr << "P=" << P << std::endl;
             }
 
         }
@@ -59,8 +69,12 @@ Y_UTEST(algebra_svd)
 
 
     doSVD<float>(ran);
-    //doSVD<double>(ran);
-    //doSVD<long double>(ran);
+    doSVD<double>(ran);
+    doSVD<long double>(ran);
+
+    doSVD< XReal<float> >(ran);
+    doSVD< XReal<double> >(ran);
+    doSVD< XReal<long double> >(ran);
 
 
 }
