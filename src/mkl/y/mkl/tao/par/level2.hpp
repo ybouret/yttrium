@@ -35,6 +35,26 @@ namespace Yttrium
                 }
             }
 
+            template <typename TARGET, typename T, typename SOURCE, typename U, typename PROC> inline
+            void MulOp(TARGET &          target,
+                       const Matrix<T>  &M,
+                       SOURCE           &source,
+                       MultiAdd<U>      &xma,
+                       Engine           &engine,
+                       PROC             &proc)
+            {
+
+                assert( target.size() == M.rows );
+                assert( source.size() == M.cols );
+
+                const size_t   para = engine.in1D.size();
+                engine.setup(M.rows);                      // process rows in parallel
+                engine.in1D.attach(xma.make(para,M.cols)); // with help
+
+                volatile Engine::Clean1D willClean(engine.in1D);
+                engine.in1D(Parallel::Mul<TARGET,T,SOURCE,U,PROC>,target,M,source,proc);
+            }
+
             //__________________________________________________________________
             //
             //! target = M*source
@@ -46,20 +66,11 @@ namespace Yttrium
                      MultiAdd<U>      &xma,
                      Engine           &engine)
             {
-                assert( target.size() == M.rows );
-                assert( source.size() == M.cols );
-              
                 typedef typename TARGET::Type TGT;
                 typedef void    (*PROC)(TGT &, const U &);
-                
-                static  PROC   proc = Ops<typename TARGET::Type,U>::Set;
-                const size_t   para = engine.in1D.size();
-                
-                engine.setup(M.rows);                      // process rows in parallel
-                engine.in1D.attach(xma.make(para,M.cols)); // with help
-                
-                volatile Engine::Clean1D willClean(engine.in1D);
-                engine.in1D(Parallel::Mul<TARGET,T,SOURCE,U,PROC>,target,M,source,proc);
+                static  PROC      proc = Ops<TGT,U>::Set;
+
+                MulOp(target,M,source,xma,engine,proc);
             }
 
             //__________________________________________________________________
@@ -73,20 +84,10 @@ namespace Yttrium
                         MultiAdd<U>      &xma,
                         Engine           &engine)
             {
-                assert( target.size() == M.rows );
-                assert( source.size() == M.cols );
-                
                 typedef typename TARGET::Type TGT;
                 typedef void    (*PROC)(TGT &, const U &);
-
-                static  PROC   proc = Ops<typename TARGET::Type,U>::Add;
-                const size_t   para = engine.in1D.size();
-                
-                engine.setup(M.rows);                      // process rows in parallel
-                engine.in1D.attach(xma.make(para,M.cols)); // with help
-                
-                volatile Engine::Clean1D willClean(engine.in1D);
-                engine.in1D(Parallel::Mul<TARGET,T,SOURCE,U,PROC>,target,M,source,proc);
+                static  PROC   proc = Ops<TGT,U>::Add;
+                MulOp(target,M,source,xma,engine,proc);
             }
 
             //__________________________________________________________________
@@ -100,20 +101,10 @@ namespace Yttrium
                         MultiAdd<U>      &xma,
                         Engine           &engine)
             {
-                assert( target.size() == M.rows );
-                assert( source.size() == M.cols );
-
                 typedef typename TARGET::Type TGT;
                 typedef void    (*PROC)(TGT &, const U &);
-
-                static  PROC   proc = Ops<typename TARGET::Type,U>::Sub;
-                const size_t   para = engine.in1D.size();
-
-                engine.setup(M.rows);                      // process rows in parallel
-                engine.in1D.attach(xma.make(para,M.cols)); // with help
-
-                volatile Engine::Clean1D willClean(engine.in1D);
-                engine.in1D(Parallel::Mul<TARGET,T,SOURCE,U,PROC>,target,M,source,proc);
+                static  PROC   proc = Ops<TGT,U>::Sub;
+                MulOp(target,M,source,xma,engine,proc);
             }
 
         }
