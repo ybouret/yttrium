@@ -37,29 +37,44 @@ Y_UTEST(tao3)
     Matrix<int>  seqtgt(nr,nc);
     Matrix<int>  partgt(nr,nc);
 
-    Matrix<int>  lhs(nr,ns);
-    Matrix<int>  rhs(ns,nc);
+
+
     Tao::MultiAdd<int> xma;
 
-    for(size_t i=1;i<=lhs.rows;++i)
-        for(size_t j=1;j<=lhs.cols;++j)
-            lhs[i][j] = ran.in<int>(-10,10);
+    Matrix<int>  lhs(nr,ns);
+    {
+        Matrix<int>  rhs(ns,nc);
 
-    for(size_t i=1;i<=rhs.rows;++i)
-        for(size_t j=1;j<=rhs.cols;++j)
-            rhs[i][j] = ran.in<int>(-10,10);
+        for(size_t i=1;i<=lhs.rows;++i)
+            for(size_t j=1;j<=lhs.cols;++j)
+                lhs[i][j] = ran.in<int>(-10,10);
 
-    std::cerr << "lhs=" << lhs << std::endl;
-    std::cerr << "rhs=" << rhs << std::endl;
-    Tao::MMul(target,lhs,rhs,xma);
-    std::cerr << "target=" << target << std::endl;
+        for(size_t i=1;i<=rhs.rows;++i)
+            for(size_t j=1;j<=rhs.cols;++j)
+                rhs[i][j] = ran.in<int>(-10,10);
 
-    Tao::MMul(seqtgt,lhs,rhs,xma,seq);
-    std::cerr << "seqtgt=" << seqtgt << std::endl;
+        std::cerr << "lhs=" << lhs << std::endl;
+        std::cerr << "rhs=" << rhs << std::endl;
+        Tao::MMul(target,lhs,rhs,xma);
+        std::cerr << "target=" << target << std::endl;
 
-    Tao::MMul(partgt,lhs,rhs,xma,par);
-    std::cerr << "partgt=" << partgt << std::endl;
+        Tao::MMul(seqtgt,lhs,rhs,xma,seq);
+        std::cerr << "seqtgt=" << seqtgt << std::endl;
 
+        Tao::MMul(partgt,lhs,rhs,xma,par);
+        std::cerr << "partgt=" << partgt << std::endl;
+    }
+
+    {
+        Matrix<int> rhs(nc,ns);
+        for(size_t i=1;i<=rhs.rows;++i)
+            for(size_t j=1;j<=rhs.cols;++j)
+                rhs[i][j] = ran.in<int>(-10,10);
+        std::cerr << "lhs=" << lhs << std::endl;
+        std::cerr << "rhs=" << rhs << std::endl;
+        Tao::MMul(target,lhs,TransposeOf,rhs,xma);
+        std::cerr << "target=" << target << std::endl;
+    }
 
 
 }
