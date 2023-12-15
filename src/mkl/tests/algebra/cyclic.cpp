@@ -5,6 +5,7 @@
 #include "y/container/cxx/array.hpp"
 #include "y/system/rtti.hpp"
 #include "y/mkl/tao/seq/level1.hpp"
+#include "y/mkl/tao/seq/level2.hpp"
 
 using namespace Yttrium;
 using namespace MKL;
@@ -18,6 +19,7 @@ namespace
         typedef typename ScalarFor<T>::Type ScalarType;
         const ScalarType s0 = 0;
 
+        Tao::MultiAdd<T> xm;
         for(size_t n=3;n<=nmax;++n)
         {
             std::cerr << "--   n=" << n << std::endl;
@@ -53,7 +55,9 @@ namespace
             Matrix<T> M(n,n);
             cy.sendTo(M);
 
-            M.mul(v,u);
+
+            Tao::Mul(v,M,u,xm);
+            //M.mul(v,u);
             cy.mul(w,u);
             const ScalarType residue1 = Tao::Mod2(v,r);
             const ScalarType residue2 = Tao::Mod2(w,r);

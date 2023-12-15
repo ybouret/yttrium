@@ -6,6 +6,7 @@
 #include "y/system/rtti.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/mkl/tao/seq/level1.hpp"
+#include "y/mkl/tao/seq/level2.hpp"
 
 using namespace Yttrium;
 using namespace MKL;
@@ -18,6 +19,7 @@ namespace
         std::cerr << "-- using " << RTTI::Name<T>() << std::endl;
         typedef typename ScalarFor<T>::Type ScalarType;
 
+        Tao::MultiAdd<T> xm;
         for(size_t n=1;n<=nmax;++n)
         {
             std::cerr << "--   n=" << n << std::endl;
@@ -42,8 +44,9 @@ namespace
             Matrix<T> M(n,n);
             tr.sendTo(M);
 
-            M.mul(v,u);
+            Tao::Mul(v, M, u, xm);
             tr.mul(w,u);
+
             const ScalarType residue1 = Tao::Mod2(v,r);
             const ScalarType residue2 = Tao::Mod2(w,r);
 

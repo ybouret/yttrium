@@ -53,15 +53,17 @@ namespace Yttrium
             template <typename RES, typename RHS> inline
             void mul(RES &res, RHS &rhs) const
             {
+
                 const size_t n = size;
                 switch(n)
                 {
                     case 0: return;
-                    case 1: res[1] = b[1] * rhs[1]; return;
+                    case 1: res[1] = b[1]*rhs[1]; return;
                     default:
                         break;
                 }
-                res[1] = b[1] * rhs[1] + c[1] * rhs[2];
+
+                res[1] = b[1]*rhs[1] + c[1]*rhs[2];
                 const size_t nm=n-1;
                 for(size_t i=nm,im=i-1,ip=i+1;i>1;--i,--im,--ip)
                 {

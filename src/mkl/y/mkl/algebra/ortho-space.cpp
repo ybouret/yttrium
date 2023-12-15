@@ -3,6 +3,7 @@
 #include "y/mkl/algebra/lu.hpp"
 #include "y/apex/mylar.hpp"
 #include "y/container/cxx/array.hpp"
+#include "y/mkl/tao/seq/level3.hpp"
 
 namespace Yttrium
 {
@@ -14,12 +15,14 @@ namespace Yttrium
             const size_t p = P.rows;
             const size_t d = P.cols;
 
-            Matrix<apz>       QQ(d,d);
+            Tao::MultiAdd<apz> xm;
+            Matrix<apz>        QQ(d,d);
             {
                 apz         dP2 = 0;  // determinant(P*P')
                 Matrix<apz> aP2(p,p); // adjoint(P*P')
                 Matrix<apz> P2(p,p);  // P*P'
-                P.mmul(P2,TransposeOf,P);
+                //P.mmul(P2,TransposeOf,P);
+                Tao::MatMul(P2, P, TransposeOf, P, xm);
 
                 // compute det/adj using LU
                 {
@@ -41,8 +44,10 @@ namespace Yttrium
                     const Matrix<apz> Pt(TransposeOf,P);
                     {
                         Matrix<apz> P3(p,d);
-                        aP2.mmul(P3,P);
-                        Pt.mmul(QQ,P3);
+                        //aP2.mmul(P3,P);
+                        //Pt.mmul(QQ,P3);
+                        Tao::MatMul(P3,aP2,P,xm);
+                        Tao::MatMul(QQ,Pt,P3,xm);
                     }
                 }
 

@@ -198,6 +198,7 @@ namespace Yttrium
         //
         //! multiply LHS = M * RHS
         //______________________________________________________________________
+#if 0
         template <typename RES, typename RHS> inline
         void mul(RES &res, RHS &rhs) const
         {
@@ -211,31 +212,6 @@ namespace Yttrium
                 res[i] = sum;
             }
         }
-
-#if 0
-        //______________________________________________________________________
-        //
-        //! multiply with xadd
-        //______________________________________________________________________
-        template <typename RES, typename RHS> inline
-        void mul(RES &res, RHS &rhs, MKL::Antelope::Add<T> &xadd) const
-        {
-            assert(res.size()>=rows);
-            assert(rhs.size()>=cols);
-            for(size_t i=rows;i>0;--i)
-            {
-                xadd.free();
-                const Readable<T> &r = row[i];
-                for(size_t j=cols;j>0;--j)
-                {
-                    ConstType p = r[j] * rhs[j];
-                    xadd << p;
-                }
-                res[i] = xadd.sum();;
-            }
-        }
-#endif
-
 
         //______________________________________________________________________
         //
@@ -283,7 +259,7 @@ namespace Yttrium
                 }
             }
         }
-
+#endif
 
 
 

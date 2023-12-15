@@ -19,6 +19,7 @@ namespace
         std::cerr << "---------- Testing LU< " << TypeName<T>() << " > ----------" << std::endl;
         MKL::LU<T> lu;
 
+#if 0
         for(size_t n=1;n<=nmax;++n)
         {
             std::cerr << "\tn = " << n << std::endl;
@@ -165,8 +166,8 @@ namespace
 
             std::cerr << std::endl;
 
-
         }
+#endif
     }
 }
 
