@@ -35,6 +35,10 @@ namespace Yttrium
                 }
             }
 
+            //__________________________________________________________________
+            //
+            //! parallel multiplication Set/Add/Sub
+            //__________________________________________________________________
             template <typename TARGET, typename T, typename SOURCE, typename U, typename PROC> inline
             void MulOp(TARGET &          target,
                        const Matrix<T>  &M,
