@@ -43,6 +43,8 @@ namespace
                 }
 
 
+                MKL::SVD<T>::Sort(u, w, v, Comparison::IncreasingAbs<T> );
+
                 std::cerr << "u=" << u << std::endl;
                 std::cerr << "w=diagm(" << w << ")" << std::endl;
                 std::cerr << "v=" << v << std::endl;
@@ -72,10 +74,12 @@ Y_UTEST(algebra_svd)
     doSVD<double>(ran);
     doSVD<long double>(ran);
 
+
     doSVD< XReal<float> >(ran);
     doSVD< XReal<double> >(ran);
     doSVD< XReal<long double> >(ran);
 
+    return 0;
 
 }
 Y_UDONE()

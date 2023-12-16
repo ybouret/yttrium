@@ -17,8 +17,8 @@ namespace Yttrium
         {
             //! Sort eigenvalues d[1..n] and COLUMN eigenvectors v[1..n][1..n]
             /**
-             \param d eigenvalues
-             \param v eigenvectors, colums
+             \param d        eigenvalues
+             \param v        eigenvectors, colums
              \param compare comparison for eigenvalues
              */
             template <typename T, typename U, typename COMPARE> inline
@@ -45,6 +45,10 @@ namespace Yttrium
                     }
                 }
             }
+
+            
+
+
 
 
         }

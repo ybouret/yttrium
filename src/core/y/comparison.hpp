@@ -34,8 +34,9 @@ namespace Yttrium
         template <typename T> static inline
         int IncreasingAbs(const T &lhs, const T &rhs)
         {
-            const T l = lhs <= 0 ? -lhs : lhs;
-            const T r = rhs <= 0 ? -rhs : rhs;
+            const T zero(0);
+            const T l = lhs <= zero ? -lhs : lhs;
+            const T r = rhs <= zero ? -rhs : rhs;
             return Increasing(l,r);
         }
 
