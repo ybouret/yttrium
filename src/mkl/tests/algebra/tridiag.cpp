@@ -19,8 +19,8 @@ namespace
         std::cerr << "-- using " << RTTI::Name<T>() << std::endl;
         typedef typename ScalarFor<T>::Type ScalarType;
 
-        Tao::Mod2<T>     sq;
-        Tao::MultiAdd<T> xm;
+        Tao::ComputeMod2<T> sq;
+        Tao::MultiAdd<T>    xm;
 
         for(size_t n=1;n<=nmax;++n)
         {

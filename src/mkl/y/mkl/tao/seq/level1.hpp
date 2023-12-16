@@ -241,18 +241,18 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            //! Mod2 wrapper
+            //! Mod2 computation
             //
             //__________________________________________________________________
             template <typename T>
-            class Mod2
+            class ComputeMod2
             {
             public:
                 typedef Cog::SquaredNorm<T>        SqNrm;
                 typedef typename SqNrm::ScalarType ScalarType;
 
-                inline explicit Mod2() noexcept : sma() {}
-                inline virtual ~Mod2() noexcept {}
+                inline explicit ComputeMod2() noexcept : sma() {}
+                inline virtual ~ComputeMod2() noexcept {}
 
                 template <typename PRIMARY> inline
                 ScalarType operator()(PRIMARY &primary)
@@ -269,7 +269,7 @@ namespace Yttrium
 
                 MultiAdd<ScalarType> sma; //!< scalar multi-add
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Mod2);
+                Y_DISABLE_COPY_AND_ASSIGN(ComputeMod2);
             };
 
 

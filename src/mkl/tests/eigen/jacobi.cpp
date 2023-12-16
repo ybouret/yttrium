@@ -18,8 +18,8 @@ namespace
         const String &ts = RTTI::Name<T>();
         std::cerr << "Jacobi<" << ts << ">" << std::endl;
         MKL::Eigen::Jacobi<T> J;
-        MKL::Tao::Mod2<T>     sq;
-        MKL::Tao::MultiAdd<T> xm;
+        MKL::Tao::ComputeMod2<T> mod2;
+        MKL::Tao::MultiAdd<T>    xm;
 
         for(size_t n=1;n<=4;++n)
         {
@@ -54,7 +54,7 @@ namespace
             {
                 const LightArray<T> arr = P.asArray();
                 const LightArray<T> brr = a.asArray();
-                const T             sq2 = sq(arr,brr)/T(n*n);
+                const T             sq2 = mod2(arr,brr)/T(n*n);
                 const T             rms = MKL::Sqrt<T>::Of(sq2);
                 std::cerr << "rms=" << rms << std::endl;
             }

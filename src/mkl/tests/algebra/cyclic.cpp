@@ -19,8 +19,8 @@ namespace
         typedef typename ScalarFor<T>::Type ScalarType;
         const ScalarType s0 = 0;
 
-        Tao::MultiAdd<T> xm;
-        Tao::Mod2<T>     sq;
+        Tao::MultiAdd<T>    xm;
+        Tao::ComputeMod2<T> mod2;
 
         for(size_t n=3;n<=nmax;++n)
         {
@@ -60,8 +60,8 @@ namespace
 
             Tao::Mul(v,M,u,xm);
             cy.mul(w,u);
-            const ScalarType residue1 = sq(v,r);
-            const ScalarType residue2 = sq(w,r);
+            const ScalarType residue1 = mod2(v,r);
+            const ScalarType residue2 = mod2(w,r);
 
             // std::cerr << "M=" << M << std::endl;
             // std::cerr << "r=" << r << std::endl;
