@@ -180,6 +180,14 @@ namespace Yttrium
             }
         }
 
+        //! swap both columns and rows
+        inline void swapBoth(size_t i,size_t j) throw()
+        {
+            swapRows(i,j);
+            swapCols(i,j);
+        }
+
+
         //! assign matrices with same metrics
         template <typename U> inline
         Matrix<T> & assign(const Matrix<U> &other)

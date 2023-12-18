@@ -1,4 +1,30 @@
 
+
+template <> Diagonalization<real_t> :: Diagonalization() :
+code( new Code() )
+{
+
+}
+
+template <> Diagonalization<real_t> :: ~Diagonalization() noexcept
+{
+    assert(0!=code);
+    Nullify(code);
+}
+
+template <> void Diagonalization<real_t> :: balance(Matrix<real_t> &a)
+{
+    assert(code);
+    code->balance(a);
+}
+
+template <> void Diagonalization<real_t> :: reduce(Matrix<real_t> &a)
+{
+    assert(code);
+    code->reduce(a);
+}
+
+#if 0
 template <>
 void Balance<real_t>(Matrix<real_t> &a)
 {
@@ -52,3 +78,6 @@ void Balance<real_t>(Matrix<real_t> &a)
         }
     }
 }
+
+#endif
+
