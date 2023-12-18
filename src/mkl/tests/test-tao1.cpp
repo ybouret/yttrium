@@ -1,5 +1,4 @@
-#include "y/mkl/tao/seq/level1.hpp"
-#include "y/mkl/tao/par/level1.hpp"
+#include "y/mkl/tao/level1.hpp"
 
 #include "y/concurrent/loop/crew.hpp"
 #include "y/concurrent/loop/mono.hpp"

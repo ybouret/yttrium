@@ -1,6 +1,5 @@
 
-#include "y/mkl/tao/seq/level3.hpp"
-#include "y/mkl/tao/par/level3.hpp"
+#include "y/mkl/tao/level3.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
