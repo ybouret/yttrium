@@ -72,6 +72,19 @@ namespace Yttrium
 
         //______________________________________________________________________
         //
+        //! C style increasing abs
+        //______________________________________________________________________
+        template <typename T> static inline
+        SignType CxxIncreasingAbs(const T &lhs, const T &rhs)
+        {
+            const T zero(0);
+            const T l = lhs <= zero ? -lhs : lhs;
+            const T r = rhs <= zero ? -rhs : rhs;
+            return CxxIncreasing(l,r);
+        }
+
+        //______________________________________________________________________
+        //
         //! Check Increasing ARRAY (readable)
         //______________________________________________________________________
         template <typename ARRAY> static inline
