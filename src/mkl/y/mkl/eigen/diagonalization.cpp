@@ -150,6 +150,15 @@ namespace Yttrium
                     }
                 }
 
+                inline bool isSmall(const T small, const T &big)
+                {
+                    const T sum = OutOfReach::Add(small,big);
+                    const T dif = sum - big;
+                    return Fabs<T>::Of(dif) <= zero;
+                }
+
+                static inline T SqrtOf(const T value) { return Sqrt<T>::Of(value); }
+
                 static const unsigned MAX_ITS =100; //!< maximum number of cycles
                 static const unsigned SCALING = 10; //!< scaling every cycle
                 //! find the eigen values
@@ -162,12 +171,11 @@ namespace Yttrium
                  */
                 inline bool QR( Matrix<T> &a, Writable<T> &wr, Writable<T> &wi, size_t &nr)
                 {
-                    assert( a.is_square );
-                    assert( a.rows>0    );
+                    assert( a.isSquare() );
+                    assert( a.rows>0     );
                     const ptrdiff_t n = a.rows;
                     assert( wr.size()   >= a.rows );
                     assert( wi.size()   >= a.rows );
-                    //assert( flag.size() >= n );
 
                     ptrdiff_t nn,m,l,k,j,i,mmin;
                     T         z,y,x,w,v,u,t,s,r=0,q=0,p=0,anorm;
@@ -178,9 +186,9 @@ namespace Yttrium
                     anorm = 0;
                     for (i=1;i<=n;i++)
                         for (j=Max<size_t>(i-1,1);j<=n;j++)
-                            anorm += fabs_of(a[i][j]);
+                            anorm += Fabs<T>::Of(a[i][j]);
                     nn=n;
-                    t=0;
+                    t=zero;
                     while(nn>=1)
                     {
                         unsigned its=0;
@@ -188,10 +196,11 @@ namespace Yttrium
                         {
                             for (l=nn;l>=2;l--)
                             {
-                                s=fabs_of(a[l-1][l-1])+fabs_of(a[l][l]);
-                                if (s <= 0)
+                                s=Fabs<T>::Of(a[l-1][l-1])+Fabs<T>::Of(a[l][l]);
+                                if (s <= zero)
                                     s=anorm;
-                                if ((T)(fabs_of(a[l][l-1]) + s) == s)
+                                //if ((T)(Fabs<T>::Of(a[l][l-1]) + s) == s) break;
+                                if( isSmall(Fabs<T>::Of(a[l][l-1]),s))
                                     break;
                             }
                             x=a[nn][nn];
@@ -199,7 +208,6 @@ namespace Yttrium
                             {
                                 wr[ir]=x+t;
                                 wi[ir]=0;
-                                //std::cerr << "#EIG: real single: " << wr[ir] << std::endl;
                                 ++ir;
                                 ++nr;
                                 --nn;
@@ -212,15 +220,15 @@ namespace Yttrium
                                 {
                                     p=T(0.5)*(y-x);
                                     q=p*p+w;
-                                    z=sqrt_of(fabs_of(q));
+                                    const T absq = Fabs<T>::Of(q);
+                                    z=Sqrt<T>::Of(absq);
                                     x += t;
-                                    if (q >= 0)
+                                    if (q >= zero)
                                     {
-                                        z=p+__sgn(z,p);
+                                        z=p + Sgn(z,p);
                                         wr[ir+1]=wr[ir]=x+z;
-                                        if( fabs_of(z)>0 )
+                                        if( Fabs<T>::Of(z)>zero )
                                             wr[ir]=x-w/z;
-                                        //std::cerr << "#EIG: real pair: " << wr[ir] << ", " << wr[ir+1] << ", x=" << x << ", w=" << w << ", z=" << z << ", p=" << p << ", sq=" << Sqrt(Fabs(q)) << std::endl;
                                         wi[ir+1]=wi[ir]=0;
                                         ir += 2;
                                         nr += 2;
@@ -244,7 +252,7 @@ namespace Yttrium
                                         t += x;
                                         for (i=1;i<=nn;i++)
                                             a[i][i] -= x;
-                                        s=fabs_of(a[nn][nn-1])+fabs_of(a[nn-1][nn-2]);
+                                        s=Fabs<T>::Of(a[nn][nn-1])+Fabs<T>::Of(a[nn-1][nn-2]);
                                         y=x= T(0.75)*s;
                                         w = -T(0.4375)*s*s;
                                     }
@@ -257,7 +265,7 @@ namespace Yttrium
                                         p=(r*s-w)/a[m+1][m]+a[m][m+1];
                                         q=a[m+1][m+1]-z-r-s;
                                         r=a[m+2][m+1];
-                                        s=fabs_of(p)+fabs_of(q)+fabs_of(r);
+                                        s=Fabs<T>::Of(p)+Fabs<T>::Of(q)+Fabs<T>::Of(r);
                                         p /= s;
                                         q /= s;
                                         r /= s;
@@ -265,18 +273,17 @@ namespace Yttrium
                                         {
                                             break;
                                         }
-                                        u=fabs_of(a[m][m-1])*(fabs_of(q)+fabs_of(r));
-                                        v=fabs_of(p)*(fabs_of(a[m-1][m-1])+fabs_of(z)+fabs_of(a[m+1][m+1]));
-                                        if ((T)(u+v) == v)
-                                        {
+                                        u=Fabs<T>::Of(a[m][m-1])*(Fabs<T>::Of(q)+Fabs<T>::Of(r));
+                                        v=Fabs<T>::Of(p)*(Fabs<T>::Of(a[m-1][m-1])+Fabs<T>::Of(z)+Fabs<T>::Of(a[m+1][m+1]));
+                                        //if ((T)(u+v) == v) break;
+                                        if(isSmall(u,v))
                                             break;
-                                        }
                                     }
-                                    for (i=m+2;i<=nn;i++)
+                                    for(i=m+2;i<=nn;i++)
                                     {
-                                        a[i][i-2]=0;
+                                        a[i][i-2]=zero;
                                         if (i != (m+2))
-                                            a[i][i-3]=0;
+                                            a[i][i-3]=zero;
                                     }
                                     for (k=m;k<=nn-1;k++)
                                     {
@@ -284,16 +291,16 @@ namespace Yttrium
                                         {
                                             p=a[k][k-1];
                                             q=a[k+1][k-1];
-                                            r=0;
+                                            r=zero;
                                             if (k != (nn-1)) r=a[k+2][k-1];
-                                            if ( (x=fabs_of(p)+fabs_of(q)+fabs_of(r))>0 )
+                                            if ( (x=Fabs<T>::Of(p)+Fabs<T>::Of(q)+Fabs<T>::Of(r))>zero )
                                             {
                                                 p /= x;
                                                 q /= x;
                                                 r /= x;
                                             }
                                         }
-                                        if( fabs_of(s=__sgn(sqrt_of(p*p+q*q+r*r),p)) > 0 )
+                                        if( Fabs<T>::Of(s=Sgn(SqrtOf(p*p+q*q+r*r),p)) > zero )
                                         {
                                             if (k == m)
                                             {
@@ -338,8 +345,11 @@ namespace Yttrium
                             }
                         } while (l < nn-1);
                     }
-                    LightArray<T> W(*wr,nr);
-                    //hsort(W,comparison::increasing<T>);
+                    if(nr>0)
+                    {
+                        LightArray<T> W(&wr[1],nr);
+                        //hsort(W,comparison::increasing<T>);
+                    }
                     return true;
                 }
 

@@ -39,6 +39,17 @@ namespace Yttrium
                  */
                 void reduce(Matrix<T> &a);
 
+                //! find the eigen values
+                /**
+                 \param a  a real matrix reduced to its Hessenberg form: destructed !
+                 \param wr an array that will be filled with the real parts
+                 \param wi an array that will be filled with the imagnary parts
+                 \param nr the number or real eigenvalues
+                 wi[1..nr]=0 and wr[1..nr] are sorted by increasing order.
+                 */
+                bool QR( Matrix<T> &a, Writable<T> &wr, Writable<T> &wi, size_t &nr);
+
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Diagonalization);
                 class Code;
