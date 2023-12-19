@@ -114,6 +114,10 @@ namespace Yttrium
                  */
                 const Values<T> * eig(const Matrix<T> &a);
 
+                //!
+                void guess(Writable<T>     &eVal,
+                           Matrix<T>        eVec,
+                           const Matrix<T> &a);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Diagonalization);
