@@ -20,7 +20,7 @@ namespace
         std::cerr << "<" << RTTI::Name<T>() << ">" << std::endl;
         MKL::Eigen::Diagonalization<T> diag;
 
-        for(size_t n=1;n<=1;++n)
+        for(size_t n=1;n<=3;++n)
         {
             Matrix<T> a(n,n);
             Vector<T> wr(n,0), wi(n,0);
@@ -32,23 +32,13 @@ namespace
                 }
             }
             std::cerr << "a=" << a << std::endl;
-            diag.balance(a);
-            std::cerr << "a=" << a << std::endl;
-            diag.reduce(a);
-            std::cerr << "a=" << a << std::endl;
-            size_t nr = 0;
-            if(!diag.QR(a,wr,wi,nr))
+            const MKL::Eigen::Values<T> *values = diag.eig(a);
+            if(values)
             {
-                std::cerr << "Couldn't diagonalize!!" << std::endl;
-                //continue;
+                std::cerr << "wr=" << values->wr << std::endl;
+                std::cerr << "wc=" << values->wc << std::endl;
             }
-            else
-            {
-                std::cerr << "#nr = " << nr << std::endl;
-                std::cerr << "wr  = " << wr << std::endl;
-                std::cerr << "wi  = " << wi << std::endl;
-            }
-
+            else std::cerr << "Couldn't diag!!" << std::endl;
         }
         std::cerr << std::endl;
     }

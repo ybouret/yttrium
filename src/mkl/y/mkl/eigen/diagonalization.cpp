@@ -5,6 +5,7 @@
 #include "y/mkl/numeric.hpp"
 #include "y/mkl/antelope/add.hpp"
 #include "y/sort/heap.hpp"
+#include "y/sequence/vector.hpp"
 #include <cfloat>
 
 namespace Yttrium
@@ -15,13 +16,34 @@ namespace Yttrium
         namespace Eigen
         {
 
+
             template <typename T>
             class Diagonalization<T> :: Code : public Object
             {
             public:
+                typedef Memory::Pooled     Model;
+                typedef Complex<T>         Cplx;
+                typedef Vector<T,Model>    VectorR;
+                typedef Vector<Cplx,Model> VectorC;
 
-                inline explicit Code() : Object(),
-                zero(0), one(1), balanceFactor(0.95)
+
+                const T   zero;
+                const T   one;
+                const T   balanceFactor;
+                VectorR   wr;
+                VectorR   wi;
+                VectorC   wc;
+                const Values<T> values;
+
+                inline explicit Code() :
+                Object(),
+                zero(0),
+                one(1),
+                balanceFactor(0.95),
+                wr(),
+                wi(),
+                wc(),
+                values(wr,wc)
                 {
                 }
 
@@ -356,10 +378,43 @@ namespace Yttrium
                     return true;
                 }
 
+                inline const Values<T> * eig(Matrix<T> &a)
+                {
+                    assert(a.isSquare());
+                    assert(a.rows>0);
+                    // preparing
+                    const size_t n = a.rows;
+                    wr.adjust(n,zero);
+                    wi.adjust(n,zero);
+                    wc.free();
 
-                const T zero;
-                const T one;
-                const T balanceFactor;
+                    // balance/reduce to Hessenber form
+                    balance(a);
+                    reduce(a);
+                    size_t nr = 0;
+                    if( QR(a, wr, wi, nr ) )
+                    {
+                        assert(nr<=n);
+                        // extract complex values
+                        wc.ensure(n-nr);
+                        for(size_t j=1+nr;j<=n;++j)
+                        {
+                            const Cplx z(wr[j],wi[j]);
+                            wc << z;
+                        }
+                        // trim real part of complex values
+                        while( wr.size() > nr ) wr.popTail();
+                        assert(values.wr.size() + values.wc.size() == n);
+                        return &values;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+
+                }
+
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Code);

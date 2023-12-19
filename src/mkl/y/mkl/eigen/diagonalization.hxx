@@ -30,3 +30,8 @@ template <> bool Diagonalization<real_t> ::  QR( Matrix<real_t> &a, Writable<rea
     return code->QR(a,wr,wi,nr);
 }
 
+template <> const Values<real_t> *Diagonalization<real_t> :: eig( Matrix<real_t> &a )
+{
+    assert(0!=code);
+    return code->eig(a);
+}
