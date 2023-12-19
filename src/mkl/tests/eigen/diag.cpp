@@ -59,6 +59,11 @@ Y_UTEST(eigen_diag)
     testDiag< double >( ran, nmax);
     testDiag< long double >( ran, nmax);
 
+    testDiag< XReal<float> >( ran, nmax );
+    testDiag< XReal<double> >( ran, nmax );
+    testDiag< XReal<long double> >( ran, nmax );
+
+
 
 }
 Y_UDONE()

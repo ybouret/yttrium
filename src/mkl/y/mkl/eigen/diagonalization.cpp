@@ -26,20 +26,21 @@ namespace Yttrium
                 typedef Vector<T,Model>    VectorR;
                 typedef Vector<Cplx,Model> VectorC;
 
+                typedef Antelope::Add<T>   XAdd;
 
-                const T   zero;
-                const T   one;
-                const T   balanceFactor;
-                VectorR   wr;
-                VectorR   wi;
-                VectorC   wc;
+                const T         zero;
+                const T         one;
+                XAdd            radd;
+                XAdd            cadd;
+                VectorR         wr;
+                VectorR         wi;
+                VectorC         wc;
                 const Values<T> values;
 
                 inline explicit Code() :
                 Object(),
                 zero(0),
                 one(1),
-                balanceFactor(0.95),
                 wr(),
                 wi(),
                 wc(),
@@ -57,26 +58,32 @@ namespace Yttrium
                 {
                     static const T RADIX  = FLT_RADIX;
                     static const T SQRDX  = FLT_RADIX * FLT_RADIX;
+                    static const T factor(0.95);
 
                     assert( a.isSquare() );
                     assert( a.rows>0     );
                     const size_t n = a.rows;
 
                     size_t last=0;
+                    cadd.make(n); assert(cadd.isEmpty());
+                    radd.make(n); assert(radd.isEmpty());
                     while(0==last)
                     {
                         last=1;
                         for(size_t i=1;i<=n;i++)
                         {
-                            T r=zero,c=zero;
-                            for (size_t j=1;j<=n;j++)
+                            assert(cadd.isEmpty());
+                            assert(radd.isEmpty());
+                            for(size_t j=n;j>0;--j)
                             {
                                 if (j != i)
                                 {
-                                    c += Fabs<T>::Of(a[j][i]);
-                                    r += Fabs<T>::Of(a[i][j]);
+                                    cadd << Fabs<T>::Of(a[j][i]);
+                                    radd << Fabs<T>::Of(a[i][j]);
                                 }
                             }
+                            T r = radd.sum();
+                            T c = cadd.sum();
                             if( (c>zero) && (r>zero) )
                             {
                                 T g=r/RADIX;
@@ -93,12 +100,15 @@ namespace Yttrium
                                     f /= RADIX;
                                     c /= SQRDX;
                                 }
-                                if( (c+r)/f < balanceFactor*s)
+                                if( (c+r)/f < factor*s)
                                 {
                                     last=0;
                                     g=one/f;
-                                    for(size_t j=1;j<=n;j++) a[i][j] *= g;
-                                    for(size_t j=1;j<=n;j++) a[j][i] *= f;
+                                    for(size_t j=n;j>0;--j)
+                                    {
+                                        a[i][j] *= g;
+                                        a[j][i] *= f;
+                                    }
                                 }
                             }
                         }
@@ -153,12 +163,12 @@ namespace Yttrium
                                 //----------------------------------------------
                                 // subtract factor times row r + 1 from row i
                                 //----------------------------------------------
-                                for(size_t j=1;j<=n;++j) a[i][j] -= factor * a[m][j];
+                                for(size_t j=n;j>0;--j) a[i][j] -= factor * a[m][j];
 
                                 //----------------------------------------------
                                 // add factor times column i to column r + 1
                                 //----------------------------------------------
-                                for(size_t j=1;j<=n;j++) a[j][m] += factor * a[j][i];
+                                for(size_t j=n;j>0;--j)  a[j][m] += factor * a[j][i];
                             }
                         }
                     }
@@ -172,6 +182,7 @@ namespace Yttrium
                             a[i][j] = zero;
                     }
                 }
+
 
                 inline bool isSmall(const T small, const T &big) noexcept
                 {
@@ -194,6 +205,7 @@ namespace Yttrium
                  */
                 inline bool QR( Matrix<T> &a, Writable<T> &wr, Writable<T> &wi, size_t &nr)
                 {
+                    static const T half(0.5);
                     assert( a.isSquare() );
                     assert( a.rows>0     );
                     const ptrdiff_t n = a.rows;
@@ -224,7 +236,6 @@ namespace Yttrium
                                 s=Fabs<T>::Of(a[l-1][l-1])+Fabs<T>::Of(a[l][l]);
                                 if (s <= zero)
                                     s=anorm;
-                                //if ((T)(Fabs<T>::Of(a[l][l-1]) + s) == s) break;
                                 if( isSmall(Fabs<T>::Of(a[l][l-1]),s))
                                     break;
                             }
@@ -243,14 +254,14 @@ namespace Yttrium
                                 w=a[nn][nn-1]*a[nn-1][nn];
                                 if(l == (nn-1))
                                 {
-                                    p=T(0.5)*(y-x);
+                                    p=half*(y-x);
                                     q=p*p+w;
                                     const T absq = Fabs<T>::Of(q);
                                     z=Sqrt<T>::Of(absq);
                                     x += t;
                                     if (q >= zero)
                                     {
-                                        z=p + Sgn(z,p);
+                                        z = p + Sgn(z,p);
                                         wr[ir+1]=wr[ir]=x+z;
                                         if( Fabs<T>::Of(z)>zero )
                                             wr[ir]=x-w/z;
@@ -274,12 +285,15 @@ namespace Yttrium
                                     }
                                     if (0 == (its%SCALING) )
                                     {
+                                        static const T _3over4(0.75);
+                                        static const T _minus7over16(-0.4375);
+
                                         t += x;
                                         for (i=1;i<=nn;i++)
                                             a[i][i] -= x;
                                         s=Fabs<T>::Of(a[nn][nn-1])+Fabs<T>::Of(a[nn-1][nn-2]);
-                                        y =x = T(0.75)*s;
-                                        w    = -T(0.4375)*s*s;
+                                        y = x = _3over4*s;
+                                        w     = _minus7over16*s*s;
                                     }
                                     ++its;
                                     for(m=(nn-2);m>=l;m--)
@@ -300,7 +314,6 @@ namespace Yttrium
                                         }
                                         u=Fabs<T>::Of(a[m][m-1])*(Fabs<T>::Of(q)+Fabs<T>::Of(r));
                                         v=Fabs<T>::Of(p)*(Fabs<T>::Of(a[m-1][m-1])+Fabs<T>::Of(z)+Fabs<T>::Of(a[m+1][m+1]));
-                                        //if ((T)(u+v) == v) break;
                                         if(isSmall(u,v))
                                             break;
                                     }
@@ -310,7 +323,7 @@ namespace Yttrium
                                         if (i != (m+2))
                                             a[i][i-3]=zero;
                                     }
-                                    for (k=m;k<=nn-1;k++)
+                                    for(k=m;k<=nn-1;++k)
                                     {
                                         if (k != m)
                                         {
@@ -370,11 +383,14 @@ namespace Yttrium
                             }
                         } while (l < nn-1);
                     }
+
+                    // sort real values
                     if(nr>0)
                     {
                         LightArray<T> W(&wr[1],nr);
                         HeapSort::Call(W, Comparison::Increasing<T> );
                     }
+
                     return true;
                 }
 
@@ -382,27 +398,41 @@ namespace Yttrium
                 {
                     assert(a.isSquare());
                     assert(a.rows>0);
+                    //----------------------------------------------------------
+                    //
                     // preparing
+                    //
+                    //----------------------------------------------------------
                     const size_t n = a.rows;
                     wr.adjust(n,zero);
                     wi.adjust(n,zero);
                     wc.free();
 
+                    //----------------------------------------------------------
+                    //
                     // balance/reduce to Hessenber form
+                    //
+                    //----------------------------------------------------------
                     balance(a);
                     reduce(a);
                     size_t nr = 0;
                     if( QR(a, wr, wi, nr ) )
                     {
                         assert(nr<=n);
+
+                        //------------------------------------------------------
                         // extract complex values
+                        //------------------------------------------------------
                         wc.ensure(n-nr);
                         for(size_t j=1+nr;j<=n;++j)
                         {
                             const Cplx z(wr[j],wi[j]);
                             wc << z;
                         }
+
+                        //------------------------------------------------------
                         // trim real part of complex values
+                        //------------------------------------------------------
                         while( wr.size() > nr ) wr.popTail();
                         assert(values.wr.size() + values.wc.size() == n);
                         return &values;
