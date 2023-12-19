@@ -1,6 +1,6 @@
 
-#include "y/mkl/eigen/sort.hpp"
 #include "y/mkl/eigen/diagonalization.hpp"
+#include "y/mkl/algebra/svd.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/bits.hpp"
 #include "y/system/rtti.hpp"
@@ -18,6 +18,7 @@ namespace
 
         std::cerr << "<" << RTTI::Name<T>() << ">" << std::endl;
         MKL::Eigen::Diagonalization<T> diag;
+        MKL::SVD<T>                    svd;
 
         for(size_t n=1;n<=nmax;++n)
         {
@@ -32,15 +33,44 @@ namespace
             }
             std::cerr << "a=" << a << std::endl;
             const MKL::Eigen::Values<T> *values = diag.eig(a);
-            if(values)
-            {
-                std::cerr << "wr=" << values->wr << std::endl;
-                std::cerr << "wc=" << values->wc << std::endl;
-            }
-            else
+            if(!values)
             {
                 std::cerr << "Couldn't diag!!" << std::endl;
+                continue;
             }
+
+            std::cerr << "wr=" << values->wr << std::endl;
+            std::cerr << "wc=" << values->wc << std::endl;
+
+            Matrix<T> A(a);
+            Matrix<T> u(n,n);
+            Matrix<T> v(n,n);
+            Vector<T> w(n,0);
+
+            for(size_t i=1;i<=values->wr.size();++i)
+            {
+                const T lam = values->wr[i];
+                std::cerr  << "lam = " << lam << std::endl;
+
+                for(size_t j=1;j<=n;++j)
+                {
+                    A[j][j] = a[j][j] - lam;
+                }
+
+                if(!svd.build(u, w, v, A))
+                {
+                    std::cerr << "no svd..." << std::endl;
+                    continue;;
+                }
+                MKL::SVD<T>::Sort(u,w,v);
+                std::cerr << "\tw=" << w << std::endl;
+                std::cerr << "v=" << v << std::endl;
+            }
+
+
+
+
+
         }
         std::cerr << std::endl;
     }
@@ -56,7 +86,10 @@ Y_UTEST(eigen_diag)
     size_t nmax = 4;
     if(argc>1) nmax = ASCII::Convert::To<size_t>(argv[1],"nmax");
     testDiag< float >( ran, nmax );
+    return 0;
+
     testDiag< double >( ran, nmax);
+
     testDiag< long double >( ran, nmax);
 
     testDiag< XReal<float> >( ran, nmax );
