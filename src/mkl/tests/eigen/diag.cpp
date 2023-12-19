@@ -13,13 +13,13 @@ using namespace Yttrium;
 namespace
 {
     template <typename T>
-    static inline void testDiag( Random::Bits &ran )
+    static inline void testDiag( Random::Bits &ran, const size_t nmax=4)
     {
 
         std::cerr << "<" << RTTI::Name<T>() << ">" << std::endl;
         MKL::Eigen::Diagonalization<T> diag;
 
-        for(size_t n=1;n<=3;++n)
+        for(size_t n=1;n<=nmax;++n)
         {
             Matrix<T> a(n,n);
             Vector<T> wr(n,0), wi(n,0);
@@ -37,19 +37,27 @@ namespace
                 std::cerr << "wr=" << values->wr << std::endl;
                 std::cerr << "wc=" << values->wc << std::endl;
             }
-            else std::cerr << "Couldn't diag!!" << std::endl;
+            else
+            {
+                std::cerr << "Couldn't diag!!" << std::endl;
+            }
         }
         std::cerr << std::endl;
     }
 
 }
 
+#include "y/text/ascii/convert.hpp"
+
 Y_UTEST(eigen_diag)
 {
     Random::Rand ran;
 
-    testDiag< float >( ran );
-    testDiag< double >( ran );
+    size_t nmax = 4;
+    if(argc>1) nmax = ASCII::Convert::To<size_t>(argv[1],"nmax");
+    testDiag< float >( ran, nmax );
+    testDiag< double >( ran, nmax);
+    testDiag< long double >( ran, nmax);
 
 
 }
