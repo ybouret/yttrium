@@ -2,8 +2,9 @@
 #include "y/mkl/eigen/diagonalization.hpp"
 #include "y/type/nullify.hpp"
 #include "y/mkl/utils.hpp"
-//#include "y/mkl/numeric.hpp"
-//#include "y/mkl/antelope/add.hpp"
+#include "y/mkl/numeric.hpp"
+#include "y/mkl/antelope/add.hpp"
+#include "y/sort/heap.hpp"
 #include <cfloat>
 
 namespace Yttrium
@@ -150,7 +151,7 @@ namespace Yttrium
                     }
                 }
 
-                inline bool isSmall(const T small, const T &big)
+                inline bool isSmall(const T small, const T &big) noexcept
                 {
                     const T sum = OutOfReach::Add(small,big);
                     const T dif = sum - big;
@@ -185,8 +186,10 @@ namespace Yttrium
                     nr    = 0;
                     anorm = 0;
                     for (i=1;i<=n;i++)
+                    {
                         for (j=Max<size_t>(i-1,1);j<=n;j++)
                             anorm += Fabs<T>::Of(a[i][j]);
+                    }
                     nn=n;
                     t=zero;
                     while(nn>=1)
@@ -207,7 +210,7 @@ namespace Yttrium
                             if (l == nn)
                             {
                                 wr[ir]=x+t;
-                                wi[ir]=0;
+                                wi[ir]=zero;
                                 ++ir;
                                 ++nr;
                                 --nn;
@@ -229,7 +232,7 @@ namespace Yttrium
                                         wr[ir+1]=wr[ir]=x+z;
                                         if( Fabs<T>::Of(z)>zero )
                                             wr[ir]=x-w/z;
-                                        wi[ir+1]=wi[ir]=0;
+                                        wi[ir+1]=wi[ir]=zero;
                                         ir += 2;
                                         nr += 2;
                                     }
@@ -253,8 +256,8 @@ namespace Yttrium
                                         for (i=1;i<=nn;i++)
                                             a[i][i] -= x;
                                         s=Fabs<T>::Of(a[nn][nn-1])+Fabs<T>::Of(a[nn-1][nn-2]);
-                                        y=x= T(0.75)*s;
-                                        w = -T(0.4375)*s*s;
+                                        y =x = T(0.75)*s;
+                                        w    = -T(0.4375)*s*s;
                                     }
                                     ++its;
                                     for(m=(nn-2);m>=l;m--)
@@ -348,7 +351,7 @@ namespace Yttrium
                     if(nr>0)
                     {
                         LightArray<T> W(&wr[1],nr);
-                        //hsort(W,comparison::increasing<T>);
+                        HeapSort::Call(W, Comparison::Increasing<T> );
                     }
                     return true;
                 }

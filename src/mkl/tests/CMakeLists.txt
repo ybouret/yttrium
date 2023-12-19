@@ -51,3 +51,5 @@ add_test(filter:smooth  test-mkl filter_smooth)
 add_test(root:zfind     test-mkl root_zfind)
 
 add_test(eigen:jacobi   test-mkl eigen_jacobi)
+add_test(eigen:diag     test-mkl eigen_diag)
+

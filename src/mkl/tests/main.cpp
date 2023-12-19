@@ -38,6 +38,7 @@ Y_UTEST_DECL(32)
 
 
     Y_UTEST(eigen_jacobi);
+    Y_UTEST(eigen_diag);
 
 }
 Y_UTEST_EXEC()
