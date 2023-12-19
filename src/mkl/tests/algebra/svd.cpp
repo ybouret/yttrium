@@ -43,8 +43,8 @@ namespace
                 }
 
 
-                MKL::SVD<T>::Sort(u, w, v, Comparison::CxxIncreasingAbs<T> );
-
+                MKL::SVD<T>::Sort(u, w, v);
+                
                 std::cerr << "u=" << u << std::endl;
                 std::cerr << "w=diagm(" << w << ")" << std::endl;
                 std::cerr << "v=" << v << std::endl;

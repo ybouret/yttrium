@@ -5,7 +5,6 @@
 #define Y_MKL_SVD_Included 1
 
 #include "y/container/matrix.hpp"
-#include "y/comparison.hpp"
 
 namespace Yttrium
 {
@@ -23,6 +22,14 @@ namespace Yttrium
         class SVD
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+
+            //! values comparison prototype
             typedef SignType (*Compare)(const T &, const T &);
 
             //__________________________________________________________________
@@ -50,13 +57,16 @@ namespace Yttrium
 
             //! Sort singular values d[1..n], COLUMN eigenvectors v[1..n][1..n] and matching COLUMN vectors u[1..m][1..n]
             /**
-             \param u        left hand sive
-             \param d        eigenvalues
-             \param v        eigenvectors, colums
-             \param compare comparison for eigenvalues
+             \param u        left hand side
+             \param d        singular values
+             \param v        singular vectors
+             \param compare  comparison for eigenvalues
              */
             static void Sort(Matrix<T> &u, Writable<T> &d, Matrix<T> &v, Compare compare);
-            
+
+            //! Sort singular values by increasing absolute value: kernel first
+            static void Sort(Matrix<T> &u, Writable<T> &d, Matrix<T> &v);
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SVD);
             class Code;

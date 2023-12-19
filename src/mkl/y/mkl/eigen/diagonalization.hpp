@@ -16,29 +16,73 @@ namespace Yttrium
         namespace Eigen
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! light weight place holder for internal eigenvalues
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             class Values
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! setup from internal readable
                 inline Values(const Readable<T>            &_,
                               const Readable< Complex<T> > &__) noexcept :
                 wr(_), wc(__) {}
 
+                //! cleanup
                 inline ~Values() noexcept {}
 
-                const Readable<T>            &wr;
-                const Readable< Complex<T> > &wc;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const Readable<T>            &wr; //!< internal real values
+                const Readable< Complex<T> > &wc; //!< internal complex values
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Values);
             };
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Diagonalization algorithms
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             class Diagonalization
             {
             public:
-                explicit Diagonalization();
-                virtual ~Diagonalization() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Diagonalization();           //!< setup internal code
+                virtual ~Diagonalization() noexcept;  //!< cleanup
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
 
                 //! balance a real matrix
                 /**
@@ -65,12 +109,10 @@ namespace Yttrium
 
                 //! find the eigen value
                 /**
-                 \param a a real matrix, that will be balanced and reduced
-                 \param wr output sequence of real    eigenvalues
-                 \param wc output sequence of complex eigenvalues
+                 \param a a real matrix, preserved
                  \return values on success, NULL on error
                  */
-                const Values<T> * eig(Matrix<T> &a);
+                const Values<T> * eig(const Matrix<T> &a);
 
 
             private:

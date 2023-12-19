@@ -198,6 +198,7 @@ namespace Yttrium
                     typedef T                              Type;        //!< alias
                     typedef typename ScalarFor<Type>::Type ScalarType;  //!< alias
 
+                    //! compute |lhs|^2
                     template <typename LHS> static inline
                     ScalarType Of(LHS &lhs, MultiAdd<ScalarType> &xm)
                     {
@@ -215,7 +216,7 @@ namespace Yttrium
                         return xadd.sum();
                     }
 
-                    //! |primary-replica|^2, difference in PRIMARY::Type
+                    //! compute |primary-replica|^2, difference in PRIMARY::Type
                     template <typename PRIMARY, typename REPLICA> static inline
                     ScalarType Of(PRIMARY &primary, REPLICA &replica, MultiAdd<ScalarType> &xm)
                     {
@@ -248,25 +249,44 @@ namespace Yttrium
             class ComputeMod2
             {
             public:
-                typedef Cog::SquaredNorm<T>        SqNrm;
-                typedef typename SqNrm::ScalarType ScalarType;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef Cog::SquaredNorm<T>        SqNrm;      //!< alias
+                typedef typename SqNrm::ScalarType ScalarType; //!< aalias
 
-                inline explicit ComputeMod2() noexcept : sma() {}
-                inline virtual ~ComputeMod2() noexcept {}
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                inline explicit ComputeMod2() noexcept : sma() {} //!< setup
+                inline virtual ~ComputeMod2() noexcept {}         //!< cleanup
 
+                //! |primary|^2
                 template <typename PRIMARY> inline
                 ScalarType operator()(PRIMARY &primary)
                 {
                     return SqNrm::Of(primary,sma);
                 }
 
+                //! |primary-replica|^2
                 template <typename PRIMARY, typename REPLICA> inline
                 ScalarType operator()(PRIMARY &primary, REPLICA &replica)
                 {
                     return SqNrm::Of(primary,replica,sma);
                 }
 
-
+                //______________________________________________________________
+                //
+                //
+                // members
+                //
+                //______________________________________________________________
                 MultiAdd<ScalarType> sma; //!< scalar multi-add
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(ComputeMod2);

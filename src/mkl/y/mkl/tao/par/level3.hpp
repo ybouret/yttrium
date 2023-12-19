@@ -153,6 +153,7 @@ namespace Yttrium
 
             namespace Parallel
             {
+                //! fill rows of range
                 template <typename T, typename ARRAY, typename V>
                 void DiagMatMul(Engine1D        &range,
                                 Matrix<T>       &tgt,
