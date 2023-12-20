@@ -62,70 +62,12 @@ namespace Yttrium
 #include "diag/balance.hxx"
 #include "diag/reduce.hxx"
 #include "diag/qr.hxx"
-               
+#include "diag/eig.hxx"
 
 
              
 
-                inline const Values<T> * eig(Matrix<T> &a)
-                {
-                    assert(a.isSquare());
-                    assert(a.rows>0);
-                    //----------------------------------------------------------
-                    //
-                    // preparing
-                    //
-                    //----------------------------------------------------------
-                    const size_t n = a.rows;
-                    wr.adjust(n,zero);
-                    wi.adjust(n,zero);
-                    wc.free();
-
-                    //----------------------------------------------------------
-                    //
-                    // balance/reduce to Hessenber form
-                    //
-                    //----------------------------------------------------------
-                    balance(a);
-                    reduce(a);
-                    size_t nr = 0;
-                    try {
-
-                        if( QR(a, wr, wi, nr ) )
-                        {
-                            assert(nr<=n);
-
-                            //------------------------------------------------------
-                            // extract complex values
-                            //------------------------------------------------------
-                            wc.ensure(n-nr);
-                            for(size_t j=1+nr;j<=n;++j)
-                            {
-                                const Cplx z(wr[j],wi[j]);
-                                wc << z;
-                            }
-
-                            //------------------------------------------------------
-                            // trim real part of complex values
-                            //------------------------------------------------------
-                            while( wr.size() > nr ) wr.popTail();
-                            assert(values.wr.size() + values.wc.size() == n);
-                            return &values;
-                        }
-                        else
-                        {
-                            return 0;
-                        }
-                    }
-                    catch(...)
-                    {
-                        wr.free();
-                        wi.free();
-                        wc.free();
-                        throw;
-                    }
-
-                }
+               
 
                 inline void guess(Writable<T>            &eVal,
                                   Matrix<T>              &eVec,
@@ -142,24 +84,30 @@ namespace Yttrium
                     const size_t nv = eVal.size();
                     const size_t nr = wr.size();
                     Matrix<T>    A(a);
-                    Matrix<T>    u(n,n);
                     Matrix<T>    v(n,n);
                     CxxArray<T>  w(n);
 
                     for(size_t iv=1;iv<=nv;++iv)
                     {
+                        //------------------------------------------------------
+                        // extract eigenvalue by its index
+                        //------------------------------------------------------
                         const size_t k   = eIdx[iv]; if(k<1||k>nr) throw Specific::Exception(fn, "index=%u not in [1:%u]", unsigned(k), unsigned(nr));
                         const T      lam = eVal[iv] = wr[k];
-                        //std::cerr << "\tlam" << iv << "=" << lam << std::endl;
-                        for(size_t i=n;i>0;--i)
-                        {
-                            A[i][i] = a[i][i] - lam;
-                        }
-                        if(!svd.build(u,w,v,A))
-                            throw Specific::Exception(fn,"no SVD for eigenvalue %.15g", double(lam));
-                        //std::cerr << "\t#w=" << w << std::endl;
-                        //std::cerr << "\tv=" << v << std::endl;
 
+                        //------------------------------------------------------
+                        // A = a - lam * Id
+                        //------------------------------------------------------
+                        A.assign(a);
+                        for(size_t i=n;i>0;--i)
+                            A[i][i] = a[i][i] - lam;
+
+                        if(!svd.build(A,w,v))
+                            throw Specific::Exception(fn,"no SVD for eigenvalue %.15g", double(lam));
+
+                        //------------------------------------------------------
+                        // find min(|w|)
+                        //------------------------------------------------------
                         size_t imin = 1;
                         T      amin = Fabs<T>::Of(w[1]);
                         for(size_t i=n;i>1;--i)
@@ -171,12 +119,15 @@ namespace Yttrium
                                 imin = i;
                             }
                         }
-                        //std::cerr << "\t#|w|_min=" << amin << " @" << imin << std::endl;
+
+                        //------------------------------------------------------
+                        // extract column of v
+                        //------------------------------------------------------
+                        Writable<T> &vec = eVec[iv];
                         for(size_t i=n;i>0;--i)
-                        {
-                            eVec[iv][i] = v[i][imin];
-                        }
-                        std::cerr << "\tv" << iv << "=" << eVec[iv] << std::endl;
+                            vec[i] = v[i][imin];
+
+                        radd.normalize(vec);
 
                     }
 
