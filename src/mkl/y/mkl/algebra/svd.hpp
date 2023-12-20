@@ -54,15 +54,15 @@ namespace Yttrium
             //__________________________________________________________________
             bool build(Matrix<T> &a, Writable<T> &w, Matrix<T> &v);
 
+
+            //! build with copy of UNTOUCHED a
             template <typename U> inline
             bool build(Matrix<T> &u, Writable<T> &w, Matrix<T> &v, const Matrix<U> &a)
             {
                 u.assign(a);
                 return build(u,w,v);
             }
-
-
-
+            
             //! Sort singular values d[1..n], COLUMN eigenvectors v[1..n][1..n] and matching COLUMN vectors u[1..m][1..n]
             /**
              \param u        left hand side
