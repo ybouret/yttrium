@@ -308,7 +308,6 @@ namespace Yttrium
                                         p=(r*s-w)/a[m+1][m]+a[m][m+1];
                                         q=a[m+1][m+1]-z-r-s;
                                         r=a[m+2][m+1];
-                                        //s=Fabs<T>::Of(p)+Fabs<T>::Of(q)+Fabs<T>::Of(r);
                                         s=Antelope::Sum3<T>::OfAbs(p,q,r);
                                         p /= s;
                                         q /= s;
@@ -318,7 +317,7 @@ namespace Yttrium
                                             break;
                                         }
                                         u=Fabs<T>::Of(a[m][m-1])*(Fabs<T>::Of(q)+Fabs<T>::Of(r));
-                                        v=Fabs<T>::Of(p)*(Fabs<T>::Of(a[m-1][m-1])+Fabs<T>::Of(z)+Fabs<T>::Of(a[m+1][m+1]));
+                                        v=Fabs<T>::Of(p)*(Antelope::Sum3<T>::OfAbs(a[m-1][m-1],z,a[m+1][m+1]));
                                         if(isSmall(u,v))
                                             break;
                                     }
@@ -336,7 +335,8 @@ namespace Yttrium
                                             q=a[k+1][k-1];
                                             r=zero;
                                             if (k != (nn-1)) r=a[k+2][k-1];
-                                            if ( (x=Fabs<T>::Of(p)+Fabs<T>::Of(q)+Fabs<T>::Of(r))>zero )
+                                            //if ( (x=Fabs<T>::Of(p)+Fabs<T>::Of(q)+Fabs<T>::Of(r))>zero )
+                                            if ( (x=Antelope::Sum3<T>::OfAbs(p,q,r))>zero )
                                             {
                                                 p /= x;
                                                 q /= x;
