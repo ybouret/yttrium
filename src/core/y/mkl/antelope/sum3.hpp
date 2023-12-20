@@ -51,6 +51,24 @@ namespace Yttrium
                     return a+b+c;
                 }
 
+                //! sum3 of absolute values by probing largest
+                static inline ScalarType OfAbs(ConstType &a, ConstType &b, ConstType &c)
+                {
+                    ScalarType       vmax = Fabs<T>::Of(a);
+                    const ScalarType absa = vmax;           Big             big = BigA;
+                    const ScalarType absb = Fabs<T>::Of(b); if(absb>vmax) { big = BigB; vmax=absb; }
+                    const ScalarType absc = Fabs<T>::Of(c); if(absc>vmax) { big = BigC; vmax=absc; }
+                    switch(big)
+                    {
+                        case BigA: return (absb+absc) + absa;
+                        case BigB: return (absc+absa) + absb;
+                        case BigC: return (absa+absb) + absc;
+                    }
+                    // never get here
+                    return absa+absb+absc;
+                }
+
+
             private:
                 enum Big
                 {
@@ -70,12 +88,20 @@ namespace Yttrium
             struct Sum3Proxy<T,false>
             {
                 Y_ARGS_DECL(T,Type); //!< aliases
+                typedef typename ScalarFor<MutableType>::Type ScalarType; //!< alias
 
                 //! direct sum3
                 static inline Type Of(ConstType &a, ConstType &b, ConstType &c)
                 {
                     return a+b+c;
                 }
+
+                //! direct sum3 of absolute values
+                static inline ScalarType OfAbs(ConstType &a, ConstType &b, ConstType &c)
+                {
+                    return Fabs<T>::Of(a) + Fabs<T>::Of(b) + Fabs<T>::Of(c);
+                }
+
             };
 
             //__________________________________________________________________
@@ -87,13 +113,22 @@ namespace Yttrium
             template <typename T>
             struct Sum3
             {
-                Y_ARGS_DECL(T,Type); //!< aliases
+                Y_ARGS_DECL(T,Type);                                      //!< aliases
+                typedef typename ScalarFor<MutableType>::Type ScalarType; //!< alias
+
 
                 //! algorithm selection
                 static inline T Of(ParamType a, ParamType b, ParamType c)
                 {
                     return Sum3Proxy<T, Wary<T>::Flag >::Of(a,b,c);
                 }
+
+                //! algorithm selection
+                static inline ScalarType OfAbs(ParamType a, ParamType b, ParamType c)
+                {
+                    return Sum3Proxy<Type, Wary<Type>::Flag >::OfAbs(a,b,c);
+                }
+
             };
 
         }

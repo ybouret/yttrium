@@ -4,6 +4,8 @@
 #include "y/mkl/utils.hpp"
 #include "y/mkl/numeric.hpp"
 #include "y/mkl/antelope/add.hpp"
+#include "y/mkl/antelope/sum3.hpp"
+
 #include "y/sort/heap.hpp"
 #include "y/sequence/vector.hpp"
 #include <cfloat>
