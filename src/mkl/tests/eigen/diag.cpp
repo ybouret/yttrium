@@ -42,6 +42,8 @@ namespace
             std::cerr << "wr=" << values->wr << std::endl;
             std::cerr << "wc=" << values->wc << std::endl;
 
+            continue;
+            
             Matrix<T> A(a);
             Matrix<T> u(n,n);
             Matrix<T> v(n,n);

@@ -237,7 +237,7 @@ namespace Yttrium
                         {
                             for (l=nn;l>=2;l--)
                             {
-                                s=Fabs<T>::Of(a[l-1][l-1])+Fabs<T>::Of(a[l][l]);
+                                s = Fabs<T>::Of(a[l-1][l-1])+Fabs<T>::Of(a[l][l]);
                                 if (s <= zero)
                                     s=anorm;
                                 if( isSmall(Fabs<T>::Of(a[l][l-1]),s))
@@ -308,7 +308,8 @@ namespace Yttrium
                                         p=(r*s-w)/a[m+1][m]+a[m][m+1];
                                         q=a[m+1][m+1]-z-r-s;
                                         r=a[m+2][m+1];
-                                        s=Fabs<T>::Of(p)+Fabs<T>::Of(q)+Fabs<T>::Of(r);
+                                        //s=Fabs<T>::Of(p)+Fabs<T>::Of(q)+Fabs<T>::Of(r);
+                                        s=Antelope::Sum3<T>::OfAbs(p,q,r);
                                         p /= s;
                                         q /= s;
                                         r /= s;
