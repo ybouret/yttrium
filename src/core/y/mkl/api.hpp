@@ -6,6 +6,7 @@
 #include "y/mkl/complex.hpp"
 #include "y/mkl/xreal.hpp"
 #include "y/apex/rational.hpp"
+#include "y/sort/nw.hpp"
 
 namespace Yttrium
 {
@@ -257,6 +258,35 @@ namespace Yttrium
                 }
             }
         }
+
+        //______________________________________________________________________
+        //
+        //
+        //! hypotenuse for [Xreal]<float|double|long double>
+        //
+        //______________________________________________________________________
+        template <typename T>
+        inline T Hypotenuse(const T &a, const T &b, const T &c) noexcept
+        {
+            static const T zero(0);
+            static const T one(1);
+
+            T data[4] = { zero, Fabs<T>::Of(a), Fabs<T>::Of(b), Fabs<T>::Of(c) };
+            NetworkSort::Algo<3>::Decreasing(data);
+            const T dmax = data[1];
+            if(dmax<=zero)
+                return zero;
+            else
+            {
+                const T rho2 = data[2]/dmax;
+                const T rho3 = data[3]/dmax;
+                const T args = one + (rho2*rho2 + rho3*rho3);
+                return dmax * Sqrt<T>::Of(args);
+            }
+
+        }
+
+     
 
         //______________________________________________________________________
         //

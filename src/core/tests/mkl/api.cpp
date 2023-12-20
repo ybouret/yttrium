@@ -1,6 +1,7 @@
 #include "../main.hpp"
 
 #include "y/mkl/api.hpp"
+
 #include "y/utest/run.hpp"
 #include <typeinfo>
 
@@ -19,6 +20,15 @@ static inline void TestFabs(Random::Bits &ran)
     }
     std::cerr << std::endl;
 }
+
+namespace Yttrium
+{
+    namespace MKL
+    {
+       
+    }
+}
+
 
 Y_UTEST(mkl_api)
 {
@@ -54,6 +64,12 @@ Y_UTEST(mkl_api)
     TestFabs< Complex< XReal<float> > >(ran);
     TestFabs< Complex< XReal<double> > >(ran);
     TestFabs< Complex< XReal<long double> > >(ran);
+
+    {
+        float a=-2, b=1, c=-3;
+        const float h = MKL::Hypotenuse(a,b,c);
+        std::cerr << "h=" << h << std::endl;
+    }
 
 }
 Y_UDONE()
