@@ -95,6 +95,11 @@ Y_UTEST(mkl_xadd)
         std::cerr << std::endl;
         V3D<double> v(-3,1,-2);
         std::cerr << "|" << v << "| = " << v.norm() << " / " << xadd.normOf(v) << std::endl;
+
+        xadd.normalize(v);
+        std::cerr << "|" << v << "| = " << v.norm() << " / " << xadd.normOf(v) << std::endl;
+
+
     }
 
 }

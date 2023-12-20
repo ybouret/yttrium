@@ -409,58 +409,41 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
+                //! compute norm of readable-like array[1..arr.size()]
                 template <typename ARRAY>
                 inline T normOf(ARRAY &arr)
                 {
-                    const size_t n = arr.size();
-                    const T      zero(0);
 
                     //----------------------------------------------------------
                     // check size
                     //----------------------------------------------------------
-                    if(n<=0) return zero;
+                    const T      zero(0);
+                    if(arr.size()<=0) return zero;
 
                     //----------------------------------------------------------
                     // find maximum of absolute values
                     //----------------------------------------------------------
-                    T      amax = Fabs<T>::Of(arr[1]);
-                    size_t imax = 1;
-                    for(size_t i=n;i>1;--i)
-                    {
-                        const T atmp = Fabs<T>::Of(arr[i]);
-                        if(atmp>amax)
-                        {
-                            amax = atmp;
-                            imax = i;
-                        }
-                    }
+                    size_t  imax = 1;
+                    const T amax = findMax(arr,imax);
                     if(amax<=zero) return zero;
 
                     //----------------------------------------------------------
-                    // compute sum  of reduced squares
+                    // return norm
                     //----------------------------------------------------------
-                    Add<T> &self = *this;
-                    self.make(n);
-                    {
-                        const T one(1);
-                        self << one;
-                    }
-
-                    for(size_t i=n;i>imax;--i)
-                    {
-                        const T tmp = Fabs<T>::Of(arr[i])/amax;
-                        self << tmp*tmp;
-                    }
-
-                    for(size_t i=--imax;i>0;--i)
-                    {
-                        const T tmp = Fabs<T>::Of(arr[i])/amax;
-                        self << tmp*tmp;
-                    }
-
-                    const  T s2 = self.sum();
-                    return amax * Sqrt<T>::Of(s2);
+                    return amax * scaledSqrt(arr,amax,imax);
                 }
+
+                template <typename ARRAY>
+                inline void normalize(ARRAY &arr)
+                {
+                    const size_t n = arr.size();           if(n<=0) return;
+                    size_t       imax = 1;
+                    const T      zero(0);
+                    const T      amax = findMax(arr,imax); if(amax<=zero) return;
+                    const T      scal = amax * scaledSqrt(arr,amax,imax);
+                    for(size_t i=n;i>0;--i) arr[i] /= scal;
+                }
+
 
                 //______________________________________________________________
                 //
@@ -517,6 +500,54 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Add);
+
+                template <typename ARRAY>
+                inline T findMax(ARRAY &arr, size_t &imax)
+                {
+                    assert(arr.size()>0);
+                    assert(1==imax);
+                    T      amax = Fabs<T>::Of(arr[1]);
+                    for(size_t i=arr.size();i>1;--i)
+                    {
+                        const T atmp = Fabs<T>::Of(arr[i]);
+                        if(atmp>amax)
+                        {
+                            amax = atmp;
+                            imax = i;
+                        }
+                    }
+                    return amax;
+                }
+
+                //! push (|arr|/amax)^2
+                template <typename ARRAY>
+                inline T scaledSqrt(ARRAY &arr, const T &amax, size_t imax)
+                {
+                    const size_t n    = arr.size();
+                    Add<T>      &self = *this;
+                    self.make(n); assert(self.isEmpty());
+                    {
+                        const T one(1);
+                        self << one;
+                    }
+
+                    for(size_t i=n;i>imax;--i)
+                    {
+                        const T tmp = Fabs<T>::Of(arr[i])/amax;
+                        self << tmp*tmp;
+                    }
+
+                    for(size_t i=--imax;i>0;--i)
+                    {
+                        const T tmp = Fabs<T>::Of(arr[i])/amax;
+                        self << tmp*tmp;
+                    }
+
+                    const T s2 = self.sum();
+                    return Sqrt<T>::Of(s2);
+                }
+
+
             };
 
         }
