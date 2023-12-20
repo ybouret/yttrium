@@ -114,16 +114,16 @@ namespace Yttrium
                  */
                 const Values<T> * eig(const Matrix<T> &a);
 
-                //! initialize eigenvalues and eigenvector from selected indice
+                //! initialize eigenvalues and eigenvector from selected indices
                 /**
-                 \param eVal [1..nv]        initial eigenvalue
-                 \param eVec [1..nv][1..n]  initial eigenvector
-                 \param eIdx [1..nv]        indices in [1:eig->wr.size()]
-                 \param a    [1..n][1..n]   original matrix
+                 \param eigenValues  [1..nv]        initial eigenvalue
+                 \param eigenVectors [1..nv][1..n]  initial eigenvector
+                 \param eigenIndices [1..nv]        indices in [1:eig->wr.size()]
+                 \param a            [1..n][1..n]   original matrix
                  */
-                void guess(Writable<T>            &eVal,
-                           Matrix<T>              &eVec,
-                           const Readable<size_t> &eIdx,
+                void guess(Writable<T>            &eigenValues,
+                           Matrix<T>              &eigenVectors,
+                           const Readable<size_t> &eigenIndices,
                            const Matrix<T>        &a);
 
             private:
