@@ -343,7 +343,8 @@ namespace Yttrium
                                                 r /= x;
                                             }
                                         }
-                                        if( Fabs<T>::Of(s=Sgn(SqrtOf(p*p+q*q+r*r),p)) > zero )
+                                        //if( Fabs<T>::Of(s=Sgn(SqrtOf(p*p+q*q+r*r),p)) > zero )
+                                        if( Fabs<T>::Of(s=Sgn(Hypotenuse(p,q,r),p)) > zero )
                                         {
                                             if (k == m)
                                             {
