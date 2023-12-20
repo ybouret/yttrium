@@ -7,6 +7,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/mkl/tao/seq/level3.hpp"
 #include "y/mkl/api.hpp"
+#include "y/sequence/vector.hpp"
 
 using namespace Yttrium;
 
@@ -42,8 +43,8 @@ namespace
             std::cerr << "wr=" << values->wr << std::endl;
             std::cerr << "wc=" << values->wc << std::endl;
 
-            continue;
-            
+
+#if 0
             Matrix<T> A(a);
             Matrix<T> u(n,n);
             Matrix<T> v(n,n);
@@ -67,6 +68,24 @@ namespace
                 MKL::SVD<T>::Sort(u,w,v);
                 std::cerr << "\tw=" << w << std::endl;
                 std::cerr << "v=" << v << std::endl;
+            }
+#endif
+
+            const size_t nr = values->wr.size();
+            if(nr>0)
+            {
+                Vector<size_t> eIdx(nr,0);
+                for(size_t i=1;i<=nr;++i) eIdx[i] = i;
+
+                Vector<T> eVal(nr,0);
+                Matrix<T> eVec(nr,n);
+
+                diag.guess(eVal,eVec,eIdx,a);
+                for(size_t i=1;i<=nr;++i)
+                {
+                    std::cerr << "lam" << i << " = " << eVal[i] << "; v" << i << "=" << eVec[i] << std::endl;
+                }
+
             }
 
 

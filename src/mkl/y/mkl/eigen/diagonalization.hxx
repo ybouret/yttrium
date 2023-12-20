@@ -44,10 +44,10 @@ template <> const Values<real_t> *Diagonalization<real_t> :: eig( const Matrix<r
 
 template <>
 void Diagonalization<real_t> ::guess(Writable<real_t>       &eVal,
-                                     Matrix<real_t>          eVec,
+                                     Matrix<real_t>         &eVec,
                                      const Readable<size_t> &eIdx,
                                      const Matrix<real_t>   &a)
 {
     assert(0!=code);
-
+    code->guess(eVal, eVec, eIdx, a);
 }

@@ -122,7 +122,7 @@ namespace Yttrium
                  \param a    [1..n][1..n]   original matrix
                  */
                 void guess(Writable<T>            &eVal,
-                           Matrix<T>               eVec,
+                           Matrix<T>              &eVec,
                            const Readable<size_t> &eIdx,
                            const Matrix<T>        &a);
 

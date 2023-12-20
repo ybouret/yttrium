@@ -6,9 +6,12 @@
 #include "y/mkl/antelope/add.hpp"
 #include "y/mkl/antelope/sum3.hpp"
 #include "y/mkl/algebra/svd.hpp"
+
 #include "y/sort/heap.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/system/exception.hpp"
+#include "y/container/cxx/array.hpp"
+
 #include <cfloat>
 
 namespace Yttrium
@@ -57,287 +60,12 @@ namespace Yttrium
 
 
 #include "diag/balance.hxx"
-
+#include "diag/reduce.hxx"
+#include "diag/qr.hxx"
                
 
-                //! reduction to a real Hessenberg form
-                /**
-                 matrix should be balanced.
-                 */
-                inline void reduce( Matrix<T> &a ) throw()
-                {
-                    assert(a.isSquare());
-                    const size_t n = a.rows;
 
-                    //----------------------------------------------------------
-                    // m = r+1
-                    //----------------------------------------------------------
-                    for(size_t m=2; m<n; ++m )
-                    {
-                        const size_t r   = m-1;
-                        T            piv = zero;
-                        size_t       s   = m;
-                        for( size_t j=m+1;j<=n;++j)
-                        {
-                            //--------------------------------------------------
-                            // find the pivot
-                            //--------------------------------------------------
-                            const T tmp = a[j][r];
-                            if(Fabs<T>::Of(tmp)>Fabs<T>::Of(piv))
-                            {
-                                piv = tmp;
-                                s   = j;
-                            }
-                        }
-                        if( s != m )
-                        {
-                            assert(Fabs<T>::Of(piv)>zero);
-                            //--------------------------------------------------
-                            // First similarity transform: exchange colums/rows
-                            //--------------------------------------------------
-                            a.swapBoth(s,m);
-
-                            //--------------------------------------------------
-                            // Second similarity transform
-                            //--------------------------------------------------
-                            assert( Fabs<T>::Of(piv-a[m][m-1]) <= zero );
-                            for(size_t i=m+1;i<=n;++i)
-                            {
-                                const T factor = a[i][r] / piv;
-
-                                //----------------------------------------------
-                                // subtract factor times row r + 1 from row i
-                                //----------------------------------------------
-                                for(size_t j=n;j>0;--j) a[i][j] -= factor * a[m][j];
-
-                                //----------------------------------------------
-                                // add factor times column i to column r + 1
-                                //----------------------------------------------
-                                for(size_t j=n;j>0;--j)  a[j][m] += factor * a[j][i];
-                            }
-                        }
-                    }
-
-                    //==================================================================
-                    // clean up to the exact Hessenberg form
-                    //==================================================================
-                    for(size_t j=n;j>0;--j)
-                    {
-                        for(size_t i=j+2;i<=n;++i)
-                            a[i][j] = zero;
-                    }
-                }
-
-
-                inline bool isSmall(const T small, const T &big) noexcept
-                {
-                    const T sum = OutOfReach::Add(small,big);
-                    const T dif = sum - big;
-                    return Fabs<T>::Of(dif) <= zero;
-                }
-
-                static inline T SqrtOf(const T value) { return Sqrt<T>::Of(value); }
-
-                static const unsigned MAX_ITS =100; //!< maximum number of cycles
-                static const unsigned SCALING = 10; //!< scaling every cycle
-                //! find the eigen values
-                /**
-                 \param a  a real matrix reduced to its Hessenberg form: destructed !
-                 \param wr an array that will be filled with the real parts
-                 \param wi an array that will be filled with the imagnary parts
-                 \param nr the number or real eigenvalues
-                 wi[1..nr]=0 and wr[1..nr] are sorted by increasing order.
-                 */
-                inline bool QR( Matrix<T> &a, Writable<T> &wr, Writable<T> &wi, size_t &nr)
-                {
-                    static const T half(0.5);
-                    assert( a.isSquare() );
-                    assert( a.rows>0     );
-                    const ptrdiff_t n = a.rows;
-                    assert( wr.size()   >= a.rows );
-                    assert( wi.size()   >= a.rows );
-
-                    ptrdiff_t nn,m,l,k,j,i,mmin;
-                    T         z,y,x,w,v,u,t,s,r=0,q=0,p=0,anorm;
-
-                    size_t   ir = 1; //! where to put real eigenvalues
-                    size_t   ic = n; //! where to put cplx eigenvalues
-                    nr    = 0;
-                    anorm = 0;
-                    for (i=1;i<=n;i++)
-                    {
-                        for (j=Max<size_t>(i-1,1);j<=n;j++)
-                            anorm += Fabs<T>::Of(a[i][j]);
-                    }
-                    nn=n;
-                    t=zero;
-                    while(nn>=1)
-                    {
-                        unsigned its=0;
-                        do
-                        {
-                            for (l=nn;l>=2;l--)
-                            {
-                                s = Fabs<T>::Of(a[l-1][l-1])+Fabs<T>::Of(a[l][l]);
-                                if (s <= zero)
-                                    s=anorm;
-                                if( isSmall(Fabs<T>::Of(a[l][l-1]),s))
-                                    break;
-                            }
-                            x=a[nn][nn];
-                            if (l == nn)
-                            {
-                                wr[ir]=x+t;
-                                wi[ir]=zero;
-                                ++ir;
-                                ++nr;
-                                --nn;
-                            }
-                            else
-                            {
-                                y=a[nn-1][nn-1];
-                                w=a[nn][nn-1]*a[nn-1][nn];
-                                if(l == (nn-1))
-                                {
-                                    p=half*(y-x);
-                                    q=p*p+w;
-                                    const T absq = Fabs<T>::Of(q);
-                                    z=Sqrt<T>::Of(absq);
-                                    x += t;
-                                    if (q >= zero)
-                                    {
-                                        z = p + Sgn(z,p);
-                                        wr[ir+1]=wr[ir]=x+z;
-                                        if( Fabs<T>::Of(z)>zero )
-                                            wr[ir]=x-w/z;
-                                        wi[ir+1]=wi[ir]=zero;
-                                        ir += 2;
-                                        nr += 2;
-                                    }
-                                    else
-                                    {
-                                        wr[ic-1]=wr[ic]=x+p;
-                                        wi[ic-1]= -(wi[ic]=z);
-                                        ic -= 2;
-                                    }
-                                    nn -= 2;
-                                }
-                                else
-                                {
-                                    if (its >= MAX_ITS)
-                                    {
-                                        return false;
-                                    }
-                                    if (0 == (its%SCALING) )
-                                    {
-                                        static const T _3over4(0.75);
-                                        static const T _minus7over16(-0.4375);
-
-                                        t += x;
-                                        for (i=1;i<=nn;i++)
-                                            a[i][i] -= x;
-                                        s=Fabs<T>::Of(a[nn][nn-1])+Fabs<T>::Of(a[nn-1][nn-2]);
-                                        y = x = _3over4*s;
-                                        w     = _minus7over16*s*s;
-                                    }
-                                    ++its;
-                                    for(m=(nn-2);m>=l;m--)
-                                    {
-                                        z=a[m][m];
-                                        r=x-z;
-                                        s=y-z;
-                                        p=(r*s-w)/a[m+1][m]+a[m][m+1];
-                                        q=a[m+1][m+1]-z-r-s;
-                                        r=a[m+2][m+1];
-                                        s=Antelope::Sum3<T>::OfAbs(p,q,r);
-                                        p /= s;
-                                        q /= s;
-                                        r /= s;
-                                        if (m == l)
-                                        {
-                                            break;
-                                        }
-                                        u=Fabs<T>::Of(a[m][m-1])*(Fabs<T>::Of(q)+Fabs<T>::Of(r));
-                                        v=Fabs<T>::Of(p)*(Antelope::Sum3<T>::OfAbs(a[m-1][m-1],z,a[m+1][m+1]));
-                                        if(isSmall(u,v))
-                                            break;
-                                    }
-                                    for(i=m+2;i<=nn;i++)
-                                    {
-                                        a[i][i-2]=zero;
-                                        if (i != (m+2))
-                                            a[i][i-3]=zero;
-                                    }
-                                    for(k=m;k<=nn-1;++k)
-                                    {
-                                        if (k != m)
-                                        {
-                                            p=a[k][k-1];
-                                            q=a[k+1][k-1];
-                                            r=zero;
-                                            if (k != (nn-1)) r=a[k+2][k-1];
-                                            if ( (x=Antelope::Sum3<T>::OfAbs(p,q,r))>zero )
-                                            {
-                                                p /= x;
-                                                q /= x;
-                                                r /= x;
-                                            }
-                                        }
-                                        if( Fabs<T>::Of(s=Sgn(Hypotenuse(p,q,r),p)) > zero )
-                                        {
-                                            if (k == m)
-                                            {
-                                                if (l != m)
-                                                    a[k][k-1] = -a[k][k-1];
-                                            }
-                                            else
-                                            {
-                                                a[k][k-1] = -s*x;
-                                            }
-                                            p += s;
-                                            x=p/s;
-                                            y=q/s;
-                                            z=r/s;
-                                            q /= p;
-                                            r /= p;
-                                            for(j=k;j<=nn;j++)
-                                            {
-                                                p=a[k][j]+q*a[k+1][j];
-                                                if (k != (nn-1))
-                                                {
-                                                    p += r*a[k+2][j];
-                                                    a[k+2][j] -= p*z;
-                                                }
-                                                a[k+1][j] -= p*y;
-                                                a[k][j]   -= p*x;
-                                            }
-                                            mmin = nn<k+3 ? nn : k+3;
-                                            for (i=l;i<=mmin;i++)
-                                            {
-                                                p=x*a[i][k]+y*a[i][k+1];
-                                                if (k != (nn-1)) {
-                                                    p += z*a[i][k+2];
-                                                    a[i][k+2] -= p*r;
-                                                }
-                                                a[i][k+1] -= p*q;
-                                                a[i][k] -= p;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        } while (l < nn-1);
-                    }
-
-                    // sort real values
-                    if(nr>0)
-                    {
-                        LightArray<T> W(&wr[1],nr);
-                        HeapSort::Call(W, Comparison::Increasing<T> );
-                    }
-
-                    return true;
-                }
+             
 
                 inline const Values<T> * eig(Matrix<T> &a)
                 {
@@ -400,10 +128,12 @@ namespace Yttrium
                 }
 
                 inline void guess(Writable<T>            &eVal,
-                                  Matrix<T>               eVec,
+                                  Matrix<T>              &eVec,
                                   const Readable<size_t> &eIdx,
                                   const Matrix<T>        &a)
                 {
+                    static const char fn[] = "Diagonalize::guess";
+
                     assert(a.isSquare());
                     assert(eVec.rows   == eVal.size());
                     assert(eIdx.size() == eVal.size());
@@ -414,15 +144,40 @@ namespace Yttrium
                     Matrix<T>    A(a);
                     Matrix<T>    u(n,n);
                     Matrix<T>    v(n,n);
+                    CxxArray<T>  w(n);
 
                     for(size_t iv=1;iv<=nv;++iv)
                     {
-                        const size_t k   = eIdx[iv]; if(k<=1||k>=nr) throw Specific::Exception("Diagonalize::guess", "index=%u not in [1:%u]", unsigned(k), unsigned(nr));
+                        const size_t k   = eIdx[iv]; if(k<1||k>nr) throw Specific::Exception(fn, "index=%u not in [1:%u]", unsigned(k), unsigned(nr));
                         const T      lam = eVal[iv] = wr[k];
+                        //std::cerr << "\tlam" << iv << "=" << lam << std::endl;
                         for(size_t i=n;i>0;--i)
                         {
-                            A[i][i] -= lam;
+                            A[i][i] = a[i][i] - lam;
                         }
+                        if(!svd.build(u,w,v,A))
+                            throw Specific::Exception(fn,"no SVD for eigenvalue %.15g", double(lam));
+                        //std::cerr << "\t#w=" << w << std::endl;
+                        //std::cerr << "\tv=" << v << std::endl;
+
+                        size_t imin = 1;
+                        T      amin = Fabs<T>::Of(w[1]);
+                        for(size_t i=n;i>1;--i)
+                        {
+                            const T atmp = Fabs<T>::Of(w[i]);
+                            if(atmp<amin)
+                            {
+                                amin = atmp;
+                                imin = i;
+                            }
+                        }
+                        //std::cerr << "\t#|w|_min=" << amin << " @" << imin << std::endl;
+                        for(size_t i=n;i>0;--i)
+                        {
+                            eVec[iv][i] = v[i][imin];
+                        }
+                        std::cerr << "\tv" << iv << "=" << eVec[iv] << std::endl;
+
                     }
 
 
