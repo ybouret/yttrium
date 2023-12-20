@@ -14,6 +14,7 @@ mkl/io
 mkl/filter
 mkl/root
 mkl/eigen
+mkl/eigen/diag
 )
 
 add_subdirectory(tests)
