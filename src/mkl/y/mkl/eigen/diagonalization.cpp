@@ -335,7 +335,6 @@ namespace Yttrium
                                             q=a[k+1][k-1];
                                             r=zero;
                                             if (k != (nn-1)) r=a[k+2][k-1];
-                                            //if ( (x=Fabs<T>::Of(p)+Fabs<T>::Of(q)+Fabs<T>::Of(r))>zero )
                                             if ( (x=Antelope::Sum3<T>::OfAbs(p,q,r))>zero )
                                             {
                                                 p /= x;
@@ -343,7 +342,6 @@ namespace Yttrium
                                                 r /= x;
                                             }
                                         }
-                                        //if( Fabs<T>::Of(s=Sgn(SqrtOf(p*p+q*q+r*r),p)) > zero )
                                         if( Fabs<T>::Of(s=Sgn(Hypotenuse(p,q,r),p)) > zero )
                                         {
                                             if (k == m)
