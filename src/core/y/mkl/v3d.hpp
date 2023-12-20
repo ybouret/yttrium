@@ -6,8 +6,6 @@
 #define Y_MKL_V3D_Included 1
 
 #include "y/mkl/v2d.hpp"
-#include <iostream>
-#include <cmath>
 
 namespace Yttrium
 {
@@ -49,6 +47,9 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
+
+        //! pseudo writable
+        inline size_t size() const noexcept { return 3; }
 
         //______________________________________________________________________
         //
@@ -112,6 +113,26 @@ namespace Yttrium
         inline friend bool operator!=(const V3D &lhs, const V3D &rhs) noexcept
         {
             return lhs.x != rhs.x || lhs.y != rhs.y || lhs.z != rhs.z;
+        }
+
+        //______________________________________________________________________
+        //
+        //! |v|^2
+        //______________________________________________________________________
+        inline T norm2() const noexcept
+        {
+            T data[4] = { 0, x*x, y*y, z*z };
+            NetworkSort::Algo<3>::Decreasing(data);
+            return data[1] + (data[2]+data[3]);
+        }
+
+        //______________________________________________________________________
+        //
+        //! |v|
+        //______________________________________________________________________
+        inline T norm() const noexcept
+        {
+            return MKL::Hypotenuse(x,y,z);
         }
 
         //______________________________________________________________________

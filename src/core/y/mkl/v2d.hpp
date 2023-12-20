@@ -4,7 +4,7 @@
 #ifndef Y_MKL_V2D_Included
 #define Y_MKL_V2D_Included 1
 
-#include "y/config/starting.hpp"
+#include "y/mkl/api.hpp"
 #include <iostream>
 #include <cmath>
 
@@ -50,6 +50,8 @@ namespace Yttrium
         //
         //______________________________________________________________________
 
+        //! pseudo writable
+        inline size_t size() const noexcept { return 2; }
 
         //______________________________________________________________________
         //
@@ -114,6 +116,25 @@ namespace Yttrium
         {
             return lhs.x != rhs.x || lhs.y != rhs.y;
         }
+
+        //______________________________________________________________________
+        //
+        //! |v|^2
+        //______________________________________________________________________
+        inline T norm2() const noexcept
+        {
+            return x*x + y*y;
+        }
+
+        //______________________________________________________________________
+        //
+        //! |v|
+        //______________________________________________________________________
+        inline T norm() const noexcept
+        {
+            return MKL::Hypotenuse(x,y);
+        }
+
 
         //______________________________________________________________________
         //

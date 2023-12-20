@@ -405,7 +405,67 @@ namespace Yttrium
                 //______________________________________________________________
                 //
                 //
-                // Methods
+                //
+                //
+                //______________________________________________________________
+
+                template <typename ARRAY>
+                inline T normOf(ARRAY &arr)
+                {
+                    const size_t n = arr.size();
+                    const T      zero(0);
+
+                    //----------------------------------------------------------
+                    // check size
+                    //----------------------------------------------------------
+                    if(n<=0) return zero;
+
+                    //----------------------------------------------------------
+                    // find maximum of absolute values
+                    //----------------------------------------------------------
+                    T      amax = Fabs<T>::Of(arr[1]);
+                    size_t imax = 1;
+                    for(size_t i=n;i>1;--i)
+                    {
+                        const T atmp = Fabs<T>::Of(arr[i]);
+                        if(atmp>amax)
+                        {
+                            amax = atmp;
+                            imax = i;
+                        }
+                    }
+                    if(amax<=zero) return zero;
+
+                    //----------------------------------------------------------
+                    // compute sum  of reduced squares
+                    //----------------------------------------------------------
+                    Add<T> &self = *this;
+                    self.make(n);
+                    {
+                        const T one(1);
+                        self << one;
+                    }
+
+                    for(size_t i=n;i>imax;--i)
+                    {
+                        const T tmp = Fabs<T>::Of(arr[i])/amax;
+                        self << tmp*tmp;
+                    }
+
+                    for(size_t i=--imax;i>0;--i)
+                    {
+                        const T tmp = Fabs<T>::Of(arr[i])/amax;
+                        self << tmp*tmp;
+                    }
+
+                    const  T s2 = self.sum();
+                    return amax * Sqrt<T>::Of(s2);
+                }
+
+                //______________________________________________________________
+                //
+                //
+                // Statistical Methods
                 //
                 //______________________________________________________________
 

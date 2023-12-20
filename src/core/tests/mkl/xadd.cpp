@@ -90,5 +90,12 @@ Y_UTEST(mkl_xadd)
     Y_SHOW_UNIT(apq);
 
 
+    {
+        Antelope::Add<double> xadd;
+        std::cerr << std::endl;
+        V3D<double> v(-3,1,-2);
+        std::cerr << "|" << v << "| = " << v.norm() << " / " << xadd.normOf(v) << std::endl;
+    }
+
 }
 Y_UDONE()
