@@ -25,16 +25,18 @@ namespace Yttrium
                 typename TARGET,
                 typename T,
                 typename SOURCE,
+                typename U,
                 typename PROC> inline
-                void TriDiagMul(TARGET &          target,
-                                const TriDiag<T>  &M,
-                                SOURCE            &source,
-                                PROC              &proc)
+                void TriDiagMul(TARGET &            target,
+                                const TriDiag<T>   &M,
+                                SOURCE             &source,
+                                PROC               &proc,
+                                const Type2Type<U> &)
                 {
                     assert( target.size() == M.size );
                     assert( source.size() == M.size );
-                    typedef typename TARGET::Type    TGT;
-                    typedef struct Transmogrify<TGT> Trans;
+                    //typedef typename TARGET::Type    TGT;
+                    typedef struct Transmogrify<U> Trans;
 
                     const size_t n = M.size;
                     switch(n)
@@ -46,20 +48,20 @@ namespace Yttrium
                     }
 
                     {
-                        const TGT s = Trans::Product(M.b[1],source[1]) + Trans::Product(M.c[1],source[2]);
+                        const U s = Trans::Product(M.b[1],source[1]) + Trans::Product(M.c[1],source[2]);
                         proc(target[1],s);
                     }
                     const size_t nm=n-1;
                     for(size_t i=nm,im=i-1,ip=i+1;i>1;--i,--im,--ip)
                     {
-                        const TGT A = Trans::Product(M.a[i],source[im]);
-                        const TGT B = Trans::Product(M.b[i],source[i]);
-                        const TGT C = Trans::Product(M.c[i],source[ip]);
-                        const TGT s = Antelope::Sum3<TGT>::Of(A,B,C);
+                        const U A = Trans::Product(M.a[i],source[im]);
+                        const U B = Trans::Product(M.b[i],source[i]);
+                        const U C = Trans::Product(M.c[i],source[ip]);
+                        const U s = Antelope::Sum3<U>::Of(A,B,C);
                         proc(target[i],s);
                     }
                     {
-                        const TGT s = Trans::Product(M.a[n],source[nm]) + Trans::Product(M.b[n],source[n]);
+                        const U s = Trans::Product(M.a[n],source[nm]) + Trans::Product(M.b[n],source[n]);
                         proc(target[n],s);
                     }
                 }
@@ -69,15 +71,41 @@ namespace Yttrium
             template <
             typename TARGET,
             typename T,
-            typename SOURCE> inline
-            void TriDiagMul(TARGET &          target,
-                            const TriDiag<T>  &M,
-                            SOURCE            &source)
+            typename SOURCE,
+            typename U> inline
+            void TriDiagMul(TARGET &            target,
+                            const TriDiag<T>   &M,
+                            SOURCE             &source,
+                            const Type2Type<U>  inner)
             {
-                Cog::TriDiagMul(target,M,source,Ops<typename TARGET::Type,typename TARGET::Type>::Set);
+                Cog::TriDiagMul(target,M,source,Ops<typename TARGET::Type,U>::Set,inner);
             }
 
+            template <
+            typename TARGET,
+            typename T,
+            typename SOURCE,
+            typename U> inline
+            void TriDiagMulAdd(TARGET &            target,
+                               const TriDiag<T>   &M,
+                               SOURCE             &source,
+                               const Type2Type<U>  inner)
+            {
+                Cog::TriDiagMul(target,M,source,Ops<typename TARGET::Type,U>::Add,inner);
+            }
 
+            template <
+            typename TARGET,
+            typename T,
+            typename SOURCE,
+            typename U> inline
+            void TriDiagMulSub(TARGET &            target,
+                               const TriDiag<T>   &M,
+                               SOURCE             &source,
+                               const Type2Type<U>  inner)
+            {
+                Cog::TriDiagMul(target,M,source,Ops<typename TARGET::Type,U>::Sub,inner);
+            }
         }
 
     }
