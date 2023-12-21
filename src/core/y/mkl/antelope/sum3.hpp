@@ -31,15 +31,17 @@ namespace Yttrium
                 //! make sum3 by probing largest elememnt
                 static inline Type Of(ConstType &a, ConstType &b, ConstType &c)
                 {
-                    ScalarType amx  = Fabs<T>::Of(a);
                     Big        big  = BigA;
                     {
-                        const ScalarType tmp = Fabs<T>::Of(b);
-                        if(tmp>amx) { amx=tmp; big=BigB; }
-                    }
-                    {
-                        const ScalarType tmp = Fabs<T>::Of(c);
-                        if(tmp>amx) { amx=tmp; big=BigC; }
+                        ScalarType amx  = Fabs<T>::Of(a);
+                        {
+                            const ScalarType tmp = Fabs<T>::Of(b);
+                            if(tmp>amx) { amx=tmp; big=BigB; }
+                        }
+                        {
+                            const ScalarType tmp = Fabs<T>::Of(c);
+                            if(tmp>amx) {  big=BigC; }
+                        }
                     }
                     switch(big)
                     {
