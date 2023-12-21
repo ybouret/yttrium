@@ -16,4 +16,30 @@ We assume that $\lambda_k$ is close to a given eigenvalue of $\bm{A}$ with a (no
 	\bm{A} \vec{v}_k \simeq \lambda_k \vec{v}_k
 \end{equation}
 
+\begin{equation}
+	\mathcal{L}(\lambda,\vec{v}) = 
+	\dfrac{1}{2} 
+	\langle \bm{A}\vec{v} - \lambda \vec{v} \vert \bm{A}\vec{v} - \lambda \vec{v}\rangle
+\end{equation}
+
+\begin{equation}
+	\partial_\lambda \mathcal{L} = - \langle \vec{v} \vert \bm{A}  - \lambda \bm{I} \vert \vec{v} \rangle
+\end{equation}
+
+\begin{equation}
+	\partial_{\vec{v}} \mathcal{L} =  (\bm{A}  - \lambda \bm{I})^T  (\bm{A}  - \lambda \bm{I}) \vec{v}
+\end{equation}
+
+\begin{equation}
+	\lambda_{k+1} = \lambda_k + \alpha \langle \vec{v}_k \vert \bm{A}  - \lambda_k \bm{I} \vert \vec{v}_k \rangle
+\end{equation}
+
+\begin{equation}
+	\vec{u}_k = \vec{v}_k - \alpha (\bm{A}  - \lambda_k \bm{I})^T(\bm{A}  - \lambda_k \bm{I}) \vec{v}_k
+\end{equation}
+
+\begin{equation}
+	\vec{v}_{k+1} = \dfrac{1}{\vert \vec{u}_k \vert} \vec{u}_k
+\end{equation}
+
 \end{document}
