@@ -36,6 +36,7 @@ We assume that $\lambda_k$ is close to a given eigenvalue of $\bm{A}$ with a (no
 \end{array}
 \end{equation}
 
+Intermediary:
 \begin{equation}
 	\partial_{\vec{v}} \left( 
 	\dfrac{1}{\langle \vec{v} \vert \vec{v} \rangle } 
@@ -43,19 +44,46 @@ We assume that $\lambda_k$ is close to a given eigenvalue of $\bm{A}$ with a (no
 \end{equation}
 
 \begin{equation}
-	\partial_{\vec{v}} \left( \underbrace{\dfrac{1}{2} \left[ \langle \vec{v} \vert \bm{A}^T \bm{A} \vert \vec{v} \rangle - 2 \lambda \langle \vec{v} \vert \bm{A} \vert \vec{v} \rangle\right]}_{D} \right) =  \bm{A}^T \bm{A}   \vec{v} - \lambda \left( \bm{A}^T + \bm{A} \right) \vec{v}
+\begin{array}{rcl}
+	\partial_{\vec{v}} \left( \underbrace{\dfrac{1}{2} \left[ \langle \vec{v} \vert \bm{A}^T \bm{A} \vert \vec{v} \rangle - 2 \lambda \langle \vec{v} \vert \bm{A} \vert \vec{v} \rangle\right]}_{D} \right) 
+	& = &  \bm{A}^T \bm{A}   \vec{v} - \lambda \left( \bm{A}^T + \bm{A} \right) \vec{v} \\
+	\\
+	& = & \left\lbrack \bm{A}^T \bm{A} - \lambda \left( \bm{A}^T + \bm{A}\right) \right\rbrack \vec{v} \\
+\end{array}
 \end{equation}
 
+Gradient:
 \begin{equation}
 	\partial_\lambda \mathcal{L} = \lambda - \dfrac{\langle \vec{v} \vert \bm{A} \vert \vec{v} \rangle }{\langle \vec{v} \vert \vec{v} \rangle }
 \end{equation}
 
 \begin{equation}
-\partial_{\vec{v}} \mathcal{L} = \left( 
+\begin{array}{rcl}
+\partial_{\vec{v}} \mathcal{L} & = & \left( 
 	\dfrac{1}{\langle \vec{v} \vert \vec{v} \rangle } 
 	\right) \partial_{\vec{v}} D + D \partial_{\vec{v}} \left( 
 	\dfrac{1}{\langle \vec{v} \vert \vec{v} \rangle } 
-	\right)
+	\right)\\
+	\\
+	& = & 
+	\dfrac{1}{\langle \vec{v} \vert \vec{v} \rangle } 
+	 \left\lbrack \bm{A}^T \bm{A} - \lambda \left( \bm{A}^T + \bm{A}\right) \right\rbrack \vec{v}
+	  -\dfrac{2D}{ \left(\langle \vec{v} \vert \vec{v} \rangle\right)^2 } \vec{v} \\
+	  \\
+	  & = & 
+	  \dfrac{1}{\langle \vec{v} \vert \vec{v} \rangle } 
+	  \left(
+	  \left\lbrack \bm{A}^T \bm{A} - \lambda \left( \bm{A}^T + \bm{A}\right) \right\rbrack \vec{v}
+	  - 
+	  \dfrac{
+	  \left[ 
+	  \langle \vec{v} \vert \bm{A}^T \bm{A} \vert \vec{v} \rangle - 
+	  2 \lambda \langle \vec{v} \vert \bm{A} \vert \vec{v} \rangle
+	  \right]
+	  }{\langle \vec{v} \vert \vec{v} \rangle}
+	  \vec{v}
+	  \right)\\
+\end{array}
 \end{equation}
 
 \end{document}
