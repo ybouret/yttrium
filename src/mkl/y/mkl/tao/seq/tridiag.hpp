@@ -35,7 +35,6 @@ namespace Yttrium
                 {
                     assert( target.size() == M.size );
                     assert( source.size() == M.size );
-                    //typedef typename TARGET::Type    TGT;
                     typedef struct Transmogrify<U> Trans;
 
                     const size_t n = M.size;
