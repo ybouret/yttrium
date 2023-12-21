@@ -50,9 +50,8 @@ namespace
             Tao::ComputeMod2<T> Mod2;
             const ScalarType arg = Mod2(u,v)/ScalarType(n);
             const ScalarType rms = Sqrt<ScalarType>::Of(arg);
+            std::cerr << "\trms=" << rms << std::endl;
             Y_CHECK(_0 == rms);
-            //std::cerr << "\trms=" << rms << std::endl;
-
 #endif
 
         }
