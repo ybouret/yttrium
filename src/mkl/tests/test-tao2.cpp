@@ -1,4 +1,6 @@
 #include "y/mkl/tao/level2.hpp"
+#include "y/mkl/tao/seq/tridiag.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 
