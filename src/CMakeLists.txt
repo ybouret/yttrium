@@ -34,7 +34,7 @@ macro(Y_CreateTest id)
     add_custom_target(utest-${id}
 		COMMAND ${CMAKE_CTEST_COMMAND} -C ${CMAKE_BUILD_TYPE}
 		DEPENDS test-${id}
-		COMMENT "[yttrium] Unit Tests on <core>"
+		COMMENT "[yttrium] Unit Tests on <${id}>"
 		VERBATIM)
 endmacro()
 
