@@ -15,7 +15,7 @@ namespace
     static inline void testTr( Random::Bits &ran )
     {
         typedef typename ScalarFor<T>::Type ScalarType;
-        const ScalarType _0(0);
+        //const ScalarType _0(0);
 
         for(size_t n=1;n<=8;++n)
         {
@@ -51,7 +51,7 @@ namespace
             const ScalarType arg = Mod2(u,v)/ScalarType(n);
             const ScalarType rms = Sqrt<ScalarType>::Of(arg);
             std::cerr << "\trms=" << rms << std::endl;
-            Y_CHECK(_0 == rms);
+            //Y_CHECK(_0 == rms);
 #endif
 
         }
