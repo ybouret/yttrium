@@ -60,7 +60,7 @@ namespace Yttrium
             // Access to all less than 16 bits
             //
             //__________________________________________________________________
-            static const size_t   Pi8  = N8;
+            static const size_t   Pi8  = N8;     //!< number of primes < 2^8
             static const size_t   Pi16 = N8+N16; //!< number of primes < 2^16
             static unsigned       Get(const size_t i) noexcept; //!< in [1..Pi16]
 
@@ -70,7 +70,7 @@ namespace Yttrium
             //! Precomputed Pi(2^n)
             //
             //__________________________________________________________________
-            static const uint32_t   Pi2ToThe[37]; 
+            static const uint32_t   Pi2ToThe[37];
 
         };
 
