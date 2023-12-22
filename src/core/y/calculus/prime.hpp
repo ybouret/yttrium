@@ -45,7 +45,7 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // Precomputed table
+            // Precomputed tables
             //
             //__________________________________________________________________
             static const size_t   N8 = 54; //!< primes with less than 8 bits
@@ -54,11 +54,23 @@ namespace Yttrium
             static const size_t   N16 = 6488; //!< primes with 9 to 16 bits
             static const uint16_t P16[N16];   //!< table 257:65521
 
+            //__________________________________________________________________
+            //
+            //
+            // Access to all less than 16 bits
+            //
+            //__________________________________________________________________
             static const size_t   Pi8  = N8;
             static const size_t   Pi16 = N8+N16; //!< number of primes < 2^16
             static unsigned       Get(const size_t i) noexcept; //!< in [1..Pi16]
 
-            static const size_t   Pi2ToThe[]; //!< Pi(2^n)
+            //__________________________________________________________________
+            //
+            //
+            //! Precomputed Pi(2^n)
+            //
+            //__________________________________________________________________
+            static const uint32_t   Pi2ToThe[37]; 
 
         };
 

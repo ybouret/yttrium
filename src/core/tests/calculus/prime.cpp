@@ -68,14 +68,17 @@ Y_UTEST(calculus_prime)
 
     std::cerr << "#8  = " << p8.size  << std::endl;
     std::cerr << "#16 = " << p16.size << std::endl;
+    if(false)
     {
-        Libc::OutputFile fp("p8.hxx");
-        saveTable(fp,p8);
-    }
-
-    {
-        Libc::OutputFile fp("p16.hxx");
-        saveTable(fp,p16);
+        {
+            Libc::OutputFile fp("p8.hxx");
+            saveTable(fp,p8);
+        }
+        
+        {
+            Libc::OutputFile fp("p16.hxx");
+            saveTable(fp,p16);
+        }
     }
 
     std::cerr << "First 17 bits: " << p << std::endl;
@@ -86,7 +89,7 @@ Y_UTEST(calculus_prime)
         std::cerr << q << std::endl;
     }
 
-    for(size_t i=0;i<=32;++i)
+    for(size_t i=0;i<37;++i)
     {
         std::cerr << "Pi(2^" << std::setw(2) << i << ") = " << std::setw(10) << Core::Prime::Pi2ToThe[i] << std::endl;
     }
