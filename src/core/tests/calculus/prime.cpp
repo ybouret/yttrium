@@ -78,6 +78,23 @@ Y_UTEST(calculus_prime)
         saveTable(fp,p16);
     }
 
+    std::cerr << "First 17 bits: " << p << std::endl;
+
+    for(size_t i=1;i<=Core::Prime::Pi16;++i)
+    {
+        const unsigned q = Core::Prime::Get(i);
+        std::cerr << q << std::endl;
+    }
+
+    for(size_t i=0;i<=32;++i)
+    {
+        std::cerr << "Pi(2^" << std::setw(2) << i << ") = " << std::setw(10) << Core::Prime::Pi2ToThe[i] << std::endl;
+    }
+
+    Y_CHECK(Core::Prime::Pi8  == Core::Prime::Pi2ToThe[8]);
+    Y_CHECK(Core::Prime::Pi16 == Core::Prime::Pi2ToThe[16]);
+
+
 
 }
 Y_UDONE()

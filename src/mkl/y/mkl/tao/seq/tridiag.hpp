@@ -20,7 +20,12 @@ namespace Yttrium
 
             namespace Cog
             {
+                //______________________________________________________________
+                //
+                //
                 //! proc(target,M*source)
+                //
+                //______________________________________________________________
                 template <
                 typename TARGET,
                 typename T,
@@ -66,7 +71,12 @@ namespace Yttrium
                 }
             }
 
-
+            //__________________________________________________________________
+            //
+            //
+            //! target = M*source
+            //
+            //__________________________________________________________________
             template <
             typename TARGET,
             typename T,
@@ -75,11 +85,17 @@ namespace Yttrium
             void TriDiagMul(TARGET &            target,
                             const TriDiag<T>   &M,
                             SOURCE             &source,
-                            const Type2Type<U>  inner)
+                            const Type2Type<U>  innerType)
             {
-                Cog::TriDiagMul(target,M,source,Ops<typename TARGET::Type,U>::Set,inner);
+                Cog::TriDiagMul(target,M,source,Ops<typename TARGET::Type,U>::Set,innerType);
             }
 
+            //__________________________________________________________________
+            //
+            //
+            //! target += M*source
+            //
+            //__________________________________________________________________
             template <
             typename TARGET,
             typename T,
@@ -93,6 +109,12 @@ namespace Yttrium
                 Cog::TriDiagMul(target,M,source,Ops<typename TARGET::Type,U>::Add,inner);
             }
 
+            //__________________________________________________________________
+            //
+            //
+            //! target -= M*source
+            //
+            //__________________________________________________________________
             template <
             typename TARGET,
             typename T,

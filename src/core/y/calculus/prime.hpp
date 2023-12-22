@@ -10,10 +10,20 @@ namespace Yttrium
 
     namespace Core
     {
+        //______________________________________________________________________
+        //
+        //
         //! basic function for primality
+        //
+        //______________________________________________________________________
         struct Prime
         {
-            //! generic is_prime function
+            //__________________________________________________________________
+            //
+            //
+            //! generic division-trial algorithm
+            //
+            //__________________________________________________________________
             template <typename T> static inline
             bool Check(const T n)
             {
@@ -32,11 +42,24 @@ namespace Yttrium
                 return true;
             }
 
-            static const size_t   N8 = 54;
-            static const uint8_t  P8[N8];
+            //__________________________________________________________________
+            //
+            //
+            // Precomputed table
+            //
+            //__________________________________________________________________
+            static const size_t   N8 = 54; //!< primes with less than 8 bits
+            static const uint8_t  P8[N8];  //!< table 2:251
 
-            static const size_t   N16 = 6488;
-            static const uint16_t P16[N16];
+            static const size_t   N16 = 6488; //!< primes with 9 to 16 bits
+            static const uint16_t P16[N16];   //!< table 257:65521
+
+            static const size_t   Pi8  = N8;
+            static const size_t   Pi16 = N8+N16; //!< number of primes < 2^16
+            static unsigned       Get(const size_t i) noexcept; //!< in [1..Pi16]
+
+            static const size_t   Pi2ToThe[]; //!< Pi(2^n)
+
         };
 
     }
