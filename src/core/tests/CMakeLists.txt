@@ -133,6 +133,9 @@ add_test(calculus:isqrt  test-core calculus_isqrt)
 add_test(calculus:ipower test-core calculus_ipower)
 add_test(calculus:xlog2  test-core calculus_xlog2)
 add_test(calculus:gray   test-core calculus_gray)
+add_test(calculues:prime test-core calculus_prime)
+
+
 
 #concurrent
 add_test(concurrent:mutex     test-core concurrent_mutex)
