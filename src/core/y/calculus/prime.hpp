@@ -31,6 +31,12 @@ namespace Yttrium
 
                 return true;
             }
+
+            static const size_t   N8 = 54;
+            static const uint8_t  P8[N8];
+
+            static const size_t   N16 = 6488;
+            static const uint16_t P16[N16];
         };
 
     }
@@ -38,8 +44,8 @@ namespace Yttrium
     //! prime for 64bits unsigned
     struct Prime64
     {
-        static bool     Check(const uint64_t n) noexcept; //!< check is prime
-        static uint64_t Next(uint64_t n)        noexcept; //!< get next prime
+        static bool     Is_(const uint64_t n) noexcept; //!< check is prime
+        static uint64_t Next(uint64_t n)      noexcept; //!< get next prime
     };
 
 

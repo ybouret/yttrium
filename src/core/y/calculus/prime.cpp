@@ -3,7 +3,18 @@
 namespace Yttrium
 {
 
-    bool Prime64:: Check(const uint64_t n) noexcept
+    namespace Core
+    {
+        const uint8_t Prime::P8
+#include "p8.hxx"
+        ;
+
+        const uint16_t Prime::P16
+#include "p16.hxx"
+        ;
+    }
+
+    bool Prime64:: Is_(const uint64_t n) noexcept
     {
         return Core::Prime::Check<uint64_t>(n);
     }
@@ -20,7 +31,7 @@ namespace Yttrium
                 p|=1;
                 break;
         }
-        while(!Check(p)) p += 2;
+        while(!Is_(p)) p += 2;
         return p;
     }
 
