@@ -1,4 +1,5 @@
 
+#include "y/mkl/tao/par/tridiag.hpp"
 #include "y/mkl/tao/seq/tridiag.hpp"
 #include "y/mkl/tao/seq/level2.hpp"
 #include "y/utest/run.hpp"
@@ -6,13 +7,20 @@
 #include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/pooled.hpp"
 
+#include "y/concurrent/loop/crew.hpp"
+#include "y/concurrent/loop/mono.hpp"
+
+#include "y/concurrent/thread.hpp"
+#include "y/string/env.hpp"
+
 using namespace Yttrium;
 using namespace MKL;
 
 namespace
 {
     template <typename T>
-    static inline void testTr( Random::Bits &ran )
+    static inline void testTr(Random::Bits &ran,
+                              Tao::Engine  &seq)
     {
         typedef typename ScalarFor<T>::Type ScalarType;
         //const ScalarType _0(0);
@@ -61,19 +69,29 @@ namespace
 
 Y_UTEST(taoTr)
 {
-    Random::Rand ran;
+    Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
+    const Concurrent::Topology topo;
+    Random::Rand               ran;
 
-    testTr<float>(ran);
-    testTr<double>(ran);
-    testTr<long double>(ran);
 
-    testTr< XReal<float>       >(ran);
-    testTr< XReal<double>      >(ran);
-    testTr< XReal<long double> >(ran);
+    Concurrent::SharedLoop seqLoop = new Concurrent::Mono();
+    Concurrent::SharedLoop parLoop = new Concurrent::Crew(topo);
 
-    testTr< Complex<float> >(ran);
-    testTr< Complex<double> >(ran);
-    testTr< Complex<long double> >(ran);
+    Tao::Engine seq(seqLoop);
+    Tao::Engine par(parLoop);
+
+#define ARGS ran,seq
+    testTr<float>(ARGS);
+    testTr<double>(ARGS);
+    testTr<long double>(ARGS);
+
+    testTr< XReal<float>       >(ARGS);
+    testTr< XReal<double>      >(ARGS);
+    testTr< XReal<long double> >(ARGS);
+
+    testTr< Complex<float> >(ARGS);
+    testTr< Complex<double> >(ARGS);
+    testTr< Complex<long double> >(ARGS);
 
 }
 Y_UDONE()
