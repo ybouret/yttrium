@@ -121,10 +121,10 @@ namespace Yttrium
                  \param eigenIndices [1..nv]        indices in [1:eig->wr.size()]
                  \param a            [1..n][1..n]   original matrix
                  */
-                void guess(Writable<T>            &eigenValues,
-                           Matrix<T>              &eigenVectors,
-                           const Readable<size_t> &eigenIndices,
-                           const Matrix<T>        &a);
+                void eigv(Writable<T>            &eigenValues,
+                          Matrix<T>              &eigenVectors,
+                          const Readable<size_t> &eigenIndices,
+                          const Matrix<T>        &a);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Diagonalization);

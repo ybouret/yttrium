@@ -1,5 +1,3 @@
-
-
 //! \file
 
 #ifndef Y_MKL_SeqTaoTridiag_Included

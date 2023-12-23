@@ -44,33 +44,6 @@ namespace
             std::cerr << "wc=" << values->wc << std::endl;
 
 
-#if 0
-            Matrix<T> A(a);
-            Matrix<T> u(n,n);
-            Matrix<T> v(n,n);
-            Vector<T> w(n,0);
-
-            for(size_t i=1;i<=values->wr.size();++i)
-            {
-                const T lam = values->wr[i];
-                std::cerr  << "lam = " << lam << std::endl;
-
-                for(size_t j=1;j<=n;++j)
-                {
-                    A[j][j] = a[j][j] - lam;
-                }
-
-                if(!svd.build(u, w, v, A))
-                {
-                    std::cerr << "no svd..." << std::endl;
-                    continue;;
-                }
-                MKL::SVD<T>::Sort(u,w,v);
-                std::cerr << "\tw=" << w << std::endl;
-                std::cerr << "v=" << v << std::endl;
-            }
-#endif
-
             const size_t nr = values->wr.size();
             if(nr>0)
             {
@@ -80,7 +53,7 @@ namespace
                 Vector<T> eVal(nr,0);
                 Matrix<T> eVec(nr,n);
 
-                diag.guess(eVal,eVec,eIdx,a);
+                diag.eigv(eVal,eVec,eIdx,a);
                 for(size_t i=1;i<=nr;++i)
                 {
                     std::cerr << "lam" << i << " = " << eVal[i] << "; v" << i << "=" << eVec[i] << std::endl;
