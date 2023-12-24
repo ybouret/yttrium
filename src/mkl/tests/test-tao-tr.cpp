@@ -20,7 +20,8 @@ namespace
 {
     template <typename T>
     static inline void testTr(Random::Bits &ran,
-                              Tao::Engine  &seq)
+                              Tao::Engine  &seq,
+                              Tao::Engine  &par)
     {
         typedef typename ScalarFor<T>::Type ScalarType;
         //const ScalarType _0(0);
@@ -32,6 +33,7 @@ namespace
             CxxArray<T,Memory::Pooled> v(n);
             CxxArray<T,Memory::Pooled> r(n);
             CxxArray<T,Memory::Pooled> w(n);
+            CxxArray<T,Memory::Pooled> x(n);
 
 
             for(size_t i=1;i<=n;++i)
@@ -50,14 +52,17 @@ namespace
 
             Tao::MultiAdd<T> xma;
             Tao::Mul(v,M,r,xma);
-            std::cerr << "v =" << v << std::endl;
+            std::cerr << "v = " << v << std::endl;
 
             Tao::TriDiagMul(u,tr,r,Type2Type<T>());
-            std::cerr << "u =" << u << std::endl;
+            std::cerr << "u = " << u << std::endl;
 
             Tao::TriDiagMul(seq,w,tr,r,Type2Type<T>());
-            std::cerr << "w =" << w << std::endl;
-            
+            std::cerr << "w = " << w << std::endl;
+
+            Tao::TriDiagMul(par,x,tr,r,Type2Type<T>());
+            std::cerr << "x = " << x << std::endl;
+
 #if 1
             Tao::ComputeMod2<T> Mod2;
             {
@@ -70,9 +75,15 @@ namespace
 
 
             {
-                const ScalarType arg = Mod2(u,v)/ScalarType(n);
+                const ScalarType arg = Mod2(u,w)/ScalarType(n);
                 const ScalarType rms = Sqrt<ScalarType>::Of(arg);
                 std::cerr << "\trms_seq=" << rms << std::endl;
+            }
+
+            {
+                const ScalarType arg = Mod2(u,x)/ScalarType(n);
+                const ScalarType rms = Sqrt<ScalarType>::Of(arg);
+                std::cerr << "\trms_par=" << rms << std::endl;
             }
 
 
@@ -94,7 +105,8 @@ Y_UTEST(taoTr)
     Tao::Engine seq(seqLoop);
     Tao::Engine par(parLoop);
 
-#define ARGS ran,seq
+#define ARGS ran,seq,par
+
     testTr<float>(ARGS); return 0;
     testTr<double>(ARGS);
     testTr<long double>(ARGS);
