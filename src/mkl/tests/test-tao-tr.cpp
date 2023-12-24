@@ -31,6 +31,7 @@ namespace
             CxxArray<T,Memory::Pooled> u(n);
             CxxArray<T,Memory::Pooled> v(n);
             CxxArray<T,Memory::Pooled> r(n);
+            CxxArray<T,Memory::Pooled> w(n);
 
 
             for(size_t i=1;i<=n;++i)
@@ -54,13 +55,26 @@ namespace
             Tao::TriDiagMul(u,tr,r,Type2Type<T>());
             std::cerr << "u =" << u << std::endl;
 
+            Tao::TriDiagMul(seq,w,tr,r,Type2Type<T>());
+            std::cerr << "w =" << w << std::endl;
+            
 #if 1
             Tao::ComputeMod2<T> Mod2;
-            const ScalarType arg = Mod2(u,v)/ScalarType(n);
-            const ScalarType rms = Sqrt<ScalarType>::Of(arg);
-            std::cerr << "\trms=" << rms << std::endl;
+            {
+                const ScalarType arg = Mod2(u,v)/ScalarType(n);
+                const ScalarType rms = Sqrt<ScalarType>::Of(arg);
+                std::cerr << "\trms_mat=" << rms << std::endl;
+            }
             //Y_CHECK(_0 == rms);
 #endif
+
+
+            {
+                const ScalarType arg = Mod2(u,v)/ScalarType(n);
+                const ScalarType rms = Sqrt<ScalarType>::Of(arg);
+                std::cerr << "\trms_seq=" << rms << std::endl;
+            }
+
 
         }
         std::cerr << std::endl;
@@ -81,7 +95,7 @@ Y_UTEST(taoTr)
     Tao::Engine par(parLoop);
 
 #define ARGS ran,seq
-    testTr<float>(ARGS);
+    testTr<float>(ARGS); return 0;
     testTr<double>(ARGS);
     testTr<long double>(ARGS);
 

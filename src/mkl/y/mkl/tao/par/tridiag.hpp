@@ -32,11 +32,20 @@ namespace Yttrium
                                 SOURCE             &source,
                                 PROC               &proc)
                 {
+                    typedef struct Transmogrify<U> Trans;
+
                     if(range.length<=0) return;
-
-                    for(size_t i=range.latest,im=i;i>=range.offset;--i)
+                    for(size_t i=range.latest,im=i,ip=i+1;i>=range.offset;--i)
                     {
-
+                        --im;
+                        assert(i-1==im);
+                        assert(i+1==ip);
+                        const U A = Trans::Product(M.a[i],source[im]);
+                        const U B = Trans::Product(M.b[i],source[i]);
+                        const U C = Trans::Product(M.c[i],source[ip]);
+                        const U s = Antelope::Sum3<U>::Of(A,B,C);
+                        proc(target[i],s);
+                        --ip;
                     }
 
                 }
@@ -44,8 +53,6 @@ namespace Yttrium
 
             namespace Cog
             {
-
-
 
                 //______________________________________________________________
                 //
@@ -90,17 +97,7 @@ namespace Yttrium
                     if(n>2)
                     {
                         engine.in1D.init(2,nm,1);
-                        engine( Tao::Parallel::TriDiagMul<TARGET,T,SOURCE,U,PROC> );
-#if 0
-                        for(size_t i=nm,im=i-1,ip=i+1;i>1;--i,--im,--ip)
-                        {
-                            const U A = Trans::Product(M.a[i],source[im]);
-                            const U B = Trans::Product(M.b[i],source[i]);
-                            const U C = Trans::Product(M.c[i],source[ip]);
-                            const U s = Antelope::Sum3<U>::Of(A,B,C);
-                            proc(target[i],s);
-                        }
-#endif
+                        engine.in1D(Tao::Parallel::TriDiagMul<TARGET,T,SOURCE,U,PROC>,target,M,source,proc);
                     }
 
                     // tail
@@ -109,6 +106,27 @@ namespace Yttrium
                         proc(target[n],s);
                     }
                 }
+            }
+
+
+            //__________________________________________________________________
+            //
+            //
+            //! target = M*source
+            //
+            //__________________________________________________________________
+            template <
+            typename TARGET,
+            typename T,
+            typename SOURCE,
+            typename U> inline
+            void TriDiagMul(Engine             &engine,
+                            TARGET             &target,
+                            const TriDiag<T>   &M,
+                            SOURCE             &source,
+                            const Type2Type<U>  innerType)
+            {
+                Cog::TriDiagMulParallel(engine,target,M,source,Ops<typename TARGET::Type,U>::Set,innerType);
             }
 
         }
