@@ -20,6 +20,13 @@ namespace Yttrium
 
             namespace Parallel
             {
+
+                //______________________________________________________________
+                //
+                //
+                //! compute target on defined range
+                //
+                //______________________________________________________________
                 template <
                 typename TARGET,
                 typename T,
@@ -86,13 +93,17 @@ namespace Yttrium
                             break;
                     }
 
+                    //----------------------------------------------------------
                     // head
+                    //----------------------------------------------------------
                     {
                         const U s = Trans::Product(M.b[1],source[1]) + Trans::Product(M.c[1],source[2]);
                         proc(target[1],s);
                     }
 
+                    //----------------------------------------------------------
                     // bulk 2:n-1
+                    //----------------------------------------------------------
                     const size_t nm=n-1;
                     if(n>2)
                     {
@@ -100,7 +111,9 @@ namespace Yttrium
                         engine.in1D(Tao::Parallel::TriDiagMul<TARGET,T,SOURCE,U,PROC>,target,M,source,proc);
                     }
 
+                    //----------------------------------------------------------
                     // tail
+                    //----------------------------------------------------------
                     {
                         const U s = Trans::Product(M.a[n],source[nm]) + Trans::Product(M.b[n],source[n]);
                         proc(target[n],s);
