@@ -7,6 +7,7 @@
 #include "y/container/cxx/array.hpp"
 #include "y/type/nullify.hpp"
 #include "y/calculus/ipower.hpp"
+#include "y/apex/mylar.hpp"
 
 #include <cmath>
 
@@ -24,39 +25,48 @@ namespace Yttrium
         public:
             explicit Moments(const ptrdiff_t n, const ptrdiff_t j, const size_t p)
             {
-                Matrix<apq> mu(p,p);
-                for(size_t l=1,lm=0;l<=p;++l,++lm)
+
                 {
-                    for(size_t k=1,km=0;k<=l;++k,++km)
+                    Matrix<apq> mu(p,p);
+                    for(size_t l=1,lm=0;l<=p;++l,++lm)
                     {
-                        apz sum = 0;
+                        for(size_t k=1,km=0;k<=l;++k,++km)
+                        {
+                            apz sum = 0;
+                            for(ptrdiff_t i=1;i<=n;++i)
+                            {
+                                const apz imj   = i-j;
+                                const apz imj_lk = ipower(imj,lm+km);
+                                sum += imj_lk;
+                            }
+                            mu[k][l]= mu[l][k] = sum;
+                        }
+                    }
+                    //std::cerr << "mu=" << mu << std::endl;
+
+                    Matrix<apq> F(p,n);
+                    for(size_t l=1,lm=0;l<=p;++l,++lm)
+                    {
                         for(ptrdiff_t i=1;i<=n;++i)
                         {
                             const apz imj   = i-j;
-                            const apz imj_lk = ipower(imj,lm+km);
-                            sum += imj_lk;
+                            const apz imj_l = ipower(imj,lm);
+                            F[l][i] = imj_l;
                         }
-                        mu[k][l]= mu[l][k] = sum;
                     }
-                }
-                std::cerr << "mu=" << mu << std::endl;
+                    //std::cerr << "W=" << F << std::endl;
 
-                Matrix<apq> W(p,n);
-                for(size_t l=1,lm=0;l<=p;++l,++lm)
-                {
-                    for(ptrdiff_t i=1;i<=n;++i)
+                    LU<apq> lu;
+                    if(!lu.build(mu)) throw Exception("bad moments");
+                    lu.solve(mu,F);
+
+                    //std::cerr << "F=" << F << std::endl;
+                    for(size_t l=1;l<=p;++l)
                     {
-                        const apz imj   = i-j;
-                        const apz imj_l = ipower(imj,lm);
-                        W[l][i] = imj_l;
+                        std::cerr << "order" << l-1 << " : " << F[l] << std::endl;
                     }
-                }
-                std::cerr << "W=" << W << std::endl;
 
-                LU<apq> lu;
-                if(!lu.build(mu)) throw Exception("bad moments");
-                lu.solve(mu,W);
-                std::cerr << "F=" << W << std::endl;
+                }
 
             }
 
@@ -219,9 +229,24 @@ Y_UTEST(filter_smooth)
 
     Random::Rand ran;
 
+    for(ptrdiff_t n=1;n<=15;++n)
+    {
+        for(ptrdiff_t j=1;j<=n;++j)
+        {
+            for(ptrdiff_t p=1;p<=Min<ptrdiff_t>(n,4);++p)
+            {
+                std::cerr << n << "-" << j << "-" << p << std::endl;
+                MKL::Moments mom(n,j,p);
+            }
+        }
+    }
+
+
+#if 0
     MKL::Moments mom1(5,3,3);
     MKL::Moments mom2(11,6,3);
-
+    MKL::Moments mom3(99,50,4);
+#endif
 
 #if 0
     Vector<double> X,Y;
