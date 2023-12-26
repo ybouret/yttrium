@@ -19,6 +19,57 @@ namespace Yttrium
     namespace MKL
     {
 
+        class Moments : public Object
+        {
+        public:
+            explicit Moments(const ptrdiff_t n, const ptrdiff_t j, const size_t p)
+            {
+                Matrix<apq> mu(p,p);
+                for(size_t l=1,lm=0;l<=p;++l,++lm)
+                {
+                    for(size_t k=1,km=0;k<=l;++k,++km)
+                    {
+                        apz sum = 0;
+                        for(ptrdiff_t i=1;i<=n;++i)
+                        {
+                            const apz imj   = i-j;
+                            const apz imj_lk = ipower(imj,lm+km);
+                            sum += imj_lk;
+                        }
+                        mu[k][l]= mu[l][k] = sum;
+                    }
+                }
+                std::cerr << "mu=" << mu << std::endl;
+
+                Matrix<apq> W(p,n);
+                for(size_t l=1,lm=0;l<=p;++l,++lm)
+                {
+                    for(ptrdiff_t i=1;i<=n;++i)
+                    {
+                        const apz imj   = i-j;
+                        const apz imj_l = ipower(imj,lm);
+                        W[l][i] = imj_l;
+                    }
+                }
+                std::cerr << "W=" << W << std::endl;
+
+                LU<apq> lu;
+                if(!lu.build(mu)) throw Exception("bad moments");
+                lu.solve(mu,W);
+                std::cerr << "F=" << W << std::endl;
+
+            }
+
+
+            virtual ~Moments() noexcept {}
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Moments);
+        };
+
+
+#if 0
         template <typename T>
         class Smooth
         {
@@ -158,6 +209,7 @@ namespace Yttrium
             Antelope::Add<T> xadd;
             MKL::LU<T>       lu;
         };
+#endif
 
     }
 }
@@ -167,6 +219,11 @@ Y_UTEST(filter_smooth)
 
     Random::Rand ran;
 
+    MKL::Moments mom1(5,3,3);
+    MKL::Moments mom2(11,6,3);
+
+
+#if 0
     Vector<double> X,Y;
 
 
@@ -224,7 +281,7 @@ Y_UTEST(filter_smooth)
         }
     }
 
-
+#endif
 
 
 

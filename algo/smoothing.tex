@@ -19,9 +19,36 @@ we want to fit them at $t_j,\vec{z}_j$ with:
 We want to minimize:
 \begin{equation}
 	D^2 = \dfrac{1}{2} \sum_{i=1}^n \left\vert
-	\vec{z}_i - \vec{P}(t_i-t_j)
-	\right\vert^2 = \dfrac{1}{2} \sum_{i=1}^n \left\vert \vec{z}_i - \sum_{k=0}^{p<n} (t_i-t_j)^k \vec{a}_k
+	\left(\vec{z}_i - \vec{z}_j\right) - \vec{P}(t_i-t_j)
+	\right\vert^2 = \dfrac{1}{2} \sum_{i=1}^n \left\vert \left(\vec{z}_i - \vec{z}_j\right)  - \sum_{k=0}^{p<n} (t_i-t_j)^k \vec{a}_k
 	\right\vert^2
+\end{equation}
+
+\begin{equation}
+	\partial_{\vec{a}_l} D^2 = \sum_{i=1}^n (t_i-t_j)^l \left( \left(\vec{z}_i - \vec{z}_j\right)  
+	- \sum_{k=0}^{p<n} (t_i-t_j)^k \vec{a}_k \right)
+\end{equation}
+
+\begin{equation}
+\forall 0 \leq l \leq p, \;\; \sum_{i=1}^n  \sum_{k=0}^{p<n} (t_i-t_j)^{k+l} \, \vec{a}_k 
+= \sum_{i=1}^n (t_i-t_j)^l \left(\vec{z}_i - \vec{z}_j\right) 
+\end{equation}
+
+\begin{equation}
+	\sum_{k=0}^{p} \left[\sum_{i=1}^n (t_i-t_j)^{k+l} \right] \vec{a}_k = \sum_{i=1}^n (t_i-t_j)^l \left(\vec{z}_i - \vec{z}_j\right) 
+\end{equation}
+
+\begin{equation}
+	\sum_{k=0}^{p} \bm{\mu}_{l,k} \vec{a}_k = \vec{w}_l \otimes \vec{Z}
+\end{equation}
+	
+
+\begin{equation}
+	\bm{\mu} \vec{A} = \bm{W} \vec{Z},\;\;\bm{\mu} \in \mathcal{M}_{p,p}.\;\;\bm{W} \in \mathcal{M}_{p,n}
+\end{equation}
+
+\begin{equation}
+	\vec{A} = \left(\bm{\mu}^{-1}\bm{W}\right)
 \end{equation}
 
 \end{document}
