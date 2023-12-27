@@ -12,27 +12,49 @@ namespace Yttrium
 {
     namespace MKL
     {
+        //______________________________________________________________________
+        //
+        //
+        //
         //! Regular Savitzky-Golay Filters
+        //
+        //
+        //______________________________________________________________________
         struct ReSaGo
         {
-            static const size_t MaxKeptDegree = 2;
 
-            class Filter : public Object
-            {
-            public:
-                explicit Filter(const int64_t n, const int64_t j, const size_t degree);
-                virtual ~Filter() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const size_t MaxKeptDegree = 2; //!< keep degree 0...MaxKeptDegree in matrix
 
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Filter);
-            };
-
+            //__________________________________________________________________
+            //
+            //
+            //! Factory of unique filters computed as rational
+            //
+            //__________________________________________________________________
             class Factory
             {
             public:
-                explicit Factory();
-                virtual ~Factory() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Factory();          //!< setup empty
+                virtual ~Factory() noexcept; //!< cleanup
 
+                //! compute rational filter weights
+                /**
+                 \param nLeft  number of points at the left  of the point of interest
+                 \param nRight number of points at the right of the point of interest
+                 \return matrix[1..maxDegree+1][1..nLeft+1+nRight]
+                 */
                 const Matrix<apq> & operator()(const uint32_t nLeft,
                                                const uint32_t nRight,
                                                const uint32_t degree);
