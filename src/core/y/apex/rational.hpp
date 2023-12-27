@@ -218,7 +218,9 @@ Rational & Rational:: operator OP##=(const Natural  & lhs) Y_APQ_BINARY_BODY(OP)
             static Rational Sqrt(const Rational &); //!< absolute value
             Rational        sqrt()           const; //!< absolute value
 
-            
+            template <typename T>
+            T toReal() const; //!< floating point approximation [XReal](float|double|long double)
+
             //__________________________________________________________________
             //
             //

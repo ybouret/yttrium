@@ -203,8 +203,9 @@ namespace Yttrium
             static Natural Sqrt(const Natural &s);                   //!< square root
             Natural        sqrt() const;                             //!< square root
 
+
             template <typename T> static
-            T ToReal(const Natural &numer, const Natural &denom);
+            T ToReal(const Natural &numer, const Natural &denom); //!< positive, floating point approximation float|double|long double
 
             //__________________________________________________________________
             //

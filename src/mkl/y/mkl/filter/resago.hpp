@@ -52,17 +52,30 @@ namespace Yttrium
                 explicit Factory();          //!< setup empty
                 virtual ~Factory() noexcept; //!< cleanup
 
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
                 //! compute rational filter weights
                 /**
                  \param nLeft  number of points at the left  of the point of interest
                  \param nRight number of points at the right of the point of interest
+                 \param degree fitting degree < 1+nLeft+1+nRight
                  \return matrix[1..maxDegree+1][1..nLeft+1+nRight]
                  */
                 const Matrix<apq> & operator()(const uint32_t nLeft,
                                                const uint32_t nRight,
                                                const uint32_t degree);
-
-                Code * const code;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                Code * const code; //!< anonymous code
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Factory);
