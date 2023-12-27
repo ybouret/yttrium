@@ -32,7 +32,12 @@ namespace Yttrium
             public:
                 explicit Factory();
                 virtual ~Factory() noexcept;
-                
+
+                const Matrix<apq> & operator()(const uint32_t nLeft,
+                                               const uint32_t nRight,
+                                               const uint32_t degree);
+
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Factory);
                 class Code;

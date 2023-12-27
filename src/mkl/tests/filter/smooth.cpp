@@ -234,6 +234,19 @@ Y_UTEST(filter_smooth)
     Random::Rand ran;
 
     MKL::ReSaGo::Factory factory;
+    for(uint32_t nl=0;nl<=5;++nl)
+    {
+        for(uint32_t nr=0;nr<=5;++nr)
+        {
+            const uint32_t np = 1+nl+nr;
+            const uint32_t dg = Min<uint32_t>(np-1,4);
+            for(uint32_t   d=0;d<=dg;++d)
+            {
+                std::cerr << "(-" << nl << ",+" << nr <<")@" << d << std::endl;
+                std::cerr << factory(nl,nr,d) << std::endl;
+            }
+        }
+    }
 
     if(false)
     {
