@@ -39,8 +39,8 @@ namespace Yttrium
 
                 //! setup
                 inline  ReSaGoMetrics(const int32_t  n_,
-                                       const int32_t  j_,
-                                       const uint32_t d_) noexcept :
+                                      const int32_t  j_,
+                                      const uint32_t d_) noexcept :
                 n(n_),
                 j(j_),
                 d(d_)
@@ -196,7 +196,7 @@ namespace Yttrium
                             mu[k][l]= mu[l][k] = sum;
                         }
                     }
-                    std::cerr << "mu=" << mu << std::endl;
+                    //std::cerr << "mu=" << mu << std::endl;
                     if(!lu.build(mu)) throw Exception(CallSign,"unexpected singular moments");
 
                     //----------------------------------------------------------
@@ -294,12 +294,8 @@ namespace Yttrium
                 //______________________________________________________________
 
                 //! get/create
-                const ReSaGoFilter & get(const int32_t  n,
-                                         const int32_t  j,
-                                         const uint32_t d)
+                const ReSaGoFilter & get(const ReSaGoKey &key)
                 {
-                    const ReSaGoKey           key(n,j,d);
-
                     {
                         const ReSaGoSharedFilter *ppF = search(key);
                         if(ppF) return **ppF;
@@ -312,6 +308,8 @@ namespace Yttrium
                     }
                     return *F;
                 }
+
+
 
                 //______________________________________________________________
                 //
@@ -345,7 +343,7 @@ namespace Yttrium
         }
 
         ReSaGo:: Factory:: ~Factory() noexcept
-        { assert(0!=code); Nullify(code); }
+        { assert(0!=code); Nullify( Coerce(code) ); }
 
 
         const Matrix<apq> & ReSaGo:: Factory:: operator()(const uint32_t nLeft,
@@ -356,9 +354,118 @@ namespace Yttrium
             const int32_t j = nLeft+1;
             const int32_t n = j+nRight;
             if( degree >= uint32_t(n) ) throw Specific:: Exception("ReSaGo::Factory","degree=%u >= %d points", degree, n);
-            return code->get(n,j,degree).f;
+            const ReSaGoKey key(n,j,degree);
+            return code->get(key).f;
         }
 
     }
 
+}
+
+#include "y/mkl/filter/savgol.hpp"
+#include "y/system/rtti.hpp"
+
+namespace Yttrium
+{
+    namespace MKL
+    {
+        namespace
+        {
+
+            //! unique filter containing converted matrix
+            template <typename T>
+            class SavGolFilter : public Object, public Counted, public ReSaGoKey
+            {
+            public:
+                typedef ArkPtr<ReSaGoKey,SavGolFilter> Pointer;
+                typedef HashSet<ReSaGoKey,Pointer>     DataBase;
+
+                // C++
+                
+                inline explicit SavGolFilter(const ReSaGoFilter &filter) :
+                Object(),
+                Counted(),
+                ReSaGoKey(filter),
+                f(filter.f.rows,filter.f.cols)
+                {
+                    for(size_t i=1;i<=f.rows;++i)
+                    {
+                        for(size_t j=1;j<=f.cols;++j)
+                        {
+                            const apq &q = filter.f[i][j];
+                            
+                        }
+                    }
+                }
+
+                inline virtual ~SavGolFilter() noexcept {}
+
+                // Methods
+                inline const ReSaGoKey & key() const noexcept { return *this; }
+
+
+                // Members
+                const Matrix<T> f;
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(SavGolFilter);
+            };
+        }
+
+        template <typename T>
+        class SavGol<T>::Code :
+        public Object,
+        public SavGolFilter<T>::DataBase
+        {
+        public:
+            typedef SavGolFilter<T>                   FilterType;
+            typedef typename SavGolFilter<T>::Pointer FilterPointer;
+
+            inline explicit Code(const SavGolFactory &sharedFactory) :
+            Object(),
+            factory( sharedFactory    ),
+            filters( *(factory->code) ),
+            tid( RTTI::Name<T>() )
+            {
+            }
+
+            inline virtual ~Code() noexcept {}
+
+            inline
+            const FilterType &get(const int32_t  n,
+                                  const int32_t  j,
+                                  const uint32_t d)
+            {
+                const ReSaGoKey key(n,j,d);
+                {
+                    const FilterPointer *ppF = this->search(key);
+                    if(ppF) return **ppF;
+                }
+
+                const ReSaGoFilter &impl = filters.get(key);
+                FilterType         *F    = new FilterType(impl);
+                {
+                    const FilterPointer tmp(F);
+                    if(!this->insert(tmp)) throw Specific::Exception("SavGol","unexpected insertion failure");
+                }
+                return *F;
+            }
+
+
+            SavGolFactory          factory;
+            ReSaGo::Factory::Code &filters;
+            const String          &tid;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Code);
+        };
+
+#define real_t float
+#include "savgol.hxx"
+
+#undef real_t
+#define real_t double
+#include "savgol.hxx"
+
+    }
 }

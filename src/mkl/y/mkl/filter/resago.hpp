@@ -7,6 +7,7 @@
 #include "y/mkl/api.hpp"
 #include "y/container/matrix.hpp"
 #include "y/apex/rational.hpp"
+#include "y/counted.hpp"
 
 namespace Yttrium
 {
@@ -37,9 +38,11 @@ namespace Yttrium
             //! Factory of unique filters computed as rational
             //
             //__________________________________________________________________
-            class Factory
+            class Factory : public Object, public Counted
             {
             public:
+                class Code;
+
                 //______________________________________________________________
                 //
                 //
@@ -59,12 +62,14 @@ namespace Yttrium
                                                const uint32_t nRight,
                                                const uint32_t degree);
 
+                Code * const code;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Factory);
-                class Code;
-                Code *code;
+
             };
+
+
         };
     }
 

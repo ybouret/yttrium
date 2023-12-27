@@ -9,7 +9,7 @@
 #include "y/calculus/ipower.hpp"
 #include "y/apex/mylar.hpp"
 
-#include "y/mkl/filter/resago.hpp"
+#include "y/mkl/filter/savgol.hpp"
 
 #include <cmath>
 
@@ -22,65 +22,6 @@ namespace Yttrium
     namespace MKL
     {
 
-        class Moments : public Object
-        {
-        public:
-
-            // n points, center is j in [1:n], p is number of coefficients
-            explicit Moments(const ptrdiff_t n, const ptrdiff_t j, const size_t p)
-            {
-
-                {
-                    Matrix<apq> mu(p,p);
-                    for(size_t l=1,lm=0;l<=p;++l,++lm)
-                    {
-                        for(size_t k=1,km=0;k<=l;++k,++km)
-                        {
-                            apz sum = 0;
-                            for(ptrdiff_t i=1;i<=n;++i)
-                            {
-                                const apz imj   = i-j;
-                                const apz imj_lk = ipower(imj,lm+km);
-                                sum += imj_lk;
-                            }
-                            mu[k][l]= mu[l][k] = sum;
-                        }
-                    }
-                    //std::cerr << "mu=" << mu << std::endl;
-
-                    Matrix<apq> F(p,n);
-                    for(size_t l=1,lm=0;l<=p;++l,++lm)
-                    {
-                        for(ptrdiff_t i=1;i<=n;++i)
-                        {
-                            const apz imj   = i-j;
-                            const apz imj_l = ipower(imj,lm);
-                            F[l][i] = imj_l;
-                        }
-                    }
-                    //std::cerr << "W=" << F << std::endl;
-
-                    LU<apq> lu;
-                    if(!lu.build(mu)) throw Exception("bad moments");
-                    lu.solve(mu,F);
-
-                    //std::cerr << "F=" << F << std::endl;
-                    for(size_t l=1;l<=p;++l)
-                    {
-                        std::cerr << "order" << l-1 << " : " << F[l] << std::endl;
-                    }
-
-                }
-
-            }
-
-
-            virtual ~Moments() noexcept {}
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Moments);
-        };
 
 
 #if 0
@@ -233,35 +174,25 @@ Y_UTEST(filter_smooth)
 
     Random::Rand ran;
 
-    MKL::ReSaGo::Factory factory;
-    for(uint32_t nl=0;nl<=5;++nl)
+    MKL::SavGolFactory factory = new MKL::ReSaGo::Factory();
+    MKL::SavGol<float> sgf(factory);
+
+    for(uint32_t nl=0;nl<=2;++nl)
     {
-        for(uint32_t nr=0;nr<=5;++nr)
+        for(uint32_t nr=0;nr<=2;++nr)
         {
             const uint32_t np = 1+nl+nr;
             const uint32_t dg = Min<uint32_t>(np-1,4);
             for(uint32_t   d=0;d<=dg;++d)
             {
                 std::cerr << "(-" << nl << ",+" << nr <<")@" << d << std::endl;
-                std::cerr << factory(nl,nr,d) << std::endl;
+                std::cerr << (*factory)(nl,nr,d) << std::endl;
+                std::cerr << sgf(nl,nr,d) << std::endl;
             }
         }
     }
 
-    if(false)
-    {
-        for(ptrdiff_t n=1;n<=15;++n)
-        {
-            for(ptrdiff_t j=1;j<=n;++j)
-            {
-                for(ptrdiff_t p=1;p<=Min<ptrdiff_t>(n,4);++p)
-                {
-                    std::cerr << n << "-" << j << "-" << p << std::endl;
-                    MKL::Moments mom(n,j,p);
-                }
-            }
-        }
-    }
+
 
 
 #if 0

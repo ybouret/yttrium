@@ -202,7 +202,9 @@ namespace Yttrium
             static Natural Comb(const size_t n, const size_t k);     //!< (n,k)
             static Natural Sqrt(const Natural &s);                   //!< square root
             Natural        sqrt() const;                             //!< square root
-            
+
+            template <typename T> static
+            T ToReal(const Natural &numer, const Natural &denom);
 
             //__________________________________________________________________
             //
