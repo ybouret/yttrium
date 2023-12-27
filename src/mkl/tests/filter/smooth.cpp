@@ -9,6 +9,8 @@
 #include "y/calculus/ipower.hpp"
 #include "y/apex/mylar.hpp"
 
+#include "y/mkl/filter/resago.hpp"
+
 #include <cmath>
 
 using namespace Yttrium;
@@ -23,6 +25,8 @@ namespace Yttrium
         class Moments : public Object
         {
         public:
+
+            // n points, center is j in [1:n], p is number of coefficients
             explicit Moments(const ptrdiff_t n, const ptrdiff_t j, const size_t p)
             {
 
@@ -229,24 +233,23 @@ Y_UTEST(filter_smooth)
 
     Random::Rand ran;
 
-    for(ptrdiff_t n=1;n<=15;++n)
+    MKL::ReSaGo::Factory factory;
+
+    if(false)
     {
-        for(ptrdiff_t j=1;j<=n;++j)
+        for(ptrdiff_t n=1;n<=15;++n)
         {
-            for(ptrdiff_t p=1;p<=Min<ptrdiff_t>(n,4);++p)
+            for(ptrdiff_t j=1;j<=n;++j)
             {
-                std::cerr << n << "-" << j << "-" << p << std::endl;
-                MKL::Moments mom(n,j,p);
+                for(ptrdiff_t p=1;p<=Min<ptrdiff_t>(n,4);++p)
+                {
+                    std::cerr << n << "-" << j << "-" << p << std::endl;
+                    MKL::Moments mom(n,j,p);
+                }
             }
         }
     }
 
-
-#if 0
-    MKL::Moments mom1(5,3,3);
-    MKL::Moments mom2(11,6,3);
-    MKL::Moments mom3(99,50,4);
-#endif
 
 #if 0
     Vector<double> X,Y;
