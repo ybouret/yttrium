@@ -218,10 +218,22 @@ namespace Yttrium
         //______________________________________________________________________
         template <typename T> struct Sqrt< XReal<T> >
         {
-            //! use buil-in functions
+            //! use built-in functions
             static inline XReal<T> Of(const XReal<T> &x) noexcept { return x.sqrt(); }
         };
 
+
+        //______________________________________________________________________
+        //
+        //
+        //! Sqrt for rational
+        //
+        //______________________________________________________________________
+        template<> struct Sqrt<apq>
+        {
+            //! use apq methods
+            static inline apq Of(const apq &x) { return x.sqrt(); }
+        };
 
         //______________________________________________________________________
         //

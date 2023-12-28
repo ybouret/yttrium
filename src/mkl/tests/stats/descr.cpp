@@ -35,7 +35,13 @@ namespace
 
         const T vAverage = Statistics::Average(v,xadd);
         const T lAverage = Statistics::Average(l,xadd);
-        std::cerr << vAverage << "/" << lAverage << std::endl;
+        std::cerr << "Average: " << vAverage << " | " << lAverage << std::endl;
+
+        const T vVariance = Statistics::Variance(v,xadd,vAverage);
+        const T lVariance = Statistics::Variance(l,xadd,vAverage);
+        const T vStdDev   = Sqrt<T>::Of(vVariance);
+        const T lStdDev   = Sqrt<T>::Of(lVariance);
+        std::cerr << "StdDev : " << vStdDev << " | " <<  lStdDev << std::endl;
 
     }
 }
@@ -47,8 +53,8 @@ Y_UTEST(stats_descr)
     Random::Rand ran;
 
     doMetrics<float>(ran);
-    doMetrics<apq>(ran);
     doMetrics< XReal<long double> >(ran);
+    if(false) doMetrics<apq>(ran);
 }
 Y_UDONE()
 

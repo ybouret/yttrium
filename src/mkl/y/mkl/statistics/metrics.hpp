@@ -29,11 +29,43 @@ namespace Yttrium
             }
 
             template <typename T,typename SEQUENCE> inline
-            T Average(SEQUENCE &seq,Antelope::Add<T> &xadd)
+            T Average(SEQUENCE &seq, Antelope::Add<T> &xadd)
             {
                 return Average(seq.begin(),seq.size(),xadd);
             }
         }
+
+        namespace Statistics
+        {
+            template <typename T,typename ITERATOR> inline
+            T Variance(ITERATOR it, size_t n, Antelope::Add<T> &xadd, const T &average)
+            {
+                switch(n)
+                {
+                    case 0:
+                    case 1:
+                        return T(0);
+                    default:
+                        break;
+                }
+                const T den(n-1);
+                xadd.free();
+                while(n-- > 0)
+                {
+                    const T delta = *(it++) - average;
+                    xadd << delta*delta;
+                }
+                return xadd.sum()/den;
+            }
+
+            template <typename T,typename SEQUENCE> inline
+            T Variance(SEQUENCE &seq, Antelope::Add<T> &xadd, const T &average)
+            {
+                return Variance( seq.begin(), seq.size(), xadd, average);
+            }
+
+        }
+
     }
 }
 
