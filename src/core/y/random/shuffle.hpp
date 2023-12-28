@@ -33,13 +33,23 @@ namespace Yttrium
 
             //__________________________________________________________________
             //
-            //! Fisher-Yates
+            //! Fisher-Yates over a range
             //__________________________________________________________________
             template <typename ITERATOR>
             static void Range(ITERATOR curr, const size_t n, Bits &ran)
             {
                 for(size_t i=n-1;i>0;--i)
                     Exchange(*(curr+i), *(curr+ran.leq(i)));
+            }
+
+            //__________________________________________________________________
+            //
+            //! Fisher-Yates over a sequence
+            //__________________________________________________________________
+            template <typename SEQUENCE>
+            static void Range(SEQUENCE &seq, Bits &ran)
+            {
+                Range(seq.begin(),seq.size(),ran);
             }
 
             //__________________________________________________________________
