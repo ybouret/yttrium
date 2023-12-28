@@ -9,7 +9,7 @@
 #include "y/calculus/ipower.hpp"
 #include "y/apex/mylar.hpp"
 
-#include "y/mkl/filter/savgol.hpp"
+#include "y/mkl/filter/smooth.hpp"
 
 #include <cmath>
 
@@ -174,30 +174,6 @@ Y_UTEST(filter_smooth)
 
     Random::Rand ran;
 
-    MKL::SavGolFactory factory = new MKL::ReSaGo::Factory();
-    MKL::SavGol<float>           sgf(factory);
-    MKL::SavGol<double>          sgd(factory);
-    MKL::SavGol<long double>     sgl(factory);
-    MKL::SavGol< XReal<double> > sgx(factory);
-
-    for(uint32_t nl=0;nl<=2;++nl)
-    {
-        for(uint32_t nr=0;nr<=2;++nr)
-        {
-            const uint32_t np = 1+nl+nr;
-            const uint32_t dg = Min<uint32_t>(np-1,4);
-            for(uint32_t   d=0;d<=dg;++d)
-            {
-                std::cerr << "(-" << nl << ",+" << nr <<")@" << d << std::endl;
-                std::cerr << (*factory)(nl,nr,d) << std::endl;
-                std::cerr << sgf.fetch(nl,nr,d) << std::endl;
-                std::cerr << sgd.fetch(nl,nr,d) << std::endl;
-                std::cerr << sgl.fetch(nl,nr,d) << std::endl;
-                std::cerr << sgx.fetch(nl,nr,d) << std::endl;
-
-            }
-        }
-    }
 
 
 
@@ -218,31 +194,31 @@ Y_UTEST(filter_smooth)
         }
     }
 
-    
+    MKL::Smooth<double> sm;
 
-
-#if 0
-    const double   xmin  = 0;
-    const double   xmax  = X.tail()*1.01;
     Vector<double> xs, ys;
 
 
-    MKL::Antelope::Add<double> xadd;
 
-    MKL::Smooth<double> sm;
+    const double   xmin  = 0;
+    const double   xmax  = X.tail()*1.01;
+
+
 
     {
         Libc::OutputFile fp("smooth.dat");
-        const size_t NP = 10;
+        const size_t NP = 20;
         for(size_t i=0;i<=NP;++i)
         {
             const double xx = xmin + i*(xmax-xmin)/double(NP);
             std::cerr << "xx=" << xx << std::endl;
             MKL::Selector::Fill(xx, 0.5, 0.7, xs, ys, X, Y);
 
+            sm.run(xx,xs,ys,5);
+            fp("%.15g %.15g %.15g %.15g\n", xx, sm[1], sm[2], sm[3] );
 
 
-
+#if 0
             if(!sm.prepare(xx, xs, ys,5)) throw Exception("singular smooth");
 
             if(false)
@@ -259,12 +235,12 @@ Y_UTEST(filter_smooth)
             }
 
             fp("%.15g %.15g\n", xx, sm[0] );
+#endif
         }
     }
 
-#endif
 
-
+    std::cerr << "plot 'smooth-data.dat' w lp, 'smooth.dat' w lp, 'smooth.dat' u 1:3  w lp, -sin(x), 'smooth.dat' u ($1):(-$4) w lp" << std::endl;
 
 
 
