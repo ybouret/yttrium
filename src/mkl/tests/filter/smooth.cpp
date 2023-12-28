@@ -175,9 +175,9 @@ Y_UTEST(filter_smooth)
     Random::Rand ran;
 
     MKL::SavGolFactory factory = new MKL::ReSaGo::Factory();
-    MKL::SavGol<float>          sgf(factory);
-    MKL::SavGol<double>         sgd(factory);
-    MKL::SavGol<long double>    sgl(factory);
+    MKL::SavGol<float>           sgf(factory);
+    MKL::SavGol<double>          sgd(factory);
+    MKL::SavGol<long double>     sgl(factory);
     MKL::SavGol< XReal<double> > sgx(factory);
 
     for(uint32_t nl=0;nl<=2;++nl)
@@ -190,10 +190,10 @@ Y_UTEST(filter_smooth)
             {
                 std::cerr << "(-" << nl << ",+" << nr <<")@" << d << std::endl;
                 std::cerr << (*factory)(nl,nr,d) << std::endl;
-                std::cerr << sgf(nl,nr,d) << std::endl;
-                std::cerr << sgd(nl,nr,d) << std::endl;
-                std::cerr << sgl(nl,nr,d) << std::endl;
-                std::cerr << sgx(nl,nr,d) << std::endl;
+                std::cerr << sgf.fetch(nl,nr,d) << std::endl;
+                std::cerr << sgd.fetch(nl,nr,d) << std::endl;
+                std::cerr << sgl.fetch(nl,nr,d) << std::endl;
+                std::cerr << sgx.fetch(nl,nr,d) << std::endl;
 
             }
         }
@@ -202,7 +202,8 @@ Y_UTEST(filter_smooth)
 
 
 
-#if 0
+
+
     Vector<double> X,Y;
 
 
@@ -220,6 +221,7 @@ Y_UTEST(filter_smooth)
 
     }
 
+#if 0
     const double   xmin  = 0;
     const double   xmax  = X.tail()*1.01;
     Vector<double> xs, ys;

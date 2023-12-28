@@ -450,7 +450,8 @@ namespace Yttrium
             FilterDB(),
             tid( RTTI::Name<T>() ),
             svf( sharedFactory   ),
-            raw( *(svf->code)    )
+            raw( *(svf->code)    ),
+            add()
             {
             }
 
@@ -484,11 +485,10 @@ namespace Yttrium
             // Members
             //__________________________________________________________________
             const String          &tid; //!< uuid
-
-        private:
             SavGolFactory          svf; //!< shared factory
             ReSaGo::Factory::Code &raw; //!< low-level filters
-
+            XAdd                   add;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
         };
