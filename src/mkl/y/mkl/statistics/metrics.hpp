@@ -63,9 +63,53 @@ namespace Yttrium
             {
                 return Variance( seq.begin(), seq.size(), xadd, average);
             }
-
         }
 
+        namespace Statistics
+        {
+            template <typename T,typename ITERATOR> inline
+            T StandardDeviation(ITERATOR it, size_t n, Antelope::Add<T> &xadd, const T &average)
+            {
+                const T _ = Variance(it,n,xadd,average);
+                return Sqrt<T>::Of(_);
+            }
+
+            template <typename T,typename SEQUENCE> inline
+            T StandardDeviation(SEQUENCE &seq, Antelope::Add<T> &xadd, const T &average)
+            {
+                return StandardDeviation( seq.begin(), seq.size(), xadd, average);
+            }
+        }
+
+        namespace Statistics
+        {
+            template <typename T,typename ITERATOR> inline
+            T AbsoluteDeviation(ITERATOR it, size_t n, Antelope::Add<T> &xadd, const T &average)
+            {
+                switch(n)
+                {
+                    case 0:
+                        return T(0);
+                    default:
+                        break;
+                }
+                const T den(n);
+                xadd.free();
+                while(n-- > 0)
+                {
+                    const T delta = *(it++) - average;
+                    xadd << Fabs<T>::Of(delta);
+                }
+                return xadd.sum()/den;
+            }
+            
+            template <typename T,typename SEQUENCE> inline
+            T AbsoluteDeviation(SEQUENCE &seq, Antelope::Add<T> &xadd, const T &average)
+            {
+                return AbsoluteDeviation( seq.begin(), seq.size(), xadd, average);
+            }
+
+        }
     }
 }
 

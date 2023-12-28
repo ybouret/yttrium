@@ -39,9 +39,19 @@ namespace
 
         const T vVariance = Statistics::Variance(v,xadd,vAverage);
         const T lVariance = Statistics::Variance(l,xadd,vAverage);
-        const T vStdDev   = Sqrt<T>::Of(vVariance);
-        const T lStdDev   = Sqrt<T>::Of(lVariance);
+        const T vStdDev0  = Sqrt<T>::Of(vVariance);
+        const T lStdDev0  = Sqrt<T>::Of(lVariance);
+        std::cerr << "StdDev0: " << vStdDev0 << " | " <<  lStdDev0 << std::endl;
+
+
+        const T vStdDev = Statistics::StandardDeviation(v,xadd,vAverage);
+        const T lStdDev = Statistics::StandardDeviation(l,xadd,vAverage);
         std::cerr << "StdDev : " << vStdDev << " | " <<  lStdDev << std::endl;
+
+        const T vAbsDev = Statistics::AbsoluteDeviation(v,xadd,vAverage);
+        const T lAbsDev = Statistics::AbsoluteDeviation(l,xadd,vAverage);
+        std::cerr << "AbsDev : " << vAbsDev << " | " <<  lAbsDev << std::endl;
+
 
     }
 }
