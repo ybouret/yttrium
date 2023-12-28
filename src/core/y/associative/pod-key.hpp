@@ -63,6 +63,7 @@ namespace Yttrium
 
         //! copy relying on POD(const POD &) noexcept
         inline POD_Key(const POD_Key &other) noexcept :
+        Memory::ReadOnlyBuffer(),
         data(other.data)
         {
         }
