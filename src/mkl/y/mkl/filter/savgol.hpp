@@ -66,67 +66,65 @@ namespace Yttrium
              \param out    [0:num-1] filtered output
              \param idx    [0:num-1] requested orders
              \param num    number of filter
-             \param I      data iterator
-             \param n      data size
-             \param j      data center index
+             \param source source data
+             \param center data center index
              \param degree polynomial fit order
              */
-            template <typename ITERATOR>
-            void run(T              out[],
-                     const size_t   idx[],
-                     const size_t   num,
-                     const ITERATOR I,
-                     const size_t   n,
-                     const size_t   j,
-                     const size_t   degree)
+            template <typename U>
+            void run(T                  out[],
+                     const size_t       idx[],
+                     const size_t       num,
+                     const Readable<U> &source,
+                     const size_t       center,
+                     const size_t       degree)
             {
-                assert(n>0);
-                assert(j>0);
-                assert(j<=n);
+
                 assert(Good(out,num));
                 assert(Good(idx,num));
-                assert(degree<n);
+                assert(center>=1);
+                assert(center<=source.size());
+                assert(degree<source.size());
+
                 xadd.free();
-                const Matrix<T> &filter = get(n,j,degree);
+                const size_t     length = source.size();
+                const Matrix<T> &filter = get(length,center,degree);
+                const U          offset = source[center];
+                const T          append = offset;
                 for(size_t i=0;i<num;++i)
                 {
                     const size_t       k = idx[i]; assert(k<filter.rows);
                     const Readable<T> &f = filter[k+1];
-                    ITERATOR           it = I;
-                    for(size_t l=1;l<=n;++l,++it)
+                    for(size_t i=length;i>0;--i)
                     {
-                        xadd << f[l] * (*it);
+                        const U delta = source[i] - offset;
+                        xadd << f[i] * delta;
                     }
-                    out[i] = xadd.sum();
+                    out[i] = xadd.sum() + append;
                 }
             }
 
-            template <typename ITERATOR>
-            T operator()(const ITERATOR I,
-                         const size_t   n,
-                         const size_t   j,
-                         const size_t   degree)
+            template <typename U>
+            T operator()(const Readable<U> &source,
+                         const size_t       center,
+                         const size_t       degree)
             {
                 static const size_t idx[1] = { 0 };
                 T                   out[1] = { 0 };
-                run(out,idx,1,I,n,j,degree);
+                run(out,idx,1,source,center,degree);
                 return out[0];
             }
-
-            template <typename ITERATOR>
-            T operator()(const ITERATOR I,
-                         const size_t   n,
-                         const size_t   j,
-                         const size_t   degree,
-                         T             &drvs)
+            template <typename U>
+            T operator()(const Readable<U> &source,
+                         const size_t       center,
+                         const size_t       degree,
+                         T                 &drvs)
             {
                 static const size_t idx[2] = { 0,1 };
                 T                   out[2] = { 0,0 };
-                run(out,idx,2,I,n,j,degree);
+                run(out,idx,2,source,center,degree);
                 drvs = out[1];
                 return out[0];
             }
-
 
 
         private:

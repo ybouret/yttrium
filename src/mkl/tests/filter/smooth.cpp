@@ -203,10 +203,8 @@ Y_UTEST(filter_smooth)
 
 
 
-
+    // generate some data
     Vector<double> X,Y;
-
-
     {
         const size_t np=100;
         Libc::OutputFile fp("smooth-data.dat");
@@ -218,8 +216,10 @@ Y_UTEST(filter_smooth)
             Y << cos(xx);
             fp("%.15g %.15g\n", X.tail(), Y.tail());
         }
-
     }
+
+    
+
 
 #if 0
     const double   xmin  = 0;
