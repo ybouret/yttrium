@@ -7,9 +7,64 @@
 \usepackage{chemarr}
 \usepackage{mathptmx}
 \usepackage{bookman}
-
+\usepackage{array}
   	 
 \begin{document}
+
+Let $\vec{z}_1,\ldots,\vec{z}_n$ be points taken at "times" $t_i$ and
+we want to fit them at $t_0$ with a low degree polynomial of degree $d$,
+with $m=d+1$ coefficients:
+\begin{equation}
+P(t) = \vec{z}_0 + \sum_{k=0}^{d} \left(t-t_0\right)^k \vec{a}_k
+\end{equation}
+
+
+\begin{equation}
+	D^2 = \dfrac{1}{2} \sum_{i=1}^n
+	\left[ 
+	\left(\vec{z}_i - \vec{z}_0\right) -
+	\left(\sum_{k=0}^{d} \left(t_i-t_0\right)^k \vec{a}_k \right)
+	 \right]^2
+\end{equation}	
+
+\begin{equation}
+	\forall\; 0 \leq l \leq d,\;
+	\partial_{\vec{a}_l} D^2 =
+	-\sum_{i=1}^n  \left(t_i-t_0\right)^l \left[ 
+	\left(\vec{z}_i - \vec{z}_0\right) -
+	\left(\sum_{k=0}^{d} \left(t_i-t_0\right)^k \vec{a}_k \right)
+	 \right]
+\end{equation}
+
+\begin{equation}
+	\forall\; 0 \leq l \leq d,\;
+	\sum_{k=0}^{d} \left[ \sum_{i=1}^n \left(t_i-t_0\right)^{(k+l)} \right] \vec{a}_k = 
+	\sum_{i=1}^n \left(t_i-t_0\right)^l  
+	\left(\vec{z}_i - \vec{z}_0\right)
+\end{equation}
+
+\begin{equation}
+\left[ \sum_{k=1}^n (t_k-t_0)^{i+j-2}\right] \vec{A} = 
+\begin{bmatrix}
+\sum_{k=1}^n\left(\vec{z}_k - \vec{z}_0\right) \\
+\sum_{k=1}^n\left(t_k-t_0\right)\left(\vec{z}_k - \vec{z}_0\right)\\
+\vdots\\
+\sum_{k=1}^n\left(t_k-t_0\right)^{j-1}\left(\vec{z}_k - \vec{z}_0\right)\\
+\vdots\\
+\sum_{k=1}^n\left(t_k-t_0\right)^{d-1}\left(\vec{z}_k - \vec{z}_0\right)\\
+\end{bmatrix}
+\end{equation}
+
+We choose:
+\begin{equation}
+	\vec{z}_0 = \frac{1}{n} \sum_{k=1}^n \vec{z}_k
+\end{equation}
+so that:
+\begin{equation}
+	\sum_{k=1}^n\left(\vec{z}_k - \vec{z}_0\right) = \vec{0}
+\end{equation}
+
+\end{document}
 
 Let $\vec{z}_1,\ldots,\vec{z}_n$ be points taken at "times" $t_i=i$ and
 we want to fit them at $t_j,\vec{z}_j$ with:
