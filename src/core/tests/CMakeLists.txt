@@ -253,6 +253,8 @@ add_test(associative:hash-set     test-core associative_hash_set ${DATA}/small.d
 add_test(associative:lek          test-core associative_lek)
 add_test(associative:key-set      test-core associative_key_set)
 add_test(associative:address-book test-core associative_addrbook)
+add_test(associative:pod-key      test-core associative_pod_key)
+
 
 
 #mkl

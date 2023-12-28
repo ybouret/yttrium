@@ -191,6 +191,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(associative_lek);
     Y_UTEST(associative_key_set);
     Y_UTEST(associative_addrbook);
+    Y_UTEST(associative_pod_key);
 
     Y_UTEST(mkl_numeric);
     Y_UTEST(mkl_complex);
