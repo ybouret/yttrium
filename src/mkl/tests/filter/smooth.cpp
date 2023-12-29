@@ -216,7 +216,7 @@ Y_UTEST(filter_smooth)
             std::cerr << "xx=" << xx << std::endl;
             MKL::Selector::Fill(xx, 0.5, 0.7, xs, ys, X, Y);
 
-            sm.run(xx,xs,ys,5);
+            sm(xx,xs,ys,5);
             fp("%.15g %.15g %.15g %.15g\n", xx, sm[1], sm[2], sm[3] );
 
 

@@ -51,16 +51,24 @@ namespace Yttrium
                         [3] = smoothed second derivative
              */
             //__________________________________________________________________
-            void  run(const T           &t0,
-                      const Readable<T> &t,
-                      const Readable<T> &z,
-                      const size_t       degree);
+            void  operator()(const T           &t0,
+                             const Readable<T> &t,
+                             const Readable<T> &z,
+                             const size_t       degree);
 
             //__________________________________________________________________
             //
             //! reserve internal memory to process from 0 to degree
             //__________________________________________________________________
             void reserveMaxDegree(const size_t degree);
+
+
+            //__________________________________________________________________
+            //
+            //! reserve internal memory to process points
+            //__________________________________________________________________
+            void reserveMaxLength(const size_t points);
+
 
             //__________________________________________________________________
             //

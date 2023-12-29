@@ -14,10 +14,10 @@ code( new Code() )
 
 
 template <>
-void Smooth<real_t>:: run(const real_t           &t0,
-                          const Readable<real_t> &t,
-                          const Readable<real_t> &z,
-                          const size_t            degree)
+void Smooth<real_t>:: operator()(const real_t           &t0,
+                                 const Readable<real_t> &t,
+                                 const Readable<real_t> &z,
+                                 const size_t            degree)
 {
     assert(0!=code);
     code->run(t0,t,z,degree);
@@ -50,4 +50,11 @@ void Smooth<real_t>:: reserveMaxDegree(const size_t degree)
 {
     assert(0!=code);
     code->reserveMaxDegree(degree);
+}
+
+template <>
+void Smooth<real_t>:: reserveMaxLength(const size_t points)
+{
+    assert(0!=code);
+    code->reserveMaxLength(points);
 }

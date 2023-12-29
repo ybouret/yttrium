@@ -122,6 +122,7 @@ namespace Yttrium
             solv(),
             ttab(),
             ztab(),
+            xadd(),
             mydb()
             {}
 
@@ -164,7 +165,24 @@ namespace Yttrium
             //__________________________________________________________________
             inline void reserveMaxDegree(const size_t degree)
             {
-                for(size_t m=degree+1;m>0;--m) (void) get(m);
+                const size_t top = degree+1;
+                solv.ensure(top);
+                for(size_t m=top;m>0;--m) (void) get(m);
+
+            }
+
+
+            //__________________________________________________________________
+            //
+            //! reserve moments for 0..degree
+            //__________________________________________________________________
+            inline void reserveMaxLength(const size_t points)
+            {
+                ztab.free();
+                ttab.free();
+                ttab.ensure(points);
+                ztab.ensure(points);
+                xadd.make(points);
             }
 
             //__________________________________________________________________
@@ -182,14 +200,15 @@ namespace Yttrium
                 // prepare resources
                 //--------------------------------------------------------------
                 const size_t n = t.size(); if(n<=0) return;
-                const size_t m = Min(degree+1,n);
-                MomentsType &moments = get(m);
-
-                solv.ensure(m); // and create internal xadd
-                XAdd &xadd = solv.xadd();
                 xadd.make(n);
                 ttab.adjust(n,zero);
                 ztab.adjust(n,zero);
+
+                const size_t m = Min(degree+1,n);
+                MomentsType &moments = get(m);
+                solv.ensure(m);
+
+
 
                 //--------------------------------------------------------------
                 // initialize internal coef
@@ -265,13 +284,19 @@ namespace Yttrium
 
             }
 
+            //__________________________________________________________________
+            //
+            //
             // Members
-            const T          zero;
-            Array            coef;
-            LU<T>            solv;
-            Tableau          ttab;
-            Tableau          ztab;
-            MomentsDB        mydb;
+            //
+            //__________________________________________________________________
+            const T          zero; //!< constant
+            Array            coef; //!< allocated for Smooth
+            LU<T>            solv; //!< solver
+            Tableau          ttab; //!< centered t
+            Tableau          ztab; //!< centered z
+            XAdd             xadd; //!< local xadd
+            MomentsDB        mydb; //!< database of moments
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
