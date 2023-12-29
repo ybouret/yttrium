@@ -22,11 +22,9 @@ using namespace MKL;
 namespace
 {
     template <typename T> static inline
-    void testTAO()
+    void testTAO(Random::Bits &ran)
     {
         std::cerr << "Tao<" << RTTI::Name<T>() << ">" << std::endl;
-        //Tao::Multifold<T> mf;
-        //mf.make(2,10);
 
 
 
@@ -67,14 +65,14 @@ Y_UTEST(tao1)
         Tao::Load(target,source,par);
         std::cerr << "target=" << target << std::endl;
 
-
-        testTAO<float>();
-        testTAO<double>();
-        testTAO<long double>();
-        testTAO< XReal<float>  >();
-        testTAO< XReal<double> >();
-        testTAO< XReal<long double> >();
-        testTAO< apq >();
+#define ARGS ran
+        testTAO<float>(ARGS);
+        testTAO<double>(ARGS);
+        testTAO<long double>(ARGS);
+        testTAO< XReal<float>  >(ARGS);
+        testTAO< XReal<double> >(ARGS);
+        testTAO< XReal<long double> >(ARGS);
+        testTAO< apq >(ARGS);
     }
 
 
