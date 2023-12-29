@@ -196,6 +196,8 @@ Y_UTEST(filter_smooth)
 
     MKL::Smooth<double> sm;
 
+    sm.reserveMaxDegree(5);
+
     Vector<double> xs, ys;
 
 

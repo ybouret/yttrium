@@ -43,3 +43,11 @@ const real_t & Smooth<real_t>:: operator[](const size_t idx) const noexcept
     assert(idx<=3);
     return code->coef[idx];
 }
+
+
+template <>
+void Smooth<real_t>:: reserveMaxDegree(const size_t degree)
+{
+    assert(0!=code);
+    code->reserveMaxDegree(degree);
+}

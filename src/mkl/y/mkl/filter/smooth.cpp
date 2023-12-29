@@ -11,30 +11,167 @@
 #include "y/system/exception.hpp"
 #include <cerrno>
 
+#include "y/sequence/vector.hpp"
+
+#include "y/associative/little-endian-key.hpp"
+#include "y/associative/suffix/set.hpp"
+#include "y/ptr/ark.hpp"
+
 namespace Yttrium
 {
     namespace MKL
     {
 
+
+        namespace
+        {
+            typedef Memory::Dyadic  MemoryModel; //!< alias
+            typedef LittleEndianKey KeyType;     //!< alias
+
+            //__________________________________________________________________
+            //
+            //
+            //! Matrix + Vector of given dimension
+            //
+            //__________________________________________________________________
+            template <typename T>
+            class Moments : public Object, public Counted
+            {
+            public:
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef ArkPtr<KeyType,Moments>    Pointer;
+                typedef SuffixSet<KeyType,Pointer> DataBase;
+
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! acquire resources
+                inline explicit Moments(const size_t n) :
+                mu(n,n),
+                cf(n),
+                k_(n)
+                {
+                }
+
+                //! cleanup
+                inline virtual ~Moments() noexcept {}
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                //! for database
+                inline const KeyType & key() const noexcept { return k_; }
+
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                Matrix<T>               mu; //!< matrix of moment
+                CxxArray<T,MemoryModel> cf; //!< right hand side
+
+            private:
+                const LittleEndianKey   k_;
+                Y_DISABLE_COPY_AND_ASSIGN(Moments);
+            };
+        }
+
+
+        //! Code for Smooth
         template <typename T>
         class Smooth<T> :: Code : public Object
         {
         public:
-            typedef Memory::Dyadic    Model;
-            typedef Vector<T,Model>   Tableau;
-            typedef Antelope::Add<T>  XAdd;
-            typedef CxxArray<T,Model> Array;
+            //__________________________________________________________________
+            //
+            //
+            // Defintions
+            //
+            //__________________________________________________________________
+            typedef Vector<T,MemoryModel>         Tableau;     //!< alias
+            typedef Antelope::Add<T>              XAdd;        //!< alias
+            typedef CxxArray<T,MemoryModel>       Array;       //!< alias
+            typedef Moments<T>                    MomentsType; //!< alias
+            typedef typename Moments<T>::Pointer  MomentsPtr;  //!< alias
+            typedef typename Moments<T>::DataBase MomentsDB;   //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup
             inline explicit Code() :
             zero(0),
             coef(4,zero),
             solv(),
             ttab(),
-            ztab()
+            ztab(),
+            mydb()
             {}
 
+            //! cleanup
             inline virtual ~Code() noexcept {}
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //__________________________________________________________________
+            //
+            //! get/create moments of size m
+            //__________________________________________________________________
+            inline MomentsType & get(const size_t m)
+            {
+                const KeyType key(m);
+                {
+                    MomentsPtr * ppM = mydb.search(key);
+                    if(0!=ppM)
+                        return **ppM;
+                }
+
+                MomentsType *M = new MomentsType(m);
+                {
+                    const MomentsPtr tmp(M);
+                    if(!mydb.insert(tmp))
+                        throw Specific::Exception("Smooth::Moments","unexpected insertion failure");
+                }
+                return *M;
+            }
+
+
+            //__________________________________________________________________
+            //
+            //! reserve moments for 0..degree
+            //__________________________________________________________________
+            inline void reserveMaxDegree(const size_t degree)
+            {
+                for(size_t m=degree+1;m>0;--m) (void) get(m);
+            }
+
+            //__________________________________________________________________
+            //
+            //! process selection
+            //__________________________________________________________________
             inline void run(const T           &t0,
                             const Readable<T> &t,
                             const Readable<T> &z,
@@ -45,14 +182,20 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 // prepare resources
                 //--------------------------------------------------------------
-                coef.ld(zero);
                 const size_t n = t.size(); if(n<=0) return;
                 const size_t m = Min(degree+1,n);
-                solv.ensure(m);
+                MomentsType &moments = get(m);
+
+                solv.ensure(m); // and create internal xadd
+                XAdd &xadd = solv.xadd();
+                xadd.make(n);
                 ttab.adjust(n,zero);
                 ztab.adjust(n,zero);
-                XAdd &xadd = solv.xadd();
-                xadd.make(n);           assert( xadd.isEmpty() );
+
+                //--------------------------------------------------------------
+                // initialize internal coef
+                //--------------------------------------------------------------
+                coef.ld(zero);
 
                 //--------------------------------------------------------------
                 // center t
@@ -67,49 +210,52 @@ namespace Yttrium
                 // center z
                 //--------------------------------------------------------------
                 const T z0 = xadd.sum()/T(n);
-                //std::cerr << "z0=" << z0 << std::endl;
                 for(size_t i=n;i>0;--i)
                 {
                     ztab[i] = z[i] - z0;
                 }
 
                 //--------------------------------------------------------------
-                // compute coefficients
+                // compute matrix coefficients
                 //--------------------------------------------------------------
-                Array     cf(m,zero);
+                Matrix<T>   &mu = moments.mu; assert(mu.rows==m); assert(mu.cols==m);
+                for(size_t i=1;i<=m;++i)
                 {
-                    Matrix<T> mu(m,m);
-                    for(size_t i=1;i<=m;++i)
+                    for(size_t j=i;j<=m;++j)
                     {
-                        for(size_t j=i;j<=m;++j)
-                        {
-                            const size_t p = j+i-2;
-                            xadd.free();
-                            for(size_t k=n;k>0;--k)
-                            {
-                                const T tmp = ipower(ttab[k],p);
-                                xadd << tmp;
-                            }
-                            mu[i][j] = mu[j][i] = xadd.sum();
-                        }
-                    }
-                    //std::cerr << "mu=" << mu << std::endl;
-                    if(!solv.build(mu)) throw Libc::Exception(EDOM,"singular smoothing moments");
-                    
-                    for(size_t j=2;j<=m;++j)
-                    {
+                        const size_t p = (j+i)-2;
                         xadd.free();
                         for(size_t k=n;k>0;--k)
                         {
-                            const T tmp = ipower(ttab[k],j-1);
-                            xadd << tmp * ztab[k];
+                            const T tmp = ipower(ttab[k],p);
+                            xadd << tmp;
                         }
-                        cf[j] = xadd.sum();
+                        mu[i][j] = mu[j][i] = xadd.sum();
                     }
-                    //std::cerr << "rs=" << cf << std::endl;
-                    solv.solve(mu,cf);
                 }
-                //std::cerr << "cf=" << cf << std::endl;
+                if(!solv.build(mu)) throw Libc::Exception(EDOM,"singular smoothing moments");
+
+                //--------------------------------------------------------------
+                // compute right hand side
+                //--------------------------------------------------------------
+                Writable<T> &cf = moments.cf; assert(m==cf.size());
+                cf[1] = zero;
+                for(size_t j=2;j<=m;++j)
+                {
+                    xadd.free();
+                    for(size_t k=n;k>0;--k)
+                    {
+                        const T tmp = ipower(ttab[k],j-1);
+                        xadd << tmp * ztab[k];
+                    }
+                    cf[j] = xadd.sum();
+                }
+
+                //--------------------------------------------------------------
+                // compute all coefficients
+                //--------------------------------------------------------------
+                solv.solve(mu,cf);
+
 
                 //--------------------------------------------------------------
                 // transfer coefficients
@@ -120,12 +266,14 @@ namespace Yttrium
 
             }
 
+            // Members
             const T          zero;
             Array            coef;
             LU<T>            solv;
             Tableau          ttab;
             Tableau          ztab;
-            
+            MomentsDB        mydb;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
         };

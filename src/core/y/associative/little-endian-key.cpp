@@ -1,7 +1,7 @@
 
 #include "y/associative/little-endian-key.hpp"
-#include <cstring>
 #include "y/stream/output.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
@@ -119,5 +119,11 @@ namespace Yttrium
     {
         return key.displayHexadecimal(os);
     }
+
+    bool operator==(const LittleEndianKey &lhs, const LittleEndianKey &rhs) noexcept
+    {
+        return 0 == memcmp(lhs.code,rhs.code,8);
+    }
+
 }
 

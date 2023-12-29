@@ -56,6 +56,8 @@ namespace Yttrium
         friend std::ostream & operator<<(std::ostream &os, const LittleEndianKey &key); //!< display
         friend OutputStream & operator<<(OutputStream &os, const LittleEndianKey &key); //!< write
 
+        friend bool operator==(const LittleEndianKey &, const LittleEndianKey &) noexcept;
+        
         //! recompose integer from code
         template <size_t N>
         typename UnsignedInt<N>::Type get() const noexcept;

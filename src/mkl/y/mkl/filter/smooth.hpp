@@ -13,6 +13,7 @@ namespace Yttrium
     namespace MKL
     {
 
+        
         //______________________________________________________________________
         //
         //
@@ -57,8 +58,14 @@ namespace Yttrium
 
             //__________________________________________________________________
             //
+            //! reserve internal memory to process from 0 to degree
+            //__________________________________________________________________
+            void reserveMaxDegree(const size_t degree);
+
+            //__________________________________________________________________
             //
-            // interface
+            //
+            // Readable interface
             //
             //__________________________________________________________________
             virtual const char * callSign()               const noexcept; //!< "Smooth"
