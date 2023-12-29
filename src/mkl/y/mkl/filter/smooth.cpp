@@ -326,6 +326,11 @@ namespace Yttrium
 #include "smooth.hxx"
 #undef real_t
 
+
+#define real_t apq
+#include "smooth.hxx"
+#undef real_t
+
     }
 
 }

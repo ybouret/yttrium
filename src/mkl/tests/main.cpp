@@ -35,6 +35,7 @@ Y_UTEST_DECL(32)
 
 
     Y_UTEST(filter_smooth);
+    Y_UTEST(filter_arc);
 
     Y_UTEST(root_zfind);
 
