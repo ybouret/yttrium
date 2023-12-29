@@ -40,3 +40,20 @@ void SmoothArc<real_t> :: operator()(const real_t             &t0,
     assert(0!=code);
     code->run(t0,t,p,xdegree,ydegree,geometry);
 }
+
+template <>
+void SmoothArc<real_t>:: reserveMaxDegree(const size_t degree)
+{
+    assert(0!=code);
+    code->sm.reserveMaxDegree(degree);
+
+}
+
+template <>
+void SmoothArc<real_t>:: reserveMaxLength(const size_t points)
+{
+    assert(0!=code);
+    code->sm.reserveMaxLength(points);
+    code->coord.free();
+    code->coord.ensure(points);
+}

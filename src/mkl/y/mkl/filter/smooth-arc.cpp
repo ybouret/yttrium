@@ -14,7 +14,8 @@ namespace Yttrium
         class SmoothArc<T>:: Code : public Object
         {
         public:
-            typedef V2D<T> Vtx;
+            typedef V2D<T>                   Vtx;
+            typedef Vector<T,Memory::Dyadic> Tableau;
 
             inline explicit Code() :
             sm(),
@@ -22,7 +23,8 @@ namespace Yttrium
             r(zero,zero),
             v(zero,zero),
             d(zero,zero),
-            curvature(zero)
+            curvature(zero),
+            coord()
             {}
             
             inline virtual ~Code() noexcept {}
@@ -80,16 +82,27 @@ namespace Yttrium
 
             void computeCurvature(const SmoothGeometry geometry)
             {
-                curvature = 0;
+                const T velocity = v.norm();
+                switch(geometry)
+                {
+                    case SmoothPlanar:
+                        curvature = (v.x*d.y-v.y*d.x)/(velocity*velocity*velocity);
+                        break;
+
+                    case SmoothAxisymmetric:
+                        curvature = (v.x*d.y-v.y*d.x)/(velocity*velocity*velocity);
+                        break;
+                }
             }
 
-            Smooth<T>  sm;         //!< 1D smoothing
-            const T    zero;       //!< constant
-            Vtx        r;          //!< position
-            Vtx        v;          //!< velocity
-            Vtx        d;          //!< second derivative
-            T          curvature;
-            Vector<T,Memory::Dyadic> coord; //!< temporary
+            Smooth<T>   sm;         //!< 1D smoothing
+            const T     zero;       //!< constant
+            Vtx         r;          //!< position
+            Vtx         v;          //!< velocity
+            Vtx         d;          //!< second derivative
+            T           curvature;  //!< computed curvature
+            Tableau     coord;      //!< temporary 1D coordinates
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
         };

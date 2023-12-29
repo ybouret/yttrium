@@ -13,21 +13,48 @@ namespace Yttrium
     namespace MKL
     {
 
+        //! kind of arc
         enum SmoothGeometry
         {
-            SmoothPlanar,
-            SmoothAxisymmetric
+            SmoothPlanar,       //!< regular 2D planar arc
+            SmoothAxisymmetric  //!< arc describing axisymmetric contour
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //! Smoothing an arc
+        //
+        //______________________________________________________________________
         template <typename T>
         class SmoothArc
         {
         public:
-            typedef V2D<T> Vtx;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef V2D<T> Vtx; //!< alias
 
-            explicit  SmoothArc();
-            virtual  ~SmoothArc() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit  SmoothArc();          //!< setup
+            virtual  ~SmoothArc() noexcept; //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! extract local arc metrics
             void operator()(const T            &t0,
                             const Readable<T>   &t,
                             const Readable<T>   &x,
@@ -36,6 +63,7 @@ namespace Yttrium
                             const size_t         ydegree,
                             const SmoothGeometry geometry);
 
+            //! extract local arc metrics
             void operator()(const T             &t0,
                             const Readable<T>   &t,
                             const Readable<Vtx> &p,
@@ -43,14 +71,27 @@ namespace Yttrium
                             const size_t         ydegree,
                             const SmoothGeometry geometry);
 
+            //__________________________________________________________________
+            //
+            //! reserve internal memory to process from 0 to degree
+            //__________________________________________________________________
+            void reserveMaxDegree(const size_t degree);
+
+
+            //__________________________________________________________________
+            //
+            //! reserve internal memory to process points
+            //__________________________________________________________________
+            void reserveMaxLength(const size_t points);
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SmoothArc);
             class Code;
             Code *code;
         public:
-            const Vtx &r;
-            const Vtx &v;
-            const T   &curvature;
+            const Vtx &r;           //!< last position
+            const Vtx &v;           //!< velocity
+            const T   &curvature;   //!< last curvature
         };
 
     }
