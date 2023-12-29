@@ -23,72 +23,71 @@ namespace Yttrium
     {
 
 
-        namespace
+
+        typedef Memory::Dyadic  MemoryModel; //!< alias
+        typedef LittleEndianKey KeyType;     //!< alias
+
+        //__________________________________________________________________
+        //
+        //
+        //! Matrix + Vector of given dimension
+        //
+        //__________________________________________________________________
+        template <typename T>
+        class Moments : public Object, public Counted
         {
-            typedef Memory::Dyadic  MemoryModel; //!< alias
-            typedef LittleEndianKey KeyType;     //!< alias
+        public:
+            //______________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //______________________________________________________________
+            typedef ArkPtr<KeyType,Moments>    Pointer;
+            typedef SuffixSet<KeyType,Pointer> DataBase;
 
-            //__________________________________________________________________
+            //______________________________________________________________
             //
             //
-            //! Matrix + Vector of given dimension
+            // C++
             //
-            //__________________________________________________________________
-            template <typename T>
-            class Moments : public Object, public Counted
+            //______________________________________________________________
+
+            //! acquire resources
+            inline explicit Moments(const size_t n) :
+            mu(n,n),
+            cf(n),
+            k_(n)
             {
-            public:
-                //______________________________________________________________
-                //
-                //
-                // Definitions
-                //
-                //______________________________________________________________
-                typedef ArkPtr<KeyType,Moments>    Pointer;
-                typedef SuffixSet<KeyType,Pointer> DataBase;
+            }
 
-                //______________________________________________________________
-                //
-                //
-                // C++
-                //
-                //______________________________________________________________
+            //! cleanup
+            inline virtual ~Moments() noexcept {}
 
-                //! acquire resources
-                inline explicit Moments(const size_t n) :
-                mu(n,n),
-                cf(n),
-                k_(n)
-                {
-                }
+            //______________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //______________________________________________________________
 
-                //! cleanup
-                inline virtual ~Moments() noexcept {}
+            //! for database
+            inline const KeyType & key() const noexcept { return k_; }
 
-                //______________________________________________________________
-                //
-                //
-                // Methods
-                //
-                //______________________________________________________________
+            //______________________________________________________________
+            //
+            //
+            // Members
+            //
+            //______________________________________________________________
+            Matrix<T>               mu; //!< matrix of moment
+            CxxArray<T,MemoryModel> cf; //!< right hand side
 
-                //! for database
-                inline const KeyType & key() const noexcept { return k_; }
+        private:
+            const LittleEndianKey   k_;
+            Y_DISABLE_COPY_AND_ASSIGN(Moments);
+        };
 
-                //______________________________________________________________
-                //
-                //
-                // Members
-                //
-                //______________________________________________________________
-                Matrix<T>               mu; //!< matrix of moment
-                CxxArray<T,MemoryModel> cf; //!< right hand side
-
-            private:
-                const LittleEndianKey   k_;
-                Y_DISABLE_COPY_AND_ASSIGN(Moments);
-            };
-        }
 
 
         //! Code for Smooth
