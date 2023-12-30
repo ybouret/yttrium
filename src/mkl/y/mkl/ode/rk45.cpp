@@ -58,7 +58,7 @@ namespace Yttrium
                     static const T ERRCON(1.89e-4);
 
                     assert(y.size()<=dims);
-                    const size_t n = y.size();
+                    const size_t n      = y.size();
                     T            h      = htry;
                     T            errmax = zero;
                     while(true)
@@ -84,7 +84,8 @@ namespace Yttrium
 
 
                 const size_t dims;
-                ArrayType yerr, ytemp;
+                ArrayType    yerr;
+                ArrayType    ytemp;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Code);

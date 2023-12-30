@@ -6,6 +6,7 @@ mkl/tao
 mkl/tao/seq
 mkl/tao/par
 mkl/ode
+mkl/ode/rk45
 mkl/opt
 mkl/algebra
 mkl/derivatives
