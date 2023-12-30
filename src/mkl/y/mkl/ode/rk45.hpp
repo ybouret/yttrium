@@ -3,7 +3,7 @@
 #ifndef Y_ODE_RK45_Included
 #define Y_ODE_RK45_Included 1
 
-#include "y/mkl/ode/cash-karp.hpp"
+#include "y/mkl/ode/rk45/step.hpp"
 #include "y/mkl/ode/actuator.hpp"
 
 namespace Yttrium
