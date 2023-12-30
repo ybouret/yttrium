@@ -28,24 +28,22 @@ namespace
     {
         std::cerr << "Tao<" << RTTI::Name<T>() << ">" << std::endl;
 
-        Vector<T> target(8,0);
-        Vector<T> source(10,0);
-        for(size_t i=1;i<=source.size();++i) source[i] = Bring<T>::Get(ran);
-
-        std::cerr << "target=" << target << std::endl;
-        std::cerr << "source=" << source << std::endl;
-        Tao::Load(target,source);
-        std::cerr << "target=" << target << std::endl;
-        target.ld(0);
-        //std::cerr << "target=" << target << std::endl;
-        Tao::Load(target,source,seq);
-        std::cerr << "target=" << target << std::endl;
-        target.ld(0);
-        //std::cerr << "target=" << target << std::endl;
-        Tao::Load(target,source,par);
-        std::cerr << "target=" << target << std::endl;
-
-        std::cerr << std::endl;
+        {
+            Vector<T> target(8,0);
+            Vector<T> source(10,0);
+            for(size_t i=1;i<=source.size();++i) source[i] = Bring<T>::Get(ran);
+            std::cerr << "target=" << target << std::endl;
+            std::cerr << "source=" << source << std::endl;
+            Tao::Load(target,source);
+            std::cerr << "target=" << target << std::endl;
+            target.ld(0);
+            Tao::Load(target,source,seq);
+            std::cerr << "target=" << target << std::endl;
+            target.ld(0);
+            Tao::Load(target,source,par);
+            std::cerr << "target=" << target << std::endl;
+            std::cerr << std::endl;
+        }
     }
 
 

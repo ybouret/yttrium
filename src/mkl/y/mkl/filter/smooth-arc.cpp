@@ -90,7 +90,9 @@ namespace Yttrium
                         break;
 
                     case SmoothAxisymmetric:
-                        curvature = (v.x*d.y-v.y*d.x)/(velocity*velocity*velocity);
+                        curvature =
+                        (v.x*d.y-v.y*d.x)/(velocity*velocity*velocity)
+                        + v.y/r.x/velocity;
                         break;
                 }
             }
