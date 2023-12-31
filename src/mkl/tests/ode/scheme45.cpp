@@ -3,6 +3,9 @@
 #include "y/utest/run.hpp"
 #include "y/random/bits.hpp"
 #include "y/system/rtti.hpp"
+#include "y/container/cxx/array.hpp"
+#include "y/stream/libc/output.hpp"
+#include "y/text/cxx-identifier.hpp"
 
 using namespace Yttrium;
 using namespace MKL;
@@ -28,8 +31,9 @@ namespace
         }
     };
 
+
     template <typename T> static inline
-    void testScheme(Random::Bits & )
+    void testScheme(Random::Bits &)
     {
         static const String &tid = RTTI::Name<T>();
 
@@ -39,7 +43,13 @@ namespace
         Meca<T>                          meca = { 0.11f, 1.01, 0.0f };
         typename ODE::Named<T>::Equation diffeq( &meca, & Meca<T>::compute );
 
+        CxxArray<T> y(2);
 
+        y[1] = 0.1f;
+        y[2] = 0.0f;
+
+        const String     fileName = "meca-" + CxxIdentifier::From(tid) + ".dat";
+        Libc::OutputFile fp(fileName);
 
         std::cerr << "Leave Scheme<" << tid << ">" << std::endl << std::endl;
 
