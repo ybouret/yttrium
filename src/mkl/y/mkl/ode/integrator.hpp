@@ -4,7 +4,7 @@
 #ifndef Y_ODE_Integrator_Included
 #define Y_ODE_Integrator_Included 1
 
-#include "y/mkl/ode/rk45.hpp"
+#include "y/mkl/ode/actuator.hpp"
 
 namespace Yttrium
 {

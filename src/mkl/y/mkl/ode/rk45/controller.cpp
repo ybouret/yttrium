@@ -1,5 +1,5 @@
 
-#include "y/mkl/ode/rk45.hpp"
+#include "y/mkl/ode/rk45/controller.hpp"
 #include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/mkl/antelope/add.hpp"
@@ -93,16 +93,17 @@ namespace Yttrium
                 };
                 
 #define real_t float
-#include "rk45.hxx"
-                
+#include "controller.hxx"
 #undef  real_t
+
 #define real_t double
-#include "rk45.hxx"
-                
+#include "controller.hxx"
 #undef  real_t
+
 #define real_t long double
-#include "rk45.hxx"
-                
+#include "controller.hxx"
+#undef  real_t
+
 #if 0
 #undef  real_t
 #define real_t XReal<float>
