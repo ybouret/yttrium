@@ -79,7 +79,7 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                T eps; //!< tolerance withing algorithm
+                T eps; //!< tolerance within algorithm
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Integrator);

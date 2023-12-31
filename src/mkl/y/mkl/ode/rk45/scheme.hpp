@@ -29,11 +29,10 @@ namespace Yttrium
                 public:
                     typedef typename Step<T>::Handle StepType;
 
-                    inline explicit Scheme(const size_t dims = 0) :
+                    inline explicit Scheme(const size_t dims) :
                     StepType( new STEP<T>() ),
                     Controller<T>( static_cast<const StepType &>(*this), dims )
                     {}
-
 
                     
                     inline virtual ~Scheme() noexcept {}
