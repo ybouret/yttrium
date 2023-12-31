@@ -37,7 +37,7 @@ namespace Yttrium
                     {
                     }
                     
-                    inline void move(RK45_Step<T> &       step,
+                    inline void move(Step<T>      &       step,
                                      Writable<T>  &       y,
                                      const Readable<T>  & dydx,
                                      T                  & x,

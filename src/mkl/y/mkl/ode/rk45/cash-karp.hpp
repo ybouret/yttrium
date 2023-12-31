@@ -13,56 +13,59 @@ namespace Yttrium
 
         namespace ODE
         {
-            
-            //__________________________________________________________________
-            //
-            //
-            //! Cash Karp 4/5 step
-            //
-            //__________________________________________________________________
-            template <typename T>
-            class CashKarp : public RK45_Step<T>
+
+            namespace RK45
             {
-            public:
-                //______________________________________________________________
+                //__________________________________________________________________
                 //
                 //
-                //  Definitions
+                //! Cash Karp 4/5 step
                 //
-                //______________________________________________________________
-                typedef typename Named<T>::Equation Equation; //!< alias
-                typedef typename Named<T>::Callback Callback; //!< alias
-
-                //______________________________________________________________
-                //
-                //
-                //  C++
-                //
-                //______________________________________________________________
-                explicit CashKarp() noexcept;      //!< setup empty
-                explicit CashKarp(const size_t n); //!< setup with capacity
-                virtual ~CashKarp() noexcept;      //!< cleanup
-
-                //______________________________________________________________
-                //
-                //
-                //!  Interface
-                //
-                //______________________________________________________________
-                void operator()(const Readable<T> & y,
-                                const Readable<T> & dydx,
-                                const T             x,
-                                const T             h,
-                                Writable<T> &       yout,
-                                Writable<T> &       yerr,
-                                Equation     &      drvs,
-                                Callback     *      cntl);
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(CashKarp);
-                class Code;
-                Code *code;
-            };
+                //__________________________________________________________________
+                template <typename T>
+                class CashKarp : public Step<T>
+                {
+                public:
+                    //______________________________________________________________
+                    //
+                    //
+                    //  Definitions
+                    //
+                    //______________________________________________________________
+                    typedef typename Named<T>::Equation Equation; //!< alias
+                    typedef typename Named<T>::Callback Callback; //!< alias
+                    
+                    //______________________________________________________________
+                    //
+                    //
+                    //  C++
+                    //
+                    //______________________________________________________________
+                    explicit CashKarp() noexcept;      //!< setup empty
+                    explicit CashKarp(const size_t n); //!< setup with capacity
+                    virtual ~CashKarp() noexcept;      //!< cleanup
+                    
+                    //______________________________________________________________
+                    //
+                    //
+                    //!  Interface
+                    //
+                    //______________________________________________________________
+                    void operator()(const Readable<T> & y,
+                                    const Readable<T> & dydx,
+                                    const T             x,
+                                    const T             h,
+                                    Writable<T> &       yout,
+                                    Writable<T> &       yerr,
+                                    Equation     &      drvs,
+                                    Callback     *      cntl);
+                    
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(CashKarp);
+                    class Code;
+                    Code *code;
+                };
+            }
         }
     }
 

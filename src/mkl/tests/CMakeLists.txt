@@ -28,8 +28,10 @@ add_test(tao3     test-mkl tao3)
 add_test(taoTr    test-mkl taoTr)
 
 
-add_test(ode:rk4 test-mkl ode_rk4)
-add_test(odeint  test-mkl odeint)
+add_test(ode:rk4      test-mkl ode_rk4)
+add_test(odeint       test-mkl odeint)
+add_test(ode:scheme45 test-mkl ode_scheme45)
+
 
 add_test(opt:parabolic test-mkl opt_parabolic)
 add_test(opt:bracket   test-mkl opt_bracket)

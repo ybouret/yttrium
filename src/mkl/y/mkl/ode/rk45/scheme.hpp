@@ -1,11 +1,12 @@
 
-/! \file
+//! \file
 
 #ifndef Y_MKL_ODE_RK45_Scheme_Included
 #define Y_MKL_ODE_RK45_Scheme_Included 1
 
 
-#include "y/mkl/ode/rk4.hpp"
+#include "y/mkl/ode/rk45/step.hpp"
+
 namespace Yttrium
 {
     namespace MKL
@@ -14,16 +15,21 @@ namespace Yttrium
         namespace ODE
         {
 
-            template <
-            template <typename T>
-            class STEP >
-            class RK45_Scheme
+            namespace RK45
             {
-            public:
+                template <
+                template <typename T> class STEP,
+                typename                    T>
+                class Scheme
+                {
+                public:
+                    inline explicit Scheme() {}
+                    inline virtual ~Scheme() noexcept {}
 
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Scheme);
-            };
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Scheme);
+                };
+            }
         }
 
     }
