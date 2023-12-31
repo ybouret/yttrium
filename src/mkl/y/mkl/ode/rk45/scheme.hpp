@@ -5,7 +5,7 @@
 #define Y_MKL_ODE_RK45_Scheme_Included 1
 
 
-#include "y/mkl/ode/rk45/step.hpp"
+#include "y/mkl/ode/rk45/controller.hpp"
 
 namespace Yttrium
 {
@@ -17,14 +17,25 @@ namespace Yttrium
 
             namespace RK45
             {
+
+
                 template <
                 template <typename T> class STEP,
                 typename                    T>
-                class Scheme
+                class Scheme :
+                public Step<T>::Handle,
+                public Controller<T>
                 {
                 public:
-                    inline explicit Scheme() {}
+                    typedef typename Step<T>::Handle StepType;
+
+                    inline explicit Scheme() :
+                    StepType( new STEP<T>() ),
+                    Controller<T>( static_cast<const StepType &>(*this) )
+                    {}
+                    
                     inline virtual ~Scheme() noexcept {}
+
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Scheme);
