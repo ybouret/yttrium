@@ -55,7 +55,7 @@ Y_UTEST(odeint)
 
     dExp<double>                   dd(1.2);
     ODE::RK45_Step<double>::Handle step = new ODE::CashKarp<double>();
-    ODE::RK45<double>              rk45(step);
+    ODE::RK45::Controller<double>  rk45(step);
     ODE::Integrator<double>        odeint(1e-7);
 
     if(true)
