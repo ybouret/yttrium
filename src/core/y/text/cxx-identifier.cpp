@@ -19,4 +19,10 @@ namespace Yttrium
         return out;
 
     }
+
+    String CxxIdentifier:: From(const char *s)
+    {
+        const String _(s);
+        return From(_);
+    }
 }

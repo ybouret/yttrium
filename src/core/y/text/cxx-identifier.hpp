@@ -10,9 +10,12 @@
 namespace Yttrium
 {
 
+    //! creating C++ identifier from string
     struct CxxIdentifier
     {
-        static String From(const String &);
+
+        static String From(const String &); //!< create from string
+        static String From(const char   *); //!< create from text
     };
 
 }
