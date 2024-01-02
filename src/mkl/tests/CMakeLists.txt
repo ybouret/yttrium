@@ -26,6 +26,7 @@ add_test(tao1     test-mkl tao1)
 add_test(tao2     test-mkl tao2)
 add_test(tao3     test-mkl tao3)
 add_test(taoTr    test-mkl taoTr)
+add_test(trigconv test-mkl trigconv)
 
 
 add_test(ode:rk4      test-mkl ode_rk4)

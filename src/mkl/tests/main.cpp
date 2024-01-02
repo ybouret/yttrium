@@ -11,6 +11,7 @@ Y_UTEST_DECL(32)
     Y_UTEST(tao2);
     Y_UTEST(tao3);
     Y_UTEST(taoTr);
+    Y_UTEST(trigconv);
 
     
     Y_UTEST(ode_rk4);
