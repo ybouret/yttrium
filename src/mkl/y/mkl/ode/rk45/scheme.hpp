@@ -18,7 +18,7 @@ namespace Yttrium
             namespace RK45
             {
 
-
+#if 0
                 template <
                 template <typename T> class STEP,
                 typename                    T>
@@ -33,7 +33,6 @@ namespace Yttrium
                     StepType( new STEP<T>() ),
                     Controller<T>( static_cast<const StepType &>(*this), dims )
                     {}
-
                     
                     inline virtual ~Scheme() noexcept {}
 
@@ -41,6 +40,7 @@ namespace Yttrium
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Scheme);
                 };
+#endif
             }
         }
 

@@ -5,6 +5,8 @@
 #define Y_ODE_Actuator_Included 1
 
 #include "y/mkl/ode/types.hpp"
+#include "y/counted.hpp"
+#include "y/ptr/arc.hpp"
 
 namespace Yttrium
 {
@@ -21,7 +23,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename T>
-            class Actuator
+            class Actuator : public Object, public Counted
             {
             public:
                 //______________________________________________________________
@@ -32,7 +34,7 @@ namespace Yttrium
                 //______________________________________________________________
                 typedef typename Named<T>::Equation   Equation; //!< alias
                 typedef typename Named<T>::Callback   Callback; //!< alias
-
+                typedef ArcPtr<Actuator>              Pointer;  //!< alias
 
                 //______________________________________________________________
                 //

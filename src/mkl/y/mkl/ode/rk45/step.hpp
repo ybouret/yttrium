@@ -35,7 +35,7 @@ namespace Yttrium
                     //______________________________________________________________
                     typedef typename Named<T>::Equation Equation; //!< alias
                     typedef typename Named<T>::Callback Callback; //!< alias
-                    typedef ArcPtr<Step>                Handle;   //!< alias
+                    typedef ArcPtr<Step>                Pointer;  //!< alias
 
                     //______________________________________________________________
                     //

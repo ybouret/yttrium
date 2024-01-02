@@ -54,10 +54,10 @@ namespace
 Y_UTEST(odeint)
 {
 
-    dExp<double>                   dd(1.2);
-    ODE::RK45::Step<double>::Handle step = new ODE::RK45::CashKarp<double>();
-    ODE::RK45::Controller<double>  rk45(step);
-    ODE::Integrator<double>        odeint(1e-7);
+    dExp<double>                     dd(1.2);
+    ODE::RK45::Step<double>::Pointer step = new ODE::RK45::CashKarp<double>();
+    ODE::RK45::Controller<double>    rk45(step);
+    ODE::Integrator<double>          odeint(1e-7);
 
     if(true)
     {

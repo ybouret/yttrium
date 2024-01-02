@@ -33,7 +33,6 @@ namespace Yttrium
                 typedef typename Named<T>::Equation Equation; //!< alias
                 typedef typename Named<T>::Callback Callback; //!< alias
 
-
                 //______________________________________________________________
                 //
                 //

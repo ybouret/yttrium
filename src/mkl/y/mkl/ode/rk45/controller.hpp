@@ -35,7 +35,7 @@ namespace Yttrium
                     //______________________________________________________________
                     typedef typename Named<T>::Equation Equation; //!< alias
                     typedef typename Named<T>::Callback Callback; //!< alias
-                    typedef typename Step<T>::Handle    StepType; //!< alias
+                    typedef typename Step<T>::Pointer   StepType; //!< alias
 
                     //______________________________________________________________
                     //
