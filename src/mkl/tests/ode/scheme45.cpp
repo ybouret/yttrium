@@ -1,5 +1,5 @@
-#include "y/mkl/ode/rk45/scheme.hpp"
 #include "y/mkl/ode/rk45/cash-karp.hpp"
+#include "y/mkl/ode/rk45/controller.hpp"
 #include "y/mkl/ode/integrator.hpp"
 
 #include "y/utest/run.hpp"
@@ -28,7 +28,7 @@ namespace
             const T force = -k*x - lam*v;
 
             T &dxdt = dydt[1]; dxdt = v;
-            T &dvdt = dydt[1]; dvdt = force/mass;
+            T &dvdt = dydt[2]; dvdt = force/mass;
 
         }
     };
@@ -40,11 +40,12 @@ namespace
         static const String &tid = RTTI::Name<T>();
 
         std::cerr << "Enter Scheme<" << tid << ">" << std::endl;
-        //ODE::RK45::Scheme<ODE::RK45::CashKarp,T> scheme(2);
-        ODE::Integrator<T>                       odeint(1e-7);
+        typename ODE::RK45::Step<T>::Pointer step = new ODE::RK45::CashKarp<T>();
+        ODE::RK45::Controller<T>             rk45(step);
+        ODE::Integrator<T>                   odeint(1e-7);
 
-        Meca<T>                          meca = { 0.11f, 1.01, 0.0f };
-        typename ODE::Named<T>::Equation eq( &meca, & Meca<T>::compute );
+        Meca<T>                          meca = { 1.314f, 1.01, 0.2f };
+        typename ODE::Named<T>::Equation drvs( &meca, & Meca<T>::compute );
 
         CxxArray<T> y(2);
 
@@ -53,6 +54,19 @@ namespace
 
         const String     fileName = "meca-" + CxxIdentifier::From(tid) + ".dat";
         Libc::OutputFile fp(fileName);
+        fp("0 %.15g\n",double(y[1]));
+        const T      tmax = 60;
+        const size_t np   = 100;;
+        const T      hmin(0.01);
+        for(size_t i=1;i<=np;++i)
+        {
+            const T x0 = (tmax*(i-1))/np;
+            const T x1 = (tmax*(i))/np;
+            T       h  = hmin;
+            odeint.run(y,x0,x1,h,drvs,NULL,rk45);
+            fp("%.15g %.15g\n",double(x1),double(y[1]));
+        }
+
 
         std::cerr << "Leave Scheme<" << tid << ">" << std::endl << std::endl;
 
