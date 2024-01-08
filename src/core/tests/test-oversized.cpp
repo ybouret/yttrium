@@ -26,12 +26,21 @@ namespace
         std::cerr << "N=" << N << std::endl;
         Y_SIZEOF(MyDummy);
 
-        MyDummy *dum = new MyDummy();
+        {
+            MyDummy *dum = new MyDummy();
+            Random::Fill::Block(dum->data,N,ran,0x1);
+            delete dum;
+        }
 
-        Random::Fill::Block(dum->data,N,ran,0x1);
-
-        delete dum;
-
+        {
+            const size_t n = 1 + ran.leq(10);
+            MyDummy *dum = new MyDummy[n];
+            for(size_t i=0;i<n;++i)
+            {
+                Random::Fill::Block(dum[i].data,N,ran,0x1);
+            }
+            delete []dum;
+        }
     }
 
 };

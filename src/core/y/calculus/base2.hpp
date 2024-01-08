@@ -17,10 +17,10 @@ namespace Yttrium
     template <typename Type>
     struct Base2
     {
-        static const bool     Signed           = IsSigned<Type>::Value;             //!< alias
+        static const bool     Signed           = IsSigned<Type>::Value;            //!< alias
         static const unsigned MaxShift         = (sizeof(Type)<<3) - (Signed?2:1); //!< alias
-        static const unsigned MaxSlots         = MaxShift+1;                        //!< alias
-        static const Type     One              = 1;                                 //!< alias
+        static const unsigned MaxSlots         = MaxShift+1;                       //!< alias
+        static const Type     One              = 1;                                //!< alias
         static const Type     MaxPowerOfTwo    = (One << MaxShift);                //!< alias
 
 
@@ -64,7 +64,7 @@ namespace Yttrium
         return (v>0) && !( v & (v - Base2<T>::One) );
     }
 
-    //! next power of two of v<=max_power_of_two
+    //! next power of two of v<=MaxPowerOfTwo
     template <typename T>
     inline T NextPowerOfTwo( T v ) noexcept
     {
