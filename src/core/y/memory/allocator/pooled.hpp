@@ -40,9 +40,11 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            virtual void *       acquire(size_t & count, const size_t blockSize);      //!< never empty
-            virtual void         release(void * & entry, size_t &     count) noexcept; //!< release a previously acquired
-            virtual const char * variety()                             const noexcept; //!< CallSign
+            virtual void *       acquire(size_t & count, const size_t blockSize);                 //!< never empty
+            virtual void         release(void * & entry, size_t &     count) noexcept;            //!< release a previously acquired
+            virtual const char * variety()                             const noexcept;            //!< CallSign
+            virtual void *       acquireBlock(const size_t blockSize);                            //!< acquire for Oversized
+            virtual void         releaseBlock(void *blockAddr, const size_t blockSize) noexcept;  //!< release for Oversized
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pooled);
