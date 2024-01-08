@@ -51,6 +51,7 @@ add_test(main:lockable  test-core lockable)
 add_test(main:wtime     test-core wtime)
 add_test(main:singleton test-core singleton)
 add_test(main:object    test-core object)
+add_test(main:oversized test-core oversized)
 add_test(main:endian    test-core endian)
 add_test(main:rtti      test-core rtti)
 
