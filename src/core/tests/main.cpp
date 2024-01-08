@@ -12,6 +12,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(singleton);
     Y_UTEST(object);
     Y_UTEST(oversized);
+    Y_UTEST(quantized);
     Y_UTEST(endian);
     Y_UTEST(rtti);
 
