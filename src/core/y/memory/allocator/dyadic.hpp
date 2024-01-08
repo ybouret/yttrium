@@ -52,7 +52,10 @@ namespace Yttrium
             //__________________________________________________________________
             void * acquireBlock(unsigned &shift);                         //!< using internal Corpus directly
             void   releaseBlock(void * &entry, unsigned &shift) noexcept; //!< using internal Corpus directly
-            
+
+
+            void * acquireLegacy(size_t blockSize);
+            void   releaseLegacy(void *blockAddr, size_t blockSize) noexcept;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Dyadic);

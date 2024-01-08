@@ -13,7 +13,7 @@ namespace Yttrium
     {
         static Memory::Pooled &mgr = Memory::Pooled::Instance();
         assert(blockSize>0);
-        return mgr.acquireBlock(blockSize);
+        return mgr.acquireLegacy(blockSize);
     }
 
     void Oversized:: operator delete(void *blockAddr, const size_t blockSize) noexcept
@@ -22,7 +22,7 @@ namespace Yttrium
         if(blockAddr)
         {
             static Memory::Pooled &mgr = Memory::Pooled::Location();
-            mgr.releaseBlock(blockAddr,blockSize);
+            mgr.releaseLegacy(blockAddr,blockSize);
         }
     }
 
@@ -30,7 +30,7 @@ namespace Yttrium
     {
         static Memory::Pooled &mgr = Memory::Pooled::Instance();
         assert(blockSize>0);
-        return mgr.acquireBlock(blockSize);
+        return mgr.acquireLegacy(blockSize);
     }
 
     void Oversized:: operator delete[](void *blockAddr, const size_t blockSize) noexcept
@@ -39,7 +39,7 @@ namespace Yttrium
         if(blockAddr)
         {
             static Memory::Pooled &mgr = Memory::Pooled::Location();
-            mgr.releaseBlock(blockAddr,blockSize);
+            mgr.releaseLegacy(blockAddr,blockSize);
         }
     }
 

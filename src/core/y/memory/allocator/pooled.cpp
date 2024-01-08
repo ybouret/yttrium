@@ -54,14 +54,14 @@ namespace Yttrium
         }
 
 
-        void * Pooled:: acquireBlock(const size_t blockSize)
+        void * Pooled:: acquireLegacy(const size_t blockSize)
         {
             Y_LOCK(access);
             size_t request = blockSize;
             return straps->acquire(request);
         }
 
-        void Pooled:: releaseBlock(void *blockAddr, const size_t) noexcept
+        void Pooled:: releaseLegacy(void *blockAddr, const size_t) noexcept
         {
             Y_LOCK(access);
             assert(0!=blockAddr);

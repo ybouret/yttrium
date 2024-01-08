@@ -39,6 +39,9 @@ namespace Yttrium
             return mgr[shift].acquire();
         }
 
+
+
+
         void   Dyadic:: releaseBlock(void * &entry, unsigned &shift) noexcept
         {
             assert(0!=corpus);
@@ -50,6 +53,31 @@ namespace Yttrium
             entry = 0;
             shift = 0;
         }
+
+        void * Dyadic:: acquireLegacy(size_t blockSize)
+        {
+            assert(0!=corpus);
+            static Corpus &mgr = *corpus;
+
+            if(blockSize>Base2<size_t>::MaxPowerOfTwo) throw Specific::Exception(CallSign,"blockSize is too high");
+            const unsigned shift = Base2<size_t>::LogFor(blockSize);
+            Y_LOCK(access);
+            return mgr[shift].acquire();
+        }
+
+
+        void Dyadic:: releaseLegacy(void *blockAddr, size_t blockSize) noexcept
+        {
+            assert(0!=blockAddr);
+            assert(blockSize<=Base2<size_t>::MaxPowerOfTwo);
+            assert(0!=corpus);
+
+            static Corpus &mgr   = *corpus;
+            const unsigned shift = Base2<size_t>::LogFor(blockSize);
+            Y_LOCK(access);
+            return mgr[shift].release(blockAddr);
+        }
+
 
         void * Dyadic:: acquire(size_t & count, const size_t blockSize)
         {
