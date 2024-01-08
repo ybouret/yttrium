@@ -54,8 +54,8 @@ namespace Yttrium
             void   releaseBlock(void * &entry, unsigned &shift) noexcept; //!< using internal Corpus directly
 
 
-            void * acquireLegacy(size_t blockSize);
-            void   releaseLegacy(void *blockAddr, size_t blockSize) noexcept;
+            void * acquireLegacy(size_t blockSize);                           //!< for Quantized
+            void   releaseLegacy(void *blockAddr, size_t blockSize) noexcept; //!< for Quantized
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Dyadic);

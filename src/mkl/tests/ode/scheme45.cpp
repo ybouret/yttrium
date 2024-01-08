@@ -1,6 +1,7 @@
 #include "y/mkl/ode/rk45/cash-karp.hpp"
 #include "y/mkl/ode/rk45/controller.hpp"
 #include "y/mkl/ode/integrator.hpp"
+#include "y/mkl/ode/rk45/scheme.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/random/bits.hpp"

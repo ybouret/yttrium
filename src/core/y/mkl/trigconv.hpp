@@ -10,8 +10,18 @@ namespace Yttrium
 
     namespace MKL
     {
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Trigonometric Conversions
+        //
+        //
+        //______________________________________________________________________
         struct TrigConv
         {
+            //! Degrees to Radians
             template <typename T> static inline
             T DegToRad(const T deg)
             {
@@ -20,6 +30,8 @@ namespace Yttrium
                 return (pi*deg)/_180;
             }
 
+
+            //! Radians to Degress
             template <typename T> static inline
             T RadToDeg(const T rad)
             {

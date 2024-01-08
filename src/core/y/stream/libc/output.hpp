@@ -53,6 +53,13 @@ namespace Yttrium
             //! open regular files of Y_STDERR/Y_STDOUT
             explicit OutputFile(const Core::String<char> &fileName, const bool append=false);
 
+            //! overwrite filename
+            static void Overwrite(const Core::String<char> & filename);
+
+            //! overwrite filename
+            static void Overwrite(const char *               filename);
+
+
             //__________________________________________________________________
             //
             //

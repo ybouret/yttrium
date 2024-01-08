@@ -95,7 +95,15 @@ namespace Yttrium
             }
         }
 
+        void OutputFile:: Overwrite(const Core::String<char> & filename)
+        {
+            const OutputFile here(filename,false);
+        }
 
+        void OutputFile:: Overwrite(const char *filename)
+        {
+            const OutputFile here(filename,false);
+        }
     }
 
 }
