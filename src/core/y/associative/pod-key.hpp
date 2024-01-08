@@ -59,7 +59,7 @@ namespace Yttrium
 
 
         //! build relying on POD(const POD &) noexcept
-        inline POD_Key(const ParamType user) noexcept : data(user) {}
+        inline POD_Key(ParamType user) noexcept : data(user) {}
 
         //! copy relying on POD(const POD &) noexcept
         inline POD_Key(const POD_Key &other) noexcept :
@@ -85,6 +85,12 @@ namespace Yttrium
         inline friend bool operator==(const POD_Key &lhs, const POD_Key &rhs) noexcept
         {
             return 0 == memcmp(&lhs.data, &rhs.data, sizeof(POD) );
+        }
+
+        //! byte-wise testing
+        inline friend bool operator!=(const POD_Key &lhs, const POD_Key &rhs) noexcept
+        {
+            return 0 != memcmp(&lhs.data, &rhs.data, sizeof(POD) );
         }
 
         //______________________________________________________________________
