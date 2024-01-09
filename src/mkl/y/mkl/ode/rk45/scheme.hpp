@@ -4,6 +4,7 @@
 #define Y_MKL_ODE_RK45_Scheme_Included 1
 
 
+#include "y/mkl/ode/rk45/cash-karp.hpp"
 #include "y/mkl/ode/rk45/controller.hpp"
 #include "y/mkl/ode/integrator.hpp"
 
@@ -27,8 +28,8 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 template <
-                template <typename> class STEP,
-                typename T
+                typename T,
+                template <typename> class STEP = CashKarp
                 >
                 class Scheme :
                 private Step<T>::Pointer,

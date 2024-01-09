@@ -41,7 +41,7 @@ namespace
         static const String &tid = RTTI::Name<T>();
 
         std::cerr << "Enter Scheme<" << tid << ">" << std::endl;
-        ODE::RK45::Scheme<ODE::RK45::CashKarp,T> odeint(2,1e-7);
+        ODE::RK45::Scheme<T> odeint(2,1e-7);
 
         Meca<T>                          meca = { 1.314f, 1.01, 0.2f };
         typename ODE::Named<T>::Equation drvs( &meca, & Meca<T>::compute );
