@@ -5,6 +5,7 @@
 
 
 #include "y/mkl/ode/rk45/controller.hpp"
+#include "y/mkl/ode/integrator.hpp"
 
 namespace Yttrium
 {
@@ -16,23 +17,72 @@ namespace Yttrium
         {
             namespace RK45
             {
+
+                //______________________________________________________________
+                //
+                //
+                //
+                //! RK45 all--in-one integrator
+                //
+                //
+                //______________________________________________________________
                 template <
                 template <typename> class STEP,
                 typename T
                 >
                 class Scheme :
                 private Step<T>::Pointer,
-                public  Controller<T>
+                public  Controller<T>,
+                public  ODE::Integrator<T>
                 {
                 public:
-                    typedef  typename Step<T>::Pointer StepType;
+                    //__________________________________________________________
+                    //
+                    //
+                    // C++
+                    //
+                    //__________________________________________________________
+                    typedef typename Step<T>::Pointer   StepType; //!< alias
+                    typedef typename Named<T>::Equation Equation; //!< alias
+                    typedef typename Named<T>::Callback Callback; //!< alias
+                    using ODE::Integrator<T>::run;
 
-                    explicit Scheme(const size_t n) : 
-                    StepType( new STEP<T>(n) ),
-                    Controller<T>(**this, n)
+                    //__________________________________________________________
+                    //
+                    //
+                    // C++
+                    //
+                    //__________________________________________________________
+
+                    //! setup resources
+                    explicit Scheme(const size_t usrDim,
+                                    const T      usrEps) :
+                    StepType( new STEP<T>(usrDim) ),
+                    Controller<T>(static_cast<const StepType&>(*this), usrDim),
+                    ODE::Integrator<T>(usrEps,usrDim)
                     {}
 
+                    //! cleanup
                     virtual ~Scheme() noexcept {}
+
+
+                    //__________________________________________________________
+                    //
+                    //
+                    // Methods
+                    //
+                    //__________________________________________________________
+
+                    //! call
+                    inline void operator()(Writable<T> & ystart,
+                                           const T       x1,
+                                           const T       x2,
+                                           T           & hini,
+                                           Equation    & drvs,
+                                           Callback    * cntl)
+                    {
+                        run(ystart,x1,x2,hini,drvs,cntl,*this);
+                    }
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Scheme);
