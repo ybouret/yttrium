@@ -87,6 +87,12 @@ namespace Yttrium
                         case '.':
                             goto FRACTIONAL_PART;
 
+                        case 'e':
+                        case 'E':
+                        case 'd':
+                        case 'D':
+                            goto EXPONENT_PART;
+
                         default:
                             throw Specific::Exception(fn,"bad '%s' in integer part for '%s'", Printable::Char[c], WHERE);
                     }
