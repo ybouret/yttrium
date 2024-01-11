@@ -13,6 +13,8 @@ concurrent/split
 concurrent/thread
 concurrent/loop
 concurrent/pipeline
+concurrent/pipeline/args
+concurrent/pipeline/callback
 concurrent/resource
 locking
 config
