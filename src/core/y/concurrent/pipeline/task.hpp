@@ -3,7 +3,6 @@
 #ifndef Y_Concurrent_Task_Included
 #define Y_Concurrent_Task_Included 1
 
-#include "y/concurrent/pipeline/command.hpp"
 
 #include "y/concurrent/pipeline/callback/0.hpp"
 #include "y/concurrent/pipeline/callback/1.hpp"
@@ -13,6 +12,7 @@
 #include "y/concurrent/pipeline/command/0.hpp"
 #include "y/concurrent/pipeline/command/1.hpp"
 #include "y/concurrent/pipeline/command/2.hpp"
+#include "y/concurrent/pipeline/command/3.hpp"
 
 #include "y/type/ints.hpp"
 #include "y/config/shallow.hpp"
@@ -127,6 +127,20 @@ namespace Yttrium
             {
 
             }
+
+            //! create for host.meth(context,arg1,arg2,arg3)
+            template <typename OBJECT, typename METHOD, typename ARG1, typename ARG2, typename ARG3> inline
+            Task(const CxxMethodOf_ &,
+                 OBJECT             &host,
+                 METHOD              meth,
+                 ARG1               &arg1,
+                 ARG2               &arg2,
+                 ARG3               &arg3) :
+            code( new Command3<OBJECT,METHOD,ARG1,ARG2,ARG2>(host,meth,arg1,arg2,arg3) )
+            {
+
+            }
+
 
 
             //__________________________________________________________________
