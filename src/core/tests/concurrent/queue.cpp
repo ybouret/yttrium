@@ -111,7 +111,7 @@ Y_UTEST(concurrent_queue)
     {
         const int value = 89;
         void (*proc)(const Concurrent::ThreadContext & , const int  ) = Process;
-        const Concurrent::Task task = Concurrent::Task::Functionoid(proc,value);
+        const Concurrent::Task task(Functionoid,proc,value);
         alone.push(task);
         queue.push(task);
     }

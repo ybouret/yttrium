@@ -6,7 +6,9 @@
 
 namespace Yttrium
 {
-    
+    Y_SHALLOW_IMPL(Functionoid);
+    Y_SHALLOW_IMPL(CxxMethodOf);
+
     namespace Concurrent
     {
 
