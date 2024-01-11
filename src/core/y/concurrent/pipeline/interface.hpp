@@ -65,7 +65,12 @@ namespace Yttrium
             inline void push(SEQUENCE &tids, TASKS tasks)
             { push(tids,tasks.begin(),tasks.size()); }
 
-           
+            template <typename FUNCTION> inline
+            Task::ID Call(const FUNCTION &fn)
+            {
+                const Task task(fn);
+                return push(task);
+            }
 
 
 
