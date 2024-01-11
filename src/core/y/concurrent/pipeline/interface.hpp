@@ -29,8 +29,9 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            virtual void flush() noexcept = 0; //!< wait for all jobs to complete
-            void         reset() noexcept;     //!< reset tid
+            virtual void         flush()                     noexcept = 0; //!< wait for all jobs to complete
+            virtual Task::Status query(const Task::ID) const noexcept = 0; //!< query task status
+            void                 reset()                     noexcept;     //!< reset internal tid
 
             //! push ONE task, retrieve its ID
             Task::ID     push(const Task &task);

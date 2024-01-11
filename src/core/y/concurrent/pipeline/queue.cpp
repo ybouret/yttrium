@@ -114,6 +114,8 @@ namespace Yttrium
                 Y_DISABLE_COPY_AND_ASSIGN(JList);
             };
 
+            typedef JList::NodeType JNode;
+
         }
 
         namespace
@@ -240,13 +242,13 @@ namespace Yttrium
             //__________________________________________________________________
             void run(Worker &) noexcept; //!< entry point
             void restart()     noexcept; //!< restart after enqueueing some tasks
-
             inline void flush() noexcept
             {
                 Y_LOCK(sync);
                 if(busy.size>0) fence.wait(sync);
             }
 
+            Task::Status query(const Task::ID uuid) const noexcept;
 
             //__________________________________________________________________
             //
@@ -429,6 +431,26 @@ namespace Yttrium
             sync.unlock();
         }
 
+        Task::Status Queue:: Code:: query(const Task::ID uuid) const noexcept
+        {
+            Y_LOCK(Coerce(sync));
+
+            for(const JNode *node=jobs.head;node;node=node->next)
+            {
+                if(uuid==node->uuid) return Task::Pending;
+            }
+
+            for(const Worker *node=busy.head;node;node=node->next)
+            {
+                assert(0!=node->duty);
+                if(uuid==node->duty->uuid) return Task::Running;
+            }
+
+
+            return Task::Success;
+        }
+
+
 
     }
 
@@ -500,6 +522,11 @@ namespace Yttrium
             code->flush();
         }
 
+        Task::Status Queue:: query(const Task::ID uuid)  const noexcept
+        {
+            assert(code!=0);
+            return code->query(uuid);
+        }
 
     }
 

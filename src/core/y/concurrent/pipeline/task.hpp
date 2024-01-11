@@ -31,7 +31,14 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef UnsignedInt<sizeof(void*)>::Type ID; //!< identifier
-
+           
+            //! status of the task
+            enum Status
+            {
+                Success, //!< done
+                Pending, //!< pending
+                Running  //!< running
+            };
 
             //__________________________________________________________________
             //

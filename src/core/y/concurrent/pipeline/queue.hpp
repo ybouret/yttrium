@@ -49,8 +49,8 @@ namespace Yttrium
             virtual size_t       size()                   const noexcept; //!< 1
             virtual ConstType &  operator[](const size_t) const noexcept; //!< self
             virtual void         flush()                        noexcept; //!< wait for jobs to complete.
+            Task::Status query(const Task::ID)            const noexcept; //!< probe task id
 
-            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Queue);
             Code *code;
