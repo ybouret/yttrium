@@ -63,9 +63,7 @@ namespace Yttrium
             //! push a full sequence of tasks, append their IDs
             template <typename SEQUENCE, typename TASKS>
             inline void push(SEQUENCE &tids, TASKS tasks)
-            {
-                push(tids,tasks.begin(),tasks.size());
-            }
+            { push(tids,tasks.begin(),tasks.size()); }
 
            
 
