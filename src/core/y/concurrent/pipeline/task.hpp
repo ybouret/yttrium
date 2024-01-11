@@ -20,8 +20,8 @@
 
 namespace Yttrium
 {
-    Y_SHALLOW_DECL(Functionoid);
-    Y_SHALLOW_DECL(CxxMethodOf);
+    Y_SHALLOW_DECL(Functionoid); //!< alias
+    Y_SHALLOW_DECL(CxxMethodOf); //!< alias
 
     namespace Concurrent
     {
@@ -58,14 +58,13 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // C++
+            // C++ : allowing to make pre-compiled, re-usable tasks
             //
             //__________________________________________________________________
             Task(Runnable *) noexcept; //!< setup from user's runnable code
             Task(const Task &) noexcept; //!< shared copy
             ~Task()            noexcept; //!< cleanup
 
-            // no args
 
             //! create from function/functionoid (full copy)
             template <typename FUNCTION> inline

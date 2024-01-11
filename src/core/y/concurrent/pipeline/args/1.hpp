@@ -10,23 +10,25 @@ namespace Yttrium
     namespace Concurrent
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! holding one argument for task
+        //
+        //______________________________________________________________________
         template <class ARG1>
         class OneArgument
         {
         public:
+            //! setup
             inline explicit OneArgument(typename TypeTraits<ARG1>::ParamType a1) :
-            arg1(a1)
-            {
-                
-            }
+            arg1(a1) { }
 
-            inline virtual ~OneArgument() noexcept
-            {
-
-            }
+            //! cleanup
+            inline virtual ~OneArgument() noexcept {}
 
         protected:
-            ARG1 arg1;
+            ARG1 arg1; //!< argument copy
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(OneArgument);

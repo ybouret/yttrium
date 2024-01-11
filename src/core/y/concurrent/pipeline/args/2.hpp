@@ -10,27 +10,32 @@ namespace Yttrium
 {
     namespace Concurrent
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! holding two arguments for task
+        //
+        //______________________________________________________________________
         template <class ARG1, class ARG2>
         class TwoArguments
         {
         public:
+            //! setup
             inline explicit TwoArguments(typename TypeTraits<ARG1>::ParamType a1,
-                                  typename TypeTraits<ARG2>::ParamType a2) :
+                                         typename TypeTraits<ARG2>::ParamType a2) :
             arg1(a1),
             arg2(a2)
             {
-
             }
 
+            //! cleanup
             inline virtual ~TwoArguments() noexcept
             {
-
             }
 
         protected:
-            ARG1 arg1;
-            ARG2 arg2;
+            ARG1 arg1; //!< arg1
+            ARG2 arg2; //!< arg2
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(TwoArguments);
