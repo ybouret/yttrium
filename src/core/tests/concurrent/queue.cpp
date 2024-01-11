@@ -47,6 +47,15 @@ namespace
     private:
         Y_DISABLE_ASSIGN(Demo);
     };
+
+    static inline void Process(const Concurrent::ThreadContext &ctx, const int value)
+    {
+        Y_LOCK(ctx.sync);
+        (std::cerr << "Process(" << value << ")" << std::endl).flush();
+        WallTime tmx;
+        tmx.wait(0.1);
+    }
+
 }
 
 Y_UTEST(concurrent_queue)
@@ -96,6 +105,16 @@ Y_UTEST(concurrent_queue)
     queue.push(tid,tsk);
     
     queue.flush();
+
+    Y_THREAD_MSG("Ready to restart");
+
+    {
+        const int value = 89;
+        void (*proc)(const Concurrent::ThreadContext & , const int  ) = Process;
+        const Concurrent::Task task = Concurrent::Task::Call(proc,value);
+    }
+
+
 
 
 }

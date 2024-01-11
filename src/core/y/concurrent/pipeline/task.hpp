@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Concurrent_Task_Included
@@ -7,12 +6,16 @@
 #include "y/concurrent/pipeline/command.hpp"
 #include "y/concurrent/pipeline/callback.hpp"
 #include "y/type/ints.hpp"
+#include "y/config/shallow.hpp"
 
 
 namespace Yttrium
 {
+    
     namespace Concurrent
     {
+
+
         //______________________________________________________________________
         //
         //
@@ -50,13 +53,27 @@ namespace Yttrium
             Task(const Task &) noexcept; //!< shared copy
             ~Task()            noexcept; //!< cleanup
 
+            // no args
+
             //! create from function/functionoid (full copy)
             template <typename FUNCTION> inline
-            Task(const FUNCTION &fn) : code( new Callback<FUNCTION>(fn) )       { initialize(); }
+            Task( const FUNCTION     &fn) :
+            code( new Callback<FUNCTION>(fn) )
+            { initialize(); }
 
             //! create from object+method
             template <typename OBJECT, typename METHOD> inline
-            Task(OBJECT &o, METHOD m) : code( new Command<OBJECT,METHOD>(o,m) ) { initialize(); }
+            Task(OBJECT             &o,
+                 METHOD              m) :
+            code( new Command<OBJECT,METHOD>(o,m) )
+            { initialize(); }
+
+            template <typename FUNCTION, typename ARG1> static inline
+            Task Call(const FUNCTION &fn, ARG1 &a1)
+            {
+                const Task task( static_cast<Runnable *>(new Callback1<FUNCTION,ARG1>(fn,a1)) );
+                return task;
+            }
 
             //__________________________________________________________________
             //

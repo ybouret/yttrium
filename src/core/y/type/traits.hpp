@@ -182,63 +182,6 @@ namespace Yttrium
 
 }
 
-#if 0
-namespace yack
-{
-
-
-    //__________________________________________________________________________
-    //
-    //
-    //! type traits
-    //
-    //__________________________________________________________________________
-    template <class T>
-    class type_traits
-    {
-
-
-
-
-    public:
-        enum { is_std_integer   = ( tl::index_of<tl::std_sints_list,T>::value >= 0 ) };
-        enum { is_std_unsigned  = ( tl::index_of<tl::std_uints_list,T>::value >= 0 ) };
-        enum { is_sys_integer   = ( tl::index_of<tl::sys_sints_list,T>::value >= 0 ) };
-        enum { is_sys_unsigned  = ( tl::index_of<tl::sys_uints_list,T>::value >= 0 ) };
-        enum { is_misc_integer  = ( tl::index_of<tl::misc_ints_list,T>::value >= 0 ) };
-        enum { is_integral      = ( is_std_integer || is_std_unsigned || is_sys_integer || is_sys_unsigned || is_misc_integer ) };
-        enum { is_std_real      = ( tl::index_of<tl::std_reals_list,T>::value >= 0 ) };
-        enum { is_arithmetic    = ( is_integral || is_std_real )                 };
-        enum { is_fundamental   = ( is_arithmetic  || is_same_type<T,void>::value) };
-        enum { is_primitive     = ( is_fundamental || is_pointer || is_pointer_to_member ) };
-        
-
-        /** \brief optimized parameter type.
-
-         - U & \f$\rightarrow\f$ U &
-         - const U & \f$\rightarrow\f$ const U &
-         - U \f$\rightarrow\f$ U is primitive ? U : const U &
-         - const U \f$\rightarrow\f$ U is primitive ? const U : const U &
-         */
-        typedef typename pick_from<
-        is_reference,
-        // if T is a reference (U &, const U &)
-        T,
-        // else if T is not a reference
-        typename pick_from< type_traits<mutable_type>::is_primitive,
-        // T is a primitive U or const U: returns T
-        T,
-        // T is a non primitive U or const U: returns const T &
-        const_reference_type>::type
-        >::type parameter_type;
-
-
-    };
-
-
-
-}
-#endif
 
 #endif
 
