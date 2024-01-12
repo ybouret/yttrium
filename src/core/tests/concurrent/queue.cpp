@@ -22,7 +22,7 @@ namespace
         inline  Demo(const Demo &dem) noexcept :
         param(dem.param)
         {
-            std::cerr << "[#Demo] @" << param << std::endl;
+            //std::cerr << "[#Demo] @" << param << std::endl;
         }
 
 
@@ -34,6 +34,21 @@ namespace
             }
             WallTime tmx;
             tmx.wait(0.1);
+        }
+
+        inline void doMul(const Concurrent::ThreadContext &ctx, const int x)
+        {
+            {
+                Y_LOCK(ctx.sync);
+                (std::cerr << "[*Demo] @" << param << " in " << ctx.name << " => x" << x << " = " << param*x << std::endl).flush();
+            }
+            WallTime tmx;
+            tmx.wait(0.1);
+        }
+
+        inline void getMul(const Concurrent::ThreadContext &ctx, int *res, const int x)
+        {
+
         }
 
         inline void operator()(const Concurrent::ThreadContext &ctx)
@@ -109,21 +124,36 @@ Y_UTEST(concurrent_queue)
     Y_THREAD_MSG("Ready to restart");
 
     {
-        const int value = 89;
+        int value = 89;
         void (*proc)(const Concurrent::ThreadContext & , const int  ) = Process;
         const Concurrent::Task task(Functionoid,proc,value);
         alone.push(task);
         queue.push(task);
-    }
 
-    {
         dem.param = 8;
+        
         alone.call(dem);
         queue.call(dem);
 
+        queue.flush();
+
         alone.invoke(dem, & Demo::unfold);
         queue.invoke(dem, & Demo::unfold);
+        queue.flush();
 
+        alone.call(proc,value);
+        {
+            Y_LOCK(queue.sync());
+            (std::cerr << "invoke demo/value" << std::endl).flush();
+        }
+        alone.invoke(dem, & Demo::doMul, value);
+
+        queue.flush();
+
+        value   = 4;
+        int res = 0;
+        int *pRes = & res;
+        alone.invoke(dem, & Demo::getMul, pRes, value);
 
     }
 

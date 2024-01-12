@@ -28,9 +28,9 @@ namespace Yttrium
                                      typename TypeTraits<ARG1>::ParamType a1,
                                      typename TypeTraits<ARG2>::ParamType a2) noexcept :
             Runnable(),
+            TwoArguments<ARG1,ARG2>(a1,a2),
             host(o),
-            meth(m),
-            TwoArguments<ARG1,ARG2>(a1,a2)
+            meth(m)
             {}
 
             //! cleanup

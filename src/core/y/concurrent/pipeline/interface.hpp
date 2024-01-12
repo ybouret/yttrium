@@ -26,15 +26,28 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // Methods
+            // Interface
             //
             //__________________________________________________________________
             virtual void         flush()                     noexcept = 0; //!< wait for all jobs to complete
             virtual Task::Status query(const Task::ID) const noexcept = 0; //!< query task status
+          
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
             void                 reset()                     noexcept;     //!< reset internal tid
+            virtual Lockable    &sync()                      noexcept = 0; //!< get synchronization lock
+            Task::ID             push(const Task &task);                   //!< push ONE task, retrieve its ID
 
-            //! push ONE task, retrieve its ID
-            Task::ID     push(const Task &task);
+            //__________________________________________________________________
+            //
+            //
+            // Helpers
+            //
+            //__________________________________________________________________
 
             //! push a range of tasks, append their IDs
             template < typename SEQUENCE, typename ITERATOR>
@@ -65,15 +78,57 @@ namespace Yttrium
             inline void push(SEQUENCE &tids, TASKS tasks)
             { push(tids,tasks.begin(),tasks.size()); }
 
+
+
+            //__________________________________________________________________
+            //
+            //
+            // once call/invoke, no arg
+            //
+            //__________________________________________________________________
+
             //! create an push a task : fn(context)
             template <typename FUNCTION> inline
-            Task::ID call(const FUNCTION &fn) { const Task task(fn); return push(task); }
+            Task::ID call(const FUNCTION &func) { const Task task(func); return push(task); }
 
             //! create and push a task: host.meth(context)
             template <typename OBJECT, typename METHOD> inline
             Task::ID invoke(OBJECT &host, METHOD meth) { const Task task(host,meth); return push(task); }
 
+            //__________________________________________________________________
+            //
+            //
+            // once call/invoke, one argument
+            //
+            //__________________________________________________________________
 
+            //! create an push a task : func(context,arg1)
+            template <typename FUNCTION, typename ARG1> inline
+            Task::ID call(const FUNCTION &func, ARG1 &arg1)
+            { const Task task(Functionoid,func,arg1); return push(task); }
+
+            //! create and push a task: host.meth(context,arg1)
+            template <typename OBJECT, typename METHOD, typename ARG1> inline
+            Task::ID invoke(OBJECT &host, METHOD meth, ARG1 &arg1)
+            { const Task task(CxxMethodOf,host,meth,arg1); return push(task); }
+
+
+            //__________________________________________________________________
+            //
+            //
+            // once call/invoke, two arguments
+            //
+            //__________________________________________________________________
+
+            //! create an push a task : func(context,arg1)
+            template <typename FUNCTION, typename ARG1, typename ARG2> inline
+            Task::ID call(const FUNCTION &func, ARG1 &arg1, ARG2 &arg2)
+            { const Task task(Functionoid,func,arg1,arg2); return push(task); }
+
+            //! create and push a task: host.meth(context,arg1)
+            template <typename OBJECT, typename METHOD, typename ARG1, typename ARG2> inline
+            Task::ID invoke(OBJECT &host, METHOD meth, ARG1 &arg1, ARG2 &arg2)
+            { const Task task(CxxMethodOf,host,meth,arg1,arg2); return push(task); }
 
 
             //__________________________________________________________________

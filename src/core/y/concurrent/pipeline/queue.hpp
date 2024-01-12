@@ -46,10 +46,11 @@ namespace Yttrium
             //
             //__________________________________________________________________
             virtual const char * callSign()               const noexcept; //!< CallSign
-            virtual size_t       size()                   const noexcept; //!< 1
+            virtual size_t       size()                   const noexcept; //!< number of threads
+            virtual Lockable    &sync()                         noexcept; //!< shared mutex
             virtual ConstType &  operator[](const size_t) const noexcept; //!< self
             virtual void         flush()                        noexcept; //!< wait for jobs to complete.
-            Task::Status query(const Task::ID)            const noexcept; //!< probe task id
+            Task::Status         query(const Task::ID)    const noexcept; //!< probe task id
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Queue);

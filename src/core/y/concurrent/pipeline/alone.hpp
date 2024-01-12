@@ -47,13 +47,14 @@ namespace Yttrium
             //__________________________________________________________________
             virtual const char * callSign()               const noexcept; //!< CallSign
             virtual size_t       size()                   const noexcept; //!< 1
+            virtual Lockable    &sync()                         noexcept; //!< mine
             virtual ConstType &  operator[](const size_t) const noexcept; //!< self
             virtual void         flush()                        noexcept; //!< do nothing...
             virtual Task::Status query(const Task::ID)    const noexcept; //!< always success
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alone);
-            FakeLock      sync;
+            FakeLock      mine;
             ThreadContext self;
 
             virtual void     suspend() noexcept;

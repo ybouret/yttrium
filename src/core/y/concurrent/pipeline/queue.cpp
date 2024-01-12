@@ -524,10 +524,16 @@ namespace Yttrium
 
         Task::Status Queue:: query(const Task::ID uuid)  const noexcept
         {
-            assert(code!=0);
+            assert(0!=code);
             return code->query(uuid);
         }
 
+
+        Lockable    & Queue:: sync() noexcept
+        {
+            assert(0!=code);
+            return code->sync;
+        }
     }
 
 }

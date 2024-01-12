@@ -26,9 +26,9 @@ namespace Yttrium
                                      METHOD                               m,
                                      typename TypeTraits<ARG1>::ParamType a1) noexcept :
             Runnable(),
+            OneArgument<ARG1>(a1),
             host(o),
-            meth(m),
-            OneArgument<ARG1>(a1)
+            meth(m)
             {}
 
             //! cleanup

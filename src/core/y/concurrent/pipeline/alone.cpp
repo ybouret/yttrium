@@ -13,8 +13,8 @@ namespace Yttrium
         }
 
         Alone:: Alone(const char *id) noexcept :
-        sync(id),
-        self(sync) 
+        mine(id),
+        self(mine)
         {
         }
 
@@ -45,12 +45,12 @@ namespace Yttrium
         
         void Alone:: suspend() noexcept
         {
-            sync.lock();
+            mine.lock();
         }
 
         void Alone:: restart() noexcept
         {
-            sync.unlock();
+            mine.unlock();
         }
 
 
@@ -64,6 +64,9 @@ namespace Yttrium
         {
             
         }
+
+
+        Lockable & Alone:: sync() noexcept { return mine; }
 
     }
 
