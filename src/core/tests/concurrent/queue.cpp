@@ -116,6 +116,16 @@ Y_UTEST(concurrent_queue)
         queue.push(task);
     }
 
+    {
+        dem.param = 8;
+        alone.call(dem);
+        queue.call(dem);
+
+        alone.invoke(dem, & Demo::unfold);
+        queue.invoke(dem, & Demo::unfold);
+
+
+    }
 
 
 

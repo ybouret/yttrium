@@ -65,12 +65,14 @@ namespace Yttrium
             inline void push(SEQUENCE &tids, TASKS tasks)
             { push(tids,tasks.begin(),tasks.size()); }
 
+            //! create an push a task : fn(context)
             template <typename FUNCTION> inline
-            Task::ID Call(const FUNCTION &fn)
-            {
-                const Task task(fn);
-                return push(task);
-            }
+            Task::ID call(const FUNCTION &fn) { const Task task(fn); return push(task); }
+
+            //! create and push a task: host.meth(context)
+            template <typename OBJECT, typename METHOD> inline
+            Task::ID invoke(OBJECT &host, METHOD meth) { const Task task(host,meth); return push(task); }
+
 
 
 

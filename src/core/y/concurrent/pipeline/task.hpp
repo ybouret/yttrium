@@ -32,7 +32,7 @@ namespace Yttrium
         //
         //
         //
-        //! Encapsulate all different Runnable for Pipeline
+        //! Encapsulate all different (ref-counted) Runnable for Pipeline
         //
         //
         //______________________________________________________________________
@@ -84,25 +84,19 @@ namespace Yttrium
             template <typename FUNCTION, typename ARG1> inline
             Task(const Functionoid_ &, const FUNCTION &fn, ARG1 &a1) :
             code( new Callback1<FUNCTION,ARG1>(fn,a1) )
-            {
-
-            }
+            { initialize(); }
 
             //! create for functionoid(context,arg1,arg2)
             template <typename FUNCTION, typename ARG1, typename ARG2>   inline
             Task( const Functionoid_ &, const FUNCTION &fn, ARG1 &a1, ARG2 &a2) :
             code( new Callback2<FUNCTION,ARG1,ARG2>(fn,a1,a2) )
-            {
-
-            }
+            { initialize(); }
 
             //! create for functionoid(context,arg1,arg2,arg3)
             template <typename FUNCTION, typename ARG1, typename ARG2, typename ARG3> inline
             Task( const Functionoid_ &, const FUNCTION &fn, ARG1 &a1, ARG2 &a2, ARG3 &a3) :
             code( new Callback3<FUNCTION,ARG1,ARG2,ARG3>(fn,a1,a2,a3) )
-            {
-
-            }
+            { initialize(); }
 
             //! create for host.meth(context,arg1)
             template <typename OBJECT, typename METHOD, typename ARG1> inline
@@ -111,9 +105,7 @@ namespace Yttrium
                  METHOD              meth,
                  ARG1               &arg1) :
             code( new Command1<OBJECT,METHOD,ARG1>(host,meth,arg1) )
-            {
-
-            }
+            { initialize(); }
 
             //! create for host.meth(context,arg1,arg2)
             template <typename OBJECT, typename METHOD, typename ARG1, typename ARG2> inline
@@ -123,9 +115,7 @@ namespace Yttrium
                  ARG1               &arg1,
                  ARG2               &arg2) :
             code( new Command2<OBJECT,METHOD,ARG1,ARG2>(host,meth,arg1,arg2) )
-            {
-
-            }
+            { initialize(); }
 
             //! create for host.meth(context,arg1,arg2,arg3)
             template <typename OBJECT, typename METHOD, typename ARG1, typename ARG2, typename ARG3> inline
@@ -136,9 +126,7 @@ namespace Yttrium
                  ARG2               &arg2,
                  ARG3               &arg3) :
             code( new Command3<OBJECT,METHOD,ARG1,ARG2,ARG2>(host,meth,arg1,arg2,arg3) )
-            {
-
-            }
+            { initialize(); }
 
 
 
@@ -153,7 +141,7 @@ namespace Yttrium
             
         private:
             Y_DISABLE_ASSIGN(Task);
-            void initialize() noexcept;
+            void initialize() noexcept; //!< withold code
             Runnable *code;
         };
 
