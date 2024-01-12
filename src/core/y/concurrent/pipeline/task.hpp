@@ -62,30 +62,12 @@ namespace Yttrium
                 call(ctx,args);
             }
 
-            inline void call(const ThreadContext &ctx, const Int2Type<0> &)
-            {
-                func(ctx);
-            }
-
-            inline void call(const ThreadContext &ctx, const Int2Type<1> &)
-            {
-                func(ctx,arg1);
-            }
-
-            inline void call(const ThreadContext &ctx, const Int2Type<2> &)
-            {
-                func(ctx,arg1,arg2);
-            }
-
-            inline void call(const ThreadContext &ctx, const Int2Type<3> &)
-            {
-                func(ctx,arg1,arg2,arg3);
-            }
-
-            inline void call(const ThreadContext &ctx, const Int2Type<4> &)
-            {
-                func(ctx,arg1,arg2,arg3,arg4);
-            }
+            inline void call(const ThreadContext &ctx, const Int2Type<0> &) { func(ctx);                     }
+            inline void call(const ThreadContext &ctx, const Int2Type<1> &) { func(ctx,arg1);                }
+            inline void call(const ThreadContext &ctx, const Int2Type<2> &) { func(ctx,arg1,arg2);           }
+            inline void call(const ThreadContext &ctx, const Int2Type<3> &) { func(ctx,arg1,arg2,arg3);      }
+            inline void call(const ThreadContext &ctx, const Int2Type<4> &) { func(ctx,arg1,arg2,arg3,arg4); }
+            
         };
 
         //______________________________________________________________________

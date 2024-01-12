@@ -23,7 +23,13 @@ typedef typename TypeTraits<Type##I>::ParamType              Param##I; \
 typedef Int2Type<I>                                          ARGC##I;  \
 Type##I                                                      arg##I
 
-#define Y_BINDER_ARGS(THE_LIST)                  \
+    //__________________________________________________________________________
+    //
+    //
+    //! helper to implement derived class
+    //
+    //__________________________________________________________________________
+#define Y_BINDER_ARGS(THE_LIST)                                                 \
 typedef typename Binder<THE_LIST>::Param1 Param1; using Binder<THE_LIST>::arg1; \
 typedef typename Binder<THE_LIST>::Param2 Param2; using Binder<THE_LIST>::arg2; \
 typedef typename Binder<THE_LIST>::Param3 Param3; using Binder<THE_LIST>::arg3; \
@@ -50,8 +56,8 @@ typedef typename Binder<THE_LIST>::ArgsType ArgsType
         Y_BINDER_DECL(2); //!< arg2
         Y_BINDER_DECL(3); //!< arg3
         Y_BINDER_DECL(4); //!< arg4
-        static const size_t    ARGN = TL::LengthOf<TLIST>::Value;
-        typedef Int2Type<ARGN> ArgsType;
+        static const size_t    ARGN = TL::LengthOf<TLIST>::Value; //!< alias
+        typedef Int2Type<ARGN> ArgsType;                          //!< alias
 
         //______________________________________________________________________
         //
@@ -61,30 +67,25 @@ typedef typename Binder<THE_LIST>::ArgsType ArgsType
         //______________________________________________________________________
 
         //! empty/default binder
-        inline explicit Binder() :
-        arg1(), arg2(), arg3(), arg4() {}
+        inline explicit Binder() : arg1(), arg2(), arg3(), arg4() {}
 
         //! setup1
-        inline explicit Binder(Param1 p1) :
-        arg1(p1), arg2(), arg3(), arg4() {}
+        inline explicit Binder(Param1 p1) : arg1(p1), arg2(), arg3(), arg4() {}
 
         //! setup2
         inline explicit Binder(Param1 p1,
-                               Param2 p2) :
-        arg1(p1), arg2(p2), arg3(), arg4() {}
+                               Param2 p2) : arg1(p1), arg2(p2), arg3(), arg4() {}
 
         //! setup3
         inline explicit Binder(Param1 p1,
                                Param2 p2,
-                               Param3 p3) :
-        arg1(p1), arg2(p2), arg3(p3), arg4() {}
+                               Param3 p3) : arg1(p1), arg2(p2), arg3(p3), arg4() {}
 
         //! setup4
         inline explicit Binder(Param1 p1,
                                Param2 p2,
                                Param3 p3,
-                               Param4 p4) :
-        arg1(p1), arg2(p2), arg3(p3), arg4(p4) {}
+                               Param4 p4) : arg1(p1), arg2(p2), arg3(p3), arg4(p4) {}
 
         //! cleanup
         inline virtual ~Binder() noexcept {}
