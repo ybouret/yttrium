@@ -22,6 +22,7 @@ namespace Yttrium
         class Callback : public Runnable, private Binder<TLIST>
         {
         public:
+            Y_BINDER_ECHO(TLIST);
             Y_BINDER_ARGS(TLIST);
 
             inline explicit Callback(const FUNCTION &fn) :
@@ -80,14 +81,18 @@ namespace Yttrium
         class Command : public Runnable, private Binder<TLIST>
         {
         public:
+            Y_BINDER_ECHO(TLIST);
             Y_BINDER_ARGS(TLIST);
 
             inline explicit Command(OBJECT &o, METHOD m) noexcept :
-            Runnable(),
-            Binder<TLIST>(),
-            host(o),
-            meth(m) {}
+            Runnable(), Binder<TLIST>(), host(o), meth(m) {}
 
+            inline explicit Command(OBJECT &o, METHOD m, Param1 p1) noexcept :
+            Runnable(), Binder<TLIST>(p1), host(o), meth(m) {}
+
+
+            inline explicit Command(OBJECT &o, METHOD m, Param1 p1, Param2 p2) noexcept :
+            Runnable(), Binder<TLIST>(p1,p2), host(o), meth(m) {}
 
             inline virtual ~Command() noexcept {}
 
@@ -145,33 +150,8 @@ namespace Yttrium
             // C++ : allowing to make pre-compiled, re-usable tasks
             //
             //__________________________________________________________________
-            Task(Runnable   *) noexcept; //!< setup from user's runnable code
             Task(const Task &) noexcept; //!< shared copy
-            ~Task()            noexcept; //!< cleanup
-
-
-            //! create from function/functionoid (full copy)
-            template <typename FUNCTION> inline
-            Task(const FUNCTION     &fn) :
-            code(new Callback<FUNCTION,NullType>(fn))
-            { initialize(); }
-
-            //! create from object+method
-            template <typename OBJECT, typename METHOD> inline
-            Task(OBJECT             &o,
-                 METHOD              m) :
-            code( new Command<OBJECT,METHOD,NullType>(o,m) )
-            { initialize(); }
-
-#if 0
-            template <typename FUNCTION, typename TLIST> inline
-            Task(const Functionoid_            &,
-                 const FUNCTION                &fn,
-                 typename Binder<TLIST>::Param1 p1) :
-            code( new Callback<FUNCTION,TLIST>(fn,p1) )
-            {
-            }
-#endif
+            virtual ~Task()    noexcept; //!< cleanup
 
             //__________________________________________________________________
             //
@@ -181,11 +161,88 @@ namespace Yttrium
             //__________________________________________________________________
             void process(const ThreadContext &); //!< run code on given context
 
-            
+        protected:
+            Task(Runnable   *) noexcept; //!< setup from user's runnable code
+            void initialize()  noexcept; //!< withold code
+
         private:
             Y_DISABLE_ASSIGN(Task);
-            void initialize() noexcept; //!< withold code
             Runnable *code;
+        };
+
+        template <typename TLIST>
+        class Mission : public Task
+        {
+        public:
+            Y_BINDER_ECHO(TLIST);
+
+            inline Mission(const Mission &other) noexcept : Task(other) {}
+
+            //! create from functioniod : fn(context)
+            template <typename FUNCTION>
+            inline explicit Mission(const Functionoid_ &,
+                                    const FUNCTION     &fn) :
+            Task(  new Callback<FUNCTION,NullType>(fn) )
+            {
+            }
+
+            //! create from object.method(context)
+            template <typename OBJECT, typename METHOD> inline
+            explicit Mission(const CxxMethodOf_ &,
+                             OBJECT             &o,
+                             METHOD              m) :
+            Task( new Command<OBJECT,METHOD,NullType>(o,m) )
+            {
+            }
+
+            //! create from fn(context,p1)
+            template <typename FUNCTION>
+            inline explicit Mission(const Functionoid_ &,
+                                    const FUNCTION     &fn,
+                                    Param1              p1) :
+            Task( new Callback<FUNCTION,TLIST>(fn,p1) )
+            {
+
+            }
+
+            //! create from object.method(context,p1)
+            template <typename OBJECT, typename METHOD> inline
+            explicit Mission(const CxxMethodOf_ &,
+                             OBJECT             &o,
+                             METHOD              m,
+                             Param1              p1) :
+            Task( new Command<OBJECT,METHOD,TLIST>(o,m,p1) )
+            {
+            }
+
+
+            //! create from fn(context,p1,p2)
+            template <typename FUNCTION>
+            inline explicit Mission(const Functionoid_ &,
+                                    const FUNCTION     &fn,
+                                    Param1              p1,
+                                    Param2              p2) :
+            Task( new Callback<FUNCTION,TLIST>(fn,p1,p2) )
+            {
+
+            }
+
+            //! create from object.method(context,p1,p2)
+            template <typename OBJECT, typename METHOD> inline
+            explicit Mission(const CxxMethodOf_ &,
+                             OBJECT             &o,
+                             METHOD              m,
+                             Param1              p1,
+                             Param2              p2) :
+            Task( new Command<OBJECT,METHOD,TLIST>(o,m,p1,p2) )
+            {
+            }
+
+
+            inline virtual ~Mission() noexcept {}
+
+        private:
+            Y_DISABLE_ASSIGN(Mission);
         };
 
     }

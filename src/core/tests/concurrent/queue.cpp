@@ -47,6 +47,17 @@ namespace
         }
 
 
+        inline void getMul(const Concurrent::ThreadContext &ctx, int &res, const int x)
+        {
+            {
+                Y_LOCK(ctx.sync);
+                (std::cerr << "[*Demo] get @" << param << " in " << ctx.name << " => x" << x << " = " << (res = param*x) << std::endl).flush();
+            }
+            WallTime tmx;
+            tmx.wait(0.1);
+        }
+
+
 
         inline void operator()(const Concurrent::ThreadContext &ctx)
         {
@@ -63,7 +74,7 @@ namespace
     static inline void Process(const Concurrent::ThreadContext &ctx, const int value)
     {
         Y_LOCK(ctx.sync);
-        (std::cerr << "Process(" << value << ")" << std::endl).flush();
+        (std::cerr << "Process(" << value << ")" << " in " << ctx.name << std::endl).flush();
         WallTime tmx;
         tmx.wait(0.1);
     }
@@ -78,10 +89,10 @@ Y_UTEST(concurrent_queue)
     
     Demo  dem(3);
 
-    
+    typedef Concurrent::Mission<NullType> Chore;
 
-    Concurrent::Task task1(dem);
-    Concurrent::Task task2(dem, & Demo::unfold);
+    Chore            task1(Functionoid,dem);
+    Chore            task2(CxxMethodOf,dem, & Demo::unfold);
     Concurrent::Task task3 = task1;
     Concurrent::Task task4 = task2;
 
@@ -112,7 +123,7 @@ Y_UTEST(concurrent_queue)
     for(int i=1;i<=40;++i)
     {
         const Demo             todo(i);
-        const Concurrent::Task task(todo);
+        const Chore            task(Functionoid,todo);
         tsk << task;
     }
 
@@ -122,12 +133,39 @@ Y_UTEST(concurrent_queue)
 
     Y_THREAD_MSG("Ready to restart");
 
+    
+
     {
         int value = 89;
         void (*proc)(const Concurrent::ThreadContext & , const int  ) = Process;
-        //const Concurrent::Task task(Functionoid,proc,value);
-        //alone.push(task); queue.push(task); queue.flush();
-        
+        typedef Concurrent::Mission<TL1(int)> IM;
+        {
+            const IM task(Functionoid,proc,value);
+            alone.push(task);
+            queue.push(task);
+            queue.flush();
+        }
+
+        {
+            const IM task(CxxMethodOf,dem, & Demo::doMul,value);
+            alone.push(task);
+            queue.push(task);
+            queue.flush();
+        }
+
+        typedef Concurrent::Mission<TL2(int&,int)> GM;
+        std::cerr << "#args=" << GM::ArgsType::Value << std::endl;
+        {
+            int res = 0 ;
+            const GM task(CxxMethodOf,dem, & Demo::getMul,res,3);
+            alone.push(task);
+            std::cerr << "res=" << res << std::endl;
+            queue.push(task);
+            queue.flush();
+            std::cerr << "res=" << res << std::endl;
+        }
+
+
 #if 0
         dem.param = 8;
         

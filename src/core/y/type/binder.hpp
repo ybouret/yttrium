@@ -29,12 +29,19 @@ Type##I                                                      arg##I
     //! helper to implement derived class
     //
     //__________________________________________________________________________
-#define Y_BINDER_ARGS(THE_LIST)                                                 \
-typedef typename Binder<THE_LIST>::Param1 Param1; using Binder<THE_LIST>::arg1; \
-typedef typename Binder<THE_LIST>::Param2 Param2; using Binder<THE_LIST>::arg2; \
-typedef typename Binder<THE_LIST>::Param3 Param3; using Binder<THE_LIST>::arg3; \
-typedef typename Binder<THE_LIST>::Param4 Param4; using Binder<THE_LIST>::arg4; \
+#define Y_BINDER_ECHO(THE_LIST)                     \
+typedef typename Binder<THE_LIST>::Param1 Param1;   \
+typedef typename Binder<THE_LIST>::Param2 Param2;   \
+typedef typename Binder<THE_LIST>::Param3 Param3;   \
+typedef typename Binder<THE_LIST>::Param4 Param4;   \
 typedef typename Binder<THE_LIST>::ArgsType ArgsType
+
+#define Y_BINDER_ARGS(THE_LIST) \
+using Binder<THE_LIST>::arg1;   \
+using Binder<THE_LIST>::arg2;   \
+using Binder<THE_LIST>::arg3;   \
+using Binder<THE_LIST>::arg4
+
 
     //__________________________________________________________________________
     //
