@@ -165,34 +165,16 @@ Y_UTEST(concurrent_queue)
             std::cerr << "res=" << res << std::endl;
         }
 
-
-#if 0
-        dem.param = 8;
-        
-        alone.call(dem);
-        queue.call(dem);
-
-        queue.flush();
-
-        alone.invoke(dem, & Demo::unfold);
-        queue.invoke(dem, & Demo::unfold);
-        queue.flush();
-
-        alone.call(proc,value);
         {
             Y_LOCK(queue.sync());
-            (std::cerr << "invoke demo/value" << std::endl).flush();
+            (std::cerr << "Hi-Level"<< std::endl).flush();
         }
-        alone.invoke(dem, & Demo::doMul, value);
-
+        alone.call(dem);
+        queue.call(dem);
         queue.flush();
-
-        value   = 4;
-        int res = 0;
-        int *pRes = & res;
-        alone.invoke(dem, & Demo::getMul, pRes, value);
-#endif
-
+        alone.invoke(dem, & Demo::unfold);
+        queue.invoke(dem, & Demo::unfold);
+        
     }
 
 

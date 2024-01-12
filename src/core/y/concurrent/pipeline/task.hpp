@@ -174,9 +174,29 @@ namespace Yttrium
         class Mission : public Task
         {
         public:
-            Y_BINDER_ECHO(TLIST);
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            Y_BINDER_ECHO(TLIST); //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             inline Mission(const Mission &other) noexcept : Task(other) {}
+            inline virtual ~Mission() noexcept {}
+
+            //__________________________________________________________________
+            //
+            //
+            // Wrappers with no argument
+            //
+            //__________________________________________________________________
 
             //! create from functioniod : fn(context)
             template <typename FUNCTION>
@@ -194,6 +214,13 @@ namespace Yttrium
             Task( new Command<OBJECT,METHOD,NullType>(o,m) )
             {
             }
+
+            //__________________________________________________________________
+            //
+            //
+            // Wrappers with one argument
+            //
+            //__________________________________________________________________
 
             //! create from fn(context,p1)
             template <typename FUNCTION>
@@ -215,6 +242,12 @@ namespace Yttrium
             {
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // Wrappers with two arguments
+            //
+            //__________________________________________________________________
 
             //! create from fn(context,p1,p2)
             template <typename FUNCTION>
@@ -239,7 +272,70 @@ namespace Yttrium
             }
 
 
-            inline virtual ~Mission() noexcept {}
+            //__________________________________________________________________
+            //
+            //
+            // Wrappers with three arguments
+            //
+            //__________________________________________________________________
+
+            //! create from fn(context,p1,p2,p3)
+            template <typename FUNCTION>
+            inline explicit Mission(const Functionoid_ &,
+                                    const FUNCTION     &fn,
+                                    Param1              p1,
+                                    Param2              p2,
+                                    Param3              p3) :
+            Task( new Callback<FUNCTION,TLIST>(fn,p1,p2,p3) )
+            {
+
+            }
+
+            //! create from object.method(context,p1,p2,p3)
+            template <typename OBJECT, typename METHOD> inline
+            explicit Mission(const CxxMethodOf_ &,
+                             OBJECT             &o,
+                             METHOD              m,
+                             Param1              p1,
+                             Param2              p2,
+                             Param3              p3) :
+            Task( new Command<OBJECT,METHOD,TLIST>(o,m,p1,p2,p3) )
+            {
+            }
+
+            //__________________________________________________________________
+            //
+            //
+            // Wrappers with four arguments
+            //
+            //__________________________________________________________________
+
+            //! create from fn(context,p1,p2,p3,p4)
+            template <typename FUNCTION>
+            inline explicit Mission(const Functionoid_ &,
+                                    const FUNCTION     &fn,
+                                    Param1              p1,
+                                    Param2              p2,
+                                    Param3              p3,
+                                    Param4              p4) :
+            Task( new Callback<FUNCTION,TLIST>(fn,p1,p2,p3,p4) )
+            {
+
+            }
+
+            //! create from object.method(context,p1,p2,p3,p4)
+            template <typename OBJECT, typename METHOD> inline
+            explicit Mission(const CxxMethodOf_ &,
+                             OBJECT             &o,
+                             METHOD              m,
+                             Param1              p1,
+                             Param2              p2,
+                             Param3              p3,
+                             Param4              p4) :
+            Task( new Command<OBJECT,METHOD,TLIST>(o,m,p1,p2,p3,p4) )
+            {
+            }
+
 
         private:
             Y_DISABLE_ASSIGN(Mission);

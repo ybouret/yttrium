@@ -89,11 +89,19 @@ namespace Yttrium
 
             //! create an push a task : fn(context)
             template <typename FUNCTION> inline
-            Task::ID call(const FUNCTION &func) { const Task task(func); return push(task); }
+            Task::ID call(const FUNCTION &func)
+            {
+                const Mission<NullType> mission(Functionoid,func);
+                return push(mission);
+            }
 
             //! create and push a task: host.meth(context)
             template <typename OBJECT, typename METHOD> inline
-            Task::ID invoke(OBJECT &host, METHOD meth) { const Task task(host,meth); return push(task); }
+            Task::ID invoke(OBJECT &host, METHOD meth)
+            {
+                const Mission<NullType> mission(CxxMethodOf,host,meth);
+                return push(mission);
+            }
 
             //__________________________________________________________________
             //
