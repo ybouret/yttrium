@@ -3,6 +3,7 @@
 #define Y_Type_List_Included 1
 
 #include "y/config/starting.hpp"
+#include "y/ostream-proto.hpp"
 
 namespace Yttrium
 {
@@ -14,6 +15,9 @@ namespace Yttrium
     //__________________________________________________________________________
     class NullType
     {
+    public:
+        static const char * const CallSign; //!< "NullType"
+        Y_OSTREAM_PROTO(NullType);          //!< output CallSign
     };
 
     //__________________________________________________________________________
@@ -24,8 +28,10 @@ namespace Yttrium
     //__________________________________________________________________________
     struct EmptyType
     {
+        static const char * const CallSign; //!< "EmptyType"
+        Y_OSTREAM_PROTO(EmptyType);          //!< out CallSign
     };
-    
+
     //__________________________________________________________________________
     //
     //

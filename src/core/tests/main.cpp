@@ -51,6 +51,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(type_temporary);
     Y_UTEST(type_moniker);
     Y_UTEST(type_auto_clean);
+    Y_UTEST(type_binder);
 
     Y_UTEST(text_plural);
     Y_UTEST(text_human_readable);
