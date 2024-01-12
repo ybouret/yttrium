@@ -20,7 +20,15 @@ namespace Yttrium
 #define Y_BINDER_DECL(I)                                               \
 typedef typename TL::SafeTypeAt<TLIST,I-1,EmptyType>::Result Type##I;  \
 typedef typename TypeTraits<Type##I>::ParamType              Param##I; \
+typedef Int2Type<I>                                          ARGC##I;  \
 Type##I                                                      arg##I
+
+#define Y_BINDER_ARGS(THE_LIST)                  \
+typedef typename Binder<THE_LIST>::Param1 Param1; using Binder<THE_LIST>::arg1; \
+typedef typename Binder<THE_LIST>::Param2 Param2; using Binder<THE_LIST>::arg2; \
+typedef typename Binder<THE_LIST>::Param3 Param3; using Binder<THE_LIST>::arg3; \
+typedef typename Binder<THE_LIST>::Param4 Param4; using Binder<THE_LIST>::arg4; \
+typedef typename Binder<THE_LIST>::ArgsType ArgsType
 
     //__________________________________________________________________________
     //
@@ -42,6 +50,8 @@ Type##I                                                      arg##I
         Y_BINDER_DECL(2); //!< arg2
         Y_BINDER_DECL(3); //!< arg3
         Y_BINDER_DECL(4); //!< arg4
+        static const size_t    ARGN = TL::LengthOf<TLIST>::Value;
+        typedef Int2Type<ARGN> ArgsType;
 
         //______________________________________________________________________
         //

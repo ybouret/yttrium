@@ -102,6 +102,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+#if 0
             //! create an push a task : func(context,arg1)
             template <typename FUNCTION, typename ARG1> inline
             Task::ID call(const FUNCTION &func, ARG1 &arg1)
@@ -129,7 +130,7 @@ namespace Yttrium
             template <typename OBJECT, typename METHOD, typename ARG1, typename ARG2> inline
             Task::ID invoke(OBJECT &host, METHOD meth, ARG1 &arg1, ARG2 &arg2)
             { const Task task(CxxMethodOf,host,meth,arg1,arg2); return push(task); }
-
+#endif
 
             //__________________________________________________________________
             //

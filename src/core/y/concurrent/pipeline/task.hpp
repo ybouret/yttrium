@@ -3,17 +3,8 @@
 #ifndef Y_Concurrent_Task_Included
 #define Y_Concurrent_Task_Included 1
 
-
-#include "y/concurrent/pipeline/callback/0.hpp"
-#include "y/concurrent/pipeline/callback/1.hpp"
-#include "y/concurrent/pipeline/callback/2.hpp"
-#include "y/concurrent/pipeline/callback/3.hpp"
-
-#include "y/concurrent/pipeline/command/0.hpp"
-#include "y/concurrent/pipeline/command/1.hpp"
-#include "y/concurrent/pipeline/command/2.hpp"
-#include "y/concurrent/pipeline/command/3.hpp"
-
+#include "y/concurrent/pipeline/runnable.hpp"
+#include "y/type/binder.hpp"
 #include "y/type/ints.hpp"
 #include "y/config/shallow.hpp"
 
@@ -25,6 +16,117 @@ namespace Yttrium
 
     namespace Concurrent
     {
+
+
+        template <typename FUNCTION, typename TLIST>
+        class Callback : public Runnable, private Binder<TLIST>
+        {
+        public:
+            Y_BINDER_ARGS(TLIST);
+
+            inline explicit Callback(const FUNCTION &fn) :
+            Runnable(), Binder<TLIST>(), func(fn)
+            {
+            }
+
+            inline explicit Callback(const FUNCTION &fn, Param1 p1) :
+            Runnable(), Binder<TLIST>(p1), func(fn)
+            {
+            }
+
+            inline explicit Callback(const FUNCTION &fn, Param1 p1, Param2 p2) :
+            Runnable(), Binder<TLIST>(p1,p2), func(fn)
+            {
+            }
+
+            inline explicit Callback(const FUNCTION &fn, Param1 p1, Param2 p2, Param3 p3) :
+            Runnable(), Binder<TLIST>(p1,p2,p3), func(fn)
+            {
+            }
+
+            inline explicit Callback(const FUNCTION &fn, Param1 p1, Param2 p2, Param3 p3, Param4 p4) :
+            Runnable(), Binder<TLIST>(p1,p2,p3,p4), func(fn)
+            {
+            }
+
+
+            inline virtual ~Callback() noexcept {}
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Callback);
+            FUNCTION func;
+            
+            inline virtual void run(const ThreadContext &ctx)
+            {
+                static const ArgsType args = {};
+                call(ctx,args);
+            }
+
+            inline void call(const ThreadContext &ctx, const Int2Type<0> &)
+            {
+                func(ctx);
+            }
+
+            inline void call(const ThreadContext &ctx, const Int2Type<1> &)
+            {
+                func(ctx,arg1);
+            }
+
+            inline void call(const ThreadContext &ctx, const Int2Type<2> &)
+            {
+                func(ctx,arg1,arg2);
+            }
+
+            inline void call(const ThreadContext &ctx, const Int2Type<3> &)
+            {
+                func(ctx,arg1,arg2,arg3);
+            }
+
+            inline void call(const ThreadContext &ctx, const Int2Type<4> &)
+            {
+                func(ctx,arg1,arg2,arg3,arg4);
+            }
+        };
+
+        //______________________________________________________________________
+        //
+        //
+        //! encapsulate call to OBJECT.METHOD call
+        //
+        //______________________________________________________________________
+        template <typename OBJECT, typename METHOD, typename TLIST>
+        class Command : public Runnable, private Binder<TLIST>
+        {
+        public:
+            Y_BINDER_ARGS(TLIST);
+
+            inline explicit Command(OBJECT &o, METHOD m) noexcept :
+            Runnable(),
+            Binder<TLIST>(),
+            host(o),
+            meth(m) {}
+
+
+            inline virtual ~Command() noexcept {}
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Command);
+            inline virtual void run(const ThreadContext &ctx)
+            {
+                static const ArgsType args = {};
+                call(ctx,args);
+            }
+
+            inline void call(const ThreadContext &ctx, const Int2Type<0> &) { (host.*meth)(ctx);                }
+            inline void call(const ThreadContext &ctx, const Int2Type<1> &) { (host.*meth)(ctx,arg1);           }
+            inline void call(const ThreadContext &ctx, const Int2Type<2> &) { (host.*meth)(ctx,arg1,arg2);      }
+            inline void call(const ThreadContext &ctx, const Int2Type<3> &) { (host.*meth)(ctx,arg1,arg2,arg3); }
+            inline void call(const ThreadContext &ctx, const Int2Type<4> &) { (host.*meth)(ctx,arg1,arg2,arg4); }
+
+            OBJECT &host;
+            METHOD  meth;
+        };
 
 
 
@@ -61,74 +163,33 @@ namespace Yttrium
             // C++ : allowing to make pre-compiled, re-usable tasks
             //
             //__________________________________________________________________
-            Task(Runnable *) noexcept; //!< setup from user's runnable code
+            Task(Runnable   *) noexcept; //!< setup from user's runnable code
             Task(const Task &) noexcept; //!< shared copy
             ~Task()            noexcept; //!< cleanup
 
 
             //! create from function/functionoid (full copy)
             template <typename FUNCTION> inline
-            Task( const FUNCTION     &fn) :
-            code( new Callback0<FUNCTION>(fn) )
+            Task(const FUNCTION     &fn) :
+            code(new Callback<FUNCTION,NullType>(fn))
             { initialize(); }
 
             //! create from object+method
             template <typename OBJECT, typename METHOD> inline
             Task(OBJECT             &o,
                  METHOD              m) :
-            code( new Command0<OBJECT,METHOD>(o,m) )
+            code( new Command<OBJECT,METHOD,NullType>(o,m) )
             { initialize(); }
 
-
-            //! create for functionoid(context,arg1)
-            template <typename FUNCTION, typename ARG1> inline
-            Task(const Functionoid_ &, const FUNCTION &fn, ARG1 &a1) :
-            code( new Callback1<FUNCTION,ARG1>(fn,a1) )
-            { initialize(); }
-
-            //! create for functionoid(context,arg1,arg2)
-            template <typename FUNCTION, typename ARG1, typename ARG2>   inline
-            Task( const Functionoid_ &, const FUNCTION &fn, ARG1 &a1, ARG2 &a2) :
-            code( new Callback2<FUNCTION,ARG1,ARG2>(fn,a1,a2) )
-            { initialize(); }
-
-            //! create for functionoid(context,arg1,arg2,arg3)
-            template <typename FUNCTION, typename ARG1, typename ARG2, typename ARG3> inline
-            Task( const Functionoid_ &, const FUNCTION &fn, ARG1 &a1, ARG2 &a2, ARG3 &a3) :
-            code( new Callback3<FUNCTION,ARG1,ARG2,ARG3>(fn,a1,a2,a3) )
-            { initialize(); }
-
-            //! create for host.meth(context,arg1)
-            template <typename OBJECT, typename METHOD, typename ARG1> inline
-            Task(const CxxMethodOf_ &,
-                 OBJECT             &host,
-                 METHOD              meth,
-                 ARG1               &arg1) :
-            code( new Command1<OBJECT,METHOD,ARG1>(host,meth,arg1) )
-            { initialize(); }
-
-            //! create for host.meth(context,arg1,arg2)
-            template <typename OBJECT, typename METHOD, typename ARG1, typename ARG2> inline
-            Task(const CxxMethodOf_ &,
-                 OBJECT             &host,
-                 METHOD              meth,
-                 ARG1               &arg1,
-                 ARG2               &arg2) :
-            code( new Command2<OBJECT,METHOD,ARG1,ARG2>(host,meth,arg1,arg2) )
-            { initialize(); }
-
-            //! create for host.meth(context,arg1,arg2,arg3)
-            template <typename OBJECT, typename METHOD, typename ARG1, typename ARG2, typename ARG3> inline
-            Task(const CxxMethodOf_ &,
-                 OBJECT             &host,
-                 METHOD              meth,
-                 ARG1               &arg1,
-                 ARG2               &arg2,
-                 ARG3               &arg3) :
-            code( new Command3<OBJECT,METHOD,ARG1,ARG2,ARG2>(host,meth,arg1,arg2,arg3) )
-            { initialize(); }
-
-
+#if 0
+            template <typename FUNCTION, typename TLIST> inline
+            Task(const Functionoid_            &,
+                 const FUNCTION                &fn,
+                 typename Binder<TLIST>::Param1 p1) :
+            code( new Callback<FUNCTION,TLIST>(fn,p1) )
+            {
+            }
+#endif
 
             //__________________________________________________________________
             //

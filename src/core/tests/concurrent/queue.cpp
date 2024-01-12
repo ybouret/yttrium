@@ -46,10 +46,7 @@ namespace
             tmx.wait(0.1);
         }
 
-        inline void getMul(const Concurrent::ThreadContext &ctx, int *res, const int x)
-        {
 
-        }
 
         inline void operator()(const Concurrent::ThreadContext &ctx)
         {
@@ -80,6 +77,8 @@ Y_UTEST(concurrent_queue)
     std::cerr << topology << std::endl;
     
     Demo  dem(3);
+
+    
 
     Concurrent::Task task1(dem);
     Concurrent::Task task2(dem, & Demo::unfold);
@@ -126,10 +125,10 @@ Y_UTEST(concurrent_queue)
     {
         int value = 89;
         void (*proc)(const Concurrent::ThreadContext & , const int  ) = Process;
-        const Concurrent::Task task(Functionoid,proc,value);
-        alone.push(task);
-        queue.push(task);
-
+        //const Concurrent::Task task(Functionoid,proc,value);
+        //alone.push(task); queue.push(task); queue.flush();
+        
+#if 0
         dem.param = 8;
         
         alone.call(dem);
@@ -154,9 +153,9 @@ Y_UTEST(concurrent_queue)
         int res = 0;
         int *pRes = & res;
         alone.invoke(dem, & Demo::getMul, pRes, value);
+#endif
 
     }
-
 
 
 }
