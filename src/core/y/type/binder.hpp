@@ -36,6 +36,12 @@ typedef typename Binder<THE_LIST>::Param3 Param3;   \
 typedef typename Binder<THE_LIST>::Param4 Param4;   \
 typedef typename Binder<THE_LIST>::ArgsType ArgsType
 
+    //__________________________________________________________________________
+    //
+    //
+    //! helper to recall args
+    //
+    //__________________________________________________________________________
 #define Y_BINDER_ARGS(THE_LIST) \
 using Binder<THE_LIST>::arg1;   \
 using Binder<THE_LIST>::arg2;   \

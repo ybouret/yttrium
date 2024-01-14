@@ -17,40 +17,66 @@ namespace Yttrium
     namespace Concurrent
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Storing functionoids
+        //
+        //
+        //______________________________________________________________________
         template <typename FUNCTION, typename TLIST>
         class Callback : public Runnable, private Binder<TLIST>
         {
         public:
-            Y_BINDER_ECHO(TLIST);
-            Y_BINDER_ARGS(TLIST);
+            //__________________________________________________________________
+            //
+            //
+            // Definition
+            //
+            //__________________________________________________________________
+            Y_BINDER_ECHO(TLIST); //!< aliases
+            Y_BINDER_ARGS(TLIST); //!< aliases
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup0
             inline explicit Callback(const FUNCTION &fn) :
             Runnable(), Binder<TLIST>(), func(fn)
             {
             }
 
+            //! setup1
             inline explicit Callback(const FUNCTION &fn, Param1 p1) :
             Runnable(), Binder<TLIST>(p1), func(fn)
             {
             }
 
+            //! setup2
             inline explicit Callback(const FUNCTION &fn, Param1 p1, Param2 p2) :
             Runnable(), Binder<TLIST>(p1,p2), func(fn)
             {
             }
 
+            //! setup3
             inline explicit Callback(const FUNCTION &fn, Param1 p1, Param2 p2, Param3 p3) :
             Runnable(), Binder<TLIST>(p1,p2,p3), func(fn)
             {
             }
 
+            //! setup4
             inline explicit Callback(const FUNCTION &fn, Param1 p1, Param2 p2, Param3 p3, Param4 p4) :
             Runnable(), Binder<TLIST>(p1,p2,p3,p4), func(fn)
             {
             }
 
 
+            //! cleanup
             inline virtual ~Callback() noexcept {}
 
         private:
@@ -74,26 +100,52 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
+        //
         //! encapsulate call to OBJECT.METHOD call
+        //
         //
         //______________________________________________________________________
         template <typename OBJECT, typename METHOD, typename TLIST>
         class Command : public Runnable, private Binder<TLIST>
         {
         public:
-            Y_BINDER_ECHO(TLIST);
-            Y_BINDER_ARGS(TLIST);
+            //__________________________________________________________________
+            //
+            //
+            // Definition
+            //
+            //__________________________________________________________________
+            Y_BINDER_ECHO(TLIST); //!< aliases
+            Y_BINDER_ARGS(TLIST); //!< aliases
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup0
             inline explicit Command(OBJECT &o, METHOD m) noexcept :
             Runnable(), Binder<TLIST>(), host(o), meth(m) {}
 
+            //! setup1
             inline explicit Command(OBJECT &o, METHOD m, Param1 p1) noexcept :
             Runnable(), Binder<TLIST>(p1), host(o), meth(m) {}
 
-
+            //! setup2
             inline explicit Command(OBJECT &o, METHOD m, Param1 p1, Param2 p2) noexcept :
             Runnable(), Binder<TLIST>(p1,p2), host(o), meth(m) {}
 
+            //! setup3
+            inline explicit Command(OBJECT &o, METHOD m, Param1 p1, Param2 p2, Param3 p3) noexcept :
+            Runnable(), Binder<TLIST>(p1,p2,p3), host(o), meth(m) {}
+
+            //! setup3
+            inline explicit Command(OBJECT &o, METHOD m, Param1 p1, Param2 p2, Param3 p3, Param4 p4) noexcept :
+            Runnable(), Binder<TLIST>(p1,p2,p3,p4), host(o), meth(m) {}
+
+            //! cleanup
             inline virtual ~Command() noexcept {}
 
 
@@ -170,6 +222,50 @@ namespace Yttrium
             Runnable *code;
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Base class for Pipeline
+        //
+        //
+        //______________________________________________________________________
+        class Tasks
+        {
+        public:
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+
+            //! push a new task
+            virtual Task::ID push(const Task &) = 0;
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            virtual ~Tasks() noexcept {}
+        protected:
+            explicit Tasks() noexcept {}
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Tasks);
+        };
+
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Mission for tasks
+        //
+        //
+        //______________________________________________________________________
         template <typename TLIST>
         class Mission : public Task
         {
@@ -188,7 +284,11 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
+
+            //! copy (increase reference)
             inline Mission(const Mission &other) noexcept : Task(other) {}
+
+            //! cleanup
             inline virtual ~Mission() noexcept {}
 
             //__________________________________________________________________
@@ -214,6 +314,25 @@ namespace Yttrium
             Task( new Command<OBJECT,METHOD,NullType>(o,m) )
             {
             }
+
+            //! call into task
+            template <typename FUNCTION> static inline
+            Task::ID Call(Tasks &tasks, const FUNCTION &fn)
+            {
+                const Mission mission(Functionoid,fn);
+                return tasks.push(mission);
+            }
+
+            //! invoke into task
+            template <typename OBJECT, typename METHOD> static inline
+            Task::ID Invoke(Tasks &tasks,
+                            OBJECT &o,
+                            METHOD  m)
+            {
+                const Mission mission(CxxMethodOf,o,m);
+                return tasks.push(mission);
+            }
+
 
             //__________________________________________________________________
             //
@@ -242,6 +361,26 @@ namespace Yttrium
             {
             }
 
+            //! call into task
+            template <typename FUNCTION> static inline
+            Task::ID Call(Tasks &tasks, const FUNCTION &fn, Param1 p1)
+            {
+                const Mission mission(Functionoid,fn,p1);
+                return tasks.push(mission);
+            }
+
+            //! invoke into task
+            template <typename OBJECT, typename METHOD> static inline
+            Task::ID Invoke(Tasks &tasks,
+                            OBJECT &o,
+                            METHOD  m,
+                            Param1  p1)
+            {
+                const Mission mission(CxxMethodOf,o,m,p1);
+                return tasks.push(mission);
+            }
+
+
             //__________________________________________________________________
             //
             //
@@ -269,6 +408,27 @@ namespace Yttrium
                              Param2              p2) :
             Task( new Command<OBJECT,METHOD,TLIST>(o,m,p1,p2) )
             {
+            }
+
+
+            //! call into task
+            template <typename FUNCTION> static inline
+            Task::ID Call(Tasks &tasks, const FUNCTION &fn, Param1 p1, Param2 p2)
+            {
+                const Mission mission(Functionoid,fn,p1,p2);
+                return tasks.push(mission);
+            }
+
+            //! invoke into task
+            template <typename OBJECT, typename METHOD> static inline
+            Task::ID Invoke(Tasks &tasks,
+                            OBJECT &o,
+                            METHOD  m,
+                            Param1  p1,
+                            Param2  p2)
+            {
+                const Mission mission(CxxMethodOf,o,m,p1,p2);
+                return tasks.push(mission);
             }
 
 
@@ -302,6 +462,28 @@ namespace Yttrium
             Task( new Command<OBJECT,METHOD,TLIST>(o,m,p1,p2,p3) )
             {
             }
+
+            //! call into task
+            template <typename FUNCTION> static inline
+            Task::ID Call(Tasks &tasks, const FUNCTION &fn, Param1 p1, Param2 p2, Param3 p3)
+            {
+                const Mission mission(Functionoid,fn,p1,p2,p3);
+                return tasks.push(mission);
+            }
+
+            //! invoke into task
+            template <typename OBJECT, typename METHOD> static inline
+            Task::ID Invoke(Tasks &tasks,
+                            OBJECT &o,
+                            METHOD  m,
+                            Param1  p1,
+                            Param2  p2,
+                            Param3  p3)
+            {
+                const Mission mission(CxxMethodOf,o,m,p1,p2,p3);
+                return tasks.push(mission);
+            }
+
 
             //__________________________________________________________________
             //

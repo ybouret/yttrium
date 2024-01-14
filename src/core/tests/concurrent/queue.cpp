@@ -5,6 +5,7 @@
 #include "y/string/env.hpp"
 #include "y/system/wtime.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/random/bits.hpp"
 
 using namespace Yttrium;
 
@@ -57,7 +58,10 @@ namespace
             tmx.wait(0.1);
         }
 
-
+        inline void doWork(const Concurrent::ThreadContext &, double &res, const int x)
+        {
+            res = x * param;
+        }
 
         inline void operator()(const Concurrent::ThreadContext &ctx)
         {
@@ -83,6 +87,7 @@ namespace
 
 Y_UTEST(concurrent_queue)
 {
+    Random::Rand ran;
     Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
     const Concurrent::Topology topology;
     std::cerr << topology << std::endl;
@@ -169,12 +174,42 @@ Y_UTEST(concurrent_queue)
             Y_LOCK(queue.sync());
             (std::cerr << "Hi-Level"<< std::endl).flush();
         }
-        alone.call(dem);
-        queue.call(dem);
+
+        Chore::Call(alone,dem);
+        Chore::Call(queue,dem);
         queue.flush();
-        alone.invoke(dem, & Demo::unfold);
-        queue.invoke(dem, & Demo::unfold);
-        
+
+        Chore::Invoke(alone, dem, & Demo::unfold);
+        Chore::Invoke(queue, dem, & Demo::unfold);
+        queue.flush();
+
+        value = 31;
+        IM::Call(alone,proc,value);
+        IM::Call(queue,proc,value);
+        queue.flush();
+
+        {
+            int res = 0;
+            GM::Invoke(alone, dem, & Demo::getMul, res, 6);
+            std::cerr << "res=" << res << std::endl;
+            res = 0;
+            GM::Invoke(queue, dem, & Demo::getMul, res, 6);
+            queue.flush();
+            std::cerr << "res=" << res << std::endl;
+        }
+
+    }
+
+    {
+        typedef Concurrent::Mission<TL2(double&,int)> Work;
+        const int      n = ran.in<int>(1,10);
+        Vector<double> vec(n,0);
+        for(int i=1;i<=n;++i)
+        {
+            Work::Invoke(queue, dem, & Demo::doWork, vec[i], i);
+        }
+        queue.flush();
+        std::cerr << "vec=" << vec << std::endl;
     }
 
 
