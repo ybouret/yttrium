@@ -67,6 +67,9 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Compute);
         };
 
+        
+
+
         template <typename ENGINE>
         class Dispatcher : public Resources< Compute<ENGINE> >
         {
