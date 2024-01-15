@@ -2,9 +2,11 @@
 #include "y/concurrent/pipeline/alone.hpp"
 #include "y/concurrent/pipeline/queue.hpp"
 
-#include "y/concurrent/resources.hpp"
-#include "y/concurrent/resource/in0d.hpp"
-#include "y/concurrent/pipeline/task.hpp"
+
+
+//#include "y/concurrent/resources.hpp"
+//#include "y/concurrent/pipeline/task.hpp"
+#include "y/concurrent/pipeline/dispatcher/invoke.hpp"
 
 #include "y/concurrent/thread.hpp"
 #include "y/string/env.hpp"
@@ -17,7 +19,7 @@
 using namespace Yttrium;
 
 
-class MyEngine
+class MyEngine : public WallTime, public Random::Rand
 {
 public:
 
@@ -30,11 +32,42 @@ public:
 
     void Proc0(const Concurrent::ThreadContext &ctx)
     {
+        double s = 0;
         {
             Y_LOCK(ctx.sync);
-            (std::cerr << "Proc0(" << ctx.name << "):" << std::endl).flush();
+            s = 0.1*to<double>();
+            (std::cerr << "Proc0(" << ctx.name << ") : ... " << s << std::endl).flush();
         }
+        wait(s);
     }
+
+    void Proc1(const Concurrent::ThreadContext &ctx,
+               const int x)
+    {
+        double s = 0;
+        {
+            Y_LOCK(ctx.sync);
+            s = 0.1*to<double>();
+            (std::cerr << "Proc1(" << ctx.name << ") : " << x << " ..." << s << std::endl).flush();
+        }
+        wait(s);
+    }
+
+    void Proc2(const Concurrent::ThreadContext &ctx,
+               int       &res,
+               const int  arg)
+    {
+        double s = 0;
+        {
+            Y_LOCK(ctx.sync);
+            s = 0.1*to<double>();
+            (std::cerr << "Proc2(" << ctx.name << ") : " << arg << " ..." << s << std::endl).flush();
+        }
+        wait(s);
+        res = arg;
+    }
+
+
 
 private:
     Y_DISABLE_COPY_AND_ASSIGN(MyEngine);
@@ -45,140 +78,12 @@ namespace Yttrium
     namespace Concurrent
     {
 
+      
 
-        template <typename ENGINE>
-        class Compute : public Resource0D, public ENGINE
-        {
-        public:
+       
 
-            inline explicit Compute(const ThreadContext &ctx) :
-            Resource0D(ctx), ENGINE()
-            {
-            }
+       
 
-            inline virtual ~Compute() noexcept
-            {
-
-            }
-
-            virtual void activate() noexcept {
-                const Context &ctx = *this;
-                Y_THREAD_MSG("activate " << ctx.name);
-            }
-
-            virtual void shutdown() noexcept  {
-                const Context &ctx = *this;
-                Y_THREAD_MSG("shutdown " << ctx.name);
-            }
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Compute);
-        };
-
-        template <typename ENGINE, typename METHOD, typename TLIST>
-        class Mission : public Runnable, public Binder<TLIST>
-        {
-        public:
-            //__________________________________________________________________
-            //
-            //
-            // Definition
-            //
-            //__________________________________________________________________
-            Y_BINDER_ECHO(TLIST); //!< aliases
-            Y_BINDER_ARGS(TLIST); //!< aliases
-            typedef Compute<ENGINE>           ComputeEngine;
-            typedef Writable< ComputeEngine > ComputeEngines;
-
-            inline virtual ~Mission() noexcept {}
-
-            inline explicit Mission(ComputeEngines &kernel,
-                                   METHOD          method) noexcept :
-            Runnable(), 
-            Binder<TLIST>(),
-            core(kernel),
-            meth(method)
-            {
-            }
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Mission);
-            ComputeEngines &core;
-            METHOD          meth;
-
-            inline virtual void run(const ThreadContext &ctx)
-            {
-                static const ArgsType args = {};
-                ComputeEngine        &host = core[ctx.indx];
-                call(host,args);
-            }
-
-            inline void call(ComputeEngine &host, const Int2Type<0> &) { (host.*meth)(host);                    }
-#if 0
-            inline void call(const ThreadContext &ctx, const Int2Type<1> &) { (host.*meth)(ctx,arg1);                }
-            inline void call(const ThreadContext &ctx, const Int2Type<2> &) { (host.*meth)(ctx,arg1,arg2);           }
-            inline void call(const ThreadContext &ctx, const Int2Type<3> &) { (host.*meth)(ctx,arg1,arg2,arg3);      }
-            inline void call(const ThreadContext &ctx, const Int2Type<4> &) { (host.*meth)(ctx,arg1,arg2,arg3,arg4); }
-#endif
-
-        };
-
-        template <typename ENGINE,typename TLIST>
-        class Invoke : public Task
-        {
-        public:
-            typedef Compute<ENGINE>              ComputeEngine;
-            typedef Writable< ComputeEngine >    ComputeEngines;
-
-            virtual ~Invoke() noexcept {}
-
-            template <typename METHOD>
-            inline explicit Invoke(ComputeEngines &kernel,
-                                   METHOD          method) :
-            Task( new Mission<ENGINE,METHOD,TLIST>(kernel,method) )
-            {
-            }
-
-
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Invoke);
-        };
-
-
-
-        template <typename ENGINE>
-        class Dispatcher : 
-        public Resources< Compute<ENGINE> >,
-        public TaskManager
-        {
-        public:
-            typedef Compute<ENGINE> ComputeEngine;
-
-            explicit Dispatcher(const Concurrent::SharedPipeline &shared) :
-            Resources<ComputeEngine>(shared),
-            pipeline(shared)
-            {
-                this->init();
-            }
-
-            virtual ~Dispatcher() noexcept
-            {
-                this->quit();
-            }
-
-
-            virtual TaskUUID load(const Task &task)
-            {
-                return pipeline->load(task);
-            }
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Dispatcher);
-            Concurrent::SharedPipeline pipeline;
-        };
 
     }
 }
@@ -196,8 +101,46 @@ Y_UTEST(concurrent_dispatcher)
     Concurrent::Dispatcher<MyEngine> ST(alone);
     Concurrent::Dispatcher<MyEngine> MT(queue);
 
-    Concurrent::Invoke<MyEngine, NullType> task0(ST, & MyEngine::Proc0 );
-    ST.load(task0);
+    // 0 arg
+    Concurrent::Invoke<MyEngine,NullType>::Call(ST, & MyEngine::Proc0);
+
+    for(size_t i=1;i<=10;++i)
+        Concurrent::Invoke<MyEngine,NullType>::Call(MT, & MyEngine::Proc0);
+
+    MT.flush();
+
+    // 1 arg
+    Concurrent::Invoke<MyEngine,TL1(int)>::Call(ST, & MyEngine::Proc1,007);
+
+    for(int i=1;i<=10;++i)
+    {
+        Concurrent::Invoke<MyEngine,TL1(int)>::Call(MT, & MyEngine::Proc1,i);
+    }
+    MT.flush();
+
+    // 2 args
+    {
+        int res = 0;
+        Concurrent::Invoke<MyEngine,TL2(int&,int)>::Call(ST, & MyEngine::Proc2,res,007);
+        std::cerr << "res=" << res << std::endl;
+    }
+
+    {
+        Vector<int> res(40,0);
+        Vector<int> out(40,0);
+        for(size_t i=res.size();i>0;--i)
+        {
+            Concurrent::Invoke<MyEngine,TL2(int&,int)>::Call(MT, & MyEngine::Proc2,res[i], out[i] = ran.in<int>(-10,10));
+        }
+        MT.flush();
+        //std::cerr << res << "/" << out << std::endl;
+        Y_CHECK(res==out);
+    }
+
+
+
+
+
 
 }
 Y_UDONE()
