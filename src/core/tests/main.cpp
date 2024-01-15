@@ -104,6 +104,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(concurrent_loop);
     Y_UTEST(concurrent_simd);
     Y_UTEST(concurrent_resource);
+    Y_UTEST(concurrent_dispatcher);
 
 
     Y_UTEST(hashing_mix64);
