@@ -5,7 +5,7 @@
 
 #include "y/concurrent/pipeline/task/callback.hpp"
 #include "y/concurrent/pipeline/task/command.hpp"
-#include "y/type/ints.hpp"
+#include "y/concurrent/pipeline/task/id.hpp"
 
 
 namespace Yttrium
@@ -13,7 +13,7 @@ namespace Yttrium
 
     namespace Concurrent
     {
-        
+
         //______________________________________________________________________
         //
         //
@@ -31,8 +31,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef UnsignedInt<sizeof(void*)>::Type ID; //!< identifier
-           
+
             //! status of the task
             enum Status
             {
@@ -67,6 +66,7 @@ namespace Yttrium
             Runnable *code;
         };
 
+#if 0
         //______________________________________________________________________
         //
         //
@@ -86,7 +86,7 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! push a new task
-            virtual Task::ID push(const Task &) = 0;
+            virtual TaskUUID push(const Task &) = 0;
 
             //__________________________________________________________________
             //
@@ -162,7 +162,7 @@ namespace Yttrium
 
             //! call into task
             template <typename FUNCTION> static inline
-            Task::ID Call(Tasks &tasks, const FUNCTION &fn)
+            TaskID Call(Tasks &tasks, const FUNCTION &fn)
             {
                 const Mission mission(Functionoid,fn);
                 return tasks.push(mission);
@@ -170,9 +170,9 @@ namespace Yttrium
 
             //! invoke into task
             template <typename OBJECT, typename METHOD> static inline
-            Task::ID Invoke(Tasks &tasks,
-                            OBJECT &o,
-                            METHOD  m)
+            TaskID Invoke(Tasks &tasks,
+                          OBJECT &o,
+                          METHOD  m)
             {
                 const Mission mission(CxxMethodOf,o,m);
                 return tasks.push(mission);
@@ -208,7 +208,7 @@ namespace Yttrium
 
             //! call into task
             template <typename FUNCTION> static inline
-            Task::ID Call(Tasks &tasks, const FUNCTION &fn, Param1 p1)
+            TaskID Call(Tasks &tasks, const FUNCTION &fn, Param1 p1)
             {
                 const Mission mission(Functionoid,fn,p1);
                 return tasks.push(mission);
@@ -216,10 +216,10 @@ namespace Yttrium
 
             //! invoke into task
             template <typename OBJECT, typename METHOD> static inline
-            Task::ID Invoke(Tasks &tasks,
-                            OBJECT &o,
-                            METHOD  m,
-                            Param1  p1)
+            TaskID Invoke(Tasks &tasks,
+                          OBJECT &o,
+                          METHOD  m,
+                          Param1  p1)
             {
                 const Mission mission(CxxMethodOf,o,m,p1);
                 return tasks.push(mission);
@@ -258,7 +258,7 @@ namespace Yttrium
 
             //! call into task
             template <typename FUNCTION> static inline
-            Task::ID Call(Tasks &tasks, const FUNCTION &fn, Param1 p1, Param2 p2)
+            TaskID Call(Tasks &tasks, const FUNCTION &fn, Param1 p1, Param2 p2)
             {
                 const Mission mission(Functionoid,fn,p1,p2);
                 return tasks.push(mission);
@@ -266,11 +266,11 @@ namespace Yttrium
 
             //! invoke into task
             template <typename OBJECT, typename METHOD> static inline
-            Task::ID Invoke(Tasks &tasks,
-                            OBJECT &o,
-                            METHOD  m,
-                            Param1  p1,
-                            Param2  p2)
+            TaskID Invoke(Tasks &tasks,
+                          OBJECT &o,
+                          METHOD  m,
+                          Param1  p1,
+                          Param2  p2)
             {
                 const Mission mission(CxxMethodOf,o,m,p1,p2);
                 return tasks.push(mission);
@@ -310,7 +310,7 @@ namespace Yttrium
 
             //! call into task
             template <typename FUNCTION> static inline
-            Task::ID Call(Tasks &tasks, const FUNCTION &fn, Param1 p1, Param2 p2, Param3 p3)
+            TaskID Call(Tasks &tasks, const FUNCTION &fn, Param1 p1, Param2 p2, Param3 p3)
             {
                 const Mission mission(Functionoid,fn,p1,p2,p3);
                 return tasks.push(mission);
@@ -318,12 +318,12 @@ namespace Yttrium
 
             //! invoke into task
             template <typename OBJECT, typename METHOD> static inline
-            Task::ID Invoke(Tasks &tasks,
-                            OBJECT &o,
-                            METHOD  m,
-                            Param1  p1,
-                            Param2  p2,
-                            Param3  p3)
+            TaskID Invoke(Tasks &tasks,
+                          OBJECT &o,
+                          METHOD  m,
+                          Param1  p1,
+                          Param2  p2,
+                          Param3  p3)
             {
                 const Mission mission(CxxMethodOf,o,m,p1,p2,p3);
                 return tasks.push(mission);
@@ -367,7 +367,7 @@ namespace Yttrium
         private:
             Y_DISABLE_ASSIGN(Mission);
         };
-
+#endif
     }
 
 }

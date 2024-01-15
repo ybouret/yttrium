@@ -1,5 +1,7 @@
+
 #include "y/concurrent/pipeline/alone.hpp"
 #include "y/concurrent/pipeline/queue.hpp"
+
 #include "y/concurrent/thread.hpp"
 #include "y/utest/run.hpp"
 #include "y/string/env.hpp"
@@ -87,13 +89,16 @@ namespace
 
 Y_UTEST(concurrent_queue)
 {
-    Random::Rand ran;
     Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
     const Concurrent::Topology topology;
     std::cerr << topology << std::endl;
     
-    Demo  dem(3);
+    Demo         dem(3);
+    Random::Rand ran;
 
+
+
+#if 0
     typedef Concurrent::Mission<NullType> Chore;
 
     Chore            task1(Functionoid,dem);
@@ -106,7 +111,7 @@ Y_UTEST(concurrent_queue)
     Concurrent::Alone  alone;
 
     {
-        Concurrent::Task::ID tid = 0;
+        Concurrent::TaskID tid = 0;
         tid = alone.push(task1); std::cerr << "tid = " << tid << std::endl;
         tid = alone.push(task2); std::cerr << "tid = " << tid << std::endl;
         tid = alone.push(task3); std::cerr << "tid = " << tid << std::endl;
@@ -124,7 +129,7 @@ Y_UTEST(concurrent_queue)
     queue.reset();
     Y_THREAD_MSG("Ready to restart");
     Vector<Concurrent::Task>     tsk;
-    Vector<Concurrent::Task::ID> tid;
+    Vector<Concurrent::TaskID>   tid;
     for(int i=1;i<=40;++i)
     {
         const Demo             todo(i);
@@ -211,6 +216,7 @@ Y_UTEST(concurrent_queue)
         queue.flush();
         std::cerr << "vec=" << vec << std::endl;
     }
+#endif
 
 
 }

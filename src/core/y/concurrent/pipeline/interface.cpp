@@ -19,16 +19,16 @@ namespace Yttrium
 
         void Pipeline:: upgrade() noexcept
         {
-            static const Task::ID j1 = 1;
-            Coerce(tid) = Max<Task::ID>(j1,j1+tid);
+            static const TaskUUID j1 = 1;
+            Coerce(tid) = Max<TaskUUID>(j1,j1+tid);
         }
 
-        Task::ID Pipeline:: push(const Task &task)
+        TaskUUID Pipeline:: load(const Task &task)
         {
             assert(tid>0);
             try {
                 suspend(); // no-throw
-                const Task::ID ans = enqueue(task,tid);
+                const TaskUUID ans = enqueue(task,tid);
                 restart(); // no-throw
                 upgrade(); // no-throw
                 return ans;

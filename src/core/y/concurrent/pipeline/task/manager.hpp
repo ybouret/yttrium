@@ -4,13 +4,16 @@
 #ifndef Y_Concurrent_Task_Manager_Included
 #define Y_Concurrent_Task_Manager_Included 1
 
-#include "y/concurrent/pipeline/task.hpp"
+#include "y/concurrent/pipeline/task/id.hpp"
 
 
 namespace Yttrium
 {
     namespace Concurrent
     {
+
+        class Task;
+
         //______________________________________________________________________
         //
         //
@@ -29,7 +32,7 @@ namespace Yttrium
             // Interface
             //
             //__________________________________________________________________
-            virtual void load(const Task &task);
+            virtual TaskUUID load(const Task &task) = 0;
 
             //__________________________________________________________________
             //

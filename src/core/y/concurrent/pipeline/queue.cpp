@@ -24,25 +24,25 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            //! a Job stores a Task and its ID
+            //! a QJob stores a Task and its ID
             //
             //__________________________________________________________________
-            class Job
+            class QJob
             {
             public:
                 //______________________________________________________________
                 //
                 // Definitions
                 //______________________________________________________________
-                typedef ListOf<Job> List; //!< alias
-                typedef PoolOf<Job> Pool; //!< alias
+                typedef ListOf<QJob> List; //!< alias
+                typedef PoolOf<QJob> Pool; //!< alias
 
                 //______________________________________________________________
                 //
                 // C++
                 //______________________________________________________________
-                inline  Job(const Task &t, const Task::ID u) noexcept : next(0), prev(0), task(t), uuid(u) {} //!< setup
-                inline ~Job() noexcept {} //!< cleanup
+                inline  QJob(const Task &t, const TaskUUID u) noexcept : next(0), prev(0), task(t), uuid(u) {} //!< setup
+                inline ~QJob() noexcept {} //!< cleanup
 
                 //______________________________________________________________
                 //
@@ -50,23 +50,23 @@ namespace Yttrium
                 //______________________________________________________________
 
                 //! helper to cleanup completed job
-                static inline Job *Zombified(Job *active) noexcept
+                static inline QJob *Zombified(QJob *active) noexcept
                 {
                     assert(0!=active); assert(0==active->next); assert(0==active->prev);
-                    return static_cast<Job *>( Memory::OutOfReach::Naught(active) );
+                    return static_cast<QJob *>( Memory::OutOfReach::Naught(active) );
                 }
 
                 //______________________________________________________________
                 //
                 // Members
                 //______________________________________________________________
-                Job           *next; //!< for list
-                Job           *prev; //!< for list
-                Task           task; //!< shared task
-                const Task::ID uuid; //!< task UUID
+                QJob           *next; //!< for list
+                QJob           *prev; //!< for list
+                Task            task; //!< shared task
+                const TaskUUID  uuid; //!< task UUID
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Job);
+                Y_DISABLE_COPY_AND_ASSIGN(QJob);
             };
 
             //__________________________________________________________________
@@ -75,15 +75,15 @@ namespace Yttrium
             //! self-container list of jobs
             //
             //__________________________________________________________________
-            class JList : public Job::List
+            class JList : public QJob::List
             {
             public:
                 //______________________________________________________________
                 //
                 // C++
                 //______________________________________________________________
-                inline explicit JList() noexcept : Job::List(), zpool() {} //!< setup empty
-                inline virtual ~JList() noexcept { crush(); prune(); }     //!< cleanup
+                inline explicit JList() noexcept : QJob::List(), zpool() {} //!< setup empty
+                inline virtual ~JList() noexcept { crush(); prune(); }      //!< cleanup
 
                 //______________________________________________________________
                 //
@@ -95,20 +95,20 @@ namespace Yttrium
 
 
                 //! enqueue a new task
-                inline Task::ID enqueue(const Task    &task,
-                                        const Task::ID uuid)
+                inline TaskUUID enqueue(const Task    &task,
+                                        const TaskUUID uuid)
                 {
-                    return pushTail( new (zpool.size > 0 ? zpool.query() : Object::zacquire<Job>()) Job(task,uuid) )->uuid;
+                    return pushTail( new (zpool.size > 0 ? zpool.query() : Object::zacquire<QJob>()) QJob(task,uuid) )->uuid;
                 }
 
                 //! cleanup and store job in zpool
-                inline void dismiss(Job *active) noexcept { zpool.store( Job::Zombified(active) ); }
+                inline void dismiss(QJob *active) noexcept { zpool.store( QJob::Zombified(active) ); }
 
                 //______________________________________________________________
                 //
                 // Members
                 //______________________________________________________________
-                Job::Pool zpool; //!< pool of zombi jobs
+                QJob::Pool zpool; //!< pool of zombi jobs
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(JList);
@@ -159,7 +159,7 @@ namespace Yttrium
 
                 Worker    *next; //!< for list
                 Worker    *prev; //!< for list
-                Job       *duty; //!< job to do
+                QJob      *duty; //!< job to do
                 Condition  cond; //!< self waiting condition
                 Wire       wire; //!< thread
 
@@ -248,7 +248,7 @@ namespace Yttrium
                 if(busy.size>0) fence.wait(sync);
             }
 
-            Task::Status query(const Task::ID uuid) const noexcept;
+            Task::Status query(const TaskUUID uuid) const noexcept;
 
             //__________________________________________________________________
             //
@@ -431,7 +431,7 @@ namespace Yttrium
             sync.unlock();
         }
 
-        Task::Status Queue:: Code:: query(const Task::ID uuid) const noexcept
+        Task::Status Queue:: Code:: query(const TaskUUID uuid) const noexcept
         {
             Y_LOCK(Coerce(sync));
 
@@ -475,7 +475,7 @@ namespace Yttrium
         {
             std::cerr << " *** sizeof(Code)   = " << sizeof(Code)   << std::endl;
             std::cerr << " *** sizeof(Worker) = " << sizeof(Worker) << std::endl;
-            std::cerr << " *** sizeof(Job)    = " << sizeof(Job)    << std::endl;
+            std::cerr << " *** sizeof(QJob)   = " << sizeof(QJob)    << std::endl;
 
         }
 
@@ -508,7 +508,7 @@ namespace Yttrium
             code->restart();
         }
 
-        Task::ID Queue:: enqueue(const Task &task, const Task::ID uuid)
+        TaskUUID Queue:: enqueue(const Task &task, const TaskUUID uuid)
         {
             // assuming LOCKED mutex
             assert(0!=code);
@@ -522,7 +522,7 @@ namespace Yttrium
             code->flush();
         }
 
-        Task::Status Queue:: query(const Task::ID uuid)  const noexcept
+        Task::Status Queue:: query(const TaskUUID uuid)  const noexcept
         {
             assert(0!=code);
             return code->query(uuid);

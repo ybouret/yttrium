@@ -18,7 +18,7 @@ namespace Yttrium
         {
         }
 
-        Task::Status Alone:: query(const Task::ID)    const noexcept
+        Task::Status Alone:: query(const TaskUUID)    const noexcept
         {
             return Task::Success;
         }
@@ -42,7 +42,7 @@ namespace Yttrium
             return self;
         }
 
-        
+
         void Alone:: suspend() noexcept
         {
             mine.lock();
@@ -54,7 +54,7 @@ namespace Yttrium
         }
 
 
-        Task::ID Alone:: enqueue(const Task &task, const Task::ID tid)
+        TaskUUID Alone:: enqueue(const Task &task, const TaskUUID tid)
         {
             Coerce(task).process(self);
             return tid;
@@ -62,7 +62,7 @@ namespace Yttrium
 
         void Alone:: flush() noexcept
         {
-            
+
         }
 
 

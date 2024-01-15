@@ -3,6 +3,7 @@
 #ifndef Y_Concurrent_Pipeline_Included
 #define Y_Concurrent_Pipeline_Included 1
 
+#include "y/concurrent/pipeline/task/manager.hpp"
 #include "y/concurrent/pipeline/task.hpp"
 #include "y/concurrent/thread/contexts.hpp"
 #include "y/ptr/arc.hpp"
@@ -20,7 +21,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Pipeline : public ThreadContexts, public Tasks
+        class Pipeline : public ThreadContexts, public TaskManager
         {
         public:
             //__________________________________________________________________
@@ -29,9 +30,9 @@ namespace Yttrium
             // Interface
             //
             //__________________________________________________________________
-            virtual void         flush()                     noexcept = 0; //!< wait for all jobs to complete
-            virtual Task::Status query(const Task::ID) const noexcept = 0; //!< query task status
-          
+            virtual void         flush()                    noexcept = 0; //!< wait for all jobs to complete
+            virtual Task::Status query(const TaskUUID) const noexcept = 0; //!< query task status
+
             //__________________________________________________________________
             //
             //
@@ -40,7 +41,7 @@ namespace Yttrium
             //__________________________________________________________________
             void                 reset()                     noexcept;     //!< reset internal tid
             virtual Lockable    &sync()                      noexcept = 0; //!< get synchronization lock
-            virtual Task::ID     push(const Task &task);                   //!< push ONE task, retrieve its ID
+            virtual TaskUUID     load(const Task &task);                   //!< push ONE task, retrieve its ID
 
             //__________________________________________________________________
             //
@@ -59,7 +60,7 @@ namespace Yttrium
                     suspend();
                     while(ntsk-- > 0)
                     {
-                        const Task::ID tmp = enqueue(*curr,tid);
+                        const TaskUUID tmp = enqueue(*curr,tid);
                         tids.pushTail(tmp);
                         upgrade();
                         ++curr;
@@ -93,11 +94,11 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pipeline);
-            const Task::ID   tid;                                       //!< auto-incremented counter
+            const TaskUUID   tid;                                       //!< auto-incremented counter
             void             upgrade() noexcept;                        //!< tid++, controlled
             virtual void     suspend() noexcept                    = 0; //!< suspend mechanism
             virtual void     restart() noexcept                    = 0; //!< restart mechanism
-            virtual Task::ID enqueue(const Task &, const Task::ID) = 0; //!< enqueue a single task in a LOCKED pipeline
+            virtual TaskUUID enqueue(const Task &, const TaskUUID) = 0; //!< enqueue a single task in a LOCKED pipeline
         };
 
         //______________________________________________________________________
