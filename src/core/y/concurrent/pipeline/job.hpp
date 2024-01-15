@@ -195,6 +195,128 @@ namespace Yttrium
                 return tasks.load(job);
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // Wrappers with three arguments
+            //
+            //__________________________________________________________________
+
+            //! create from fn(context,p1,p2,p3)
+            template <typename FUNCTION>
+            inline explicit Job(const Functionoid_ &,
+                                const FUNCTION     &fn,
+                                Param1              p1,
+                                Param2              p2,
+                                Param3              p3) :
+            Task( new Callback<FUNCTION,TLIST>(fn,p1,p2,p3) )
+            {
+
+            }
+
+
+            //! create from host.meth(context,p1)
+            template <typename OBJECT, typename METHOD> inline
+            explicit Job(const CxxMethodOf_ &,
+                         OBJECT             &host,
+                         METHOD              meth,
+                         Param1              p1,
+                         Param2              p2,
+                         Param3              p3) :
+            Task( new Command<OBJECT,METHOD,TLIST>(host,meth,p1,p2,p3) )
+            {
+            }
+
+
+            //! call into task
+            template <typename FUNCTION> static inline
+            TaskUUID Launch(TaskManager    &tasks,
+                            const FUNCTION &fn,
+                            Param1          p1,
+                            Param2          p2,
+                            Param3          p3)
+            {
+                const Job job(Functionoid,fn,p1,p2,p3);
+                return tasks.load(job);
+            }
+
+
+            //! invoke into task
+            template <typename OBJECT, typename METHOD> static inline
+            TaskUUID Invoke(TaskManager &tasks,
+                            OBJECT      &host,
+                            METHOD       meth,
+                            Param1       p1,
+                            Param2       p2,
+                            Param3       p3)
+            {
+                const Job job(CxxMethodOf,host,meth,p1,p2,p3);
+                return tasks.load(job);
+            }
+
+            //__________________________________________________________________
+            //
+            //
+            // Wrappers with four arguments
+            //
+            //__________________________________________________________________
+
+            //! create from fn(context,p1,p2,p3)
+            template <typename FUNCTION>
+            inline explicit Job(const Functionoid_ &,
+                                const FUNCTION     &fn,
+                                Param1              p1,
+                                Param2              p2,
+                                Param3              p3,
+                                Param4              p4) :
+            Task( new Callback<FUNCTION,TLIST>(fn,p1,p2,p3,p4) )
+            {
+
+            }
+
+
+            //! create from host.meth(context,p1)
+            template <typename OBJECT, typename METHOD> inline
+            explicit Job(const CxxMethodOf_ &,
+                         OBJECT             &host,
+                         METHOD              meth,
+                         Param1              p1,
+                         Param2              p2,
+                         Param3              p3,
+                         Param4              p4) :
+            Task( new Command<OBJECT,METHOD,TLIST>(host,meth,p1,p2,p3,p4) )
+            {
+            }
+
+
+            //! call into task
+            template <typename FUNCTION> static inline
+            TaskUUID Launch(TaskManager    &tasks,
+                            const FUNCTION &fn,
+                            Param1          p1,
+                            Param2          p2,
+                            Param3          p3,
+                            Param4          p4)
+            {
+                const Job job(Functionoid,fn,p1,p2,p3,p4);
+                return tasks.load(job);
+            }
+
+
+            //! invoke into task
+            template <typename OBJECT, typename METHOD> static inline
+            TaskUUID Invoke(TaskManager &tasks,
+                            OBJECT      &host,
+                            METHOD       meth,
+                            Param1       p1,
+                            Param2       p2,
+                            Param3       p3,
+                            Param4       p4)
+            {
+                const Job job(CxxMethodOf,host,meth,p1,p2,p3,p4);
+                return tasks.load(job);
+            }
+
         private:
             Y_DISABLE_ASSIGN(Job);
         };
