@@ -4,7 +4,7 @@
 #define Y_Concurrent_Pipeline_Included 1
 
 #include "y/concurrent/pipeline/task/manager.hpp"
-#include "y/concurrent/pipeline/task.hpp"
+#include "y/concurrent/pipeline/task/flag.hpp"
 #include "y/concurrent/thread/contexts.hpp"
 #include "y/ptr/arc.hpp"
 
@@ -30,8 +30,8 @@ namespace Yttrium
             // Interface
             //
             //__________________________________________________________________
-            virtual void         flush()                    noexcept = 0; //!< wait for all jobs to complete
-            virtual Task::Status query(const TaskUUID) const noexcept = 0; //!< query task status
+            virtual void     flush()                     noexcept = 0; //!< wait for all jobs to complete
+            virtual TaskFlag query(const TaskUUID) const noexcept = 0; //!< query task status
 
             //__________________________________________________________________
             //

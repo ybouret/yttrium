@@ -50,7 +50,7 @@ namespace Yttrium
             virtual Lockable    &sync()                         noexcept; //!< mine
             virtual ConstType &  operator[](const size_t) const noexcept; //!< self
             virtual void         flush()                        noexcept; //!< do nothing...
-            virtual Task::Status query(const TaskUUID)    const noexcept; //!< always success
+            virtual TaskFlag     query(const TaskUUID)    const noexcept; //!< always success
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alone);

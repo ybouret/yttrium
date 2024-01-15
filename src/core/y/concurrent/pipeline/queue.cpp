@@ -1,4 +1,6 @@
 #include "y/concurrent/pipeline/queue.hpp"
+#include "y/concurrent/pipeline/task.hpp"
+
 #include "y/concurrent/condition.hpp"
 #include "y/concurrent/wire.hpp"
 #include "y/concurrent/thread/handle-zip.hpp"
@@ -248,7 +250,7 @@ namespace Yttrium
                 if(busy.size>0) fence.wait(sync);
             }
 
-            Task::Status query(const TaskUUID uuid) const noexcept;
+            TaskFlag query(const TaskUUID uuid) const noexcept;
 
             //__________________________________________________________________
             //
@@ -431,23 +433,23 @@ namespace Yttrium
             sync.unlock();
         }
 
-        Task::Status Queue:: Code:: query(const TaskUUID uuid) const noexcept
+        TaskFlag Queue:: Code:: query(const TaskUUID uuid) const noexcept
         {
             Y_LOCK(Coerce(sync));
 
             for(const JNode *node=jobs.head;node;node=node->next)
             {
-                if(uuid==node->uuid) return Task::Pending;
+                if(uuid==node->uuid) return TaskPending;
             }
 
             for(const Worker *node=busy.head;node;node=node->next)
             {
                 assert(0!=node->duty);
-                if(uuid==node->duty->uuid) return Task::Running;
+                if(uuid==node->duty->uuid) return TaskRunning;
             }
 
 
-            return Task::Success;
+            return TaskSuccess;
         }
 
 
@@ -522,7 +524,7 @@ namespace Yttrium
             code->flush();
         }
 
-        Task::Status Queue:: query(const TaskUUID uuid)  const noexcept
+        TaskFlag Queue:: query(const TaskUUID uuid)  const noexcept
         {
             assert(0!=code);
             return code->query(uuid);

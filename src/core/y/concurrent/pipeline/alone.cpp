@@ -1,7 +1,5 @@
-
-
 #include "y/concurrent/pipeline/alone.hpp"
-#include "y/ptr/auto.hpp"
+#include "y/concurrent/pipeline/task.hpp"
 
 namespace Yttrium
 {
@@ -18,9 +16,9 @@ namespace Yttrium
         {
         }
 
-        Task::Status Alone:: query(const TaskUUID)    const noexcept
+        TaskFlag Alone:: query(const TaskUUID)    const noexcept
         {
-            return Task::Success;
+            return TaskSuccess;
         }
 
         const char * const Alone::CallSign = "Concurrent::Alone";

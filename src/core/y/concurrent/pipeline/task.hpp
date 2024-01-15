@@ -5,7 +5,7 @@
 
 #include "y/concurrent/pipeline/task/callback.hpp"
 #include "y/concurrent/pipeline/task/command.hpp"
-#include "y/concurrent/pipeline/task/id.hpp"
+#include "y/concurrent/pipeline/task/uuid.hpp"
 
 
 namespace Yttrium
@@ -25,21 +25,6 @@ namespace Yttrium
         class Task
         {
         public:
-            //__________________________________________________________________
-            //
-            //
-            // Definitions
-            //
-            //__________________________________________________________________
-
-            //! status of the task
-            enum Status
-            {
-                Success, //!< done
-                Pending, //!< pending
-                Running  //!< running
-            };
-
             //__________________________________________________________________
             //
             //

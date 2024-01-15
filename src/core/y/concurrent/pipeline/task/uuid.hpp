@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_Concurrent_Task_ID_Included
-#define Y_Concurrent_Task_ID_Included 1
+#ifndef Y_Concurrent_Task_UUID_Included
+#define Y_Concurrent_Task_UUID_Included 1
 
 #include "y/type/ints.hpp"
 

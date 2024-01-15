@@ -50,7 +50,7 @@ namespace Yttrium
             virtual Lockable    &sync()                         noexcept; //!< shared mutex
             virtual ConstType &  operator[](const size_t) const noexcept; //!< self
             virtual void         flush()                        noexcept; //!< wait for jobs to complete.
-            Task::Status         query(const TaskUUID)    const noexcept; //!< probe task id
+            virtual TaskFlag     query(const TaskUUID)    const noexcept; //!< probe task id
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Queue);

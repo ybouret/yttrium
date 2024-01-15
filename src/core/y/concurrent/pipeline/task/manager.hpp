@@ -4,7 +4,7 @@
 #ifndef Y_Concurrent_Task_Manager_Included
 #define Y_Concurrent_Task_Manager_Included 1
 
-#include "y/concurrent/pipeline/task/id.hpp"
+#include "y/concurrent/pipeline/task/uuid.hpp"
 
 
 namespace Yttrium
