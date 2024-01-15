@@ -17,26 +17,34 @@
 using namespace Yttrium;
 
 
-class Computing
+class MyEngine
 {
 public:
 
-    explicit Computing() {}
+    explicit MyEngine() {}
 
-    virtual ~Computing() noexcept
+    virtual ~MyEngine() noexcept
     {
 
     }
 
+    void Proc0(const Concurrent::ThreadContext &ctx)
+    {
+        {
+            Y_LOCK(ctx.sync);
+            (std::cerr << "Proc0(" << ctx.name << "):" << std::endl).flush();
+        }
+    }
 
 private:
-    Y_DISABLE_COPY_AND_ASSIGN(Computing);
+    Y_DISABLE_COPY_AND_ASSIGN(MyEngine);
 };
 
 namespace Yttrium
 {
     namespace Concurrent
     {
+
 
         template <typename ENGINE>
         class Compute : public Resource0D, public ENGINE
@@ -67,11 +75,83 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Compute);
         };
 
-        
+        template <typename ENGINE, typename METHOD, typename TLIST>
+        class Mission : public Runnable, public Binder<TLIST>
+        {
+        public:
+            //__________________________________________________________________
+            //
+            //
+            // Definition
+            //
+            //__________________________________________________________________
+            Y_BINDER_ECHO(TLIST); //!< aliases
+            Y_BINDER_ARGS(TLIST); //!< aliases
+            typedef Compute<ENGINE>           ComputeEngine;
+            typedef Writable< ComputeEngine > ComputeEngines;
+
+            inline virtual ~Mission() noexcept {}
+
+            inline explicit Mission(ComputeEngines &kernel,
+                                   METHOD          method) noexcept :
+            Runnable(), 
+            Binder<TLIST>(),
+            core(kernel),
+            meth(method)
+            {
+            }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Mission);
+            ComputeEngines &core;
+            METHOD          meth;
+
+            inline virtual void run(const ThreadContext &ctx)
+            {
+                static const ArgsType args = {};
+                ComputeEngine        &host = core[ctx.indx];
+                call(host,args);
+            }
+
+            inline void call(ComputeEngine &host, const Int2Type<0> &) { (host.*meth)(host);                    }
+#if 0
+            inline void call(const ThreadContext &ctx, const Int2Type<1> &) { (host.*meth)(ctx,arg1);                }
+            inline void call(const ThreadContext &ctx, const Int2Type<2> &) { (host.*meth)(ctx,arg1,arg2);           }
+            inline void call(const ThreadContext &ctx, const Int2Type<3> &) { (host.*meth)(ctx,arg1,arg2,arg3);      }
+            inline void call(const ThreadContext &ctx, const Int2Type<4> &) { (host.*meth)(ctx,arg1,arg2,arg3,arg4); }
+#endif
+
+        };
+
+        template <typename ENGINE,typename TLIST>
+        class Invoke : public Task
+        {
+        public:
+            typedef Compute<ENGINE>              ComputeEngine;
+            typedef Writable< ComputeEngine >    ComputeEngines;
+
+            virtual ~Invoke() noexcept {}
+
+            template <typename METHOD>
+            inline explicit Invoke(ComputeEngines &kernel,
+                                   METHOD          method) :
+            Task( new Mission<ENGINE,METHOD,TLIST>(kernel,method) )
+            {
+            }
+
+
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Invoke);
+        };
+
 
 
         template <typename ENGINE>
-        class Dispatcher : public Resources< Compute<ENGINE> >
+        class Dispatcher : 
+        public Resources< Compute<ENGINE> >,
+        public TaskManager
         {
         public:
             typedef Compute<ENGINE> ComputeEngine;
@@ -88,9 +168,10 @@ namespace Yttrium
                 this->quit();
             }
 
-            void load(const Task &task)
+
+            virtual TaskUUID load(const Task &task)
             {
-                pipeline->load(task);
+                return pipeline->load(task);
             }
 
 
@@ -112,8 +193,11 @@ Y_UTEST(concurrent_dispatcher)
     Concurrent::SharedPipeline  alone = new Concurrent::Alone();
     Concurrent::SharedPipeline  queue = new Concurrent::Queue(topology);
 
-    Concurrent::Dispatcher<Computing> ST(alone);
-    Concurrent::Dispatcher<Computing> MT(queue);
+    Concurrent::Dispatcher<MyEngine> ST(alone);
+    Concurrent::Dispatcher<MyEngine> MT(queue);
+
+    Concurrent::Invoke<MyEngine, NullType> task0(ST, & MyEngine::Proc0 );
+    ST.load(task0);
 
 }
 Y_UDONE()
