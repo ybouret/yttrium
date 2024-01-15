@@ -32,6 +32,8 @@ namespace Yttrium
             // Interface
             //
             //__________________________________________________________________
+
+            //! load a new task into manager
             virtual TaskUUID load(const Task &task) = 0;
 
             //__________________________________________________________________

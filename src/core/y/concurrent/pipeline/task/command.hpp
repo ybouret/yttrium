@@ -74,11 +74,11 @@ namespace Yttrium
                 call(ctx,args);
             }
 
-            inline void call(const ThreadContext &ctx, const Int2Type<0> &) { (host.*meth)(ctx);                }
-            inline void call(const ThreadContext &ctx, const Int2Type<1> &) { (host.*meth)(ctx,arg1);           }
-            inline void call(const ThreadContext &ctx, const Int2Type<2> &) { (host.*meth)(ctx,arg1,arg2);      }
-            inline void call(const ThreadContext &ctx, const Int2Type<3> &) { (host.*meth)(ctx,arg1,arg2,arg3); }
-            inline void call(const ThreadContext &ctx, const Int2Type<4> &) { (host.*meth)(ctx,arg1,arg2,arg4); }
+            inline void call(const ThreadContext &ctx, const Int2Type<0> &) { (host.*meth)(ctx);                     }
+            inline void call(const ThreadContext &ctx, const Int2Type<1> &) { (host.*meth)(ctx,arg1);                }
+            inline void call(const ThreadContext &ctx, const Int2Type<2> &) { (host.*meth)(ctx,arg1,arg2);           }
+            inline void call(const ThreadContext &ctx, const Int2Type<3> &) { (host.*meth)(ctx,arg1,arg2,arg3);      }
+            inline void call(const ThreadContext &ctx, const Int2Type<4> &) { (host.*meth)(ctx,arg1,arg2,arg3,arg4); }
 
             OBJECT &host;
             METHOD  meth;
