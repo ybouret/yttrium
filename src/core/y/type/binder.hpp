@@ -52,7 +52,7 @@ using Binder<THE_LIST>::arg4
     //__________________________________________________________________________
     //
     //
-    //! Binding types
+    //! Binding types, using Functor approahc
     //
     //__________________________________________________________________________
     template <typename TLIST>
@@ -80,25 +80,30 @@ using Binder<THE_LIST>::arg4
         //______________________________________________________________________
 
         //! empty/default binder
-        inline explicit Binder() : arg1(), arg2(), arg3(), arg4() {}
+        inline explicit Binder() : 
+        arg1(), arg2(), arg3(), arg4() {}
 
         //! setup1
-        inline explicit Binder(Param1 p1) : arg1(p1), arg2(), arg3(), arg4() {}
+        inline explicit Binder(Param1 p1) : 
+        arg1(p1), arg2(), arg3(), arg4() {}
 
         //! setup2
         inline explicit Binder(Param1 p1,
-                               Param2 p2) : arg1(p1), arg2(p2), arg3(), arg4() {}
+                               Param2 p2) :
+        arg1(p1), arg2(p2), arg3(), arg4() {}
 
         //! setup3
         inline explicit Binder(Param1 p1,
                                Param2 p2,
-                               Param3 p3) : arg1(p1), arg2(p2), arg3(p3), arg4() {}
+                               Param3 p3) : 
+        arg1(p1), arg2(p2), arg3(p3), arg4() {}
 
         //! setup4
         inline explicit Binder(Param1 p1,
                                Param2 p2,
                                Param3 p3,
-                               Param4 p4) : arg1(p1), arg2(p2), arg3(p3), arg4(p4) {}
+                               Param4 p4) : 
+        arg1(p1), arg2(p2), arg3(p3), arg4(p4) {}
 
         //! cleanup
         inline virtual ~Binder() noexcept {}
