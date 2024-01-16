@@ -4,6 +4,7 @@
 #define Y_JSON_Parser_Included 1
 
 #include "y/singleton.hpp"
+#include "y/jive/module.hpp"
 
 namespace Yttrium
 {
@@ -37,6 +38,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             void renderGraphViz() const; //!< render parser's architecture
+            void run(Jive::Module *);
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);

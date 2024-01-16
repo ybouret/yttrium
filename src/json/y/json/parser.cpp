@@ -87,6 +87,12 @@ namespace Yttrium
                 {
                 }
 
+                //XNode * operator()(Jive::Module *);
+
+                void run(Jive::Module *m)
+                {
+                    AutoPtr<XNode> xnode = (*this)(m);
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Code);
@@ -112,6 +118,12 @@ namespace Yttrium
         {
             assert(0!=code);
             code->renderGraphViz();
+        }
+
+        void Parser:: run(Jive::Module *m)
+        {
+            assert(0!=code);
+            code->run(m);
         }
 
         
