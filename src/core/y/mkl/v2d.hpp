@@ -5,6 +5,7 @@
 #define Y_MKL_V2D_Included 1
 
 #include "y/mkl/api.hpp"
+#include "y/type/utils.hpp"
 #include <iostream>
 #include <cmath>
 
@@ -135,6 +136,15 @@ namespace Yttrium
             return MKL::Hypotenuse(x,y);
         }
 
+        inline static V2D MinOf(const V2D &lhs, const V2D &rhs) noexcept
+        {
+            return V2D(Min(lhs.x,rhs.x),Min(lhs.y,rhs.y));
+        }
+
+        inline static V2D MaxOf(const V2D &lhs, const V2D &rhs) noexcept
+        {
+            return V2D(Max(lhs.x,rhs.x),Max(lhs.y,rhs.y));
+        }
 
         //______________________________________________________________________
         //
