@@ -28,12 +28,7 @@ We change the coordinate to $u_a=0$, $u_c=1$ and
 	\right.
 \end{equation}
 
- 
-\section{$\beta\leq0$ or $\beta\geq1$}
-
-We probe $\frac{x_a+x_c}2$ and take the best triplet.
-
-\section{$0<\beta<1$}
+\section{Parabola}
 We define the reduced polynomial
 \begin{equation}
 	Q(u) =  \mu_a (1-u) + \mu_c u - \gamma u(1-u)
@@ -52,17 +47,25 @@ We define the reduced polynomial
 \end{equation}
 
 \begin{equation}
+\boxed{
 	u_\star = \dfrac{1}{2} + \dfrac{\mu_a-\mu_c}{2\gamma} = \dfrac{1}{2} + \dfrac{\beta(1-\beta)}{2} 
 	\dfrac{\mu_a-\mu_c}{(1-\beta)\mu_a + \beta \mu_c}
+	}
 \end{equation}
 
 \begin{equation}
 \begin{array}{lcl}
+\beta \leq 0           & \implies & u_\star = \dfrac{1}{2}\\
+\\
+\beta \geq 1           & \implies & u_\star = \dfrac{1}{2}\\
+\\
 \mu_a = 0, \;\mu_c = 0 & \implies & u_\star = \dfrac{1}{2}\\
 \\
 \mu_a > 0, \;\mu_c = 0 & \implies & u_\star = \dfrac{1}{2} + \dfrac{\beta}{2} \\
 \\
 \mu_a = 0, \;\mu_c > 0 & \implies & u_\star = \dfrac{1}{2} - \dfrac{1-\beta}{2} = \dfrac{\beta}{2} \\
+\\
+\mu_a \simeq \mu_c & \implies & u_\star = \dfrac{1}{2} \\
 \end{array}
 \end{equation}
 
