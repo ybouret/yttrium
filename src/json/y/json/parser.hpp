@@ -16,6 +16,8 @@ namespace Yttrium
             static const char * const      CallSign;
             static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 13;
 
+            void renderGraphViz() const;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);
             friend class Singleton<Parser>;
