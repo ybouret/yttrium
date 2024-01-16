@@ -5,6 +5,7 @@
 
 #include "y/singleton.hpp"
 #include "y/jive/module.hpp"
+#include "y/json/value.hpp"
 
 namespace Yttrium
 {
