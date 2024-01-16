@@ -136,11 +136,13 @@ namespace Yttrium
             return MKL::Hypotenuse(x,y);
         }
 
+        //! lower point
         inline static V2D MinOf(const V2D &lhs, const V2D &rhs) noexcept
         {
             return V2D(Min(lhs.x,rhs.x),Min(lhs.y,rhs.y));
         }
 
+        //! upper point
         inline static V2D MaxOf(const V2D &lhs, const V2D &rhs) noexcept
         {
             return V2D(Max(lhs.x,rhs.x),Max(lhs.y,rhs.y));
