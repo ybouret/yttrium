@@ -12,7 +12,10 @@ set(HERE ${CMAKE_CURRENT_SOURCE_DIR})
 message( STATUS "HERE='${HERE}'")
 
 set(CMAKE_INSTALL_PREFIX "${HERE}/../sdk")
-INSTALL(FILES ../etc/y.cmake DESTINATION etc)
+INSTALL(FILES 
+../etc/y.cmake 
+../etc/fltk.cmake
+DESTINATION etc)
 
 ################################################################################
 ##
