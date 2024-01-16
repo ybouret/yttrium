@@ -5,6 +5,7 @@
 
 #include "y/string.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/ptr/ark.hpp"
 
 namespace Yttrium
 {
@@ -55,12 +56,27 @@ namespace Yttrium
 
         };
 
-        class Pair
+        class Pair : public Yttrium::Object, public Counted
         {
         public:
+            virtual ~Pair() noexcept;
+            explicit Pair(const String &, const Value &);
+
+            const String & key() const noexcept;
+
+            const String name;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pair);
+        };
+
+        typedef ArkPtr<String,Pair> SharedPair;
+        
+        class Object
+        {
+        public:
+
+
         };
 
     }
