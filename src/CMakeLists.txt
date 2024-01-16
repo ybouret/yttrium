@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.0)
 project(yttrium)
 
 ################################################################################
@@ -5,7 +6,6 @@ project(yttrium)
 ## global settings
 ##
 ################################################################################
-cmake_minimum_required(VERSION 3.0)
 include(../etc/y.cmake)
 
 set(HERE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -83,6 +83,7 @@ add_subdirectory(jive)
 add_subdirectory(mkl)
 add_subdirectory(lua++)
 add_subdirectory(chem)
+add_subdirectory(fltk)
 
 ################################################################################
 ##
