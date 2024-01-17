@@ -6,6 +6,7 @@
 #include "y/stream/libc/output.hpp"
 
 #include "y/sort/heap.hpp"
+#include "y/comparison.hpp"
 
 
 namespace Yttrium

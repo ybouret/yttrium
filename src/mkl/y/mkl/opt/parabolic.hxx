@@ -99,6 +99,8 @@ namespace {
         upgrade(Clamp(x.a,half*(x.a+x.c),x.c),xx,ff,nn,F);
     }
 
+
+
 }
 
 template <>
@@ -141,110 +143,26 @@ void Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
             assert(mu_a>zero || mu_c>zero);
             const real_t beta         = Clamp(zero,(x.b-x.a)/width,one);
             const real_t oneMinusBeta = Clamp(zero,one-beta,one);
-            const real_t delta        = beta*(one-beta) * ((mu_a-mu_c)/(oneMinusBeta*mu_a+beta * mu_c) );
+            const real_t delta        = beta*(oneMinusBeta) * ((mu_a-mu_c)/(oneMinusBeta*mu_a+beta * mu_c) );
             const real_t deltaPlusOne = delta+one;
-            upgrade(half*deltaPlusOne,xx,ff,nn,F);
-            //switch( Sign::Of(mu_a,mu_c))
+            upgrade( Clamp(x.a,x.a+width*(half*deltaPlusOne),x.c),xx,ff,nn,F);
+            switch( Sign::Of(mu_a,mu_c))
+            {
+                case __Zero__: break;
+
+                case Negative: assert(mu_a<mu_c);
+                    upgrade( Clamp(x.a,x.a+width*(one-delta),x.c),xx,ff,nn,F);
+                    break;
+
+                case Positive: assert(mu_c<mu_a);
+                    upgrade( Clamp(x.a,x.a+width*delta,x.c),xx,ff,nn,F);
+                    break;
+            }
         }
 
-
-    }
-    {
-        Libc::OutputFile fp("para.dat");
-        for(size_t i=0;i<nn;++i)
-        {
-            fp("%g %g\n", double(xx[i]), double(ff[i]));
-        }
     }
 
-    std::cerr << "Exit..." << std::endl;
-    exit(1);
-
-#if 0
-
+    HeapSort::Tableau(xx,nn,Comparison::Increasing<real_t>,ff);
+    chooseTriplets(x,f, xx, ff, nn);
     
-    if(x.b<=x.a||x.c<=x.b)
-    {
-        //----------------------------------------------------------------------
-        //
-        // value on one side: probe middle
-        //
-        //----------------------------------------------------------------------
-        append(Clamp(x.a,half*(x.a+x.c),x.c),xx,ff,F);
-    }
-    else
-    {
-        const real_t width = x.c-x.a;
-        const real_t beta  = Clamp(zero,(x.b-x.a)/width,one);
-        const real_t mu_a  = Fabs<real_t>::Of(f.a - f.b);
-        const real_t mu_c  = Fabs<real_t>::Of(f.c - f.b);
-        real_t       uopt  = half;
-        bool         used  = false;
-        if(mu_a<=zero)
-        {
-            //------------------------------------------------------------------
-            // mu_a = 0
-            //------------------------------------------------------------------
-            if(mu_c<=zero)
-            {
-                used = true;
-                // mu_a=0, mu_c=0
-                if(beta<half)
-                {
-                    // probe between b and c
-                    append(Clamp(x.b,half*(x.b+x.c),x.c),xx,ff,F);
-                }
-                else
-                {
-                    // probe between a and b
-                    append(Clamp(x.a,half*(x.a+x.b),x.b),xx,ff,F);
-                }
-            }
-            else
-            {
-                // mu_a=0, mu_c>0
-                uopt = half - (one-beta)*half;
-            }
-        }
-        else
-        {
-            //------------------------------------------------------------------
-            // mu_a > 0
-            //------------------------------------------------------------------
-            if(mu_c<=zero)
-            {
-                // mu_a>0, mu_c=0
-                uopt = half + half * beta;
-            }
-            else
-            {
-                // mu_a>0, mu_c>0
-                const real_t omb  = one - beta;
-                uopt = half + half * beta * omb * (mu_a-mu_c)/(omb*mu_a+beta*mu_c);
-            }
-        }
-
-        //----------------------------------------------------------------------
-        // append value if not used
-        //----------------------------------------------------------------------
-        if(!used)
-            append(Clamp(x.a,x.a+uopt*width,x.c),xx,ff,F);
-
-        //----------------------------------------------------------------------
-        // create local evaluation
-        //----------------------------------------------------------------------
-        {
-            real_t * const _x = Memory::OutOfReach::Self(xx)-1;
-            real_t * const _f = Memory::OutOfReach::Self(ff)-1;
-            NetworkSort::Algo<4>::Increasing(_x, _f);
-        }
-
-        //----------------------------------------------------------------------
-        // and choose the final triplets
-        //----------------------------------------------------------------------
-        chooseTriplets(x,f,xx,ff,4);
-
-    }
-#endif
-
 }
