@@ -103,6 +103,10 @@ namespace Yttrium
                 
             };
 
+#define Y_Jive_OnTerminal(CLASS,NAME) forTerminal( #NAME, *this, & CLASS:: on##NAME )
+#define Y_Jive_OnInternal(CLASS,NAME) forInternal( #NAME, *this, & CLASS:: on##NAME )
+
+
         }
 
     }

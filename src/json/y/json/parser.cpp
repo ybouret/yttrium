@@ -5,6 +5,7 @@
 #include "y/jive/lexical/plugin/jstring.hpp"
 #include "y/jive/syntax/translator.hpp"
 #include "y/text/ascii/convert.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -22,7 +23,8 @@ namespace Yttrium
 
                 inline explicit Code() :
                 Jive::Parser(JSON::Parser::CallSign),
-                values()
+                values(),
+                pairs()
                 {
                     setupParser();
                     setupLinker();
@@ -36,6 +38,7 @@ namespace Yttrium
                 {
                     std::cerr << CallSign << " initialize..." << std::endl;
                     values.free();
+                    pairs.free();
                 }
 
                 void run(Jive::Module *m)
@@ -45,12 +48,12 @@ namespace Yttrium
 
                     //translate(*ast,Yttrium::Jive::Syntax::Permissive);
                     translate(*ast,Yttrium::Jive::Syntax::Restricted);
-
                 }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Code);
-                Vector<Value> values;
+                Vector<Value>      values;
+                Vector<SharedPair> pairs;
 
                 void setupParser();
                 void setupLinker();
@@ -70,19 +73,19 @@ namespace Yttrium
                     newValue().swapWith(v);
                 }
 
-                void onNull(const Jive::Token &)
+                void onnull(const Jive::Token &)
                 {
                     const Value v;
                     values << v;
                 }
 
-                void onTrue(const Jive::Token &)
+                void ontrue(const Jive::Token &)
                 {
                     const Value v(true);
                     values << v;
                 }
 
-                void onFalse(const Jive::Token &)
+                void onfalse(const Jive::Token &)
                 {
                     const Value v(false);
                     values << v;
@@ -90,15 +93,13 @@ namespace Yttrium
 
                 void onString(const Jive::Token &t)
                 {
-                    Jive::Syntax::Analyzer::onTerminal("String", t);
                     const String s = t.toString(1,1);
                     Value  v(s);
                     newValue().swapWith(v);
                 }
 
-                void onEmptyArray(const size_t n)
+                void onEmptyArray(const size_t)
                 {
-                    Jive::Syntax::Analyzer::onInternal("EmptyArray",n);
                     Value v(AsArray);
                     newValue().swapWith(v);
                 }
@@ -106,7 +107,6 @@ namespace Yttrium
 
                 void onHeavyArray(const size_t n)
                 {
-                    Jive::Syntax::Analyzer::onInternal("HeavyArray",n);
                     Value v(AsArray);
                     Array &arr = v.as<Array>();
                     arr.reserve(n);
@@ -121,7 +121,36 @@ namespace Yttrium
                     newValue().swapWith(v);
                 }
 
+                void onEmptyObject(const size_t )
+                {
+                    Value v(AsObject);
+                    newValue().swapWith(v);
+                }
 
+                void onPair(const size_t n)
+                {
+                    std::cerr << "onPair/" << n << std::endl;
+                    std::cerr << "values: " << values << std::endl;
+                    const size_t  m = values.size();
+                    SharedPair    p = new Pair(values[m-1].as<String>());
+                    p->v.swapWith(values.tail());
+                    values.popTail();
+                    values.popTail();
+                    pairs << p;
+                }
+
+                void onHeavyObject(const size_t n)
+                {
+                    Value        v(AsObject);
+                    JSON::Object &o = v.as<JSON::Object>();
+                    const size_t  m = pairs.size();
+                    for(size_t i=m+1-n;i<=m;++i)
+                    {
+                        const SharedPair &p = pairs[i];
+                        if(!o.insert(p))
+                            throw Specific::Exception("JSON::Object","multiple entry '%s'", p->k.c_str());
+                    }
+                }
 
             };
 
@@ -193,15 +222,17 @@ namespace Yttrium
 
             void Code:: setupLinker()
             {
-                forTerminal("Number",   *this, &Code:: onNumber);
-                forTerminal("null",     *this, &Code:: onNull);
-                forTerminal("true",     *this, &Code:: onTrue);
-                forTerminal("false",    *this, &Code:: onFalse);
-                forTerminal("String",   *this, &Code:: onString);
+                Y_Jive_OnTerminal(Code,Number);
+                Y_Jive_OnTerminal(Code,null);
+                Y_Jive_OnTerminal(Code,true);
+                Y_Jive_OnTerminal(Code,false);
+                Y_Jive_OnTerminal(Code,String);
 
-                forInternal("EmptyArray", *this, &Code::onEmptyArray);
-                forInternal("HeavyArray", *this, &Code::onHeavyArray);
-
+                Y_Jive_OnInternal(Code,EmptyArray);
+                Y_Jive_OnInternal(Code,HeavyArray);
+                Y_Jive_OnInternal(Code,EmptyObject);
+                Y_Jive_OnInternal(Code,Pair);
+                Y_Jive_OnInternal(Code,HeavyObject);
             }
         }
 

@@ -128,6 +128,13 @@ namespace Yttrium
             return *static_cast<const Array *>(impl);
         }
 
+        template <>
+        const JSON::Object & Value:: as<JSON::Object>() const noexcept
+        {
+            assert(IsObject==type);
+            return *static_cast<const Object *>(impl);
+        }
+
         std::ostream &  Value:: display(std::ostream &os, const size_t indent) const
         {
             switch(type)
