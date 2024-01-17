@@ -17,12 +17,13 @@ static inline double F(double x)
 
 static inline void saveState(OutputStream          &fp,
                              const Triplet<double> &x,
-                             const Triplet<double> &f)
+                             const Triplet<double> &f,
+                             const unsigned         i)
 {
-    fp("%.15g %.15g\n",x.a,f.a);
-    fp("%.15g %.15g\n",x.b,f.b);
-    fp("%.15g %.15g\n",x.c,f.c);
-    fp("%.15g %.15g\n",x.a,f.a);
+    fp("%.15g %.15g %d\n",x.a,f.a,i);
+    fp("%.15g %.15g %d\n",x.b,f.b,i);
+    fp("%.15g %.15g %d\n",x.c,f.c,i);
+    fp("%.15g %.15g %d\n",x.a,f.a,i);
     fp << '\n';
     fp.flush();
 }
@@ -34,12 +35,12 @@ Y_UTEST(opt_parabolic)
 
     Libc::OutputFile fp("parabolic.dat");
     std::cerr << x << " -> " << f << std::endl;
-    saveState(fp,x,f);
-    for(int i=0;i<6;++i)
+    saveState(fp,x,f,0);
+    for(int i=1;i<=6;++i)
     {
         Parabolic<double>::Step(F,x,f);
         std::cerr << x << " -> " << f << std::endl;
-        saveState(fp,x,f);
+        saveState(fp,x,f,i);
     }
 
 }

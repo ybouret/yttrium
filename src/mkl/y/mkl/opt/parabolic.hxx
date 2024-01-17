@@ -114,8 +114,8 @@ void Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
     assert(f.isLocalMinimum());
 
 
-    real_t xx[5] = { x.a,x.b,x.c,zero,zero };
-    real_t ff[5] = { f.a,f.b,f.c,zero,zero };
+    real_t xx[6] = { x.a,x.b,x.c,zero,zero,zero };
+    real_t ff[6] = { f.a,f.b,f.c,zero,zero,zero };
     size_t nn    = 3;
 
 
@@ -142,22 +142,12 @@ void Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
         {
             assert(mu_a>zero || mu_c>zero);
             const real_t beta         = Clamp(zero,(x.b-x.a)/width,one);
-            const real_t oneMinusBeta = Clamp(zero,one-beta,one);
+            const real_t oneMinusBeta = one-beta;
             const real_t delta        = beta*(oneMinusBeta) * ((mu_a-mu_c)/(oneMinusBeta*mu_a+beta * mu_c) );
-            const real_t deltaPlusOne = delta+one;
-            upgrade( Clamp(x.a,x.a+width*(half*deltaPlusOne),x.c),xx,ff,nn,F);
-            switch( Sign::Of(mu_a,mu_c))
-            {
-                case __Zero__: break;
-
-                case Negative: assert(mu_a<mu_c);
-                    upgrade( Clamp(x.a,x.a+width*(one-delta),x.c),xx,ff,nn,F);
-                    break;
-
-                case Positive: assert(mu_c<mu_a);
-                    upgrade( Clamp(x.a,x.a+width*delta,x.c),xx,ff,nn,F);
-                    break;
-            }
+            const real_t uOpt         = Clamp(zero,half*(delta+one),one);
+            const real_t wOpt         = width * uOpt;
+            upgrade(Clamp(x.a, x.a+wOpt, x.c),xx,ff,nn,F);
+            upgrade(Clamp(x.a, x.c-wOpt, x.c),xx,ff,nn,F);
         }
 
     }
