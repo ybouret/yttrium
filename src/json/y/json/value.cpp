@@ -1,6 +1,7 @@
 #include "y/json/value.hpp"
 #include "y/object.hpp"
 #include <cstring>
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -110,6 +111,36 @@ namespace Yttrium
 
     }
 
+
+    namespace JSON
+    {
+        Pair:: ~Pair() noexcept
+        {
+        }
+
+        Pair:: Pair(const String &str, const Value &val) :
+        k(str),
+        v(val)
+        {
+
+        }
+
+        Pair:: Pair(const String &str) :
+        k(str),
+        v()
+        {
+        }
+        
+
+        const String & Pair:: key() const noexcept
+        {
+            return k;
+        }
+
+
+
+    }
+
     namespace JSON
     {
         Object:: Object(const size_t n) : Pairs(n,AsCapacity)
@@ -129,6 +160,36 @@ namespace Yttrium
             Pairs tmp(other);
             return *this;
         }
+
+        const Value & Object:: operator[](const String &key) const
+        {
+
+            {
+                const SharedPair *pp = search(key);
+                if(0!=pp) return (**pp).v;
+            }
+
+
+            throw Specific::Exception("JSON::Object","no ['%s']", key.c_str());
+        }
+
+        Value & Object:: operator[](const String &key)
+        {
+
+            {
+                SharedPair *pp = search(key);
+                if(0!=pp) return (**pp).v;
+            }
+
+            Pair *p = new Pair(key);
+            {
+                const SharedPair tmp(p);
+                if(!insert(tmp)) throw Specific::Exception("JSON::Object", "couldn't insert '%s'", key.c_str());
+            }
+            return p->v;
+
+        }
+
     }
     
 }

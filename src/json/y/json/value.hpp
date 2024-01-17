@@ -64,11 +64,13 @@ namespace Yttrium
         public:
             virtual ~Pair() noexcept;
             explicit Pair(const String &, const Value &);
-
+            explicit Pair(const String &);
+            
             const String & key() const noexcept;
 
-            const String name;
-
+            const String k;
+            Value        v;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pair);
         };
@@ -83,7 +85,10 @@ namespace Yttrium
             virtual ~Object() noexcept;
             explicit Object(const Object &);
             Object & operator=(const Object &);
-            
+
+            Value &       operator[](const String &key);
+            const Value & operator[](const String &key) const;
+
         };
 
     }

@@ -3,6 +3,7 @@
 #include "y/jive/parser.hpp"
 #include "y/type/nullify.hpp"
 #include "y/jive/lexical/plugin/jstring.hpp"
+#include "y/jive/syntax/translator.hpp"
 
 namespace Yttrium
 {
@@ -91,7 +92,11 @@ namespace Yttrium
 
                 void run(Jive::Module *m)
                 {
-                    AutoPtr<XNode> xnode = (*this)(m);
+                    AutoPtr<XNode> ast = (*this)(m);
+                    GraphViz::Vizible::DotToPng( *name + "-ast.dot", *ast);
+
+                    Jive::Syntax::Translator  tr;
+                    tr.translate(*ast,Yttrium::Jive::Syntax::Permissive);
                 }
 
             private:
