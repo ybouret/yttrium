@@ -153,13 +153,13 @@ namespace Yttrium
 
     size_t HashTable:: size() const noexcept
     {
-        assert(code!=0);
+        assert(0!=code);
         return code->size;
     }
 
     void HashTable:: grow()
     {
-        assert(code!=0);
+        assert(0!=code);
         const size_t curr = code->size;
         if(curr>=Code::MaxSlots) Exception("Already got maximum slots");
 
@@ -171,16 +171,22 @@ namespace Yttrium
 
     void HashTable:: freeWith(HashKnot::Pool &pool) noexcept
     {
-        assert(code!=0);
+        assert(0!=code);
         code->freeWith(pool);
     }
 
     void HashTable:: releaseWith(HashKnot::Pool &pool) noexcept
     {
-        assert(code!=0);
+        assert(0!=code);
         code->releaseWith(pool);
     }
 
+    void HashTable:: swapWith(HashTable &other)    noexcept
+    {
+        assert(0!=code);
+        assert(0!=other.code);
+        Swap(code,other.code);
+    }
 
 
 };

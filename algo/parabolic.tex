@@ -91,23 +91,33 @@ We look for the reduction position $u_\bullet$ for which $\mu_{a,new}=\mu_{c,new
 	\dfrac{\mu_a-\mu_c}{(1-\beta)\mu_a + \beta \mu_c}
 \end{equation}
 
+\begin{itemize}
+\item Special Cases:
+
 \begin{equation}
 \begin{array}{lcl}
-\beta \leq 0           & \implies & u_\star = \dfrac{1}{2}\\
+\beta \leq 0           & \implies & u_\star = \dfrac{1}{2} \text{, no $u_\bullet$}\\
 \\
-\beta \geq 1           & \implies & u_\star = \dfrac{1}{2}\\
-\\
-\mu_a = 0, \;\mu_c = 0 & \implies & u_\star = \dfrac{1}{2}\\
-\\
-\mu_a > 0, \;\mu_c = 0 & \implies & u_\star = \dfrac{1}{2} + \dfrac{\beta}{2} \\
-\\
-\mu_a = 0, \;\mu_c > 0 & \implies & u_\star = \dfrac{1}{2} - \dfrac{1-\beta}{2} = \dfrac{\beta}{2} \\
-\\
-\mu_a \simeq \mu_c & \implies & u_\star = \dfrac{1}{2} \\
+\beta \geq 1           & \implies & u_\star = \dfrac{1}{2} \text{, no $u_\bullet$}\\
 \end{array}
 \end{equation}
 
-\section{Balancing}
+\item Generic Cases $0<\beta<1$:
+\begin{equation}
+\begin{array}{lcll}
+\mu_a = 0, \;\mu_c = 0 & \implies & u_\star = \dfrac{1}{2}, & \text{no $u_\bullet$}\\
+\\
+\mu_a > 0, \;\mu_c = 0 & \implies & u_\star = \dfrac{1}{2} + \dfrac{\beta}{2}, &\; u_\bullet=\beta \\
+\\
+\mu_a = 0, \;\mu_c > 0 & \implies & u_\star = \dfrac{\beta}{2}, & u\bullet = 1 - \beta \\
+\\
+\mu_a \simeq \mu_c & \implies & u_\star = \dfrac{1}{2}, & \text{no $u_\bullet$} \\
+\end{array}
+\end{equation}
+
+\end{itemize}
+
+
 
  
 

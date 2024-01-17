@@ -80,6 +80,12 @@ Y_UTEST(associative_hash_set)
         {
             HashSet<String,Dummy>  hcpy(hset);
             Y_CHECK(hcpy.size()==hset.size());
+
+            HashSet<String,Dummy> hdum;
+            hdum.swapWith(hcpy);
+            Y_CHECK(hcpy.size()==0);
+            Y_CHECK(hdum.size()==hset.size());
+
         }
 
         {
@@ -91,6 +97,7 @@ Y_UTEST(associative_hash_set)
 
         if(keys.size())
         {
+
             Random::Shuffle::Range(keys(),keys.size(),ran);
             while(keys.size())
             {

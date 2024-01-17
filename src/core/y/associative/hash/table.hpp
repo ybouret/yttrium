@@ -100,6 +100,7 @@ namespace Yttrium
         void    releaseWith(HashKnot::Pool &) noexcept; //!< free all knots, release memory
         size_t  size()                  const noexcept; //!< current size
         void    grow();                                 //!< double size
+        void    swapWith(HashTable &other)    noexcept; //!< exchange codes
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(HashTable);

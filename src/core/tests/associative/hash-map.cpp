@@ -42,10 +42,14 @@ Y_UTEST(associative_hash_map)
         }
         std::cerr << "count=" << count << std::endl;
         {
-            const HashMap<String,apn> tmp(hmap);
+            HashMap<String,apn> tmp(hmap);
             Y_CHECK(tmp.size()==hmap.size());
             std::cerr << hmap << std::endl;
             std::cerr << tmp << std::endl;
+
+            HashMap<String,apn> dum;
+            dum.swapWith(tmp);
+            Y_CHECK(dum.size()==hmap.size());
         }
 
         std::cerr << "Iterator:" << std::endl;

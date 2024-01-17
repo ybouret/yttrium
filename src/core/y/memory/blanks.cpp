@@ -236,19 +236,19 @@ namespace Yttrium
 
         size_t Blanks:: blockSize() const noexcept
         {
-            assert(code!=0);
+            assert(0!=code);
             return code->coreArena.blockSize;
         }
 
         size_t Blanks:: available() const noexcept
         {
-            assert(code!=0);
+            assert(0!=code);
             return code->size;
         }
 
         size_t Blanks:: allocated() const noexcept
         {
-            assert(code!=0);
+            assert(0!=code);
             return code->allocated;
         }
 
@@ -266,9 +266,17 @@ namespace Yttrium
 
         void Blanks:: gc(const size_t maxCount) noexcept
         {
-            assert(code!=0);
+            assert(0!=code);
             code->gc(maxCount);
         }
+
+        void Blanks:: swapWith(Blanks &other)   noexcept
+        {
+            assert(0!=code);
+            assert(0!=other.code);
+            Swap(code,other.code);
+        }
+
 
 
     }

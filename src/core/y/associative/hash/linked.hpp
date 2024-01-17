@@ -81,7 +81,7 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        // Methods
+        // Interface
         //
         //______________________________________________________________________
         inline virtual size_t       size()      const noexcept { return nodes.size;                   }  //!< size
@@ -94,6 +94,22 @@ namespace Yttrium
         inline virtual bool         remove(ParamKey key)       noexcept { return remove_(key); }         //!< remove by key
         inline virtual ConstType *  search(ParamKey key) const noexcept { return search_(key); }         //!< search by key
         inline virtual Type *       search(ParamKey key)       noexcept { return (Type *)search_(key); } //!< search by key
+
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+
+        inline void swapWith(HashLinked &other) noexcept
+        {
+            nodes.swapWith(other.nodes);
+            table.swapWith(other.table);
+            kpool.swapWith(other.kpool);
+            npool.swapWith(other.npool);
+
+        }
 
         //! display
         friend inline std::ostream & operator<<(std::ostream &os, const HashLinked &self)

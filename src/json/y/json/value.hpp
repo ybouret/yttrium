@@ -6,6 +6,7 @@
 #include "y/string.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/ptr/ark.hpp"
+#include "y/associative/hash/set.hpp"
 
 namespace Yttrium
 {
@@ -31,6 +32,8 @@ namespace Yttrium
         public:
             Value(const Value &);
             virtual ~Value() noexcept;  //!< cleanup
+            Value & operator=(const Value &); //!< copy
+            
             Value() noexcept;           //!< IsNull
             Value(const String &);      //!< IsString
             Value(const char   *);      //!< IsString
@@ -38,7 +41,8 @@ namespace Yttrium
             Value(const Number);        //!< IsNumber
 
             void  swapWith(Value &) noexcept;
-
+            void  nullify() noexcept;
+            
             const Type type;
         private:
             void       *impl;
@@ -53,7 +57,6 @@ namespace Yttrium
             explicit Array(const Array &);
             virtual ~Array() noexcept;
             Array & operator=(const Array &other);
-
         };
 
         class Pair : public Yttrium::Object, public Counted
@@ -70,13 +73,17 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Pair);
         };
 
-        typedef ArkPtr<String,Pair> SharedPair;
-        
-        class Object
+        typedef ArkPtr<String,Pair>        SharedPair;
+        typedef HashSet<String,SharedPair> Pairs;
+
+        class Object : public Pairs
         {
         public:
-
-
+            explicit Object(const size_t n=0);
+            virtual ~Object() noexcept;
+            explicit Object(const Object &);
+            Object & operator=(const Object &);
+            
         };
 
     }
