@@ -29,6 +29,7 @@ We change the coordinate to $u_a=0$, $u_c=1$ and
 \end{equation}
 
 \section{Parabola}
+\subsection{Notations}
 We define the reduced polynomial
 \begin{equation}
 	Q(u) =  \mu_a (1-u) + \mu_c u - \gamma u(1-u)
@@ -46,11 +47,48 @@ We define the reduced polynomial
 	\gamma = \dfrac{(1-\beta)\mu_a + \beta \mu_c}{\beta(1-\beta)}  \geq 0 
 \end{equation}
 
+\subsection{Quadratic Minimum}
 \begin{equation}
 \boxed{
 	u_\star = \dfrac{1}{2} + \dfrac{\mu_a-\mu_c}{2\gamma} = \dfrac{1}{2} + \dfrac{\beta(1-\beta)}{2} 
 	\dfrac{\mu_a-\mu_c}{(1-\beta)\mu_a + \beta \mu_c}
 	}
+\end{equation}
+
+\subsection{Reduction}
+We look for the reduction position $u_\bullet$ for which $\mu_{a,new}=\mu_{c,new}$.
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcll}
+	\mu_a & = & \mu_a (1-u) + \mu_c u - \gamma u(1-u) , & \mu_c \geq \mu_a\\
+	\mu_c & = & \mu_a (1-u) + \mu_c u - \gamma u(1-u) , & \mu_c \leq \mu_a\\
+\end{array}
+\right.
+\end{equation}	 
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcll}
+	0     & = &    (\mu_c-\mu_a)  - \gamma (1-u), & \mu_c \geq \mu_a\\
+	0 & = & (\mu_a -\mu_c)   - \gamma u         , & \mu_c \leq \mu_a\\
+\end{array}
+\right.
+\end{equation}	 
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcll}
+	u_\bullet    & = &   1+ (\mu_a-\mu_c) / \gamma, & \mu_c \geq \mu_a\\
+	u_\bullet   & = & (\mu_a -\mu_c)/\gamma,       & \mu_c \leq \mu_a\\
+\end{array}
+\right.
+\end{equation}	
+
+\subsection{Summary}
+\begin{equation}
+\delta = (\mu_a -\mu_c)/\gamma = \beta(1-\beta)
+	\dfrac{\mu_a-\mu_c}{(1-\beta)\mu_a + \beta \mu_c}
 \end{equation}
 
 \begin{equation}
@@ -68,6 +106,11 @@ We define the reduced polynomial
 \mu_a \simeq \mu_c & \implies & u_\star = \dfrac{1}{2} \\
 \end{array}
 \end{equation}
+
+\section{Balancing}
+
+ 
+
 
 
 \end{document}
