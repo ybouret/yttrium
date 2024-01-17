@@ -147,8 +147,22 @@ void Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
             const real_t uOpt         = Clamp(zero,half*(delta+one),one);
             const real_t wOpt         = width * uOpt;
             upgrade(Clamp(x.a, x.a+wOpt, x.c),xx,ff,nn,F);
-            upgrade(Clamp(x.a, x.c-wOpt, x.c),xx,ff,nn,F);
         }
+        HeapSort::Tableau(xx,nn,Comparison::Increasing<real_t>,ff);
+        real_t wmax = xx[1]-xx[0];
+        size_t jmax = 1;
+        for(size_t j=2;j<nn;++j)
+        {
+            const real_t wtmp = xx[j] - xx[j-1];
+            if(wtmp>wmax)
+            {
+                jmax = j;
+                wmax = wtmp;
+            }
+        }
+        const real_t xlo = xx[jmax-1];
+        const real_t xhi = xx[jmax];
+        upgrade(Clamp(xlo,half*(xlo+xhi),xhi),xx,ff,nn,F);
 
     }
 
