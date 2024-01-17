@@ -3,6 +3,10 @@
 #include "y/mkl/api.hpp"
 #include "y/type/utils.hpp"
 #include "y/system/exception.hpp"
+#include "y/stream/libc/output.hpp"
+
+#include "y/sort/heap.hpp"
+
 
 namespace Yttrium
 {

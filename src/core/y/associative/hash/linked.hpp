@@ -102,6 +102,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
 
+        //! swap internal content
         inline void swapWith(HashLinked &other) noexcept
         {
             nodes.swapWith(other.nodes);

@@ -1,6 +1,7 @@
 #include "y/sort/heap.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/shuffle.hpp"
+#include "y/sequence/vector.hpp"
 
 using namespace Yttrium;
 
@@ -44,6 +45,56 @@ Y_UTEST(sort_heap)
             }
         }
     }
+
+
+    {
+        Vector<char>    ch;
+        Vector<char>    cp;
+        Vector<size_t>  id;
+        {
+            const char s[] = "World";
+            for(size_t i=0;i<sizeof(s)-1;++i)
+            {
+                ch << s[i];
+                cp << s[i];
+                id << i;
+            }
+        }
+        std::cerr << "ch=" << ch << std::endl;
+        std::cerr << "cp=" << cp << std::endl;
+        std::cerr << "id=" << id << std::endl;
+        Y_CHECK(cp==ch);
+
+        HeapSort::Call(ch,compare<char>,id);
+        HeapSort::Call(cp,compare<char>);
+
+        std::cerr << "ch=" << ch << std::endl;
+        std::cerr << "cp=" << cp << std::endl;
+        std::cerr << "id=" << id << std::endl;
+        Y_CHECK(ch==cp);
+    }
+
+    {
+        std::cerr << "Single Tab" << std::endl;
+        double xx[5] = { 5, 4, 3, 2, 1};
+        Core::Display(std::cerr,xx,sizeof(xx)/sizeof(xx[0])) << std::endl;
+        HeapSort::Tableau(xx, sizeof(xx)/sizeof(xx[0]), compare<double>);
+        Core::Display(std::cerr,xx,sizeof(xx)/sizeof(xx[0])) << std::endl;
+    }
+
+    {
+        std::cerr << "Dual Tab" << std::endl;
+        double xx[5] = { 5, 4, 3, 2, 1};
+        short  id[5] = { 1, 2, 3, 4, 5};
+        Core::Display(std::cerr,xx,sizeof(xx)/sizeof(xx[0])) << std::endl;
+        Core::Display(std::cerr,id,sizeof(id)/sizeof(id[0])) << std::endl;
+
+        HeapSort::Tableau(xx, sizeof(xx)/sizeof(xx[0]), compare<double>, id);
+        Core::Display(std::cerr,xx,sizeof(xx)/sizeof(xx[0])) << std::endl;
+        Core::Display(std::cerr,id,sizeof(id)/sizeof(id[0])) << std::endl;
+
+    }
+
 
 
 

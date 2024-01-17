@@ -74,6 +74,33 @@ INITIALIZE:
     }
 }
 
+namespace {
+
+    //! upgrade
+    static inline
+    void upgrade(const real_t   xm,
+                 real_t * const xx,
+                 real_t * const ff,
+                 size_t        &nn,
+                 Function<real_t,real_t> &F)
+    {
+        const size_t i = nn++;
+        ff[i] = F( xx[i] = xm );
+    }
+
+    static inline
+    void upgradeMiddle(const Triplet<real_t> &x,
+                       real_t * const xx,
+                       real_t * const ff,
+                       size_t        &nn,
+                       Function<real_t,real_t> &F)
+    {
+        static const real_t half(0.5);
+        upgrade(Clamp(x.a,half*(x.a+x.c),x.c),xx,ff,nn,F);
+    }
+
+}
+
 template <>
 void Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionType &F)
 {
@@ -84,8 +111,57 @@ void Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
     assert(x.isIncreasing());
     assert(f.isLocalMinimum());
 
-    real_t xx[4] = { x.a,x.b,x.c,zero };
-    real_t ff[4] = { f.a,f.b,f.c,zero };
+
+    real_t xx[5] = { x.a,x.b,x.c,zero,zero };
+    real_t ff[5] = { f.a,f.b,f.c,zero,zero };
+    size_t nn    = 3;
+
+
+    if(x.b<=x.a||x.c<=x.b)
+    {
+        //----------------------------------------------------------------------
+        //
+        // value on one side: probe middle
+        //
+        //----------------------------------------------------------------------
+        upgradeMiddle(x, xx, ff, nn, F);
+    }
+    else
+    {
+        const real_t width = x.c-x.a;
+        const real_t mu_a  = Fabs<real_t>::Of(f.a - f.b);
+        const real_t mu_c  = Fabs<real_t>::Of(f.c - f.b);
+
+        if(mu_a<=zero && mu_c <= zero)
+        {
+            upgradeMiddle(x, xx, ff, nn, F);
+        }
+        else
+        {
+            assert(mu_a>zero || mu_c>zero);
+            const real_t beta         = Clamp(zero,(x.b-x.a)/width,one);
+            const real_t oneMinusBeta = Clamp(zero,one-beta,one);
+            const real_t delta        = beta*(one-beta) * ((mu_a-mu_c)/(oneMinusBeta*mu_a+beta * mu_c) );
+            const real_t deltaPlusOne = delta+one;
+            upgrade(half*deltaPlusOne,xx,ff,nn,F);
+            //switch( Sign::Of(mu_a,mu_c))
+        }
+
+
+    }
+    {
+        Libc::OutputFile fp("para.dat");
+        for(size_t i=0;i<nn;++i)
+        {
+            fp("%g %g\n", double(xx[i]), double(ff[i]));
+        }
+    }
+
+    std::cerr << "Exit..." << std::endl;
+    exit(1);
+
+#if 0
+
     
     if(x.b<=x.a||x.c<=x.b)
     {
@@ -98,7 +174,7 @@ void Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
     }
     else
     {
-        const real_t width =  x.c-x.a;
+        const real_t width = x.c-x.a;
         const real_t beta  = Clamp(zero,(x.b-x.a)/width,one);
         const real_t mu_a  = Fabs<real_t>::Of(f.a - f.b);
         const real_t mu_c  = Fabs<real_t>::Of(f.c - f.b);
@@ -169,5 +245,6 @@ void Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
         chooseTriplets(x,f,xx,ff,4);
 
     }
+#endif
 
 }
