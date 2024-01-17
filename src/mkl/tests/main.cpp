@@ -21,6 +21,7 @@ Y_UTEST_DECL(32)
  
     Y_UTEST(opt_parabolic);
     Y_UTEST(opt_bracket);
+    Y_UTEST(opt_minimize);
 
     Y_UTEST(algebra_lu);
     Y_UTEST(algebra_ortho_space);

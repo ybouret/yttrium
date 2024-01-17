@@ -36,6 +36,7 @@ add_test(ode:scheme45 test-mkl ode_scheme45)
 
 add_test(opt:parabolic test-mkl opt_parabolic)
 add_test(opt:bracket   test-mkl opt_bracket)
+add_test(opt:minimize  test-mkl opt_minimize)
 
 add_test(algebra:lu          test-mkl algebra_lu)
 add_test(algebra:ortho_space test-mkl algebra_ortho_space)
