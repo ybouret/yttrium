@@ -1,8 +1,10 @@
 
 #include "y/mkl/opt/parabolic.hpp"
+#include "y/mkl/opt/bracket.hpp"
 #include "y/utest/run.hpp"
 #include "y/stream/libc/output.hpp"
 #include "y/mkl/xreal.hpp"
+#include "y/text/ascii/convert.hpp"
 #include <cmath>
 
 using namespace Yttrium;
@@ -31,7 +33,25 @@ static inline void saveState(OutputStream          &fp,
 Y_UTEST(opt_parabolic)
 {
     Triplet<double> x = { -0.5, 0, 0.5 };
-    Triplet<double> f = { F(x.a), F(x.b), F(x.c) };
+
+    if(argc>1)
+    {
+        x.a = ASCII::Convert::ToReal<double>(argv[1],"x.a");
+    }
+
+    if(argc>2)
+    {
+        x.c = ASCII::Convert::ToReal<double>(argv[2],"x.c");
+    }
+
+    Triplet<double> f = { F(x.a), 0, F(x.c) };
+
+    if( !Bracket<double>::Inside(F, x, f) )
+    {
+        std::cerr << "Couldn't bracket..." << std::endl;
+        return 0;
+    }
+    
 
     Libc::OutputFile fp("parabolic.dat");
     std::cerr << x << " -> " << f << std::endl;
