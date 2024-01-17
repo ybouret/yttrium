@@ -221,12 +221,7 @@ namespace Yttrium
         {
         }
 
-        Pair:: Pair(const String &str, const Value &val) :
-        k(str),
-        v(val)
-        {
-
-        }
+        
 
         Pair:: Pair(const String &str) :
         k(str),

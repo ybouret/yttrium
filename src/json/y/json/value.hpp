@@ -14,6 +14,14 @@ namespace Yttrium
     namespace JSON
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Type of Value
+        //
+        //
+        //______________________________________________________________________
         enum Type
         {
             IsString,
@@ -25,17 +33,30 @@ namespace Yttrium
             IsObject
         };
 
-        typedef double Number;
-        Y_SHALLOW_DECL(AsArray);
-        Y_SHALLOW_DECL(AsObject);
+        typedef double Number;     //!< alias
+        Y_SHALLOW_DECL(AsArray);   //!< alias
+        Y_SHALLOW_DECL(AsObject);  //!< alias
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Variant Value
+        //
+        //
+        //______________________________________________________________________
         class Value
         {
         public:
-            Value(const Value &);
-            virtual ~Value() noexcept;  //!< cleanup
-            Value & operator=(const Value &); //!< copy
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            virtual ~Value() noexcept;        //!< cleanup
+            Value(const Value &);             //!< copy
+            Value & operator=(const Value &); //!< assign
             
             Value() noexcept;           //!< IsNull
             Value(const String &);      //!< IsString
@@ -46,18 +67,23 @@ namespace Yttrium
             Value(const AsArray_  &);   //!< IsArray
             Value(const AsObject_ &);   //!< IsObject
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void  swapWith(Value &) noexcept; //!< swap contents
+            void  nullify() noexcept;         //!< clear content
 
-            void  swapWith(Value &) noexcept;
-            void  nullify() noexcept;
+            std::ostream &        display(std::ostream &os, const size_t indent) const; //!< display
+            static std::ostream & Indent(std::ostream &os,const size_t indent);         //!< indent
 
-            std::ostream &        display(std::ostream &os, const size_t indent) const;
-            static std::ostream & Indent(std::ostream &os,const size_t indent);
+            Y_OSTREAM_PROTO(Value); //!< default display
 
-            Y_OSTREAM_PROTO(Value);
+            template <typename T> const T & as() const noexcept; //!< access data
 
-            template <typename T>
-            const T & as() const noexcept;
-
+            //! access data, const
             template <typename T> inline
             T & as() noexcept
             {
@@ -66,57 +92,129 @@ namespace Yttrium
                 return Coerce(cstv);
             }
 
-
-            const Type type;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const Type type;  //!< type
         private:
-            void       *impl;
+            void       *impl; //!< opaque data
 
         };
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Array = Vector of Values
+        //
+        //
+        //______________________________________________________________________
         class Array : public Vector<Value>
         {
         public:
-            explicit Array() noexcept;
-            explicit Array(const Array &);
-            virtual ~Array() noexcept;
-            Array & operator=(const Array &other);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Array()     noexcept;         //!< setup
+            virtual ~Array()     noexcept;         //!< cleanup
+            explicit Array(const Array &);         //!< copy
+            Array & operator=(const Array &other); //!< assign
 
-            void add(Value &value);
-
-            std::ostream & display(std::ostream &, const size_t ) const;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void add(Value &value); //!< steal value, pushed
+            std::ostream & display(std::ostream &, const size_t ) const; //!< display
 
         };
 
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Pair key/value for Object
+        //
+        //
+        //______________________________________________________________________
         class Pair : public Yttrium::Object, public Counted
         {
         public:
-            virtual ~Pair() noexcept;
-            explicit Pair(const String &, const Value &);
-            explicit Pair(const String &);
-            
-            const String & key() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Pair(const String &); //!< setup
+            virtual ~Pair() noexcept;      //!< cleanup
 
-            const String k;
-            Value        v;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            const String & key() const noexcept; //!< get key
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const String k; //!< key
+            Value        v; //!< value
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pair);
         };
 
-        typedef ArkPtr<String,Pair>        SharedPair;
-        typedef HashSet<String,SharedPair> Pairs;
+        typedef ArkPtr<String,Pair>        SharedPair; //!< alias
+        typedef HashSet<String,SharedPair> Pairs;      //!< alias
 
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Object = Set of SharedPairs
+        //
+        //
+        //______________________________________________________________________
         class Object : public Pairs
         {
         public:
-            explicit Object();
-            virtual ~Object() noexcept;
-            explicit Object(const Object &);
-            Object & operator=(const Object &);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Object();                  //!< create
+            virtual ~Object() noexcept;         //!< cleanup
+            explicit Object(const Object &);    //!< copy
+            Object & operator=(const Object &); //!< cleanup
 
-            Value &       operator[](const String &key);
-            const Value & operator[](const String &key) const;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            Value &       operator[](const String &key);       //!< get/create (null) Value
+            const Value & operator[](const String &key) const; //!< get existing Value
 
         };
 

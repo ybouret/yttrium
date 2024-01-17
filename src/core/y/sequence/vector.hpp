@@ -109,17 +109,18 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(), Core::Vector(), Writable
         // Methods
         //
         //______________________________________________________________________
-        inline virtual const char * callSign() const noexcept { return CallSign; }
-        inline virtual size_t       size()     const noexcept { return code ? code->size    :  0; }
-        inline virtual size_t       capacity() const noexcept { return code ? code->capacity : 0; }
-        inline virtual void         free()           noexcept { if(0!=code) code->free(); }
-        inline virtual void         release()        noexcept { release_(); }
+        inline virtual const char * callSign() const noexcept { return CallSign; }                  //!< CallSing
+        inline virtual size_t       size()     const noexcept { return code ? code->size    :  0; } //!< stored items
+        inline virtual size_t       capacity() const noexcept { return code ? code->capacity : 0; } //!< current capacity
+        inline virtual void         free()           noexcept { if(0!=code) code->free(); }         //!< remove content
+        inline virtual void         release()        noexcept { release_(); }                       //!< remove memory
         inline virtual void         reserve(const size_t n)
         {
             if(n<=0) return;
             minimalCapacity(capacity()+n);
-        }
+        }//!< upgrade capacity
 
+        //! remove tail item
         inline virtual void popTail() noexcept
         {
             assert(0!=code);
@@ -127,6 +128,7 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(), Core::Vector(), Writable
             code->popTail();
         }
 
+        //! remove head item
         inline virtual void popHead() noexcept
         {
             assert(0!=code);
@@ -134,6 +136,7 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(), Core::Vector(), Writable
             code->popHead();
         }
 
+        //! push args at head
         inline virtual void pushHead(ParamType args)
         {
             Workspace  data;
@@ -144,6 +147,7 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(), Core::Vector(), Writable
             data.dismiss();
         }
 
+        //! push args at tail
         inline virtual void pushTail(ParamType args)
         {
             Workspace data;
@@ -154,6 +158,7 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(), Core::Vector(), Writable
             data.dismiss();
         }
 
+        //! access
         inline virtual Type & operator[](const size_t indx) noexcept
         {
             assert(indx>=1);
@@ -162,6 +167,7 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(), Core::Vector(), Writable
             return code->item[indx];
         }
 
+        //! access, const
         inline virtual ConstType & operator[](const size_t indx) const noexcept
         {
             assert(indx>=1);
