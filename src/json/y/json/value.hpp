@@ -26,6 +26,9 @@ namespace Yttrium
         };
 
         typedef double Number;
+        Y_SHALLOW_DECL(AsArray);
+        Y_SHALLOW_DECL(AsObject);
+
 
         class Value
         {
@@ -40,12 +43,34 @@ namespace Yttrium
             Value(const bool) noexcept; //!< Is[True|False]
             Value(const Number);        //!< IsNumber
 
+            Value(const AsArray_  &);   //!< IsArray
+            Value(const AsObject_ &);   //!< IsObject
+
+
             void  swapWith(Value &) noexcept;
             void  nullify() noexcept;
-            
+
+            std::ostream &        display(std::ostream &os, const size_t indent) const;
+            static std::ostream & Indent(std::ostream &os,const size_t indent);
+
+            Y_OSTREAM_PROTO(Value);
+
+            template <typename T>
+            const T & as() const noexcept;
+
+            template <typename T> inline
+            T & as() noexcept
+            {
+                const Value &self = *this;
+                const T     &cstv = self.as<T>();
+                return Coerce(cstv);
+            }
+
+
             const Type type;
         private:
             void       *impl;
+
         };
 
 
@@ -53,10 +78,14 @@ namespace Yttrium
         {
         public:
             explicit Array() noexcept;
-            explicit Array(const size_t n);
             explicit Array(const Array &);
             virtual ~Array() noexcept;
             Array & operator=(const Array &other);
+
+            void add(Value &value);
+
+            std::ostream & display(std::ostream &, const size_t ) const;
+
         };
 
         class Pair : public Yttrium::Object, public Counted
@@ -81,7 +110,7 @@ namespace Yttrium
         class Object : public Pairs
         {
         public:
-            explicit Object(const size_t n=0);
+            explicit Object();
             virtual ~Object() noexcept;
             explicit Object(const Object &);
             Object & operator=(const Object &);

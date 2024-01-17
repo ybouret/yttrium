@@ -8,6 +8,9 @@ namespace Yttrium
     namespace JSON
     {
 
+        Y_SHALLOW_IMPL(AsArray);
+        Y_SHALLOW_IMPL(AsObject);
+
         Value:: Value() noexcept : type(IsNull), impl(0) {}
 
 
@@ -79,6 +82,71 @@ namespace Yttrium
             *static_cast<Number *>(impl) = x;
         }
 
+        void Value:: swapWith(Value &other) noexcept
+        {
+            CoerceSwap(type,other.type);
+            Swap(impl,other.impl);
+        }
+
+        Value:: Value(const AsArray_  &) :
+        type(IsArray),
+        impl( new Array() )
+        {
+        }
+
+        Value:: Value(const AsObject_  &) :
+        type(IsObject),
+        impl( new Object() )
+        {
+        }
+
+        std::ostream & Value::Indent(std::ostream &os, const size_t indent)
+        {
+            for(size_t i=indent;i>0;--i) os << "  ";
+            return os;
+        }
+
+
+        template <>
+        const Number & Value:: as<Number>() const noexcept
+        {
+            assert(IsNumber==type);
+            return *static_cast<const Number *>(impl);
+        }
+
+        template <>
+        const String & Value:: as<String>() const noexcept
+        {
+            assert(IsString==type);
+            return *static_cast<const String *>(impl);
+        }
+
+        template <>
+        const Array & Value:: as<Array>() const noexcept
+        {
+            assert(IsArray==type);
+            return *static_cast<const Array *>(impl);
+        }
+
+        std::ostream &  Value:: display(std::ostream &os, const size_t indent) const
+        {
+            switch(type)
+            {
+                case IsNull:   os << "null";  break;
+                case IsTrue:   os << "true";  break;
+                case IsFalse:  os << "false"; break;
+                case IsString: os << "\"" << as<String>() << "\""; break;
+                case IsNumber: os << as<Number>(); break;
+                case IsArray:  return as<Array>().display(os,indent);
+            }
+            return os;
+        }
+
+        std::ostream & operator<<(std::ostream &os, const Value &v)
+        {
+            return v.display(os,0);
+        }
+
     }
 
     namespace JSON
@@ -92,10 +160,7 @@ namespace Yttrium
         {
         }
 
-        Array:: Array(const size_t n) :
-        Vector<Value>(n,AsCapacity)
-        {
-        }
+
 
         Array:: Array(const Array &other) :
         Identifiable(), Collection(), Vector<Value>(other)
@@ -108,6 +173,37 @@ namespace Yttrium
             swapWith(tmp);
             return *this;
         }
+
+        void Array:: add(Value &value)
+        {
+            {
+                const Value nil;
+                pushTail(nil);
+            }
+            tail().swapWith(value);
+        }
+
+        std::ostream & Array:: display(std::ostream &os, size_t indent) const
+        {
+            if(size()<=0)
+            {
+                os << "[]";
+            }
+            else
+            {
+                os << "[";
+                indent += 1;
+                (*this)[1].display(os,indent);
+                for(size_t i=2;i<=size();++i)
+                {
+                    Value::Indent(os << ",\n",indent);
+                    (*this)[i].display(os,indent);
+                }
+                os << " ]";
+            }
+            return os;
+        }
+
 
     }
 
@@ -143,7 +239,7 @@ namespace Yttrium
 
     namespace JSON
     {
-        Object:: Object(const size_t n) : Pairs(n,AsCapacity)
+        Object:: Object() : Pairs()
         {
         }
 
