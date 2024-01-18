@@ -46,7 +46,7 @@ namespace Yttrium
              - update by parabolic estimation and 1 function evaluation
              */
             //__________________________________________________________________
-            static void Step(Triplet<T> &x, Triplet<T> &f, FunctionType &F);
+            static bool Step(Triplet<T> &x, Triplet<T> &f, FunctionType &F);
 
             //__________________________________________________________________
             //
@@ -55,10 +55,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename FUNCTION> static inline
-            void Step(FUNCTION &F, Triplet<T> &x, Triplet<T> &f )
+            bool Step(FUNCTION &F, Triplet<T> &x, Triplet<T> &f )
             {
                 Wrapper1D<T,T,FUNCTION> FW(F);
-                Step(x,f,FW);
+                return Step(x,f,FW);
             }
 
 

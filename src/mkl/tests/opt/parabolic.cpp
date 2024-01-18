@@ -46,13 +46,28 @@ Y_UTEST(opt_parabolic)
 
     Triplet<double> f = { F(x.a), 0, F(x.c) };
 
+#if 1
     if( !Bracket<double>::Inside(F, x, f) )
     {
         std::cerr << "Couldn't bracket..." << std::endl;
         return 0;
     }
-    
+#endif
 
+    std::cerr << x << " -> " << f << std::endl;
+    if( Parabolic<double>::Step(F,x,f) )
+    {
+        std::cerr << "success" << std::endl;
+    }
+    else
+    {
+        std::cerr << "failure" << std::endl;
+    }
+    std::cerr << x << " -> " << f << std::endl;
+
+
+
+#if 0
     Libc::OutputFile fp("parabolic.dat");
     std::cerr << x << " -> " << f << std::endl;
     saveState(fp,x,f,0);
@@ -62,6 +77,7 @@ Y_UTEST(opt_parabolic)
         std::cerr << x << " -> " << f << std::endl;
         saveState(fp,x,f,i);
     }
+#endif
 
 }
 Y_UDONE()

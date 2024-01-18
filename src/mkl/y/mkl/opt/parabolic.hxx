@@ -104,8 +104,10 @@ namespace {
 }
 
 template <>
-void Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionType &F)
+bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionType &F)
 {
+
+
     static const real_t half(0.5);
     static const real_t zero(0);
     static const real_t one(1);
@@ -114,6 +116,111 @@ void Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
     assert(f.isLocalMinimum());
 
 
+
+    //--------------------------------------------------------------------------
+    //
+    // At Left
+    //
+    //--------------------------------------------------------------------------
+    if(x.b <= x.a)
+    {
+        const real_t xm = Clamp(x.a,half*(x.a+x.c),x.c);
+        const real_t fm = F(xm);
+        if( fm < f.b )
+        {
+            // explore middle
+            x.b = xm;
+            f.b = fm;
+            return true;
+        }
+        else
+        {
+            // tighten right side
+            x.c = xm;
+            f.c = fm;
+            return false;
+        }
+    }
+
+
+
+    //--------------------------------------------------------------------------
+    //
+    // At Right
+    //
+    //--------------------------------------------------------------------------
+    if(x.c <= x.b )
+    {
+        const real_t xm = Clamp(x.a,half*(x.a+x.c),x.c);
+        const real_t fm = F(xm);
+        if( fm < f.b )
+        {
+            // explore middle
+            x.b = xm;
+            f.b = fm;
+            return true;
+        }
+        else
+        {
+            // tighten left side
+            x.a = xm;
+            f.a = fm;
+            return false;
+        }
+    }
+
+    //--------------------------------------------------------------------------
+    //
+    // In Bulk
+    //
+    //--------------------------------------------------------------------------
+    assert(x.a<x.b); assert(x.b<x.c);
+
+    const real_t width        = x.c-x.a;
+    const real_t mu_a         = Max(f.a - f.b,zero);
+    const real_t mu_c         = Max(f.c - f.b,zero);
+    const real_t beta         = Clamp(zero,(x.b-x.a)/width,one);
+    const real_t oneMinusBeta = one-beta;
+    const real_t delta        = beta*(oneMinusBeta) * ((mu_a-mu_c)/(oneMinusBeta*mu_a+beta * mu_c) );
+    const real_t uQuadratic   = Clamp(zero,half*(delta+one),one);
+    const real_t xQuadratic   = Clamp(x.a, x.a+(width*uQuadratic), x.c);
+    const real_t fQuadratic   = F(xQuadratic);
+
+    if(fQuadratic<f.b)
+    {
+        //----------------------------------------------------------------------
+        //
+        // found a new matching point : keep it and the two smallest values
+        //
+        //----------------------------------------------------------------------
+        std::cerr << "Found At " << xQuadratic << " -> " << fQuadratic << std::endl;
+
+        if(mu_a<=mu_c)
+        {
+
+        }
+        else
+        {
+
+        }
+
+
+        return true;
+    }
+    else
+    {
+        //----------------------------------------------------------------------
+        //
+        // f.b is still the one
+        //
+        //----------------------------------------------------------------------
+
+        return false;
+    }
+
+
+
+#if 0
     real_t xx[6] = { x.a,x.b,x.c,zero,zero,zero };
     real_t ff[6] = { f.a,f.b,f.c,zero,zero,zero };
     size_t nn    = 3;
@@ -168,5 +275,6 @@ void Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
 
     HeapSort::Tableau(xx,nn,Comparison::Increasing<real_t>,ff);
     chooseTriplets(x,f, xx, ff, nn);
-    
+#endif
+
 }
