@@ -1,12 +1,6 @@
 
 
 
-//! append fourth value
-static inline void append(const real_t xm, real_t xx[], real_t ff[], Function<real_t,real_t> &F)
-{
-    ff[3] = F( xx[3] = xm );
-}
-
 //------------------------------------------------------------------------------
 //
 //
@@ -104,7 +98,7 @@ namespace {
 }
 
 template <>
-bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionType &F)
+bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionType &F, real_t &w)
 {
 
 
@@ -116,6 +110,7 @@ bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
     assert(f.isLocalMinimum());
 
 
+    w = zero;
 
     //--------------------------------------------------------------------------
     //
@@ -129,6 +124,7 @@ bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
         if( fm <= f.b )
         {
             // explore middle
+            w   = Fabs<real_t>::Of(x.b-xm);
             x.b = xm;
             f.b = fm;
             return true;
@@ -156,6 +152,7 @@ bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
         if( fm <= f.b )
         {
             // explore middle
+            w   = Fabs<real_t>::Of(x.b-xm);
             x.b = xm;
             f.b = fm;
             return true;
@@ -185,9 +182,8 @@ bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
     const real_t uQuadratic   = Clamp(zero,half*(delta+one),one);
     const real_t xQuadratic   = Clamp(x.a, x.a+(width*uQuadratic), x.c);
     const real_t fQuadratic   = F(xQuadratic);
-
-    real_t xx[4] = { x.a, x.b, x.c, xQuadratic };
-    real_t ff[4] = { f.a, f.b, f.c, fQuadratic };
+    real_t       xx[4]        = { x.a, x.b, x.c, xQuadratic };
+    real_t       ff[4]        = { f.a, f.b, f.c, fQuadratic };
 
 
     HeapSort::Tableau(xx,4, Comparison::Increasing<real_t>, ff);
@@ -195,6 +191,14 @@ bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
     Core::Display(std::cerr << "ff=", ff, 4) << std::endl;
     chooseTriplets(x,f, xx, ff, 4);
 
-    return (fQuadratic<=f.b);
+    if (fQuadratic<=f.b)
+    {
+        w = Max(xx[2]-xx[1],zero);
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 
 }

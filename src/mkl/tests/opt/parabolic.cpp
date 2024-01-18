@@ -54,11 +54,12 @@ Y_UTEST(opt_parabolic)
     }
 #endif
 
-    for(int i=1;i<=4;++i)
+    for(int i=1;i<=6;++i)
     {
-        if( Parabolic<double>::Step(F,x,f) )
+        double w = 0;
+        if( Parabolic<double>::Step(F,x,f,w) )
         {
-            std::cerr << "success" << std::endl;
+            std::cerr << "success @w=" << w << std::endl;
         }
         else
         {
