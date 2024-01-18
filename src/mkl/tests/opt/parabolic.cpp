@@ -54,16 +54,18 @@ Y_UTEST(opt_parabolic)
     }
 #endif
 
-    std::cerr << x << " -> " << f << std::endl;
-    if( Parabolic<double>::Step(F,x,f) )
+    for(int i=1;i<=4;++i)
     {
-        std::cerr << "success" << std::endl;
+        if( Parabolic<double>::Step(F,x,f) )
+        {
+            std::cerr << "success" << std::endl;
+        }
+        else
+        {
+            std::cerr << "failure" << std::endl;
+        }
+        
     }
-    else
-    {
-        std::cerr << "failure" << std::endl;
-    }
-    std::cerr << x << " -> " << f << std::endl;
 
 
 
