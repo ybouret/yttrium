@@ -17,6 +17,7 @@ static inline double F(double x)
     return  0.7-cos(0.9*x-0.1);
 }
 
+
 static inline void saveState(OutputStream          &fp,
                              const Triplet<double> &x,
                              const Triplet<double> &f,
