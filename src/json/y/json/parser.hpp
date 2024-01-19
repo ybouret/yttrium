@@ -39,7 +39,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             void renderGraphViz() const; //!< render parser's architecture
-            void run(Jive::Module *);
+            void load(JSON::Value &value, Jive::Module *);
 
 
         private:

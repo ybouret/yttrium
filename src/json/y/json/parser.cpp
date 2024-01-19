@@ -36,7 +36,6 @@ namespace Yttrium
 
                 virtual void initialize()
                 {
-                    std::cerr << CallSign << " initialize..." << std::endl;
                     values.free();
                     pairs.free();
                 }
@@ -50,10 +49,13 @@ namespace Yttrium
                     translate(*ast,Yttrium::Jive::Syntax::Restricted);
                 }
 
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Code);
+
                 Vector<Value>      values;
                 Vector<SharedPair> pairs;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Code);
+
 
                 void setupParser();
                 void setupLinker();
@@ -75,6 +77,7 @@ namespace Yttrium
 
                 void onnull(const Jive::Token &)
                 {
+
                     const Value v;
                     values << v;
                 }
@@ -111,7 +114,7 @@ namespace Yttrium
                     Array &arr = v.as<Array>();
                     arr.reserve(n);
 
-                    std::cerr << "values:" << std::endl << values << std::endl;
+                    //std::cerr << "values:" << std::endl << values << std::endl;
                     const size_t m = values.size();
                     for(size_t i=m-n+1;i<=m;++i)
                     {
@@ -129,8 +132,8 @@ namespace Yttrium
 
                 void onPair(const size_t n)
                 {
-                    std::cerr << "onPair/" << n << std::endl;
-                    std::cerr << "values: " << values << std::endl;
+                    //std::cerr << "onPair/" << n << std::endl;
+                    //std::cerr << "values: " << values << std::endl;
                     const size_t  m = values.size();
                     SharedPair    p = new Pair(values[m-1].as<String>());
                     p->v.swapWith(values.tail());
@@ -142,14 +145,17 @@ namespace Yttrium
                 void onHeavyObject(const size_t n)
                 {
                     Value        v(AsObject);
-                    JSON::Object &o = v.as<JSON::Object>();
-                    const size_t  m = pairs.size();
-                    for(size_t i=m+1-n;i<=m;++i)
                     {
-                        const SharedPair &p = pairs[i];
-                        if(!o.insert(p))
-                            throw Specific::Exception("JSON::Object","multiple entry '%s'", p->k.c_str());
+                        JSON::Object &o = v.as<JSON::Object>();
+                        const size_t  m = pairs.size();
+                        for(size_t i=m+1-n;i<=m;++i)
+                        {
+                            const SharedPair &p = pairs[i];
+                            if(!o.insert(p))
+                                throw Specific::Exception("JSON::Object","multiple entry '%s'", p->k.c_str());
+                        }
                     }
+                    values << v;
                 }
 
             };
@@ -254,10 +260,17 @@ namespace Yttrium
             code->renderGraphViz();
         }
 
-        void Parser:: run(Jive::Module *m)
+        void Parser:: load(JSON::Value &value, Jive::Module *m)
         {
             assert(0!=code);
+            value.nullify();
             code->run(m);
+            if(1!=code->values.size())
+            {
+                throw Specific::Exception(CallSign,"corrupted parser....");
+            }
+            value.swapWith(code->values.head());
+            code->initialize();
         }
 
         
