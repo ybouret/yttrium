@@ -119,6 +119,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(sort_heap);
     Y_UTEST(sort_merge);
     Y_UTEST(sort_nw);
+    Y_UTEST(sort_indexing);
 
     Y_UTEST(ptr_auto);
     Y_UTEST(ptr_arc);

@@ -5,17 +5,6 @@
 
 using namespace Yttrium;
 
-#if 0
-template <typename T>
-static inline int compare(const void *lhs, const void *rhs, void *) noexcept
-{
-    assert(0!=lhs);
-    assert(0!=rhs);
-    const T &l = *static_cast<const T *>(lhs);
-    const T &r = *static_cast<const T *>(rhs);
-    return l<r ? -1 : (r<l ? 1 : 0 );
-}
-#endif
 
 template <typename T>
 static inline int compare(const T &lhs, const T &rhs)
