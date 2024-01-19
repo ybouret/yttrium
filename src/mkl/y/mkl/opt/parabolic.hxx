@@ -216,6 +216,8 @@ bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
         }
     }
 
+    
+
     if(nn<=3)
     {
         std::cerr << "failure level-1" << std::endl;
