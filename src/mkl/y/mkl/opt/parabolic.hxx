@@ -68,12 +68,34 @@ INITIALIZE:
     }
 }
 
+#if 0
+namespace
+{
+    static inline
+    void tryAppend(const real_t           u,
+                   const Triplet<real_t> &x,
+                   real_t * const         uu,
+                   real_t * const         ff,
+                   size_t  &              nn)
+    {
+        static const real_t utol = Numeric<real_t>::SQRT_EPSILON;
+        assert(u>=real_t(0));
+
+        for(size_t i=0;i<nn;++i)
+        {
+            if( Fabs<real_t>::Of(u-uu[i]) <= utol ) return;
+        }
+        uu[nn] = u;
+        ff[nn] = Clamp(x.a,x.a+u*(x.c-x.a),x.c);
+    }
+}
+#endif
 
 template <>
 bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionType &F)
 {
 
-    static const real_t utol = Numeric<real_t>::EPSILON;
+    //static const real_t utol = Numeric<real_t>::SQRT_EPSILON;
     static const real_t half(0.5);
     static const real_t zero(0);
     static const real_t one(1);
@@ -153,21 +175,34 @@ bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
     const real_t beta         = Clamp(zero,(x.b-x.a)/width,one);
 
     real_t       uu[5]        = { zero, beta, one, zero, zero };
+    real_t       xx[5]        = { x.a,  x.b,  x.c, zero, zero };
     real_t       ff[5]        = { f.a,  f.b,  f.c, zero, zero };
     size_t       nn           = 3;
 
-    if(mu_a<=zero && mu_c<=zero)
+    if(mu_a<=zero)
     {
-        const real_t um = half;
-        if(Fabs<real_t>::Of(um-beta)>=utol)
+        if(mu_c<=zero)
         {
-            uu[nn] = um;
-            ff[nn] = F( Clamp(x.a,half*(x.a+x.c),x.c) );
-            ++nn;
+            assert(mu_a<=zero); assert(mu_c<=zero);
         }
+        else
+        {
+            assert(mu_a<=zero); assert(mu_c>zero);
+        }
+
     }
     else
     {
+        assert(mu_a>zero);
+        if(mu_c<=zero)
+        {
+            assert(mu_a>zero); assert(mu_c<=zero);
+
+        }
+        else
+        {
+            assert(mu_a>zero); assert(mu_c>zero);
+        }
 
     }
 
