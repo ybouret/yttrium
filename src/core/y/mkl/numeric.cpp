@@ -76,7 +76,17 @@ Y_MKL_DECL_XREAL(VAR)
         Y_MKL_DECL_XREAL(FTOL);
         Y_MKL_DECL_XREAL(SQRT_EPSILON);
 
-        
+        template <> const float       Numeric<float>       :: GOLDEN = (1.0f+sqrtf(5.0f))/2.0f;
+        template <> const double      Numeric<double>      :: GOLDEN = (1.0+sqrt(5.0))/2.0;
+        template <> const long double Numeric<long double> :: GOLDEN = (1.0l+sqrtl(5.0l))/2.0l;
+
+        template <> const float       Numeric<float>       :: INV_GOLDEN = (-1.0f+sqrtf(5.0f))/2.0f;
+        template <> const double      Numeric<double>      :: INV_GOLDEN = (-1.0+sqrt(5.0))/2.0;
+        template <> const long double Numeric<long double> :: INV_GOLDEN = (-1.0l+sqrtl(5.0l))/2.0l;
+
+        Y_MKL_DECL_XREAL(GOLDEN);
+        Y_MKL_DECL_XREAL(INV_GOLDEN);
+
     }
 
 }

@@ -23,6 +23,8 @@ static inline void displayNumeric(const char *id)
     Y_SHOW(RADIX);
     Y_SHOW(FTOL);
     Y_SHOW(SQRT_EPSILON);
+    Y_SHOW(GOLDEN);
+    Y_SHOW(INV_GOLDEN);
     std::cerr << std::endl;
 
 }
