@@ -119,7 +119,7 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        //! arr = T[1..n]
+        //! arr = T[1..n] and brr = U[1..n]
         //
         //______________________________________________________________________
         template <
@@ -203,6 +203,85 @@ namespace Yttrium
             WRITBBLE,
             COMPARE>(arr,arr.size(),proc,brr);
         }
+
+
+        //______________________________________________________________________
+        //
+        //
+        //! arr = T[1..n] and brr = U[1..n] and crr=V[1..n[
+        //
+        //______________________________________________________________________
+        template <
+        typename T,
+        typename WRITABLE,
+        typename U,
+        typename WRITBBLE,
+        typename V,
+        typename WRITCBLE,
+        typename COMPARE>
+        static inline
+        void Call(WRITABLE    &arr,
+                  const size_t num,
+                  COMPARE     &proc,
+                  WRITBBLE    &brr,
+                  WRITCBLE    &crr)
+        {
+            if(num<2) return;
+
+            void *          wa[ Y_WORDS_FOR(T) ];                                 // temporary
+            void *          wb[ Y_WORDS_FOR(U) ];                                 // temporary
+            void *          wc[ Y_WORDS_FOR(V) ];                                 // temporary
+            size_t          il  = (num>>1)+1;                                     // left index
+            size_t          ir  = num;                                            // right index
+            T       &       ta  = *static_cast<T*>(Memory::OutOfReach::Addr(wa)); // alias
+            T       * const a1  = &arr[1];                                        // alias
+            U       * const b1  = &brr[1];                                        // alias
+            V       * const c1  = &crr[1];                                        // alias
+
+            while(true) {
+                if(il>1)
+                {
+                    --il;
+                    Memory::OutOfReach::Copy(wa,&arr[il],sizeof(T));
+                    Memory::OutOfReach::Copy(wb,&brr[il],sizeof(U));
+                }
+                else
+                {
+                    Memory::OutOfReach::Move(wa,&arr[ir],a1,sizeof(T));
+                    Memory::OutOfReach::Move(wb,&brr[ir],b1,sizeof(U));
+
+                    if(--ir == 1)
+                    {
+                        Memory::OutOfReach::Copy(a1,wa,sizeof(T));
+                        Memory::OutOfReach::Copy(b1,wb,sizeof(U));
+                        break;
+                    }
+                }
+
+                size_t    i   = il;
+                size_t    j   = il<<1;
+                while (j <= ir)
+                {
+                    if( (j<ir) && proc(arr[j],arr[j+1]) < 0 )
+                        ++j;
+
+                    if( proc(ta,arr[j]) < 0 )
+                    {
+                        Memory::OutOfReach::Copy(&arr[i],&arr[j],sizeof(T));
+                        Memory::OutOfReach::Copy(&brr[i],&brr[j],sizeof(U));
+                        i   = j;
+                        j <<= 1;
+                    }
+                    else
+                        break;
+                }
+                Memory::OutOfReach::Copy(&arr[i],wa,sizeof(T));
+                Memory::OutOfReach::Copy(&brr[i],wb,sizeof(U));
+
+            }
+        }
+
+
     };
 
 }
