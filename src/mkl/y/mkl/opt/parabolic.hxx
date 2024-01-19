@@ -187,13 +187,13 @@ bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
         {
             assert(mu_a<=zero); assert(mu_c<=zero);
             const real_t u = half;
-            tryAppend(u,x,width, uu, xx, ff, nn, F);
+            tryAppend(u,x,width,uu,xx,ff,nn,F);
         }
         else
         {
             assert(mu_a<=zero); assert(mu_c>zero);
-            const real_t u = Clamp(zero,half * beta,one);
-            tryAppend(u,x,width, uu, xx, ff, nn, F);
+            const real_t u = Clamp(zero,half*beta,one);
+            tryAppend(u,x,width,uu,xx,ff,nn,F);
         }
 
     }
@@ -204,7 +204,7 @@ bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
         {
             assert(mu_a>zero); assert(mu_c<=zero);
             const real_t u = Clamp(zero,half*(one+beta),one);
-            tryAppend(u,x,width, uu, xx, ff, nn, F);
+            tryAppend(u,x,width,uu,xx,ff,nn,F);
         }
         else
         {
@@ -212,7 +212,7 @@ bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
             const real_t oneMinusBeta = one-beta;
             const real_t delta        = beta*(oneMinusBeta) * ((mu_a-mu_c)/(oneMinusBeta*mu_a+beta * mu_c) );
             const real_t u            = Clamp(zero,half*(delta+one),one);
-            tryAppend(u,x,width, uu, xx, ff, nn, F);
+            tryAppend(u,x,width,uu,xx,ff,nn,F);
         }
 
     }
