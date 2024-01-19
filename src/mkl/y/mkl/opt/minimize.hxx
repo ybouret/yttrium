@@ -10,13 +10,8 @@ real_t Minimize<real_t>:: Locate(Triplet<real_t> &x,
     assert(x.isIncreasing());
     assert(f.isLocalMinimum());
 
-    real_t width = 0;
-    bool   state = Parabolic<real_t>::Step(x,f,F,width);
+    bool   state = Parabolic<real_t>::Step(x,f,F);
 
-    if(state && width<=zero)
-    {
-        return 0;
-    }
 
     
 

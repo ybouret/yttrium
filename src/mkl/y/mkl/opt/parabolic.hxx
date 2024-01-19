@@ -68,40 +68,12 @@ INITIALIZE:
     }
 }
 
-namespace {
-
-    //! upgrade
-    static inline
-    void upgrade(const real_t   xm,
-                 real_t * const xx,
-                 real_t * const ff,
-                 size_t        &nn,
-                 Function<real_t,real_t> &F)
-    {
-        const size_t i = nn++;
-        ff[i] = F( xx[i] = xm );
-    }
-
-    static inline
-    void upgradeMiddle(const Triplet<real_t> &x,
-                       real_t * const xx,
-                       real_t * const ff,
-                       size_t        &nn,
-                       Function<real_t,real_t> &F)
-    {
-        static const real_t half(0.5);
-        upgrade(Clamp(x.a,half*(x.a+x.c),x.c),xx,ff,nn,F);
-    }
-
-
-
-}
 
 template <>
-bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionType &F, real_t &w)
+bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionType &F)
 {
 
-
+    static const real_t utol = Numeric<real_t>::EPSILON;
     static const real_t half(0.5);
     static const real_t zero(0);
     static const real_t one(1);
@@ -110,8 +82,7 @@ bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
     assert(f.isLocalMinimum());
 
 
-    w = zero;
-
+    
     //--------------------------------------------------------------------------
     //
     // At Left
@@ -121,10 +92,11 @@ bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
     {
         const real_t xm = Clamp(x.a,half*(x.a+x.c),x.c);
         const real_t fm = F(xm);
+        f.a = f.b;
+        x.a = x.b;
         if( fm <= f.b )
         {
             // explore middle
-            w   = Fabs<real_t>::Of(x.b-xm);
             x.b = xm;
             f.b = fm;
             return true;
@@ -149,10 +121,11 @@ bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
     {
         const real_t xm = Clamp(x.a,half*(x.a+x.c),x.c);
         const real_t fm = F(xm);
+        f.c = f.b;
+        x.c = x.b;
         if( fm <= f.b )
         {
             // explore middle
-            w   = Fabs<real_t>::Of(x.b-xm);
             x.b = xm;
             f.b = fm;
             return true;
@@ -173,10 +146,34 @@ bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
     //--------------------------------------------------------------------------
     assert(x.a<x.b); assert(x.b<x.c);
 
-    const real_t width        = x.c-x.a;
+
     const real_t mu_a         = Max(f.a - f.b,zero);
     const real_t mu_c         = Max(f.c - f.b,zero);
+    const real_t width        = x.c-x.a;
     const real_t beta         = Clamp(zero,(x.b-x.a)/width,one);
+
+    real_t       uu[5]        = { zero, beta, one, zero, zero };
+    real_t       ff[5]        = { f.a,  f.b,  f.c, zero, zero };
+    size_t       nn           = 3;
+
+    if(mu_a<=zero && mu_c<=zero)
+    {
+        const real_t um = half;
+        if(Fabs<real_t>::Of(um-beta)>=utol)
+        {
+            uu[nn] = um;
+            ff[nn] = F( Clamp(x.a,half*(x.a+x.c),x.c) );
+            ++nn;
+        }
+    }
+    else
+    {
+
+    }
+
+    return false;
+
+#if 0
     const real_t oneMinusBeta = one-beta;
     const real_t delta        = beta*(oneMinusBeta) * ((mu_a-mu_c)/(oneMinusBeta*mu_a+beta * mu_c) );
     const real_t uQuadratic   = Clamp(zero,half*(delta+one),one);
@@ -193,12 +190,12 @@ bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
 
     if (fQuadratic<=f.b)
     {
-        w = Max(xx[2]-xx[1],zero);
         return true;
     }
     else
     {
         return false;
     }
+#endif
 
 }

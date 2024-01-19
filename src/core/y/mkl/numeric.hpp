@@ -3,7 +3,7 @@
 #ifndef Y_MKL_Numeric_Included
 #define Y_MKL_Numeric_Included 1
 
-#include "y/config/starting.hpp"
+#include "y/mkl/xreal.hpp"
 #include <cmath>
 
 namespace Yttrium
@@ -38,9 +38,12 @@ namespace Yttrium
 #if !defined(_MSC_VER)
         //! helper to declare existence of values
 #define Y_MKL_NUMERIC(VAR) \
-template <> const float       Numeric<float>      :: VAR;\
-template <> const double      Numeric<double>     :: VAR;\
-template <> const long double Numeric<long double>:: VAR
+template <> const float              Numeric<float>                :: VAR; \
+template <> const double             Numeric<double>               :: VAR; \
+template <> const long double        Numeric<long double>          :: VAR; \
+template <> const XReal<float>       Numeric< XReal<float> >       :: VAR; \
+template <> const XReal<double>      Numeric< XReal<double> >      :: VAR; \
+template <> const XReal<long double> Numeric< XReal<long double> > :: VAR
 
         Y_MKL_NUMERIC(PI);           //!< declare PI
         Y_MKL_NUMERIC(EPSILON);      //!< declare EPSILON

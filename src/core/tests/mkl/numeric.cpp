@@ -6,7 +6,7 @@
 using namespace Yttrium;
 
 
-#define Y_SHOW(FIELD) std::cerr << std::setw(10) << #FIELD << " = " << std::setw(16) << MKL::Numeric<T>::FIELD << std::endl
+#define Y_SHOW(FIELD) std::cerr << std::setw(16) << #FIELD << " = " << std::setw(16) << MKL::Numeric<T>::FIELD << std::endl
 
 template <typename T>
 static inline void displayNumeric(const char *id)
@@ -32,5 +32,11 @@ Y_UTEST(mkl_numeric)
     displayNumeric<float>("float");
     displayNumeric<double>("double");
     displayNumeric<long double>("long double");
+
+    displayNumeric< XReal<float>  >( "xflt" );
+    displayNumeric< XReal<double> >( "xdbl" );
+    displayNumeric< XReal<long double> >( "xldbl" );
+
+
 }
 Y_UDONE()

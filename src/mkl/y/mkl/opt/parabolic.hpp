@@ -50,8 +50,7 @@ namespace Yttrium
             //__________________________________________________________________
             static bool Step(Triplet<T>   &x,
                              Triplet<T>   &f,
-                             FunctionType &F,
-                             T            &w);
+                             FunctionType &F);
 
             //__________________________________________________________________
             //
@@ -60,10 +59,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename FUNCTION> static inline
-            bool Step(FUNCTION &F, Triplet<T> &x, Triplet<T> &f , T &w)
+            bool Step(FUNCTION &F, Triplet<T> &x, Triplet<T> &f)
             {
                 Wrapper1D<T,T,FUNCTION> FW(F);
-                return Step(x,f,FW,w);
+                return Step(x,f,FW);
             }
 
 
