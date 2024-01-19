@@ -68,34 +68,36 @@ INITIALIZE:
     }
 }
 
-#if 0
-namespace
+ namespace
 {
     static inline
     void tryAppend(const real_t           u,
                    const Triplet<real_t> &x,
+                   const real_t           w,
                    real_t * const         uu,
+                   real_t * const         xx,
                    real_t * const         ff,
-                   size_t  &              nn)
+                   size_t  &              nn,
+                   Function<real_t,real_t> &F)
     {
         static const real_t utol = Numeric<real_t>::SQRT_EPSILON;
-        assert(u>=real_t(0));
+        assert(u>=static_cast<real_t>(0));
+        assert(u<=static_cast<real_t>(1));
 
         for(size_t i=0;i<nn;++i)
         {
             if( Fabs<real_t>::Of(u-uu[i]) <= utol ) return;
         }
         uu[nn] = u;
-        ff[nn] = Clamp(x.a,x.a+u*(x.c-x.a),x.c);
+        ff[nn] = F( xx[nn] = Clamp(x.a,x.a+u*w,x.c) );
+        ++nn;
     }
 }
-#endif
 
 template <>
 bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionType &F)
 {
 
-    //static const real_t utol = Numeric<real_t>::SQRT_EPSILON;
     static const real_t half(0.5);
     static const real_t zero(0);
     static const real_t one(1);
@@ -184,10 +186,14 @@ bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
         if(mu_c<=zero)
         {
             assert(mu_a<=zero); assert(mu_c<=zero);
+            const real_t u = half;
+            tryAppend(u,x,width, uu, xx, ff, nn, F);
         }
         else
         {
             assert(mu_a<=zero); assert(mu_c>zero);
+            const real_t u = Clamp(zero,half * beta,one);
+            tryAppend(u,x,width, uu, xx, ff, nn, F);
         }
 
     }
@@ -197,40 +203,22 @@ bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
         if(mu_c<=zero)
         {
             assert(mu_a>zero); assert(mu_c<=zero);
-
+            const real_t u = Clamp(zero,half*(one+beta),one);
+            tryAppend(u,x,width, uu, xx, ff, nn, F);
         }
         else
         {
             assert(mu_a>zero); assert(mu_c>zero);
+            const real_t oneMinusBeta = one-beta;
+            const real_t delta        = beta*(oneMinusBeta) * ((mu_a-mu_c)/(oneMinusBeta*mu_a+beta * mu_c) );
+            const real_t u            = Clamp(zero,half*(delta+one),one);
+            tryAppend(u,x,width, uu, xx, ff, nn, F);
         }
 
     }
 
     return false;
 
-#if 0
-    const real_t oneMinusBeta = one-beta;
-    const real_t delta        = beta*(oneMinusBeta) * ((mu_a-mu_c)/(oneMinusBeta*mu_a+beta * mu_c) );
-    const real_t uQuadratic   = Clamp(zero,half*(delta+one),one);
-    const real_t xQuadratic   = Clamp(x.a, x.a+(width*uQuadratic), x.c);
-    const real_t fQuadratic   = F(xQuadratic);
-    real_t       xx[4]        = { x.a, x.b, x.c, xQuadratic };
-    real_t       ff[4]        = { f.a, f.b, f.c, fQuadratic };
 
-
-    HeapSort::Tableau(xx,4, Comparison::Increasing<real_t>, ff);
-    Core::Display(std::cerr << "xx=", xx, 4) << " -> ";
-    Core::Display(std::cerr << "ff=", ff, 4) << std::endl;
-    chooseTriplets(x,f, xx, ff, 4);
-
-    if (fQuadratic<=f.b)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-#endif
 
 }
