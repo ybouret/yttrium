@@ -214,11 +214,20 @@ bool Parabolic<real_t>:: Step(Triplet<real_t> &x, Triplet<real_t> &f, FunctionTy
             const real_t u            = Clamp(zero,half*(delta+one),one);
             tryAppend(u,x,width,uu,xx,ff,nn,F);
         }
-
     }
 
+    if(nn<=3)
+    {
+        std::cerr << "failure level-1" << std::endl;
+    }
+    else
+    {
+        std::cerr << "success level-1" << std::endl;
+    }
+
+
+    chooseTriplets(x, f, xx, ff, nn);
+
+
     return false;
-
-
-
 }
