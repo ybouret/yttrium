@@ -7,6 +7,7 @@
 #include "y/sort/heap.hpp"
 #include "y/comparison.hpp"
 #include "y/mkl/numeric.hpp"
+#include "y/sort/indexing.hpp"
 
 
 namespace Yttrium

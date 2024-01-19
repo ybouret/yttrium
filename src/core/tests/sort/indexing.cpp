@@ -29,7 +29,7 @@ Y_UTEST(sort_indexing)
     }
 
     {
-        const size_t n       = 5;
+        const size_t n       =   5;
         double       data[n] = { 0 };
         size_t       indx[n] = { 0 };
         for(size_t i=0;i<n;++i) data[i] = ran.symm<double>();
