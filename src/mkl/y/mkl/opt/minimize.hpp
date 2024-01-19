@@ -37,26 +37,23 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            static void Step(Triplet<T> &x, Triplet<T> &f, FunctionType &F);
 
-            //__________________________________________________________________
-            //
-            //
-            //!
-            //
-            //__________________________________________________________________
-            static T Locate(Triplet<T> &x, Triplet<T> &f, FunctionType &F);
 
-            //__________________________________________________________________
-            //
-            //
-            //! Step for any Callable function
-            //
-            //__________________________________________________________________
-            template <typename FUNCTION> static inline
-            T Locate(FUNCTION &F, Triplet<T> &x, Triplet<T> &f )
+            template <typename FUNCTION>  inline
+            static void Step(FUNCTION &F, Triplet<T> &x, Triplet<T> &f )
             {
                 Wrapper1D<T,T,FUNCTION> FW(F);
-                return Locate(x,f,FW);
+                Step(x,f,FW);
+            }
+
+            static T Find(Triplet<T> &x, Triplet<T> &f, FunctionType &F);
+            template <typename FUNCTION>  inline
+
+            static T Find(FUNCTION &F, Triplet<T> &x, Triplet<T> &f )
+            {
+                Wrapper1D<T,T,FUNCTION> FW(F);
+                return Find(x,f,FW);
             }
 
 

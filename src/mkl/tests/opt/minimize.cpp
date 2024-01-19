@@ -23,7 +23,9 @@ Y_UTEST(opt_minimize)
     Triplet<double> x = { -0.5, 0, 0.5 };
     Triplet<double> f = { F(x.a), F(x.b), F(x.c) };
 
-    const double x_opt = Minimize<double>::Locate(F, x, f);
+    Minimize<double>::Step(F, x, f);
+
+    const double x_opt = Minimize<double>::Find(F, x, f);
     std::cerr << "x_opt=" << x_opt << std::endl;
 
 }
