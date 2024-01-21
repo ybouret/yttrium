@@ -17,7 +17,6 @@ namespace
                           const size_t      nn)
     {
         assert(nn>=3);
-        HeapSort::Tableau(xx, nn, Comparison::Increasing<real_t>, ff);
 
         const size_t nt = nn-2; // number of triplets
         size_t       it = 0;    // index of triplet in [0:nt-1]
@@ -70,8 +69,24 @@ namespace
             }
         }
     }
+
+    static inline void coSort(real_t * const xx,
+                              real_t * const ff,
+                              const size_t   nn)
+    {
+        HeapSort::Tableau(xx, nn, Comparison::Increasing<real_t>, ff);
+    }
+
+    static inline void coSort4(real_t * const xx,
+                               real_t * const ff)
+    {
+        real_t * const abscissae = Memory::OutOfReach::Cast<real_t>(xx)-1;
+        real_t * const ordinates = Memory::OutOfReach::Cast<real_t>(ff)-1;
+        NetworkSort::Algo<4>::Increasing(abscissae,ordinates);
+    }
 }
 
+#if 0
 namespace
 {
     static inline
@@ -86,10 +101,13 @@ namespace
         assert(u>=static_cast<real_t>(0));
         assert(u<=static_cast<real_t>(1));
 
+
         ff[nn] = F( xx[nn] = Clamp(x.a,x.a+u*w,x.c) );
+        std::cerr << "appendTrial(" << xx[nn] << ") to " << x << std::endl;
         ++nn;
     }
 }
+#endif
 
 template <>
 void Minimize<real_t>:: Step(Triplet<real_t> &x,
@@ -101,7 +119,6 @@ void Minimize<real_t>:: Step(Triplet<real_t> &x,
     static const real_t half(0.5);
     static const real_t R   = Numeric<real_t>::INV_GOLDEN;
     static const real_t C   = one-R;
-    //static const real_t tol = Numeric<real_t>::SQRT_EPSILON;
 
     assert(x.isIncreasing());
     assert(f.isLocalMinimum());
@@ -111,23 +128,36 @@ void Minimize<real_t>:: Step(Triplet<real_t> &x,
     real_t xx[4] = { x.a, x.b, x.c, zero };
     real_t ff[4] = { f.a, f.b, f.c, zero };
     size_t nn    = 3;
+    real_t width = x.c-x.a;
 
-    const real_t width = x.c-x.a;
-
+      //--------------------------------------------------------------------------
+    //
     // x.b at left
+    //
+    //--------------------------------------------------------------------------
     if(x.b <= x.a)
     {
+        x.a    = x.b;
+        f.a    = f.b;
         ff[nn] = F( xx[nn] = Clamp(x.a,x.a+C*width,x.c) );
-        ++nn;
+        ++nn; assert(4==nn);
+        coSort4(xx,ff);
         chooseNewTriplet(x,f,xx,ff,nn);
         return;
     }
 
+    //--------------------------------------------------------------------------
+    //
     // x.b at right
+    //
+    //--------------------------------------------------------------------------
     if(x.c<=x.b)
     {
+        x.c    = x.b;
+        f.c    = f.b;
         ff[nn] = F( xx[nn] = Clamp(x.a,x.c-C*width,x.c) );
-        ++nn;
+        ++nn; assert(4==nn);
+        coSort4(xx,ff);
         chooseNewTriplet(x,f,xx,ff,nn);
         return;
     }
@@ -136,7 +166,55 @@ void Minimize<real_t>:: Step(Triplet<real_t> &x,
     assert(x.a<x.b);
     assert(x.b<x.c);
 
+    const real_t l = Max(x.b-x.a,zero);
+    const real_t r = Max(x.c-x.b,zero);
+    if( r < l )
+    {
+        // take left
+        xx[nn] = Clamp(x.a,x.b-C*l,x.b);
+    }
+    else
+    {
+        // take right
+        xx[nn] = Clamp(x.b,x.b+C*r,x.c);
+    }
 
+    ff[nn] = F( xx[nn] );
+    ++nn; assert(4==nn);
+    coSort4(xx,ff);
+    Core::Display(std::cerr << "xx=", xx, nn) << " -> ";
+    Core::Display(std::cerr << "ff=", ff, nn) << std::endl;
+
+    {
+        Libc::OutputFile fp("min.dat");
+        for(size_t i=0;i<nn;++i)
+        {
+            fp("%g %g\n", double(xx[i]), double(ff[i]) );
+        }
+    }
+
+    chooseNewTriplet(x,f,xx,ff,nn);
+
+    assert(x.isIncreasing());
+    assert(f.isLocalMinimum());
+    
+
+    if(x.b<=x.a) return;
+    if(x.c<=x.b) return;
+    assert(x.a<x.b);
+    assert(x.b<x.c);
+    width             = x.c - x.a; assert(width>zero);
+    const real_t mu_a = Max(f.a - f.b,zero);
+    const real_t mu_c = Max(f.c - f.b,zero);
+    const real_t beta = Clamp(zero,(x.b-x.a)/width,one);
+
+
+
+
+    throw Exception("todo");
+
+
+#if 0
     const real_t mu_a         = Max(f.a - f.b,zero);
     const real_t mu_c         = Max(f.c - f.b,zero);
     const real_t beta         = Clamp(zero,(x.b-x.a)/width,one);
@@ -189,7 +267,7 @@ void Minimize<real_t>:: Step(Triplet<real_t> &x,
     }
 
     chooseNewTriplet(x, f, xx, ff, nn);
-
+#endif
 }
 
 namespace

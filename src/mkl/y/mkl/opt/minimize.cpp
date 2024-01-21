@@ -8,6 +8,7 @@
 #include "y/sort/heap.hpp"
 #include "y/comparison.hpp"
 #include "y/mkl/antelope/sum3.hpp"
+#include "y/stream/libc/output.hpp"
 
 namespace Yttrium
 {
