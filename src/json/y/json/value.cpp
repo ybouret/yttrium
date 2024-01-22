@@ -170,7 +170,7 @@ namespace Yttrium
 
 
         Array:: Array(const Array &other) :
-        Identifiable(), Collection(), Vector<Value>(other)
+        Identifiable(), Collection(), Yttrium::Vector<Value>(other)
         {
         }
 
