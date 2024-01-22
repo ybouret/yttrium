@@ -114,7 +114,6 @@ namespace Yttrium
                     Array &arr = v.as<Array>();
                     arr.reserve(n);
 
-                    //std::cerr << "values:" << std::endl << values << std::endl;
                     const size_t m = values.size();
                     for(size_t i=m-n+1;i<=m;++i)
                     {
@@ -130,10 +129,8 @@ namespace Yttrium
                     newValue().swapWith(v);
                 }
 
-                void onPair(const size_t n)
+                void onPair(const size_t)
                 {
-                    //std::cerr << "onPair/" << n << std::endl;
-                    //std::cerr << "values: " << values << std::endl;
                     const size_t  m = values.size();
                     SharedPair    p = new Pair(values[m-1].as<String>());
                     p->v.swapWith(values.tail());

@@ -12,9 +12,17 @@ namespace Yttrium
     namespace MKL
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! common data
+        //
+        //
+        //______________________________________________________________________
         struct Minimizing
         {
-            static bool Verbose;
+            static bool Verbose; //!< verbosity during minimize
         };
 
         //______________________________________________________________________
@@ -42,9 +50,12 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+           
+            //! reduction/interpolation convergence
             static bool Found(Triplet<T> &x, Triplet<T> &f, FunctionType &F);
 
 
+            //! wrapper
             template <typename FUNCTION>  inline
             static bool Found(FUNCTION &F, Triplet<T> &x, Triplet<T> &f )
             {
@@ -52,9 +63,11 @@ namespace Yttrium
                 return Found(x,f,FW);
             }
 
+            //! starting from local minimum estimation, converge
             static T Find(Triplet<T> &x, Triplet<T> &f, FunctionType &F);
             template <typename FUNCTION>  inline
 
+            //! wrapper
             static T Find(FUNCTION &F, Triplet<T> &x, Triplet<T> &f )
             {
                 Wrapper1D<T,T,FUNCTION> FW(F);

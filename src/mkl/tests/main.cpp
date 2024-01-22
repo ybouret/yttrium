@@ -19,7 +19,6 @@ Y_UTEST_DECL(32)
     Y_UTEST(ode_scheme45);
 
  
-    Y_UTEST(opt_parabolic);
     Y_UTEST(opt_bracket);
     Y_UTEST(opt_minimize);
 

@@ -38,8 +38,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void renderGraphViz() const; //!< render parser's architecture
-            void load(JSON::Value &value, Jive::Module *);
+            void renderGraphViz() const;                   //!< render parser's architecture
+            void load(JSON::Value &value, Jive::Module *); //!< load module content into value
 
 
         private:
