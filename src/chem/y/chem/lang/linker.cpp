@@ -29,21 +29,22 @@ namespace Yttrium
         RXP()
         {
 
-            forTerminal("UID",   *this, & Linker:: onUID);
-            forTerminal("+",     *this, & Linker:: onSGN);
-            forTerminal("-",     *this, & Linker:: onSGN);
-            forTerminal("COEFF", *this, & Linker:: onCOEFF);
-            forTerminal("K",     *this, & Linker:: onK);
-            forTerminal("RXP",   *this, & Linker:: onRXP);
+            Y_Jive_OnTerminal(Linker,UID);
+            Y_Jive_OnTerminal(Linker,COEFF);
+            Y_Jive_OnTerminal(Linker,K);
+            Y_Jive_OnTerminal(Linker,RXP);
+            forTerminal("+", *this, & Linker:: onSGN);
+            forTerminal("-", *this, & Linker:: onSGN);
+            
 
-            forInternal("Z+",      *this, & Linker:: onZP);
-            forInternal("Z-",      *this, & Linker:: onZM);
-            forInternal("SPECIES", *this, & Linker:: onSpecies);
-            forInternal("ACTOR",   *this, & Linker:: onACTOR);
-            forInternal("REAC",    *this, & Linker:: onREAC);
-            forInternal("PROD",    *this, & Linker:: onPROD);
-            forInternal("EQ",      *this, & Linker:: onEQ);
-            forInternal("Weasel",  *this, & Linker:: onEND);
+            Y_Jive_OnInternal(Linker,SPECIES);
+            Y_Jive_OnInternal(Linker,ACTOR);
+            Y_Jive_OnInternal(Linker,REAC);
+            Y_Jive_OnInternal(Linker,PROD);
+            Y_Jive_OnInternal(Linker,EQ);
+            forInternal("Z+",     *this, & Linker:: onZP);
+            forInternal("Z-",     *this, & Linker:: onZM);
+            forInternal("Weasel", *this, & Linker:: onEND);
 
         }
 
@@ -130,7 +131,7 @@ namespace Yttrium
 
 
 
-        void Linker:: onSpecies(const size_t n)
+        void Linker:: onSPECIES(const size_t n)
         {
             assert(UID.size>0);
 

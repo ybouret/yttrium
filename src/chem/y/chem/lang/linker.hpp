@@ -71,7 +71,7 @@ namespace Yttrium
             void onSGN(const Token &);    //!< drop sign
             void onZP(const size_t);      //!< store Z+
             void onZM(const size_t);      //!< store Z-
-            void onSpecies(const size_t); //!< query/create specues, store on SP
+            void onSPECIES(const size_t); //!< query/create specues, store on SP
             void onCOEFF(const Token &);  //!< store info COEFF;
             void onACTOR(const size_t);   //!< store Actor
             void onREAC(const size_t);    //!< build some REACtants
