@@ -10,7 +10,11 @@ namespace Yttrium
 
     namespace MKL
     {
-        //static const char CallSign[] = "Parabolic::Step";
+        static const char CallSign[] = "[Bracketing]";
+
+        bool Bracketing::Verbose = false;
+
+#define Y_BRACKET_PRINT(MSG) do { if(Bracketing::Verbose) { std::cerr << CallSign << ' ' << MSG << std::endl; } } while(false)
 
 #define real_t float
 #include "bracket.hxx"

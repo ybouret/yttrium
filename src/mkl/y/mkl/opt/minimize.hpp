@@ -23,7 +23,18 @@ namespace Yttrium
         struct Minimizing
         {
             static bool Verbose; //!< verbosity during minimize
+
+            //! prolog befor locationg a minimz
+            enum Prolog
+            {
+                Direct, //!< local minimum estimated by user
+                Inside, //!< will bracket inside x.a:x.c
+                Expand  //!< will bracket expand x.a:x.b
+            };
         };
+
+
+
 
         //______________________________________________________________________
         //
@@ -64,14 +75,14 @@ namespace Yttrium
             }
 
             //! starting from local minimum estimation, converge
-            static T Find(Triplet<T> &x, Triplet<T> &f, FunctionType &F);
+            static T Locate(const Minimizing::Prolog prolog, Triplet<T> &x, Triplet<T> &f, FunctionType &F);
             template <typename FUNCTION>  inline
 
             //! wrapper
-            static T Find(FUNCTION &F, Triplet<T> &x, Triplet<T> &f )
+            static T Locate(const Minimizing::Prolog prolog, FUNCTION &F, Triplet<T> &x, Triplet<T> &f)
             {
                 Wrapper1D<T,T,FUNCTION> FW(F);
-                return Find(x,f,FW);
+                return Locate(prolog,x,f,FW);
             }
 
 

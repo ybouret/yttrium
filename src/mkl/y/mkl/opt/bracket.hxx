@@ -5,7 +5,7 @@ bool Bracket<real_t>:: Inside(Triplet<real_t>   &x,
                               FunctionType      &F)
 {
     static const real_t half(0.5);
-    //static const real_t zero(0);
+    Y_BRACKET_PRINT("<Inside x=" << x << " f=" << f <<">");
 
     //--------------------------------------------------------------------------
     // order f.a<=f.c and initialize width
@@ -24,6 +24,8 @@ PROBE:
     if(xmin>xmax) Swap(xmin,xmax);
     f.b = F( x.b = Clamp(xmin,half*(xmin+xmax),xmax) );
 
+    Y_BRACKET_PRINT("probe @x=" << x << " f=" << f <<" width=" << width);
+
 
     if(f.b <= f.a)
     {
@@ -31,6 +33,8 @@ PROBE:
         x.makeIncreasingWith(f);
         assert(x.isIncreasing());
         assert(f.isLocalMinimum());
+        Y_BRACKET_PRINT("found @x=" << x << " f=" << f);
+        Y_BRACKET_PRINT("<Inside/>");
         return true;
     }
 
@@ -41,7 +45,9 @@ PROBE:
     {
         f.c = f.b = f.a;
         x.c = x.b = x.a;
-        return false; 
+        Y_BRACKET_PRINT("side  @x=" << x << " f=" << f);
+        Y_BRACKET_PRINT("<Inside/>");
+        return false;
     }
 
     width = newWidth;

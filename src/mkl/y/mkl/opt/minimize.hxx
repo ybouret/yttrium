@@ -312,13 +312,34 @@ bool Minimize<real_t>:: Found(Triplet<real_t> &x,
 
 
 template <>
-real_t Minimize<real_t>:: Find(Triplet<real_t> &x, Triplet<real_t> &f, FunctionType &F)
+real_t Minimize<real_t>:: Locate(const Minimizing::Prolog prolog, 
+                                 Triplet<real_t>         &x,
+                                 Triplet<real_t>         &f,
+                                 FunctionType            &F)
 {
 
     assert(x.isIncreasing());
     assert(f.isLocalMinimum());
 
-    Y_MINIMIZE_PRINT("<Minimizing>");
+    switch (prolog) 
+    {
+        case Minimizing::Direct:
+            if(!x.isIncreasing())   throw Specific::Exception(CallSign,"abscissae are not increasing");
+            if(!f.isLocalMinimum()) throw Specific::Exception(CallSign,"ordinates are not local minimum");
+            break;
+
+        case Minimizing::Inside: {
+            const Temporary<bool> flag(Bracketing::Verbose,Minimizing::Verbose);
+            if(!Bracket<real_t>::Inside(x,f,F)) return x.b; // early return
+        } break;
+
+        case Minimizing::Expand: {
+            const Temporary<bool> flag(Bracketing::Verbose,Minimizing::Verbose);
+            Bracket<real_t>::Expand(x,f,F);
+        } break;
+    }
+
+    Y_MINIMIZE_PRINT("<Locate>");
     size_t cycle = 0;
     while( !Found(x,f,F) )
     {
@@ -326,7 +347,7 @@ real_t Minimize<real_t>:: Find(Triplet<real_t> &x, Triplet<real_t> &f, FunctionT
         Y_MINIMIZE_PRINT("@cycle = " <<cycle);
     }
     Y_MINIMIZE_PRINT("@find : F(" << x.b << ") = " << f.b);
-    Y_MINIMIZE_PRINT("<Minimizing/>");
+    Y_MINIMIZE_PRINT("<Locate/>");
 
     return x.b;
 

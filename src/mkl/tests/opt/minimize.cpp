@@ -24,7 +24,9 @@ Y_UTEST(opt_minimize)
     Triplet<double> f = { F(x.a), F(x.b), F(x.c) };
 
     Minimizing::Verbose = true;
-    const double x_opt = Minimize<double>::Find(F, x, f);
+
+
+    const double x_opt = Minimize<double>::Locate( Minimizing::Inside, F, x, f);
     std::cerr << "x_opt=" << x_opt << std::endl;
 
 }

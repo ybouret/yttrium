@@ -19,6 +19,7 @@ static inline double F(double x)
 Y_UTEST(opt_bracket)
 {
     Triplet<double> x = { 0, 0, 0.5 };
+    Bracketing::Verbose = true;
 
     if(argc>1)
     {

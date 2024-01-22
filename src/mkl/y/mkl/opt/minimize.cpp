@@ -1,6 +1,8 @@
 
 
 #include "y/mkl/opt/minimize.hpp"
+#include "y/mkl/opt/bracket.hpp"
+#include "y/type/temporary.hpp"
 #include "y/mkl/api.hpp"
 #include "y/mkl/numeric.hpp"
 #include "y/type/utils.hpp"
@@ -16,7 +18,7 @@ namespace Yttrium
     namespace MKL
     {
         bool              Minimizing::Verbose = false;
-        static const char CallSign[] = "[Minimize]";
+        static const char CallSign[] = "[Minimizing]";
 
 #define Y_MINIMIZE_PRINT(MSG) do { if(Minimizing::Verbose) { std::cerr << CallSign << ' ' << MSG << std::endl; } } while(false)
 
