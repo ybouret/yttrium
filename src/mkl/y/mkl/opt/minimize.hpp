@@ -11,6 +11,12 @@ namespace Yttrium
 {
     namespace MKL
     {
+
+        struct Minimizing
+        {
+            static bool Verbose;
+        };
+
         //______________________________________________________________________
         //
         //
@@ -36,15 +42,14 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-
-            static bool Step(Triplet<T> &x, Triplet<T> &f, FunctionType &F);
+            static bool Found(Triplet<T> &x, Triplet<T> &f, FunctionType &F);
 
 
             template <typename FUNCTION>  inline
-            static void Step(FUNCTION &F, Triplet<T> &x, Triplet<T> &f )
+            static bool Found(FUNCTION &F, Triplet<T> &x, Triplet<T> &f )
             {
                 Wrapper1D<T,T,FUNCTION> FW(F);
-                Step(x,f,FW);
+                return Found(x,f,FW);
             }
 
             static T Find(Triplet<T> &x, Triplet<T> &f, FunctionType &F);

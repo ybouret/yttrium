@@ -15,7 +15,10 @@ namespace Yttrium
 
     namespace MKL
     {
-        static const char CallSign[] = "Minimize::Step";
+        bool              Minimizing::Verbose = false;
+        static const char CallSign[] = "[Minimize]";
+
+#define Y_MINIMIZE_PRINT(MSG) do { if(Minimizing::Verbose) { std::cerr << CallSign << ' ' << MSG << std::endl; } } while(false)
 
 #define real_t float
 #include "minimize.hxx"

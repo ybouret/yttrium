@@ -1,6 +1,6 @@
 Y_CreateTest(json)
 
-Y_LinkLibraries(test-json y-jive y-json)
+Y_LinkLibraries(test-json y-json y-jive)
 
 set( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
 set( DATA ${HERE}/../../../var)

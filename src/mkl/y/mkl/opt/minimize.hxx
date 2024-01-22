@@ -75,17 +75,7 @@ namespace
             }
         }
     }
-
-
-#if 0
-    static inline void coSort4(real_t * const xx,
-                               real_t * const ff)
-    {
-        real_t * const abscissae = Memory::OutOfReach::Cast<real_t>(xx)-1;
-        real_t * const ordinates = Memory::OutOfReach::Cast<real_t>(ff)-1;
-        NetworkSort::Algo<4>::Increasing(abscissae,ordinates);
-    }
-#endif
+ 
 
 }
 
@@ -115,99 +105,109 @@ namespace
 
 
 template <>
-bool Minimize<real_t>:: Step(Triplet<real_t> &x,
-                             Triplet<real_t> &f,
-                             FunctionType    &F)
+bool Minimize<real_t>:: Found(Triplet<real_t> &x,
+                              Triplet<real_t> &f,
+                              FunctionType    &F)
 {
     static const real_t zero(0);
     static const real_t one(1);
     static const real_t half(0.5);
-    static const real_t R   = Numeric<real_t>::INV_GOLDEN;
-    static const real_t C   = one-R;
+    static const real_t R    = Numeric<real_t>::INV_GOLDEN;
+    static const real_t C    = one-R;
+    static const real_t utol = Numeric<real_t>::SQRT_EPSILON;
 
     assert(x.isIncreasing());
     assert(f.isLocalMinimum());
-
-    std::cerr << "C=" << C << std::endl;
-
-    real_t xx[4] = { x.a, x.b, x.c, zero };
-    real_t ff[4] = { f.a, f.b, f.c, zero };
-    size_t nn    = 3;
-    real_t width = x.c-x.a;
-
-    //--------------------------------------------------------------------------
-    //
-    // Special case: x.b at left
-    //
-    //--------------------------------------------------------------------------
-    if(x.b <= x.a)
+    
+    Y_MINIMIZE_PRINT("@init : " << x << " -> " << f);
     {
-        x.a    = x.b;
-        f.a    = f.b;
-        ff[nn] = F( xx[nn] = Clamp(x.a,x.a+C*width,x.c) );
-        ++nn;
+        const real_t width = x.c-x.a;
+        real_t       xx[4] = { x.a, x.b, x.c, zero };
+        real_t       ff[4] = { f.a, f.b, f.c, zero };
+        size_t       nn    = 3;
+        //----------------------------------------------------------------------
+        //
+        //
+        // Special case: x.b at left
+        //
+        //
+        //----------------------------------------------------------------------
+        if(x.b <= x.a)
+        {
+            x.a    = x.b;
+            f.a    = f.b;
+            ff[nn] = F( xx[nn] = Clamp(x.a,x.a+C*width,x.c) );
+            ++nn;
+            ChooseNewTriplet(x,f,xx,ff,nn);
+            Y_MINIMIZE_PRINT("@left : " << x << " -> " << f);
+            return HasConverged(x);
+        }
+
+        //----------------------------------------------------------------------
+        //
+        //
+        // Special case: x.b at right
+        //
+        //
+        //----------------------------------------------------------------------
+        if(x.c<=x.b)
+        {
+            x.c    = x.b;
+            f.c    = f.b;
+            ff[nn] = F( xx[nn] = Clamp(x.a,x.c-C*width,x.c) );
+            ++nn;
+            ChooseNewTriplet(x,f,xx,ff,nn);
+            Y_MINIMIZE_PRINT("@right: " << x << " -> " << f);
+            return HasConverged(x);
+        }
+
+        //----------------------------------------------------------------------
+        //
+        //
+        // Generic case in : regularize
+        //
+        //
+        //----------------------------------------------------------------------
+        assert(x.a<x.b);
+        assert(x.b<x.c);
+
+        {
+            const real_t l = Max(x.b-x.a,zero);
+            const real_t r = Max(x.c-x.b,zero);
+            if( l >= r)
+            {
+                // left >= right
+                xx[nn] = Clamp(x.a,x.b-C*l,x.b);
+            }
+            else
+            {
+                // right > left
+                xx[nn] = Clamp(x.b,x.b+C*r,x.c);
+            }
+            ff[nn] = F( xx[nn] );
+            ++nn;
+        }
         ChooseNewTriplet(x,f,xx,ff,nn);
-        return HasConverged(x);;
-    }
+        Y_MINIMIZE_PRINT("@loop : " << x << " -> " << f);
 
-    //--------------------------------------------------------------------------
-    //
-    // Special case: x.b at right
-    //
-    //--------------------------------------------------------------------------
-    if(x.c<=x.b)
-    {
-        x.c    = x.b;
-        f.c    = f.b;
-        ff[nn] = F( xx[nn] = Clamp(x.a,x.c-C*width,x.c) );
-        ++nn;
-        ChooseNewTriplet(x,f,xx,ff,nn);
-        return HasConverged(x);
-    }
-
-    //--------------------------------------------------------------------------
-    //
-    // Generic case in : regularize
-    //
-    //--------------------------------------------------------------------------
-    assert(x.a<x.b);
-    assert(x.b<x.c);
-
-    {
-        const real_t l = Max(x.b-x.a,zero);
-        const real_t r = Max(x.c-x.b,zero);
-        if( l >= r)
+        if(false)
         {
-            // left >= right
-            xx[nn] = Clamp(x.a,x.b-C*l,x.b);
+            Libc::OutputFile fp("min.dat");
+            for(size_t i=0;i<nn;++i)
+            {
+                fp("%g %g 3\n", double(xx[i]), double(ff[i]) );
+            }
+            fp << "\n";
         }
-        else
-        {
-            // right > left
-            xx[nn] = Clamp(x.b,x.b+C*r,x.c);
-        }
-        ff[nn] = F( xx[nn] );
-        ++nn;
+        assert(x.isIncreasing());
+        assert(f.isLocalMinimum());
     }
-    ChooseNewTriplet(x,f,xx,ff,nn);
-
-
-    Core::Display(std::cerr << "xx=", xx, nn) << " -> ";
-    Core::Display(std::cerr << "ff=", ff, nn) << std::endl;
-
-    {
-        Libc::OutputFile fp("min.dat");
-        for(size_t i=0;i<nn;++i)
-        {
-            fp("%g %g\n", double(xx[i]), double(ff[i]) );
-        }
-    }
-    assert(x.isIncreasing());
-    assert(f.isLocalMinimum());
 
     //--------------------------------------------------------------------------
+    //
     //
     // sort out result
+    //
     //
     //--------------------------------------------------------------------------
     if( HasConverged(x) ) return true;
@@ -216,76 +216,97 @@ bool Minimize<real_t>:: Step(Triplet<real_t> &x,
 
     //--------------------------------------------------------------------------
     //
+    //
     // try parabolic interpolation
+    //
     //
     //--------------------------------------------------------------------------
     assert(x.a<x.b);
     assert(x.b<x.c);
-    width             = x.c - x.a; assert(width>zero);
 
-    const real_t mu_a = Max(f.a - f.b,zero);
-    const real_t mu_c = Max(f.c - f.b,zero);
-    const real_t beta = Clamp(zero,(x.b-x.a)/width,one);
-
-
-
-    throw Exception("todo");
-
-
-#if 0
-    const real_t mu_a         = Max(f.a - f.b,zero);
-    const real_t mu_c         = Max(f.c - f.b,zero);
-    const real_t beta         = Clamp(zero,(x.b-x.a)/width,one);
-
-    if(mu_a<=zero)
     {
-        if(mu_c<=zero)
+        //----------------------------------------------------------------------
+        //
+        // compute new width and metrics elements
+        //
+        //----------------------------------------------------------------------
+        const real_t          width = x.c - x.a; assert(width>zero);
+        const real_t          mu_a  = Max(f.a - f.b,zero);
+        const real_t          mu_c  = Max(f.c - f.b,zero);
+        const real_t          beta  = Clamp(zero,(x.b-x.a)/width,one);
+        const Triplet<real_t> u     = {zero,beta,one};
+        real_t                u_opt = half;
+
+        //----------------------------------------------------------------------
+        //
+        // compute reduced parabolic position
+        //
+        //----------------------------------------------------------------------
+        if(mu_a<=zero)
         {
-            assert(mu_a<=zero); assert(mu_c<=zero);
-            const real_t u = half;
-            appendTrial(u,x,width,xx,ff,nn,F);
+            if(mu_c<=zero)
+            {
+                assert(mu_a<=zero); assert(mu_c<=zero);
+                u_opt = half;
+            }
+            else
+            {
+                assert(mu_a<=zero); assert(mu_c>zero);
+                u_opt = Clamp(zero,half*beta,one);
+            }
+
         }
         else
         {
-            assert(mu_a<=zero); assert(mu_c>zero);
-            const real_t u = Clamp(zero,half*beta,one);
-            appendTrial(u,x,width,xx,ff,nn,F);
+            assert(mu_a>zero);
+            if(mu_c<=zero)
+            {
+                assert(mu_a>zero); assert(mu_c<=zero);
+                u_opt = Clamp(zero,half*(one+beta),one);
+            }
+            else
+            {
+                assert(mu_a>zero); assert(mu_c>zero);
+                const real_t oneMinusBeta = one-beta;
+                const real_t delta        = beta*(oneMinusBeta) * ((mu_a-mu_c)/(oneMinusBeta*mu_a+beta * mu_c) );
+                u_opt                     = Clamp(zero,half*(delta+one),one);
+            }
         }
 
-    }
-    else
-    {
-        assert(mu_a>zero);
-        if(mu_c<=zero)
+        //----------------------------------------------------------------------
+        //
+        // check meaningfull parabolic step
+        //
+        //----------------------------------------------------------------------
+        for(size_t i=3;i>0;--i)
         {
-            assert(mu_a>zero); assert(mu_c<=zero);
-            const real_t u = Clamp(zero,half*(one+beta),one);
-            appendTrial(u,x,width,xx,ff,nn,F);
+            if(Fabs<real_t>::Of(u[i]-u_opt)<=utol) 
+            {
+                Y_MINIMIZE_PRINT("no interpolation...");
+                return false;
+            }
         }
-        else
+
+        const real_t xp    = Clamp(x.a, x.a + width * u_opt, x.c);
+        real_t       xx[4] = { x.a, x.b, x.c, xp    };
+        real_t       ff[4] = { f.a, f.b, f.c, F(xp) };
+        ChooseNewTriplet(x, f, xx, ff, 4);
+        Y_MINIMIZE_PRINT("@inter: " << x << " -> " << f);
+
+        if(false)
         {
-            assert(mu_a>zero); assert(mu_c>zero);
-            const real_t oneMinusBeta = one-beta;
-            const real_t delta        = beta*(oneMinusBeta) * ((mu_a-mu_c)/(oneMinusBeta*mu_a+beta * mu_c) );
-            const real_t u            = Clamp(zero,half*(delta+one),one);
-            appendTrial(u,x,width,xx,ff,nn,F);
+            Libc::OutputFile fp("min.dat",true);
+            for(size_t i=0;i<4;++i)
+            {
+                fp("%g %g 4\n", double(xx[i]), double(ff[i]));
+            }
+            fp << "\n";
         }
+
+        return HasConverged(x);
     }
 
-    assert(4==nn);
-    const bool decreased = ff[nn-1] <= f.b;
-    HeapSort::Tableau(xx, nn, Comparison::Increasing<real_t>, ff);
 
-    std::cerr << " *** decreased = " << decreased << std::endl;
-
-    if(!decreased)
-    {
-        std::cerr << "Error..." << std::endl;
-        throw Exception("not decreased");
-    }
-
-    chooseNewTriplet(x, f, xx, ff, nn);
-#endif
 }
 
 
@@ -293,18 +314,15 @@ bool Minimize<real_t>:: Step(Triplet<real_t> &x,
 template <>
 real_t Minimize<real_t>:: Find(Triplet<real_t> &x, Triplet<real_t> &f, FunctionType &F)
 {
-    static const real_t _3(3);
-    static const real_t tol = _3 *  Numeric<real_t>::SQRT_EPSILON;
 
     assert(x.isIncreasing());
     assert(f.isLocalMinimum());
 
-    std::cerr << "@init: " << x << " -> " << f << std::endl;
-    while( WidthOf(x) > SumOfAbs(x) * tol  )
-    {
-        Step(x,f,F);
-        std::cerr << "@loop: " << x << " -> " << f << std::endl;
-    }
+    Y_MINIMIZE_PRINT("<Minimizing>");
+    while( !Found(x,f,F) )
+        ;
+    Y_MINIMIZE_PRINT("@find : F(" << x.b << ") = " << f.b);
+    Y_MINIMIZE_PRINT("<Minimizing/>");
 
     return x.b;
 
