@@ -319,8 +319,12 @@ real_t Minimize<real_t>:: Find(Triplet<real_t> &x, Triplet<real_t> &f, FunctionT
     assert(f.isLocalMinimum());
 
     Y_MINIMIZE_PRINT("<Minimizing>");
+    size_t cycle = 0;
     while( !Found(x,f,F) )
-        ;
+    {
+        ++cycle;
+        Y_MINIMIZE_PRINT("@cycle = " <<cycle);
+    }
     Y_MINIMIZE_PRINT("@find : F(" << x.b << ") = " << f.b);
     Y_MINIMIZE_PRINT("<Minimizing/>");
 
