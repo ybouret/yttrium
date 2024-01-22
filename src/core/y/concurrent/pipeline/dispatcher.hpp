@@ -51,10 +51,7 @@ namespace Yttrium
 
 
             //! cleanup engines
-            virtual ~Dispatcher() noexcept
-            {
-                this->quit();
-            }
+            virtual ~Dispatcher() noexcept { this->quit(); }
 
             //__________________________________________________________________
             //

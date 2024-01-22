@@ -3,9 +3,11 @@
 #ifndef Y_Concurrent_Task_Included
 #define Y_Concurrent_Task_Included 1
 
-#include "y/concurrent/pipeline/task/callback.hpp"
-#include "y/concurrent/pipeline/task/command.hpp"
+//#include "y/concurrent/pipeline/task/callback.hpp"
+//#include "y/concurrent/pipeline/task/command.hpp"
+#include "y/concurrent/thread/context.hpp"
 #include "y/concurrent/pipeline/task/uuid.hpp"
+#include "y/concurrent/pipeline/runnable.hpp"
 
 
 namespace Yttrium
