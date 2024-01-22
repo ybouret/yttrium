@@ -145,6 +145,7 @@ namespace Yttrium
                 case IsString: os << "\"" << as<String>() << "\""; break;
                 case IsNumber: os << as<Number>(); break;
                 case IsArray:  return as<Array>().display(os,indent);
+                case IsObject: return as<Object>().display(os,indent);
             }
             return os;
         }
@@ -286,6 +287,22 @@ namespace Yttrium
             }
             return p->v;
 
+        }
+
+        std::ostream & Object:: display(std::ostream &os, const size_t indent) const
+        {
+
+            os << '{';
+            size_t num = size();
+            size_t idx = 1;
+            for(ConstIterator it=begin();it!=end();++it,++idx)
+            {
+                os << "\"" << it->key() << "\" : ";
+                os << (*it)->v;
+                if(idx<num) os << ',' << std::endl;
+            }
+            os << '}';
+            return os;
         }
 
     }

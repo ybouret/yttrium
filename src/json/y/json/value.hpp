@@ -212,6 +212,7 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+            std::ostream & display(std::ostream &, const size_t ) const; //!< display
 
             Value &       operator[](const String &key);       //!< get/create (null) Value
             const Value & operator[](const String &key) const; //!< get existing Value
