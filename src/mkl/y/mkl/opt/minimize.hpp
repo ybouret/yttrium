@@ -37,7 +37,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            static void Step(Triplet<T> &x, Triplet<T> &f, FunctionType &F);
+            static bool Step(Triplet<T> &x, Triplet<T> &f, FunctionType &F);
 
 
             template <typename FUNCTION>  inline

@@ -1,6 +1,12 @@
 
 namespace
 {
+    static inline void CoSort(real_t * const xx,
+                              real_t * const ff,
+                              const size_t   nn)
+    {
+        HeapSort::Tableau(xx, nn, Comparison::Increasing<real_t>, ff);
+    }
 
     //------------------------------------------------------------------------------
     //
@@ -10,14 +16,14 @@ namespace
     //
     //------------------------------------------------------------------------------
     static inline
-    void chooseNewTriplet(Triplet<real_t> & x,
+    void ChooseNewTriplet(Triplet<real_t> & x,
                           Triplet<real_t> & f,
                           real_t  * const   xx,
                           real_t  * const   ff,
                           const size_t      nn)
     {
         assert(nn>=3);
-
+        CoSort(xx,ff,nn);
         const size_t nt = nn-2; // number of triplets
         size_t       it = 0;    // index of triplet in [0:nt-1]
 
@@ -70,13 +76,8 @@ namespace
         }
     }
 
-    static inline void coSort(real_t * const xx,
-                              real_t * const ff,
-                              const size_t   nn)
-    {
-        HeapSort::Tableau(xx, nn, Comparison::Increasing<real_t>, ff);
-    }
 
+#if 0
     static inline void coSort4(real_t * const xx,
                                real_t * const ff)
     {
@@ -84,33 +85,37 @@ namespace
         real_t * const ordinates = Memory::OutOfReach::Cast<real_t>(ff)-1;
         NetworkSort::Algo<4>::Increasing(abscissae,ordinates);
     }
-}
-
-#if 0
-namespace
-{
-    static inline
-    void appendTrial(const real_t           u,
-                     const Triplet<real_t> &x,
-                     const real_t           w,
-                     real_t * const         xx,
-                     real_t * const         ff,
-                     size_t  &              nn,
-                     Function<real_t,real_t> &F)
-    {
-        assert(u>=static_cast<real_t>(0));
-        assert(u<=static_cast<real_t>(1));
-
-
-        ff[nn] = F( xx[nn] = Clamp(x.a,x.a+u*w,x.c) );
-        std::cerr << "appendTrial(" << xx[nn] << ") to " << x << std::endl;
-        ++nn;
-    }
-}
 #endif
 
+}
+
+namespace
+{
+    static inline real_t WidthOf(const Triplet<real_t> &x)
+    {
+        return Fabs<real_t>::Of(x.c-x.a);
+    }
+
+    static inline real_t SumOfAbs(const Triplet<real_t> &x)
+    {
+        const real_t aa = Fabs<real_t>::Of(x.a);
+        const real_t ab = Fabs<real_t>::Of(x.b);
+        const real_t ac = Fabs<real_t>::Of(x.c);
+        return Antelope::Sum3<real_t>::Of(aa,ab,ac);
+    }
+
+    static inline
+    bool HasConverged(const Triplet<real_t> &x)
+    {
+        static const real_t _3(3);
+        static const real_t tol = _3 *  Numeric<real_t>::SQRT_EPSILON;
+        return WidthOf(x) <= SumOfAbs(x) * tol;
+    }
+}
+
+
 template <>
-void Minimize<real_t>:: Step(Triplet<real_t> &x,
+bool Minimize<real_t>:: Step(Triplet<real_t> &x,
                              Triplet<real_t> &f,
                              FunctionType    &F)
 {
@@ -130,9 +135,9 @@ void Minimize<real_t>:: Step(Triplet<real_t> &x,
     size_t nn    = 3;
     real_t width = x.c-x.a;
 
-      //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     //
-    // x.b at left
+    // Special case: x.b at left
     //
     //--------------------------------------------------------------------------
     if(x.b <= x.a)
@@ -140,15 +145,14 @@ void Minimize<real_t>:: Step(Triplet<real_t> &x,
         x.a    = x.b;
         f.a    = f.b;
         ff[nn] = F( xx[nn] = Clamp(x.a,x.a+C*width,x.c) );
-        ++nn; assert(4==nn);
-        coSort4(xx,ff);
-        chooseNewTriplet(x,f,xx,ff,nn);
-        return;
+        ++nn;
+        ChooseNewTriplet(x,f,xx,ff,nn);
+        return HasConverged(x);;
     }
 
     //--------------------------------------------------------------------------
     //
-    // x.b at right
+    // Special case: x.b at right
     //
     //--------------------------------------------------------------------------
     if(x.c<=x.b)
@@ -156,32 +160,38 @@ void Minimize<real_t>:: Step(Triplet<real_t> &x,
         x.c    = x.b;
         f.c    = f.b;
         ff[nn] = F( xx[nn] = Clamp(x.a,x.c-C*width,x.c) );
-        ++nn; assert(4==nn);
-        coSort4(xx,ff);
-        chooseNewTriplet(x,f,xx,ff,nn);
-        return;
+        ++nn;
+        ChooseNewTriplet(x,f,xx,ff,nn);
+        return HasConverged(x);
     }
 
-    // in bulk
+    //--------------------------------------------------------------------------
+    //
+    // Generic case in : regularize
+    //
+    //--------------------------------------------------------------------------
     assert(x.a<x.b);
     assert(x.b<x.c);
 
-    const real_t l = Max(x.b-x.a,zero);
-    const real_t r = Max(x.c-x.b,zero);
-    if( r < l )
     {
-        // take left
-        xx[nn] = Clamp(x.a,x.b-C*l,x.b);
+        const real_t l = Max(x.b-x.a,zero);
+        const real_t r = Max(x.c-x.b,zero);
+        if( l >= r)
+        {
+            // left >= right
+            xx[nn] = Clamp(x.a,x.b-C*l,x.b);
+        }
+        else
+        {
+            // right > left
+            xx[nn] = Clamp(x.b,x.b+C*r,x.c);
+        }
+        ff[nn] = F( xx[nn] );
+        ++nn;
     }
-    else
-    {
-        // take right
-        xx[nn] = Clamp(x.b,x.b+C*r,x.c);
-    }
+    ChooseNewTriplet(x,f,xx,ff,nn);
 
-    ff[nn] = F( xx[nn] );
-    ++nn; assert(4==nn);
-    coSort4(xx,ff);
+
     Core::Display(std::cerr << "xx=", xx, nn) << " -> ";
     Core::Display(std::cerr << "ff=", ff, nn) << std::endl;
 
@@ -192,22 +202,30 @@ void Minimize<real_t>:: Step(Triplet<real_t> &x,
             fp("%g %g\n", double(xx[i]), double(ff[i]) );
         }
     }
-
-    chooseNewTriplet(x,f,xx,ff,nn);
-
     assert(x.isIncreasing());
     assert(f.isLocalMinimum());
-    
 
-    if(x.b<=x.a) return;
-    if(x.c<=x.b) return;
+    //--------------------------------------------------------------------------
+    //
+    // sort out result
+    //
+    //--------------------------------------------------------------------------
+    if( HasConverged(x) ) return true;
+    if(x.b<=x.a)          return false;
+    if(x.c<=x.b)          return false;
+
+    //--------------------------------------------------------------------------
+    //
+    // try parabolic interpolation
+    //
+    //--------------------------------------------------------------------------
     assert(x.a<x.b);
     assert(x.b<x.c);
     width             = x.c - x.a; assert(width>zero);
+
     const real_t mu_a = Max(f.a - f.b,zero);
     const real_t mu_c = Max(f.c - f.b,zero);
     const real_t beta = Clamp(zero,(x.b-x.a)/width,one);
-
 
 
 
@@ -270,21 +288,7 @@ void Minimize<real_t>:: Step(Triplet<real_t> &x,
 #endif
 }
 
-namespace
-{
-    static inline real_t WidthOf(const Triplet<real_t> &x)
-    {
-        return Fabs<real_t>::Of(x.c-x.a);
-    }
 
-    static inline real_t SumOfAbs(const Triplet<real_t> &x)
-    {
-        const real_t aa = Fabs<real_t>::Of(x.a);
-        const real_t ab = Fabs<real_t>::Of(x.b);
-        const real_t ac = Fabs<real_t>::Of(x.c);
-        return Antelope::Sum3<real_t>::Of(aa,ab,ac);
-    }
-}
 
 template <>
 real_t Minimize<real_t>:: Find(Triplet<real_t> &x, Triplet<real_t> &f, FunctionType &F)
