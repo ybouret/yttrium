@@ -169,7 +169,7 @@ namespace Yttrium
                 const Rule & COMMA   = mark(',');
                 const Rule & STRING  = plug<Jive::Lexical::JString>("String");
                 VALUE
-                << term("Number","-?[:digit:]+")
+                << term("Number","[-+]?[:digit:]+([.][:digit:]+)?([eEdD][-+]?[:digit:]+)?")
                 << STRING
                 << term("true")
                 << term("false")
