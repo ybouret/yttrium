@@ -199,7 +199,7 @@ endif()
 #============================================================================
 if(ZLIB_BUILD_EXAMPLES)
     add_executable(example test/example.c)
-    target_link_libraries(example zlib)
+    target_link_libraries(example zlibstatic)
     add_test(example example)
 
     add_executable(minigzip test/minigzip.c)
