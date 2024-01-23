@@ -16,7 +16,7 @@ include(CheckTypeSize)
 include(CheckFunctionExists)
 include(CheckIncludeFile)
 include(CheckCSourceCompiles)
-enable_testing()
+#enable_testing()
 
 check_include_file(sys/types.h HAVE_SYS_TYPES_H)
 check_include_file(stdint.h    HAVE_STDINT_H)
@@ -124,7 +124,6 @@ set(ZLIB_SRCS
 add_library(y-z STATIC ${ZLIB_SRCS} ${ZLIB_DLL_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
 add_executable(z-example test/example.c)
 target_link_libraries(z-example y-z)
-#add_test(example example)
 add_custom_command(TARGET z-example POST_BUILD
 COMMAND z-example
 COMMENT "[yttrium] Testing zlib"

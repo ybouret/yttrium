@@ -10,12 +10,12 @@ message( STATUS "CMAKE_C_FLAGS_DEBUG   = ${CMAKE_C_FLAGS_DEBUG}")
 message( STATUS "CMAKE_C_FLAGS_RELEASE = ${CMAKE_C_FLAGS_RELEASE}")
 
 
-add_subdirectory(lua)
 add_subdirectory(zlib)
 add_subdirectory(jpeg)
 add_subdirectory(bzip2)
 add_subdirectory(png)
 add_subdirectory(jbig)
+add_subdirectory(lua)
 
 add_custom_target(ThirdParty 
 DEPENDS 
