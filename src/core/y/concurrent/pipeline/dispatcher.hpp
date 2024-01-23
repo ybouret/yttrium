@@ -1,6 +1,4 @@
-
 //! \file
-
 
 #ifndef Y_Concurrent_Pipeline_Dispatcher_Included
 #define Y_Concurrent_Pipeline_Dispatcher_Included 1
