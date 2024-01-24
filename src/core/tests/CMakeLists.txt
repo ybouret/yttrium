@@ -33,16 +33,12 @@ set( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
 set( DATA ${HERE}/../../../var)
 
 add_library(dso MODULE dso.cpp)
-set(dsoName ${CMAKE_CURRENT_SOURCE_DIR}/../../../dso${Y_UUID}.dll)
-
-if(FALSE)
-add_custom_command(TARGET dso POST_BUILD
-COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:dso> ${dsoName}
-COMMAND test-core rtld_dll ${dsoName}
-COMMENT "[yttrium] RTLD using ${dsoName}"
-DEPENDS test-core
+add_custom_target(TARGET dso POST_BUILD
+COMMAND test-core rtld_dll $<TARGET_FILE:dso>
+DEPENDS test-core 
+COMMENT "[yttrium] RTLD"
 VERBATIM)
-endif()
+
 
 enable_testing()
 
