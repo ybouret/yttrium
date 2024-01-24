@@ -901,16 +901,9 @@
  */
 #ifndef PNG_VERSION_INFO_ONLY
 
-#include "./pngstruct.h"
-#include "./pnginfo.h"
+#include "pngstruct.h"
+#include "pnginfo.h"
 
-#if ZLIB_VERNUM != 0x1310
-#error "Bad Zlib!!""
-#endif
-
-#if PNG_ZLIB_VERNUM != 0x1310
-#error "Bad Png!"
-#endif
 
 /* Validate the include paths - the include path used to generate pnglibconf.h
  * must match that used in the build, or we must be using pnglibconf.h.prebuilt:
