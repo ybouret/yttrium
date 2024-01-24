@@ -22,6 +22,7 @@ COMMAND y_lua ${DEMO}/bisect.lua
 COMMAND y_lua ${DEMO}/sieve.lua
 COMMAND y_lua ${DEMO}/account.lua
 COMMENT "[yttrium] Testing Lua"
+DEPENDS y_lua
 VERBATIM)
 
 
