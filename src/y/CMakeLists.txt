@@ -16,7 +16,7 @@ add_subdirectory(bzip2)
 #add_subdirectory(png)
 #add_subdirectory(jbig)
 add_subdirectory(lua)
-add_subdirectory(zlib-1.3.1)
+#add_subdirectory(zlib-1.3.1)
 
 add_custom_target(ThirdParty 
 DEPENDS 
