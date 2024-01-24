@@ -9,10 +9,10 @@ target_link_libraries(y_test_jbig85 y-jbig85)
 
 add_custom_command(TARGET y_test_jbig POST_BUILD
 COMMAND y_test_jbig 
-COMMENT "[yttrium] Testing JBIG"
+COMMENT "[Yttrium] Testing JBIG"
 VERBATIM)
 
 add_custom_command(TARGET y_test_jbig85 POST_BUILD
 COMMAND y_test_jbig85
-COMMENT "[yttrium] Testing JBIG85"
+COMMENT "[Yttrium] Testing JBIG85"
 VERBATIM)
