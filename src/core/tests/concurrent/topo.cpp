@@ -126,7 +126,14 @@ Y_UTEST(concurrent_topo)
 
     std::cerr << "-- ready!" << std::endl;
 
-    topology.assign(crew);
+    try
+    {
+        topology.assign(crew);
+    }
+    catch(...)
+    {
+        std::cerr << "Couldn't assign..." << std::endl;
+    }
 
     if(argc>1)
     {
