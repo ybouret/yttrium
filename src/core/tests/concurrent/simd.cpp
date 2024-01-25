@@ -101,6 +101,7 @@ namespace Yttrium
             Y_LOCK(range.sync);
             (std::cerr << "DoSomething2D(" << range << ")" << std::endl).flush();
 
+            if(range.isEmpty()) return;
 
             //const Concurrent::Tiling<size_t>::Tile &tile = *range;
             const Tao2D::Tile &tile = *range;
