@@ -143,9 +143,11 @@ namespace Yttrium
             static inline
             void DisplayThreadWarning(const Exception &excp)
             {
-                Y_GIANT_LOCK();
-                std::cerr << "*** Thread Warning" << std::endl;
-                excp.display();
+                if(true)
+                {
+                    Y_GIANT_LOCK();
+                    excp.display(4);
+                }
             }
 
 #if defined Y_THREAD_AFFINITY

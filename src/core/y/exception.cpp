@@ -65,24 +65,30 @@ namespace Yttrium
         memcpy(story, excp.story, sizeof(story) );
     }
 
-    static inline
-    void displayLine(const size_t n)
+    static inline std::ostream & indentLine(std::ostream &os, const size_t n)
+    {
+        for(size_t i=0;i<n;++i) os << ' ';
+        return os;
+    }
+
+    static inline void displayLine(const size_t n)
     {
         for(size_t i=0;i<n;++i) std::cerr << '-';
         std::cerr << std::endl;
     }
 
-    void Exception:: display() const
+
+    void Exception:: display(const size_t indent) const
     {
         const char * what_text = what();
         const size_t what_size = Core::Length(what_text);
         const char * when_text = when();
         const size_t when_size = Core::Length(when_text);
         const size_t line_size = Max(what_size,when_size)+5;
-        std::cerr << "/"; displayLine(line_size);
-        std::cerr << "| *** " << what_text << std::endl;
-        std::cerr << "| *** " << when_text << std::endl;
-        std::cerr << "\\"; displayLine(line_size);
+        indentLine(std::cerr,indent) << "/"; displayLine(line_size);
+        indentLine(std::cerr,indent) << "| *** " << what_text << std::endl;
+        indentLine(std::cerr,indent) << "| *** " << when_text << std::endl;
+        indentLine(std::cerr,indent) << "\\"; displayLine(line_size);
 
     }
 
