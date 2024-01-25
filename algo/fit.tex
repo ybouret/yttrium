@@ -27,16 +27,35 @@ We define the distance over $\mathcal{S}_i$:
 \end{equation}
 The minimum is around the solution of:
 \begin{equation}
-	\mathcal{H}_i   \delta \vec{a}  \simeq -\vec{\nabla}_{\vec{a}} D^2_i 
+	\mathcal{H}_i   \delta \vec{a}  \simeq -\vec{\nabla}_{\vec{a}} D^2_i = \vec{\beta}_i
 \end{equation}
 
 \begin{equation}
-	\beta_{ik} = -\partial_{a_k}D^2_i = \sum_{j=1}^{N_i} \left[ \vec{Y}_{ij} - \vec{F}(X_{ij},\vec{a})\right] \cdot \partial_{a_k}\vec{F}(X_{ij},\vec{a})
+	 \partial_{a_k}D^2_i = -\sum_{j=1}^{N_i} \left[ \vec{Y}_{ij} - \vec{F}(X_{ij},\vec{a})\right] \cdot \partial_{a_k}\vec{F}(X_{ij},\vec{a})
 \end{equation}
 
 \begin{equation}
 	\alpha_{ikl} = \partial_{a_l,a_k} D^2_i 
+	= \sum_{j=1}^{N_i} \left(
+	\partial_{a_k}\vec{F}(X_{ij},\vec{a}) \cdot \partial_{a_l}\vec{F}(X_{ij},\vec{a})
+	- \left[ \vec{Y}_{ij} - \vec{F}(X_{ij},\vec{a})\right] \partial_{a_l,a_k}\cdot\vec{F}(X_{ij},\vec{a})  \right)
 \end{equation}
 
+\begin{equation}
+	\beta_{ik} = \sum_{j=1}^{N_i} \left[ \vec{Y}_{ij} - \vec{F}(X_{ij},\vec{a})\right] \cdot \partial_{a_k}\vec{F}(X_{ij},\vec{a})
+\end{equation}
+
+Let us combine $S$ samples with natural respective weights $N_i$:
+\begin{equation}
+	 D^2(\vec{a}) = \left(\sum_{i=1}^S N_i D^2_i(\vec{a}) \right) /  \left(\sum_{i=1}^S N_i \right)
+\end{equation}
+We get:
+\begin{equation}
+	\vec{\beta} = 1/\left(\sum_{i=1}^S N_i \right) \left( \sum_{i=1}^S N_i \vec{\beta}_i\right)
+\end{equation}
+and
+\begin{equation}
+		 \bm{\alpha} = 1/\left(\sum_{i=1}^S N_i \right) \left( \sum_{i=1}^S N_i \bm{\alpha}_i\right)
+\end{equation}
 
 \end{document}
