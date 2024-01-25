@@ -231,7 +231,7 @@ namespace Yttrium
 #include <sys/processor.h>
 #include <sys/procset.h>
 
-            void Thread::assign(const size_t j)
+            bool Thread::assign(const size_t j) noexcept
             {
                 const int res = processor_bind(P_LWPID, idtype_t(thr), j, NULL);
                 if (0 != res) 
