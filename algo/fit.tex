@@ -11,6 +11,7 @@
   	 
 \begin{document}
 
+\section{Single Sample}
 We define a sample $\mathcal{S}_i$ 
 by a set of $N_i$ \emph{scalar abscissae} $X_{ij}$ with corresponding \emph{vectorial ordinates} $\vec{Y}_{ij}$ of $\mathbb{R}^d$.
 
@@ -27,7 +28,7 @@ We define the distance over $\mathcal{S}_i$:
 \end{equation}
 The minimum is around the solution of:
 \begin{equation}
-	\mathcal{H}_i   \delta \vec{a}  \simeq -\vec{\nabla}_{\vec{a}} D^2_i = \vec{\beta}_i
+	\bm{\alpha}_i   \delta \vec{a}  \simeq -\vec{\nabla}_{\vec{a}} D^2_i = \vec{\beta}_i
 \end{equation}
 
 \begin{equation}
@@ -45,6 +46,7 @@ The minimum is around the solution of:
 	\beta_{ik} = \sum_{j=1}^{N_i} \left[ \vec{Y}_{ij} - \vec{F}(X_{ij},\vec{a})\right] \cdot \partial_{a_k}\vec{F}(X_{ij},\vec{a})
 \end{equation}
 
+\section{Multiple Samples}
 Let us combine $S$ samples with natural respective weights $N_i$:
 \begin{equation}
 	 D^2(\vec{a}) = \left(\sum_{i=1}^S N_i D^2_i(\vec{a}) \right) /  \left(\sum_{i=1}^S N_i \right)
