@@ -536,6 +536,21 @@ namespace Yttrium
             assert(0!=code);
             return code->sync;
         }
+
+        size_t Queue:: numThreads() const noexcept
+        {
+            assert(0!=code);
+            return code->size;
+        }
+
+        const Thread & Queue:: getThread(const size_t threadIndex) const noexcept
+        {
+            assert(0!=code);
+            assert(threadIndex>=1);
+            assert(threadIndex<=code->size);
+            return (code->meta[threadIndex])->wire;
+        }
+
     }
 
 }

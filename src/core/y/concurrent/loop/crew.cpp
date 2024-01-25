@@ -112,7 +112,7 @@ namespace Yttrium
                         // update status
                         //------------------------------------------------------
                         ++Coerce(size);
-                        player->assign( **node );
+                        (void) player->assign( **node );
                         node = node->next;
                     }
 
@@ -294,6 +294,20 @@ namespace Yttrium
         {
             assert(0!=code);
             return code->sync;
+        }
+
+        const Thread & Crew:: getThread(const size_t threadIndex) const noexcept
+        {
+            assert(0!=code);
+            assert(threadIndex>=1);
+            assert(threadIndex<=code->size);
+            return code->item[threadIndex];
+        }
+
+        size_t Crew:: numThreads() const noexcept
+        {
+            assert(0!=code);
+            return code->size;
         }
 
     }

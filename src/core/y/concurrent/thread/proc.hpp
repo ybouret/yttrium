@@ -11,8 +11,13 @@ namespace Yttrium
     {
 
         typedef void (*ThreadProc)(void *); //!< generic parallel function
+        typedef int    ThreadCore;          //!< localisation
+
     }
 
 }
+
+//! hard-coded invalid thread core value
+#define Y_INVALID_THREAD_CORE (static_cast<ThreadCore>(-1))
 
 #endif

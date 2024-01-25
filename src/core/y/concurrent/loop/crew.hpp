@@ -8,12 +8,14 @@
 
 #include "y/concurrent/loop/interface.hpp"
 #include "y/concurrent/topology.hpp"
+#include "y/concurrent/threads.hpp"
 
 
 namespace Yttrium
 {
     namespace Concurrent
     {
+
         //______________________________________________________________________
         //
         //
@@ -22,7 +24,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Crew : public Loop
+        class Crew : public Loop, public Threads
         {
         public:
             //__________________________________________________________________
@@ -46,14 +48,17 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // Methods
+            // Interface
             //
             //__________________________________________________________________
-            virtual const char * callSign()               const noexcept; //!< CallSign
-            virtual size_t       size()                   const noexcept; //!< number of internal threads
-            virtual ConstType &  operator[](const size_t) const noexcept; //!< access
-            virtual void         run1(Kernel &)                 noexcept; //!< dispatch/run kernel for every thread
-            virtual Lockable &   sync()                         noexcept; //!< shared sync
+            virtual const char *   callSign()                const noexcept; //!< CallSign
+            virtual size_t         size()                    const noexcept; //!< number of internal threads
+            virtual ConstType &    operator[](const size_t)  const noexcept; //!< access
+            virtual void           run1(Kernel &)                  noexcept; //!< dispatch/run kernel for every thread
+            virtual Lockable &     sync()                          noexcept; //!< shared sync
+            virtual const Thread & getThread(const size_t i) const noexcept; //!< getThread(1..size)
+            virtual size_t         numThreads()              const noexcept; //!< size
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Crew);

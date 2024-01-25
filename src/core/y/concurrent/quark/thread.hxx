@@ -42,9 +42,9 @@ namespace Yttrium
 #if defined(Y_WIN)
                 tid(0),
 #endif
+                myCore(Y_INVALID_THREAD_CORE),
                 myProc(proc),
                 myArgs(args)
-
                 {
                     assert(0 != proc);
                     Y_GIANT_LOCK();
@@ -91,7 +91,7 @@ namespace Yttrium
 
                 }
 
-                void assign(const size_t j);
+                bool assign(const size_t j) noexcept;
 
                 //______________________________________________________________
                 //
@@ -99,10 +99,11 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                Y_THREAD  thr;
+                Y_THREAD         thr;
 #if defined(Y_WIN)
-                DWORD     tid;
+                DWORD            tid;
 #endif
+                const ThreadCore myCore;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Thread);
@@ -138,6 +139,15 @@ namespace Yttrium
 
             };
 
+
+            static inline
+            void DisplayThreadWarning(const Exception &excp)
+            {
+                Y_GIANT_LOCK();
+                std::cerr << "*** Thread Warning" << std::endl;
+                excp.display();
+            }
+
 #if defined Y_THREAD_AFFINITY
 #error "Y_THREAD_AFFINITY shouldn't be defined"
 #endif
@@ -147,14 +157,20 @@ namespace Yttrium
 #include <mach/thread_policy.h>
 #include <mach/thread_act.h>
 
-            void Thread::assign(const size_t j)
+            bool Thread::assign(const size_t j) noexcept
             {
                 thread_affinity_policy_data_t policy_data = { int(j) };
                 mach_port_t                   mach_thread = pthread_mach_thread_np(thr);
                 const int                     mach_result = thread_policy_set(mach_thread, THREAD_AFFINITY_POLICY, (thread_policy_t)&policy_data, THREAD_AFFINITY_POLICY_COUNT);
                 if (KERN_SUCCESS != mach_result)
                 {
-                    throw Mach::Exception(mach_result, "thread_policy_set");
+                    const Mach::Exception excp(mach_result, "thread_policy_set");
+                    DisplayThreadWarning(excp);
+                    return false;
+                }
+                else
+                {
+                    return true;
                 }
 
             }
@@ -170,27 +186,41 @@ namespace Yttrium
 #      define Y_CPU_SET cpu_set_t
 #   endif
 
-            void   Thread::assign(const size_t j)
+            bool   Thread::assign(const size_t j) noexcept
             {
                 Y_CPU_SET the_cpu_set;
                 CPU_ZERO(&the_cpu_set);
                 CPU_SET(j, &the_cpu_set);
                 const int err = pthread_setaffinity_np(thr, sizeof(Y_CPU_SET), &the_cpu_set);
                 if (err != 0)
-                    throw Libc::Exception(err, "pthread_setaffinity_np");
+                {
+                    const Libc::Exception excp(err, "pthread_setaffinity_np");
+                    DisplayThreadWarning(excp);
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
             }
 
 #endif
 
 #if defined(Y_WIN)
 #   define Y_THREAD_AFFINITY 1
-            void Thread::assign(const size_t j)
+            bool Thread::assign(const size_t j) noexcept
             {
                 const DWORD_PTR mask = DWORD_PTR(1) << j;
                 if (!::SetThreadAffinityMask(thr, mask))
                 {
                     const DWORD err = ::GetLastError();
-                    throw Win32::Exception(err, "::SetThreadAffinityMask");
+                    const Win32::Exception excp(err, "::SetThreadAffinityMask");
+                    DisplayThreadWarning(excp);
+                    return false;
+                }
+                else
+                {
+                    return true;
                 }
             }
 #endif
@@ -204,7 +234,16 @@ namespace Yttrium
             void Thread::assign(const size_t j)
             {
                 const int res = processor_bind(P_LWPID, idtype_t(thr), j, NULL);
-                if (0 != res) throw Exception("processor_bind failure");
+                if (0 != res) 
+                {
+                    const Exception excp("processor_bind failure");
+                    DisplayThreadWarning(excp);
+                    return false;
+                }
+                else
+                {
+                    return true
+                }
             }
 
 #endif
@@ -212,8 +251,11 @@ namespace Yttrium
 
 #if ! defined(Y_THREAD_AFFINITY)
 #warning "No Thread Affinity"
-            void Thread::assign(const size_t)
+            bool Thread::assign(const size_t) noexcept
             {
+                const Exception excp("No Thread Affinity");
+                DisplayThreadWarning(excp);
+                return false;
             }
 #endif
 

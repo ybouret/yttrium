@@ -383,11 +383,17 @@ namespace Yttrium
             quark.deleteThread(thread);
         }
 
-        void Thread:: assign(const size_t j)
+        bool Thread:: assign(const size_t j) noexcept
         {
             assert(0!=thread);
             Y_THREAD_MSG("[*Thread:" << handle << "] => CPU #" << j);
-            thread->assign(j);
+            return thread->assign(j);
+        }
+
+        ThreadCore Thread:: getCore() const noexcept
+        {
+            assert(0!=thread);
+            return thread->myCore;
         }
 
 #if 0

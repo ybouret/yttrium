@@ -57,16 +57,18 @@ namespace Yttrium
 
             //! assign to a list of 
             template <typename LIST> inline
-            void assign(LIST &crew) const
+            bool assign(LIST &crew) const noexcept
             {
                 assert(crew.size==size);
                 typename LIST::NodeType *node = crew.head;
+                bool                     flag = true;
                 for(const CPU *cpu=head;cpu;cpu=cpu->next,node=node->next)
                 {
                     assert(0!=node);
                     assert(0!=cpu);
-                    node->assign( **cpu );
+                    if(!node->assign( **cpu )) flag = false;
                 }
+                return flag;
             }
 
         private:

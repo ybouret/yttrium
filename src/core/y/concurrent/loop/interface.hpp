@@ -48,14 +48,20 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual void       run1(Kernel &) noexcept = 0; //!< execute the kernel, return when all done
+            virtual Lockable & sync()         noexcept = 0; //!< synchronzing object
+
+
+            //__________________________________________________________________
+            //
+            //
             // Methods
             //
             //__________________________________________________________________
-       
-            //! execute the kernel, return when all done
-            virtual void       run1(Kernel &) noexcept = 0;
-            virtual Lockable & sync()         noexcept = 0; //!< synchronzing object
-
+            
             //! wrapper to any kernel(context) interface
             template <typename KERNEL> inline
             void operator()(KERNEL &kernel) {

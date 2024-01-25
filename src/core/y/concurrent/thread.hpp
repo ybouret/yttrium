@@ -46,7 +46,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void                  assign(const size_t j);          //!< best effort thread placement
+            bool                  assign(const size_t j) noexcept; //!< best effort thread placement
+            ThreadCore            getCore()        const noexcept; //!< get assigned core
             static ThreadHandle   CurrentHandle()        noexcept; //!< Human Readadble Thread Handle
 
             //__________________________________________________________________
