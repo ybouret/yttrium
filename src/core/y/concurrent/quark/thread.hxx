@@ -242,7 +242,7 @@ namespace Yttrium
                 }
                 else
                 {
-                    return true
+                    return true;
                 }
             }
 
