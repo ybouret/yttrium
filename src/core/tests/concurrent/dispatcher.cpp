@@ -73,20 +73,7 @@ private:
     Y_DISABLE_COPY_AND_ASSIGN(MyEngine);
 };
 
-namespace Yttrium
-{
-    namespace Concurrent
-    {
 
-      
-
-       
-
-       
-
-
-    }
-}
 
 Y_UTEST(concurrent_dispatcher)
 {
