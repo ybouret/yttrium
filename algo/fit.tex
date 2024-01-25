@@ -11,5 +11,32 @@
   	 
 \begin{document}
 
+We define a sample $\mathcal{S}_i$ 
+by a set of $N_i$ \emph{scalar abscissae} $X_{ij}$ with corresponding \emph{vectorial ordinates} $\vec{Y}_{ij}$ of $\mathbb{R}^d$.
+
+We want to fit this sample by a \emph{vectorial function of scalar variable} $\vec{F}$ which depends on a set of parameters $\vec{a}\in\mathbb{R}^M$.
+
+We define the distance over $\mathcal{S}_i$:
+\begin{equation}
+	D^2_i = \dfrac{1}{2}\sum_{j=1}^{N_i} \left[ \vec{Y}_{ij} - \vec{F}(X_{ij},\vec{a})\right]^2
+\end{equation}
+
+\begin{equation}
+	D^2_i(\vec{a}+\delta\vec{a}) \simeq D^2_i(\vec{a}) + \langle \vec{\nabla}_{\vec{a}} D^2_i \vert \delta \vec{a} \rangle
+	+ \dfrac{1}{2} \langle \delta\vec{a} \vert \mathcal{H}_i \vert \delta \vec{a} \rangle
+\end{equation}
+The minimum is around the solution of:
+\begin{equation}
+	\mathcal{H}_i   \delta \vec{a}  \simeq -\vec{\nabla}_{\vec{a}} D^2_i 
+\end{equation}
+
+\begin{equation}
+	\beta_{ik} = -\partial_{a_k}D^2_i = \sum_{j=1}^{N_i} \left[ \vec{Y}_{ij} - \vec{F}(X_{ij},\vec{a})\right] \cdot \partial_{a_k}\vec{F}(X_{ij},\vec{a})
+\end{equation}
+
+\begin{equation}
+	\alpha_{ikl} = \partial_{a_l,a_k} D^2_i 
+\end{equation}
+
 
 \end{document}
