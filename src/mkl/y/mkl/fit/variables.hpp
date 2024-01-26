@@ -27,7 +27,8 @@ namespace Yttrium
                 Variables & link(const String &name, const size_t indx);
                 Variables & link(const char   *name, const size_t indx);
                 Variables & link(const char    name, const size_t indx);
-
+                size_t      span() const noexcept; //!< highest index
+                
                 template <typename ID> inline
                 Variables & operator<<(const ID &id)
                 {

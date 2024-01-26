@@ -135,6 +135,11 @@ namespace Yttrium
                 return *this;
             }
 
+            size_t Variables:: span() const noexcept
+            {
+                assert(0!=code);
+                return code->upper;
+            }
 
 
         }
