@@ -43,6 +43,13 @@ namespace Yttrium
             {
             }
 
+            std::ostream & operator<<(std::ostream &os, const Variable &v)
+            {
+                const String &id = v;
+                os << id << '@' << v.indx;
+                return os;
+            }
+
         }
 
     }

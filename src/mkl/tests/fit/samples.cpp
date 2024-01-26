@@ -112,5 +112,9 @@ Y_UTEST(fit_samples)
     Fit::ComputeD2<double,double> Eval1D;
     F1D<double> F1;
 
+    Fit::Variables v1;
+    v1 << "t0" << "D";
+    std::cerr << "v1=" << v1 << std::endl;
+
 }
 Y_UDONE()
