@@ -62,6 +62,8 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
+             
+                //! display basic info
                 inline friend std::ostream & operator<<(std::ostream &os, const Sample &s)
                 {
                     const String &aid = RTTI::Name<Abscissa>();
@@ -77,10 +79,10 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                virtual ~Sample() noexcept {}
+                virtual ~Sample() noexcept {} //!< cleanp
             protected:
                 template <typename ID>
-                explicit Sample(const ID &id) noexcept : MyAbscissae(id) {}
+                explicit Sample(const ID &id) noexcept : MyAbscissae(id) {} //!< setup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Sample);

@@ -49,8 +49,7 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
-
-                const String & key() const noexcept;
+                const String & key() const noexcept; //!< name
 
                 //______________________________________________________________
                 //
@@ -58,10 +57,10 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                virtual ~SampleMetrics() noexcept;
+                virtual ~SampleMetrics() noexcept;      //!< cleanup
             protected:
-                explicit SampleMetrics(const String &);
-                explicit SampleMetrics(const char   *);
+                explicit SampleMetrics(const String &); //!< setup
+                explicit SampleMetrics(const char   *); //!< setup
 
             public:
                 //______________________________________________________________

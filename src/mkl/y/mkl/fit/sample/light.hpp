@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Fit_Sample_Light_Included
@@ -14,15 +13,36 @@ namespace Yttrium
 
         namespace Fit
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Light Sample, based on persistent user's data
+            //
+            //
+            //__________________________________________________________________
             template <typename ABSCISSA, typename ORDINATE>
             class LightSample : public Sample<ABSCISSA,ORDINATE>
             {
             public:
-                typedef Sample<ABSCISSA,ORDINATE>      SampleType;
-                typedef typename SampleType::Abscissae Abscissae;
-                typedef typename SampleType::Ordinates Ordinates;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef Sample<ABSCISSA,ORDINATE>      SampleType; //!< alias
+                typedef typename SampleType::Abscissae Abscissae;  //!< alias
+                typedef typename SampleType::Ordinates Ordinates;  //!< alias
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! setup with name and persistent data
                 template <typename ID>
                 inline explicit LightSample(const ID       &       id,
                                             const ABSCISSA * const XX,
@@ -35,8 +55,15 @@ namespace Yttrium
                 {
                 }
 
+                //! cleanup
                 inline virtual ~LightSample() noexcept {}
 
+                //______________________________________________________________
+                //
+                //
+                // Interface
+                //
+                //______________________________________________________________
                 inline virtual size_t    dimension() const noexcept { return _num; }
                 inline const Abscissae & abscissae() const noexcept { return _abs; }
                 inline const Ordinates & ordinates() const noexcept { return _ord; }

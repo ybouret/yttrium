@@ -73,8 +73,13 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
+
+                //! cleanup
                 inline virtual ~SampleAbscissae() noexcept {}
+
             protected:
+
+                //! setup
                 template <typename ID>
                 inline explicit SampleAbscissae(const ID &id) noexcept : SampleMetrics(id) {}
 
