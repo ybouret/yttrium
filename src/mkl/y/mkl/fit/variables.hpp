@@ -28,14 +28,21 @@ namespace Yttrium
                 Variables & link(const char   *name, const size_t indx);
                 Variables & link(const char    name, const size_t indx);
                 size_t      span() const noexcept; //!< highest index
-                
+
                 template <typename ID> inline
                 Variables & operator<<(const ID &id)
                 {
                     return link(id, (**this).size()+1 );
                 }
 
+                const Variable & get(const String &) const;
+                const Variable & get(const char   *) const;
+                const Variable & get(const char    ) const;
 
+                template <typename ID> inline
+                const Variable & operator[](const ID &id) const { return get(id); }
+
+                
             private:
                 virtual ConstInterface & surrogate() const noexcept;
                 class Code;

@@ -29,7 +29,10 @@ namespace Yttrium
                 virtual ~Variable() noexcept;
                 Y_OSTREAM_PROTO(Variable);
                 
-                const String & key() const noexcept;
+                const String & key()       const noexcept;
+                //size_t         operator*() const noexcept;
+
+
 
                 const size_t indx;
             private:

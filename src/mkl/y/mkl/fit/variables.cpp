@@ -140,6 +140,28 @@ namespace Yttrium
                 assert(0!=code);
                 return code->upper;
             }
+           
+            const Variable & Variables:: get(const String &name) const
+            {
+                assert(0!=code);
+                const Variable::Handle *ppv = code->search(name);
+                if(!ppv)
+                    throw Specific::Exception(Code::Label,"No '%s'",name.c_str());
+                return **ppv;
+            }
+
+
+            const Variable & Variables:: get(const char *name) const
+            {
+                const String _(name);
+                return get(_);
+            }
+
+            const Variable & Variables:: get(const char name) const
+            {
+                const String _(name);
+                return get(_);
+            }
 
 
         }
