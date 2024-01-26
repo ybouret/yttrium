@@ -17,10 +17,11 @@ Y_UTEST(fit_samples)
     static const double _x2[] = { 5.199063,5.854801,6.662763,7.365340,8.067916,8.782201,9.578454,10.175644,10.878220,11.651054,12.213115};
     const size_t        _n2   = sizeof(_t2)/sizeof(_t2[0]);
 
-    Fit::LightSample<double,double> S1("S1",_t1,_x1,_n1);
-    Fit::LightSample<double,double> S2("S2",_t2,_x2,_n2);
+    Fit::Sample<double,double>::Pointer S1 = new Fit::LightSample<double,double>("S1",_t1,_x1,_n1);
+    Fit::Sample<double,double>::Pointer S2 = new Fit::LightSample<double,double>("S2",_t2,_x2,_n2);
 
-
+    std::cerr << S1 << std::endl;
+    std::cerr << S2 << std::endl;
 
 }
 Y_UDONE()

@@ -4,6 +4,10 @@
 #define Y_Fit_Sample_Interface_Included 1
 
 #include "y/mkl/fit/sample/abscissae.hpp"
+#include "y/ptr/ark.hpp"
+
+#include "y/system/rtti.hpp"
+#include <iomanip>
 
 namespace Yttrium
 {
@@ -39,7 +43,7 @@ namespace Yttrium
                 typedef typename MyAbscissae::Abscissae Abscissae;   //!< alias
                 typedef Readable<ORDINATE>              Ordinates;   //!< alias
 
-
+                typedef ArkPtr<String,Sample>           Pointer;     //!< alias
 
 
                 //______________________________________________________________
@@ -52,6 +56,21 @@ namespace Yttrium
                 //! access ordinates
                 virtual const Ordinates & ordinates() const noexcept = 0;
 
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                inline friend std::ostream & operator<<(std::ostream &os, const Sample &s)
+                {
+                    const String &aid = RTTI::Name<Abscissa>();
+                    const String &oid = RTTI::Name<Ordinate>();
+                    os << "['" << s.name << "': Sample<" << aid << "," << oid << "> #" << std::setw(5) << s.dimension() << "]";
+                    return os;
+                }
+
+                
                 //______________________________________________________________
                 //
                 //
