@@ -39,6 +39,9 @@ namespace Yttrium
                 typedef typename MyAbscissae::Abscissae Abscissae;   //!< alias
                 typedef Readable<ORDINATE>              Ordinates;   //!< alias
 
+                
+
+
                 //______________________________________________________________
                 //
                 //
