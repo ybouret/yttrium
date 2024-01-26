@@ -4,7 +4,7 @@
 #ifndef Y_Fit_Sequential_Included
 #define Y_Fit_Sequential_Included 1
 
-#include "y/config/starting.hpp"
+#include "y/container/readable.hpp"
 
 namespace Yttrium
 {
@@ -25,6 +25,7 @@ namespace Yttrium
             class Sequential
             {
             public:
+
                 //______________________________________________________________
                 //
                 //
@@ -32,7 +33,8 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
-                virtual ORDINATE start(const ABSCISSA &) = 0;
+                virtual ORDINATE start(const ABSCISSA           &,
+                                       const Readable<ABSCISSA> &aorg) = 0;
 
 
                 //______________________________________________________________

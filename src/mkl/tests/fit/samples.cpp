@@ -6,9 +6,78 @@
 #include "y/mkl/fit/sample/light.hpp"
 #include "y/utest/run.hpp"
 #include "y/mkl/v2d.hpp"
+#include "y/mkl/antelope/add.hpp"
 
 using namespace Yttrium;
 using namespace MKL;
+
+namespace Yttrium
+{
+
+    namespace MKL
+    {
+
+        namespace Fit
+        {
+
+            template <typename ABSCISSA, typename ORDINATE>
+            class ComputeD2
+            {
+            public:
+                typedef Sequential<ABSCISSA,ORDINATE> SequentialType;
+                typedef Sample<ABSCISSA,ORDINATE>     SampleType;
+
+                Antelope::Add<ABSCISSA> xadd;
+
+                explicit ComputeD2()
+                {
+                }
+
+                virtual ~ComputeD2() noexcept
+                {
+
+                }
+
+                ABSCISSA Of(SequentialType &F, const SampleType &S)
+                {
+                    const size_t n = S.dimension();
+                    xadd.make(n);
+
+                    return xadd.sum();
+                }
+
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(ComputeD2);
+            };
+
+
+
+        }
+    }
+
+}
+
+namespace
+{
+    template <typename T>
+    class F1D : public Fit::Sequential<T,T>
+    {
+    public:
+        explicit F1D() noexcept {}
+
+        virtual ~F1D() noexcept {}
+
+        inline T start(const T &ini, const Readable<T> &)
+        {
+            return ini;
+        }
+
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(F1D);
+    };
+}
 
 Y_UTEST(fit_samples)
 {
@@ -24,14 +93,24 @@ Y_UTEST(fit_samples)
     Fit::Sample<double,double>::Pointer S1 = new Fit::LightSample<double,double>("S1",_t1,_x1,_n1);
     Fit::Sample<double,double>::Pointer S2 = new Fit::LightSample<double,double>("S2",_t2,_x2,_n2);
 
-    Fit::Sample<double, V2D<double> >::Pointer H1 = new Fit::HeavySample<double, V2D<double> >("H1");
+    Fit::HeavySample<double, V2D<double> >    *P1 = new Fit::HeavySample<double, V2D<double> >("H1");
+    Fit::Sample<double, V2D<double> >::Pointer H1 = P1;
+
+
+
+
+    P1->add(0.1,  V2D<double>(1,0)  );
+    P1->add(1.57, V2D<double>(0,1)  );
+    P1->add(3,    V2D<double>(-1,0) );
+    P1->add(4.7,  V2D<double>(0,-1) );
 
 
     std::cerr << S1 << std::endl;
     std::cerr << S2 << std::endl;
     std::cerr << H1 << std::endl;
 
-
+    Fit::ComputeD2<double,double> Eval1D;
+    F1D<double> F1;
 
 }
 Y_UDONE()
