@@ -10,10 +10,15 @@ namespace Yttrium
         namespace Fit
         {
 
-            SampleMetrics:: SampleMetrics() noexcept : indx()
+            SampleMetrics:: SampleMetrics(const String &id) : name(id), indx()
             {
 
             }
+
+            SampleMetrics:: SampleMetrics(const char *id) : name(id), indx()
+            {
+            }
+            
 
             SampleMetrics:: ~SampleMetrics() noexcept
             {

@@ -39,7 +39,7 @@ namespace Yttrium
                 typedef typename MyAbscissae::Abscissae Abscissae;   //!< alias
                 typedef Readable<ORDINATE>              Ordinates;   //!< alias
 
-                
+
 
 
                 //______________________________________________________________
@@ -60,7 +60,8 @@ namespace Yttrium
                 //______________________________________________________________
                 virtual ~Sample() noexcept {}
             protected:
-                explicit Sample() noexcept : MyAbscissae() {}
+                template <typename ID>
+                explicit Sample(const ID &id) noexcept : MyAbscissae(id) {}
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Sample);

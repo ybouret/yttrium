@@ -23,10 +23,12 @@ namespace Yttrium
                 typedef typename SampleType::Abscissae Abscissae;
                 typedef typename SampleType::Ordinates Ordinates;
 
-                inline explicit LightSample(const ABSCISSA * const XX,
+                template <typename ID>
+                inline explicit LightSample(const ID       &       id,
+                                            const ABSCISSA * const XX,
                                             const ORDINATE * const YY,
                                             const size_t           NN) :
-                SampleType(),
+                SampleType(id),
                 _num( NN ),
                 _abs( (ABSCISSA *)XX, NN),
                 _ord( (ORDINATE *)YY, NN)

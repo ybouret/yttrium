@@ -75,7 +75,8 @@ namespace Yttrium
                 //______________________________________________________________
                 inline virtual ~SampleAbscissae() noexcept {}
             protected:
-                inline explicit SampleAbscissae() noexcept : SampleMetrics() {}
+                template <typename ID>
+                inline explicit SampleAbscissae(const ID &id) noexcept : SampleMetrics(id) {}
 
 
 

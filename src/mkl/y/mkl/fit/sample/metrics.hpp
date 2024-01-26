@@ -6,7 +6,7 @@
 
 #include "y/sequence/vector.hpp"
 #include "y/memory/allocator/dyadic.hpp"
-#include "y/counted.hpp"
+#include "y/string.hpp"
 
 namespace Yttrium
 {
@@ -46,12 +46,22 @@ namespace Yttrium
                 //______________________________________________________________
                 //
                 //
+                // Methods
+                //
+                //______________________________________________________________
+
+                const String & key() const noexcept;
+
+                //______________________________________________________________
+                //
+                //
                 // C++
                 //
                 //______________________________________________________________
                 virtual ~SampleMetrics() noexcept;
             protected:
-                explicit SampleMetrics() noexcept;
+                explicit SampleMetrics(const String &);
+                explicit SampleMetrics(const char   *);
 
             public:
                 //______________________________________________________________
@@ -60,6 +70,7 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
+                const String                name; //!< identifier
                 Vector<size_t,SampleMemory> indx; //!< index of data abscissae
 
             private:
