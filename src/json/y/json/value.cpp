@@ -268,7 +268,6 @@ namespace Yttrium
                 if(0!=pp) return (**pp).v;
             }
 
-
             throw Specific::Exception("JSON::Object","no ['%s']", key.c_str());
         }
 
