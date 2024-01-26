@@ -5,6 +5,7 @@
 #include "y/mkl/fit/sample/heavy.hpp"
 #include "y/mkl/fit/sample/light.hpp"
 #include "y/utest/run.hpp"
+#include "y/mkl/v2d.hpp"
 
 using namespace Yttrium;
 using namespace MKL;
@@ -23,12 +24,14 @@ Y_UTEST(fit_samples)
     Fit::Sample<double,double>::Pointer S1 = new Fit::LightSample<double,double>("S1",_t1,_x1,_n1);
     Fit::Sample<double,double>::Pointer S2 = new Fit::LightSample<double,double>("S2",_t2,_x2,_n2);
 
-    Fit::Sample<double,double>::Pointer H1 = new Fit::HeavySample<double,double>("H1");
+    Fit::Sample<double, V2D<double> >::Pointer H1 = new Fit::HeavySample<double, V2D<double> >("H1");
 
 
     std::cerr << S1 << std::endl;
     std::cerr << S2 << std::endl;
     std::cerr << H1 << std::endl;
+
+
 
 }
 Y_UDONE()

@@ -26,7 +26,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename ABSCISSA, typename ORDINATE>
-            class Sample : public SampleAbscissae<ABSCISSA>
+            class Sample : public Identifiable, public SampleAbscissae<ABSCISSA>
             {
             public:
                 //______________________________________________________________
@@ -68,7 +68,7 @@ namespace Yttrium
                 {
                     const String &aid = RTTI::Name<Abscissa>();
                     const String &oid = RTTI::Name<Ordinate>();
-                    os << "['" << s.name << "': Sample<" << aid << "," << oid << "> #" << std::setw(5) << s.dimension() << "]";
+                    os << "['" << s.name << "': " << s.callSign() << "<" << aid << "," << oid << "> #" << std::setw(5) << s.dimension() << "]";
                     return os;
                 }
 

@@ -13,6 +13,20 @@ namespace Yttrium
 
         namespace Fit
         {
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! common data
+            //
+            //
+            //__________________________________________________________________
+            struct HeavySampleInfo
+            {
+                static const char * const CallSign; //!< "HeavySample"
+            };
+
             //__________________________________________________________________
             //
             //
@@ -34,6 +48,9 @@ namespace Yttrium
                 typedef Sample<ABSCISSA,ORDINATE>      SampleType; //!< alias
                 typedef typename SampleType::Abscissae Abscissae;  //!< alias
                 typedef typename SampleType::Ordinates Ordinates;  //!< alias
+                typedef typename TypeTraits<ABSCISSA>::ParamType AParam;
+                typedef typename TypeTraits<ORDINATE>::ParamType OParam;
+
 
                 //______________________________________________________________
                 //
@@ -61,15 +78,25 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
+                inline virtual size_t            dimension() const noexcept { return _num; }
+                inline virtual const Abscissae & abscissae() const noexcept { return _abs; }
+                inline virtual const Ordinates & ordinates() const noexcept { return _ord; }
+                inline virtual const char *      callSign()  const noexcept { return HeavySampleInfo::CallSign;   }
+
                 //______________________________________________________________
                 //
                 //
                 // Methods
                 //
                 //______________________________________________________________
-                inline virtual size_t    dimension() const noexcept { return _num; }
-                inline const Abscissae & abscissae() const noexcept { return _abs; }
-                inline const Ordinates & ordinates() const noexcept { return _ord; }
+                inline void add(AParam A, OParam O)
+                {
+                    assert(_abs.size()==_num);
+                    assert(_ord.size()==_num);
+                    {     _abs.pushTail(A); }
+                    try { _ord.pushTail(O); } catch(...) { _abs.popTail(); }
+                    ++_num;
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(HeavySample);

@@ -316,5 +316,12 @@ update(typeid(NAME),#NAME);     \
         Y_RTTI(Complex< XReal<double> >);
         Y_RTTI(Complex< XReal<long double> >);
 
+        Y_RTTI( V2D<float> );
+        Y_RTTI( V2D<double> );
+        Y_RTTI( V2D<long double> );
+
+        Y_RTTI( V3D<float> );
+        Y_RTTI( V3D<double> );
+        Y_RTTI( V3D<long double> );
     }
 }

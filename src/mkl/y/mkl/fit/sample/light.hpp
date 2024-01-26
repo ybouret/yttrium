@@ -13,6 +13,20 @@ namespace Yttrium
 
         namespace Fit
         {
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! common data
+            //
+            //
+            //__________________________________________________________________
+            struct LightSampleInfo
+            {
+                static const char * const CallSign; //!< "LightSample"
+            };
+
             //__________________________________________________________________
             //
             //
@@ -64,9 +78,10 @@ namespace Yttrium
                 // Interface
                 //
                 //______________________________________________________________
-                inline virtual size_t    dimension() const noexcept { return _num; }
-                inline const Abscissae & abscissae() const noexcept { return _abs; }
-                inline const Ordinates & ordinates() const noexcept { return _ord; }
+                inline virtual size_t            dimension() const noexcept { return _num; }
+                inline virtual const Abscissae & abscissae() const noexcept { return _abs; }
+                inline virtual const Ordinates & ordinates() const noexcept { return _ord; }
+                inline virtual const char *      callSign()  const noexcept { return LightSampleInfo::CallSign; }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(LightSample);
