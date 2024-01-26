@@ -47,7 +47,7 @@ Y_UTEST_DECL(32)
     Y_UTEST(eigen_diag);
 
     Y_UTEST(stats_descr);
-
+    Y_UTEST(fit_samples);
 }
 Y_UTEST_EXEC()
 

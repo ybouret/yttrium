@@ -146,7 +146,7 @@ namespace Yttrium
                 if(true)
                 {
                     Y_GIANT_LOCK();
-                    excp.display(4);
+                    std::cerr << "*** " << excp.when() << " : " << excp.what() << std::endl;
                 }
             }
 

@@ -17,6 +17,8 @@ mkl/root
 mkl/eigen
 mkl/eigen/diag
 mkl/statistics
+mkl/fit
+mkl/fit/sample
 )
 
 add_subdirectory(tests)

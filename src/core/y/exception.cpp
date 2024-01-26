@@ -71,10 +71,10 @@ namespace Yttrium
         return os;
     }
 
-    static inline void displayLine(const size_t n)
+    static inline void displayLine(std::ostream &os, const size_t n)
     {
-        for(size_t i=0;i<n;++i) std::cerr << '-';
-        std::cerr << std::endl;
+        for(size_t i=0;i<n;++i) os << '-';
+        os << std::endl;
     }
 
 
@@ -85,10 +85,10 @@ namespace Yttrium
         const char * when_text = when();
         const size_t when_size = Core::Length(when_text);
         const size_t line_size = Max(what_size,when_size)+5;
-        indentLine(std::cerr,indent) << "/"; displayLine(line_size);
+        indentLine(std::cerr,indent) << "/"; displayLine(std::cerr,line_size);
         indentLine(std::cerr,indent) << "| *** " << what_text << std::endl;
         indentLine(std::cerr,indent) << "| *** " << when_text << std::endl;
-        indentLine(std::cerr,indent) << "\\"; displayLine(line_size);
+        indentLine(std::cerr,indent) << "\\"; displayLine(std::cerr,line_size);
 
     }
 

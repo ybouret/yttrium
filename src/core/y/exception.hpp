@@ -53,7 +53,7 @@ namespace Yttrium
         Exception &         operator<< (const char  ) noexcept;              //!< append char
         Exception &         add(const char *fmt,...)  noexcept Y_PRINTF_API; //!< append formated
         Exception &         pre(const char *fmt,...)  noexcept Y_PRINTF_API; //!< prepend formated
-        void                display(const size_t indent=0) const;                                 //!< helper
+        void                display(const size_t indent=0) const;            //!< display to std::cerr
 
     protected:
         void format(const char *fmt, void *ptr) noexcept; //!< format with va_list

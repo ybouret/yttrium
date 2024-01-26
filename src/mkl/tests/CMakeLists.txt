@@ -9,6 +9,7 @@ filter
 root
 eigen
 stats
+fit
 )
 
 set( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
@@ -58,4 +59,6 @@ add_test(root:zfind     test-mkl root_zfind)
 
 add_test(eigen:jacobi   test-mkl eigen_jacobi)
 add_test(eigen:diag     test-mkl eigen_diag)
+
+add_test(fit:samples    test-mkl fit_samples)
 
