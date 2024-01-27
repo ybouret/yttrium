@@ -26,6 +26,7 @@ namespace Yttrium
                 Y_DISABLE_COPY_AND_ASSIGN(PrimaryVariable);
                 static  size_t CheckIndex(const String &, const size_t); //!< positive index
                 virtual size_t idx() const noexcept;                     //!< indx
+                virtual void   dsp(std::ostream &) const;                //!< display index
                 const size_t indx;                                       //!< value
             };
 

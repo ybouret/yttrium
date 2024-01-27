@@ -17,6 +17,13 @@ namespace Yttrium
             {
                 return primary->idx();
             }
+
+            void ReplicaVariable:: dsp(std::ostream &os) const
+            {
+                const String &_ = *primary;
+                os << _ << '@' << primary->idx();
+            }
+
         }
 
     }

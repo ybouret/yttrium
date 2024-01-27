@@ -37,10 +37,13 @@ namespace Yttrium
                 inline virtual ~Code() noexcept
                 {
                 }
-                
-                // create a new variable
+
+                //______________________________________________________________
+                //
+                // create a new primary variable
+                //______________________________________________________________
                 template <typename ID> inline
-                void link(const ID &id, const size_t indx)
+                const Variable &link(const ID &id, const size_t indx)
                 {
                     const Variable::Handle hVar = new PrimaryVariable(id,indx);
 
@@ -67,9 +70,32 @@ namespace Yttrium
                     // update
                     lower = Min(lower,indx);
                     upper = Max(upper,indx);
+
+                    return *hVar;
                 }
 
+                //______________________________________________________________
+                //
+                // create a new replica variable
+                //______________________________________________________________
+                template <typename ID> inline
+                const Variable &link(const ID &id, const Variable &primary)
+                {
+                    if(primary.quantity()<=0) throw Specific::Exception(Label, "impossible replica of static '%s'", primary.c_str());
+                    const Variable::Handle hp = &Coerce(primary);
+                    const Variable::Handle hv = new ReplicaVariable(id,hp);
+                    if( !insert(hv) )
+                        throw Specific::Exception(Label,"Replica of existing variable '%s'", hv->c_str() );
+                    return *hv;
+                }
+
+
+                //______________________________________________________________
+                //
+                //
                 // Members
+                //
+                //______________________________________________________________
                 size_t lower;
                 size_t upper;
 
@@ -115,25 +141,22 @@ namespace Yttrium
                 return *code;
             }
 
-            Variables & Variables:: link(const String &name, const size_t indx)
+            const Variable & Variables:: link(const String &name, const size_t indx)
             {
                 assert(0!=code);
-                code->link(name,indx);
-                return *this;
+                return code->link(name,indx);
             }
 
-            Variables & Variables:: link(const char *name, const size_t indx)
+            const Variable & Variables:: link(const char *name, const size_t indx)
             {
                 assert(0!=code);
-                code->link(name,indx);
-                return *this;
+                return code->link(name,indx);
             }
 
-            Variables & Variables:: link(const char name, const size_t indx)
+            const Variable & Variables:: link(const char name, const size_t indx)
             {
                 assert(0!=code);
-                code->link(name,indx);
-                return *this;
+                return code->link(name,indx);
             }
 
             size_t Variables:: span() const noexcept
@@ -162,6 +185,29 @@ namespace Yttrium
             {
                 const String _(name);
                 return get(_);
+            }
+
+            const Variable & Variables:: link(const String &name, const Variable &v)
+            {
+                assert(0!=code);
+                return code->link(name,v);
+            }
+
+            const Variable & Variables:: link(const char *name, const Variable &v)
+            {
+                assert(0!=code);
+                return code->link(name,v);
+            }
+
+            const Variable & Variables:: link(const char name, const Variable &v)
+            {
+                assert(0!=code);
+                return code->link(name,v);
+            }
+
+            const Variable & Variables:: link(const Variable &v)
+            {
+                return link(v,v);
             }
 
 

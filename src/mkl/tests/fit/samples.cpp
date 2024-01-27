@@ -112,13 +112,21 @@ Y_UTEST(fit_samples)
     Fit::ComputeD2<double,double> Eval1D;
     F1D<double> F1;
 
-    Fit::Variables varAll;
-    varAll << "t0" << "D1" << "D2";
-    std::cerr << "varAll=" << varAll << std::endl;
+    Fit::Variables all;
+    all << "t0" << "D1" << "D2";
+    std::cerr << "all =" << all << std::endl;
 
-    Fit::Variables v1;
-    v1.link("t0", varAll["t0"].indx );
-    std::cerr << "v1 = " << v1 << std::endl;
+    Fit::Variables var1;
+    var1.link( all["t0"] );
+    var1.link( "D", all["D1"]);
+    std::cerr << "var1=" << var1 << std::endl;
+
+    Fit::Variables var2;
+    var2.link( all["t0"] );
+    var2.link( "D", all["D2"]);
+    std::cerr << "var2=" << var2 << std::endl;
+
+
 
 
 }

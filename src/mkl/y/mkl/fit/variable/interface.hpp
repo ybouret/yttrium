@@ -36,6 +36,7 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Variable);
+                virtual void   dsp(std::ostream &) const = 0;
             };
 
         }

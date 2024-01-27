@@ -46,9 +46,7 @@ namespace Yttrium
 
             std::ostream & operator<<(std::ostream &os, const Variable &v)
             {
-                //const String &id = v;
-                //os << id << '@' << v.indx;
-                os << '@' << v.idx();
+                v.dsp(os);
                 return os;
             }
 

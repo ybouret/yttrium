@@ -28,7 +28,9 @@ namespace Yttrium
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(ReplicaVariable);
-                virtual size_t idx() const noexcept;
+                virtual size_t idx()      const noexcept; //!< primary index
+                virtual void   dsp(std::ostream &) const; //!< display primary info
+
                 const Variable::Handle primary;
             };
 

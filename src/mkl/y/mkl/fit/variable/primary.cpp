@@ -25,6 +25,10 @@ namespace Yttrium
                 return indx;
             }
 
+            void PrimaryVariable:: dsp(std::ostream &os) const
+            {
+                os << '@' << indx;
+            }
         }
 
     }
