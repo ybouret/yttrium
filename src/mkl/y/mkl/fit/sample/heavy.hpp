@@ -45,11 +45,11 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef Sample<ABSCISSA,ORDINATE>      SampleType; //!< alias
-                typedef typename SampleType::Abscissae Abscissae;  //!< alias
-                typedef typename SampleType::Ordinates Ordinates;  //!< alias
-                typedef typename TypeTraits<ABSCISSA>::ParamType AParam;
-                typedef typename TypeTraits<ORDINATE>::ParamType OParam;
+                typedef Sample<ABSCISSA,ORDINATE>                SampleType; //!< alias
+                typedef typename SampleType::Abscissae           Abscissae;  //!< alias
+                typedef typename SampleType::Ordinates           Ordinates;  //!< alias
+                typedef typename TypeTraits<ABSCISSA>::ParamType AParam;     //!< alias
+                typedef typename TypeTraits<ORDINATE>::ParamType OParam;     //!< aliuas
 
 
                 //______________________________________________________________
@@ -58,6 +58,8 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
+
+                //! create sample with optional capacity
                 template <typename ID>
                 inline explicit HeavySample(const ID     &id,
                                             const size_t nmin = 0) :
@@ -89,6 +91,8 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
+              
+                //! create data
                 inline void add(AParam A, OParam O)
                 {
                     assert(_abs.size()==_num);

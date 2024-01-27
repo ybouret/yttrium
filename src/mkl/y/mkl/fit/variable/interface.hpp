@@ -15,28 +15,53 @@ namespace Yttrium
 
         namespace Fit
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! a Variable is a name with and index
+            //
+            //
+            //__________________________________________________________________
             class Variable : public String
             {
             public:
-                typedef ArkPtr<String,Variable> Handle;
-                typedef HashSet<String,Handle>  DB;
-                typedef DB::ConstIterator       Iterator;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef ArkPtr<String,Variable> Handle;   //!< alias
+                typedef HashSet<String,Handle>  DB;       //!< alias
+                typedef DB::ConstIterator       Iterator; //!< alias
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
             protected:
-                explicit Variable(const String &);
-                explicit Variable(const char   *);
-                explicit Variable(const char    );
+                explicit Variable(const String &); //!< setup
+                explicit Variable(const char   *); //!< setup
+                explicit Variable(const char    ); //!< setup
             public:
-                virtual ~Variable() noexcept;
-                Y_OSTREAM_PROTO(Variable);
+                virtual ~Variable() noexcept;      //!< cleanup
+                Y_OSTREAM_PROTO(Variable);         //!< display with dsp
                 
-                const String & key() const noexcept;
-                virtual size_t idx() const noexcept = 0;
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                const String & key() const noexcept;      //!< for set
+                virtual size_t idx() const noexcept = 0;  //!< for access
 
             private:
+                virtual void   dsp(std::ostream &) const = 0; //!< to dispplay
                 Y_DISABLE_COPY_AND_ASSIGN(Variable);
-                virtual void   dsp(std::ostream &) const = 0;
             };
 
         }

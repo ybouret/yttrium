@@ -13,7 +13,14 @@ namespace Yttrium
 
         namespace Fit
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! set of unique [Primary|Replica]Variable(s)
+            //
+            //
+            //__________________________________________________________________
             class Variables : public  Proxy<const Variable::DB>
             {
             public:
@@ -23,7 +30,7 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef Proxy<const Variable::DB> ProxyType;
+                typedef Proxy<const Variable::DB> ProxyType; //!< alias
 
                 //______________________________________________________________
                 //
@@ -31,22 +38,23 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                Variables();
-                Variables(const Variables &other);
-                virtual ~Variables() noexcept;
-                Variables & operator=(const Variables &other);
+                Variables();                              //!< setup
+                Variables(const Variables &other);        //!< copy
+                virtual ~Variables() noexcept;            //!< cleanup
+                Variables & operator=(const Variables &); //!< assign
 
                 //______________________________________________________________
                 //
                 //
-                // Create Primarty Variables
+                // Create Primary Variables
                 //
                 //______________________________________________________________
-                const Variable & link(const String &name, const size_t indx);
-                const Variable & link(const char   *name, const size_t indx);
-                const Variable & link(const char    name, const size_t indx);
-                size_t           span() const noexcept; //!< highest index
+                const Variable & link(const String &name, const size_t indx); //!< new primary
+                const Variable & link(const char   *name, const size_t indx); //!< new primary
+                const Variable & link(const char    name, const size_t indx); //!< new primary
+                size_t           span() const noexcept;                       //!< highest index
 
+                //! helper to declare primary variables
                 template <typename ID> inline
                 Variables & operator<<(const ID &id)
                 {
@@ -54,6 +62,12 @@ namespace Yttrium
                     return *this;
                 }
 
+                //______________________________________________________________
+                //
+                //
+                // Create Replica Variables
+                //
+                //______________________________________________________________
                 const Variable & link(const String &name, const Variable &v); //!< replica
                 const Variable & link(const char   *name, const Variable &v); //!< replica
                 const Variable & link(const char    name, const Variable &v); //!< replica
@@ -70,6 +84,7 @@ namespace Yttrium
                 const Variable & get(const char   *) const; //!< get by name
                 const Variable & get(const char    ) const; //!< get by name
 
+                //! any access
                 template <typename ID> inline
                 const Variable & operator[](const ID &id) const { return get(id); }
 

@@ -14,18 +14,32 @@ namespace Yttrium
 
         namespace Fit
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! a Variable renaming another one
+            //
+            //
+            //__________________________________________________________________
             class ReplicaVariable : public Variable
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! cleanup
                 virtual ~ReplicaVariable() noexcept;
 
+                //! setup
                 template <typename ID> inline
                 explicit ReplicaVariable(const ID &id, const Variable::Handle &hv) :
-                Variable(id),
-                primary(hv)
-                {
-                }
-                
+                Variable(id), primary(hv) { }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(ReplicaVariable);
                 virtual size_t idx()      const noexcept; //!< primary index
