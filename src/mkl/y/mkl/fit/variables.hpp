@@ -88,7 +88,14 @@ namespace Yttrium
                 template <typename ID> inline
                 const Variable & operator[](const ID &id) const { return get(id); }
 
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
                 
+
             private:
                 virtual ConstInterface & surrogate() const noexcept;
                 class Code;
