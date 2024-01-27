@@ -1,5 +1,6 @@
 
 #include "y/mkl/fit/variables.hpp"
+#include "y/mkl/fit/variable/replica.hpp"
 #include "y/type/nullify.hpp"
 #include "y/oversized.hpp"
 #include "y/system/exception.hpp"
@@ -41,7 +42,7 @@ namespace Yttrium
                 template <typename ID> inline
                 void link(const ID &id, const size_t indx)
                 {
-                    const Variable::Handle hVar = new Variable(id,indx);
+                    const Variable::Handle hVar = new PrimaryVariable(id,indx);
 
                     // check no multiple var
                     if( search(*hVar) )
@@ -51,7 +52,7 @@ namespace Yttrium
                     for(Iterator it=begin(); it != end(); ++it)
                     {
                         const Variable &v = **it;
-                        if( indx == v.indx )
+                        if( indx == v.idx() )
                             throw Specific::Exception(Label,
                                                       "Multiple index #%lu  for '%s' and '%s'",
                                                       (unsigned long)indx,

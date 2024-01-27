@@ -23,18 +23,17 @@ namespace Yttrium
                 typedef HashSet<String,Handle>  DB;
                 typedef DB::ConstIterator       Iterator;
 
-                explicit Variable(const String &, const size_t);
-                explicit Variable(const char   *, const size_t);
-                explicit Variable(const char    , const size_t);
+            protected:
+                explicit Variable(const String &);
+                explicit Variable(const char   *);
+                explicit Variable(const char    );
+            public:
                 virtual ~Variable() noexcept;
                 Y_OSTREAM_PROTO(Variable);
                 
-                const String & key()       const noexcept;
-                //size_t         operator*() const noexcept;
+                const String & key() const noexcept;
+                virtual size_t idx() const noexcept = 0;
 
-
-
-                const size_t indx;
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Variable);
             };
