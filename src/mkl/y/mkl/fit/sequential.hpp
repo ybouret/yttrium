@@ -44,7 +44,7 @@ namespace Yttrium
                     return prevOrdinate.build(ord0);
                 }
 
-                //! run from previsous coordinates to abscissa1
+                //! run from previous coordinates to abscissa1
                 inline ORDINATE run(const ABSCISSA           &abs1,
                                     const Readable<ABSCISSA> &aorg,
                                     const Variables          &vars)
@@ -57,6 +57,7 @@ namespace Yttrium
                     (void) prevAbscissa.build(abs1);
                     return prevOrdinate.build(ord1);
                 }
+                
 
                 //______________________________________________________________
                 //

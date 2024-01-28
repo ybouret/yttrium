@@ -68,6 +68,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
+                //! Ordinate to Abscissa pointer
                 static inline const Abscissa * O2A(const Ordinate &o) noexcept
                 {
                     return Memory::OutOfReach::Cast<const Abscissa, const Ordinate>( &o );
@@ -82,6 +83,7 @@ namespace Yttrium
                     return os;
                 }
 
+                //! save to output stream
                 inline void save( OutputStream &fp ) const
                 {
                     const size_t     n = this->numPoints();
@@ -97,6 +99,7 @@ namespace Yttrium
                     }
                 }
 
+                //! save using name.dat
                 inline void saveDatFile() const
                 {
                     const String     fn = this->key() + ".dat";

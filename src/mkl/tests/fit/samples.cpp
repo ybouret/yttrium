@@ -104,11 +104,13 @@ namespace Yttrium
                     for(size_t d=0;d<Dimension;++d)
                         xadd << Squared(a[d]);
                 }
+                
 
-                ABSCISSA Of(SequentialType           &F,
-                            const SampleType         &S,
-                            const Readable<ABSCISSA> &aorg,
-                            const Variables          &vars)
+
+                inline ABSCISSA Of(SequentialType           &F,
+                                   const SampleType         &S,
+                                   const Readable<ABSCISSA> &aorg,
+                                   const Variables          &vars)
                 {
                     static const ABSCISSA half(0.5);
                     const size_t     n = S.numPoints();
@@ -117,12 +119,14 @@ namespace Yttrium
 
                     xadd.make(n*Dimension);
 
+                    // first point
                     {
                         const size_t   j  = S.indx[1];
                         const ORDINATE Fj = F.set(a[j],aorg,vars);
                         push(b[j],Fj);
                     }
 
+                    // second point
                     for(size_t i=2;i<=n;++i)
                     {
                         const size_t   j  = S.indx[i];
@@ -163,7 +167,7 @@ namespace
             const T t0 = vars(aorg,"t0");
             const T D  = vars(aorg,"D");
             if(t<=t0) return 0;
-            return sqrt(D*(t-t0));
+            return sqrt( D*(t-t0) );
         }
 
 

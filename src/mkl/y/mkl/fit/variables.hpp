@@ -30,8 +30,8 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef Proxy<const Variable::DB> ProxyType; //!< alias
-                typedef Variable::DB::ConstIterator   ConstIterator;
+                typedef Proxy<const Variable::DB>   ProxyType;     //!< alias
+                typedef Variable::DB::ConstIterator ConstIterator; //!< alias
 
                 //______________________________________________________________
                 //
@@ -110,9 +110,11 @@ namespace Yttrium
                     return get(id)(arr);
                 }
 
+                //! get max name length from code
                 size_t maxNameLength() const noexcept;
 
 
+                //! display "pfx var.name sep arr[var]"
                 template <typename ARRAY>
                 void display(const char *pfx, std::ostream &os,  ARRAY &arr, const char *sep = 0) const
                 {
