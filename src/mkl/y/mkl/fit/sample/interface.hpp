@@ -67,7 +67,12 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
-             
+
+                static inline const Abscissa * O2A(const Ordinate &o) noexcept
+                {
+                    return Memory::OutOfReach::Cast<const Abscissa, const Ordinate>( &o );
+                }
+
                 //! display basic info
                 inline friend std::ostream & operator<<(std::ostream &os, const Sample &s)
                 {
@@ -85,7 +90,7 @@ namespace Yttrium
                     for(size_t i=1;i<=n;++i)
                     {
                         fp("%.15g",double(a[i]));
-                        const Abscissa * const p = Memory::OutOfReach::Cast<const Abscissa, const Ordinate>( &b[i] );
+                        const Abscissa * const p = O2A( b[i] );
                         for(size_t j=0;j<Dimension;++j)
                             fp(" %.15g",double(p[j]));
                         fp << '\n';

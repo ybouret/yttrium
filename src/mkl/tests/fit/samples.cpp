@@ -1,7 +1,6 @@
 
 
 #include "y/mkl/fit/sequential.hpp"
-
 #include "y/mkl/fit/sample/heavy.hpp"
 #include "y/mkl/fit/sample/light.hpp"
 #include "y/utest/run.hpp"
@@ -100,7 +99,10 @@ namespace Yttrium
 
                 inline void push(const ORDINATE &Bj, const ORDINATE &Fj)
                 {
-
+                    const ORDINATE  dB = Bj - Fj;
+                    const ABSCISSA *a  = SampleType::O2A(dB);
+                    for(size_t d=0;d<Dimension;++d)
+                        xadd << Squared(a[d]);
                 }
 
                 ABSCISSA Of(SequentialType           &F,
@@ -108,6 +110,7 @@ namespace Yttrium
                             const Readable<ABSCISSA> &aorg,
                             const Variables          &vars)
                 {
+                    static const ABSCISSA half(0.5);
                     const size_t     n = S.numPoints();
                     const Abscissae &a = S.abscissae();
                     const Ordinates &b = S.ordinates();
@@ -128,7 +131,7 @@ namespace Yttrium
                     }
 
 
-                    return xadd.sum();
+                    return half * xadd.sum();
                 }
 
 
