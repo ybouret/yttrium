@@ -82,6 +82,9 @@ namespace Yttrium
             public:
                 typedef Sequential<ABSCISSA,ORDINATE> SequentialType;
                 typedef Sample<ABSCISSA,ORDINATE>     SampleType;
+                typedef typename SampleType::Abscissae Abscissae;
+                typedef typename SampleType::Ordinates Ordinates;;
+
                 static const size_t                   Dimension = SampleType::Dimension;
 
                 Antelope::Add<ABSCISSA> xadd;
@@ -95,13 +98,35 @@ namespace Yttrium
 
                 }
 
+                inline void push(const ORDINATE &Bj, const ORDINATE &Fj)
+                {
+
+                }
+
                 ABSCISSA Of(SequentialType           &F,
                             const SampleType         &S,
                             const Readable<ABSCISSA> &aorg,
                             const Variables          &vars)
                 {
-                    const size_t n = S.dimension();
+                    const size_t     n = S.numPoints();
+                    const Abscissae &a = S.abscissae();
+                    const Ordinates &b = S.ordinates();
+
                     xadd.make(n*Dimension);
+
+                    {
+                        const size_t   j  = S.indx[1];
+                        const ORDINATE Fj = F.set(a[j],aorg,vars);
+                        push(b[j],Fj);
+                    }
+
+                    for(size_t i=2;i<=n;++i)
+                    {
+                        const size_t   j  = S.indx[i];
+                        const ORDINATE Fj = F.run(a[j],aorg,vars);
+                        push(b[j],Fj);
+                    }
+
 
                     return xadd.sum();
                 }
@@ -197,10 +222,7 @@ Y_UTEST(fit_samples)
     var2.link( "D", all["D2"]);
     std::cerr << "var2=" << var2 << std::endl;
 
-    Fit::ComputeD2<double,double> Eval1D;
 
-    Fit::RegularFunction<double,double>::Handle hFunc = new F1D<double>();
-    Fit::SequentialWrapper<double, double>      F1(hFunc);
 
     Vector<double> aorg(all.span(),0);
     std::cerr << "aorg=" << aorg << std::endl;
@@ -217,6 +239,12 @@ Y_UTEST(fit_samples)
     var2.display("(v2)  ", std::cerr, aorg);
     std::cerr << std::endl;
 
+    Fit::ComputeD2<double,double>               Eval1D;
+    Fit::RegularFunction<double,double>::Handle hFunc = new F1D<double>();
+    Fit::SequentialWrapper<double, double>      F1(hFunc);
+
+    const double D21 = Eval1D.Of(F1,*S1,aorg,var1);
+    std::cerr << "D21=" << D21 << std::endl;
 
 }
 Y_UDONE()
