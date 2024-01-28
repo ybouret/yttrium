@@ -45,6 +45,7 @@ namespace Yttrium
 
                 typedef ArkPtr<String,Sample>           Pointer;     //!< alias
 
+                //! ORDINATE Dimension, based on ABSCISSA size
                 static const size_t                     Dimension = sizeof(ORDINATE)/sizeof(ABSCISSA);
 
                 //______________________________________________________________

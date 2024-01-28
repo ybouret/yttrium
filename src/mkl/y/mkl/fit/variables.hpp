@@ -94,12 +94,15 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
+
+                //! get mutable named value from array
                 template <typename WRITABLE, typename ID> inline
                 typename WRITABLE::Type & operator()(WRITABLE &arr, const ID &id) const
                 {
                     return get(id)(arr);
                 }
 
+                //! get constant named value from array
                 template <typename READABLE, typename ID> inline
                 typename READABLE::ConstType & operator()(const READABLE &arr, const ID &id) const
                 {

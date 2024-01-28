@@ -59,6 +59,7 @@ namespace Yttrium
                 const String & key() const noexcept;      //!< for set
                 virtual size_t idx() const noexcept = 0;  //!< for access
 
+                //! return mutable named value from array
                 template <typename WRITABLE> inline
                 typename WRITABLE::Type & operator()(WRITABLE &arr) const noexcept
                 {
@@ -66,6 +67,7 @@ namespace Yttrium
                     return arr[i];
                 }
 
+                //! return const named value from array
                 template <typename READABLE> inline
                 typename READABLE::ConstType & operator()(const READABLE &arr) const noexcept
                 {
