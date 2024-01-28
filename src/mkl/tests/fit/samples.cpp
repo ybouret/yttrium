@@ -201,6 +201,10 @@ Y_UTEST(fit_samples)
     Vector<double> aorg(all.span(),0);
     std::cerr << "aorg=" << aorg << std::endl;
 
+    all.display( "(all) ", std::cerr, aorg);
+    var1.display("(v1)  ", std::cerr, aorg);
+    var2.display("(v2)  ", std::cerr, aorg);
+
 
 
 }

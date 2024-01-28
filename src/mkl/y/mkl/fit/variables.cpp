@@ -22,14 +22,16 @@ namespace Yttrium
                 inline explicit Code() : 
                 Variable::DB(),
                 lower(0),
-                upper(0)
+                upper(0),
+                maxNL(0)
                 {
                 }
 
                 inline explicit Code(const Code &other) :
                 Variable::DB(other),
                 lower(other.lower),
-                upper(other.upper)
+                upper(other.upper),
+                maxNL(other.maxNL)
                 {
                 }
                 
@@ -68,9 +70,9 @@ namespace Yttrium
                         throw Specific::Exception(Label,"Unexpected failure to insert '%s'", hVar->c_str() );
 
                     // update
-                    lower = Min(lower,indx);
-                    upper = Max(upper,indx);
-
+                    Coerce(lower) = Min(lower,indx);
+                    Coerce(upper) = Max(upper,indx);
+                    Coerce(maxNL) = Max(maxNL,hVar->size());
                     return *hVar;
                 }
 
@@ -86,6 +88,12 @@ namespace Yttrium
                     const Variable::Handle hv = new ReplicaVariable(id,hp);
                     if( !insert(hv) )
                         throw Specific::Exception(Label,"Replica of existing variable '%s'", hv->c_str() );
+
+                    const size_t indx = hv->idx();
+                    // update
+                    Coerce(lower) = Min(lower,indx);
+                    Coerce(upper) = Max(upper,indx);
+                    Coerce(maxNL) = Max(maxNL,hv->size());
                     return *hv;
                 }
 
@@ -96,8 +104,9 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                size_t lower;
-                size_t upper;
+                const size_t lower;
+                const size_t upper;
+                const size_t maxNL;
 
             private:
                 Y_DISABLE_ASSIGN(Code);
@@ -210,6 +219,11 @@ namespace Yttrium
                 return link(v,v);
             }
 
+            size_t Variables:: maxNameLength() const noexcept
+            {
+                assert(0!=code);
+                return code->maxNL;
+            }
 
         }
 

@@ -31,7 +31,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 typedef Proxy<const Variable::DB> ProxyType; //!< alias
-                typedef Variable::ConstIterator   ConstIterator;
+                typedef Variable::DB::ConstIterator   ConstIterator;
 
                 //______________________________________________________________
                 //
@@ -114,9 +114,20 @@ namespace Yttrium
 
 
                 template <typename ARRAY>
-                void display(std::ostream &os, ARRAY &arr)
+                void display(const char *pfx, std::ostream &os,  ARRAY &arr, const char *sep = 0) const
                 {
+                    if(!pfx) pfx="";
+                    if(!sep) sep=" = ";
                     const size_t lmax = maxNameLength();
+                    for(ConstIterator it = (**this).begin(); it!= (**this).end(); ++it)
+                    {
+                        const Variable &v = **it;
+                        const String   &s = v;
+                        const size_t    l = v.size();
+                        os << s; for(size_t i=l;i<lmax;++i) os << ' '; os << sep;
+                        os << v(arr);
+                        os << std::endl;
+                    }
                 }
 
 
