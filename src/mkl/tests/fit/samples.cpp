@@ -174,6 +174,10 @@ Y_UTEST(fit_samples)
     std::cerr << S2 << std::endl;
     std::cerr << H1 << std::endl;
 
+    S1->saveDatFile();
+    S2->saveDatFile();
+    H1->saveDatFile();
+
     S1->prepare();
     S2->prepare();
     H1->prepare();
@@ -201,10 +205,17 @@ Y_UTEST(fit_samples)
     Vector<double> aorg(all.span(),0);
     std::cerr << "aorg=" << aorg << std::endl;
 
-    all.display( "(all) ", std::cerr, aorg);
-    var1.display("(v1)  ", std::cerr, aorg);
-    var2.display("(v2)  ", std::cerr, aorg);
+    all(aorg,"t0") = 100.0;
+    var1(aorg,"D") = 0.1;
+    var2(aorg,"D") = 0.12;
 
+
+    all.display( "(all) ", std::cerr, aorg);
+    std::cerr << std::endl;
+    var1.display("(v1)  ", std::cerr, aorg);
+    std::cerr << std::endl;
+    var2.display("(v2)  ", std::cerr, aorg);
+    std::cerr << std::endl;
 
 
 }

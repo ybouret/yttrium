@@ -25,6 +25,11 @@ namespace Yttrium
 
             }
 
+            const String & SampleMetrics:: key() const noexcept
+            {
+                return name;
+            }
+
         }
 
     }

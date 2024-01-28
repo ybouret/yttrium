@@ -9,6 +9,9 @@
 #include "y/system/rtti.hpp"
 #include <iomanip>
 
+#include "y/stream/libc/output.hpp"
+
+
 namespace Yttrium
 {
     namespace MKL
@@ -74,7 +77,28 @@ namespace Yttrium
                     return os;
                 }
 
-                
+                inline void save( OutputStream &fp ) const
+                {
+                    const size_t     n = this->numPoints();
+                    const Abscissae &a = this->abscissae();
+                    const Ordinates &b = this->ordinates();
+                    for(size_t i=1;i<=n;++i)
+                    {
+                        fp("%.15g",double(a[i]));
+                        const Abscissa * const p = Memory::OutOfReach::Cast<const Abscissa, const Ordinate>( &b[i] );
+                        for(size_t j=0;j<Dimension;++j)
+                            fp(" %.15g",double(p[j]));
+                        fp << '\n';
+                    }
+                }
+
+                inline void saveDatFile() const
+                {
+                    const String     fn = this->key() + ".dat";
+                    Libc::OutputFile fp(fn);
+                    save(fp);
+                }
+
                 //______________________________________________________________
                 //
                 //
