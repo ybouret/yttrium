@@ -41,7 +41,7 @@ namespace Yttrium
                 //______________________________________________________________
                
                 //! number of data point
-                virtual size_t dimension() const noexcept = 0;
+                virtual size_t numPoints() const noexcept = 0;
 
                 //______________________________________________________________
                 //

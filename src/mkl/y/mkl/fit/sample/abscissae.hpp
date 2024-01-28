@@ -56,8 +56,8 @@ namespace Yttrium
                 //! build indices and clean memory
                 inline void prepare()
                 {
-                    assert( dimension() == abscissae().size() );
-                    const size_t n = dimension();
+                    assert( numPoints() == abscissae().size() );
+                    const size_t n = numPoints();
                     indx.adjust(n,0);
                     Indexing::Make(indx,Compare,abscissae());
                 }
@@ -81,13 +81,14 @@ namespace Yttrium
 
                 //! setup
                 template <typename ID>
-                inline explicit SampleAbscissae(const ID &id) noexcept : SampleMetrics(id) {}
-
+                inline explicit SampleAbscissae(const ID &id) noexcept : 
+                SampleMetrics(id) {}
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(SampleAbscissae);
 
+                
             };
 
         }

@@ -45,6 +45,7 @@ namespace Yttrium
 
                 typedef ArkPtr<String,Sample>           Pointer;     //!< alias
 
+                static const size_t                     Dimension = sizeof(ORDINATE)/sizeof(ABSCISSA);
 
                 //______________________________________________________________
                 //
@@ -68,7 +69,7 @@ namespace Yttrium
                 {
                     const String &aid = RTTI::Name<Abscissa>();
                     const String &oid = RTTI::Name<Ordinate>();
-                    os << "['" << s.name << "': " << s.callSign() << "<" << aid << "," << oid << "> #" << std::setw(5) << s.dimension() << "]";
+                    os << "['" << s.name << "': " << s.callSign() << "<" << aid << "," << oid << "> #" << std::setw(5) << s.numPoints() << "]";
                     return os;
                 }
 

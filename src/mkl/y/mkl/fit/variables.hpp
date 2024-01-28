@@ -94,7 +94,18 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
-                
+                template <typename WRITABLE, typename ID> inline
+                typename WRITABLE::Type & operator()(WRITABLE &arr, const ID &id) const
+                {
+                    return get(id)(arr);
+                }
+
+                template <typename READABLE, typename ID> inline
+                typename READABLE::ConstType & operator()(const READABLE &arr, const ID &id) const
+                {
+                    return get(id)(arr);
+                }
+
 
             private:
                 virtual ConstInterface & surrogate() const noexcept;

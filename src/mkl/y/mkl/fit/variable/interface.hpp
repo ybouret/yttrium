@@ -59,9 +59,25 @@ namespace Yttrium
                 const String & key() const noexcept;      //!< for set
                 virtual size_t idx() const noexcept = 0;  //!< for access
 
+                template <typename WRITABLE> inline
+                typename WRITABLE::Type & operator()(WRITABLE &arr) const noexcept
+                {
+                    const size_t i = idx(); assert(i>=1);assert(i<=arr.size());
+                    return arr[i];
+                }
+
+                template <typename READABLE> inline
+                typename READABLE::ConstType & operator()(const READABLE &arr) const noexcept
+                {
+                    const size_t i = idx(); assert(i>=1);assert(i<=arr.size());
+                    return arr[i];
+                }
+
+
             private:
                 virtual void   dsp(std::ostream &) const = 0; //!< to dispplay
                 Y_DISABLE_COPY_AND_ASSIGN(Variable);
+
             };
 
         }

@@ -78,7 +78,7 @@ namespace Yttrium
                 // Interface
                 //
                 //______________________________________________________________
-                inline virtual size_t            dimension() const noexcept { return _num; }
+                inline virtual size_t            numPoints() const noexcept { return _num; }
                 inline virtual const Abscissae & abscissae() const noexcept { return _abs; }
                 inline virtual const Ordinates & ordinates() const noexcept { return _ord; }
                 inline virtual const char *      callSign()  const noexcept { return LightSampleInfo::CallSign; }

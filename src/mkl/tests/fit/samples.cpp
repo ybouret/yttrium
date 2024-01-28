@@ -19,6 +19,62 @@ namespace Yttrium
 
         namespace Fit
         {
+            template <typename ABSCISSA, typename ORDINATE>
+            class RegularFunction : public Object, public Counted
+            {
+            public:
+                typedef ArcPtr<RegularFunction> Handle;;
+
+                inline virtual ~RegularFunction() noexcept {}
+
+                virtual ORDINATE operator()(const ABSCISSA           &,
+                                            const Readable<ABSCISSA> &,
+                                            const Variables          &) = 0;
+
+            protected:
+                inline explicit RegularFunction() noexcept {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(RegularFunction);
+            };
+
+            template <typename ABSCISSA, typename ORDINATE>
+            class SequentialWrapper : public Sequential<ABSCISSA,ORDINATE>
+            {
+            public:
+                typedef Sequential<ABSCISSA,ORDINATE>        SequentialType;
+                typedef RegularFunction<ABSCISSA,ORDINATE>   RegularFunctionType;
+                typedef typename RegularFunctionType::Handle RegularFunctionHandle;;
+
+                inline explicit SequentialWrapper(const RegularFunctionHandle &h) : SequentialType(), func(h) {}
+                inline virtual ~SequentialWrapper() noexcept {}
+
+                RegularFunctionHandle func;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(SequentialWrapper);
+
+                virtual ORDINATE init(const ABSCISSA           &abs0,
+                                      const Readable<ABSCISSA> &aorg,
+                                      const Variables          &vars)
+                {
+                    RegularFunctionType &f = *func;
+                    return f(abs0,aorg,vars);
+                }
+
+                virtual ORDINATE move(const ABSCISSA           &abs0,
+                                      const ORDINATE           &ord0,
+                                      const ABSCISSA           &abs1,
+                                      const Readable<ABSCISSA> &aorg,
+                                      const Variables          &vars)
+                {
+                    RegularFunctionType &f = *func;
+                    (void)abs0;
+                    (void)ord0;
+                    return f(abs1,aorg,vars);
+                }
+
+            };
 
             template <typename ABSCISSA, typename ORDINATE>
             class ComputeD2
@@ -26,6 +82,7 @@ namespace Yttrium
             public:
                 typedef Sequential<ABSCISSA,ORDINATE> SequentialType;
                 typedef Sample<ABSCISSA,ORDINATE>     SampleType;
+                static const size_t                   Dimension = SampleType::Dimension;
 
                 Antelope::Add<ABSCISSA> xadd;
 
@@ -38,10 +95,13 @@ namespace Yttrium
 
                 }
 
-                ABSCISSA Of(SequentialType &F, const SampleType &S)
+                ABSCISSA Of(SequentialType           &F,
+                            const SampleType         &S,
+                            const Readable<ABSCISSA> &aorg,
+                            const Variables          &vars)
                 {
                     const size_t n = S.dimension();
-                    xadd.make(n);
+                    xadd.make(n*Dimension);
 
                     return xadd.sum();
                 }
@@ -61,16 +121,21 @@ namespace Yttrium
 namespace
 {
     template <typename T>
-    class F1D : public Fit::Sequential<T,T>
+    class F1D : public Fit::RegularFunction<T,T>
     {
     public:
         explicit F1D() noexcept {}
 
         virtual ~F1D() noexcept {}
 
-        inline T start(const T &ini, const Readable<T> &)
+        virtual T operator()(const T              &t,
+                             const Readable<T>    &aorg,
+                             const Fit::Variables &vars)
         {
-            return ini;
+            const T t0 = vars(aorg,"t0");
+            const T D  = vars(aorg,"D");
+            if(t<=t0) return 0;
+            return sqrt(D*(t-t0));
         }
 
 
@@ -109,8 +174,10 @@ Y_UTEST(fit_samples)
     std::cerr << S2 << std::endl;
     std::cerr << H1 << std::endl;
 
-    Fit::ComputeD2<double,double> Eval1D;
-    F1D<double> F1;
+    S1->prepare();
+    S2->prepare();
+    H1->prepare();
+
 
     Fit::Variables all;
     all << "t0" << "D1" << "D2";
@@ -126,6 +193,13 @@ Y_UTEST(fit_samples)
     var2.link( "D", all["D2"]);
     std::cerr << "var2=" << var2 << std::endl;
 
+    Fit::ComputeD2<double,double> Eval1D;
+
+    Fit::RegularFunction<double,double>::Handle hFunc = new F1D<double>();
+    Fit::SequentialWrapper<double, double>      F1(hFunc);
+
+    Vector<double> aorg(all.span(),0);
+    std::cerr << "aorg=" << aorg << std::endl;
 
 
 
