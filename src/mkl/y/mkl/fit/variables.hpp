@@ -31,6 +31,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 typedef Proxy<const Variable::DB> ProxyType; //!< alias
+                typedef Variable::ConstIterator   ConstIterator;
 
                 //______________________________________________________________
                 //
@@ -108,6 +109,16 @@ namespace Yttrium
                 {
                     return get(id)(arr);
                 }
+
+                size_t maxNameLength() const noexcept;
+
+
+                template <typename ARRAY>
+                void display(std::ostream &os, ARRAY &arr)
+                {
+                    const size_t lmax = maxNameLength();
+                }
+
 
 
             private:

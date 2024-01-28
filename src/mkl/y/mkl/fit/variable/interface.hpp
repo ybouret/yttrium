@@ -34,8 +34,7 @@ namespace Yttrium
                 //______________________________________________________________
                 typedef ArkPtr<String,Variable> Handle;   //!< alias
                 typedef HashSet<String,Handle>  DB;       //!< alias
-                typedef DB::ConstIterator       Iterator; //!< alias
-
+                
                 //______________________________________________________________
                 //
                 //
