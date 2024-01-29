@@ -7,6 +7,7 @@
 #include "y/mkl/v2d.hpp"
 #include "y/mkl/antelope/add.hpp"
 #include "y/functor.hpp"
+#include "y/container/matrix.hpp"
 
 using namespace Yttrium;
 using namespace MKL;
@@ -112,7 +113,8 @@ namespace Yttrium
                     return half * xadd.sum();
                 }
 
-                inline void push(Writable<ABSCISSA> &beta,
+                inline void push(Matrix<ABSCISSA>   &alpha,
+                                 Writable<ABSCISSA> &beta,
                                  const ORDINATE     &Bj,
                                  const ORDINATE     &Fj)
                 {
@@ -122,13 +124,21 @@ namespace Yttrium
                     for(unsigned d=0;d<Dimension;++d)
                         xadd << Squared(df[d]);
 
-
-                    for(size_t i=1;i<=beta.size();++i)
+                    const size_t nv = beta.size();
+                    for(size_t i=nv;i>0;--i)
                     {
-                        const ABSCISSA *g = SampleType::O2A(dFda[i]);
+                        const ABSCISSA *lhs = SampleType::O2A(dFda[i]);
                         for(unsigned d=0;d<Dimension;++d)
                         {
-                            beta[i] += df[d] * g[d];
+                            beta[i] += df[d] * lhs[d];
+                        }
+                        for(size_t j=i;j>0;--j)
+                        {
+                            const ABSCISSA *rhs = SampleType::O2A(dFda[j]);
+                            for(unsigned d=0;d<Dimension;++d)
+                            {
+                                alpha[i][j] += lhs[d] * rhs[d];
+                            }
                         }
                     }
                 }
@@ -140,6 +150,7 @@ namespace Yttrium
                                    const Variables          &vars,
                                    const Booleans           &used,
                                    OutOfOrderGrad           &G,
+                                   Matrix<ABSCISSA>         &alpha,
                                    Writable<ABSCISSA>       &beta)
 
                 {
@@ -150,13 +161,14 @@ namespace Yttrium
                     xadd.make(n*Dimension);
                     dFda.adjust(beta.size(),zord);
                     beta.ld(zero);
+                    alpha.ld(zero);
 
                     for(size_t j=n;j>0;--j)
                     {
                         const ORDINATE Fj = F(a[j],aorg,vars);
                         dFda.ld(zord);
                         G(dFda,a[j],aorg,vars,used);
-                        push(beta,b[j],Fj);
+                        push(alpha,beta,b[j],Fj);
                     }
 
                     return half * xadd.sum();
@@ -357,18 +369,25 @@ Y_UTEST(fit_samples)
         const double D21w = Eval1D.Of(Fw,*S1,aorg,var1);
         std::cerr << "D21=" << D21 << " / " << D21w << std::endl;
 
+        Matrix<double> alpha(all.span(),all.span());
         Vector<double> beta(all.span(),0);
         Vector<bool>   used(all.span(),true);
 
-        const double D21a = Eval1D.Of(F,*S1, aorg, var1, used, G, beta);
-        std::cerr << "D21a=" << D21a << std::endl;
-        std::cerr << "beta=" << beta << std::endl;
+        const double D21a = Eval1D.Of(F,*S1, aorg, var1, used, G, alpha, beta);
+        std::cerr << "D21a="  << D21a << std::endl;
+        std::cerr << "beta="  << beta << std::endl;
+        std::cerr << "alpha=" << alpha << std::endl;
 
-        const double D22a = Eval1D.Of(F,*S2, aorg, var2, used, G, beta);
+
+        const double D22a = Eval1D.Of(F,*S2, aorg, var2, used, G, alpha, beta);
         std::cerr << "D22a=" << D22a << std::endl;
         std::cerr << "beta=" << beta << std::endl;
+        std::cerr << "alpha=" << alpha << std::endl;
+
+        std::cerr << std::endl;
     }
 
+#if 0
     {
         Fit::Variables vars;
         vars << "radius" << "x_c" << "y_c";
@@ -394,7 +413,7 @@ Y_UTEST(fit_samples)
         std::cerr << "beta = " << beta << std::endl;
 
     }
-
+#endif
 
 
 }
