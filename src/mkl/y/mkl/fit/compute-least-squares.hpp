@@ -60,6 +60,7 @@ namespace Yttrium
                 dFda(),
                 beta(),
                 npts(0),
+                last(0),
                 zero(0),
                 half(0.5),
                 one(1),
@@ -120,7 +121,7 @@ namespace Yttrium
                     // return sum
                     //----------------------------------------------------------
                     Coerce(npts) = n;
-                    return half * xadd.sum();
+                    return ( Coerce(last) = half * xadd.sum() );
                 }
 
                 //! compute least squares of S w.r.t an out of order F
@@ -150,7 +151,7 @@ namespace Yttrium
                     // return sum
                     //----------------------------------------------------------
                     Coerce(npts) = n;
-                    return half * xadd.sum();
+                    return ( Coerce(last) = half * xadd.sum() );
                 }
 
 
@@ -206,48 +207,65 @@ namespace Yttrium
                     }
 
                     Coerce(npts) = 0;
-                    return half * xadd.sum();
+                    return ( Coerce(last) = half * xadd.sum() );
                 }
 
-                template <typename ITERATOR>
-                inline ABSCISSA Of(ITERATOR it, size_t n)
+                inline ABSCISSA Of(const List &L)
                 {
-                    if(n<=0) return zero;
 
+                    if(L.size<=0) return zero;
+
+                    // prepare memory
                     {
-                        const ComputeLeastSquares &first = *it;
+                        const ComputeLeastSquares &first = *(L.head);
                         const size_t nv = first.dFda.size(); assert(nv>0);
                         dFda.adjust(nv,zero);
                         beta.adjust(nv,zero);
                         curv.make(nv,nv);
-                        xadd.make(n);
+                        xadd.make(L.size);
                     }
 
-                    const size_t nvar = beta.size();
-                    Coerce(npts)      = 0;
-                    while(n-- > 0)
+                    // first pass: npts
+                    Coerce(npts) = 0;
+                    for(const ComputeLeastSquares *cls = L.head; cls; cls=cls->next)
                     {
-                        const ComputeLeastSquares &ls = *(it++);
-                        const size_t               ns = ls.npts;
-                        Coerce(npts) += ns;
-                        for(size_t i=nvar;i>0;--i)
-                        {
-                            beta[i] += ns * ls.beta[i];
-                            for(size_t j=nvar;i>0;--j)
-                            {
-                                curv[i][j] += ns * ls.curv[i][j];
-                            }
-                        }
+                        Coerce(npts) += cls->npts;
                     }
 
+                    // second pass: beta
+                    const size_t   nvar = beta.size();
+                    const ABSCISSA den  = T(npts);
                     for(size_t i=nvar;i>0;--i)
                     {
-                        beta[i] /= npts;
-                        for(size_t j=nvar;i>0;--j)
+                        xadd.free();
+                        for(const ComputeLeastSquares *cls = L.head; cls; cls=cls->next)
                         {
-                            curv[i][j] /= npts;
+                            xadd << (cls->beta[i]* static_cast<ABSCISSA>(cls->npts) );
+                        }
+                        beta[i] = xadd.sum() / den;
+                    }
+
+                    // third pass: curv
+                    for(size_t i=nvar;i>0;--i)
+                    {
+                        for(size_t j=i;j>0;--j)
+                        {
+                            xadd.free();
+                            for(const ComputeLeastSquares *cls = L.head; cls; cls=cls->next)
+                            {
+                                xadd << (cls->curv[i][j]*static_cast<ABSCISSA>(cls->npts));
+                            }
+                            curv[i][j] = curv[j][i] = xadd.sum() / den;
                         }
                     }
+
+                    // final D2
+                    xadd.free();
+                    for(const ComputeLeastSquares *cls = L.head; cls; cls=cls->next)
+                    {
+                        xadd << (cls->last * static_cast<ABSCISSA>(cls->npts));
+                    }
+                    return ( Coerce(last) = xadd.sum()/den );
 
                 }
 
@@ -263,6 +281,7 @@ namespace Yttrium
                 Vector<ABSCISSA,SampleMemory> beta; //!< gradient of D2
                 Matrix<ABSCISSA>              curv; //!< approx curvature of D2
                 const size_t                  npts; //!< last dimensions
+                const ABSCISSA                last; //!< last valyue
                 const ABSCISSA                zero; //!< alias
                 const ABSCISSA                half; //!< alias
                 const ABSCISSA                one;  //!< alias
