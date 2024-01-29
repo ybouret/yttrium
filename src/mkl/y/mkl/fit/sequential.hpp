@@ -4,8 +4,7 @@
 #ifndef Y_Fit_Sequential_Included
 #define Y_Fit_Sequential_Included 1
 
-#include "y/mkl/fit/variables.hpp"
-#include "y/container/readable.hpp"
+#include "y/mkl/fit/type-for.hpp"
 #include "y/memory/solitary/workspace.hpp"
 
 namespace Yttrium
@@ -15,6 +14,9 @@ namespace Yttrium
 
         namespace Fit
         {
+
+          
+
             //__________________________________________________________________
             //
             //
@@ -27,6 +29,9 @@ namespace Yttrium
             class Sequential
             {
             public:
+                typedef TypeFor<ABSCISSA,ORDINATE>     MyTypeFor;
+                typedef typename MyTypeFor::Parameters Parameters;
+
                 //______________________________________________________________
                 //
                 //
@@ -36,7 +41,7 @@ namespace Yttrium
 
                 //! initialize call at abscissa0
                 inline ORDINATE set(const ABSCISSA           &abs0,
-                                    const Readable<ABSCISSA> &aorg,
+                                    const Parameters         &aorg,
                                     const Variables          &vars)
                 {
                     std::cerr << "Sequential init@" << abs0 << std::endl;
@@ -46,7 +51,7 @@ namespace Yttrium
 
                 //! run from previous coordinates to abscissa1
                 inline ORDINATE run(const ABSCISSA           &abs1,
-                                    const Readable<ABSCISSA> &aorg,
+                                    const Parameters         &aorg,
                                     const Variables          &vars)
                 {
                     const ABSCISSA &abs0 = *prevAbscissa;
@@ -75,13 +80,13 @@ namespace Yttrium
                 Memory::Workspace<ORDINATE> prevOrdinate;
 
                 virtual ORDINATE init(const ABSCISSA           &abs0,
-                                      const Readable<ABSCISSA> &aorg,
+                                      const Parameters         &aorg,
                                       const Variables          &vars) = 0;
 
                 virtual ORDINATE move(const ABSCISSA           &abs0,
                                       const ORDINATE           &ord0,
                                       const ABSCISSA           &abs1,
-                                      const Readable<ABSCISSA> &aorg,
+                                      const Parameters         &aorg,
                                       const Variables          &vars) = 0;
 
             };

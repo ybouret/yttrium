@@ -6,6 +6,7 @@
 #include "y/utest/run.hpp"
 #include "y/mkl/v2d.hpp"
 #include "y/mkl/antelope/add.hpp"
+#include "y/functor.hpp"
 
 using namespace Yttrium;
 using namespace MKL;
@@ -18,6 +19,8 @@ namespace Yttrium
 
         namespace Fit
         {
+            
+
             template <typename ABSCISSA, typename ORDINATE>
             class RegularFunction : public Object, public Counted
             {
@@ -41,14 +44,14 @@ namespace Yttrium
             class SequentialWrapper : public Sequential<ABSCISSA,ORDINATE>
             {
             public:
-                typedef Sequential<ABSCISSA,ORDINATE>        SequentialType;
-                typedef RegularFunction<ABSCISSA,ORDINATE>   RegularFunctionType;
-                typedef typename RegularFunctionType::Handle RegularFunctionHandle;;
+                typedef TypeFor<ABSCISSA,ORDINATE>           MyType;
+                typedef Sequential<ABSCISSA,ORDINATE>        SequentialFunc;
+                typedef typename MyType::OutOfOrderFunc      OutOfOrderFunc;
 
-                inline explicit SequentialWrapper(const RegularFunctionHandle &h) : SequentialType(), func(h) {}
+                inline explicit SequentialWrapper(const OutOfOrderFunc &h) : SequentialFunc(), func(h) {}
                 inline virtual ~SequentialWrapper() noexcept {}
 
-                RegularFunctionHandle func;
+                OutOfOrderFunc func;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(SequentialWrapper);
@@ -57,8 +60,7 @@ namespace Yttrium
                                       const Readable<ABSCISSA> &aorg,
                                       const Variables          &vars)
                 {
-                    RegularFunctionType &f = *func;
-                    return f(abs0,aorg,vars);
+                    return func(abs0,aorg,vars);
                 }
 
                 virtual ORDINATE move(const ABSCISSA           &abs0,
@@ -67,10 +69,9 @@ namespace Yttrium
                                       const Readable<ABSCISSA> &aorg,
                                       const Variables          &vars)
                 {
-                    RegularFunctionType &f = *func;
                     (void)abs0;
                     (void)ord0;
-                    return f(abs1,aorg,vars);
+                    return func(abs1,aorg,vars);
                 }
 
             };
@@ -79,16 +80,20 @@ namespace Yttrium
             class ComputeD2
             {
             public:
-                typedef Sequential<ABSCISSA,ORDINATE> SequentialType;
-                typedef Sample<ABSCISSA,ORDINATE>     SampleType;
+                typedef Sample<ABSCISSA,ORDINATE>      SampleType;
+                typedef TypeFor<ABSCISSA,ORDINATE>     MyType;
+
                 typedef typename SampleType::Abscissae Abscissae;
                 typedef typename SampleType::Ordinates Ordinates;;
+                typedef TL3(ABSCISSA,const Readable<ABSCISSA>&,const Variables) OutOfOrderArgs;
+                typedef Functor<ORDINATE,OutOfOrderArgs> OutOfOrderFunc;
+                typedef Sequential<ABSCISSA,ORDINATE>    SequentialFunc;
 
                 static const size_t                   Dimension = SampleType::Dimension;
 
                 Antelope::Add<ABSCISSA> xadd;
 
-                explicit ComputeD2()
+                explicit ComputeD2() : half(0.5)
                 {
                 }
 
@@ -104,15 +109,13 @@ namespace Yttrium
                     for(size_t d=0;d<Dimension;++d)
                         xadd << Squared(a[d]);
                 }
-                
 
 
-                inline ABSCISSA Of(SequentialType           &F,
+                inline ABSCISSA Of(SequentialFunc           &F,
                                    const SampleType         &S,
                                    const Readable<ABSCISSA> &aorg,
                                    const Variables          &vars)
                 {
-                    static const ABSCISSA half(0.5);
                     const size_t     n = S.numPoints();
                     const Abscissae &a = S.abscissae();
                     const Ordinates &b = S.ordinates();
@@ -138,7 +141,28 @@ namespace Yttrium
                     return half * xadd.sum();
                 }
 
+                inline ABSCISSA Of(OutOfOrderFunc           &F,
+                                   const SampleType         &S,
+                                   const Readable<ABSCISSA> &aorg,
+                                   const Variables          &vars)
+                {
+                    const size_t     n = S.numPoints();
+                    const Abscissae &a = S.abscissae();
+                    const Ordinates &b = S.ordinates();
 
+                    xadd.make(n*Dimension);
+
+                    for(size_t j=n;j>0;--j)
+                    {
+                        const ORDINATE Fj = F(a[j],aorg,vars);
+                        push(b[j],Fj);
+                    }
+
+
+                    return half * xadd.sum();
+                }
+
+                const ABSCISSA half;
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(ComputeD2);
             };
@@ -153,16 +177,16 @@ namespace Yttrium
 namespace
 {
     template <typename T>
-    class F1D : public Fit::RegularFunction<T,T>
+    class F1D
     {
     public:
         explicit F1D() noexcept {}
 
         virtual ~F1D() noexcept {}
 
-        virtual T operator()(const T              &t,
-                             const Readable<T>    &aorg,
-                             const Fit::Variables &vars)
+        virtual T compute(const T              &t,
+                          const Readable<T>    &aorg,
+                          const Fit::Variables &vars)
         {
             const T t0 = vars(aorg,"t0");
             const T D  = vars(aorg,"D");
@@ -246,12 +270,14 @@ Y_UTEST(fit_samples)
     var2.display("(v2)  ", std::cerr, aorg);
     std::cerr << std::endl;
 
-    Fit::ComputeD2<double,double>               Eval1D;
-    Fit::RegularFunction<double,double>::Handle hFunc = new F1D<double>();
-    Fit::SequentialWrapper<double, double>      F1(hFunc);
+    Fit::ComputeD2<double,double> Eval1D;
+    F1D<double> f1;
+    Fit::ComputeD2<double,double>::OutOfOrderFunc F1( &f1, & F1D<double>::compute );
+    Fit::SequentialWrapper<double, double>        F1w( F1 );
 
-    const double D21 = Eval1D.Of(F1,*S1,aorg,var1);
-    std::cerr << "D21=" << D21 << std::endl;
+    const double D21  = Eval1D.Of(F1,*S1,aorg,var1);
+    const double D21w = Eval1D.Of(F1w,*S1,aorg,var1);
+    std::cerr << "D21=" << D21 << " / " << D21w << std::endl;
 
 }
 Y_UDONE()

@@ -5,12 +5,9 @@
 
 #include "y/mkl/fit/sample/abscissae.hpp"
 #include "y/ptr/ark.hpp"
-
 #include "y/system/rtti.hpp"
-#include <iomanip>
-
 #include "y/stream/libc/output.hpp"
-
+#include <iomanip>
 
 namespace Yttrium
 {
@@ -48,8 +45,9 @@ namespace Yttrium
 
                 typedef ArkPtr<String,Sample>           Pointer;     //!< alias
 
+
                 //! ORDINATE Dimension, based on ABSCISSA size
-                static const size_t                     Dimension = sizeof(ORDINATE)/sizeof(ABSCISSA);
+                static const size_t Dimension = sizeof(ORDINATE)/sizeof(ABSCISSA);
 
                 //______________________________________________________________
                 //
