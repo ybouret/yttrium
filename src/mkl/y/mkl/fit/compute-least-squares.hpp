@@ -98,7 +98,7 @@ namespace Yttrium
                     {
                         const size_t   j  = S.indx[1];
                         const ORDINATE Fj = F.set(a[j],aorg,vars);
-                        push(b[j],Fj);
+                        pushDSQ(b[j],Fj);
                     }
 
                     //----------------------------------------------------------
@@ -108,7 +108,7 @@ namespace Yttrium
                     {
                         const size_t   j  = S.indx[i];
                         const ORDINATE Fj = F.run(a[j],aorg,vars);
-                        push(b[j],Fj);
+                        pushDSQ(b[j],Fj);
                     }
 
                     //----------------------------------------------------------
@@ -137,7 +137,7 @@ namespace Yttrium
                     for(size_t j=n;j>0;--j)
                     {
                         const ORDINATE Fj = F(a[j],aorg,vars);
-                        push(b[j],Fj);
+                        pushDSQ(b[j],Fj);
                     }
 
                     //----------------------------------------------------------
@@ -154,8 +154,7 @@ namespace Yttrium
                                    const Readable<ABSCISSA> &aorg,
                                    const Variables          &vars,
                                    const Booleans           &used,
-                                   OutOfOrderGrad           &G,
-                                   Matrix<ABSCISSA>         &alpha)
+                                   OutOfOrderGrad           &G)
 
                 {
                     // initialize
@@ -164,23 +163,22 @@ namespace Yttrium
                     const Ordinates &b  = S.ordinates();
                     const size_t     nv = aorg.size();
                     assert(used.size() == nv);
-                    assert(alpha.cols  == nv);
-                    assert(alpha.rows  == nv);
 
                     xadd.make(n*Dimension);
                     dFda.adjust(nv,zord);
                     beta.adjust(nv,zero);
+                    curv.make(nv,nv);
 
                     // global setting
                     beta.ld(zero);
-                    alpha.ld(zero);
+                    curv.ld(zero);
 
                     for(size_t j=n;j>0;--j)
                     {
                         const ORDINATE Fj = F(a[j],aorg,vars);
                         dFda.ld(zord); // local setting befor call
                         G(dFda,a[j],aorg,vars,used);
-                        push(alpha,beta,b[j],Fj);
+                        pushAll(b[j],Fj);
                     }
 
                     // ensure consistency
@@ -189,15 +187,15 @@ namespace Yttrium
                         if( vars.found(i) && used[i] )
                         {
                             for(size_t j=i-1;j>0;--j)
-                                alpha[j][i] = alpha[i][j];
+                                curv[j][i] = curv[i][j];
                             continue;
                         }
 
                         // assuming not used by algorithm
                         beta[i] = zero;
-                        alpha.ldCol(i,zero);
-                        alpha.ldRow(i,zero);
-                        alpha[i][i] = one;
+                        curv.ldCol(i,zero);
+                        curv.ldRow(i,zero);
+                        curv[i][i] = one;
                     }
 
                     return half * xadd.sum();
@@ -212,6 +210,7 @@ namespace Yttrium
                 Antelope::Add<ABSCISSA>       xadd; //!< to perform additions
                 Vector<ORDINATE,SampleMemory> dFda; //!< local dF/da
                 Vector<ABSCISSA,SampleMemory> beta; //!< gradient of D2
+                Matrix<ABSCISSA>              curv; //!< approx curvature of D2
                 const ABSCISSA                zero; //!< alias
                 const ABSCISSA                half; //!< alias
                 const ABSCISSA                one;  //!< alias
@@ -222,7 +221,7 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(ComputeLeastSquares);
 
-                inline void push(const ORDINATE &Bj, const ORDINATE &Fj)
+                inline void pushDSQ(const ORDINATE &Bj, const ORDINATE &Fj)
                 {
                     const ORDINATE  dB = Bj - Fj;
                     const ABSCISSA *a  = SampleType::O2A(dB);
@@ -230,12 +229,9 @@ namespace Yttrium
                         xadd << Squared(a[d]);
                 }
 
-                inline void push(Matrix<ABSCISSA>   &alpha,
-                                 Writable<ABSCISSA> &beta,
-                                 const ORDINATE     &Bj,
-                                 const ORDINATE     &Fj)
+                inline void pushAll(const ORDINATE     &Bj,
+                                    const ORDINATE     &Fj)
                 {
-                    assert(beta.size()==dFda.size());
                     const ORDINATE  dB = Bj - Fj;
                     const ABSCISSA *df = SampleType::O2A(dB);
                     for(unsigned d=0;d<Dimension;++d)
@@ -254,7 +250,7 @@ namespace Yttrium
                             const ABSCISSA *rhs = SampleType::O2A(dFda[j]);
                             for(unsigned d=0;d<Dimension;++d)
                             {
-                                alpha[i][j] += lhs[d] * rhs[d];
+                                curv[i][j] += lhs[d] * rhs[d];
                             }
                         }
                     }

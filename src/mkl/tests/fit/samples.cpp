@@ -205,24 +205,23 @@ Y_UTEST(fit_samples)
         const double D21w = Eval1D.Of(Fw,*S1,aorg,var1);
         std::cerr << "D21=" << D21 << " / " << D21w << std::endl;
 
-        Matrix<double> alpha(all.span(),all.span());
         Vector<bool>   used(all.span(),true);
 
-        const double D21a = Eval1D.Of(F,*S1, aorg, var1, used, G, alpha);
-        std::cerr << "D21a="  << D21a << std::endl;
-        std::cerr << "beta="  << Eval1D.beta << std::endl;
-        std::cerr << "alpha=" << alpha << std::endl;
+        const double D21a = Eval1D.Of(F,*S1, aorg, var1, used, G);
+        std::cerr << "D21a = " << D21a << std::endl;
+        std::cerr << "beta = " << Eval1D.beta << std::endl;
+        std::cerr << "curv = " << Eval1D.curv << std::endl;
 
 
-        const double D22a = Eval1D.Of(F,*S2, aorg, var2, used, G, alpha);
-        std::cerr << "D22a=" << D22a << std::endl;
-        std::cerr << "beta=" << Eval1D.beta << std::endl;
-        std::cerr << "alpha=" << alpha << std::endl;
+        const double D22a = Eval1D.Of(F,*S2, aorg, var2, used, G);
+        std::cerr << "D22a = " << D22a << std::endl;
+        std::cerr << "beta = " << Eval1D.beta << std::endl;
+        std::cerr << "curv = " << Eval1D.curv << std::endl;
 
         std::cerr << std::endl;
     }
 
-#if 0
+#if 1
     {
         Fit::Variables vars;
         vars << "radius" << "x_c" << "y_c";
@@ -240,15 +239,14 @@ Y_UTEST(fit_samples)
         vars.display("", std::cerr, aorg);
 
         const double D21 = Eval2D.Of(F, *H1, aorg, vars);
-        std::cerr << "D21 = " << D21 << std::endl;
+        std::cerr << "D21   = " << D21 << std::endl;
 
         Matrix<double> alpha(vars.span(),vars.span());
-        Vector<double> beta(vars.span(),0);
-        Vector<bool>   used(vars.span(),true);
-        const double   D21a = Eval2D.Of(F,*H1, aorg, vars, used, G, alpha, beta);
+        Vector<bool>   used(aorg.size(),true);
+        const double   D21a = Eval2D.Of(F,*H1, aorg, vars, used, G);;
         std::cerr << "D21a  = " << D21a << std::endl;
-        std::cerr << "beta  = " << beta << std::endl;
-        std::cerr << "alpha = " << alpha << std::endl;
+        std::cerr << "beta  = " << Eval2D.beta << std::endl;
+        std::cerr << "curv  = " << Eval2D.curv << std::endl;
 
     }
 #endif
