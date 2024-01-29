@@ -219,12 +219,61 @@ namespace
             if( D__(used) ) D__(dFda) = dt/den;
          }
 
-
-
-
     private:
         Y_DISABLE_COPY_AND_ASSIGN(F1D);
     };
+
+    template <typename T>
+    class Circle
+    {
+    public:
+        typedef V2D<T> VTX;
+
+        explicit Circle()
+        {
+        }
+
+        virtual ~Circle() noexcept
+        {
+        }
+
+        inline VTX F(const T              &t,
+                     const Readable<T>    &aorg,
+                     const Fit::Variables &vars)
+        {
+            const T radius  = vars(aorg,"radius");
+            const T x_c     = vars(aorg,"x_c");
+            const T y_c     = vars(aorg,"y_c");
+            const double  c = cos(t);
+            const double  s = sin(t);
+            return VTX(x_c+radius*c,y_c+radius*s);
+        }
+
+        inline void G(Writable<VTX>        &dFda,
+                      const T              &t,
+                      const Readable<T>    &aorg,
+                      const Fit::Variables &vars,
+                      const Fit::Booleans  &used)
+        {
+            const Fit::Variable &radius_ = vars["radius"];
+            const Fit::Variable &x_c_    = vars["x_c"];
+            const Fit::Variable &y_c_    = vars["y_c"];
+            //const T radius  = radius_(aorg);
+            //const T x_c     = x_c_(aorg);
+            //const T y_c     = y_c_(aorg);
+            const double  c = cos(t);
+            const double  s = sin(t);
+
+            if( radius_(used) ) radius_(dFda) = VTX(c,s);
+            if( x_c_(used)    ) x_c_(dFda)    = VTX(1,0);
+            if( y_c_(used)    ) y_c_(dFda)    = VTX(0,1);
+        }
+
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(Circle);
+    };
+
 }
 
 Y_UTEST(fit_samples)
@@ -266,57 +315,86 @@ Y_UTEST(fit_samples)
     H1->prepare();
 
 
-    Fit::Variables all;
-    all << "t0" << "D1" << "D2";
-    std::cerr << "all =" << all << std::endl;
+    {
+        Fit::Variables all;
+        all << "t0" << "D1" << "D2";
+        std::cerr << "all =" << all << std::endl;
 
-    Fit::Variables var1;
-    var1.link( all["t0"] );
-    var1.link( "D", all["D1"]);
-    std::cerr << "var1=" << var1 << std::endl;
+        Fit::Variables var1;
+        var1.link( all["t0"] );
+        var1.link( "D", all["D1"]);
+        std::cerr << "var1=" << var1 << std::endl;
 
-    Fit::Variables var2;
-    var2.link( all["t0"] );
-    var2.link( "D", all["D2"]);
-    std::cerr << "var2=" << var2 << std::endl;
-
-
-
-    Vector<double> aorg(all.span(),0);
-    std::cerr << "aorg=" << aorg << std::endl;
-
-    all(aorg,"t0") = 100.0;
-    var1(aorg,"D") = 0.1;
-    var2(aorg,"D") = 0.12;
+        Fit::Variables var2;
+        var2.link( all["t0"] );
+        var2.link( "D", all["D2"]);
+        std::cerr << "var2=" << var2 << std::endl;
 
 
-    all.display( "(all) ", std::cerr, aorg);
-    std::cerr << std::endl;
-    var1.display("(v1)  ", std::cerr, aorg);
-    std::cerr << std::endl;
-    var2.display("(v2)  ", std::cerr, aorg);
-    std::cerr << std::endl;
 
-    Fit::ComputeD2<double,double> Eval1D;
-    F1D<double> f1;
-    Fit::ComputeD2<double,double>::OutOfOrderFunc F1( &f1, & F1D<double>::F );
-    Fit::SequentialWrapper<double, double>        F1w( F1 );
-    Fit::ComputeD2<double,double>::OutOfOrderGrad G1( &f1, & F1D<double>::G );
+        Vector<double> aorg(all.span(),0);
+        std::cerr << "aorg=" << aorg << std::endl;
 
-    const double D21  = Eval1D.Of(F1,*S1,aorg,var1);
-    const double D21w = Eval1D.Of(F1w,*S1,aorg,var1);
-    std::cerr << "D21=" << D21 << " / " << D21w << std::endl;
+        all(aorg,"t0") = 100.0;
+        var1(aorg,"D") = 0.1;
+        var2(aorg,"D") = 0.12;
 
-    Vector<double> beta(all.span(),0);
-    Vector<bool>   used(all.span(),true);
 
-    const double D21a = Eval1D.Of(F1,*S1, aorg, var1, used, G1, beta);
-    std::cerr << "D21a=" << D21a << std::endl;
-    std::cerr << "beta=" << beta << std::endl;
+        all.display( "(all) ", std::cerr, aorg);
+        std::cerr << std::endl;
+        var1.display("(v1)  ", std::cerr, aorg);
+        std::cerr << std::endl;
+        var2.display("(v2)  ", std::cerr, aorg);
+        std::cerr << std::endl;
 
-    const double D22a = Eval1D.Of(F1,*S2, aorg, var2, used, G1, beta);
-    std::cerr << "D22a=" << D22a << std::endl;
-    std::cerr << "beta=" << beta << std::endl;
+        Fit::ComputeD2<double,double> Eval1D;
+        F1D<double> f1;
+        Fit::ComputeD2<double,double>::OutOfOrderFunc F( &f1, & F1D<double>::F );
+        Fit::SequentialWrapper<double, double>        Fw( F );
+        Fit::ComputeD2<double,double>::OutOfOrderGrad G( &f1, & F1D<double>::G );
+
+        const double D21  = Eval1D.Of(F,*S1,aorg,var1);
+        const double D21w = Eval1D.Of(Fw,*S1,aorg,var1);
+        std::cerr << "D21=" << D21 << " / " << D21w << std::endl;
+
+        Vector<double> beta(all.span(),0);
+        Vector<bool>   used(all.span(),true);
+
+        const double D21a = Eval1D.Of(F,*S1, aorg, var1, used, G, beta);
+        std::cerr << "D21a=" << D21a << std::endl;
+        std::cerr << "beta=" << beta << std::endl;
+
+        const double D22a = Eval1D.Of(F,*S2, aorg, var2, used, G, beta);
+        std::cerr << "D22a=" << D22a << std::endl;
+        std::cerr << "beta=" << beta << std::endl;
+    }
+
+    {
+        Fit::Variables vars;
+        vars << "radius" << "x_c" << "y_c";
+        typedef V2D<double> VTX;
+        Fit::ComputeD2<double,VTX>                 Eval2D;
+        Circle<double>                             Circ;
+        Fit::ComputeD2<double,VTX>::OutOfOrderFunc F( &Circ, & Circle<double>::F );
+        Fit::ComputeD2<double,VTX>::OutOfOrderGrad G( &Circ, & Circle<double>::G );
+
+        Vector<double> aorg(vars.span(),0);
+        vars(aorg,"x_c")    = 0.1;
+        vars(aorg,"y_c")    = 0.02;
+        vars(aorg,"radius") = 0.78;
+        vars.display("", std::cerr, aorg);
+
+        const double D21 = Eval2D.Of(F, *H1, aorg, vars);
+        std::cerr << "D21 = " << D21 << std::endl;
+
+        Vector<double> beta(vars.span(),0);
+        Vector<bool>   used(vars.span(),true);
+        const double   D21a = Eval2D.Of(F,*H1, aorg, vars, used, G, beta);
+        std::cerr << "D21a = " << D21a << std::endl;
+        std::cerr << "beta = " << beta << std::endl;
+
+    }
+
 
 
 }
