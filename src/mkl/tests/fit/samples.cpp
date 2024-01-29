@@ -1,13 +1,11 @@
 
-
+#include "y/mkl/fit/compute-least-squares.hpp"
 #include "y/mkl/fit/sequential/wrapper.hpp"
 #include "y/mkl/fit/sample/heavy.hpp"
 #include "y/mkl/fit/sample/light.hpp"
 #include "y/utest/run.hpp"
 #include "y/mkl/v2d.hpp"
-#include "y/mkl/antelope/add.hpp"
-#include "y/functor.hpp"
-#include "y/container/matrix.hpp"
+
 
 using namespace Yttrium;
 using namespace MKL;
@@ -23,188 +21,6 @@ namespace Yttrium
 
 
           
-            template <typename ABSCISSA, typename ORDINATE>
-            class ComputeD2
-            {
-            public:
-                typedef Sample<ABSCISSA,ORDINATE>      SampleType;
-                typedef TypeFor<ABSCISSA,ORDINATE>     MyType;
-
-                typedef typename SampleType::Abscissae       Abscissae;
-                typedef typename SampleType::Ordinates       Ordinates;;
-                typedef typename MyType::OutOfOrderFunc      OutOfOrderFunc;
-                typedef Sequential<ABSCISSA,ORDINATE>        SequentialFunc;
-                typedef typename MyType::OutOfOrderGradient  OutOfOrderGrad;
-
-                static const size_t                   Dimension = SampleType::Dimension;
-
-
-                explicit ComputeD2() : 
-                xadd(),
-                dFda(),
-                zero(0),
-                half(0.5),
-                z___(),
-                zord(*static_cast<const ORDINATE *>(Memory::OutOfReach::Addr(z___)) )
-                {
-
-                }
-
-                virtual ~ComputeD2() noexcept
-                {
-
-                }
-
-                inline void push(const ORDINATE &Bj, const ORDINATE &Fj)
-                {
-                    const ORDINATE  dB = Bj - Fj;
-                    const ABSCISSA *a  = SampleType::O2A(dB);
-                    for(size_t d=0;d<Dimension;++d)
-                        xadd << Squared(a[d]);
-                }
-
-
-                inline ABSCISSA Of(SequentialFunc           &F,
-                                   const SampleType         &S,
-                                   const Readable<ABSCISSA> &aorg,
-                                   const Variables          &vars)
-                {
-                    const size_t     n = S.numPoints();
-                    const Abscissae &a = S.abscissae();
-                    const Ordinates &b = S.ordinates();
-
-                    xadd.make(n*Dimension);
-
-                    // first point
-                    {
-                        const size_t   j  = S.indx[1];
-                        const ORDINATE Fj = F.set(a[j],aorg,vars);
-                        push(b[j],Fj);
-                    }
-
-                    // following points
-                    for(size_t i=2;i<=n;++i)
-                    {
-                        const size_t   j  = S.indx[i];
-                        const ORDINATE Fj = F.run(a[j],aorg,vars);
-                        push(b[j],Fj);
-                    }
-
-
-                    return half * xadd.sum();
-                }
-
-                inline ABSCISSA Of(OutOfOrderFunc           &F,
-                                   const SampleType         &S,
-                                   const Readable<ABSCISSA> &aorg,
-                                   const Variables          &vars)
-                {
-                    const size_t     n = S.numPoints();
-                    const Abscissae &a = S.abscissae();
-                    const Ordinates &b = S.ordinates();
-
-                    xadd.make(n*Dimension);
-
-                    for(size_t j=n;j>0;--j)
-                    {
-                        const ORDINATE Fj = F(a[j],aorg,vars);
-                        push(b[j],Fj);
-                    }
-                    return half * xadd.sum();
-                }
-
-                inline void push(Matrix<ABSCISSA>   &alpha,
-                                 Writable<ABSCISSA> &beta,
-                                 const ORDINATE     &Bj,
-                                 const ORDINATE     &Fj)
-                {
-                    assert(beta.size()==dFda.size());
-                    const ORDINATE  dB = Bj - Fj;
-                    const ABSCISSA *df = SampleType::O2A(dB);
-                    for(unsigned d=0;d<Dimension;++d)
-                        xadd << Squared(df[d]);
-
-                    const size_t nv = beta.size();
-                    for(size_t i=nv;i>0;--i)
-                    {
-                        const ABSCISSA *lhs = SampleType::O2A(dFda[i]);
-                        for(unsigned d=0;d<Dimension;++d)
-                        {
-                            beta[i] += df[d] * lhs[d];
-                        }
-                        for(size_t j=i;j>0;--j)
-                        {
-                            const ABSCISSA *rhs = SampleType::O2A(dFda[j]);
-                            for(unsigned d=0;d<Dimension;++d)
-                            {
-                                alpha[i][j] += lhs[d] * rhs[d];
-                            }
-                        }
-                    }
-                }
-
-
-                inline ABSCISSA Of(OutOfOrderFunc           &F,
-                                   const SampleType         &S,
-                                   const Readable<ABSCISSA> &aorg,
-                                   const Variables          &vars,
-                                   const Booleans           &used,
-                                   OutOfOrderGrad           &G,
-                                   Matrix<ABSCISSA>         &alpha,
-                                   Writable<ABSCISSA>       &beta)
-
-                {
-                    const size_t     n  = S.numPoints();
-                    const Abscissae &a  = S.abscissae();
-                    const Ordinates &b  = S.ordinates();
-                    const size_t     nv = aorg.size();
-                    assert(used.size() == nv);
-                    assert(beta.size() == nv);
-                    assert(alpha.cols  == nv);
-                    assert(alpha.rows  == nv);
-
-                    xadd.make(n*Dimension);
-                    dFda.adjust(beta.size(),zord);
-                    beta.ld(zero);
-                    alpha.ld(zero);
-
-                    for(size_t j=n;j>0;--j)
-                    {
-                        const ORDINATE Fj = F(a[j],aorg,vars);
-                        dFda.ld(zord);
-                        G(dFda,a[j],aorg,vars,used);
-                        push(alpha,beta,b[j],Fj);
-                    }
-
-                    for(size_t i=nv;i>0;--i)
-                    {
-                        if( vars.found(i) && used[i]) 
-                        {
-                            for(size_t j=i-1;j>0;--j)
-                                alpha[j][i] = alpha[i][j];
-                            continue;
-                        }
-                        beta[i] = zero;
-                        alpha.ldCol(i,zero);
-                        alpha.ldRow(i,zero);
-                        alpha[i][i] = 1;
-                    }
-
-                    return half * xadd.sum();
-                }
-
-                Antelope::Add<ABSCISSA>       xadd;
-                Vector<ORDINATE,SampleMemory> dFda;
-                const ABSCISSA                zero;
-                const ABSCISSA                half;
-            private:
-                void *                        z___[ Y_WORDS_FOR(ORDINATE) ];
-                const ORDINATE               &zord;
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(ComputeD2);
-            };
-
-
 
         }
     }
@@ -378,43 +194,44 @@ Y_UTEST(fit_samples)
         var2.display("(v2)  ", std::cerr, aorg);
         std::cerr << std::endl;
 
-        Fit::ComputeD2<double,double> Eval1D;
         F1D<double> f1;
-        Fit::ComputeD2<double,double>::OutOfOrderFunc F( &f1, & F1D<double>::F );
-        Fit::SequentialWrapper<double, double>        Fw( F );
-        Fit::ComputeD2<double,double>::OutOfOrderGrad G( &f1, & F1D<double>::G );
+
+        Fit::ComputeLeastSquares<double,double> Eval1D;
+        Fit::ComputeLeastSquares<double,double>::OutOfOrderFunc F( &f1, & F1D<double>::F );
+        Fit::SequentialWrapper<double, double>                  Fw( F );
+        Fit::ComputeLeastSquares<double,double>::OutOfOrderGrad G( &f1, & F1D<double>::G );
 
         const double D21  = Eval1D.Of(F,*S1,aorg,var1);
         const double D21w = Eval1D.Of(Fw,*S1,aorg,var1);
         std::cerr << "D21=" << D21 << " / " << D21w << std::endl;
 
         Matrix<double> alpha(all.span(),all.span());
-        Vector<double> beta(all.span(),0);
         Vector<bool>   used(all.span(),true);
 
-        const double D21a = Eval1D.Of(F,*S1, aorg, var1, used, G, alpha, beta);
+        const double D21a = Eval1D.Of(F,*S1, aorg, var1, used, G, alpha);
         std::cerr << "D21a="  << D21a << std::endl;
-        std::cerr << "beta="  << beta << std::endl;
+        std::cerr << "beta="  << Eval1D.beta << std::endl;
         std::cerr << "alpha=" << alpha << std::endl;
 
 
-        const double D22a = Eval1D.Of(F,*S2, aorg, var2, used, G, alpha, beta);
+        const double D22a = Eval1D.Of(F,*S2, aorg, var2, used, G, alpha);
         std::cerr << "D22a=" << D22a << std::endl;
-        std::cerr << "beta=" << beta << std::endl;
+        std::cerr << "beta=" << Eval1D.beta << std::endl;
         std::cerr << "alpha=" << alpha << std::endl;
 
         std::cerr << std::endl;
     }
 
-#if 1
+#if 0
     {
         Fit::Variables vars;
         vars << "radius" << "x_c" << "y_c";
         typedef V2D<double> VTX;
-        Fit::ComputeD2<double,VTX>                 Eval2D;
-        Circle<double>                             Circ;
-        Fit::ComputeD2<double,VTX>::OutOfOrderFunc F( &Circ, & Circle<double>::F );
-        Fit::ComputeD2<double,VTX>::OutOfOrderGrad G( &Circ, & Circle<double>::G );
+        Circle<double>      Circ;
+
+        Fit::ComputeLeastSquares<double,VTX>                 Eval2D;
+        Fit::ComputeLeastSquares<double,VTX>::OutOfOrderFunc F( &Circ, & Circle<double>::F );
+        Fit::ComputeLeastSquares<double,VTX>::OutOfOrderGrad G( &Circ, & Circle<double>::G );
 
         Vector<double> aorg(vars.span(),0);
         vars(aorg,"x_c")    = 0.1;

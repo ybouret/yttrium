@@ -49,6 +49,7 @@ namespace Yttrium
                 }
 
 
+                //! upgrade index map and metrics
                 inline const Variable &upgradedWith(const Variable::Handle &hvar)
                 {
                     const size_t indx = hvar->idx();
@@ -68,6 +69,8 @@ namespace Yttrium
                     return *hvar;
                 }
 
+
+                //! link any variable
                 inline const Variable & link(const Variable::Handle &hvar)
                 {
                     const String          &name = *hvar;
