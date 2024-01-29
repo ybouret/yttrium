@@ -27,8 +27,14 @@ namespace Yttrium
             class Sequential
             {
             public:
-                typedef TypeFor<ABSCISSA,ORDINATE>     MyTypeFor;
-                typedef typename MyTypeFor::Parameters Parameters;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef TypeFor<ABSCISSA,ORDINATE>     MyType;     //!< alias
+                typedef typename MyType::Parameters    Parameters; //!< laias
 
                 //______________________________________________________________
                 //
@@ -70,7 +76,12 @@ namespace Yttrium
                 //______________________________________________________________
                 inline virtual ~Sequential() noexcept  {} //!< cleanup
             protected:
-                inline explicit Sequential()  {} //!< setup
+
+                //! setup
+                inline explicit Sequential() :
+                prevAbscissa(),
+                prevOrdinate()
+                {}
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Sequential);

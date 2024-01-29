@@ -13,18 +13,48 @@ namespace Yttrium
 
         namespace Fit
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! convert an out-of-order function into a sequential function
+            //
+            //
+            //__________________________________________________________________
             template <typename ABSCISSA, typename ORDINATE>
             class SequentialWrapper : public Sequential<ABSCISSA,ORDINATE>
             {
             public:
-                typedef TypeFor<ABSCISSA,ORDINATE>           MyType;
-                typedef Sequential<ABSCISSA,ORDINATE>        SequentialFunc;
-                typedef typename MyType::OutOfOrderFunc      OutOfOrderFunc;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef TypeFor<ABSCISSA,ORDINATE>           MyType;         //!< alias
+                typedef Sequential<ABSCISSA,ORDINATE>        SequentialFunc; //!< alias
+                typedef typename MyType::OutOfOrderFunc      OutOfOrderFunc; //!< alias
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! setup
                 inline explicit SequentialWrapper(const OutOfOrderFunc &h) : SequentialFunc(), func(h) {}
+
+                //! cleanup
                 inline virtual ~SequentialWrapper() noexcept {}
 
-                OutOfOrderFunc func;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                OutOfOrderFunc func; //!< copy of the function
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(SequentialWrapper);
