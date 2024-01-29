@@ -22,6 +22,7 @@ namespace Yttrium
                 static const char * const Label;
 
                 inline explicit Code() : 
+                Oversized(),
                 Variable::DB(),
                 idmap(),
                 lower(0),
@@ -31,6 +32,9 @@ namespace Yttrium
                 }
 
                 inline explicit Code(const Code &other) :
+                Identifiable(),
+                Collection(),
+                Oversized(),
                 Variable::DB(other),
                 idmap(other.idmap),
                 lower(other.lower),
@@ -134,11 +138,12 @@ namespace Yttrium
         namespace Fit
         {
 
-            Variables:: Variables() : code( new Code() )
+            Variables:: Variables() : ProxyType(),  code( new Code() )
             {
             }
 
-            Variables:: Variables(const Variables &other) : code ( new Code( *(other.code) ) )
+            Variables:: Variables(const Variables &other) : 
+            ProxyType(), code ( new Code( *(other.code) ) )
             {
 
             }
