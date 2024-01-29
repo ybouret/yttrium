@@ -19,26 +19,7 @@ namespace Yttrium
 
         namespace Fit
         {
-            
 
-            template <typename ABSCISSA, typename ORDINATE>
-            class RegularFunction : public Object, public Counted
-            {
-            public:
-                typedef ArcPtr<RegularFunction> Handle;;
-
-                inline virtual ~RegularFunction() noexcept {}
-
-                virtual ORDINATE operator()(const ABSCISSA           &,
-                                            const Readable<ABSCISSA> &,
-                                            const Variables          &) = 0;
-
-            protected:
-                inline explicit RegularFunction() noexcept {}
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(RegularFunction);
-            };
 
             template <typename ABSCISSA, typename ORDINATE>
             class SequentialWrapper : public Sequential<ABSCISSA,ORDINATE>
