@@ -19,7 +19,7 @@ namespace Yttrium
         namespace Fit
         {
 
-
+            
           
 
         }
@@ -201,6 +201,8 @@ Y_UTEST(fit_samples)
         Fit::SequentialWrapper<double, double>                  Fw( F );
         Fit::ComputeLeastSquares<double,double>::OutOfOrderGrad G( &f1, & F1D<double>::G );
 
+        Y_SIZEOF(Eval1D);
+
         const double D21  = Eval1D.Of(F,*S1,aorg,var1);
         const double D21w = Eval1D.Of(Fw,*S1,aorg,var1);
         std::cerr << "D21=" << D21 << " / " << D21w << std::endl;
@@ -231,6 +233,8 @@ Y_UTEST(fit_samples)
         Fit::ComputeLeastSquares<double,VTX>                 Eval2D;
         Fit::ComputeLeastSquares<double,VTX>::OutOfOrderFunc F( &Circ, & Circle<double>::F );
         Fit::ComputeLeastSquares<double,VTX>::OutOfOrderGrad G( &Circ, & Circle<double>::G );
+        Y_SIZEOF(Eval2D);
+
 
         Vector<double> aorg(vars.span(),0);
         vars(aorg,"x_c")    = 0.1;

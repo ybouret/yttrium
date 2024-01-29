@@ -3,11 +3,12 @@
 #ifndef Y_Fit_Compute_Least_Squares_Included
 #define Y_Fit_Compute_Least_Squares_Included 1
 
-#include "y/mkl/fit/sample/interface.hpp"
+#include "y/mkl/fit/samples.hpp"
 #include "y/mkl/fit/sequential.hpp"
 #include "y/mkl/antelope/add.hpp"
 #include "y/container/matrix.hpp"
 #include "y/type/zeroed-field.hpp"
+#include "y/oversized.hpp"
 
 namespace Yttrium
 {
@@ -27,7 +28,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename ABSCISSA, typename ORDINATE>
-            class ComputeLeastSquares
+            class ComputeLeastSquares : public Oversized
             {
             public:
                 //______________________________________________________________
@@ -46,6 +47,8 @@ namespace Yttrium
                 typedef Sequential<ABSCISSA,ORDINATE>        SequentialFunc;
                 static const size_t Dimension = MyType::Dimension;
 
+                typedef ListOf<ComputeLeastSquares> List;
+                
                 //______________________________________________________________
                 //
                 //
@@ -56,11 +59,14 @@ namespace Yttrium
                 xadd(),
                 dFda(),
                 beta(),
+                npts(0),
                 zero(0),
                 half(0.5),
                 one(1),
                 z___(),
-                zord(*z___)
+                zord(*z___),
+                next(0),
+                prev(0)
                 {
 
                 }
@@ -89,7 +95,6 @@ namespace Yttrium
                     const size_t     n = S.numPoints();
                     const Abscissae &a = S.abscissae();
                     const Ordinates &b = S.ordinates();
-
                     xadd.make(n*Dimension);
 
                     //----------------------------------------------------------
@@ -114,6 +119,7 @@ namespace Yttrium
                     //----------------------------------------------------------
                     // return sum
                     //----------------------------------------------------------
+                    Coerce(npts) = n;
                     return half * xadd.sum();
                 }
 
@@ -143,6 +149,7 @@ namespace Yttrium
                     //----------------------------------------------------------
                     // return sum
                     //----------------------------------------------------------
+                    Coerce(npts) = n;
                     return half * xadd.sum();
                 }
 
@@ -198,8 +205,52 @@ namespace Yttrium
                         curv[i][i] = one;
                     }
 
+                    Coerce(npts) = 0;
                     return half * xadd.sum();
                 }
+
+                template <typename ITERATOR>
+                inline ABSCISSA Of(ITERATOR it, size_t n)
+                {
+                    if(n<=0) return zero;
+
+                    {
+                        const ComputeLeastSquares &first = *it;
+                        const size_t nv = first.dFda.size(); assert(nv>0);
+                        dFda.adjust(nv,zero);
+                        beta.adjust(nv,zero);
+                        curv.make(nv,nv);
+                        xadd.make(n);
+                    }
+
+                    const size_t nvar = beta.size();
+                    Coerce(npts)      = 0;
+                    while(n-- > 0)
+                    {
+                        const ComputeLeastSquares &ls = *(it++);
+                        const size_t               ns = ls.npts;
+                        Coerce(npts) += ns;
+                        for(size_t i=nvar;i>0;--i)
+                        {
+                            beta[i] += ns * ls.beta[i];
+                            for(size_t j=nvar;i>0;--j)
+                            {
+                                curv[i][j] += ns * ls.curv[i][j];
+                            }
+                        }
+                    }
+
+                    for(size_t i=nvar;i>0;--i)
+                    {
+                        beta[i] /= npts;
+                        for(size_t j=nvar;i>0;--j)
+                        {
+                            curv[i][j] /= npts;
+                        }
+                    }
+
+                }
+
 
                 //______________________________________________________________
                 //
@@ -211,6 +262,7 @@ namespace Yttrium
                 Vector<ORDINATE,SampleMemory> dFda; //!< local dF/da
                 Vector<ABSCISSA,SampleMemory> beta; //!< gradient of D2
                 Matrix<ABSCISSA>              curv; //!< approx curvature of D2
+                const size_t                  npts; //!< last dimensions
                 const ABSCISSA                zero; //!< alias
                 const ABSCISSA                half; //!< alias
                 const ABSCISSA                one;  //!< alias
@@ -218,7 +270,7 @@ namespace Yttrium
             private:
                 const ZeroedField<ORDINATE>   z___;
                 const ORDINATE               &zord;
-            private:
+
                 Y_DISABLE_COPY_AND_ASSIGN(ComputeLeastSquares);
 
                 inline void pushDSQ(const ORDINATE &Bj, const ORDINATE &Fj)
@@ -255,6 +307,10 @@ namespace Yttrium
                         }
                     }
                 }
+
+            public:
+                ComputeLeastSquares          *next;
+                ComputeLeastSquares          *prev;
             };
 
         }
