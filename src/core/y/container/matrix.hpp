@@ -42,7 +42,7 @@ namespace Yttrium
         Y_ARGS_DECL(T,Type);                //!< aliases
         typedef MatrixRow<T>      RowType;  //!< alias
         typedef Writable<RowType> RowsType; //!< alias
-        
+
         //______________________________________________________________________
         //
         //
@@ -163,6 +163,20 @@ namespace Yttrium
             for(size_t i=0;i<items;++i) base[i] = args;
         }
 
+        inline void ldRow(const size_t r, ParamType args)
+        {
+            Writable<T> &arr = (*this)[r];
+            for(size_t i=cols;i>0;--i) arr[i] = args;
+        }
+
+        inline void ldCol(const size_t c, ParamType args)
+        {
+            Matrix &self = *this;
+            for(size_t r=rows;r>0;--r) self[r][c] = args;
+        }
+
+
+
         //! swap rows
         inline void swapRows(const size_t a, const size_t b) noexcept
         {
@@ -201,74 +215,6 @@ namespace Yttrium
             }
             return *this;
         }
-
-        //______________________________________________________________________
-        //
-        //! multiply LHS = M * RHS
-        //______________________________________________________________________
-#if 0
-        template <typename RES, typename RHS> inline
-        void mul(RES &res, RHS &rhs) const
-        {
-            assert(res.size()>=rows);
-            assert(rhs.size()>=cols);
-            for(size_t i=rows;i>0;--i)
-            {
-                Type sum(0);
-                const Readable<T> &r = row[i];
-                for(size_t j=cols;j>0;--j) sum += r[j] * rhs[j];
-                res[i] = sum;
-            }
-        }
-
-        //______________________________________________________________________
-        //
-        //! matrix multiplication
-        //______________________________________________________________________
-        template <typename U, typename V> inline
-        void mmul(Matrix<U> &res, const Matrix<V> &rhs) const
-        {
-            assert(res.rows == rows);
-            assert(res.cols == rhs.cols);
-            for(size_t i=res.rows;i>0;--i)
-            {
-                for(size_t j=res.cols;j>0;--j)
-                {
-                    T sum(0);
-                    for(size_t k=cols;k>0;--k)
-                    {
-                        sum += (*this)[i][k] * rhs[k][j];
-                    }
-                    res[i][j] = sum;
-                }
-            }
-        }
-
-        //______________________________________________________________________
-        //
-        //! matrix multiplication
-        //______________________________________________________________________
-        template <typename U, typename V> inline
-        void mmul(Matrix<U> &res, const TransposeOf_ &,const Matrix<V> &rhs) const
-        {
-            assert(res.rows == rows);
-            assert(res.cols == rhs.rows);
-            assert(cols     == rhs.cols);
-            for(size_t i=rows;i>0;--i)
-            {
-                for(size_t j=res.cols;j>0;--j)
-                {
-                    T sum(0);
-                    for(size_t k=cols;k>0;--k)
-                    {
-                        sum += (*this)[i][k] * rhs[j][k];
-                    }
-                    res[i][j] = sum;
-                }
-            }
-        }
-#endif
-
 
 
         //______________________________________________________________________
@@ -373,7 +319,7 @@ namespace Yttrium
             }
         }
         
-
+        
 
 
     private:

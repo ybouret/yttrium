@@ -154,9 +154,14 @@ namespace Yttrium
                                    Writable<ABSCISSA>       &beta)
 
                 {
-                    const size_t     n = S.numPoints();
-                    const Abscissae &a = S.abscissae();
-                    const Ordinates &b = S.ordinates();
+                    const size_t     n  = S.numPoints();
+                    const Abscissae &a  = S.abscissae();
+                    const Ordinates &b  = S.ordinates();
+                    const size_t     nv = aorg.size();
+                    assert(used.size() == nv);
+                    assert(beta.size() == nv);
+                    assert(alpha.cols  == nv);
+                    assert(alpha.rows  == nv);
 
                     xadd.make(n*Dimension);
                     dFda.adjust(beta.size(),zord);
@@ -169,6 +174,20 @@ namespace Yttrium
                         dFda.ld(zord);
                         G(dFda,a[j],aorg,vars,used);
                         push(alpha,beta,b[j],Fj);
+                    }
+
+                    for(size_t i=nv;i>0;--i)
+                    {
+                        if( vars.found(i) && used[i]) 
+                        {
+                            for(size_t j=i-1;j>0;--j)
+                                alpha[j][i] = alpha[i][j];
+                            continue;
+                        }
+                        beta[i] = zero;
+                        alpha.ldCol(i,zero);
+                        alpha.ldRow(i,zero);
+                        alpha[i][i] = 1;
                     }
 
                     return half * xadd.sum();
@@ -347,7 +366,7 @@ Y_UTEST(fit_samples)
         Vector<double> aorg(all.span(),0);
         std::cerr << "aorg=" << aorg << std::endl;
 
-        all(aorg,"t0") = 100.0;
+        all(aorg,"t0") = -100.0;
         var1(aorg,"D") = 0.1;
         var2(aorg,"D") = 0.12;
 
@@ -387,7 +406,7 @@ Y_UTEST(fit_samples)
         std::cerr << std::endl;
     }
 
-#if 0
+#if 1
     {
         Fit::Variables vars;
         vars << "radius" << "x_c" << "y_c";
@@ -406,11 +425,13 @@ Y_UTEST(fit_samples)
         const double D21 = Eval2D.Of(F, *H1, aorg, vars);
         std::cerr << "D21 = " << D21 << std::endl;
 
+        Matrix<double> alpha(vars.span(),vars.span());
         Vector<double> beta(vars.span(),0);
         Vector<bool>   used(vars.span(),true);
-        const double   D21a = Eval2D.Of(F,*H1, aorg, vars, used, G, beta);
-        std::cerr << "D21a = " << D21a << std::endl;
-        std::cerr << "beta = " << beta << std::endl;
+        const double   D21a = Eval2D.Of(F,*H1, aorg, vars, used, G, alpha, beta);
+        std::cerr << "D21a  = " << D21a << std::endl;
+        std::cerr << "beta  = " << beta << std::endl;
+        std::cerr << "alpha = " << alpha << std::endl;
 
     }
 #endif

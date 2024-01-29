@@ -110,6 +110,9 @@ namespace Yttrium
                     return get(id)(arr);
                 }
 
+                const Variable * query(const size_t indx) const noexcept;
+                bool             found(const size_t indx) const noexcept;
+
                 //! get max name length from code
                 size_t maxNameLength() const noexcept;
 

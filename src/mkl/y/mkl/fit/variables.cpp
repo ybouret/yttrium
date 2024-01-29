@@ -4,6 +4,7 @@
 #include "y/type/nullify.hpp"
 #include "y/oversized.hpp"
 #include "y/system/exception.hpp"
+#include "y/associative/hash/map.hpp"
 
 namespace Yttrium
 {
@@ -17,10 +18,12 @@ namespace Yttrium
             class Variables:: Code : public Oversized, public Variable::DB
             {
             public:
+                typedef HashMap<size_t,Variable::Handle> IndexMap;
                 static const char * const Label;
 
                 inline explicit Code() : 
                 Variable::DB(),
+                idmap(),
                 lower(0),
                 upper(0),
                 maxNL(0)
@@ -29,6 +32,7 @@ namespace Yttrium
 
                 inline explicit Code(const Code &other) :
                 Variable::DB(other),
+                idmap(other.idmap),
                 lower(other.lower),
                 upper(other.upper),
                 maxNL(other.maxNL)
@@ -40,6 +44,48 @@ namespace Yttrium
                 {
                 }
 
+
+                inline const Variable &upgradedWith(const Variable::Handle &hvar)
+                {
+                    const size_t indx = hvar->idx();
+                    try {
+                        if(!idmap.insert(indx,hvar))
+                            throw Specific::Exception(Label, "unexpected failure to insert #%u for '%s'", unsigned(indx), hvar->c_str());
+                    }
+                    catch(...)
+                    {
+                        (void) remove( *hvar );
+                        throw;
+                    }
+
+                    Coerce(lower) = Min(lower,indx);
+                    Coerce(upper) = Max(upper,indx);
+                    Coerce(maxNL) = Max(maxNL,hvar->size());
+                    return *hvar;
+                }
+
+                inline const Variable & link(const Variable::Handle &hvar)
+                {
+                    const String          &name = *hvar;
+                    const size_t           indx = hvar->idx();
+
+                    // look for multiple index
+                    {
+                        const Variable::Handle *ppv = idmap.search(indx);
+                        if(ppv)
+                        {
+                            throw Specific::Exception(Label,"'%s' index #%u already assigned to '%s'", name.c_str(), unsigned(indx), (**ppv).c_str());
+                        }
+                    }
+
+                    // look for multiple name
+                    if(!insert(hvar))
+                        throw Specific::Exception(Label,"Multiple variable '%s'", name.c_str());
+
+                    return upgradedWith(hvar);
+
+                }
+
                 //______________________________________________________________
                 //
                 // create a new primary variable
@@ -47,33 +93,9 @@ namespace Yttrium
                 template <typename ID> inline
                 const Variable &link(const ID &id, const size_t indx)
                 {
-                    const Variable::Handle hVar = new PrimaryVariable(id,indx);
-
-                    // check no multiple var
-                    if( search(*hVar) )
-                        throw Specific::Exception(Label, "Multiple Variable '%s'", hVar->c_str() );
-
-                    // check no multiple index
-                    for(Iterator it=begin(); it != end(); ++it)
-                    {
-                        const Variable &v = **it;
-                        if( indx == v.idx() )
-                            throw Specific::Exception(Label,
-                                                      "Multiple index #%lu  for '%s' and '%s'",
-                                                      (unsigned long)indx,
-                                                      hVar->c_str(),
-                                                      v.c_str() );
-                    }
-
-                    // final insertion
-                    if( !insert(hVar) )
-                        throw Specific::Exception(Label,"Unexpected failure to insert '%s'", hVar->c_str() );
-
-                    // update
-                    Coerce(lower) = Min(lower,indx);
-                    Coerce(upper) = Max(upper,indx);
-                    Coerce(maxNL) = Max(maxNL,hVar->size());
-                    return *hVar;
+                    assert(indx>0);
+                    const Variable::Handle hvar = new PrimaryVariable(id,indx);
+                    return link(hvar);
                 }
 
                 //______________________________________________________________
@@ -84,19 +106,10 @@ namespace Yttrium
                 const Variable &link(const ID &id, const Variable &primary)
                 {
                     if(primary.quantity()<=0) throw Specific::Exception(Label, "impossible replica of static '%s'", primary.c_str());
-                    const Variable::Handle hp = &Coerce(primary);
-                    const Variable::Handle hv = new ReplicaVariable(id,hp);
-                    if( !insert(hv) )
-                        throw Specific::Exception(Label,"Replica of existing variable '%s'", hv->c_str() );
-
-                    const size_t indx = hv->idx();
-                    // update
-                    Coerce(lower) = Min(lower,indx);
-                    Coerce(upper) = Max(upper,indx);
-                    Coerce(maxNL) = Max(maxNL,hv->size());
-                    return *hv;
+                    const Variable::Handle hprm = &Coerce(primary);
+                    const Variable::Handle hvar = new ReplicaVariable(id,hprm);
+                    return link(hvar);
                 }
-
 
                 //______________________________________________________________
                 //
@@ -104,6 +117,7 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
+                IndexMap     idmap;
                 const size_t lower;
                 const size_t upper;
                 const size_t maxNL;
@@ -223,6 +237,20 @@ namespace Yttrium
             {
                 assert(0!=code);
                 return code->maxNL;
+            }
+
+            const Variable * Variables:: query(const size_t indx) const noexcept
+            {
+                assert(0!=code);
+                const Variable::Handle *ppv = code->idmap.search(indx);
+                if(!ppv) return 0;
+                return & (**ppv);
+            }
+
+            bool Variables:: found(const size_t indx)  const noexcept
+            {
+                assert(0!=code);
+                return 0 != code->idmap.search(indx);
             }
 
         }
