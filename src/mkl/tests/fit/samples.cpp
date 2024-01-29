@@ -37,9 +37,9 @@ namespace Yttrium
 
                 static const size_t                   Dimension = SampleType::Dimension;
 
-                Antelope::Add<ABSCISSA> xadd;
 
                 explicit ComputeD2() : 
+                xadd(),
                 dFda(),
                 zero(0),
                 half(0.5),
@@ -81,7 +81,7 @@ namespace Yttrium
                         push(b[j],Fj);
                     }
 
-                    // second point
+                    // following points
                     for(size_t i=2;i<=n;++i)
                     {
                         const size_t   j  = S.indx[i];
@@ -134,13 +134,14 @@ namespace Yttrium
                 }
 
 
-                inline ABSCISSA Of(Writable<ABSCISSA>       &beta,
-                                   OutOfOrderFunc           &F,
-                                   OutOfOrderGrad           &G,
+                inline ABSCISSA Of(OutOfOrderFunc           &F,
                                    const SampleType         &S,
                                    const Readable<ABSCISSA> &aorg,
                                    const Variables          &vars,
-                                   const Booleans           &used)
+                                   const Booleans           &used,
+                                   OutOfOrderGrad           &G,
+                                   Writable<ABSCISSA>       &beta)
+
                 {
                     const size_t     n = S.numPoints();
                     const Abscissae &a = S.abscissae();
@@ -161,6 +162,7 @@ namespace Yttrium
                     return half * xadd.sum();
                 }
 
+                Antelope::Add<ABSCISSA>       xadd;
                 Vector<ORDINATE,SampleMemory> dFda;
                 const ABSCISSA                zero;
                 const ABSCISSA                half;
@@ -308,11 +310,11 @@ Y_UTEST(fit_samples)
     Vector<double> beta(all.span(),0);
     Vector<bool>   used(all.span(),true);
 
-    const double D21a = Eval1D.Of(beta, F1, G1, *S1, aorg, var1, used);
+    const double D21a = Eval1D.Of(F1,*S1, aorg, var1, used, G1, beta);
     std::cerr << "D21a=" << D21a << std::endl;
     std::cerr << "beta=" << beta << std::endl;
 
-    const double D22a = Eval1D.Of(beta, F1, G1, *S2, aorg, var2, used);
+    const double D22a = Eval1D.Of(F1,*S2, aorg, var2, used, G1, beta);
     std::cerr << "D22a=" << D22a << std::endl;
     std::cerr << "beta=" << beta << std::endl;
 
