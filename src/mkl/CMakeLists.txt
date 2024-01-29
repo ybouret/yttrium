@@ -20,6 +20,7 @@ mkl/statistics
 mkl/fit
 mkl/fit/sample
 mkl/fit/variable
+mkl/fit/sequential
 )
 
 add_subdirectory(tests)

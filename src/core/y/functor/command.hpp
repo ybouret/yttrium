@@ -97,6 +97,14 @@ namespace Yttrium {
                 return ( (*object_).*method_ )( P1, P2, P3, P4);
             }
 
+            //! five arguments call
+            inline R operator()( param1 P1, param2 P2, param3 P3, param4 P4, param5 P5)
+            {
+                assert( NULL != object_ );
+                assert( NULL != method_ );
+                return ( (*object_).*method_ )( P1, P2, P3, P4, P5);
+            }
+
 
         private:
             Y_DISABLE_ASSIGN(command);

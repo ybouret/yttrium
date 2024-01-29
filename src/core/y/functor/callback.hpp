@@ -75,6 +75,12 @@ namespace Yttrium {
                 return function_( P1, P2, P3, P4);
             }
 
+            //! five arguments call
+            inline R operator()( param1 P1, param2 P2, param3 P3, param4 P4, param5 P5)
+            {
+                return function_( P1, P2, P3, P4, P5);
+            }
+
 
         private:
             Y_DISABLE_ASSIGN(callback);

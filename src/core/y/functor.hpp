@@ -140,6 +140,18 @@ namespace Yttrium
             return (*function_)(p1,p2,p3,p4);
         }
 
+        //! forward five arguments call
+        inline R operator()(param1 p1,
+                            param2 p2,
+                            param3 p3,
+                            param4 p4,
+                            param5 p5)
+        {
+            assert( function_ );
+            return (*function_)(p1,p2,p3,p4,p5);
+        }
+
+
         //! direct assignation for binder_first or manual setting
         explicit Functor( callable *proc ) noexcept : function_( proc ) { assert( proc ); }
 

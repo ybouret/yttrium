@@ -1,6 +1,6 @@
 
 
-#include "y/mkl/fit/sequential.hpp"
+#include "y/mkl/fit/sequential/wrapper.hpp"
 #include "y/mkl/fit/sample/heavy.hpp"
 #include "y/mkl/fit/sample/light.hpp"
 #include "y/utest/run.hpp"
@@ -21,42 +21,7 @@ namespace Yttrium
         {
 
 
-            template <typename ABSCISSA, typename ORDINATE>
-            class SequentialWrapper : public Sequential<ABSCISSA,ORDINATE>
-            {
-            public:
-                typedef TypeFor<ABSCISSA,ORDINATE>           MyType;
-                typedef Sequential<ABSCISSA,ORDINATE>        SequentialFunc;
-                typedef typename MyType::OutOfOrderFunc      OutOfOrderFunc;
-
-                inline explicit SequentialWrapper(const OutOfOrderFunc &h) : SequentialFunc(), func(h) {}
-                inline virtual ~SequentialWrapper() noexcept {}
-
-                OutOfOrderFunc func;
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(SequentialWrapper);
-
-                virtual ORDINATE init(const ABSCISSA           &abs0,
-                                      const Readable<ABSCISSA> &aorg,
-                                      const Variables          &vars)
-                {
-                    return func(abs0,aorg,vars);
-                }
-
-                virtual ORDINATE move(const ABSCISSA           &abs0,
-                                      const ORDINATE           &ord0,
-                                      const ABSCISSA           &abs1,
-                                      const Readable<ABSCISSA> &aorg,
-                                      const Variables          &vars)
-                {
-                    (void)abs0;
-                    (void)ord0;
-                    return func(abs1,aorg,vars);
-                }
-
-            };
-
+          
             template <typename ABSCISSA, typename ORDINATE>
             class ComputeD2
             {
@@ -64,17 +29,24 @@ namespace Yttrium
                 typedef Sample<ABSCISSA,ORDINATE>      SampleType;
                 typedef TypeFor<ABSCISSA,ORDINATE>     MyType;
 
-                typedef typename SampleType::Abscissae   Abscissae;
-                typedef typename SampleType::Ordinates   Ordinates;;
-                typedef typename MyType::OutOfOrderFunc  OutOfOrderFunc;
-                typedef Sequential<ABSCISSA,ORDINATE>    SequentialFunc;
+                typedef typename SampleType::Abscissae       Abscissae;
+                typedef typename SampleType::Ordinates       Ordinates;;
+                typedef typename MyType::OutOfOrderFunc      OutOfOrderFunc;
+                typedef Sequential<ABSCISSA,ORDINATE>        SequentialFunc;
+                typedef typename MyType::OutOfOrderGradient  OutOfOrderGrad;
 
                 static const size_t                   Dimension = SampleType::Dimension;
 
                 Antelope::Add<ABSCISSA> xadd;
 
-                explicit ComputeD2() : half(0.5)
+                explicit ComputeD2() : 
+                dFda(),
+                zero(0),
+                half(0.5),
+                z___(),
+                zord(*static_cast<const ORDINATE *>(Memory::OutOfReach::Addr(z___)) )
                 {
+
                 }
 
                 virtual ~ComputeD2() noexcept
@@ -137,12 +109,64 @@ namespace Yttrium
                         const ORDINATE Fj = F(a[j],aorg,vars);
                         push(b[j],Fj);
                     }
+                    return half * xadd.sum();
+                }
 
+                inline void push(Writable<ABSCISSA> &beta,
+                                 const ORDINATE     &Bj,
+                                 const ORDINATE     &Fj)
+                {
+                    assert(beta.size()==dFda.size());
+                    const ORDINATE  dB = Bj - Fj;
+                    const ABSCISSA *df = SampleType::O2A(dB);
+                    for(unsigned d=0;d<Dimension;++d)
+                        xadd << Squared(df[d]);
+
+
+                    for(size_t i=1;i<=beta.size();++i)
+                    {
+                        const ABSCISSA *g = SampleType::O2A(dFda[i]);
+                        for(unsigned d=0;d<Dimension;++d)
+                        {
+                            beta[i] += df[d] * g[d];
+                        }
+                    }
+                }
+
+
+                inline ABSCISSA Of(Writable<ABSCISSA>       &beta,
+                                   OutOfOrderFunc           &F,
+                                   OutOfOrderGrad           &G,
+                                   const SampleType         &S,
+                                   const Readable<ABSCISSA> &aorg,
+                                   const Variables          &vars,
+                                   const Booleans           &used)
+                {
+                    const size_t     n = S.numPoints();
+                    const Abscissae &a = S.abscissae();
+                    const Ordinates &b = S.ordinates();
+
+                    xadd.make(n*Dimension);
+                    dFda.adjust(beta.size(),zord);
+                    beta.ld(zero);
+
+                    for(size_t j=n;j>0;--j)
+                    {
+                        const ORDINATE Fj = F(a[j],aorg,vars);
+                        dFda.ld(zord);
+                        G(dFda,a[j],aorg,vars,used);
+                        push(beta,b[j],Fj);
+                    }
 
                     return half * xadd.sum();
                 }
 
-                const ABSCISSA half;
+                Vector<ORDINATE,SampleMemory> dFda;
+                const ABSCISSA                zero;
+                const ABSCISSA                half;
+            private:
+                void *                        z___[ Y_WORDS_FOR(ORDINATE) ];
+                const ORDINATE               &zord;
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(ComputeD2);
             };
@@ -164,15 +188,36 @@ namespace
 
         virtual ~F1D() noexcept {}
 
-        virtual T compute(const T              &t,
-                          const Readable<T>    &aorg,
-                          const Fit::Variables &vars)
+        inline T F(const T              &t,
+                    const Readable<T>    &aorg,
+                   const Fit::Variables &vars)
         {
             const T t0 = vars(aorg,"t0");
             const T D  = vars(aorg,"D");
             if(t<=t0) return 0;
             return sqrt( D*(t-t0) );
         }
+
+        inline void G(Writable<double>     &dFda,
+                      const T              &t,
+                      const Readable<T>    &aorg,
+                      const Fit::Variables &vars,
+                      const Fit::Booleans  &used)
+        {
+            const Fit::Variable &t0_ = vars["t0"];
+            const Fit::Variable &D__ = vars["D"];
+
+            const T t0 = t0_(aorg);
+            const T D  = D__(aorg);
+            if(t<=t0) return;
+            const T dt  = t-t0;
+            const T den = Twice( sqrt( D*dt ) );
+
+            if( t0_(used) ) t0_(dFda) = -D/den;
+            if( D__(used) ) D__(dFda) = dt/den;
+         }
+
+
 
 
     private:
@@ -252,12 +297,25 @@ Y_UTEST(fit_samples)
 
     Fit::ComputeD2<double,double> Eval1D;
     F1D<double> f1;
-    Fit::ComputeD2<double,double>::OutOfOrderFunc F1( &f1, & F1D<double>::compute );
+    Fit::ComputeD2<double,double>::OutOfOrderFunc F1( &f1, & F1D<double>::F );
     Fit::SequentialWrapper<double, double>        F1w( F1 );
+    Fit::ComputeD2<double,double>::OutOfOrderGrad G1( &f1, & F1D<double>::G );
 
     const double D21  = Eval1D.Of(F1,*S1,aorg,var1);
     const double D21w = Eval1D.Of(F1w,*S1,aorg,var1);
     std::cerr << "D21=" << D21 << " / " << D21w << std::endl;
+
+    Vector<double> beta(all.span(),0);
+    Vector<bool>   used(all.span(),true);
+
+    const double D21a = Eval1D.Of(beta, F1, G1, *S1, aorg, var1, used);
+    std::cerr << "D21a=" << D21a << std::endl;
+    std::cerr << "beta=" << beta << std::endl;
+
+    const double D22a = Eval1D.Of(beta, F1, G1, *S2, aorg, var2, used);
+    std::cerr << "D22a=" << D22a << std::endl;
+    std::cerr << "beta=" << beta << std::endl;
+
 
 }
 Y_UDONE()

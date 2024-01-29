@@ -90,12 +90,26 @@ namespace Yttrium
                                  ) = 0;
         };
 
+        //! five arguments callable type
+        template <typename R, typename P1, typename P2, typename P3, typename P4, typename P5>
+        class callable<R,TL5(P1,P2,P3,P4,P5)> YACK_CALLABLE_OBJECT()
+        {
+            YACK_CALLABLE_PROTOTYPE();
+            virtual R operator()(Y_FUNCTOR_PARAM(P1),
+                                 Y_FUNCTOR_PARAM(P2),
+                                 Y_FUNCTOR_PARAM(P3),
+                                 Y_FUNCTOR_PARAM(P4),
+                                 Y_FUNCTOR_PARAM(P5)
+                                 ) = 0;
+        };
+
         //! compute parameters aliases
 #define Y_FUNCTOR_PARAMETERS() \
-typedef typename TypeTraits< typename TL::SafeTypeAt<TLIST,0,EmptyType>::Result>::ParamType param1;\
-typedef typename TypeTraits< typename TL::SafeTypeAt<TLIST,1,EmptyType>::Result>::ParamType param2;\
-typedef typename TypeTraits< typename TL::SafeTypeAt<TLIST,2,EmptyType>::Result>::ParamType param3;\
-typedef typename TypeTraits< typename TL::SafeTypeAt<TLIST,3,EmptyType>::Result>::ParamType param4
+typedef typename TypeTraits< typename TL::SafeTypeAt<TLIST,0,EmptyType>::Result>::ParamType param1; \
+typedef typename TypeTraits< typename TL::SafeTypeAt<TLIST,1,EmptyType>::Result>::ParamType param2; \
+typedef typename TypeTraits< typename TL::SafeTypeAt<TLIST,2,EmptyType>::Result>::ParamType param3; \
+typedef typename TypeTraits< typename TL::SafeTypeAt<TLIST,3,EmptyType>::Result>::ParamType param4; \
+typedef typename TypeTraits< typename TL::SafeTypeAt<TLIST,4,EmptyType>::Result>::ParamType param5
 
 
     }
