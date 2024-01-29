@@ -64,10 +64,9 @@ namespace Yttrium
                 typedef Sample<ABSCISSA,ORDINATE>      SampleType;
                 typedef TypeFor<ABSCISSA,ORDINATE>     MyType;
 
-                typedef typename SampleType::Abscissae Abscissae;
-                typedef typename SampleType::Ordinates Ordinates;;
-                typedef TL3(ABSCISSA,const Readable<ABSCISSA>&,const Variables) OutOfOrderArgs;
-                typedef Functor<ORDINATE,OutOfOrderArgs> OutOfOrderFunc;
+                typedef typename SampleType::Abscissae   Abscissae;
+                typedef typename SampleType::Ordinates   Ordinates;;
+                typedef typename MyType::OutOfOrderFunc  OutOfOrderFunc;
                 typedef Sequential<ABSCISSA,ORDINATE>    SequentialFunc;
 
                 static const size_t                   Dimension = SampleType::Dimension;
