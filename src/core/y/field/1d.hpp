@@ -4,6 +4,7 @@
 #define Y_Field1D_Included 1
 
 #include "y/field/layout.hpp"
+#include "y/memory/embed.hpp"
 #include "y/memory/allocator.hpp"
 #include "y/type/args.hpp"
 
@@ -13,6 +14,42 @@ namespace Yttrium
     {
         typedef unit_t          Coord1D;
         typedef Layout<Coord1D> Layout1D;
+
+
+        class Manager
+        {
+        public:
+            explicit Manager(Memory::Embed      emb[],
+                             const size_t       num,
+                             Memory::Allocator &mgr) :
+            bytes(0),
+            entry( Memory::Embed::Build(emb,num,mgr,bytes) ),
+            alloc( &mgr )
+            {
+            }
+
+            explicit Manager() noexcept : bytes(0), entry(0), alloc(0) {}
+
+
+            virtual ~Manager() noexcept
+            {
+                if(alloc)
+                {
+                    assert(bytes>0);
+                    assert(0!=entry);
+                    alloc->release(entry,bytes);
+                    alloc = 0;
+                }
+            }
+
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Manager);
+            size_t              bytes;
+            void *              entry;
+            Memory::Allocator * alloc;
+        };
 
         template <typename T>
         class Builder
@@ -46,7 +83,11 @@ namespace Yttrium
             }
         };
 
-        
+
+
+
+
+
 
 
         template <typename T>
