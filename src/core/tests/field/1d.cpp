@@ -33,6 +33,9 @@ Y_UTEST(field1d)
     Y_CHECK(content==provided);
 #endif
     
+    Y_SIZEOF( Field::In1D<int>    );
+    Y_SIZEOF( Field::In1D<String> );
+
 }
 Y_UDONE()
 
