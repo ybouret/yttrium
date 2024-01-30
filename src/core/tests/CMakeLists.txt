@@ -296,4 +296,7 @@ add_test(NAME rtld:dll COMMAND test-core rtld_dll $<TARGET_FILE:dso> COMMAND_EXP
 
 #field
 add_test(field:1d test-core field1d)
+add_test(field:2d test-core field2d)
+add_test(field:3d test-core field3d)
+add_test(field:4d test-core field4d)
 

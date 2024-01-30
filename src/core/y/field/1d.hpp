@@ -4,42 +4,19 @@
 #define Y_Field1D_Included 1
 
 #include "y/memory/allocator.hpp"
-#include "y/memory/out-of-reach.hpp"
 #include "y/type/args.hpp"
+#include "y/field/layout.hpp"
 
 namespace Yttrium
 {
-    typedef unit_t Coord1D;
-
-    class Field
+    namespace Field
     {
-    public:
-        const unsigned dims;
+        typedef unit_t          Coord1D;
+        typedef Layout<Coord1D> Layout1D;
+        
+    }
 
-        virtual ~Field() noexcept {}
-        explicit Field(const unsigned d) noexcept :
-        dims(d)
-        {}
-
-        size_t getItems(unit_t * const width,
-                        unit_t * const lower,
-                        unit_t * const upper) const noexcept
-        {
-            size_t items = 1;
-            for(unsigned d=0;d<dims;++d)
-            {
-                unit_t &lo = lower[d];
-                unit_t &up = upper[d];
-                if(up<lo) Swap(lo,up);
-                items *= ( width[d] = (1+up)-lo );
-            }
-            return items;
-        }
-
-    private:
-        Y_DISABLE_COPY_AND_ASSIGN(Field);
-    };
-
+#if 0
     template <typename T>
     class Field1D : public Field
     {
@@ -107,7 +84,8 @@ namespace Yttrium
         }
 
     };
-
+#endif
+    
 }
 
 #endif
