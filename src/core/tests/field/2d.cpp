@@ -16,7 +16,7 @@ Y_UTEST(field2d)
     std::cerr << L << std::endl;
 
     Field::In2D<int> F(L,mgr);
-
+    
 }
 Y_UDONE()
 

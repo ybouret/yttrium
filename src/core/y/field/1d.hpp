@@ -14,6 +14,8 @@ namespace Yttrium
         typedef unit_t          Coord1D;
         typedef Layout<Coord1D> Layout1D;
 
+        
+
         template <typename T>
         class In1D : public Layout1D
         {
@@ -33,10 +35,19 @@ namespace Yttrium
                 setup();
             }
 
-            inline virtual ~In1D() noexcept
+            inline virtual ~In1D() noexcept { clear(); }
+
+            inline In1D(const LayoutType &layout,
+                        MutableType      *aliens) noexcept :
+            LayoutType(layout),
+            count(0),
+            bytes(0),
+            entry(aliens-lower),
+            alloc(0),
+            built(0)
             {
-                clear();
             }
+
 
             inline MutableType & operator[](const Coord1D q) noexcept
             {
@@ -48,6 +59,11 @@ namespace Yttrium
             {
                 assert(q>=lower); assert(q<=upper);
                 return entry[q];
+            }
+
+            inline std::ostream & display(std::ostream &os) const
+            {
+                return Core::Display(os, entry+lower, width);
             }
 
 
