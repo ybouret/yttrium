@@ -27,7 +27,7 @@ Y_UTEST(field1d)
     }
 
     F.display(std::cerr) << std::endl;
-    const LightArray<String> content( &F[F.lower], F.width );
+    const LightArray<String> content( &F[F.lower], F.items );
     std::cerr << content << std::endl;
     Y_CHECK(content==provided);
 }
