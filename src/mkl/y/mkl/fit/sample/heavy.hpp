@@ -83,6 +83,7 @@ namespace Yttrium
                 inline virtual size_t            numPoints() const noexcept { return _num; }
                 inline virtual const Abscissae & abscissae() const noexcept { return _abs; }
                 inline virtual const Ordinates & ordinates() const noexcept { return _ord; }
+                inline virtual const Ordinates & predicted() const noexcept { return _pre; }
                 inline virtual const char *      callSign()  const noexcept { return HeavySampleInfo::CallSign;   }
 
                 //______________________________________________________________
@@ -97,9 +98,14 @@ namespace Yttrium
                 {
                     assert(_abs.size()==_num);
                     assert(_ord.size()==_num);
+                    assert(_pre.size()==_num);
                     {     _abs.pushTail(A); }
                     try { _ord.pushTail(O); } catch(...) { _abs.popTail(); }
+                    try { _pre.pushTail(O); } catch(...) { _abs.popTail(); _ord.popTail(); }
                     ++_num;
+                    assert(_abs.size()==_num);
+                    assert(_ord.size()==_num);
+                    assert(_pre.size()==_num);
                 }
 
             private:
@@ -107,6 +113,7 @@ namespace Yttrium
                 size_t                        _num;
                 Vector<ABSCISSA,SampleMemory> _abs;
                 Vector<ORDINATE,SampleMemory> _ord;
+                Vector<ORDINATE,SampleMemory> _pre;
             };
         }
     }

@@ -61,11 +61,13 @@ namespace Yttrium
                 inline explicit LightSample(const ID       &       id,
                                             const ABSCISSA * const XX,
                                             const ORDINATE * const YY,
+                                            ORDINATE       * const ZZ,
                                             const size_t           NN) :
                 SampleType(id),
                 _num( NN ),
                 _abs( (ABSCISSA *)XX, NN),
-                _ord( (ORDINATE *)YY, NN)
+                _ord( (ORDINATE *)YY, NN),
+                _pre( (ORDINATE *)ZZ, NN)
                 {
                 }
 
@@ -81,6 +83,7 @@ namespace Yttrium
                 inline virtual size_t            numPoints() const noexcept { return _num; }
                 inline virtual const Abscissae & abscissae() const noexcept { return _abs; }
                 inline virtual const Ordinates & ordinates() const noexcept { return _ord; }
+                inline virtual const Ordinates & predicted() const noexcept { return _pre; }
                 inline virtual const char *      callSign()  const noexcept { return LightSampleInfo::CallSign; }
 
             private:
@@ -88,6 +91,7 @@ namespace Yttrium
                 const size_t               _num;
                 const LightArray<ABSCISSA> _abs;
                 const LightArray<ORDINATE> _ord;
+                LightArray<ORDINATE>       _pre;
             };
 
         }
