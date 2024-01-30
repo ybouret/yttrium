@@ -15,6 +15,8 @@ Y_UTEST(field2d)
     Field::Layout2D L( Field::Coord2D(-2,-4), Field::Coord2D(3,5) );
     std::cerr << L << std::endl;
 
+    Field::In2D<int> F(L,mgr);
+
 }
 Y_UDONE()
 
