@@ -13,8 +13,8 @@ namespace Yttrium
     {
         typedef unit_t          Coord1D;
         typedef Layout<Coord1D> Layout1D;
-
         
+
 
         template <typename T>
         class In1D : public Layout1D
