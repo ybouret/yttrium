@@ -5,7 +5,6 @@
 #define Y_Memory_Embedded_Included 1
 
 #include "y/memory/embed.hpp"
-#include "y/object.hpp"
 
 namespace Yttrium
 {
@@ -19,7 +18,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Embedded : public Object
+        class Embedded
         {
         public:
             //__________________________________________________________________
@@ -34,6 +33,9 @@ namespace Yttrium
                               const size_t num,
                               Allocator   &mgr);
 
+            //! allocate nothing
+            explicit Embedded() noexcept;
+
             //! release flat memory
             virtual ~Embedded() noexcept;
 
@@ -46,9 +48,9 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-        private: Allocator &   alloc; //!< persistent allocator
-        public:  const  size_t bytes; //!< flat memory bytes
-        private: void      *   entry; //!< flat memory entry
+        private: Allocator * const alloc; //!< persistent allocator
+        public:  const  size_t     bytes; //!< flat memory bytes
+        private: void      * const entry; //!< flat memory entry
 
         };
     }

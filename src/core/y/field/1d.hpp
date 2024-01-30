@@ -4,7 +4,7 @@
 #define Y_Field1D_Included 1
 
 #include "y/field/layout.hpp"
-#include "y/memory/embed.hpp"
+#include "y/memory/embedded.hpp"
 #include "y/memory/allocator.hpp"
 #include "y/type/args.hpp"
 
@@ -16,47 +16,12 @@ namespace Yttrium
         typedef Layout<Coord1D> Layout1D;
 
 
-        class Manager
-        {
-        public:
-            explicit Manager(Memory::Embed      emb[],
-                             const size_t       num,
-                             Memory::Allocator &mgr) :
-            bytes(0),
-            entry( Memory::Embed::Build(emb,num,mgr,bytes) ),
-            alloc( &mgr )
-            {
-            }
-
-            explicit Manager() noexcept : bytes(0), entry(0), alloc(0) {}
-
-
-            virtual ~Manager() noexcept
-            {
-                if(alloc)
-                {
-                    assert(bytes>0);
-                    assert(0!=entry);
-                    alloc->release(entry,bytes);
-                    alloc = 0;
-                }
-            }
-
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Manager);
-            size_t              bytes;
-            void *              entry;
-            Memory::Allocator * alloc;
-        };
-
         template <typename T>
         class Builder
         {
         public:
-            explicit Builder(T           *blockAddr,
-                             const size_t numBlocks) :
+            inline explicit Builder(T           *blockAddr,
+                                    const size_t numBlocks) :
             block(blockAddr),
             built(0)
             {
@@ -70,12 +35,19 @@ namespace Yttrium
                 catch(...) { clearBlocks(); throw; }
             }
 
-        protected:
-            T     *block;
+            inline explicit Builder() noexcept : block(0), built(0) {}
+
+
+            inline virtual ~Builder() noexcept
+            {
+                clearBlocks();
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Builder);
+            T     *block;
             size_t built;
+
             inline void clearBlocks() noexcept
             {
                 while(built>0) Memory::OutOfReach::Naught( &block[--built] );
@@ -85,11 +57,67 @@ namespace Yttrium
 
 
 
+        template <typename T>
+        class In1D : public Layout1D
+        {
+        public:
+            Y_ARGS_DECL(T,Type);
+            typedef Layout1D LayoutType;
+
+            inline explicit In1D(LayoutType         layout,
+                                 Memory::Allocator &memmgr) :
+            LayoutType(layout),
+            addr(0),
+            emb1(addr,width),
+            xemb( &emb1, 1, memmgr),
+            make(addr,width)
+            {
+                addr -= lower;
+            }
+
+            inline In1D(const LayoutType &layout,
+                        MutableType      *aliens) noexcept :
+            LayoutType(layout),
+            addr(aliens-lower),
+            emb1(addr,width),
+            xemb(),
+            make()
+            {
+            }
+
+            inline virtual ~In1D() noexcept
+            {
+
+            }
+
+            inline MutableType & operator[](const Coord1D q) noexcept
+            {
+                assert(q>=lower); assert(q<=upper);
+                return addr[q];
+            }
+
+            inline ConstType & operator[](const Coord1D q) const noexcept
+            {
+                assert(q>=lower); assert(q<=upper);
+                return addr[q];
+            }
+
+            inline std::ostream & display(std::ostream &os) const
+            {
+                return Core::Display(os, addr+lower, width);
+            }
+
+        private:
+            MutableType         *addr;
+            Memory::Embed        emb1;
+            Memory::Embedded     xemb;
+            Builder<MutableType> make;
+
+            Y_DISABLE_COPY_AND_ASSIGN(In1D);
+        };
 
 
-
-
-
+#if 0
         template <typename T>
         class In1D : public Layout1D
         {
@@ -178,6 +206,7 @@ namespace Yttrium
                 }
             }
         };
+#endif
 
     }
 

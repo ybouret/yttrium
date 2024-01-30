@@ -17,6 +17,7 @@ Y_UTEST(field2d)
     Field::Layout2D L( Field::Coord2D(-2,-4), Field::Coord2D(3,5) );
     std::cerr << L << std::endl;
 
+#if 1
     Field::In2D<String> F(L,mgr);
     Vector<String>      provided;
 
@@ -33,6 +34,8 @@ Y_UTEST(field2d)
     const LightArray<String> content( &F[F.lower.y][F.lower.x], F.items);
     std::cerr << content << std::endl;
     Y_CHECK(content==provided);
+#endif
+    
 }
 Y_UDONE()
 

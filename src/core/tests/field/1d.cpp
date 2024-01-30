@@ -16,6 +16,7 @@ Y_UTEST(field1d)
     Field::Layout1D L( -5, 6);
     std::cerr << L << std::endl;
 
+#if 1
     Field::In1D<String> F(L,mgr);
     Vector<String>      provided;;
 
@@ -30,6 +31,8 @@ Y_UTEST(field1d)
     const LightArray<String> content( &F[F.lower], F.items );
     std::cerr << content << std::endl;
     Y_CHECK(content==provided);
+#endif
+    
 }
 Y_UDONE()
 
