@@ -43,7 +43,7 @@ namespace Yttrium
 
             inline friend std::ostream & operator<<(std::ostream &os, const Layout &l)
             {
-                os << "#[" << l.lower << "->" << l.upper << "]=" << l.width;
+                os << "#{[" << l.lower << "->" << l.upper << "]:" << l.width << "}=" << l.items;
                 return os;
             }
 

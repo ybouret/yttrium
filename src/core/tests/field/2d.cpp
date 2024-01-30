@@ -12,6 +12,8 @@ Y_UTEST(field2d)
     
     Memory::Dyadic &mgr = Memory::Dyadic::Instance();
 
+    Field::Layout2D L( Field::Coord2D(-2,-4), Field::Coord2D(3,5) );
+    std::cerr << L << std::endl;
 
 }
 Y_UDONE()
