@@ -27,7 +27,8 @@ namespace Yttrium
             built(0),
             erase(smash)
             {
-                assert(0!=entry);
+                assert(Good(blockAddr,numBlocks));
+                assert(blockSize>0);
                 assert(0!=erase);
                 assert(0!=build);
                 assert(width>0);
@@ -61,7 +62,7 @@ namespace Yttrium
             built(0),
             erase(smash)
             {
-                assert(0!=entry);
+                assert(blockSize>0);
                 assert(0!=erase);
                 assert(0!=xcopy);
                 assert(width>0);
@@ -96,7 +97,8 @@ namespace Yttrium
             built(0),
             erase(smash)
             {
-                assert(0!=entry);
+                assert(Good(blockAddr,numBlocks));
+                assert(blockSize>0);
                 assert(0!=erase);
                 assert(0!=xproc);
                 assert(0!=param);
@@ -123,7 +125,6 @@ namespace Yttrium
 
             inline void release() noexcept
             {
-                assert(0!=entry);
                 assert(0!=erase);
                 assert(width>0);
 
@@ -131,6 +132,7 @@ namespace Yttrium
                 size_t   size = built*width;
                 while(size>0)
                 {
+                    assert(0!=addr);
                     erase( &addr[size -= width] );
                 }
             }

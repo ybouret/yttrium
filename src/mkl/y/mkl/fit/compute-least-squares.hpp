@@ -234,7 +234,7 @@ namespace Yttrium
 
                     // second pass: beta
                     const size_t   nvar = beta.size();
-                    const ABSCISSA den  = T(npts);
+                    const ABSCISSA den  = ABSCISSA(npts);
                     for(size_t i=nvar;i>0;--i)
                     {
                         xadd.free();

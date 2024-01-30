@@ -24,6 +24,7 @@ vfs
 information
 woven
 rtld
+field
 )
 
 Y_LinkLibraries(test-core)
@@ -292,4 +293,7 @@ add_test(woven:subspace test-core woven_subspace)
 
 #rtld
 add_test(NAME rtld:dll COMMAND test-core rtld_dll $<TARGET_FILE:dso> COMMAND_EXPAND_LISTS)
+
+#field
+add_test(field:1d test-core field1d)
 

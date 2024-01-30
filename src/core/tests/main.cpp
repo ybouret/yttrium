@@ -224,5 +224,7 @@ Y_UTEST_DECL(256)
 
     Y_UTEST(rtld_dll);
 
+    Y_UTEST(field1d);
+
 }
 Y_UTEST_EXEC()

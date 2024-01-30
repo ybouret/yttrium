@@ -100,6 +100,7 @@ functor
 woven
 woven/survey
 rtld
+field
 )
 
 source_group(concurrent FILES ${quark})
