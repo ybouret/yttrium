@@ -3,9 +3,9 @@
 #ifndef Y_Field1D_Included
 #define Y_Field1D_Included 1
 
+#include "y/field/layout.hpp"
 #include "y/memory/allocator.hpp"
 #include "y/type/args.hpp"
-#include "y/field/layout.hpp"
 
 namespace Yttrium
 {
@@ -17,7 +17,76 @@ namespace Yttrium
         template <typename T>
         class In1D : public Layout1D
         {
-            
+        public:
+            Y_ARGS_DECL(T,Type);
+            typedef Layout1D               LayoutType;
+
+            inline In1D(LayoutType         layout,
+                        Memory::Allocator &mgr) :
+            LayoutType(layout),
+            count(items),
+            bytes(0),
+            entry( mgr.allocate<MutableType>(count,bytes) - lower ),
+            alloc( &mgr ),
+            built(0)
+            {
+                setup();
+            }
+
+            inline virtual ~In1D() noexcept
+            {
+                clear();
+            }
+
+            inline MutableType & operator[](const Coord1D q) noexcept
+            {
+                assert(q>=lower); assert(q<=upper);
+                return entry[q];
+            }
+
+            inline ConstType & operator[](const Coord1D q) const noexcept
+            {
+                assert(q>=lower); assert(q<=upper);
+                return entry[q];
+            }
+
+
+        private:
+            size_t              count;
+            size_t              bytes;
+            MutableType *       entry;
+            Memory::Allocator * alloc;
+            size_t              built;
+
+            Y_DISABLE_COPY_AND_ASSIGN(In1D);
+
+            inline void clear() noexcept
+            {
+                if(0!=alloc)
+                {
+                    entry += lower;
+                    while(built>0)
+                        Memory::OutOfReach::Naught( &entry[--built] );
+                    alloc->withdraw(entry,count,bytes);
+                    alloc = 0;
+                }
+
+            }
+
+            inline void setup() {
+                try {
+                    MutableType *addr = entry+lower;
+                    while(built<items) {
+                        new (addr+built) MutableType();
+                        ++built;
+                    }
+                }
+                catch(...)
+                {
+                    clear();
+                    throw;
+                }
+            }
         };
 
     }
