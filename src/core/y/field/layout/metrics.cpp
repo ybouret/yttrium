@@ -9,6 +9,8 @@ namespace Yttrium
 
         LayoutMetrics:: ~LayoutMetrics() noexcept
         {
+            Y_STATIC_ZVAR(Coerce(items));
+            Y_STATIC_ZVAR(Coerce(dimension));
         }
         
         LayoutMetrics:: LayoutMetrics(const unsigned d,
