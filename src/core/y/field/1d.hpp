@@ -13,6 +13,39 @@ namespace Yttrium
     {
         typedef unit_t          Coord1D;
         typedef Layout<Coord1D> Layout1D;
+
+        template <typename T>
+        class Builder
+        {
+        public:
+            explicit Builder(T           *blockAddr,
+                             const size_t numBlocks) :
+            block(blockAddr),
+            built(0)
+            {
+                assert(Good(blockAddr,numBlocks));
+                try {
+                    while(built<numBlocks) {
+                        new (block+built) T();
+                        ++built;
+                    }
+                }
+                catch(...) { clearBlocks(); throw; }
+            }
+
+        protected:
+            T     *block;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Builder);
+            size_t built;
+            inline void clearBlocks() noexcept
+            {
+                while(built>0) Memory::OutOfReach::Naught( &block[--built] );
+                block = 0;
+            }
+        };
+
         
 
 
