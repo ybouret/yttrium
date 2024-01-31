@@ -19,7 +19,7 @@ namespace Yttrium
                     case  1: return String();
                 }
                 assert(abs(nu)>1);
-                return FormatString("%d*",nu);
+                return Formatted::Get("%d*",nu);
             }
 
             static inline String ExtraCof(const int nu)
@@ -31,9 +31,9 @@ namespace Yttrium
                 }
                 assert(abs(nu)>1);
                 if(nu < -1)
-                    return FormatString("%d*",nu);
+                    return Formatted::Get("%d*",nu);
                 assert(nu>1);
-                return FormatString("+%d*",nu);
+                return Formatted::Get("+%d*",nu);
             }
 
             static inline String MakeName(const EqArray       & eqs,

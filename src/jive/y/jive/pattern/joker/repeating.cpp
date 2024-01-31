@@ -143,7 +143,7 @@ namespace Yttrium
                 case 1: Label(fp,"+"); break;
                 default:
                 {
-                    const String msg = FormatString(">=%u",unsigned(atLeast));
+                    const String msg = Formatted::Get(">=%u",unsigned(atLeast));
                     Label(fp,msg);
                 }
             }

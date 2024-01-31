@@ -21,7 +21,7 @@ Y_UTEST(match)
             unsigned        iline = 1;
             while( fp.gets(line) )
             {
-                const String uuid = fileName + FormatString(":%u",iline);
+                const String uuid = fileName + Formatted::Get(":%u",iline);
                 std::cerr << "-- '" << line << "'" << std::endl;
                 {
 

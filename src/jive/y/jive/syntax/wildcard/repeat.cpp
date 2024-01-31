@@ -18,7 +18,7 @@ namespace Yttrium
                     case 0: (*res) += '*'; break;
                     case 1: (*res) += '+'; break;
                     default:
-                        (*res) += FormatString(">=%u",nmin);
+                        (*res) += Formatted::Get(">=%u",nmin);
                 }
                 return res.yield();
             }

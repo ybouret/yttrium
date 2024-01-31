@@ -23,7 +23,7 @@ static inline void testPattern(Pattern &p)
     }
     Y_CHECK(p == *q);
 
-    String root = FourCC::ToText(p.uuid); root += FormatString("%u",++I);
+    String root = FourCC::ToText(p.uuid); root += Formatted::Get("%u",++I);
     {
         const String fileName = root + ".dat";
         p.toBinary(fileName);

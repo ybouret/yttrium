@@ -108,7 +108,7 @@ namespace Yttrium
 
             for(size_t order=1;order<=maxOrder;++order)
             {
-                const String id = FormatString("plexus%u.dot",unsigned(order));
+                const String id = Formatted::Get("plexus%u.dot",unsigned(order));
                 //std::cerr << "saving " << id << std::endl;
                 GraphViz::Vizible::DotToPngEx(id,*this,order);
             }
