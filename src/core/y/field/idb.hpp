@@ -12,18 +12,43 @@ namespace Yttrium
     namespace Field
     {
 
-        typedef ArcPtr<String> SharedString;
+        typedef ArcPtr<String> SharedString; //!< shared string
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! global database of index string
+        //
+        //
+        //______________________________________________________________________
         class IndexDataBase : public Singleton<IndexDataBase>
         {
         public:
-            static const char * const      CallSign;
-            static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 15;
-            static const char              Prefix = '[';
-            static const char              Suffix = ']';
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const      CallSign; //!< CallSign
+            static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 15; //!< Longevity
+            static const char              Prefix = '['; //!< to format
+            static const char              Suffix = ']'; //!< to format
 
-            const String &operator[](const unit_t i);
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
+            //! get create a String ready to be shared for index i
+            const String & operator[](const unit_t i);
+
+            //! empty string
+            const SharedString empty;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(IndexDataBase);
             explicit IndexDataBase();

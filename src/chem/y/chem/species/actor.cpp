@@ -34,7 +34,7 @@ namespace Yttrium
         {
             String res;
             if(nu>1)
-                res += FormatString("%u",nu);
+                res += Formatted::Get("%u",nu);
             res += sp.toString();
             return res;
         }

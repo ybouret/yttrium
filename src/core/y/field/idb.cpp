@@ -20,16 +20,13 @@ namespace Yttrium
 
         const char * const IndexDataBase:: CallSign = "Field::IndexDataBase";
 
-        IndexDataBase:: IndexDataBase()
+        IndexDataBase:: IndexDataBase() : empty( new String() )
         {
-            Y_LOCK(access);
             Indices_ = new( Y_STATIC_ZARR(Indices__) ) Indices();
-            std::cerr << "sizeof(Indices)=" << sizeof(Indices) << " / " << sizeof(Indices__) << std::endl;
         }
 
         IndexDataBase:: ~IndexDataBase() noexcept
         {
-            Y_LOCK(access);
             assert(0!=Indices_);
             Memory::OutOfReach::Naught(Indices_);
             Indices_ = 0;
