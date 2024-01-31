@@ -12,12 +12,10 @@ namespace Yttrium
                 Coerce(data) = 0;
             }
             
-            Data:: Data(const void  *ptr,
-                        const size_t num) noexcept :
+            Data:: Data(const void  *ptr) noexcept :
             size(0),
             data( static_cast<const Embed *>(ptr) )
             {
-                assert( Good(ptr,num) );
             }
         }
     }

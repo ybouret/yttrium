@@ -22,7 +22,7 @@ namespace Yttrium
                 inline virtual ~Repo() noexcept {}
 
             protected:
-                inline explicit Repo() noexcept : Room<N>(), Data(this->room(),N) {}
+                inline explicit Repo() noexcept : Room<N>(), Data(this->room()) {}
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Repo);

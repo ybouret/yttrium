@@ -23,7 +23,7 @@ namespace Yttrium
 
                 virtual ~Data() noexcept;
             protected:
-                explicit Data(const void *ptr, const size_t num) noexcept;
+                explicit Data(const void *ptr) noexcept;
 
                 template <typename T> inline
                 void push(T * &entry, const size_t count) noexcept
