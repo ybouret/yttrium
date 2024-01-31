@@ -1,4 +1,3 @@
-
 #include "y/memory/embedding/solo.hpp"
 
 namespace Yttrium

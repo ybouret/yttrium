@@ -1,6 +1,8 @@
 #include "y/memory/embedding/solo.hpp"
 #include "y/memory/embedding/pair.hpp"
 #include "y/memory/embedding/trio.hpp"
+#include "y/memory/embedding/quad.hpp"
+
 #include "y/utest/run.hpp"
 
 #include "y/string.hpp"
@@ -12,16 +14,18 @@ Y_UTEST(memory_embedding)
     Y_SIZEOF(Memory::EmbeddingSolo);
     Y_SIZEOF(Memory::EmbeddingPair);
     Y_SIZEOF(Memory::EmbeddingTrio);
-    Y_SIZEOF(Memory::Embedding::Room<4>);
+    Y_SIZEOF(Memory::EmbeddingQuad);
 
 
     int    *a = 0;
     double *b = 0;
     String *s = 0;
+    char   *c = 0;
 
-    Memory::EmbeddingSolo solo(a,5);            Y_CHECK(1==solo.size);
-    Memory::EmbeddingPair pair(a,7,b,11);       Y_CHECK(2==pair.size);
-    Memory::EmbeddingTrio trio(a,3,b,21,s,31);  Y_CHECK(3==trio.size);
+    Memory::EmbeddingSolo solo(a,5);                 Y_CHECK(1==solo.size);
+    Memory::EmbeddingPair pair(a,7,b,11);            Y_CHECK(2==pair.size);
+    Memory::EmbeddingTrio trio(a,3,b,21,s,31);       Y_CHECK(3==trio.size);
+    Memory::EmbeddingQuad quad(a,2,b,13,s,27,c,93);  Y_CHECK(4==quad.size);
 
 
 

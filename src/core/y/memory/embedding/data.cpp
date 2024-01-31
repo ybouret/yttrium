@@ -1,4 +1,3 @@
-
 #include "y/memory/embedding/data.hpp"
 
 namespace Yttrium

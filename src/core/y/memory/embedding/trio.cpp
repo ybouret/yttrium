@@ -1,6 +1,3 @@
-
-
-
 #include "y/memory/embedding/trio.hpp"
 
 namespace Yttrium
