@@ -59,6 +59,7 @@ memory/exclusive
 memory/buffer
 memory/solitary
 memory/object
+memory/embedding
 ptr
 container
 container/iterator

@@ -5,8 +5,6 @@
 
 #include "y/config/starting.hpp"
 #include "y/ostream-proto.hpp"
-#include "y/calculus/align.hpp"
-#include "y/memory/out-of-reach.hpp"
 
 namespace Yttrium
 {

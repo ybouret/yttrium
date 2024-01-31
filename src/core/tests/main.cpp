@@ -36,6 +36,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(memory_wad);
     Y_UTEST(memory_workspace);
     Y_UTEST(memory_embed);
+    Y_UTEST(memory_embedding);
     Y_UTEST(memory_digest);
     Y_UTEST(memory_specimen);
     Y_UTEST(memory_objloc);
