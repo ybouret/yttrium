@@ -300,4 +300,6 @@ add_test(field:1d test-core field1d)
 add_test(field:2d test-core field2d)
 add_test(field:3d test-core field3d)
 add_test(field:4d test-core field4d)
+add_test(field:mk test-core fieldmk)
+
 
