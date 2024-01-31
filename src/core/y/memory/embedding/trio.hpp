@@ -12,11 +12,21 @@ namespace Yttrium
 {
     namespace Memory
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Three Embeds
+        //
+        //
+        //______________________________________________________________________
         class EmbeddingTrio : public Embedding::Repo<3>
         {
         public:
+            //! cleanup
             virtual ~EmbeddingTrio() noexcept;
 
+            //! setup
             template <typename T, typename U, typename V>
             inline EmbeddingTrio(T * &p1, const size_t n1,
                                  U * &p2, const size_t n2,

@@ -79,10 +79,9 @@ namespace Yttrium
         // Interface
         //
         //______________________________________________________________________
-        virtual bool insert(ParamType t)
-        {
-            return  this->insert_(t);
-        }
+
+        //! insert new data, false if key already exists
+        inline virtual bool insert(ParamType t) { return  this->insert_(t);}
 
     private:
         Y_DISABLE_ASSIGN(SuffixSet);

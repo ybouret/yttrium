@@ -59,6 +59,7 @@ namespace Yttrium
                 //! access ordinates
                 virtual const Ordinates & ordinates() const noexcept = 0;
                 
+                //! access predicted ordinates
                 virtual const Ordinates & predicted() const noexcept = 0;
 
 

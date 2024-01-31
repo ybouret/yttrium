@@ -110,7 +110,10 @@ namespace Yttrium
                     return get(id)(arr);
                 }
 
+                //! query by index, NULL means index is free
                 const Variable * query(const size_t indx) const noexcept;
+
+                //! check if index is available
                 bool             found(const size_t indx) const noexcept;
 
                 //! get max name length from code

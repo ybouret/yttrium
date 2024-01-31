@@ -13,15 +13,39 @@ namespace Yttrium
     {
         namespace Embedding
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! static Embed reposotiry
+            //
+            //
+            //__________________________________________________________________
             template <size_t N>
             class Repo : public Room<N>, public Data
             {
             public:
-                inline virtual size_t maxi() const noexcept { return N; }
+                //______________________________________________________________
+                //
+                //
+                // Interface
+                //
+                //______________________________________________________________
+                inline virtual size_t maxi() const noexcept { return N; } //!< maxi=N
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! cleanup
                 inline virtual ~Repo() noexcept {}
 
             protected:
+
+                //! setup
                 inline explicit Repo() noexcept : Room<N>(), Data(this->room()) {}
 
             private:

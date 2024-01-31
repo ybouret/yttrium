@@ -15,15 +15,40 @@ namespace Yttrium
 
         namespace Embedding
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! static room to hold embedding info
+            //
+            //
+            //__________________________________________________________________
             template <size_t N>
             class Room
             {
             public:
-                static const size_t Required = N * sizeof(Embed);
-                inline virtual ~Room() noexcept { clr(); }
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                static const size_t Required = N * sizeof(Embed); //!< required bytes to hold Embed[N]
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! cleanup
+                inline virtual ~Room() noexcept { clr(); }
             protected:
+                //! setup
                 explicit Room() noexcept : wksp() { clr(); }
+
+                //! get address for derived classes
                 inline const void *room() const noexcept { return &wksp[0]; }
 
             private:

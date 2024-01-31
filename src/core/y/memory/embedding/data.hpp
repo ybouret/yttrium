@@ -13,18 +13,45 @@ namespace Yttrium
     {
         namespace Embedding
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! data to store embedding info
+            //
+            //
+            //__________________________________________________________________
             class  Data
             {
             public:
-                const size_t        size;
-                const Embed * const data;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const size_t        size; //!< number of info
+                const Embed * const data; //!< location
 
-                virtual size_t maxi() const noexcept = 0;
+                //______________________________________________________________
+                //
+                //
+                // Interface
+                //
+                //______________________________________________________________
+                virtual size_t maxi() const noexcept = 0; //!< capacity
 
-                virtual ~Data() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                virtual ~Data()                noexcept; //!< cleanup
             protected:
-                explicit Data(const void *ptr) noexcept;
+                explicit Data(const void *ptr) noexcept; //!< setup
 
+                //! push new information in place
                 template <typename T> inline
                 void push(T * &entry, const size_t count) noexcept
                 {

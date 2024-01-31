@@ -9,11 +9,21 @@ namespace Yttrium
 {
     namespace Memory
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Four Embeds
+        //
+        //
+        //______________________________________________________________________
         class EmbeddingQuad : public Embedding::Repo<4>
         {
         public:
+            //! cleanup
             virtual ~EmbeddingQuad() noexcept;
 
+            //! setup
             template <typename T, typename U, typename V, typename W>
             inline EmbeddingQuad(T * &p1, const size_t n1,
                                  U * &p2, const size_t n2,

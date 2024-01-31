@@ -163,12 +163,14 @@ namespace Yttrium
             for(size_t i=0;i<items;++i) base[i] = args;
         }
 
+        //! load row[r] with args
         inline void ldRow(const size_t r, ParamType args)
         {
             Writable<T> &arr = (*this)[r];
             for(size_t i=cols;i>0;--i) arr[i] = args;
         }
 
+        //! load column[c] with args
         inline void ldCol(const size_t c, ParamType args)
         {
             Matrix &self = *this;

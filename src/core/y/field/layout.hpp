@@ -12,19 +12,42 @@ namespace Yttrium
 
     namespace Field
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Generic Layout
+        //
+        //
+        //______________________________________________________________________
         template <typename COORD>
         class Layout : public LayoutWidth<COORD>, public LayoutMetrics
         {
         public:
-            static const unsigned DIMENSION = sizeof(COORD)/sizeof(unit_t);
+            //__________________________________________________________________
+            //
+            //
+            // Definition
+            //
+            //__________________________________________________________________
+            static const unsigned DIMENSION = sizeof(COORD)/sizeof(unit_t); //!< space dimension
             using LayoutWidth<COORD>::width;
+          
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
+            //! cleanup
             inline virtual ~Layout() noexcept
             {
                 Y_STATIC_ZVAR(Coerce(lower));
                 Y_STATIC_ZVAR(Coerce(upper));
             }
 
+            //! copy
             inline Layout(const Layout &other) noexcept :
             LayoutWidth<COORD>(other),
             LayoutMetrics(other),
@@ -33,6 +56,7 @@ namespace Yttrium
             {
             }
 
+            //! setup
             inline explicit Layout(COORD lo, COORD up) noexcept :
             LayoutWidth<COORD>(lo),
             LayoutMetrics(DIMENSION,C2U(lo),C2U(up), C2U(width) ),
@@ -41,14 +65,21 @@ namespace Yttrium
             {
             }
 
+            //! display metrics
             inline friend std::ostream & operator<<(std::ostream &os, const Layout &l)
             {
                 os << "#{[" << l.lower << "->" << l.upper << "]:" << l.width << "}=" << l.items;
                 return os;
             }
 
-            const COORD lower;
-            const COORD upper;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const COORD lower; //!< lower coordinate
+            const COORD upper; //!< upper coordinate
 
         private:
             Y_DISABLE_ASSIGN(Layout);

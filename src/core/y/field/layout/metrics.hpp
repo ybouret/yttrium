@@ -10,17 +10,39 @@ namespace Yttrium
 
     namespace Field
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Shared components for Layouts
+        //
+        //
+        //______________________________________________________________________
         class LayoutMetrics
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            virtual ~LayoutMetrics()                      noexcept; //!< cleanup
+            explicit LayoutMetrics(const LayoutMetrics &) noexcept; //!< copy
 
-            const unsigned dimension;
-            const size_t   items;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const unsigned dimension; //!< space dimension
+            const size_t   items;     //!< items in field
 
-            virtual ~LayoutMetrics() noexcept;
-            explicit LayoutMetrics(const LayoutMetrics &) noexcept;
+
 
         protected:
+            //! setup with items computation and coordinates ordering
             explicit LayoutMetrics(const unsigned d,
                                    unit_t * const lower,
                                    unit_t * const upper,

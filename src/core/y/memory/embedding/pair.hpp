@@ -11,11 +11,21 @@ namespace Yttrium
 {
     namespace Memory
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Two Embeds
+        //
+        //
+        //______________________________________________________________________
         class EmbeddingPair: public Embedding::Repo<2>
         {
         public:
+            //! cleanup
             virtual ~EmbeddingPair() noexcept;
 
+            //! setup
             template <typename T, typename U>
             inline EmbeddingPair( T * &p1, const size_t n1,
                                   U * &p2, const size_t n2) noexcept :

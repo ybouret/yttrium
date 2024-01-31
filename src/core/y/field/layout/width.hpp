@@ -11,14 +11,23 @@ namespace Yttrium
 
     namespace Field
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Layout Width to get width before Layout
+        //
+        //
+        //______________________________________________________________________
         template <typename COORD> class LayoutWidth
         {
         public:
-            inline virtual ~LayoutWidth() noexcept { Y_STATIC_ZVAR( Coerce(width) ); }
-            inline explicit LayoutWidth(const COORD       &dummy) noexcept : width(dummy) {}
-            inline explicit LayoutWidth(const LayoutWidth &other) noexcept : width(other.width) {}
 
-            const COORD width;
+            inline virtual ~LayoutWidth() noexcept { Y_STATIC_ZVAR( Coerce(width) ); }              //!< cleanup
+            inline explicit LayoutWidth(const COORD       &dummy) noexcept : width(dummy) {}        //!< dummy setup
+            inline explicit LayoutWidth(const LayoutWidth &other) noexcept : width(other.width) {}  //!< copy
+
+            const COORD width; //!< the width
 
         private:
             Y_DISABLE_ASSIGN(LayoutWidth);
