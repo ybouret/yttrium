@@ -5,6 +5,8 @@
 
 #include "y/config/starting.hpp"
 #include "y/ostream-proto.hpp"
+#include "y/calculus/align.hpp"
+#include "y/memory/out-of-reach.hpp"
 
 namespace Yttrium
 {
@@ -56,10 +58,10 @@ namespace Yttrium
             static size_t Align(const size_t) noexcept;
 
             //! compute all metrics, allocate and link
-            static void  *Build(Embed          embed[],
-                                  const size_t count,
-                                  Allocator   &alloc,
-                                  size_t      &bytes);
+            static void  *Build(Embed        embed[],
+                                const size_t count,
+                                Allocator   &alloc,
+                                size_t      &bytes);
 
             //! (check and) get allocated address
             void * address() noexcept;
@@ -75,6 +77,9 @@ namespace Yttrium
             const size_t length; //!< allocated bytes
             const size_t blocks; //!< allocated blocks
         };
+
+      
+
 
     }
 

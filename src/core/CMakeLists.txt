@@ -102,6 +102,7 @@ woven/survey
 rtld
 field
 field/layout
+field/memory
 )
 
 source_group(concurrent FILES ${quark})

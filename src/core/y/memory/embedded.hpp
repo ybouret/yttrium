@@ -33,7 +33,7 @@ namespace Yttrium
                               const size_t num,
                               Allocator   &mgr);
 
-            //! allocate nothing
+            //! allocate nothing, NOEXCEPT
             explicit Embedded() noexcept;
 
             //! release flat memory
@@ -51,8 +51,8 @@ namespace Yttrium
         private: Allocator * const alloc; //!< persistent allocator
         public:  const  size_t     bytes; //!< flat memory bytes
         private: void      * const entry; //!< flat memory entry
-
         };
+        
     }
 
 }
