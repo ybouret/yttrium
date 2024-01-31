@@ -10,10 +10,21 @@
 namespace Yttrium
 {
     typedef Core::String<char> String; //!< default string
+    
+    //! Formatted String API
+    struct Formatted
+    {
+        //! C-style formatting
+        static String  Get(const char *fmt,...) Y_PRINTF_CHECK(1,2);
 
-    //! C-style formating
-    String FormatString(const char *fmt,...) Y_PRINTF_CHECK(1,2);
+        //! C-style formatting
+        static String *New(const char *fmt,...) Y_PRINTF_CHECK(1,2);
+    };
+
+
 }
+
+
 
 #endif
 

@@ -13,7 +13,7 @@ Y_UTEST(text_embedding)
     Vector<String> txt(256,AsCapacity);
     for(size_t i=0;i<256;++i)
     {
-        txt << FormatString("\\\\x%02x",unsigned(i));
+        txt << Formatted::Get("\\\\x%02x",unsigned(i));
     }
 
 

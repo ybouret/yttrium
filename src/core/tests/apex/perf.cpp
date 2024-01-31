@@ -40,7 +40,7 @@ namespace
             return;
         }
 
-        const String     fileName = FormatString("apex%u-%u.dat",PROTO::CoreSize*8,PROTO::WordSize*8 );
+        const String     fileName = Formatted::Get("apex%u-%u.dat",PROTO::CoreSize*8,PROTO::WordSize*8 );
         Libc::OutputFile fp(fileName);
         for(unsigned lbits=32;lbits<=MaxBits;lbits+=32)
         {
