@@ -17,7 +17,7 @@ Y_UTEST(field2d)
     Field::Layout2D L( Field::Coord2D(-2,-4), Field::Coord2D(3,5) );
     std::cerr << L << std::endl;
 
-#if 1
+#if 0
     Field::In2D<String> F(L,mgr);
     Vector<String>      provided;
 

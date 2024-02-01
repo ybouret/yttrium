@@ -29,7 +29,7 @@ Y_UTEST(field1d)
     std::cerr << idb[-1] << idb[3] << std::endl;
 
 
-#if 1
+#if 0
     Field::In1D<String> F(L,mgr);
     Vector<String>      provided;;
 
@@ -46,8 +46,7 @@ Y_UTEST(field1d)
     Y_CHECK(content==provided);
 #endif
     
-    Y_SIZEOF( Field::In1D<int>    );
-    Y_SIZEOF( Field::In1D<String> );
+    
 
 }
 Y_UDONE()

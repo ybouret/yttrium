@@ -8,10 +8,27 @@
 
 using namespace Yttrium;
 
+namespace Yttrium
+{
+    namespace Field
+    {
+
+        template <size_t>
+        class MetaKeyLink;
+
+        template <>
+        class MetaKeyLink<0> : public MetaKeyData<0>
+        {
+            
+        };
+
+
+    }
+}
+
 Y_UTEST(fieldmk)
 {
-    const Field::SharedString uuid = new String("field");
-    Field::MetaKeyWith<0> mk0(uuid);
+    Field::MetaKeyWith<0> mk0("field");
     std::cerr << mk0 << std::endl;
 
     Field::MetaKeyWith<1> mk1(mk0,1);

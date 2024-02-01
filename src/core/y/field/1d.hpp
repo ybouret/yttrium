@@ -4,8 +4,11 @@
 #define Y_Field1D_Included 1
 
 #include "y/field/layout.hpp"
+#include "y/field/interface.hpp"
+#include "y/field/meta-key/with.hpp"
 #include "y/field/memory/builder.hpp"
-#include "y/memory/embedded.hpp"
+#include "y/memory/embedding/solo.hpp"
+#include "y/memory/embed.hpp"
 #include "y/memory/allocator.hpp"
 #include "y/type/args.hpp"
 
@@ -16,6 +19,40 @@ namespace Yttrium
         typedef unit_t          Coord1D;
         typedef Layout<Coord1D> Layout1D;
 
+        
+        template <typename T, size_t NSUB>
+        class In1D : public Interface, public Layout1D
+        {
+        public:
+            typedef MetaKeyWith<NSUB>      SelfMetaKey;
+            typedef Memory::EmbeddingSolo  SelfPattern;
+
+            template <typename NAME>
+            inline explicit In1D(const NAME &name) :
+            metaKey(name)
+            {
+                
+            }
+
+            inline explicit In1D(const MetaKeyWith<NSUB-1> &rootKey,
+                                 const unit_t               subIndx) :
+            metaKey(rootKey,subIndx)
+            {
+            }
+
+
+
+            inline virtual const MetaKey & key() const noexcept { return metaKey; }
+
+            inline virtual ~In1D() noexcept {}
+
+            const SelfMetaKey metaKey;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(In1D);
+        };
+
+#if 0
         template <typename T>
         class In1D : public Layout1D
         {
@@ -76,6 +113,7 @@ namespace Yttrium
 
             Y_DISABLE_COPY_AND_ASSIGN(In1D);
         };
+#endif
 
 
     }
