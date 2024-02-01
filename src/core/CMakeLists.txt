@@ -104,6 +104,7 @@ rtld
 field
 field/layout
 field/memory
+field/meta-key
 )
 
 source_group(concurrent FILES ${quark})
