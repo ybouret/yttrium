@@ -12,16 +12,7 @@ namespace Yttrium
 {
     namespace Field
     {
-
-        template <size_t>
-        class MetaKeyLink;
-
-        template <>
-        class MetaKeyLink<0> : public MetaKeyData<0>
-        {
-            
-        };
-
+        
 
     }
 }

@@ -4,7 +4,7 @@
 #ifndef Y_Memory_Embedded_Included
 #define Y_Memory_Embedded_Included 1
 
-#include "y/memory/embed.hpp"
+#include "y/memory/embedding/data.hpp"
 
 namespace Yttrium
 {
@@ -32,6 +32,10 @@ namespace Yttrium
             explicit Embedded(Embed        emb[],
                               const size_t num,
                               Allocator   &mgr);
+
+            //! allocate and link
+            explicit Embedded(Embedding::Data &emb,
+                              Allocator       &mgr);
 
             //! allocate nothing, NOEXCEPT
             explicit Embedded() noexcept;

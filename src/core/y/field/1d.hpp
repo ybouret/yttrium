@@ -8,7 +8,7 @@
 #include "y/field/meta-key/with.hpp"
 #include "y/field/memory/builder.hpp"
 #include "y/memory/embedding/solo.hpp"
-#include "y/memory/embed.hpp"
+#include "y/memory/embedded.hpp"
 #include "y/memory/allocator.hpp"
 #include "y/type/args.hpp"
 
@@ -24,18 +24,30 @@ namespace Yttrium
         class In1D : public Interface, public Layout1D
         {
         public:
+            Y_ARGS_DECL(T,Type);
             typedef MetaKeyWith<NSUB>      SelfMetaKey;
             typedef Memory::EmbeddingSolo  SelfPattern;
+            typedef Memory::Embedded       SelfAcquire;
 
-            template <typename NAME>
-            inline explicit In1D(const NAME &name) :
-            metaKey(name)
+            template <typename LABEL>
+            inline explicit In1D(const LABEL       & label,
+                                 const Layout1D      layout,
+                                 Memory::Allocator & alloc) :
+            Interface(),
+            Layout1D(layout),
+            metaKey(label),
+            entry(0),
+            motif(entry,items),
+            owned(motif,alloc)
             {
                 
             }
 
             inline explicit In1D(const MetaKeyWith<NSUB-1> &rootKey,
-                                 const unit_t               subIndx) :
+                                 const unit_t               subIndx,
+                                 const Layout1D            &layout) :
+            Interface(),
+            Layout1D(layout),
             metaKey(rootKey,subIndx)
             {
             }
@@ -50,6 +62,10 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(In1D);
+            MutableType *entry;
+            SelfPattern  motif;
+            SelfAcquire  owned;
+
         };
 
 #if 0
