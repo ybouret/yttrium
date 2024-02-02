@@ -11,8 +11,8 @@ namespace Yttrium
 {
     namespace Field
     {
-        typedef V2D<unit_t>     Coord2D;
-        typedef Layout<Coord2D> Layout2D;
+        typedef V2D<unit_t>     Coord2D;  //!< alias
+        typedef Layout<Coord2D> Layout2D; //!< alias
 #if 0
 
 

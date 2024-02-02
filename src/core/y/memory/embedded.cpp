@@ -6,21 +6,13 @@ namespace Yttrium
 {
     namespace Memory
     {
-        Embedded:: Embedded(Embed        emb[],
-                            const size_t num,
-                            Allocator   &mgr) :
-        alloc( &mgr),
-        bytes(0),
-        entry( Embed::Build(emb,num,mgr,Coerce(bytes)) )
-        {
-
-        }
+        
 
         Embedded:: Embedded(Embedding::Data &emb,
                             Allocator       &mgr) :
         alloc( &mgr ),
         bytes( 0 ),
-        entry( Embed::Build( &Coerce(emb.data[0]), emb.size, mgr, Coerce(bytes)) )
+        entry( Embed::Build( &emb[0], emb.size, mgr, Coerce(bytes)) )
         {
         }
 

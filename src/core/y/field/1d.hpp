@@ -16,19 +16,20 @@ namespace Yttrium
 {
     namespace Field
     {
-        typedef unit_t          Coord1D;
-        typedef Layout<Coord1D> Layout1D;
+        typedef unit_t          Coord1D;  //!< alias
+        typedef Layout<Coord1D> Layout1D; //!< alias
 
-        
+        //! Generic 1D Field
         template <typename T, size_t NSUB>
         class In1D : public Interface, public Layout1D
         {
         public:
-            Y_ARGS_DECL(T,Type);
-            typedef MetaKeyWith<NSUB>      SelfMetaKey;
-            typedef Memory::EmbeddingSolo  SelfPattern;
-            typedef Memory::Embedded       SelfAcquire;
+            Y_ARGS_DECL(T,Type);                         //!< aliases
+            typedef MetaKeyWith<NSUB>      SelfMetaKey;  //!< alias
+            typedef Memory::EmbeddingSolo  SelfPattern;  //!< alias
+            typedef Memory::Embedded       SelfAcquire;  //!< alias
 
+            //! default constructor
             template <typename LABEL>
             inline explicit In1D(const LABEL       & label,
                                  const Layout1D      layout,
@@ -43,6 +44,7 @@ namespace Yttrium
                 
             }
 
+            //! constructor as sub-field
             inline explicit In1D(const MetaKeyWith<NSUB-1> &rootKey,
                                  const unit_t               subIndx,
                                  const Layout1D            &layout) :
@@ -52,11 +54,13 @@ namespace Yttrium
             {
             }
 
+            //! cleanup
+            inline virtual ~In1D() noexcept {}
 
-
+            //! get key
             inline virtual const MetaKey & key() const noexcept { return metaKey; }
 
-            inline virtual ~In1D() noexcept {}
+
 
             const SelfMetaKey metaKey;
 
@@ -68,70 +72,7 @@ namespace Yttrium
 
         };
 
-#if 0
-        template <typename T>
-        class In1D : public Layout1D
-        {
-        public:
-            Y_ARGS_DECL(T,Type);
-            typedef Layout1D LayoutType;
-
-            inline explicit In1D(LayoutType         layout,
-                                 Memory::Allocator &memmgr) :
-            LayoutType(layout),
-            addr(0),
-            emb1(addr,width),
-            xemb( &emb1, 1, memmgr),
-            make(addr,width)
-            {
-                addr -= lower;
-            }
-
-            //! directly assign aliens to address
-            inline In1D(const LayoutType &layout,
-                        MutableType      *aliens) noexcept :
-            LayoutType(layout),
-            addr(aliens-lower),
-            emb1(addr,width),
-            xemb(),
-            make()
-            {
-
-            }
-
-            inline virtual ~In1D() noexcept
-            {
-
-            }
-
-            inline MutableType & operator[](const Coord1D q) noexcept
-            {
-                assert(q>=lower); assert(q<=upper);
-                return addr[q];
-            }
-
-            inline ConstType & operator[](const Coord1D q) const noexcept
-            {
-                assert(q>=lower); assert(q<=upper);
-                return addr[q];
-            }
-
-            inline std::ostream & display(std::ostream &os) const
-            {
-                return Core::Display(os, addr+lower, width);
-            }
-
-        private:
-            MutableType *              addr;
-            Memory::Embed              emb1;
-            Memory::Embedded           xemb;
-            MemoryBuilder<MutableType> make;
-
-            Y_DISABLE_COPY_AND_ASSIGN(In1D);
-        };
-#endif
-
-
+        
     }
 
 }

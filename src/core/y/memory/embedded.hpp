@@ -27,12 +27,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-
-            //! allocate and link
-            explicit Embedded(Embed        emb[],
-                              const size_t num,
-                              Allocator   &mgr);
-
+            
             //! allocate and link
             explicit Embedded(Embedding::Data &emb,
                               Allocator       &mgr);

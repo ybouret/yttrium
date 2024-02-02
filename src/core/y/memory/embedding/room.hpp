@@ -49,7 +49,7 @@ namespace Yttrium
                 explicit Room() noexcept : wksp() { clr(); }
 
                 //! get address for derived classes
-                inline const void *room() const noexcept { return &wksp[0]; }
+                inline   void *room()   noexcept { return &wksp[0]; }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Room);

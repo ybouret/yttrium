@@ -1,6 +1,8 @@
 
 #include "y/container/implanted.hpp"
 #include "y/memory/embedded.hpp"
+#include "y/memory/embedding/pair.hpp"
+#include "y/memory/embedding/solo.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/memory/allocator/pooled.hpp"
@@ -26,8 +28,8 @@ Y_UTEST(memory_embed)
             Memory::Embed(b,numB)
         };
 
-
-        const Memory::Embedded resources(emb,sizeof(emb)/sizeof(emb[0]), Memory::Pooled::Instance() );
+        Memory::EmbeddingPair   pair(a,numA,b,numB);
+        const Memory::Embedded  resources(pair,Memory::Pooled::Instance() );
 
         for(size_t i=0;i<numA;++i)
         {
@@ -44,15 +46,11 @@ Y_UTEST(memory_embed)
 
     {
         String *S = 0;
-        Memory::Embed emb[] =
-        {
-            Memory::Embed(S,13)
-        };
-
-        const Memory::Embedded resources(emb,1, Memory::Pooled::Instance() );
+        Memory::EmbeddingSolo  emb(S,13);
+        const Memory::Embedded resources(emb,Memory::Pooled::Instance() );
         Implanted<String>      implanted(emb[0]);
         std::cerr << "string : " << emb[0] << std::endl;
     }
-
+    
 }
 Y_UDONE()

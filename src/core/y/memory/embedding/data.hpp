@@ -31,7 +31,6 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 const size_t        size; //!< number of info
-                const Embed * const data; //!< location
 
                 //______________________________________________________________
                 //
@@ -41,6 +40,9 @@ namespace Yttrium
                 //______________________________________________________________
                 virtual size_t maxi() const noexcept = 0; //!< capacity
 
+                Embed       & operator[](const size_t indx)       noexcept;
+                const Embed & operator[](const size_t indx) const noexcept;
+
                 //______________________________________________________________
                 //
                 //
@@ -49,15 +51,16 @@ namespace Yttrium
                 //______________________________________________________________
                 virtual ~Data()                noexcept; //!< cleanup
             protected:
-                explicit Data(const void *ptr) noexcept; //!< setup
+                explicit Data(void *ptr) noexcept; //!< setup
+                Embed * const data; //!< location
 
                 //! push new information in place
                 template <typename T> inline
                 void push(T * &entry, const size_t count) noexcept
                 {
                     assert(size<maxi());
-                    const Embed &here = data[Coerce(size)++];
-                    new ( (void *) &here ) Embed(entry,count);
+                    Embed &here = data[Coerce(size)++];
+                    new ( &here ) Embed(entry,count);
                 }
 
             private:

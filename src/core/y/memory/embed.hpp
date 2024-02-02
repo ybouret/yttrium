@@ -72,8 +72,8 @@ namespace Yttrium
             void **      handle;
             size_t       offset;
         public:
-            const size_t length; //!< allocated bytes
-            const size_t blocks; //!< allocated blocks
+            const size_t length;  //!< allocated bytes
+            const size_t blocks;  //!< allocated blocks (a.k.a objects)
         };
 
       

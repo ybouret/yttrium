@@ -12,11 +12,25 @@ namespace Yttrium
                 Coerce(data) = 0;
             }
             
-            Data:: Data(const void  *ptr) noexcept :
+            Data:: Data(void  *ptr) noexcept :
             size(0),
-            data( static_cast<const Embed *>(ptr) )
+            data( static_cast<Embed *>(ptr) )
             {
             }
+
+            Embed & Data:: operator[](const size_t indx) noexcept
+            {
+                assert(indx<size);
+                return data[indx];
+            }
+
+            const Embed & Data:: operator[](const size_t indx) const noexcept
+            {
+                assert(indx<size);
+                return data[indx];
+            }
+
+
         }
     }
 

@@ -8,6 +8,7 @@
 #include "y/container/matrix/metrics.hpp"
 #include "y/container/matrix/row.hpp"
 #include "y/memory/embedded.hpp"
+#include "y/memory/embedding/pair.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/type/releasable.hpp"
 #include "y/container/implanted.hpp"
@@ -362,8 +363,9 @@ namespace Yttrium
         class Code : public Memory::Embedded
         {
         public:
-            explicit Code(Memory::Embed emb[], const size_t nc) :
-            Memory::Embedded(emb,NUM_FIELDS,ALLOCATOR::Instance()),
+            //explicit Code(Memory::Embed emb[], const size_t nc) : Memory::Embedded(emb,NUM_FIELDS,ALLOCATOR::Instance()),
+            explicit Code(Memory::Embedding::Data &emb, const size_t nc) :
+            Memory::Embedded(emb,ALLOCATOR::Instance()),
             stride(nc*sizeof(T)),
             dataOps(emb[DATA_INDEX]),
             rowInfo(emb[DATA_INDEX].address(),nc),
@@ -385,11 +387,8 @@ namespace Yttrium
         inline void create()
         {
             if(items<=0) return;
-            Memory::Embed emb[] = {
-                Memory::Embed(base,items),
-                Memory::Embed(row,rows)
-            };
-            code = new Code(emb,cols);
+            Memory::EmbeddingPair pair(base,items,row,rows);
+            code = new Code(pair,cols);
             --row;
         }
 

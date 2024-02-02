@@ -3,6 +3,9 @@
 #include "y/memory/embedding/trio.hpp"
 #include "y/memory/embedding/quad.hpp"
 
+#include "y/memory/embedded.hpp"
+#include "y/memory/allocator/pooled.hpp"
+
 #include "y/utest/run.hpp"
 
 #include "y/string.hpp"
@@ -27,6 +30,11 @@ Y_UTEST(memory_embedding)
     Memory::EmbeddingTrio trio(a,3,b,21,s,31);       Y_CHECK(3==trio.size);
     Memory::EmbeddingQuad quad(a,2,b,13,s,27,c,93);  Y_CHECK(4==quad.size);
 
+    Memory::Allocator &mgr = Memory::Pooled::Instance();
+    {
+        const Memory::Embedded emb(solo,mgr);
+
+    }
 
 
 }
