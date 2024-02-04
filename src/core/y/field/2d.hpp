@@ -22,7 +22,7 @@ namespace Yttrium
             typedef MetaKeyWith<NSUB>          SelfMetaKey;  //!< alias
             typedef Memory::EmbeddingPair      SelfPattern;  //!< alias
             typedef Memory::Embedded           SelfAcquire;  //!< alias
-            typedef Sub1D<NSUB+1,Type>         RowType;
+            typedef Sub1D<NSUB+1,Type>         RowType;      //!< alias
             typedef MemoryBuilder<RowType>     SelfBuilder;  //!< alias
 
 
@@ -35,7 +35,7 @@ namespace Yttrium
             metaKey(label),
             row(0),
             ptr(0),
-            in1d(CopyOf,lower.x,upper.x,width.x,width.x),
+            in1d(lower.x,upper.x),
             motif(row,width.y,ptr,items),
             owned(motif,alloc),
             inner(row,width.y, metaKey,lower.y, in1d,ptr)
@@ -46,7 +46,6 @@ namespace Yttrium
             inline virtual ~Sub2D() noexcept { row=0; }
             
             inline virtual const MetaKey & key() const noexcept { return metaKey; }
-
 
             inline RowType & operator[](const unit_t j) noexcept
             {

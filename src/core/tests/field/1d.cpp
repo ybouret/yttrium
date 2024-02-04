@@ -14,8 +14,7 @@ Y_UTEST(field1d)
 {
 
     Random::Rand   ran;
-    Memory::Dyadic &mgr = Memory::Dyadic::Instance();
-
+    
     Field::Layout1D L( -5, 6);
     std::cerr << L << std::endl;
 

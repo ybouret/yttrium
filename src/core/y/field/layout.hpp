@@ -34,7 +34,8 @@ namespace Yttrium
             //__________________________________________________________________
             static const unsigned DIMENSION = sizeof(COORD)/sizeof(unit_t); //!< space dimension
             using LayoutWidth<COORD>::width;
-          
+            using LayoutWidth<COORD>::shift;
+
             //__________________________________________________________________
             //
             //
@@ -60,27 +61,19 @@ namespace Yttrium
 
             //! setup
             inline explicit Layout(COORD lo, COORD up) noexcept :
-            LayoutWidth<COORD>(lo),
-            LayoutMetrics(DIMENSION,C2U(lo),C2U(up), C2U(width) ),
+            LayoutWidth<COORD>(lo,lo),
+            LayoutMetrics(DIMENSION,C2U(lo),C2U(up), C2U(width), C2U(shift)),
             lower(lo),
             upper(up)
             {
             }
 
-            //! setup with direct copy
-            inline explicit Layout(const CopyOf_ &, COORD lo, COORD up, COORD ww, const size_t nn) noexcept :
-            LayoutWidth<COORD>(ww),
-            LayoutMetrics(DIMENSION,nn),
-            lower(lo),
-            upper(up)
-            {
-                assert( validateLayout(C2U(lower),C2U(upper),C2U(width)) );
-            }
+           
 
             //! display metrics
             inline friend std::ostream & operator<<(std::ostream &os, const Layout &l)
             {
-                os << "#{[" << l.lower << "->" << l.upper << "]:" << l.width << "}=" << l.items;
+                os << "#{[" << l.lower << "->" << l.upper << "]:" << l.width << "}=" << l.items << " (shift=" << l.shift <<")";
                 return os;
             }
 

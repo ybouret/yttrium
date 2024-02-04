@@ -22,12 +22,21 @@ namespace Yttrium
         template <typename COORD> class LayoutWidth
         {
         public:
+            //!< dummy
+            inline explicit LayoutWidth(const COORD &w, const COORD &s) noexcept : width(w), shift(s)  {}
 
-            inline virtual ~LayoutWidth() noexcept { Y_STATIC_ZVAR( Coerce(width) ); }              //!< cleanup
-            inline explicit LayoutWidth(const COORD       &dummy) noexcept : width(dummy) {}        //!< dummy setup
-            inline explicit LayoutWidth(const LayoutWidth &other) noexcept : width(other.width) {}  //!< copy
+            //! copy
+            inline explicit LayoutWidth(const LayoutWidth &other) noexcept : width(other.width), shift(other.shift) {}
+
+            //! cleanup
+            inline virtual ~LayoutWidth() noexcept {
+                Y_STATIC_ZVAR( Coerce(width) );
+                Y_STATIC_ZVAR( Coerce(shift) );
+            }
+
 
             const COORD width; //!< the width
+            const COORD shift; //!< shift per dimension
 
         private:
             Y_DISABLE_ASSIGN(LayoutWidth);
