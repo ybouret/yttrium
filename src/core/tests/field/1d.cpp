@@ -30,8 +30,8 @@ Y_UTEST(field1d)
 
 
 #if 1
-    Field::In1D<0,String> F("f1",L,mgr);
-    Vector<String>        provided;;
+    Field::In1D<String,Memory::Dyadic> F("f1",L);
+    Vector<String>                     provided;
 
     for(unit_t i=F.lower;i<=F.upper;++i)
     {

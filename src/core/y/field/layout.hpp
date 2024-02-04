@@ -5,6 +5,8 @@
 
 #include "y/field/layout/metrics.hpp"
 #include "y/field/layout/width.hpp"
+#include "y/type/copy.hpp"
+
 #include <iostream>
 
 namespace Yttrium
@@ -63,6 +65,16 @@ namespace Yttrium
             lower(lo),
             upper(up)
             {
+            }
+
+            //! setup with direct copy
+            inline explicit Layout(const CopyOf_ &, COORD lo, COORD up, COORD ww, const size_t nn) noexcept :
+            LayoutWidth<COORD>(ww),
+            LayoutMetrics(DIMENSION,nn),
+            lower(lo),
+            upper(up)
+            {
+                assert( validateLayout(C2U(lower),C2U(upper),C2U(width)) );
             }
 
             //! display metrics

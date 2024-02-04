@@ -4,7 +4,7 @@
 #ifndef Y_Field_Memory_Builder_Included
 #define Y_Field_Memory_Builder_Included 1
 
-#include "y/config/starting.hpp"
+#include "y/field/layout/1d.hpp"
 
 namespace Yttrium
 {
@@ -32,6 +32,29 @@ namespace Yttrium
             //! build nothing, NOEXCEPT
             inline explicit MemoryBuilder() noexcept : block(0), built(0) {}
 
+            template <
+            typename META_KEY,
+            typename DATATYPE>
+            inline explicit MemoryBuilder(T            *    blockAddr,
+                                          const size_t      numBlocks,
+                                          const META_KEY &  rootKey,
+                                          unit_t            subIndx,
+                                          const Layout1D &  layout,
+                                          DATATYPE       *  aliens) :
+            block(blockAddr),
+            built(0)
+            {
+                assert(Good(blockAddr,numBlocks));
+                try {
+                    while(built<numBlocks) {
+                        new (block+built) T(rootKey,subIndx,layout,aliens);
+                        ++built;
+                        ++subIndx;
+                        aliens += layout.items;
+                    }
+                }
+                catch(...) { clearBlocks(); throw; }
+            }
 
             inline virtual ~MemoryBuilder() noexcept
             {

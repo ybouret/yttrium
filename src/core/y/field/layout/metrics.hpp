@@ -40,6 +40,9 @@ namespace Yttrium
             const size_t   items;     //!< items in field
 
 
+            bool validateLayout(const unit_t * const lower,
+                                const unit_t * const upper,
+                                const unit_t * const width) const noexcept;
 
         protected:
             //! setup with items computation and coordinates ordering
@@ -47,6 +50,9 @@ namespace Yttrium
                                    unit_t * const lower,
                                    unit_t * const upper,
                                    unit_t * const width) noexcept;
+
+            //! setup directly from precomputed coords
+            explicit LayoutMetrics(const unsigned d, const size_t n) noexcept;
 
         private:
             Y_DISABLE_ASSIGN(LayoutMetrics);
