@@ -29,9 +29,9 @@ Y_UTEST(field1d)
     std::cerr << idb[-1] << idb[3] << std::endl;
 
 
-#if 0
-    Field::In1D<String> F(L,mgr);
-    Vector<String>      provided;;
+#if 1
+    Field::In1D<0,String> F("f1",L,mgr);
+    Vector<String>        provided;;
 
     for(unit_t i=F.lower;i<=F.upper;++i)
     {

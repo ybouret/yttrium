@@ -20,15 +20,15 @@ namespace Yttrium
         typedef Layout<Coord1D> Layout1D; //!< alias
 
         //! Generic 1D Field
-        template <typename T, size_t NSUB>
+        template <size_t NSUB, typename T>
         class In1D : public Interface, public Layout1D
         {
         public:
-            Y_ARGS_DECL(T,Type);                         //!< aliases
-            typedef MetaKeyWith<NSUB>      SelfMetaKey;  //!< alias
-            typedef Memory::EmbeddingSolo  SelfPattern;  //!< alias
-            typedef Memory::Embedded       SelfAcquire;  //!< alias
-
+            Y_ARGS_DECL(T,Type);                             //!< aliases
+            typedef MetaKeyWith<NSUB>          SelfMetaKey;  //!< alias
+            typedef Memory::EmbeddingSolo      SelfPattern;  //!< alias
+            typedef Memory::Embedded           SelfAcquire;  //!< alias
+            typedef MemoryBuilder<MutableType> SelfBuilder;
             //! default constructor
             template <typename LABEL>
             inline explicit In1D(const LABEL       & label,
@@ -39,9 +39,10 @@ namespace Yttrium
             metaKey(label),
             entry(0),
             motif(entry,items),
-            owned(motif,alloc)
+            owned(motif,alloc),
+            inner(entry,items)
             {
-                
+                entry -= lower;
             }
 
             //! constructor as sub-field
@@ -55,12 +56,20 @@ namespace Yttrium
             }
 
             //! cleanup
-            inline virtual ~In1D() noexcept {}
+            inline virtual ~In1D() noexcept { entry = 0; }
 
             //! get key
-            inline virtual const MetaKey & key() const noexcept { return metaKey; }
+            inline virtual const MetaKey & key()                    const noexcept { return metaKey; }
 
+            inline bool contains(const unit_t i) const noexcept { return (i>=lower) && (i<=upper); }
 
+            inline ConstType & operator[](const unit_t i) const noexcept { assert(contains(i)); return entry[i]; }
+            inline Type &      operator[](const unit_t i)       noexcept { assert(contains(i)); return entry[i]; }
+
+            inline std::ostream & display(std::ostream &os) const
+            {
+                return Core::Display(os, entry+lower, width);
+            }
 
             const SelfMetaKey metaKey;
 
@@ -69,7 +78,7 @@ namespace Yttrium
             MutableType *entry;
             SelfPattern  motif;
             SelfAcquire  owned;
-
+            SelfBuilder  inner;
         };
 
         
