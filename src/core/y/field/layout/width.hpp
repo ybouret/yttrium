@@ -21,13 +21,14 @@ namespace Yttrium
         //______________________________________________________________________
         template <typename COORD> class LayoutWidth
         {
-        public:
-            //!< dummy
+        protected:
+            //! dummy setu;
             inline explicit LayoutWidth(const COORD &w, const COORD &s) noexcept : width(w), shift(s)  {}
 
             //! copy
             inline explicit LayoutWidth(const LayoutWidth &other) noexcept : width(other.width), shift(other.shift) {}
 
+        public:
             //! cleanup
             inline virtual ~LayoutWidth() noexcept {
                 Y_STATIC_ZVAR( Coerce(width) );
