@@ -18,17 +18,8 @@ Y_UTEST(field1d)
     Field::Layout1D L( -5, 6);
     std::cerr << L << std::endl;
 
-    Field::IndexDataBase & idb = Field::IndexDataBase::Instance();
 
-    {
-        const String &z = idb[0];
-        std::cerr << "z='" << z << "', quantity=" << z.quantity() << std::endl;
-    }
-
-    std::cerr << idb[-1] << idb[3] << std::endl;
-
-
-#if 1
+#if 0
     Field::In1D<String,Memory::Dyadic> F("f1",L);
     Vector<String>                     provided;
 

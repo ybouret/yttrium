@@ -49,6 +49,19 @@ namespace Yttrium
             return *array[dim];
         }
 
+        bool operator==(const MetaKey &lhs, const MetaKey &rhs) noexcept
+        {
+            const unsigned n = lhs.size();
+            if(rhs.size()!=n) return false;
+
+            for(unsigned i=0;i<n;++i)
+            {
+                if( lhs[i] != rhs[i] ) return false;
+            }
+
+            return true;
+        }
+
     }
 
 }

@@ -13,6 +13,7 @@ namespace Yttrium
     namespace Field
     {
         
+#if 0
         //! Generic 2D Sub-Field
         template <size_t NSUB, typename T>
         class Sub2D : public Interface, public Layout2D
@@ -25,7 +26,7 @@ namespace Yttrium
             typedef Sub1D<NSUB+1,Type>         RowType;      //!< alias
             typedef MemoryBuilder<RowType>     SelfBuilder;  //!< alias
 
-
+            
             template <typename LABEL>
             inline explicit Sub2D(const LABEL       & label,
                                   const Layout2D    & layout,
@@ -87,7 +88,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(In2D);
         };
 
-        
+#endif
 
     }
 

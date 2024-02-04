@@ -11,6 +11,7 @@ namespace Yttrium
 {
     namespace Field
     {
+#if 0
         //! Generic 3D Sub-Field
         template <size_t NSUB, typename T>
         class Sub3D : public Interface, public Layout3D
@@ -53,7 +54,8 @@ namespace Yttrium
             SelfAcquire  owned;
             SelfBuilder  inner;
         };
-
+#endif
+        
     }
 
 

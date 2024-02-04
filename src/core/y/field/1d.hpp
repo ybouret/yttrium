@@ -16,7 +16,7 @@ namespace Yttrium
     namespace Field
     {
        
-
+#if 0
         //! Generic 1D Field
         template <size_t NSUB, typename T>
         class Sub1D : public Interface, public Layout1D
@@ -106,7 +106,8 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(In1D);
         };
-
+#endif
+        
     }
 
 }

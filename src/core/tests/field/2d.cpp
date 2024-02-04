@@ -16,6 +16,7 @@ Y_UTEST(field2d)
     Field::Layout2D L( Field::Coord2D(-2,-4), Field::Coord2D(3,5) );
     std::cerr << L << std::endl;
 
+#if 0
     Field::In2D<String,Memory::Dyadic> F("f2",L);
     Vector<String>      provided;
 
@@ -25,7 +26,6 @@ Y_UTEST(field2d)
         std::cerr << "->" << F[j].key() << std::endl;
     }
 
-#if 1
     for(unit_t j=F.lower.y;j<=F.upper.y;++j)
     {
         for(unit_t i=F.lower.x;i<=F.upper.x;++i)

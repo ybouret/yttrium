@@ -10,10 +10,26 @@ namespace Yttrium
 {
     namespace Field
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Memory Builder on linear space
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class MemoryBuilder
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! build numBlocks T without argument
             inline explicit MemoryBuilder(T           *blockAddr,
                                           const size_t numBlocks) :
             block(blockAddr),
@@ -32,6 +48,7 @@ namespace Yttrium
             //! build nothing, NOEXCEPT
             inline explicit MemoryBuilder() noexcept : block(0), built(0) {}
 
+#if 0
             template <
             typename META_KEY,
             typename DATATYPE>
@@ -56,6 +73,9 @@ namespace Yttrium
                 catch(...) { clearBlocks(); throw; }
             }
 
+#endif
+
+            //! cleanup blocks
             inline virtual ~MemoryBuilder() noexcept
             {
                 clearBlocks();
