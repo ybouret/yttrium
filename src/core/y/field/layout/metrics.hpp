@@ -39,7 +39,7 @@ namespace Yttrium
             const unsigned dimension; //!< space dimension
             const size_t   items;     //!< items in field
 
-
+            //! helper to debug
             bool validateLayout(const unit_t * const lower,
                                 const unit_t * const upper,
                                 const unit_t * const width) const noexcept;

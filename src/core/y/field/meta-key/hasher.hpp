@@ -12,12 +12,34 @@ namespace Yttrium
     namespace Field
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! MetaKey Hasher
+        //
+        //
+        //______________________________________________________________________
         class MetaKeyHasher
         {
         public:
-            explicit MetaKeyHasher() noexcept;
-            virtual ~MetaKeyHasher() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit MetaKeyHasher() noexcept; //!< setup
+            virtual ~MetaKeyHasher() noexcept; //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! iterative hashing over strings
             size_t operator()(const MetaKey &mk) noexcept;
 
         private:

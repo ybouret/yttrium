@@ -12,14 +12,35 @@ namespace Yttrium
     namespace Field
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Agnostic Field Interface
+        //
+        //
+        //______________________________________________________________________
         class Interface : public Oversized, public Counted
         {
         public:
-            virtual const MetaKey & key() const noexcept = 0;
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual const MetaKey & key() const noexcept = 0; //!< get metaKey
 
-            virtual ~Interface() noexcept;
+            
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            virtual ~Interface() noexcept; //!< cleanup
         protected:
-            explicit Interface() noexcept;
+            explicit Interface() noexcept; //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Interface);

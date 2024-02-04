@@ -9,16 +9,36 @@ namespace Yttrium
 {
     namespace Field
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Data for MetaKey
+        //
+        //
+        //______________________________________________________________________
         template <size_t NSUB> class MetaKeyData
         {
         public:
-            static const size_t Maxi     = 1+NSUB;;
-            static const size_t Required = Maxi * sizeof(SharedString);
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const size_t Maxi     = 1+NSUB;                      //!< Max SharedString
+            static const size_t Required = Maxi * sizeof(SharedString); //!< internal bytes
 
-            inline virtual      ~MetaKeyData() noexcept { clr(); }
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            inline virtual      ~MetaKeyData() noexcept { clr(); } //!< cleanup
         protected:
-            inline explicit      MetaKeyData() noexcept : wksp() { clr(); }
-            inline virtual void *data()        noexcept { return &wksp[0]; }
+            inline explicit      MetaKeyData() noexcept : wksp() { clr(); }  //!< setup
+            inline virtual void *data()        noexcept { return &wksp[0]; } //!< access
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MetaKeyData);

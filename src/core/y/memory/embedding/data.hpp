@@ -40,8 +40,14 @@ namespace Yttrium
                 //______________________________________________________________
                 virtual size_t maxi() const noexcept = 0; //!< capacity
 
-                Embed       & operator[](const size_t indx)       noexcept;
-                const Embed & operator[](const size_t indx) const noexcept;
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                Embed       & operator[](const size_t indx)       noexcept; //!< access in [0..size()-1]
+                const Embed & operator[](const size_t indx) const noexcept; //!< access in [0..size()-1], const
 
                 //______________________________________________________________
                 //

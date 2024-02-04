@@ -11,24 +11,34 @@ namespace Yttrium
     namespace Field
     {
         
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! MetaKey With subspaces
+        //
+        //
+        //______________________________________________________________________
         template <size_t NSUB>
         class MetaKeyWith : public MetaKeyData<NSUB>, public MetaKey
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             typedef MetaKeyData<NSUB> DataType; //!< alias
 
-#if 0
-            inline explicit MetaKeyWith(const SharedString &uuid) noexcept:
-            DataType(),
-            MetaKey(this->data())
-            {
-                push(uuid);
-            }
-#endif
-
-
-
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+           
+            //! setup from parent
             inline explicit MetaKeyWith(const MetaKeyWith<NSUB-1> &root,
                                         const unit_t               indx) noexcept:
             DataType(),
@@ -40,9 +50,17 @@ namespace Yttrium
                 push( idb[indx] );
             }
 
+            //! cleanup
             inline virtual ~MetaKeyWith() noexcept {}
 
-            // interface
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+
+            //! static capacity
             inline virtual unsigned maxi() const noexcept { return this->Maxi; }
 
         private:
@@ -50,14 +68,35 @@ namespace Yttrium
         };
 
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Specialized Top-Level MetaKey
+        //
+        //
+        //______________________________________________________________________
         template <>
         class MetaKeyWith<0> :public MetaKeyData<0>, public MetaKey
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             typedef MetaKeyData<0> DataType; //!< alias
-            inline virtual unsigned maxi() const noexcept { return this->Maxi; }
 
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+          
+            //! setup from shared string
             inline explicit MetaKeyWith(const SharedString &uuid) noexcept:
             DataType(),
             MetaKey(this->data())
@@ -65,6 +104,7 @@ namespace Yttrium
                 push(uuid);
             }
 
+            //! setup from regular string
             inline explicit MetaKeyWith(const String &uuid) :
             DataType(), MetaKey(this->data())
             {
@@ -72,6 +112,7 @@ namespace Yttrium
                 push(temp);
             }
 
+            //! setup from text
             inline explicit MetaKeyWith(const char *uuid) :
             DataType(), MetaKey(this->data())
             {
@@ -79,8 +120,18 @@ namespace Yttrium
                 push(temp);
             }
 
+            //! cleanup
+            inline virtual ~MetaKeyWith() noexcept {} 
 
-            inline virtual ~MetaKeyWith() noexcept {}
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+
+            //! static capacity
+            inline virtual unsigned maxi() const noexcept { return this->Maxi; }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MetaKeyWith<0>);
