@@ -28,8 +28,21 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
+          
+            //__________________________________________________________________
+            //
+            //! build nothing, NOEXCEPT
+            //__________________________________________________________________
+            inline explicit MemoryBuilder() noexcept : block(0), built(0) {}
 
+            //__________________________________________________________________
+            //
             //! build numBlocks T without argument
+            /**
+             \param blockAddr linear memory
+             \param numBlocks number of object to build
+             */
+            //_________________________________________________________________
             inline explicit MemoryBuilder(T           *blockAddr,
                                           const size_t numBlocks) :
             block(blockAddr),
@@ -45,35 +58,38 @@ namespace Yttrium
                 catch(...) { clearBlocks(); throw; }
             }
 
-            //! build nothing, NOEXCEPT
-            inline explicit MemoryBuilder() noexcept : block(0), built(0) {}
 
-#if 0
+            //__________________________________________________________________
+            //
+            //
+            //! build rows of a 2D space
+            //
+            //__________________________________________________________________
             template <
             typename META_KEY,
             typename DATATYPE>
-            inline explicit MemoryBuilder(T            *    blockAddr,
-                                          const size_t      numBlocks,
+            inline explicit MemoryBuilder(T            *    rowAddr,
+                                          const size_t      numRows,
                                           const META_KEY &  rootKey,
                                           unit_t            subIndx,
                                           const Layout1D &  layout,
                                           DATATYPE       *  aliens) :
-            block(blockAddr),
+            block(rowAddr),
             built(0)
             {
-                assert(Good(blockAddr,numBlocks));
+                assert(Good(rowAddr,numRows));
                 try {
-                    while(built<numBlocks) {
+                    const unit_t stride = layout.shift;
+                    while(built<numRows) {
                         new (block+built) T(rootKey,subIndx,layout,aliens);
                         ++built;
                         ++subIndx;
-                        aliens += layout.items;
+                        aliens += stride;
                     }
                 }
                 catch(...) { clearBlocks(); throw; }
             }
 
-#endif
 
             //! cleanup blocks
             inline virtual ~MemoryBuilder() noexcept

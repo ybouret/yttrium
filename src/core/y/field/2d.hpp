@@ -12,13 +12,29 @@ namespace Yttrium
 {
     namespace Field
     {
-        
-#if 0
-        //! Generic 2D Sub-Field
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Generic 2D Subspace
+        /**
+         - NSUB = 0: Standalone Field
+         - NSUB = 1: Slice of a 3D space
+         - NSUB = 2: Slice of a 3D space
+         */
+        //
+        //______________________________________________________________________    
         template <size_t NSUB, typename T>
         class Sub2D : public Interface, public Layout2D
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             Y_ARGS_DECL(T,Type);                             //!< aliases
             typedef MetaKeyWith<NSUB>          SelfMetaKey;  //!< alias
             typedef Memory::EmbeddingPair      SelfPattern;  //!< alias
@@ -26,7 +42,18 @@ namespace Yttrium
             typedef Sub1D<NSUB+1,Type>         RowType;      //!< alias
             typedef MemoryBuilder<RowType>     SelfBuilder;  //!< alias
 
-            
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+        protected:
+
+            //__________________________________________________________________
+            //
+            //! STANDALONE constructor, NSUB=0
+            //__________________________________________________________________
             template <typename LABEL>
             inline explicit Sub2D(const LABEL       & label,
                                   const Layout2D    & layout,
@@ -39,13 +66,19 @@ namespace Yttrium
             in1d(lower.x,upper.x),
             motif(row,width.y,ptr,items),
             owned(motif,alloc),
-            inner(row,width.y, metaKey,lower.y, in1d,ptr)
+            inner(row,width.y,metaKey,lower.y,in1d,ptr)
             {
                 row -= lower.y;
             }
 
-            inline virtual ~Sub2D() noexcept { row=0; }
+        public:
+            explicit Sub2D(const MetaKeyWith<NSUB-1> & rootKey,
+                           const unit_t                rowIndx,
+                           const Layout2D            & layout);
             
+
+            inline virtual ~Sub2D() noexcept { row=0; }
+
             inline virtual const MetaKey & key() const noexcept { return metaKey; }
 
             inline RowType & operator[](const unit_t j) noexcept
@@ -82,13 +115,12 @@ namespace Yttrium
             {
             }
 
-
+            
             inline virtual ~In2D() noexcept {}
         private:
             Y_DISABLE_COPY_AND_ASSIGN(In2D);
         };
 
-#endif
 
     }
 

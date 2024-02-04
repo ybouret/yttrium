@@ -1,7 +1,7 @@
-#include "y/field/idb.hpp"
 
 
 #include "y/field/1d.hpp"
+
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
@@ -19,7 +19,7 @@ Y_UTEST(field1d)
     std::cerr << L << std::endl;
 
 
-#if 0
+#if 1
     Field::In1D<String,Memory::Dyadic> F("f1",L);
     Vector<String>                     provided;
 

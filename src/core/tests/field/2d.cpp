@@ -12,11 +12,10 @@ Y_UTEST(field2d)
 {
 
     Random::Rand     ran;
-
-    Field::Layout2D L( Field::Coord2D(-2,-4), Field::Coord2D(3,5) );
+    Field::Layout2D  L( Field::Coord2D(-2,-4), Field::Coord2D(3,5) );
     std::cerr << L << std::endl;
-
-#if 0
+    
+#if 1
     Field::In2D<String,Memory::Dyadic> F("f2",L);
     Vector<String>      provided;
 
