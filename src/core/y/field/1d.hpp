@@ -3,7 +3,7 @@
 #ifndef Y_Field1D_Included
 #define Y_Field1D_Included 1
 
-#include "y/field/interface.hpp"
+#include "y/field/sketch.hpp"
 #include "y/field/meta-key/with.hpp"
 #include "y/field/memory/builder.hpp"
 #include "y/memory/embedding/solo.hpp"
@@ -11,6 +11,7 @@
 #include "y/memory/allocator.hpp"
 #include "y/type/args.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/type/proxy.hpp"
 
 namespace Yttrium
 {
@@ -31,7 +32,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <size_t NSUB, typename T>
-        class Sub1D : public Interface, public Layout1D
+        class Sub1D : public Sketch, public Proxy<const Layout1D>
         {
         public:
             //__________________________________________________________________
@@ -57,10 +58,12 @@ namespace Yttrium
 
                 inline virtual ~Code() noexcept {}
 
+                Memory::Embedding::Solo  plan;
+                const Memory::Embedded   hold;
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Code);
-                Memory::Embedding::Solo  plan;
-                Memory::Embedded         hold;
+
             };
 
             //__________________________________________________________________
@@ -75,22 +78,22 @@ namespace Yttrium
             //! STANDALONE constructor, NSUB=0
             /**
              \param label  the label
-             \param layout the layout
+             \param space  the layout
              \param alloc  the allocator
              */
             //__________________________________________________________________
             template <typename LABEL>
             inline explicit Sub1D(const LABEL       & label,
-                                  const Layout1D    & layout,
+                                  const Format1D    & space,
                                   Memory::Allocator & alloc) :
-            Interface(),
-            Layout1D(layout),
+            Sketch(),
+            layout( space),
             metaKey(label),
             entry(0),
-            code( new Code(alloc,entry,items) ),
-            inner(entry,items)
+            code( new Code(alloc,entry,layout->items) ),
+            inner(entry,layout->items)
             {
-                entry -= lower;
+                entry -= layout->lower;
             }
 
         public:
@@ -101,23 +104,23 @@ namespace Yttrium
             /**
              \param rootKey key of the 2D space
              \param rowIndx row index in the 2D space
-             \param layout  1D layout
-             \param aliens  linear space for itemds
+             \param space   1D layout
+             \param alien   linear space for items
              */
             //
             //__________________________________________________________________
             inline explicit Sub1D(const MetaKeyWith<NSUB-1> & rootKey,
                                   const unit_t                rowIndx,
-                                  const Layout1D            & layout,
-                                  MutableType * const         aliens) :
-            Interface(),
-            Layout1D(layout),
+                                  const Format1D            & space,
+                                  MutableType * const         alien) :
+            Sketch(),
+            layout(space),
             metaKey(rootKey,rowIndx),
-            entry(aliens),
+            entry(alien),
             code(0),
-            inner(entry,items)
+            inner(entry,layout->items)
             {
-                entry  -= lower;
+                entry  -= layout->lower;
             }
 
             //! cleanup
@@ -130,8 +133,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
             
-            //! get key
-            inline virtual const MetaKey & key() const noexcept { return metaKey; }
+
+            inline virtual const MetaKey & key() const noexcept { return metaKey; }                               //!< get key
+            inline virtual size_t          ram() const noexcept { return code.isValid() ? code->hold.bytes : 0; } //!< get ram
 
             //__________________________________________________________________
             //
@@ -143,20 +147,20 @@ namespace Yttrium
             //! access, const
             inline ConstType & operator[](const unit_t i) const noexcept
             { 
-                assert(i>=lower); assert(i<=upper);
+                assert(i>=layout->lower); assert(i<=layout->upper);
                 return entry[i];
             }
 
             //! access
             inline Type & operator[](const unit_t i) noexcept {
-                assert(i>=lower); assert(i<=upper);
+                assert(i>=layout->lower); assert(i<=layout->upper);
                 return entry[i];
             }
 
             //! diplay constant
             inline std::ostream & display(std::ostream &os) const
             {
-                return Core::Display(os, entry+lower, width);
+                return Core::Display(os, entry+layout->lower, layout->width);
             }
 
             //__________________________________________________________________
@@ -165,6 +169,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
+            const Format1D    layout;  //!< shared layout
             const SelfMetaKey metaKey; //!< meta key
 
         private:
@@ -172,6 +177,8 @@ namespace Yttrium
             MutableType              *entry;
             const AutoPtr<const Code> code;
             SelfBuilder               inner;
+
+            inline virtual ConstInterface & surrogate() const noexcept { return *layout; }
         };
 
         //______________________________________________________________________
@@ -189,9 +196,9 @@ namespace Yttrium
 
             //! setup
             template <typename LABEL>
-            inline explicit In1D(const LABEL &  label,
-                                 const Layout1D layout) :
-            Sub1D<0,T>(label,layout,ALLOCATOR::Instance())
+            inline explicit In1D(const LABEL    & label,
+                                 const Format1D & space) :
+            Sub1D<0,T>(label,space,ALLOCATOR::Instance())
             {
             }
 

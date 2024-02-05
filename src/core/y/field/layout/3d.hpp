@@ -5,6 +5,7 @@
 
 #include "y/field/layout.hpp"
 #include "y/mkl/v3d.hpp"
+#include "y/ptr/arc.hpp"
 
 namespace Yttrium
 {
@@ -14,6 +15,7 @@ namespace Yttrium
         typedef V3D<unit_t>             Coord3D;  //!< alias
         typedef V3D<size_t>             Count3D;  //!< alias
         typedef Layout<Coord3D,Count3D> Layout3D; //!< alias
+        typedef ArcPtr<const Layout3D>  Format3D; //!< alias
     }
 
 }

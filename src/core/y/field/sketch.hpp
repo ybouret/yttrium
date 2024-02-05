@@ -1,11 +1,10 @@
 
 //! \file
 
-#ifndef Y_Field_Interface_Included
-#define Y_Field_Interface_Included 1
+#ifndef Y_Field_Sketch_Included
+#define Y_Field_Sketch_Included 1
 
 #include "y/field/meta-key.hpp"
-#include "y/oversized.hpp"
 
 namespace Yttrium
 {
@@ -16,11 +15,11 @@ namespace Yttrium
         //
         //
         //
-        //! Agnostic Field Interface
+        //! Agnostic Field
         //
         //
         //______________________________________________________________________
-        class Interface : public Oversized, public Counted
+        class Sketch 
         {
         public:
             //__________________________________________________________________
@@ -30,7 +29,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             virtual const MetaKey & key() const noexcept = 0; //!< get metaKey
-
+            
             
             //__________________________________________________________________
             //
@@ -38,12 +37,12 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            virtual ~Interface() noexcept; //!< cleanup
+            virtual ~Sketch() noexcept; //!< cleanup
         protected:
-            explicit Interface() noexcept; //!< setup
+            explicit Sketch() noexcept; //!< setup
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Interface);
+            Y_DISABLE_COPY_AND_ASSIGN(Sketch);
         };
 
     }

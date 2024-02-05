@@ -6,6 +6,8 @@
 #include "y/field/layout/metrics.hpp"
 #include "y/field/layout/scope.hpp"
 #include "y/type/copy.hpp"
+#include "y/object.hpp"
+#include "y/counted.hpp"
 
 #include <iostream>
 
@@ -23,7 +25,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename COORD,typename COUNT>
-        class Layout : public LayoutScope<COUNT>, public LayoutMetrics
+        class Layout : public Object, public Counted, public LayoutScope<COUNT>, public LayoutMetrics
         {
         public:
             //__________________________________________________________________
@@ -33,9 +35,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const unsigned DIMENSION = sizeof(COORD)/sizeof(unit_t); //!< space dimension
+            typedef COORD CoordType;                                        //!< alias
+
             using LayoutScope<COUNT>::width;
             using LayoutScope<COUNT>::shift;
-            typedef COORD CoordType;
 
             //__________________________________________________________________
             //

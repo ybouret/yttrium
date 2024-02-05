@@ -15,15 +15,16 @@ Y_UTEST(field1d)
 
     Random::Rand   ran;
     
-    Field::Layout1D L( -5, 6);
+    Field::Format1D L = new Field::Layout1D( -5, 6);
     std::cerr << L << std::endl;
 
 
-#if 1
     Field::In1D<String,Memory::Dyadic> F("f1",L);
     Vector<String>                     provided;
 
-    for(unit_t i=F.lower;i<=F.upper;++i)
+    std::cerr << "ram: " << F.ram() << std::endl;
+
+    for(unit_t i=F->lower;i<=F->upper;++i)
     {
         const String s = Bring<String>::Get(ran);
         F[i] = s;
@@ -31,21 +32,19 @@ Y_UTEST(field1d)
     }
 
     F.display(std::cerr) << std::endl;
-    const LightArray<String> content( &F[F.lower], F.items );
+    const LightArray<String> content( &F[F->lower], F->items );
     std::cerr << content << std::endl;
     Y_CHECK(content==provided);
-#endif
 
-    Y_SIZEOF( Field::MetaKeyWith<0> );
-    Y_SIZEOF( Field::MetaKeyWith<1> );
-    Y_SIZEOF( Field::MetaKeyWith<2> );
-    Y_SIZEOF( Field::MetaKeyWith<3> );
-    Y_SIZEOF( Field::Layout1D       );
+
+
+    Y_SIZEOF( Field::Layout1D );
     Y_SIZEOF( Field::MemoryBuilder<String> );
-    Y_SIZEOF( Field::Interface  );
-    Y_SIZEOF( AutoPtr<String>   );
 
     std::cerr << sizeof(Field::Sub1D<0,String>) << std::endl;
+    std::cerr << sizeof(Field::Sub1D<1,String>) << std::endl;
+    std::cerr << sizeof(Field::Sub1D<2,String>) << std::endl;
+    std::cerr << sizeof(Field::Sub1D<3,String>) << std::endl;
 
 
 

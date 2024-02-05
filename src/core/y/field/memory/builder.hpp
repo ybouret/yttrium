@@ -5,6 +5,7 @@
 #define Y_Field_Memory_Builder_Included 1
 
 #include "y/field/layout/1d.hpp"
+#include "y/field/layout/2d.hpp"
 
 namespace Yttrium
 {
@@ -72,21 +73,59 @@ namespace Yttrium
                                           const size_t      numRows,
                                           const META_KEY &  rootKey,
                                           unit_t            subIndx,
-                                          const Layout1D &  layout,
-                                          DATATYPE       *  aliens) :
+                                          const Format1D &  space,
+                                          DATATYPE       *  alien) :
             block(rowAddr),
             built(0)
             {
                 assert(Good(rowAddr,numRows));
+                typedef T Row;
                 try {
-                    const unit_t stride = layout.shift;
+                    const unit_t stride = space->shift;
                     while(built<numRows) {
-                        new (block+built) T(rootKey,subIndx,layout,aliens);
+                        new (block+built) Row(rootKey,subIndx,space,alien);
                         ++built;
                         ++subIndx;
-                        aliens += stride;
+                        alien += stride;
                     }
                 }
+                catch(...) { clearBlocks(); throw; }
+            }
+
+            //__________________________________________________________________
+            //
+            //
+            //! build slices of a 3D space
+            //
+            //__________________________________________________________________
+            template <
+            typename META_KEY,
+            typename DATATYPE,
+            typename ROW_TYPE>
+            inline explicit MemoryBuilder(T *             sliceAddr,
+                                          const size_t    numSlices,
+                                          const META_KEY &rootKey,
+                                          unit_t          subIndx,
+                                          const Format2D &space2D,
+                                          const Format1D &space1D,
+                                          ROW_TYPE       *alienRows,
+                                          DATATYPE       *alienData) :
+            block(sliceAddr),
+            built(0)
+            {
+                assert(Good(sliceAddr,numSlices));
+                typedef T Slice;
+                try {
+                    const size_t RowsPerSlice = space2D->width.y;
+                    const size_t DataPerSlice = space2D->items;
+                    while(built<numSlices) {
+                        new (block+built) Slice(rootKey,subIndx,space2D,space1D,alienRows,alienData);
+                        ++built;
+                        ++subIndx;
+                        alienRows += RowsPerSlice;
+                        alienData += DataPerSlice;
+                    }
+                 }
                 catch(...) { clearBlocks(); throw; }
             }
 

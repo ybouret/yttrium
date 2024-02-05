@@ -12,7 +12,8 @@ namespace Yttrium
 
     namespace Field
     {
-        Y_SHALLOW_DECL(SubLayout);
+
+        Y_SHALLOW_DECL(SubLayout); //!< helper
 
         //______________________________________________________________________
         //
@@ -47,7 +48,7 @@ namespace Yttrium
         template <typename COUNT> class LayoutScope
         {
         public:
-            typedef COUNT CountType;
+            typedef COUNT CountType; //!< alias
 
         protected:
             //! zero setup
@@ -78,6 +79,7 @@ namespace Yttrium
                 Y_STATIC_ZVAR( Coerce(shift) );
             }
 
+            //! retrieve items from last shift coordinate
             inline size_t lastShift() const noexcept
             {
                 static const size_t DIM = sizeof(COUNT)/sizeof(size_t);
