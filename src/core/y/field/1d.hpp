@@ -24,10 +24,10 @@ namespace Yttrium
         //
         //! Generic 1D Subspace
         /**
-         - NSUB = 0: Standalone Field
-         - NSUB = 1: Row of a 2D space
-         - NSUB = 2: Row of a 3D space
-         - NSUB = 4: Row of a 4D space
+         - NSUB = 0: Standalone Field  => label
+         - NSUB = 1: Row of a 2D space => label[j]
+         - NSUB = 2: Row of a 3D space => label[k][j]
+         - NSUB = 3: Row of a 4D space => label[t][k][k]
          */
         //
         //______________________________________________________________________

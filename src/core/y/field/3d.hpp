@@ -17,8 +17,8 @@ namespace Yttrium
         //
         //! Generic 3D Sub-Field
         /**
-         - NSUB = 0 : Standalone Field
-         - NSUB = 1 : Space of a 4D space
+         - NSUB = 0 : Standalone Field    => label
+         - NSUB = 1 : Space of a 4D space => label[t]
          */
         //______________________________________________________________________
         template <size_t NSUB, typename T>
@@ -95,11 +95,6 @@ namespace Yttrium
             {
                 slc -= layout->lower.z;
             }
-
-
-
-
-
 
         public:
 

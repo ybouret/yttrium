@@ -19,9 +19,9 @@ namespace Yttrium
         //
         //! Generic 2D Subspace
         /**
-         - NSUB = 0: Standalone Field
-         - NSUB = 1: Slice of a 3D space
-         - NSUB = 2: Slice of a 4D space
+         - NSUB = 0: Standalone Field     => label
+         - NSUB = 1: Slice of a 3D space  => label[k]
+         - NSUB = 2: Slice of a 4D space  => label[t][k]
          */
         //
         //______________________________________________________________________

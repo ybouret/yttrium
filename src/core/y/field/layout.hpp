@@ -6,7 +6,7 @@
 #include "y/field/layout/metrics.hpp"
 #include "y/field/layout/scope.hpp"
 #include "y/type/copy.hpp"
-#include "y/object.hpp"
+#include "y/oversized.hpp"
 #include "y/counted.hpp"
 
 #include <iostream>
@@ -25,7 +25,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename COORD,typename COUNT>
-        class Layout : public Object, public Counted, public LayoutScope<COUNT>, public LayoutMetrics
+        class Layout : public Oversized, public Counted, public LayoutScope<COUNT>, public LayoutMetrics
         {
         public:
             //__________________________________________________________________
