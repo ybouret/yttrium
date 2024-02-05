@@ -45,8 +45,7 @@ Y_UTEST(container_matrix)
         }
     }
 
-    return 0;
-
+    
     //Matrix<double> m0;
     //Matrix<double> m(2,4);
     Matrix<String> s(8,7);

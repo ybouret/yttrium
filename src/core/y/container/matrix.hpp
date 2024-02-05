@@ -144,12 +144,14 @@ namespace Yttrium
 
         //! access row
         inline RowType & operator[](const size_t r) noexcept {
+            assert(0!=row);
             assert(r>=1); assert(r<=rows);
             return row[r];
         }
 
         //! access const row
         inline const RowType & operator[](const size_t r) const noexcept {
+            assert(0!=row);
             assert(r>=1); assert(r<=rows);
             return row[r];
         }
@@ -360,15 +362,18 @@ namespace Yttrium
         //! Code for Matrix
         //
         //______________________________________________________________________
-        class Code : public Memory::Embedded
+        class Code
         {
         public:
-            explicit Code(Memory::Embedding::Data &emb, const size_t nc) :
-            Memory::Embedded(emb,ALLOCATOR::Instance()),
+            explicit Code(MutableType * & p, const size_t n,
+                          RowType *     & r, const size_t nr,
+                          const size_t    nc) :
             stride(nc*sizeof(T)),
-            dataOps(emb[DATA_INDEX]),
-            rowInfo(emb[DATA_INDEX].address(),nc),
-            rowsOps(emb[ROWS_INDEX],rowInfo)
+            plan(p,n,r,nr),
+            hold(plan,ALLOCATOR::Instance()),
+            dataOps(plan[DATA_INDEX]),
+            rowInfo(plan[DATA_INDEX].address(),nc),
+            rowsOps(plan[ROWS_INDEX],rowInfo)
             {
             }
 
@@ -376,21 +381,20 @@ namespace Yttrium
 
             const size_t             stride;
         private:
+            Memory::Embedding::Pair  plan;
+            const Memory::Embedded   hold;
             Implanted<T>             dataOps;
             Core::MatrixRow::Info    rowInfo;
             Implanted<RowType>       rowsOps;
+
             Y_DISABLE_COPY_AND_ASSIGN(Code);
         };
 
         // create with default objects
         inline void create()
         {
-            std::cerr << "creating for items=" << items <<", rows=" << rows << std::endl;
             if(items<=0) return;
-            Memory::Embedding::Pair pair(base,items,row,rows);
-            std::cerr << pair[0] << ", " << pair[1] << std::endl;
-            code = new Code(pair,cols);
-            std::cerr << pair[0] << ", " << pair[1] << std::endl;
+            code = new Code(base,items,row,rows,cols);
             assert(code.isValid());
             assert(0!=row);
             assert(0!=base);
