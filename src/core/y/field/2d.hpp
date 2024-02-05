@@ -21,7 +21,7 @@ namespace Yttrium
         /**
          - NSUB = 0: Standalone Field
          - NSUB = 1: Slice of a 3D space
-         - NSUB = 2: Slice of a 3D space
+         - NSUB = 2: Slice of a 4D space
          */
         //
         //______________________________________________________________________

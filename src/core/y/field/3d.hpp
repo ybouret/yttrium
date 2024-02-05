@@ -11,7 +11,16 @@ namespace Yttrium
 {
     namespace Field
     {
+        //______________________________________________________________________
+        //
+        //
+        //
         //! Generic 3D Sub-Field
+        /**
+         - NSUB = 0 : Standalone Field
+         - NSUB = 1 : Space of a 4D space
+         */
+        //______________________________________________________________________
         template <size_t NSUB, typename T>
         class Sub3D : public Sketch, public Proxy<const Layout3D>
         {
