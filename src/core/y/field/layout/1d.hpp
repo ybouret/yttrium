@@ -11,21 +11,39 @@ namespace Yttrium
 
     namespace Field
     {
-        typedef unit_t                  Coord1D;  //!< alias
-        typedef size_t                  Count1D;  //!< alias
-        typedef Layout<Coord1D,Count1D> Layout1D_;
+        typedef unit_t                  Coord1D;   //!< alias
+        typedef size_t                  Count1D;   //!< alias
+        typedef Layout<Coord1D,Count1D> Layout1D_; //!< alias
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! 1D Layout
+        //
+        //
+        //______________________________________________________________________
         class Layout1D : public Layout1D_
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            
+            //! setup
             explicit Layout1D(const Coord1D lo, const Coord1D up) noexcept;
 
+            //! setup
             template <typename SUPER> inline
             explicit Layout1D(const SubLayout_ &_, const SUPER &super) noexcept :
             Layout1D_(_,super)
             {
             }
 
+            //! cleanup
             virtual ~Layout1D() noexcept;
 
         private:

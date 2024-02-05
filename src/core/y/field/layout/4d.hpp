@@ -17,12 +17,32 @@ namespace Yttrium
         typedef V4D<size_t>             Count4D;  //!< alias
         typedef Layout<Coord4D,Count4D> Layout4D_; //!< alias
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! 4D Layout
+        //
+        //
+        //______________________________________________________________________
         class Layout4D : public Layout4D_
         {
         public:
-            explicit Layout4D(const Coord4D lo, const Coord4D up) noexcept;
-            virtual ~Layout4D() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Layout4D(const Coord4D lo, const Coord4D up) noexcept; //!< setup
+            virtual ~Layout4D() noexcept; //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
             size_t numVolumes() const noexcept; //!< width.w
             size_t numSlices()  const noexcept; //!< precompute  width.z * width.w
             size_t numRows()    const noexcept; //!< precomputed  width.y * numSlices()

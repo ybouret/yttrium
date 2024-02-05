@@ -8,6 +8,7 @@ namespace Yttrium
 
         Layout3D:: ~Layout3D() noexcept
         {
+            Coerce(nr) = 0;
         }
 
         Layout3D:: Layout3D(const Coord3D lo,

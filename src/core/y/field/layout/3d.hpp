@@ -16,13 +16,28 @@ namespace Yttrium
         typedef V3D<size_t>             Count3D;  //!< alias
         typedef Layout<Coord3D,Count3D> Layout3D_; //!< alias
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! 3D Layout
+        //
+        //
+        //______________________________________________________________________
         class Layout3D : public Layout3D_
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+           
+            //! setup
             explicit Layout3D(const Coord3D lo, const Coord3D up) noexcept;
-            virtual ~Layout3D() noexcept;
 
-
+            //! setup
             template <typename SUPER> inline
             explicit Layout3D(const SubLayout_ &_, const SUPER &super) noexcept :
             Layout3D_(_,super),
@@ -30,6 +45,15 @@ namespace Yttrium
             {
             }
 
+            //! cleanup
+            virtual ~Layout3D() noexcept;
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
             size_t numSlices() const noexcept; //!< width.z
             size_t numRows()   const noexcept; //!< precomputed width.z * width.y
 

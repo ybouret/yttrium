@@ -13,6 +13,7 @@ namespace Yttrium
     namespace Field
     {
 
+        //! final call to make field
 #define Y_FIELD2D_MAKE()  make(row,layout->numRows(),metaKey,layout->lower.y,in1D,addr)
 
         //______________________________________________________________________

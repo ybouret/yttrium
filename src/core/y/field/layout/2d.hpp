@@ -16,20 +16,44 @@ namespace Yttrium
         typedef V2D<size_t>             Count2D;  //!< alias
         typedef Layout<Coord2D,Count2D> Layout2D_; //!< alias
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! 2D Layout
+        //
+        //
+        //______________________________________________________________________
         class Layout2D : public Layout2D_
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+          
+            //! setup
             explicit Layout2D(const Coord2D lo, const Coord2D up) noexcept;
-           
+
+            //! setup
             template <typename SUPER> inline
             explicit Layout2D(const SubLayout_ &_, const SUPER &super) noexcept :
             Layout2D_(_,super)
             {
             }
 
+            //! cleanup
             virtual ~Layout2D() noexcept;
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            
             size_t numRows() const noexcept; //!< width.y
 
 
