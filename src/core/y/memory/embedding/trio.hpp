@@ -12,35 +12,37 @@ namespace Yttrium
 {
     namespace Memory
     {
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! Three Embeds
-        //
-        //
-        //______________________________________________________________________
-        class EmbeddingTrio : public Embedding::Repo<3>
+        namespace Embedding
         {
-        public:
-            //! cleanup
-            virtual ~EmbeddingTrio() noexcept;
-
-            //! setup
-            template <typename T, typename U, typename V>
-            inline EmbeddingTrio(T * &p1, const size_t n1,
-                                 U * &p2, const size_t n2,
-                                 V * &p3, const size_t n3) noexcept :
-            Embedding::Repo<3>()
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Three Embeds
+            //
+            //
+            //______________________________________________________________________
+            class Trio : public Repo<3>
             {
-                push(p1,n1);
-                push(p2,n2);
-                push(p3,n3);
-            }
+            public:
+                //! cleanup
+                virtual ~Trio() noexcept;
 
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(EmbeddingTrio);
-        };
+                //! setup
+                template <typename T, typename U, typename V>
+                inline Trio(T * &p1, const size_t n1,
+                            U * &p2, const size_t n2,
+                            V * &p3, const size_t n3) noexcept :
+                Repo<3>() {
+                    push(p1,n1);
+                    push(p2,n2);
+                    push(p3,n3);
+                }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Trio);
+            };
+        }
 
     }
 }

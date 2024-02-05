@@ -41,7 +41,7 @@ namespace Yttrium
             //__________________________________________________________________
             Y_ARGS_DECL(T,Type);                             //!< aliases
             typedef MetaKeyWith<NSUB>          SelfMetaKey;  //!< alias
-            typedef Memory::EmbeddingSolo      SelfPattern;  //!< alias
+            typedef Memory::Embedding::Solo    SelfPattern;  //!< alias
             typedef Memory::Embedded           SelfAcquire;  //!< alias
             typedef MemoryBuilder<MutableType> SelfBuilder;  //!< alias
            

@@ -10,32 +10,34 @@ namespace Yttrium
 {
     namespace Memory
     {
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! One Embed
-        //
-        //
-        //______________________________________________________________________
-        class EmbeddingSolo : public Embedding::Repo<1>
+        namespace Embedding
         {
-        public:
-            //! cleanup
-            virtual ~EmbeddingSolo() noexcept;
-
-            //! setup
-            template <typename T>
-            inline EmbeddingSolo( T * &p1, const size_t n1) noexcept :
-            Embedding::Repo<1>()
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! One Embed
+            //
+            //
+            //__________________________________________________________________
+            class Solo : public Repo<1>
             {
-                push(p1,n1);
-            }
+            public:
+                //! cleanup
+                virtual ~Solo() noexcept;
 
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(EmbeddingSolo);
-        };
+                //! setup
+                template <typename T>
+                inline Solo( T * &p1, const size_t n1) noexcept :
+                Repo<1>() {
+                    push(p1,n1);
+                }
 
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Solo);
+            };
+
+        }
     }
 }
 

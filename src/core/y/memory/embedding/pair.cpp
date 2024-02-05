@@ -4,11 +4,13 @@ namespace Yttrium
 {
     namespace Memory
     {
-        EmbeddingPair:: ~EmbeddingPair() noexcept
+        namespace Embedding
         {
-
+            Pair:: ~Pair() noexcept
+            {
+                
+            }
         }
-
     }
 
 }

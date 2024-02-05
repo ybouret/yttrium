@@ -4,11 +4,14 @@ namespace Yttrium
 {
     namespace Memory
     {
-        EmbeddingSolo:: ~EmbeddingSolo() noexcept
+        namespace Embedding
         {
-
+            Solo:: ~Solo() noexcept
+            {
+                
+            }
         }
-        
+
     }
 
 }

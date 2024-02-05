@@ -37,7 +37,7 @@ namespace Yttrium
             //__________________________________________________________________
             Y_ARGS_DECL(T,Type);                             //!< aliases
             typedef MetaKeyWith<NSUB>          SelfMetaKey;  //!< alias
-            typedef Memory::EmbeddingPair      SelfPattern;  //!< alias
+            typedef Memory::Embedding::Pair    SelfPattern;  //!< alias
             typedef Memory::Embedded           SelfAcquire;  //!< alias
             typedef Sub1D<NSUB+1,Type>         RowType;      //!< alias
             typedef MemoryBuilder<RowType>     SelfBuilder;  //!< alias
@@ -66,16 +66,34 @@ namespace Yttrium
             in1d(lower.x,upper.x),
             motif(row,width.y,ptr,items),
             owned(motif,alloc),
-            inner(row,width.y,metaKey,lower.y,in1d,ptr)
+            inner(row,width.y,
+                  metaKey,lower.y,
+                  in1d,ptr)
             {
                 row -= lower.y;
             }
 
         public:
+
+            //__________________________________________________________________
+            //
+            //! Construct as a slice of higher space
+            //__________________________________________________________________
             explicit Sub2D(const MetaKeyWith<NSUB-1> & rootKey,
-                           const unit_t                rowIndx,
-                           const Layout2D            & layout);
-            
+                           const unit_t                slcIndx,
+                           const Layout2D            & layout) :
+            Interface(),
+            Layout2D(layout),
+            metaKey(rootKey,slcIndx),
+            row(0),
+            ptr(0),
+            in1d(lower.x,upper.x),
+            motif(row,width.y,ptr,items),
+            owned()
+            {
+            }
+
+
 
             inline virtual ~Sub2D() noexcept { row=0; }
 

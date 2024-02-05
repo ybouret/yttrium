@@ -387,7 +387,7 @@ namespace Yttrium
         inline void create()
         {
             if(items<=0) return;
-            Memory::EmbeddingPair pair(base,items,row,rows);
+            Memory::Embedding::Pair pair(base,items,row,rows);
             code = new Code(pair,cols);
             --row;
         }

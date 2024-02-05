@@ -14,10 +14,10 @@ using namespace Yttrium;
 
 Y_UTEST(memory_embedding)
 {
-    Y_SIZEOF(Memory::EmbeddingSolo);
-    Y_SIZEOF(Memory::EmbeddingPair);
-    Y_SIZEOF(Memory::EmbeddingTrio);
-    Y_SIZEOF(Memory::EmbeddingQuad);
+    Y_SIZEOF(Memory::Embedding::Solo);
+    Y_SIZEOF(Memory::Embedding::Pair);
+    Y_SIZEOF(Memory::Embedding::Trio);
+    Y_SIZEOF(Memory::Embedding::Quad);
 
 
     int    *a = 0;
@@ -25,10 +25,10 @@ Y_UTEST(memory_embedding)
     String *s = 0;
     char   *c = 0;
 
-    Memory::EmbeddingSolo solo(a,5);                 Y_CHECK(1==solo.size);
-    Memory::EmbeddingPair pair(a,7,b,11);            Y_CHECK(2==pair.size);
-    Memory::EmbeddingTrio trio(a,3,b,21,s,31);       Y_CHECK(3==trio.size);
-    Memory::EmbeddingQuad quad(a,2,b,13,s,27,c,93);  Y_CHECK(4==quad.size);
+    Memory::Embedding::Solo solo(a,5);                 Y_CHECK(1==solo.size);
+    Memory::Embedding::Pair pair(a,7,b,11);            Y_CHECK(2==pair.size);
+    Memory::Embedding::Trio trio(a,3,b,21,s,31);       Y_CHECK(3==trio.size);
+    Memory::Embedding::Quad quad(a,2,b,13,s,27,c,93);  Y_CHECK(4==quad.size);
 
     Memory::Allocator &mgr = Memory::Pooled::Instance();
     {

@@ -4,9 +4,12 @@ namespace Yttrium
 {
     namespace Memory
     {
-        EmbeddingQuad:: ~EmbeddingQuad() noexcept
+        namespace Embedding
         {
-
+            Quad:: ~Quad() noexcept
+            {
+                
+            }
         }
 
     }
