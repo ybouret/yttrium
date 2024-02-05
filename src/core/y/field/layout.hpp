@@ -54,6 +54,7 @@ namespace Yttrium
                 Y_STATIC_ZVAR(Coerce(upper));
             }
 
+#if 0
             //! copy
             inline Layout(const Layout &other) noexcept :
             LayoutScope<COUNT>(other),
@@ -62,6 +63,7 @@ namespace Yttrium
             upper(other.upper)
             {
             }
+#endif
 
             //! setup
             inline explicit Layout(COORD lo, COORD up) noexcept :
@@ -116,7 +118,7 @@ namespace Yttrium
             const COORD upper; //!< upper coordinate
 
         private:
-            Y_DISABLE_ASSIGN(Layout);
+            Y_DISABLE_COPY_AND_ASSIGN(Layout);
             static inline unit_t * C2U(const COORD &coord) noexcept
             {
                 return Memory::OutOfReach::Cast<unit_t,COORD>( &Coerce(coord) );
