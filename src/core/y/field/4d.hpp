@@ -132,6 +132,7 @@ namespace Yttrium
             const Memory::Embedded  hold;
             SelfBuilder             make;
             
+            Y_DISABLE_COPY_AND_ASSIGN(In4D);
             inline virtual ConstInterface & surrogate() const noexcept { return *layout; }
         };
 
