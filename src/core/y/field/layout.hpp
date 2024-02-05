@@ -4,7 +4,7 @@
 #define Y_Field_Layout_Included 1
 
 #include "y/field/layout/metrics.hpp"
-#include "y/field/layout/width.hpp"
+#include "y/field/layout/scope.hpp"
 #include "y/type/copy.hpp"
 
 #include <iostream>
@@ -22,8 +22,8 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        template <typename COORD>
-        class Layout : public LayoutWidth<COORD>, public LayoutMetrics
+        template <typename COORD,typename COUNT>
+        class Layout : public LayoutScope<COUNT>, public LayoutMetrics
         {
         public:
             //__________________________________________________________________
@@ -33,8 +33,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const unsigned DIMENSION = sizeof(COORD)/sizeof(unit_t); //!< space dimension
-            using LayoutWidth<COORD>::width;
-            using LayoutWidth<COORD>::shift;
+            using LayoutScope<COUNT>::width;
+            using LayoutScope<COUNT>::shift;
 
             //__________________________________________________________________
             //
@@ -52,7 +52,7 @@ namespace Yttrium
 
             //! copy
             inline Layout(const Layout &other) noexcept :
-            LayoutWidth<COORD>(other),
+            LayoutScope<COUNT>(other),
             LayoutMetrics(other),
             lower(other.lower),
             upper(other.upper)
@@ -61,8 +61,8 @@ namespace Yttrium
 
             //! setup
             inline explicit Layout(COORD lo, COORD up) noexcept :
-            LayoutWidth<COORD>(lo,lo),
-            LayoutMetrics(DIMENSION,C2U(lo),C2U(up), C2U(width), C2U(shift)),
+            LayoutScope<COUNT>(),
+            LayoutMetrics(DIMENSION, C2U(lo), C2U(up), C2S(width), C2S(shift)),
             lower(lo),
             upper(up)
             {
@@ -91,6 +91,11 @@ namespace Yttrium
             static inline unit_t * C2U(const COORD &coord) noexcept
             {
                 return Memory::OutOfReach::Cast<unit_t,COORD>( &Coerce(coord) );
+            }
+
+            static inline size_t * C2S(const COUNT &count) noexcept
+            {
+                return Memory::OutOfReach::Cast<size_t,COUNT>( &Coerce(count) );
             }
 
         };

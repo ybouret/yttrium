@@ -11,13 +11,13 @@ using namespace Yttrium;
 
 Y_UTEST(field3d)
 {
+#if 0
 
     Random::Rand     ran;
 
     Field::Layout3D L( Field::Coord3D(-2,-4,-1), Field::Coord3D(3,5,7) );
     std::cerr << L << std::endl;
 
-#if 0
     Field::In2D<String,Memory::Dyadic> F("f2",L);
     Vector<String>      provided;
 

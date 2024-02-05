@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Field_Layout_In1D_Included
@@ -11,8 +10,9 @@ namespace Yttrium
 
     namespace Field
     {
-        typedef unit_t          Coord1D;  //!< alias
-        typedef Layout<Coord1D> Layout1D; //!< alias
+        typedef unit_t                  Coord1D;  //!< alias
+        typedef size_t                  Count1D;  //!< alias
+        typedef Layout<Coord1D,Count1D> Layout1D; //!< alias
     }
 
 }

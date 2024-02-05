@@ -12,7 +12,7 @@ namespace Yttrium
                             Allocator       &mgr) :
         alloc( &mgr ),
         bytes( 0 ),
-        entry( Embed::Build( &emb[0], emb.size, mgr, Coerce(bytes)) )
+        entry( Embed::Build( emb.head(), emb.size, mgr, Coerce(bytes)) )
         {
         }
 

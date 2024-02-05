@@ -6,10 +6,10 @@ namespace Yttrium
     {
         namespace Embedding
         {
-            Quad:: ~Quad() noexcept
-            {
-                
-            }
+            Quad:: ~Quad() noexcept {}
+            Quad::  Quad() noexcept {}
+            
+
         }
 
     }

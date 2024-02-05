@@ -10,12 +10,12 @@ using namespace Yttrium;
 
 Y_UTEST(field2d)
 {
+#if 1
 
     Random::Rand     ran;
     Field::Layout2D  L( Field::Coord2D(-2,-4), Field::Coord2D(3,5) );
     std::cerr << L << std::endl;
     
-#if 1
     Field::In2D<String,Memory::Dyadic> F("f2",L);
     Vector<String>      provided;
 

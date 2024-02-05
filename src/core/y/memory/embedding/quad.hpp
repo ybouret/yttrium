@@ -25,12 +25,15 @@ namespace Yttrium
                 //! cleanup
                 virtual ~Quad() noexcept;
 
+                //! setup empty
+                explicit Quad() noexcept;
+
                 //! setup
                 template <typename T, typename U, typename V, typename W>
-                inline Quad(T * &p1, const size_t n1,
-                            U * &p2, const size_t n2,
-                            V * &p3, const size_t n3,
-                            W * &p4, const size_t n4) noexcept :
+                inline explicit Quad(T * &p1, const size_t n1,
+                                     U * &p2, const size_t n2,
+                                     V * &p3, const size_t n3,
+                                     W * &p4, const size_t n4) noexcept :
                 Repo<4>() {
                     push(p1,n1);
                     push(p2,n2);

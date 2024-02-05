@@ -77,6 +77,13 @@ namespace Yttrium
             return addr;
         }
 
+        void Embed:: dismiss() noexcept
+        {
+            assert(0!=handle);
+            *handle = 0;
+        }
+
+
         std::ostream & operator<<(std::ostream &os, const Embed &emb)
         {
             os << "@" << *emb.handle << " #blocks=" << emb.blocks << " #bytes=" << emb.length;

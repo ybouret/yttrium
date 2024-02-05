@@ -10,6 +10,11 @@ namespace Yttrium
             {
                 
             }
+
+            Solo:: Solo() noexcept
+            {
+            }
+            
         }
 
     }

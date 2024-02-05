@@ -6,10 +6,8 @@ namespace Yttrium
     {
         namespace Embedding
         {
-            Pair:: ~Pair() noexcept
-            {
-                
-            }
+            Pair:: ~Pair() noexcept {}
+            Pair::  Pair() noexcept {}
         }
     }
 

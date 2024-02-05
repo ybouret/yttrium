@@ -1,6 +1,3 @@
-
-
-
 //! \file
 
 #ifndef Y_Field_Layout_In3D_Included
@@ -14,8 +11,9 @@ namespace Yttrium
 
     namespace Field
     {
-        typedef V3D<unit_t>     Coord3D;  //!< alias
-        typedef Layout<Coord3D> Layout3D; //!< alias
+        typedef V3D<unit_t>             Coord3D;  //!< alias
+        typedef V2D<size_t>             Count3D;  //!< alias
+        typedef Layout<Coord3D,Count3D> Layout3D; //!< alias
     }
 
 }

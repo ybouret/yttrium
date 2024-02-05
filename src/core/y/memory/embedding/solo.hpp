@@ -26,9 +26,12 @@ namespace Yttrium
                 //! cleanup
                 virtual ~Solo() noexcept;
 
-                //! setup
+                //! setup empty
+                explicit Solo() noexcept;
+                
+                //! setup with data
                 template <typename T>
-                inline Solo( T * &p1, const size_t n1) noexcept :
+                inline explicit Solo( T * &p1, const size_t n1) noexcept :
                 Repo<1>() {
                     push(p1,n1);
                 }

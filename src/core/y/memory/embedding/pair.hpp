@@ -27,10 +27,14 @@ namespace Yttrium
                 //! cleanup
                 virtual ~Pair() noexcept;
 
+
+                //! setup empty
+                inline explicit Pair() noexcept;
+
                 //! setup
                 template <typename T, typename U>
-                inline Pair(T * &p1, const size_t n1,
-                            U * &p2, const size_t n2) noexcept :
+                inline explicit Pair(T * &p1, const size_t n1,
+                                     U * &p2, const size_t n2) noexcept :
                 Repo<2>() {
                     push(p1,n1);
                     push(p2,n2);

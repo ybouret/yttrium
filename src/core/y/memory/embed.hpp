@@ -64,6 +64,8 @@ namespace Yttrium
             //! (check and) get allocated address
             void * address() noexcept;
 
+            //! dismiss linked handle
+            void   dismiss() noexcept;
 
         private:
             Y_DISABLE_ASSIGN(Embed);

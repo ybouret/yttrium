@@ -28,11 +28,14 @@ namespace Yttrium
                 //! cleanup
                 virtual ~Trio() noexcept;
 
+                //! setup empty
+                explicit Trio() noexcept;
+
                 //! setup
                 template <typename T, typename U, typename V>
-                inline Trio(T * &p1, const size_t n1,
-                            U * &p2, const size_t n2,
-                            V * &p3, const size_t n3) noexcept :
+                inline explicit Trio(T * &p1, const size_t n1,
+                                     U * &p2, const size_t n2,
+                                     V * &p3, const size_t n3) noexcept :
                 Repo<3>() {
                     push(p1,n1);
                     push(p2,n2);

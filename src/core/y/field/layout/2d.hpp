@@ -1,5 +1,3 @@
-
-
 //! \file
 
 #ifndef Y_Field_Layout_In2D_Included
@@ -13,8 +11,9 @@ namespace Yttrium
 
     namespace Field
     {
-        typedef V2D<unit_t>     Coord2D;  //!< alias
-        typedef Layout<Coord2D> Layout2D; //!< alias
+        typedef V2D<unit_t>             Coord2D;  //!< alias
+        typedef V2D<size_t>             Count2D;  //!< alias
+        typedef Layout<Coord2D,Count2D> Layout2D; //!< alias
     }
 
 }

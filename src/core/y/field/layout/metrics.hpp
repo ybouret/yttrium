@@ -45,8 +45,8 @@ namespace Yttrium
             explicit LayoutMetrics(const unsigned d,
                                    unit_t * const lower,
                                    unit_t * const upper,
-                                   unit_t * const width,
-                                   unit_t * const shift) noexcept;
+                                   size_t * const width,
+                                   size_t * const shift) noexcept;
             
 
         private:

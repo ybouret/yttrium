@@ -96,12 +96,11 @@ namespace Yttrium
             Interface(),
             Layout1D(layout),
             metaKey(rootKey,rowIndx),
-            entry(0),
-            motif(entry,items),
+            entry(aliens),
+            motif(),
             owned(),
-            inner(entry=aliens,items)
+            inner(entry,items)
             {
-                // owned nothing
                 entry  -= lower;
             }
 

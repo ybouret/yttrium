@@ -8,6 +8,8 @@ namespace Yttrium
         {
             Data:: ~Data() noexcept
             {
+                for(size_t i=0;i<size;++i)
+                    data[i].dismiss();
                 Coerce(size) = 0;
                 Coerce(data) = 0;
             }
@@ -30,6 +32,11 @@ namespace Yttrium
                 return data[indx];
             }
 
+            Embed * Data:: head() noexcept
+            {
+                assert(0!=data);
+                return data;
+            }
 
         }
     }

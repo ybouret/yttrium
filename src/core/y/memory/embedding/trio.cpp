@@ -6,10 +6,9 @@ namespace Yttrium
     {
         namespace Embedding
         {
-            Trio:: ~Trio() noexcept
-            {
-                
-            }
+            Trio:: ~Trio() noexcept {}
+            Trio::  Trio() noexcept {}
+
         }
     }
 
