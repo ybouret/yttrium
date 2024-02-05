@@ -11,6 +11,10 @@ namespace Yttrium
 {
     namespace Field
     {
+
+
+#define Y_FIELD3D_MAKE()  make(slc,layout->numSlices(), metaKey,layout->lower.z, in2D,in1D, row, addr)
+
         //______________________________________________________________________
         //
         //
@@ -87,11 +91,7 @@ namespace Yttrium
             in2D( new Layout2D(SubLayout,*layout) ),
             in1D( new Layout1D(SubLayout,*layout) ),
             code( new Code(alloc,slc,layout->width.z,row,layout->width.z * layout->width.y,addr,layout->items) ),
-            make(slc,layout->width.z,
-                 metaKey,layout->lower.z,
-                 in2D,in1D,
-                 row,
-                 addr)
+            Y_FIELD3D_MAKE()
             {
                 slc -= layout->lower.z;
             }
@@ -129,11 +129,7 @@ namespace Yttrium
             in2D(space2D),
             in1D(space1D),
             code(0),
-            make(slc,layout->width.z,
-                 metaKey,layout->lower.z,
-                 in2D,in1D,
-                 row,
-                 addr)
+            Y_FIELD3D_MAKE()
             {
                 slc -= layout->lower.z;
             }
