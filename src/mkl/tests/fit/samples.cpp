@@ -98,7 +98,7 @@ namespace
 
         inline void G(Writable<VTX>        &dFda,
                       const T              &t,
-                      const Readable<T>    &aorg,
+                      const Readable<T>    &,
                       const Fit::Variables &vars,
                       const Fit::Booleans  &used)
         {

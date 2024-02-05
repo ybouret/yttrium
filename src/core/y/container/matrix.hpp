@@ -363,7 +363,6 @@ namespace Yttrium
         class Code : public Memory::Embedded
         {
         public:
-            //explicit Code(Memory::Embed emb[], const size_t nc) : Memory::Embedded(emb,NUM_FIELDS,ALLOCATOR::Instance()),
             explicit Code(Memory::Embedding::Data &emb, const size_t nc) :
             Memory::Embedded(emb,ALLOCATOR::Instance()),
             stride(nc*sizeof(T)),
@@ -386,9 +385,15 @@ namespace Yttrium
         // create with default objects
         inline void create()
         {
+            std::cerr << "creating for items=" << items <<", rows=" << rows << std::endl;
             if(items<=0) return;
             Memory::Embedding::Pair pair(base,items,row,rows);
+            std::cerr << pair[0] << ", " << pair[1] << std::endl;
             code = new Code(pair,cols);
+            std::cerr << pair[0] << ", " << pair[1] << std::endl;
+            assert(code.isValid());
+            assert(0!=row);
+            assert(0!=base);
             --row;
         }
 
