@@ -13,6 +13,8 @@ namespace Yttrium
     namespace Field
     {
 
+#define Y_FIELD1D_MAKE()  make(row,layout->numRows(),metaKey,layout->lower.y,in1D,addr)
+
         //______________________________________________________________________
         //
         //
@@ -85,9 +87,7 @@ namespace Yttrium
             addr(0),
             in1D( new Layout1D(SubLayout,*layout) ),
             code( new Code(alloc,row,layout->width.y,addr,layout->items) ),
-            make(row,layout->width.y,
-                 metaKey,layout->lower.y,
-                 in1D,addr)
+            Y_FIELD1D_MAKE()
             {
                 row -= layout->lower.y;
             }
@@ -118,9 +118,7 @@ namespace Yttrium
             addr( alienData ),
             in1D( space1D   ),
             code(0),
-            make(row,layout->width.y,
-                 metaKey,layout->lower.y,
-                 in1D,addr)
+            Y_FIELD1D_MAKE()
             {
                 row -= layout->lower.y;
             }
