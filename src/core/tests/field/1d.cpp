@@ -35,8 +35,20 @@ Y_UTEST(field1d)
     std::cerr << content << std::endl;
     Y_CHECK(content==provided);
 #endif
-    
-    
+
+    Y_SIZEOF( Field::MetaKeyWith<0> );
+    Y_SIZEOF( Field::MetaKeyWith<1> );
+    Y_SIZEOF( Field::MetaKeyWith<2> );
+    Y_SIZEOF( Field::MetaKeyWith<3> );
+    Y_SIZEOF( Field::Layout1D       );
+    Y_SIZEOF( Field::MemoryBuilder<String> );
+    Y_SIZEOF( Field::Interface  );
+    Y_SIZEOF( AutoPtr<String>   );
+
+    std::cerr << sizeof(Field::Sub1D<0,String>) << std::endl;
+
+
+
 
 }
 Y_UDONE()

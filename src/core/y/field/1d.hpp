@@ -10,6 +10,7 @@
 #include "y/memory/embedded.hpp"
 #include "y/memory/allocator.hpp"
 #include "y/type/args.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace Yttrium
 {
@@ -41,10 +42,27 @@ namespace Yttrium
             //__________________________________________________________________
             Y_ARGS_DECL(T,Type);                             //!< aliases
             typedef MetaKeyWith<NSUB>          SelfMetaKey;  //!< alias
-            typedef Memory::Embedding::Solo    SelfPattern;  //!< alias
-            typedef Memory::Embedded           SelfAcquire;  //!< alias
             typedef MemoryBuilder<MutableType> SelfBuilder;  //!< alias
-           
+
+        private:
+            class Code : public Object
+            {
+            public:
+                template <typename U1>
+                inline explicit Code(Memory::Allocator &ma,
+                                     U1 *              &u1,
+                                     const size_t       n1) :
+                plan(u1,n1),
+                hold(plan,ma) {}
+
+                inline virtual ~Code() noexcept {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Code);
+                Memory::Embedding::Solo  plan;
+                Memory::Embedded         hold;
+            };
+
             //__________________________________________________________________
             //
             //
@@ -69,8 +87,7 @@ namespace Yttrium
             Layout1D(layout),
             metaKey(label),
             entry(0),
-            motif(entry,items),
-            owned(motif,alloc),
+            code( new Code(alloc,entry,items) ),
             inner(entry,items)
             {
                 entry -= lower;
@@ -97,8 +114,7 @@ namespace Yttrium
             Layout1D(layout),
             metaKey(rootKey,rowIndx),
             entry(aliens),
-            motif(),
-            owned(),
+            code(0),
             inner(entry,items)
             {
                 entry  -= lower;
@@ -153,10 +169,9 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Sub1D);
-            MutableType *entry;
-            SelfPattern  motif;
-            SelfAcquire  owned;
-            SelfBuilder  inner;
+            MutableType              *entry;
+            const AutoPtr<const Code> code;
+            SelfBuilder               inner;
         };
 
         //______________________________________________________________________

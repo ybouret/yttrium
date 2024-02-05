@@ -21,5 +21,9 @@ Y_UTEST(field_layouts)
 
     Y_CHECK(L1b == L1);
 
+    Y_SIZEOF(Field::Layout1D);
+    Y_SIZEOF(Field::Layout2D);
+    Y_SIZEOF(Field::Layout3D);
+
 }
 Y_UDONE()

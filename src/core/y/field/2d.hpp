@@ -87,7 +87,7 @@ namespace Yttrium
             row(0),
             ptr(0),
             in1d(SubLayout,layout),
-            motif(row,width.y,ptr,items),
+            motif(),
             owned()
             {
             }
