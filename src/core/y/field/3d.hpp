@@ -13,7 +13,7 @@ namespace Yttrium
     {
 
 
-#define Y_FIELD3D_MAKE()  make(slc,layout->numSlices(), metaKey,layout->lower.z, in2D,in1D, row, addr)
+#define Y_FIELD3D_MAKE()  make(slc,layout->numSlices(), metaKey,layout->lower.z, in2D,in1D, row, ptr)
 
         //______________________________________________________________________
         //
@@ -85,12 +85,12 @@ namespace Yttrium
             Sketch(),
             layout(space),
             metaKey(label),
-            slc(  0 ),
-            row(  0 ),
-            addr( 0 ),
+            slc( 0 ),
+            row( 0 ),
+            ptr( 0 ),
             in2D( new Layout2D(SubLayout,*layout) ),
             in1D( new Layout1D(SubLayout,*layout) ),
-            code( new Code(alloc,slc,layout->width.z,row,layout->width.z * layout->width.y,addr,layout->items) ),
+            code( new Code(alloc,slc,layout->numSlices(),row,layout->numRows(),ptr,layout->items) ),
             Y_FIELD3D_MAKE()
             {
                 slc -= layout->lower.z;
@@ -125,7 +125,7 @@ namespace Yttrium
             metaKey(rootKey,volIndx),
             slc(alienSlcs),
             row(alienRows),
-            addr(alienData),
+            ptr(alienData),
             in2D(space2D),
             in1D(space1D),
             code(0),
@@ -183,7 +183,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Sub3D);
             SliceType   *             slc;  //!< slice address, shifted
             RowType     *             row;  //!< rows address
-            MutableType *             addr; //!< items address
+            MutableType *             ptr;  //!< items address
         public:
             const Format2D            in2D; //!< shared 2D layout
             const Format1D            in1D; //!< shared 1D layout
