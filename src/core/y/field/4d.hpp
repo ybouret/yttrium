@@ -37,6 +37,14 @@ namespace Yttrium
             typedef Sub3D<1,Type>              VolumeType;   //!< alias
             typedef MemoryBuilder<VolumeType>  SelfBuilder;  //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! top-level constructor
             template <typename LABEL>
             inline explicit In4D(const LABEL    & label,
                                  const Format4D & space) :
@@ -63,10 +71,8 @@ namespace Yttrium
                 vol -= layout->lower.w;
             }
 
-            inline virtual ~In4D() noexcept
-            {
-
-            }
+            //! cleanup
+            inline virtual ~In4D() noexcept {}
 
             //__________________________________________________________________
             //
@@ -75,6 +81,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //! access
             inline VolumeType & operator[](const unit_t l) noexcept
             {
                 assert(l>=layout->lower.w);
@@ -82,6 +89,7 @@ namespace Yttrium
                 return vol[l];
             }
 
+            //! access, const
             inline const VolumeType & operator[](const unit_t l) const noexcept
             {
                 assert(l>=layout->lower.w);
@@ -107,17 +115,19 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            const Format4D    layout;
-            const SelfMetaKey metaKey;
-            
+            const Format4D    layout;  //!< layout
+            const SelfMetaKey metaKey; //!< meta key
+
         private:
             VolumeType             *vol;
             SliceType              *slc;
             RowType                *row;
             MutableType            *ptr;
-            const Format3D          in3D;
-            const Format2D          in2D;
-            const Format1D          in1D;
+        public:
+            const Format3D          in3D; //!< 3D sub-layout
+            const Format2D          in2D; //!< 2D sub-layout
+            const Format1D          in1D; //!< 1D sub-layout
+        private:
             Memory::Embedding::Quad plan;
             const Memory::Embedded  hold;
             SelfBuilder             make;

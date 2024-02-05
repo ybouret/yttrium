@@ -107,7 +107,7 @@ namespace Yttrium
              \param space3D   shared layout of this volume
              \param space2D   shared layout of slices
              \param space1D   shared layout of rows
-             \param aliewSlcs allocated memory for space3D->width.z
+             \param alienSlcs allocated memory for space3D->width.z
              \param alienRows allocated memory for space3D->width.y * space3D->width.z
              \param alienData allocated memory for space3D->items
              */

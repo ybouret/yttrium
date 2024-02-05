@@ -73,6 +73,7 @@ namespace Yttrium
             }
             
 
+            //! setup as a sub-layout
             template <typename SUPER> inline
             explicit Layout(const SubLayout_ &_, const SUPER &super) noexcept :
             LayoutScope<COUNT>(_,super),
@@ -83,6 +84,7 @@ namespace Yttrium
 
             }
 
+            //! test equality
             inline friend bool operator==(const Layout &lhs,
                                           const Layout &rhs) noexcept
             {
