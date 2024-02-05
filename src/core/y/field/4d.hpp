@@ -58,12 +58,12 @@ namespace Yttrium
             in3D( new Layout3D(SubLayout,*layout) ),
             in2D( new Layout2D(SubLayout,*layout) ),
             in1D( new Layout1D(SubLayout,*layout) ),
-            plan(vol,layout->width.w,
-                 slc,layout->width.w * layout->width.z,
-                 row,layout->width.w * layout->width.z * layout->width.y,
+            plan(vol,layout->numVolumes(),
+                 slc,layout->numSlices(),
+                 row,layout->numRows(),
                  ptr,layout->items),
             hold(plan,ALLOCATOR::Instance()),
-            make(vol,layout->width.w,
+            make(vol,layout->numVolumes(),
                  metaKey,layout->lower.w,
                  in3D,in2D,in1D,
                  slc,row,ptr)
@@ -130,8 +130,8 @@ namespace Yttrium
         private:
             Memory::Embedding::Quad plan;
             const Memory::Embedded  hold;
-            SelfBuilder             make;
-            
+            const SelfBuilder       make;
+
             Y_DISABLE_COPY_AND_ASSIGN(In4D);
             inline virtual ConstInterface & surrogate() const noexcept { return *layout; }
         };

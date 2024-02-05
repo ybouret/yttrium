@@ -91,7 +91,7 @@ namespace Yttrium
             metaKey(label),
             entry(0),
             code( new Code(alloc,entry,layout->items) ),
-            inner(entry,layout->items)
+            make(entry,layout->items)
             {
                 entry -= layout->lower;
             }
@@ -118,7 +118,7 @@ namespace Yttrium
             metaKey(rootKey,rowIndx),
             entry(alien),
             code(0),
-            inner(entry,layout->items)
+            make(entry,layout->items)
             {
                 entry  -= layout->lower;
             }
@@ -176,7 +176,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Sub1D);
             MutableType              *entry;
             const AutoPtr<const Code> code;
-            SelfBuilder               inner;
+            const SelfBuilder         make;;
 
             inline virtual ConstInterface & surrogate() const noexcept { return *layout; }
         };

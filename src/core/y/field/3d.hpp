@@ -13,7 +13,7 @@ namespace Yttrium
     {
 
 
-#define Y_FIELD3D_MAKE()  make(slc,layout->numSlices(), metaKey,layout->lower.z, in2D,in1D, row, ptr)
+#define Y_FIELD3D_MAKE()  make(slc,layout->numSlices(),metaKey,layout->lower.z,in2D,in1D,row,ptr)
 
         //______________________________________________________________________
         //
@@ -189,7 +189,7 @@ namespace Yttrium
             const Format1D            in1D; //!< shared 1D layout
         private:
             const AutoPtr<const Code> code; //!< mapping
-            SelfBuilder               make; //!< builder of slices
+            const SelfBuilder         make; //!< builder of slices
 
             inline virtual ConstInterface & surrogate() const noexcept { return *layout; }
         };

@@ -19,6 +19,10 @@ namespace Yttrium
         {
         }
 
+        size_t Layout4D:: numVolumes() const noexcept {
+            return width.w;
+        }
+
         size_t Layout4D:: numRows() const noexcept
         {
             return nr;

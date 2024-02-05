@@ -173,7 +173,7 @@ namespace Yttrium
             const Format1D            in1D;   //!< shared 1D layout
         private:
             const AutoPtr<const Code> code;   //!< for private data
-            SelfBuilder               make;   //!< build with row/addr
+            const SelfBuilder         make;   //!< build with row/addr
 
             inline virtual ConstInterface & surrogate() const noexcept { return *layout; }
         };
