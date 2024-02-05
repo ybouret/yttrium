@@ -41,7 +41,7 @@ namespace Yttrium
             }
 
             Embed(const Embed &) noexcept; //!< copy
-            ~Embed()             noexcept; //!< cleanup
+            ~Embed()             noexcept; //!< cleanup handle
             Y_OSTREAM_PROTO(Embed);        //!< dislplay
 
             //__________________________________________________________________
@@ -64,8 +64,7 @@ namespace Yttrium
             //! (check and) get allocated address
             void * address() noexcept;
 
-            //! dismiss linked handle
-            void   dismiss() noexcept;
+            
 
         private:
             Y_DISABLE_ASSIGN(Embed);

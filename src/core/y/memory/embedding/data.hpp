@@ -30,7 +30,8 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                const size_t        size; //!< number of info
+                const size_t  size; //!< number of info
+                Embed * const data; //!< location
 
                 //______________________________________________________________
                 //
@@ -48,7 +49,6 @@ namespace Yttrium
                 //______________________________________________________________
                 Embed       & operator[](const size_t indx)       noexcept; //!< access in [0..size()-1]
                 const Embed & operator[](const size_t indx) const noexcept; //!< access in [0..size()-1], const
-                Embed       * head()    noexcept;                           //!< access first item
                 
                 //______________________________________________________________
                 //
@@ -56,11 +56,12 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                virtual ~Data()                noexcept; //!< cleanup
+
+                //! cleanup: all embeded are destructed
+                virtual ~Data()                noexcept;
             protected:
                 explicit Data(void *ptr) noexcept; //!< setup
-                Embed * const data; //!< location
-
+               
                 //! push new information in place
                 template <typename T> inline
                 void push(T * &entry, const size_t count) noexcept

@@ -15,6 +15,7 @@
 #include "y/ptr/auto.hpp"
 #include "y/type/utils.hpp"
 #include "y/type/copy.hpp"
+#include "y/object.hpp"
 
 namespace Yttrium
 {
@@ -362,7 +363,7 @@ namespace Yttrium
         //! Code for Matrix
         //
         //______________________________________________________________________
-        class Code
+        class Code : public Object
         {
         public:
             explicit Code(MutableType * & p, const size_t n,

@@ -1,4 +1,5 @@
 #include "y/memory/embedding/data.hpp"
+#include "y/memory/out-of-reach.hpp"
 
 namespace Yttrium
 {
@@ -8,9 +9,8 @@ namespace Yttrium
         {
             Data:: ~Data() noexcept
             {
-                for(size_t i=0;i<size;++i)
-                    data[i].dismiss();
-                Coerce(size) = 0;
+                while(size>0)
+                    Memory::OutOfReach::Naught(&data[ --Coerce(size) ] );
                 Coerce(data) = 0;
             }
             
@@ -32,11 +32,7 @@ namespace Yttrium
                 return data[indx];
             }
 
-            Embed * Data:: head() noexcept
-            {
-                assert(0!=data);
-                return data;
-            }
+            
 
         }
     }

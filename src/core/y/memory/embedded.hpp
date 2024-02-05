@@ -14,7 +14,7 @@ namespace Yttrium
         //
         //
         //
-        //! Resource acquisition for embedded objetcs
+        //! flat memory acquisition for embedded objects
         //
         //
         //______________________________________________________________________
@@ -31,9 +31,7 @@ namespace Yttrium
             //! allocate and link
             explicit Embedded(Embedding::Data &emb,
                               Allocator       &mgr);
-
-            //! allocate nothing, NOEXCEPT
-            explicit Embedded() noexcept;
+            
 
             //! release flat memory if any
             virtual ~Embedded() noexcept;

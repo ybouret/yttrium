@@ -12,16 +12,10 @@ namespace Yttrium
                             Allocator       &mgr) :
         alloc( &mgr ),
         bytes( 0 ),
-        entry( Embed::Build( emb.head(), emb.size, mgr, Coerce(bytes)) )
+        entry( Embed::Build( emb.data, emb.size, mgr, Coerce(bytes)) )
         {
         }
-
-        Embedded:: Embedded() noexcept :
-        alloc(0),
-        bytes(0),
-        entry(0)
-        {
-        }
+        
 
         Embedded:: ~Embedded() noexcept
         {
