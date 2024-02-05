@@ -4,12 +4,14 @@
 #define Y_Field_Layout_Metrics_Included 1
 
 #include "y/memory/out-of-reach.hpp"
+#include "y/config/shallow.hpp"
 
 namespace Yttrium
 {
 
     namespace Field
     {
+
         //______________________________________________________________________
         //
         //
@@ -48,6 +50,10 @@ namespace Yttrium
                                    size_t * const width,
                                    size_t * const shift) noexcept;
             
+            //! setup with dimension and precomputed items
+            explicit LayoutMetrics(const unsigned d,
+                                   const size_t   n) noexcept;
+
 
         private:
             Y_DISABLE_ASSIGN(LayoutMetrics);

@@ -35,6 +35,7 @@ namespace Yttrium
             static const unsigned DIMENSION = sizeof(COORD)/sizeof(unit_t); //!< space dimension
             using LayoutScope<COUNT>::width;
             using LayoutScope<COUNT>::shift;
+            typedef COORD CoordType;
 
             //__________________________________________________________________
             //
@@ -67,8 +68,31 @@ namespace Yttrium
             upper(up)
             {
             }
+            
 
-           
+            template <typename SUPER> inline
+            explicit Layout(const SubLayout_ &_, const SUPER &super) noexcept :
+            LayoutScope<COUNT>(_,super),
+            LayoutMetrics(DIMENSION, this->lastShift() ),
+            lower( Memory::OutOfReach::Conv<const COORD,const typename SUPER::CoordType>(super.lower) ),
+            upper( Memory::OutOfReach::Conv<const COORD,const typename SUPER::CoordType>(super.upper) )
+            {
+
+            }
+
+            inline friend bool operator==(const Layout &lhs,
+                                          const Layout &rhs) noexcept
+            {
+                if(lhs.lower==rhs.lower && lhs.upper==rhs.upper)
+                {
+                    assert(lhs.width==rhs.width);
+                    assert(lhs.shift==rhs.shift);
+                    assert(lhs.items==rhs.items);
+                    return true;
+                }
+                else
+                    return false;
+            }
 
             //! display metrics
             inline friend std::ostream & operator<<(std::ostream &os, const Layout &l)

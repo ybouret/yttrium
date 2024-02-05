@@ -5,12 +5,14 @@
 #define Y_Field_Layout_Width_Included 1
 
 #include "y/memory/out-of-reach.hpp"
+#include "y/config/shallow.hpp"
 
 namespace Yttrium
 {
 
     namespace Field
     {
+        Y_SHALLOW_DECL(SubLayout);
 
         //______________________________________________________________________
         //
@@ -44,8 +46,10 @@ namespace Yttrium
         //______________________________________________________________________
         template <typename COUNT> class LayoutScope
         {
-        protected:
+        public:
+            typedef COUNT CountType;
 
+        protected:
             //! zero setup
             inline explicit LayoutScope() noexcept : 
             width( ZeroCount::Value<COUNT>() ),
@@ -58,6 +62,15 @@ namespace Yttrium
             shift(other.shift)
             {}
 
+            //! sub-scope
+            template <typename SUPER> inline
+            explicit LayoutScope(const SubLayout_ &, const SUPER &super) noexcept :
+            width( Memory::OutOfReach::Conv<const CountType,const typename SUPER::CountType>(super.width) ),
+            shift( Memory::OutOfReach::Conv<const CountType,const typename SUPER::CountType>(super.shift) )
+            {
+            }
+
+
         public:
             //! cleanup
             inline virtual ~LayoutScope() noexcept {
@@ -65,6 +78,11 @@ namespace Yttrium
                 Y_STATIC_ZVAR( Coerce(shift) );
             }
 
+            inline size_t lastShift() const noexcept
+            {
+                static const size_t DIM = sizeof(COUNT)/sizeof(size_t);
+                return * (Memory::OutOfReach::Cast<const size_t, const COUNT>(&shift) + (DIM-1));
+            }
 
             const COUNT width; //!< the width
             const COUNT shift; //!< shift per dimension

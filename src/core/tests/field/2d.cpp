@@ -10,7 +10,6 @@ using namespace Yttrium;
 
 Y_UTEST(field2d)
 {
-#if 1
 
     Random::Rand     ran;
     Field::Layout2D  L( Field::Coord2D(-2,-4), Field::Coord2D(3,5) );
@@ -38,7 +37,6 @@ Y_UTEST(field2d)
     const LightArray<String> content( &F[F.lower.y][F.lower.x], F.items);
     std::cerr << content << std::endl;
     Y_CHECK(content==provided);
-#endif
     
 }
 Y_UDONE()

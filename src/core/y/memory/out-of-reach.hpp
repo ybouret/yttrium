@@ -42,7 +42,7 @@ namespace Yttrium
                 return static_cast<T*>(Zero(Destructed(item),sizeof(T)));
             }
 
-            //! force Cast
+            //! force Cast or addresses
             template <typename T, typename U> static inline
             T *Cast(U *source) noexcept
             {
@@ -54,6 +54,13 @@ namespace Yttrium
             T *Self(T *source) noexcept
             {
                 return static_cast<T*>( Addr(source) );
+            }
+
+            //! convert references from binary compatible objects
+            template <typename T, typename U> static inline
+            T & Conv(U &source) noexcept
+            {
+                return *static_cast<T*>( Addr( &source) );
             }
 
             //! force Haul

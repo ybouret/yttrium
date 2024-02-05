@@ -7,9 +7,12 @@ namespace Yttrium
 
     namespace Field
     {
+        Y_SHALLOW_IMPL(SubLayout);
 
-        static const size_t data[8] = { 0, 0, 0, 0, 0, 0, 0, 0};
-
+        namespace
+        {
+            static const size_t data[8] = { 0, 0, 0, 0, 0, 0, 0, 0};
+        }
 
         const void * ZeroCount:: Entry() noexcept
         {

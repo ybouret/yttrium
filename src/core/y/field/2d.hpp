@@ -74,7 +74,6 @@ namespace Yttrium
             }
 
         public:
-
             //__________________________________________________________________
             //
             //! Construct as a slice of higher space
@@ -87,7 +86,7 @@ namespace Yttrium
             metaKey(rootKey,slcIndx),
             row(0),
             ptr(0),
-            in1d(lower.x,upper.x),
+            in1d(SubLayout,layout),
             motif(row,width.y,ptr,items),
             owned()
             {

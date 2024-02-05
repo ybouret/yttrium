@@ -48,7 +48,13 @@ namespace Yttrium
         {
         }
         
-        
+        LayoutMetrics:: LayoutMetrics(const unsigned d,
+                                      const size_t   n) noexcept :
+        dimension(d),
+        items(n)
+        {
+            
+        }
 
     }
 

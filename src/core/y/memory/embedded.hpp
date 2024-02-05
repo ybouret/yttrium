@@ -35,7 +35,7 @@ namespace Yttrium
             //! allocate nothing, NOEXCEPT
             explicit Embedded() noexcept;
 
-            //! release flat memory
+            //! release flat memory if any
             virtual ~Embedded() noexcept;
 
         private:
