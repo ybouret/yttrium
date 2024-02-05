@@ -38,6 +38,8 @@ namespace Yttrium
             // Operators
             //
             //__________________________________________________________________
+
+            //! full content equality
             friend bool operator==(const MetaKey &lhs, const MetaKey &rhs) noexcept;
 
             //__________________________________________________________________

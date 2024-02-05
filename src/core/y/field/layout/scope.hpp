@@ -12,16 +12,25 @@ namespace Yttrium
     namespace Field
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! providing Zero Coord[1|2|3|4]D
+        //
+        //
+        //______________________________________________________________________
         struct ZeroCount
         {
+            //! get a pseudo zero
             template <typename T> static inline
             const T & Value() noexcept {
                 assert( sizeof(T) <= Bytes() );
                 return *static_cast<const T *>( Entry() );
             }
 
-            static size_t       Bytes() noexcept;
-            static const void  *Entry() noexcept;
+            static size_t       Bytes() noexcept; //!< inner bytes
+            static const void  *Entry() noexcept; //!< inner entry
 
         };
 
@@ -37,7 +46,7 @@ namespace Yttrium
         {
         protected:
 
-            //! dummy setup
+            //! zero setup
             inline explicit LayoutScope() noexcept : 
             width( ZeroCount::Value<COUNT>() ),
             shift( ZeroCount::Value<COUNT>() )

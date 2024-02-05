@@ -94,22 +94,29 @@ namespace Yttrium
             }
 
 
-
             inline virtual ~Sub2D() noexcept { row=0; }
 
+            // Interface
+
+            //! get key
             inline virtual const MetaKey & key() const noexcept { return metaKey; }
 
+            //! get row
             inline RowType & operator[](const unit_t j) noexcept
             {
                 assert(j>=lower.y); assert(j<=upper.y); return row[j];
             }
 
+            //! get row, const
             inline const RowType & operator[](const unit_t j) const noexcept
             {
                 assert(j>=lower.y); assert(j<=upper.y); return row[j];
             }
 
-            const SelfMetaKey metaKey;
+
+            // Members
+
+            const SelfMetaKey metaKey; //!< meta key
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Sub2D);
@@ -122,10 +129,20 @@ namespace Yttrium
         };
 
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Standalone 2D field
+        //
+        //
+        //______________________________________________________________________
         template <typename T, typename ALLOCATOR>
         class In2D : public Sub2D<0,T>
         {
         public:
+
+            //! setup
             template <typename LABEL>
             inline explicit In2D(const LABEL    & label,
                                  const Layout2D & layout) :
@@ -133,7 +150,7 @@ namespace Yttrium
             {
             }
 
-            
+            //! cleanup
             inline virtual ~In2D() noexcept {}
         private:
             Y_DISABLE_COPY_AND_ASSIGN(In2D);

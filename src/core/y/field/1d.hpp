@@ -149,8 +149,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-
-            const SelfMetaKey metaKey;
+            const SelfMetaKey metaKey; //!< meta key
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Sub1D);
@@ -163,7 +162,9 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
+        //
         //! Standalone 1D field
+        //
         //
         //______________________________________________________________________
         template <typename T, typename ALLOCATOR>
