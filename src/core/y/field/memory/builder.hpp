@@ -6,6 +6,7 @@
 
 #include "y/field/layout/1d.hpp"
 #include "y/field/layout/2d.hpp"
+#include "y/field/layout/3d.hpp"
 
 namespace Yttrium
 {
@@ -126,6 +127,50 @@ namespace Yttrium
                         alienData += DataPerSlice;
                     }
                  }
+                catch(...) { clearBlocks(); throw; }
+            }
+
+
+            //__________________________________________________________________
+            //
+            //
+            //! build volumes of a 4D space
+            //
+            //__________________________________________________________________
+            template <
+            typename META_KEY,
+            typename DATATYPE,
+            typename ROW_TYPE,
+            typename SLC_TYPE>
+            inline explicit MemoryBuilder(T *             volAddr,
+                                          const size_t    numVols,
+                                          const META_KEY &rootKey,
+                                          unit_t          subIndx,
+                                          const Format3D &space3D,
+                                          const Format2D &space2D,
+                                          const Format1D &space1D,
+                                          SLC_TYPE       *alienSlcs,
+                                          ROW_TYPE       *alienRows,
+                                          DATATYPE       *alienData) :
+            block(volAddr),
+            built(0)
+            {
+                assert(Good(volAddr,numVols));
+                typedef T Volume;
+                try {
+                    const size_t SlcsPerVolume = space3D->width.z;
+                    const size_t RowsPerSlice  = space3D->width.y;
+                    const size_t RowsPerVolume = SlcsPerVolume * RowsPerSlice;
+                    const size_t DataPerVolume = space3D->items;
+                    while(built<numVols) {
+                        new (block+built) Volume(rootKey,subIndx,space3D,space2D,space1D,alienSlcs,alienRows,alienData);
+                        ++built;
+                        ++subIndx;
+                        alienSlcs += SlcsPerVolume;
+                        alienRows += RowsPerVolume;
+                        alienData += DataPerVolume;
+                    }
+                }
                 catch(...) { clearBlocks(); throw; }
             }
 

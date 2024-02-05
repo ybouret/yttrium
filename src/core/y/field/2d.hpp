@@ -83,11 +83,11 @@ namespace Yttrium
             metaKey(label),
             row(0),
             addr(0),
-            in1d( new Layout1D(SubLayout,*layout) ),
+            in1D( new Layout1D(SubLayout,*layout) ),
             code( new Code(alloc,row,layout->width.y,addr,layout->items) ),
-            make(row,    layout->width.y,
+            make(row,layout->width.y,
                  metaKey,layout->lower.y,
-                 in1d,   addr)
+                 in1D,addr)
             {
                 row -= layout->lower.y;
             }
@@ -116,11 +116,11 @@ namespace Yttrium
             metaKey(rootKey,slcIndx),
             row(  alienRows ),
             addr( alienData ),
-            in1d( space1D   ),
+            in1D( space1D   ),
             code(0),
-            make(row,     layout->width.y,
-                 metaKey, layout->lower.y,
-                 in1d,    addr)
+            make(row,layout->width.y,
+                 metaKey,layout->lower.y,
+                 in1D,addr)
             {
                 row -= layout->lower.y;
             }
@@ -172,7 +172,7 @@ namespace Yttrium
             RowType      *            row;    //!< row, offseted
             MutableType  *            addr;   //!< linear space of items
         public:
-            const Format1D            in1d;   //!< shared 1D layout
+            const Format1D            in1D;   //!< shared 1D layout
         private:
             const AutoPtr<const Code> code;   //!< for private data
             SelfBuilder               make;   //!< build with row/addr

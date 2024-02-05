@@ -46,32 +46,83 @@ namespace Yttrium
             vol(0),
             slc(0),
             row(0),
-            data(0),
-            in3d( new Layout3D(SubLayout,*layout) ),
-            in2d( new Layout2D(SubLayout,*layout) ),
-            in1d( new Layout1D(SubLayout,*layout) )
+            ptr(0),
+            in3D( new Layout3D(SubLayout,*layout) ),
+            in2D( new Layout2D(SubLayout,*layout) ),
+            in1D( new Layout1D(SubLayout,*layout) ),
+            plan(vol,layout->width.w,
+                 slc,layout->width.w * layout->width.z,
+                 row,layout->width.w * layout->width.z * layout->width.y,
+                 ptr,layout->items),
+            hold(plan,ALLOCATOR::Instance()),
+            make(vol,layout->width.w,
+                 metaKey,layout->lower.w,
+                 in3D,in2D,in1D,
+                 slc,row,ptr)
             {
-
+                vol -= layout->lower.w;
             }
-
 
             inline virtual ~In4D() noexcept
             {
 
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            inline VolumeType & operator[](const unit_t l) noexcept
+            {
+                assert(l>=layout->lower.w);
+                assert(l<=layout->upper.w);
+                return vol[l];
+            }
+
+            inline const VolumeType & operator[](const unit_t l) const noexcept
+            {
+                assert(l>=layout->lower.w);
+                assert(l<=layout->upper.w);
+                return vol[l];
+            }
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            inline virtual const MetaKey & key() const noexcept { return metaKey;    } //!< get key
+            inline virtual size_t          ram() const noexcept { return hold.bytes; } //!< get ram
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+
             const Format4D    layout;
             const SelfMetaKey metaKey;
+            
         private:
-            VolumeType    *vol;
-            SliceType     *slc;
-            RowType       *row;
-            MutableType   *data;
-            const Format3D in3d;
-            const Format2D in2d;
-            const Format1D in1d;
-
-
+            VolumeType             *vol;
+            SliceType              *slc;
+            RowType                *row;
+            MutableType            *ptr;
+            const Format3D          in3D;
+            const Format2D          in2D;
+            const Format1D          in1D;
+            Memory::Embedding::Quad plan;
+            const Memory::Embedded  hold;
+            SelfBuilder             make;
+            
+            inline virtual ConstInterface & surrogate() const noexcept { return *layout; }
         };
 
     }

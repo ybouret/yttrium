@@ -69,7 +69,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-           
+
             //__________________________________________________________________
             //
             //! STANDALONE constructor, NSUB=0
@@ -84,12 +84,12 @@ namespace Yttrium
             slc(  0 ),
             row(  0 ),
             addr( 0 ),
-            in2d( new Layout2D(SubLayout,*layout) ),
-            in1d( new Layout1D(SubLayout,*layout) ),
+            in2D( new Layout2D(SubLayout,*layout) ),
+            in1D( new Layout1D(SubLayout,*layout) ),
             code( new Code(alloc,slc,layout->width.z,row,layout->width.z * layout->width.y,addr,layout->items) ),
             make(slc,layout->width.z,
                  metaKey,layout->lower.z,
-                 in2d,in1d,
+                 in2D,in1D,
                  row,
                  addr)
             {
@@ -98,8 +98,48 @@ namespace Yttrium
 
         public:
 
+            //__________________________________________________________________
+            //
+            //! Construct as a volume of higher space
+            /**
+             \param rootKey   key of 4D Field
+             \param volIndx   index of volume
+             \param space3D   shared layout of this volume
+             \param space2D   shared layout of slices
+             \param space1D   shared layout of rows
+             \param aliewSlcs allocated memory for space3D->width.z
+             \param alienRows allocated memory for space3D->width.y * space3D->width.z
+             \param alienData allocated memory for space3D->items
+             */
+            //__________________________________________________________________
+            explicit Sub3D(const MetaKeyWith<NSUB-1> & rootKey,
+                           const unit_t                volIndx,
+                           const Format3D            & space3D,
+                           const Format2D            & space2D,
+                           const Format1D            & space1D,
+                           SliceType                 * alienSlcs,
+                           RowType                   * alienRows,
+                           MutableType               * alienData) :
+            Sketch(),
+            layout( space3D ),
+            metaKey(rootKey,volIndx),
+            slc(alienSlcs),
+            row(alienRows),
+            addr(alienData),
+            in2D(space2D),
+            in1D(space1D),
+            code(0),
+            make(slc,layout->width.z,
+                 metaKey,layout->lower.z,
+                 in2D,in1D,
+                 row,
+                 addr)
+            {
+                slc -= layout->lower.z;
+            }
+
             //! cleanup
-           inline virtual ~Sub3D() noexcept {}
+            inline virtual ~Sub3D() noexcept {}
 
             //__________________________________________________________________
             //
@@ -117,7 +157,7 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-           
+
             //! access
             inline SliceType & operator[](const unit_t k) noexcept
             {
@@ -149,12 +189,12 @@ namespace Yttrium
             RowType     *             row;  //!< rows address
             MutableType *             addr; //!< items address
         public:
-            const Format2D            in2d; //!< shared 2D layout
-            const Format1D            in1d; //!< shared 1D layout
+            const Format2D            in2D; //!< shared 2D layout
+            const Format1D            in1D; //!< shared 1D layout
         private:
             const AutoPtr<const Code> code; //!< mapping
             SelfBuilder               make; //!< builder of slices
-            
+
             inline virtual ConstInterface & surrogate() const noexcept { return *layout; }
         };
 
