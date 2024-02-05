@@ -124,7 +124,7 @@ namespace Yttrium
             }
 
             //! cleanup
-            inline virtual ~Sub1D() noexcept { entry = 0; }
+            inline virtual ~Sub1D() noexcept { ; }
 
             //__________________________________________________________________
             //

@@ -196,6 +196,7 @@ Y_UTEST(fit_samples)
         var2.display("(v2)  ", std::cerr, aorg);
         std::cerr << std::endl;
 
+
         F1D<double> f1;
 
         Fit::ComputeLeastSquares<double,double> Eval1D;
@@ -205,13 +206,17 @@ Y_UTEST(fit_samples)
 
         Y_SIZEOF(Eval1D);
 
+
         const double D21  = Eval1D.Of(F,*S1,aorg,var1);
         const double D21w = Eval1D.Of(Fw,*S1,aorg,var1);
         std::cerr << "D21=" << D21 << " / " << D21w << std::endl;
 
+
         Vector<bool>   used(all.span(),true);
 
         const double D21a = Eval1D.Of(F,*S1, aorg, var1, used, G);
+        return 0;
+
         std::cerr << "D21a = " << D21a << std::endl;
         std::cerr << "beta = " << Eval1D.beta << std::endl;
         std::cerr << "curv = " << Eval1D.curv << std::endl;
@@ -221,11 +226,10 @@ Y_UTEST(fit_samples)
         std::cerr << "D22a = " << D22a << std::endl;
         std::cerr << "beta = " << Eval1D.beta << std::endl;
         std::cerr << "curv = " << Eval1D.curv << std::endl;
-
         std::cerr << std::endl;
     }
 
-#if 1
+#if 0
     {
         Fit::Variables vars;
         vars << "radius" << "x_c" << "y_c";

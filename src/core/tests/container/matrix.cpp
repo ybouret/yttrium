@@ -80,6 +80,12 @@ Y_UTEST(container_matrix)
     }
 
 
+    {
+        Matrix<String> M;
+        M.make(4,4);
+        //M.make(5,5);
+    }
+
 }
 Y_UDONE()
 

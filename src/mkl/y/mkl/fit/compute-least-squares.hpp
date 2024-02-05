@@ -206,7 +206,7 @@ namespace Yttrium
                         curv[i][i] = one;
                     }
 
-                    Coerce(npts) = 0;
+                    Coerce(npts) = n;
                     return ( Coerce(last) = half * xadd.sum() );
                 }
 

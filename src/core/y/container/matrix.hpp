@@ -278,12 +278,35 @@ namespace Yttrium
         //______________________________________________________________________
         inline void xch(Matrix &other) noexcept
         {
-            CoerceSwap(cols,other.cols);
-            CoerceSwap(rows,other.rows);
-            CoerceSwap(items,other.items);
-            CoerceSwap(row,other.row);
-            CoerceSwap(base,other.base);
+            std::cerr << "swap(" << rows << "," << cols << ") with (" << other.rows << "," << other.cols << ")" << std::endl;
+
+            if(other.items)
+            {
+                std::cerr << "checking other..." << std::endl;
+                assert(other.code->plan[DATA_INDEX].pointee()  == (void**)& other.base);
+                assert(other.code->plan[ROWS_INDEX].pointee()  == (void**)& other.row);
+                std::cerr << "other ok" << std::endl;
+            }
+
+            MutableType *oldBase  = other.base;
+            const size_t oldItems = other.items;
+            Code       *oldCode   = other.code.isEmpty() ? 0 : & *other.code;
+            CoerceSwap(cols,  other.cols  );
+            CoerceSwap(rows,  other.rows  );
+            CoerceSwap(items, other.items );
+            CoerceSwap(row,   other.row   );
+            CoerceSwap(base,  other.base  );
             code.xch(other.code);
+            std::cerr << "my items=" << items << "/other now " << other.items << std::endl;
+            assert(base==oldBase);
+            assert(items==oldItems);
+            if(items>0)
+            {
+                assert(code.isValid());
+                assert(oldCode == & *code);
+                assert(0!=base);
+                assert(code->plan[DATA_INDEX].pointee()  == (void**)&base);
+            }
         }
 
         //______________________________________________________________________
@@ -376,12 +399,14 @@ namespace Yttrium
             rowInfo(plan[DATA_INDEX].address(),nc),
             rowsOps(plan[ROWS_INDEX],rowInfo)
             {
+                assert( plan[DATA_INDEX].pointee() == (void**)&p );
+                assert( plan[ROWS_INDEX].pointee() == (void**)&r );
+
             }
 
             inline virtual ~Code() noexcept { }
 
             const size_t             stride;
-        private:
             Memory::Embedding::Pair  plan;
             const Memory::Embedded   hold;
             Implanted<T>             dataOps;

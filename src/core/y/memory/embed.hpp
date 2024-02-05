@@ -62,9 +62,9 @@ namespace Yttrium
                                 size_t      &bytes);
 
             //! (check and) get allocated address
-            void * address() noexcept;
+            void *        address() noexcept;
+            void **  pointee() const noexcept { return handle; }
 
-            
 
         private:
             Y_DISABLE_ASSIGN(Embed);
