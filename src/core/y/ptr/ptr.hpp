@@ -91,7 +91,8 @@ namespace Yttrium
             return os;
         }
         
-
+        //! get anonymous address
+        inline const void * address() const noexcept { return handle; }
 
     protected:
         MutableType *handle; //!< handle for all smart pointers

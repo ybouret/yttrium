@@ -278,33 +278,23 @@ namespace Yttrium
         //______________________________________________________________________
         inline void xch(Matrix &other) noexcept
         {
-            std::cerr << "swap(" << rows << "," << cols << ") with (" << other.rows << "," << other.cols << ")" << std::endl;
+            std::cerr << "---- before xch" << std::endl;
+            displayInfo(" mine");
+            other.displayInfo("other");
 
-            if(other.items)
-            {
-                std::cerr << "checking other..." << std::endl;
 
-                std::cerr << "other ok" << std::endl;
-            }
-
-            MutableType *oldBase  = other.base;
-            const size_t oldItems = other.items;
-            Code       *oldCode   = other.code.isEmpty() ? 0 : & *other.code;
             CoerceSwap(cols,  other.cols  );
             CoerceSwap(rows,  other.rows  );
             CoerceSwap(items, other.items );
             CoerceSwap(row,   other.row   );
             CoerceSwap(base,  other.base  );
             code.xch(other.code);
-            std::cerr << "my items=" << items << "/other now " << other.items << std::endl;
-            assert(base==oldBase);
-            assert(items==oldItems);
-            if(items>0)
-            {
-                assert(code.isValid());
-                assert(oldCode == & *code);
-                assert(0!=base);
-            }
+            std::cerr << "---- after xch" << std::endl;
+
+            other.displayInfo("other");
+            displayInfo(" mine");
+
+
         }
 
         //______________________________________________________________________
@@ -345,8 +335,43 @@ namespace Yttrium
                 xch(_);
             }
         }
-        
-        
+
+        inline void displayInfo(const char * const prefix) const
+        {
+            std::cerr << prefix << "(" << rows << "," << cols << ") : items=" << items << std::endl;
+            std::cerr << prefix << ".base@" << base << std::endl;
+            std::cerr << prefix << ".row @" << row  << std::endl;
+            std::cerr << prefix << ".code@" << code.address() << std::endl;
+
+            if(items>0)
+            {
+                if(code.isEmpty())
+                {
+                    std::cerr << prefix << " unexpected empty code!!" << std::endl;
+                    exit(1);
+                }
+                const void *codeBase = code->plan[DATA_INDEX].address();
+                const void *codeRow  = code->plan[ROWS_INDEX].address();
+
+                std::cerr << prefix << ".codeBase@" << codeBase << std::endl;
+                std::cerr << prefix << ".codeRow @" << codeRow  << std::endl;
+
+                if(! code->plan[DATA_INDEX].linkedTo(base) )
+                {
+                    std::cerr << prefix << " invalid base linking!!" << std::endl;
+                    exit(1);
+                }
+            }
+            else
+            {
+                if(code.isValid())
+                {
+                    std::cerr << prefix << " unexpected valid code!!" << std::endl;
+                    exit(1);
+                }
+            }
+        }
+
 
 
     private:
@@ -397,6 +422,8 @@ namespace Yttrium
             rowInfo(plan[DATA_INDEX].address(),nc),
             rowsOps(plan[ROWS_INDEX],rowInfo)
             {
+                assert( plan[DATA_INDEX].linkedTo(p) );
+                assert( plan[ROWS_INDEX].linkedTo(r) );
 
             }
 
@@ -415,6 +442,7 @@ namespace Yttrium
         // create with default objects
         inline void create()
         {
+            assert(code.isEmpty());
             if(items<=0) return;
             code = new Code(base,items,row,rows,cols);
             assert(code.isValid());

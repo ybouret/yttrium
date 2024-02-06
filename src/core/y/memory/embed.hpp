@@ -61,6 +61,9 @@ namespace Yttrium
             //! (check and) get allocated address
             void *   address() noexcept;
 
+            //! get allocated/nil address
+            const void * address() const noexcept;
+
             template <typename T> inline
             bool linkedTo(T * const &entry) const noexcept
             {

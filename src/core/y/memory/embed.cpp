@@ -80,6 +80,11 @@ namespace Yttrium
             return *handle;
         }
 
+        const void * Embed:: address() const noexcept
+        {
+            assert(0!=handle);
+            return *handle;
+        }
 
 
 
