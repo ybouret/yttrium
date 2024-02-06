@@ -9,6 +9,7 @@
 #include "y/container/matrix.hpp"
 #include "y/type/zeroed-field.hpp"
 #include "y/oversized.hpp"
+#include "y/data/list/cxx.hpp"
 
 namespace Yttrium
 {
@@ -45,7 +46,22 @@ namespace Yttrium
                 typedef typename MyType::OutOfOrderGradient    OutOfOrderGrad; //!< alias
                 typedef          Sequential<ABSCISSA,ORDINATE> SequentialFunc; //!< alias
                 typedef          ListOf<LeastSquares>          List;           //!< alias
+                typedef          Antelope::Add<ABSCISSA>       XAdd;           //!< alias
                 static const     size_t Dimension = MyType::Dimension;         //!< alias
+
+                class XNode : public Object, public XAdd
+                {
+                public:
+                    explicit XNode() : XAdd(), next(0), prev(0) {}
+                    virtual ~XNode() noexcept {}
+
+                    XNode *next;
+                    XNode *prev;
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(XNode);
+                };
+
+                typedef CxxListOf<XNode> XList;
 
                 //______________________________________________________________
                 //
@@ -57,6 +73,7 @@ namespace Yttrium
                 //! initialize
                 explicit LeastSquares() :
                 xadd(),
+                xlst(),
                 dFda(),
                 beta(),
                 curv(),
@@ -334,7 +351,8 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                Antelope::Add<ABSCISSA>       xadd; //!< to perform additions
+                XAdd                          xadd; //!< to perform additions
+                XList                         xlst; //!< to perform additions
                 Vector<ORDINATE,SampleMemory> dFda; //!< local dF/da
                 Vector<ABSCISSA,SampleMemory> beta; //!< gradient of D2
                 Matrix<ABSCISSA>              curv; //!< approx curvature of D2
@@ -350,6 +368,7 @@ namespace Yttrium
 
                 Y_DISABLE_COPY_AND_ASSIGN(LeastSquares);
 
+                //! push |Bj-Fj|^2 into xadd
                 inline void pushDSQ(const ORDINATE &Bj, const ORDINATE &Fj)
                 {
                     const ORDINATE  dB = Bj - Fj;
@@ -358,6 +377,10 @@ namespace Yttrium
                         xadd << Squared(a[d]);
                 }
 
+                //! push |Bj-Fj|^2 into xadd
+                /**
+                 
+                 */
                 inline void pushAll(const ORDINATE     &Bj,
                                     const ORDINATE     &Fj)
                 {

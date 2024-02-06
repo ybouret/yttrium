@@ -27,7 +27,7 @@ namespace Yttrium
 }
 
 //! helper to replace sizeof()
-#define Y_SIZEOF(CLASS) Yttrium::UnitTestDisplay::SizeOf(#CLASS,sizeof(CLASS))
+#define Y_SIZEOF(CLASS) Yttrium::UnitTestDisplay::SizeOf(#CLASS,(sizeof(CLASS)))
 
 //! helper to display unsigned field
 #define Y_USHOW(FIELD)  Yttrium::UnitTestDisplay::AsU64(#FIELD,static_cast<uint64_t>(FIELD))

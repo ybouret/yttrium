@@ -215,8 +215,7 @@ Y_UTEST(fit_samples)
         Vector<bool>   used(all.span(),true);
 
         const double D21a = Eval1D.Of(F,*S1, aorg, var1, used, G);
-        return 0;
-
+        
         std::cerr << "D21a = " << D21a << std::endl;
         std::cerr << "beta = " << Eval1D.beta << std::endl;
         std::cerr << "curv = " << Eval1D.curv << std::endl;
@@ -260,6 +259,14 @@ Y_UTEST(fit_samples)
 
     }
 #endif
+
+    typedef Fit::LeastSquares<float,float>::XNode             XNodeF;
+    typedef Fit::LeastSquares<double,double>::XNode           XNodeD;
+    typedef Fit::LeastSquares<long double,long double>::XNode XNodeL;
+
+    Y_SIZEOF(XNodeF);
+    Y_SIZEOF(XNodeD);
+    Y_SIZEOF(XNodeL);
 
 
 }
