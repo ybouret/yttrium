@@ -283,8 +283,7 @@ namespace Yttrium
             if(other.items)
             {
                 std::cerr << "checking other..." << std::endl;
-                assert(other.code->plan[DATA_INDEX].pointee()  == (void**)& other.base);
-                assert(other.code->plan[ROWS_INDEX].pointee()  == (void**)& other.row);
+
                 std::cerr << "other ok" << std::endl;
             }
 
@@ -305,7 +304,6 @@ namespace Yttrium
                 assert(code.isValid());
                 assert(oldCode == & *code);
                 assert(0!=base);
-                assert(code->plan[DATA_INDEX].pointee()  == (void**)&base);
             }
         }
 
@@ -399,8 +397,6 @@ namespace Yttrium
             rowInfo(plan[DATA_INDEX].address(),nc),
             rowsOps(plan[ROWS_INDEX],rowInfo)
             {
-                assert( plan[DATA_INDEX].pointee() == (void**)&p );
-                assert( plan[ROWS_INDEX].pointee() == (void**)&r );
 
             }
 

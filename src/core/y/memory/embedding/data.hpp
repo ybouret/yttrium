@@ -30,8 +30,8 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                const size_t  size; //!< number of info
-                Embed * const data; //!< location
+                const size_t  size; //!< number of built Embed
+                Embed * const data; //!< provided location of first Embed
 
                 //______________________________________________________________
                 //
@@ -56,19 +56,19 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
+                Y_OSTREAM_PROTO(Data);
 
-                //! cleanup: all embeded are destructed
+                //! cleanup: all embeded are destructed, addresses are reset
                 virtual ~Data()                noexcept;
             protected:
-                explicit Data(void *ptr) noexcept; //!< setup
-               
+                explicit Data(void *ptr) noexcept; //!< setup with provided location
+
                 //! push new information in place
                 template <typename T> inline
                 void push(T * &entry, const size_t count) noexcept
                 {
                     assert(size<maxi());
-                    Embed &here = data[Coerce(size)++];
-                    new ( &here ) Embed(entry,count);
+                    new ( &data[Coerce(size)++] ) Embed(entry,count);
                 }
 
             private:

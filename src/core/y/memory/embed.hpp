@@ -35,13 +35,12 @@ namespace Yttrium
             inline Embed( T * &entry, const size_t count) noexcept :
             handle( (void **)&entry   ),
             offset( 0 ),
-            length( Align(count * sizeof(T)) ),
+            length( AlignBytes(count * sizeof(T)) ),
             blocks( count )
             {
             }
-
             Embed(const Embed &) noexcept; //!< copy
-            ~Embed()             noexcept; //!< cleanup handle
+            ~Embed()             noexcept; //!< cleanup handle (!)
             Y_OSTREAM_PROTO(Embed);        //!< dislplay
 
             //__________________________________________________________________
@@ -52,28 +51,31 @@ namespace Yttrium
             //__________________________________________________________________
 
 
-            //! ensure memory alignment
-            static size_t Align(const size_t) noexcept;
 
             //! compute all metrics, allocate and link
-            static void  *Build(Embed        embed[],
-                                const size_t count,
-                                Allocator   &alloc,
-                                size_t      &bytes);
+            static void  *Build(Embed * const embed,
+                                const size_t  count,
+                                Allocator   & alloc,
+                                size_t      & bytes);
 
             //! (check and) get allocated address
-            void *        address() noexcept;
-            void **  pointee() const noexcept { return handle; }
+            void *   address() noexcept;
 
+            template <typename T> inline
+            bool linkedTo(T * const &entry) const noexcept
+            {
+                return ( (void **) &entry ) == handle;
+            }
 
         private:
             Y_DISABLE_ASSIGN(Embed);
-            size_t nextOffset()     noexcept; //!< compute
-            void   link(void *base) noexcept; //!< transfer
+            static size_t AlignBytes(const size_t) noexcept; //!< ensure memory alignment
+            size_t        nextOffset()             noexcept; //!< offset+length
+            void          linkOffset(void *base)   noexcept; //!< transfer
             void **      handle;
             size_t       offset;
         public:
-            const size_t length;  //!< allocated bytes
+            const size_t length;  //!< requested bytes
             const size_t blocks;  //!< allocated blocks (a.k.a objects)
         };
 

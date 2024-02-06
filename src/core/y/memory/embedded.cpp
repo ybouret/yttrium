@@ -19,11 +19,8 @@ namespace Yttrium
 
         Embedded:: ~Embedded() noexcept
         {
-            if(0!=alloc)
-            {
-                alloc->release(Coerce(entry),Coerce(bytes));
-                Coerce(alloc) = 0;
-            }
+            alloc->release(Coerce(entry),Coerce(bytes));
+            Coerce(alloc) = 0;
         }
 
     }

@@ -22,14 +22,11 @@ Y_UTEST(memory_embed)
         const size_t numA = 3;
         const size_t numB = 17;
 
-        Memory::Embed emb[] =
-        {
-            Memory::Embed(a,numA),
-            Memory::Embed(b,numB)
-        };
 
         Memory::Embedding::Pair   pair(a,numA,b,numB);
+        std::cerr << "nil=" << pair << std::endl;
         const Memory::Embedded    resources(pair,Memory::Pooled::Instance() );
+        std::cerr << resources.bytes << "=" << pair << std::endl;
 
         for(size_t i=0;i<numA;++i)
         {
@@ -46,10 +43,12 @@ Y_UTEST(memory_embed)
 
     {
         String *S = 0;
-        Memory::Embedding::Solo  emb(S,13);
-        const Memory::Embedded resources(emb,Memory::Pooled::Instance() );
-        Implanted<String>      implanted(emb[0]);
-        std::cerr << "string : " << emb[0] << std::endl;
+        Memory::Embedding::Solo  solo(S,13);
+        const Memory::Embedded   resources(solo,Memory::Pooled::Instance() );
+        Implanted<String>        implanted(solo[0]);
+        std::cerr << "string : " << solo[0] << std::endl;
+        std::cerr << "solo=" << solo << std::endl;
+        std::cerr << "resources = " << resources.bytes << "b" << std::endl;
     }
     
 }

@@ -1,5 +1,6 @@
 #include "y/memory/embedding/data.hpp"
-#include "y/memory/out-of-reach.hpp"
+#include "y/type/destruct.hpp"
+#include <iostream>
 
 namespace Yttrium
 {
@@ -9,8 +10,9 @@ namespace Yttrium
         {
             Data:: ~Data() noexcept
             {
+                // destruct
                 while(size>0)
-                    Memory::OutOfReach::Naught(&data[ --Coerce(size) ] );
+                    Destruct( &data[ --Coerce(size) ] );
                 Coerce(data) = 0;
             }
             
@@ -32,7 +34,17 @@ namespace Yttrium
                 return data[indx];
             }
 
-            
+            std::ostream & operator<<(std::ostream &os, const Data &d)
+            {
+                os << '{' << std::endl;
+                for(size_t i=0;i<d.size;++i)
+                {
+                    os << "  " << d[i] << std::endl;
+                }
+                os << '}';
+                return os;
+            }
+
 
         }
     }

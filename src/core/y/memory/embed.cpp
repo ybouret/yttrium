@@ -3,13 +3,15 @@
 #include "y/memory/allocator.hpp"
 
 #include <iostream>
+#include <iomanip>
+#include "y/text/human-readable.hpp"
 
 namespace Yttrium
 {
     namespace Memory
     {
 
-        size_t Embed:: Align(const size_t n) noexcept
+        size_t Embed:: AlignBytes(const size_t n) noexcept
         {
             return Y_MEMALIGN(n);
         }
@@ -32,18 +34,19 @@ namespace Yttrium
         size_t Embed:: nextOffset()   noexcept
         {
             assert(0!=handle);
-            *handle = 0;
+            assert(0==*handle);
             return offset + length;
         }
 
-        void Embed:: link(void *base) noexcept
+        void Embed:: linkOffset(void *base) noexcept
         {
             assert(0!=base);
             assert(0!=handle);
+            assert(0==*handle);
             *handle = static_cast<void *>( static_cast<char*>(base)+offset );
         }
 
-        void  *Embed:: Build(Embed          embed[],
+        void  *Embed:: Build(Embed * const  embed,
                              const size_t   count,
                              Allocator   &  alloc,
                              size_t      &  bytes)
@@ -64,19 +67,17 @@ namespace Yttrium
             //------------------------------------------------------------------
             // acquire
             //------------------------------------------------------------------
-            void *entry = alloc.acquire(bytes,1);
+            void *base = alloc.acquire(bytes,1);
             for(size_t i=0;i<count;++i)
-            {
-                embed[i].link(entry);
-            }
-            return entry;
+                embed[i].linkOffset(base);
+            return base;
         }
 
         void * Embed:: address() noexcept
         {
-            assert(0!=handle);
-            void *addr = *handle; assert(0!=addr);
-            return addr;
+            assert(0!=  handle);
+            assert(0!= *handle);
+            return *handle;
         }
 
 
@@ -84,7 +85,9 @@ namespace Yttrium
 
         std::ostream & operator<<(std::ostream &os, const Embed &emb)
         {
-            os << "@" << *emb.handle << " #blocks=" << emb.blocks << " #bytes=" << emb.length;
+            os << HumanReadable(emb.blocks);
+            os << "@" << *emb.handle;
+            os << " (" << HumanReadable(emb.length) << "b)";
             return os;
         }
         
