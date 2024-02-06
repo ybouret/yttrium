@@ -40,7 +40,7 @@ namespace Yttrium
             {
             }
             Embed(const Embed &) noexcept; //!< copy
-            ~Embed()             noexcept; //!< cleanup handle (!)
+            ~Embed()             noexcept; //!< cleanup, do nothing
             Y_OSTREAM_PROTO(Embed);        //!< dislplay
 
             //__________________________________________________________________
@@ -63,6 +63,10 @@ namespace Yttrium
 
             //! get allocated/nil address
             const void * address() const noexcept;
+
+            //! reset handle's content to null
+            void dismiss() noexcept;
+
 
             template <typename T> inline
             bool linkedTo(T * const &entry) const noexcept

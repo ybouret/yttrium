@@ -278,23 +278,12 @@ namespace Yttrium
         //______________________________________________________________________
         inline void xch(Matrix &other) noexcept
         {
-            std::cerr << "---- before xch" << std::endl;
-            displayInfo(" mine");
-            other.displayInfo("other");
-
-
             CoerceSwap(cols,  other.cols  );
             CoerceSwap(rows,  other.rows  );
             CoerceSwap(items, other.items );
             CoerceSwap(row,   other.row   );
             CoerceSwap(base,  other.base  );
             code.xch(other.code);
-            std::cerr << "---- after xch" << std::endl;
-
-            other.displayInfo("other");
-            displayInfo(" mine");
-
-
         }
 
         //______________________________________________________________________
@@ -336,41 +325,6 @@ namespace Yttrium
             }
         }
 
-        inline void displayInfo(const char * const prefix) const
-        {
-            std::cerr << prefix << "(" << rows << "," << cols << ") : items=" << items << std::endl;
-            std::cerr << prefix << ".base@" << base << std::endl;
-            std::cerr << prefix << ".row @" << row  << std::endl;
-            std::cerr << prefix << ".code@" << code.address() << std::endl;
-
-            if(items>0)
-            {
-                if(code.isEmpty())
-                {
-                    std::cerr << prefix << " unexpected empty code!!" << std::endl;
-                    exit(1);
-                }
-                const void *codeBase = code->plan[DATA_INDEX].address();
-                const void *codeRow  = code->plan[ROWS_INDEX].address();
-
-                std::cerr << prefix << ".codeBase@" << codeBase << std::endl;
-                std::cerr << prefix << ".codeRow @" << codeRow  << std::endl;
-
-                if(! code->plan[DATA_INDEX].linkedTo(base) )
-                {
-                    std::cerr << prefix << " invalid base linking!!" << std::endl;
-                    exit(1);
-                }
-            }
-            else
-            {
-                if(code.isValid())
-                {
-                    std::cerr << prefix << " unexpected valid code!!" << std::endl;
-                    exit(1);
-                }
-            }
-        }
 
 
 
@@ -412,30 +366,33 @@ namespace Yttrium
         class Code : public Object
         {
         public:
-            explicit Code(MutableType * & p, const size_t n,
-                          RowType *     & r, const size_t nr,
-                          const size_t    nc) :
+
+            //__________________________________________________________________
+            //
+            //! build with temporary plan
+            //___________________________________________________________________
+            explicit Code(Memory::Embed *const plan,
+                          const size_t         nc) :
             stride(nc*sizeof(T)),
-            plan(p,n,r,nr),
-            hold(plan,ALLOCATOR::Instance()),
+            holding(plan,NUM_FIELDS,ALLOCATOR::Instance()),
             dataOps(plan[DATA_INDEX]),
             rowInfo(plan[DATA_INDEX].address(),nc),
             rowsOps(plan[ROWS_INDEX],rowInfo)
             {
-                assert( plan[DATA_INDEX].linkedTo(p) );
-                assert( plan[ROWS_INDEX].linkedTo(r) );
-
             }
 
+            //__________________________________________________________________
+            //
+            // cleanup
+            //__________________________________________________________________
             inline virtual ~Code() noexcept { }
 
             const size_t             stride;
-            Memory::Embedding::Pair  plan;
-            const Memory::Embedded   hold;
+        private:
+            const Memory::Embedded   holding;
             Implanted<T>             dataOps;
             Core::MatrixRow::Info    rowInfo;
             Implanted<RowType>       rowsOps;
-
             Y_DISABLE_COPY_AND_ASSIGN(Code);
         };
 
@@ -444,10 +401,12 @@ namespace Yttrium
         {
             assert(code.isEmpty());
             if(items<=0) return;
-            code = new Code(base,items,row,rows,cols);
-            assert(code.isValid());
-            assert(0!=row);
-            assert(0!=base);
+            Memory::Embed plan[NUM_FIELDS] =
+            {
+                Memory::Embed(base,items),
+                Memory::Embed(row,rows)
+            };
+            code = new Code(plan,cols);
             --row;
         }
 

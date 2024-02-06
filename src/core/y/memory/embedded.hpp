@@ -28,12 +28,16 @@ namespace Yttrium
             //
             //__________________________________________________________________
             
-            //! allocate flat memory and link
+            //! allocate flat memory and link, persistent embedding
             explicit Embedded(Embedding::Data &emb,
                               Allocator       &mgr);
             
+            //! allocate flat memory and link, temporary embedding
+            explicit Embedded(Embed * const emb,
+                              const size_t  num,
+                              Allocator    &mgr);
 
-            //! release flat
+            //! release flat memory
             virtual ~Embedded() noexcept;
 
         private:

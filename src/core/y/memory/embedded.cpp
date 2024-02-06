@@ -15,7 +15,18 @@ namespace Yttrium
         entry( Embed::Build( emb.data, emb.size, mgr, Coerce(bytes)) )
         {
         }
-        
+
+
+        Embedded:: Embedded(Embed * const emb,
+                            const size_t  num,
+                            Allocator    &mgr) :
+        alloc( &mgr ),
+        bytes( 0 ),
+        entry( Embed::Build( emb, num, mgr, Coerce(bytes)) )
+        {
+
+        }
+
 
         Embedded:: ~Embedded() noexcept
         {

@@ -27,8 +27,7 @@ namespace Yttrium
         
         Embed:: ~Embed() noexcept
         {
-            assert(0!=handle);
-            *handle = 0;
+            
         }
 
         size_t Embed:: nextOffset()   noexcept
@@ -84,6 +83,12 @@ namespace Yttrium
         {
             assert(0!=handle);
             return *handle;
+        }
+
+        void Embed:: dismiss() noexcept
+        {
+            assert(0!=handle);
+            *handle = 0;
         }
 
 

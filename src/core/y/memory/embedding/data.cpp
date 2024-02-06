@@ -12,7 +12,11 @@ namespace Yttrium
             {
                 // destruct
                 while(size>0)
-                    Destruct( &data[ --Coerce(size) ] );
+                {
+                    Embed &emb = data[ --Coerce(size) ];
+                    emb.dismiss();
+                    Destruct( &emb );
+                }
                 Coerce(data) = 0;
             }
             

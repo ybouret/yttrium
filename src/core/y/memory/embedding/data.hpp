@@ -17,7 +17,7 @@ namespace Yttrium
             //
             //
             //
-            //! data to store embedding info
+            //! data to store embedding info that cleans up upon destructor
             //
             //
             //__________________________________________________________________
