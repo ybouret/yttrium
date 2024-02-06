@@ -23,12 +23,12 @@ namespace Yttrium
             //
             //
             //
-            //! computing least squares metric
+            //! computing least squares
             //
             //
             //__________________________________________________________________
             template <typename ABSCISSA, typename ORDINATE>
-            class ComputeLeastSquares : public Oversized
+            class LeastSquares : public Oversized
             {
             public:
                 //______________________________________________________________
@@ -37,28 +37,29 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef Sample<ABSCISSA,ORDINATE>            SampleType;
-                typedef TypeFor<ABSCISSA,ORDINATE>           MyType;
+                typedef          Sample<ABSCISSA,ORDINATE>     SampleType;     //!< alias
+                typedef          TypeFor<ABSCISSA,ORDINATE>    MyType;         //!< alias
+                typedef typename SampleType::Abscissae         Abscissae;      //!< alias
+                typedef typename SampleType::Ordinates         Ordinates;      //!< alias
+                typedef typename MyType::OutOfOrderFunc        OutOfOrderFunc; //!< alias
+                typedef typename MyType::OutOfOrderGradient    OutOfOrderGrad; //!< alias
+                typedef          Sequential<ABSCISSA,ORDINATE> SequentialFunc; //!< alias
+                typedef          ListOf<LeastSquares>          List;           //!< alias
+                static const     size_t Dimension = MyType::Dimension;         //!< alias
 
-                typedef typename SampleType::Abscissae       Abscissae;
-                typedef typename SampleType::Ordinates       Ordinates;
-                typedef typename MyType::OutOfOrderFunc      OutOfOrderFunc;
-                typedef typename MyType::OutOfOrderGradient  OutOfOrderGrad;
-                typedef Sequential<ABSCISSA,ORDINATE>        SequentialFunc;
-                static const size_t Dimension = MyType::Dimension;
-
-                typedef ListOf<ComputeLeastSquares> List;
-                
                 //______________________________________________________________
                 //
                 //
                 // C++
                 //
                 //______________________________________________________________
-                explicit ComputeLeastSquares() :
+              
+                //! initialize
+                explicit LeastSquares() :
                 xadd(),
                 dFda(),
                 beta(),
+                curv(),
                 npts(0),
                 last(0),
                 zero(0),
@@ -72,10 +73,8 @@ namespace Yttrium
 
                 }
 
-                virtual ~ComputeLeastSquares() noexcept
-                {
-
-                }
+                //! cleanup
+                virtual ~LeastSquares() noexcept {}
 
                 //______________________________________________________________
                 //
@@ -84,7 +83,16 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
+                //______________________________________________________________
+                //
                 //! compute least squares of S w.r.t a sequential F
+                /**
+                 \param F    a sequential function
+                 \param S    a single sample
+                 \param aorg parameters
+                 \param vars variables
+                 */
+                //______________________________________________________________
                 inline ABSCISSA Of(SequentialFunc           &F,
                                    const SampleType         &S,
                                    const Readable<ABSCISSA> &aorg,
@@ -124,7 +132,16 @@ namespace Yttrium
                     return ( Coerce(last) = half * xadd.sum() );
                 }
 
+                //______________________________________________________________
+                //
                 //! compute least squares of S w.r.t an out of order F
+                /**
+                 \param F    an out-of-order function
+                 \param S    a single sample
+                 \param aorg parameters
+                 \param vars variables
+                 */
+                //______________________________________________________________
                 inline ABSCISSA Of(OutOfOrderFunc           &F,
                                    const SampleType         &S,
                                    const Readable<ABSCISSA> &aorg,
@@ -156,7 +173,18 @@ namespace Yttrium
 
 
 
-
+                //______________________________________________________________
+                //
+                //! compute full least squares of S w.r.t an out-of-order F
+                /**
+                 \param F    an out of order function
+                 \param S    a single sample
+                 \param aorg parametes
+                 \param vars variables
+                 \param used used parameters/variables
+                 \param G   an out of order gradient
+                 */
+                //______________________________________________________________
                 inline ABSCISSA Of(OutOfOrderFunc           &F,
                                    const SampleType         &S,
                                    const Readable<ABSCISSA> &aorg,
@@ -165,7 +193,9 @@ namespace Yttrium
                                    OutOfOrderGrad           &G)
 
                 {
+                    //----------------------------------------------------------
                     // initialize
+                    //----------------------------------------------------------
                     const size_t     n  = S.numPoints();
                     const Abscissae &a  = S.abscissae();
                     const Ordinates &b  = S.ordinates();
@@ -177,19 +207,26 @@ namespace Yttrium
                     beta.adjust(nv,zero);
                     curv.make(nv,nv);
 
-                    // global setting
+                    //----------------------------------------------------------
+                    // global initialization
+                    //----------------------------------------------------------
                     beta.ld(zero);
                     curv.ld(zero);
 
+                    //----------------------------------------------------------
+                    // accumulation
+                    //----------------------------------------------------------
                     for(size_t j=n;j>0;--j)
                     {
                         const ORDINATE Fj = F(a[j],aorg,vars);
-                        dFda.ld(zord); // local setting befor call
+                        dFda.ld(zord); // local setting before call
                         G(dFda,a[j],aorg,vars,used);
                         pushAll(b[j],Fj);
                     }
 
+                    //----------------------------------------------------------
                     // ensure consistency
+                    //----------------------------------------------------------
                     for(size_t i=nv;i>0;--i)
                     {
                         if( vars.found(i) && used[i] )
@@ -206,18 +243,31 @@ namespace Yttrium
                         curv[i][i] = one;
                     }
 
+                    //----------------------------------------------------------
+                    // return sim
+                    //----------------------------------------------------------
                     Coerce(npts) = n;
                     return ( Coerce(last) = half * xadd.sum() );
                 }
 
+                //______________________________________________________________
+                //
+                //
+                // Methods for multiple samples
+                //
+                //______________________________________________________________
+
+                //! summing precomputed LeastSquares
                 inline ABSCISSA Of(const List &L)
                 {
 
                     if(L.size<=0) return zero;
 
+                    //----------------------------------------------------------
                     // prepare memory
+                    //----------------------------------------------------------
                     {
-                        const ComputeLeastSquares &first = *(L.head);
+                        const LeastSquares &first = *(L.head);
                         const size_t nv = first.dFda.size(); assert(nv>0);
                         dFda.adjust(nv,zero);
                         beta.adjust(nv,zero);
@@ -225,33 +275,39 @@ namespace Yttrium
                         xadd.make(L.size);
                     }
 
+                    //----------------------------------------------------------
                     // first pass: npts
+                    //----------------------------------------------------------
                     Coerce(npts) = 0;
-                    for(const ComputeLeastSquares *cls = L.head; cls; cls=cls->next)
+                    for(const LeastSquares *cls = L.head; cls; cls=cls->next)
                     {
                         Coerce(npts) += cls->npts;
                     }
 
+                    //----------------------------------------------------------
                     // second pass: beta
+                    //----------------------------------------------------------
                     const size_t   nvar = beta.size();
                     const ABSCISSA den  = ABSCISSA(npts);
                     for(size_t i=nvar;i>0;--i)
                     {
                         xadd.free();
-                        for(const ComputeLeastSquares *cls = L.head; cls; cls=cls->next)
+                        for(const LeastSquares *cls = L.head; cls; cls=cls->next)
                         {
                             xadd << (cls->beta[i]* static_cast<ABSCISSA>(cls->npts) );
                         }
                         beta[i] = xadd.sum() / den;
                     }
 
+                    //----------------------------------------------------------
                     // third pass: curv
+                    //----------------------------------------------------------
                     for(size_t i=nvar;i>0;--i)
                     {
                         for(size_t j=i;j>0;--j)
                         {
                             xadd.free();
-                            for(const ComputeLeastSquares *cls = L.head; cls; cls=cls->next)
+                            for(const LeastSquares *cls = L.head; cls; cls=cls->next)
                             {
                                 xadd << (cls->curv[i][j]*static_cast<ABSCISSA>(cls->npts));
                             }
@@ -259,9 +315,11 @@ namespace Yttrium
                         }
                     }
 
+                    //----------------------------------------------------------
                     // final D2
+                    //----------------------------------------------------------
                     xadd.free();
-                    for(const ComputeLeastSquares *cls = L.head; cls; cls=cls->next)
+                    for(const LeastSquares *cls = L.head; cls; cls=cls->next)
                     {
                         xadd << (cls->last * static_cast<ABSCISSA>(cls->npts));
                     }
@@ -290,7 +348,7 @@ namespace Yttrium
                 const ZeroedField<ORDINATE>   z___;
                 const ORDINATE               &zord;
 
-                Y_DISABLE_COPY_AND_ASSIGN(ComputeLeastSquares);
+                Y_DISABLE_COPY_AND_ASSIGN(LeastSquares);
 
                 inline void pushDSQ(const ORDINATE &Bj, const ORDINATE &Fj)
                 {
@@ -328,8 +386,8 @@ namespace Yttrium
                 }
 
             public:
-                ComputeLeastSquares          *next;
-                ComputeLeastSquares          *prev;
+                LeastSquares *next; //!< for list
+                LeastSquares *prev; //!< for list
             };
 
         }

@@ -14,16 +14,39 @@ namespace Yttrium
 
         namespace Fit
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Samples are a database of shared Sample::Pointer
+            //
+            //
+            //__________________________________________________________________
             template <typename ABSCISSA, typename ORDINATE>
             class Samples : public SuffixSet<String, typename Sample<ABSCISSA,ORDINATE>::Pointer>
             {
             public:
-                typedef Sample<ABSCISSA,ORDINATE>       SampleType;
-                typedef typename SampleType::Pointer    SamplePointer;
-                typedef SuffixSet<String,SamplePointer> SampleDB;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef Sample<ABSCISSA,ORDINATE>       SampleType;     //!< alias
+                typedef typename SampleType::Pointer    SamplePointer;  //!< alias
+                typedef SuffixSet<String,SamplePointer> SampleDB;       //!< alias
 
-                explicit Samples() {}
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+               
+                //! setup
+                explicit Samples() : SampleDB() {}
+
+                //! cleanup
                 virtual ~Samples() noexcept {}
                 
 

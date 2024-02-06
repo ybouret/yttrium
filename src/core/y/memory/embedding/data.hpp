@@ -56,7 +56,7 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                Y_OSTREAM_PROTO(Data);
+                Y_OSTREAM_PROTO(Data); //!< display
 
                 //! cleanup: all embeded are destructed, addresses are reset
                 virtual ~Data()                noexcept;

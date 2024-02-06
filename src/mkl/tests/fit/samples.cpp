@@ -1,5 +1,5 @@
 
-#include "y/mkl/fit/compute-least-squares.hpp"
+#include "y/mkl/fit/least-squares.hpp"
 #include "y/mkl/fit/sequential/wrapper.hpp"
 #include "y/mkl/fit/sample/heavy.hpp"
 #include "y/mkl/fit/sample/light.hpp"
@@ -199,10 +199,10 @@ Y_UTEST(fit_samples)
 
         F1D<double> f1;
 
-        Fit::ComputeLeastSquares<double,double> Eval1D;
-        Fit::ComputeLeastSquares<double,double>::OutOfOrderFunc F( &f1, & F1D<double>::F );
-        Fit::SequentialWrapper<double, double>                  Fw( F );
-        Fit::ComputeLeastSquares<double,double>::OutOfOrderGrad G( &f1, & F1D<double>::G );
+        Fit::LeastSquares<double,double>                 Eval1D;
+        Fit::LeastSquares<double,double>::OutOfOrderFunc F( &f1, & F1D<double>::F );
+        Fit::SequentialWrapper<double, double>           Fw( F );
+        Fit::LeastSquares<double,double>::OutOfOrderGrad G( &f1, & F1D<double>::G );
 
         Y_SIZEOF(Eval1D);
 
@@ -229,16 +229,16 @@ Y_UTEST(fit_samples)
         std::cerr << std::endl;
     }
 
-#if 0
+#if 1
     {
         Fit::Variables vars;
         vars << "radius" << "x_c" << "y_c";
         typedef V2D<double> VTX;
         Circle<double>      Circ;
 
-        Fit::ComputeLeastSquares<double,VTX>                 Eval2D;
-        Fit::ComputeLeastSquares<double,VTX>::OutOfOrderFunc F( &Circ, & Circle<double>::F );
-        Fit::ComputeLeastSquares<double,VTX>::OutOfOrderGrad G( &Circ, & Circle<double>::G );
+        Fit::LeastSquares<double,VTX>                 Eval2D;
+        Fit::LeastSquares<double,VTX>::OutOfOrderFunc F( &Circ, & Circle<double>::F );
+        Fit::LeastSquares<double,VTX>::OutOfOrderGrad G( &Circ, & Circle<double>::G );
         Y_SIZEOF(Eval2D);
 
 

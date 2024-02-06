@@ -66,7 +66,8 @@ namespace Yttrium
                 SampleType(id),
                 _num(0),
                 _abs(nmin,AsCapacity),
-                _ord(nmin,AsCapacity)
+                _ord(nmin,AsCapacity),
+                _pre(nmin,AsCapacity)
                 {
 
                 }

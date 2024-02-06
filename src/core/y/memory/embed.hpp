@@ -67,10 +67,9 @@ namespace Yttrium
             //! reset handle's content to null
             void dismiss() noexcept;
 
-
+            //! testing linked address, mostly to debug
             template <typename T> inline
-            bool linkedTo(T * const &entry) const noexcept
-            {
+            bool linkedTo(T * const &entry) const noexcept {
                 return ( (void **) &entry ) == handle;
             }
 
