@@ -257,16 +257,16 @@ Y_UTEST(fit_samples)
         std::cerr << "beta  = " << Eval2D.beta << std::endl;
         std::cerr << "curv  = " << Eval2D.curv << std::endl;
 
+        vars(used,"radius") = false;
+        const double   D21b = Eval2D.Of(F,*H1, aorg, vars, used, G);
+        std::cerr << "D21b  = " << D21b << std::endl;
+        std::cerr << "beta  = " << Eval2D.beta << std::endl;
+        std::cerr << "curv  = " << Eval2D.curv << std::endl;
+
     }
 #endif
 
-    typedef Fit::LeastSquares<float,float>::XNode             XNodeF;
-    typedef Fit::LeastSquares<double,double>::XNode           XNodeD;
-    typedef Fit::LeastSquares<long double,long double>::XNode XNodeL;
-
-    Y_SIZEOF(XNodeF);
-    Y_SIZEOF(XNodeD);
-    Y_SIZEOF(XNodeL);
+    
 
 
 }

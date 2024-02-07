@@ -49,19 +49,7 @@ namespace Yttrium
                 typedef          Antelope::Add<ABSCISSA>       XAdd;           //!< alias
                 static const     size_t Dimension = MyType::Dimension;         //!< alias
 
-                class XNode : public Object, public XAdd
-                {
-                public:
-                    explicit XNode() : XAdd(), next(0), prev(0) {}
-                    virtual ~XNode() noexcept {}
 
-                    XNode *next;
-                    XNode *prev;
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(XNode);
-                };
-
-                typedef CxxListOf<XNode> XList;
 
                 //______________________________________________________________
                 //
@@ -73,7 +61,6 @@ namespace Yttrium
                 //! initialize
                 explicit LeastSquares() :
                 xadd(),
-                xlst(),
                 dFda(),
                 beta(),
                 curv(),
@@ -92,6 +79,9 @@ namespace Yttrium
 
                 //! cleanup
                 virtual ~LeastSquares() noexcept {}
+
+
+                
 
                 //______________________________________________________________
                 //
@@ -118,10 +108,10 @@ namespace Yttrium
                     //----------------------------------------------------------
                     // initialize
                     //----------------------------------------------------------
-                    const size_t     n = S.numPoints();
-                    const Abscissae &a = S.abscissae();
-                    const Ordinates &b = S.ordinates();
-                    xadd.make(n*Dimension);
+                    const size_t     np = S.numPoints();
+                    const Abscissae &a  = S.abscissae();
+                    const Ordinates &b  = S.ordinates();
+                    xadd.make(np*Dimension);
 
                     //----------------------------------------------------------
                     // first point
@@ -135,7 +125,7 @@ namespace Yttrium
                     //----------------------------------------------------------
                     // following points
                     //----------------------------------------------------------
-                    for(size_t i=2;i<=n;++i)
+                    for(size_t i=2;i<=np;++i)
                     {
                         const size_t   j  = S.indx[i];
                         const ORDINATE Fj = F.run(a[j],aorg,vars);
@@ -145,7 +135,7 @@ namespace Yttrium
                     //----------------------------------------------------------
                     // return sum
                     //----------------------------------------------------------
-                    Coerce(npts) = n;
+                    Coerce(npts) = np;
                     return ( Coerce(last) = half * xadd.sum() );
                 }
 
@@ -167,15 +157,15 @@ namespace Yttrium
                     //----------------------------------------------------------
                     // initialize
                     //----------------------------------------------------------
-                    const size_t     n = S.numPoints();
-                    const Abscissae &a = S.abscissae();
-                    const Ordinates &b = S.ordinates();
-                    xadd.make(n*Dimension);
+                    const size_t     np = S.numPoints();
+                    const Abscissae &a  = S.abscissae();
+                    const Ordinates &b  = S.ordinates();
+                    xadd.make(np*Dimension);
 
                     //----------------------------------------------------------
                     // compute
                     //----------------------------------------------------------
-                    for(size_t j=n;j>0;--j)
+                    for(size_t j=np;j>0;--j)
                     {
                         const ORDINATE Fj = F(a[j],aorg,vars);
                         pushDSQ(b[j],Fj);
@@ -184,7 +174,7 @@ namespace Yttrium
                     //----------------------------------------------------------
                     // return sum
                     //----------------------------------------------------------
-                    Coerce(npts) = n;
+                    Coerce(npts) = np;
                     return ( Coerce(last) = half * xadd.sum() );
                 }
 
@@ -213,13 +203,13 @@ namespace Yttrium
                     //----------------------------------------------------------
                     // initialize
                     //----------------------------------------------------------
-                    const size_t     n  = S.numPoints();
+                    const size_t     np = S.numPoints();
                     const Abscissae &a  = S.abscissae();
                     const Ordinates &b  = S.ordinates();
                     const size_t     nv = aorg.size();
                     assert(used.size() == nv);
 
-                    xadd.make(n*Dimension);
+                    xadd.make(np*Dimension);
                     dFda.adjust(nv,zord);
                     beta.adjust(nv,zero);
                     curv.make(nv,nv);
@@ -233,12 +223,12 @@ namespace Yttrium
                     //----------------------------------------------------------
                     // accumulation
                     //----------------------------------------------------------
-                    for(size_t j=n;j>0;--j)
+                    for(size_t j=np;j>0;--j)
                     {
                         const ORDINATE Fj = F(a[j],aorg,vars);
                         dFda.ld(zord); // local setting before call
                         G(dFda,a[j],aorg,vars,used);
-                        pushAll(b[j],Fj);
+                        pushAll(b[j],Fj,used);
                     }
 
                     //----------------------------------------------------------
@@ -254,16 +244,16 @@ namespace Yttrium
                         }
 
                         // assuming not used by algorithm
-                        beta[i] = zero;
-                        curv.ldCol(i,zero);
-                        curv.ldRow(i,zero);
+                        //beta[i] = zero;
+                        //curv.ldCol(i,zero);
+                        //curv.ldRow(i,zero);
                         curv[i][i] = one;
                     }
 
                     //----------------------------------------------------------
                     // return sim
                     //----------------------------------------------------------
-                    Coerce(npts) = n;
+                    Coerce(npts) = np;
                     return ( Coerce(last) = half * xadd.sum() );
                 }
 
@@ -352,7 +342,6 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 XAdd                          xadd; //!< to perform additions
-                XList                         xlst; //!< to perform additions
                 Vector<ORDINATE,SampleMemory> dFda; //!< local dF/da
                 Vector<ABSCISSA,SampleMemory> beta; //!< gradient of D2
                 Matrix<ABSCISSA>              curv; //!< approx curvature of D2
@@ -368,6 +357,11 @@ namespace Yttrium
 
                 Y_DISABLE_COPY_AND_ASSIGN(LeastSquares);
 
+                static inline ABSCISSA FabsOf(const ABSCISSA x)
+                {
+                    return Fabs<ABSCISSA>::Of(x);
+                }
+
                 //! push |Bj-Fj|^2 into xadd
                 inline void pushDSQ(const ORDINATE &Bj, const ORDINATE &Fj)
                 {
@@ -379,10 +373,11 @@ namespace Yttrium
 
                 //! push |Bj-Fj|^2 into xadd
                 /**
-                 
+
                  */
                 inline void pushAll(const ORDINATE     &Bj,
-                                    const ORDINATE     &Fj)
+                                    const ORDINATE     &Fj,
+                                    const Booleans     &used)
                 {
                     const ORDINATE  dB = Bj - Fj;
                     const ABSCISSA *df = SampleType::O2A(dB);
@@ -392,6 +387,11 @@ namespace Yttrium
                     const size_t nv = beta.size();
                     for(size_t i=nv;i>0;--i)
                     {
+                        if(!used[i]) 
+                        {
+                            assert( FabsOf(beta[i])<=zero) ;
+                            continue;
+                        }
                         const ABSCISSA *lhs = SampleType::O2A(dFda[i]);
                         for(unsigned d=0;d<Dimension;++d)
                         {
@@ -399,6 +399,11 @@ namespace Yttrium
                         }
                         for(size_t j=i;j>0;--j)
                         {
+                            if(!used[j]) 
+                            {
+                                assert( FabsOf( curv[i][j]) <= zero );
+                                continue;
+                            }
                             const ABSCISSA *rhs = SampleType::O2A(dFda[j]);
                             for(unsigned d=0;d<Dimension;++d)
                             {
