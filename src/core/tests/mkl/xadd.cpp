@@ -6,10 +6,49 @@
 #include "y/text/justify.hpp"
 #include "y/sequence/vector.hpp"
 
+#include "y/data/list/cxx.hpp"
+#include "y/data/pool/cxx.hpp"
+
+
 using namespace Yttrium;
 using namespace MKL;
 
+namespace Yttrium
+{
+    namespace MKL
+    {
+        namespace Antelope
+        {
+            template <typename T>
+            class AddNode : public Object, public Add<T>
+            {
+            public:
+                typedef CxxListOf<AddNode> List;
+                typedef CxxPoolOf<AddNode> Pool;
 
+                inline explicit AddNode() : next(0), prev(0)
+                {
+                }
+
+                inline virtual ~AddNode() noexcept
+                {
+                }
+
+                AddNode *next;
+                AddNode *prev;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(AddNode);
+            };
+
+            template <typename T>
+            class Caddy
+            {
+
+            };
+        }
+    }
+}
 
 
 template <typename T>
@@ -98,9 +137,13 @@ Y_UTEST(mkl_xadd)
 
         xadd.normalize(v);
         std::cerr << "|" << v << "| = " << v.norm() << " / " << xadd.normOf(v) << std::endl;
-
-
     }
+
+    Y_SIZEOF(Antelope::AddNode<double>);
+    Y_SIZEOF(Antelope::AddNode< XReal<long double> >);
+    Y_SIZEOF(Antelope::AddNode< apq >);
+    Y_SIZEOF(Antelope::AddNode< apz >);
+
 
 }
 Y_UDONE()

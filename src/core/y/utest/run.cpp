@@ -5,7 +5,7 @@
 namespace Yttrium
 {
 
-    size_t UnitTestDisplay::Width = 32;
+    size_t UnitTestDisplay::Width = 40;
 
     void UnitTestDisplay:: SizeOf(const char *className, const size_t classSize)
     {
