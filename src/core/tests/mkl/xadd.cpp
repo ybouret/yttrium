@@ -42,8 +42,21 @@ namespace Yttrium
             };
 
             template <typename T>
-            class Caddy
+            class Caddy : public AddNode<T>::List
             {
+            public:
+                typedef typename AddNode<T>::List ListType;
+                typedef
+                explicit Caddy()
+                {
+                }
+
+                virtual ~Caddy() noexcept
+                {
+                }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Caddy);
 
             };
         }
