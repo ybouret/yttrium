@@ -46,8 +46,9 @@ namespace Yttrium
             {
             public:
                 typedef typename AddNode<T>::List ListType;
-                typedef
-                explicit Caddy()
+                typedef typename AddNode<T>::Pool PoolType;
+
+                explicit Caddy() : ListType()
                 {
                 }
 
