@@ -18,7 +18,6 @@ namespace Yttrium
         namespace Antelope
         {
             template <typename T,const bool> struct AddProxy;
-
         }
     }
 

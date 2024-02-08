@@ -7,7 +7,7 @@
 #include "y/sequence/vector.hpp"
 
 #include "y/data/list/cxx.hpp"
-
+//#include "y/comparison.hpp"
 
 using namespace Yttrium;
 using namespace MKL;
@@ -23,6 +23,13 @@ namespace Yttrium
             {
             public:
                 typedef CxxListOf<AddNode> List;
+                static inline 
+                SignType Compare(const AddNode *lhs, const AddNode *rhs) noexcept
+                {
+                    const size_t lhsAbility = lhs->ability();
+                    const size_t rhsAbility = rhs->ability();
+                    return Comparison::CxxIncreasing(lhsAbility,rhsAbility);
+                }
 
                 inline explicit AddNode() : next(0), prev(0)
                 {
@@ -48,16 +55,21 @@ namespace Yttrium
 
                 explicit Caddy() : XList(), pool()
                 {
-                    AddNode<T> *node = new AddNode<T>();
-                    
+                    store( new XNode() );
                 }
 
                 virtual ~Caddy() noexcept
                 {
                 }
 
+                
 
 
+                inline void store(XNode *node) noexcept
+                {
+                    ListOps::InsertOrdered(pool, node, XNode::Compare);
+
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Caddy);
@@ -162,6 +174,10 @@ Y_UTEST(mkl_xadd)
     Y_SIZEOF(Antelope::AddNode< XReal<long double> >);
     Y_SIZEOF(Antelope::AddNode< apq >);
     Y_SIZEOF(Antelope::AddNode< apz >);
+
+    {
+        Antelope::Caddy<double> caddy;
+    }
 
 
 }

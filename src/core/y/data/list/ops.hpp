@@ -470,6 +470,11 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //! generic insertion of a node into a sorted list
+        /**
+         \param L list
+         \param node a valid node
+         \param compare SignType compare(lhsNode,rhsNode)
+         */
         //______________________________________________________________________
         template <typename LIST, typename NODE, typename COMPARE> static inline
         NODE *InsertOrdered(LIST &L, NODE *node, COMPARE &compare) noexcept
