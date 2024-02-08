@@ -52,6 +52,10 @@ namespace Yttrium
             public:
                 typedef AddNode<T>           XNode;
                 typedef typename XNode::List XList;
+                using XList::size;
+                using XList::head;
+                using XList::popTail;
+                using XList::pushHead;
 
                 explicit Caddy() : XList(), pool()
                 {
@@ -62,8 +66,28 @@ namespace Yttrium
                 {
                 }
 
-                
+                inline void flush() noexcept
+                {
+                    while(size>0) store( popTail() );
+                }
 
+                inline void prune() noexcept
+                {
+                    pool.release();
+                }
+
+                inline void make(const size_t numVars,
+                                 const size_t numData)
+                {
+                    flush();
+                    try {
+                        while(size<numVars) pushHead( (pool.size > 0) ? pool.popTail : new XNode() );
+                        assert(numVars==size);
+                        for(XNode *node=head;node;node=node->next) node->make(numData);
+
+
+                    } catch(...) { flush(); throw; }
+                }
 
                 inline void store(XNode *node) noexcept
                 {
@@ -74,8 +98,6 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Caddy);
                 XList pool;
-
-
             };
         }
     }
@@ -177,6 +199,8 @@ Y_UTEST(mkl_xadd)
 
     {
         Antelope::Caddy<double> caddy;
+        caddy.flush();
+        caddy.prune();
     }
 
 
