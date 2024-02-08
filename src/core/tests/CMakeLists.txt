@@ -270,6 +270,7 @@ add_test(mkl:api     test-core mkl_api)
 add_test(mkl:xadd    test-core mkl_xadd)
 add_test(mkl:xmul    test-core mkl_xmul)
 add_test(mkl:sum3    test-core mkl_sum3)
+add_test(mkl:caddy   test-core mkl_caddy)
 
 
 #graphviz
