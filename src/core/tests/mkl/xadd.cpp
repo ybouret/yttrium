@@ -7,7 +7,6 @@
 #include "y/sequence/vector.hpp"
 
 #include "y/data/list/cxx.hpp"
-#include "y/data/pool/cxx.hpp"
 
 
 using namespace Yttrium;
@@ -24,7 +23,6 @@ namespace Yttrium
             {
             public:
                 typedef CxxListOf<AddNode> List;
-                typedef CxxPoolOf<AddNode> Pool;
 
                 inline explicit AddNode() : next(0), prev(0)
                 {
@@ -45,19 +43,26 @@ namespace Yttrium
             class Caddy : public AddNode<T>::List
             {
             public:
-                typedef typename AddNode<T>::List ListType;
-                typedef typename AddNode<T>::Pool PoolType;
+                typedef AddNode<T>           XNode;
+                typedef typename XNode::List XList;
 
-                explicit Caddy() : ListType()
+                explicit Caddy() : XList(), pool()
                 {
+                    AddNode<T> *node = new AddNode<T>();
+                    
                 }
 
                 virtual ~Caddy() noexcept
                 {
                 }
 
+
+
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Caddy);
+                XList pool;
+
 
             };
         }

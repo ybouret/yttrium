@@ -191,6 +191,11 @@ namespace Yttrium
                         return this->capacity() >= n;
                     }
 
+                    inline virtual size_t ability() const noexcept
+                    {
+                        return this->capacity();
+                    }
+
                     //__________________________________________________________
                     //
                     //
@@ -339,6 +344,10 @@ namespace Yttrium
                         return true;
                     }
 
+                    inline virtual size_t ability() const noexcept
+                    {
+                        return 0;
+                    }
 
                     //! return computed sum, reset
                     inline T    sum()

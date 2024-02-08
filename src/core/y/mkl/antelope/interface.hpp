@@ -22,8 +22,10 @@ namespace Yttrium
             class Interface
             {
             public:
-                virtual bool isEmpty()               const noexcept = 0; //!< empty of zero
-                virtual bool accepts(const size_t n) const noexcept = 0; //!< test capacity
+                virtual bool   isEmpty()               const noexcept = 0; //!< empty or zero
+                virtual bool   accepts(const size_t n) const noexcept = 0; //!< test capacity
+                virtual size_t ability()               const noexcept = 0; //!< capacity or zero
+
 
                 virtual ~Interface() noexcept; //!< cleanup
             protected:
