@@ -47,7 +47,8 @@ namespace Yttrium
                 typedef          Sequential<ABSCISSA,ORDINATE> SequentialFunc; //!< alias
                 typedef          ListOf<LeastSquares>          List;           //!< alias
                 typedef          Antelope::Add<ABSCISSA>       XAdd;           //!< alias
-                typedef          Antelope::Caddy<ABSCISSA>     XAddList;       //!< alias
+                typedef          Antelope::Caddy<ABSCISSA>     Caddy;          //!< alias
+                typedef          typename Caddy::XNode         XNode;          //!< alias
                 static const     size_t Dimension = MyType::Dimension;         //!< alias
 
 
@@ -212,10 +213,12 @@ namespace Yttrium
                     const Abscissae &a  = S.abscissae();
                     const Ordinates &b  = S.ordinates();
                     const size_t     nv = aorg.size();
+                    const size_t     nc = nv*Dimension;
                     assert(used.size() == nv);
 
-                    xadd.make(np*Dimension);
-                    xlst.setup(nv,np);
+
+                    xadd.make(nc);           assert(xadd.accepts(nc));
+                    xlst.setup(nv,nc);       assert(xlst.size==nv);
                     dFda.adjust(nv,zord);
                     beta.adjust(nv,zero);
                     curv.make(nv,nv);
@@ -226,8 +229,10 @@ namespace Yttrium
                     beta.ld(zero);
                     curv.ld(zero);
 
+
+
                     //----------------------------------------------------------
-                    // accumulation
+                    // accumulation over points
                     //----------------------------------------------------------
                     for(size_t j=np;j>0;--j)
                     {
@@ -236,6 +241,9 @@ namespace Yttrium
                         G(dFda,a[j],aorg,vars,used);
                         pushAll(b[j],Fj,used);
                     }
+
+                    xlst.sum(beta);
+                    
 
                     //----------------------------------------------------------
                     // ensure consistency
@@ -249,15 +257,11 @@ namespace Yttrium
                             continue;
                         }
 
-                        // assuming not used by algorithm
-                        //beta[i] = zero;
-                        //curv.ldCol(i,zero);
-                        //curv.ldRow(i,zero);
                         curv[i][i] = one;
                     }
 
                     //----------------------------------------------------------
-                    // return sim
+                    // return sum
                     //----------------------------------------------------------
                     Coerce(npts) = np;
                     return ( Coerce(last) = half * xadd.sum() );
@@ -348,7 +352,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 XAdd                          xadd; //!< to perform additions
-                XAddList                      xlst; //!< to perform additions
+                Caddy                         xlst; //!< to perform additions
                 Vector<ORDINATE,SampleMemory> dFda; //!< local dF/da
                 Vector<ABSCISSA,SampleMemory> beta; //!< gradient of D2
                 Matrix<ABSCISSA>              curv; //!< approx curvature of D2
@@ -386,24 +390,33 @@ namespace Yttrium
                                     const ORDINATE     &Fj,
                                     const Booleans     &used)
                 {
+
                     const ORDINATE  dB = Bj - Fj;
                     const ABSCISSA *df = SampleType::O2A(dB);
                     for(unsigned d=0;d<Dimension;++d)
                         xadd << Squared(df[d]);
 
-                    const size_t nv = beta.size();
-                    for(size_t i=nv;i>0;--i)
+
+                    // Outer loop over variables
+                    const size_t nvars = beta.size();
+                    XNode       *xnode = xlst.tail;
+                    for(size_t i=nvars;i>0;--i,xnode=xnode->prev)
                     {
-                        if(!used[i]) 
+                        assert(xnode->indx == i);
+                        if(!used[i])
                         {
                             assert( FabsOf(beta[i])<=zero) ;
                             continue;
                         }
+
                         const ABSCISSA *lhs = SampleType::O2A(dFda[i]);
                         for(unsigned d=0;d<Dimension;++d)
                         {
-                            beta[i] += df[d] * lhs[d];
+                            const ABSCISSA prod = df[d] * lhs[d];
+                            //beta[i] += prod;
+                            (*xnode) << prod;
                         }
+
                         for(size_t j=i;j>0;--j)
                         {
                             if(!used[j]) 
@@ -418,6 +431,7 @@ namespace Yttrium
                             }
                         }
                     }
+
                 }
 
             public:

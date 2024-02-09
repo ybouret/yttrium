@@ -58,8 +58,8 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                inline explicit AddNode() : Add<T>(), next(0), prev(0) {} //!< setup
-                inline virtual ~AddNode() noexcept {}                     //!< cleanup
+                inline explicit AddNode() : Add<T>(), next(0), prev(0), indx(0) {} //!< setup
+                inline virtual ~AddNode() noexcept {}                              //!< cleanup
 
                 //______________________________________________________________
                 //
@@ -67,8 +67,9 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                AddNode *next; //!< for list
-                AddNode *prev; //!< for list
+                AddNode     *next; //!< for list
+                AddNode     *prev; //!< for list
+                const size_t indx; //!< local index
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(AddNode);
 
@@ -254,9 +255,13 @@ namespace Yttrium
                         while(size<numVars) {
                             XNode *node = pushTail( (pool.size > 0) ? pool.query() : new XNode() );
                             node->make(numData);
+                            assert(node->isEmpty());
+                            assert(0==node->indx);
+                            Coerce(node->indx) = size;
                         }
                     }
                     catch(...) { flush(); throw; }
+                    assert(numVars==size);
                 }
 
                 inline void reset(const size_t numData) {
@@ -264,7 +269,11 @@ namespace Yttrium
                 }
 
                 inline virtual void flush() noexcept {
-                    while(size>0) pool.store( popTail() )->free();
+                    while(size>0) {
+                        XNode *node = pool.store( popTail() );
+                        node->free();
+                        Coerce(node->indx) = 0;
+                    }
                 }
 
                 //______________________________________________________________
@@ -275,22 +284,16 @@ namespace Yttrium
                 //______________________________________________________________
 
                 template <typename ITERATOR> inline
-                void sum(ITERATOR it) {
+                void sumIn(ITERATOR it) {
                     for(XNode *node = head;node;node=node->next,++it) *it = node->sum();
                 }
 
                 template <typename SEQUENCE> inline
-                void sumForward(SEQUENCE &seq) {
+                void sum(SEQUENCE &seq) {
                     assert(seq.size() == size);
-                    sum(seq.begin());
+                    sumIn(seq.begin());
                 }
-
-                template <typename SEQUENCE> inline
-                void sumReverse(SEQUENCE &seq) {
-                    assert(seq.size() == size);
-                    sum(seq.rbegin());
-                }
-
+                
 
 
 

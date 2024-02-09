@@ -23,20 +23,7 @@ namespace
 
         caddy.setup(numVars,numData);
 
-        for(size_t j=numData;j>0;--j)
-        {
-            XNode *node=caddy.head;
-            for(size_t i=numVars;i>0;--i,node=node->next)
-            {
-                (*node) << M[i][j];
-            }
-        }
 
-        CxxArray<T> sumR(numVars);
-        caddy.sumReverse(sumR);
-        std::cerr << "sumR=" << sumR << std::endl;
-
-        caddy.reset(numData);
         for(size_t j=numData;j>0;--j)
         {
             XNode *node=caddy.head;
@@ -45,17 +32,11 @@ namespace
                 (*node) << M[i][j];
             }
         }
-        CxxArray<T> sumF(numVars);
-        caddy.sumForward(sumF);
-        std::cerr << "sumF=" << sumF << std::endl;
 
-        const T zero(0);
-        for(size_t i=1;i<=numVars;++i)
-        {
-            const T delta = sumF[i] - sumR[i];
-            const T difference = Fabs<T>::Of(delta);
-            Y_ASSERT(difference<=zero);
-        }
+        CxxArray<T> sumF(numVars);
+        caddy.sum(sumF);
+        std::cerr << "sumF=" << sumF << std::endl;
+        
 
 
     }

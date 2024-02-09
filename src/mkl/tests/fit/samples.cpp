@@ -219,8 +219,7 @@ Y_UTEST(fit_samples)
         std::cerr << "D21a = " << D21a << std::endl;
         std::cerr << "beta = " << Eval1D.beta << std::endl;
         std::cerr << "curv = " << Eval1D.curv << std::endl;
-
-
+        
         const double D22a = Eval1D.Of(F,*S2, aorg, var2, used, G);
         std::cerr << "D22a = " << D22a << std::endl;
         std::cerr << "beta = " << Eval1D.beta << std::endl;
