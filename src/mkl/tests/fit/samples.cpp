@@ -1,5 +1,6 @@
 
-#include "y/mkl/fit/least-squares.hpp"
+#include "y/mkl/fit/step-inventor.hpp"
+
 #include "y/mkl/fit/sequential/wrapper.hpp"
 #include "y/mkl/fit/sample/heavy.hpp"
 #include "y/mkl/fit/sample/light.hpp"
@@ -163,6 +164,7 @@ Y_UTEST(fit_samples)
     S2->prepare();
     H1->prepare();
 
+    Fit::StepInventor<double> inventor;
 
     {
         Fit::Variables all;
@@ -219,7 +221,11 @@ Y_UTEST(fit_samples)
         std::cerr << "D21a = " << D21a << std::endl;
         std::cerr << "beta = " << Eval1D.beta << std::endl;
         std::cerr << "curv = " << Eval1D.curv << std::endl;
-        
+
+
+        inventor.compute(Eval1D, -2, used);
+
+
         const double D22a = Eval1D.Of(F,*S2, aorg, var2, used, G);
         std::cerr << "D22a = " << D22a << std::endl;
         std::cerr << "beta = " << Eval1D.beta << std::endl;
@@ -241,20 +247,23 @@ Y_UTEST(fit_samples)
 
 
         Vector<double> aorg(vars.span(),0);
-        vars(aorg,"x_c")    = 0.1;
-        vars(aorg,"y_c")    = 0.02;
+        vars(aorg,"x_c")    = 0.0;
+        vars(aorg,"y_c")    = 0.0;
         vars(aorg,"radius") = 0.78;
         vars.display("", std::cerr, aorg);
 
         const double D21 = Eval2D.Of(F, *H1, aorg, vars);
         std::cerr << "D21   = " << D21 << std::endl;
 
-        Matrix<double> alpha(vars.span(),vars.span());
+        //Matrix<double> alpha(vars.span(),vars.span());
         Vector<bool>   used(aorg.size(),true);
         const double   D21a = Eval2D.Of(F,*H1, aorg, vars, used, G);;
         std::cerr << "D21a  = " << D21a << std::endl;
         std::cerr << "beta  = " << Eval2D.beta << std::endl;
         std::cerr << "curv  = " << Eval2D.curv << std::endl;
+
+        inventor.compute(Eval2D, -2, used);
+
 
         vars(used,"radius") = false;
         const double   D21b = Eval2D.Of(F,*H1, aorg, vars, used, G);

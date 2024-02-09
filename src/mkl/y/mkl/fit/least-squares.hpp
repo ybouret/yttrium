@@ -9,7 +9,6 @@
 #include "y/container/matrix.hpp"
 #include "y/type/zeroed-field.hpp"
 #include "y/oversized.hpp"
-#include "y/data/list/cxx.hpp"
 
 namespace Yttrium
 {
@@ -68,7 +67,6 @@ namespace Yttrium
                 beta(),
                 curv(),
                 npts(0),
-                last(0),
                 zero(0),
                 half(0.5),
                 one(1),
@@ -84,266 +82,23 @@ namespace Yttrium
                 virtual ~LeastSquares() noexcept {}
 
 
-                
-
                 //______________________________________________________________
                 //
                 //
                 // Methods for a single Sample
                 //
                 //______________________________________________________________
+#include "least-squares/seq.hpp"
+#include "least-squares/ooo.hpp"
 
-                //______________________________________________________________
-                //
-                //! compute least squares of S w.r.t a sequential F
-                /**
-                 \param F    a sequential function
-                 \param S    a single sample
-                 \param aorg parameters
-                 \param vars variables
-                 */
-                //______________________________________________________________
-                inline ABSCISSA Of(SequentialFunc           &F,
-                                   const SampleType         &S,
-                                   const Readable<ABSCISSA> &aorg,
-                                   const Variables          &vars)
-                {
-                    //----------------------------------------------------------
-                    // initialize
-                    //----------------------------------------------------------
-                    const size_t     np = S.numPoints();
-                    const Abscissae &a  = S.abscissae();
-                    const Ordinates &b  = S.ordinates();
-                    xadd.make(np*Dimension);
-                    xlst.flush();
-
-
-                    //----------------------------------------------------------
-                    // first point
-                    //----------------------------------------------------------
-                    {
-                        const size_t   j  = S.indx[1];
-                        const ORDINATE Fj = F.set(a[j],aorg,vars);
-                        pushDSQ(b[j],Fj);
-                    }
-
-                    //----------------------------------------------------------
-                    // following points
-                    //----------------------------------------------------------
-                    for(size_t i=2;i<=np;++i)
-                    {
-                        const size_t   j  = S.indx[i];
-                        const ORDINATE Fj = F.run(a[j],aorg,vars);
-                        pushDSQ(b[j],Fj);
-                    }
-
-                    //----------------------------------------------------------
-                    // return sum
-                    //----------------------------------------------------------
-                    Coerce(npts) = np;
-                    return ( Coerce(last) = half * xadd.sum() );
-                }
-
-                //______________________________________________________________
-                //
-                //! compute least squares of S w.r.t an out of order F
-                /**
-                 \param F    an out-of-order function
-                 \param S    a single sample
-                 \param aorg parameters
-                 \param vars variables
-                 */
-                //______________________________________________________________
-                inline ABSCISSA Of(OutOfOrderFunc           &F,
-                                   const SampleType         &S,
-                                   const Readable<ABSCISSA> &aorg,
-                                   const Variables          &vars)
-                {
-                    //----------------------------------------------------------
-                    // initialize
-                    //----------------------------------------------------------
-                    const size_t     np = S.numPoints();
-                    const Abscissae &a  = S.abscissae();
-                    const Ordinates &b  = S.ordinates();
-                    xadd.make(np*Dimension);
-                    xlst.flush();
-
-                    //----------------------------------------------------------
-                    // compute
-                    //----------------------------------------------------------
-                    for(size_t j=np;j>0;--j)
-                    {
-                        const ORDINATE Fj = F(a[j],aorg,vars);
-                        pushDSQ(b[j],Fj);
-                    }
-
-                    //----------------------------------------------------------
-                    // return sum
-                    //----------------------------------------------------------
-                    Coerce(npts) = np;
-                    return ( Coerce(last) = half * xadd.sum() );
-                }
-
-                
-
-                //______________________________________________________________
-                //
-                //! compute full least squares of S w.r.t an out-of-order F
-                /**
-                 \param F    an out of order function
-                 \param S    a single sample
-                 \param aorg parametes
-                 \param vars variables
-                 \param used used parameters/variables
-                 \param G   an out of order gradient
-                 */
-                //______________________________________________________________
-                inline ABSCISSA Of(OutOfOrderFunc           &F,
-                                   const SampleType         &S,
-                                   const Readable<ABSCISSA> &aorg,
-                                   const Variables          &vars,
-                                   const Booleans           &used,
-                                   OutOfOrderGrad           &G)
-
-                {
-                    //----------------------------------------------------------
-                    // initialize
-                    //----------------------------------------------------------
-                    const size_t     np = S.numPoints();
-                    const Abscissae &a  = S.abscissae();
-                    const Ordinates &b  = S.ordinates();
-                    const size_t     nv = aorg.size();
-                    const size_t     nc = nv*Dimension;
-                    assert(used.size() == nv);
-
-
-                    xadd.make(nc);           assert(xadd.accepts(nc));
-                    xlst.setup(nv,nc);       assert(xlst.size==nv);
-                    dFda.adjust(nv,zord);
-                    beta.adjust(nv,zero);
-                    curv.make(nv,nv);
-
-                    //----------------------------------------------------------
-                    // global initialization
-                    //----------------------------------------------------------
-                    beta.ld(zero);
-                    curv.ld(zero);
-
-
-
-                    //----------------------------------------------------------
-                    // accumulation over points
-                    //----------------------------------------------------------
-                    for(size_t j=np;j>0;--j)
-                    {
-                        const ORDINATE Fj = F(a[j],aorg,vars);
-                        dFda.ld(zord); // local setting before call
-                        G(dFda,a[j],aorg,vars,used);
-                        pushAll(b[j],Fj,used);
-                    }
-
-                    xlst.sum(beta);
-                    
-
-                    //----------------------------------------------------------
-                    // ensure consistency
-                    //----------------------------------------------------------
-                    for(size_t i=nv;i>0;--i)
-                    {
-                        if( vars.found(i) && used[i] )
-                        {
-                            for(size_t j=i-1;j>0;--j)
-                                curv[j][i] = curv[i][j];
-                            continue;
-                        }
-
-                        curv[i][i] = one;
-                    }
-
-                    //----------------------------------------------------------
-                    // return sum
-                    //----------------------------------------------------------
-                    Coerce(npts) = np;
-                    return ( Coerce(last) = half * xadd.sum() );
-                }
-
+              
                 //______________________________________________________________
                 //
                 //
                 // Methods for multiple samples
                 //
                 //______________________________________________________________
-
-                //! summing precomputed LeastSquares
-                inline ABSCISSA Of(const List &L)
-                {
-
-                    if(L.size<=0) return zero;
-
-                    //----------------------------------------------------------
-                    // prepare memory
-                    //----------------------------------------------------------
-                    {
-                        const LeastSquares &first = *(L.head);
-                        const size_t nv = first.dFda.size(); assert(nv>0);
-                        dFda.adjust(nv,zero);
-                        beta.adjust(nv,zero);
-                        curv.make(nv,nv);
-                        xadd.make(L.size);
-                    }
-
-                    //----------------------------------------------------------
-                    // first pass: npts
-                    //----------------------------------------------------------
-                    Coerce(npts) = 0;
-                    for(const LeastSquares *cls = L.head; cls; cls=cls->next)
-                    {
-                        Coerce(npts) += cls->npts;
-                    }
-
-                    //----------------------------------------------------------
-                    // second pass: beta
-                    //----------------------------------------------------------
-                    const size_t   nvar = beta.size();
-                    const ABSCISSA den  = ABSCISSA(npts);
-                    for(size_t i=nvar;i>0;--i)
-                    {
-                        xadd.free();
-                        for(const LeastSquares *cls = L.head; cls; cls=cls->next)
-                        {
-                            xadd << (cls->beta[i]* static_cast<ABSCISSA>(cls->npts) );
-                        }
-                        beta[i] = xadd.sum() / den;
-                    }
-
-                    //----------------------------------------------------------
-                    // third pass: curv
-                    //----------------------------------------------------------
-                    for(size_t i=nvar;i>0;--i)
-                    {
-                        for(size_t j=i;j>0;--j)
-                        {
-                            xadd.free();
-                            for(const LeastSquares *cls = L.head; cls; cls=cls->next)
-                            {
-                                xadd << (cls->curv[i][j]*static_cast<ABSCISSA>(cls->npts));
-                            }
-                            curv[i][j] = curv[j][i] = xadd.sum() / den;
-                        }
-                    }
-
-                    //----------------------------------------------------------
-                    // final D2
-                    //----------------------------------------------------------
-                    xadd.free();
-                    for(const LeastSquares *cls = L.head; cls; cls=cls->next)
-                    {
-                        xadd << (cls->last * static_cast<ABSCISSA>(cls->npts));
-                    }
-                    return ( Coerce(last) = xadd.sum()/den );
-
-                }
-
+#include "least-squares/mix.hpp"
 
                 //______________________________________________________________
                 //
@@ -357,7 +112,6 @@ namespace Yttrium
                 Vector<ABSCISSA,SampleMemory> beta; //!< gradient of D2
                 Matrix<ABSCISSA>              curv; //!< approx curvature of D2
                 const size_t                  npts; //!< last dimensions
-                const ABSCISSA                last; //!< last valyue
                 const ABSCISSA                zero; //!< alias
                 const ABSCISSA                half; //!< alias
                 const ABSCISSA                one;  //!< alias
