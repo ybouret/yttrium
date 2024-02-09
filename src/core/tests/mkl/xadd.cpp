@@ -12,97 +12,6 @@
 using namespace Yttrium;
 using namespace MKL;
 
-namespace Yttrium
-{
-    namespace MKL
-    {
-        namespace Antelope
-        {
-            template <typename T>
-            class AddNode : public Object, public Add<T>
-            {
-            public:
-                typedef CxxListOf<AddNode> List;
-                static inline 
-                SignType Compare(const AddNode *lhs, const AddNode *rhs) noexcept
-                {
-                    const size_t lhsAbility = lhs->ability();
-                    const size_t rhsAbility = rhs->ability();
-                    return Comparison::CxxIncreasing(lhsAbility,rhsAbility);
-                }
-
-                inline explicit AddNode() : next(0), prev(0)
-                {
-                }
-
-                inline virtual ~AddNode() noexcept
-                {
-                }
-
-                AddNode *next;
-                AddNode *prev;
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(AddNode);
-            };
-
-            template <typename T>
-            class Caddy : public AddNode<T>::List
-            {
-            public:
-                typedef AddNode<T>           XNode;
-                typedef typename XNode::List XList;
-                using XList::size;
-                using XList::head;
-                using XList::popTail;
-                using XList::pushHead;
-
-                explicit Caddy() : XList(), pool()
-                {
-                    store( new XNode() );
-                }
-
-                virtual ~Caddy() noexcept
-                {
-                }
-
-                inline void flush() noexcept
-                {
-                    while(size>0) store( popTail() );
-                }
-
-                inline void prune() noexcept
-                {
-                    pool.release();
-                }
-
-                inline void make(const size_t numVars,
-                                 const size_t numData)
-                {
-                    flush();
-                    try {
-                        while(size<numVars) pushHead( (pool.size > 0) ? pool.popTail : new XNode() );
-                        assert(numVars==size);
-                        for(XNode *node=head;node;node=node->next) node->make(numData);
-
-
-                    } catch(...) { flush(); throw; }
-                }
-
-                inline void store(XNode *node) noexcept
-                {
-                    ListOps::InsertOrdered(pool, node, XNode::Compare);
-
-                }
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Caddy);
-                XList pool;
-            };
-        }
-    }
-}
-
 
 template <typename T>
 static inline void ShowUnit( const char *name, Random::Bits &ran )
@@ -191,18 +100,6 @@ Y_UTEST(mkl_xadd)
         xadd.normalize(v);
         std::cerr << "|" << v << "| = " << v.norm() << " / " << xadd.normOf(v) << std::endl;
     }
-
-    Y_SIZEOF(Antelope::AddNode<double>);
-    Y_SIZEOF(Antelope::AddNode< XReal<long double> >);
-    Y_SIZEOF(Antelope::AddNode< apq >);
-    Y_SIZEOF(Antelope::AddNode< apz >);
-
-    {
-        Antelope::Caddy<double> caddy;
-        caddy.flush();
-        caddy.prune();
-    }
-
-
+    
 }
 Y_UDONE()
