@@ -8,10 +8,16 @@
 
 namespace Yttrium
 {
+    //__________________________________________________________________________
+    //
+    //
+    //! find which end to query from list
+    //
+    //__________________________________________________________________________
     enum OrderedListQuery
     {
-        OrderedListQueryHead,
-        OrderedListQueryTail
+        OrderedListQueryHead, //!< will query head value
+        OrderedListQueryTail  //!< will query tail value
     };
 
     //__________________________________________________________________________
@@ -48,9 +54,9 @@ namespace Yttrium
         //______________________________________________________________________
       
         //! store using ordered insertion
-        inline void store(NODE *node) noexcept
+        inline NODE * store(NODE *node) noexcept
         {
-            ListOps::InsertOrdered(*this,node,compare);
+            return ListOps::InsertOrdered(*this,node,compare);
         }
 
         //! query
@@ -61,7 +67,8 @@ namespace Yttrium
         }
 
 
-        COMPARATOR compare;
+        
+        COMPARATOR compare; //!< comparator
     private:
         Y_DISABLE_COPY_AND_ASSIGN(OrderedList);
         inline NODE *query(const Int2Type<OrderedListQueryHead> & ) noexcept

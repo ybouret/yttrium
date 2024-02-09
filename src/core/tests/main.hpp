@@ -135,7 +135,7 @@ namespace Yttrium
     };
 
     template <typename WRITABLE>
-    inline void FillWritable(WRITABLE &data,
+    inline void FillWritable(WRITABLE     &data,
                              Random::Bits &ran)
     {
         for(size_t i=1;i<=data.size();++i)
