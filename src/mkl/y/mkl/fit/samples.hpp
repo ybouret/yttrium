@@ -6,6 +6,7 @@
 
 #include "y/mkl/fit/sample/interface.hpp"
 #include "y/associative/suffix/set.hpp"
+#include "y/exception.hpp"
 
 namespace Yttrium
 {
@@ -14,6 +15,8 @@ namespace Yttrium
 
         namespace Fit
         {
+
+
             //__________________________________________________________________
             //
             //
@@ -49,6 +52,23 @@ namespace Yttrium
                 //! cleanup
                 virtual ~Samples() noexcept {}
                 
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                SampleType & add( SampleType *sample )
+                {
+                    assert(0!=sample);
+                    const SamplePointer s(sample);
+                    if(!this->insert(s))
+                        throw Exception("Multiple Fit::Sample '%s'", sample->name.c_str());
+                    return *sample;
+                }
+
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Samples);
