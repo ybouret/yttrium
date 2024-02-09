@@ -8,6 +8,11 @@
 
 namespace Yttrium
 {
+    enum OrderedListQuery
+    {
+        OrderedListQueryHead,
+        OrderedListQueryTail
+    };
 
     //__________________________________________________________________________
     //
@@ -19,29 +24,57 @@ namespace Yttrium
      - COMPARATOR must provide a SignType operator
      */
     //__________________________________________________________________________
-    template <typename NODE, typename COMPARATOR>
+    template <
+    typename         NODE,
+    typename         COMPARATOR,
+    OrderedListQuery QUERY>
     class OrderedList : public CxxListOf<NODE>
     {
     public:
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        inline explicit OrderedList() noexcept : CxxListOf<NODE>(), compare() {} //!< setup
+        inline virtual ~OrderedList() noexcept {}                                //!< cleanup
 
-        inline explicit OrderedList() noexcept : CxxListOf<NODE>(), compare() {}
-        inline virtual ~OrderedList() noexcept {}
-
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+      
+        //! store using ordered insertion
         inline void store(NODE *node) noexcept
         {
             ListOps::InsertOrdered(*this,node,compare);
         }
 
+        //! query
         inline NODE *query() noexcept
         {
-            assert(this->size>0);
-            return this->popHead();
+            static const Int2Type<QUERY> choice = {};
+            return query(choice);
         }
 
 
         COMPARATOR compare;
     private:
         Y_DISABLE_COPY_AND_ASSIGN(OrderedList);
+        inline NODE *query(const Int2Type<OrderedListQueryHead> & ) noexcept
+        {
+            assert(this->size>0);
+            return this->popHead();
+        }
+
+        inline NODE *query(const Int2Type<OrderedListQueryTail> & ) noexcept
+        {
+            assert(this->size>0);
+            return this->popTail();
+        }
     };
 
 }

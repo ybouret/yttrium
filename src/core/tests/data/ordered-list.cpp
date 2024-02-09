@@ -40,23 +40,35 @@ namespace
 }
 
 #include "y/random/bits.hpp"
+#include "y/ptr/auto.hpp"
 
 Y_UTEST(data_ordered_list)
 {
     Random::Rand ran;
 
-    CxxPoolOf<Node> pool;
-    OrderedList<Node,Node::Comparator> list;
+    CxxPoolOf<Node>                                         npool;
+    OrderedList<Node,Node::Comparator,OrderedListQueryHead> hlist;
+    OrderedList<Node,Node::Comparator,OrderedListQueryTail> tlist;
 
     for(size_t i=10+ran.leq(10);i>0;--i)
     {
         const int data = ran.in<int>(1,100);
-        pool.store( new Node(data) );
-        list.store( new Node(data) );
+        npool.store( new Node(data) );
+        hlist.store( new Node(data) );
+        tlist.store( new Node(data) );
     }
 
-    std::cerr << "pool=" << pool << std::endl;
-    std::cerr << "list=" << list << std::endl;
+    std::cerr << "npool=" << npool << std::endl;
+    std::cerr << "hlist=" << hlist << std::endl;
+    std::cerr << "tlist=" << tlist << std::endl;
+
+    while(hlist.size>0)
+    {
+        const AutoPtr<Node> hnode = hlist.query();
+        const AutoPtr<Node> tnode = tlist.query();
+        std::cerr << "h: " << **hnode << " | t: " << **tnode << std::endl;
+    }
+
 
 }
 Y_UDONE()
