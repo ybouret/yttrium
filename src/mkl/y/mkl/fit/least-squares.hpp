@@ -5,7 +5,7 @@
 
 #include "y/mkl/fit/samples.hpp"
 #include "y/mkl/fit/sequential.hpp"
-#include "y/mkl/antelope/add.hpp"
+#include "y/mkl/antelope/caddy.hpp"
 #include "y/container/matrix.hpp"
 #include "y/type/zeroed-field.hpp"
 #include "y/oversized.hpp"
@@ -47,6 +47,7 @@ namespace Yttrium
                 typedef          Sequential<ABSCISSA,ORDINATE> SequentialFunc; //!< alias
                 typedef          ListOf<LeastSquares>          List;           //!< alias
                 typedef          Antelope::Add<ABSCISSA>       XAdd;           //!< alias
+                typedef          Antelope::Caddy<ABSCISSA>     XAddList;       //!< alias
                 static const     size_t Dimension = MyType::Dimension;         //!< alias
 
 
@@ -61,6 +62,7 @@ namespace Yttrium
                 //! initialize
                 explicit LeastSquares() :
                 xadd(),
+                xlst(),
                 dFda(),
                 beta(),
                 curv(),
@@ -112,6 +114,8 @@ namespace Yttrium
                     const Abscissae &a  = S.abscissae();
                     const Ordinates &b  = S.ordinates();
                     xadd.make(np*Dimension);
+                    xlst.flush();
+
 
                     //----------------------------------------------------------
                     // first point
@@ -161,6 +165,7 @@ namespace Yttrium
                     const Abscissae &a  = S.abscissae();
                     const Ordinates &b  = S.ordinates();
                     xadd.make(np*Dimension);
+                    xlst.flush();
 
                     //----------------------------------------------------------
                     // compute
@@ -178,7 +183,7 @@ namespace Yttrium
                     return ( Coerce(last) = half * xadd.sum() );
                 }
 
-
+                
 
                 //______________________________________________________________
                 //
@@ -210,6 +215,7 @@ namespace Yttrium
                     assert(used.size() == nv);
 
                     xadd.make(np*Dimension);
+                    xlst.setup(nv,np);
                     dFda.adjust(nv,zord);
                     beta.adjust(nv,zero);
                     curv.make(nv,nv);
@@ -342,6 +348,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 XAdd                          xadd; //!< to perform additions
+                XAddList                      xlst; //!< to perform additions
                 Vector<ORDINATE,SampleMemory> dFda; //!< local dF/da
                 Vector<ABSCISSA,SampleMemory> beta; //!< gradient of D2
                 Matrix<ABSCISSA>              curv; //!< approx curvature of D2

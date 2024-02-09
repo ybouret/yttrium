@@ -203,6 +203,7 @@ namespace Yttrium
 
 }
 
+
 namespace Yttrium
 {
     namespace MKL
@@ -265,6 +266,32 @@ namespace Yttrium
                 inline virtual void flush() noexcept {
                     while(size>0) pool.store( popTail() )->free();
                 }
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                template <typename ITERATOR> inline
+                void sum(ITERATOR it) {
+                    for(XNode *node = head;node;node=node->next,++it) *it = node->sum();
+                }
+
+                template <typename SEQUENCE> inline
+                void sumForward(SEQUENCE &seq) {
+                    assert(seq.size() == size);
+                    sum(seq.begin());
+                }
+
+                template <typename SEQUENCE> inline
+                void sumReverse(SEQUENCE &seq) {
+                    assert(seq.size() == size);
+                    sum(seq.rbegin());
+                }
+
+
 
 
                 //______________________________________________________________
