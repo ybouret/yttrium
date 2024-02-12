@@ -16,7 +16,10 @@ namespace Yttrium
         namespace Fit
         {
 
+            //! helper to show process
 #define Y_MKL_FIT(MSG) do { if(verbose) std::cerr << MSG << std::endl; } while(false)
+
+            
             //__________________________________________________________________
             //
             //
@@ -81,8 +84,11 @@ namespace Yttrium
                          Writable<ABSCISSA> &aorg,
                          const Booleans     &used,
                          GRADIENT           &G,
-                         const Intervals    &dom)
+                         const Intervals    &domain)
                 {
+
+                    assert( aorg.size() == used.size() ) ;
+                    assert( aorg.size() == domain.size() );
 
                     // compute full metrics
                     ABSCISSA D2_org = D2(F,S,aorg,used,G);
@@ -115,7 +121,7 @@ namespace Yttrium
 
                 inline virtual typename ProxyType::ConstInterface & surrogate() const noexcept { return *mine; }
             public:
-                bool verbose;
+                bool verbose; //!< verbosity
             };
         }
 

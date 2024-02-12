@@ -82,8 +82,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            inline explicit Interval() : lower(), upper() {} //!< default: full space
-            inline virtual ~Interval() noexcept           {} //!< cleanup
+            inline explicit Interval() : lower(Infinity), upper(Infinity) {} //!< default: full space
+            inline virtual ~Interval() noexcept                           {} //!< cleanup
 
             //! copy
             inline Interval(const Interval &I) : Kernel::Interval(), lower(I.lower), upper(I.upper) {}

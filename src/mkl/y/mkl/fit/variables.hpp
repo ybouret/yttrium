@@ -135,7 +135,7 @@ namespace Yttrium
                         const Variable &v = **it;
                         const String   &s = v;
                         const size_t    l = v.size();
-                        os << s; for(size_t i=l;i<lmax;++i) os << ' '; os << sep;
+                        os << pfx << s; for(size_t i=l;i<lmax;++i) os << ' '; os << sep;
                         os << v(arr);
                         os << std::endl;
                     }

@@ -293,8 +293,10 @@ Y_UTEST(fit_samples)
         }
 
         CxxArray< Interval<double> > dom(used.size());
-        std::cerr << "dom=" << dom << std::endl;
-        
+        all(dom,"D1") = Interval<double>(0,Infinity);
+        all(dom,"D2") = Interval<double>(0,Infinity);
+        all.display("domain_", std::cerr, dom);
+
         xfit.run(F,S1,aorg,used,G,dom);
         //xfit.run(F,S2,aorg,used,G);
         //xfit.run(F,samples,aorg,used,G);
@@ -346,30 +348,7 @@ Y_UTEST(fit_samples)
 
 
     std::cerr << std::endl;
-    Y_SIZEOF(Fit::StepInventor<float>);
-    Y_SIZEOF(Fit::StepInventor<double>);
-    Y_SIZEOF(Fit::StepInventor<long double>);
-    Y_SIZEOF(Fit::StepInventor< XReal<float> >);
-    Y_SIZEOF(Fit::StepInventor< XReal<double> >);
-    Y_SIZEOF(Fit::StepInventor< XReal<long double> >);
 
-    typedef Fit::LeastSquares<float,float>                                    LeastSquaresSmall;
-    typedef Fit::LeastSquares< XReal<long double>,V3D< XReal<long double> > > LeastSquaresGreat;
-
-    Y_SIZEOF(LeastSquaresSmall);
-    Y_SIZEOF(LeastSquaresGreat);
-
-    typedef Fit::LeastSquaresRoll<float,float>                                    LeastSquaresRollSmall;
-    typedef Fit::LeastSquaresRoll< XReal<long double>,V3D< XReal<long double> > > LeastSquaresRollGreat;
-
-    Y_SIZEOF(LeastSquaresRollSmall);
-    Y_SIZEOF(LeastSquaresRollGreat);
-
-
-    typedef Fit::Executive<float,float>                                    ExecutiveSmall;
-    typedef Fit::Executive< XReal<long double>,V3D< XReal<long double> > > ExecutiveGreat;
-    Y_SIZEOF(ExecutiveSmall);
-    Y_SIZEOF(ExecutiveGreat);
 
 
 
