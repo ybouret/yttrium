@@ -10,12 +10,12 @@ namespace Yttrium
         namespace Fit
         {
 
-            SampleMetrics:: SampleMetrics(const String &id) : name(id), indx()
+            SampleMetrics:: SampleMetrics(const String &id) : name(id), indx(), vars()
             {
 
             }
 
-            SampleMetrics:: SampleMetrics(const char *id) : name(id), indx()
+            SampleMetrics:: SampleMetrics(const char *id) : name(id), indx(), vars()
             {
             }
             
