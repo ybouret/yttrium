@@ -22,6 +22,7 @@ mkl/fit/sample
 mkl/fit/variable
 mkl/fit/sequential
 mkl/fit/least-squares
+mkl/fit/executive
 )
 
 add_subdirectory(tests)

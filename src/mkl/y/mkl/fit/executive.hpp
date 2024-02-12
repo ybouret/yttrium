@@ -15,17 +15,39 @@ namespace Yttrium
         namespace Fit
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Managing fit memory and procedure
+            //
+            //
+            //__________________________________________________________________
             template <typename ABSCISSA,typename ORDINATE>
             class Executive : public Proxy< const LeastSquares<ABSCISSA,ORDINATE> >
             {
             public:
-                typedef LeastSquaresRoll<ABSCISSA,ORDINATE> RollType;
-                typedef LeastSquares<ABSCISSA,ORDINATE>     LeastSquaresType;
-                typedef StepInventor<ABSCISSA>              StepInventorType;
-                typedef Sample<ABSCISSA,ORDINATE>           SampleType;     //!< alias
-                typedef Samples<ABSCISSA,ORDINATE>          SamplesType;    //!< alias
-                typedef Proxy<const LeastSquaresType>       ProxyType;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef LeastSquaresRoll<ABSCISSA,ORDINATE> RollType;         //!< alias
+                typedef LeastSquares<ABSCISSA,ORDINATE>     LeastSquaresType; //!< alias
+                typedef StepInventor<ABSCISSA>              StepInventorType; //!< alias
+                typedef Sample<ABSCISSA,ORDINATE>           SampleType;       //!< alias
+                typedef Samples<ABSCISSA,ORDINATE>          SamplesType;      //!< alias
+                typedef Proxy<const LeastSquaresType>       ProxyType;        //!< alias
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! setup
                 inline explicit Executive() :
                 ProxyType(),
                 mine( new LeastSquaresType() ),
@@ -33,45 +55,19 @@ namespace Yttrium
                 solv( new StepInventorType() )
                 {}
 
+                //! cleanup
                 inline virtual ~Executive() noexcept {}
 
-                template <typename FUNCTION> inline
-                ABSCISSA D2(FUNCTION                 &F,
-                            SampleType               &S,
-                            const Readable<ABSCISSA> &aorg)
-                {
-                    return mine->Of(F,S,aorg);
-                }
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
 
-                template <typename FUNCTION> inline
-                ABSCISSA D2(FUNCTION                 &F,
-                            SamplesType              &S,
-                            const Readable<ABSCISSA> &aorg)
-                {
-                    return mine->Of(F,S,roll->setup(S.size()),aorg);
-                }
+#include "executive/d2.hpp"
 
-
-                template <typename FUNCTION, typename GRADIENT> inline
-                ABSCISSA D2(FUNCTION                 &F,
-                            SampleType               &S,
-                            const Readable<ABSCISSA> &aorg,
-                            const Booleans           &used,
-                            GRADIENT                 &G)
-                {
-                    return mine->Of(F,S,aorg,used,G);
-                }
-
-                template <typename FUNCTION, typename GRADIENT> inline
-                ABSCISSA D2(FUNCTION                 &F,
-                            SamplesType              &S,
-                            const Readable<ABSCISSA> &aorg,
-                            const Booleans           &used,
-                            GRADIENT                 &G)
-                {
-                    return mine->Of(F,S,roll->setup(S.size()),aorg,used,G);
-                }
-
+               
 
 
 

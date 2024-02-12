@@ -65,14 +65,13 @@ namespace Yttrium
                 }
 
                 //! compute factor
-                ABSCISSA getFactor(const int p)
+                ABSCISSA getFactor(const int param)
                 {
-
-                    switch( Sign::Of(p) )
+                    switch( Sign::Of(param) )
                     {
                         case __Zero__: break;
-                        case Positive: return one + ipower(ten,p);
-                        case Negative: return one + ipower(tenth,-p);
+                        case Positive: return one + ipower(ten,param);
+                        case Negative: return one + ipower(tenth,-param);
                     }
                     return two;
                 }
@@ -115,6 +114,60 @@ namespace Yttrium
                     return false;
 
                 }
+
+                inline bool buildFrom(const Matrix<ABSCISSA> &alpha,
+                                      const int               param,
+                                      const Booleans         &used)
+                {
+
+                    
+
+                }
+
+
+                //! compute step
+                template <typename LEAST_SQUARES>
+                bool build(const LEAST_SQUARES &ls,
+                           int                 &p,
+                           const Booleans      &used)
+                {
+                    const Readable<ABSCISSA> &beta  = ls.beta;
+                    const Matrix<ABSCISSA>   &alpha = ls.curv;
+                    const size_t              nvar  = beta.size();
+
+                    prepare(nvar);
+
+
+
+                    const ABSCISSA fac = getFactor(p);
+
+                    for(size_t i=nvar;i>0;--i)
+                    {
+                        step[i] = beta[i];
+                        for(size_t j=nvar;j>0;--j)
+                        {
+                            curv[i][j] = alpha[i][j];
+                        }
+                        if(used[i])
+                            curv[i][i] *= fac;
+                    }
+
+                    std::cerr << "Curv = " << curv << std::endl;
+                    if(!lu.build(curv))
+                    {
+                        std::cerr << "Singular Matrix" << std::endl;
+                        return false;
+                    }
+
+                    lu.solve(curv,step);
+                    std::cerr << "step = " << step << std::endl;
+
+
+                    return false;
+
+                }
+
+
 
                 //______________________________________________________________
                 //
