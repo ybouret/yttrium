@@ -8,7 +8,8 @@
  \param aorg parameters
  */
 //______________________________________________________________
-inline ABSCISSA Of(OutOfOrderFunc           &F,
+template <typename FIT_FUNCTION>
+inline ABSCISSA Of(FIT_FUNCTION             &F,
                    SamplesType              &S,
                    List                     &L,
                    const Readable<ABSCISSA> &aorg)
@@ -38,10 +39,12 @@ inline ABSCISSA Of(OutOfOrderFunc           &F,
     }
     
     return (npts<=0) ? zero : (xadd.sum() / static_cast<const ABSCISSA>(npts));
-
 }
 
 
+
+
+#if 0
 //! summing precomputed LeastSquares
 inline ABSCISSA Of(const List &L)
 {
@@ -111,3 +114,5 @@ inline ABSCISSA Of(const List &L)
     return ( xadd.sum()/den );
 
 }
+#endif
+
