@@ -16,7 +16,7 @@ namespace Yttrium
         {
 
             template <typename ABSCISSA,typename ORDINATE>
-            class Executive
+            class Executive : public Proxy< const LeastSquares<ABSCISSA,ORDINATE> >
             {
             public:
                 typedef LeastSquaresRoll<ABSCISSA,ORDINATE> RollType;
@@ -24,42 +24,65 @@ namespace Yttrium
                 typedef StepInventor<ABSCISSA>              StepInventorType;
                 typedef Sample<ABSCISSA,ORDINATE>           SampleType;     //!< alias
                 typedef Samples<ABSCISSA,ORDINATE>          SamplesType;    //!< alias
+                typedef Proxy<const LeastSquaresType>       ProxyType;
 
                 inline explicit Executive() :
-                roll(   ),
+                ProxyType(),
                 mine( new LeastSquaresType() ),
+                roll( new RollType()         ),
                 solv( new StepInventorType() )
                 {}
 
                 inline virtual ~Executive() noexcept {}
 
                 template <typename FUNCTION> inline
-                ABSCISSA LeastSquaresOf(FUNCTION                 &F,
-                                        SampleType               &S,
-                                        const Readable<ABSCISSA> &aorg)
+                ABSCISSA D2(FUNCTION                 &F,
+                            SampleType               &S,
+                            const Readable<ABSCISSA> &aorg)
                 {
-                    LeastSquaresType &LS = *roll.setup(1).head;
-                    return LS.Of(F,S,aorg);
+                    return mine->Of(F,S,aorg);
                 }
 
-                template <
-                typename FUNCTION,
-                typename GRADIENT> inline
-                ABSCISSA LeastSquaresOf(FUNCTION                 &F,
-                                        SamplesType              &S,
-                                        const Readable<ABSCISSA> &aorg )
+                template <typename FUNCTION> inline
+                ABSCISSA D2(FUNCTION                 &F,
+                            SamplesType              &S,
+                            const Readable<ABSCISSA> &aorg)
                 {
-                    return mine->Of(F,S,roll.setup(S.size()),aorg);
+                    return mine->Of(F,S,roll->setup(S.size()),aorg);
                 }
 
 
+                template <typename FUNCTION, typename GRADIENT> inline
+                ABSCISSA D2(FUNCTION                 &F,
+                            SampleType               &S,
+                            const Readable<ABSCISSA> &aorg,
+                            const Booleans           &used,
+                            GRADIENT                 &G)
+                {
+                    return mine->Of(F,S,aorg,used,G);
+                }
 
-                RollType                  roll;
+                template <typename FUNCTION, typename GRADIENT> inline
+                ABSCISSA D2(FUNCTION                 &F,
+                            SamplesType              &S,
+                            const Readable<ABSCISSA> &aorg,
+                            const Booleans           &used,
+                            GRADIENT                 &G)
+                {
+                    return mine->Of(F,S,roll->setup(S.size()),aorg,used,G);
+                }
+
+
+
+
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Executive);
                 AutoPtr<LeastSquaresType> mine;
+                AutoPtr<RollType>         roll;
                 AutoPtr<StepInventorType> solv;
 
+                inline virtual typename ProxyType::ConstInterface & surrogate() const noexcept { return *mine; }
 
             };
         }

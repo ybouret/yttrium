@@ -21,7 +21,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename ABSCISSA, typename ORDINATE>
-            class LeastSquaresRoll : public LeastSquares<ABSCISSA,ORDINATE>::List
+            class LeastSquaresRoll : public Object, public LeastSquares<ABSCISSA,ORDINATE>::List
             {
             public:
                 //______________________________________________________________

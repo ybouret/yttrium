@@ -247,10 +247,46 @@ Y_UTEST(fit_samples)
 
 
 
-
         std::cerr << std::endl;
 
+        std::cerr << "-------- Using Executive --------" << std::endl;
+        Fit::Executive<double,double> xfit;
 
+        used.ld(true);
+        const double S1D2  = xfit.D2(F,S1,aorg);
+        const double S1D2w = xfit.D2(Fw,S1,aorg);
+        const double S2D2  = xfit.D2(F,S2,aorg);
+        const double S2D2w = xfit.D2(Fw,S2,aorg);
+        std::cerr << "S1D2 = " << S1D2 << " / " << S1D2w << std::endl;
+        std::cerr << "S2D2 = " << S2D2 << " / " << S2D2w << std::endl;
+
+        const double S1D2a = xfit.D2(F,S1,aorg,used,G);
+        std::cerr << "S1D2a = " << S1D2a << " / " << S1D2 << std::endl;
+        std::cerr << "beta  = " << xfit->beta << std::endl;
+        std::cerr << "curv  = " << xfit->curv << std::endl;
+
+        const double S2D2a = xfit.D2(F,S2,aorg,used,G);
+        std::cerr << "S2D2a = " << S2D2a << " / " << S2D2 << std::endl;
+        std::cerr << "beta  = " << xfit->beta << std::endl;
+        std::cerr << "curv  = " << xfit->curv << std::endl;
+
+        {
+            const double SAD2  = xfit.D2(F,samples,aorg);
+            const double SAD2a = xfit.D2(F,samples,aorg,used,G);
+            std::cerr << "SAD2 = " << SAD2 << " / " << SAD2a << std::endl;
+            std::cerr << "beta  = " << xfit->beta << std::endl;
+            std::cerr << "curv  = " << xfit->curv << std::endl;
+        }
+
+        std::cerr << "-- with fixed parameter" << std::endl;
+        all(used,"t0") = false;
+        {
+            const double SAD2  = xfit.D2(F,samples,aorg);
+            const double SAD2a = xfit.D2(F,samples,aorg,used,G);
+            std::cerr << "SAD2 = " << SAD2 << " / " << SAD2a << std::endl;
+            std::cerr << "beta  = " << xfit->beta << std::endl;
+            std::cerr << "curv  = " << xfit->curv << std::endl;
+        }
     }
 
 #if 1
@@ -320,6 +356,8 @@ Y_UTEST(fit_samples)
     typedef Fit::Executive< XReal<long double>,V3D< XReal<long double> > > ExecutiveGreat;
     Y_SIZEOF(ExecutiveSmall);
     Y_SIZEOF(ExecutiveGreat);
+
+
 
 }
 Y_UDONE()
