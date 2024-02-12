@@ -11,8 +11,7 @@
 //______________________________________________________________
 inline ABSCISSA Of(OutOfOrderFunc           &F,
                    const SampleType         &S,
-                   const Readable<ABSCISSA> &aorg,
-                   const Variables          &vars)
+                   const Readable<ABSCISSA> &aorg)
 {
     //----------------------------------------------------------
     // initialize
@@ -28,7 +27,7 @@ inline ABSCISSA Of(OutOfOrderFunc           &F,
     //----------------------------------------------------------
     for(size_t j=np;j>0;--j)
     {
-        const ORDINATE Fj = F(a[j],aorg,vars);
+        const ORDINATE Fj = F(a[j],aorg,S.vars);
         pushDSQ(b[j],Fj);
     }
 
@@ -54,7 +53,6 @@ inline ABSCISSA Of(OutOfOrderFunc           &F,
 inline ABSCISSA Of(OutOfOrderFunc           &F,
                    const SampleType         &S,
                    const Readable<ABSCISSA> &aorg,
-                   const Variables          &vars,
                    const Booleans           &used,
                    OutOfOrderGrad           &G)
 
@@ -89,9 +87,9 @@ inline ABSCISSA Of(OutOfOrderFunc           &F,
     //----------------------------------------------------------
     for(size_t j=np;j>0;--j)
     {
-        const ORDINATE Fj = F(a[j],aorg,vars);
+        const ORDINATE Fj = F(a[j],aorg,S.vars);
         dFda.ld(zord); // local setting before call
-        G(dFda,a[j],aorg,vars,used);
+        G(dFda,a[j],aorg,S.vars,used);
         pushAll(b[j],Fj,used);
     }
     xlst.sum(beta);
@@ -102,7 +100,7 @@ inline ABSCISSA Of(OutOfOrderFunc           &F,
     //----------------------------------------------------------
     for(size_t i=nv;i>0;--i)
     {
-        if( vars.found(i) && used[i] )
+        if( S.vars.found(i) && used[i] )
         {
             for(size_t j=i-1;j>0;--j)
                 curv[j][i] = curv[i][j];

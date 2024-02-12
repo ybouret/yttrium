@@ -12,8 +12,7 @@
 inline ABSCISSA Of(OutOfOrderFunc           &F,
                    SamplesType              &S,
                    List                     &L,
-                   const Readable<ABSCISSA> &aorg,
-                   const Variables          &vars)
+                   const Readable<ABSCISSA> &aorg)
 {
     assert(S.size() == L.size);
     const size_t ns = S.size();
@@ -22,7 +21,7 @@ inline ABSCISSA Of(OutOfOrderFunc           &F,
     switch(ns)
     {
         case 0: return zero;
-        case 1: return L.head->Of(F,**S.begin(),aorg,vars);
+        case 1: return L.head->Of(F,**S.begin(),aorg);
         default:
             break;
     }
@@ -33,11 +32,11 @@ inline ABSCISSA Of(OutOfOrderFunc           &F,
         LeastSquares                  *node = L.head;
         for(size_t i=ns;i>0;--i,++curr,++node)
         {
-            SampleType    &sm = **curr;                 // sample
-            LeastSquares  &ls =  *node;                 // least squares
-            const ABSCISSA D2 = ls.Of(F,sm,aorg,vars);  // value
-            const size_t   np = ls.npts;                // number of points
-            const ABSCISSA sw(np);                      // weight
+            SampleType    &sm = **curr;           // sample
+            LeastSquares  &ls =  *node;           // least squares
+            const ABSCISSA D2 = ls.Of(F,sm,aorg); // value
+            const size_t   np = ls.npts;          // number of points
+            const ABSCISSA sw(np);                // weight
 
             Coerce(npts) += np; // update total number of pointd
             xadd << (sw * D2);  // update xadd

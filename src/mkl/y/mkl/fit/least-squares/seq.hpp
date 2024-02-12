@@ -10,8 +10,7 @@
 //______________________________________________________________
 inline ABSCISSA Of(SequentialFunc           &F,
                    const SampleType         &S,
-                   const Readable<ABSCISSA> &aorg,
-                   const Variables          &vars)
+                   const Readable<ABSCISSA> &aorg)
 {
     //----------------------------------------------------------
     // initialize
@@ -28,7 +27,7 @@ inline ABSCISSA Of(SequentialFunc           &F,
     //----------------------------------------------------------
     {
         const size_t   j  = S.indx[1];
-        const ORDINATE Fj = F.set(a[j],aorg,vars);
+        const ORDINATE Fj = F.set(a[j],aorg,S.vars);
         pushDSQ(b[j],Fj);
     }
 
@@ -38,7 +37,7 @@ inline ABSCISSA Of(SequentialFunc           &F,
     for(size_t i=2;i<=np;++i)
     {
         const size_t   j  = S.indx[i];
-        const ORDINATE Fj = F.run(a[j],aorg,vars);
+        const ORDINATE Fj = F.run(a[j],aorg,S.vars);
         pushDSQ(b[j],Fj);
     }
 

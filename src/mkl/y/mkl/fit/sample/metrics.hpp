@@ -6,7 +6,7 @@
 
 #include "y/sequence/vector.hpp"
 #include "y/memory/allocator/dyadic.hpp"
-#include "y/string.hpp"
+#include "y/mkl/fit/variables.hpp"
 
 namespace Yttrium
 {
@@ -71,7 +71,8 @@ namespace Yttrium
                 //______________________________________________________________
                 const String                name; //!< identifier
                 Vector<size_t,SampleMemory> indx; //!< index of data abscissae
-
+                Variables                   vars; //!< fit variables
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(SampleMetrics);
             };

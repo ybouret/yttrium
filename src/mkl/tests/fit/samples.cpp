@@ -156,12 +156,12 @@ Y_UTEST(fit_samples)
         all << "t0" << "D1" << "D2";
         std::cerr << "all =" << all << std::endl;
 
-        Fit::Variables var1;
+        Fit::Variables &var1 = S1.vars;
         var1.link( all["t0"] );
         var1.link( "D", all["D1"]);
         std::cerr << "var1=" << var1 << std::endl;
 
-        Fit::Variables var2;
+        Fit::Variables &var2 = S2.vars;
         var2.link( all["t0"] );
         var2.link( "D", all["D2"]);
         std::cerr << "var2=" << var2 << std::endl;
@@ -186,59 +186,53 @@ Y_UTEST(fit_samples)
 
         F1D<double> f1;
 
-        Fit::LeastSquares<double,double>                 Eval1D;
+        Fit::LeastSquares<double,double>                 eval;
         Fit::LeastSquares<double,double>::OutOfOrderFunc F( &f1, & F1D<double>::F );
         Fit::SequentialWrapper<double, double>           Fw( F );
         Fit::LeastSquares<double,double>::OutOfOrderGrad G( &f1, & F1D<double>::G );
 
-        Y_SIZEOF(Eval1D);
+        Y_SIZEOF(eval);
 
+        std::cerr << "--- 1D, sample 1 ---" << std::endl;
+        const double D1  = eval.Of(F,S1,aorg);
+        const double D1w = eval.Of(Fw,S1,aorg);
 
-        const double D21  = Eval1D.Of(F,S1,aorg,var1);
-        const double D21w = Eval1D.Of(Fw,S1,aorg,var1);
-        std::cerr << "D21=" << D21 << " / " << D21w << std::endl;
-
-
+        std::cerr << "D1   = " << D1 << " / " << D1w << std::endl;
         Vector<bool>   used(all.span(),true);
-
-        const double D21a = Eval1D.Of(F,S1, aorg, var1, used, G);
-        
-        std::cerr << "D21a = " << D21a << std::endl;
-        std::cerr << "beta = " << Eval1D.beta << std::endl;
-        std::cerr << "curv = " << Eval1D.curv << std::endl;
+        const double   D1a = eval.Of(F,S1, aorg, used, G);
+        std::cerr << "D1a  = " << D1a << " / " << D1 << std::endl;
+        std::cerr << "beta = " << eval.beta << std::endl;
+        std::cerr << "curv = " << eval.curv << std::endl;
+        inventor.compute(eval, -2, used);
         std::cerr << std::endl;
 
-
-        inventor.compute(Eval1D, -2, used);
-
-
-        const double D22a = Eval1D.Of(F,S2, aorg, var2, used, G);
-        std::cerr << "D22a = " << D22a << std::endl;
-        std::cerr << "beta = " << Eval1D.beta << std::endl;
-        std::cerr << "curv = " << Eval1D.curv << std::endl;
+        std::cerr << "--- 1D, sample 2 ---" << std::endl;
+        const double D2a = eval.Of(F,S2, aorg);
+        const double D2b = eval.Of(F,S2, aorg, used, G);
+        std::cerr << "D2a  = " << D2a << " / " << D2b << std::endl;
+        std::cerr << "beta = " << eval.beta << std::endl;
+        std::cerr << "curv = " << eval.curv << std::endl;
+        inventor.compute(eval, -2, used);
         std::cerr << std::endl;
-
-        inventor.compute(Eval1D, -2, used);
 
         Fit::LeastSquaresRoll<double,double> roll1D;
-        //const double Dall = Eval1D.Of(F,samples,roll1D.setup(samples.size()),aorg,all);
-        //std::cerr << "Dall = " << Dall << std::endl;
 
 
 
     }
 
-#if 0
+#if 1
     {
-        Fit::Variables vars;
+        std::cerr << "--- 2D ---" << std::endl;
+        Fit::Variables &vars = H1->vars;
         vars << "radius" << "x_c" << "y_c";
         typedef V2D<double> VTX;
         Circle<double>      Circ;
 
-        Fit::LeastSquares<double,VTX>                 Eval2D;
+        Fit::LeastSquares<double,VTX>                 eval;
         Fit::LeastSquares<double,VTX>::OutOfOrderFunc F( &Circ, & Circle<double>::F );
         Fit::LeastSquares<double,VTX>::OutOfOrderGrad G( &Circ, & Circle<double>::G );
-        Y_SIZEOF(Eval2D);
+        Y_SIZEOF(eval);
 
 
         Vector<double> aorg(vars.span(),0);
@@ -247,24 +241,23 @@ Y_UTEST(fit_samples)
         vars(aorg,"radius") = 0.78;
         vars.display("", std::cerr, aorg);
 
-        const double D21 = Eval2D.Of(F, *H1, aorg, vars);
+        const double D21 = eval.Of(F, *H1, aorg);
         std::cerr << "D21   = " << D21 << std::endl;
 
-        //Matrix<double> alpha(vars.span(),vars.span());
         Vector<bool>   used(aorg.size(),true);
-        const double   D21a = Eval2D.Of(F,*H1, aorg, vars, used, G);;
+        const double   D21a = eval.Of(F,*H1, aorg, used, G);;
         std::cerr << "D21a  = " << D21a << std::endl;
-        std::cerr << "beta  = " << Eval2D.beta << std::endl;
-        std::cerr << "curv  = " << Eval2D.curv << std::endl;
+        std::cerr << "beta  = " << eval.beta << std::endl;
+        std::cerr << "curv  = " << eval.curv << std::endl;
 
-        inventor.compute(Eval2D, -2, used);
+        inventor.compute(eval, -2, used);
 
 
         vars(used,"radius") = false;
-        const double   D21b = Eval2D.Of(F,*H1, aorg, vars, used, G);
+        const double   D21b = eval.Of(F,*H1, aorg, used, G);
         std::cerr << "D21b  = " << D21b << std::endl;
-        std::cerr << "beta  = " << Eval2D.beta << std::endl;
-        std::cerr << "curv  = " << Eval2D.curv << std::endl;
+        std::cerr << "beta  = " << eval.beta << std::endl;
+        std::cerr << "curv  = " << eval.curv << std::endl;
 
     }
 #endif
