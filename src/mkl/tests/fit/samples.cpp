@@ -245,7 +245,11 @@ Y_UTEST(fit_samples)
         inventor.compute(eval,-2,used);
         std::cerr << "stepA=" << inventor.step << std::endl;
 
+        bool kept = true;
+        int  p    = -1;
 
+        inventor.buildStep(eval, p, used, kept);
+        std::cerr << "step=" << inventor.step << " @p=" << p << ", kept=" << kept << std::endl;
 
         std::cerr << std::endl;
 
@@ -287,6 +291,16 @@ Y_UTEST(fit_samples)
             std::cerr << "beta  = " << xfit->beta << std::endl;
             std::cerr << "curv  = " << xfit->curv << std::endl;
         }
+
+        CxxArray< Interval<double> > dom(used.size());
+        std::cerr << "dom=" << dom << std::endl;
+        
+        xfit.run(F,S1,aorg,used,G,dom);
+        //xfit.run(F,S2,aorg,used,G);
+        //xfit.run(F,samples,aorg,used,G);
+
+        return 0;
+
     }
 
 #if 1

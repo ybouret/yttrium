@@ -31,6 +31,9 @@ namespace Yttrium
             static const unsigned DIG;          //!< DIGits
             static const int      MIN_EXP;      //!< MIN_EXP
             static const int      MAX_EXP;      //!< MAX_EXP
+            static const int      MAX_10_EXP;   //!< MAX_10_EXP
+            static const int      MIN_10_EXP;   //!< MIN_10_EXP
+
             static const T        FTOL;         //!< 10^(-DIG)
             static const T        SQRT_EPSILON; //!< sqrt(EPSILON)
             static const T        GOLDEN;       //!< (1+sqrt(5))/2

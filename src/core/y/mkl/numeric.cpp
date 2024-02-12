@@ -40,6 +40,8 @@ template <> const TYPE Numeric< XReal<long double> > :: VAR = Numeric<long doubl
 
         Y_MKL_DECL_TYPE(int,MIN_EXP);
         Y_MKL_DECL_TYPE(int,MAX_EXP);
+        Y_MKL_DECL_TYPE(int,MIN_10_EXP);
+        Y_MKL_DECL_TYPE(int,MAX_10_EXP);
 
 
 #define Y_MKL_DECL_REAL(VAR) \
