@@ -38,13 +38,14 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 typedef          Sample<ABSCISSA,ORDINATE>     SampleType;     //!< alias
+                typedef          Samples<ABSCISSA,ORDINATE>    SamplesType;    //!< alias
                 typedef          TypeFor<ABSCISSA,ORDINATE>    MyType;         //!< alias
                 typedef typename SampleType::Abscissae         Abscissae;      //!< alias
                 typedef typename SampleType::Ordinates         Ordinates;      //!< alias
                 typedef typename MyType::OutOfOrderFunc        OutOfOrderFunc; //!< alias
                 typedef typename MyType::OutOfOrderGradient    OutOfOrderGrad; //!< alias
                 typedef          Sequential<ABSCISSA,ORDINATE> SequentialFunc; //!< alias
-                typedef          ListOf<LeastSquares>          List;           //!< alias
+                typedef          CxxListOf<LeastSquares>       List;           //!< alias
                 typedef          Antelope::Add<ABSCISSA>       XAdd;           //!< alias
                 typedef          Antelope::Caddy<ABSCISSA>     Caddy;          //!< alias
                 typedef          typename Caddy::XNode         XNode;          //!< alias

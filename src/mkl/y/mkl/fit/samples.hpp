@@ -38,7 +38,7 @@ namespace Yttrium
                 typedef Sample<ABSCISSA,ORDINATE>       SampleType;     //!< alias
                 typedef typename SampleType::Pointer    SamplePointer;  //!< alias
                 typedef SuffixSet<String,SamplePointer> SampleDB;       //!< alias
-
+                
                 //______________________________________________________________
                 //
                 //
@@ -59,7 +59,9 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
-                SampleType & add( SampleType *sample )
+              
+                template <typename SAMPLE>
+                SAMPLE & operator()( SAMPLE *sample )
                 {
                     assert(0!=sample);
                     const SamplePointer s(sample);

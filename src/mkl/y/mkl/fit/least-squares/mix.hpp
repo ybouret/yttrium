@@ -1,4 +1,80 @@
 
+//______________________________________________________________
+//
+//! compute least squares of S w.r.t an out of order F
+/**
+ \param F    an out-of-order function
+ \param S    a single sample
+ \param aorg parameters
+ \param vars variables
+ */
+//______________________________________________________________
+inline ABSCISSA Of(OutOfOrderFunc           &F,
+                   SamplesType              &S,
+                   List                     &L,
+                   const Readable<ABSCISSA> &aorg,
+                   const Variables          &vars)
+{
+    assert(S.size() == L.size);
+    const size_t ns = S.size();
+    Coerce(npts) = 0;
+
+    switch(ns)
+    {
+        case 0: return zero;
+        case 1: return L.head->Of(F,**S.begin(),aorg,vars);
+        default:
+            break;
+    }
+
+    xadd.make(ns);
+    {
+        typename SamplesType::Iterator curr = S.begin();
+        LeastSquares                  *node = L.head;
+        for(size_t i=ns;i>0;--i,++curr,++node)
+        {
+            SampleType    &sm = **curr;                 // sample
+            LeastSquares  &ls =  *node;                 // least squares
+            const ABSCISSA D2 = ls.Of(F,sm,aorg,vars);  // value
+            const size_t   np = ls.npts;                // number of points
+            const ABSCISSA sw(np);                      // weight
+
+            Coerce(npts) += np; // update total number of pointd
+            xadd << (sw * D2);  // update xadd
+        }
+    }
+
+    return (npts<=0) ? zero : xadd.sum() / static_cast<const ABSCISSA>(npts);
+
+
+#if 0
+    //----------------------------------------------------------
+    // initialize
+    //----------------------------------------------------------
+    const size_t     np = S.numPoints();
+    const Abscissae &a  = S.abscissae();
+    const Ordinates &b  = S.ordinates();
+    xadd.make(np*Dimension);
+    xlst.flush();
+
+    //----------------------------------------------------------
+    // compute
+    //----------------------------------------------------------
+    for(size_t j=np;j>0;--j)
+    {
+        const ORDINATE Fj = F(a[j],aorg,vars);
+        pushDSQ(b[j],Fj);
+    }
+
+    //----------------------------------------------------------
+    // return sum
+    //----------------------------------------------------------
+    Coerce(npts) = np;
+    return (  half * xadd.sum() );
+#endif
+}
+
+
 //! summing precomputed LeastSquares
 inline ABSCISSA Of(const List &L)
 {

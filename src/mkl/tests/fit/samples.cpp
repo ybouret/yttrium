@@ -1,5 +1,6 @@
 
 #include "y/mkl/fit/step-inventor.hpp"
+#include "y/mkl/fit/least-squares/roll.hpp"
 
 #include "y/mkl/fit/sequential/wrapper.hpp"
 #include "y/mkl/fit/sample/heavy.hpp"
@@ -10,23 +11,6 @@
 
 using namespace Yttrium;
 using namespace MKL;
-
-namespace Yttrium
-{
-
-    namespace MKL
-    {
-
-        namespace Fit
-        {
-
-            
-          
-
-        }
-    }
-
-}
 
 namespace
 {
@@ -137,8 +121,9 @@ Y_UTEST(fit_samples)
     static const size_t _n2   = sizeof(_t2)/sizeof(_t2[0]);
     double              _z2[_n2] = { 0 };
 
-    Fit::Sample<double,double>::Pointer S1 = new Fit::LightSample<double,double>("S1",_t1,_x1, _z1, _n1);
-    Fit::Sample<double,double>::Pointer S2 = new Fit::LightSample<double,double>("S2",_t2,_x2, _z2, _n2);
+    Fit::Samples<double,double>  samples;
+    Fit::Sample<double,double> & S1 = samples( new Fit::LightSample<double,double>("S1",_t1,_x1, _z1, _n1) );
+    Fit::Sample<double,double> & S2 = samples( new Fit::LightSample<double,double>("S2",_t2,_x2, _z2, _n2) );
 
     Fit::HeavySample<double, V2D<double> >    *P1 = new Fit::HeavySample<double, V2D<double> >("H1");
     Fit::Sample<double, V2D<double> >::Pointer H1 = P1;
@@ -156,12 +141,12 @@ Y_UTEST(fit_samples)
     std::cerr << S2 << std::endl;
     std::cerr << H1 << std::endl;
 
-    S1->saveDatFile();
-    S2->saveDatFile();
+    S1.saveDatFile();
+    S2.saveDatFile();
     H1->saveDatFile();
 
-    S1->prepare();
-    S2->prepare();
+    S1.prepare();
+    S2.prepare();
     H1->prepare();
 
     Fit::StepInventor<double> inventor;
@@ -209,31 +194,41 @@ Y_UTEST(fit_samples)
         Y_SIZEOF(Eval1D);
 
 
-        const double D21  = Eval1D.Of(F,*S1,aorg,var1);
-        const double D21w = Eval1D.Of(Fw,*S1,aorg,var1);
+        const double D21  = Eval1D.Of(F,S1,aorg,var1);
+        const double D21w = Eval1D.Of(Fw,S1,aorg,var1);
         std::cerr << "D21=" << D21 << " / " << D21w << std::endl;
 
 
         Vector<bool>   used(all.span(),true);
 
-        const double D21a = Eval1D.Of(F,*S1, aorg, var1, used, G);
+        const double D21a = Eval1D.Of(F,S1, aorg, var1, used, G);
         
         std::cerr << "D21a = " << D21a << std::endl;
         std::cerr << "beta = " << Eval1D.beta << std::endl;
         std::cerr << "curv = " << Eval1D.curv << std::endl;
+        std::cerr << std::endl;
 
 
         inventor.compute(Eval1D, -2, used);
 
 
-        const double D22a = Eval1D.Of(F,*S2, aorg, var2, used, G);
+        const double D22a = Eval1D.Of(F,S2, aorg, var2, used, G);
         std::cerr << "D22a = " << D22a << std::endl;
         std::cerr << "beta = " << Eval1D.beta << std::endl;
         std::cerr << "curv = " << Eval1D.curv << std::endl;
         std::cerr << std::endl;
+
+        inventor.compute(Eval1D, -2, used);
+
+        Fit::LeastSquaresRoll<double,double> roll1D;
+        //const double Dall = Eval1D.Of(F,samples,roll1D.setup(samples.size()),aorg,all);
+        //std::cerr << "Dall = " << Dall << std::endl;
+
+
+
     }
 
-#if 1
+#if 0
     {
         Fit::Variables vars;
         vars << "radius" << "x_c" << "y_c";
