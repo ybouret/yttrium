@@ -18,10 +18,24 @@ namespace Yttrium
             class Variables:: Code : public Oversized, public Variable::DB
             {
             public:
-                typedef HashMap<size_t,Variable::Handle> IndexMap;
-                static const char * const Label;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef HashMap<size_t,Variable::Handle> IndexMap; //!< alias
+                static const char * const Label;                   //!< helper
 
-                inline explicit Code() : 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+               
+                //! default
+                inline explicit Code() :
                 Oversized(),
                 Variable::DB(),
                 idmap(),
@@ -31,6 +45,7 @@ namespace Yttrium
                 {
                 }
 
+                //! copy
                 inline explicit Code(const Code &other) :
                 Identifiable(),
                 Collection(),
@@ -43,14 +58,37 @@ namespace Yttrium
                 {
                 }
                 
-
+                //! cleanup
                 inline virtual ~Code() noexcept
                 {
                 }
 
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
 
+                //______________________________________________________________
+                //
+                //! erase
+                //______________________________________________________________
+                inline void erase() noexcept
+                {
+                    free();
+                    idmap.free();
+                    Coerce(lower) = 0;
+                    Coerce(upper) = 0;
+                    Coerce(maxNL) = 0;
+                }
+
+
+                //______________________________________________________________
+                //
                 //! upgrade index map and metrics
-                inline const Variable &upgradedWith(const Variable::Handle &hvar)
+                //______________________________________________________________
+                inline const Variable & upgradedWith(const Variable::Handle &hvar)
                 {
                     const size_t indx = hvar->idx();
                     try {
@@ -69,8 +107,10 @@ namespace Yttrium
                     return *hvar;
                 }
 
-
+                //______________________________________________________________
+                //
                 //! link any variable
+                //______________________________________________________________
                 inline const Variable & link(const Variable::Handle &hvar)
                 {
                     const String          &name = *hvar;
@@ -165,6 +205,14 @@ namespace Yttrium
                 assert(0!=code);
                 Nullify(code);
             }
+
+            void Variables:: erase() noexcept
+            {
+                assert(0!=code);
+                code->erase();
+            }
+
+
 
             Variables::ConstInterface & Variables:: surrogate() const noexcept
             {

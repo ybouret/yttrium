@@ -96,6 +96,9 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
+                //! erase content
+                void erase() noexcept;
+
                 //! get mutable named value from array
                 template <typename WRITABLE, typename ID> inline
                 typename WRITABLE::Type & operator()(WRITABLE &arr, const ID &id) const
