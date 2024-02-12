@@ -13,64 +13,32 @@ inline ABSCISSA Of(OutOfOrderFunc           &F,
                    List                     &L,
                    const Readable<ABSCISSA> &aorg)
 {
+
+    // initialize
     assert(S.size() == L.size);
     const size_t ns = S.size();
     Coerce(npts) = 0;
-
-    std::cerr << "#samples=" << ns << std::endl;
-    std::cerr << "#list   =" << L.size << std::endl;
-
-    std::cerr << "init" << std::endl;
     xadd.make(ns);
+
     {
         typename SamplesType::Iterator curr = S.begin();
         LeastSquares                  *node = L.head;
-        for(size_t i=ns;i>0;--i,++curr,++node)
+        for(size_t i=ns;i>0;--i,++curr,node=node->next)
         {
             assert(0!=node);
             SampleType    &sm = **curr;           // sample
             LeastSquares  &ls =  *node;           // least squares
-            std::cerr << "computing for '" << sm.name << "' vars=" << sm.vars << std::endl;
             const ABSCISSA D2 = ls.Of(F,sm,aorg); // value
-            std::cerr << "\tD2=" << D2 << std::endl;
-            continue;
             const size_t   np = ls.npts;          // number of points
             const ABSCISSA sw(np);                // weight
 
-            Coerce(npts) += np; // update total number of pointd
+            Coerce(npts) += np; // update total number of points
             xadd << (sw * D2);  // update xadd
         }
     }
-    std::cerr << "done" << std::endl;
-
+    
     return (npts<=0) ? zero : (xadd.sum() / static_cast<const ABSCISSA>(npts));
 
-
-#if 0
-    //----------------------------------------------------------
-    // initialize
-    //----------------------------------------------------------
-    const size_t     np = S.numPoints();
-    const Abscissae &a  = S.abscissae();
-    const Ordinates &b  = S.ordinates();
-    xadd.make(np*Dimension);
-    xlst.flush();
-
-    //----------------------------------------------------------
-    // compute
-    //----------------------------------------------------------
-    for(size_t j=np;j>0;--j)
-    {
-        const ORDINATE Fj = F(a[j],aorg,vars);
-        pushDSQ(b[j],Fj);
-    }
-
-    //----------------------------------------------------------
-    // return sum
-    //----------------------------------------------------------
-    Coerce(npts) = np;
-    return (  half * xadd.sum() );
-#endif
 }
 
 

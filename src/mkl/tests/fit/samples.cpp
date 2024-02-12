@@ -219,7 +219,8 @@ Y_UTEST(fit_samples)
         Fit::LeastSquaresRoll<double,double> roll1D;
         
         const double D2sum = eval.Of(F,samples,roll1D.setup(samples.size()), aorg);
-        std::cerr << "D2sum = " << D2sum << std::endl;
+        std::cerr << "D2sum = " << D2sum << " / " << (D1a*S1.numPoints()+D2a*S2.numPoints())/( S1.numPoints()+ S2.numPoints() ) << std::endl;
+        std::cerr << std::endl;
 
     }
 

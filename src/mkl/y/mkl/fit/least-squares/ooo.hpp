@@ -16,6 +16,8 @@ inline ABSCISSA Of(OutOfOrderFunc           &F,
     //----------------------------------------------------------
     // initialize
     //----------------------------------------------------------
+   
+    
     const size_t     np = S.numPoints();
     const Abscissae &a  = S.abscissae();
     const Ordinates &b  = S.ordinates();

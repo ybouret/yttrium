@@ -58,7 +58,9 @@ namespace Yttrium
 
             //! [Recyclable] clean content memory
             inline virtual void free() noexcept
-            { PriorityQueue<MutableType>::Finish(entry,count); }
+            { 
+                PriorityQueue<MutableType>::Finish(entry,count);
+            }
 
             //! [Container] current  objects
             inline virtual size_t size()     const noexcept { return count; }

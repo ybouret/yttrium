@@ -160,7 +160,10 @@ namespace Yttrium
         {
             assert(Good(tree,count));
             while(count>0)
+            {
+                assert(0!=tree);
                 RemoveLast(tree,count);
+            }
         }
     };
 

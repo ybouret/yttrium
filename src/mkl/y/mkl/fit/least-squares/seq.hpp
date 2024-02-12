@@ -18,6 +18,8 @@ inline ABSCISSA Of(SequentialFunc           &F,
     const size_t     np = S.numPoints();
     const Abscissae &a  = S.abscissae();
     const Ordinates &b  = S.ordinates();
+
+
     xadd.make(np*Dimension);
     xlst.flush();
 
