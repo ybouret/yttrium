@@ -42,6 +42,7 @@ namespace Yttrium
                 typedef          TypeFor<ABSCISSA,ORDINATE>    MyType;         //!< alias
                 typedef typename SampleType::Abscissae         Abscissae;      //!< alias
                 typedef typename SampleType::Ordinates         Ordinates;      //!< alias
+                typedef typename SampleType::Predicted         Predicted;      //!< alias
                 typedef typename MyType::OutOfOrderFunc        OutOfOrderFunc; //!< alias
                 typedef typename MyType::OutOfOrderGradient    OutOfOrderGrad; //!< alias
                 typedef          Sequential<ABSCISSA,ORDINATE> SequentialFunc; //!< alias

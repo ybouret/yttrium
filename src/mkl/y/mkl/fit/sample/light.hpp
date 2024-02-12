@@ -48,6 +48,7 @@ namespace Yttrium
                 typedef Sample<ABSCISSA,ORDINATE>      SampleType; //!< alias
                 typedef typename SampleType::Abscissae Abscissae;  //!< alias
                 typedef typename SampleType::Ordinates Ordinates;  //!< alias
+                typedef typename SampleType::Predicted Predicted;  //!< alias
 
                 //______________________________________________________________
                 //
@@ -83,7 +84,7 @@ namespace Yttrium
                 inline virtual size_t            numPoints() const noexcept { return _num; }
                 inline virtual const Abscissae & abscissae() const noexcept { return _abs; }
                 inline virtual const Ordinates & ordinates() const noexcept { return _ord; }
-                inline virtual const Ordinates & predicted() const noexcept { return _pre; }
+                inline virtual Predicted       & predicted()       noexcept { return _pre; }
                 inline virtual const char *      callSign()  const noexcept { return LightSampleInfo::CallSign; }
 
             private:

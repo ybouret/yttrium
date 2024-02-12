@@ -42,6 +42,7 @@ namespace Yttrium
 
                 typedef typename MyAbscissae::Abscissae Abscissae;   //!< alias
                 typedef Readable<ORDINATE>              Ordinates;   //!< alias
+                typedef Writable<ORDINATE>              Predicted;   //!< alias
 
                 typedef ArkPtr<String,Sample>           Pointer;     //!< alias
 
@@ -56,11 +57,8 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
-                //! access ordinates
-                virtual const Ordinates & ordinates() const noexcept = 0;
-                
-                //! access predicted ordinates
-                virtual const Ordinates & predicted() const noexcept = 0;
+                virtual const Ordinates & ordinates() const noexcept = 0;  //!< access ordinates
+                virtual Predicted       & predicted()       noexcept = 0;  //!< access predicted ordinates
 
 
                 //______________________________________________________________

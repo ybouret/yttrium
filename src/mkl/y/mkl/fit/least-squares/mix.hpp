@@ -15,12 +15,18 @@ inline ABSCISSA Of(FIT_FUNCTION             &F,
                    const Readable<ABSCISSA> &aorg)
 {
 
+    //--------------------------------------------------------------------------
     // initialize
+    //--------------------------------------------------------------------------
     assert(S.size() == L.size);
     const size_t ns = S.size();
     Coerce(npts) = 0;
     xadd.make(ns);
+    xlst.flush();
 
+    //--------------------------------------------------------------------------
+    // Loop over samples
+    //--------------------------------------------------------------------------
     {
         typename SamplesType::Iterator curr = S.begin();
         LeastSquares                  *node = L.head;
@@ -37,10 +43,37 @@ inline ABSCISSA Of(FIT_FUNCTION             &F,
             xadd << (sw * D2);  // update xadd
         }
     }
-    
+
+    //--------------------------------------------------------------------------
+    // final result
+    //--------------------------------------------------------------------------
     return (npts<=0) ? zero : (xadd.sum() / static_cast<const ABSCISSA>(npts));
 }
 
+
+template <
+typename FUNCTION,
+typename GRADIENT>
+inline ABSCISSA Of(FUNCTION                 &F,
+                   SampleType               &S,
+                   List                     &L,
+                   const Readable<ABSCISSA> &aorg,
+                   const Booleans           &used,
+                   GRADIENT                 &G)
+
+{
+    //--------------------------------------------------------------------------
+    // initialize
+    //--------------------------------------------------------------------------
+    assert(S.size() == L.size);
+    const size_t ns = S.size();
+    Coerce(npts) = 0;
+    xadd.make(ns);
+    xlst.flush();
+
+    return 0;
+
+}
 
 
 
