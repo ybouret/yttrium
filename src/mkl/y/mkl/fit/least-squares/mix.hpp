@@ -6,7 +6,6 @@
  \param F    an out-of-order function
  \param S    a single sample
  \param aorg parameters
- \param vars variables
  */
 //______________________________________________________________
 inline ABSCISSA Of(OutOfOrderFunc           &F,
@@ -18,23 +17,23 @@ inline ABSCISSA Of(OutOfOrderFunc           &F,
     const size_t ns = S.size();
     Coerce(npts) = 0;
 
-    switch(ns)
-    {
-        case 0: return zero;
-        case 1: return L.head->Of(F,**S.begin(),aorg);
-        default:
-            break;
-    }
+    std::cerr << "#samples=" << ns << std::endl;
+    std::cerr << "#list   =" << L.size << std::endl;
 
+    std::cerr << "init" << std::endl;
     xadd.make(ns);
     {
         typename SamplesType::Iterator curr = S.begin();
         LeastSquares                  *node = L.head;
         for(size_t i=ns;i>0;--i,++curr,++node)
         {
+            assert(0!=node);
             SampleType    &sm = **curr;           // sample
             LeastSquares  &ls =  *node;           // least squares
+            std::cerr << "computing for '" << sm.name << "' vars=" << sm.vars << std::endl;
             const ABSCISSA D2 = ls.Of(F,sm,aorg); // value
+            std::cerr << "\tD2=" << D2 << std::endl;
+            continue;
             const size_t   np = ls.npts;          // number of points
             const ABSCISSA sw(np);                // weight
 
@@ -42,8 +41,9 @@ inline ABSCISSA Of(OutOfOrderFunc           &F,
             xadd << (sw * D2);  // update xadd
         }
     }
+    std::cerr << "done" << std::endl;
 
-    return (npts<=0) ? zero : xadd.sum() / static_cast<const ABSCISSA>(npts);
+    return (npts<=0) ? zero : (xadd.sum() / static_cast<const ABSCISSA>(npts));
 
 
 #if 0

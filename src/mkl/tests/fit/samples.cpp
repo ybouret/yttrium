@@ -215,9 +215,11 @@ Y_UTEST(fit_samples)
         inventor.compute(eval, -2, used);
         std::cerr << std::endl;
 
+        std::cerr << "--- 1D, sample 1+2 ---" << std::endl;
         Fit::LeastSquaresRoll<double,double> roll1D;
-
-
+        
+        const double D2sum = eval.Of(F,samples,roll1D.setup(samples.size()), aorg);
+        std::cerr << "D2sum = " << D2sum << std::endl;
 
     }
 
