@@ -309,8 +309,17 @@ Y_UTEST(fit_samples)
     Y_SIZEOF(LeastSquaresSmall);
     Y_SIZEOF(LeastSquaresGreat);
 
+    typedef Fit::LeastSquaresRoll<float,float>                                    LeastSquaresRollSmall;
+    typedef Fit::LeastSquaresRoll< XReal<long double>,V3D< XReal<long double> > > LeastSquaresRollGreat;
+
+    Y_SIZEOF(LeastSquaresRollSmall);
+    Y_SIZEOF(LeastSquaresRollGreat);
 
 
+    typedef Fit::Executive<float,float>                                    ExecutiveSmall;
+    typedef Fit::Executive< XReal<long double>,V3D< XReal<long double> > > ExecutiveGreat;
+    Y_SIZEOF(ExecutiveSmall);
+    Y_SIZEOF(ExecutiveGreat);
 
 }
 Y_UDONE()
