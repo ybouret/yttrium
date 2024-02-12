@@ -1,10 +1,12 @@
+//! \file
 
 //______________________________________________________________
 //
-//! compute least squares of S w.r.t an out of order F
+//! compute least squares of S w.r.t  F
 /**
- \param F    an out-of-order function
- \param S    a single sample
+ \param F    a function (OOO,Seq)
+ \param S    multiple samples
+ \param L    list of least-squares, one for each sample
  \param aorg parameters
  */
 //______________________________________________________________
@@ -51,6 +53,18 @@ inline ABSCISSA Of(FIT_FUNCTION             &F,
 }
 
 
+//______________________________________________________________
+//
+//! compute least squares of S w.r.t F, plus metrics with F
+/**
+ \param F    a function (OOO,Seq)
+ \param S    multiple samples
+ \param L    list of least-squares, one for each sample
+ \param aorg parameters
+ \param used used parameters
+ \param G    gradient of F
+ */
+//______________________________________________________________
 template <
 typename FUNCTION,
 typename GRADIENT>
@@ -78,11 +92,7 @@ inline ABSCISSA Of(FUNCTION                 &F,
     for(size_t i=nv;i>0;--i) curv[i][i] = one;
 
     //--------------------------------------------------------------------------
-    // Pass 1: compute all beta/curv and store result
-    //--------------------------------------------------------------------------
-
-    //--------------------------------------------------------------------------
-    // Loop over samples
+    // Pass 1: compute all nodes beta/curv and store result
     //--------------------------------------------------------------------------
     {
         typename SamplesType::Iterator curr = S.begin();
@@ -92,7 +102,7 @@ inline ABSCISSA Of(FUNCTION                 &F,
             assert(0!=node);
             SampleType    &sm = **curr;                  // sample
             LeastSquares  &ls =  *node;                  // least squares
-            const ABSCISSA D2 = ls.Of(F,sm,aorg,used,G); // value + metrics
+            const ABSCISSA D2 = ls.Of(F,sm,aorg,used,G,false); // value + metrics
             const size_t   np = ls.npts;                 // number of points
             const ABSCISSA sw(np);                       // weight
 
@@ -106,14 +116,13 @@ inline ABSCISSA Of(FUNCTION                 &F,
         return zero;
     }
 
-    std::cerr << "---------- compiling..." << std::endl;
-    std::cerr << "used: " << used << std::endl;
+
     const ABSCISSA den = static_cast<const ABSCISSA>(npts);
     const ABSCISSA res = xadd.sum() / den;
-    for(const LeastSquares *node=L.head;node;node=node->next)
-    {
-        std::cerr << "node_beta: " << node->beta << std::endl;
-    }
+  
+    //--------------------------------------------------------------------------
+    // Pass 2: compute  beta
+    //--------------------------------------------------------------------------
     for(size_t i=nv;i>0;--i)
     {
         if(!used[i]) continue;
@@ -123,85 +132,33 @@ inline ABSCISSA Of(FUNCTION                 &F,
         beta[i] = xadd.sum()/den;
     }
 
-    for(const LeastSquares *node=L.head;node;node=node->next)
+
+    //--------------------------------------------------------------------------
+    // Pass 2: compute  curv
+    //--------------------------------------------------------------------------
+    for(size_t i=nv;i>0;--i)
     {
-        std::cerr << "node_curv: " << node->curv << std::endl;
-    }
-
-    return res;
-}
-
-
-
-#if 0
-//! summing precomputed LeastSquares
-inline ABSCISSA Of(const List &L)
-{
-
-    if(L.size<=0) return zero;
-
-    //----------------------------------------------------------
-    // prepare memory
-    //----------------------------------------------------------
-    {
-        const LeastSquares &first = *(L.head);
-        const size_t nv = first.dFda.size(); assert(nv>0);
-        dFda.adjust(nv,zero);
-        beta.adjust(nv,zero);
-        curv.make(nv,nv);
-        xadd.make(L.size);
-    }
-
-    //----------------------------------------------------------
-    // first pass: npts
-    //----------------------------------------------------------
-    Coerce(npts) = 0;
-    for(const LeastSquares *cls = L.head; cls; cls=cls->next)
-    {
-        Coerce(npts) += cls->npts;
-    }
-
-    //----------------------------------------------------------
-    // second pass: beta
-    //----------------------------------------------------------
-    const size_t   nvar = beta.size();
-    const ABSCISSA den  = ABSCISSA(npts);
-    for(size_t i=nvar;i>0;--i)
-    {
-        xadd.free();
-        for(const LeastSquares *cls = L.head; cls; cls=cls->next)
-        {
-            xadd << (cls->beta[i]* static_cast<ABSCISSA>(cls->npts) );
-        }
-        beta[i] = xadd.sum() / den;
-    }
-
-    //----------------------------------------------------------
-    // third pass: curv
-    //----------------------------------------------------------
-    for(size_t i=nvar;i>0;--i)
-    {
+        if(!used[i]) continue;
         for(size_t j=i;j>0;--j)
         {
+            if(!used[j]) continue;
             xadd.free();
-            for(const LeastSquares *cls = L.head; cls; cls=cls->next)
-            {
-                xadd << (cls->curv[i][j]*static_cast<ABSCISSA>(cls->npts));
-            }
+            for(const LeastSquares *node=L.head;node;node=node->next)
+                xadd << (node->curv[i][j] * static_cast<ABSCISSA>(node->npts));
             curv[i][j] = curv[j][i] = xadd.sum() / den;
         }
     }
 
-    //----------------------------------------------------------
-    // final D2
-    //----------------------------------------------------------
-    xadd.free();
-    for(const LeastSquares *cls = L.head; cls; cls=cls->next)
+    //--------------------------------------------------------------------------
+    // post regularize
+    //--------------------------------------------------------------------------
     {
-        xadd << (cls->last * static_cast<ABSCISSA>(cls->npts));
+        typename SamplesType::Iterator curr = S.begin();
+        LeastSquares                  *node = L.head;
+        for(size_t i=ns;i>0;--i,++curr,node=node->next)
+            node->regularizeWith(**curr,used);
     }
-    return ( xadd.sum()/den );
-
+    return res;
 }
-#endif
+
 

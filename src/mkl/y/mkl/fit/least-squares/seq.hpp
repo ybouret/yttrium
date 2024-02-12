@@ -1,52 +1,53 @@
-//______________________________________________________________
+//! \file
+
+//______________________________________________________________________________
 //
 //! compute least squares of S w.r.t a sequential F
 /**
  \param F    a sequential function
  \param S    a single sample
  \param aorg parameters
- \param vars variables
  */
-//______________________________________________________________
+//______________________________________________________________________________
 inline ABSCISSA Of(SequentialFunc           &F,
-                   const SampleType         &S,
+                   SampleType               &S,
                    const Readable<ABSCISSA> &aorg)
 {
-    //----------------------------------------------------------
+    //--------------------------------------------------------------------------
     // initialize
-    //----------------------------------------------------------
-    const size_t     np = S.numPoints();
-    const Abscissae &a  = S.abscissae();
-    const Ordinates &b  = S.ordinates();
+    //--------------------------------------------------------------------------
+    const size_t     numPoints  = S.numPoints();
+    const Abscissae &abscissae  = S.abscissae();
+    const Ordinates &ordinates  = S.ordinates();
+    Predicted       &predicted  = S.predicted();
 
-
-    xadd.make(np*Dimension);
+    xadd.make(numPoints*Dimension);
     xlst.flush();
 
 
-    //----------------------------------------------------------
+    //--------------------------------------------------------------------------
     // first point
-    //----------------------------------------------------------
+    //--------------------------------------------------------------------------
     {
         const size_t   j  = S.indx[1];
-        const ORDINATE Fj = F.set(a[j],aorg,S.vars);
-        pushDSQ(b[j],Fj);
+        const ORDINATE Fj = predicted[j] = F.set(abscissae[j],aorg,S.vars);
+        pushDSQ(ordinates[j],Fj);
     }
 
-    //----------------------------------------------------------
+    //--------------------------------------------------------------------------
     // following points
-    //----------------------------------------------------------
-    for(size_t i=2;i<=np;++i)
+    //--------------------------------------------------------------------------
+    for(size_t i=2;i<=numPoints;++i)
     {
         const size_t   j  = S.indx[i];
-        const ORDINATE Fj = F.run(a[j],aorg,S.vars);
-        pushDSQ(b[j],Fj);
+        const ORDINATE Fj = predicted[j] = F.run(abscissae[j],aorg,S.vars);
+        pushDSQ(ordinates[j],Fj);
     }
 
-    //----------------------------------------------------------
+    //--------------------------------------------------------------------------
     // return sum
-    //----------------------------------------------------------
-    Coerce(npts) = np;
+    //--------------------------------------------------------------------------
+    Coerce(npts) = numPoints;
     return ( half * xadd.sum() );
 }
 

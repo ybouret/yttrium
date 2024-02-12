@@ -60,6 +60,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
               
+                //! append [Light|Heavy|..]Sample
                 template <typename SAMPLE>
                 SAMPLE & operator()( SAMPLE *sample )
                 {

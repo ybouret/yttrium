@@ -225,7 +225,11 @@ Y_UTEST(fit_samples)
         const double D2full = eval.Of(F,samples,roll1D,aorg,used,G);
         std::cerr << "D2full = " << D2full << std::endl;
         std::cerr << "beta   = " << eval.beta << std::endl;
-        
+        std::cerr << "curv   = " << eval.curv << std::endl;
+
+        inventor.compute(eval, -2, used);
+
+
         std::cerr << std::endl;
 
 

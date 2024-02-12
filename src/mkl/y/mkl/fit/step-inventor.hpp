@@ -15,12 +15,26 @@ namespace Yttrium
 
         namespace Fit
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Findind Out step according to a full metrics
+            //
+            //
+            //__________________________________________________________________
             template <typename ABSCISSA>
             class StepInventor
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
 
+                //! setup
                 inline explicit StepInventor() :
                 curv(),
                 step(),
@@ -32,8 +46,17 @@ namespace Yttrium
                 tenth(0.1)
                 {}
 
+                //! cleanup
                 inline virtual ~StepInventor() noexcept {}
 
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                //! prepare memory
                 inline void prepare(const size_t nvar)
                 {
                     curv.make(nvar,nvar);
@@ -41,6 +64,7 @@ namespace Yttrium
                     lu.ensure(nvar);
                 }
 
+                //! compute factor
                 ABSCISSA getFactor(const int p)
                 {
 
@@ -53,6 +77,7 @@ namespace Yttrium
                     return two;
                 }
 
+                //! compute step
                 template <typename LEAST_SQUARES>
                 bool compute(const LEAST_SQUARES &ls, 
                              const int            p,
@@ -91,9 +116,17 @@ namespace Yttrium
 
                 }
 
-                Matrix<ABSCISSA>              curv;
-                Vector<ABSCISSA,SampleMemory> step;
-                LU<ABSCISSA>                  lu;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                Matrix<ABSCISSA>              curv; //!< approx curvature
+                Vector<ABSCISSA,SampleMemory> step; //!< approx step
+                LU<ABSCISSA>                  lu;   //!< linear algebra
+
+            private:
                 const ABSCISSA                zero;
                 const ABSCISSA                one;
                 const ABSCISSA                two;
