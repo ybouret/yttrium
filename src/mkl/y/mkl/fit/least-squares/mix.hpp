@@ -77,7 +77,7 @@ inline ABSCISSA Of(FUNCTION                 &F,
 
 {
     //--------------------------------------------------------------------------
-    // initialize
+    // initialize memory
     //--------------------------------------------------------------------------
     assert(S.size() == L.size);
     assert(aorg.size()==used.size());
@@ -89,6 +89,12 @@ inline ABSCISSA Of(FUNCTION                 &F,
     dFda.adjust(nv,zero);
     beta.adjust(nv,zero);
     curv.make(nv,nv);
+
+    //--------------------------------------------------------------------------
+    // initialize values
+    //--------------------------------------------------------------------------
+    beta.ld(zero);
+    curv.ld(zero);
     for(size_t i=nv;i>0;--i) curv[i][i] = one;
 
     //--------------------------------------------------------------------------
@@ -158,6 +164,7 @@ inline ABSCISSA Of(FUNCTION                 &F,
         for(size_t i=ns;i>0;--i,++curr,node=node->next)
             node->regularizeWith(**curr,used);
     }
+
     return res;
 }
 

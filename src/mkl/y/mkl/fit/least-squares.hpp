@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_Fit_Compute_Least_Squares_Included
-#define Y_Fit_Compute_Least_Squares_Included 1
+#ifndef Y_Fit_Least_Squares_Included
+#define Y_Fit_Least_Squares_Included 1
 
 #include "y/mkl/fit/samples.hpp"
 #include "y/mkl/fit/sequential.hpp"

@@ -1,13 +1,12 @@
 
-#include "y/mkl/fit/step-inventor.hpp"
-#include "y/mkl/fit/least-squares/roll.hpp"
-
+#include "y/mkl/fit/executive.hpp"
 #include "y/mkl/fit/sequential/wrapper.hpp"
 #include "y/mkl/fit/sample/heavy.hpp"
 #include "y/mkl/fit/sample/light.hpp"
 #include "y/utest/run.hpp"
 #include "y/mkl/v2d.hpp"
-
+#include "y/container/cxx/array.hpp"
+#include "y/mkl/tao/seq/level1.hpp"
 
 using namespace Yttrium;
 using namespace MKL;
@@ -229,6 +228,25 @@ Y_UTEST(fit_samples)
 
         inventor.compute(eval, -2, used);
 
+        std::cerr << std::endl;
+        std::cerr << "---- with partial fit" << std::endl;
+        all(used,"t0") = false;
+        (void) eval.Of(F,samples,roll1D,aorg,used,G);
+        CxxArray<double> step1(used.size(),0);
+        CxxArray<double> step2(used.size(),0);
+
+        inventor.compute(*roll1D.head,-2,used);
+        Tao::Load(step1,inventor.step);
+        inventor.compute(*roll1D.tail,-2,used);
+        Tao::Load(step2,inventor.step);
+        std::cerr << "step1=" << step1 << std::endl;
+        std::cerr << "step2=" << step2 << std::endl;
+
+        inventor.compute(eval,-2,used);
+        std::cerr << "stepA=" << inventor.step << std::endl;
+
+
+
 
         std::cerr << std::endl;
 
@@ -276,7 +294,22 @@ Y_UTEST(fit_samples)
     }
 #endif
 
-    
+
+    std::cerr << std::endl;
+    Y_SIZEOF(Fit::StepInventor<float>);
+    Y_SIZEOF(Fit::StepInventor<double>);
+    Y_SIZEOF(Fit::StepInventor<long double>);
+    Y_SIZEOF(Fit::StepInventor< XReal<float> >);
+    Y_SIZEOF(Fit::StepInventor< XReal<double> >);
+    Y_SIZEOF(Fit::StepInventor< XReal<long double> >);
+
+    typedef Fit::LeastSquares<float,float>                                    LeastSquaresSmall;
+    typedef Fit::LeastSquares< XReal<long double>,V3D< XReal<long double> > > LeastSquaresGreat;
+
+    Y_SIZEOF(LeastSquaresSmall);
+    Y_SIZEOF(LeastSquaresGreat);
+
+
 
 
 }

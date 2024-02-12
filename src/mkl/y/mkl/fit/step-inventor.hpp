@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_Fit_Compute_Step_Inventor_Included
-#define Y_Fit_Compute_Step_Inventor_Included 1
+#ifndef Y_Fit_Step_Inventor_Included
+#define Y_Fit_Step_Inventor_Included 1
 
 #include "y/mkl/fit/least-squares.hpp"
 #include "y/mkl/algebra/lu.hpp"
@@ -24,7 +24,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename ABSCISSA>
-            class StepInventor
+            class StepInventor : public Oversized
             {
             public:
                 //______________________________________________________________
