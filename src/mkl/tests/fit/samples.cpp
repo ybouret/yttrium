@@ -220,8 +220,14 @@ Y_UTEST(fit_samples)
         
         const double D2sum  = eval.Of(F,samples,roll1D.setup(samples.size()), aorg);
         const double D2sumw = eval.Of(Fw,samples,roll1D, aorg);
-        std::cerr << "D2sum = " << D2sum << " / " << (D1a*S1.numPoints()+D2a*S2.numPoints())/( S1.numPoints()+ S2.numPoints() ) << " / " << D2sumw << std::endl;
+        std::cerr << "D2sum  = " << D2sum << " / " << (D1a*S1.numPoints()+D2a*S2.numPoints())/( S1.numPoints()+ S2.numPoints() ) << " / " << D2sumw << std::endl;
+
+        const double D2full = eval.Of(F,samples,roll1D,aorg,used,G);
+        std::cerr << "D2full = " << D2full << std::endl;
+        std::cerr << "beta   = " << eval.beta << std::endl;
+        
         std::cerr << std::endl;
+
 
     }
 
