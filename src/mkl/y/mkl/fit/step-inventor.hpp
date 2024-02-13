@@ -168,7 +168,7 @@ namespace Yttrium
                  \param ls   a LeastSquares based object
                  \param p    correcting parameter, possiblu upgraded
                  \param used used variables flag
-                 \param kept intialized to true, set to false if p was upgraded
+                 \param kept set to false if p was upgraded
                  */
                 template <typename LEAST_SQUARES>
                 bool buildStep(const LEAST_SQUARES      &ls,
@@ -196,7 +196,6 @@ namespace Yttrium
                     assert(nvar == atry.size());
                     assert(adom.contains(aorg));
 
-                    kept = true;
 
                     //----------------------------------------------------------
                     //

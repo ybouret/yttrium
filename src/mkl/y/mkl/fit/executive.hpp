@@ -91,25 +91,47 @@ namespace Yttrium
                     //__________________________________________________________
                     ABSCISSA            Dorg = D2(F,S,aorg,used,G); // full metrics
                     Writable<ABSCISSA> &atry = solv->atry;          // alias
+                    const int           pmax = solv->pmax;          // alias
                     const size_t        nvar = aorg.size();         // num variables
                     bool                kept = true;                // indicator
                     int                 p    = -4;                  // initial guess TODO
                     solv->prepare(nvar);                            // workspace
 
 
-                    Y_MKL_FIT("Dorg = " << Dorg << "# @" << aorg << ", p=" << p);
 
-                    // compute probable step
+                    size_t cycle = 0;
+                CYCLE:
+                    ++cycle;
+                    Y_MKL_FIT("cycle =" << cycle);
+                    Y_MKL_FIT("Dorg  = " << Dorg << "# @" << aorg << ", p=" << p);
+                    // compute admissible step
+                BUILD_STEP:
                     if(!solv->buildStep(*mine,aorg,adom,p,used,kept,verbose))
                     {
                         Y_MKL_FIT("no possible step");
                         return false;
                     }
-                    
 
-                    ABSCISSA Dtry = D2(F,S,atry);
-                    Y_MKL_FIT("Dtry = " << Dtry << "# @" << atry << ", p=" << p);
-                    
+
+                    const ABSCISSA Dtry = D2(F,S,atry);
+                    Y_MKL_FIT("Dtry  = " << Dtry << "# @" << atry << ", p=" << p);
+                    if(Dtry>Dorg)
+                    {
+                        Y_MKL_FIT_DEGRADE();
+                        goto BUILD_STEP;
+                    }
+
+                    Tao::Load(aorg,atry);
+                    Dorg = D2(F,S,aorg,used,G);
+                    if(kept)
+                    {
+                        if(--p<=solv->pmin) p = solv->pmin;
+                    }
+
+                    kept = true;
+                    if(cycle<=3)
+                        goto CYCLE;
+
 
                     return false;
                 }
