@@ -171,7 +171,7 @@ namespace Yttrium
 
             //__________________________________________________________________
             //
-            //! shift lower value withing interval
+            //! shift lower value within interval
             /**
              \param x x.a <= x.b <= x.c, this->contains(x.b)
              \return positive value if x.a was shifted up

@@ -18,8 +18,8 @@ namespace Yttrium
 
             //! helper to show process
 #define Y_MKL_FIT(MSG) do { if(verbose) std::cerr << MSG << std::endl; } while(false)
-
             
+
             //__________________________________________________________________
             //
             //

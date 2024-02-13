@@ -5,6 +5,7 @@ Y_UTEST_DECL(32)
 {
     Y_UTEST(triplet);    
     Y_UTEST(interval);
+    Y_UTEST(intervals);
     Y_UTEST(utils);
     Y_UTEST(tao0);
     Y_UTEST(tao1);
