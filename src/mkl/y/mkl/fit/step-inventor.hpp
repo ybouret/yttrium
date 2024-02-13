@@ -206,8 +206,11 @@ namespace Yttrium
                     Y_MKL_FIT("#building curvature with p=" << p);
                     while( !buildCurvature(alpha,p,used) )
                     {
+                        Y_MKL_FIT("-- singular curvature");
                         Y_MKL_FIT_DEGRADE();
                     }
+                    Y_MKL_FIT("-- computed curvature");
+
 
                     //----------------------------------------------------------
                     //
@@ -227,11 +230,12 @@ namespace Yttrium
                     Y_MKL_FIT("atry=" << atry);
                     if(!adom.contains(atry))
                     {
+                        Y_MKL_FIT("-- out of domain");
                         Y_MKL_FIT_DEGRADE();
                         goto TRIAL;
                     }
                     
-
+                    Y_MKL_FIT("-- found parameters!");
                     return true;
                 }
 

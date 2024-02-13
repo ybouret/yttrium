@@ -91,6 +91,7 @@ namespace Yttrium
                     //__________________________________________________________
                     ABSCISSA            Dorg = D2(F,S,aorg,used,G); // full metrics
                     Writable<ABSCISSA> &atry = solv->atry;          // alias
+                    const int           pmin = solv->pmin;          // alias
                     const int           pmax = solv->pmax;          // alias
                     const size_t        nvar = aorg.size();         // num variables
                     bool                kept = true;                // indicator
@@ -102,9 +103,15 @@ namespace Yttrium
                     size_t cycle = 0;
                 CYCLE:
                     ++cycle;
-                    Y_MKL_FIT("cycle =" << cycle);
+                    Y_MKL_FIT("-------- cycle = " << cycle << " --------");
                     Y_MKL_FIT("Dorg  = " << Dorg << "# @" << aorg << ", p=" << p);
+
+                    //----------------------------------------------------------
+                    //
                     // compute admissible step
+                    //
+                    //----------------------------------------------------------
+
                 BUILD_STEP:
                     if(!solv->buildStep(*mine,aorg,adom,p,used,kept,verbose))
                     {
@@ -125,8 +132,12 @@ namespace Yttrium
                     Dorg = D2(F,S,aorg,used,G);
                     if(kept)
                     {
-                        if(--p<=solv->pmin) p = solv->pmin;
+                        if(--p<=pmin) p = pmin;
                     }
+
+                    //----------------------------------------------------------
+                    // prepare for next cycle
+                    //----------------------------------------------------------
 
                     kept = true;
                     if(cycle<=3)

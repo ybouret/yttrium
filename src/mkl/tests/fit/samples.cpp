@@ -293,7 +293,10 @@ Y_UTEST(fit_samples)
         all(dom,"D2") = Interval<double>(0,Infinity);
         all.display("domain_", std::cerr, dom);
 
+        S1.saveDatFile("-org");
+
         xfit.run(F,S1,aorg,dom,used,G);
+        S1.saveDatFile("-try");
         //xfit.run(F,S2,aorg,used,G);
         //xfit.run(F,samples,aorg,used,G);
 
