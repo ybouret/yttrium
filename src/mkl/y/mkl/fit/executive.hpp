@@ -99,7 +99,7 @@ namespace Yttrium
 
                     Y_MKL_FIT("Dorg = " << Dorg << "# @" << aorg << ", p=" << p);
 
-                    // compute probable
+                    // compute probable step
                     if(!solv->buildStep(*mine,aorg,adom,p,used,kept,verbose))
                     {
                         Y_MKL_FIT("no possible step");

@@ -86,7 +86,6 @@ namespace Yttrium
                 inline virtual size_t            numPoints() const noexcept { return _num; }
                 inline virtual const Abscissae & abscissae() const noexcept { return _abs; }
                 inline virtual const Ordinates & ordinates() const noexcept { return _ord; }
-                inline virtual Predicted       & predicted()       noexcept { return _pre; }
                 inline virtual const char *      callSign()  const noexcept { return HeavySampleInfo::CallSign;   }
 
                 //______________________________________________________________
@@ -117,6 +116,8 @@ namespace Yttrium
                 Vector<ABSCISSA,MemoryModel> _abs;
                 Vector<ORDINATE,MemoryModel> _ord;
                 Vector<ORDINATE,MemoryModel> _pre;
+                inline virtual const Predicted & fetchPred() const noexcept { return _pre; }
+
             };
         }
     }

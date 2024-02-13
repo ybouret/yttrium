@@ -84,7 +84,6 @@ namespace Yttrium
                 inline virtual size_t            numPoints() const noexcept { return _num; }
                 inline virtual const Abscissae & abscissae() const noexcept { return _abs; }
                 inline virtual const Ordinates & ordinates() const noexcept { return _ord; }
-                inline virtual Predicted       & predicted()       noexcept { return _pre; }
                 inline virtual const char *      callSign()  const noexcept { return LightSampleInfo::CallSign; }
 
             private:
@@ -93,7 +92,11 @@ namespace Yttrium
                 const LightArray<ABSCISSA> _abs;
                 const LightArray<ORDINATE> _ord;
                 LightArray<ORDINATE>       _pre;
+
+                inline virtual const Predicted & fetchPred() const noexcept { return _pre; }
+
             };
+
 
         }
 
