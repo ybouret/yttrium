@@ -56,12 +56,9 @@ namespace Yttrium
                 // Interface
                 //
                 //______________________________________________________________
-
                 virtual const Ordinates & ordinates() const noexcept = 0;  //!< access ordinates
                 virtual const Predicted & fetchPred() const noexcept = 0;  //!< access predicted
-
-
-
+                
                 //______________________________________________________________
                 //
                 //
