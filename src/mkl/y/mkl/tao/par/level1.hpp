@@ -139,7 +139,7 @@ namespace Yttrium
             //! target += factor * source
             //__________________________________________________________________
             template <typename TARGET, typename T, typename SOURCE>   inline
-            void Add( TARGET &target, T factor, SOURCE &source, Engine &engine)
+            void MulAdd( TARGET &target, T factor, SOURCE &source, Engine &engine)
             {
                 assert(target.size()==source.size());
                 engine.setup(target.size());
@@ -169,7 +169,7 @@ namespace Yttrium
             //! target += factor * source
             //__________________________________________________________________
             template <typename TARGET,  typename SOURCE, typename T, typename VECTOR> inline
-            void Add(TARGET &target,  SOURCE &source, const T &factor, VECTOR &vector, Engine &engine)
+            void MulAdd(TARGET &target,  SOURCE &source, const T &factor, VECTOR &vector, Engine &engine)
             {
                 assert(target.size()==source.size());
                 engine.setup(target.size());
@@ -234,10 +234,10 @@ namespace Yttrium
 
             //__________________________________________________________________
             //
-            //! target += factor * source
+            //! target -= factor * source
             //__________________________________________________________________
             template <typename TARGET, typename T, typename SOURCE>   inline
-            void Sub( TARGET &target, T factor, SOURCE &source, Engine &engine)
+            void MulSub( TARGET &target, T factor, SOURCE &source, Engine &engine)
             {
                 assert(target.size()==source.size());
                 engine.setup(target.size());
@@ -264,10 +264,10 @@ namespace Yttrium
 
             //__________________________________________________________________
             //
-            //! target += factor * source
+            //! target = source - factor * source
             //__________________________________________________________________
             template <typename TARGET,  typename SOURCE, typename T, typename VECTOR> inline
-            void Sub(TARGET &target,  SOURCE &source, const T &factor, VECTOR &vector, Engine &engine)
+            void MulSub(TARGET &target,  SOURCE &source, const T &factor, VECTOR &vector, Engine &engine)
             {
                 assert(target.size()==source.size());
                 engine.setup(target.size());

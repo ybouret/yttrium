@@ -60,7 +60,6 @@ namespace Yttrium
                 virtual const Ordinates & ordinates() const noexcept = 0;  //!< access ordinates
                 virtual Predicted       & predicted()       noexcept = 0;  //!< access predicted ordinates
 
-
                 //______________________________________________________________
                 //
                 //
@@ -89,20 +88,30 @@ namespace Yttrium
                     const size_t     n = this->numPoints();
                     const Abscissae &a = this->abscissae();
                     const Ordinates &b = this->ordinates();
+                    const Ordinates &c = Coerce(*this).predicted();
+
                     for(size_t i=1;i<=n;++i)
                     {
                         fp("%.15g",double(a[i]));
-                        const Abscissa * const p = O2A( b[i] );
-                        for(size_t j=0;j<Dimension;++j)
-                            fp(" %.15g",double(p[j]));
+                        {
+                            const Abscissa * const p = O2A( b[i] );
+                            for(size_t j=0;j<Dimension;++j)
+                                fp(" %.15g",double(p[j]));
+                        }
+                        {
+                            const Abscissa * const p = O2A( c[i] );
+                            for(size_t j=0;j<Dimension;++j)
+                                fp(" %.15g",double(p[j]));
+                        }
+
                         fp << '\n';
                     }
                 }
 
                 //! save using name.dat
-                inline void saveDatFile() const
+                inline void saveDatFile(const char *sfx=0) const
                 {
-                    const String     fn = this->key() + ".dat";
+                    const String     fn = this->key() + sfx + ".dat";
                     Libc::OutputFile fp(fn);
                     save(fp);
                 }

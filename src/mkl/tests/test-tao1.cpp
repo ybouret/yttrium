@@ -100,17 +100,17 @@ Y_UTEST(tao1)
 
         {
             const int factor = 3;
-            Tao::Add(target,factor,source);     std::cerr << target << std::endl;
-            Tao::Add(seqtgt,factor,source,seq); std::cerr << seqtgt << std::endl; Y_CHECK(seqtgt==target);
-            Tao::Add(partgt,factor,source,par); std::cerr << partgt << std::endl; Y_CHECK(partgt==target);
+            Tao::MulAdd(target,factor,source);     std::cerr << target << std::endl;
+            Tao::MulAdd(seqtgt,factor,source,seq); std::cerr << seqtgt << std::endl; Y_CHECK(seqtgt==target);
+            Tao::MulAdd(partgt,factor,source,par); std::cerr << partgt << std::endl; Y_CHECK(partgt==target);
         }
 
 
         {
             const int factor = 7;
-            Tao::Add(target,source,factor,vector);     std::cerr << target << std::endl;
-            Tao::Add(seqtgt,source,factor,vector,seq); std::cerr << seqtgt << std::endl; Y_CHECK(seqtgt==target);
-            Tao::Add(partgt,source,factor,vector,par); std::cerr << partgt << std::endl; Y_CHECK(partgt==target);
+            Tao::MulAdd(target,source,factor,vector);     std::cerr << target << std::endl;
+            Tao::MulAdd(seqtgt,source,factor,vector,seq); std::cerr << seqtgt << std::endl; Y_CHECK(seqtgt==target);
+            Tao::MulAdd(partgt,source,factor,vector,par); std::cerr << partgt << std::endl; Y_CHECK(partgt==target);
         }
 
         Tao::Sub(target,source);     std::cerr << target << std::endl;
@@ -119,17 +119,17 @@ Y_UTEST(tao1)
 
         {
             const int factor = 3;
-            Tao::Sub(target,factor,source);     std::cerr << target << std::endl;
-            Tao::Sub(seqtgt,factor,source,seq); std::cerr << seqtgt << std::endl; Y_CHECK(seqtgt==target);
-            Tao::Sub(partgt,factor,source,par); std::cerr << partgt << std::endl; Y_CHECK(partgt==target);
+            Tao::MulSub(target,factor,source);     std::cerr << target << std::endl;
+            Tao::MulSub(seqtgt,factor,source,seq); std::cerr << seqtgt << std::endl; Y_CHECK(seqtgt==target);
+            Tao::MulSub(partgt,factor,source,par); std::cerr << partgt << std::endl; Y_CHECK(partgt==target);
         }
 
 
         {
             const int factor = 7;
-            Tao::Sub(target,source,factor,vector);     std::cerr << target << std::endl;
-            Tao::Sub(seqtgt,source,factor,vector,seq); std::cerr << seqtgt << std::endl; Y_CHECK(seqtgt==target);
-            Tao::Sub(partgt,source,factor,vector,par); std::cerr << partgt << std::endl; Y_CHECK(partgt==target);
+            Tao::MulSub(target,source,factor,vector);     std::cerr << target << std::endl;
+            Tao::MulSub(seqtgt,source,factor,vector,seq); std::cerr << seqtgt << std::endl; Y_CHECK(seqtgt==target);
+            Tao::MulSub(partgt,source,factor,vector,par); std::cerr << partgt << std::endl; Y_CHECK(partgt==target);
         }
 
 

@@ -110,8 +110,8 @@ namespace Yttrium
                 //______________________________________________________________
                 XAdd                          xadd; //!< to perform additions
                 Caddy                         xlst; //!< to perform additions on beta
-                Vector<ORDINATE,SampleMemory> dFda; //!< local dF/da
-                Vector<ABSCISSA,SampleMemory> beta; //!< gradient of D2
+                Vector<ORDINATE,MemoryModel>  dFda; //!< local dF/da
+                Vector<ABSCISSA,MemoryModel>  beta; //!< gradient of D2
                 Matrix<ABSCISSA>              curv; //!< approx curvature of D2
                 const size_t                  npts; //!< last dimensions
                 const ABSCISSA                zero; //!< alias

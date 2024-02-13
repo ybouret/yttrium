@@ -245,16 +245,12 @@ Y_UTEST(fit_samples)
         inventor.compute(eval,-2,used);
         std::cerr << "stepA=" << inventor.step << std::endl;
 
-        bool kept = true;
-        int  p    = -1;
-
-        inventor.buildStep(eval, p, used, kept);
-        std::cerr << "step=" << inventor.step << " @p=" << p << ", kept=" << kept << std::endl;
+        
 
         std::cerr << std::endl;
 
         std::cerr << "-------- Using Executive --------" << std::endl;
-        Fit::Executive<double,double> xfit;
+        Fit::Executive<double,double> xfit(true);
 
         used.ld(true);
         const double S1D2  = xfit.D2(F,S1,aorg);
@@ -292,12 +288,12 @@ Y_UTEST(fit_samples)
             std::cerr << "curv  = " << xfit->curv << std::endl;
         }
 
-        CxxArray< Interval<double> > dom(used.size());
+        Fit::Domain<double> dom(used.size());
         all(dom,"D1") = Interval<double>(0,Infinity);
         all(dom,"D2") = Interval<double>(0,Infinity);
         all.display("domain_", std::cerr, dom);
 
-        xfit.run(F,S1,aorg,used,G,dom);
+        xfit.run(F,S1,aorg,dom,used,G);
         //xfit.run(F,S2,aorg,used,G);
         //xfit.run(F,samples,aorg,used,G);
 

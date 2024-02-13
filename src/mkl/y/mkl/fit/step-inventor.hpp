@@ -4,9 +4,11 @@
 #define Y_Fit_Step_Inventor_Included 1
 
 #include "y/mkl/fit/least-squares.hpp"
+#include "y/mkl/fit/domain.hpp"
 #include "y/mkl/algebra/lu.hpp"
 #include "y/calculus/ipower.hpp"
 #include "y/mkl/numeric.hpp"
+#include "y/mkl/tao/seq/level1.hpp"
 
 namespace Yttrium
 {
@@ -16,6 +18,13 @@ namespace Yttrium
 
         namespace Fit
         {
+
+
+            //! helper to show process
+#define Y_MKL_FIT(MSG) do { if(verbose) std::cerr << MSG << std::endl; } while(false)
+
+
+
             //__________________________________________________________________
             //
             //
@@ -86,8 +95,13 @@ namespace Yttrium
                 }
 
                 //! compute step
+                /**
+                 \param ls   a LeastSquares based object
+                 \param p    correcting parameters
+                 \param used used variables flag, initialized
+                 */
                 template <typename LEAST_SQUARES>
-                bool compute(const LEAST_SQUARES &ls, 
+                bool compute(const LEAST_SQUARES &ls,
                              const int            p,
                              const Booleans      &used)
                 {
@@ -134,7 +148,7 @@ namespace Yttrium
                 {
                     const ABSCISSA fac = getFactor(param);
                     curv.assign(alpha);
-                    for(size_t i=curv.rows;i>0;--i) 
+                    for(size_t i=curv.rows;i>0;--i)
                     {
                         if(used[i])
                             curv[i][i] *= fac;
@@ -143,42 +157,82 @@ namespace Yttrium
                     return lu.build(curv);
                 }
 
+#define Y_MKL_FIT_DEGRADE() do {            \
+/**/ kept=false;                            \
+/**/ if(++p>pmax) { p=pmax; return false; } \
+} while(false)
+
             public:
                 //! compute step
+                /**
+                 \param ls   a LeastSquares based object
+                 \param p    correcting parameter, possiblu upgraded
+                 \param used used variables flag
+                 \param kept intialized to true, set to false if p was upgraded
+                 */
                 template <typename LEAST_SQUARES>
-                bool buildStep(const LEAST_SQUARES &ls,
-                               int                 &p,
-                               const Booleans      &used,
-                               bool                &kept)
+                bool buildStep(const LEAST_SQUARES      &ls,
+                               const Readable<ABSCISSA> &aorg,
+                               const Domain<ABSCISSA>   &adom,
+                               int                      &p,
+                               const Booleans           &used,
+                               bool                     &kept,
+                               const bool                verbose = false)
                 {
                     assert(p>=pmin);
                     assert(p<=pmax);
 
+                    //----------------------------------------------------------
+                    //
+                    // initialize
+                    //
+                    //----------------------------------------------------------
                     const Readable<ABSCISSA> &beta  = ls.beta;
                     const Matrix<ABSCISSA>   &alpha = ls.curv;
                     const size_t              nvar  = beta.size();
-                    prepare(nvar);
+
+                    assert(nvar == curv.rows);
+                    assert(nvar == step.size());
+                    assert(nvar == atry.size());
+                    assert(adom.contains(aorg));
+
+                    kept = true;
 
                     //----------------------------------------------------------
+                    //
                     // look for invertible matrix
+                    //
                     //----------------------------------------------------------
-                    kept = true;
+                TRIAL:
+                    Y_MKL_FIT("#building curvature with p=" << p);
                     while( !buildCurvature(alpha,p,used) )
                     {
-                        kept = false; // must reduce step
-                        if(++p>pmax)
-                        {
-                            p = pmax;
-                            return false;
-                        }
+                        Y_MKL_FIT_DEGRADE();
                     }
-                    
+
                     //----------------------------------------------------------
+                    //
                     // compute local step
+                    //
                     //----------------------------------------------------------
                     for(size_t i=nvar;i>0;--i) step[i] = beta[i];
-                    std::cerr << "Beta=" << beta << std::endl;
                     lu.solve(curv,step);
+
+                    //----------------------------------------------------------
+                    //
+                    // compute trial position
+                    //
+                    //----------------------------------------------------------
+                    Tao::Add(atry,aorg,step);
+                    Y_MKL_FIT("step=" << step);
+                    Y_MKL_FIT("atry=" << atry);
+                    if(!adom.contains(atry))
+                    {
+                        Y_MKL_FIT_DEGRADE();
+                        goto TRIAL;
+                    }
+                    
+
                     return true;
                 }
 
@@ -191,8 +245,8 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 Matrix<ABSCISSA>              curv; //!< approx curvature
-                Vector<ABSCISSA,SampleMemory> step; //!< approx step
-                Vector<ABSCISSA,SampleMemory> atry; //!< trial parameters
+                Vector<ABSCISSA,MemoryModel>  step; //!< approx step
+                Vector<ABSCISSA,MemoryModel>  atry; //!< trial parameters
                 LU<ABSCISSA>                  lu;   //!< linear algebra
                 const int                     pmin; //!< -int(DIG)-1  => lambda=1
                 const int                     pmax; //!< MAX_10_EXP   => overflow

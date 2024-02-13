@@ -113,10 +113,10 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(HeavySample);
-                size_t                        _num;
-                Vector<ABSCISSA,SampleMemory> _abs;
-                Vector<ORDINATE,SampleMemory> _ord;
-                Vector<ORDINATE,SampleMemory> _pre;
+                size_t                       _num;
+                Vector<ABSCISSA,MemoryModel> _abs;
+                Vector<ORDINATE,MemoryModel> _ord;
+                Vector<ORDINATE,MemoryModel> _pre;
             };
         }
     }

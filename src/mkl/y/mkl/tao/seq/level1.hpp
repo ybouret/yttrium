@@ -60,12 +60,31 @@ namespace Yttrium
             }
 
 
+#if 1
+            //__________________________________________________________________
+            //
+            //! target = lhs+rhs
+            //__________________________________________________________________
+            template <typename TARGET, typename LHS, typename RHS>   inline
+            void Add(TARGET &target, LHS &lhs, RHS &rhs)
+            {
+                assert(target.size()==lhs.size());
+                assert(target.size()==rhs.size());
+                typedef typename TARGET::Type TTYPE;
+                typedef typename LHS::Type    LTYPE;
+                typedef typename RHS::Type    RTYPE;
+                for(size_t i=target.size();i>0;--i)
+                    target[i] = To<TTYPE,LTYPE>::Get(lhs[i]) + To<TTYPE,RTYPE>::Get(rhs[i]);
+            }
+#endif
+
+
             //__________________________________________________________________
             //
             //! target += factor * source
             //__________________________________________________________________
             template <typename TARGET, typename T, typename SOURCE>   inline
-            void Add( TARGET &target, T factor, SOURCE &source )
+            void MulAdd( TARGET &target, T factor, SOURCE &source )
             {
                 assert(target.size()==source.size());
                 typedef typename TARGET::Type TGT;
@@ -78,7 +97,7 @@ namespace Yttrium
             //! target = source + factor * vector
             //__________________________________________________________________
             template <typename TARGET, typename SOURCE, typename T, typename VECTOR>   inline
-            void Add( TARGET &target, SOURCE &source, T factor, VECTOR &vector)
+            void MulAdd( TARGET &target, SOURCE &source, T factor, VECTOR &vector)
             {
                 assert(target.size()==source.size());
                 assert(target.size()==vector.size());
@@ -110,7 +129,7 @@ namespace Yttrium
             //! target -= factor * source
             //__________________________________________________________________
             template <typename TARGET, typename T, typename SOURCE>   inline
-            void Sub(TARGET &target, T factor, SOURCE &source)
+            void MulSub(TARGET &target, T factor, SOURCE &source)
             {
                 assert(target.size()==source.size());
                 typedef typename TARGET::Type TGT;
@@ -123,7 +142,7 @@ namespace Yttrium
             //! target = source - factor * vector
             //__________________________________________________________________
             template <typename TARGET, typename SOURCE, typename T, typename VECTOR>   inline
-            void Sub(TARGET &target, SOURCE &source, T factor, VECTOR &vector)
+            void MulSub(TARGET &target, SOURCE &source, T factor, VECTOR &vector)
             {
                 assert(target.size()==source.size());
                 assert(target.size()==vector.size());

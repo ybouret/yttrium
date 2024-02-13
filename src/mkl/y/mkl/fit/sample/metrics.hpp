@@ -7,6 +7,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/mkl/fit/variables.hpp"
+#include "y/mkl/fit/memory-model.hpp"
 
 namespace Yttrium
 {
@@ -15,13 +16,7 @@ namespace Yttrium
 
         namespace Fit
         {
-
-            //__________________________________________________________________
-            //
-            //! internal memory alocator
-            //__________________________________________________________________
-            typedef Memory::Dyadic SampleMemory;
-
+            
             //__________________________________________________________________
             //
             //
@@ -70,7 +65,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 const String                name; //!< identifier
-                Vector<size_t,SampleMemory> indx; //!< index of data abscissae
+                Vector<size_t,MemoryModel>  indx; //!< index of data abscissae
                 Variables                   vars; //!< fit variables
                 
             private:

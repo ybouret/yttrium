@@ -5,7 +5,6 @@
 
 #include "y/mkl/fit/step-inventor.hpp"
 #include "y/mkl/fit/least-squares/roll.hpp"
-#include "y/mkl/interval.hpp"
 
 namespace Yttrium
 {
@@ -15,10 +14,6 @@ namespace Yttrium
 
         namespace Fit
         {
-
-            //! helper to show process
-#define Y_MKL_FIT(MSG) do { if(verbose) std::cerr << MSG << std::endl; } while(false)
-            
 
             //__________________________________________________________________
             //
@@ -44,8 +39,7 @@ namespace Yttrium
                 typedef Sample<ABSCISSA,ORDINATE>           SampleType;       //!< alias
                 typedef Samples<ABSCISSA,ORDINATE>          SamplesType;      //!< alias
                 typedef Proxy<const LeastSquaresType>       ProxyType;        //!< alias
-                typedef Interval<ABSCISSA>                  IntervalType;     //!< alias
-                typedef Readable<IntervalType>              Intervals;        //!< alias
+                typedef Domain<ABSCISSA>                    DomainType;       //!< alias
 
                 //______________________________________________________________
                 //
@@ -82,30 +76,40 @@ namespace Yttrium
                 bool run(FUNCTION           &F,
                          SAMPLE             &S,
                          Writable<ABSCISSA> &aorg,
+                         const DomainType   &adom,
                          const Booleans     &used,
-                         GRADIENT           &G,
-                         const Intervals    &domain)
+                         GRADIENT           &G)
                 {
 
                     assert( aorg.size() == used.size() ) ;
-                    assert( aorg.size() == domain.size() );
+                    assert( aorg.size() == adom.size() );
+                    assert( adom.contains(aorg) );
 
-                    // compute full metrics
-                    ABSCISSA D2_org = D2(F,S,aorg,used,G);
-                    bool     kept   = true;
-                    int      p      = -4;
+                    //__________________________________________________________
+                    //
+                    // top level initialization
+                    //__________________________________________________________
+                    ABSCISSA            Dorg = D2(F,S,aorg,used,G); // full metrics
+                    Writable<ABSCISSA> &atry = solv->atry;          // alias
+                    const size_t        nvar = aorg.size();         // num variables
+                    bool                kept = true;                // indicator
+                    int                 p    = -4;                  // initial guess TODO
+                    solv->prepare(nvar);                            // workspace
 
-                    Y_MKL_FIT("D2_org = " << D2_org << "@" << aorg << ", p=" << p);
 
-                    if(!solv->buildStep(*mine,p,used,kept))
+                    Y_MKL_FIT("Dorg = " << Dorg << "# @" << aorg << ", p=" << p);
+
+                    // compute probable
+                    if(!solv->buildStep(*mine,aorg,adom,p,used,kept,verbose))
                     {
                         Y_MKL_FIT("no possible step");
                         return false;
                     }
                     
 
-
-                    Y_MKL_FIT("step=" << solv->step);
+                    ABSCISSA Dtry = D2(F,S,atry);
+                    Y_MKL_FIT("Dtry = " << Dtry << "# @" << atry << ", p=" << p);
+                    
 
                     return false;
                 }

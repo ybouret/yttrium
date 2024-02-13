@@ -20,7 +20,7 @@ inline ABSCISSA Of(OutOfOrderFunc           &F,
     const Abscissae    &abscissae = S.abscissae();
     const Ordinates    &ordinates = S.ordinates();
     Predicted          &predicted = S.predicted();
-    xadd.make(numPoints*Dimension);
+    xadd.make(numPoints*Dimension); assert( xadd.isEmpty() );
     xlst.flush();
 
     //--------------------------------------------------------------------------
