@@ -98,20 +98,21 @@ namespace Yttrium
                     int                 p    = -4;                  // initial guess TODO
                     solv->prepare(nvar);                            // workspace
 
+                    Libc::OutputFile fp("D2.dat");
 
-
-                    size_t cycle = 0;
+                    unsigned long cycle = 0;
                 CYCLE:
                     ++cycle;
                     Y_MKL_FIT("-------- cycle = " << cycle << " --------");
                     Y_MKL_FIT("Dorg  = " << Dorg << "# @" << aorg << ", p=" << p);
+                    Y_MKL_FIT("beta  = " << mine->beta);
+                    fp("%lu %.15g\n", cycle, double(Dorg) );
 
                     //----------------------------------------------------------
                     //
-                    // compute admissible step
+                    // compute predicted step
                     //
                     //----------------------------------------------------------
-
                 BUILD_STEP:
                     if(!solv->buildStep(*mine,aorg,adom,p,used,kept,verbose))
                     {
@@ -119,6 +120,11 @@ namespace Yttrium
                         return false;
                     }
 
+                    //----------------------------------------------------------
+                    //
+                    // here, we have an approximated step
+                    //
+                    //----------------------------------------------------------
 
                     const ABSCISSA Dtry = D2(F,S,atry);
                     Y_MKL_FIT("Dtry  = " << Dtry << "# @" << atry << ", p=" << p);
