@@ -202,7 +202,6 @@ Y_UTEST(fit_samples)
         std::cerr << "D1a  = " << D1a << " / " << D1 << std::endl;
         std::cerr << "beta = " << eval.beta << std::endl;
         std::cerr << "curv = " << eval.curv << std::endl;
-        inventor.compute(eval, -2, used);
         std::cerr << std::endl;
 
         std::cerr << "--- 1D, sample 2 ---" << std::endl;
@@ -211,7 +210,6 @@ Y_UTEST(fit_samples)
         std::cerr << "D2a  = " << D2a << " / " << D2b << std::endl;
         std::cerr << "beta = " << eval.beta << std::endl;
         std::cerr << "curv = " << eval.curv << std::endl;
-        inventor.compute(eval, -2, used);
         std::cerr << std::endl;
 
         std::cerr << "--- 1D, sample 1+2 ---" << std::endl;
@@ -226,26 +224,11 @@ Y_UTEST(fit_samples)
         std::cerr << "beta   = " << eval.beta << std::endl;
         std::cerr << "curv   = " << eval.curv << std::endl;
 
-        inventor.compute(eval, -2, used);
 
         std::cerr << std::endl;
         std::cerr << "---- with partial fit" << std::endl;
         all(used,"t0") = false;
         (void) eval.Of(F,samples,roll1D,aorg,used,G);
-        CxxArray<double> step1(used.size(),0);
-        CxxArray<double> step2(used.size(),0);
-
-        inventor.compute(*roll1D.head,-2,used);
-        Tao::Load(step1,inventor.step);
-        inventor.compute(*roll1D.tail,-2,used);
-        Tao::Load(step2,inventor.step);
-        std::cerr << "step1=" << step1 << std::endl;
-        std::cerr << "step2=" << step2 << std::endl;
-
-        inventor.compute(eval,-2,used);
-        std::cerr << "stepA=" << inventor.step << std::endl;
-
-        
 
         std::cerr << std::endl;
 
@@ -333,7 +316,6 @@ Y_UTEST(fit_samples)
         std::cerr << "beta  = " << eval.beta << std::endl;
         std::cerr << "curv  = " << eval.curv << std::endl;
 
-        inventor.compute(eval, -2, used);
 
 
         vars(used,"radius") = false;

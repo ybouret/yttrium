@@ -6,8 +6,6 @@
 #include "y/mkl/fit/least-squares.hpp"
 #include "y/mkl/fit/domain.hpp"
 #include "y/mkl/algebra/lu.hpp"
-#include "y/calculus/ipower.hpp"
-#include "y/mkl/numeric.hpp"
 #include "y/mkl/tao/seq/level1.hpp"
 
 namespace Yttrium
@@ -23,7 +21,11 @@ namespace Yttrium
             //! helper to show process
 #define Y_MKL_FIT(MSG) do { if(verbose) std::cerr << MSG << std::endl; } while(false)
 
-
+            //! helper to degrade step/return false on overflow
+#define Y_MKL_FIT_DEGRADE() do {            \
+/**/ kept=false;                            \
+/**/ if(++p>pmax) { p=pmax; return false; } \
+} while(false)
 
             //__________________________________________________________________
             //
@@ -43,24 +45,8 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-
-                //! setup
-                inline explicit StepInventor() :
-                curv(),
-                step(),
-                atry(),
-                lu(),
-                pmin( -int(Numeric<ABSCISSA>::DIG)-1   ),
-                pmax( Numeric<ABSCISSA>::MAX_10_EXP-1  ),
-                zero(0),
-                one(1),
-                two(2),
-                ten(10),
-                tenth(0.1)
-                {}
-
-                //! cleanup
-                inline virtual ~StepInventor() noexcept {}
+                explicit StepInventor();          //!< setup
+                virtual ~StepInventor() noexcept; //!< cleanup
 
                 //______________________________________________________________
                 //
@@ -68,177 +54,31 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
+                void     prepare(const size_t nvar);   //! prepare memory
+                ABSCISSA xFactor(const int p) const; //! compute factor with pmin<=p<=pmax
 
-                //! prepare memory
-                inline void prepare(const size_t nvar)
-                {
-                    curv.make(nvar,nvar);
-                    step.adjust(nvar,zero);
-                    atry.adjust(nvar,zero);
-                    lu.ensure(nvar);
-                }
-
-                //! compute factor
-                ABSCISSA getFactor(const int param)
-                {
-                    assert(param>=pmin);
-                    assert(param<=pmax);
-                    if(param<=pmin) return one;
-
-                    switch( Sign::Of(param) )
-                    {
-                        case __Zero__: break;
-                        case Positive: return one + ipower(ten,param);
-                        case Negative: return one + ipower(tenth,-param);
-                    }
-                    return two;
-                }
-
-                //! compute step
-                /**
-                 \param ls   a LeastSquares based object
-                 \param p    correcting parameters
-                 \param used used variables flag, initialized
-                 */
-                template <typename LEAST_SQUARES>
-                bool compute(const LEAST_SQUARES &ls,
-                             const int            p,
-                             const Booleans      &used)
-                {
-                    const Readable<ABSCISSA> &beta  = ls.beta;
-                    const Matrix<ABSCISSA>   &alpha = ls.curv;
-                    const size_t              nvar  = beta.size();
-                    assert(nvar>0);
-
-                    prepare(nvar);
-
-                    const ABSCISSA fac = getFactor(p);
-
-
-                    for(size_t i=nvar;i>0;--i)
-                    {
-                        step[i] = beta[i];
-                        for(size_t j=nvar;j>0;--j)
-                        {
-                            curv[i][j] = alpha[i][j];
-                        }
-                        if(used[i])
-                            curv[i][i] *= fac;
-                    }
-
-                    std::cerr << "Curv = " << curv << std::endl;
-                    if(!lu.build(curv))
-                    {
-                        std::cerr << "Singular Matrix" << std::endl;
-                        return false;
-                    }
-
-                    lu.solve(curv,step);
-                    std::cerr << "step = " << step << std::endl;
-
-
-                    return false;
-
-                }
-
+                
             private:
                 bool buildCurvature(const Matrix<ABSCISSA> &alpha,
                                     const int               param,
-                                    const Booleans         &used)
-                {
-                    const ABSCISSA fac = getFactor(param);
-                    curv.assign(alpha);
-                    for(size_t i=curv.rows;i>0;--i)
-                    {
-                        if(used[i])
-                            curv[i][i] *= fac;
-                    }
-                    std::cerr << "Curv=" << curv << std::endl;
-                    return lu.build(curv);
-                }
+                                    const Booleans         &used);
 
-#define Y_MKL_FIT_DEGRADE() do {            \
-/**/ kept=false;                            \
-/**/ if(++p>pmax) { p=pmax; return false; } \
-} while(false)
 
             public:
                 //! compute step
                 /**
-                 \param ls   a LeastSquares based object
-                 \param p    correcting parameter, possiblu upgraded
+                 \param ls   computed LeastSquares
+                 \param p    correcting parameter, possibly upgraded
                  \param used used variables flag
                  \param kept set to false if p was upgraded
                  */
-                template <typename LEAST_SQUARES>
-                bool buildStep(const LEAST_SQUARES      &ls,
+                bool buildStep(const LeastSquaresCom<ABSCISSA>  &ls,
                                const Readable<ABSCISSA> &aorg,
                                const Domain<ABSCISSA>   &adom,
                                int                      &p,
                                const Booleans           &used,
                                bool                     &kept,
-                               const bool                verbose = false)
-                {
-                    assert(p>=pmin);
-                    assert(p<=pmax);
-
-                    //----------------------------------------------------------
-                    //
-                    // initialize
-                    //
-                    //----------------------------------------------------------
-                    const Readable<ABSCISSA> &beta  = ls.beta;
-                    const Matrix<ABSCISSA>   &alpha = ls.curv;
-                    const size_t              nvar  = beta.size();
-
-                    assert(nvar == curv.rows);
-                    assert(nvar == step.size());
-                    assert(nvar == atry.size());
-                    assert(adom.contains(aorg));
-
-
-                    //----------------------------------------------------------
-                    //
-                    // look for invertible matrix
-                    //
-                    //----------------------------------------------------------
-                TRIAL:
-                    Y_MKL_FIT("#building curvature with p=" << p);
-                    while( !buildCurvature(alpha,p,used) )
-                    {
-                        Y_MKL_FIT("-- singular curvature");
-                        Y_MKL_FIT_DEGRADE();
-                    }
-                    Y_MKL_FIT("-- computed curvature");
-
-
-                    //----------------------------------------------------------
-                    //
-                    // compute local step
-                    //
-                    //----------------------------------------------------------
-                    for(size_t i=nvar;i>0;--i) step[i] = beta[i];
-                    lu.solve(curv,step);
-
-                    //----------------------------------------------------------
-                    //
-                    // compute trial position
-                    //
-                    //----------------------------------------------------------
-                    Tao::Add(atry,aorg,step);
-                    Y_MKL_FIT("step=" << step);
-                    Y_MKL_FIT("atry=" << atry);
-                    if(!adom.contains(atry))
-                    {
-                        Y_MKL_FIT("-- out of domain");
-                        Y_MKL_FIT_DEGRADE();
-                        goto TRIAL;
-                    }
-                    
-                    Y_MKL_FIT("-- found parameters!");
-                    return true;
-                }
-
+                               const bool                verbose);
 
 
                 //______________________________________________________________
