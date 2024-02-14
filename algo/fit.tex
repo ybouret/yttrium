@@ -94,4 +94,59 @@ The guess step is:
 	\end{bmatrix}
 \end{equation}
 
+\section{Errors}
+For no error, we have $\vec{a}_0$ and $D^2(\vec{a}_0)=0$.
+With error, we have $\vec{a}_0+\delta\vec{a}$ and 
+\begin{equation}
+D^2(\vec{a}_0+\delta\vec{a})=D^2(\vec{a}_0) - \vec{\beta}_0 \cdot \delta\vec{a} + \frac{1}{2} 
+\langle \delta \vec{a} \vert \bm{\alpha}_0 \vert \delta \vec{a}\rangle
+\end{equation}
+
+\begin{equation}
+	\gamma_i = \delta a_i \sqrt{\dfrac{\alpha_{ii}}{D^2}} \iff \delta \vec{a} = 
+	\underbrace{
+	\mathrm{diagm}
+	\left(
+	\begin{bmatrix}
+	\vdots\\
+	\sqrt{D^2/\alpha_{ii}}\\
+	\vdots\\
+	\end{bmatrix}
+	\right)}_{\bm{\Delta}_w} \vec{\gamma}
+\end{equation}
+
+\begin{equation}
+	2 D^2 = \langle \vec{\gamma} \vert \bm{\Delta}_w \bm{\alpha}_0 \bm{\Delta}_w \vert \vec{\gamma} \rangle
+\end{equation}
+
+\begin{equation}
+	\bm{\Delta}_w \bm{\alpha}_0 \bm{\Delta}_w = \bm{P} \bm{\Delta}_\mu \bm{P}^t
+\end{equation}
+
+\begin{equation}
+	\vec{\rho} = \bm{P}^t \vec{\gamma}
+\end{equation}
+
+\begin{equation}
+	2D^2 = \langle \vec{\rho} \vert \bm{\Delta}_\mu \vert \vec{\rho} \rangle
+\end{equation}
+
+\begin{equation}
+	2D^2 = \sum_i \mu_i \rho_i^2, \text{$\mu_i>0$ since minimum}
+\end{equation}
+
+\begin{equation}
+	1 = \sum_i  \dfrac{\mu_i}{2D^2} \rho_i^2 = \sum_i \left(\dfrac{\rho_i}{ \sqrt{\dfrac{2D^2}{\mu_i}} }\right)^2
+\end{equation}
+
+We get $\vec{\rho}$ on an ellipsoid with radii $\sqrt{\dfrac{2D^2}{\mu_i}}$
+
+\begin{equation}
+	\delta\vec{a} = \bm{\Delta}_w\bm{P} \vec{\rho} \iff \vec{\rho} = \bm{P}^t \bm{\Delta}_w^{-1} \delta\vec{a}
+\end{equation}
+
+\begin{equation}
+	L = \dfrac{1}{2} \delta\vec{a}^2 - \kappa (2D^2 - \langle \vec{\rho} \vert \bm{\Delta}_\mu \vert \vec{\rho} \rangle)
+\end{equation}
+
 \end{document}
