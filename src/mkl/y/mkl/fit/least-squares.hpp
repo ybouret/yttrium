@@ -66,6 +66,7 @@ namespace Yttrium
                 //! initialize
                 explicit LeastSquares() :
                 Common(),
+                dFda(),
                 z___(),
                 zord(*z___),
                 next(0),
