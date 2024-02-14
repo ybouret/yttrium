@@ -3,12 +3,8 @@
 #ifndef Y_Fit_Least_Squares_Included
 #define Y_Fit_Least_Squares_Included 1
 
-#include "y/mkl/fit/samples.hpp"
-#include "y/mkl/fit/sequential.hpp"
-#include "y/mkl/antelope/caddy.hpp"
-#include "y/container/matrix.hpp"
+#include "y/mkl/fit/least-squares/com.hpp"
 #include "y/type/zeroed-field.hpp"
-#include "y/oversized.hpp"
 
 namespace Yttrium
 {
@@ -28,7 +24,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename ABSCISSA, typename ORDINATE>
-            class LeastSquares : public Oversized
+            class LeastSquares : public LeastSquaresCom<ABSCISSA>
             {
             public:
                 //______________________________________________________________
@@ -47,12 +43,18 @@ namespace Yttrium
                 typedef typename MyType::OutOfOrderGradient    OutOfOrderGrad; //!< alias
                 typedef          Sequential<ABSCISSA,ORDINATE> SequentialFunc; //!< alias
                 typedef          CxxListOf<LeastSquares>       List;           //!< alias
-                typedef          Antelope::Add<ABSCISSA>       XAdd;           //!< alias
-                typedef          Antelope::Caddy<ABSCISSA>     Caddy;          //!< alias
-                typedef          typename Caddy::XNode         XNode;          //!< alias
+                typedef          LeastSquaresCom<ABSCISSA>     Common;         //!< alias
+                typedef          typename Common::XNode        XNode;          //!< alias
                 static const     size_t Dimension = MyType::Dimension;         //!< alias
 
-
+                using Common::xadd;
+                using Common::xlst;
+                using Common::npts;
+                using Common::curv;
+                using Common::zero;
+                using Common::beta;
+                using Common::half;
+                using Common::one;
 
                 //______________________________________________________________
                 //
@@ -63,15 +65,7 @@ namespace Yttrium
               
                 //! initialize
                 explicit LeastSquares() :
-                xadd(),
-                xlst(),
-                dFda(),
-                beta(),
-                curv(),
-                npts(0),
-                zero(0),
-                half(0.5),
-                one(1),
+                Common(),
                 z___(),
                 zord(*z___),
                 next(0),
@@ -108,15 +102,7 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                XAdd                          xadd; //!< to perform additions
-                Caddy                         xlst; //!< to perform additions on beta
                 Vector<ORDINATE,MemoryModel>  dFda; //!< local dF/da
-                Vector<ABSCISSA,MemoryModel>  beta; //!< gradient of D2
-                Matrix<ABSCISSA>              curv; //!< approx curvature of D2
-                const size_t                  npts; //!< last dimensions
-                const ABSCISSA                zero; //!< alias
-                const ABSCISSA                half; //!< alias
-                const ABSCISSA                one;  //!< alias
 
             private:
                 const ZeroedField<ORDINATE>   z___;
