@@ -65,13 +65,17 @@ namespace Yttrium
 
 
             public:
-                //! compute step
+                //______________________________________________________________
+                //
+                //! compute constrained, approximated step
                 /**
                  \param ls   computed LeastSquares
                  \param p    correcting parameter, possibly upgraded
                  \param used used variables flag
                  \param kept set to false if p was upgraded
+                 \return false if singular matrix or always out of bound step
                  */
+                //______________________________________________________________
                 bool buildStep(const LeastSquaresCom<ABSCISSA>  &ls,
                                const Readable<ABSCISSA> &aorg,
                                const Domain<ABSCISSA>   &adom,

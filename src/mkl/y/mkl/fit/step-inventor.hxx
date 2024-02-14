@@ -80,11 +80,11 @@ namespace Yttrium
                 assert(p>=pmin);
                 assert(p<=pmax);
 
-                //----------------------------------------------------------
+                //--------------------------------------------------------------
                 //
-                // initialize
+                // initialize and sanity check
                 //
-                //----------------------------------------------------------
+                //--------------------------------------------------------------
                 const Readable<real_t> &beta  = ls.beta;
                 const Matrix<real_t>   &alpha = ls.curv;
                 const size_t            nvar  = beta.size();
@@ -94,22 +94,20 @@ namespace Yttrium
                 assert(nvar == atry.size());
                 assert(adom.contains(aorg));
 
-
-                //----------------------------------------------------------
+                Y_MKL_FIT("<buildStep>");
+                //--------------------------------------------------------------
                 //
                 // look for invertible matrix
                 //
-                //----------------------------------------------------------
+                //--------------------------------------------------------------
             TRIAL:
-                Y_MKL_FIT("#building curvature with p=" << p);
+                Y_MKL_FIT("  buildCurvature(p=" << p << ")");
                 while( !buildCurvature(alpha,p,used) )
                 {
-                    Y_MKL_FIT("-- singular curvature");
+                    Y_MKL_FIT("    singular curvature");
                     Y_MKL_FIT_DEGRADE();
                 }
-                Y_MKL_FIT("-- computed curvature");
-
-
+                
                 //----------------------------------------------------------
                 //
                 // compute local step
@@ -124,16 +122,16 @@ namespace Yttrium
                 //
                 //----------------------------------------------------------
                 Tao::Add(atry,aorg,step);
-                Y_MKL_FIT("step=" << step);
-                Y_MKL_FIT("atry=" << atry);
+                Y_MKL_FIT("  step=" << step);
+                Y_MKL_FIT("  atry=" << atry);
                 if(!adom.contains(atry))
                 {
-                    Y_MKL_FIT("-- out of domain");
+                    Y_MKL_FIT("  out of domain");
                     Y_MKL_FIT_DEGRADE();
                     goto TRIAL;
                 }
 
-                Y_MKL_FIT("-- found parameters!");
+                Y_MKL_FIT("<buildStep>");
                 return true;
             }
 
