@@ -74,8 +74,7 @@ namespace Yttrium
                                                   const Domain<real_t>   &adom,
                                                   int                      &p,
                                                   const Booleans           &used,
-                                                  bool                     &kept,
-                                                  const bool                verbose)
+                                                  const bool               verbose)
             {
                 assert(p>=pmin);
                 assert(p<=pmax);
@@ -107,7 +106,7 @@ namespace Yttrium
                     Y_MKL_FIT("    singular curvature");
                     Y_MKL_FIT_DEGRADE();
                 }
-                
+
                 //----------------------------------------------------------
                 //
                 // compute local step

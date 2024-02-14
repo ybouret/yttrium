@@ -89,12 +89,12 @@ namespace Yttrium
                     //
                     // top level initialization
                     //__________________________________________________________
-                    ABSCISSA            Dorg = D2(F,S,aorg,used,G); // full metrics
-                    Writable<ABSCISSA> &atry = solv->atry;          // alias
-                    const int           pmin = solv->pmin;          // alias
-                    const int           pmax = solv->pmax;          // alias
-                    const size_t        nvar = aorg.size();         // num variables
-                    bool                kept = true;                // indicator
+                    ABSCISSA                   Dorg = D2(F,S,aorg,used,G); // full metrics
+                    Writable<ABSCISSA>       & atry = solv->atry;          // alias
+                    const Readable<ABSCISSA> & beta = mine->beta;
+                    const int                  pmin = solv->pmin;          // alias
+                    const int                  pmax = solv->pmax;          // alias
+                    const size_t               nvar = aorg.size();         // num variables
                     int                 p    = -4;                  // initial guess TODO
                     solv->prepare(nvar);                            // workspace
 
@@ -102,6 +102,7 @@ namespace Yttrium
 
                     unsigned long cycle = 0;
                 CYCLE:
+                    const int p0 = p;
                     ++cycle;
                     Y_MKL_FIT("-------- cycle = " << cycle << " --------");
                     Y_MKL_FIT("Dorg  = " << Dorg << "# @" << aorg << ", p=" << p);
@@ -114,7 +115,7 @@ namespace Yttrium
                     //
                     //----------------------------------------------------------
                 BUILD_STEP:
-                    if(!solv->buildStep(*mine,aorg,adom,p,used,kept,verbose))
+                    if(!solv->buildStep(*mine,aorg,adom,p,used,verbose))
                     {
                         Y_MKL_FIT("no possible step");
                         return false;
@@ -125,7 +126,6 @@ namespace Yttrium
                     // here, we have an approximated step
                     //
                     //----------------------------------------------------------
-
                     const ABSCISSA Dtry = D2(F,S,atry);
                     Y_MKL_FIT("Dtry  = " << Dtry << "# @" << atry << ", p=" << p);
                     if(Dtry>Dorg)
@@ -136,6 +136,7 @@ namespace Yttrium
 
                     Tao::Load(aorg,atry);
                     Dorg = D2(F,S,aorg,used,G);
+                    const bool kept = (p==p0);
                     if(kept)
                     {
                         if(--p<=pmin) p = pmin;
@@ -145,7 +146,6 @@ namespace Yttrium
                     // prepare for next cycle
                     //----------------------------------------------------------
 
-                    kept = true;
                     if(cycle<=3)
                         goto CYCLE;
 

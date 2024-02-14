@@ -23,7 +23,6 @@ namespace Yttrium
 
             //! helper to degrade step/return false on overflow
 #define Y_MKL_FIT_DEGRADE() do {            \
-/**/ kept=false;                            \
 /**/ if(++p>pmax) { p=pmax; return false; } \
 } while(false)
 
@@ -77,12 +76,11 @@ namespace Yttrium
                  */
                 //______________________________________________________________
                 bool buildStep(const LeastSquaresCom<ABSCISSA>  &ls,
-                               const Readable<ABSCISSA> &aorg,
-                               const Domain<ABSCISSA>   &adom,
-                               int                      &p,
-                               const Booleans           &used,
-                               bool                     &kept,
-                               const bool                verbose);
+                               const Readable<ABSCISSA> & aorg,
+                               const Domain<ABSCISSA>   & adom,
+                               int                      & p,
+                               const Booleans           & used,
+                               const bool                 verbose);
 
 
                 //______________________________________________________________
