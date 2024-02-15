@@ -106,7 +106,7 @@ namespace Yttrium
                     ++cycle;
                     Y_MKL_FIT("-------- cycle = " << cycle << " --------");
                     Y_MKL_FIT("Dorg  = " << Dorg << "# @" << aorg << ", p=" << p);
-                    Y_MKL_FIT("beta  = " << mine->beta);
+                    Y_MKL_FIT("beta  = " << beta);
                     fp("%lu %.15g\n", cycle, double(Dorg) );
 
                     //----------------------------------------------------------
@@ -126,6 +126,7 @@ namespace Yttrium
                     // here, we have an approximated step
                     //
                     //----------------------------------------------------------
+
                     const ABSCISSA Dtry = D2(F,S,atry);
                     Y_MKL_FIT("Dtry  = " << Dtry << "# @" << atry << ", p=" << p);
                     if(Dtry>Dorg)
@@ -145,6 +146,8 @@ namespace Yttrium
                     //----------------------------------------------------------
                     // prepare for next cycle
                     //----------------------------------------------------------
+
+                    return false;
 
                     if(cycle<=3)
                         goto CYCLE;

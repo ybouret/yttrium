@@ -130,7 +130,7 @@ namespace Yttrium
                     goto TRIAL;
                 }
 
-                Y_MKL_FIT("<buildStep>");
+                Y_MKL_FIT("<buildStep/>");
                 return true;
             }
 
