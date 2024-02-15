@@ -247,11 +247,14 @@ namespace Yttrium
                 //______________________________________________________________
 
 
-
+                //______________________________________________________________
+                //
+                //! adjust size to numVars, each initialized to numData
                 /**
                  \param numVars for a number of variable/parallelism
                  \param numData dimension for each varriable
                  */
+                //______________________________________________________________
                 inline virtual void setup(const size_t numVars,
                                           const size_t numData)
                 {
@@ -283,11 +286,18 @@ namespace Yttrium
 
                 }
 
+                //______________________________________________________________
+                //
+                // reset current nodes to numData
+                //______________________________________________________________
                 inline void reset(const size_t numData) {
                     for(XNode *node=head;node;node=node->next) node->make(numData);
                 }
 
-
+                //______________________________________________________________
+                //
+                //! flush all
+                //______________________________________________________________
                 inline virtual void flush() noexcept {
                     while(size>0) remNode( popTail() );
                 }
@@ -299,17 +309,18 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
+                //! setup and return first node
                 inline XNode *make(const size_t numVars, const size_t numData) {
                     setup(numVars,numData); return head;
                 }
 
+                //! setup and return only node
                 inline Add<T> & make(const size_t numData) {
                     return *make(1,numData);
                 }
 
 
-
-
+                //! put each summ in corresponding sequence item
                 template <typename SEQUENCE> inline
                 void sum(SEQUENCE &seq) {
                     assert(seq.size() == size);
