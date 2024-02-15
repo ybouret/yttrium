@@ -12,6 +12,7 @@ namespace Yttrium
             curv(),
             step(),
             atry(),
+            atmp(),
             lu(),
             pmin( -int(Numeric<real_t>::DIG)-1   ),
             pmax( Numeric<real_t>::MAX_10_EXP-1  ),
@@ -34,6 +35,7 @@ namespace Yttrium
                 curv.make(nvar,nvar);
                 step.adjust(nvar,zero);
                 atry.adjust(nvar,zero);
+                atmp.adjust(nvar,zero);
                 lu.ensure(nvar);
             }
 

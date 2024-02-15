@@ -92,6 +92,7 @@ namespace Yttrium
                 Matrix<ABSCISSA>              curv; //!< approx curvature
                 Vector<ABSCISSA,MemoryModel>  step; //!< approx step
                 Vector<ABSCISSA,MemoryModel>  atry; //!< trial parameters
+                Vector<ABSCISSA,MemoryModel>  atmp; //!< probe if necessary
                 LU<ABSCISSA>                  lu;   //!< linear algebra
                 const int                     pmin; //!< -int(DIG)-1  => lambda=1
                 const int                     pmax; //!< MAX_10_EXP   => overflow

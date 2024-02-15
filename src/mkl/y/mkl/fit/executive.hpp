@@ -92,11 +92,15 @@ namespace Yttrium
                     ABSCISSA                   Dorg = D2(F,S,aorg,used,G); // full metrics
                     Writable<ABSCISSA>       & atry = solv->atry;          // alias
                     const Readable<ABSCISSA> & beta = mine->beta;          // alias
+                    const Readable<ABSCISSA> & step = solv->step;          // alias
+                    Writable<ABSCISSA>       & atmp = solv->atmp;          // alias
                     const int                  pmin = solv->pmin;          // alias
                     const int                  pmax = solv->pmax;          // alias
                     const size_t               nvar = aorg.size();         // num variables
                     int                 p    = -4;                         // initial guess TODO
                     solv->prepare(nvar);                                   // workspace
+
+                    D2Call<FUNCTION,SAMPLE> H = { nvar, aorg, atry, atmp, F,S, *this };
 
                     Libc::OutputFile fp("D2.dat");
 
@@ -107,6 +111,8 @@ namespace Yttrium
                     Y_MKL_FIT("-------- cycle = " << cycle << " --------");
                     Y_MKL_FIT("Dorg  = " << Dorg << "# @" << aorg << ", p=" << p);
                     Y_MKL_FIT("beta  = " << beta);
+                    Y_MKL_FIT("curv  = " << solv->curv);
+
                     fp("%lu %.15g\n", cycle, double(Dorg) );
 
                     //----------------------------------------------------------
@@ -126,11 +132,28 @@ namespace Yttrium
                     // here, we have an approximated step
                     //
                     //----------------------------------------------------------
+                    const ABSCISSA sigma = Tao::DotProduct<ABSCISSA>::Of(beta,step,mine->xlst);
 
                     const ABSCISSA Dtry = D2(F,S,atry);
                     Y_MKL_FIT("Dtry  = " << Dtry << "# @" << atry << ", p=" << p);
+                    Y_MKL_FIT("sigma = " << sigma);
+                    {
+                        const String     fn = Formatted::Get("d2-%lu.dat",cycle);
+                        Libc::OutputFile d2(fn);
+                        const size_t     nn = 100;
+                        for(size_t i=0;i<=nn;++i)
+                        {
+                            const ABSCISSA u = ABSCISSA(i) / ABSCISSA(nn);
+                            d2("%.15g %.15g\n", double(u), double(H(u)));
+                        }
+                    }
+
                     if(Dtry>Dorg)
                     {
+                        Y_MKL_FIT("Bad!");
+                        const ABSCISSA sigma = Tao::DotProduct<ABSCISSA>::Of(beta,step,mine->xlst);
+                        std::cerr << "sigma=" << sigma << std::endl;
+                        exit(0);
                         Y_MKL_FIT_DEGRADE();
                         goto BUILD_STEP;
                     }
@@ -143,7 +166,6 @@ namespace Yttrium
                     {
                         Y_MKL_FIT("-- upgrade parameter");
                         if(--p<=pmin) p = pmin;
-                        //const ABSCISSA sigma = 1; //Tao::DotProduct<ABSCISSA>::Of(beta,solv->step,mine->xadd);
                     }
 
                     //----------------------------------------------------------
@@ -151,7 +173,7 @@ namespace Yttrium
                     //----------------------------------------------------------
 
 
-                    if(cycle<=1)
+                    if(cycle<=4)
                         goto CYCLE;
 
 
@@ -166,8 +188,33 @@ namespace Yttrium
                 AutoPtr<LeastSquaresType> mine;
                 AutoPtr<RollType>         roll;
                 AutoPtr<StepInventorType> solv;
-
                 inline virtual typename ProxyType::ConstInterface & surrogate() const noexcept { return *mine; }
+
+                template <typename FUNCTION, typename SAMPLE>
+                struct D2Call
+                {
+                    size_t                    nvar;
+                    const Readable<ABSCISSA> &aorg;
+                    const Readable<ABSCISSA> &atry;
+                    Writable<ABSCISSA>       &atmp;
+                    FUNCTION                 &F;
+                    SAMPLE                   &S;
+                    Executive                &self;
+
+                    inline ABSCISSA operator()(const ABSCISSA u)
+                    {
+                        static const ABSCISSA _1(1);
+                        const ABSCISSA v = _1 - u;
+                        for(size_t i=nvar;i>0;--i)
+                        {
+                            atmp[i] = v * aorg[i] + u * atry[i];
+                        }
+                        return self.D2(F,S,atmp);
+                    }
+
+                };
+
+
             public:
                 bool verbose; //!< verbosity
             };
