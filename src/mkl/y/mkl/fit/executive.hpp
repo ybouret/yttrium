@@ -5,6 +5,7 @@
 
 #include "y/mkl/fit/step-inventor.hpp"
 #include "y/mkl/fit/least-squares/roll.hpp"
+#include "y/mkl/numeric.hpp"
 
 namespace Yttrium
 {
@@ -81,6 +82,7 @@ namespace Yttrium
                          GRADIENT           &G)
                 {
 
+                    static const ABSCISSA tol = Numeric<ABSCISSA>::SQRT_EPSILON;
                     assert( aorg.size() == used.size() ) ;
                     assert( aorg.size() == adom.size() );
                     assert( adom.contains(aorg) );
@@ -111,7 +113,6 @@ namespace Yttrium
                     Y_MKL_FIT("-------- cycle = " << cycle << " --------");
                     Y_MKL_FIT("Dorg  = " << Dorg << "# @" << aorg << ", p=" << p);
                     Y_MKL_FIT("beta  = " << beta);
-                    Y_MKL_FIT("curv  = " << solv->curv);
 
                     fp("%lu %.15g\n", cycle, double(Dorg) );
 
@@ -132,11 +133,13 @@ namespace Yttrium
                     // here, we have an approximated step
                     //
                     //----------------------------------------------------------
-                    const ABSCISSA sigma = Tao::DotProduct<ABSCISSA>::Of(beta,step,mine->xlst);
 
                     const ABSCISSA Dtry = D2(F,S,atry);
                     Y_MKL_FIT("Dtry  = " << Dtry << "# @" << atry << ", p=" << p);
-                    Y_MKL_FIT("sigma = " << sigma);
+
+                    //const ABSCISSA sigma = Tao::DotProduct<ABSCISSA>::Of(beta,step,mine->xlst);
+                    //Y_MKL_FIT("sigma = " << sigma);
+
                     {
                         const String     fn = Formatted::Get("d2-%lu.dat",cycle);
                         Libc::OutputFile d2(fn);
@@ -159,14 +162,21 @@ namespace Yttrium
                     }
 
                     Y_MKL_FIT("-- accepted!");
-                    Tao::Load(aorg,atry);
-                    Dorg = D2(F,S,aorg,used,G);
-                    const bool kept = (p==p0);
+                    const bool kept      = (p==p0);
                     if(kept)
                     {
                         Y_MKL_FIT("-- upgrade parameter");
                         if(--p<=pmin) p = pmin;
+                        assert(Dtry<=Dorg);
+                        const ABSCISSA del = Dorg-Dtry;
+                        const ABSCISSA sum = Dorg+Dtry;
+                        const ABSCISSA lim = sum * tol;
+                        
                     }
+
+                    Tao::Load(aorg,atry);
+                    Dorg = D2(F,S,aorg,used,G);
+
 
                     //----------------------------------------------------------
                     // prepare for next cycle
