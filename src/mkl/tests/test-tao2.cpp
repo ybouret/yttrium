@@ -50,7 +50,7 @@ Y_UTEST(tao2)
         std::cerr << "source=" << source << std::endl;
         std::cerr << "M     =" << M << std::endl;
 
-        Tao::MultiAdd<int> xma;
+        Antelope::Caddy<int> xma;
         Tao::Mul(target,M,source,xma);
         std::cerr << "target=" << target << std::endl;
 

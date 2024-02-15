@@ -33,8 +33,8 @@ namespace Yttrium
 
                     if( range.isEmpty() ) return;
 
-                    const size_t nrun = lhs.cols;
-                    XAdd<W>     &xadd = range.xadd<W>();
+                    const size_t      nrun = lhs.cols;
+                    Antelope::Add<W> &xadd = range.xadd<W>();
                     assert(xadd.isEmpty());
                     assert(xadd.accepts(nrun));
 
@@ -69,11 +69,11 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename T, typename U, typename V, typename W>  inline
-            void MatMul(Matrix<T>       &tgt,
-                        const Matrix<U> &lhs,
-                        const Matrix<V> &rhs,
-                        MultiAdd<W>     &xma,
-                        Engine          &engine)
+            void MatMul(Matrix<T>          &tgt,
+                        const Matrix<U>    &lhs,
+                        const Matrix<V>    &rhs,
+                        Antelope::Caddy<W> &xma,
+                        Engine             &engine)
             {
                 assert(tgt.rows==lhs.rows);
                 assert(tgt.cols==rhs.cols);
@@ -104,7 +104,7 @@ namespace Yttrium
 
                     if( range.isEmpty() ) return;
 
-                    XAdd<W>     &xadd = range.xadd<W>();
+                    Antelope::Add<W> &xadd = range.xadd<W>();
                     assert(xadd.isEmpty());
                     assert(xadd.accepts(lhs.cols));
 
@@ -138,7 +138,7 @@ namespace Yttrium
                         const Matrix<U>    &lhs,
                         const TransposeOf_ &,
                         const Matrix<V>    &rhs,
-                        MultiAdd<W>        &xma,
+                        Antelope::Caddy<W> &xma,
                         Engine             &engine)
             {
                 assert(tgt.rows==lhs.rows);

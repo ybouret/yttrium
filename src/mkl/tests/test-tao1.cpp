@@ -133,14 +133,14 @@ Y_UTEST(tao1)
         }
 
 
-        Tao::MultiAdd<int> xmf;
+        Antelope::Caddy<int> xmf;
         const int rawDot = Tao::DotProduct<int>::Of(source,vector,xmf);
         std::cerr << "rawDot=" << rawDot << std::endl;
 
         {
-            Vector<apq>        lhs;
-            Vector<apq>        rhs;
-            Tao::MultiAdd<apq> amf;
+            Vector<apq>          lhs;
+            Vector<apq>          rhs;
+            Antelope::Caddy<apq> amf;
             for(size_t i=5+ran.leq(10);i>0;--i)
             {
                 lhs << apq(10,10,ran);
@@ -156,9 +156,9 @@ Y_UTEST(tao1)
     }
 
     {
-        Vector<double>                 lhs;
-        Vector<float>                  rhs;
-        Tao::MultiAdd< XReal<double> > xmf;
+        Vector<double>                   lhs;
+        Vector<float>                    rhs;
+        Antelope::Caddy< XReal<double> > xmf;
 
         for(size_t i=5+ran.leq(10);i>0;--i)
         {
@@ -179,7 +179,7 @@ Y_UTEST(tao1)
             v << z;
         }
         std::cerr << "v=" << v << std::endl;
-        Tao::MultiAdd<double> xm;
+        Antelope::Caddy<double> xm;
         const double n2 = Tao::Cog::SquaredNorm<double>::Of(v,xm);
         std::cerr << "n2=" << n2 << std::endl;
 

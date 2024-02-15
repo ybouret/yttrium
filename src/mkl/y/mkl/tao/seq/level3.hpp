@@ -24,17 +24,17 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename T, typename U, typename V, typename W>  inline
-            void MatMul(Matrix<T>       &tgt,
-                        const Matrix<U> &lhs,
-                        const Matrix<V> &rhs,
-                        MultiAdd<W>     &xma)
+            void MatMul(Matrix<T>          &tgt,
+                        const Matrix<U>    &lhs,
+                        const Matrix<V>    &rhs,
+                        Antelope::Caddy<W> &xma)
             {
                 assert(tgt.rows==lhs.rows);
                 assert(tgt.cols==rhs.cols);
                 assert(lhs.cols==rhs.rows);
-                const size_t ncol = tgt.cols;
-                const size_t nrun = lhs.cols;
-                XAdd<W>     &xadd = xma.make(nrun);
+                const size_t      ncol = tgt.cols;
+                const size_t      nrun = lhs.cols;
+                Antelope::Add<W> &xadd = xma.make(nrun);
 
                 assert(xadd.isEmpty());
                 assert(xadd.accepts(nrun));
@@ -68,15 +68,15 @@ namespace Yttrium
                         const Matrix<U>    &lhs,
                         const TransposeOf_ &,
                         const Matrix<V>    &rhs,
-                        MultiAdd<W>        &xma)
+                        Antelope::Caddy<W> &xma)
             {
                 assert(tgt.rows==lhs.rows);
                 assert(tgt.cols==rhs.rows);
                 assert(lhs.cols==rhs.cols);
 
-                const size_t ncol = tgt.cols;
-                const size_t nrun = lhs.cols;
-                XAdd<W>     &xadd = xma.make(nrun);
+                const size_t      ncol = tgt.cols;
+                const size_t      nrun = lhs.cols;
+                Antelope::Add<W> &xadd = xma.make(nrun);
                 for(size_t i=tgt.rows;i>0;--i)
                 {
                     Writable<T>       &tgt_i = tgt[i];

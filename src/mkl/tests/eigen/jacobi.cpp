@@ -19,7 +19,7 @@ namespace
         std::cerr << "Jacobi<" << ts << ">" << std::endl;
         MKL::Eigen::Jacobi<T> J;
         MKL::Tao::ComputeMod2<T> mod2;
-        MKL::Tao::MultiAdd<T>    xm;
+        MKL:: Antelope::Caddy<T> xm;
 
         for(size_t n=1;n<=4;++n)
         {

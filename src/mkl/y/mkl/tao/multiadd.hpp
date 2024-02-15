@@ -14,7 +14,7 @@ namespace Yttrium
     {
         namespace Tao
         {
-
+#if 0
             //__________________________________________________________________
             //
             //
@@ -167,7 +167,7 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(MultiAdd);
             };
-
+#endif
         }
 
     }

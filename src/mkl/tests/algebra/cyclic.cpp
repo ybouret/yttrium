@@ -19,7 +19,7 @@ namespace
         typedef typename ScalarFor<T>::Type ScalarType;
         const ScalarType s0 = 0;
 
-        Tao::MultiAdd<T>    xm;
+        Antelope::Caddy<T>  xm;
         Tao::ComputeMod2<T> mod2;
 
         for(size_t n=3;n<=nmax;++n)

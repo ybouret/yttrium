@@ -50,7 +50,7 @@ namespace
             std::cerr << "M = " << M  << std::endl;
             std::cerr << "r = " << r  << std::endl;
 
-            Tao::MultiAdd<T> xma;
+            Antelope::Caddy<T> xma;
             Tao::Mul(v,M,r,xma);
             std::cerr << "v = " << v << std::endl;
 

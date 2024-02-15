@@ -25,7 +25,7 @@ namespace Yttrium
 
                     if(range.length<=0) return;
 
-                    XAdd<U>   &xadd = range.xadd<U>();
+                    Antelope::Add<U> &xadd = range.xadd<U>();
                     for(size_t row  = range.latest; row>=range.offset; --row)
                     {
                         assert(xadd.isEmpty());
@@ -40,12 +40,12 @@ namespace Yttrium
             //! parallel multiplication Set/Add/Sub
             //__________________________________________________________________
             template <typename TARGET, typename T, typename SOURCE, typename U, typename PROC> inline
-            void MulOp(TARGET &          target,
-                       const Matrix<T>  &M,
-                       SOURCE           &source,
-                       MultiAdd<U>      &xma,
-                       Engine           &engine,
-                       PROC             &proc)
+            void MulOp(TARGET &            target,
+                       const Matrix<T>    &M,
+                       SOURCE             &source,
+                       Antelope::Caddy<U> &xma,
+                       Engine             &engine,
+                       PROC               &proc)
             {
 
                 assert( target.size() == M.rows );
@@ -64,11 +64,11 @@ namespace Yttrium
             //! target = M*source
             //__________________________________________________________________
             template <typename TARGET, typename T, typename SOURCE, typename U> inline
-            void Mul(TARGET &          target,
-                     const Matrix<T>  &M,
-                     SOURCE           &source,
-                     MultiAdd<U>      &xma,
-                     Engine           &engine)
+            void Mul(TARGET &            target,
+                     const Matrix<T>    &M,
+                     SOURCE             &source,
+                     Antelope::Caddy<U> &xma,
+                     Engine             &engine)
             {
                 typedef typename TARGET::Type TGT;
                 typedef void    (*PROC)(TGT &, const U &);
@@ -82,11 +82,11 @@ namespace Yttrium
             //! target += M*source
             //__________________________________________________________________
             template <typename TARGET, typename T, typename SOURCE, typename U> inline
-            void MulAdd(TARGET &          target,
-                        const Matrix<T>  &M,
-                        SOURCE           &source,
-                        MultiAdd<U>      &xma,
-                        Engine           &engine)
+            void MulAdd(TARGET &            target,
+                        const Matrix<T>    &M,
+                        SOURCE             &source,
+                        Antelope::Caddy<U> &xma,
+                        Engine             &engine)
             {
                 typedef typename TARGET::Type TGT;
                 typedef void    (*PROC)(TGT &, const U &);
@@ -99,11 +99,11 @@ namespace Yttrium
             //! target += M*source
             //__________________________________________________________________
             template <typename TARGET, typename T, typename SOURCE, typename U> inline
-            void MulSub(TARGET &          target,
-                        const Matrix<T>  &M,
-                        SOURCE           &source,
-                        MultiAdd<U>      &xma,
-                        Engine           &engine)
+            void MulSub(TARGET &            target,
+                        const Matrix<T>    &M,
+                        SOURCE             &source,
+                        Antelope::Caddy<U> &xma,
+                        Engine             &engine)
             {
                 typedef typename TARGET::Type TGT;
                 typedef void    (*PROC)(TGT &, const U &);

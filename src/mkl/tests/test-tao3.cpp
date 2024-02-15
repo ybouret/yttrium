@@ -25,10 +25,10 @@ Y_UTEST(tao3)
     Concurrent::SharedLoop seqLoop = new Concurrent::Mono();
     Concurrent::SharedLoop parLoop = new Concurrent::Crew(topo);
 
-    Tao::Engine        seq(seqLoop);
-    Tao::Engine        par(parLoop);
-    Random::Rand       ran;
-    Tao::MultiAdd<int> xma;
+    Tao::Engine          seq(seqLoop);
+    Tao::Engine          par(parLoop);
+    Random::Rand         ran;
+    Antelope::Caddy<int> xma;
 
     for(size_t iter=0;iter<2;++iter)
     {

@@ -15,8 +15,8 @@ namespace Yttrium
             const size_t p = P.rows;
             const size_t d = P.cols;
 
-            Tao::MultiAdd<apz> xm;
-            Matrix<apz>        QQ(d,d);
+            Antelope::Caddy<apz> xm;
+            Matrix<apz>          QQ(d,d);
             {
                 apz         dP2 = 0;  // determinant(P*P')
                 Matrix<apz> aP2(p,p); // adjoint(P*P')

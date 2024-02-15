@@ -91,12 +91,12 @@ namespace Yttrium
                     //__________________________________________________________
                     ABSCISSA                   Dorg = D2(F,S,aorg,used,G); // full metrics
                     Writable<ABSCISSA>       & atry = solv->atry;          // alias
-                    const Readable<ABSCISSA> & beta = mine->beta;
+                    const Readable<ABSCISSA> & beta = mine->beta;          // alias
                     const int                  pmin = solv->pmin;          // alias
                     const int                  pmax = solv->pmax;          // alias
                     const size_t               nvar = aorg.size();         // num variables
-                    int                 p    = -4;                  // initial guess TODO
-                    solv->prepare(nvar);                            // workspace
+                    int                 p    = -4;                         // initial guess TODO
+                    solv->prepare(nvar);                                   // workspace
 
                     Libc::OutputFile fp("D2.dat");
 

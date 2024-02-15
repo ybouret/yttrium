@@ -3,7 +3,7 @@
 #ifndef Y_MKL_TAO_XAddPtr_Included
 #define Y_MKL_TAO_XAddPtr_Included 1
 
-#include "y/mkl/tao/multiadd.hpp"
+#include "y/mkl/antelope/add.hpp"
 
 namespace Yttrium
 {
@@ -47,17 +47,17 @@ namespace Yttrium
 
                 //! attach a XAdd
                 template <typename U> inline
-                void attach( XAdd<U> &host ) noexcept
+                void attach( Antelope::Add<U> &host ) noexcept
                 {
                     handle = &host;
                 }
 
                 //! cast internal address
                 template <typename U> inline
-                XAdd<U> & xadd() noexcept
+                Antelope::Add<U> & xadd() noexcept
                 {
                     assert(0!=handle);
-                    return * static_cast< XAdd<U> * >(handle);
+                    return * static_cast< Antelope::Add<U> * >(handle);
                 }
 
             private:

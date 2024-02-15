@@ -19,8 +19,8 @@ namespace
     static inline void testLU(Random::Bits &ran, const size_t nmax=10)
     {
         std::cerr << "---------- Testing LU< " << TypeName<T>() << " > ----------" << std::endl;
-        MKL::LU<T>       lu;
-        Tao::MultiAdd<T> xm;
+        MKL::LU<T>         lu;
+        Antelope::Caddy<T> xm;
 
 #if 1
         for(size_t n=1;n<=nmax;++n)

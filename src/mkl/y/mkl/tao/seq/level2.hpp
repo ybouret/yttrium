@@ -26,15 +26,15 @@ namespace Yttrium
                 typename SOURCE,
                 typename U,
                 typename PROC> inline
-                void Mul(TARGET &          target,
-                         const Matrix<T>  &M,
-                         SOURCE           &source,
-                         MultiAdd<U>      &xma,
-                         PROC             &proc)
+                void Mul(TARGET &            target,
+                         const Matrix<T>    &M,
+                         SOURCE             &source,
+                         Antelope::Caddy<U> &xma,
+                         PROC               &proc)
                 {
                     assert( target.size() == M.rows );
                     assert( source.size() == M.cols );
-                    XAdd<U> &xadd = xma.make(M.cols);
+                    Antelope::Add<U> &xadd = xma.make(M.cols);
                     for(size_t i=M.rows;i>0;--i)
                     {
                         const U rhs = DotProduct<U>::Of_(M[i],source,xadd);
@@ -46,10 +46,10 @@ namespace Yttrium
 
             //! target = M*source
             template <typename TARGET, typename T, typename SOURCE, typename U> inline
-            void Mul(TARGET &          target,
-                     const Matrix<T>  &M,
-                     SOURCE           &source,
-                     MultiAdd<U>      &xma)
+            void Mul(TARGET &            target,
+                     const Matrix<T>    &M,
+                     SOURCE             &source,
+                     Antelope::Caddy<U> &xma)
             {
                 assert( target.size() == M.rows );
                 assert( source.size() == M.cols );
@@ -58,10 +58,10 @@ namespace Yttrium
 
             //! target += M*source
             template <typename TARGET, typename T, typename SOURCE, typename U> inline
-            void MulAdd(TARGET &          target,
-                        const Matrix<T>  &M,
-                        SOURCE           &source,
-                        MultiAdd<U>      &xma)
+            void MulAdd(TARGET &            target,
+                        const Matrix<T>    &M,
+                        SOURCE             &source,
+                        Antelope::Caddy<U> &xma)
             {
                 assert( target.size() == M.rows );
                 assert( source.size() == M.cols );
@@ -70,10 +70,10 @@ namespace Yttrium
 
             //! target -= M*source
             template <typename TARGET, typename T, typename SOURCE, typename U> inline
-            void MulSub(TARGET &          target,
-                        const Matrix<T>  &M,
-                        SOURCE           &source,
-                        MultiAdd<U>      &xma)
+            void MulSub(TARGET &            target,
+                        const Matrix<T>    &M,
+                        SOURCE             &source,
+                        Antelope::Caddy<U> &xma)
             {
                 assert( target.size() == M.rows );
                 assert( source.size() == M.cols );

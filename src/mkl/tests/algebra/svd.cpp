@@ -18,8 +18,8 @@ namespace
         const String &ts = RTTI::Name<T>();
         std::cerr << "SVD<" << ts << ">" << std::endl;
 
-        MKL::SVD<T>           svd;
-        MKL::Tao::MultiAdd<T> xm;
+        MKL::SVD<T>              svd;
+        MKL:: Antelope::Caddy<T> xm;
 
         for(size_t m=1;m<=4;++m)
         {

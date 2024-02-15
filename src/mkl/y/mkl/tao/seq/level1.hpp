@@ -6,7 +6,7 @@
 
 
 #include "y/mkl/api.hpp"
-#include "y/mkl/tao/multiadd.hpp"
+//#include "y/mkl/tao/multiadd.hpp"
 #include "y/mkl/antelope/caddy.hpp"
 #include "y/mkl/tao/transmogrify.hpp"
 
@@ -61,7 +61,6 @@ namespace Yttrium
             }
 
 
-#if 1
             //__________________________________________________________________
             //
             //! target = lhs+rhs
@@ -77,7 +76,6 @@ namespace Yttrium
                 for(size_t i=target.size();i>0;--i)
                     target[i] = To<TTYPE,LTYPE>::Get(lhs[i]) + To<TTYPE,RTYPE>::Get(rhs[i]);
             }
-#endif
 
 
             //__________________________________________________________________
@@ -168,6 +166,8 @@ namespace Yttrium
             struct DotProduct
             {
 
+                typedef Antelope::Caddy<T> XMA; //!< extended multiple add
+
                 //______________________________________________________________
                 //
                 //! compute with prepared xadd
@@ -192,7 +192,7 @@ namespace Yttrium
                 //! compute with any xadd
                 //______________________________________________________________
                 template <typename LHS, typename RHS> static inline
-                T Of(LHS &lhs, RHS &rhs, MultiAdd<T>  &xma)
+                T Of(LHS &lhs, RHS &rhs, XMA &xma)
                 {
                     assert(lhs.size()==rhs.size());
                     return Of_(lhs,rhs,xma.make(lhs.size()));
@@ -217,16 +217,17 @@ namespace Yttrium
                 {
                     typedef T                              Type;        //!< alias
                     typedef typename ScalarFor<Type>::Type ScalarType;  //!< alias
+                    typedef Antelope::Caddy<ScalarType>    SMA;         //!< scalar multiple add
 
                     //! compute |lhs|^2
                     template <typename LHS> static inline
-                    ScalarType Of(LHS &lhs, MultiAdd<ScalarType> &xm)
+                    ScalarType Of(LHS &lhs, SMA &xma)
                     {
                         typedef typename LHS::Type          U;
                         typedef typename ScalarFor<U>::Type ScalarU;
 
-                        const size_t      n    = lhs.size();
-                        XAdd<ScalarType> &xadd = xm.make(n);
+                        const size_t               n    = lhs.size();
+                        Antelope::Add<ScalarType> &xadd = xma.make(n);
                         for(size_t i=n;i>0;--i)
                         {
                             const ScalarU     l2 = MKL::Mod2<U>::Of( lhs[i] );
@@ -238,14 +239,14 @@ namespace Yttrium
 
                     //! compute |primary-replica|^2, difference in PRIMARY::Type
                     template <typename PRIMARY, typename REPLICA> static inline
-                    ScalarType Of(PRIMARY &primary, REPLICA &replica, MultiAdd<ScalarType> &xm)
+                    ScalarType Of(PRIMARY &primary, REPLICA &replica, SMA &xma)
                     {
                         typedef typename PRIMARY::Type                PrimaryType;
                         typedef typename ScalarFor<PrimaryType>::Type ScalarPrimary;
 
                         assert(primary.size()==replica.size());
                         const size_t      n    = primary.size();
-                        XAdd<ScalarType> &xadd = xm.make(n);
+                        Antelope::Add<ScalarType> &xadd = xma.make(n);
                         for(size_t i=n;i>0;--i)
                         {
                             const PrimaryType   dd = primary[i] - Tao::To<PrimaryType,typename REPLICA::Type>::Get(replica[i]);
@@ -307,7 +308,7 @@ namespace Yttrium
                 // members
                 //
                 //______________________________________________________________
-                MultiAdd<ScalarType> sma; //!< scalar multi-add
+                Antelope::Caddy<ScalarType> sma; //!< scalar multi-add
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(ComputeMod2);
             };
