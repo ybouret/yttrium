@@ -117,7 +117,7 @@ namespace Yttrium
                 BUILD_STEP:
                     if(!solv->buildStep(*mine,aorg,adom,p,used,verbose))
                     {
-                        Y_MKL_FIT("no possible step");
+                        Y_MKL_FIT("-- no possible step");
                         return false;
                     }
 
@@ -135,11 +135,13 @@ namespace Yttrium
                         goto BUILD_STEP;
                     }
 
+                    Y_MKL_FIT("-- accepted!");
                     Tao::Load(aorg,atry);
                     Dorg = D2(F,S,aorg,used,G);
                     const bool kept = (p==p0);
                     if(kept)
                     {
+                        Y_MKL_FIT("-- upgrade parameter");
                         if(--p<=pmin) p = pmin;
                     }
 
@@ -147,9 +149,8 @@ namespace Yttrium
                     // prepare for next cycle
                     //----------------------------------------------------------
 
-                    return false;
-
-                    if(cycle<=3)
+                    
+                    if(cycle<=1)
                         goto CYCLE;
 
 
