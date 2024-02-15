@@ -16,14 +16,65 @@ Chemical potential:
 	\mu_i = RT \ln a_i + z_i \mathcal{F} V = RT \ln (\gamma_i[C_i]) + z_i \mathcal{F} V
 \end{equation}
 
-Poisson
+Poisson equation:
 \begin{equation}
-	\Delta V = - \dfrac{\rho}{\epsilon} = -\mathcal{N}_A 
+	\Delta V = - \dfrac{\rho}{\epsilon} = -\dfrac{\mathcal{N}_A}{\epsilon} k_1 \sum_i z_i C_i,\;k_1=1000
+\end{equation}
+We have $\rho$ in particles/$m^3$ and $C$ in moles/$dm^3$.
+
+\begin{equation}
+	\vec{E} = -\vec{\nabla} V
 \end{equation}
 
-Molar force:
+Molecular force:	
 \begin{equation}
-	\vec{F}_i = - \vec{\nabla} \mu_i
+	\vec{F}_i = - \frac{1}{\mathcal{N}_A} \vec{\nabla} \mu_i
+\end{equation}
+
+Molecular motion:
+\begin{equation}
+	m_i \ddot {\vec{r}} = \vec{F}_i - a_i \vec{v}_i \implies \vec{v}_i \simeq \dfrac{1}{a_i} \vec{F}_i
+\end{equation}
+
+\begin{equation}
+	\vec{v}_i = -\underbrace{\dfrac{k_bT}{a_i}}_{D_i} \vec{\nabla}(\ln(\gamma_i C_i))  + z_i \underbrace{\dfrac{ q}{a_i}}_{\lambda_i} \vec{E}
+\end{equation}
+
+Molar flux:
+\begin{equation}
+\boxed{
+	\vec{J}_i = C_i\vec{v}_i = -D_i C_i \vec{\nabla}(\ln(\gamma_i C_i)) + z_i C_i \lambda_i \vec{E}
+	}
+\end{equation}
+
+\begin{equation}
+	\vec{J}_i = - D_i \left( \vec{\nabla} C_i + C_i \vec{\nabla}\Gamma_i \right) + z_i C_i \lambda_i \vec{E}
+\end{equation}
+
+Electric flux:
+\begin{equation}
+	\dfrac{1}{\mathcal{F}} \vec{J}_i^{el} =  z_i \vec{J}_i = - z_i D_i \left( \vec{\nabla} C_i + C_i \vec{\nabla}\Gamma_i \right) + z_i^2 C_i \lambda_i \vec{E}
+\end{equation}
+Continuity equation:
+\begin{equation}
+	\partial_t C_i + \mathrm{div} \vec{J}_i = \sigma_i
+\end{equation}
+
+\begin{equation}
+	\mathrm{div}(f\vec{g}) = f \, \mathrm{div}\vec{g} + \vec{\nabla} f \cdot \vec{g}
+\end{equation}
+
+\begin{equation}
+	\vec{J}_i = -D_i \vec{\nabla} C_i + C_i \left( z_i \lambda_i \vec{E} - D_i \vec{\nabla}\Gamma_i \right)
+\end{equation}
+
+\begin{equation}
+	\vec{J}_i = - \left[ D_i \vec{\nabla} C_i + C_i \left( z_i \lambda_i \vec{\nabla} V + D_i \vec{\nabla}\Gamma_i \right) \right]
+\end{equation}
+
+\begin{equation}
+	-\mathrm{div} J_i = D_i \Delta C_i + C_i \left( D_i \Delta \Gamma_i + z_i \lambda_i \Delta V \right)
+	+ \vec{\nabla} C_i \cdot \left(  D_i \vec{\nabla}\Gamma_i - z_i \lambda_i \vec{E} \right) 
 \end{equation}
 
 \end{document}
