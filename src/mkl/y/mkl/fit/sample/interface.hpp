@@ -66,8 +66,8 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
-                inline Predicted        & predicted()        noexcept { return Coerce(fetchPred()); }
-                inline const Ordinates  & predicted() const  noexcept { return fetchPred(); }
+                inline Predicted        & predicted()        noexcept { return Coerce(fetchPred()); } //!< mutable predicted
+                inline const Ordinates  & predicted() const  noexcept { return fetchPred(); }         //!< constant predicted
 
                 //! Ordinate to Abscissa pointer
                 static inline const Abscissa * O2A(const Ordinate &o) noexcept

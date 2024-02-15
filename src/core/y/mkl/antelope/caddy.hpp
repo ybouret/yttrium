@@ -245,33 +245,51 @@ namespace Yttrium
                 // Interface
                 //
                 //______________________________________________________________
+
+
+
+                /**
+                 \param numVars for a number of variable/parallelism
+                 \param numData dimension for each varriable
+                 */
                 inline virtual void setup(const size_t numVars,
                                           const size_t numData)
                 {
-                    flush();
-                    try {
-                        while(size<numVars) {
-                            XNode *node = pushTail( (pool.size > 0) ? pool.query() : new XNode() );
-                            node->make(numData);
-                            assert(node->isEmpty());
-                            assert(0==node->indx);
-                            Coerce(node->indx) = size;
+
+                    try
+                    {
+                        switch( Sign::Of(size,numVars) )
+                        {
+                            case Negative: assert(size<numVars);
+                                while(size<numVars && pool.size>0) addNode( pool.query() );
+                                while(size<numVars)                addNode( new XNode()  );
+                                break;
+
+                            case __Zero__: assert(size==numVars);
+                                break;
+
+                            case Positive: assert(size>numVars);
+                                while(size>numVars) remNode( popTail() );
+                                break;
                         }
                     }
                     catch(...) { flush(); throw; }
                     assert(numVars==size);
+
+
+                    for(XNode *node=head;node;node=node->next)
+                        node->make(numData);
+
+
                 }
 
                 inline void reset(const size_t numData) {
                     for(XNode *node=head;node;node=node->next) node->make(numData);
                 }
 
+
                 inline virtual void flush() noexcept {
-                    while(size>0) {
-                        XNode *node = pool.store( popTail() );
-                        node->free();
-                        Coerce(node->indx) = 0;
-                    }
+                    while(size>0) remNode( popTail() );
                 }
 
                 //______________________________________________________________
@@ -286,15 +304,11 @@ namespace Yttrium
                 }
 
                 inline Add<T> & make(const size_t numData) {
-                    setup(1,numData); return *head;
+                    return *make(1,numData);
                 }
 
 
 
-                template <typename ITERATOR> inline
-                void sumIn(ITERATOR it) {
-                    for(XNode *node = head;node;node=node->next,++it) *it = node->sum();
-                }
 
                 template <typename SEQUENCE> inline
                 void sum(SEQUENCE &seq) {
@@ -313,6 +327,28 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Caddy);
+
+                inline void addNode( XNode *node ) noexcept
+                {
+                    assert(0!=node);
+                    assert(0==node->indx);
+                    (void) pushTail(node);
+                    Coerce(node->indx) = size;
+                }
+
+                inline void remNode(XNode *node) noexcept
+                {
+                    assert(0!=node);
+                    assert(node->indx>0);
+                    node->free();
+                    Coerce( pool.store(node)->indx ) = 0;
+                }
+
+                template <typename ITERATOR> inline
+                void sumIn(ITERATOR it) {
+                    for(XNode *node = head;node;node=node->next,++it) *it = node->sum();
+                }
+
             };
 
         }
