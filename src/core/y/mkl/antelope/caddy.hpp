@@ -1,7 +1,5 @@
 //! \file
 
-
-
 #ifndef Y_MKL_Antelope_Caddy_Included
 #define Y_MKL_Antelope_Caddy_Included 1
 
@@ -283,6 +281,16 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
+                inline XNode *make(const size_t numVars, const size_t numData) {
+                    setup(numVars,numData); return head;
+                }
+
+                inline Add<T> & make(const size_t numData) {
+                    setup(1,numData); return *head;
+                }
+
+
+
                 template <typename ITERATOR> inline
                 void sumIn(ITERATOR it) {
                     for(XNode *node = head;node;node=node->next,++it) *it = node->sum();
@@ -293,9 +301,6 @@ namespace Yttrium
                     assert(seq.size() == size);
                     sumIn(seq.begin());
                 }
-                
-
-
 
                 //______________________________________________________________
                 //

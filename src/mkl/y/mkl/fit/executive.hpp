@@ -143,13 +143,14 @@ namespace Yttrium
                     {
                         Y_MKL_FIT("-- upgrade parameter");
                         if(--p<=pmin) p = pmin;
+                        const ABSCISSA sigma = 1; //Tao::DotProduct<ABSCISSA>::Of(beta,solv->step,mine->xadd);
                     }
 
                     //----------------------------------------------------------
                     // prepare for next cycle
                     //----------------------------------------------------------
 
-                    
+
                     if(cycle<=1)
                         goto CYCLE;
 

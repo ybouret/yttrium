@@ -39,7 +39,8 @@ namespace Yttrium
             //__________________________________________________________________
             inline explicit Intervals(const size_t dims) : AssemblyType(dims) {} //!< initialize to R^dims
             inline virtual ~Intervals() noexcept                              {} //!< cleanup
-            inline Intervals(const Intervals &other) : AssemblyType(other)    {} //!< copy
+            inline Intervals(const Intervals &other) :                           //
+            Identifiable(), Collection(), AssemblyType(other)                 {} //!< copy
 
             //! display
             inline friend std::ostream & operator<<(std::ostream &os, const Intervals &domain)
