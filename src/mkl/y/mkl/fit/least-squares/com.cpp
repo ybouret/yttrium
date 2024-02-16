@@ -1,5 +1,6 @@
 
 #include "y/mkl/fit/least-squares/com.hpp"
+#include "y/mkl/tao/seq/level2.hpp"
 
 #define real_t float
 #include "com.hxx"

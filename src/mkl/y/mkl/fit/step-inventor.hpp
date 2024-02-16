@@ -75,12 +75,12 @@ namespace Yttrium
                  \return false if singular matrix or always out of bound step
                  */
                 //______________________________________________________________
-                bool buildStep(const LeastSquaresCom<ABSCISSA>  &ls,
-                               const Readable<ABSCISSA> & aorg,
-                               const Domain<ABSCISSA>   & adom,
-                               int                      & p,
-                               const Booleans           & used,
-                               const bool                 verbose);
+                bool buildStep(const LeastSquaresCom<ABSCISSA> & lsqf,
+                               const Readable<ABSCISSA> &        aorg,
+                               const Domain<ABSCISSA>   &        adom,
+                               int                      &        p,
+                               const Booleans           &        used,
+                               const bool                        verbose);
 
 
                 //______________________________________________________________
@@ -90,6 +90,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 Matrix<ABSCISSA>              curv; //!< approx curvature
+                Matrix<ABSCISSA>              hess; //!< approx hessian
                 Vector<ABSCISSA,MemoryModel>  step; //!< approx step
                 Vector<ABSCISSA,MemoryModel>  atry; //!< trial parameters
                 Vector<ABSCISSA,MemoryModel>  atmp; //!< probe if necessary

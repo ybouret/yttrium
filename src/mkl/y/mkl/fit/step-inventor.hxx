@@ -10,6 +10,7 @@ namespace Yttrium
             template <>
             StepInventor<real_t>:: StepInventor() :
             curv(),
+            hess(),
             step(),
             atry(),
             atmp(),
@@ -33,6 +34,7 @@ namespace Yttrium
             void StepInventor<real_t>:: prepare(const size_t nvar)
             {
                 curv.make(nvar,nvar);
+                hess.make(nvar,nvar);
                 step.adjust(nvar,zero);
                 atry.adjust(nvar,zero);
                 atmp.adjust(nvar,zero);
@@ -57,8 +59,8 @@ namespace Yttrium
 
             template <>
             bool StepInventor<real_t>:: buildCurvature(const Matrix<real_t> &alpha,
-                                                       const int               param,
-                                                       const Booleans         &used)
+                                                       const int             param,
+                                                       const Booleans       &used)
             {
                 const real_t fac = xFactor(param);
                 curv.assign(alpha);
@@ -67,16 +69,17 @@ namespace Yttrium
                     if(used[i])
                         curv[i][i] *= fac;
                 }
+                hess.assign(curv);
                 return lu.build(curv);
             }
 
             template <>
-            bool StepInventor<real_t>:: buildStep(const LeastSquaresCom<real_t>  &ls,
-                                                  const Readable<real_t> &aorg,
-                                                  const Domain<real_t>   &adom,
-                                                  int                      &p,
-                                                  const Booleans           &used,
-                                                  const bool               verbose)
+            bool StepInventor<real_t>:: buildStep(const LeastSquaresCom<real_t>  &lsqf,
+                                                  const Readable<real_t>         &aorg,
+                                                  const Domain<real_t>           &adom,
+                                                  int                            &p,
+                                                  const Booleans                 &used,
+                                                  const bool                      verbose)
             {
                 assert(p>=pmin);
                 assert(p<=pmax);
@@ -86,11 +89,12 @@ namespace Yttrium
                 // initialize and sanity check
                 //
                 //--------------------------------------------------------------
-                const Readable<real_t> &beta  = ls.beta;
-                const Matrix<real_t>   &alpha = ls.curv;
+                const Readable<real_t> &beta  = lsqf.beta;
+                const Matrix<real_t>   &alpha = lsqf.curv;
                 const size_t            nvar  = beta.size();
 
                 assert(nvar == curv.rows);
+                assert(nvar == hess.rows);
                 assert(nvar == step.size());
                 assert(nvar == atry.size());
                 assert(adom.contains(aorg));
@@ -109,19 +113,19 @@ namespace Yttrium
                     Y_MKL_FIT_DEGRADE();
                 }
 
-                //----------------------------------------------------------
+                //--------------------------------------------------------------
                 //
                 // compute local step
                 //
-                //----------------------------------------------------------
+                //--------------------------------------------------------------
                 for(size_t i=nvar;i>0;--i) step[i] = beta[i];
                 lu.solve(curv,step);
 
-                //----------------------------------------------------------
+                //--------------------------------------------------------------
                 //
                 // compute trial position
                 //
-                //----------------------------------------------------------
+                //--------------------------------------------------------------
                 Tao::Add(atry,aorg,step);
                 Y_MKL_FIT("  step=" << step);
                 Y_MKL_FIT("  atry=" << atry);
@@ -131,6 +135,7 @@ namespace Yttrium
                     Y_MKL_FIT_DEGRADE();
                     goto TRIAL;
                 }
+                
 
                 Y_MKL_FIT("<buildStep/>");
                 return true;

@@ -35,7 +35,17 @@ namespace Yttrium
                 const ABSCISSA                zero; //!< alias
                 const ABSCISSA                half; //!< alias
                 const ABSCISSA                one;  //!< alias
-                                                    //!
+            
+
+                static ABSCISSA aabs(const ABSCISSA x);
+                
+                ABSCISSA        dot(const Readable<ABSCISSA> &lhs,
+                                    const Readable<ABSCISSA> &rhs);
+
+                ABSCISSA        quad(const Matrix<ABSCISSA>   &hess,
+                                     const Readable<ABSCISSA> &step,
+                                     Writable<ABSCISSA>       &temp);
+
                 virtual ~LeastSquaresCom() noexcept;
             protected:
                 explicit LeastSquaresCom();

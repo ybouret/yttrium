@@ -82,6 +82,9 @@ namespace Yttrium
                          GRADIENT           &G)
                 {
 
+                    static const ABSCISSA zero = 0;
+                    static const ABSCISSA one  = 1;
+
                     static const ABSCISSA tol = Numeric<ABSCISSA>::SQRT_EPSILON;
                     assert( aorg.size() == used.size() ) ;
                     assert( aorg.size() == adom.size() );
@@ -114,7 +117,7 @@ namespace Yttrium
                     Y_MKL_FIT("Dorg  = " << Dorg << "# @" << aorg << ", p=" << p);
                     Y_MKL_FIT("beta  = " << beta);
 
-                    fp("%lu %.15g\n", cycle, double(Dorg) );
+                    fp("%lu %.15g\n", cycle, double(Dorg) ).flush();
 
                     //----------------------------------------------------------
                     //
@@ -137,8 +140,12 @@ namespace Yttrium
                     const ABSCISSA Dtry = D2(F,S,atry);
                     Y_MKL_FIT("Dtry  = " << Dtry << "# @" << atry << ", p=" << p);
 
-                    //const ABSCISSA sigma = Tao::DotProduct<ABSCISSA>::Of(beta,step,mine->xlst);
-                    //Y_MKL_FIT("sigma = " << sigma);
+                    const ABSCISSA sigma = mine->dot(beta,step);
+                    const ABSCISSA gamma = mine->quad(solv->hess,step,solv->atmp);
+                    Y_MKL_FIT("sigma = " << sigma);
+                    Y_MKL_FIT("gamma = " << gamma);
+                    //const ABSCISSA gamma = Dtry-Dorg+sigma;
+
 
                     {
                         const String     fn = Formatted::Get("d2-%lu.dat",cycle);
@@ -147,14 +154,13 @@ namespace Yttrium
                         for(size_t i=0;i<=nn;++i)
                         {
                             const ABSCISSA u = ABSCISSA(i) / ABSCISSA(nn);
-                            d2("%.15g %.15g\n", double(u), double(H(u)));
+                            d2("%.15g %.15g %.15g\n", double(u), double(H(u)), double(Dorg-sigma*u));
                         }
                     }
 
                     if(Dtry>Dorg)
                     {
                         Y_MKL_FIT("Bad!");
-                        const ABSCISSA sigma = Tao::DotProduct<ABSCISSA>::Of(beta,step,mine->xlst);
                         std::cerr << "sigma=" << sigma << std::endl;
                         exit(0);
                         Y_MKL_FIT_DEGRADE();
@@ -171,7 +177,14 @@ namespace Yttrium
                         const ABSCISSA del = Dorg-Dtry;
                         const ABSCISSA sum = Dorg+Dtry;
                         const ABSCISSA lim = sum * tol;
-                        
+                        std::cerr << "delta=" << del << " / limit=" << lim << std::endl;
+                        for(size_t i=1;i<=nvar;++i)
+                        {
+                            if(!used[i]) continue;
+                            std::cerr << "aorg[" << i << "]=" << aorg[i] << " + " << (atry[i]-aorg[i]) << std::endl;
+                        }
+
+
                     }
 
                     Tao::Load(aorg,atry);

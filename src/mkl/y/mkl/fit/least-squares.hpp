@@ -55,7 +55,8 @@ namespace Yttrium
                 using Common::beta;
                 using Common::half;
                 using Common::one;
-
+                using Common::aabs;
+                
                 //______________________________________________________________
                 //
                 //
@@ -96,7 +97,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 #include "least-squares/mix.hpp"
-
+                
                 //______________________________________________________________
                 //
                 //
@@ -111,10 +112,7 @@ namespace Yttrium
 
                 Y_DISABLE_COPY_AND_ASSIGN(LeastSquares);
 
-                static inline ABSCISSA FabsOf(const ABSCISSA x)
-                {
-                    return Fabs<ABSCISSA>::Of(x);
-                }
+
 
                 //! push |Bj-Fj|^2 into xadd
                 inline void pushDSQ(const ORDINATE &Bj, const ORDINATE &Fj)
@@ -148,7 +146,7 @@ namespace Yttrium
                         assert(xnode->indx == i);
                         if(!used[i])
                         {
-                            assert( FabsOf(beta[i])<=zero) ;
+                            assert( aabs(beta[i])<=zero) ;
                             continue;
                         }
 
@@ -164,7 +162,7 @@ namespace Yttrium
                         {
                             if(!used[j]) 
                             {
-                                assert( FabsOf( curv[i][j]) <= zero );
+                                assert( aabs( curv[i][j]) <= zero );
                                 continue;
                             }
                             const ABSCISSA *rhs = SampleType::O2A(dFda[j]);
