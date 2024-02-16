@@ -168,22 +168,25 @@ namespace Yttrium
 
                     Y_MKL_FIT("-- accepted!");
 
-                    const ABSCISSA Horg  = Sqrt<ABSCISSA>::Of(D2org);
-                    const ABSCISSA Htry  = Sqrt<ABSCISSA>::Of(D2try);
-                    const ABSCISSA Hest  = (four*Htry - Horg)/three;
-                    const ABSCISSA Hdif  = mine->aabs(Hest-Htry);
-                    std::cerr << "  Horg = " << Horg << std::endl;
-                    std::cerr << "  Htry = " << Htry << std::endl;
-                    std::cerr << "  Hest = " << Hest << std::endl;
-                    std::cerr << "  Hdif = " << Hdif << std::endl;
-                    std::cerr << "  htol = " << Numeric<ABSCISSA>::SQRT_EPSILON << std::endl;
-                    std::cerr << "  Hlim = " << Numeric<ABSCISSA>::SQRT_EPSILON * Htry << std::endl;
+
 
                     const bool     kept  = (p==p0);
                     if(kept)
                     {
                         Y_MKL_FIT("-- upgrade parameter");
                         if(--p<=pmin) p = pmin;
+
+                        const ABSCISSA Horg  = Sqrt<ABSCISSA>::Of(D2org);
+                        const ABSCISSA Htry  = Sqrt<ABSCISSA>::Of(D2try);
+                        const ABSCISSA Hest  = (four*Htry - Horg)/three;
+                        const ABSCISSA Hdif  = mine->aabs(Hest-Htry);
+                        std::cerr << "  Horg = " << Horg << std::endl;
+                        std::cerr << "  Htry = " << Htry << std::endl;
+                        std::cerr << "  Hest = " << Hest << std::endl;
+                        std::cerr << "  Hdif = " << Hdif << std::endl;
+                        std::cerr << "  htol = " << Numeric<ABSCISSA>::SQRT_EPSILON << std::endl;
+                        std::cerr << "  Hlim = " << Numeric<ABSCISSA>::SQRT_EPSILON * Htry << std::endl;
+
                     }
 
 
