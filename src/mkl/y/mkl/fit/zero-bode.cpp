@@ -12,7 +12,7 @@ namespace Yttrium
 
         namespace Fit
         {
-            ZeroBodeInfo::  ZeroBodeInfo(const size_t n) noexcept : Oversized(), size(n) {}
+            ZeroBodeInfo::  ZeroBodeInfo() noexcept : Oversized() {}
             ZeroBodeInfo:: ~ZeroBodeInfo() noexcept {}
 
             void ZeroBodeInfo:: singular() const

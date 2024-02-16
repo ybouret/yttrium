@@ -6,7 +6,7 @@
 #include "y/mkl/algebra/lu.hpp"
 #include "y/sequence/snake.hpp"
 #include "y/oversized.hpp"
-#include "y/string/fwd.hpp"
+#include "y/string.hpp"
 
 namespace Yttrium
 {
@@ -18,11 +18,10 @@ namespace Yttrium
             class ZeroBodeInfo : public Oversized
             {
             public:
-                const size_t size;
 
                 virtual ~ZeroBodeInfo() noexcept;
             protected:
-                explicit ZeroBodeInfo(const size_t n) noexcept;
+                explicit ZeroBodeInfo() noexcept;
 
                 void singular() const;
 
@@ -31,7 +30,7 @@ namespace Yttrium
             };
 
             template <typename ABSCISSA>
-            class ZeroBode : public ZeroBodeInfo
+            class ZeroBode : public ZeroBodeInfo, public Snake<ABSCISSA>
             {
             public:
                 typedef Snake<ABSCISSA> Scope;
@@ -39,16 +38,11 @@ namespace Yttrium
                 explicit ZeroBode(const size_t depth);
                 virtual ~ZeroBode() noexcept;
 
-                void free() noexcept;
-                void feed(const ABSCISSA xx, const ABSCISSA yy);
-                void save(const Core::String<char> &fileName) const;
+                void save(const String &fileName) const;
 
                 ABSCISSA inferred();
-
-                const Scope  x;
-                const Scope  y;
                 LU<ABSCISSA> lu;
-                
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(ZeroBode);
             };

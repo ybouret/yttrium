@@ -11,10 +11,9 @@ namespace Yttrium
 
             template <>
             ZeroBode<real_t>:: ZeroBode(const size_t depth) :
-            ZeroBodeInfo( depth <= 1 ? 1 : depth),
-            x(size),
-            y(size),
-            lu(size)
+            ZeroBodeInfo( ),
+            Snake<real_t>( depth <= 1 ? 1 : depth ),
+            lu( size() )
             {
             }
 
@@ -23,27 +22,9 @@ namespace Yttrium
             {
             }
 
-            template <>
-            void ZeroBode<real_t>:: free() noexcept
-            {
-                Coerce(x).free();
-                Coerce(y).free();
-            }
 
-            template <>
-            void  ZeroBode<real_t>:: feed(const real_t xx, const real_t yy)
-            {
-                assert(x.size() == y.size());
-                assert(x.size() <= size);
 
-                {     Coerce(x) >> xx; }
-                try { Coerce(y) >> yy; }
-                catch(...) {
-                    Coerce(x).popHead();
-                    assert(x.size() == y.size());
-                    throw;
-                }
-            }
+
 
             template <>
             real_t ZeroBode<real_t>::inferred()
@@ -51,13 +32,13 @@ namespace Yttrium
                 static const real_t zero(0);
                 static const real_t one(1);
 
-                assert(x.size() == y.size());
-                const size_t n = x.size();
+                const size_t n = size();
+
 
                 switch(n)
                 {
                     case 0: return zero;
-                    case 1: return y.head();
+                    case 1: return head();
                     default:
                         break;
                 }
@@ -65,14 +46,13 @@ namespace Yttrium
                 Matrix<real_t>               mu(n,n);
                 CxxArray<real_t,MemoryModel> cf(n,zero);
 
-                Scope::ConstIterator ix = x.begin();
-                Scope::ConstIterator iy = y.begin();
-                for(size_t i=1;i<=n;++i,++ix,++iy)
+                Scope::Iterator it = begin();
+                for(size_t i=1;i<=n;++i,++it)
                 {
-                    cf[i]     = *iy;
+                    cf[i]     = *it;
                     mu[i][1]  = one;
                     {
-                        const real_t xx = *ix;
+                        const real_t xx = i;
                         real_t       xp = xx;
                         for(size_t j=2;j<=n;++j) mu[i][j] = (xp*=xx);
                     }
@@ -81,21 +61,34 @@ namespace Yttrium
                 if(!lu.build(mu)) singular();
                 lu.solve(mu,cf);
 
-                std::cerr << "cf=" << cf << std::endl;
+                {
+                    std::cerr << cf[1];
+                    for(size_t i=2;i<=n;++i)
+                    {
+                        std::cerr << "+(" << cf[i] << ")*x**" << i;
+                    }
+                    std::cerr << std::endl;
+                }
+
 
                 return cf[1];
 
             }
 
             template <>
-            void ZeroBode<real_t>:: save(const Core::String<char> &fileName) const
+            void ZeroBode<real_t>:: save(const String &fileName) const
             {
                 Libc::OutputFile fp(fileName);
-                for( Scope::ConstIterator ix = x.begin(), iy = y.begin(); ix != x.end(); ++ix, ++iy)
+
+                unsigned i=1;
+                for(ConstIterator it=begin();it != end();++it,++i)
                 {
-                    fp("%.15g %.15g\n", double(*ix), double(*iy) );
+                    fp("%u  %.15g\n", i, double( *it ));
                 }
+
             }
+
+
 
         }
 

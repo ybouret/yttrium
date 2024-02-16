@@ -8,22 +8,27 @@ using namespace MKL;
 Y_UTEST(fit_zbode)
 {
 
-    Fit::ZeroBode<float> bode(3);
+    Fit::ZeroBode<float> bode(4);
 
-    std::cerr << bode.x << " / " << bode.y << "=>" << bode.inferred() <<  std::endl;
+    std::cerr << bode << " => " << bode.inferred() << std::endl;
 
-    bode.feed(2,1.1);
-    std::cerr << bode.x << " / " << bode.y << "=>" << bode.inferred() <<  std::endl;
+    bode >> 1.2;
+    std::cerr << bode << " => " << bode.inferred() << std::endl;
 
-    bode.feed(1,1.02);
-    std::cerr << bode.x << " / " << bode.y << "=>" << bode.inferred() <<  std::endl;
+    bode >> 1.1;
+    std::cerr << bode << " => " << bode.inferred() << std::endl;
 
     bode.save("bode2.dat");
 
-    bode.feed(0.5,1.01);
-    std::cerr << bode.x << " / " << bode.y << "=>" << bode.inferred() <<  std::endl;
+    bode >> 1.1;
+    std::cerr << bode << " => " << bode.inferred() << std::endl;
+
     bode.save("bode3.dat");
 
+    bode >> 1.1;
+    std::cerr << bode << " => " << bode.inferred() << std::endl;
+
+    bode.save("bode3b.dat");
 
 }
 Y_UDONE()
