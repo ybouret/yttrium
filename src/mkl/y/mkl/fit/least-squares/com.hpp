@@ -8,6 +8,7 @@
 #include "y/mkl/fit/sequential.hpp"
 #include "y/mkl/antelope/caddy.hpp"
 #include "y/container/matrix.hpp"
+#include "y/sequence/snake.hpp"
 #include "y/oversized.hpp"
 
 namespace Yttrium
@@ -31,6 +32,7 @@ namespace Yttrium
             class LeastSquaresCom : public Oversized
             {
             public:
+                typedef          Snake<ABSCISSA>               Bode;           //!< alias
                 typedef          Antelope::Add<ABSCISSA>       XAdd;           //!< alias
                 typedef          Antelope::Caddy<ABSCISSA>     Caddy;          //!< alias
                 typedef          typename Caddy::XNode         XNode;          //!< alias
@@ -39,6 +41,7 @@ namespace Yttrium
                 Caddy                         xlst; //!< to perform additions on beta
                 Vector<ABSCISSA,MemoryModel>  beta; //!< gradient of D2
                 Matrix<ABSCISSA>              curv; //!< approx curvature of D2
+                Bode                          bode; //!< used to predict D2
                 const size_t                  npts; //!< last dimensions
                 const ABSCISSA                zero; //!< alias
                 const ABSCISSA                half; //!< alias
