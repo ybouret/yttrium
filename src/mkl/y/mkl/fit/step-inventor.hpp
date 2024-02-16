@@ -53,8 +53,8 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
-                void     prepare(const size_t nvar);   //! prepare memory
-                ABSCISSA xFactor(const int p) const; //! compute factor with pmin<=p<=pmax
+                void     prepare(const size_t nvar); //!< prepare memory
+                ABSCISSA xFactor(const int p) const; //!< compute factor with pmin<=p<=pmax
 
                 
             private:
@@ -68,10 +68,9 @@ namespace Yttrium
                 //
                 //! compute constrained, approximated step
                 /**
-                 \param ls   computed LeastSquares
+                 \param lsqf computed LeastSquares
                  \param p    correcting parameter, possibly upgraded
                  \param used used variables flag
-                 \param kept set to false if p was upgraded
                  \return false if singular matrix or always out of bound step
                  */
                 //______________________________________________________________

@@ -22,7 +22,7 @@ namespace Yttrium
         //______________________________________________________________________
         class List
         {
-        public: static const char * const CallSign; //!< "Vector"
+        public: static const char * const CallSign; //!< "List"
         protected: explicit List() noexcept;        //!< setup
         public:    virtual ~List() noexcept;        //!< cleanup
         private:   Y_DISABLE_COPY_AND_ASSIGN(List);
@@ -104,10 +104,10 @@ Identifiable(), Collection(), Dynamic(), Sequence<T>(), Core::List(), Writable<T
         inline virtual void         popHead()                    noexcept { code.cutHead(); }
         inline virtual void         popTail()                    noexcept { code.cutTail(); }
         
-        inline Type & operator[](const size_t i) noexcept
+        inline virtual Type & operator[](const size_t i) noexcept
         { return **code.fetch(i); }
 
-        inline const Type & operator[](const size_t i) const noexcept
+        inline virtual ConstType & operator[](const size_t i) const noexcept
         { return **code.fetch(i); }
 
         //! display

@@ -37,11 +37,13 @@ namespace Yttrium
                 const ABSCISSA                one;  //!< alias
             
 
-                static ABSCISSA aabs(const ABSCISSA x);
-                
+                static ABSCISSA aabs(const ABSCISSA x); //!< abscissa Fabs
+
+                //! dot product
                 ABSCISSA        dot(const Readable<ABSCISSA> &lhs,
                                     const Readable<ABSCISSA> &rhs);
 
+                //! quadratic product
                 ABSCISSA        quad(const Matrix<ABSCISSA>   &hess,
                                      const Readable<ABSCISSA> &step,
                                      Writable<ABSCISSA>       &temp);
