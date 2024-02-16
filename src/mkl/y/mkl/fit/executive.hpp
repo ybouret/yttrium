@@ -160,8 +160,6 @@ namespace Yttrium
                     if(D2try>D2org)
                     {
                         Y_MKL_FIT("Bad!");
-                        std::cerr << "sigma=" << sigma << std::endl;
-                        exit(0);
                         Y_MKL_FIT_DEGRADE();
                         goto BUILD_STEP;
                     }
