@@ -25,6 +25,7 @@ namespace Yttrium
 #define Y_MKL_FIT_DEGRADE() do {            \
 /**/ if(++p>pmax) { p=pmax; return false; } \
 } while(false)
+            
 
             //__________________________________________________________________
             //

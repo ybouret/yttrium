@@ -107,17 +107,17 @@ namespace Yttrium
         // Interface
         //
         //______________________________________________________________________
-        inline virtual const char * callSign()             const noexcept { return CallSign;  } //!< "Snake"
-        inline virtual size_t       size()                 const noexcept { return list.size; } //!< current body size
+        inline virtual const char * callSign()             const noexcept { return CallSign;  }             //!< "Snake"
+        inline virtual size_t       size()                 const noexcept { return list.size; }             //!< current body size
         inline virtual size_t       capacity()             const noexcept { return list.size + pool.size; } //!< maximal length
         inline virtual size_t       available()            const noexcept { return pool.size; }             //!< available length
-        inline virtual void         free()                       noexcept { empty();   } //!< free body
-        inline virtual void         release()                    noexcept { erase();   } //!< max length would be zero!!
-        inline virtual void         reserve(const size_t n)               { stash(n);  } //!< increase max length
-        inline virtual void         popHead()                    noexcept { cutHead(); } //!< remove head
-        inline virtual void         popTail()                    noexcept { cutTail(); } //!< remove tail
-        inline virtual void         pushTail(ParamType args)              { growTail(args); } //!< constrained growth
-        inline virtual void         pushHead(ParamType args)              { growHead(args); } //!< constrained growth
+        inline virtual void         free()                       noexcept { empty();   }                    //!< free body
+        inline virtual void         release()                    noexcept { erase();   }                    //!< max length would be zero!!
+        inline virtual void         reserve(const size_t n)               { stash(n);  }                    //!< increase max length
+        inline virtual void         popHead()                    noexcept { cutHead(); }                    //!< remove head
+        inline virtual void         popTail()                    noexcept { cutTail(); }                    //!< remove tail
+        inline virtual void         pushTail(ParamType args)              { growTail(args); }               //!< constrained growth
+        inline virtual void         pushHead(ParamType args)              { growHead(args); }               //!< constrained growth
 
         //! access, slow
         inline virtual Type & operator[](const size_t i) noexcept
@@ -132,7 +132,20 @@ namespace Yttrium
         {
             return os << self.list;
         }
-        
+
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+
+        //! empty and append args
+        inline Snake & initWith(ParamType args)
+        {
+            empty(); growTail(args); return *this;
+        }
+
         //__________________________________________________________________
         //
         //

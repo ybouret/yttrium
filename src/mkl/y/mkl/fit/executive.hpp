@@ -82,10 +82,6 @@ namespace Yttrium
                          GRADIENT           &G)
                 {
 
-                    static const ABSCISSA zero = 0;
-                    static const ABSCISSA one  = 1;
-
-                    static const ABSCISSA tol = Numeric<ABSCISSA>::SQRT_EPSILON;
                     assert( aorg.size() == used.size() ) ;
                     assert( aorg.size() == adom.size() );
                     assert( adom.contains(aorg) );
@@ -94,7 +90,6 @@ namespace Yttrium
                     //
                     // top level initialization
                     //__________________________________________________________
-                    ABSCISSA                   Dorg = D2(F,S,aorg,used,G); // full metrics
                     Writable<ABSCISSA>       & atry = solv->atry;          // alias
                     const Readable<ABSCISSA> & beta = mine->beta;          // alias
                     const Readable<ABSCISSA> & step = solv->step;          // alias
@@ -102,22 +97,29 @@ namespace Yttrium
                     const int                  pmin = solv->pmin;          // alias
                     const int                  pmax = solv->pmax;          // alias
                     const size_t               nvar = aorg.size();         // num variables
-                    int                 p    = -4;                         // initial guess TODO
-                    solv->prepare(nvar);                                   // workspace
+                    int                        p    = -4;                  // initial guess TODO
+                    D2Call<FUNCTION,SAMPLE>    H    = { nvar, aorg, atry, atmp, F,S, *this };
 
-                    D2Call<FUNCTION,SAMPLE> H = { nvar, aorg, atry, atmp, F,S, *this };
+                    //__________________________________________________________
+                    //
+                    // top level memory
+                    //__________________________________________________________
+                    solv->prepare(nvar); // workspace
+
 
                     Libc::OutputFile fp("D2.dat");
+                    ABSCISSA      D2org = D2(F,S,aorg,used,G); // full metrics
+                    mine->bode.initWith(D2org);
 
                     unsigned long cycle = 0;
                 CYCLE:
                     const int p0 = p;
                     ++cycle;
                     Y_MKL_FIT("-------- cycle = " << cycle << " --------");
-                    Y_MKL_FIT("Dorg  = " << Dorg << "# @" << aorg << ", p=" << p);
+                    Y_MKL_FIT("D2org = " << D2org << "# @" << aorg << ", p=" << p);
                     Y_MKL_FIT("beta  = " << beta);
 
-                    fp("%lu %.15g\n", cycle, double(Dorg) ).flush();
+                    fp("%lu %.15g\n", cycle, double(D2org) ).flush();
 
                     //----------------------------------------------------------
                     //
@@ -137,8 +139,8 @@ namespace Yttrium
                     //
                     //----------------------------------------------------------
 
-                    const ABSCISSA Dtry = D2(F,S,atry);
-                    Y_MKL_FIT("Dtry  = " << Dtry << "# @" << atry << ", p=" << p);
+                    const ABSCISSA D2try = D2(F,S,atry);
+                    Y_MKL_FIT("D2try = " << D2try << "# @" << atry << ", p=" << p);
 
                     const ABSCISSA sigma = mine->dot(beta,step);
                     Y_MKL_FIT("sigma = " << sigma);
@@ -151,11 +153,11 @@ namespace Yttrium
                         for(size_t i=0;i<=nn;++i)
                         {
                             const ABSCISSA u = ABSCISSA(i) / ABSCISSA(nn);
-                            d2("%.15g %.15g %.15g\n", double(u), double(H(u)), double(Dorg-sigma*u));
+                            d2("%.15g %.15g %.15g\n", double(u), double(H(u)), double(D2org-sigma*u));
                         }
                     }
 
-                    if(Dtry>Dorg)
+                    if(D2try>D2org)
                     {
                         Y_MKL_FIT("Bad!");
                         std::cerr << "sigma=" << sigma << std::endl;
@@ -170,22 +172,12 @@ namespace Yttrium
                     {
                         Y_MKL_FIT("-- upgrade parameter");
                         if(--p<=pmin) p = pmin;
-                        assert(Dtry<=Dorg);
-                        const ABSCISSA del = Dorg-Dtry;
-                        const ABSCISSA sum = Dorg+Dtry;
-                        const ABSCISSA lim = sum * tol;
-                        std::cerr << "delta=" << del << " / limit=" << lim << std::endl;
-                        for(size_t i=1;i<=nvar;++i)
-                        {
-                            if(!used[i]) continue;
-                            std::cerr << "aorg[" << i << "]=" << aorg[i] << " + " << (atry[i]-aorg[i]) << std::endl;
-                        }
-
-
                     }
 
+                    mine->bode >> D2try;
+                    std::cerr << "bode=" << mine->bode << std::endl;
                     Tao::Load(aorg,atry);
-                    Dorg = D2(F,S,aorg,used,G);
+                    D2org = D2(F,S,aorg,used,G);
 
 
                     //----------------------------------------------------------
