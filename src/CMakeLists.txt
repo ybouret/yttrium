@@ -87,6 +87,7 @@ add_subdirectory(json)
 add_subdirectory(mkl)
 add_subdirectory(lua++)
 add_subdirectory(chem)
+add_subdirectory(mpi)
 add_subdirectory(fltk)
 
 ################################################################################
