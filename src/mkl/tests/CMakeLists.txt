@@ -63,6 +63,5 @@ add_test(eigen:diag     test-mkl eigen_diag)
 
 
 add_test(fit:samples    test-mkl fit_samples)
-add_test(fit:zbode      test-mkl fit_zbode)
 
 

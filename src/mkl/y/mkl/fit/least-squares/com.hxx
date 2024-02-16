@@ -13,7 +13,6 @@ namespace Yttrium
             xlst(),
             beta(),
             curv(),
-            bode(3),
             npts(0),
             zero(0),
             half(0.5),

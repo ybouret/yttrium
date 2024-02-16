@@ -94,7 +94,6 @@ namespace Yttrium
                     const Readable<ABSCISSA> & beta = mine->beta;          // alias
                     const Readable<ABSCISSA> & step = solv->step;          // alias
                     Writable<ABSCISSA>       & atmp = solv->atmp;          // alias
-                    ZeroBode<ABSCISSA>       & bode = mine->bode;          // alias
                     const int                  pmin = solv->pmin;          // alias
                     const int                  pmax = solv->pmax;          // alias
                     const size_t               nvar = aorg.size();         // num variables
@@ -110,15 +109,13 @@ namespace Yttrium
                     Libc::OutputFile fp("D2.dat");
                     ABSCISSA      D2org = D2(F,S,aorg,used,G); // full metrics
                     unsigned long cycle = 0;
-                    bode.initWith(D2org);   assert(1==bode.size());
                 CYCLE:
                     const int p0 = p;
                     ++cycle;
                     Y_MKL_FIT("-------- cycle = " << cycle << " --------");
                     Y_MKL_FIT("D2org = " << D2org << "# @" << aorg << ", p=" << p);
                     Y_MKL_FIT("beta  = " << beta);
-                    Y_MKL_FIT("bode  = " << bode);
-
+                    
                     fp("%lu %.15g\n", cycle, double(D2org) ).flush();
 
                     //----------------------------------------------------------
@@ -167,12 +164,7 @@ namespace Yttrium
                     }
 
                     Y_MKL_FIT("-- accepted!");
-                    {
-                        const String fn = Formatted::Get("bode-%lu.dat",cycle);
-                        bode.save(fn);
-                    }
-                    const ABSCISSA D2est = bode.inferred();
-                    std::cerr << "D2try = " << D2try << " / estimated=" << D2est << std::endl;
+
                     const bool     kept  = (p==p0);
                     if(kept)
                     {
@@ -180,8 +172,7 @@ namespace Yttrium
                         if(--p<=pmin) p = pmin;
                     }
 
-                    bode >> D2try;
-
+                    
 
 
                     Tao::Load(aorg,atry);
