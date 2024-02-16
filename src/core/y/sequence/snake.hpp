@@ -146,6 +146,13 @@ namespace Yttrium
             empty(); growTail(args); return *this;
         }
 
+        //! reverse content
+        Snake & reverse() noexcept
+        {
+            list.reverse();
+            return *this;
+        }
+
         //__________________________________________________________________
         //
         //

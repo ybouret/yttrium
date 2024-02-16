@@ -105,11 +105,10 @@ namespace Yttrium
                     // top level memory
                     //__________________________________________________________
                     solv->prepare(nvar); // workspace
-
+                    mine->bode.free();
 
                     Libc::OutputFile fp("D2.dat");
                     ABSCISSA      D2org = D2(F,S,aorg,used,G); // full metrics
-                    mine->bode.initWith(D2org);
 
                     unsigned long cycle = 0;
                 CYCLE:
@@ -174,8 +173,6 @@ namespace Yttrium
                         if(--p<=pmin) p = pmin;
                     }
 
-                    mine->bode >> D2try;
-                    std::cerr << "bode=" << mine->bode << std::endl;
                     Tao::Load(aorg,atry);
                     D2org = D2(F,S,aorg,used,G);
 

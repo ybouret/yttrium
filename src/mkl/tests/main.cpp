@@ -1,7 +1,7 @@
 #include "y/utest/driver.hpp"
 #include "y/config/compiler.h"
 
-Y_UTEST_DECL(32)
+Y_UTEST_DECL(64)
 {
     Y_UTEST(triplet);    
     Y_UTEST(interval);
@@ -48,7 +48,10 @@ Y_UTEST_DECL(32)
     Y_UTEST(eigen_diag);
 
     Y_UTEST(stats_descr);
+   
     Y_UTEST(fit_samples);
+    Y_UTEST(fit_zbode);
+
 }
 Y_UTEST_EXEC()
 
