@@ -41,14 +41,7 @@ namespace Yttrium
                 return xadd.sum();
             }
 
-            template <>
-            real_t LeastSquaresCom<real_t>:: quad(const Matrix<real_t>   &hess,
-                                                  const Readable<real_t> &step,
-                                                  Writable<real_t>       &temp)
-            {
-                Tao::Mul(temp, hess, step, xlst);
-                return dot(step,temp);
-            }
+            
 
         }
 

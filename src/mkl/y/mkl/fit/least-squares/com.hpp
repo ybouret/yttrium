@@ -18,6 +18,14 @@ namespace Yttrium
 
         namespace Fit
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Common part for LeastSquares, acting only on ABSCISSA
+            //
+            //
+            //__________________________________________________________________
 
             template <typename ABSCISSA>
             class LeastSquaresCom : public Oversized
@@ -43,10 +51,7 @@ namespace Yttrium
                 ABSCISSA        dot(const Readable<ABSCISSA> &lhs,
                                     const Readable<ABSCISSA> &rhs);
 
-                //! quadratic product
-                ABSCISSA        quad(const Matrix<ABSCISSA>   &hess,
-                                     const Readable<ABSCISSA> &step,
-                                     Writable<ABSCISSA>       &temp);
+                
 
                 virtual ~LeastSquaresCom() noexcept;
             protected:

@@ -68,9 +68,12 @@ namespace Yttrium
                 //
                 //! compute constrained, approximated step
                 /**
-                 \param lsqf computed LeastSquares
-                 \param p    correcting parameter, possibly upgraded
-                 \param used used variables flag
+                 \param lsqf    computed LeastSquares
+                 \param aorg    fit parameters
+                 \param adom    domains of definition
+                 \param p       correcting parameter, possibly upgraded
+                 \param used    used parameters
+                 \param verbose verbosity
                  \return false if singular matrix or always out of bound step
                  */
                 //______________________________________________________________

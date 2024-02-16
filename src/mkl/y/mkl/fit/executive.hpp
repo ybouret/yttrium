@@ -141,11 +141,8 @@ namespace Yttrium
                     Y_MKL_FIT("Dtry  = " << Dtry << "# @" << atry << ", p=" << p);
 
                     const ABSCISSA sigma = mine->dot(beta,step);
-                    const ABSCISSA gamma = mine->quad(solv->hess,step,solv->atmp);
                     Y_MKL_FIT("sigma = " << sigma);
-                    Y_MKL_FIT("gamma = " << gamma);
-                    //const ABSCISSA gamma = Dtry-Dorg+sigma;
-
+                    
 
                     {
                         const String     fn = Formatted::Get("d2-%lu.dat",cycle);
