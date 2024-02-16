@@ -12,6 +12,7 @@
 #include "y/data/pool.hpp"
 #include "y/object.hpp"
 #include "y/memory/out-of-reach.hpp"
+#include "y/container/iterator/linked.hpp"
 
 namespace Yttrium
 {
@@ -132,6 +133,27 @@ namespace Yttrium
             return os << self.list;
         }
         
+        //__________________________________________________________________
+        //
+        //
+        // Iterators
+        //
+        //__________________________________________________________________
+        typedef Iterating::Linked<Type,Node,Iterating::Forward>            Iterator;      //!< alias
+        typedef Iterating::Linked<ConstType,const Node,Iterating::Forward> ConstIterator; //!< alias
+        inline  Iterator      begin()       noexcept { return Iterator(list.head);      }               //!< begin
+        inline  Iterator      end()         noexcept { return Iterator(0);               }               //!< end
+        inline  ConstIterator begin() const noexcept { return ConstIterator(list.head); }               //!< begin, const
+        inline  ConstIterator end()   const noexcept { return ConstIterator(0);          }               //!< end, const
+
+        typedef Iterating::Linked<Type,Node,Iterating::Reverse>            ReverseIterator;      //!< alias
+        typedef Iterating::Linked<ConstType,const Node,Iterating::Reverse> ConstReverseIterator; //!< alias
+        inline  ReverseIterator      rbegin()       noexcept { return ReverseIterator(list.tail);      }       //!< rbegin
+        inline  ReverseIterator      rend()         noexcept { return ReverseIterator(0);               }       //!< rend
+        inline  ConstReverseIterator rbegin() const noexcept { return ConstReverseIterator(list.tail); }       //!< rbegin, const
+        inline  ConstReverseIterator rend()   const noexcept { return ConstReverseIterator(0);          }       //!< rend, const
+
+
     private:
         Y_DISABLE_ASSIGN(Snake);
         List list;
