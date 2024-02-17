@@ -34,7 +34,8 @@ set( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
 set( DATA ${HERE}/../../../var)
 
 add_library(dso MODULE dso.cpp)
-add_custom_target(TARGET dso POST_BUILD
+
+add_custom_command(TARGET dso POST_BUILD
 COMMAND test-core rtld_dll $<TARGET_FILE:dso>
 DEPENDS test-core 
 COMMENT "[yttrium] RTLD"
