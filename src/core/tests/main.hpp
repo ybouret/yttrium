@@ -47,6 +47,15 @@ namespace Yttrium
     };
 
     template <>
+    struct Bring<uint8_t>
+    {
+        static inline uint8_t Get(Random::Bits &ran) noexcept
+        {
+            return ran.to<uint8_t>(unsigned(ran.leq(8)));
+        }
+    };
+
+    template <>
     struct Bring<uint16_t>
     {
         static inline uint16_t Get(Random::Bits &ran) noexcept

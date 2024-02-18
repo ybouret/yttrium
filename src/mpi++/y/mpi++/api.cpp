@@ -1,37 +1,6 @@
 #include "y/mpi++/api.hpp"
 
 
-namespace Yttrium
-{
-    MPI::Monitor:: Monitor() noexcept : bytes(0), ticks(0)
-    {
-    }
-
-    MPI::Monitor:: ~Monitor() noexcept
-    {
-        reset();
-    }
-
-    void MPI::Monitor:: reset() noexcept
-    {
-        Coerce(bytes)=0;
-        Coerce(ticks)=0;
-    }
-
-    void MPI:: Monitor:: record(const uint64_t n, const uint64_t t) noexcept
-    {
-        Coerce(bytes) += n;
-        Coerce(ticks) += t;
-    }
-
-}
-
-namespace Yttrium
-{
-    /**/ MPI:: Traffic::  Traffic() noexcept : send(), recv() {}
-    /**/ MPI:: Traffic:: ~Traffic() noexcept {}
-    void MPI:: Traffic::  reset()   noexcept { send.reset(); recv.reset(); }
-}
 
 #include "y/ptr/ark.hpp"
 #include "y/associative/suffix/set.hpp"
@@ -205,7 +174,9 @@ namespace Yttrium
     getTicks( MPI_THREAD_SINGLE == threadSupport ? WallTime::Ticks : WallTime::LockedTicks ),
     traffic(),
     processorName( processor_name() ),
-    parallel( size>1 )
+    parallel( size>1 ),
+    primary( 0 == rank ),
+    replica( 0 <  rank )
     {
         createDB();
     }

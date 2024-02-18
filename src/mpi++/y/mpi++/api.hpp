@@ -70,8 +70,12 @@ namespace Yttrium
         public:
             Monitor()    noexcept;
             ~Monitor()   noexcept;
+            Y_OSTREAM_PROTO(Monitor);
+
             void reset() noexcept;
             void record(const uint64_t n, const uint64_t t) noexcept;
+
+
             const uint64_t bytes;
             const uint64_t ticks;
         private:
@@ -109,12 +113,6 @@ namespace Yttrium
                   const size_t       destination,
                   const int          tag);
 
-        void Recv(void *             data,
-                  const size_t       count,
-                  const DataType    &datatype,
-                  const size_t       source,
-                  const int          tag);
-
         template <typename T> inline
         void Send(const T * const entry,
                   const size_t    count,
@@ -124,6 +122,14 @@ namespace Yttrium
             static const DataType &datatype = get( RTTI::Of<T>() );
             Send(entry,count,datatype,destination,tag);
         }
+
+        void Recv(void *             data,
+                  const size_t       count,
+                  const DataType    &datatype,
+                  const size_t       source,
+                  const int          tag);
+
+
 
         template <typename T> inline
         void Recv(T *          entry,
@@ -136,12 +142,15 @@ namespace Yttrium
         }
 
 
+
         // members
         const GetTicks     getTicks;
         Traffic            traffic;
         const char * const processorName;
         const bool         parallel;
-
+        const bool         primary;
+        const bool         replica;
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(MPI);
         friend class Singleton<MPI>;
