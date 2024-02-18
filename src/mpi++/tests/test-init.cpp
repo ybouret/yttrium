@@ -1,20 +1,16 @@
 
 #include "y/mpi++/api.hpp"
+#include "y/concurrent/context.hpp"
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;
 
 Y_UTEST(init)
 {
-    std::cerr << MPI_MAX_ERROR_STRING << std::endl;
 
-
-    MPI_Init(&argc, &argv);
-
-    MPI::Exception excp(MPI_ERR_TOPOLOGY,"just for %s",program);
-    excp.display();
+    MPI & Y_MPI = MPI::Init(&argc,&argv);
     
-    MPI_Finalize();
+    std::cerr << Y_MPI.name << " @" << Y_MPI.processorName << std::endl;
 }
 Y_UDONE()
 

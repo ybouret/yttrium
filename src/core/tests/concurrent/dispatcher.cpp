@@ -38,7 +38,7 @@ public:
             s = 0.1*to<double>();
             (std::cerr << "Proc0(" << ctx.name << ") : ... " << s << std::endl).flush();
         }
-        wait(s);
+        lockedWait(s);
     }
 
     void Proc1(const Concurrent::ThreadContext &ctx,
@@ -50,7 +50,7 @@ public:
             s = 0.1*to<double>();
             (std::cerr << "Proc1(" << ctx.name << ") : " << x << " ..." << s << std::endl).flush();
         }
-        wait(s);
+        lockedWait(s);
     }
 
     void Proc2(const Concurrent::ThreadContext &ctx,
@@ -63,7 +63,7 @@ public:
             s = 0.1*to<double>();
             (std::cerr << "Proc2(" << ctx.name << ") : " << arg << " ..." << s << std::endl).flush();
         }
-        wait(s);
+        lockedWait(s);
         res = arg;
     }
 

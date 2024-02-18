@@ -27,7 +27,6 @@ namespace Yttrium
 #if defined(Y_Darwin)
     uint64_t WallTime::Ticks()
     {
-        Y_GIANT_LOCK();
         return mach_absolute_time();
     }
 
@@ -53,7 +52,6 @@ namespace Yttrium
 
     uint64_t WallTime:: Ticks()
     {
-        Y_GIANT_LOCK();
         struct timespec tp  = { 0, 0 };
         const int       err = clock_gettime( CLOCK_REALTIME, &tp );
         if(err!=0)
@@ -78,7 +76,6 @@ namespace Yttrium
 #if defined(Y_WIN)
     uint64_t WallTime::Ticks()
     {
-        Y_GIANT_LOCK();
         int64_t Q = 0;
         if (!::QueryPerformanceCounter((LARGE_INTEGER*)&Q))
         {
@@ -102,6 +99,13 @@ namespace Yttrium
 
 #endif
 
+
+    uint64_t WallTime:: LockedTicks()
+    {
+        Y_GIANT_LOCK();
+        return Ticks();
+    }
+
     WallTime:: ~WallTime() noexcept
     {
     }
@@ -120,6 +124,14 @@ namespace Yttrium
         const WallTime &self = *this;
         const uint64_t  mark = Ticks();
         while(self(Ticks()-mark)<nsec)
+            ;
+    }
+
+    void WallTime:: lockedWait(const double nsec) const
+    {
+        const WallTime &self = *this;
+        const uint64_t  mark = Ticks();
+        while(self(LockedTicks()-mark)<nsec)
             ;
     }
 
