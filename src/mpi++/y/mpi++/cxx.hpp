@@ -15,6 +15,9 @@ namespace Yttrium
     class MPIXX
     {
     public:
+        static const char * ThreadSupport(const int) noexcept;
+        const char *        threadSupportText() const noexcept;
+
         virtual ~MPIXX() noexcept;
 
     protected:
@@ -23,9 +26,12 @@ namespace Yttrium
         size_t      Comm_size() const;
         size_t      Comm_rank() const;
         const char *processor_name() const;
-        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(MPIXX);
+
+    public:
+        const int threadSupport;
+
     };
 }
 

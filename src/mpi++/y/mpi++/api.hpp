@@ -16,6 +16,7 @@ namespace Yttrium
     public:
         static const char * const      CallSign;
         static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 20;
+        typedef uint64_t               (*GetTicks)(void);
 
         class Exception : public Yttrium::Exception
         {
@@ -31,10 +32,51 @@ namespace Yttrium
             char mesg[MPI_MAX_ERROR_STRING];
         };
 
+        class Monitor
+        {
+        public:
+            Monitor()    noexcept;
+            ~Monitor()   noexcept;
+            void reset() noexcept;
+            void record(const uint64_t n, const uint64_t t) noexcept;
+            const uint64_t bytes;
+            const uint64_t ticks;
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Monitor);
+        };
+
+        class Traffic
+        {
+        public:
+            Traffic() noexcept;
+            ~Traffic() noexcept;
+
+            void reset() noexcept;
+
+            Monitor send;
+            Monitor recv;
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Traffic);
+        };
+
+
+
         // management
-        static MPI &Init(int *argc, char ***argv);
+        static MPI &Init(int *argc, char ***argv, const int thread_support);
+
+
+        void Send(const void * const data,
+                  const size_t       count,
+                  MPI_Datatype       datatype,
+                  const int          destination,
+                  const int          tag);
+
+
 
         // members
+        const GetTicks     getTicks;
+        Traffic            traffic;
         const char * const processorName;
 
     private:

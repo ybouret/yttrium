@@ -1,12 +1,33 @@
 
 #include "y/mpi++/cxx.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
+#define Y_MPIXX_SUPPORT(MODEL) case MODEL : return #MODEL
+
+    const char * MPIXX:: ThreadSupport(const int t) noexcept
+    {
+        switch(t)
+        {
+                Y_MPIXX_SUPPORT(MPI_THREAD_SINGLE);
+                Y_MPIXX_SUPPORT(MPI_THREAD_FUNNELED);
+                Y_MPIXX_SUPPORT(MPI_THREAD_SERIALIZED);
+                Y_MPIXX_SUPPORT(MPI_THREAD_MULTIPLE);
+                
+            default:
+                return Core::Unknown;
+        }
+    }
 
     MPIXX:: ~MPIXX() noexcept
     {
         MPI_Finalize();
+    }
+
+    const char *MPIXX:: threadSupportText() const noexcept
+    {
+        return ThreadSupport(threadSupport);
     }
 
 
