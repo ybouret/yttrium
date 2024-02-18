@@ -7,6 +7,8 @@
 #include "y/singleton.hpp"
 #include "y/exception.hpp"
 #include "y/concurrent/context.hpp"
+#include "y/system/rtti.hpp"
+#include "y/associative/little-endian-address.hpp"
 
 namespace Yttrium
 {
@@ -17,6 +19,7 @@ namespace Yttrium
         static const char * const      CallSign;
         static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 20;
         typedef uint64_t               (*GetTicks)(void);
+        static  const size_t           MaximumSize = static_cast<size_t>(IntegerFor<int>::Maximum);
 
         class Exception : public Yttrium::Exception
         {
@@ -30,6 +33,35 @@ namespace Yttrium
         private:
             Y_DISABLE_ASSIGN(Exception);
             char mesg[MPI_MAX_ERROR_STRING];
+        };
+
+        typedef LittleEndianKey DataKey;
+        
+        class DataType : public Object, public Counted
+        {
+        public:
+            template <typename T> inline
+            DataType(const MPI_Datatype t) :
+            Object(),
+            Counted(),
+            rtti( RTTI::Of<T>() ),
+            type( t ),
+            size( sizeof(T) ),
+            uuid( rtti )
+            {
+            }
+            
+            ~DataType() noexcept;
+
+            const DataKey & key() const  noexcept;
+
+            const RTTI               &rtti;
+            const MPI_Datatype        type;
+            const size_t              size;
+            const LittleEndianAddress uuid;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(DataType);
         };
 
         class Monitor
@@ -66,6 +98,11 @@ namespace Yttrium
         static MPI &Init(int *argc, char ***argv, const int thread_support);
 
 
+        // methods
+        const DataType & get(const std::type_info &) const;
+
+
+        // Point to point
         void Send(const void * const data,
                   const size_t       count,
                   MPI_Datatype       datatype,

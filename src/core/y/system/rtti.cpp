@@ -1,6 +1,5 @@
 #include "y/system/rtti.hpp"
 #include "y/data/list/cxx.hpp"
-#include "y/associative/little-endian-address.hpp"
 #include "y/singleton.hpp"
 #include "y/system/exception.hpp"
 
@@ -54,8 +53,7 @@ namespace Yttrium
             aliases.pushTail( new Alias(id) );
         }
 
-        Alias::List aliases;
-
+        Alias::List               aliases;
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Code);
@@ -64,6 +62,7 @@ namespace Yttrium
     RTTI::RTTI(const String &tid) : code( new Code(tid) )
     {
     }
+
 
     RTTI:: ~RTTI() noexcept
     {
@@ -263,7 +262,7 @@ update(typeid(NAME),#NAME);     \
 
     RTTIdb:: RTTIdb() : Singleton<RTTIdb>(), db()
     {
-#if 0
+#if 1
         Y_RTTI(char);
         Y_RTTI(short);
         Y_RTTI(int);

@@ -68,7 +68,7 @@ namespace Yttrium
         bool           owns(const String &) const noexcept; //!< check within aliases
         void           aka(const String &);                 //!< NEW alias
         void           rem() noexcept;                      //!< remove last
-
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(RTTI);
         class Code;

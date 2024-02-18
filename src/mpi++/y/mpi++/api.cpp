@@ -31,8 +31,39 @@ namespace Yttrium
     /**/ MPI:: Traffic::  Traffic() noexcept : send(), recv() {}
     /**/ MPI:: Traffic:: ~Traffic() noexcept {}
     void MPI:: Traffic::  reset()   noexcept { send.reset(); recv.reset(); }
+}
 
-    
+#include "y/ptr/ark.hpp"
+#include "y/associative/suffix/set.hpp"
+
+namespace Yttrium
+{
+    MPI:: DataType:: ~DataType() noexcept {}
+    const MPI:: DataKey & MPI:: DataType::key() const noexcept { return uuid; }
+
+    namespace
+    {
+
+        typedef ArkPtr<MPI::DataKey,MPI::DataType>  DataTypePtr;
+        typedef SuffixSet<MPI::DataKey,DataTypePtr> DataTypeSet;
+
+        class DataTypeDB : public DataTypeSet
+        {
+        public:
+            explicit DataTypeDB() : DataTypeSet() {}
+            virtual ~DataTypeDB() noexcept {}
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(DataTypeDB);
+        };
+
+        static void *DataTypeWksp[ Y_WORDS_FOR(DataTypeDB) ] = { 0 };
+        static inline DataTypeDB & GetDataTypeDB() noexcept
+        {
+            return *static_cast<DataTypeDB *>( Memory::OutOfReach::Addr(DataTypeWksp) );
+        }
+
+    }
 
 }
 
@@ -64,7 +95,10 @@ namespace Yttrium
 
     const char * const MPI::CallSign = "MPI";
 
-    MPI:: ~MPI() noexcept {}
+    MPI:: ~MPI() noexcept 
+    {
+        Memory::OutOfReach::Naught( & GetDataTypeDB() );
+    }
 
     MPI:: MPI() :  
     Singleton<MPI>(),
@@ -74,7 +108,7 @@ namespace Yttrium
     traffic(),
     processorName( processor_name() )
     {
-
+        new ( &GetDataTypeDB() ) DataTypeDB();
     }
 
 
