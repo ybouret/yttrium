@@ -1,6 +1,4 @@
-
 #include "y/mpi++/api.hpp"
-#include "y/concurrent/context.hpp"
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;
@@ -12,10 +10,7 @@ Y_UTEST(init)
     
     std::cerr << Y_MPI.name << " @" << Y_MPI.processorName << std::endl;
 
-    if(0==Y_MPI.rank)
-    {
-        Y_SIZEOF(MPI::DataType);
-    }
+    
 }
 Y_UDONE()
 

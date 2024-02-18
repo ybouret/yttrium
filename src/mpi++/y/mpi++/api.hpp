@@ -20,6 +20,7 @@ namespace Yttrium
         static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 20;
         typedef uint64_t               (*GetTicks)(void);
         static  const size_t           MaximumSize = static_cast<size_t>(IntegerFor<int>::Maximum);
+        static  const int              DefaultTag  = 0x07;
 
         class Exception : public Yttrium::Exception
         {
@@ -41,7 +42,7 @@ namespace Yttrium
         {
         public:
             template <typename T> inline
-            DataType(const MPI_Datatype t) :
+            DataType( const Type2Type<T>, const MPI_Datatype t) :
             Object(),
             Counted(),
             rtti( RTTI::Of<T>() ),
@@ -99,22 +100,47 @@ namespace Yttrium
 
 
         // methods
-        const DataType & get(const std::type_info &) const;
-
+        const DataType & get(const RTTI &) const;
 
         // Point to point
         void Send(const void * const data,
                   const size_t       count,
-                  MPI_Datatype       datatype,
-                  const int          destination,
+                  const DataType    &datatype,
+                  const size_t       destination,
                   const int          tag);
 
+        void Recv(void *             data,
+                  const size_t       count,
+                  const DataType    &datatype,
+                  const size_t       source,
+                  const int          tag);
+
+        template <typename T> inline
+        void Send(const T * const entry,
+                  const size_t    count,
+                  const size_t    destination,
+                  const int       tag = DefaultTag)
+        {
+            static const DataType &datatype = get( RTTI::Of<T>() );
+            Send(entry,count,datatype,destination,tag);
+        }
+
+        template <typename T> inline
+        void Recv(T *          entry,
+                  const size_t count,
+                  const size_t source,
+                  const int    tag = DefaultTag)
+        {
+            static const DataType &datatype = get( RTTI::Of<T>() );
+            Recv(entry,count,datatype,source,tag);
+        }
 
 
         // members
         const GetTicks     getTicks;
         Traffic            traffic;
         const char * const processorName;
+        const bool         parallel;
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(MPI);
