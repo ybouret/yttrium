@@ -36,7 +36,7 @@ namespace Yttrium
         typedef uint64_t               (*GetTicks)(void);
         static  const size_t           MaximumSize = static_cast<size_t>(IntegerFor<int>::Maximum);
         static  const int              DefaultTag  = 0x07;
-        typedef OutputBuffer<9>        IO64;
+        typedef OutputBuffer<9>        SizeExchanger;
 
         class Exception : public Yttrium::Exception
         {
@@ -103,6 +103,7 @@ namespace Yttrium
         public:
             Traffic() noexcept;
             ~Traffic() noexcept;
+            Y_OSTREAM_PROTO(Traffic);
 
             void reset() noexcept;
 
@@ -139,6 +140,12 @@ namespace Yttrium
             Send(entry,count,datatype,destination,tag);
         }
 
+        void SendSize(const size_t sz,
+                      const size_t destination,
+                      const int    tag = DefaultTag);
+
+
+
         template <typename T>
         struct SendOne
         {
@@ -156,7 +163,8 @@ namespace Yttrium
                   const size_t       source,
                   const int          tag);
 
-
+        size_t RecvSize(const size_t source,
+                        const int    tag = DefaultTag);
 
         template <typename T> inline
         void Recv(T *          entry,
@@ -170,7 +178,10 @@ namespace Yttrium
 
 
 
+
+
         // members
+        SizeExchanger      sizeIO;
         const GetTicks     getTicks;
         Traffic            traffic;
         const char * const processorName;

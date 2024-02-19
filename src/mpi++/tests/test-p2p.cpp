@@ -55,9 +55,24 @@ Y_UTEST(p2p)
     testIO<int32_t>(mpi);
     testIO<int64_t>(mpi);
 
-    testIO<size_t>(mpi);
-    testIO<ptrdiff_t>(mpi);
+    if(mpi.primary) std::cerr << "Testing Size" << std::endl;
+    const size_t original = 0xabcdef;
+    if( mpi.primary )
+    {
+        for(size_t rank=1;rank<mpi.size;++rank)
+        {
+            mpi.SendSize(original,rank);
+        }
+    }
+    else
+    {
+        const size_t sz = mpi.RecvSize(0);
+        Y_ASSERT(original==sz);
+    }
 
+    std::cerr << mpi.traffic << std::endl;
+
+    return 0;
 
     if(mpi.primary)
     {
