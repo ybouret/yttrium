@@ -4,7 +4,7 @@
 
 namespace Yttrium
 {
-    void MPI::Send(const void *const data,
+    void MPI::send(const void *const data,
                    const size_t      count,
                    const DataType &  datatype,
                    const size_t      destination,
@@ -18,7 +18,7 @@ namespace Yttrium
     }
 
 
-    void MPI:: SendSize(const size_t sz,
+    void MPI:: sendSize(const size_t sz,
                         const size_t destination,
                         const int    tag)
     {
@@ -37,7 +37,7 @@ namespace Yttrium
 
     }
 
-    void  MPI::Recv(void *             data,
+    void  MPI::recv(void *             data,
                     const size_t       count,
                     const DataType    &datatype,
                     const size_t       source,
@@ -51,7 +51,7 @@ namespace Yttrium
         traffic.recv.record(count*datatype.size,getTicks()-mark);
     }
 
-    size_t MPI:: RecvSize(const size_t source,
+    size_t MPI:: recvSize(const size_t source,
                           const int    tag)
     {
         sizeIO.erase();
@@ -72,8 +72,16 @@ namespace Yttrium
 
         InputDataStream fp(sizeIO);
         return IO::Pack64::Read(fp, "RecvSize");
-
     }
+
+    const uint8_t MPI::SYN;
+
+
+    
+
+
+
+
 }
 
 

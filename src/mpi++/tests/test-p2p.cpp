@@ -7,9 +7,7 @@ using namespace Yttrium;
 
 namespace Yttrium
 {
-    void MPI::SendOne<String>::With(MPI & , const String & , const size_t  , const int  )
-    {
-    }
+    
 }
 
 template <typename T>
@@ -24,12 +22,12 @@ static inline void testIO( MPI &mpi )
         Random::Fill::Block( &arr[1], arr.size() * sizeof(T), ran, 0x01, 0xff);
         for(size_t rank=1;rank<mpi.size;++rank)
         {
-            mpi.Send(&arr[1],count,rank);
+            mpi.send(&arr[1],count,rank);
         }
     }
     else
     {
-        mpi.Recv(&arr[1],count,0);
+        mpi.recv(&arr[1],count,0);
     }
 }
 
@@ -61,27 +59,16 @@ Y_UTEST(p2p)
     {
         for(size_t rank=1;rank<mpi.size;++rank)
         {
-            mpi.SendSize(original,rank);
+            mpi.sendSize(original,rank);
         }
     }
     else
     {
-        const size_t sz = mpi.RecvSize(0);
+        const size_t sz = mpi.recvSize(0);
         Y_ASSERT(original==sz);
     }
 
-    std::cerr << mpi.traffic << std::endl;
-
-    return 0;
-
-    if(mpi.primary)
-    {
-        const String s = "hello";
-        for(size_t rank=1;rank<mpi.size;++rank)
-        {
-            MPI::SendOne<String>::With(mpi,s,rank);
-        }
-    }
+    
 
 }
 Y_UDONE()

@@ -13,7 +13,7 @@
 
 namespace Yttrium
 {
-    
+
     //__________________________________________________________________________
     //
     //
@@ -37,6 +37,7 @@ namespace Yttrium
         static  const size_t           MaximumSize = static_cast<size_t>(IntegerFor<int>::Maximum);
         static  const int              DefaultTag  = 0x07;
         typedef OutputBuffer<9>        SizeExchanger;
+        static  const uint8_t          SYN = 0x01;
 
         class Exception : public Yttrium::Exception
         {
@@ -53,7 +54,7 @@ namespace Yttrium
         };
 
         typedef LittleEndianKey DataKey;
-        
+
         class DataType : public Object, public Counted
         {
         public:
@@ -67,7 +68,7 @@ namespace Yttrium
             uuid( rtti )
             {
             }
-            
+
             ~DataType() noexcept;
 
             const DataKey & key() const  noexcept;
@@ -109,7 +110,7 @@ namespace Yttrium
 
             Monitor send;
             Monitor recv;
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Traffic);
         };
@@ -124,61 +125,51 @@ namespace Yttrium
         const DataType & get(const RTTI &) const;
 
         // Point to point
-        void Send(const void * const data,
+        void send(const void * const data,
                   const size_t       count,
                   const DataType    &datatype,
                   const size_t       destination,
                   const int          tag);
 
         template <typename T> inline
-        void Send(const T * const entry,
+        void send(const T * const entry,
                   const size_t    count,
                   const size_t    destination,
                   const int       tag = DefaultTag)
         {
             static const DataType &datatype = get( RTTI::Of<T>() );
-            Send(entry,count,datatype,destination,tag);
+            send(entry,count,datatype,destination,tag);
         }
 
-        void SendSize(const size_t sz,
+        void sendSize(const size_t sz,
                       const size_t destination,
                       const int    tag = DefaultTag);
 
 
-
-        template <typename T>
-        struct SendOne
-        {
-            static inline void With(MPI &mpi, const T &obj, const size_t destination, const int tag = DefaultTag) {
-                mpi.Send(&obj,1,destination,tag);
-            }
-        };
-        
-
-
-
-        void Recv(void *             data,
+        void recv(void *             data,
                   const size_t       count,
                   const DataType    &datatype,
                   const size_t       source,
                   const int          tag);
 
-        size_t RecvSize(const size_t source,
+        size_t recvSize(const size_t source,
                         const int    tag = DefaultTag);
 
         template <typename T> inline
-        void Recv(T *          entry,
+        void recv(T *          entry,
                   const size_t count,
                   const size_t source,
                   const int    tag = DefaultTag)
         {
             static const DataType &datatype = get( RTTI::Of<T>() );
-            Recv(entry,count,datatype,source,tag);
+            recv(entry,count,datatype,source,tag);
         }
 
-
-
-
+        void primarySyn()
+        {
+            assert(primary);
+            for(size_t i=1;i<size;++i) send(&SYN,1,rank);
+        }
 
         // members
         SizeExchanger      sizeIO;
@@ -188,7 +179,7 @@ namespace Yttrium
         const bool         parallel;
         const bool         primary;
         const bool         replica;
-        
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(MPI);
         friend class Singleton<MPI>;
@@ -204,11 +195,8 @@ namespace Yttrium
 /**/ } while(false)
 
 
-    template <>
-    struct  MPI:: SendOne<String>
-    {
-        static void With(MPI &mpi, const String &obj, const size_t destination, const int tag = DefaultTag);
-    };
+
+
 
 }
 
