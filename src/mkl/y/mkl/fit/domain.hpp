@@ -15,16 +15,35 @@ namespace Yttrium
 
         namespace Fit
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Intervals of admissible ABSCISSA
+            //
+            //
+            //__________________________________________________________________
             template <typename ABSCISSA>
             class Domain : public Intervals<ABSCISSA,MemoryModel>
             {
             public:
-                typedef Intervals<ABSCISSA,MemoryModel> IntervalsType;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef Intervals<ABSCISSA,MemoryModel> IntervalsType; //!< alias
 
-                inline explicit Domain(const size_t dims) : IntervalsType(dims) {}
-                inline virtual ~Domain() noexcept {}
-                inline Domain(const Domain &other) : IntervalsType(other) {}
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                inline explicit Domain(const size_t dims) : IntervalsType(dims) {} //!< setup
+                inline virtual ~Domain() noexcept {}                               //!< cleanup
+                inline Domain(const Domain &other) : IntervalsType(other) {}       //!< copy
 
             private:
                 Y_DISABLE_ASSIGN(Domain);

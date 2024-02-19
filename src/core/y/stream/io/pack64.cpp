@@ -51,9 +51,6 @@ namespace Yttrium
             assert(bits==dataBits%8);
             if(bits)
                 emit(code,bits);
-
-            //std::cerr << "qw:" << Hexadecimal(word) << " [ "; for(size_t i=0;i<size;++i) std::cerr << ' ' << Hexadecimal(data[i]);
-            //std::cerr << " ] #" << size << " / " << ByteCount::For(word) <<  std::endl;
         }
 
         void Pack64:: emit(uint8_t &code, unsigned &bits) noexcept

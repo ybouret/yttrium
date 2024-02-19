@@ -123,6 +123,17 @@ namespace Yttrium
             Send(entry,count,datatype,destination,tag);
         }
 
+        template <typename T>
+        struct SendOne
+        {
+            static inline void With(MPI &mpi, const T &obj, const size_t destination, const int tag = DefaultTag) {
+                mpi.Send(&obj,1,destination,tag);
+            }
+        };
+        
+
+
+
         void Recv(void *             data,
                   const size_t       count,
                   const DataType    &datatype,
@@ -158,11 +169,19 @@ namespace Yttrium
         virtual ~MPI() noexcept;
     };
 
+
 #define Y_MPI_CALL(PROCEDURE) do {                      \
 /**/    const int res = (PROCEDURE);                    \
 /**/    if(MPI_SUCCESS!=res)                            \
 /**/         throw MPI::Exception(res,"%s",#PROCEDURE); \
 /**/ } while(false)
+
+
+    template <>
+    struct  MPI:: SendOne<String>
+    {
+        static void With(MPI &mpi, const String &obj, const size_t destination, const int tag = DefaultTag);
+    };
 
 }
 
