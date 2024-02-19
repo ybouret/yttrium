@@ -56,16 +56,16 @@ namespace Yttrium
                 //______________________________________________________________
             protected:
                 void returnTo(Allocator &allocator) noexcept; //!< return memory and cleanup
-                static void *Shift(void *addr, const size_t blockSize) noexcept;
 
                 template <typename T> static inline
                 T *Cxx(T *base) noexcept {
-                    return static_cast<T*>(Shift(base,sizeof(T)));
+                    return static_cast<T*>(ShiftDown(base,sizeof(T)));
                 }
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Wad);
+                static void *ShiftDown(void *addr, const size_t blockSize) noexcept;
             };
         }
 

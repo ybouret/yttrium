@@ -34,9 +34,16 @@ namespace Yttrium
         static  const int              Tag = 0x07;       //!< if needed
         typedef uint64_t             (*GetTicks)(void);  //!< getting [Locked]Ticks
         typedef OutputBuffer<9>        SizeExch;         //!< to exchange sizez
-        static const char * const      CallSign;         //!< "MPI"
-        static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 20;
-        static  const size_t           MaxCount = static_cast<size_t>(IntegerFor<int>::Maximum);
+        static  const size_t           MaxCount = static_cast<size_t>(IntegerFor<int>::Maximum); //!< size_t as int
+
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        static const char * const      CallSign;                                 //!< "MPI"
+        static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 20; //!< lifetime
 
         //______________________________________________________________________
         //
@@ -50,6 +57,7 @@ namespace Yttrium
             explicit Exception(const int err, const char *fmt,...) noexcept Y_PRINTF_CHECK(3,4);
             virtual ~Exception() noexcept;
             Exception(const Exception &) noexcept;
+           
             virtual const char * what() const noexcept; //!< return MPI error string
 
             const int code;
@@ -58,7 +66,7 @@ namespace Yttrium
             char mesg[MPI_MAX_ERROR_STRING];
         };
 
-        
+
         typedef LittleEndianKey DataKey;
 
         //______________________________________________________________________

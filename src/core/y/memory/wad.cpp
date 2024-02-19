@@ -36,7 +36,7 @@ namespace Yttrium
                 Coerce(capacity) = 0;
             }
 
-            void *Wad:: Shift(void *addr, const size_t blockSize) noexcept
+            void *Wad:: ShiftDown(void *addr, const size_t blockSize) noexcept
             {
                 char *p = static_cast<char *>(addr);
                 p -= blockSize;
