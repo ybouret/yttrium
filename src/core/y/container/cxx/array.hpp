@@ -55,7 +55,7 @@ WadType(COUNT)
     //__________________________________________________________________________
 #define Y_CxxArray_Epilog(COUNT) \
 cdata( this->lead() ),           \
-entry( cdata-1      ),           \
+entry( this->Cxx(cdata) ),       \
 count( COUNT )
 
     //__________________________________________________________________________

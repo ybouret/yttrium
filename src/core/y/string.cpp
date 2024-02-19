@@ -11,16 +11,32 @@ namespace Yttrium
 {
     static const char fn[] = "vsnprintf";
 
+
+
+    int Formatted:: ComputeSize(const char *fmt, void *ptr) noexcept
+    {
+        assert(0!=fmt);
+        assert(0!=ptr);
+        va_list &ap = *(va_list *)ptr;
+        return vsnprintf(NULL,0,fmt,ap);
+    }
+
+    int Formatted:: WriteString(String &ans, const char * fmt, void *ptr) noexcept
+    {
+        assert(0!=fmt);
+        assert(0!=ptr);
+        va_list &ap = *(va_list *)ptr;
+        return vsnprintf( static_cast<char *>(ans.rw_addr()),ans.size()+1,fmt,ap);
+    }
+
     String Formatted:: Get(const char *fmt,...)
     {
-
         assert(fmt!=NULL);
-        Y_GIANT_LOCK();
         int res = 0;
         {
             va_list ap;
             va_start(ap,fmt);
-            res = vsnprintf(NULL,0,fmt,ap);
+            res = ComputeSize(fmt,&ap);
             va_end(ap);
             if(res<0) throw Libc::Exception(errno,"%s(...)",fn);
         }
@@ -33,7 +49,7 @@ namespace Yttrium
             String  ans(res,AsCapacity,true); assert( ans.size() == size_t(res) );
             va_list ap;
             va_start(ap,fmt);
-            const int chk = vsnprintf(&ans[1],ans.size()+1,fmt,ap);
+            const int chk = WriteString(ans,fmt,&ap);
             va_end(ap);
             if(res!=chk) throw  Specific::Exception(fn,"lengths mismatch!");
             return ans;
@@ -43,12 +59,11 @@ namespace Yttrium
     String * Formatted:: New(const char *fmt,...)
     {
         assert(fmt!=NULL);
-        Y_GIANT_LOCK();
         int res = 0;
         {
             va_list ap;
             va_start(ap,fmt);
-            res = vsnprintf(NULL,0,fmt,ap);
+            res = ComputeSize(fmt,&ap);
             va_end(ap);
             if(res<0) throw Libc::Exception(errno,"%s(...)",fn);
         }
@@ -61,7 +76,7 @@ namespace Yttrium
             AutoPtr<String> ans = new String(res,AsCapacity,true); assert( ans->size() == size_t(res) );
             va_list ap;
             va_start(ap,fmt);
-            const int chk = vsnprintf(& (*ans)[1],ans->size()+1,fmt,ap);
+            const int chk = WriteString(*ans,fmt,&ap);
             va_end(ap);
             if(res!=chk) throw  Specific::Exception(fn,"lengths mismatch!");
             return ans.yield();

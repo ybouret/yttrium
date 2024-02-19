@@ -11,7 +11,7 @@ namespace Yttrium
                    const int         tag)
     {
         assert( Good(data,count) );
-        assert(count<=MaximumSize);
+        assert(count<=MaxCount);
         const uint64_t mark = getTicks();
         Y_MPI_CALL(MPI_Send(data, static_cast<int>(count), datatype.type, int(destination), tag, MPI_COMM_WORLD));
         traffic.send.record(count*datatype.size,getTicks()-mark);
@@ -44,7 +44,7 @@ namespace Yttrium
                     const int          tag)
     {
         assert( Good(data,count) );
-        assert(count<=MaximumSize);
+        assert(count<=MaxCount);
         MPI_Status     status;
         const uint64_t mark  = getTicks();
         Y_MPI_CALL(MPI_Recv(data, static_cast<int>(count), datatype.type, int(source), tag, MPI_COMM_WORLD, &status));
@@ -78,10 +78,10 @@ namespace Yttrium
     void MPI:: SendOne<String> :: With(MPI &mpi, const String &str, const size_t dst, const int tag)
     {
         const size_t sz = str.size();
-        mpi.sendSize(sz, dst, tag);
+        mpi.sendSize(sz,dst,tag);
         if(sz>0)
         {
-            mpi.send( str.c_str(), sz, dst, tag);
+            mpi.send(str.c_str(),sz,dst,tag);
         }
     }
 
@@ -91,7 +91,7 @@ namespace Yttrium
         if(sz>0)
         {
             String res(sz,AsCapacity,true);
-            mpi.recv(&res[1], sz, src,tag);
+            mpi.recv( static_cast<char *>(res.rw_addr()),sz,src,tag);
             return res;
         }
         else

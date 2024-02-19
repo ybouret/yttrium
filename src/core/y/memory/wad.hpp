@@ -56,6 +56,13 @@ namespace Yttrium
                 //______________________________________________________________
             protected:
                 void returnTo(Allocator &allocator) noexcept; //!< return memory and cleanup
+                static void *Shift(void *addr, const size_t blockSize) noexcept;
+
+                template <typename T> static inline
+                T *Cxx(T *base) noexcept {
+                    return static_cast<T*>(Shift(base,sizeof(T)));
+                }
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Wad);
@@ -100,7 +107,7 @@ namespace Yttrium
         protected:
             //! cast workspace to mutable pointed type
             inline LeadType *lead() noexcept { return static_cast<LeadType *>(workspace); }
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Wad);
             static inline Allocator &GetAllocatorInstance() {

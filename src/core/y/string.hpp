@@ -14,6 +14,13 @@ namespace Yttrium
     //! Formatted String API
     struct Formatted
     {
+        //! string size from format and va_list address
+        static int ComputeSize(const char *fmt, void *ptr) noexcept;
+        
+        //! write into string with format and va_list address
+        static int WriteString(String &ans, const char * fmt, void *ptr) noexcept;
+
+
         //! C-style formatting
         static String  Get(const char *fmt,...) Y_PRINTF_CHECK(1,2);
 

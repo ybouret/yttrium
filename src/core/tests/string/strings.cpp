@@ -1,4 +1,4 @@
-#include "y/string/string.hpp"
+#include "y/string.hpp"
 #include "y/utest/run.hpp"
 #include "y/container/iterator/display-all.hpp"
 
@@ -61,6 +61,10 @@ Y_UTEST(strings)
         Y_CHECK(s!="World");
     }
 
+    {
+        const String ans = Formatted::Get("here: %s @%d", program, __LINE__);
+        std::cerr << ans << std::endl;
+    }
 
 
 }

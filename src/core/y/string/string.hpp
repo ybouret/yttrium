@@ -10,7 +10,7 @@
 #include "y/sequence/interface.hpp"
 #include "y/ostream-proto.hpp"
 #include "y/type/capacity.hpp"
-#include "y/memory/buffer/ro.hpp"
+#include "y/memory/buffer/rw.hpp"
 #include "y/stream/serializable.hpp"
 #include "y/type/signs.hpp"
 
@@ -28,7 +28,7 @@ namespace Yttrium
         //! base class for strings
         //
         //______________________________________________________________________
-        class StringCommon : public Object, public Counted, public Memory::ReadOnlyBuffer
+        class StringCommon : public Object, public Counted, public Memory::ReadWriteBuffer
         {
         public:
             static const size_t MinChars = 31;                       //!< minimal Chars

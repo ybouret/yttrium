@@ -31,13 +31,13 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        static const char * const      CallSign;
+        static  const int              Tag = 0x07;       //!< if needed
+        typedef uint64_t             (*GetTicks)(void);  //!< getting [Locked]Ticks
+        typedef OutputBuffer<9>        SizeExch;         //!< to exchange sizez
+        static const char * const      CallSign;         //!< "MPI"
         static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 20;
-        typedef uint64_t               (*GetTicks)(void);
-        static  const size_t           MaximumSize = static_cast<size_t>(IntegerFor<int>::Maximum);
-        static  const int              DefaultTag  = 0x07;
-        typedef OutputBuffer<9>        SizeExchanger;
-        
+        static  const size_t           MaxCount = static_cast<size_t>(IntegerFor<int>::Maximum);
+
         //______________________________________________________________________
         //
         //
@@ -160,7 +160,7 @@ namespace Yttrium
         void send(const T * const entry,
                   const size_t    count,
                   const size_t    destination,
-                  const int       tag = DefaultTag)
+                  const int       tag)
         {
             static const DataType &datatype = get( RTTI::Of<T>() );
             send(entry,count,datatype,destination,tag);
@@ -168,17 +168,16 @@ namespace Yttrium
 
         void sendSize(const size_t sz,
                       const size_t destination,
-                      const int    tag = DefaultTag);
+                      const int    tag);
 
         template <typename T>
         struct SendOne
         {
-            static inline void With(MPI &mpi, const T &obj, const size_t dst, const int tag = DefaultTag)
+            static inline void With(MPI &mpi, const T &obj, const size_t dst, const int tag)
             {
                 mpi.send(&obj,1,dst,tag);
             }
         };
-
 
 
         void recv(void *             data,
@@ -188,22 +187,22 @@ namespace Yttrium
                   const int          tag);
 
         template <typename T> inline
-        void recv(T *          entry,
+        void recv(T * const    entry,
                   const size_t count,
                   const size_t source,
-                  const int    tag = DefaultTag)
+                  const int    tag)
         {
             static const DataType &datatype = get( RTTI::Of<T>() );
             recv(entry,count,datatype,source,tag);
         }
 
         size_t recvSize(const size_t source,
-                        const int    tag = DefaultTag);
+                        const int    tag);
 
         template <typename T>
         struct RecvOne
         {
-            static inline T With(MPI &mpi, const size_t src, const int tag = DefaultTag )
+            static inline T With(MPI &mpi, const size_t src, const int tag )
             {
                 T res;
                 mpi.recv(&res, 1, src, tag);
@@ -211,11 +210,11 @@ namespace Yttrium
             }
         };
 
-
+        void print(OutputStream &, const char *fmt,...) Y_PRINTF_CHECK(3,4);
 
 
         // members
-        SizeExchanger      sizeIO;
+        SizeExch           sizeIO;
         const GetTicks     getTicks;
         Traffic            traffic;
         const char * const processorName;
@@ -232,13 +231,13 @@ namespace Yttrium
 
     template <> struct MPI:: SendOne<String>
     {
-        static void With(MPI &, const String &, const size_t, const int = DefaultTag);
+        static void With(MPI &, const String &, const size_t, const int);
     };
 
 
     template <> struct MPI:: RecvOne<String>
     {
-        static String With(MPI &, const size_t, const int = DefaultTag);
+        static String With(MPI &, const size_t, const int);
     };
 
 

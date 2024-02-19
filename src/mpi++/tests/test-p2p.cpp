@@ -22,12 +22,12 @@ static inline void testIO( MPI &mpi )
         Random::Fill::Block( &arr[1], arr.size() * sizeof(T), ran, 0x01, 0xff);
         for(size_t rank=1;rank<mpi.size;++rank)
         {
-            mpi.send(&arr[1],count,rank);
+            mpi.send(&arr[1],count,rank,MPI::Tag);
         }
     }
     else
     {
-        mpi.recv(&arr[1],count,0);
+        mpi.recv(&arr[1],count,0,MPI::Tag);
     }
 }
 
@@ -60,44 +60,48 @@ Y_UTEST(p2p)
     {
         for(size_t rank=1;rank<mpi.size;++rank)
         {
-            mpi.sendSize(original,rank);
+            mpi.sendSize(original,rank,MPI::Tag);
         }
     }
     else
     {
-        const size_t sz = mpi.recvSize(0);
+        const size_t sz = mpi.recvSize(0,MPI::Tag);
         Y_ASSERT(original==sz);
     }
 
 
     if(mpi.primary) std::cerr << "Testing [Send|Recv]One" << std::endl;
 
-    const int ival = 0xabcdef;
-    if( mpi.primary )
     {
-        for(size_t rank=1;rank<mpi.size;++rank)
+        const int ival = 0xabcdef;
+        if( mpi.primary )
         {
-            MPI::SendOne<int>::With(mpi,ival,rank);
+            for(size_t rank=1;rank<mpi.size;++rank)
+            {
+                MPI::SendOne<int>::With(mpi,ival,rank,MPI::Tag);
+            }
         }
-    }
-    else
-    {
-        const int rval = MPI::RecvOne<int>::With(mpi,0);
-        Y_ASSERT(rval==ival);
+        else
+        {
+            const int rval = MPI::RecvOne<int>::With(mpi,0,MPI::Tag);
+            Y_ASSERT(rval==ival);
+        }
     }
 
-    const String s = "Hello, World!";
-    if( mpi.primary )
     {
-        for(size_t rank=1;rank<mpi.size;++rank)
+        const String s = "Hello, World!";
+        if( mpi.primary )
         {
-            MPI::SendOne<String>::With(mpi,s,rank);
+            for(size_t rank=1;rank<mpi.size;++rank)
+            {
+                MPI::SendOne<String>::With(mpi,s,rank,MPI::Tag);
+            }
         }
-    }
-    else
-    {
-        const String r = MPI::RecvOne<String>::With(mpi,0);
-        Y_ASSERT(r==s);
+        else
+        {
+            const String r = MPI::RecvOne<String>::With(mpi,0,MPI::Tag);
+            Y_ASSERT(r==s);
+        }
     }
 
 
