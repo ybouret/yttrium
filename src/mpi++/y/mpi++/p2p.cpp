@@ -74,10 +74,32 @@ namespace Yttrium
         return IO::Pack64::Read(fp, "RecvSize");
     }
 
-    const uint8_t MPI::SYN;
-
-
     
+    void MPI:: SendOne<String> :: With(MPI &mpi, const String &str, const size_t dst, const int tag)
+    {
+        const size_t sz = str.size();
+        mpi.sendSize(sz, dst, tag);
+        if(sz>0)
+        {
+            mpi.send( str.c_str(), sz, dst, tag);
+        }
+    }
+
+    String MPI:: RecvOne<String>:: With(MPI &mpi, const size_t src, const int tag)
+    {
+        const size_t sz = mpi.recvSize(src,tag);
+        if(sz>0)
+        {
+            String res(sz,AsCapacity,true);
+            mpi.recv(&res[1], sz, src,tag);
+            return res;
+        }
+        else
+        {
+            return String();
+        }
+    }
+
 
 
 

@@ -54,6 +54,7 @@ Y_UTEST(p2p)
     testIO<int64_t>(mpi);
 
     if(mpi.primary) std::cerr << "Testing Size" << std::endl;
+   
     const size_t original = 0xabcdef;
     if( mpi.primary )
     {
@@ -68,7 +69,37 @@ Y_UTEST(p2p)
         Y_ASSERT(original==sz);
     }
 
-    
+
+    if(mpi.primary) std::cerr << "Testing [Send|Recv]One" << std::endl;
+
+    const int ival = 0xabcdef;
+    if( mpi.primary )
+    {
+        for(size_t rank=1;rank<mpi.size;++rank)
+        {
+            MPI::SendOne<int>::With(mpi,ival,rank);
+        }
+    }
+    else
+    {
+        const int rval = MPI::RecvOne<int>::With(mpi,0);
+        Y_ASSERT(rval==ival);
+    }
+
+    const String s = "Hello, World!";
+    if( mpi.primary )
+    {
+        for(size_t rank=1;rank<mpi.size;++rank)
+        {
+            MPI::SendOne<String>::With(mpi,s,rank);
+        }
+    }
+    else
+    {
+        const String r = MPI::RecvOne<String>::With(mpi,0);
+        Y_ASSERT(r==s);
+    }
+
 
 }
 Y_UDONE()
