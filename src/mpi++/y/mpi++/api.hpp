@@ -9,18 +9,34 @@
 #include "y/concurrent/context.hpp"
 #include "y/system/rtti.hpp"
 #include "y/associative/little-endian-address.hpp"
+#include "y/stream/data/output-buffer.hpp"
 
 namespace Yttrium
 {
     
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! MPI interface
+    //
+    //
+    //__________________________________________________________________________
     class MPI : public Singleton<MPI>, public  MPIXX, public Concurrent::Context
     {
     public:
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
         static const char * const      CallSign;
         static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 20;
         typedef uint64_t               (*GetTicks)(void);
         static  const size_t           MaximumSize = static_cast<size_t>(IntegerFor<int>::Maximum);
         static  const int              DefaultTag  = 0x07;
+        typedef OutputBuffer<9>        IO64;
 
         class Exception : public Yttrium::Exception
         {

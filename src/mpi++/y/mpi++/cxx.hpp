@@ -4,6 +4,7 @@
 #ifndef Y_MPIXX_INCLUDED
 #define Y_MPIXX_INCLUDED 1
 
+//! disable mpi c++
 #define OMPI_SKIP_MPICXX 1
 #include <mpi.h>
 
@@ -11,26 +12,52 @@
 
 namespace Yttrium
 {
-
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! MPI initializer
+    //
+    //
+    //__________________________________________________________________________
     class MPIXX
     {
     public:
-        static const char * ThreadSupport(const int) noexcept;
-        const char *        threadSupportText() const noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // Helpers
+        //
+        //______________________________________________________________________
+        static const char * ThreadSupport(const int) noexcept;  //!< int to human readable thread support
+        const char *        threadSupportText() const noexcept; //!< my  human readable thread support
 
-        virtual ~MPIXX() noexcept;
+
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        virtual ~MPIXX() noexcept; //!< MPI_Finalize()
 
     protected:
-        explicit MPIXX();
+        explicit MPIXX();              //!< MPI_Init_threed
 
-        size_t      Comm_size() const;
-        size_t      Comm_rank() const;
-        const char *processor_name() const;
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        size_t      Comm_size() const;      //!< MPI_Comm_size(MPI_COMM_WORLD)
+        size_t      Comm_rank() const;      //!< MPI_Comm_size(MPI_COMM_WORLD)
+        const char *processor_name() const; //!< MPI_Get_processor_name()
     private:
         Y_DISABLE_COPY_AND_ASSIGN(MPIXX);
 
     public:
-        const int threadSupport;
+        const int threadSupport; //!< one of the possible MPI thread support
 
     };
 }
