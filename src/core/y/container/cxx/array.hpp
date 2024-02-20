@@ -109,7 +109,7 @@ count( COUNT )
 
         }
 
-        //! setup with 1-arg constructor [1:[n|nmax] objets
+        //! setup with 1-arg constructor [1:n] objets
         template <typename U>
         inline explicit CxxArray(const size_t n, const CopyOf_ &, U &args ) :
         Y_CxxArray_Prolog(n),
@@ -126,11 +126,6 @@ count( COUNT )
         OpsType(this->workspace,copying,src),
         Y_CxxArray_Epilog(src.size())
         {
-#if 0
-            Writable<T> &self = *this;
-            for(size_t i=src.size();i>0;--i)
-                Coerce(self[i]) = src[i];
-#endif
         }
 
         //! copy
@@ -171,7 +166,7 @@ count( COUNT )
     protected:
         MutableType * const cdata; //!< memory or [0..count-1]
         MutableType * const entry; //!< memory for [1..count]
-        const size_t        count; //!< built objecct
+        const size_t        count; //!< built object(s)
         
     private:
         Y_DISABLE_ASSIGN(CxxArray);

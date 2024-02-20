@@ -56,11 +56,17 @@ namespace Yttrium
                 //______________________________________________________________
             protected:
                 void         returnTo(Allocator &allocator)               noexcept; //!< return memory and cleanup
-                static void *WalkDown(void *addr, const size_t blockSize) noexcept; //!< &addr[-blockSize]
+               
+                template <typename T> inline T *Cxx(T *addr) noexcept
+                {
+                    return static_cast<T*>( WalkDown(addr,sizeof(T)) );
+                }
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Wad);
+                static void *WalkDown(void *blockAddr, const size_t blockSize) noexcept; //!< &blockAddr[-blockSize]
+
             };
         }
 
@@ -104,7 +110,7 @@ namespace Yttrium
             inline LeadType *lead() noexcept { return static_cast<LeadType *>(workspace); }
             
             //! cast workspace to a mutable pointe type [1..size]
-            inline LeadType *warp() noexcept { return static_cast<LeadType *>( WalkDown(workspace, sizeof(LeadType) ) ); }
+            inline LeadType *warp() noexcept { return Cxx(lead()); }
 
 
         private:

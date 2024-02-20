@@ -36,10 +36,11 @@ namespace Yttrium
                 Coerce(capacity) = 0;
             }
 
-            void *Wad:: WalkDown(void *addr, const size_t blockSize) noexcept
+            void *Wad:: WalkDown(void *blockAddr, const size_t blockSize) noexcept
             {
+                assert(0!=blockAddr);
                 assert(blockSize>0);
-                return static_cast<char *>(addr) - blockSize;
+                return static_cast<char *>(blockAddr) - blockSize;
             }
         }
     }

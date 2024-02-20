@@ -43,11 +43,11 @@ namespace Yttrium
 
         template <typename> class String;
 
-        template <typename T> String<T> operator+(const String<T> &, const String<T> &);  //!< forward declaration
-        template <typename T> String<T> operator+(const String<T> &, const T);            //!< forward declaration
-        template <typename T> String<T> operator+(const String<T> &, const T *);          //!< forward declaration
-        template <typename T> String<T> operator+(const T, const String<T> &);            //!< forward declaration
-        template <typename T> String<T> operator+(const T*, const String<T> &);           //!< forward declaration
+        template <typename T> String<T> operator+(const String<T> &, const String<T> &);   //!< forward declaration
+        template <typename T> String<T> operator+(const String<T> &, const T);             //!< forward declaration
+        template <typename T> String<T> operator+(const String<T> &, const T *);           //!< forward declaration
+        template <typename T> String<T> operator+(const T, const String<T> &);             //!< forward declaration
+        template <typename T> String<T> operator+(const T*, const String<T> &);            //!< forward declaration
         template <typename T> bool      operator==(const T *, const String<T> &) noexcept; //!< forward declaration
         template <typename T> bool      operator==(const String<T> &, const T *) noexcept; //!< forward declaration
         template <typename T> bool      operator!=(const T *, const String<T> &) noexcept; //!< forward declaration

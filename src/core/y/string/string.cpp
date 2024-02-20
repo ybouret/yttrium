@@ -49,7 +49,8 @@ Serializable()
 Object(),                                      \
 WadType( StringCommon::BlocksFor(NUM_CHARS) ), \
 data(    this->lead()        ),                \
-item(data-1), size(0), maxi(capacity-1)
+item(    this->warp()        ),                \
+size(0), maxi(capacity-1)
 
 #define CH char
 #include "string.hxx"

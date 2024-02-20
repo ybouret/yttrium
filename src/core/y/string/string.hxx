@@ -13,9 +13,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <>
-        class String<CH>:: Code :
-        public Object,
-        public Memory::Wad<CH,Memory::Pooled>
+        class String<CH>:: Code : public Object, public Memory::Wad<CH,Memory::Pooled>
         {
         public:
             //__________________________________________________________________

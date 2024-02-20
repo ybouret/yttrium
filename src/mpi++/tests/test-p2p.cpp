@@ -1,6 +1,6 @@
 #include "y/mpi++/api.hpp"
 #include "y/utest/run.hpp"
-#include "y/container/cxx/array.hpp"
+#include "y/sequence/vector.hpp"
 #include "y/random/fill.hpp"
 
 using namespace Yttrium;
@@ -10,32 +10,38 @@ namespace Yttrium
     
 }
 
+#if 1
 template <typename T>
 static inline void testIO( MPI &mpi )
 {
     const size_t count = 10;
-    CxxArray<T>  arr(count);
+    Vector<T>    arr(count,0);
+    T           *ptr = &arr[1];
+    
     if( mpi.primary )
     {
         std::cerr << "<" << RTTI::Name<T>() << ">" << std::endl;
         Random::Rand ran;
-        Random::Fill::Block( &arr[1], arr.size() * sizeof(T), ran, 0x01, 0xff);
+        Random::Fill::Block( ptr, arr.size() * sizeof(T), ran, 0x01, 0xff);
         for(size_t rank=1;rank<mpi.size;++rank)
         {
-            mpi.send(&arr[1],count,rank,MPI::Tag);
+            mpi.send(ptr,count,rank,MPI::Tag);
         }
     }
     else
     {
-        mpi.recv(&arr[1],count,0,MPI::Tag);
+        mpi.recv(ptr,count,0,MPI::Tag);
     }
 }
+#endif
 
 Y_UTEST(p2p)
 {
 
     MPI & mpi = MPI::Init(&argc,&argv,MPI_THREAD_SINGLE);
 
+
+#if 1
     testIO<char>(mpi);
     testIO<signed char>(mpi);
     testIO<unsigned char>(mpi);
@@ -52,6 +58,7 @@ Y_UTEST(p2p)
     testIO<int16_t>(mpi);
     testIO<int32_t>(mpi);
     testIO<int64_t>(mpi);
+#endif
 
     if(mpi.primary) std::cerr << "Testing Size" << std::endl;
    

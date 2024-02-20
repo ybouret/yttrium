@@ -54,82 +54,149 @@ namespace Yttrium
         class Exception : public Yttrium::Exception
         {
         public:
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+
+            //! setup from MPI error code and context
             explicit Exception(const int err, const char *fmt,...) noexcept Y_PRINTF_CHECK(3,4);
-            virtual ~Exception() noexcept;
-            Exception(const Exception &) noexcept;
-           
+            virtual ~Exception()         noexcept;                                               //!< cleanup
+            Exception(const Exception &) noexcept;                                               //!< copy
+
+            //__________________________________________________________________
+            //
+            // Methods
+            //__________________________________________________________________
             virtual const char * what() const noexcept; //!< return MPI error string
 
-            const int code;
+            //__________________________________________________________________
+            //
+            // Members
+            //__________________________________________________________________
+            const int code; //!< MPI error code
         private:
             Y_DISABLE_ASSIGN(Exception);
             char mesg[MPI_MAX_ERROR_STRING];
         };
 
 
-        typedef LittleEndianKey DataKey;
+        typedef LittleEndianKey DataKey; //!< interface for datatype
 
         //______________________________________________________________________
         //
         //
-        //! Advanced DataType
+        //! Advanced DataType, using RTTI as key
         //
         //______________________________________________________________________
         class DataType : public Object, public Counted
         {
         public:
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+           
+            //! setup from type and allegded datatype
             template <typename T> inline
             DataType( const Type2Type<T>, const MPI_Datatype t) :
             Object(),
             Counted(),
             rtti( RTTI::Of<T>() ),
-            type( t ),
-            size( sizeof(T) ),
-            uuid( rtti )
+            type( t             ),
+            size( sizeof(T)     ),
+            uuid( rtti          )
             {
             }
 
+            //! cleanup
             ~DataType() noexcept;
 
+            //__________________________________________________________________
+            //
+            // Methods
+            //__________________________________________________________________
+
+            //! return uuid, key from unique rtti
             const DataKey & key() const  noexcept;
 
-            const RTTI               &rtti;
-            const MPI_Datatype        type;
-            const size_t              size;
-            const LittleEndianAddress uuid;
+            //__________________________________________________________________
+            //
+            // Members
+            //__________________________________________________________________
+            const RTTI               &rtti; //!< type of T
+            const MPI_Datatype        type; //!< matching data type
+            const size_t              size; //!< sizeof(T)
+            const LittleEndianAddress uuid; //!< made from &rtti
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DataType);
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //! Traffic Monitor
+        //
+        //______________________________________________________________________
         class Monitor
         {
         public:
-            Monitor()    noexcept;
-            ~Monitor()   noexcept;
-            Y_OSTREAM_PROTO(Monitor);
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            Monitor()    noexcept;    //!< setup
+            ~Monitor()   noexcept;    //!< cleanup
+            Y_OSTREAM_PROTO(Monitor); //!< display
 
-            void reset() noexcept;
-            void record(const uint64_t n, const uint64_t t) noexcept;
+            //__________________________________________________________________
+            //
+            // Methods
+            //__________________________________________________________________
+            void reset() noexcept;                                    //!< reset all
+            void record(const uint64_t n, const uint64_t t) noexcept; //!< record traffic
 
+            //__________________________________________________________________
+            //
+            // Members
+            //__________________________________________________________________
+            const uint64_t bytes; //!< total transferred
+            const uint64_t ticks; //!< total ticks
 
-            const uint64_t bytes;
-            const uint64_t ticks;
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Monitor);
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //! Traffic
+        //
+        //______________________________________________________________________
         class Traffic
         {
         public:
-            Traffic() noexcept;
-            ~Traffic() noexcept;
-            Y_OSTREAM_PROTO(Traffic);
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            Traffic()  noexcept;       //!< setup
+            ~Traffic() noexcept;       //!< cleanup
+            Y_OSTREAM_PROTO(Traffic);  //!< display
 
-            void reset() noexcept;
+            //__________________________________________________________________
+            //
+            // Methods
+            //__________________________________________________________________
+            void reset() noexcept; //!< reset all
 
-            Monitor send;
-            Monitor recv;
+            //__________________________________________________________________
+            //
+            // Members
+            //__________________________________________________________________
+            Monitor send; //!< traffic for send
+            Monitor recv; //!< traffic for recv
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Traffic);
@@ -142,6 +209,13 @@ namespace Yttrium
         // Management
         //
         //______________________________________________________________________
+
+        //! setup singleton
+        /**
+         \param argc from main
+         \param argv from main
+         \param thread_support required from MPI_THREAD[...]
+         */
         static MPI &Init(int *argc, char ***argv, const int thread_support);
 
         //______________________________________________________________________
@@ -150,66 +224,121 @@ namespace Yttrium
         // methods
         //
         //______________________________________________________________________
+
+        //! get advanced datatype from RTTI
         const DataType & get(const RTTI &) const;
 
         //______________________________________________________________________
         //
         //
-        // Point to point
+        // Point to point interface
         //
         //______________________________________________________________________
-        void send(const void * const data,
+
+        //! sending block
+        /**
+         \param entry       data address
+         \param count       number of items
+         \param datatype    advanced datatype
+         \param destination rank to send to
+         \param tag         communication tag
+         */
+        void send(const void * const entry,
                   const size_t       count,
                   const DataType    &datatype,
                   const size_t       destination,
                   const int          tag);
 
+        //! sending blocks
+        /**
+         \param blockAddr   first block
+         \param numBlocks   number of blocks
+         \param destination rank to send to
+         \param tag         communication tag
+         */
         template <typename T> inline
-        void send(const T * const entry,
-                  const size_t    count,
+        void send(const T * const blockAddr,
+                  const size_t    numBlocks,
                   const size_t    destination,
                   const int       tag)
         {
             static const DataType &datatype = get( RTTI::Of<T>() );
-            send(entry,count,datatype,destination,tag);
+            send(blockAddr,numBlocks,datatype,destination,tag);
         }
 
+        //! heterogeneous sendSize
+        /**
+         use IO::Pack64 to encode
+         \param sz          system size
+         \param destination rank to send to
+         \param tag         communication tag
+         */
         void sendSize(const size_t sz,
                       const size_t destination,
                       const int    tag);
 
-        template <typename T>
-        struct SendOne
-        {
-            static inline void With(MPI &mpi, const T &obj, const size_t dst, const int tag)
-            {
-                mpi.send(&obj,1,dst,tag);
-            }
-        };
 
-
-        void recv(void *             data,
+        //! receiving block
+        /**
+         \param entry       data address
+         \param count       number of items
+         \param datatype    advanced datatype
+         \param source      rank to recv from
+         \param tag         communication tag
+         */
+        void recv(void *             entry,
                   const size_t       count,
                   const DataType    &datatype,
                   const size_t       source,
                   const int          tag);
 
+        //! receigin blocks
+        /**
+         \param blockAddr   first block
+         \param numBlocks   number of blocks
+         \param source      rank to recv from
+         \param tag         communication tag
+         */
         template <typename T> inline
-        void recv(T * const    entry,
-                  const size_t count,
+        void recv(T * const    blockAddr,
+                  const size_t numBlocks,
                   const size_t source,
                   const int    tag)
         {
             static const DataType &datatype = get( RTTI::Of<T>() );
-            recv(entry,count,datatype,source,tag);
+            recv(blockAddr,numBlocks,datatype,source,tag);
         }
 
+        //! heterogeneous recvSize
+        /**
+         use IO::Pack64 to decode data
+         \param source      rank to recv from
+         \param tag         communication tag
+         */
         size_t recvSize(const size_t source,
                         const int    tag);
 
+        //______________________________________________________________________
+        //
+        //! send one object, default
+        //______________________________________________________________________
+        template <typename T>
+        struct SendOne
+        {
+            //! use regular send
+            static inline void With(MPI &mpi, const T &obj, const size_t dst, const int tag) {
+                mpi.send(&obj,1,dst,tag);
+            }
+        };
+
+        //______________________________________________________________________
+        //
+        //! recv one object, default
+        //______________________________________________________________________
         template <typename T>
         struct RecvOne
         {
+            //! use regular recv
             static inline T With(MPI &mpi, const size_t src, const int tag )
             {
                 T res;
@@ -220,15 +349,19 @@ namespace Yttrium
 
         void print(OutputStream &, const char *fmt,...) Y_PRINTF_CHECK(3,4);
 
-
-        // members
-        SizeExch           sizeIO;
-        const GetTicks     getTicks;
-        Traffic            traffic;
-        const char * const processorName;
-        const bool         parallel;
-        const bool         primary;
-        const bool         replica;
+        //______________________________________________________________________
+        //
+        //
+        // Members
+        //
+        //______________________________________________________________________
+        SizeExch           sizeIO;          //!< size encoder/decoder
+        const GetTicks     getTicks;        //!< ticks protocol
+        Traffic            traffic;         //!< current traffic
+        const char * const processorName;   //!< processor name
+        const bool         parallel;        //!< size>1
+        const bool         primary;         //!< rank==0
+        const bool         replica;         //!< rank>0
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(MPI);
@@ -237,18 +370,33 @@ namespace Yttrium
         virtual ~MPI() noexcept;
     };
 
+    //__________________________________________________________________________
+    //
+    //! send one string
+    //__________________________________________________________________________
     template <> struct MPI:: SendOne<String>
     {
+        //! send size + data
         static void With(MPI &, const String &, const size_t, const int);
     };
 
 
+    //__________________________________________________________________________
+    //
+    //! recv one string
+    //__________________________________________________________________________
     template <> struct MPI:: RecvOne<String>
     {
+        //! recv size + data
         static String With(MPI &, const size_t, const int);
     };
 
-
+    //__________________________________________________________________________
+    //
+    //
+    //! retrieve result and throw upon failure
+    //
+    //__________________________________________________________________________
 #define Y_MPI_CALL(PROCEDURE) do {                      \
 /**/    const int res = (PROCEDURE);                    \
 /**/    if(MPI_SUCCESS!=res)                            \
