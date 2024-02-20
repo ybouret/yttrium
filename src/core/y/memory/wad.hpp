@@ -56,7 +56,7 @@ namespace Yttrium
                 //______________________________________________________________
             protected:
                 void         returnTo(Allocator &allocator)               noexcept; //!< return memory and cleanup
-               
+
                 //! transform [0..size-1] in [1..size]
                 template <typename T> inline T *Cxx(T * const addr) noexcept
                 {
@@ -71,14 +71,14 @@ namespace Yttrium
             };
         }
 
-        //__________________________________________________________________
+        //______________________________________________________________________
         //
         //
         //
         //! Local allocation of memory blocks
         //
         //
-        //__________________________________________________________________
+        //______________________________________________________________________
         template <typename T, typename ALLOCATOR>
         class Wad : public Crux::Wad
         {
@@ -89,7 +89,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-           
+
             //! alias to produce mutable lead type
             typedef typename TypeTraits<T>::MutableType LeadType;
 
@@ -109,7 +109,7 @@ namespace Yttrium
         protected:
             //! cast workspace to mutable pointed type [0..size-1]
             inline LeadType *lead() noexcept { return static_cast<LeadType *>(workspace); }
-            
+
             //! cast workspace to a mutable pointe type [1..size]
             inline LeadType *warp() noexcept { return Cxx(lead()); }
 
