@@ -1,6 +1,7 @@
 
 #include "y/mpi++/api.hpp"
 #include "y/system/exception.hpp"
+#include <cstdarg>
 
 namespace Yttrium
 {
