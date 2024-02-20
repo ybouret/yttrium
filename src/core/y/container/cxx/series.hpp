@@ -75,7 +75,7 @@ namespace Yttrium
         Sequence<T>(),
         Core::CxxSeries(),
         cdata( this->lead() ),
-        entry( this->Cxx(cdata)   ),
+        entry( this->warp() ),
         count( 0 ),
         total( n )
         {
@@ -89,7 +89,7 @@ namespace Yttrium
         Sequence<T>(),
         Core::CxxSeries(),
         cdata( this->lead() ),
-        entry( this->Cxx(cdata)   ),
+        entry( this->warp() ),
         count( 0 ),
         total( other.size() )
         {

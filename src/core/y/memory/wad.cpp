@@ -22,8 +22,8 @@ namespace Yttrium
             numBytes(0)
             {
                 assert(blockSize>0);
-                size_t count  = Max<size_t>(numBlocks,1);
-                workspace      = allocator.acquire(count,blockSize);
+                size_t count     = Max<size_t>(numBlocks,1);
+                workspace        = allocator.acquire(count,blockSize);
                 Coerce(capacity) = (Coerce(numBytes) = count) / blockSize;
                 assert(capacity>=numBlocks);
             }
@@ -32,15 +32,14 @@ namespace Yttrium
             void Wad:: returnTo(Allocator &allocator) noexcept
             {
                 assert(0!=workspace);
-                allocator.release(workspace, Coerce(numBytes) );
+                allocator.release(workspace, Coerce(numBytes));
                 Coerce(capacity) = 0;
             }
 
-            void *Wad:: ShiftDown(void *addr, const size_t blockSize) noexcept
+            void *Wad:: WalkDown(void *addr, const size_t blockSize) noexcept
             {
-                char *p = static_cast<char *>(addr);
-                p -= blockSize;
-                return p;
+                assert(blockSize>0);
+                return static_cast<char *>(addr) - blockSize;
             }
         }
     }
