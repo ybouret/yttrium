@@ -347,7 +347,7 @@ namespace Yttrium
             }
         };
 
-        void print(OutputStream &, const char *fmt,...) Y_PRINTF_CHECK(3,4);
+        void print(FILE *fp, const char *fmt,...) Y_PRINTF_CHECK(3,4);
 
         //______________________________________________________________________
         //

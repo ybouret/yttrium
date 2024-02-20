@@ -111,6 +111,10 @@ Y_UTEST(p2p)
         }
     }
 
+    std::cerr.flush();
+    
+    mpi.print(stderr,"Hello from <%s>\n", mpi.name);
+
 
 }
 Y_UDONE()
