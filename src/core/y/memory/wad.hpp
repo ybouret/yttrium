@@ -57,7 +57,8 @@ namespace Yttrium
             protected:
                 void         returnTo(Allocator &allocator)               noexcept; //!< return memory and cleanup
                
-                template <typename T> inline T *Cxx(T *addr) noexcept
+                //! transform [0..size-1] in [1..size]
+                template <typename T> inline T *Cxx(T * const addr) noexcept
                 {
                     return static_cast<T*>( WalkDown(addr,sizeof(T)) );
                 }

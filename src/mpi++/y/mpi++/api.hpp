@@ -347,6 +347,14 @@ namespace Yttrium
             }
         };
 
+        //______________________________________________________________________
+        //
+        //! print formatted output to C FILE on primart
+        /**
+         \param fp FILE on primary only
+         \param fmt printf-like format
+         */
+        //______________________________________________________________________
         void print(FILE *fp, const char *fmt,...) Y_PRINTF_CHECK(3,4);
 
         //______________________________________________________________________
