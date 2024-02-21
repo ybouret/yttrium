@@ -35,6 +35,7 @@ static inline void testIO( MPI &mpi )
         crc = CRC32::Of(ptr, arr.size()*sizeof(T));
     }
     mpi.print(stderr, "crc32=%08x\n", crc);
+    
 }
 
 static inline void testSize( MPI &mpi, const size_t original )
