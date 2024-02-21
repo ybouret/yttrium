@@ -374,6 +374,7 @@ namespace Yttrium
                 return res;
             }
         };
+        
 
         //______________________________________________________________________
         //
@@ -405,6 +406,22 @@ namespace Yttrium
             static const DataType &datatype = get( RTTI::Of<T>() );
             broadcast(blockAddr, numBlocks,datatype,root);
         }
+
+        template <typename T>
+        struct CastOne
+        {
+            //! use regular broadcast
+            static inline void With(MPI &mpi, T &args, const size_t root)
+            {
+                static const T _0(0);
+                const  bool    isRoot = (root == mpi.rank);
+                T res( isRoot ? args : _0 );
+                mpi.broadcast(&res, 1, root);
+                args = res;
+            }
+        };
+
+
 
         //______________________________________________________________________
         //
