@@ -37,6 +37,22 @@ static inline void testIO( MPI &mpi )
     mpi.print(stderr, "crc32=%08x\n", crc);
 }
 
+static inline void testSize( MPI &mpi, const size_t original )
+{
+    if( mpi.primary )
+    {
+        for(size_t rank=1;rank<mpi.size;++rank)
+        {
+            mpi.sendSize(original,rank,MPI::Tag);
+        }
+    }
+    else
+    {
+        const size_t sz = mpi.recvSize(0,MPI::Tag);
+        Y_ASSERT(original==sz);
+    }
+}
+
 Y_UTEST(p2p)
 {
 
@@ -62,19 +78,9 @@ Y_UTEST(p2p)
 
     if(mpi.primary) std::cerr << "Testing Size" << std::endl;
    
-    const size_t original = 0xabcdef;
-    if( mpi.primary )
-    {
-        for(size_t rank=1;rank<mpi.size;++rank)
-        {
-            mpi.sendSize(original,rank,MPI::Tag);
-        }
-    }
-    else
-    {
-        const size_t sz = mpi.recvSize(0,MPI::Tag);
-        Y_ASSERT(original==sz);
-    }
+    testSize(mpi,0);
+    testSize(mpi,0xabcdef);
+
 
 
     if(mpi.primary) std::cerr << "Testing [Send|Recv]One" << std::endl;

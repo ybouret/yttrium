@@ -318,6 +318,34 @@ namespace Yttrium
         size_t recvSize(const size_t source,
                         const int    tag);
 
+
+        void sendrecv(const void * const sendbuf,
+                      const size_t       sendcount,
+                      const DataType    &sendtype,
+                      const size_t       destination,
+                      const int          sendtag,
+                      void * const       recvbuf,
+                      const size_t       recvcount,
+                      const DataType    &recvtype,
+                      const size_t       source,
+                      const int          recvtag);
+
+        template <typename T, typename U> inline
+        void sendrecv(const T *  const sendEntry,
+                      const size_t     sendCount,
+                      const size_t     destination,
+                      const int        sendTag,
+                      U * const        recvEntry,
+                      const size_t     recvCount,
+                      const size_t     source,
+                      const int        recvTag)
+        {
+            static const DataType &sendtype = get( RTTI::Of<T>() );
+            static const DataType &recvtype = get( RTTI::Of<U>() );
+            sendrecv(sendEntry, sendCount, sendtype, destination, sendTag,
+                     recvEntry, recvCount, recvtype, source,      recvTag);
+        }
+
         //______________________________________________________________________
         //
         //! send one object, default

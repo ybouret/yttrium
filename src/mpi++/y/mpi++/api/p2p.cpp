@@ -74,7 +74,7 @@ namespace Yttrium
         return IO::Pack64::Read(fp, "RecvSize");
     }
 
-    
+
     void MPI:: SendOne<String> :: With(MPI &mpi, const String &str, const size_t dst, const int tag)
     {
         const size_t sz = str.size();
@@ -101,8 +101,33 @@ namespace Yttrium
     }
 
 
+    void MPI:: sendrecv(const void * const sendbuf,
+                        const size_t       sendcount,
+                        const DataType    &sendtype,
+                        const size_t       destination,
+                        const int          sendtag,
+                        void * const       recvbuf,
+                        const size_t       recvcount,
+                        const DataType    &recvtype,
+                        const size_t       source,
+                        const int          recvtag)
+    {
+        assert(Good(sendbuf,sendcount));
+        assert(Good(recvbuf,recvcount));
+        assert(sendcount<=MaxCount);
+        assert(recvcount<=MaxCount);
+
+        MPI_Status status;
+        const uint64_t mark = getTicks();
+        Y_MPI_CALL(MPI_Sendrecv(sendbuf, static_cast<int>(sendcount), sendtype.type, int(destination), sendtag,
+                                recvbuf, static_cast<int>(recvcount), recvtype.type, int(source),       recvtag,
+                                MPI_COMM_WORLD, &status));
+        const uint64_t ellapsed = getTicks() - mark;
+        traffic.recv.record(recvcount*recvtype.size,ellapsed);
+        traffic.send.record(sendcount*sendtype.size,ellapsed);
 
 
+    }
 
 }
 

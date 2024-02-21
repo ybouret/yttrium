@@ -20,8 +20,8 @@ namespace Yttrium
     class ZeroedField
     {
     public:
-        explicit ZeroedField() noexcept : wksp() { ldz(); } //!< setup
-        virtual ~ZeroedField() noexcept          { }        //!< cleanup
+        inline  ZeroedField() noexcept : wksp() { ldz(); } //!< setup
+        inline ~ZeroedField() noexcept          { }        //!< cleanup
 
         //! access
         const T & operator*() const noexcept
