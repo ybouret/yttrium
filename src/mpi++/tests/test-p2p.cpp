@@ -2,6 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/random/fill.hpp"
+#include "y/check/crc32.hpp"
 
 using namespace Yttrium;
 
@@ -10,19 +11,19 @@ namespace Yttrium
     
 }
 
-#if 1
 template <typename T>
 static inline void testIO( MPI &mpi )
 {
     const size_t count = 10;
     Vector<T>    arr(count,0);
     T           *ptr = &arr[1];
-    
+    uint32_t     crc = 0x00;
     if( mpi.primary )
     {
         std::cerr << "<" << RTTI::Name<T>() << ">" << std::endl;
         Random::Rand ran;
         Random::Fill::Block( ptr, arr.size() * sizeof(T), ran, 0x01, 0xff);
+        crc = CRC32::Of(ptr, arr.size()*sizeof(T));
         for(size_t rank=1;rank<mpi.size;++rank)
         {
             mpi.send(ptr,count,rank,MPI::Tag);
@@ -31,9 +32,10 @@ static inline void testIO( MPI &mpi )
     else
     {
         mpi.recv(ptr,count,0,MPI::Tag);
+        crc = CRC32::Of(ptr, arr.size()*sizeof(T));
     }
+    mpi.print(stderr, "crc32=%08x\n", crc);
 }
-#endif
 
 Y_UTEST(p2p)
 {
@@ -41,7 +43,6 @@ Y_UTEST(p2p)
     MPI & mpi = MPI::Init(&argc,&argv,MPI_THREAD_SINGLE);
 
 
-#if 1
     testIO<char>(mpi);
     testIO<signed char>(mpi);
     testIO<unsigned char>(mpi);
@@ -58,7 +59,6 @@ Y_UTEST(p2p)
     testIO<int16_t>(mpi);
     testIO<int32_t>(mpi);
     testIO<int64_t>(mpi);
-#endif
 
     if(mpi.primary) std::cerr << "Testing Size" << std::endl;
    

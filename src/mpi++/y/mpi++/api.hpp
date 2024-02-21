@@ -360,6 +360,27 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
+        // Collective interface
+        //
+        //______________________________________________________________________
+
+        void broadcast(void * const    entry,
+                       const size_t    count,
+                       const DataType &datatype,
+                       const size_t    root);
+
+        template <typename T> inline
+        void broadcast(T * const    blockAddr,
+                       const size_t numBlocks,
+                       const size_t root)
+        {
+            static const DataType &datatype = get( RTTI::Of<T>() );
+            broadcast(blockAddr, numBlocks,datatype,root);
+        }
+
+        //______________________________________________________________________
+        //
+        //
         // Members
         //
         //______________________________________________________________________
