@@ -14,9 +14,14 @@ namespace Yttrium
     namespace IO
     {
 
-        Pack64:: ~Pack64() noexcept
+        void Pack64:: zset() noexcept
         {
             memset( &Coerce(data[0]),0,sizeof(data));
+        }
+
+        Pack64:: ~Pack64() noexcept
+        {
+            zset();
             Coerce(size) = 0;
         }
 
@@ -30,7 +35,7 @@ namespace Yttrium
         data()
         {
             // prepare
-            memset(data,0,sizeof(data));
+            zset();
 
             // counting bits to append
             const unsigned wordBits = BitCount::For(word);
@@ -58,7 +63,7 @@ namespace Yttrium
             assert(bits>0);
             assert(bits<=8);
             assert(size<=8);
-            data[size++] = code << (8-bits);
+            Coerce(data[Coerce(size)++]) = code << (8-bits);
             code = 0;
             bits = 0;
         }
