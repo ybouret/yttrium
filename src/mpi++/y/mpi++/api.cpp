@@ -171,7 +171,6 @@ namespace Yttrium
     Singleton<MPI>(),
     MPIXX(),
     Concurrent::Context( Comm_size(), Comm_rank() ),
-    sizeIO(),
     getTicks( MPI_THREAD_SINGLE == threadSupport ? WallTime::Ticks : WallTime::LockedTicks ),
     traffic(),
     processorName( processor_name() ),

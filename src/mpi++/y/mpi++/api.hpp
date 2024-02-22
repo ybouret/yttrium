@@ -9,7 +9,6 @@
 #include "y/concurrent/context.hpp"
 #include "y/system/rtti.hpp"
 #include "y/associative/little-endian-address.hpp"
-#include "y/stream/data/output-buffer.hpp"
 
 namespace Yttrium
 {
@@ -33,7 +32,6 @@ namespace Yttrium
         //______________________________________________________________________
         static  const int              Tag = 0x07;       //!< if needed
         typedef uint64_t             (*GetTicks)(void);  //!< getting [Locked]Ticks
-        typedef OutputBuffer<9>        SizeExch;         //!< to exchange sizez
         static  const size_t           MaxCount = static_cast<size_t>(IntegerFor<int>::Maximum); //!< size_t as int
 
         //______________________________________________________________________
@@ -429,7 +427,6 @@ namespace Yttrium
         // Members
         //
         //______________________________________________________________________
-        SizeExch           sizeIO;          //!< size encoder/decoder
         const GetTicks     getTicks;        //!< ticks protocol
         Traffic            traffic;         //!< current traffic
         const char * const processorName;   //!< processor name
