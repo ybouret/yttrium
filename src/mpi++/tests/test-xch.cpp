@@ -1,6 +1,7 @@
 #include "y/mpi++/api.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/random/fill.hpp"
 
 using namespace Yttrium;
 
@@ -8,16 +9,22 @@ using namespace Yttrium;
 template <typename T>
 static inline void testIO(MPI &mpi)
 {
-    const size_t n = 100;
+    Random::Rand ran;
+    const size_t n = 10;
     Vector<T>    inp(n,0);
     Vector<T>    out(n,0);
+
+    Random::Fill::Block(out(), out.size() * sizeof(T), ran);
+
 
     if( mpi.primary )
     {
         std::cerr << "<" << RTTI::Name<T>() << ">" << std::endl;
     }
 
-    
+    const size_t nextRank = mpi.next1D();
+    const size_t prevRank = mpi.prev1D();
+    mpi.sendrecv(out(), out.size(), nextRank, MPI::Tag, inp(), inp.size(), prevRank, MPI::Tag);
 
 
 }
