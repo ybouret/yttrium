@@ -229,7 +229,16 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
+        //
         // Point to point interface
+        //
+        //
+        //______________________________________________________________________
+
+        //______________________________________________________________________
+        //
+        //
+        // sending
         //
         //______________________________________________________________________
 
@@ -264,6 +273,24 @@ namespace Yttrium
             send(blockAddr,numBlocks,datatype,destination,tag);
         }
 
+
+
+        //______________________________________________________________________
+        //
+        //! send aggregate of primitive types
+        //______________________________________________________________________
+        template <typename T, template <typename> class AGG>
+        inline void sendND(const AGG<T> * const entry,
+                           const size_t         count,
+                           const size_t         destination,
+                           const int            tag)
+        {
+            static const size_t    DIMS     = sizeof(AGG<T>)/sizeof(T);
+            static const DataType &sendtype = get( RTTI::Of<T>() );
+            send(entry,count*DIMS,sendtype,destination,tag);
+        }
+
+
         //! heterogeneous sendSize
         /**
          use IO::Pack64 to encode
@@ -274,75 +301,6 @@ namespace Yttrium
         void sendSize(const size_t sz,
                       const size_t destination,
                       const int    tag);
-
-
-        //! receiving block
-        /**
-         \param entry       data address
-         \param count       number of items
-         \param datatype    advanced datatype
-         \param source      rank to recv from
-         \param tag         communication tag
-         */
-        void recv(void *             entry,
-                  const size_t       count,
-                  const DataType    &datatype,
-                  const size_t       source,
-                  const int          tag);
-
-        //! receigin blocks
-        /**
-         \param blockAddr   first block
-         \param numBlocks   number of blocks
-         \param source      rank to recv from
-         \param tag         communication tag
-         */
-        template <typename T> inline
-        void recv(T * const    blockAddr,
-                  const size_t numBlocks,
-                  const size_t source,
-                  const int    tag)
-        {
-            static const DataType &datatype = get( RTTI::Of<T>() );
-            recv(blockAddr,numBlocks,datatype,source,tag);
-        }
-
-        //! heterogeneous recvSize
-        /**
-         use IO::Pack64 to decode data
-         \param source      rank to recv from
-         \param tag         communication tag
-         */
-        size_t recvSize(const size_t source,
-                        const int    tag);
-
-
-        void sendrecv(const void * const sendbuf,
-                      const size_t       sendcount,
-                      const DataType    &sendtype,
-                      const size_t       destination,
-                      const int          sendtag,
-                      void * const       recvbuf,
-                      const size_t       recvcount,
-                      const DataType    &recvtype,
-                      const size_t       source,
-                      const int          recvtag);
-
-        template <typename T, typename U> inline
-        void sendrecv(const T *  const sendEntry,
-                      const size_t     sendCount,
-                      const size_t     destination,
-                      const int        sendTag,
-                      U * const        recvEntry,
-                      const size_t     recvCount,
-                      const size_t     source,
-                      const int        recvTag)
-        {
-            static const DataType &sendtype = get( RTTI::Of<T>() );
-            static const DataType &recvtype = get( RTTI::Of<U>() );
-            sendrecv(sendEntry, sendCount, sendtype, destination, sendTag,
-                     recvEntry, recvCount, recvtype, source,      recvTag);
-        }
 
         //______________________________________________________________________
         //
@@ -359,6 +317,70 @@ namespace Yttrium
 
         //______________________________________________________________________
         //
+        //
+        // recving
+        //
+        //______________________________________________________________________
+
+        //! receiving block
+        /**
+         \param entry       data address
+         \param count       number of items
+         \param datatype    advanced datatype
+         \param source      rank to recv from
+         \param tag         communication tag
+         */
+        void recv(void *             entry,
+                  const size_t       count,
+                  const DataType    &datatype,
+                  const size_t       source,
+                  const int          tag);
+
+        //! receiving blocks of primtive types
+        /**
+         \param blockAddr   first block
+         \param numBlocks   number of blocks
+         \param source      rank to recv from
+         \param tag         communication tag
+         */
+        template <typename T> inline
+        void recv(T * const    blockAddr,
+                  const size_t numBlocks,
+                  const size_t source,
+                  const int    tag)
+        {
+            static const DataType &datatype = get( RTTI::Of<T>() );
+            recv(blockAddr,numBlocks,datatype,source,tag);
+        }
+
+        //______________________________________________________________________
+        //
+        //! recv aggregate of primitive types
+        //______________________________________________________________________
+        template <typename T, template <typename> class AGG>
+        inline void recvND(AGG<T> * const entry,
+                           const size_t   count,
+                           const size_t   source,
+                           const int      tag)
+        {
+            static const size_t    DIMS     = sizeof(AGG<T>)/sizeof(T);
+            static const DataType &recvtype = get( RTTI::Of<T>() );
+            recv(entry,count*DIMS,recvtype,source,tag);
+        }
+        
+
+        //! heterogeneous recvSize
+        /**
+         use IO::Pack64 to decode data
+         \param source      rank to recv from
+         \param tag         communication tag
+         */
+        size_t recvSize(const size_t source,
+                        const int    tag);
+
+
+        //______________________________________________________________________
+        //
         //! recv one object, default
         //______________________________________________________________________
         template <typename T>
@@ -372,7 +394,49 @@ namespace Yttrium
                 return res;
             }
         };
-        
+
+        //______________________________________________________________________
+        //
+        //
+        // Send/Recv
+        //
+        //______________________________________________________________________
+
+        //! sendrecv
+        void sendrecv(const void * const sendbuf,
+                      const size_t       sendcount,
+                      const DataType    &sendtype,
+                      const size_t       destination,
+                      const int          sendtag,
+                      void * const       recvbuf,
+                      const size_t       recvcount,
+                      const DataType    &recvtype,
+                      const size_t       source,
+                      const int          recvtag);
+
+        //! sendrecv of primitive types
+        template <typename T, typename U> inline
+        void sendrecv(const T *  const sendEntry,
+                      const size_t     sendCount,
+                      const size_t     destination,
+                      const int        sendTag,
+                      U * const        recvEntry,
+                      const size_t     recvCount,
+                      const size_t     source,
+                      const int        recvTag)
+        {
+            static const DataType &sendtype = get( RTTI::Of<T>() );
+            static const DataType &recvtype = get( RTTI::Of<U>() );
+            sendrecv(sendEntry, sendCount, sendtype, destination, sendTag,
+                     recvEntry, recvCount, recvtype, source,      recvTag);
+        }
+
+
+
+
+
+
+
 
         //______________________________________________________________________
         //
@@ -391,11 +455,13 @@ namespace Yttrium
         //
         //______________________________________________________________________
 
+        //! Bcast
         void broadcast(void * const    entry,
                        const size_t    count,
                        const DataType &datatype,
                        const size_t    root);
 
+        //! Bcast primitive type
         template <typename T> inline
         void broadcast(T * const    blockAddr,
                        const size_t numBlocks,
@@ -405,6 +471,22 @@ namespace Yttrium
             broadcast(blockAddr, numBlocks,datatype,root);
         }
 
+        //! Bcast aggregate of primitive type(s)
+        template <typename T, template <typename> class AGG> inline
+        void broadcastND(AGG<T> * const entry,
+                         const size_t   count,
+                         const size_t   root)
+        {
+            static const size_t    DIMS = sizeof(AGG<T>)/sizeof(T);
+            static const DataType &type = get( RTTI::Of<T>() );
+            broadcast(entry,count*DIMS,type,root);
+
+        }
+
+        //______________________________________________________________________
+        //
+        //! print formatted output to C FILE on primary
+        //______________________________________________________________________
         template <typename T>
         struct CastOne
         {
