@@ -59,7 +59,7 @@ namespace Yttrium
         uint8_t         nw  = 0;
         char            data[16];
         memset(data,0,sizeof(data));
-        // recv number of encoded
+        
         {
             const uint64_t mark  = getTicks();
             Y_MPI_CALL(MPI_Recv(&nw, 1, MPI_BYTE, int(source), tag, MPI_COMM_WORLD, &status));
