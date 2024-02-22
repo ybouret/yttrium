@@ -37,11 +37,18 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        // Definitions
+        // Definitions for singleton
         //
         //______________________________________________________________________
         static const char * const      CallSign;                                 //!< "MPI"
         static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 20; //!< lifetime
+
+        enum Quality
+        {
+            MainNode,
+            BulkNode,
+            LastNode,
+        };
 
         //______________________________________________________________________
         //
@@ -459,27 +466,27 @@ namespace Yttrium
         void broadcast(void * const    entry,
                        const size_t    count,
                        const DataType &datatype,
-                       const size_t    root);
+                       const size_t    from);
 
         //! Bcast primitive type
         template <typename T> inline
         void broadcast(T * const    blockAddr,
                        const size_t numBlocks,
-                       const size_t root)
+                       const size_t from)
         {
             static const DataType &datatype = get( RTTI::Of<T>() );
-            broadcast(blockAddr, numBlocks,datatype,root);
+            broadcast(blockAddr, numBlocks,datatype,from);
         }
 
         //! Bcast aggregate of primitive type(s)
         template <typename T, template <typename> class AGG> inline
         void broadcastND(AGG<T> * const entry,
                          const size_t   count,
-                         const size_t   root)
+                         const size_t   from)
         {
             static const size_t    DIMS = sizeof(AGG<T>)/sizeof(T);
             static const DataType &type = get( RTTI::Of<T>() );
-            broadcast(entry,count*DIMS,type,root);
+            broadcast(entry,count*DIMS,type,from);
 
         }
 
@@ -515,7 +522,8 @@ namespace Yttrium
         const bool         parallel;        //!< size>1
         const bool         primary;         //!< rank==0
         const bool         replica;         //!< rank>0
-        
+        const Quality      quality;
+        ;
     private:
         Y_DISABLE_COPY_AND_ASSIGN(MPI);
         friend class Singleton<MPI>;

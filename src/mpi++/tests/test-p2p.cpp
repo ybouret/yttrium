@@ -122,6 +122,11 @@ Y_UTEST(p2p)
     
     mpi.print(stderr,"Hello from <%s>\n", mpi.name);
 
+    for(size_t rank=0;rank<mpi.size;++rank)
+    {
+        
+    }
+
 
 }
 Y_UDONE()

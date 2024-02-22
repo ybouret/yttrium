@@ -176,7 +176,8 @@ namespace Yttrium
     processorName( processor_name() ),
     parallel( size>1 ),
     primary( 0 == rank ),
-    replica( 0 <  rank )
+    replica( 0 <  rank ),
+    quality(MainNode)
     {
         createDB();
     }
