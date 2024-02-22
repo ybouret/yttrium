@@ -36,11 +36,22 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // Methods
+            // Interface
             //
             //__________________________________________________________________
             virtual const void * ro_addr() const noexcept; //!< name
             virtual size_t       measure() const noexcept; //!< len_
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            size_t next1D() const noexcept;
+            size_t prev1D() const noexcept;
+            
+
 
             //__________________________________________________________________
             //
@@ -51,6 +62,7 @@ namespace Yttrium
             const size_t size;     //!< size
             const size_t rank;     //!< rank
             const size_t indx;     //!< rank+1
+            const size_t last;     //!< size-1
             const char   name[48]; //!< size.rank, aligned
             const size_t len_;     //!< strlen(name)
 

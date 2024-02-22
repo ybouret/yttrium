@@ -515,7 +515,7 @@ namespace Yttrium
         const bool         parallel;        //!< size>1
         const bool         primary;         //!< rank==0
         const bool         replica;         //!< rank>0
-
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(MPI);
         friend class Singleton<MPI>;

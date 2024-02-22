@@ -31,6 +31,7 @@ namespace Yttrium
         size(sz),
         rank(rk),
         indx(rank+1),
+        last(size-1),
         name(),
         len_( FormatContext(name,sizeof(name),size,rank) )
         {
@@ -44,6 +45,7 @@ namespace Yttrium
         size(1),
         rank(0),
         indx(1),
+        last(0),
         name(),
         len_( FormatContext(name,sizeof(name),size,rank) )
         {
@@ -56,6 +58,7 @@ namespace Yttrium
         size(other.size),
         rank(other.rank),
         indx(other.indx),
+        last(other.last),
         name(),
         len_(other.len_)
         {
@@ -77,6 +80,18 @@ namespace Yttrium
         {
             return len_;
         }
+
+        size_t Context:: next1D() const noexcept
+        {
+            const size_t res= rank+1;
+            return (res >= size) ? 0 : res;
+        }
+
+        size_t Context:: prev1D() const noexcept
+        {
+            return (rank<=0) ? last : rank-1;
+        }
+
     }
 
 }
