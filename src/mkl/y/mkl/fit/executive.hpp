@@ -6,7 +6,6 @@
 #include "y/mkl/fit/step-inventor.hpp"
 #include "y/mkl/fit/least-squares/roll.hpp"
 #include "y/mkl/numeric.hpp"
-#include "y/sequence/snake.hpp"
 
 namespace Yttrium
 {
@@ -42,7 +41,6 @@ namespace Yttrium
                 typedef Samples<ABSCISSA,ORDINATE>          SamplesType;      //!< alias
                 typedef Proxy<const LeastSquaresType>       ProxyType;        //!< alias
                 typedef Domain<ABSCISSA>                    DomainType;       //!< alias
-                typedef Snake<ABSCISSA>                     SnakeType;
 
                 //______________________________________________________________
                 //
@@ -57,7 +55,6 @@ namespace Yttrium
                 mine( new LeastSquaresType() ),
                 roll( new RollType()         ),
                 solv( new StepInventorType() ),
-                bode( new SnakeType(2)       ),
                 verbose(verb)
                 {}
 
@@ -71,25 +68,6 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
-                inline ABSCISSA Estimate() const
-                {
-                    static const ABSCISSA four(4);
-                    static const ABSCISSA three(3);
-                    assert(1==bode->size()||2==bode->size());
-                    const ABSCISSA Htry = bode->head();
-                    if(1==bode->size())
-                    {
-                        Y_MKL_FIT( " Horg = " << Htry); // special case
-                        return Htry;
-                    }
-                    else
-                    {
-                        const ABSCISSA Horg = bode->tail(); assert(Htry<=Horg);
-                        Y_MKL_FIT( " Horg = " << Horg);
-                        Y_MKL_FIT( " Htry = " << Htry);
-                        return (four * Htry - Horg)/three;
-                    }
-                }
 
 #include "executive/d2.hpp"
 
@@ -110,6 +88,7 @@ namespace Yttrium
                     assert( aorg.size() == used.size() ) ;
                     assert( aorg.size() == adom.size() );
                     assert( adom.contains(aorg) );
+
 
                     //__________________________________________________________
                     //
@@ -134,15 +113,15 @@ namespace Yttrium
                     Libc::OutputFile fp("D2.dat");
                     ABSCISSA      D2org = D2(F,S,aorg,used,G); // full metrics
                     unsigned long cycle = 0;
-                    bode->initWith(Sqrt<ABSCISSA>::Of(D2org));
                 CYCLE:
                     const int p0 = p;
                     ++cycle;
                     Y_MKL_FIT("-------- cycle = " << cycle << " --------");
-                    Y_MKL_FIT("D2org = " << D2org << "# @" << aorg << ", p=" << p);
+                    Y_MKL_FIT("D2org = " << D2org << "# @" << aorg << ", p=" << p << ", used=" << used );
                     Y_MKL_FIT("beta  = " << beta);
-                    
-                    fp("%lu %.15g %.15g\n", cycle, double(D2org), double(bode->head()) ).flush();
+                    Y_MKL_FIT("curv  = " << mine->curv);
+
+                    fp("%lu %.15g\n", cycle, double(D2org) ).flush();
 
                     //----------------------------------------------------------
                     //
@@ -188,10 +167,6 @@ namespace Yttrium
                     }
 
                     Y_MKL_FIT("-- accepted!");
-                    const ABSCISSA Htry = Sqrt<ABSCISSA>::Of(D2try);
-
-                    bode->pushHead( Htry );
-                    assert(bode->size()==1 || bode->size()==2);
 
                     const bool     kept  = (p==p0);
                     if(kept)
@@ -199,20 +174,9 @@ namespace Yttrium
                         Y_MKL_FIT("-- upgrade parameter");
                         if(--p<=pmin) p = pmin;
 
-                        std::cerr << "bode=" << bode << std::endl;
-
-
-                        const ABSCISSA Hest = Estimate();
-                        const ABSCISSA Hdif = mine->aabs(Hest-Htry);
-                        const ABSCISSA htol = Numeric<ABSCISSA>::SQRT_EPSILON;
-                        const ABSCISSA Hlim = htol * Htry;
-                        Y_MKL_FIT( " Hest = " << Hest);
-                        Y_MKL_FIT( " Hdif = " << Hdif);
-                        Y_MKL_FIT( " htol = " << htol);
-                        Y_MKL_FIT( " Hlim = " << Hlim);
+                        const ABSCISSA D2lim = Twice( Numeric<ABSCISSA>::EPSILON * D2try );
+                        Y_MKL_FIT(" D2lim = " << D2lim);
                         
-
-
                     }
 
                     if(cycle>=4) return false;
@@ -243,7 +207,6 @@ namespace Yttrium
                 AutoPtr<LeastSquaresType> mine;
                 AutoPtr<RollType>         roll;
                 AutoPtr<StepInventorType> solv;
-                AutoPtr<SnakeType>        bode;
 
                 inline virtual typename ProxyType::ConstInterface & surrogate() const noexcept { return *mine; }
 
