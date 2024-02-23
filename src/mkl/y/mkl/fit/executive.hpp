@@ -6,7 +6,6 @@
 #include "y/mkl/fit/step-inventor.hpp"
 #include "y/mkl/fit/least-squares/roll.hpp"
 #include "y/mkl/numeric.hpp"
-#include "y/sequence/snake.hpp"
 
 namespace Yttrium
 {
@@ -85,7 +84,8 @@ namespace Yttrium
                 {
 
 
-
+                    static const ABSCISSA zero(0);
+                    
                     assert( aorg.size() == used.size() ) ;
                     assert( aorg.size() == adom.size() );
                     assert( adom.contains(aorg) );
@@ -146,8 +146,10 @@ namespace Yttrium
                     Y_MKL_FIT("D2try = " << D2try << "# @" << atry << ", p=" << p);
 
                     const ABSCISSA sigma = mine->dot(beta,step);
+                    const ABSCISSA gamma = mine->xadd(D2try,-D2org,sigma);
                     Y_MKL_FIT("sigma = " << sigma);
-                    
+                    Y_MKL_FIT("gamma = " << gamma);
+
 
                     {
                         const String     fn = Formatted::Get("d2-%lu.dat",cycle);
@@ -156,7 +158,7 @@ namespace Yttrium
                         for(size_t i=0;i<=nn;++i)
                         {
                             const ABSCISSA u = ABSCISSA(i) / ABSCISSA(nn);
-                            d2("%.15g %.15g %.15g\n", double(u), double(H(u)), double(D2org-sigma*u));
+                            d2("%.15g %.15g %.15g\n", double(u), double(H(u)), double(D2org-sigma*u + gamma * u *u));
                         }
                     }
 
@@ -169,15 +171,19 @@ namespace Yttrium
 
                     Y_MKL_FIT("-- accepted!");
 
+
                     const bool     kept  = (p==p0);
                     if(kept)
                     {
                         Y_MKL_FIT("-- upgrade parameter");
                         if(--p<=pmin) p = pmin;
 
-                        const ABSCISSA D2lim = Twice( Numeric<ABSCISSA>::EPSILON * D2try );
-                        Y_MKL_FIT(" D2lim = " << D2lim);
-                        
+                        if(gamma>zero)
+                        {
+
+                        }
+
+
                     }
 
                     if(cycle>=4) return false;
