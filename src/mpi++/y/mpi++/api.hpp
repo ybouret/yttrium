@@ -448,33 +448,18 @@ namespace Yttrium
         template <typename T> inline
         bool isEqualToPrimary(const T &args)
         {
-            static const uint8_t ok=0x01, no=0x00;
             if(primary)
             {
                 bool result = true;
                 for(size_t r=1;r<size;++r)
-                {
                     send(&args, 1, r, Tag);
-                    uint8_t flag(0);
-                    recv(&flag,1,r,Tag);
-                    if(flag!=ok) result=false;
-                }
                 return result;
             }
             else
             {
                 T temp(0);
                 recv(&temp,1,0,Tag);
-                if(temp==args)
-                {
-                    send(&ok,1,0,Tag);
-                    return true;
-                }
-                else
-                {
-                    send(&no,1,0,Tag);
-                    return false;
-                }
+                return temp == args;
             }
         }
 
