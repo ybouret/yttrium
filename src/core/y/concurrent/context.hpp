@@ -11,6 +11,15 @@ namespace Yttrium
 
     namespace Concurrent
     {
+
+        enum Property
+        {
+            OnlyOne,
+            Leading,
+            Generic,
+            Closing
+        };
+
         //______________________________________________________________________
         //
         //
@@ -59,12 +68,16 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const size_t size;     //!< size
-            const size_t rank;     //!< rank
-            const size_t indx;     //!< rank+1
-            const size_t last;     //!< size-1
-            const char   name[48]; //!< size.rank, aligned
-            const size_t len_;     //!< strlen(name)
+            const size_t   size;     //!< size
+            const size_t   rank;     //!< rank
+            const size_t   indx;     //!< rank+1
+            const size_t   last;     //!< size-1
+            const Property ppty;     //!< rank w.r.t size
+            const bool     parallel; //!< size>1
+            const bool     primary;  //!< rank==0
+            const bool     replica;  //!< rank>0
+            const char     name[48]; //!< size.rank, aligned
+            const size_t   len_;     //!< strlen(name)
 
         private:
             Y_DISABLE_ASSIGN(Context);

@@ -26,12 +26,46 @@ namespace Yttrium
             return strlen(buf);
         }
 
+        static inline
+        Property FormatProperty(const size_t size, const size_t rank) noexcept
+        {
+            assert(size>0);
+            if(1==size)
+            {
+                return OnlyOne;
+            }
+            else
+            {
+                assert(size>=2);
+                if(rank<=0)
+                {
+                    return Leading;
+                }
+                else
+                {
+                    if(rank<size-1)
+                    {
+                        return Generic;
+                    }
+                    else
+                    {
+                        assert(size-1==rank);
+                        return Closing;
+                    }
+                }
+            }
+        }
+
         Context:: Context(const size_t sz, const size_t rk) noexcept :
         Memory::ReadOnlyBuffer(),
         size(sz),
         rank(rk),
         indx(rank+1),
         last(size-1),
+        ppty( FormatProperty(size,rank) ),
+        parallel(size>1),
+        primary(rank<=0),
+        replica(!primary),
         name(),
         len_( FormatContext(name,sizeof(name),size,rank) )
         {
@@ -46,6 +80,10 @@ namespace Yttrium
         rank(0),
         indx(1),
         last(0),
+        ppty(OnlyOne),
+        parallel(false),
+        primary(true),
+        replica(false),
         name(),
         len_( FormatContext(name,sizeof(name),size,rank) )
         {
@@ -59,6 +97,10 @@ namespace Yttrium
         rank(other.rank),
         indx(other.indx),
         last(other.last),
+        ppty(other.ppty),
+        parallel(other.parallel),
+        primary(other.primary),
+        replica(other.replica),
         name(),
         len_(other.len_)
         {

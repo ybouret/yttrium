@@ -1,6 +1,7 @@
 #include "y/mpi++/api.hpp"
 #include "y/stream/io/pack64.hpp"
 #include "y/stream/data/input.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
@@ -128,6 +129,41 @@ namespace Yttrium
         traffic.send.record(sendcount*sendtype.size,ellapsed);
 
 
+    }
+
+
+    static const uint8_t SYNACK = 0xaf;
+
+    void MPI:: syn(const size_t destination)
+    {
+        send(&SYNACK, 1, destination, Tag);
+    }
+
+
+    void MPI:: ack(const size_t source)
+    {
+        uint8_t msg = 0x00;
+        recv(&msg, 1, source, Tag);
+        if( SYNACK != msg ) throw MPI::Exception(MPI_ERR_IO, "Invalid ACK");
+    }
+
+
+    void MPI:: synNext()
+    {
+        assert(parallel);
+        assert(Concurrent::Closing!=ppty);
+        assert(size>=2);
+        assert(rank<size-1);
+        syn(rank+1);
+    }
+
+    void MPI:: ackPrev()
+    {
+        assert(parallel);
+        assert(size>=2);
+        assert(Concurrent::Leading!=ppty);
+        assert(rank>0);
+        ack(rank-1);
     }
 
 }

@@ -167,17 +167,15 @@ namespace Yttrium
         return MPI::Instance();
     }
 
+
+
     MPI:: MPI() :
     Singleton<MPI>(),
     MPIXX(),
     Concurrent::Context( Comm_size(), Comm_rank() ),
     getTicks( MPI_THREAD_SINGLE == threadSupport ? WallTime::Ticks : WallTime::LockedTicks ),
     traffic(),
-    processorName( processor_name() ),
-    parallel( size>1 ),
-    primary( 0 == rank ),
-    replica( 0 <  rank ),
-    quality(MainNode)
+    processorName( processor_name() ) 
     {
         createDB();
     }

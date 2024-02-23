@@ -43,12 +43,6 @@ namespace Yttrium
         static const char * const      CallSign;                                 //!< "MPI"
         static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 20; //!< lifetime
 
-        enum Quality
-        {
-            MainNode,
-            BulkNode,
-            LastNode,
-        };
 
         //______________________________________________________________________
         //
@@ -322,6 +316,12 @@ namespace Yttrium
             }
         };
 
+        void syn(const size_t destination);
+        void ack(const size_t source);
+
+        void synNext();
+        void ackPrev();
+
         //______________________________________________________________________
         //
         //
@@ -439,12 +439,6 @@ namespace Yttrium
         }
 
 
-
-
-
-
-
-
         //______________________________________________________________________
         //
         //! print formatted output to C FILE on primart
@@ -519,11 +513,7 @@ namespace Yttrium
         const GetTicks     getTicks;        //!< ticks protocol
         Traffic            traffic;         //!< current traffic
         const char * const processorName;   //!< processor name
-        const bool         parallel;        //!< size>1
-        const bool         primary;         //!< rank==0
-        const bool         replica;         //!< rank>0
-        const Quality      quality;
-        ;
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(MPI);
         friend class Singleton<MPI>;
@@ -564,6 +554,21 @@ namespace Yttrium
 /**/         throw MPI::Exception(res,"%s",#PROCEDURE); \
 /**/ } while(false)
 
+    //__________________________________________________________________________
+    //
+    //
+    //! perform in order operation
+    //
+    //__________________________________________________________________________
+#define Y_MPI_SEQUENTIAL(THE_MPI,CODE)  \
+/**/    do { \
+/**/        switch(THE_MPI.ppty) { \
+/**/          case Yttrium::Concurrent::OnlyOne:                    do { CODE; } while(false);                    break; \
+/**/          case Yttrium::Concurrent::Leading:                    do { CODE; } while(false); THE_MPI.synNext(); break; \
+/**/          case Yttrium::Concurrent::Generic: THE_MPI.ackPrev(); do { CODE; } while(false); THE_MPI.synNext(); break; \
+/**/          case Yttrium::Concurrent::Closing: THE_MPI.ackPrev(); do { CODE; } while(false);                    break; \
+/**/        }\
+/**/    } while(false)
 
 
 
