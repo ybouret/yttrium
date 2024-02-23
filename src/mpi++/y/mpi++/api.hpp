@@ -316,11 +316,7 @@ namespace Yttrium
             }
         };
 
-        void syn(const size_t destination); //!< send a sync message to destination
-        void ack(const size_t source);      //!< recv a sync message from source
 
-        void synNext(); //!< next rank, if parallel and not closing
-        void ackPrev(); //!< prev rank, if parallel and not leading
 
         //______________________________________________________________________
         //
@@ -436,6 +432,50 @@ namespace Yttrium
             static const DataType &recvtype = get( RTTI::Of<U>() );
             sendrecv(sendEntry, sendCount, sendtype, destination, sendTag,
                      recvEntry, recvCount, recvtype, source,      recvTag);
+        }
+
+        //______________________________________________________________________
+        //
+        //
+        // Helpers
+        //
+        //______________________________________________________________________
+        void syn(const size_t destination); //!< send a sync message to destination
+        void ack(const size_t source);      //!< recv a sync message from source
+        void synNext();                     //!< next rank, if parallel and not closing
+        void ackPrev();                     //!< prev rank, if parallel and not leading
+
+        template <typename T> inline
+        bool isEqualToPrimary(const T &args)
+        {
+            static const uint8_t ok=0x01, no=0x00;
+            if(primary)
+            {
+                bool result = true;
+                for(size_t r=1;r<size;++r)
+                {
+                    send(&args, 1, r, Tag);
+                    uint8_t flag(0);
+                    recv(&flag,1,r,Tag);
+                    if(flag!=ok) result=false;
+                }
+                return result;
+            }
+            else
+            {
+                T temp(0);
+                recv(&temp,1,0,Tag);
+                if(temp==args)
+                {
+                    send(&ok,1,0,Tag);
+                    return true;
+                }
+                else
+                {
+                    send(&no,1,0,Tag);
+                    return false;
+                }
+            }
         }
 
 
