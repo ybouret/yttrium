@@ -11,13 +11,20 @@ namespace Yttrium
 
     namespace Concurrent
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! possible properties of a context
+        //
+        //
+        //______________________________________________________________________
         enum Property
         {
-            OnlyOne,
-            Leading,
-            Generic,
-            Closing
+            OnlyOne, //!< sequential
+            Leading, //!< parallel, rank=0
+            Generic, //!< parallel, rank>0, rank<size-1
+            Closing  //!< parallel, rank==size-1
         };
 
         //______________________________________________________________________

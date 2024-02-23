@@ -316,11 +316,11 @@ namespace Yttrium
             }
         };
 
-        void syn(const size_t destination);
-        void ack(const size_t source);
+        void syn(const size_t destination); //!< send a sync message to destination
+        void ack(const size_t source);      //!< recv a sync message from source
 
-        void synNext();
-        void ackPrev();
+        void synNext(); //!< next rank, if parallel and not closing
+        void ackPrev(); //!< prev rank, if parallel and not leading
 
         //______________________________________________________________________
         //
@@ -557,7 +557,7 @@ namespace Yttrium
     //__________________________________________________________________________
     //
     //
-    //! perform in order operation
+    //! perform in order operations
     //
     //__________________________________________________________________________
 #define Y_MPI_SEQUENTIAL(THE_MPI,CODE)  \
