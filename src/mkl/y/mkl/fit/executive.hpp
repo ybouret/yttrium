@@ -6,6 +6,7 @@
 #include "y/mkl/fit/step-inventor.hpp"
 #include "y/mkl/fit/least-squares/roll.hpp"
 #include "y/mkl/numeric.hpp"
+#include "y/sequence/snake.hpp"
 
 namespace Yttrium
 {
