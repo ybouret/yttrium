@@ -50,6 +50,7 @@ Y_UTEST_DECL(64)
     Y_UTEST(stats_descr);
    
     Y_UTEST(fit_samples);
+    Y_UTEST(fit_predictor);
 
 }
 Y_UTEST_EXEC()
