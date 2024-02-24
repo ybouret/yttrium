@@ -85,7 +85,8 @@ namespace Yttrium
 
 
                     static const ABSCISSA zero(0);
-                    
+                    static const ABSCISSA one(1);
+
                     assert( aorg.size() == used.size() ) ;
                     assert( aorg.size() == adom.size() );
                     assert( adom.contains(aorg) );
@@ -142,9 +143,11 @@ namespace Yttrium
                     //
                     //----------------------------------------------------------
 
+                    
+
+
                     const ABSCISSA D2try = D2(F,S,atry);
                     Y_MKL_FIT("D2try = " << D2try << "# @" << atry << ", p=" << p);
-
                     const ABSCISSA sigma = mine->dot(beta,step);
                     const ABSCISSA gamma = mine->xadd(D2try,-D2org,sigma);
                     Y_MKL_FIT("sigma = " << sigma);
@@ -180,6 +183,12 @@ namespace Yttrium
 
                         if(gamma>zero)
                         {
+                            const ABSCISSA u_opt = sigma/(gamma+gamma);
+                            const ABSCISSA u_err = mine->aabs(u_opt-one);
+
+                            std::cerr << "u_opt=" << u_opt << std::endl;
+                            std::cerr << "u_err=" << u_err << " / " << Numeric<ABSCISSA>::SQRT_EPSILON << std::endl;
+
 
                         }
 
