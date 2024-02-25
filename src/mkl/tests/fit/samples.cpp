@@ -300,7 +300,7 @@ Y_UTEST(fit_samples)
         S2.saveDatFile("-all");
         all.display("", std::cerr, aorg);
 
-        return 0;
+        //return 0;
 
     }
 
@@ -312,11 +312,10 @@ Y_UTEST(fit_samples)
         typedef V2D<double> VTX;
         Circle<double>      Circ;
 
-        Fit::LeastSquares<double,VTX>                 eval;
+        Fit::Executive<double,VTX>                    xrun;
         Fit::LeastSquares<double,VTX>::OutOfOrderFunc F( &Circ, & Circle<double>::F );
         Fit::LeastSquares<double,VTX>::OutOfOrderGrad G( &Circ, & Circle<double>::G );
-        Y_SIZEOF(eval);
-
+        
 
         Vector<double> aorg(vars.span(),0);
         vars(aorg,"x_c")    = 0.0;
@@ -324,22 +323,22 @@ Y_UTEST(fit_samples)
         vars(aorg,"radius") = 0.78;
         vars.display("", std::cerr, aorg);
 
-        const double D21 = eval.Of(F, *H1, aorg);
+        const double D21 = xrun.D2(F,*H1,aorg);
         std::cerr << "D21   = " << D21 << std::endl;
 
         Vector<bool>   used(aorg.size(),true);
-        const double   D21a = eval.Of(F,*H1, aorg, used, G);;
+        const double   D21a = xrun.D2(F,*H1, aorg, used, G);;
         std::cerr << "D21a  = " << D21a << std::endl;
-        std::cerr << "beta  = " << eval.beta << std::endl;
-        std::cerr << "curv  = " << eval.curv << std::endl;
+        //std::cerr << "beta  = " << eval.beta << std::endl;
+        //std::cerr << "curv  = " << eval.curv << std::endl;
 
 
 
         vars(used,"radius") = false;
-        const double   D21b = eval.Of(F,*H1, aorg, used, G);
+        const double   D21b = xrun.D2(F,*H1, aorg, used, G);
         std::cerr << "D21b  = " << D21b << std::endl;
-        std::cerr << "beta  = " << eval.beta << std::endl;
-        std::cerr << "curv  = " << eval.curv << std::endl;
+        //std::cerr << "beta  = " << eval.beta << std::endl;
+        //std::cerr << "curv  = " << eval.curv << std::endl;
 
     }
 #endif
