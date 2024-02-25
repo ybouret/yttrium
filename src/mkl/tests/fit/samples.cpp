@@ -282,6 +282,11 @@ Y_UTEST(fit_samples)
 
         xfit.run(F,S1,aorg,dom,used,G);
         S1.saveDatFile("-try");
+
+        used.ld(true);
+        xfit.run(F,S1,aorg,dom,used,G);
+        S1.saveDatFile("-opt");
+
         //xfit.run(F,S2,aorg,used,G);
         //xfit.run(F,samples,aorg,used,G);
 

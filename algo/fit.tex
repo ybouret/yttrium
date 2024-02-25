@@ -84,15 +84,25 @@ The guess step is:
 	\delta \vec{a}_\lambda = \bm{\alpha}_\lambda^{-1} \vec \beta
 \end{equation}
 
+\section{Stop}
+
+Let us have a function $H$:
 \begin{equation}
-	\delta \vec{a}_\lambda \to 
-	\dfrac{1}{\lambda}
-	\begin{bmatrix}
-		\vdots\\
-		\dfrac{ \beta_i }{w_i\alpha_{ii}}\\
-		\vdots\\
-	\end{bmatrix}
+	H(u) = H_0 - \sigma u + \gamma u^2
 \end{equation}
+
+\begin{equation}
+ \gamma = H_1 - H_0 + \sigma
+\end{equation}
+
+\begin{equation}
+	u_{opt} = \dfrac{\sigma}{2\gamma}
+\end{equation}
+
+\begin{equation}
+	H_1 - H(u_{opt}) = \dfrac{(2\gamma-\sigma)^2}{4\gamma}
+\end{equation}
+
 
 \section{Errors}
 For no error, we have $\vec{a}_0$ and $D^2(\vec{a}_0)=0$.

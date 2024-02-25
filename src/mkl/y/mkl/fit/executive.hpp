@@ -85,7 +85,7 @@ namespace Yttrium
 
 
                     static const ABSCISSA zero(0);
-                    static const ABSCISSA one(1);
+                    static const ABSCISSA ftol( Numeric<ABSCISSA>::FTOL );
 
                     assert( aorg.size() == used.size() ) ;
                     assert( aorg.size() == adom.size() );
@@ -175,44 +175,48 @@ namespace Yttrium
                     Y_MKL_FIT("-- accepted!");
 
 
-                    const bool     kept  = (p==p0);
+                    bool           success = false;
+                    const bool     kept    = (p==p0);
                     if(kept)
                     {
                         Y_MKL_FIT("-- upgrade parameter");
                         if(--p<=pmin) p = pmin;
 
+#if 1
                         if(gamma>zero)
                         {
-                            const ABSCISSA u_opt = sigma/(gamma+gamma);
-                            const ABSCISSA u_err = mine->aabs(u_opt-one);
-
-                            std::cerr << "u_opt=" << u_opt << std::endl;
-                            std::cerr << "u_err=" << u_err << " / " << Numeric<ABSCISSA>::SQRT_EPSILON << std::endl;
-
-
+                            const ABSCISSA _2_gamma = Twice(gamma);
+                            const ABSCISSA _4_gamma = Twice(_2_gamma);
+                            const ABSCISSA lhs  = mine->aabs(_2_gamma-sigma);
+                            const ABSCISSA rhs2 = mine->aabs(ftol*_4_gamma*D2org);
+                            const ABSCISSA rhs  = Sqrt<ABSCISSA>::Of(rhs2);
+                            Y_MKL_FIT("-- criterion : lhs=" << lhs << "; rhs=" << rhs);
+                            if(lhs<=rhs)
+                            {
+                                success = true;
+                            }
                         }
-
+#endif
+                        
 
                     }
 
                     if(cycle>=4) return false;
 
 
-
                     Tao::Load(aorg,atry);
-                    D2org = D2(F,S,aorg,used,G);
+
+                    if( success )
+                    {
+                        return true;
+                    }
 
 
                     //----------------------------------------------------------
                     // prepare for next cycle
                     //----------------------------------------------------------
-
-
-                    if(cycle<=5)
-                        goto CYCLE;
-
-
-                    return false;
+                    D2org = D2(F,S,aorg,used,G);
+                    goto CYCLE;
                 }
 
 
