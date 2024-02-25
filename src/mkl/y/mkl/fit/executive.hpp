@@ -13,8 +13,16 @@ namespace Yttrium
     namespace MKL
     {
 
+
         namespace Fit
         {
+
+            enum Result
+            {
+                Success,
+                Failure,
+                Spurious
+            };
 
             //__________________________________________________________________
             //
@@ -52,6 +60,7 @@ namespace Yttrium
                 //! setup
                 inline explicit Executive(const bool verb=true) :
                 ProxyType(),
+                dtol(1e-4),
                 mine( new LeastSquaresType() ),
                 roll( new RollType()         ),
                 solv( new StepInventorType() ),
@@ -75,18 +84,18 @@ namespace Yttrium
                 typename FUNCTION,
                 typename GRADIENT,
                 typename SAMPLE>
-                bool run(FUNCTION           &F,
-                         SAMPLE             &S,
-                         Writable<ABSCISSA> &aorg,
-                         const DomainType   &adom,
-                         const Booleans     &used,
-                         GRADIENT           &G)
+                Result run(FUNCTION           &F,
+                           SAMPLE             &S,
+                           Writable<ABSCISSA> &aorg,
+                           const DomainType   &adom,
+                           const Booleans     &used,
+                           GRADIENT           &G)
                 {
 
-
-                    static const ABSCISSA zero(0);
-                    static const ABSCISSA ftol( Numeric<ABSCISSA>::FTOL );
-
+                    //__________________________________________________________
+                    //
+                    // sanity check
+                    //__________________________________________________________
                     assert( aorg.size() == used.size() ) ;
                     assert( aorg.size() == adom.size() );
                     assert( adom.contains(aorg) );
@@ -98,13 +107,13 @@ namespace Yttrium
                     //__________________________________________________________
                     Writable<ABSCISSA>       & atry = solv->atry;          // alias
                     const Readable<ABSCISSA> & beta = mine->beta;          // alias
-                    const Readable<ABSCISSA> & step = solv->step;          // alias
-                    Writable<ABSCISSA>       & atmp = solv->atmp;          // alias
+                    //const Readable<ABSCISSA> & step = solv->step;          // alias
+                    //Writable<ABSCISSA>       & atmp = solv->atmp;          // alias
                     const int                  pmin = solv->pmin;          // alias
                     const int                  pmax = solv->pmax;          // alias
                     const size_t               nvar = aorg.size();         // num variables
                     int                        p    = -4;                  // initial guess TODO
-                    D2Call<FUNCTION,SAMPLE>    H    = { nvar, aorg, atry, atmp, F,S, *this };
+                    //D2Call<FUNCTION,SAMPLE>    H    = { nvar, aorg, atry, atmp, F,S, *this };
 
                     //__________________________________________________________
                     //
@@ -134,20 +143,17 @@ namespace Yttrium
                     if(!solv->buildStep(*mine,aorg,adom,p,used,verbose))
                     {
                         Y_MKL_FIT("-- no possible step");
-                        return false;
+                        return Failure;
                     }
 
                     //----------------------------------------------------------
                     //
-                    // here, we have an approximated step
+                    // here, we have an approximated step and trial
                     //
                     //----------------------------------------------------------
-
-                    
-
-
                     const ABSCISSA D2try = D2(F,S,atry);
                     Y_MKL_FIT("D2try = " << D2try << "# @" << atry << ", p=" << p);
+#if 0
                     const ABSCISSA sigma = mine->dot(beta,step);
                     const ABSCISSA gamma = mine->xadd(D2try,-D2org,sigma);
                     Y_MKL_FIT("sigma = " << sigma);
@@ -164,11 +170,12 @@ namespace Yttrium
                             d2("%.15g %.15g %.15g\n", double(u), double(H(u)), double(D2org-sigma*u + gamma * u *u));
                         }
                     }
+#endif
 
                     if(D2try>D2org)
                     {
                         Y_MKL_FIT("Bad!");
-                        Y_MKL_FIT_DEGRADE();
+                        Y_MKL_FIT_DEGRADE(Spurious);
                         goto BUILD_STEP;
                     }
 
@@ -182,34 +189,23 @@ namespace Yttrium
                         Y_MKL_FIT("-- upgrade parameter");
                         if(--p<=pmin) p = pmin;
 
-#if 1
-                        if(gamma>zero)
+                        const ABSCISSA delta = D2org-D2try;
+                        const ABSCISSA limit = dtol * D2org;
+                        Y_MKL_FIT("-- delta = " << delta << " / limit=" << limit);
+                        if( delta <= limit)
                         {
-                            const ABSCISSA _2_gamma = Twice(gamma);
-                            const ABSCISSA _4_gamma = Twice(_2_gamma);
-                            const ABSCISSA lhs  = mine->aabs(_2_gamma-sigma);
-                            const ABSCISSA rhs2 = mine->aabs(ftol*_4_gamma*D2org);
-                            const ABSCISSA rhs  = Sqrt<ABSCISSA>::Of(rhs2);
-                            Y_MKL_FIT("-- criterion : lhs=" << lhs << "; rhs=" << rhs);
-                            if(lhs<=rhs)
-                            {
-                                success = true;
-                            }
+                            Y_MKL_FIT("-- success");
+                            success = true;
                         }
-#endif
-                        
 
                     }
 
-                    if(cycle>=4) return false;
-
-
+                    //----------------------------------------------------------
+                    // update and check status
+                    //----------------------------------------------------------
                     Tao::Load(aorg,atry);
-
                     if( success )
-                    {
-                        return true;
-                    }
+                        return Success;
 
 
                     //----------------------------------------------------------
@@ -219,9 +215,13 @@ namespace Yttrium
                     goto CYCLE;
                 }
 
-
-
-
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                ABSCISSA                  dtol;
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Executive);
                 AutoPtr<LeastSquaresType> mine;

@@ -22,8 +22,8 @@ namespace Yttrium
 #define Y_MKL_FIT(MSG) do { if(verbose) std::cerr << MSG << std::endl; } while(false)
 
             //! helper to degrade step/return false on overflow
-#define Y_MKL_FIT_DEGRADE() do {            \
-/**/ if(++p>pmax) { p=pmax; return false; } \
+#define Y_MKL_FIT_DEGRADE(RETURN) do {       \
+/**/ if(++p>pmax) { p=pmax; return RETURN; } \
 } while(false)
             
 

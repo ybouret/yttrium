@@ -280,15 +280,25 @@ Y_UTEST(fit_samples)
 
         //used.ld(true);
 
+        Y_ASSERT(Fit::Failure != xfit.run(F,S1,aorg,dom,used,G) );
         xfit.run(F,S1,aorg,dom,used,G);
         S1.saveDatFile("-try");
 
         used.ld(true);
-        xfit.run(F,S1,aorg,dom,used,G);
+        Y_ASSERT(Fit::Failure != xfit.run(F,S1,aorg,dom,used,G) );
         S1.saveDatFile("-opt");
 
-        //xfit.run(F,S2,aorg,used,G);
-        //xfit.run(F,samples,aorg,used,G);
+        S1.vars.display("", std::cerr, aorg);
+        Y_ASSERT(Fit::Failure != xfit.run(F,S2,aorg,dom,used,G) );
+        S2.saveDatFile("-opt");
+        S2.vars.display("", std::cerr, aorg);
+
+
+        Y_ASSERT( Fit::Failure != xfit.run(F,samples,aorg,dom,used,G) );
+
+        S1.saveDatFile("-all");
+        S2.saveDatFile("-all");
+        all.display("", std::cerr, aorg);
 
         return 0;
 

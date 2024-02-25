@@ -110,7 +110,7 @@ namespace Yttrium
                 while( !buildCurvature(alpha,p,used) )
                 {
                     Y_MKL_FIT("    singular curvature");
-                    Y_MKL_FIT_DEGRADE();
+                    Y_MKL_FIT_DEGRADE(false);
                 }
 
                 //--------------------------------------------------------------
@@ -132,7 +132,7 @@ namespace Yttrium
                 if(!adom.contains(atry))
                 {
                     Y_MKL_FIT("  out of domain");
-                    Y_MKL_FIT_DEGRADE();
+                    Y_MKL_FIT_DEGRADE(false);
                     goto TRIAL;
                 }
                 
