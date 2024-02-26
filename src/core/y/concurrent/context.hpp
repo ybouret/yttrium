@@ -64,8 +64,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            size_t next1D() const noexcept;
-            size_t prev1D() const noexcept;
+            size_t next1D() const noexcept; //!< next in 1D
+            size_t prev1D() const noexcept; //!< prev in 1D
             
 
 

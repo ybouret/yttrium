@@ -445,6 +445,7 @@ namespace Yttrium
         void synNext();                     //!< next rank, if parallel and not closing
         void ackPrev();                     //!< prev rank, if parallel and not leading
 
+        //! local check same value than args
         template <typename T> inline
         bool isEqualToPrimary(const T &args)
         {

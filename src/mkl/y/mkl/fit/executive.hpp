@@ -17,11 +17,12 @@ namespace Yttrium
         namespace Fit
         {
 
+            //! possible outcome of a Fit
             enum Result
             {
-                Success,
-                Failure,
-                Spurious
+                Success, //!< normal return
+                Failure, //!< singular jacobian
+                Spurious //!< degenerate numerical value, must check
             };
 
             //__________________________________________________________________
