@@ -81,17 +81,14 @@ namespace Yttrium
 #include "executive/d2.hpp"
 #include "executive/run.hpp"
 #include "executive/err.hpp"
-
-
-
-
+                
                 //______________________________________________________________
                 //
                 //
                 // Members
                 //
                 //______________________________________________________________
-                ABSCISSA                  dtol;
+                ABSCISSA                  dtol; //!< decreasing toleance
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Executive);
                 AutoPtr<LeastSquaresType> mine;
