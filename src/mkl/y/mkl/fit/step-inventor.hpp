@@ -7,6 +7,7 @@
 #include "y/mkl/fit/domain.hpp"
 #include "y/mkl/algebra/lu.hpp"
 #include "y/mkl/tao/seq/level1.hpp"
+#include "y/stream/xmlog.hpp"
 
 namespace Yttrium
 {
@@ -79,11 +80,11 @@ namespace Yttrium
                  */
                 //______________________________________________________________
                 bool buildStep(const LeastSquaresCom<ABSCISSA> & lsqf,
-                               const Readable<ABSCISSA> &        aorg,
-                               const Domain<ABSCISSA>   &        adom,
-                               int                      &        p,
-                               const Booleans           &        used,
-                               const bool                        verbose);
+                               const Readable<ABSCISSA>        & aorg,
+                               const Domain<ABSCISSA>          & adom,
+                               int                             & p,
+                               const Booleans                  & used,
+                               XMLog                           & xml);
 
 
                 //______________________________________________________________

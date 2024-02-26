@@ -73,8 +73,28 @@ namespace Yttrium
                 {
 
                 }
+
                 //! cleanup
                 inline virtual ~HeavySample() noexcept {}
+
+                //! setup from C-data, with copy/conversion
+                template <
+                typename ID,
+                typename ABSCISSA_ARRAY,
+                typename ORDINATE_ARRAY>
+                inline explicit HeavySample(const ID &id,
+                const ABSCISSA_ARRAY * const aarr,
+                const ORDINATE_ARRAY * const oarr,
+                const size_t                 ndat) :
+                SampleType(id),
+                _num(0),
+                _abs(ndat,AsCapacity),
+                _ord(ndat,AsCapacity),
+                _pre(ndat,AsCapacity)
+                {
+                    for(size_t i=0;i<ndat;++i)
+                        add(aarr[i],oarr[i]);
+                }
 
                 //______________________________________________________________
                 //

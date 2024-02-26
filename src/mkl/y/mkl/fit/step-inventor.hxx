@@ -79,7 +79,7 @@ namespace Yttrium
                                                   const Domain<real_t>           &adom,
                                                   int                            &p,
                                                   const Booleans                 &used,
-                                                  const bool                      verbose)
+                                                  XMLog                          &xml)
             {
                 assert(p>=pmin);
                 assert(p<=pmax);
@@ -99,17 +99,16 @@ namespace Yttrium
                 assert(nvar == atry.size());
                 assert(adom.contains(aorg));
 
-                Y_MKL_FIT("<buildStep>");
                 //--------------------------------------------------------------
                 //
                 // look for invertible matrix
                 //
                 //--------------------------------------------------------------
             TRIAL:
-                Y_MKL_FIT("  buildCurvature(p=" << p << ")");
+                Y_XMLOG(xml, "-- buildCurvature(p=" << p << ")");
                 while( !buildCurvature(alpha,p,used) )
                 {
-                    Y_MKL_FIT("    singular curvature");
+                    Y_XMLOG(xml,"*** singular curvature");
                     Y_MKL_FIT_DEGRADE(false);
                 }
 
@@ -127,17 +126,16 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 Tao::Add(atry,aorg,step);
-                Y_MKL_FIT("  step=" << step);
-                Y_MKL_FIT("  atry=" << atry);
+                Y_XMLOG(xml,"step=" << step);
+                Y_XMLOG(xml,"atry=" << atry);
                 if(!adom.contains(atry))
                 {
-                    Y_MKL_FIT("  out of domain");
+                    Y_XMLOG(xml,"*** out of domain");
                     Y_MKL_FIT_DEGRADE(false);
                     goto TRIAL;
                 }
                 
 
-                Y_MKL_FIT("<buildStep/>");
                 return true;
             }
 

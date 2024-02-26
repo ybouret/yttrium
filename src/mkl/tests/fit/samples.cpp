@@ -109,6 +109,8 @@ namespace
 
 Y_UTEST(fit_samples)
 {
+    bool verbose = true;
+    XMLog xml(verbose);
 
     static const double _t1[] = { 30,80,140,200,270,320,430,550,640,720,830,890 };
     static const double _x1[] = { 4.414520,5.011710,5.632319,6.194379,6.721311,7.330211,8.009368,8.735363,9.297424,9.707260,10.339578,10.878220};
@@ -233,7 +235,7 @@ Y_UTEST(fit_samples)
         std::cerr << std::endl;
 
         std::cerr << "-------- Using Executive --------" << std::endl;
-        Fit::Executive<double,double> xfit(true);
+        Fit::Executive<double,double> xfit;
 
         used.ld(true);
         const double S1D2  = xfit.D2(F,S1,aorg);
@@ -280,21 +282,22 @@ Y_UTEST(fit_samples)
 
         //used.ld(true);
 
-        Y_ASSERT(Fit::Failure != xfit.run(F,S1,aorg,dom,used,G) );
-        xfit.run(F,S1,aorg,dom,used,G);
+
+
+        Y_ASSERT(Fit::Failure != xfit.run(F,S1,aorg,dom,used,G,xml) );
         S1.saveDatFile("-try");
 
         used.ld(true);
-        Y_ASSERT(Fit::Failure != xfit.run(F,S1,aorg,dom,used,G) );
+        Y_ASSERT(Fit::Failure != xfit.run(F,S1,aorg,dom,used,G,xml) );
         S1.saveDatFile("-opt");
 
         S1.vars.display("", std::cerr, aorg);
-        Y_ASSERT(Fit::Failure != xfit.run(F,S2,aorg,dom,used,G) );
+        Y_ASSERT(Fit::Failure != xfit.run(F,S2,aorg,dom,used,G,xml) );
         S2.saveDatFile("-opt");
         S2.vars.display("", std::cerr, aorg);
 
 
-        Y_ASSERT( Fit::Failure != xfit.run(F,samples,aorg,dom,used,G) );
+        Y_ASSERT( Fit::Failure != xfit.run(F,samples,aorg,dom,used,G,xml) );
 
         S1.saveDatFile("-all");
         S2.saveDatFile("-all");

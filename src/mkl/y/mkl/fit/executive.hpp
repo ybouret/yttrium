@@ -58,13 +58,12 @@ namespace Yttrium
                 //______________________________________________________________
 
                 //! setup
-                inline explicit Executive(const bool verb=true) :
+                inline explicit Executive() :
                 ProxyType(),
                 dtol(1e-4),
                 mine( new LeastSquaresType() ),
                 roll( new RollType()         ),
-                solv( new StepInventorType() ),
-                verbose(verb)
+                solv( new StepInventorType() )
                 {}
 
                 //! cleanup
@@ -89,8 +88,10 @@ namespace Yttrium
                            Writable<ABSCISSA> &aorg,
                            const DomainType   &adom,
                            const Booleans     &used,
-                           GRADIENT           &G)
+                           GRADIENT           &G,
+                           XMLog              &xml)
                 {
+                    Y_XML_SECTION(xml, "LeastSquaresFit");
 
                     //__________________________________________________________
                     //
@@ -107,14 +108,11 @@ namespace Yttrium
                     //__________________________________________________________
                     Writable<ABSCISSA>       & atry = solv->atry;          // alias
                     const Readable<ABSCISSA> & beta = mine->beta;          // alias
-                    //const Readable<ABSCISSA> & step = solv->step;          // alias
-                    //Writable<ABSCISSA>       & atmp = solv->atmp;          // alias
                     const int                  pmin = solv->pmin;          // alias
                     const int                  pmax = solv->pmax;          // alias
                     const size_t               nvar = aorg.size();         // num variables
                     int                        p    = -4;                  // initial guess TODO
-                    //D2Call<FUNCTION,SAMPLE>    H    = { nvar, aorg, atry, atmp, F,S, *this };
-
+                    
                     //__________________________________________________________
                     //
                     // top level memory
@@ -127,10 +125,10 @@ namespace Yttrium
                 CYCLE:
                     const int p0 = p;
                     ++cycle;
-                    Y_MKL_FIT("-------- cycle = " << cycle << " --------");
-                    Y_MKL_FIT("D2org = " << D2org << "# @" << aorg << ", p=" << p << ", used=" << used );
-                    Y_MKL_FIT("beta  = " << beta);
-                    Y_MKL_FIT("curv  = " << mine->curv);
+                    Y_XMLOG(xml,"-------- cycle = " << cycle << " --------");
+                    Y_XMLOG(xml,"D2org = " << D2org << "# @" << aorg << ", p=" << p << ", used=" << used );
+                    Y_XMLOG(xml,"beta  = " << beta);
+                    Y_XMLOG(xml,"curv  = " << mine->curv);
 
                     fp("%lu %.15g\n", cycle, double(D2org) ).flush();
 
@@ -140,9 +138,9 @@ namespace Yttrium
                     //
                     //----------------------------------------------------------
                 BUILD_STEP:
-                    if(!solv->buildStep(*mine,aorg,adom,p,used,verbose))
+                    if(!solv->buildStep(*mine,aorg,adom,p,used,xml))
                     {
-                        Y_MKL_FIT("-- no possible step");
+                        Y_XMLOG(xml,"  *** no possible step");
                         return Failure;
                     }
 
@@ -152,49 +150,31 @@ namespace Yttrium
                     //
                     //----------------------------------------------------------
                     const ABSCISSA D2try = D2(F,S,atry);
-                    Y_MKL_FIT("D2try = " << D2try << "# @" << atry << ", p=" << p);
-#if 0
-                    const ABSCISSA sigma = mine->dot(beta,step);
-                    const ABSCISSA gamma = mine->xadd(D2try,-D2org,sigma);
-                    Y_MKL_FIT("sigma = " << sigma);
-                    Y_MKL_FIT("gamma = " << gamma);
-
-
-                    {
-                        const String     fn = Formatted::Get("d2-%lu.dat",cycle);
-                        Libc::OutputFile d2(fn);
-                        const size_t     nn = 100;
-                        for(size_t i=0;i<=nn;++i)
-                        {
-                            const ABSCISSA u = ABSCISSA(i) / ABSCISSA(nn);
-                            d2("%.15g %.15g %.15g\n", double(u), double(H(u)), double(D2org-sigma*u + gamma * u *u));
-                        }
-                    }
-#endif
+                    Y_XMLOG(xml,"D2try = " << D2try << "# @" << atry << ", p=" << p);
 
                     if(D2try>D2org)
                     {
-                        Y_MKL_FIT("Bad!");
+                        Y_XMLOG(xml,"-- bad step");
                         Y_MKL_FIT_DEGRADE(Spurious);
                         goto BUILD_STEP;
                     }
 
-                    Y_MKL_FIT("-- accepted!");
+                    Y_XMLOG(xml,"-- accepted!");
 
 
                     bool           success = false;
                     const bool     kept    = (p==p0);
                     if(kept)
                     {
-                        Y_MKL_FIT("-- upgrade parameter");
+                        Y_XMLOG(xml,"-- upgrade parameter");
                         if(--p<=pmin) p = pmin;
 
                         const ABSCISSA delta = D2org-D2try;
                         const ABSCISSA limit = dtol * D2org;
-                        Y_MKL_FIT("-- delta = " << delta << " / limit=" << limit);
+                        Y_XMLOG(xml,"-- delta = " << delta << " / limit=" << limit);
                         if( delta <= limit)
                         {
-                            Y_MKL_FIT("-- success");
+                            Y_XMLOG(xml,"-- success");
                             success = true;
                         }
 
@@ -253,10 +233,7 @@ namespace Yttrium
                     }
 
                 };
-
-
-            public:
-                bool verbose; //!< verbosity
+                
             };
         }
 
