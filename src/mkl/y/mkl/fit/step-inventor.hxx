@@ -105,10 +105,10 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
             TRIAL:
-                Y_XMLOG(xml, "-- buildCurvature(p=" << p << ")");
+                Y_XMLOG(xml, "# buildCurvature(p=" << p << ")");
                 while( !buildCurvature(alpha,p,used) )
                 {
-                    Y_XMLOG(xml,"*** singular curvature");
+                    Y_XMLOG(xml,"# *** singular curvature");
                     Y_MKL_FIT_DEGRADE(false);
                 }
 
@@ -130,7 +130,7 @@ namespace Yttrium
                 Y_XMLOG(xml,"atry=" << atry);
                 if(!adom.contains(atry))
                 {
-                    Y_XMLOG(xml,"*** out of domain");
+                    Y_XMLOG(xml,"# *** out of domain");
                     Y_MKL_FIT_DEGRADE(false);
                     goto TRIAL;
                 }
