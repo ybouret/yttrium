@@ -15,6 +15,7 @@ ABSCISSA err(FUNCTION           &F,
 
     static const ABSCISSA zero(0);
 
+    Y_XML_SECTION(xml,"LeastSquaresErr");
 
     return zero;
 
