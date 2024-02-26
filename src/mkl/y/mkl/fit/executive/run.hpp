@@ -1,5 +1,9 @@
 //! \file
 
+//! running algorithm from starting point
+/**
+ 
+ */
 template <
 typename FUNCTION,
 typename GRADIENT,
