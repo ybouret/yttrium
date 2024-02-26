@@ -10,6 +10,7 @@ root
 eigen
 stats
 fit
+strain
 )
 
 set( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
@@ -64,5 +65,7 @@ add_test(eigen:diag     test-mkl eigen_diag)
 
 add_test(fit:samples    test-mkl fit_samples)
 add_test(fit:predictor  test-mkl fit_predictor)
+
+add_test(strain:filter test-mkl strain_filter)
 
 
