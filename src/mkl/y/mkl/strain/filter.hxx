@@ -31,11 +31,24 @@ namespace Yttrium
                 return code->coef[indx];
             }
 
+            template <> void Filter<real_t>:: free() noexcept
+            {
+                assert(0!=code);
+                code->points.free();
+            }
+
             template <> void Filter<real_t>:: eval(const real_t x0,
                                                    const size_t degree)
             {
                 assert(0!=code);
                 code->eval(x0,degree);
+            }
+
+            template <> void Filter<real_t>:: add(const real_t x, const real_t y)
+            {
+                assert(0!=code);
+                const V4D<real_t> p(x,y,0,0);
+                code->points << p;
             }
         }
     }

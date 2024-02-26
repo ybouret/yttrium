@@ -39,7 +39,8 @@ namespace Yttrium
                 virtual size_t       size()     const noexcept;
                 virtual const T & operator[](const size_t indx) const noexcept;
 
-                void free();
+                void free() noexcept;
+                void add(const T x, const T y);
                 void eval(const T x0, const size_t degree);
 
 
