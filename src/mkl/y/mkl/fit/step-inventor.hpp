@@ -75,7 +75,7 @@ namespace Yttrium
                  \param adom    domains of definition
                  \param p       correcting parameter, possibly upgraded
                  \param used    used parameters
-                 \param verbose verbosity
+                 \param xml     verbosity
                  \return false if singular matrix or always out of bound step
                  */
                 //______________________________________________________________
