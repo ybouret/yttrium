@@ -11,12 +11,17 @@ namespace Yttrium
     {
         namespace Strain
         {
+            
+
             template <typename T>
             class Filter
             {
             public:
-                explicit Filter() noexcept;;
+                explicit Filter();
                 virtual ~Filter() noexcept;
+
+
+
 
             private:
                 class Code;

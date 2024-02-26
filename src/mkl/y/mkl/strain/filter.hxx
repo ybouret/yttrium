@@ -8,10 +8,11 @@ namespace Yttrium
 
             template <> Filter<real_t>:: ~Filter() noexcept
             {
-                if(0!=code) Nullify(code);
+                assert(0!=code);
+                Nullify(code);
             }
 
-            template <> Filter<real_t>:: Filter() noexcept : code(0) {}
+            template <> Filter<real_t>:: Filter() : code( new Code() ) {}
         }
     }
 }
