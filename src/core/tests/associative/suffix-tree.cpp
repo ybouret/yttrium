@@ -38,8 +38,8 @@ Y_UTEST(associative_suffix_tree)
             if(argc>1)
             {
                 std::cerr << "Loading " << argv[1] << std::endl;
-                Libc::InputFile fp(argv[1]);
-                String line;
+                InputFile fp(argv[1]);
+                String   line;
 
                 while(fp.gets(line))
                 {

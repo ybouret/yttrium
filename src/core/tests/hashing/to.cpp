@@ -93,8 +93,8 @@ Y_UTEST(hashing_to)
         Vector<String,Memory::Dyadic> strings(100000,AsCapacity);
         {
             std::cerr << "loading keys..." << std::endl;
-            Libc::InputFile fp(argv[1]);
-            String line;
+            InputFile fp(argv[1]);
+            String   line;
             while(fp.gets(line))
             {
                 bool found = false;

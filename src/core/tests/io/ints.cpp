@@ -45,7 +45,7 @@ Y_UTEST(io_ints)
 
 
         {
-            Libc::InputFile fp("ints.dat");
+            InputFile fp("ints.dat");
             Y_CHECK(u8  == fp.readCBR<uint8_t>("u8") );
             Y_CHECK(u16 == fp.readCBR<uint16_t>("u16") );
             Y_CHECK(u32 == fp.readCBR<uint32_t>("u32") );

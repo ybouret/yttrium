@@ -21,7 +21,7 @@ Y_UTEST(associative_hash_map)
     if(argc>1)
     {
         apn             count = 0;
-        Libc::InputFile fp(argv[1]);
+        InputFile fp(argv[1]);
         String          line;
         while(fp.gets(line))
         {

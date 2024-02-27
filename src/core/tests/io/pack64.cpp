@@ -41,7 +41,7 @@ Y_UTEST(io_pack64)
             
 
             {
-                Libc::InputFile fp("pack64.dat");
+                InputFile fp("pack64.dat");
                 const uint64_t ld = IO::Pack64::Read(fp, "trial");
                 std::cerr << "ld:" << Hexadecimal(ld) << std::endl;
                 Y_ASSERT(ld==qw);

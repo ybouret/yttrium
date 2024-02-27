@@ -12,7 +12,7 @@ Y_Program()
     size_t       nmax = nmin;
     if(argc>2) nmax = atoi(argv[2]);
 
-    Libc::InputFile fp( StdIn );
+    InputFile fp( StdIn );
     IO::Chars line;
     while( fp.gets(line) )
     {

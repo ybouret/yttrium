@@ -86,7 +86,7 @@ Y_UTEST(hashing_functions)
         Vector<char,Memory::Dyadic> content(100000,AsCapacity);
         std::cerr << "-- loading " << argv[1] << std::endl;
         {
-            Libc::InputFile fp(argv[1]);
+            InputFile fp(argv[1]);
             fp.loadInto(content);
         }
         std::cerr << "-- loaded #" << content.size() << std::endl;

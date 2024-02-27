@@ -19,9 +19,9 @@ Y_UTEST(associative_suffix_map)
 
     if(argc>1)
     {
-        Libc::InputFile fp(argv[1]);
-        String line;
-        int    indx=1;
+        InputFile fp(argv[1]);
+        String    line;
+        int       indx=1;
 
         while(fp.gets(line))
         {

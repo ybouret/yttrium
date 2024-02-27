@@ -23,7 +23,7 @@ Y_UTEST(io_data_stream)
 
     if(argc>1)
     {
-        Libc::InputFile fp(argv[1]);
+        InputFile fp(argv[1]);
         cols.load(fp);
     }
     std::cerr << "X=" << X << std::endl;

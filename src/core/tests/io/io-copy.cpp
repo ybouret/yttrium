@@ -11,7 +11,7 @@ Y_UTEST(io_copy)
 {
     if(argc>1)
     {
-        Libc::InputFile  input(argv[1]);
+        InputFile  input(argv[1]);
         Libc::OutputFile output("copy.dat");
         char C = 0;
         while( input.query(C) )

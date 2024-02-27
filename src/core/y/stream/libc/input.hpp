@@ -15,64 +15,61 @@ namespace Yttrium
 
 
 
-    namespace Libc
+    //______________________________________________________________________
+    //
+    //
+    //! InputStream based on legacy FILE
+    //
+    //______________________________________________________________________
+    class InputFile : public InputStream, public Libc::ReadableFile
     {
-        
-        //______________________________________________________________________
+    public:
+        //__________________________________________________________________
         //
         //
-        //! InputStream based on legacy FILE
+        // Definitions
         //
-        //______________________________________________________________________
-        class InputFile : public InputStream, public ReadableFile
-        {
-        public:
-            //__________________________________________________________________
-            //
-            //
-            // Definitions
-            //
-            //__________________________________________________________________
-            static const char * const CallSign; //!< "Libc::InputFile"
+        //__________________________________________________________________
+        static const char * const CallSign; //!< "InputFile"
 
-            //__________________________________________________________________
-            //
-            //
-            // C++
-            //
-            //__________________________________________________________________
-            virtual ~InputFile() noexcept;                           //!< cleanup
-            explicit InputFile(const StdIn_ &);                      //!< stdin
-            explicit InputFile(const char *fileName);                //!< regular/stdin
-            explicit InputFile(const Core::String<char> &fileName);  //!< regilar/stdin
+        //__________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //__________________________________________________________________
+        virtual ~InputFile() noexcept;                           //!< cleanup
+        explicit InputFile(const StdIn_ &);                      //!< stdin
+        explicit InputFile(const char *fileName);                //!< regular/stdin
+        explicit InputFile(const Core::String<char> &fileName);  //!< regilar/stdin
 
-            
 
-            //__________________________________________________________________
-            //
-            //
-            // interface
-            //
-            //__________________________________________________________________
-            virtual bool query(char &);     //!< query new char
-            virtual void store(const char); //!< store read char
-            virtual bool ready();           //!< char in buffer or try to read
 
-            virtual const char *callSign() const noexcept; 
+        //__________________________________________________________________
+        //
+        //
+        // interface
+        //
+        //__________________________________________________________________
+        virtual bool query(char &);     //!< query new char
+        virtual void store(const char); //!< store read char
+        virtual bool ready();           //!< char in buffer or try to read
 
-            //__________________________________________________________________
-            //
-            //
-            // Methods
-            //
-            //__________________________________________________________________
-            void         gc()     noexcept; //!< prune buffer
+        virtual const char *callSign() const noexcept;
 
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(InputFile);
-            Libc::CachedBuffer buffer;
-        };
-    }
+        //__________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //__________________________________________________________________
+        void         gc()     noexcept; //!< prune buffer
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(InputFile);
+        Libc::CachedBuffer buffer;
+    };
+
 
 }
 

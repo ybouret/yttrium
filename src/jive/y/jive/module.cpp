@@ -47,21 +47,21 @@ namespace Yttrium
 
         Module * Module:: OpenStdIn()
         {
-            const Input   inp = new Libc::InputFile(StdIn);
+            const Input   inp = new InputFile(StdIn);
             const Context ctx(Y_STDIN,AsTag);
             return new Module(ctx,inp);
         }
 
         Module * Module:: OpenFile(const char   *fileName)
         {
-            const Input   inp = new Libc::InputFile(fileName);
+            const Input   inp = new  InputFile(fileName);
             const Context ctx(fileName,AsTag);
             return new Module(ctx,inp);
         }
 
         Module * Module:: OpenFile(const String &fileName)
         {
-            const Input   inp = new Libc::InputFile(fileName);
+            const Input   inp = new InputFile(fileName);
             const Context ctx(fileName,AsTag);
             return new Module(ctx,inp);
         }

@@ -36,7 +36,7 @@ Y_UTEST(io_ser)
     }
 
     {
-        Libc::InputFile fp("ser.dat");
+        InputFile fp("ser.dat");
         const String S = String::ReadFrom(fp);
         std::cerr << "S = " << S << std::endl;
         const apn    N = apn::ReadFrom(fp);

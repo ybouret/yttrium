@@ -16,7 +16,7 @@ Y_UTEST(match)
         if(argc>2)
         {
             const String    fileName = argv[2];
-            Libc::InputFile fp(fileName);
+            InputFile       fp(fileName);
             IO::Chars       line;
             unsigned        iline = 1;
             while( fp.gets(line) )

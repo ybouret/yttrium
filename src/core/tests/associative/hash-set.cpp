@@ -55,8 +55,8 @@ Y_UTEST(associative_hash_set)
     int count = 0;
     if(argc>1)
     {
-        Libc::InputFile fp(argv[1]);
-        String          line;
+        InputFile fp(argv[1]);
+        String    line;
         while(fp.gets(line))
         {
             bool found = false;

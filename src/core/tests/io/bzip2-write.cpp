@@ -10,7 +10,7 @@ Y_UTEST(io_bzip2_write)
     if(argc>1)
     {
         Bzip2::OutputFile out("output.bz2",9);
-        Libc::InputFile   inp(argv[1]);
+        InputFile         inp(argv[1]);
         char C = 0;
         while(inp.query(C))
             out.write(C);

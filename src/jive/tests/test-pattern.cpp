@@ -29,7 +29,7 @@ static inline void testPattern(Pattern &p)
         p.toBinary(fileName);
 
         {
-            Libc::InputFile fp(fileName);
+            InputFile fp(fileName);
             AutoPtr<Pattern> r = Pattern::ReadFrom(fp);
             Y_CHECK(p == *r);
         }

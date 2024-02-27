@@ -12,8 +12,8 @@ Y_UTEST(io_lines)
 
     if(argc>1)
     {
-        Libc::InputFile input( argv[1] );
-        IO::Chars       line;
+        InputFile input( argv[1] );
+        IO::Chars line;
         while(input.gets(line))
         {
             std::cerr << line;

@@ -17,7 +17,7 @@ Y_UTEST(info_delta)
 
     if(argc>1)
     {
-        Libc::InputFile  inp(argv[1]);
+        InputFile  inp(argv[1]);
         Libc::OutputFile out("delta.dat");
         char c = 0;
         while(inp.query(c))

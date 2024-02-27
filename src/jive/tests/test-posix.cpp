@@ -24,7 +24,7 @@ void testPosix( Jive::Pattern *p, const char *id)
     }
 
     {
-        Libc::InputFile fp(dataFile);
+        InputFile fp(dataFile);
         const AutoPtr<Jive::Pattern> reloaded = Jive::Pattern::ReadFrom(fp);
         Y_CHECK(*reloaded == *p );
     }
