@@ -5,7 +5,6 @@ algebra
 drvs
 interp
 io
-filter
 root
 eigen
 stats
@@ -53,9 +52,6 @@ add_test(interp:poly  test-mkl interp_poly)
 add_test(interp:ratio test-mkl interp_ratio)
 
 add_test(io:data-stream test-mkl io_data_stream ${DATA}/sample.txt)
-
-add_test(filter:smooth  test-mkl filter_smooth)
-add_test(filter:arc     test-mkl filter_arc)
 
 add_test(root:zfind     test-mkl root_zfind)
 

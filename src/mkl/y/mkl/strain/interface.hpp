@@ -13,15 +13,23 @@ namespace Yttrium
         namespace Strain
         {
 
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! base class for filters
+            //
+            //
+            //__________________________________________________________________
             class Interface : public Recyclable
             {
             public:
-
                 virtual size_t load() const noexcept = 0; //!< current load
 
-                virtual ~Interface() noexcept;
+                virtual ~Interface() noexcept; //!< cleanup
             protected:
-                explicit Interface() noexcept;
+                explicit Interface() noexcept; //!< setup
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Interface);
             };

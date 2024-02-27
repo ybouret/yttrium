@@ -37,12 +37,7 @@ Y_UTEST_DECL(64)
 
     Y_UTEST(io_data_stream);
 
-
-    Y_UTEST(filter_smooth);
-    Y_UTEST(filter_arc);
-
     Y_UTEST(root_zfind);
-
 
     Y_UTEST(eigen_jacobi);
     Y_UTEST(eigen_diag);

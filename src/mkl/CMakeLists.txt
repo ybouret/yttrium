@@ -12,7 +12,6 @@ mkl/algebra
 mkl/derivatives
 mkl/interpolation
 mkl/io
-mkl/filter
 mkl/strain
 mkl/root
 mkl/eigen
