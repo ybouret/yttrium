@@ -179,7 +179,7 @@ namespace Yttrium
         {
             const String ext = VFS::Extension(dotFile);
             if(ext != ".dot") throw Specific::Exception("Vizible::OpenFile","invalid extension '%s'", ext() );
-            return new Libc::OutputFile(dotFile);
+            return new OutputFile(dotFile);
         }
 
         void Vizible:: RenderPNG(const String &dotFile, const bool keepDot)

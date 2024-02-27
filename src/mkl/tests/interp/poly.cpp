@@ -37,7 +37,7 @@ Y_UTEST(interp_poly)
     std::cerr << polint(0,xa,ya,dy) << " : dy=" << dy << std::endl;
 
 
-    Libc::OutputFile fp("polint.dat");
+    OutputFile fp("polint.dat");
     for(size_t i=1;i<=xa.size();++i)
     {
         fp("%g %g\n", xa[i], ya[i]);

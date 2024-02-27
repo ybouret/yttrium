@@ -28,7 +28,7 @@ static inline void testStrain(const Readable<float> &x, const Readable<float> &y
     }
 
     const String     fn = "strain-" + uid + ".dat";
-    Libc::OutputFile fp(fn);
+    OutputFile fp(fn);
 
     for(float x0=-3.0f;x0<=3.0f;x0+=0.1f)
     {
@@ -70,7 +70,7 @@ Y_UTEST(strain_filter)
     HeapSort::Call(x, Comparison::Increasing<float>, y);
 
     {
-        Libc::OutputFile fp("strain-data.dat");
+        OutputFile fp("strain-data.dat");
         for(size_t i=1;i<=np;++i) fp("%.15g %.15g\n",x[i],y[i]);
     }
 

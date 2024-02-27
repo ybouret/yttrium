@@ -19,7 +19,7 @@ void testPosix( Jive::Pattern *p, const char *id)
 
     
     {
-        Libc::OutputFile fp(dataFile);
+        OutputFile fp(dataFile);
         p->serialize(fp);
     }
 

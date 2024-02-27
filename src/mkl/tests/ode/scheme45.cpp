@@ -51,8 +51,8 @@ namespace
         y[1] = 0.1f;
         y[2] = 0.0f;
 
-        const String     fileName = "meca-" + CxxIdentifier::From(tid) + ".dat";
-        Libc::OutputFile fp(fileName);
+        const String fileName = "meca-" + CxxIdentifier::From(tid) + ".dat";
+        OutputFile   fp(fileName);
         fp("0 %.15g\n",double(y[1]));
         const T      tmax = 60;
         const size_t np   = 100;;

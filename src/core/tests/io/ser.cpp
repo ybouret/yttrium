@@ -28,7 +28,7 @@ Y_UTEST(io_ser)
     std::cerr << "q = " << q << std::endl;
 
     {
-        Libc::OutputFile fp("ser.dat");
+        OutputFile fp("ser.dat");
         s.serialize(fp);
         n.serialize(fp);
         z.serialize(fp);

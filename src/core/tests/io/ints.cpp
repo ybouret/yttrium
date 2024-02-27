@@ -33,7 +33,7 @@ Y_UTEST(io_ints)
         const size_t sz = ran.leq(10000);
 
         {
-            Libc::OutputFile fp("ints.dat");
+            OutputFile fp("ints.dat");
             size_t written = 0;
             written += fp.emitCBR(u8);
             written += fp.emitCBR(u16);

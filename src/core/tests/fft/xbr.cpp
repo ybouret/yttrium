@@ -125,7 +125,7 @@ Y_UTEST(fft_xbr)
 #endif
     
     {
-        Libc::OutputFile header("xbr.hxx");
+        OutputFile header("xbr.hxx");
 
         for(unsigned shift=0;shift<=20;++shift)
         {

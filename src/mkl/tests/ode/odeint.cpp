@@ -69,7 +69,7 @@ Y_UTEST(odeint)
         const double   xend = 10;
         const size_t   np   = 100;
 
-        Libc::OutputFile fp("exp.dat");
+        OutputFile fp("exp.dat");
         fp("%.15g %.15g\n",xini,y[1]);
         for(size_t i=1;i<=np;++i)
         {
@@ -92,7 +92,7 @@ Y_UTEST(odeint)
         const double   xend = 10;
         const size_t   np   = 100;
 
-        Libc::OutputFile fp("lv.dat");
+        OutputFile fp("lv.dat");
         fp("%.15g %.15g %.15g\n",xini,F[1], F[2]);
         for(size_t i=1;i<=np;++i)
         {

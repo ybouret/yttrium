@@ -49,7 +49,7 @@ Y_UTEST(text_embedding)
     }
 
     {
-        Libc::OutputFile fp("embedding.dot");
+        OutputFile fp("embedding.dot");
         fp << "digraph G {\n";
         fp << " rankdir=\"TB\";\n";
         for(unsigned i=1;i<=256;++i)

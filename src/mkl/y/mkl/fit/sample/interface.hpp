@@ -113,8 +113,8 @@ namespace Yttrium
                 //! save using name.dat
                 inline void saveDatFile(const char *sfx=0) const
                 {
-                    const String     fn = this->key() + sfx + ".dat";
-                    Libc::OutputFile fp(fn);
+                    const String fn = this->key() + sfx + ".dat";
+                    OutputFile   fp(fn);
                     save(fp);
                 }
 

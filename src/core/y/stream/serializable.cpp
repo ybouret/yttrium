@@ -58,7 +58,7 @@ namespace Yttrium
 {
     size_t Serializable:: toBinary(const String &fileName, const bool append) const
     {
-        Libc::OutputFile fp(fileName,append);
+        OutputFile fp(fileName,append);
         return serialize(fp);
     }
 

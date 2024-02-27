@@ -38,7 +38,7 @@ Y_UTEST(interp_ratio)
     std::cerr << ratint(0,xa,ya,dy) << " : dy=" << dy << std::endl;
 
 
-    Libc::OutputFile fp("ratint.dat");
+    OutputFile fp("ratint.dat");
     for(size_t i=1;i<=xa.size();++i)
     {
         fp("%g %g\n", xa[i], ya[i]);

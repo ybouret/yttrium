@@ -42,7 +42,7 @@ namespace
         const size_t N    = 1000;
         ODE::RK4<T>  rk4;
 
-        Libc::OutputFile fp(fileName);
+        OutputFile fp(fileName);
         fp("%g %g\n",0.0,double(y[1]));
         for(size_t i=1;i<=N;++i)
         {
@@ -92,7 +92,7 @@ namespace
         const size_t N    = 10000;
         ODE::RK4<T>  rk4;
 
-        Libc::OutputFile fp(fileName);
+        OutputFile fp(fileName);
         fp("%g %g %g\n",0.0,double(y[1]),double(y[2]));
         for(size_t i=1;i<=N;++i)
         {

@@ -13,7 +13,7 @@ Y_UTEST(mkl_vtx)
     Random::Rand ran;
 
     {
-        Libc::OutputFile fp("circle.dat");
+        OutputFile fp("circle.dat");
         for(size_t i=100;i>0;--i)
         {
             V2D<float> v = Random::OnCircle< V2D<float> >(ran);
@@ -22,7 +22,7 @@ Y_UTEST(mkl_vtx)
     }
 
     {
-        Libc::OutputFile fp("disk.dat");
+        OutputFile fp("disk.dat");
         for(size_t i=100;i>0;--i)
         {
             V2D<double> v = Random::InDisk< V2D<double> >(ran);
@@ -31,7 +31,7 @@ Y_UTEST(mkl_vtx)
     }
 
     {
-        Libc::OutputFile fp("sphere.dat");
+        OutputFile fp("sphere.dat");
         for(size_t i=100;i>0;--i)
         {
             V3D<double> v = Random::OnSphere< V3D<double> >(ran);

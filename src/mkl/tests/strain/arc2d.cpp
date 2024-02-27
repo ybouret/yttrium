@@ -27,7 +27,7 @@ void testArc2D(const Readable<float>        &theta,
 
 
 
-    Libc::OutputFile fp(fn);
+    OutputFile fp(fn);
     for(float t=-3.0f; t<= 3.0f; t += 0.1f)
     {
         af.free();
@@ -63,7 +63,7 @@ Y_UTEST(strain_arc2d)
     HeapSort::Call(theta, Comparison::Increasing<float>, r);
 
     {
-        Libc::OutputFile fp("arc2d.dat");
+        OutputFile fp("arc2d.dat");
         for(size_t i=1;i<=theta.size();++i)
         {
             fp("%.15g %.15g %.15g\n", theta[i], r[i].x, r[i].y);

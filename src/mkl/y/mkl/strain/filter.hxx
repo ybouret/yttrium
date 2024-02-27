@@ -69,7 +69,7 @@ namespace Yttrium
             template <>
             void   Filter<real_t>:: save(const Core::String<char> &fileName) const
             {
-                Libc::OutputFile fp(fileName);
+                OutputFile fp(fileName);
                 assert(0!=code);
                 for(size_t i=1;i<=code->points.size();++i)
                 {

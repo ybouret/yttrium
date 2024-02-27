@@ -8,7 +8,7 @@ using namespace Yttrium;
 Y_UTEST(calculus_isqrt)
 {
 
-    Libc::OutputFile fp("isqrt.dat");
+    OutputFile fp("isqrt.dat");
     for(unsigned i=0;i<=65536;++i)
     {
         const unsigned s = IntegerSquareRoot(i);

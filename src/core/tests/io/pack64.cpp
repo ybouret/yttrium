@@ -21,8 +21,8 @@ Y_UTEST(io_pack64)
 
     for(unsigned ibit=0;ibit<=64;++ibit)
     {
-        const uint64_t   qw = ran.to<uint64_t>(ibit); Y_CHECK(ibit==BitCount::For(qw));
-        Libc::OutputFile fp("max64.dat");
+        const uint64_t qw = ran.to<uint64_t>(ibit); Y_CHECK(ibit==BitCount::For(qw));
+        OutputFile    fp("max64.dat");
         const size_t     nw = IO::Pack64::Emit(fp,qw);
         std::cerr << ibit << " => " << nw << std::endl;
     }
@@ -35,7 +35,7 @@ Y_UTEST(io_pack64)
 
 
             {
-                Libc::OutputFile fp("pack64.dat");
+                OutputFile fp("pack64.dat");
                 (void) IO::Pack64::Emit(fp,qw);
             }
             

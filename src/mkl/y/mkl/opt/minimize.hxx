@@ -192,7 +192,7 @@ bool Minimize<real_t>:: Found(Triplet<real_t> &x,
 
         if(false)
         {
-            Libc::OutputFile fp("min.dat");
+            OutputFile fp("min.dat");
             for(size_t i=0;i<nn;++i)
             {
                 fp("%g %g 3\n", double(xx[i]), double(ff[i]) );
@@ -295,7 +295,7 @@ bool Minimize<real_t>:: Found(Triplet<real_t> &x,
 
         if(false)
         {
-            Libc::OutputFile fp("min.dat",true);
+            OutputFile fp("min.dat",true);
             for(size_t i=0;i<4;++i)
             {
                 fp("%g %g 4\n", double(xx[i]), double(ff[i]));

@@ -71,12 +71,12 @@ Y_UTEST(calculus_prime)
     if(false)
     {
         {
-            Libc::OutputFile fp("p8.hxx");
+            OutputFile fp("p8.hxx");
             saveTable(fp,p8);
         }
         
         {
-            Libc::OutputFile fp("p16.hxx");
+            OutputFile fp("p16.hxx");
             saveTable(fp,p16);
         }
     }

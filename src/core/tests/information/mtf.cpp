@@ -18,7 +18,7 @@ Y_UTEST(info_mtf)
     if(argc>1)
     {
         InputFile  inp(argv[1]);
-        Libc::OutputFile out("mtf.dat");
+        OutputFile out("mtf.dat");
         char c = 0;
         while(inp.query(c))
         {

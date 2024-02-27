@@ -12,7 +12,7 @@ Y_UTEST(graphviz)
     Vizible A,B;
 
     {
-        Libc::OutputFile fp("viz.dot");
+        OutputFile fp("viz.dot");
         Vizible::Enter(fp, "G");
 
         Vizible::Node(fp,&A); //A.node(fp);

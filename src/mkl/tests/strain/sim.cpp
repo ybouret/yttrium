@@ -20,7 +20,7 @@ Y_UTEST(strain_sim)
 
     data << gamma * Squared( lambda * ran.symm<double>() );
 
-    Libc::OutputFile fp("strain-sim.dat");
+    OutputFile fp("strain-sim.dat");
 
     for(unsigned n=2;n<=10;++n)
     {

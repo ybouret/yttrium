@@ -15,69 +15,65 @@ namespace Yttrium
 {
 
 
-    namespace Libc
+
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! OutputStream based on a C FILE
+    //
+    //
+    //__________________________________________________________________________
+    class OutputFile : public OutputStream, public Libc::WritableFile
     {
+    public:
+        //______________________________________________________________________
+        //
+        //
+        // Definition
+        //
+        //______________________________________________________________________
+        static const char * const CallSign; //!< "OutputFile"
 
         //______________________________________________________________________
         //
         //
-        //
-        //! OutputStream based on a C FILE
-        //
+        // C++
         //
         //______________________________________________________________________
-        class OutputFile : public OutputStream, public WritableFile
-        {
-        public:
-            //__________________________________________________________________
-            //
-            //
-            // Definition
-            //
-            //__________________________________________________________________
-            static const char * const CallSign; //!< "Libc::OutputFile"
+        virtual ~OutputFile() noexcept;       //!< cleanup
+        explicit OutputFile(const StdErr_ &); //!< stderr
+        explicit OutputFile(const StdOut_ &); //!< stdout
 
-            //__________________________________________________________________
-            //
-            //
-            // C++
-            //
-            //__________________________________________________________________
-            virtual ~OutputFile() noexcept;       //!< cleanup
-            explicit OutputFile(const StdErr_ &); //!< stderr
-            explicit OutputFile(const StdOut_ &); //!< stdout
+        //! open regular files of Y_STDERR/Y_STDOUT
+        explicit OutputFile(const char *fileName, const bool append=false);
 
-            //! open regular files of Y_STDERR/Y_STDOUT
-            explicit OutputFile(const char *fileName, const bool append=false);
+        //! open regular files of Y_STDERR/Y_STDOUT
+        explicit OutputFile(const Core::String<char> &fileName, const bool append=false);
 
-            //! open regular files of Y_STDERR/Y_STDOUT
-            explicit OutputFile(const Core::String<char> &fileName, const bool append=false);
+        //! overwrite filename
+        static void Overwrite(const Core::String<char> & filename);
 
-            //! overwrite filename
-            static void Overwrite(const Core::String<char> & filename);
-
-            //! overwrite filename
-            static void Overwrite(const char *               filename);
+        //! overwrite filename
+        static void Overwrite(const char *               filename);
 
 
-            //__________________________________________________________________
-            //
-            //
-            // Methods
-            //
-            //__________________________________________________________________
-            virtual void         write(const char); //!< emit/write to buffer
-            virtual void         flush();           //!< emit
-            virtual const char * callSign() const throw();
-            
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(OutputFile);
-            Libc::DirectBuffer buffer;
-            void emit();
-        };
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        virtual void         write(const char);        //!< emit/write to buffer
+        virtual void         flush();                  //!< emit
+        virtual const char * callSign() const throw(); //!< CallSign
 
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(OutputFile);
+        Libc::DirectBuffer buffer;
+        void emit();
+    };
 
-    }
 
 }
 
