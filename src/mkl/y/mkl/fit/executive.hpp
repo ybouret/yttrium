@@ -97,6 +97,7 @@ namespace Yttrium
 
                 inline virtual typename ProxyType::ConstInterface & surrogate() const noexcept { return *mine; }
 
+#if 0
                 template <typename FUNCTION, typename SAMPLE>
                 struct D2Call
                 {
@@ -118,9 +119,9 @@ namespace Yttrium
                         }
                         return self.D2(F,S,atmp);
                     }
-
                 };
-                
+#endif
+
             };
         }
 
