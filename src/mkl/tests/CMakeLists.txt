@@ -67,6 +67,6 @@ add_test(fit:samples    test-mkl fit_samples)
 
 add_test(strain:filter test-mkl strain_filter)
 add_test(strain:arc    test-mkl strain_arc2d)
-
+add_test(strain:sim    test-mkl strain_sim)
 
 

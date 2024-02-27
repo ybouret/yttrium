@@ -53,6 +53,7 @@ Y_UTEST_DECL(64)
 
     Y_UTEST(strain_filter);
     Y_UTEST(strain_arc2d);
+    Y_UTEST(strain_sim);
 
 }
 Y_UTEST_EXEC()
