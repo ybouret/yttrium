@@ -58,6 +58,27 @@ namespace Yttrium
                 assert(code->points.size()>0);
                 code->points.popTail();
             }
+
+            template <>
+            size_t Filter<real_t>:: load() const noexcept
+            {
+                assert(0!=code);
+                return code->points.size();
+            }
+
+            template <>
+            void   Filter<real_t>:: save(const Core::String<char> &fileName) const
+            {
+                Libc::OutputFile fp(fileName);
+                assert(0!=code);
+                for(size_t i=1;i<=code->points.size();++i)
+                {
+                    const V4D<real_t> &p = code->points[i];
+                    fp("%.15g %.15g\n", double(p.x), double(p.y) );
+                }
+            }
+
+
         }
     }
 }

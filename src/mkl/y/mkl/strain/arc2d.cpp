@@ -6,6 +6,7 @@
 #include "y/mkl/xreal.hpp"
 #include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
+#include "y/string.hpp"
 
 namespace Yttrium
 {
@@ -48,16 +49,20 @@ namespace Yttrium
 
                 inline void eval(const T t0, const size_t xdg, const size_t ydg)
                 {
+                    // cleanup
                     cf.ld(v0);
 
+                    // query each filter
+                    assert(xf.load() == yf.load());
+                    //xf.save("fx.dat");
+                    //yf.save("fy.dat");
                     xf.eval(t0,xdg);
                     yf.eval(t0,ydg);
 
+                    // fill information
                     for(size_t i=SIZE;i>0;--i)
-                    {
                         cf[i] =  Vertex( xf[i], yf[i] );
-                    }
-
+                    
                 }
 
                 Filter<T>    xf;

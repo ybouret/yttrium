@@ -52,14 +52,37 @@ namespace Yttrium
             void Arc2D<real_t>:: add(const real_t t, const real_t x, const real_t y)
             {
                 assert(0!=code);
-                {     code->xf.add(t,x); }
-                try { code->yf.add(t,y); } catch(...) { code->xf.rem(); throw; }
+                assert(code->xf.load() == code->yf.load());
+
+                code->xf.add(t,x);
+                try
+                {
+                    code->yf.add(t,y);
+                }
+                catch(...)
+                {
+                    code->xf.rem();
+                    assert(code->xf.load() == code->yf.load());
+                    throw;
+                }
+
+                assert(code->xf.load() == code->yf.load());
+
             }
 
             template <>
             void Arc2D<real_t>:: eval(const real_t t0, const size_t xdg, const size_t ydg)
             {
                 assert(0!=code);
+                code->eval(t0,xdg,ydg);
+            }
+
+            template <>
+            size_t Arc2D<real_t>:: load() const noexcept
+            {
+                assert(0!=code);
+                assert(code->xf.load() == code->yf.load());
+                return code->xf.load();
             }
 
         }

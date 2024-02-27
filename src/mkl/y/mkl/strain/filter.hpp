@@ -4,6 +4,7 @@
 #define Y_MKL_Strain_Filter_Included 1
 
 #include "y/container/readable.hpp"
+#include "y/string/fwd.hpp"
 
 namespace Yttrium
 {
@@ -71,13 +72,13 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
-                void free() noexcept;                         //!< cleanup data
-                void rem()  noexcept;                         //!< remove last data point
-                void add(const T x, const T y);               //!< add (x,y)
-                void eval(const T x0, const size_t degree);   //!< extract at value x0, with max degree
-
-
-
+                void   free() noexcept;                         //!< cleanup data
+                void   rem()  noexcept;                         //!< remove last data point
+                void   add(const T x, const T y);               //!< add (x,y)
+                void   eval(const T x0, const size_t degree);   //!< extract at value x0, with max degree
+                size_t load() const noexcept;                   //!< number of points
+                void   save(const Core::String<char> &) const;  //!< save selection
+                
             private:
                 class Code;
                 Code *code;

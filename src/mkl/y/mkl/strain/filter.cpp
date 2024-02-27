@@ -8,6 +8,7 @@
 #include "y/container/cxx/array.hpp"
 #include "y/calculus/ipower.hpp"
 #include "y/system/exception.hpp"
+#include "y/stream/libc/output.hpp"
 
 namespace Yttrium
 {
@@ -73,7 +74,6 @@ namespace Yttrium
                     //
                     // recenter data x->z, y->w
                     //
-                    //
                     //__________________________________________________________
                     xadd.make(np);
                     for(size_t i=np;i>0;--i) 
@@ -115,24 +115,15 @@ namespace Yttrium
                     //
                     //__________________________________________________________
                     Matrix<T> mu(ncof,ncof);
-                    mu[1][1] = ncof;
-                    for(size_t i=1;i<=ncof;++i)
-                    {
-                        for(size_t j=1;j<=ncof;++j)
-                        {
-                            const size_t k = (i-1)+(j-1);
-                            assert(xadd.isEmpty());
-                            for(size_t i=np;i>0;--i)
-                            {
-                                xadd << ipower(points[i].z,k);
-                            }
-                            mu[i][j] = mu[j][i] = xadd.sum();
-                        }
-                    }
-                    assert( xadd.isEmpty() );
+                    buildMu(mu);
 
                     if(!solver.build(mu))
+                    {
+                        buildMu(mu);
+                        std::cerr << "mu="  << mu << std::endl;
+                        std::cerr << "rhs=" << poly << std::endl;
                         throw Specific::Exception(CallSign, "singular #points=%u/ncof=%u @%.15g", unsigned(np), unsigned(ncof), double(x0));
+                    }
 
                     solver.solve(mu,poly);
                     for(size_t i=Min(ncof,SIZE);i>0;--i)
@@ -150,6 +141,25 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Code);
+                inline void buildMu(Matrix<T> &mu)
+                {
+                    const size_t ncof = mu.rows;
+                    const size_t npts = points.size();
+                    for(size_t i=1;i<=ncof;++i)
+                    {
+                        for(size_t j=i;j<=ncof;++j)
+                        {
+                            const size_t k = (i-1)+(j-1);
+                            assert(xadd.isEmpty());
+                            for(size_t i=npts;i>0;--i)
+                            {
+                                xadd << ipower(points[i].z,k);
+                            }
+                            mu[i][j] = mu[j][i] = xadd.sum();
+                        }
+                    }
+                    assert( xadd.isEmpty() );
+                }
             };
 
         }
