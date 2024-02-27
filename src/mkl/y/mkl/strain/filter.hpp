@@ -16,7 +16,7 @@ namespace Yttrium
             //
             //
             //
-            //! Info for Filte
+            //! Info for Filter
             //
             //
             //__________________________________________________________________
@@ -78,7 +78,7 @@ namespace Yttrium
                 void   eval(const T x0, const size_t degree);   //!< extract at value x0, with max degree
                 size_t load() const noexcept;                   //!< number of points
                 void   save(const Core::String<char> &) const;  //!< save selection
-                
+
             private:
                 class Code;
                 Code *code;

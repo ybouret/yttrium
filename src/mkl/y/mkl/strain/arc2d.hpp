@@ -12,21 +12,36 @@ namespace Yttrium
     {
         namespace Strain
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Info for Arc2D
+            //
+            //
+            //__________________________________________________________________
             class Arc2DInfo
             {
             public:
-                static const char * const CallSign;
-                static const size_t       SIZE = 3;
-                
-                virtual ~Arc2DInfo() noexcept;
+                static const char * const CallSign; //!< "Strain::Arc2D"
+                static const size_t       SIZE = 3; //!< alias
+
+                virtual ~Arc2DInfo() noexcept; //!< cleanup
             protected:
-                explicit Arc2DInfo() noexcept;
+                explicit Arc2DInfo() noexcept; //!< setup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Arc2DInfo);
             };
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Arc2D filter
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             class Arc2D : public Arc2DInfo, public Readable< V2D<T> >
             {
@@ -37,8 +52,8 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef V2D<T>           Vertex;
-                typedef Readable<Vertex> ReadableType;
+                typedef V2D<T>           Vertex;        //!< alias
+                typedef Readable<Vertex> ReadableType;  //!< alias
 
                 //______________________________________________________________
                 //
@@ -46,8 +61,8 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                explicit Arc2D();
-                virtual ~Arc2D() noexcept;
+                explicit Arc2D();          //!< setup
+                virtual ~Arc2D() noexcept; //!< cleanup
 
                 //______________________________________________________________
                 //
@@ -66,11 +81,11 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 template <typename U> inline
-                void   add(const T t, const V2D<U> &v) { add(t,v.x,v.y); }
-                void   add(const T t, const T x, const T y);
-                void   free() noexcept;
-                void   eval(const T t0, const size_t xdg, const size_t ydg);   //!< extract at value t0, with max degree for x and y
-                size_t load() const noexcept;
+                void   add(const T t, const V2D<U> &v) { add(t,v.x,v.y); }   //!< add any vertex
+                void   add(const T t, const T x, const T y);                 //!< add point
+                void   free() noexcept;                                      //!< free content
+                void   eval(const T t0, const size_t xdg, const size_t ydg); //!< extract at value t0, with max degree for x and y
+                size_t load() const noexcept;                                //!< current load
 
             private:
                 class Code;
