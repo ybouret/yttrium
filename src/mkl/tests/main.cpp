@@ -52,6 +52,7 @@ Y_UTEST_DECL(64)
     Y_UTEST(fit_samples);
 
     Y_UTEST(strain_filter);
+    Y_UTEST(strain_arc);
 
 }
 Y_UTEST_EXEC()
