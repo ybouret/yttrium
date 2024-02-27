@@ -33,7 +33,8 @@ namespace Yttrium
                 Object(),
                 xf(),
                 yf(),
-                cf(SIZE)
+                cf(SIZE),
+                v0()
                 {}
 
                 inline virtual ~Code() noexcept {}
@@ -42,12 +43,28 @@ namespace Yttrium
                 {
                     xf.free();
                     yf.free();
+                    cf.ld(v0);
                 }
 
-                Filter<T> xf;
-                Filter<T> yf;
-                Coef2D    cf;
+                inline void eval(const T t0, const size_t xdg, const size_t ydg)
+                {
+                    cf.ld(v0);
 
+                    xf.eval(t0,xdg);
+                    yf.eval(t0,ydg);
+
+                    for(size_t i=SIZE;i>0;--i)
+                    {
+                        cf[i] =  Vertex( xf[i], yf[i] );
+                    }
+
+                }
+
+                Filter<T>    xf;
+                Filter<T>    yf;
+                Coef2D       cf;
+                const Vertex v0;
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Code);
             };

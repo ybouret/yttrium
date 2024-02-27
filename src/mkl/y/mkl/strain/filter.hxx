@@ -35,6 +35,7 @@ namespace Yttrium
             {
                 assert(0!=code);
                 code->points.free();
+                code->coef.ld(code->zero);
             }
 
             template <> void Filter<real_t>:: eval(const real_t x0,

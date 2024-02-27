@@ -34,14 +34,14 @@ namespace Yttrium
                 points(), 
                 solver(),
                 xadd(),
-                coef(FilterInfo::SIZE)
+                coef(FilterInfo::SIZE),
+                zero(0)
                 {}
 
                 inline virtual ~Code() noexcept {}
 
                 inline  void eval(const T &x0, const size_t degree)
                 {
-                    static const T zero(0);
                     //__________________________________________________________
                     //
                     //
@@ -146,6 +146,7 @@ namespace Yttrium
                 LU<T>   solver;
                 XAdd    xadd;
                 Coef    coef;
+                const T zero;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Code);

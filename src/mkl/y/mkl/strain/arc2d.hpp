@@ -68,7 +68,8 @@ namespace Yttrium
                 void free() noexcept;
                 void add(const T t, const T x, const T y);
                 void add(const T t, const Vertex v);
-
+                void eval(const T t0, const size_t xdg, const size_t ydg);   //!< extract at value t0, with max degree for x and y
+                
             private:
                 class Code;
                 Code *code;

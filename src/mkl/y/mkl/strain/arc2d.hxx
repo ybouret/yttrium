@@ -56,6 +56,11 @@ namespace Yttrium
                 try { code->yf.add(t,y); } catch(...) { code->xf.rem(); throw; }
             }
 
+            template <>
+            void Arc2D<real_t>:: eval(const real_t t0, const size_t xdg, const size_t ydg)
+            {
+                assert(0!=code);
+            }
 
         }
     }
