@@ -16,7 +16,12 @@ namespace Yttrium
             Arc2D<real_t>:: Arc2D() :
             Arc2DInfo(),
             ReadableType(),
-            code( new Code() )
+            code( new Code() ),
+            r( code->cf[1] ),
+            v( code->cf[2] ),
+            a( code->cf[3] ),
+            velocity(0),
+            zero(0)
             {
                 
             }
@@ -75,6 +80,7 @@ namespace Yttrium
             {
                 assert(0!=code);
                 code->eval(t0,xdg,ydg);
+                Coerce(velocity) = v.norm();
             }
 
             template <>
@@ -86,18 +92,23 @@ namespace Yttrium
             }
 
             template <>
-            real_t Arc2D<real_t>:: Curvature() const
+            real_t Arc2D<real_t>:: CartesianCurvature() const
             {
                 assert(0!=code);
-                static const real_t zero(0);
-                const ReadableType &self = *this;
-                const Vertex       v     = self[2];
-                const Vertex       a     = self[3];
-                const real_t       velocity = v.norm();
                 if( velocity <= zero ) throw Specific::Exception(CallSign,"infinite curvature");
                 return (v.x*a.y-v.y*a.x)/(velocity*velocity*velocity);
             }
 
+
+            template <>
+            real_t Arc2D<real_t>:: CylindricCurvature() const
+            {
+                assert(0!=code);
+                if( r.x      <= zero ) throw Specific::Exception(CallSign,"negative radius");
+                if( velocity <= zero ) throw Specific::Exception(CallSign,"infinite curvature");
+                return (v.x*a.y-v.y*a.x)/(velocity*velocity*velocity)
+                + v.y/r.x/velocity;
+            }
         }
     }
 }

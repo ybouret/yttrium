@@ -88,13 +88,20 @@ namespace Yttrium
                 void   add(const T t, const T x, const T y);                 //!< add point
                 void   eval(const T t0, const size_t xdg, const size_t ydg); //!< extract at value t0, with max degree for x and y
 
-                T Curvature() const;
-
+                T CartesianCurvature() const;
+                T CylindricCurvature() const;
 
             private:
-                class Code;
-                Code *code;
                 Y_DISABLE_COPY_AND_ASSIGN(Arc2D);
+
+                class Code;
+                Code *  code;
+            public:
+                const Vertex &r;
+                const Vertex &v;
+                const Vertex &a;
+                const T       velocity;
+                const T       zero;
             };
 
         }
