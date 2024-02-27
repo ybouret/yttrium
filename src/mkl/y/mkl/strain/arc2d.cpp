@@ -1,9 +1,11 @@
 
-#include "y/mkl/strain/arc-filter.hpp"
+#include "y/mkl/strain/arc2d.hpp"
 #include "y/mkl/strain/filter.hpp"
 #include "y/type/nullify.hpp"
 #include "y/object.hpp"
 #include "y/mkl/xreal.hpp"
+#include "y/container/cxx/array.hpp"
+#include "y/memory/allocator/dyadic.hpp"
 
 namespace Yttrium
 {
@@ -11,16 +13,27 @@ namespace Yttrium
     {
         namespace Strain
         {
+            const char * const Arc2DInfo:: CallSign = "Strain::Arc2D";
+
+            Arc2DInfo:: Arc2DInfo() noexcept
+            {
+            }
+
+            Arc2DInfo:: ~Arc2DInfo() noexcept
+            {
+            }
 
             template <typename T>
-            class ArcFilter<T>:: Code : public Object
+            class Arc2D<T>:: Code : public Object
             {
             public:
+                typedef CxxArray<Vertex,Memory::Dyadic> Coef2D;
 
-                inline explicit Code() : 
+                inline explicit Code() :
                 Object(),
                 xf(),
-                yf()
+                yf(),
+                cf(SIZE)
                 {}
 
                 inline virtual ~Code() noexcept {}
@@ -33,6 +46,7 @@ namespace Yttrium
 
                 Filter<T> xf;
                 Filter<T> yf;
+                Coef2D    cf;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Code);
@@ -45,25 +59,25 @@ namespace Yttrium
 }
 
 #define real_t float
-#include "arc-filter.hxx"
+#include "arc2d.hxx"
 #undef real_t
 
 #define real_t double
-#include "arc-filter.hxx"
+#include "arc2d.hxx"
 #undef real_t
 
 #define real_t long double
-#include "arc-filter.hxx"
+#include "arc2d.hxx"
 #undef real_t
 
 #define real_t XReal<float>
-#include "arc-filter.hxx"
+#include "arc2d.hxx"
 #undef real_t
 
 #define real_t XReal<double>
-#include "arc-filter.hxx"
+#include "arc2d.hxx"
 #undef real_t
 
 #define real_t XReal<long double>
-#include "arc-filter.hxx"
+#include "arc2d.hxx"
 #undef real_t

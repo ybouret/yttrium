@@ -19,7 +19,7 @@ namespace Yttrium
             FilterInfo:: ~FilterInfo() noexcept {}
             FilterInfo::  FilterInfo() noexcept {}
 
-            const char * const FilterInfo :: CallSign = "Filter";
+            const char * const FilterInfo :: CallSign = "Strain::Filter";
 
             template <typename T>
             class Filter<T>:: Code : public Object

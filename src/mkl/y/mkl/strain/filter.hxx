@@ -50,6 +50,13 @@ namespace Yttrium
                 const V4D<real_t> p(x,y,0,0);
                 code->points << p;
             }
+
+            template <> void Filter<real_t>:: rem() noexcept
+            {
+                assert(0!=code);
+                assert(code->points.size()>0);
+                code->points.popTail();
+            }
         }
     }
 }
