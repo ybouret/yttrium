@@ -7,6 +7,7 @@
 #include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/string.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {

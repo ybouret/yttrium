@@ -85,6 +85,19 @@ namespace Yttrium
                 return code->xf.load();
             }
 
+            template <>
+            real_t Arc2D<real_t>:: Curvature() const
+            {
+                assert(0!=code);
+                static const real_t zero(0);
+                const ReadableType &self = *this;
+                const Vertex       v     = self[2];
+                const Vertex       a     = self[3];
+                const real_t       velocity = v.norm();
+                if( velocity <= zero ) throw Specific::Exception(CallSign,"infinite curvature");
+                return (v.x*a.y-v.y*a.x)/(velocity*velocity*velocity);
+            }
+
         }
     }
 }

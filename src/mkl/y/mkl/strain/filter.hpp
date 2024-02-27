@@ -3,6 +3,7 @@
 #ifndef Y_MKL_Strain_Filter_Included
 #define Y_MKL_Strain_Filter_Included 1
 
+#include "y/mkl/strain/interface.hpp"
 #include "y/container/readable.hpp"
 #include "y/string/fwd.hpp"
 
@@ -20,7 +21,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class FilterInfo
+            class FilterInfo : public Interface
             {
             public:
                 static const char * const CallSign; //!< Filter
@@ -62,9 +63,11 @@ namespace Yttrium
                 // Interface
                 //
                 //______________________________________________________________
-                virtual const char * callSign()                 const noexcept; //!< [Identifiable] CallSign
-                virtual size_t       size()                     const noexcept; //!< [Collection]    SIZE
-                virtual const T & operator[](const size_t indx) const noexcept; //!< [Readable] [1]: position, [2]: frist drvs, [3]: second drvs
+                virtual const char * callSign()               const noexcept; //!< [Identifiable] CallSign
+                virtual size_t       size()                   const noexcept; //!< [Collection]    SIZE
+                virtual const T &    operator[](const size_t) const noexcept; //!< [Readable] [1]: position, [2]: frist drvs, [3]: second drvs
+                virtual void         free()                         noexcept; //!< [Recyclable] cleanup data
+                virtual size_t       load()                   const noexcept; //!< [Interface] number of points
 
                 //______________________________________________________________
                 //
@@ -72,11 +75,9 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
-                void   free() noexcept;                         //!< cleanup data
                 void   rem()  noexcept;                         //!< remove last data point
                 void   add(const T x, const T y);               //!< add (x,y)
                 void   eval(const T x0, const size_t degree);   //!< extract at value x0, with max degree
-                size_t load() const noexcept;                   //!< number of points
                 void   save(const Core::String<char> &) const;  //!< save selection
 
             private:

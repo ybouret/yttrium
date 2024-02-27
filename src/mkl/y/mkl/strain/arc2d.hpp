@@ -3,6 +3,7 @@
 #ifndef Y_MKL_Strain_Arc_Filter_Included
 #define Y_MKL_Strain_Arc_Filter_Included 1
 
+#include "y/mkl/strain/interface.hpp"
 #include "y/container/readable.hpp"
 #include "y/mkl/v2d.hpp"
 
@@ -20,7 +21,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Arc2DInfo
+            class Arc2DInfo : public Interface
             {
             public:
                 static const char * const CallSign; //!< "Strain::Arc2D"
@@ -70,9 +71,11 @@ namespace Yttrium
                 // Interface
                 //
                 //______________________________________________________________
-                virtual const char *   callSign()                    const noexcept; //!< [Identifiable]  CallSign
-                virtual size_t         size()                        const noexcept; //!< [Collection]    SIZE
-                virtual const Vertex & operator[](const size_t indx) const noexcept; //!< [Readable] [1]: position, [2]: frist drvs, [3]: second drvs
+                virtual const char *   callSign()                    const noexcept; //!< [Identifiable] CallSign
+                virtual size_t         size()                        const noexcept; //!< [Collection]   SIZE
+                virtual const Vertex & operator[](const size_t indx) const noexcept; //!< [Readable]     [1]: position, [2]: frist drvs, [3]: second drvs
+                virtual void           free()                              noexcept; //!< [Recyclable]   cleanup data
+                virtual size_t         load()                        const noexcept; //!< [Interface]    number of points
 
                 //______________________________________________________________
                 //
@@ -83,9 +86,10 @@ namespace Yttrium
                 template <typename U> inline
                 void   add(const T t, const V2D<U> &v) { add(t,v.x,v.y); }   //!< add any vertex
                 void   add(const T t, const T x, const T y);                 //!< add point
-                void   free() noexcept;                                      //!< free content
                 void   eval(const T t0, const size_t xdg, const size_t ydg); //!< extract at value t0, with max degree for x and y
-                size_t load() const noexcept;                                //!< current load
+
+                T Curvature() const;
+
 
             private:
                 class Code;
