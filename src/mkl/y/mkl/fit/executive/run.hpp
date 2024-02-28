@@ -2,7 +2,7 @@
 
 //! running algorithm from starting point
 /**
- 
+
  */
 template <
 typename FUNCTION,
@@ -51,9 +51,12 @@ Result run(FUNCTION           &F,
     //--------------------------------------------------------------------------
     //
     // initialize cycles
+    //
     //--------------------------------------------------------------------------
-    ABSCISSA      D2org = D2(F,S,aorg,used,G); // full metrics
-    unsigned long cycle = 0;
+    ABSCISSA      D2org  = D2(F,S,aorg,used,G); // full metrics
+    unsigned long cycle  = 0;
+    Result        result = Failure;
+
 CYCLE:
     const int p0 = p;
     ++cycle;
@@ -71,8 +74,8 @@ CYCLE:
 BUILD_STEP:
     if(!solv->buildStep(*mine,aorg,adom,p,used,xml))
     {
-        Y_XMLOG(xml,"# *** no possible step");
-        return Failure;
+        Y_XMLOG(xml,"# *** no possible step"); assert(Failure==result);
+        return result;
     }
 
     //--------------------------------------------------------------------------
@@ -85,43 +88,62 @@ BUILD_STEP:
 
     if(D2try>D2org)
     {
+        //----------------------------------------------------------------------
         Y_XMLOG(xml,"# bad step");
-        Y_MKL_FIT_DEGRADE(Spurious);
+        //----------------------------------------------------------------------
+        if(++p>pmax)
+        {
+            p      = pmax;         // top
+            result = Spurious;     // spurious convergence
+            D2org  = D2(F,S,aorg); // recompute predicted values
+            goto CONVERGED;
+        }
         goto BUILD_STEP;
     }
-
-    Y_XMLOG(xml,"# accepted!");
-
-
-    bool           success = false;
-    const bool     kept    = (p==p0);
-    if(kept)
+    else
     {
-        Y_XMLOG(xml,"# upgrade parameter");
-        if(--p<=pmin) p = pmin;
+        //----------------------------------------------------------------------
+        Y_XMLOG(xml,"# accepted!");
+        //----------------------------------------------------------------------
 
-        const ABSCISSA delta = D2org-D2try;
-        const ABSCISSA limit = dtol * D2org;
-        Y_XMLOG(xml,"# delta = " << delta << " / limit=" << limit);
-        if( delta <= limit)
+        bool           success = false;
+        const bool     kept    = (p==p0);
+        if(kept)
         {
-            Y_XMLOG(xml,"# success");
-            success = true;
+            Y_XMLOG(xml,"# upgrade parameter");
+            if(--p<=pmin) p = pmin;
+
+            const ABSCISSA delta = D2org-D2try;
+            const ABSCISSA limit = dtol * D2org;
+            Y_XMLOG(xml,"# delta = " << delta << " / limit=" << limit);
+            if( delta <= limit)
+            {
+                Y_XMLOG(xml,"# success");
+                success = true;
+            }
+
         }
 
+        //----------------------------------------------------------------------
+        // update and check status
+        //----------------------------------------------------------------------
+        Tao::Load(aorg,atry);
+        if( success )
+        {
+            result = Success;
+            goto CONVERGED;
+        }
+
+
+        //----------------------------------------------------------------------
+        // prepare for next cycle
+        //----------------------------------------------------------------------
+        D2org = D2(F,S,aorg,used,G);
+        goto CYCLE;
     }
 
-    //--------------------------------------------------------------------------
-    // update and check status
-    //--------------------------------------------------------------------------
-    Tao::Load(aorg,atry);
-    if( success )
-        return Success;
+CONVERGED:
+    solv->covar(mine->curv,xml);
+    return result;
 
-
-    //--------------------------------------------------------------------------
-    // prepare for next cycle
-    //--------------------------------------------------------------------------
-    D2org = D2(F,S,aorg,used,G);
-    goto CYCLE;
 }

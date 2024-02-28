@@ -140,7 +140,21 @@ namespace Yttrium
             }
 
 
+            template <>
+            bool StepInventor<real_t>:: covar(const Matrix<real_t> &alpha,
+                                              XMLog                &xml)
+            {
+                Y_XMLOG(xml, "-- computing covariance matrix");
+                Y_XMLOG(xml, "alpha=" << alpha);
+                hess.assign(alpha);
+                if(!lu.build(hess)) return false;
+
+                return true;
+            }
+
         }
+
+
 
     }
 

@@ -80,7 +80,6 @@ namespace Yttrium
 
 #include "executive/d2.hpp"
 #include "executive/run.hpp"
-#include "executive/err.hpp"
                 
                 //______________________________________________________________
                 //
