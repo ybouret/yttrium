@@ -16,6 +16,7 @@ Result run(FUNCTION           &F,
            GRADIENT           &G,
            XMLog              &xml)
 {
+    static const ABSCISSA zero(0);
     Y_XML_SECTION(xml, "LeastSquaresFit");
 
     //--------------------------------------------------------------------------
@@ -150,13 +151,29 @@ CONVERGED:
         return Failure;
     }
     Y_XMLOG(xml, "D2 = " << D2org);
+    const size_t               ndata = mine->npts;
+    size_t                     nlive = nvar;
+    for(size_t i=nvar;i>0;--i) { if(!used[i]) --nlive; }
+    Y_XMLOG(xml, "#data = " << ndata);
+    Y_XMLOG(xml, "#live = " << nlive);
+    if(ndata<=nlive)
+    {
+        // ill-conditionned/interpolation
+        Y_XMLOG(xml, "-- undefined variance");
+        return result;
+    }
+    const size_t            dof = ndata-nlive;
+    const ABSCISSA          den = dof;
+    Y_XMLOG(xml, "#dof  = " << dof);
     const Matrix<ABSCISSA> &covar = solv->curv;
 
     for(size_t i=1;i<=nvar;++i)
     {
         if(!used[i]) continue;
-        const ABSCISSA cv = covar[i][i];
-        Y_XMLOG(xml, "covar[" << i << "] = " << cv);
+        const ABSCISSA cii = covar[i][i];
+        const ABSCISSA esq = Max(zero,cii)*D2org/den;
+        const ABSCISSA err = Sqrt<ABSCISSA>::Of(esq);
+        Y_XMLOG(xml, "covar[" << i << "] = " << cii << " => err=" << err);
     }
     return result;
 
