@@ -14,9 +14,9 @@ Result run(FUNCTION           &F,
            const DomainType   &adom,
            const Booleans     &used,
            GRADIENT           &G,
+           Writable<ABSCISSA> &aerr,
            XMLog              &xml)
 {
-    static const ABSCISSA zero(0);
     Y_XML_SECTION(xml, "LeastSquaresFit");
 
     //--------------------------------------------------------------------------
@@ -26,6 +26,7 @@ Result run(FUNCTION           &F,
     //--------------------------------------------------------------------------
     assert( aorg.size() == used.size() ) ;
     assert( aorg.size() == adom.size() );
+    assert( aorg.size() == aerr.size() );
     assert( adom.contains(aorg) );
 
 
@@ -40,7 +41,7 @@ Result run(FUNCTION           &F,
     const int                  pmax = solv->pmax;          // alias
     const size_t               nvar = aorg.size();         // num variables
     int                        p    = -4;                  // initial guess
-
+    aerr.ld(0);
     //--------------------------------------------------------------------------
     //
     // top level memory
@@ -180,7 +181,7 @@ CONVERGED:
     Y_XMLOG(xml, "#dof  = " << dof);
 
     //--------------------------------------------------------------------------
-    // evaluate individual std deviations
+    // evaluate individual standard deviations
     //--------------------------------------------------------------------------
     const Matrix<ABSCISSA> &covar = solv->curv;
     for(size_t i=1;i<=nvar;++i)
@@ -190,6 +191,7 @@ CONVERGED:
         const ABSCISSA esq = Max(zero,cii)*D2org/den;
         const ABSCISSA err = Sqrt<ABSCISSA>::Of(esq);
         Y_XMLOG(xml, "covar[" << i << "] = " << cii << " => err=" << err);
+        aerr[i] = err;
     }
     return result;
 

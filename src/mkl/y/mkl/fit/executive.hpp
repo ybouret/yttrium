@@ -62,6 +62,7 @@ namespace Yttrium
                 inline explicit Executive() :
                 ProxyType(),
                 dtol(1e-4),
+                zero(0),
                 mine( new LeastSquaresType() ),
                 roll( new RollType()         ),
                 solv( new StepInventorType() )
@@ -88,6 +89,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 ABSCISSA                  dtol; //!< decreasing toleance
+                const ABSCISSA            zero; //!< zero
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Executive);
                 AutoPtr<LeastSquaresType> mine;
