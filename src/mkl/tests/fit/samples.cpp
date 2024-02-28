@@ -304,6 +304,8 @@ Y_UTEST(fit_samples)
         S2.saveDatFile("-all");
         all.display("", std::cerr, aorg);
 
+        all.display("", std::cerr, aorg, aerr);
+
         //return 0;
 
     }
