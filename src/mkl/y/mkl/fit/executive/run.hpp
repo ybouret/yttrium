@@ -144,15 +144,28 @@ BUILD_STEP:
     }
 
 CONVERGED:
+    //--------------------------------------------------------------------------
+    //
+    // Estimating errors
+    //
+    //--------------------------------------------------------------------------
     Y_XML_SECTION(xml, "LeastSquaresErrors");
+
+    //--------------------------------------------------------------------------
+    // compute covariance
+    //--------------------------------------------------------------------------
     if(!solv->covar(mine->curv,xml))
     {
         Y_XMLOG(xml, "*** singular covariance");
         return Failure;
     }
     Y_XMLOG(xml, "D2 = " << D2org);
-    const size_t               ndata = mine->npts;
-    size_t                     nlive = nvar;
+
+    //--------------------------------------------------------------------------
+    // compute degrees of freedom
+    //--------------------------------------------------------------------------
+    const size_t ndata = mine->npts;
+    size_t       nlive = nvar;
     for(size_t i=nvar;i>0;--i) { if(!used[i]) --nlive; }
     Y_XMLOG(xml, "#data = " << ndata);
     Y_XMLOG(xml, "#live = " << nlive);
@@ -165,8 +178,11 @@ CONVERGED:
     const size_t            dof = ndata-nlive;
     const ABSCISSA          den = dof;
     Y_XMLOG(xml, "#dof  = " << dof);
-    const Matrix<ABSCISSA> &covar = solv->curv;
 
+    //--------------------------------------------------------------------------
+    // evaluate individual std deviations
+    //--------------------------------------------------------------------------
+    const Matrix<ABSCISSA> &covar = solv->curv;
     for(size_t i=1;i<=nvar;++i)
     {
         if(!used[i]) continue;
