@@ -58,11 +58,29 @@ namespace
     void test1D(U * const t1, U * const x1, const size_t n1,
                 U * const t2, U * const x2, const size_t n2)
     {
+        // declaring samples
         Fit::Samples<T,T>  samples;
         Fit::Sample<T,T> & S1 = samples( new Fit::HeavySample<T,T>("S1", t1, x1, n1) );
         Fit::Sample<T,T> & S2 = samples( new Fit::HeavySample<T,T>("S2", t2, x2, n2) );
         std::cerr << "S1=" << S1.numPoints() << std::endl;
         std::cerr << "S2=" << S2.numPoints() << std::endl;
+
+        // declaring all variables
+        Fit::Variables all;
+        all << "t0" << "D1" << "D2";
+        std::cerr << "all =" << all << std::endl;
+
+        Fit::Variables &var1 = S1.vars;
+        var1.link( all["t0"] );
+        var1.link( "D", all["D1"]);
+        std::cerr << "var1=" << var1 << std::endl;
+
+        Fit::Variables &var2 = S2.vars;
+        var2.link( all["t0"] );
+        var2.link( "D", all["D2"]);
+        std::cerr << "var2=" << var2 << std::endl;
+
+
     }
 
 }
