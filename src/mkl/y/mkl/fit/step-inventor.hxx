@@ -148,7 +148,8 @@ namespace Yttrium
                 Y_XMLOG(xml, "alpha=" << alpha);
                 hess.assign(alpha);
                 if(!lu.build(hess)) return false;
-
+                lu.invert(hess,curv);
+                Y_XMLOG(xml, "covar=" << curv);
                 return true;
             }
 

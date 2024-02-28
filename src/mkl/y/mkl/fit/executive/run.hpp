@@ -143,7 +143,21 @@ BUILD_STEP:
     }
 
 CONVERGED:
-    solv->covar(mine->curv,xml);
+    Y_XML_SECTION(xml, "LeastSquaresErrors");
+    if(!solv->covar(mine->curv,xml))
+    {
+        Y_XMLOG(xml, "*** singular covariance");
+        return Failure;
+    }
+    Y_XMLOG(xml, "D2 = " << D2org);
+    const Matrix<ABSCISSA> &covar = solv->curv;
+
+    for(size_t i=1;i<=nvar;++i)
+    {
+        if(!used[i]) continue;
+        const ABSCISSA cv = covar[i][i];
+        Y_XMLOG(xml, "covar[" << i << "] = " << cv);
+    }
     return result;
 
 }
