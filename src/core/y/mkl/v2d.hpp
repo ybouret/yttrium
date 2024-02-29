@@ -148,6 +148,12 @@ namespace Yttrium
             return V2D(Max(lhs.x,rhs.x),Max(lhs.y,rhs.y));
         }
 
+        //! direct orthogonal
+        inline V2D ortho() const noexcept
+        {
+            return V2D(-y,x);
+        }
+
         //______________________________________________________________________
         //
         //

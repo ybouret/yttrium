@@ -66,10 +66,10 @@ namespace Yttrium
                     
                 }
 
-                Filter<T>    xf;
-                Filter<T>    yf;
-                Coef2D       cf;
-                const Vertex v0;
+                Filter<T>    xf; //!< filter for x
+                Filter<T>    yf; //!< filter for y
+                Coef2D       cf; //!< cf[1..SIZE]
+                const Vertex v0; //!< (0,0)
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Code);

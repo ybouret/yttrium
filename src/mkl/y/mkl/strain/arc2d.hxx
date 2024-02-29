@@ -32,6 +32,7 @@ namespace Yttrium
             {
                 assert(0!=code);
                 code->free();
+                Coerce(velocity) = zero;
             }
 
             template <>

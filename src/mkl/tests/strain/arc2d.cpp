@@ -26,6 +26,7 @@ void testArc2D(const Readable<float>        &theta,
     Strain::Arc2D<T> af;
 
 
+    const T scale(0.5);
 
     OutputFile fp(fn);
     for(float t=-3.0f; t<= 3.0f; t += 0.1f)
@@ -36,9 +37,12 @@ void testArc2D(const Readable<float>        &theta,
             if( fabsf(t-theta[i]) <= 1.0f )
                 af.add(theta[i],r[i]);
         }
-        af.eval(t, 4, 4);
-        const V2D<T> pos = af[1];
-        fp("%.15g %.15g %.15g\n", t, double(pos.x), double(pos.y) );
+        af.eval(t, 3, 3);
+        const V2D<T> &pos = af.r;
+        const V2D<T> &spd = af.v;
+        const V2D<T>  rot = spd.ortho() / af.velocity;
+        const V2D<T>  inn = pos + scale * af.CartesianCurvature() * rot;
+        fp("%.15g %.15g %.15g %.15g %.15g\n", t, double(pos.x), double(pos.y), double(inn.x), double(inn.y) );
     }
 
 }

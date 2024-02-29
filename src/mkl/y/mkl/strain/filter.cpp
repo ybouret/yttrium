@@ -36,7 +36,8 @@ namespace Yttrium
                 solver(),
                 xadd(),
                 coef(FilterInfo::SIZE),
-                zero(0)
+                zero(0),
+                half(0.5)
                 {}
 
                 inline virtual ~Code() noexcept {}
@@ -126,9 +127,9 @@ namespace Yttrium
                     }
 
                     solver.solve(mu,poly);
-                    for(size_t i=Min(ncof,SIZE);i>0;--i)
-                        coef[i] = poly[i];
-                    coef[1] += ym;
+                    /**/        coef[1] = poly[1] + ym;
+                    if(ncof>=2) coef[2] = poly[2];
+                    if(ncof>=3) coef[3] = half * poly[3];
 
                 }
 
@@ -138,6 +139,7 @@ namespace Yttrium
                 XAdd    xadd;
                 Coef    coef;
                 const T zero;
+                const T half;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Code);
