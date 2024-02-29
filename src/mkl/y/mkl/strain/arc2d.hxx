@@ -16,11 +16,7 @@ namespace Yttrium
             Arc2D<real_t>:: Arc2D() :
             Arc2DInfo(),
             ReadableType(),
-            code( new Code() ),
-            r( code->cf[1] ),
-            v( code->cf[2] ),
-            velocity(0),
-            zero(0)
+            code( new Code() ) 
             {
                 
             }
@@ -31,7 +27,6 @@ namespace Yttrium
             {
                 assert(0!=code);
                 code->free();
-                Coerce(velocity) = zero;
             }
 
             template <>
@@ -80,7 +75,6 @@ namespace Yttrium
             {
                 assert(0!=code);
                 code->eval(t0,xdg,ydg);
-                Coerce(velocity) = v.norm();
             }
 
             template <>
