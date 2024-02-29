@@ -25,8 +25,7 @@ namespace Yttrium
             {
             public:
                 static const char * const CallSign; //!< "Strain::Arc2D"
-                static const size_t       SIZE = 2; //!< alias
-
+                
                 virtual ~Arc2DInfo() noexcept; //!< cleanup
             protected:
                 explicit Arc2DInfo() noexcept; //!< setup

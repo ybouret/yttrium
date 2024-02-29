@@ -24,8 +24,7 @@ namespace Yttrium
             class FilterInfo : public Interface
             {
             public:
-                static const char * const CallSign; //!< Filter
-                static const size_t       SIZE = 2; //!< alias
+                static const char * const CallSign; //!< "Strain::Filter"
 
                 virtual ~FilterInfo() noexcept;     //!< cleanup
             protected:
