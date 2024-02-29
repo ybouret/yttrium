@@ -23,9 +23,28 @@ namespace Yttrium
             class Interface : public Recyclable
             {
             public:
-                static  const size_t SIZE = 3;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                static  const size_t SIZE = 3;            //!< number of computed coefficients
+
+                //______________________________________________________________
+                //
+                //
+                // Interface
+                //
+                //______________________________________________________________
                 virtual size_t load() const noexcept = 0; //!< current load
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
                 virtual ~Interface() noexcept; //!< cleanup
             protected:
                 explicit Interface() noexcept; //!< setup
