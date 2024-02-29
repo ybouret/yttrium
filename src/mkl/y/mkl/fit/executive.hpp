@@ -17,7 +17,10 @@ namespace Yttrium
         namespace Fit
         {
 
+            //__________________________________________________________________
+            //
             //! possible outcome of a Fit
+            //__________________________________________________________________
             enum Result
             {
                 Success, //!< normal return

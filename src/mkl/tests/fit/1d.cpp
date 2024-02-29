@@ -31,7 +31,7 @@ namespace
             return sqrt( D*(t-t0) );
         }
 
-        inline void G(Writable<double>     &dFda,
+        inline void G(Writable<T>          &dFda,
                       const T              &t,
                       const Readable<T>    &aorg,
                       const Fit::Variables &vars,
@@ -58,14 +58,21 @@ namespace
     void test1D(U * const t1, U * const x1, const size_t n1,
                 U * const t2, U * const x2, const size_t n2)
     {
+        //______________________________________________________________________
+        //
         // declaring samples
+        //______________________________________________________________________
+
         Fit::Samples<T,T>  samples;
         Fit::Sample<T,T> & S1 = samples( new Fit::HeavySample<T,T>("S1", t1, x1, n1) );
         Fit::Sample<T,T> & S2 = samples( new Fit::HeavySample<T,T>("S2", t2, x2, n2) );
         std::cerr << "S1=" << S1.numPoints() << std::endl;
         std::cerr << "S2=" << S2.numPoints() << std::endl;
 
+        //______________________________________________________________________
+        //
         // declaring all variables
+        //______________________________________________________________________
         Fit::Variables all;
         all << "t0" << "D1" << "D2";
         std::cerr << "all =" << all << std::endl;
@@ -79,6 +86,36 @@ namespace
         var2.link( all["t0"] );
         var2.link( "D", all["D2"]);
         std::cerr << "var2=" << var2 << std::endl;
+
+        //______________________________________________________________________
+        //
+        // declaring functions
+        //______________________________________________________________________
+        F1D<T> f1;
+        typename Fit::LeastSquares<T,T>::OutOfOrderFunc F( &f1, & F1D<T>::F );
+        Fit::SequentialWrapper<T, T>                    Fw( F );
+        typename Fit::LeastSquares<T,T>::OutOfOrderGrad G( &f1, & F1D<T>::G );
+
+        //______________________________________________________________________
+        //
+        // declaring parameters
+        //______________________________________________________________________
+        const T      zero(0);
+        const size_t nvar = all.span();
+        Vector<T>    aorg(nvar,zero);
+        Vector<bool> used(nvar,true);
+        
+        all(aorg,"t0") = -100.0;
+        var1(aorg,"D") = 0.1;
+        var2(aorg,"D") = 0.12;
+
+
+        all.display( "(all) ", std::cerr, aorg);
+        std::cerr << std::endl;
+        var1.display("(v1)  ", std::cerr, aorg);
+        std::cerr << std::endl;
+        var2.display("(v2)  ", std::cerr, aorg);
+        std::cerr << std::endl;
 
 
     }
