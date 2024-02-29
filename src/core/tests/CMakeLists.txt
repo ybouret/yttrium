@@ -68,6 +68,7 @@ add_test(text:convert        test-core text_convert)
 add_test(text:convflt        test-core text_convflt)
 add_test(text:base64         test-core text_base64)
 add_test(text:binary         test-core text_binary)
+add_test(test:cxx_id         test-core test_cxx_id)
 
 
 
@@ -236,6 +237,7 @@ add_test(container:cxx-series test-core container_cxx_series)
 add_test(container:iterator   test-core container_iterator)
 add_test(container:matrix     test-core container_matrix)
 add_test(container:operating  test-core container_operating)
+add_test(container:algo       test-core container_algo)
 
 #sequence
 add_test(sequence:vector test-core sequence_vector)
