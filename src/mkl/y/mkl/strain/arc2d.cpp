@@ -55,15 +55,12 @@ namespace Yttrium
 
                     // query each filter
                     assert(xf.load() == yf.load());
-                    //xf.save("fx.dat");
-                    //yf.save("fy.dat");
                     xf.eval(t0,xdg);
                     yf.eval(t0,ydg);
 
                     // fill information
                     for(size_t i=SIZE;i>0;--i)
                         cf[i] =  Vertex( xf[i], yf[i] );
-                    
                 }
 
                 Filter<T>    xf; //!< filter for x

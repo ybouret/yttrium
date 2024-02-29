@@ -25,7 +25,7 @@ namespace Yttrium
             {
             public:
                 static const char * const CallSign; //!< Filter
-                static const size_t       SIZE = 3; //!< alias
+                static const size_t       SIZE = 2; //!< alias
 
                 virtual ~FilterInfo() noexcept;     //!< cleanup
             protected:

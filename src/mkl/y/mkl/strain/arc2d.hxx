@@ -19,7 +19,6 @@ namespace Yttrium
             code( new Code() ),
             r( code->cf[1] ),
             v( code->cf[2] ),
-            a( code->cf[3] ),
             velocity(0),
             zero(0)
             {
@@ -92,6 +91,7 @@ namespace Yttrium
                 return code->xf.load();
             }
 
+#if 0
             template <>
             real_t Arc2D<real_t>:: CartesianCurvature() const
             {
@@ -110,6 +110,7 @@ namespace Yttrium
                 return (v.x*a.y-v.y*a.x)/(velocity*velocity*velocity)
                 + v.y/r.x/velocity;
             }
+#endif
         }
     }
 }
