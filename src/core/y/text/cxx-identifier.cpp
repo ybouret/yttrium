@@ -1,6 +1,7 @@
 
 #include "y/text/cxx-identifier.hpp"
 #include "y/container/algo/crop.hpp"
+#include "y/container/algo/no-repeat.hpp"
 
 namespace Yttrium
 {
@@ -16,6 +17,7 @@ namespace Yttrium
         void Compactify(String &s)
         {
             Algo::Crop(s,isSubst);
+            Algo::NoRepeat(s,isSubst);
         }
 
     }
