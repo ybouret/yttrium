@@ -3,6 +3,7 @@
 #include "y/calculus/align.hpp"
 #include "y/memory/out-of-reach.hpp"
 #include "y/data/list/raw.hpp"
+#include "y/stream/bits.hpp"
 
 namespace Yttrium
 {
@@ -71,6 +72,7 @@ namespace Yttrium
                     Memory::OutOfReach::Naught(unit+code);
                 used.reset();
             }
+            
             
 
 
