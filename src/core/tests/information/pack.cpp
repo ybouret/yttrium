@@ -45,17 +45,19 @@ namespace Yttrium
         public:
             static const Code     Bytes = 256;
             static const Code     Ctrls = 2;
-            static const Code     Units = Bytes+Ctrls;
+            static const Code     Units = Bytes + Ctrls;
             static const Code     EOS   = Bytes + CtrlEOS;
             static const Code     NYT   = Bytes + CtrlNYT;
             static const unsigned Required = Units * sizeof(Unit);
 
             explicit Alphabet() :
             unit(0),
+            eos(0),
+            nyt(0),
             used(),
             wksp()
             {
-                unit = static_cast<Unit *>(Y_STATIC_ZARR(wksp));
+                Coerce(unit) = static_cast<Unit *>(Y_STATIC_ZARR(wksp));
                 for(Code code=0;code<Bytes;++code)
                 {
                     new (unit+code) Unit(code,8);
@@ -64,6 +66,8 @@ namespace Yttrium
                 {
                     new (unit+code) Unit(code,0);
                 }
+                Coerce(eos) = unit + EOS;
+                Coerce(nyt) = unit + NYT;
             }
 
             virtual ~Alphabet() noexcept
@@ -76,9 +80,12 @@ namespace Yttrium
             
 
 
+
         protected:
-            Unit       *unit;
-            Unit::List  used;
+            Unit       * const unit;
+            Unit       * const eos;
+            Unit       * const nyt;
+            Unit::List         used;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
