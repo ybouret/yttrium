@@ -11,10 +11,13 @@ namespace Yttrium
         class Alphabet
         {
         public:
-            static const unsigned Singles  = 256;
-            static const unsigned Couples  = 65536;
-            static const unsigned Escapes  = 2;
-            static const unsigned Codes    = Singles+Couples+Escapes;
+            static const unsigned Bytes = 256;
+            static const unsigned Ctrls = 2;
+            static const uint16_t Codes = Bytes+Ctrls;
+            static const uint16_t EOS   = 256;
+            static const uint16_t NYT   = 257;
+
+            
 
 
         private:
