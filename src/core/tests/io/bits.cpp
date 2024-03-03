@@ -6,7 +6,7 @@ using namespace Yttrium;
 Y_UTEST(io_bits)
 {
     StreamBits io;
-    io.push(0x1,8);
+    io.push(171,8);
 
     std::cerr << io << std::endl;
 

@@ -34,15 +34,12 @@ namespace Yttrium
         StreamBits & operator<<( const IO::_0_ &);
        
         template <typename T>
-        StreamBits & push(T      data,
+        StreamBits & push(const T data,
                           size_t bits)
         {
             static const T mask = 1;
             while(bits-- > 0)
-            {
-                toTail( static_cast<uint8_t>(mask&data) );
-                data >>= 0x01;
-            }
+                toTail( static_cast<uint8_t>( mask&(data>>bits)) );
             return *this;
         }
 
