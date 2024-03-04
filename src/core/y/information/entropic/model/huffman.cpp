@@ -1,5 +1,6 @@
 
 #include "y/information/entropic/model/huffman.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
@@ -34,6 +35,11 @@ namespace Yttrium
 
                 heap.free();
                 {
+                    //----------------------------------------------------------
+                    //
+                    // loading leaves into heap
+                    //
+                    //----------------------------------------------------------
                     size_t    indx = 0;
                     for(Unit *unit = used.head;unit;unit=unit->next)
                     {
@@ -43,6 +49,11 @@ namespace Yttrium
                         heap.insert(node);
                     }
 
+                    //----------------------------------------------------------
+                    //
+                    // building binary tree from heap
+                    //
+                    //----------------------------------------------------------
                     while(heap.size()>1)
                     {
                         Node *r = heap.pull();

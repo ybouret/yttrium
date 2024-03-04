@@ -48,6 +48,7 @@ namespace Yttrium
                 Unit      *next; //!< for list
                 Unit      *prev; //!< for list
                 void      *priv; //!< private data
+                Code       byte; //!< original data
             };
         }
 
