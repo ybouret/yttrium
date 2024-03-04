@@ -19,9 +19,8 @@ namespace Yttrium
         {
         public:
             typedef RawListOf<Unit> List;
-            explicit Unit(const Code c, const Bits b) noexcept :
-            code(c), bits(b), freq(0), next(0), prev(0){}
-            inline ~Unit() noexcept {}
+            explicit Unit(const Code c, const Bits b) noexcept : code(c), bits(b), freq(0), next(0), prev(0) {}
+             inline ~Unit() noexcept {}
 
             const Code code;
             Bits       bits;
@@ -43,15 +42,18 @@ namespace Yttrium
         class Alphabet
         {
         public:
-            static const Code     Bytes = 256;
-            static const Code     Ctrls = 2;
-            static const Code     Units = Bytes + Ctrls;
-            static const Code     EOS   = Bytes + CtrlEOS;
-            static const Code     NYT   = Bytes + CtrlNYT;
+            static const Code     Bytes    = 256;
+            static const Code     Ctrls    = 2;
+            static const Code     Units    = Bytes + Ctrls;
+            static const Code     EOS      = Bytes + CtrlEOS;
+            static const Code     NYT      = Bytes + CtrlNYT;
             static const unsigned Required = Units * sizeof(Unit);
+
+            typedef void (Alphabet::*Emit)(StreamBits &, Unit &);
 
             explicit Alphabet() :
             unit(0),
+            emit( & Alphabet::emitInit ),
             eos(0),
             nyt(0),
             used(),
@@ -68,6 +70,7 @@ namespace Yttrium
                 }
                 Coerce(eos) = unit + EOS;
                 Coerce(nyt) = unit + NYT;
+                pushControls();
             }
 
             virtual ~Alphabet() noexcept
@@ -76,13 +79,18 @@ namespace Yttrium
                     Memory::OutOfReach::Naught(unit+code);
                 used.reset();
             }
-            
-            
+
+            void write(const uint8_t byte,
+                       StreamBits   &io)
+            {
+                Unit &u = unit[byte];
+            }
 
 
 
         protected:
             Unit       * const unit;
+            Emit               emit;
             Unit       * const eos;
             Unit       * const nyt;
             Unit::List         used;
@@ -91,6 +99,58 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
 
             void *wksp[ Y_WORDS_GEQ(Required) ];
+
+            inline void feed(StreamBits &io, const Unit &u)
+            {
+                io.push(u.code,u.bits);
+            }
+
+
+            //! emit first unit
+            void emitInit(StreamBits &io, Unit &u)
+            {
+                assert(Ctrls==used.size);
+                assert(used.owns(eos));
+                assert(used.owns(nyt));
+                assert(!used.owns(&u));
+                assert(0==u.freq);
+                assert(8==u.bits);
+
+                feed(io,u);
+                used.pushHead(&u)->freq++;
+                emit = & Alphabet::emitBulk;
+            }
+
+            void emitBulk(StreamBits &io, Unit &u)
+            {
+                assert(used.owns(eos));
+                assert(used.owns(nyt));
+                assert(used.size<Units);
+                if(u.freq++ <= 0)
+                {
+                    // a new unit
+                    assert( !used.owns(&u) );
+                    assert( 8 == u.bits    );
+
+
+                    feed(io,*nyt);             // feed Not Yet Transmitted
+                    used.insertBefore(eos,&u); // put into position
+                }
+                else
+                {
+                    while(u.prev && u.prev->freq < u.freq )
+                    {
+
+                    }
+                }
+
+            }
+
+            void pushControls() noexcept
+            {
+                used.pushTail(eos);
+                used.pushTail(nyt);
+            }
 
             void reset() noexcept
             {
@@ -114,6 +174,9 @@ namespace Yttrium
                     u.next = 0;
                     u.prev = 0;
                 }
+
+                emit = & Alphabet::emitInit;
+                pushControls();
             }
 
         };
