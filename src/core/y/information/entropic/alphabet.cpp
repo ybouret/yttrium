@@ -7,11 +7,7 @@ namespace Yttrium
     namespace Information
     {
 
-        namespace Entropic
-        {
-            Unit::  Unit(const Code c, const Bits b) noexcept : code(c), bits(b), freq(0), next(0), prev(0) {}
-            Unit:: ~Unit() noexcept {}
-        }
+
 
         namespace Entropic
         {
@@ -26,12 +22,11 @@ namespace Yttrium
                 Coerce(unit) = static_cast<Unit *>(Y_STATIC_ZARR(wksp));
                 for(Code code=0;code<Bytes;++code)
                 {
-                    new (unit+code) Unit(code,8);
+                    Unit &u = unit[code];
+                    u.code  = code;
+                    u.bits  = 8;
                 }
-                for(Code code=Bytes;code<Units;++code)
-                {
-                    new (unit+code) Unit(code,0);
-                }
+
                 Coerce(eos) = unit + EOS;
                 Coerce(nyt) = unit + NYT;
                 pushControls();
@@ -40,8 +35,7 @@ namespace Yttrium
 
             Alphabet:: ~Alphabet() noexcept
             {
-                for(Code code=0;code<Units;++code)
-                    Memory::OutOfReach::Naught(unit+code);
+                Y_STATIC_ZARR(wksp);
                 used.reset();
             }
 
@@ -73,26 +67,15 @@ namespace Yttrium
             void Alphabet:: reset() noexcept
             {
 
-                used.reset();
+                used.reset(); Y_STATIC_ZARR(wksp);
 
                 for(Code code=0;code<Bytes;++code)
                 {
                     Unit &u = unit[code];
-                    u.freq = 0;
+                    u.code = code;
                     u.bits = 8;
-                    u.next = 0;
-                    u.prev = 0;
                 }
-
-                for(Code code=Bytes;code<Units;++code)
-                {
-                    Unit &u = unit[code];
-                    assert(0==u.freq);
-                    assert(0==u.bits);
-                    u.next = 0;
-                    u.prev = 0;
-                }
-
+                
                 emit = & Alphabet::emitInit;
                 pushControls();
             }
@@ -148,7 +131,11 @@ namespace Yttrium
                 rank(u);
             }
 
-
+            void Alphabet:: write(StreamBits &io, const uint8_t byte)
+            {
+                ( (*this).*emit )(io,unit[byte]);
+                // update model
+            }
 
         }
 

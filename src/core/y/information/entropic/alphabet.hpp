@@ -16,26 +16,19 @@ namespace Yttrium
 
         namespace Entropic
         {
+
             typedef uint32_t Frequency;
             typedef uint16_t Code;
-            typedef uint8_t  Bits;
-
-            class Unit
+            typedef uint16_t Bits;
+            
+            struct Unit
             {
-            public:
                 typedef RawListOf<Unit> List;
-
-                Unit(const Code,const Bits) noexcept;
-                ~Unit()                     noexcept;
-
-                const Code code;
+                Code       code;
                 Bits       bits;
                 Frequency  freq;
                 Unit      *next;
                 Unit      *prev;
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Unit);
             };
 
             enum CtrlOffset
@@ -59,11 +52,8 @@ namespace Yttrium
                 explicit Alphabet() noexcept;
                 virtual ~Alphabet() noexcept;
 
-                void write(StreamBits &io, const uint8_t byte)
-                {
-                    ( (*this).*emit )(io,unit[byte]);
-                    // update model
-                }
+                //! emit byte to io, no model
+                void write(StreamBits &io, const uint8_t byte);
 
                 //! send EOS and fill io to byte boundary
                 void flush(StreamBits &io);
@@ -89,8 +79,6 @@ namespace Yttrium
                 void emitInit(StreamBits &io, Unit &u);   //!< emit first unit
                 void emitBulk(StreamBits &io, Unit &u);   //!< emit bulk unit
                 void emitFull(StreamBits &io, Unit &u);   //!< emit unit with full Alphabet
-
-
 
 
 
