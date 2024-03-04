@@ -27,7 +27,7 @@ namespace Yttrium
         //! start list with node, do not change size
         //______________________________________________________________________
         template <typename LIST, typename NODE> static inline
-        void Starting_(LIST &L, NODE *node) noexcept
+        void Starting_(LIST &L, NODE * const node) noexcept
         {
             L.head = L.tail = node;
         }
@@ -37,7 +37,7 @@ namespace Yttrium
         //! push node at tail, do not change size
         //______________________________________________________________________
         template <typename LIST, typename NODE> static inline
-        void PushTail_(LIST &L, NODE *node) noexcept
+        void PushTail_(LIST &L, NODE * const node) noexcept
         {
             assert(L.size>0);
             assert(0!=L.tail);
@@ -51,7 +51,7 @@ namespace Yttrium
         //! push node at head, do not change size
         //______________________________________________________________________
         template <typename LIST, typename NODE> static inline
-        void PushHead_(LIST &L, NODE *node) noexcept
+        void PushHead_(LIST &L, NODE * const node) noexcept
         {
             assert(L.size>0);
             assert(0!=L.head);
@@ -66,7 +66,7 @@ namespace Yttrium
         //! increase size and return node
         //______________________________________________________________________
         template <typename LIST, typename NODE> static inline
-        NODE * Upgraded_(LIST &L, NODE *node) noexcept
+        NODE * Upgraded_(LIST &L, NODE * const node) noexcept
         {
             ++Coerce(L.size); assert(L.owns(node));
             return node;
@@ -77,7 +77,7 @@ namespace Yttrium
         //! increase size and return node
         //______________________________________________________________________
         template <typename LIST, typename NODE> static inline
-        NODE * Released_(LIST &L, NODE *node) noexcept
+        NODE * Released_(LIST &L, NODE * const node) noexcept
         {
             --Coerce(L.size); assert(!L.owns(node));
             return node;
@@ -88,7 +88,7 @@ namespace Yttrium
         //! put after a regular node
         //______________________________________________________________________
         template <typename NODE> static inline
-        void PutAfter_(NODE *mine, NODE *node) noexcept
+        void PutAfter_(NODE * const mine, NODE * const node) noexcept
         {
             assert(0!=mine);
             assert(0!=mine->next);
@@ -104,7 +104,7 @@ namespace Yttrium
         //! put before a regular node
         //______________________________________________________________________
         template <typename NODE> static inline
-        void PutBefore_(NODE *mine, NODE *node) noexcept
+        void PutBefore_(NODE * const mine, NODE * const node) noexcept
         {
             assert(0!=mine);
             assert(0!=mine->prev);
@@ -122,7 +122,7 @@ namespace Yttrium
         //! check node is owned by list
         //______________________________________________________________________
         template <typename LIST, typename NODE> static inline
-        bool OwnedBy(const LIST &L, const NODE *node) noexcept
+        bool OwnedBy(const LIST &L, const NODE * const node) noexcept
         {
             for(const NODE *scan=L.head;scan;scan=scan->next)
             {
@@ -136,7 +136,7 @@ namespace Yttrium
         //! push node at tail of list
         //______________________________________________________________________
         template <typename LIST, typename NODE> static
-        inline NODE * PushTail(LIST &L, NODE *node) noexcept
+        inline NODE * PushTail(LIST &L, NODE *const node) noexcept
         {
             assert(0!=node);
             assert(0==node->next);
@@ -156,7 +156,7 @@ namespace Yttrium
         //! push node at head of list
         //______________________________________________________________________
         template <typename LIST, typename NODE> static
-        inline NODE * PushHead(LIST &L, NODE *node) noexcept
+        inline NODE * PushHead(LIST &L, NODE * const node) noexcept
         {
             assert(0!=node);
             assert(0==node->next);
@@ -239,7 +239,7 @@ namespace Yttrium
         //! pop any node
         //______________________________________________________________________
         template <typename LIST, typename NODE> static inline
-        NODE *Pop(LIST &L, NODE *node) noexcept
+        NODE *Pop(LIST &L, NODE * const node) noexcept
         {
             assert(OwnedBy(L,node));
             if(L.head==node)
@@ -269,7 +269,7 @@ namespace Yttrium
         //! insert node after L.mine
         //______________________________________________________________________
         template <typename LIST, typename NODE> static inline
-        NODE *InsertAfter(LIST &L, NODE *mine, NODE *node) noexcept
+        NODE *InsertAfter(LIST &L, NODE *const mine, NODE * const node) noexcept
         {
             assert(OwnedBy(L,mine));
             assert(0!=node);
@@ -292,7 +292,7 @@ namespace Yttrium
         //! insert node before L.mine
         //______________________________________________________________________
         template <typename LIST, typename NODE> static inline
-        NODE *InsertBefore(LIST &L, NODE *mine, NODE *node) noexcept
+        NODE *InsertBefore(LIST &L, NODE * const mine, NODE * const node) noexcept
         {
             assert(OwnedBy(L,mine));
             assert(0!=node);
@@ -477,7 +477,7 @@ namespace Yttrium
          */
         //______________________________________________________________________
         template <typename LIST, typename NODE, typename COMPARE> static inline
-        NODE *InsertOrdered(LIST &L, NODE *node, COMPARE &compare) noexcept
+        NODE *InsertOrdered(LIST &L, NODE * const node, COMPARE &compare) noexcept
         {
             assert(0!=node);
             assert(0==node->next);
@@ -570,7 +570,7 @@ namespace Yttrium
         //! helper to test InsertOrdered
         //______________________________________________________________________
         template <typename NODE> static inline
-        SignType IncreasingAddresses(const NODE *lhs, const NODE *rhs) noexcept
+        SignType IncreasingAddresses(const NODE * const lhs, const NODE * const rhs) noexcept
         {
             return Sign::Of(lhs,rhs);
         }
@@ -594,7 +594,7 @@ namespace Yttrium
         //! specific optimized insertion by increasing address
         //______________________________________________________________________
         template <typename LIST, typename NODE> static inline
-        NODE *InsertByIncreasingAddress(LIST &L, NODE *node) noexcept
+        NODE *InsertByIncreasingAddress(LIST &L, NODE * const node) noexcept
         {
             assert(0!=node);
             assert(0==node->next);
@@ -660,10 +660,14 @@ namespace Yttrium
         //! move node to front
         //______________________________________________________________________
         template <typename LIST, typename NODE> static inline
-        NODE *MoveToFront(LIST &L, NODE *node) noexcept
+        NODE *MoveToFront(LIST &L, NODE * const node) noexcept
         {
             assert(OwnedBy(L,node));
             assert(L.size>0);
+
+            //------------------------------------------------------------------
+            // trivial cases
+            //------------------------------------------------------------------
             switch(L.size)
             {
                 case 0: // N/A
@@ -690,7 +694,9 @@ namespace Yttrium
             }
             else
             {
+                //--------------------------------------------------------------
                 // detach node
+                //--------------------------------------------------------------
                 if(L.tail==node)
                 {
                     assert(0!=L.tail->prev);
@@ -709,10 +715,23 @@ namespace Yttrium
                     node->prev = 0;
                 }
 
+                //--------------------------------------------------------------
                 // push at head
+                //--------------------------------------------------------------
                 PushHead_(L,node); assert(L.head==node);
                 return node;
             }
+        }
+
+        template <typename LIST, typename NODE> static inline
+        NODE *TowardsHead(LIST &L, NODE * const node) noexcept
+        {
+            assert(0!=node);
+            assert(L.owns(node));
+            assert(L.size>=2);
+            assert(L.head!=node);
+            assert(0!=node->prev);
+            return InsertBefore(L,node->prev,Pop(L,node));
         }
     };
 

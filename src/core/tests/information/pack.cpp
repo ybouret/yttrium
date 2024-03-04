@@ -100,9 +100,17 @@ namespace Yttrium
 
             void *wksp[ Y_WORDS_GEQ(Required) ];
 
-            inline void feed(StreamBits &io, const Unit &u)
+            void send(StreamBits &io, const Unit &u)
             {
                 io.push(u.code,u.bits);
+            }
+
+            void rank(Unit &u) noexcept
+            {
+                assert(used.owns(&u));
+                assert(u.freq>0);
+                while(u.prev && u.prev->freq < u.freq )
+                    used.towardsHead(&u);
             }
 
 
@@ -116,11 +124,12 @@ namespace Yttrium
                 assert(0==u.freq);
                 assert(8==u.bits);
 
-                feed(io,u);
+                send(io,u);
                 used.pushHead(&u)->freq++;
                 emit = & Alphabet::emitBulk;
             }
 
+            //! emit bulk unit
             void emitBulk(StreamBits &io, Unit &u)
             {
                 assert(used.owns(eos));
@@ -128,22 +137,33 @@ namespace Yttrium
                 assert(used.size<Units);
                 if(u.freq++ <= 0)
                 {
+                    //----------------------------------------------------------
                     // a new unit
+                    //----------------------------------------------------------
                     assert( !used.owns(&u) );
                     assert( 8 == u.bits    );
 
-
-                    feed(io,*nyt);             // feed Not Yet Transmitted
+                    send(io,*nyt);             // feed Not Yet Transmitted
                     used.insertBefore(eos,&u); // put into position
-                }
-                else
-                {
-                    while(u.prev && u.prev->freq < u.freq )
+                    if(used.size>=Units)
                     {
-
+                        used.pop(nyt);
+                        emit = & Alphabet:: emitFull;
                     }
                 }
+                else
+                    rank(u);
 
+                send(io,u);
+            }
+
+            void emitFull(StreamBits &io, Unit &u)
+            {
+                assert(1+Bytes==used.size);
+                assert(u.freq>0);
+                send(io,u);
+                ++u.freq;
+                rank(u);
             }
 
             void pushControls() noexcept

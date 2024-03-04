@@ -45,27 +45,27 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        inline NODE *pushTail(NODE *node) noexcept { return ListOps::PushTail(*this,node); } //!< push node at tail
-        inline NODE *pushHead(NODE *node) noexcept { return ListOps::PushHead(*this,node); } //!< push node at head
-        inline NODE *popTail()            noexcept { return ListOps::PopTail(*this);       } //!< pop head node
-        inline NODE *popHead()            noexcept { return ListOps::PopHead(*this);       } //!< pop tail node
-        inline NODE *pop(NODE *node)      noexcept { return ListOps::Pop(*this,node);      } //!< pop any node
+        inline NODE *pushTail(NODE * const node) noexcept { return ListOps::PushTail(*this,node); } //!< push node at tail
+        inline NODE *pushHead(NODE * const node) noexcept { return ListOps::PushHead(*this,node); } //!< push node at head
+        inline NODE *popTail()                   noexcept { return ListOps::PopTail(*this);       } //!< pop head node
+        inline NODE *popHead()                   noexcept { return ListOps::PopHead(*this);       } //!< pop tail node
+        inline NODE *pop(NODE * const node)      noexcept { return ListOps::Pop(*this,node);      } //!< pop any node
 
         //! insert node after mine
-        inline NODE *insertAfter(NODE *mine, NODE *node) noexcept
+        inline NODE *insertAfter(NODE * const mine, NODE * const node) noexcept
         {
             return ListOps:: InsertAfter(*this,mine,node);
         }
 
         //! insert node before mine
-        inline NODE *insertBefore(NODE *mine, NODE *node) noexcept
+        inline NODE *insertBefore(NODE * const mine, NODE * const node) noexcept
         {
             return ListOps:: InsertBefore(*this,mine,node);
         }
 
         
         //! insert node by increasing address
-        inline NODE *insertByIncreasingAddress(NODE *node) noexcept
+        inline NODE *insertByIncreasingAddress(NODE * const node) noexcept
         {
             return ListOps::InsertByIncreasingAddress(*this,node);
         }
@@ -88,10 +88,17 @@ namespace Yttrium
         }
 
         //! move node to front
-        NODE *moveToFront(NODE *node) noexcept
+        NODE *moveToFront(NODE * const node) noexcept
         {
             return ListOps:: MoveToFront(*this,node);
         }
+
+        //! move node towards head
+        NODE *towardsHead(NODE * const node) noexcept
+        {
+            return ListOps:: TowardsHead(*this,node);
+        }
+        
 
         //! merge content at tail
         inline void mergeTail(ListOf &other) noexcept
