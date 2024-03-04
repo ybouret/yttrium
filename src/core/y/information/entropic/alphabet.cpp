@@ -52,15 +52,29 @@ namespace Yttrium
 
             }
 
+            static inline
+            size_t FullFor(const OperatingMode mode)
+            {
+                switch(mode)
+                {
+                    case BlockWise:
+                        return Unit::Encoding+1;
+
+                    case Multiplex:
+                        return Unit::Encoding+2;
+                }
+            }
+
             Alphabet:: Alphabet(const OperatingMode how,
                                 const bool          verbosity) noexcept :
             unit(0),
             emit( & Alphabet::emitInit ),
-            eos(0),
             nyt(0),
+            eos(0),
             used(),
             sumf(0),
             mode(how),
+            full( FullFor(mode) ),
             verbose(verbosity),
             wksp()
             {
@@ -115,6 +129,7 @@ namespace Yttrium
 
             void Alphabet:: pushControls() noexcept
             {
+                used.pushTail(nyt);
                 switch(mode)
                 {
                     case Multiplex:
@@ -124,8 +139,6 @@ namespace Yttrium
                     case BlockWise:
                         break;
                 }
-
-                used.pushTail(nyt);
             }
 
 
@@ -141,10 +154,16 @@ namespace Yttrium
             }
 
 
+            void Alphabet:: reset(const OperatingMode how) noexcept
+            {
+                Coerce(full) = FullFor( Coerce(mode) = how );
+                reset();
+            }
+            
+
             void Alphabet:: emitInit(StreamBits &io, Unit &u)
             {
-                assert(Unit::Controls==used.size);
-                assert(used.owns(eos));
+                //assert(used.owns(eos));
                 assert(used.owns(nyt));
                 assert(!used.owns(&u));
                 assert(0==u.freq);
@@ -172,8 +191,8 @@ namespace Yttrium
                     Y_ALPHA_MSG("emitBulk NYT");
 
                     send(io,*nyt);             // feed Not Yet Transmitted
-                    used.insertBefore(eos,&u); // put into position
-                    if(used.size>=Unit::Universe)
+                    used.insertBefore(nyt,&u); // put into position
+                    if(used.size>=full)
                     {
                         Y_ALPHA_MSG("switch to FULL");
                         used.pop(nyt);
@@ -251,7 +270,6 @@ namespace Yttrium
                 {
                     os << *u << std::endl;
                 }
-
                 os << "<Alphabet/>" << std::endl;
             }
         }

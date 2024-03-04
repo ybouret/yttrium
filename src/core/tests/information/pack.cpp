@@ -9,20 +9,6 @@
 using namespace Yttrium;
 using namespace Information;
 
-namespace Yttrium
-{
-    namespace Information
-    {
-
-        namespace Entropic
-        {
-
-          
-
-        }
-
-    }
-}
 
 #include "y/string.hpp"
 
@@ -32,6 +18,21 @@ Y_UTEST(info_pack)
 
     Entropic::Alphabet alpha(Entropic::Multiplex,true);
     StreamBits         io;
+
+
+    for(int i=0;i<256;++i)
+    {
+        alpha.write(io,uint8_t(i));
+    }
+
+    alpha.reset(Entropic::BlockWise);
+
+    for(int i=0;i<256;++i)
+    {
+        alpha.write(io,uint8_t(i));
+    }
+
+#if 0
 
     alpha.write(io,'a');
     alpha.reset();
@@ -65,6 +66,7 @@ Y_UTEST(info_pack)
     alpha.display(std::cerr);
     huff.build(alpha.used);
     alpha.display(std::cerr);
+#endif
 
 
 }

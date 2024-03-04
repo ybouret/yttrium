@@ -93,6 +93,10 @@ namespace Yttrium
                 //! reset all alphabet
                 void reset() noexcept;
 
+                //! reset with a different mode
+                void reset(const OperatingMode how) noexcept;
+
+
                 //! reduce frequencies
                 void reduce() noexcept;
 
@@ -102,14 +106,15 @@ namespace Yttrium
             protected:
                 Unit       * const unit; //!< unit[0..Units-1]
                 Emit               emit; //!< current prototype
-                Unit       * const eos;  //!< End Of Stream unit
                 Unit       * const nyt;  //!< Not Yet Transmitted unit
+                Unit       * const eos;  //!< End Of Stream unit
+
             public:
                 Unit::List         used; //!< list of used units
                 Frequency          sumf; //!< sum of frequencies
-                
             public:
                 const OperatingMode mode;       //!< operating mode
+                const size_t        full;       //!< switching to emitFull
                 bool                verbose;    //!< verbosity
 
             private:

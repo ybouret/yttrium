@@ -59,8 +59,8 @@ namespace Yttrium
                 Y_DISABLE_COPY_AND_ASSIGN(Huffman);
                 static const size_t Required = MaxNodes * sizeof(Node);
 
-                PQueueType       heap;
-                HandleType const knot;
+                PQueueType       heap; //!< heap to build codes
+                HandleType const knot; //!< all nodes
                 void *           wksp[ Y_WORDS_GEQ(Required) ];
 
 

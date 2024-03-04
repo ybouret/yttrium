@@ -38,8 +38,9 @@ namespace Yttrium
             //__________________________________________________________________
             enum ControlOffset
             {
-                ControlEOS = 0, //!< for End Of Stream
-                ControlNYT = 1  //!< for Not Yet Transmitted
+                ControlNYT = 0,  //!< for Not Yet Transmitted
+                ControlEOS = 1   //!< for End Of Stream
+
             };
 
 
@@ -58,8 +59,9 @@ namespace Yttrium
                 static const unsigned   Controls   = 2;                    //!< Controls
                 static const unsigned   Universe   = Encoding+Controls;    //!< all possible
                 static const unsigned   MaxUsed    = Universe-1;           //!< with removed NYT
+                static const unsigned   NYT        = Encoding+ControlNYT;  //!< index of NYT
                 static const unsigned   EOS        = Encoding+ControlEOS;  //!< index of EOS
-                static const unsigned   NYT        = Encoding+ControlNYT;  //!< index of MYT
+
                 static const Frequency  MaxSumFreq = IntegerFor<Frequency>::Maximum;
 
                 unsigned   code; //!< current code
