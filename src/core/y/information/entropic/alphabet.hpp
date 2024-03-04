@@ -18,18 +18,35 @@ namespace Yttrium
         namespace Entropic
         {
 
-            typedef uint32_t Frequency;
-            typedef uint16_t Code;
-            typedef uint16_t Bits;
-            
+            //__________________________________________________________________
+            //
+            //
+            //
+            // Types
+            //
+            //
+            //__________________________________________________________________
+            typedef uint32_t Frequency; //!< hold frequencies
+            typedef uint16_t Code;      //!< hold codes
+            typedef uint16_t Bits;      //!< hold bits for codes
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! C-Style unit
+            //
+            //
+            //__________________________________________________________________
             struct Unit
             {
-                typedef RawListOf<Unit> List;
-                Code       code;
-                Bits       bits;
-                Frequency  freq;
-                Unit      *next;
-                Unit      *prev;
+                typedef RawListOf<Unit> List; //!< list of unit
+
+                Code       code; //!< current code
+                Bits       bits; //!< bits for code
+                Frequency  freq; //!< frequencies
+                Unit      *next; //!< for list
+                Unit      *prev; //!< for list
             };
 
             enum OperatingMode
