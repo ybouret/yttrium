@@ -222,6 +222,12 @@ namespace Yttrium
             {
                 write_(io,byte);
             }
+
+            void Alphabet:: write(StreamBits &io, const uint8_t byte, Model &model)
+            {
+                write_(io,byte);
+                model.build(used);
+            }
         }
 
     }

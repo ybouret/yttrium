@@ -101,6 +101,10 @@ namespace Yttrium
                 //! emit byte to io, no model
                 void write(StreamBits &io, const uint8_t byte);
 
+                //! emit byte to io and build model
+                void write(StreamBits &io, const uint8_t byte, Model &model);
+
+
                 //! send EOS and fill io to byte boundary
                 void flush(StreamBits &io);
 
