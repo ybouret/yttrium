@@ -23,6 +23,11 @@ Y_UTEST(info_pack)
     alpha.write(io,'a');
     alpha.write(io,'b');
 
+    for(int i=0;i<256;++i)
+    {
+        alpha.write(io,uint8_t(i));
+    }
+    alpha.write(io,'a');
 
 
 }

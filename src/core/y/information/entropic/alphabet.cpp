@@ -1,6 +1,7 @@
 
 #include "y/information/entropic/alphabet.hpp"
-#include "y/stream/xmlog.hpp"
+#include "y/text/ascii/printable.hpp"
+#include "y/memory/out-of-reach.hpp"
 
 namespace Yttrium
 {
@@ -22,6 +23,7 @@ namespace Yttrium
             eos(0),
             nyt(0),
             used(),
+            sumf(0),
             mode(how),
             verbose(verbosity),
             wksp()
@@ -42,12 +44,22 @@ namespace Yttrium
 
             Alphabet:: ~Alphabet() noexcept
             {
-                Y_STATIC_ZARR(wksp);
-                used.reset();
+                reset();
+            }
+
+
+            const char * Alphabet:: uid(const Unit &u) const noexcept
+            {
+                const size_t delta = &u - unit;
+                if( delta < 256  ) return ASCII::Printable::Char[ uint8_t(delta) ];
+                if( delta == EOS ) return "EOS";
+                if( delta == NYT ) return "NYT";
+                return Core::Unknown;
             }
 
             void Alphabet:: send(StreamBits &io, const Unit &u)
             {
+                Y_ALPHA_MSG("--> '" << uid(u) << "'");
                 io.push(u.code,u.bits);
             }
 
@@ -57,6 +69,7 @@ namespace Yttrium
                 assert(u.freq>0);
                 while(u.prev && u.prev->freq < u.freq )
                     used.towardsHead(&u);
+
             }
 
             void Alphabet:: flush(StreamBits &io)
@@ -104,7 +117,8 @@ namespace Yttrium
                     u.code = code;
                     u.bits = 8;
                 }
-                
+
+                sumf = 0;
                 emit = & Alphabet::emitInit;
                 pushControls();
             }
@@ -119,7 +133,7 @@ namespace Yttrium
                 assert(0==u.freq);
                 assert(8==u.bits);
 
-                Y_ALPHA_MSG("emitInit(" << char(u.code) << ")");
+                Y_ALPHA_MSG("emitInit");
                 send(io,u);
                 used.pushHead(&u)->freq++;
                 emit = & Alphabet::emitBulk;
@@ -139,7 +153,7 @@ namespace Yttrium
                     assert( !used.owns(&u) );
                     assert( 8 == u.bits    );
 
-                    Y_ALPHA_MSG("emit NYT  Bulk(" << char(u.code) << ")");
+                    Y_ALPHA_MSG("emitBulk NYT");
 
                     send(io,*nyt);             // feed Not Yet Transmitted
                     used.insertBefore(eos,&u); // put into position
@@ -155,7 +169,7 @@ namespace Yttrium
                     //----------------------------------------------------------
                     // an existing unit: ranking
                     //----------------------------------------------------------
-                    Y_ALPHA_MSG("emit USED Bulk(" << char(u.code) << ")");
+                    Y_ALPHA_MSG("emitBULK USED");
                     rank(u);
                 }
 
@@ -171,6 +185,9 @@ namespace Yttrium
                 ++u.freq;
                 rank(u);
             }
+
+         
+
 
             void Alphabet:: write(StreamBits &io, const uint8_t byte)
             {

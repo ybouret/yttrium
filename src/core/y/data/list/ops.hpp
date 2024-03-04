@@ -723,6 +723,7 @@ namespace Yttrium
             }
         }
 
+        //! move node (!=head) towards head
         template <typename LIST, typename NODE> static inline
         NODE *TowardsHead(LIST &L, NODE * const node) noexcept
         {
