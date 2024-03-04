@@ -98,6 +98,7 @@ information
 information/stream
 information/bwt
 information/entropic
+information/entropic/model
 functor
 woven
 woven/survey
