@@ -213,7 +213,7 @@ namespace Yttrium
             void Alphabet:: write_(StreamBits &io, const uint8_t byte)
             {
                 ( (*this).*emit )(io,unit[byte]);
-                while(sumf>=MaxSumFreq)
+                while(sumf>=Unit::MaxSumFreq)
                     reduce();
             }
 
