@@ -18,7 +18,7 @@ namespace Yttrium
             class Huffman : public Model
             {
             public:
-                static const size_t MaxUnits = 257;
+                static const size_t MaxUnits = Unit::MaxUsed;
                 static const size_t MaxNodes = 2*MaxUnits-1;
 
                 struct Node

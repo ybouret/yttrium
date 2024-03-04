@@ -35,20 +35,7 @@ namespace Yttrium
             };
 
 
-            //__________________________________________________________________
-            //
-            //
-            //
-            //! Control codes offset
-            //
-            //
-            //__________________________________________________________________
-            enum CtrlOffset
-            {
-                CtrlEOS = 0, //!< for End Of Stream
-                CtrlNYT = 1  //!< for Not Yet Transmitted
-            };
-
+       
             //__________________________________________________________________
             //
             //
@@ -66,11 +53,6 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                static const Code     Bytes    = 256;                   //!< number of data bytes
-                static const Code     Ctrls    = 2;                     //!< number of control units
-                static const Code     Units    = Bytes + Ctrls;         //!< number of units
-                static const Code     EOS      = Bytes + CtrlEOS;       //!< index of End Of Stream
-                static const Code     NYT      = Bytes + CtrlNYT;       //!< index of Not Yet Transmitted
                 typedef void (Alphabet::*Emit)(StreamBits &, Unit &);   //!< emit prototype
 
                 //______________________________________________________________
@@ -118,8 +100,6 @@ namespace Yttrium
 
 
             protected:
-                const char *uid(const Unit &u) const noexcept;
-
                 Unit       * const unit; //!< unit[0..Units-1]
                 Emit               emit; //!< current prototype
                 Unit       * const eos;  //!< End Of Stream unit
@@ -134,9 +114,10 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
-                static const unsigned Required = Units * sizeof(Unit);
+                static const unsigned Required = Unit::Universe * sizeof(Unit);
                 void *wksp[ Y_WORDS_GEQ(Required) ];
 
+                void init() noexcept; //!< set all units
                 void send(StreamBits &io, const Unit &u); //!< send unit to io
                 void rank(Unit &u)              noexcept; //!< keep ranked used
                 void pushControls()             noexcept; //!< push initial controls

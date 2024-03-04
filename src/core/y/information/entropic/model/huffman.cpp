@@ -80,7 +80,7 @@ namespace Yttrium
                     const Node *parent = node->p;
                     if(parent)
                     {
-                        ++unit->bits;
+                        unit->bits++;
                         node = parent;
                         goto UP;
                     }

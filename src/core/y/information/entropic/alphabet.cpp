@@ -15,7 +15,42 @@ namespace Yttrium
         namespace Entropic
         {
 
+            static inline const char * UnitUID(const unsigned byte)
+            {
+                if(byte<256) return ASCII::Printable::Char[uint8_t(byte)];
+                if(Unit::EOS == byte) return "EOS";
+                if(Unit::NYT == byte) return "NYT";
+                return "???";
+            }
+
+            std::ostream & operator<<(std::ostream &os, const Unit &unit)
+            {
+                StreamBits io;
+                io.push(unit.code,unit.bits);
+                os 
+                << std::setw(5) << UnitUID(unit.byte)
+                << " = |" << io << "|=" << unit.bits << " @freq=" << unit.freq;
+                return os;
+            }
+
 #define Y_ALPHA_MSG(MSG) do { if (verbose) { std::cerr << MSG << std::endl; } } while(false)
+
+
+            void Alphabet:: init() noexcept
+            {
+                for(unsigned code=0;code<Unit::Encoding;++code)
+                {
+                    Unit &u = unit[code];
+                    u.code  = u.byte = code;
+                    u.bits  = 8;
+                }
+
+                for(unsigned code=Unit::Encoding;code<Unit::Universe;++code)
+                {
+                    unit[code].byte = code;
+                }
+
+            }
 
             Alphabet:: Alphabet(const OperatingMode how,
                                 const bool          verbosity) noexcept :
@@ -30,15 +65,9 @@ namespace Yttrium
             wksp()
             {
                 Coerce(unit) = static_cast<Unit *>(Y_STATIC_ZARR(wksp));
-                for(Code code=0;code<Bytes;++code)
-                {
-                    Unit &u = unit[code];
-                    u.code  = code;
-                    u.bits  = 8;
-                }
-
-                Coerce(eos) = unit + EOS;
-                Coerce(nyt) = unit + NYT;
+                init();
+                Coerce(eos) = unit + Unit::EOS;
+                Coerce(nyt) = unit + Unit::NYT;
                 pushControls();
             }
 
@@ -49,18 +78,11 @@ namespace Yttrium
             }
 
 
-            const char * Alphabet:: uid(const Unit &u) const noexcept
-            {
-                const size_t delta = &u - unit;
-                if( delta < 256  ) return ASCII::Printable::Char[ uint8_t(delta) ];
-                if( delta == EOS ) return "EOS";
-                if( delta == NYT ) return "NYT";
-                return Core::Unknown;
-            }
+
 
             void Alphabet:: send(StreamBits &io, const Unit &u)
             {
-                Y_ALPHA_MSG("--> '" << uid(u) << "'");
+                Y_ALPHA_MSG("--> '" << UnitUID(u.byte) << "'");
                 io.push(u.code,u.bits);
             }
 
@@ -110,15 +132,9 @@ namespace Yttrium
             void Alphabet:: reset() noexcept
             {
 
-                used.reset(); Y_STATIC_ZARR(wksp);
-
-                for(Code code=0;code<Bytes;++code)
-                {
-                    Unit &u = unit[code];
-                    u.code = code;
-                    u.bits = 8;
-                }
-
+                used.reset(); 
+                Y_STATIC_ZARR(wksp);
+                init();
                 sumf = 0;
                 emit = & Alphabet::emitInit;
                 pushControls();
@@ -127,7 +143,7 @@ namespace Yttrium
 
             void Alphabet:: emitInit(StreamBits &io, Unit &u)
             {
-                assert(Ctrls==used.size);
+                assert(Unit::Controls==used.size);
                 assert(used.owns(eos));
                 assert(used.owns(nyt));
                 assert(!used.owns(&u));
@@ -143,9 +159,7 @@ namespace Yttrium
 
             void Alphabet:: emitBulk(StreamBits &io, Unit &u)
             {
-                assert(used.owns(eos));
                 assert(used.owns(nyt));
-                assert(used.size<Units);
                 sumf++;
                 if(u.freq++ <= 0)
                 {
@@ -159,7 +173,7 @@ namespace Yttrium
 
                     send(io,*nyt);             // feed Not Yet Transmitted
                     used.insertBefore(eos,&u); // put into position
-                    if(used.size>=Units)
+                    if(used.size>=Unit::Universe)
                     {
                         Y_ALPHA_MSG("switch to FULL");
                         used.pop(nyt);
@@ -180,7 +194,6 @@ namespace Yttrium
 
             void Alphabet:: emitFull(StreamBits &io, Unit &u)
             {
-                assert(1+Bytes==used.size);
                 assert(u.freq>0);
                 Y_ALPHA_MSG("emit USED Full(" << char(u.code) << ")");
                 send(io,u);
@@ -236,11 +249,7 @@ namespace Yttrium
                 os << "<Alphabet used='" << used.size << "'>" << std::endl;
                 for(const Unit *u=used.head;u;u=u->next)
                 {
-                    os  
-                    << std::setw(5) << uid(*u)
-                    << " @" << u->freq 
-                    << " #" << u->bits
-                    << std::endl;
+                    os << *u << std::endl;
                 }
 
                 os << "<Alphabet/>" << std::endl;

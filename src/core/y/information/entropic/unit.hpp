@@ -6,6 +6,7 @@
 
 #include "y/data/list/raw.hpp"
 #include "y/type/ints.hpp"
+#include "y/ostream-proto.hpp"
 
 namespace Yttrium
 {
@@ -25,8 +26,22 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef uint32_t Frequency; //!< hold frequencies
-            typedef uint16_t Code;      //!< hold codes
-            typedef uint16_t Bits;      //!< hold bits for codes
+
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Control codes offset
+            //
+            //
+            //__________________________________________________________________
+            enum ControlOffset
+            {
+                ControlEOS = 0, //!< for End Of Stream
+                ControlNYT = 1  //!< for Not Yet Transmitted
+            };
+
 
             //__________________________________________________________________
             //
@@ -38,17 +53,24 @@ namespace Yttrium
             //__________________________________________________________________
             struct Unit
             {
-                typedef RawListOf<Unit> List; //!< list of unit
-                static const unsigned   Count      = 256;
+                typedef RawListOf<Unit> List;                              //!< list of unit
+                static const unsigned   Encoding   = 256;                  //!< Bytes
+                static const unsigned   Controls   = 2;                    //!< Controls
+                static const unsigned   Universe   = Encoding+Controls;    //!< all possible
+                static const unsigned   MaxUsed    = Universe-1;           //!< with removed NYT
+                static const unsigned   EOS        = Encoding+ControlEOS;  //!< index of EOS
+                static const unsigned   NYT        = Encoding+ControlNYT;  //!< index of MYT
                 static const Frequency  MaxSumFreq = IntegerFor<Frequency>::Maximum;
 
-                Code       code; //!< current code
-                Bits       bits; //!< bits for code
+                unsigned   code; //!< current code
+                unsigned   bits; //!< bits for code
                 Frequency  freq; //!< frequencies
                 Unit      *next; //!< for list
                 Unit      *prev; //!< for list
                 void      *priv; //!< private data
-                Code       byte; //!< original data
+                unsigned   byte; //!< original data
+
+                Y_OSTREAM_PROTO(Unit);
             };
         }
 
