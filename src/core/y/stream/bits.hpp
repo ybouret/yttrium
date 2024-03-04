@@ -58,6 +58,9 @@ namespace Yttrium
             return ans;
         }
 
+        //! fill to byte boundary
+        StreamBits & fill();
+
 
 
         IO::Stock pool;

@@ -80,10 +80,16 @@ namespace Yttrium
                 used.reset();
             }
 
-            void write(const uint8_t byte,
-                       StreamBits   &io)
+            void write(StreamBits &io, const uint8_t byte)
             {
-                Unit &u = unit[byte];
+                ( (*this).*emit )(io,unit[byte]);
+                // update model
+            }
+
+            void flush(StreamBits &io)
+            {
+                io.push(eos->code,eos->bits);
+                io.fill();
             }
 
 

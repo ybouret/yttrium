@@ -48,6 +48,13 @@ namespace Yttrium
         return *this;
     }
 
+    StreamBits & StreamBits:: fill()
+    {
+        while( 0 != (size&0x7) ) toTail(_0);
+        return *this;
+    }
+
+
 }
 
 #include "y/string.hpp"
