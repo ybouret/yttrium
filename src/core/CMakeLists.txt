@@ -97,6 +97,7 @@ vfs
 information
 information/stream
 information/bwt
+information/entropic
 functor
 woven
 woven/survey
