@@ -11,6 +11,7 @@
 namespace Yttrium
 {
 
+
     namespace Information
     {
 
@@ -49,7 +50,7 @@ namespace Yttrium
                 static const unsigned Required = Units * sizeof(Unit);
                 typedef void (Alphabet::*Emit)(StreamBits &, Unit &);
 
-                explicit Alphabet() noexcept;
+                explicit Alphabet(const bool verb=false) noexcept;
                 virtual ~Alphabet() noexcept;
 
                 //! emit byte to io, no model
@@ -59,7 +60,7 @@ namespace Yttrium
                 void flush(StreamBits &io);
 
                 //! reset all alphabet
-                void reset() noexcept; 
+                void reset() noexcept;
 
 
 
@@ -69,6 +70,9 @@ namespace Yttrium
                 Unit       * const eos;
                 Unit       * const nyt;
                 Unit::List         used;
+                
+            public:
+                bool verbose;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
