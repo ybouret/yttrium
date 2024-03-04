@@ -15,13 +15,15 @@ namespace Yttrium
 
 #define Y_ALPHA_MSG(MSG) do { if (verbose) { std::cerr << MSG << std::endl; } } while(false)
 
-            Alphabet:: Alphabet(const bool verb) noexcept :
+            Alphabet:: Alphabet(const OperatingMode how,
+                                const bool          verbosity) noexcept :
             unit(0),
             emit( & Alphabet::emitInit ),
             eos(0),
             nyt(0),
             used(),
-            verbose(verb),
+            mode(how),
+            verbose(verbosity),
             wksp()
             {
                 Coerce(unit) = static_cast<Unit *>(Y_STATIC_ZARR(wksp));
@@ -59,14 +61,34 @@ namespace Yttrium
 
             void Alphabet:: flush(StreamBits &io)
             {
-                Y_ALPHA_MSG("flush");
-                io.push(eos->code,eos->bits);
+                switch(mode)
+                {
+                    case Multiplex:
+                        Y_ALPHA_MSG("flush Multiplex");
+                        io.push(eos->code,eos->bits);
+                        break;
+
+                    case BlockWise:
+                        Y_ALPHA_MSG("flush BlockWise");
+                        assert(!used.owns(eos));
+                        break;
+                }
+
                 io.fill();
             }
 
             void Alphabet:: pushControls() noexcept
             {
-                used.pushTail(eos);
+                switch(mode)
+                {
+                    case Multiplex:
+                        used.pushTail(eos);
+                        break;
+
+                    case BlockWise:
+                        break;
+                }
+
                 used.pushTail(nyt);
             }
 

@@ -12,7 +12,7 @@ Y_UTEST(info_pack)
     Y_SIZEOF(Entropic::Unit);
     Y_SIZEOF(Entropic::Alphabet);
 
-    Entropic::Alphabet alpha(true);
+    Entropic::Alphabet alpha(Entropic::Multiplex,true);
     StreamBits         io;
 
     alpha.write(io,'a');

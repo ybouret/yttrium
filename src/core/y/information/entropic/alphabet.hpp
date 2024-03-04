@@ -32,6 +32,12 @@ namespace Yttrium
                 Unit      *prev;
             };
 
+            enum OperatingMode
+            {
+                BlockWise,
+                Multiplex
+            };
+
             enum CtrlOffset
             {
                 CtrlEOS = 0,
@@ -50,7 +56,8 @@ namespace Yttrium
                 static const unsigned Required = Units * sizeof(Unit);
                 typedef void (Alphabet::*Emit)(StreamBits &, Unit &);
 
-                explicit Alphabet(const bool verb=false) noexcept;
+                explicit Alphabet(const OperatingMode how,
+                                  const bool          verbosity=false) noexcept;
                 virtual ~Alphabet() noexcept;
 
                 //! emit byte to io, no model
@@ -72,8 +79,9 @@ namespace Yttrium
                 Unit::List         used;
                 
             public:
-                bool verbose;
-
+                const OperatingMode mode;
+                bool                verbose;
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
 
