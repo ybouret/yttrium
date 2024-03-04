@@ -137,6 +137,8 @@ namespace Yttrium
                 //! reset all alphabet
                 void reset() noexcept;
 
+                void reduce() noexcept;
+
 
 
             protected:
@@ -164,7 +166,7 @@ namespace Yttrium
                 void emitInit(StreamBits &io, Unit &u);   //!< emit first unit
                 void emitBulk(StreamBits &io, Unit &u);   //!< emit bulk unit
                 void emitFull(StreamBits &io, Unit &u);   //!< emit unit with full Alphabet
-
+                void write_(StreamBits &io, const uint8_t byte); //!< write and check frequencies
 
             };
 

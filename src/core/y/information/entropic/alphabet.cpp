@@ -136,6 +136,7 @@ namespace Yttrium
                 Y_ALPHA_MSG("emitInit");
                 send(io,u);
                 used.pushHead(&u)->freq++;
+                sumf++;
                 emit = & Alphabet::emitBulk;
             }
 
@@ -144,7 +145,7 @@ namespace Yttrium
                 assert(used.owns(eos));
                 assert(used.owns(nyt));
                 assert(used.size<Units);
-
+                sumf++;
                 if(u.freq++ <= 0)
                 {
                     //----------------------------------------------------------
@@ -182,19 +183,45 @@ namespace Yttrium
                 assert(u.freq>0);
                 Y_ALPHA_MSG("emit USED Full(" << char(u.code) << ")");
                 send(io,u);
-                ++u.freq;
+                u.freq++;
+                sumf++;
                 rank(u);
             }
 
          
+            void Alphabet:: reduce() noexcept
+            {
+                Y_ALPHA_MSG("reducing frequencies");
+                sumf = 0;
+                for(Unit *u=used.head;u;u=u->next)
+                {
+                    Frequency &freq = u->freq;
+                    switch(freq)
+                    {
+                        case 0:    // unchanged
+                        case 1:    // unchanged
+                            break;
+                        default:
+                            freq >>= 1;
+                            if(freq<=0) freq = 1;
+                    }
+                    sumf += freq;
+                }
+            }
+
+
+            void Alphabet:: write_(StreamBits &io, const uint8_t byte)
+            {
+                ( (*this).*emit )(io,unit[byte]);
+                while(sumf>=MaxSumFreq)
+                    reduce();
+            }
 
 
             void Alphabet:: write(StreamBits &io, const uint8_t byte)
             {
-                ( (*this).*emit )(io,unit[byte]);
-                // update model
+                write_(io,byte);
             }
-
         }
 
     }

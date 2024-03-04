@@ -30,5 +30,6 @@ Y_UTEST(info_pack)
     alpha.write(io,'a');
 
 
+
 }
 Y_UDONE()
