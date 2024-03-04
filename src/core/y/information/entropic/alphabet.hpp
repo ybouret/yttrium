@@ -58,6 +58,9 @@ namespace Yttrium
                 //! send EOS and fill io to byte boundary
                 void flush(StreamBits &io);
 
+                //! reset all alphabet
+                void reset() noexcept; 
+
 
 
             protected:
@@ -75,7 +78,6 @@ namespace Yttrium
                 void send(StreamBits &io, const Unit &u); //!< send unit to io
                 void rank(Unit &u)              noexcept; //!< keep ranked used
                 void pushControls()             noexcept; //!< push initial controls
-                void reset()                    noexcept; //!< total reset
                 void emitInit(StreamBits &io, Unit &u);   //!< emit first unit
                 void emitBulk(StreamBits &io, Unit &u);   //!< emit bulk unit
                 void emitFull(StreamBits &io, Unit &u);   //!< emit unit with full Alphabet

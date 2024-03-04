@@ -64,6 +64,7 @@ namespace Yttrium
                 used.pushTail(nyt);
             }
 
+
             void Alphabet:: reset() noexcept
             {
 
@@ -90,6 +91,7 @@ namespace Yttrium
                 assert(0==u.freq);
                 assert(8==u.bits);
 
+                std::cerr << "emitInit(" << char(u.code) << ")" << std::endl;
                 send(io,u);
                 used.pushHead(&u)->freq++;
                 emit = & Alphabet::emitBulk;

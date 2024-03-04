@@ -13,7 +13,14 @@ Y_UTEST(info_pack)
     Y_SIZEOF(Entropic::Alphabet);
 
     Entropic::Alphabet alpha;
-    
+    StreamBits         io;
+
+    alpha.write(io,'a');
+    alpha.reset();
+    alpha.write(io,'a');
+
+
+
 
 }
 Y_UDONE()
