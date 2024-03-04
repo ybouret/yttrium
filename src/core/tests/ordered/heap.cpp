@@ -25,6 +25,8 @@ Y_UTEST(ordered_heap)
     Heap< apn, Core::FlexibleRawBuffer<apn,Memory::Dyadic> > h;
     Heap< apn, Core::CompiledRawBuffer<13,apn>  >            hf;
 
+
+
     for(int i=0;i<10;++i)
     {
         const apn n(1+ran.leq(30),ran);
@@ -38,6 +40,10 @@ Y_UTEST(ordered_heap)
         const apn top = h.pull();
         std::cerr << std::setw(20) << top << " <- " << h << std::endl;
     }
+
+
+    std::cerr << "PrivateBytes="  << hf.PrivateBytes    << std::endl;
+    std::cerr << "WorkspaceSize=" << hf.WorkspaceSize() << std::endl;
 
 
 

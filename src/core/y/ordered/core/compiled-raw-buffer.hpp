@@ -44,7 +44,9 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            Y_ARGS_DECL(T,Type);        //!< aliases
+            static const size_t PrivateBytes = sizeof(T) * N;             //!< private bytes
+            static const size_t PrivateWords = Y_WORDS_GEQ(PrivateBytes); //!< private words
+            Y_ARGS_DECL(T,Type);                                          //!< aliases
             using RawBuffer<T>::tally;
             using RawBuffer<T>::count;
             using RawBuffer<T>::entry;
@@ -69,12 +71,22 @@ namespace Yttrium
             virtual ~CompiledRawBuffer() noexcept
             { free(); }
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
+            //! get workspace size
+            static inline size_t WorkspaceSize() noexcept
+            {
+                return sizeof(wksp);
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(CompiledRawBuffer);
-            static const size_t PrivateBytes = sizeof(T) * N;
-            void *wksp[ Y_WORDS_GEQ(PrivateBytes) ];
+            void *wksp[ PrivateWords ];
 
             inline virtual void mustAcceptNext()
             { if(count>=tally) CompiledRawBuffer_::RaiseExceeded(tally); }
