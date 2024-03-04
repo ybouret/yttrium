@@ -2,6 +2,7 @@
 #include "y/information/entropic/alphabet.hpp"
 #include "y/text/ascii/printable.hpp"
 #include "y/memory/out-of-reach.hpp"
+#include <iomanip>
 
 namespace Yttrium
 {
@@ -213,6 +214,7 @@ namespace Yttrium
             void Alphabet:: write_(StreamBits &io, const uint8_t byte)
             {
                 ( (*this).*emit )(io,unit[byte]);
+                assert(used.size<=257);
                 while(sumf>=Unit::MaxSumFreq)
                     reduce();
             }
@@ -227,6 +229,21 @@ namespace Yttrium
             {
                 write_(io,byte);
                 model.build(used);
+            }
+
+            void Alphabet:: display(std::ostream &os) const
+            {
+                os << "<Alphabet used='" << used.size << "'>" << std::endl;
+                for(const Unit *u=used.head;u;u=u->next)
+                {
+                    os  
+                    << std::setw(5) << uid(*u)
+                    << " @" << u->freq 
+                    << " #" << u->bits
+                    << std::endl;
+                }
+
+                os << "<Alphabet/>" << std::endl;
             }
         }
 

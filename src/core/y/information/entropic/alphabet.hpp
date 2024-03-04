@@ -111,8 +111,10 @@ namespace Yttrium
                 //! reset all alphabet
                 void reset() noexcept;
 
+                //! reduce frequencies
                 void reduce() noexcept;
 
+                void display(std::ostream &os) const;
 
 
             protected:
@@ -122,6 +124,7 @@ namespace Yttrium
                 Emit               emit; //!< current prototype
                 Unit       * const eos;  //!< End Of Stream unit
                 Unit       * const nyt;  //!< Not Yet Transmitted unit
+            public:
                 Unit::List         used; //!< list of used units
                 Frequency          sumf; //!< sum of frequencies
                 

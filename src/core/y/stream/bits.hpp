@@ -10,6 +10,7 @@
 #include "y/data/list/cxx.hpp"
 #include "y/config/shallow.hpp"
 #include "y/ostream-proto.hpp"
+#include "y/container/recyclable.hpp"
 
 namespace Yttrium
 {
@@ -27,7 +28,7 @@ namespace Yttrium
     //! Stream of Bits
     //
     //__________________________________________________________________________
-    class StreamBits : public CxxListOf<IO::Char>
+    class StreamBits : public CxxListOf<IO::Char>, public Recyclable
     {
     public:
         //______________________________________________________________________
@@ -49,6 +50,14 @@ namespace Yttrium
         explicit StreamBits() noexcept; //!< setup empty
         virtual ~StreamBits() noexcept; //!< cleanup
         Y_OSTREAM_PROTO(StreamBits);    //!< display as string
+
+        //______________________________________________________________________
+        //
+        //
+        // Interface
+        //
+        //______________________________________________________________________
+        virtual void free() noexcept; //!< [Recyclable] move bits into pool
 
         //______________________________________________________________________
         //

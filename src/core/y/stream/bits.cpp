@@ -17,6 +17,11 @@ namespace Yttrium
     {
     }
 
+    void StreamBits:: free() noexcept
+    {
+        while(size>0) pool.store( popTail() );
+    }
+
     IO::Char * StreamBits:: build(const uint8_t b)
     {
         if(pool.size>0)

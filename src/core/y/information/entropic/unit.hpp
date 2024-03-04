@@ -39,6 +39,7 @@ namespace Yttrium
             struct Unit
             {
                 typedef RawListOf<Unit> List; //!< list of unit
+                static const unsigned   Count      = 256;
                 static const Frequency  MaxSumFreq = IntegerFor<Frequency>::Maximum;
 
                 Code       code; //!< current code
@@ -46,6 +47,7 @@ namespace Yttrium
                 Frequency  freq; //!< frequencies
                 Unit      *next; //!< for list
                 Unit      *prev; //!< for list
+                void      *priv; //!< private data
             };
         }
 
