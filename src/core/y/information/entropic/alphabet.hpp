@@ -60,8 +60,10 @@ namespace Yttrium
                 void reset()                   noexcept;        //!< reset all
                 void reduceFrequencies()       noexcept;        //!< reduce frequencies
                 void display(std::ostream &os)    const;        //!< display status
-                void write(StreamBits &io, const uint8_t byte); //!< emit and check sumf
-
+                void write_(StreamBits &io, const uint8_t byte); //!< emit and check sumf
+                void write(StreamBits &io, const uint8_t byte, Model &model);
+                void flush(StreamBits &io);
+                
 
                 Unit::List   used; //!< current used units
                 Emit         emit; //!< current emit proc

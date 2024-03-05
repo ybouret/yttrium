@@ -30,7 +30,6 @@ namespace Yttrium
                 Coerce(unit) = static_cast<Unit *>( Y_STATIC_ZARR(wksp) );
                 Coerce(nyt)  = unit + Unit::NYT;
                 Coerce(eos)  = unit + Unit::EOS;
-                Y_STATIC_ZARR(ctrl);
 
                 for(uint16_t i=0;i<Unit::Encoding;++i)
                 {
@@ -42,6 +41,7 @@ namespace Yttrium
                     new ( &unit[i] ) Unit(i,0);
                 }
 
+                Y_STATIC_ZARR(ctrl);
                 {            ctrl[Coerce(nctl)++] = nyt; }
                 if(useEOS) { ctrl[Coerce(nctl)++] = eos; }
 
@@ -99,16 +99,31 @@ namespace Yttrium
             }
 
 
-            void Alphabet:: write(StreamBits &io, const uint8_t byte)
+            void Alphabet:: write_(StreamBits &io, const uint8_t byte)
             {
                 assert(used.size<=Unit::MaxAlive);
                 assert(0!=emit);
+                
                 ( (*this).*emit )(io,byte);
                 while(sumf>1000)
                 {
                     reduceFrequencies();
                 }
             }
+
+            void Alphabet:: write(StreamBits &io, const uint8_t byte, Model &model)
+            {
+                write_(io,byte);
+                model.build(used);
+            }
+
+            void Alphabet:: flush(StreamBits &io)
+            {
+                io.push(eos->code, eos->bits);
+                io.fill();
+            }
+
+            
 
 
             void Alphabet:: Init(StreamBits &io, const uint8_t byte)

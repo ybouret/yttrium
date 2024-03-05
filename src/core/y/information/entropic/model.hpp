@@ -29,7 +29,7 @@ namespace Yttrium
             public:
                 virtual ~Model() noexcept;
 
-                //virtual void build(Unit::List &) = 0;
+                virtual void build(Unit::List &) = 0;
 
             protected:
                 explicit Model() noexcept;

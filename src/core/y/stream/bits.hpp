@@ -98,6 +98,17 @@ namespace Yttrium
             return ans;
         }
 
+        bool query(uint8_t &C) noexcept
+        {
+            if(size>=8)
+            {
+                C = pull<uint8_t>(8);
+                return true;
+            }
+            else
+                return false;
+        }
+
         //! push 0 to byte boundary
         StreamBits & fill();
         

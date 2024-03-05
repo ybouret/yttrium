@@ -14,9 +14,28 @@ namespace Yttrium
             Huffman::Node::Comparator:: ~Comparator() noexcept {}
             SignType Huffman::Node::Comparator:: operator()(const Node * const lhs, const Node * const rhs) const noexcept
             {
-                return Comparison::CxxDecreasing(lhs->f,rhs->f);
+                return Comparison::CxxDecreasing(lhs->freq,rhs->freq);
             }
 
+            void Huffman::Node:: make() noexcept
+            {
+                const unsigned childBits = bits+1;
+                const uint32_t childCode = code << 1;
+                
+                if(left)
+                {
+                    left->bits = childBits;
+                    left->code = childCode;
+                    left->make();
+                }
+
+                if(right)
+                {
+                    right->bits = childBits;
+                    right->code = childCode | 1;
+                    right->make();
+                }
+            }
 
 
 
@@ -55,7 +74,7 @@ namespace Yttrium
                     for(Unit *unit = used.head;unit;unit=unit->next)
                     {
                         Node *node = Zeroed<Node>(knot[indx++]);
-                        node->f    = unit->freq;
+                        node->freq = unit->freq;
                         unit->priv = node;
                         heap.insert(node);
                     }
@@ -67,44 +86,31 @@ namespace Yttrium
                     //----------------------------------------------------------
                     while(heap.size()>1)
                     {
-                        Node *l = heap.pull(); // pull left
-                        Node *r = heap.pull(); // pull right
-                        const uint32_t f = r->f+l->f;
-                        std::cerr << "  l@" << l->f << " : r@" << r->f << " => @" << f << std::endl;
-                        Node *node = Zeroed<Node>(knot[indx++]);
-                        node->l = l;
-                        node->r = r;
-                        node->f = f;
-                        l->p = r->p = node;
+                        Node *         left  = heap.pull(); // pull left
+                        Node *         right = heap.pull(); // pull right
+                        const uint32_t freq  = right->freq+left->freq;
+                        Node *         node = Zeroed<Node>(knot[indx++]);
+                        node->left    = left;
+                        node->right   = right;
+                        node->freq    = freq;
                         heap.insert(node);
                     }
-                    std::cerr << "used=" << used.size << ", indx=" << indx << std::endl;
                 }
 
                 //----------------------------------------------------------
                 //
-                // retrieve root
+                // retrieve root and make recursive code
                 //
                 //----------------------------------------------------------
                 Coerce(root) = heap.pull();
-
-
-                for(Unit *unit=used.head;unit;unit=unit->next)
+                root->make();
+                for(Unit *unit = used.head;unit;unit=unit->next)
                 {
                     assert(0!=unit->priv);
-                    const Node *node = static_cast<Node *>(unit->priv);
-                    unit->bits = 0;
-                    unit->code = 0;
-                UP:
-                    const Node *parent = node->p;
-                    if(parent)
-                    {
-                        unit->bits++;
-                        node = parent;
-                        goto UP;
-                    }
+                    const Node *node = static_cast<const Node *>(unit->priv);
+                    unit->code = node->code;
+                    unit->bits = node->bits;
                 }
-
 
             }
 

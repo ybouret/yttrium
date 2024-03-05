@@ -27,16 +27,18 @@ Y_UTEST(info_pack)
         const char c = Ch[i];
         for(unsigned j=Nc[i];j>0;--j)
         {
-            multiplex.write(io,c);
-            blockwise.write(io,c);
+            multiplex.write_(io,c);
+            blockwise.write_(io,c);
         }
     }
 
     multiplex.display(std::cerr);
-
     huff.build(multiplex.used);
     multiplex.display(std::cerr);
 
+    blockwise.display(std::cerr);
+    huff.build(blockwise.used);
+    blockwise.display(std::cerr);
 
     Y_SIZEOF(Entropic::Alphabet);
     Y_SIZEOF(Entropic::Huffman);

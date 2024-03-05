@@ -45,13 +45,14 @@ namespace Yttrium
                 //______________________________________________________________
                 struct Node
                 {
-                    uint32_t        f; //!< frequency
-                    Node           *p; //!< parent
-                    Node           *l; //!< left
-                    Node           *r; //!< right
+                    uint32_t        freq;   //!< frequency
+                    uint32_t        code;   //!< [partial]code
+                    unsigned        bits;   //!< [partial]bits
+                    Node           *left;   //!< left
+                    Node           *right;  //!< right
 
+                    void make() noexcept;
 
-                    
                     //__________________________________________________________
                     //
                     //! comparator for heap
