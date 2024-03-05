@@ -67,8 +67,8 @@ namespace Yttrium
                     //----------------------------------------------------------
                     while(heap.size()>1)
                     {
-                        Node *r = heap.pull();
-                        Node *l = heap.pull();
+                        Node *l = heap.pull(); // pull left
+                        Node *r = heap.pull(); // pull right
                         const uint32_t f = r->f+l->f;
                         std::cerr << "  l@" << l->f << " : r@" << r->f << " => @" << f << std::endl;
                         Node *node = Zeroed<Node>(knot[indx++]);

@@ -11,27 +11,28 @@ using namespace Information;
 Y_UTEST(info_pack)
 {
 
+    const char     Ch[] = { 'a', 'e', 'i', 'o', 'u' };
+    const unsigned Nc[] = { 12, 42, 9, 30, 7 };
+
     Entropic::Alphabet multiplex(true);
     Entropic::Alphabet blockwise(false);
     Entropic::Huffman  huff;
-
     StreamBits         io;
 
     multiplex.display(std::cerr);
     blockwise.display(std::cerr);
 
-    const String data = "a banana";
-    for(size_t i=1;i<=data.size();++i)
+    for(unsigned i=0;i<sizeof(Ch)/sizeof(Ch[0]);++i)
     {
-        multiplex.write(io, data[i]);
-        multiplex.display(std::cerr);
+        const char c = Ch[i];
+        for(unsigned j=Nc[i];j>0;--j)
+        {
+            multiplex.write(io,c);
+            blockwise.write(io,c);
+        }
     }
 
-    for(size_t i=1;i<=data.size();++i)
-    {
-        blockwise.write(io, data[i]);
-        blockwise.display(std::cerr);
-    }
+    multiplex.display(std::cerr);
 
     huff.build(multiplex.used);
     multiplex.display(std::cerr);
