@@ -17,10 +17,12 @@ namespace Yttrium
 
             Alphabet:: Alphabet(const bool useEOS) noexcept :
             used(),
+            emit( & Alphabet::Init ),
             unit(0),
             nyt(0),
             eos(0),
             sumf(0),
+            nchr(0),
             ctrl(),
             nctl(0),
             wksp()
@@ -28,7 +30,7 @@ namespace Yttrium
                 Coerce(unit) = static_cast<Unit *>( Y_STATIC_ZARR(wksp) );
                 Coerce(nyt)  = unit + Unit::NYT;
                 Coerce(eos)  = unit + Unit::EOS;
-                memset(ctrl,0,sizeof(ctrl));
+                Y_STATIC_ZARR(ctrl);
 
                 for(uint16_t i=0;i<Unit::Encoding;++i)
                 {
@@ -71,6 +73,8 @@ namespace Yttrium
                 for(uint16_t i=0;i<Unit::Universe;++i)
                     unit[i].reset();
                 sumf = 0;
+                nchr = 0;
+                emit = & Alphabet::Init;
                 addCtrl();
             }
 
@@ -95,6 +99,81 @@ namespace Yttrium
             }
 
 
+            void Alphabet:: write(StreamBits &io, const uint8_t byte)
+            {
+                assert(0!=emit);
+                ( (*this).*emit )(io,byte);
+                while(sumf>1000)
+                {
+                    reduceFrequencies();
+                }
+            }
+
+
+            void Alphabet:: Init(StreamBits &io, const uint8_t byte)
+            {
+                assert(0==sumf);
+                assert(0==nchr);
+                Unit &u = unit[byte]; assert(0==u.freq);
+                u.freq++;
+                sumf++;
+                nchr++;
+                u.to(io);
+                emit = & Alphabet::Bulk;
+                used.pushHead(&u);
+            }
+
+
+            static inline void Rank(ListOf<Unit> &used, Unit * const node)
+            {
+                assert(0!=node);
+                const uint32_t freq = node->freq;
+            CHECK:
+                const Unit *   prev = node->prev;
+                if(prev && prev->freq < freq )
+                {
+                    used.towardsHead(node);
+                    goto CHECK;
+                }
+            }
+
+            void Alphabet:: Bulk(StreamBits &io, const uint8_t byte)
+            {
+                assert(sumf>0);
+                assert(nchr>0);
+                assert(nchr<Unit::Encoding);
+                assert(used.owns(nyt));
+
+                Unit &u = unit[byte];
+                sumf++;
+                if(u.freq++<=0)
+                {
+                    nyt->to(io);               // new char: signal NYT
+                    used.insertBefore(nyt,&u); // insert befor NYT
+
+                    if(++nchr>=Unit::Encoding) // check status
+                    {
+                        used.pop(nyt)->reset();   // all are transmitted
+                        emit = & Alphabet:: Full; // change emit method
+                    }
+                }
+                else
+                    Rank(used,&u); // update status
+
+
+                u.to(io);
+                
+            }
+
+            void Alphabet:: Full(StreamBits &io, const uint8_t byte)
+            {
+                assert(nchr==Unit::Encoding);
+                Unit &u = unit[byte]; assert(u.freq>0);
+                u.freq++;
+                sumf++;
+                Rank(used,&u);
+                u.to(io);
+            }
         }
 
     }

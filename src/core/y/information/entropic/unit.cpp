@@ -65,6 +65,10 @@ namespace Yttrium
             std::ostream & Unit:: display(std::ostream &os) const
             {
                 os << std::setw(5) << name();
+                StreamBits io;
+                to(io);
+                os << " : |" << std::setw(16) << io << "|=" << std::setw(2) << bits;
+                os << " #"  << freq;
                 return os;
             }
 
