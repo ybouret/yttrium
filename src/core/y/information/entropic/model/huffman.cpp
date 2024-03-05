@@ -10,6 +10,7 @@ namespace Yttrium
         namespace Entropic
         {
 
+#if 0
             Huffman::Node * Huffman::Node:: Zeroed(Node &node) noexcept {
                 memset(&node,0,sizeof(node));
                 return &node;
@@ -88,6 +89,8 @@ namespace Yttrium
 
 
             }
+#endif
+            
         }
 
     }

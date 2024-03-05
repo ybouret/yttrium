@@ -17,6 +17,8 @@ namespace Yttrium
 
         namespace Entropic
         {
+
+#if 0
             //__________________________________________________________________
             //
             //
@@ -74,6 +76,7 @@ namespace Yttrium
 
                 Y_OSTREAM_PROTO(Unit);
             };
+#endif
         }
 
     }

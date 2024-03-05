@@ -15,6 +15,7 @@ namespace Yttrium
         namespace Entropic
         {
 
+#if 0
             class Huffman : public Model
             {
             public:
@@ -65,7 +66,8 @@ namespace Yttrium
 
 
             };
-
+#endif
+            
         }
 
     }

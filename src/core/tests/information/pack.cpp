@@ -16,6 +16,7 @@ Y_UTEST(info_pack)
 {
 
 
+#if 0
     Entropic::Alphabet alpha(Entropic::Multiplex,true);
     StreamBits         io;
 
@@ -31,7 +32,8 @@ Y_UTEST(info_pack)
     {
         alpha.write(io,uint8_t(i));
     }
-
+#endif
+    
 #if 0
 
     alpha.write(io,'a');

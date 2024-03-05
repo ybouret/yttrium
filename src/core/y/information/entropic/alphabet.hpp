@@ -19,7 +19,7 @@ namespace Yttrium
         {
 
             
-
+#if 0
             //__________________________________________________________________
             //
             //
@@ -132,7 +132,7 @@ namespace Yttrium
                 void write_(StreamBits &io, const uint8_t byte); //!< write and check frequencies
 
             };
-
+#endif
             
 
         }

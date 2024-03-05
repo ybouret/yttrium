@@ -14,6 +14,7 @@ namespace Yttrium
 
         namespace Entropic
         {
+#if 0
 
             static inline const char * UnitUID(const unsigned byte)
             {
@@ -272,6 +273,7 @@ namespace Yttrium
                 }
                 os << "<Alphabet/>" << std::endl;
             }
+#endif
         }
 
     }
