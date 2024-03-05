@@ -17,25 +17,57 @@ namespace Yttrium
         namespace Entropic
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Unit of an Alphabet
+            //
+            //
+            //__________________________________________________________________
             class Unit
             {
             public:
-                typedef RawListOf<Unit> List;
-                static const uint16_t Encoding = 256;
-                static const uint16_t Controls = 2;
-                static const uint16_t Universe = Encoding+Controls;
-                static const uint16_t NYT      = Encoding;
-                static const uint16_t EOS      = Encoding+1;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef RawListOf<Unit> List;                        //!< alias
+                static const uint16_t Encoding = 256;                //!< Encoding bytes
+                static const uint16_t Controls = 2;                  //!< Control codes
+                static const uint16_t Universe = Encoding+Controls;  //!< all possibilities
+                static const uint16_t NYT      = Encoding;           //!< Not Yet Transmitted
+                static const uint16_t EOS      = Encoding+1;         //!< End Of Stream
 
-                Unit(const uint16_t, const uint16_t) noexcept;
-                ~Unit() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                Unit(const uint16_t, const uint16_t) noexcept; //!< setup code+bits
+                ~Unit() noexcept;                              //!< cleanup
 
-                void           reset()              noexcept;
-                void           reduceFrequency()    noexcept;
-                const char *   name()         const noexcept;
-                void           to(StreamBits &)        const;
-                std::ostream & display(std::ostream &) const;
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                void           reset()              noexcept; //!< reset code/bits/fres
+                void           reduceFrequency()    noexcept; //!< reduce frequency
+                const char *   name()         const noexcept; //!< printable name
+                void           to(StreamBits &)        const; //!< push(code,bits)
+                std::ostream & display(std::ostream &) const; //!< display info
 
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
                 Unit          *next; //!< for list/pool
                 Unit          *prev; //!< for list
                 void          *priv; //!< private field

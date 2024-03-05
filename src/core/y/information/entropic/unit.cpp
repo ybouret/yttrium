@@ -43,6 +43,7 @@ namespace Yttrium
                 code = data;
                 bits = nbit;
                 prev = next = 0;
+                priv = 0;
             }
 
             void Unit:: reduceFrequency() noexcept

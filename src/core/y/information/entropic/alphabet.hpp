@@ -16,31 +16,63 @@ namespace Yttrium
 
         namespace Entropic
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Alphabet of Units
+            //
+            //
+            //__________________________________________________________________
             class Alphabet
             {
             public:
-                typedef void (Alphabet:: *Emit)(StreamBits &io, const uint8_t);
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef void (Alphabet:: *Emit)(StreamBits &io, const uint8_t); //!< emit prototype
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! setup
+                /**
+                 \param useEOS if true, assume EOS is used
+                 */
                 explicit Alphabet(const bool useEOS) noexcept;
+
+                //! cleanup
                 virtual ~Alphabet() noexcept;
 
-                void reset() noexcept;
-                void reduceFrequencies() noexcept;
-                void display(std::ostream &os) const;
-                void write(StreamBits &io, const uint8_t byte);
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                void reset()                   noexcept;        //!< reset all
+                void reduceFrequencies()       noexcept;        //!< reduce frequencies
+                void display(std::ostream &os)    const;        //!< display status
+                void write(StreamBits &io, const uint8_t byte); //!< emit and check sumf
 
 
-                Unit::List   used;
-                Emit         emit;
-                Unit * const unit;
-                Unit * const nyt;
-                Unit * const eos;
-                uint32_t     sumf;
+                Unit::List   used; //!< current used units
+                Emit         emit; //!< current emit proc
+                Unit * const unit; //!< unit[0..Universe-1]
+                Unit * const nyt;  //!< NYT unit
+                Unit * const eos;  //!< EOS unit
+                uint32_t     sumf; //!< cumulative sum of frequencies
                 unsigned     nchr; //!< 0..256
 
-                Unit  *      ctrl[Unit::Controls];
-                const size_t nctl;
+                Unit  *      ctrl[Unit::Controls]; //!< involved control units [NYT[,EOS]]
+                const size_t nctl;                 //!< 1 or 2...
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
