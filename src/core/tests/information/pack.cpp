@@ -13,6 +13,8 @@ Y_UTEST(info_pack)
 
     Entropic::Alphabet multiplex(true);
     Entropic::Alphabet blockwise(false);
+    Entropic::Huffman  huff;
+
     StreamBits         io;
 
     multiplex.display(std::cerr);
@@ -24,6 +26,16 @@ Y_UTEST(info_pack)
         multiplex.write(io, data[i]);
         multiplex.display(std::cerr);
     }
+
+    for(size_t i=1;i<=data.size();++i)
+    {
+        blockwise.write(io, data[i]);
+        blockwise.display(std::cerr);
+    }
+
+    huff.build(multiplex.used);
+    multiplex.display(std::cerr);
+
 
     Y_SIZEOF(Entropic::Alphabet);
     Y_SIZEOF(Entropic::Huffman);

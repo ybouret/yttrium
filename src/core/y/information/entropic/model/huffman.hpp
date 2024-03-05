@@ -15,54 +15,85 @@ namespace Yttrium
         namespace Entropic
         {
 
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Huffman Codec
+            //
+            //
+            //__________________________________________________________________
             class Huffman : public Model
             {
             public:
-                static const size_t MaxUnits = Unit::MaxAlive;
-                static const size_t MaxNodes = 2*MaxUnits-1;
-
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                static const size_t   MaxUnits = Unit::MaxAlive; //!< max alive units
+                static const size_t   MaxNodes = 2*MaxUnits-1;   //!< full binary tree
+                static const uint32_t AtLeft   = 0x00;
+                static const uint32_t AtRight  = 0x01;
+                
+                //______________________________________________________________
+                //
+                //
+                //! node for tree
+                //
+                //______________________________________________________________
                 struct Node
                 {
-                    uint32_t        f;
-                    Node           *p;
-                    Node           *l;
-                    Node           *r;
-                    static Node *Zeroed(Node &node) noexcept;
+                    uint32_t        f; //!< frequency
+                    Node           *p; //!< parent
+                    Node           *l; //!< left
+                    Node           *r; //!< right
 
+
+                    
+                    //__________________________________________________________
+                    //
+                    //! comparator for heap
+                    //__________________________________________________________
                     class Comparator
                     {
                     public:
-                        Comparator()  noexcept;
-                        ~Comparator() noexcept;
-                        SignType operator()(const Node *lhs, const Node *rhs) const noexcept
-                        {
-                            return Comparison::CxxDecreasing(lhs->f,rhs->f);
-                        }
+                        Comparator()  noexcept; //!< setup
+                        ~Comparator() noexcept; //!< cleanup
+
+                        //! decreasing frequency
+                        SignType operator()(const Node * const lhs, const Node * const rhs) const noexcept;
                     private:
                         Y_DISABLE_COPY_AND_ASSIGN(Comparator);
                     };
-
                 };
 
-                typedef Node *                                       HandleType;
-                typedef Core::CompiledRawBuffer<MaxUnits,HandleType> BufferType;
-                typedef Heap<HandleType,BufferType,Node::Comparator> PQueueType;
+                typedef Node *                                       HandleType; //!< alias
+                typedef Core::CompiledRawBuffer<MaxUnits,HandleType> BufferType; //!< alias
+                typedef Heap<HandleType,BufferType,Node::Comparator> PQueueType; //!< alias
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Huffman() noexcept; //!< setup
+                virtual ~Huffman() noexcept; //!< cleanup
 
-                explicit Huffman() noexcept;
-                virtual ~Huffman() noexcept;
+                //! build from used, used.size>0
                 virtual void build(Unit::List &used) noexcept;
 
 
-                HandleType const root;
+                HandleType const root; //!< root node
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Huffman);
                 static const size_t Required = MaxNodes * sizeof(Node);
 
                 PQueueType       heap; //!< heap to build codes
                 HandleType const knot; //!< all nodes
-                void *           wksp[ Y_WORDS_GEQ(Required) ];
+                void *           wksp[ Y_WORDS_GEQ(Required) ]; //!< workspace
 
 
             };

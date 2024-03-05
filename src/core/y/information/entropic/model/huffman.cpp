@@ -12,12 +12,13 @@ namespace Yttrium
 
             Huffman::Node::Comparator::  Comparator() noexcept {}
             Huffman::Node::Comparator:: ~Comparator() noexcept {}
-
-
-            Huffman::Node * Huffman::Node:: Zeroed(Node &node) noexcept {
-                memset(&node,0,sizeof(node));
-                return &node;
+            SignType Huffman::Node::Comparator:: operator()(const Node * const lhs, const Node * const rhs) const noexcept
+            {
+                return Comparison::CxxDecreasing(lhs->f,rhs->f);
             }
+
+
+
 
             Huffman:: Huffman() noexcept :
             root(0),
@@ -33,6 +34,12 @@ namespace Yttrium
 
             }
             
+            template <typename T>
+            static inline T * Zeroed(T &obj) noexcept
+            {
+                return static_cast<T *>( memset(&obj,0x00,sizeof(T)) );
+            }
+
             void Huffman:: build(Unit::List &used) noexcept
             {
                 assert(used.size>0);
@@ -47,7 +54,7 @@ namespace Yttrium
                     size_t    indx = 0;
                     for(Unit *unit = used.head;unit;unit=unit->next)
                     {
-                        Node *node = Node::Zeroed(knot[indx++]);
+                        Node *node = Zeroed<Node>(knot[indx++]);
                         node->f    = unit->freq;
                         unit->priv = node;
                         heap.insert(node);
@@ -63,8 +70,8 @@ namespace Yttrium
                         Node *r = heap.pull();
                         Node *l = heap.pull();
                         const uint32_t f = r->f+l->f;
-                        std::cerr << "l@" << l->f << " : r@" << r->f << " => @" << f << std::endl;
-                        Node *node = Node::Zeroed(knot[indx++]);
+                        std::cerr << "  l@" << l->f << " : r@" << r->f << " => @" << f << std::endl;
+                        Node *node = Zeroed<Node>(knot[indx++]);
                         node->l = l;
                         node->r = r;
                         node->f = f;
@@ -74,12 +81,20 @@ namespace Yttrium
                     std::cerr << "used=" << used.size << ", indx=" << indx << std::endl;
                 }
 
+                //----------------------------------------------------------
+                //
+                // retrieve root
+                //
+                //----------------------------------------------------------
                 Coerce(root) = heap.pull();
+
+
                 for(Unit *unit=used.head;unit;unit=unit->next)
                 {
                     assert(0!=unit->priv);
                     const Node *node = static_cast<Node *>(unit->priv);
                     unit->bits = 0;
+                    unit->code = 0;
                 UP:
                     const Node *parent = node->p;
                     if(parent)
