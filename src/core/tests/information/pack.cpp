@@ -18,6 +18,8 @@ Y_UTEST(info_pack)
     Entropic::Alphabet multiplex(true);
     Entropic::Alphabet blockwise(false);
 
+    multiplex.display(std::cerr);
+    blockwise.display(std::cerr);
 
 
 }

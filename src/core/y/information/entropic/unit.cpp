@@ -1,5 +1,6 @@
 #include "y/information/entropic/unit.hpp"
 #include "y/text/ascii/printable.hpp"
+#include <iomanip>
 
 namespace Yttrium
 {
@@ -55,6 +56,18 @@ namespace Yttrium
                         freq >>= 1;
                 }
             }
+
+            void Unit:: to(StreamBits &io) const
+            {
+                io.push(code,bits);
+            }
+           
+            std::ostream & Unit:: display(std::ostream &os) const
+            {
+                os << std::setw(5) << name();
+                return os;
+            }
+
 
         }
 

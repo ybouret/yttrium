@@ -84,6 +84,16 @@ namespace Yttrium
                 }
             }
 
+            void Alphabet:: display(std::ostream &os) const
+            {
+                os << "<Alphabet used='" << used.size << "'>" << std::endl;
+                for(const Unit *u=used.head;u;u=u->next)
+                {
+                    u->display(os) << std::endl;
+                }
+                os << "<Alphabet/>" << std::endl;
+            }
+
 
         }
 

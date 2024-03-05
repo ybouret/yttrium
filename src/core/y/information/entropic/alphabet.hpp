@@ -25,6 +25,7 @@ namespace Yttrium
 
                 void reset() noexcept;
                 void reduceFrequencies() noexcept;
+                void display(std::ostream &os) const;
 
                 Unit::List   used;
                 Unit * const unit;
@@ -39,7 +40,7 @@ namespace Yttrium
                 Y_DISABLE_ASSIGN(Alphabet);
                 static const size_t Required = sizeof(Unit) * Unit::Universe;
                 void addCtrl() noexcept;
-                
+
                 void *wksp[ Y_WORDS_GEQ(Required) ];
             };
 

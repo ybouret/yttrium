@@ -30,9 +30,11 @@ namespace Yttrium
                 Unit(const uint16_t, const uint16_t) noexcept;
                 ~Unit() noexcept;
 
-                void        reset()           noexcept;
-                void        reduceFrequency() noexcept;
-                const char *name()      const noexcept;
+                void           reset()              noexcept;
+                void           reduceFrequency()    noexcept;
+                const char *   name()         const noexcept;
+                void           to(StreamBits &)        const;
+                std::ostream & display(std::ostream &) const;
 
                 Unit          *next; //!< for list/pool
                 Unit          *prev; //!< for list
