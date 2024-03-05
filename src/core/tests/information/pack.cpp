@@ -3,12 +3,8 @@
 #include "y/information/entropic/alphabet.hpp"
 #include "y/information/entropic/model/huffman.hpp"
 
-
-
-
 using namespace Yttrium;
 using namespace Information;
-
 
 #include "y/string.hpp"
 
@@ -28,6 +24,8 @@ Y_UTEST(info_pack)
         multiplex.write(io, data[i]);
         multiplex.display(std::cerr);
     }
+
+    Y_SIZEOF(Entropic::Alphabet);
 
 
 }

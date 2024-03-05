@@ -77,7 +77,7 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
                 static const size_t Required = sizeof(Unit) * Unit::Universe;
-                void addCtrl() noexcept; //!< add ctrl to used
+                void pushControls() noexcept; //!< push ctrl to used
                 void Init(StreamBits &io, const uint8_t byte);
                 void Bulk(StreamBits &io, const uint8_t byte);
                 void Full(StreamBits &io, const uint8_t byte);

@@ -38,6 +38,7 @@ namespace Yttrium
                 static const uint16_t Encoding = 256;                //!< Encoding bytes
                 static const uint16_t Controls = 2;                  //!< Control codes
                 static const uint16_t Universe = Encoding+Controls;  //!< all possibilities
+                static const uint16_t MaxAlive = Universe-1;         //!< Encoding+EOS
                 static const uint16_t NYT      = Encoding;           //!< Not Yet Transmitted
                 static const uint16_t EOS      = Encoding+1;         //!< End Of Stream
 

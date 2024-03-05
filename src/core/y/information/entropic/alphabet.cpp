@@ -45,7 +45,7 @@ namespace Yttrium
                 {            ctrl[Coerce(nctl)++] = nyt; }
                 if(useEOS) { ctrl[Coerce(nctl)++] = eos; }
 
-                addCtrl();
+                pushControls();
             }
 
             Alphabet:: ~Alphabet() noexcept
@@ -56,7 +56,7 @@ namespace Yttrium
 
             }
 
-            void Alphabet:: addCtrl() noexcept
+            void Alphabet:: pushControls() noexcept
             {
                 assert(0==used.size);
                 for(size_t i=0;i<nctl;++i)
@@ -75,7 +75,7 @@ namespace Yttrium
                 sumf = 0;
                 nchr = 0;
                 emit = & Alphabet::Init;
-                addCtrl();
+                pushControls();
             }
 
             void Alphabet:: reduceFrequencies() noexcept
@@ -101,6 +101,7 @@ namespace Yttrium
 
             void Alphabet:: write(StreamBits &io, const uint8_t byte)
             {
+                assert(used.size<=Unit::MaxAlive);
                 assert(0!=emit);
                 ( (*this).*emit )(io,byte);
                 while(sumf>1000)
@@ -114,7 +115,9 @@ namespace Yttrium
             {
                 assert(0==sumf);
                 assert(0==nchr);
-                Unit &u = unit[byte]; assert(0==u.freq);
+                assert(0==unit[byte].freq);
+
+                Unit &u = unit[byte];
                 u.freq++;
                 sumf++;
                 nchr++;
@@ -158,7 +161,10 @@ namespace Yttrium
                     }
                 }
                 else
-                    Rank(used,&u); // update status
+                {
+                    assert(used.owns(&u));
+                    Rank(used,&u);        // update status of already used using
+                }
 
 
                 u.to(io);

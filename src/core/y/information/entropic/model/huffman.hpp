@@ -15,6 +15,16 @@ namespace Yttrium
         namespace Entropic
         {
 
+
+            class Huffman : public Model
+            {
+            public:
+                static const size_t MaxUnits = Unit::MaxAlive;;
+                static const size_t MaxNodes = 2*MaxUnits-1;
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Huffman);
+            };
 #if 0
             class Huffman : public Model
             {
