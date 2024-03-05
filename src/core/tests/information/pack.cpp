@@ -26,6 +26,7 @@ Y_UTEST(info_pack)
     }
 
     Y_SIZEOF(Entropic::Alphabet);
+    Y_SIZEOF(Entropic::Huffman);
 
 
 }

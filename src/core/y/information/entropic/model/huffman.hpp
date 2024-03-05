@@ -19,22 +19,12 @@ namespace Yttrium
             class Huffman : public Model
             {
             public:
-                static const size_t MaxUnits = Unit::MaxAlive;;
-                static const size_t MaxNodes = 2*MaxUnits-1;
-                
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Huffman);
-            };
-#if 0
-            class Huffman : public Model
-            {
-            public:
-                static const size_t MaxUnits = Unit::MaxUsed;
+                static const size_t MaxUnits = Unit::MaxAlive;
                 static const size_t MaxNodes = 2*MaxUnits-1;
 
                 struct Node
                 {
-                    Frequency       f;
+                    uint32_t        f;
                     Node           *p;
                     Node           *l;
                     Node           *r;
@@ -43,8 +33,8 @@ namespace Yttrium
                     class Comparator
                     {
                     public:
-                        Comparator()  noexcept {}
-                        ~Comparator() noexcept {}
+                        Comparator()  noexcept;
+                        ~Comparator() noexcept;
                         SignType operator()(const Node *lhs, const Node *rhs) const noexcept
                         {
                             return Comparison::CxxDecreasing(lhs->f,rhs->f);
@@ -76,8 +66,7 @@ namespace Yttrium
 
 
             };
-#endif
-            
+
         }
 
     }

@@ -10,7 +10,10 @@ namespace Yttrium
         namespace Entropic
         {
 
-#if 0
+            Huffman::Node::Comparator::  Comparator() noexcept {}
+            Huffman::Node::Comparator:: ~Comparator() noexcept {}
+
+
             Huffman::Node * Huffman::Node:: Zeroed(Node &node) noexcept {
                 memset(&node,0,sizeof(node));
                 return &node;
@@ -59,7 +62,7 @@ namespace Yttrium
                     {
                         Node *r = heap.pull();
                         Node *l = heap.pull();
-                        const Frequency f = r->f+l->f;
+                        const uint32_t f = r->f+l->f;
                         std::cerr << "l@" << l->f << " : r@" << r->f << " => @" << f << std::endl;
                         Node *node = Node::Zeroed(knot[indx++]);
                         node->l = l;
@@ -89,8 +92,7 @@ namespace Yttrium
 
 
             }
-#endif
-            
+
         }
 
     }
