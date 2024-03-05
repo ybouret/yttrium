@@ -6,17 +6,48 @@
 
 #include "y/data/list/raw.hpp"
 #include "y/type/ints.hpp"
-#include "y/ostream-proto.hpp"
+#include "y/stream/bits.hpp"
 
 namespace Yttrium
 {
-
 
     namespace Information
     {
 
         namespace Entropic
         {
+
+            class Unit
+            {
+            public:
+                typedef RawListOf<Unit> List;
+                static const uint16_t Encoding = 256;
+                static const uint16_t Controls = 2;
+                static const uint16_t Universe = Encoding+Controls;
+                static const uint16_t NYT      = Encoding;
+                static const uint16_t EOS      = Encoding+1;
+
+                Unit(const uint16_t, const uint16_t) noexcept;
+                ~Unit() noexcept;
+
+                void        reset()           noexcept;
+                void        reduceFrequency() noexcept;
+                const char *name()      const noexcept;
+
+                Unit          *next; //!< for list/pool
+                Unit          *prev; //!< for list
+                void          *priv; //!< private field
+                uint32_t       freq; //!< current frequency
+                uint32_t       code; //!< current code
+                uint32_t       bits; //!< current bits
+                const uint16_t data; //!< original data
+                const uint16_t nbit; //!< original nbit
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Unit);
+            };
+
+
 
 #if 0
             //__________________________________________________________________
