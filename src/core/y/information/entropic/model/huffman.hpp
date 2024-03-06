@@ -34,8 +34,6 @@ namespace Yttrium
                 //______________________________________________________________
                 static const size_t   MaxUnits = Unit::MaxAlive; //!< max alive units
                 static const size_t   MaxNodes = 2*MaxUnits-1;   //!< full binary tree
-                static const uint32_t AtLeft   = 0x00;
-                static const uint32_t AtRight  = 0x01;
                 
                 //______________________________________________________________
                 //

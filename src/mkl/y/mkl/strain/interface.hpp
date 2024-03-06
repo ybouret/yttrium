@@ -15,6 +15,19 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
+            //! named coefficients
+            //
+            //__________________________________________________________________
+            enum Evaluated
+            {
+                ConstantTerm    =  1, //!< Interface[ConstantTerm]
+                FirstDerivative  = 2, //!< Interface[FirstDerivative]
+                SecondDerivative = 3  //!< Interface[SecondDerivative]
+            };
+
+            //__________________________________________________________________
+            //
+            //
             //
             //! base class for filters
             //
@@ -29,7 +42,7 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                static  const size_t SIZE = 3;            //!< number of computed coefficients
+                static  const size_t SIZE = SecondDerivative; //!< number of computed coefficients
 
                 //______________________________________________________________
                 //

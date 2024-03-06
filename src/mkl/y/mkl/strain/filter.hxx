@@ -38,11 +38,13 @@ namespace Yttrium
                 code->coef.ld(code->zero);
             }
 
-            template <> void Filter<real_t>:: eval(const real_t x0,
-                                                   const size_t degree)
+            template <>
+            const Readable<real_t> &Filter<real_t>:: eval(const real_t x0,
+                                                          const size_t degree)
             {
                 assert(0!=code);
                 code->eval(x0,degree);
+                return *this;
             }
 
             template <> void Filter<real_t>:: add(const real_t x, const real_t y)

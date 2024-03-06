@@ -83,9 +83,9 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 template <typename U> inline
-                void   add(const T t, const V2D<U> &v) { add(t,v.x,v.y); }   //!< add any vertex
-                void   add(const T t, const T x, const T y);                 //!< add point
-                void   eval(const T t0, const size_t xdg, const size_t ydg); //!< extract at value t0, with max degrees for x and y
+                void                 add(const T t, const V2D<U> &v) { add(t,v.x,v.y); }   //!< add any vertex
+                void                 add(const T t, const T x, const T y);                 //!< add point
+                const ReadableType & eval(const T t0, const size_t xdg, const size_t ydg); //!< extract at value t0, with max degrees for x and y
 
                 
 

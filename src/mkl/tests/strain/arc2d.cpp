@@ -37,7 +37,7 @@ void testArc2D(const Readable<float>        &theta,
                 af.add(theta[i],r[i]);
         }
         af.eval(t, 3, 3);
-        const V2D<T> &pos = af[1];
+        const V2D<T> &pos = af[Strain::ConstantTerm];
         //const V2D<T> &spd = af.v;
         //const V2D<T>  rot = spd.ortho() / af.velocity;
         //const V2D<T>  inn = pos + scale * af.CartesianCurvature() * rot;

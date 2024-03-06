@@ -71,10 +71,11 @@ namespace Yttrium
             }
 
             template <>
-            void Arc2D<real_t>:: eval(const real_t t0, const size_t xdg, const size_t ydg)
+            const  Arc2D<real_t>::ReadableType &Arc2D<real_t>:: eval(const real_t t0, const size_t xdg, const size_t ydg)
             {
                 assert(0!=code);
                 code->eval(t0,xdg,ydg);
+                return *this;
             }
 
             template <>

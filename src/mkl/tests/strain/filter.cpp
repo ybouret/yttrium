@@ -44,7 +44,7 @@ static inline void testStrain(const Readable<float> &x, const Readable<float> &y
         for(unsigned degree=0;degree<=4;++degree)
         {
             f.eval(x0,degree);
-            fp(" %.15g",float(f[1]));
+            fp(" %.15g",float(f[Strain::ConstantTerm]));
         }
         fp << '\n';
     }
