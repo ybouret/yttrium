@@ -31,6 +31,7 @@ namespace Yttrium
             public:
                 typedef CxxArray<Vertex,Memory::Dyadic> Coef2D;
 
+
                 inline explicit Code() :
                 Object(),
                 xf(),
@@ -43,15 +44,15 @@ namespace Yttrium
 
                 inline void free() noexcept
                 {
-                    xf.free();
                     yf.free();
+                    xf.free();
                     cf.ld(v0);
                 }
 
                 inline void eval(const T t0, const size_t xdg, const size_t ydg)
                 {
                     //----------------------------------------------------------
-                    // cleanup
+                    // initialize coefficients
                     //----------------------------------------------------------
                     cf.ld(v0);
 
