@@ -37,7 +37,7 @@ add_library(dso MODULE dso.cpp)
 
 add_custom_command(TARGET dso POST_BUILD
 COMMAND test-core rtld_dll $<TARGET_FILE:dso>
-DEPENDS test-core 
+DEPENDS test-core dso
 COMMENT "[yttrium] RTLD"
 VERBATIM)
 
