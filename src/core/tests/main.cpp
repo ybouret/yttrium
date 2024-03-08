@@ -142,7 +142,6 @@ Y_UTEST_DECL(256)
     Y_UTEST(io_bzip2_read);
     Y_UTEST(io_bzip2_write);
     Y_UTEST(io_xmlog);
-    Y_UTEST(io_serializer);
     Y_UTEST(io_bits);
 
     Y_UTEST(fft1);

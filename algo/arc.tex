@@ -10,22 +10,33 @@
 
   	 
 \begin{document}
-Arc $\vec{F}(u)$
+
+Let  $\vec{M}(s)$ be an arc of $\mathbb{R}^2$,  $\vec{T}(s) = \partial_s \vec{M}$, $\theta(s) = \widehat{(\vec{i},\vec{T})}$.
 
 \begin{equation}
-	\vec{F}(-1) = \vec{A},\;\; \vec{F}(0) = \vec{B}, \;\; \vec{F}(1) = \vec{C}
+	\vec{T} = 
+	\begin{bmatrix}
+	\cos \theta\\
+	\sin \theta
+	\end{bmatrix}
 \end{equation}
 
 \begin{equation}
-	\vec{F}(u) = \vec{B} + u\,\vec{S}_B + \frac{1}{2}u^2 \, \vec{\Gamma}_B + \vec{\Phi}(u)
+	\partial_s \vec{T} = \partial_s \theta 
+	\begin{bmatrix}
+	-\sin\theta\\
+	\cos \theta
+	\end{bmatrix}
+ = \gamma \vec{N}
 \end{equation}
 
+Around $\vec{M}_0$ and $\vec{T}_0$:
 \begin{equation}
-	\vec{\Phi}(0) = \vec{0}, \;\; \vec{\Phi}'(0) = \vec{0},\;\; \vec{\Phi}''(0) = \vec{0}
-\end{equation}
-
-\begin{equation}
-	\vec{F}'(u) = \vec{S}_B + u\, \vec{\Gamma}_B 
+	\vec{M}(s) = \vec{M}_0 + \int_0^s \begin{bmatrix}
+	\cos \theta(u)\\
+	\sin \theta(u)
+	\end{bmatrix}
+	\, \mathrm{d}u
 \end{equation}
 
 \end{document}
