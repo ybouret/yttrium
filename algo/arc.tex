@@ -32,11 +32,24 @@ Let  $\vec{M}(s)$ be an arc of $\mathbb{R}^2$,  $\vec{T}(s) = \partial_s \vec{M}
 
 Around $\vec{M}_0$ and $\vec{T}_0$:
 \begin{equation}
-	\vec{M}(s) = \vec{M}_0 + \int_0^s \begin{bmatrix}
+	\vec{M}(s) = \vec{M}_0 + \int_0^s 
+	\begin{bmatrix}
 	\cos \theta(u)\\
 	\sin \theta(u)
 	\end{bmatrix}
 	\, \mathrm{d}u
 \end{equation}
+
+We assume:
+\begin{equation}
+	\theta(u) = \theta_0 + \gamma u 
+\end{equation}
+
+\begin{equation}
+	\int_0^s \cos (\theta_0 + \gamma u) \, \mathrm{d}u =
+	\dfrac{1}{\gamma}\left[ \sin(\theta_0 + \gamma s) - \sin(\theta_0) \right] 
+\end{equation}
+
+
 
 \end{document}
