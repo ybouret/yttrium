@@ -30,6 +30,36 @@ Let  $\vec{M}(s)$ be an arc of $\mathbb{R}^2$,  $\vec{T}(s) = \partial_s \vec{M}
  = \gamma \vec{N}
 \end{equation}
 
+\begin{equation}
+(x,y) \in \mathcal{C} \iff \sin \theta_0 \left( x - x_0 \right) - \cos\theta_0 \left(y-y_0\right) = 0
+\end{equation}
+
+\begin{equation}
+	D^2 = \dfrac{1}{2} \sum_i \left[\sin \theta_0 \left( x_i - x_0 \right) - \cos\theta_0 \left(y_i-y_0\right) \right]^2
+\end{equation}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\partial_{x_0} D^2      & = & \sum_i \left[\sin \theta_0 \left( x_i - x_0 \right) - \cos\theta_0 \left(y_i-y_0\right) \right]\sin\theta_0\\
+	\partial_{y_0} D^2      & = & -\sum_i \left[\sin \theta_0 \left( x_i - x_0 \right) - \cos\theta_0 \left(y_i-y_0\right) \right]\cos\theta_0\\
+	\partial_{\theta_0} D^2 & = &\sum_i \left[\sin \theta_0 \left( x_i - x_0 \right) - \cos\theta_0 \left(y_i-y_0\right) \right]\left[\cos \theta_0 \left( x_i - x_0 \right) + \sin\theta_0 \left(y_i-y_0\right) \right]\\
+\end{array}
+\right.
+\end{equation}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	0 & = & \sin^2\theta_0 \left(\bar{x}-x_0\right) - \sin \theta_0 \cos\theta_0 \left(\bar{y}-y_0\right) \\
+	0 & = & \sin \theta_0 \cos\theta_0 \left(\bar{x}-x_0\right) -  \cos^2\theta_0 \left(\bar{y}-y_0\right)\\
+	0 & = & \\
+\end{array}
+\right.
+\end{equation}
+
+\end{document}
+
 Around $\vec{M}_0$ and $\vec{T}_0$:
 \begin{equation}
 	\vec{M}(s) = \vec{M}_0 + \int_0^s 
