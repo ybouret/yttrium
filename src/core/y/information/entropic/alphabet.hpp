@@ -61,7 +61,11 @@ namespace Yttrium
                 void reduceFrequencies()       noexcept;        //!< reduce frequencies
                 void display(std::ostream &os)    const;        //!< display status
                 void write_(StreamBits &io, const uint8_t byte); //!< emit and check sumf
+                
+                //! todo
                 void write(StreamBits &io, const uint8_t byte, Model &model);
+
+                //! toto
                 void flush(StreamBits &io);
                 
 

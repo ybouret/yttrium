@@ -49,6 +49,7 @@ namespace Yttrium
                     Node           *left;   //!< left
                     Node           *right;  //!< right
 
+                    //! top-down recursive encoding
                     void make() noexcept;
 
                     //__________________________________________________________

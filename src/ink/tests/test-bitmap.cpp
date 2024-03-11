@@ -10,9 +10,7 @@ namespace Yttrium
 
     namespace Ink
     {
-
         
-
         template <typename T>
         struct PixRow
         {
@@ -20,23 +18,25 @@ namespace Yttrium
 
             inline Type & operator[](const unit_t i) noexcept
             {
-                assert(0!=p); assert(w>0); assert(i>=0); assert(i<w);
-                return p[i];
+                assert(0!=entry);
+                assert(0!=zflux);
+                return entry[ (*zflux)(i) ];
             }
 
             inline ConstType & operator[](const unit_t i) const noexcept
             {
-                assert(0!=p); assert(w>0); assert(i>=0); assert(i<w);
-                return p[i];
+                assert(0!=entry);
+                assert(0!=zflux);
+                return entry[ (*zflux)(i) ];
             }
 
 
-            inline size_t width() const noexcept { return w; }
+            inline size_t w() const noexcept { assert(0!=zflux); return zflux->size;  }
 
 
         private:
-            MutableType *   p;
-            unit_t          w;
+            MutableType *   entry;
+            const ZeroFlux *zflux;
         };
 
 
@@ -62,17 +62,14 @@ namespace Yttrium
 
             inline RowType & operator[](const unit_t j) noexcept
             {
-                assert(j>=0);
-                assert(j<h);
-                return row[j];
+                return row[ zfh(j) ];
             }
 
             inline const RowType & operator[](const unit_t j) const noexcept
             {
-                assert(j>=0);
-                assert(j<h);
-                return row[j];
+                return row[ zfh(j) ];
             }
+
 
 
         private:
@@ -114,12 +111,13 @@ Y_UTEST(bitmap)
 {
     
     {
-        int               pixel[] = { 1, 2, 3, 4 };
-        const size_t      count   = sizeof(pixel)/sizeof(pixel[0]);
-        Ink::BitRow       row_    = { pixel, count };
-        Ink::PixRow<int> &row     = Memory::OutOfReach::Conv< Ink::PixRow<int>, Ink::BitRow>(row_);
+        int                 pixel[] = { 1, 2, 3, 4 };
+        const unit_t        count   = sizeof(pixel)/sizeof(pixel[0]);
+        const Ink::ZeroFlux zf(count);
+        Ink::BitRow         row_    = { pixel, &zf };
+        Ink::PixRow<int>   &row     = Memory::OutOfReach::Conv< Ink::PixRow<int>, Ink::BitRow>(row_);
 
-        std::cerr << " w = " << row.width() << std::endl;
+        std::cerr << " w = " << row.w() << std::endl;
 
 
     }

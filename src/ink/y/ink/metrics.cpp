@@ -18,7 +18,9 @@ namespace Yttrium
                           const unsigned  bs) noexcept :
         Area(W,H),
         s(w*bs),
-        b(bs)
+        b(bs),
+        zfh(h),
+        zfw(w)
         {
             assert(b>0);
         }
@@ -26,7 +28,9 @@ namespace Yttrium
         Metrics:: Metrics(const Metrics &other) noexcept :
         Area(other),
         s(other.s),
-        b(other.b)
+        b(other.b),
+        zfh(other.zfh),
+        zfw(other.zfw)
         {
         }
 
@@ -35,7 +39,9 @@ namespace Yttrium
         Metrics:: Metrics(const Metrics &other, const unsigned bs) noexcept :
         Area(other),
         s(w*bs),
-        b(bs)
+        b(bs),
+        zfh(other.zfh),
+        zfw(other.zfw)
         {
             assert(b>0);
         }

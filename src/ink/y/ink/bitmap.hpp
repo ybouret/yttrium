@@ -13,8 +13,8 @@ namespace Yttrium
         
         struct BitRow
         {
-            void  *p;
-            unit_t w;
+            void           *entry;
+            const ZeroFlux *zflux;
         };
 
         class Bitmap : public Metrics
@@ -22,9 +22,7 @@ namespace Yttrium
         public:
             explicit Bitmap(const unit_t W, const unit_t H, const unsigned BPP);
             virtual ~Bitmap() noexcept;
-
-            BitRow &       operator()(const unit_t j)       noexcept;
-            const BitRow & operator()(const unit_t j) const noexcept;
+            
 
             void buildWith( void (*make)(void *, void*), void *args, void (*kill)(void*) );
             void eraseWith( void (*kill)(void *) ) noexcept;

@@ -98,6 +98,7 @@ namespace Yttrium
             return ans;
         }
 
+        //! query next byte
         bool query(uint8_t &C) noexcept
         {
             if(size>=8)

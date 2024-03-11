@@ -62,8 +62,8 @@ namespace Yttrium
                 for(unit_t j=0;j<metrics.h;++j, entry += metrics.s )
                 {
                     BitRow &r = row[j];
-                    r.p       = entry;
-                    r.w       = metrics.w;
+                    r.entry   = entry;
+                    r.zflux   = &metrics.zfw;
                 }
             }
 
@@ -84,21 +84,7 @@ namespace Yttrium
             Coerce(brow) = 0;
         }
 
-        BitRow & Bitmap:: operator()(const unit_t j) noexcept
-        {
-            assert(0!=brow);
-            assert(j>=0);
-            assert(j<h);
-            return brow[j];
-        }
-
-        const BitRow & Bitmap:: operator()(const unit_t j) const noexcept
-        {
-            assert(0!=brow);
-            assert(j>=0);
-            assert(j<h);
-            return brow[j];
-        }
+  
 
         //! erase num first items of row
         static inline
@@ -109,7 +95,7 @@ namespace Yttrium
         {
             assert(0!=zap);
             assert(bpp>0);
-            uint8_t * const addr = static_cast<uint8_t *>(row.p);
+            uint8_t * const addr = static_cast<uint8_t *>(row.entry);
             for(unit_t i=num;i>0;)
             {
                 void *obj = & addr[ --i * bpp ];
@@ -130,8 +116,9 @@ namespace Yttrium
             assert(0!=kill);
             unit_t num = 0;
             try {
-                uint8_t * const addr = static_cast<uint8_t *>(row.p);
-                while(num<row.w)
+                uint8_t * const addr = static_cast<uint8_t *>(row.entry);
+                const unit_t    size = row.zflux->size;
+                while(num<size)
                 {
                     make(&addr[num*bpp],args);
                     ++num;
