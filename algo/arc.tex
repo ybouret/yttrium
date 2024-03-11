@@ -30,20 +30,32 @@ Let  $\vec{M}(s)$ be an arc of $\mathbb{R}^2$,  $\vec{T}(s) = \partial_s \vec{M}
  = \gamma \vec{N}
 \end{equation}
 
+The distance of $\vec{M}_k$ to $\mathcal{C}$ is: 
 \begin{equation}
-(x,y) \in \mathcal{C} \iff \sin \theta_0 \left( x - x_0 \right) - \cos\theta_0 \left(y-y_0\right) = 0
+	d^2_k(s) = \left[ \vec{M}_k - \vec{M}_0 - s \vec{T}\right]^2 = \left[ \vec{\delta}_k - s \vec{T}\right]^2
+	=  \vec{\delta}_k^2 - 2 s  \vec{\delta}_k \cdot \vec{T} + s^2
+\end{equation}
+It is minimal when:
+\begin{equation}
+	s^\star = \vec{\delta}_k \cdot \vec{T}
+\end{equation}
+so that:
+\begin{equation}
+	d^2_k = \vec{\delta}_k^2 - \left(\vec{\delta}_k \cdot \vec{T} \right)^2  
 \end{equation}
 
 \begin{equation}
-	D^2 = \dfrac{1}{2} \sum_i \left[\sin \theta_0 \left( x_i - x_0 \right) - \cos\theta_0 \left(y_i-y_0\right) \right]^2
+ 	d^2_k =  (x_k-x_0)^2 + (y_k -y_0)^2 - \left[ (x_k-x_0)\cos\theta_0 + (y_k-y_0)\sin\theta_0\right]^2
 \end{equation}
 
 \begin{equation}
 \left\lbrace
 \begin{array}{rcl}
-	\partial_{x_0} D^2      & = & \sum_i \left[\sin \theta_0 \left( x_i - x_0 \right) - \cos\theta_0 \left(y_i-y_0\right) \right]\sin\theta_0\\
-	\partial_{y_0} D^2      & = & -\sum_i \left[\sin \theta_0 \left( x_i - x_0 \right) - \cos\theta_0 \left(y_i-y_0\right) \right]\cos\theta_0\\
-	\partial_{\theta_0} D^2 & = &\sum_i \left[\sin \theta_0 \left( x_i - x_0 \right) - \cos\theta_0 \left(y_i-y_0\right) \right]\left[\cos \theta_0 \left( x_i - x_0 \right) + \sin\theta_0 \left(y_i-y_0\right) \right]\\
+\partial_{x_0} \frac{1}{2} d^2_k & = & -(x_k-x_0) + \cos\theta_0 \left[ (x_k-x_0)\cos\theta_0 + (y_k-y_0)\sin\theta_0\right]\\
+\\
+\partial_{x_0} \frac{1}{2} d^2_k & = & -(y_k-y_0) + \sin\theta_0 \left[ (x_k-x_0)\cos\theta_0 + (y_k-y_0)\sin\theta_0\right]\\
+\\
+\partial_{\theta_0} \frac{1}{2} d^2_k & = & -\left[ (x_k-x_0)\cos\theta_0 + (y_k-y_0)\sin\theta_0\right]\left[ -(x_k-x_0)\sin\theta_0 + (y_k-y_0)\cos\theta_0\right]\\
 \end{array}
 \right.
 \end{equation}
@@ -51,35 +63,29 @@ Let  $\vec{M}(s)$ be an arc of $\mathbb{R}^2$,  $\vec{T}(s) = \partial_s \vec{M}
 \begin{equation}
 \left\lbrace
 \begin{array}{rcl}
-	0 & = & \sin^2\theta_0 \left(\bar{x}-x_0\right) - \sin \theta_0 \cos\theta_0 \left(\bar{y}-y_0\right) \\
-	0 & = & \sin \theta_0 \cos\theta_0 \left(\bar{x}-x_0\right) -  \cos^2\theta_0 \left(\bar{y}-y_0\right)\\
-	0 & = & \\
+\sum_k\partial_{x_0} \frac{1}{2} d^2_k & = & 0\\
+\sum_k\partial_{y_0} \frac{1}{2} d^2_k & = & 0\\
+\end{array}
+\right.
+\iff
+\left\lbrace
+\begin{array}{rcl}
+x_0 & = & \bar{x} \\
+y_0 & = & \bar{y} \\
 \end{array}
 \right.
 \end{equation}
 
-\end{document}
-
-Around $\vec{M}_0$ and $\vec{T}_0$:
 \begin{equation}
-	\vec{M}(s) = \vec{M}_0 + \int_0^s 
-	\begin{bmatrix}
-	\cos \theta(u)\\
-	\sin \theta(u)
-	\end{bmatrix}
-	\, \mathrm{d}u
-\end{equation}
-
-We assume:
-\begin{equation}
-	\theta(u) = \theta_0 + \gamma u 
+\partial_{\theta_0} \frac{1}{2} d^2_k = \left[ (x_k-x_0)^2-(y_k-y_0)^2 \right] \cos\theta_0\sin\theta_0 - (x_k-x_0) (y_k-y_0) \left[ \cos^2\theta_0 - \sin^2\theta_0\right]
 \end{equation}
 
 \begin{equation}
-	\int_0^s \cos (\theta_0 + \gamma u) \, \mathrm{d}u =
-	\dfrac{1}{\gamma}\left[ \sin(\theta_0 + \gamma s) - \sin(\theta_0) \right] 
+\partial_{\theta_0} \frac{1}{2} d^2_k = \left[ (x_k-x_0)^2 - (y_k-y_0)^2\right] \frac{1}{2} \sin 2\theta_0 - (x_k-x_0) (y_k-y_0) \cos 2\theta_0
 \end{equation}
 
-
+\begin{equation}
+0 = \sum_k\partial_{\theta_0} \frac{1}{2} d^2_k \implies 0 = \left[ \sigma_x^2 - \sigma_y^2 \right] \frac{1}{2} \sin 2\theta_0 - \sigma_{xy} \cos 2\theta_0
+\end{equation}
 
 \end{document}
