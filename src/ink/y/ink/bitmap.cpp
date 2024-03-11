@@ -73,7 +73,7 @@ namespace Yttrium
         code( new Code(*this) ),
         brow( code->row )
         {
-     
+
         }
 
         Bitmap:: ~Bitmap() noexcept
@@ -101,6 +101,78 @@ namespace Yttrium
             return brow[j];
         }
 
+        //! erase num first items of row
+        static inline
+        void eraseBitRow(BitRow &     row,
+                         unit_t       num,
+                         const size_t bpp,
+                         void       (*zap)(void *) ) noexcept
+        {
+            assert(0!=zap);
+            assert(bpp>0);
+            uint8_t * const addr = static_cast<uint8_t *>(row.p);
+            for(unit_t i=num;i>0;)
+            {
+                void *obj = & addr[ --i * bpp ];
+                zap(obj);
+            }
+        }
+
+        //! build full row
+        static inline
+        void buildBitRow(BitRow &      row,
+                         const size_t  bpp,
+                         void        (*make)(void *,void*),
+                         void *        args,
+                         void        (*kill)(void *) )
+        {
+            assert(0!=make);
+            assert(0!=kill);
+            unit_t num = 0;
+            try {
+                uint8_t * const addr = static_cast<uint8_t *>(row.p);
+                while(num<row.w)
+                {
+                    make(&addr[num*bpp],args);
+                    ++num;
+                }
+            }
+            catch(...)
+            {
+                eraseBitRow(row, num, bpp, kill);
+                throw;
+            }
+
+        }
+
+
+
+        void Bitmap:: build( void (*make)(void *, void*), void *args, void (*kill)(void*) )
+        {
+            assert(0!=make);
+            assert(0!=kill);
+            unit_t j = 0;
+            try {
+                while(j<h)
+                {
+                    buildBitRow(brow[j],b, make, args, kill);
+                    ++j;
+                }
+            }
+            catch(...)
+            {
+                while(j>0)
+                    eraseBitRow(brow[--j], w, b, kill);
+                throw;
+            }
+        }
+
+        void Bitmap:: erase(void (*kill)(void *)) noexcept
+        {
+            assert(0!=kill);
+            for(unit_t j=h;j>0;)
+                eraseBitRow(brow[--j],w,b,kill);
+        }
 
 
     }
