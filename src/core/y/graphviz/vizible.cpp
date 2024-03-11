@@ -170,7 +170,7 @@ namespace Yttrium
                 if(!keepDot)
                 {
                     static VFS &fs = LocalFS::Instance();
-                    (void) fs.tryRemove(dotFile);
+                    (void) fs.tryRemoveFile(dotFile);
                 }
             }
         }

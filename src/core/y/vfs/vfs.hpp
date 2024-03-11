@@ -160,14 +160,24 @@ namespace Yttrium
         // Interface
         //
         //______________________________________________________________________
-        virtual bool      tryRemove(const String &path) = 0;           //!< try to remove file from VFS
-        bool              tryRemove(const char   *path);               //!< alias
-        virtual Scanner * openDirectory(const String &dirName)    = 0; //!< create scanner for dirName
-        Scanner         * openDirectory(const char   *dirName);        //!< alias
-        virtual EntryType findEntryType(const String &path, bool &lnk) const = 0; //!< get entry attributes
-        EntryType         findEntryType(const char   *path, bool &lnk) const;     //!< alias
+        virtual bool      tryRemoveFile(const String &path)                         = 0; //!< try to remove file from VFS
+        virtual Scanner * openDirectory(const String &dirName)                      = 0; //!< create scanner for dirName
+        virtual EntryType findEntryType(const String &path, bool &lnk) const        = 0; //!< get entry attributes
+        virtual void      makeDirectory(const String &dirName, const bool mayExist) = 0; //!< create a directory
+        virtual bool      tryEraseEmpty(const String &dirName)                      = 0; //!< try to erase an empty directory
 
-
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        bool         tryRemoveFile(const char * const path);                         //!< alias
+        Scanner    * openDirectory(const char * const dirName);                      //!< alias
+        EntryType    findEntryType(const char * const path, bool &lnk) const;        //!< alias
+        void         makeDirectory(const char * const dirName, const bool mayExist); //!< alias
+        bool         tryEraseEmpty(const char * const dirName);                      //!< alias
+        
         //______________________________________________________________________
         //
         //

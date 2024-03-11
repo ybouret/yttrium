@@ -7,10 +7,10 @@ namespace Yttrium
     VFS:: ~VFS() noexcept {}
     VFS::  VFS() noexcept {}
 
-    bool VFS:: tryRemove(const char   *path)
+    bool VFS:: tryRemoveFile(const char   *path)
     {
         const String _(path);
-        return tryRemove(_);
+        return tryRemoveFile(_);
     }
 
 }
@@ -207,6 +207,17 @@ namespace Yttrium
         return "!";
     }
 
+    void VFS:: makeDirectory(const char *dirName, const bool mayExist)
+    {
+        const String _(dirName);
+        makeDirectory(_,mayExist);
+    }
+
+    bool VFS:: tryEraseEmpty(const char * const dirName)
+    {
+        const String _(dirName);
+        return tryEraseEmpty(_);
+    }
 
 
 }

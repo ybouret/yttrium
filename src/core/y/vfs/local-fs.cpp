@@ -25,7 +25,7 @@ namespace Yttrium
     {
     }
 
-    bool LocalFS::tryRemove(const String &path)
+    bool LocalFS::tryRemoveFile(const String &path)
     {
         Y_GIANT_LOCK();
 #if defined(Y_BSD)
@@ -241,6 +241,72 @@ namespace Yttrium
     VFS::Scanner *LocalFS:: openDirectory(const String &dirName)
     {
         return new LocalScanner(*this, dirName);
+    }
+
+}
+
+#if defined(Y_BSD)
+#include <sys/types.h>
+#endif
+
+namespace Yttrium
+{
+
+    void      LocalFS:: makeDirectory(const String &dirName, const bool mayExist)
+    {
+        Y_GIANT_LOCK();
+
+#if defined(Y_BSD)
+        if( mkdir( dirName.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) < 0)
+        {
+            const int err = errno;
+            switch(err)
+            {
+                case EEXIST:
+                    if(mayExist) return; // OK
+                default:
+                    break;
+            }
+            throw Libc::Exception(err, "mkdir('%s')", dirName.c_str() );
+        }
+        return;
+#endif
+
+#if defined(Y_WIN)
+        if( ! ::CreateDirectory( dirName.c_str(), 0 ) )
+        {
+            const DWORD err = ::GetLastError();
+            switch(err)
+            {
+                case ERROR_ALREADY_EXISTS:
+                    if(mayExist) return; // OK
+                default:
+                    break;
+            }
+            throw Win32::Exception(err,"CreateDirectory('%s')", dirName.c_str() );
+        }
+        return;
+#endif
+
+        throw Specific::Exception("makeDirectory", "Not Implemented");
+    }
+
+    bool LocalFS:: tryEraseEmpty(const String &dirName)
+    {
+        Y_GIANT_LOCK();
+
+#if defined(Y_BSD)
+        if( rmdir( dirName.c_str() ) < 0 ) return false;
+        return true;
+#endif
+
+#if defined(Y_WIN)
+        if( ! ::RemoveDirectory( dirName.c_str()) ) return false;
+        return true;
+#endif
+
+        throw Specific::Exception("tryEraseEmpty", "Not Implemented");
+
     }
 
 }
