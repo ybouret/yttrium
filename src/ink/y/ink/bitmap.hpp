@@ -4,13 +4,37 @@
 #define Y_Ink_Bitmap_Included 1
 
 
-#include "y/config/starting.hpp"
+#include "y/ink/metrics.hpp"
 
 namespace Yttrium
 {
     namespace Ink
     {
         
+        struct BitRow
+        {
+            void  *p;
+            unit_t w;
+        };
+
+        class Bitmap : public Metrics
+        {
+        public:
+            explicit Bitmap(const unit_t W, const unit_t H, const unsigned BPP);
+            virtual ~Bitmap() noexcept;
+
+            BitRow &       operator()(const unit_t j)       noexcept;
+            const BitRow & operator()(const unit_t j) const noexcept;
+            
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Bitmap);
+            class Code;
+            Code *         code;
+            BitRow * const brow;
+        };
+
+
     }
 }
 

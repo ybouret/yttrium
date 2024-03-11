@@ -1,0 +1,109 @@
+#include "y/ink/bitmap.hpp"
+#include "y/object.hpp"
+#include "y/counted.hpp"
+#include "y/type/nullify.hpp"
+#include "y/calculus/align.hpp"
+#include "y/memory/allocator/dyadic.hpp"
+
+namespace Yttrium
+{
+    namespace Ink
+    {
+
+
+        class Bitmap:: Code : public Object, public Counted
+        {
+        public:
+            static inline size_t Align(const size_t x) noexcept { return Y_MEMALIGN(x); }
+            typedef Memory::Dyadic MemMgr;
+
+            explicit Code(const Metrics &metrics) : Object(), Counted(), row(0), pix(0), mem(0)
+            {
+                {
+                    // compute requests
+                    const size_t rowOffset = 0;
+                    const size_t rowLength = sizeof(BitRow) * metrics.h;
+
+                    const size_t pixOffset = Align(rowOffset+rowLength);
+                    const size_t pixLength = metrics.n * metrics.b;
+                    const size_t blockSize = Align(pixLength+pixOffset);
+
+                    // allocate
+                    mem  = 1;
+                    {
+                        uint8_t * const ptr = static_cast<uint8_t *>(MemMgr::Instance().acquire(mem,blockSize));
+                        row = static_cast<BitRow *>( Memory::OutOfReach::Addr( &ptr[rowOffset]) );
+                        pix = &ptr[pixOffset];
+                    }
+                }
+
+                // link
+                link(metrics);
+
+                withhold();
+            }
+
+            virtual ~Code() noexcept
+            {
+                void *ptr = Memory::OutOfReach::Addr(row);
+                MemMgr::Location().release(ptr,mem);
+            }
+
+            BitRow *row;
+            void   *pix;
+            size_t  mem;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Code);
+            inline void link(const Metrics &metrics) noexcept
+            {
+                uint8_t *entry = static_cast<uint8_t *>(pix);
+                for(unit_t j=0;j<metrics.h;++j, entry += metrics.s )
+                {
+                    BitRow &r = row[j];
+                    r.p       = entry;
+                    r.w       = metrics.w;
+                }
+            }
+
+        };
+
+        Bitmap:: Bitmap(const unit_t W, const unit_t H, const unsigned BPP) :
+        Metrics(W,H,BPP),
+        code( new Code(*this) ),
+        brow( code->row )
+        {
+     
+        }
+
+        Bitmap:: ~Bitmap() noexcept
+        {
+            if(code->liberate())
+            {
+                Nullify(code);
+            }
+            Coerce(brow) = 0;
+        }
+
+        BitRow & Bitmap:: operator()(const unit_t j) noexcept
+        {
+            assert(0!=brow);
+            assert(j>=0);
+            assert(j<h);
+            return brow[j];
+        }
+
+        const BitRow & Bitmap:: operator()(const unit_t j) const noexcept
+        {
+            assert(0!=brow);
+            assert(j>=0);
+            assert(j<h);
+            return brow[j];
+        }
+
+
+
+    }
+
+}
+
