@@ -4,6 +4,7 @@
 #include "y/type/nullify.hpp"
 #include "y/calculus/align.hpp"
 #include "y/memory/allocator/dyadic.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
@@ -79,9 +80,7 @@ namespace Yttrium
         Bitmap:: ~Bitmap() noexcept
         {
             if(code->liberate())
-            {
                 Nullify(code);
-            }
             Coerce(brow) = 0;
         }
 
@@ -115,6 +114,7 @@ namespace Yttrium
             {
                 void *obj = & addr[ --i * bpp ];
                 zap(obj);
+                memset(obj,0,bpp);
             }
         }
 
@@ -147,7 +147,7 @@ namespace Yttrium
 
 
 
-        void Bitmap:: build( void (*make)(void *, void*), void *args, void (*kill)(void*) )
+        void Bitmap:: buildWith( void (*make)(void *, void*), void *args, void (*kill)(void*) )
         {
             assert(0!=make);
             assert(0!=kill);
@@ -167,7 +167,7 @@ namespace Yttrium
             }
         }
 
-        void Bitmap:: erase(void (*kill)(void *)) noexcept
+        void Bitmap:: eraseWith(void (*kill)(void *)) noexcept
         {
             assert(0!=kill);
             for(unit_t j=h;j>0;)
