@@ -25,6 +25,20 @@ namespace Yttrium
             assert(bpp>0);
         }
 
+        Metrics:: Metrics(const unit_t    W,
+                          const unit_t    H,
+                          const unsigned  B,
+                          const unit_t    S) noexcept :
+        Area(W,H),
+        s(S),
+        bpp(B),
+        zfh(h),
+        zfw(w)
+        {
+            assert(bpp>0);
+            assert(s>=w*bpp);
+        }
+
         Metrics:: Metrics(const Metrics &other) noexcept :
         Area(other),
         s(other.s),

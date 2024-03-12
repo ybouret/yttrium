@@ -44,10 +44,38 @@ namespace Yttrium
                 withhold();
             }
 
+            explicit Code(void *data, const Metrics &metrics) : Object(), Counted(), row(0), pix(0), mem(0)
+            {
+                assert(0!=data);
+                {
+                    // compute requests
+                    const size_t rowOffset = 0;
+                    const size_t rowLength = sizeof(BitRow) * metrics.h;
+                    const size_t blockSize = Align(rowOffset+rowLength);
+
+                    // allocate
+                    mem  = 1;
+                    {
+                        uint8_t * const ptr = static_cast<uint8_t *>(MemMgr::Instance().acquire(mem,blockSize));
+                        row = static_cast<BitRow *>( Memory::OutOfReach::Addr( &ptr[rowOffset]) );
+                        pix = data;
+                    }
+                }
+
+                // link
+                link(metrics);
+
+                withhold();
+            }
+
+
+
             virtual ~Code() noexcept
             {
                 void *ptr = Memory::OutOfReach::Addr(row);
                 MemMgr::Location().release(ptr,mem);
+                row = 0;
+                pix = 0;
             }
 
             BitRow *row;
@@ -58,8 +86,9 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Code);
             inline void link(const Metrics &metrics) noexcept
             {
-                uint8_t *entry = static_cast<uint8_t *>(pix);
-                for(unit_t j=0;j<metrics.h;++j, entry += metrics.s )
+                uint8_t *    entry  = static_cast<uint8_t *>(pix);
+                const unit_t stride = metrics.s;
+                for(unit_t j=0;j<metrics.h;++j, entry += stride )
                 {
                     BitRow &r = row[j];
                     r.entry   = entry;
@@ -72,10 +101,21 @@ namespace Yttrium
         Bitmap:: Bitmap(const unit_t W, const unit_t H, const unsigned BPP) :
         Metrics(W,H,BPP),
         code( new Code(*this) ),
-        brow( code->row )
+        brow( code->row ),
+        dynamic(true)
         {
 
         }
+
+        Bitmap:: Bitmap(void *data, const unit_t W, const unit_t H, const unsigned BPP, const unit_t S) :
+        Metrics(W,H,BPP,S),
+        code( new Code(data,*this) ),
+        brow(code->row),
+        dynamic(false)
+        {
+
+        }
+
 
         Bitmap:: ~Bitmap() noexcept
         {

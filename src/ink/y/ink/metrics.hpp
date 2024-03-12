@@ -16,7 +16,13 @@ namespace Yttrium
         public:
             explicit Metrics(const unit_t    W,
                              const unit_t    H,
-                             const unsigned  bs) noexcept;
+                             const unsigned  B) noexcept;
+            
+            explicit Metrics(const unit_t    W,
+                             const unit_t    H,
+                             const unsigned  B,
+                             const unit_t    S) noexcept;
+
             Metrics(const Metrics &other)     noexcept;
             Metrics(const Metrics &other, const unsigned bs) noexcept;
             virtual ~Metrics() noexcept;
