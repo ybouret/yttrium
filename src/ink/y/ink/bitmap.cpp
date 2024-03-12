@@ -26,7 +26,7 @@ namespace Yttrium
                     const size_t rowLength = sizeof(BitRow) * metrics.h;
 
                     const size_t pixOffset = Align(rowOffset+rowLength);
-                    const size_t pixLength = metrics.n * metrics.b;
+                    const size_t pixLength = metrics.n * metrics.bpp;
                     const size_t blockSize = Align(pixLength+pixOffset);
 
                     // allocate
@@ -142,14 +142,14 @@ namespace Yttrium
             try {
                 while(j<h)
                 {
-                    buildBitRow(brow[j],b, make, args, kill);
+                    buildBitRow(brow[j],bpp, make, args, kill);
                     ++j;
                 }
             }
             catch(...)
             {
                 while(j>0)
-                    eraseBitRow(brow[--j], w, b, kill);
+                    eraseBitRow(brow[--j], w, bpp, kill);
                 throw;
             }
         }
@@ -158,7 +158,7 @@ namespace Yttrium
         {
             assert(0!=kill);
             for(unit_t j=h;j>0;)
-                eraseBitRow(brow[--j],w,b,kill);
+                eraseBitRow(brow[--j],w,bpp,kill);
         }
 
 

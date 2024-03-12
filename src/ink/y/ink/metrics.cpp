@@ -9,8 +9,8 @@ namespace Yttrium
 
         Metrics:: ~Metrics() noexcept
         {
-            Coerce(s) = 0;
-            Coerce(b) = 0;
+            Coerce(s)   = 0;
+            Coerce(bpp) = 0;
         }
 
         Metrics:: Metrics(const unit_t    W,
@@ -18,17 +18,17 @@ namespace Yttrium
                           const unsigned  bs) noexcept :
         Area(W,H),
         s(w*bs),
-        b(bs),
+        bpp(bs),
         zfh(h),
         zfw(w)
         {
-            assert(b>0);
+            assert(bpp>0);
         }
 
         Metrics:: Metrics(const Metrics &other) noexcept :
         Area(other),
         s(other.s),
-        b(other.b),
+        bpp(other.bpp),
         zfh(other.zfh),
         zfw(other.zfw)
         {
@@ -39,11 +39,11 @@ namespace Yttrium
         Metrics:: Metrics(const Metrics &other, const unsigned bs) noexcept :
         Area(other),
         s(w*bs),
-        b(bs),
+        bpp(bs),
         zfh(other.zfh),
         zfw(other.zfw)
         {
-            assert(b>0);
+            assert(bpp>0);
         }
 
 

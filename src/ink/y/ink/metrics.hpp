@@ -21,8 +21,8 @@ namespace Yttrium
             Metrics(const Metrics &other, const unsigned bs) noexcept;
             virtual ~Metrics() noexcept;
             
-            const size_t   s;   //!< blocks per row
-            const size_t   b;   //!< bytes per pixel
+            const size_t   s;   //!< blocks per row = stride
+            const size_t   bpp; //!< bytes per pixel
             const ZeroFlux zfh; //!< zero flux for dimension=h
             const ZeroFlux zfw; //!< zero flux for dimension=w
             

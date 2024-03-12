@@ -22,7 +22,7 @@ namespace Yttrium
         public:
             explicit Bitmap(const unit_t W, const unit_t H, const unsigned BPP);
             virtual ~Bitmap() noexcept;
-            
+
 
             void buildWith( void (*make)(void *, void*), void *args, void (*kill)(void*) );
             void eraseWith( void (*kill)(void *) ) noexcept;
