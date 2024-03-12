@@ -12,7 +12,7 @@ Y_UTEST(zero_flux)
         const Ink::ZeroFlux zf(dim);
         for(unit_t i=-10;i<=10;++i)
         {
-            std::cerr << std::setw(3) << i << " => " << zf(i) << std::endl;
+            std::cerr << std::setw(3) << i << " => " << zf[i] << std::endl;
         }
     }
 }

@@ -10,19 +10,38 @@ namespace Yttrium
 {
     namespace Ink
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //!  Basic Area
+        //
+        //
+        //______________________________________________________________________
         class Area
         {
         public:
-            Area(const unit_t W, const unit_t H) noexcept;
-            virtual ~Area()                      noexcept;
-            Area(const Area &)                   noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            Area(const unit_t W, const unit_t H) noexcept; //!< setup 0+W,0+H
+            virtual ~Area()                      noexcept; //!< cleanup
+            Area(const Area &)                   noexcept; //!< copy
 
-            const unit_t x;
-            const unit_t y;
-            const unit_t w;
-            const unit_t h;
-            const size_t n;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const unit_t x; //!< starting x
+            const unit_t y; //!< starting y
+            const unit_t w; //!< width
+            const unit_t h; //!< height
+            const size_t n; //!< number of items
             
         private:
             Y_DISABLE_ASSIGN(Area);

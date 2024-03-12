@@ -50,16 +50,7 @@ namespace Yttrium
 
 
 
-        Metrics:: Metrics(const Metrics &other, const unsigned bs) noexcept :
-        Area(other),
-        s(w*bs),
-        bpp(bs),
-        zfh(other.zfh),
-        zfw(other.zfw)
-        {
-            assert(bpp>0);
-        }
-
+      
 
 
     }

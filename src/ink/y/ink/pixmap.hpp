@@ -13,26 +13,49 @@ namespace Yttrium
 {
     namespace Ink
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Row for Pixmap
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         struct PixRow
         {
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             Y_ARGS_DECL(T,Type);
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! access item
             inline Type & operator[](const unit_t i) noexcept
             {
                 assert(0!=entry);
                 assert(0!=zflux);
-                return entry[ (*zflux)(i) ];
+                return entry[ (*zflux)[i] ];
             }
 
+            //! access const item
             inline ConstType & operator[](const unit_t i) const noexcept
             {
                 assert(0!=entry);
                 assert(0!=zflux);
-                return entry[ (*zflux)(i) ];
+                return entry[ (*zflux)[i] ];
             }
 
+            //! display
             inline friend std::ostream & operator<<(std::ostream &os, const PixRow &r)
             {
                 assert(0!=r.entry);
@@ -45,7 +68,6 @@ namespace Yttrium
                 return os;
             }
 
-            inline size_t w() const noexcept { assert(0!=zflux); return zflux->size;  }
 
 
         private:
@@ -54,14 +76,35 @@ namespace Yttrium
         };
 
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Pixmap
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class Pixmap : public Bitmap
         {
         public:
-            Y_ARGS_DECL(T,Type);
-            typedef PixRow<T> RowType;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            Y_ARGS_DECL(T,Type);        //!< aliases
+            typedef PixRow<T> RowType;  //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
+            //! zeroed WxH
             inline explicit Pixmap(const unit_t W, const unit_t H) :
             Bitmap(W,H,sizeof(T)),
             row( this->as<RowType>() )
@@ -70,6 +113,13 @@ namespace Yttrium
             }
             
 
+            //! based on user's data
+            /**
+             \param data user's data
+             \param W    width
+             \param H    height
+             \param S    stride in items, S>=W
+             */
             inline explicit Pixmap(T * data, const unit_t W, const unit_t H, const unit_t S) :
             Bitmap(data,W,H,sizeof(T),S*sizeof(T)),
             row( this->as<RowType>() )
@@ -77,22 +127,33 @@ namespace Yttrium
                 assert(!dynamic);
             }
 
+            //! cleanup
             inline virtual ~Pixmap() noexcept
             {
                 if(dynamic)
                     eraseWith(Kill);
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! access Row
             inline RowType & operator[](const unit_t j) noexcept
             {
-                return row[ zfh(j) ];
+                return row[ zfh[j] ];
             }
 
+            //! access const Row
             inline const RowType & operator[](const unit_t j) const noexcept
             {
-                return row[ zfh(j) ];
+                return row[ zfh[j] ];
             }
 
+            //! display
             inline friend std::ostream & operator<<(std::ostream &os, const Pixmap &pxm)
             {
                 os << '[' << pxm[0];
@@ -108,15 +169,8 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Pixmap);
             RowType * const row;
             
-            static inline void Make(void *ptr, void *)
-            {
-                new (ptr) T();
-            }
-
-            static inline void Kill(void *ptr) noexcept
-            {
-                static_cast<T*>(ptr)->~T();
-            }
+            static inline void Make(void *ptr, void *)  { new (ptr) T(); }
+            static inline void Kill(void *ptr) noexcept { static_cast<T*>(ptr)->~T(); }
 
         };
     }

@@ -35,13 +35,13 @@ namespace Yttrium
         {
             const ZeroFlux &self = *this;
             if(indx<0) {
-                return self(-indx);
+                return self[-indx];
             }
             else
             {
                 if(indx>=size)
                 {
-                    return self(symm-indx);
+                    return self[symm-indx];
                 }
                 else
                 {
@@ -51,7 +51,7 @@ namespace Yttrium
             }
         }
 
-        unit_t ZeroFlux:: operator()(const unit_t indx) const noexcept
+        unit_t ZeroFlux:: operator[](const unit_t indx) const noexcept
         {
             assert(0!=proc);
             return ( *this.*proc )(indx);
