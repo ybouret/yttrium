@@ -19,7 +19,7 @@ namespace Yttrium
             //
             //
             //
-            //! do-nothing class for 0D resource
+            //! "do-nothing" class for 0D resource
             //
             //
             //__________________________________________________________________

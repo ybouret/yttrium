@@ -51,7 +51,9 @@ namespace Yttrium
                  further allocation can be made for use withing thread
                  */
                 virtual void activate()          = 0; 
-                virtual void shutdown() noexcept = 0; //!< shutdown local resources
+
+                //! shutdown local resource
+                virtual void shutdown() noexcept = 0;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Resource);
