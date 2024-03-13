@@ -107,6 +107,7 @@ field
 field/layout
 field/memory
 field/meta-key
+color
 )
 
 source_group(concurrent FILES ${quark})

@@ -25,6 +25,7 @@ information
 woven
 rtld
 field
+color
 )
 
 Y_LinkLibraries(test-core)
@@ -312,4 +313,6 @@ add_test(field:4d test-core field4d)
 add_test(field:mk test-core fieldmk)
 add_test(field:layouts test-core field_layouts)
 
+#color
+add_test(color:rgb test-core color_rgb)
 
