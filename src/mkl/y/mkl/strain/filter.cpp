@@ -165,9 +165,9 @@ namespace Yttrium
                         {
                             const size_t k = (i-1)+(j-1);
                             assert(xadd.isEmpty());
-                            for(size_t i=npts;i>0;--i)
+                            for(size_t l=npts;l>0;--l)
                             {
-                                xadd << ipower(points[i].z,k);
+                                xadd << ipower(points[l].z,k);
                             }
                             mu[i][j] = mu[j][i] = xadd.sum();
                         }
