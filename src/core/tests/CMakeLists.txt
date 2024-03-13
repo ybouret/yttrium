@@ -315,6 +315,7 @@ add_test(field:layouts test-core field_layouts)
 
 #color
 add_test(color:rgb test-core color_rgb)
+add_test(color:yuv test-core color_yuv)
 add_test(color:conv test-core color_conv)
 
 

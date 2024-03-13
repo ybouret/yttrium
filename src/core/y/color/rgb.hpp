@@ -28,6 +28,7 @@ namespace Yttrium
                 return os;
             }
 
+            
             T r;
             T g;
             T b;

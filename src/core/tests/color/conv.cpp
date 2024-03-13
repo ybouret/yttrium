@@ -5,20 +5,6 @@
 
 using namespace Yttrium;
 
-#if 0
-
-namespace Yttrium
-{
-    namespace Color
-    {
-
-
-
-
-
-    }
-}
-#endif
 
 
 Y_UTEST(color_conv)
@@ -35,7 +21,7 @@ Y_UTEST(color_conv)
             {
                 std::cerr << "U(" << std::setw(3) << k++ << "), ";
             }
-            std::cerr << "\\" << "std::endl;
+            std::cerr << "\\" << std::endl;
         }
     }
 #endif
