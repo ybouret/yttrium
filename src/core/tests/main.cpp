@@ -241,6 +241,6 @@ Y_UTEST_DECL(256)
     Y_UTEST(field_layouts);
 
     Y_UTEST(color_rgb);
-
+    Y_UTEST(color_conv);
 }
 Y_UTEST_EXEC()

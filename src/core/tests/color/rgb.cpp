@@ -14,6 +14,7 @@ Y_UTEST(color_rgb)
 
     std::cerr << rgb8 << std::endl;
     std::cerr << rgbD << std::endl;
+    
 
 }
 Y_UDONE()
