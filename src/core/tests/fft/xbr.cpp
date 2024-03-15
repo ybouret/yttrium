@@ -147,7 +147,7 @@ namespace Yttrium
     typedef V2D<uint16_t> XBR;
 
     static inline
-    size_t CountXBR(const uint16_t size, Vector<XBR> &xbr)
+    uint16_t CountXBR(const uint16_t size, Vector<XBR> &xbr)
     {
         assert(IsPowerOfTwo(size));
         xbr.free();
@@ -167,7 +167,7 @@ namespace Yttrium
             }
             j += m;
         }
-        return xbr.size();
+        return (uint16_t)(xbr.size());
     }
 
 
@@ -230,6 +230,12 @@ Y_UTEST(fft_xbr)
 }
 Y_UDONE()
 
+
+static inline void OutputXBR(const XBR &p, OutputStream &fp)
+{
+    fp("\t\t{ 0x%04x, 0x%04x }", p.x, p.y);
+}
+
 Y_UTEST(fft_xbr_build)
 {
     Vector<XBR>  xbr;
@@ -243,14 +249,38 @@ Y_UTEST(fft_xbr_build)
 
         std::cerr << std::endl;
         if(nbr<=0) continue;
-        
-        const String sourceName = Formatted::Get("xbr%u.cpp",size);
-        //std::cerr << "-> " << sourceName << std::endl;
-        OutputFile   source(sourceName);
-        source << "#include \"y/config/starting.cpp\"\n";
-        source << "namespace Yttrium {\n";
 
-        source << "}\n";
+
+        {
+            const String headerName = Formatted::Get("xbr%u.hpp",size);
+            OutputFile   header(headerName);
+            header << "//! \\file\n";
+            header("#ifndef Y_XBR%u_Included\n",size);
+            header("#define Y_XBR%u_Included\n",size);
+            header << "#include \"y/config/starting.hpp\"\n";
+            header("namespace Yttrium {\n");
+            header("\textern const uint16_t XBR%u[%u][2]; //!< XBitReversal Table\n",size,nbr);
+            header("}\n");
+            header("#endif\n");
+        }
+
+        {
+            const String sourceName = Formatted::Get("xbr%u.cpp",size);
+            //std::cerr << "-> " << sourceName << std::endl;
+            OutputFile   source(sourceName);
+            source("#include \"xbr%u.hpp\"\n",size);
+            source << "namespace Yttrium {\n";
+            source("\tconst uint16_t XBR%u[%u][2]={\n",size,nbr);
+            OutputXBR(xbr[1],source);
+            for(uint16_t i=2;i<=nbr;++i)
+            {
+                source << ",\n";
+                OutputXBR(xbr[i],source);
+            }
+            source <<"\n";
+            source << "\t};\n";
+            source << "}\n";
+        }
     }
 }
 Y_UDONE()
