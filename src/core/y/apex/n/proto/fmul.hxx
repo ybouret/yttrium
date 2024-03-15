@@ -1,10 +1,10 @@
 
 #if 0
 static inline
-void FillBatch(Batch<double>  &batch,
-               const WordType *w,
-               const size_t    nWords,
-               const size_t    nBytes)
+void FillArray_(double         * const batch,
+               const WordType * const w,
+               const size_t           nWords,
+               const size_t           nBytes) noexcept
 {
     assert(nWords*WordSize==nBytes);
     size_t j = 0;
@@ -21,23 +21,24 @@ void FillBatch(Batch<double>  &batch,
 #endif
 
 static inline
-void FillArray(double         *batch,
-               const WordType *w,
-               const size_t    nWords,
-               const size_t    nBytes) noexcept
+void FillArray(double         * const batch,
+               const WordType * w,
+               const size_t     nWords,
+               const size_t     nBytes) noexcept
 {
     assert(nWords*WordSize==nBytes);
-    size_t j = 0;
-    for(size_t i=0;i<nWords;++i)
+    double *b = &batch[nBytes];
+    for(size_t i=nWords;i>0;--i)
     {
-        WordType              W = w[i];
+        WordType              W = *(w++);
         const uint8_t * const B = MakeBytes::From(W);
         for(size_t k=0;k<WordSize;++k)
-        {
-            batch[nBytes-j++] = B[k];
-        }
+            *(b--) = B[k];
     }
 }
+
+
+
 
 
 static inline Hexadecimal D2H(const double x)
@@ -71,24 +72,37 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
             const size_t   mpn   = m+n;          // product bytes
             Pointer        proto = new Proto(mpn,AsCapacity);
             Batch<uint8_t> prod(mpn);
-            const uint64_t tmx   = ell ? WallTime::Ticks() : 0;
+            const bool     chrono = 0!=ell;
+            const uint64_t tmx    = chrono ? WallTime::Ticks() : 0;
 
             {
+                //______________________________________________________________
+                //
+                // prepare arrays of reals
+                //______________________________________________________________
                 size_t       nn = 1;
                 const size_t mn = Max(m,n);
                 while (nn < mn)
                     nn <<= 1;
                 nn <<= 1;
                 Batch<double> B(nn*2);
-                double       *b = B();
+                double       *b = B(); // b[1..nn]
                 {
                     //Batch<double> A(nn);
-                    double *a = b+nn; //A();
+                    double *a = b+nn;  // a[1..nn]
                     FillArray(a,U,p,n);
                     FillArray(b,V,q,m);
 
+                    //__________________________________________________________
+                    //
+                    // forward real FFT
+                    //__________________________________________________________
                     FFT::ForwardReal(a,b,nn);
 
+                    //__________________________________________________________
+                    //
+                    // in-place product in b
+                    //__________________________________________________________
                     b[1] *= a[1];
                     b[2] *= a[2];
                     for(size_t j=3;j<=nn;j+=2)
@@ -99,16 +113,19 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                         b[j1] = t*a[j1] + b[j1]*a[j];
                     }
                 }
-
                 FFT::ReverseReal(b,nn);
 
+                //______________________________________________________________
+                //
+                // in place product as array of bytes
+                //______________________________________________________________
                 static const double RX    = 256.0;
                 double              carry = 0.0;
                 const double        scale = 1.0/(nn>>1);
                 for(size_t j=nn;j>=1;--j)
                 {
-                    double      *f = &b[j];
-                    const double t =  floor( (*f)*scale+carry+0.5 );
+                    double      * const f = &b[j];
+                    const double        t =  floor( (*f)*scale+carry+0.5 );
                     carry=(unsigned long) (t/RX);
                     *(uint8_t *)f = static_cast<uint8_t>(t-carry*RX);
                 }
@@ -155,7 +172,7 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
             //
             // done
             //__________________________________________________________________
-            if(ell) (*ell) += WallTime::Ticks() - tmx;
+            if(chrono) (*ell) += WallTime::Ticks() - tmx;
             return proto.yield();
         }
     }

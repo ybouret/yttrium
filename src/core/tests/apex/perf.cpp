@@ -7,6 +7,7 @@
 #include "y/string.hpp"
 
 #include <cstdio>
+#include <cstring>
 
 using namespace Yttrium;
 
@@ -15,30 +16,39 @@ namespace
 {
 
     static size_t   Loops   = 8;
-    static unsigned MaxBits = 512;
+    static unsigned MaxBits = 1024;
 
     template <typename Core, typename Word> static inline
     void TestProto(Random::Bits &ran)
     {
         typedef Apex::Proto<Core,Word>  PROTO;
         typedef typename PROTO::Pointer hPROTO;
-
         static char label[256];
+
+
+        memset(label,0,sizeof(label));
         snprintf(label,sizeof(label),"Apex::Proto<%3u,%3u>",PROTO::CoreSize*8,PROTO::WordSize*8 );
         std::cerr << std::endl;
         std::cerr << label << std::endl;
 
-        if(false)
+
+
+        if(true)
         {
-            const PROTO  lhs(5000,ran);
-            const PROTO  rhs(5000,ran);
-            const hPROTO LNG_Prod = PROTO::Mul(lhs,rhs,PROTO::LongMul,0);
-            const hPROTO FFT_Prod = PROTO::Mul(lhs,rhs,PROTO::FFT_Mul,0);
-            const PROTO &LongProduct = *LNG_Prod;
-            const PROTO &FFT_Product = *FFT_Prod;
-            Y_CHECK( PROTO::AreEqual(LongProduct,FFT_Product) );
-            return;
+            std::cerr << "-- Checking for products equality" << std::endl;
+            for(size_t i=0;i<Loops;++i)
+            {
+                const PROTO  lhs(5000,ran);
+                const PROTO  rhs(5000,ran);
+                const hPROTO LNG_Prod = PROTO::Mul(lhs,rhs,PROTO::LongMul,0);
+                const hPROTO FFT_Prod = PROTO::Mul(lhs,rhs,PROTO::FFT_Mul,0);
+                const PROTO &LongProduct = *LNG_Prod;
+                const PROTO &FFT_Product = *FFT_Prod;
+                Y_ASSERT( PROTO::AreEqual(LongProduct,FFT_Product) );
+            }
         }
+
+
 
         const String fileName = Formatted::Get("apex%u-%u.dat",PROTO::CoreSize*8,PROTO::WordSize*8 );
         OutputFile   fp(fileName);
@@ -53,8 +63,8 @@ namespace
                 {
                     const PROTO  lhs(lbits,ran);
                     const PROTO  rhs(rbits,ran);
-                    const hPROTO LNG_Prod = PROTO::Mul(lhs,rhs,PROTO::LongMul,&l64);
-                    const hPROTO FFT_Prod = PROTO::Mul(lhs,rhs,PROTO::FFT_Mul,&f64);
+                    const hPROTO LNG_Prod    = PROTO::Mul(lhs,rhs,PROTO::LongMul,&l64);
+                    const hPROTO FFT_Prod    = PROTO::Mul(lhs,rhs,PROTO::FFT_Mul,&f64);
                     const PROTO &LongProduct = *LNG_Prod;
                     const PROTO &FFT_Product = *FFT_Prod;
                     Y_ASSERT( PROTO::AreEqual(LongProduct,FFT_Product) );
@@ -62,26 +72,14 @@ namespace
                 const double lrate = double(Loops)/double(l64);
                 const double frate = double(Loops)/double(f64);
                 std::cerr << "long: " << std::setw(15) << lrate << " | fft: " << std::setw(15) << frate << std::endl;
-                //fp("%u %u %g %g\n", lbits, rbits, lrate, frate );
+                fp("%u %u %.15g %.15g\n", lbits, rbits, lrate, frate );
                 if(frate>=lrate)
                 {
-                    fp("%u %u\n", lbits, rbits);
+                    //fp("%u %u\n", lbits, rbits);
                 }
             }
         }
 
-#if 0
-        for(size_t i=0;i<Loops;++i)
-        {
-            const PROTO  lhs(ran.in<unsigned>(0,2000),ran);
-            const PROTO  rhs(ran.in<unsigned>(0,2000),ran);
-            const hPROTO LNG_Prod = PROTO::Mul(lhs,rhs,PROTO::LongMul,0);
-            const hPROTO FFT_Prod = PROTO::Mul(lhs,rhs,PROTO::FFT_Mul,0);
-            const PROTO &LongProduct = *LNG_Prod;
-            const PROTO &FFT_Product = *FFT_Prod;
-            Y_CHECK( PROTO::AreEqual(LongProduct,FFT_Product) );
-        }
-#endif
     }
 
 }
@@ -94,17 +92,19 @@ Y_UTEST(apex_perf)
 
     Random::Rand ran;
 
-    if(argc>1) Loops = unsigned( atol(argv[1]) );
+    if(argc>1) Loops   = unsigned( atol(argv[1]) );
     if(argc>2) MaxBits = unsigned( atol(argv[2]) );
 
-    TestProto<uint64_t,uint32_t>( ran );
-    TestProto<uint64_t,uint16_t>( ran );
-    TestProto<uint64_t,uint8_t>(  ran );
-
-    TestProto<uint32_t,uint16_t>( ran );
-    TestProto<uint32_t,uint8_t>(  ran );
 
     TestProto<uint16_t,uint8_t>(  ran );
+
+    TestProto<uint32_t,uint8_t>(  ran );
+    TestProto<uint32_t,uint16_t>( ran );
+
+
+    TestProto<uint64_t,uint8_t>(  ran );
+    TestProto<uint64_t,uint16_t>( ran );
+    TestProto<uint64_t,uint32_t>( ran );
 
 }
 Y_UDONE()
