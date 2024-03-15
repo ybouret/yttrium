@@ -114,10 +114,10 @@ namespace Yttrium
                 {
                     const size_t j1 = j+1;
                     const size_t i1 = i+1;
-                    Swap(data1[j],data1[i]);
-                    Swap(data1[j1],data1[i1]);
-                    Swap(data2[j],data2[i]);
-                    Swap(data2[j1],data2[i1]);
+                    Swap(data1[j],  data1[i]);
+                    Swap(data1[j1], data1[i1]);
+                    Swap(data2[j],  data2[i]);
+                    Swap(data2[j1], data2[i1]);
                 }
                 size_t m=size;
                 while (m >= 2 && j > m)
