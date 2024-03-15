@@ -9,6 +9,7 @@
 #include "y/concurrent/context.hpp"
 #include "y/system/rtti.hpp"
 #include "y/associative/little-endian-address.hpp"
+#include <cstdio>
 
 namespace Yttrium
 {
