@@ -60,7 +60,7 @@ add_test(eigen:diag     test-mkl eigen_diag)
 
 
 add_test(fit:samples    test-mkl fit_samples)
-add_test(fit:1d         test-mll fit_1d)
+add_test(fit:1d         test-mkl fit_1d)
 
 add_test(strain:filter test-mkl strain_filter)
 add_test(strain:arc    test-mkl strain_arc2d)
