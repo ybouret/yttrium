@@ -328,8 +328,8 @@ namespace Yttrium
                     // Methods
                     //
                     //__________________________________________________________
-                    inline void make(size_t) noexcept { acc.zset(); } //!< initialize, whatever the size
-                    inline void free()       noexcept { acc.zset(); } //!< set to zero
+                    inline void make(size_t) noexcept { acc.ldz(); } //!< initialize, whatever the size
+                    inline void free()       noexcept { acc.ldz(); } //!< set to zero
 
 
                     //! here, zero <=> empty
@@ -350,7 +350,7 @@ namespace Yttrium
 
                     //! return computed sum, reset
                     inline T    sum()
-                    { T res = acc; acc.zset(); return res; }
+                    { T res = acc; acc.ldz(); return res; }
 
                     //! add
                     inline Code & operator<<(const T &args)

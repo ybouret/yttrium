@@ -10,6 +10,21 @@ namespace Yttrium
 
     namespace Apex
     {
+
+        uint8_t Natural:: operator[](const size_t ibyte) const noexcept
+        {
+           // std::cerr << "apn[" << ibyte << "/" << bytes() << "]" << std::endl;
+            const Prototype &self    = CONST_PROTO(*this);
+            switch(self.bytes)
+            {
+                case 0: return 0x00;
+                default:
+                    break;
+            }
+            assert(ibyte<self.bytes);
+            return self.getByte(ibyte);
+        }
+
         size_t Natural:: serialize(OutputStream &fp) const
         {
             const Prototype &self    = CONST_PROTO(*this);

@@ -195,7 +195,7 @@ namespace Yttrium
 #include "proto/mul.hxx"
 
             //! force to zero, keep memory
-            inline void zset() noexcept
+            inline void ldz() noexcept
             {
                 Coerce(nbits) = 0;
                 Coerce(bytes) = 0;

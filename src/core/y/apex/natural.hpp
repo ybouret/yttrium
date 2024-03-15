@@ -65,10 +65,11 @@ namespace Yttrium
             void           appendDec( IO::Chars & ) const; //!< convert to decimal chars
             size_t         bytes()         const noexcept; //!< exact number of bytes
             size_t         bits()          const noexcept; //!< exact number of bit
+            void           ldz()                 noexcept; //!< setting to zero, keeping memory, no exception
             void           xch(Natural &)        noexcept; //!< no-throw exchange
             uint64_t       u64()           const noexcept; //!< get least significant bits
             SignType       getSign()       const noexcept; //!< __Zero__ or Positive
-            void           zset()                noexcept; //!< setting to zero, keeping memory, no exception
+            uint8_t        operator[](const size_t ibyte) const noexcept;
 
             //__________________________________________________________________
             //

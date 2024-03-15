@@ -135,10 +135,10 @@ Number(), numer(n), denom(d)                    \
         }
 
 
-        void Rational:: zset() noexcept
+        void Rational:: ldz() noexcept
         {
             static const uint64_t _1(1);
-            Coerce(numer).zset();
+            Coerce(numer).ldz();
             Coerce(denom) = _1;
         }
 

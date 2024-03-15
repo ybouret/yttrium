@@ -70,9 +70,9 @@ namespace Yttrium
             {
                 for(size_t i=dimensions;i>0;--i)
                 {
-                    Coerce( (*this)[i] ).zset();
+                    Coerce( (*this)[i] ).ldz();
                 }
-                Coerce(norm2).zset();
+                Coerce(norm2).ldz();
             }
 
 

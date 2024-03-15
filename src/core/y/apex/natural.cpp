@@ -104,9 +104,9 @@ namespace Yttrium
             return CONST_PROTO(*this).nbits;
         }
 
-        void Natural:: zset() noexcept
+        void Natural:: ldz() noexcept
         {
-            PROTO(*this).zset();
+            PROTO(*this).ldz();
         }
 
 
