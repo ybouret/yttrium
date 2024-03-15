@@ -21,6 +21,7 @@ namespace Yttrium
 {
     static double Duration = 0.05;
 
+#if 0
     //! bit reversal data[1..2*size]
     template <typename T>
     static inline
@@ -79,6 +80,7 @@ namespace Yttrium
         return n;
     }
 
+#endif
     //static inline Hexadecimal B2H(const uint8_t x) { return Hexadecimal(x); }
 
     template <typename T>
@@ -103,13 +105,13 @@ namespace Yttrium
 
             {
                 const uint64_t mark = WallTime::Ticks();
-                BR(arr.legacy(),size);
+                XBitRev::Run_(arr.legacy(),size);
                 tmxA += WallTime::Ticks()-mark;
             }
 
             {
                 const uint64_t mark = WallTime::Ticks();
-                BR2(brr.legacy(),size);
+                XBitRev::Run(brr.legacy(),size);
                 tmxB += WallTime::Ticks()-mark;
             }
 
