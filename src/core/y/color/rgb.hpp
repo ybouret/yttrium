@@ -9,16 +9,31 @@ namespace Yttrium
 {
     namespace Color
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! RGB color
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class RGB
         {
         public:
-            inline ~RGB()                                noexcept {}
-            inline  RGB()                                noexcept : r(0), g(0), b(0) {}
-            inline  RGB(const T R, const T G, const T B) noexcept : r(R), g(G), b(B){}
-            inline  RGB(const RGB &c)                    noexcept : r(c.r), g(c.g), b(c.b) {}
-            inline  RGB & operator=(const RGB &c)        noexcept { r = c.r; g=c.g; b=c.b; return *this; }
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            inline ~RGB()                                noexcept {}                                        //!< cleanup
+            inline  RGB()                                noexcept : r(0), g(0), b(0) {}                     //!< zero
+            inline  RGB(const T R, const T G, const T B) noexcept : r(R), g(G), b(B) {}                     //!< setup
+            inline  RGB(const RGB &c)                    noexcept : r(c.r), g(c.g), b(c.b) {}               //!< copy
+            inline  RGB & operator=(const RGB &c)        noexcept { r = c.r; g=c.g; b=c.b; return *this; }  //!< assign
 
+            //! display
             inline friend std::ostream & operator<<(std::ostream &os, const RGB &c)
             {
                 os << '['; Print<T>::Out(os,c.r);
@@ -29,9 +44,15 @@ namespace Yttrium
             }
 
             
-            T r;
-            T g;
-            T b;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            T r; //!< red
+            T g; //!< green
+            T b; //!< blue
         };
     }
 

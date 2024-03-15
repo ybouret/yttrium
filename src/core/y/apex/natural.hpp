@@ -61,15 +61,15 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void           appendHex( IO::Chars & ) const; //!< convert to hexadecimal chars
-            void           appendDec( IO::Chars & ) const; //!< convert to decimal chars
-            size_t         bytes()         const noexcept; //!< exact number of bytes
-            size_t         bits()          const noexcept; //!< exact number of bit
-            void           ldz()                 noexcept; //!< setting to zero, keeping memory, no exception
-            void           xch(Natural &)        noexcept; //!< no-throw exchange
-            uint64_t       u64()           const noexcept; //!< get least significant bits
-            SignType       getSign()       const noexcept; //!< __Zero__ or Positive
-            uint8_t        operator[](const size_t ibyte) const noexcept;
+            void           appendHex( IO::Chars & )            const; //!< convert to hexadecimal chars
+            void           appendDec( IO::Chars & )            const; //!< convert to decimal chars
+            size_t         bytes()                    const noexcept; //!< exact number of bytes
+            size_t         bits()                     const noexcept; //!< exact number of bit
+            void           ldz()                            noexcept; //!< setting to zero, keeping memory, no exception
+            void           xch(Natural &)                   noexcept; //!< no-throw exchange
+            uint64_t       u64()                      const noexcept; //!< get least significant bits
+            SignType       getSign()                  const noexcept; //!< __Zero__ or Positive
+            uint8_t        operator[](const size_t i) const noexcept; //!< access byte[i], byte[0] always defined
 
             //__________________________________________________________________
             //

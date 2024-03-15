@@ -22,22 +22,45 @@ namespace Yttrium
         class ZeroFlux
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             typedef unit_t (ZeroFlux::*Get)(const unit_t) const; //!< alias
 
-            ZeroFlux(const unit_t dim) noexcept;
-            ZeroFlux(const ZeroFlux &) noexcept;
-            ~ZeroFlux()                noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            ZeroFlux(const unit_t dim) noexcept; //!< setup dim>0
+            ZeroFlux(const ZeroFlux &) noexcept; //!< copy
+            ~ZeroFlux()                noexcept; //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! get virtual index to produce null flux operator
             unit_t operator[](const unit_t indx) const noexcept;
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
             const unit_t size; //!< size>=1
             const unit_t symm; //!< 2*(size-1)
         private:
             Get const    proc;
-
-        private:
             Y_DISABLE_ASSIGN(ZeroFlux);
-
             unit_t Get0(const unit_t) const noexcept;
             unit_t GetN(const unit_t) const noexcept;
         };

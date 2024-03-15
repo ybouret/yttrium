@@ -4,8 +4,10 @@
 #include "y/type/utils.hpp"
 #include "y/container/cxx/array.hpp"
 #include "y/fft/fft.hpp"
+#include "y/text/hexadecimal.hpp"
 
 using namespace Yttrium;
+
 
 Y_UTEST(fft_apn)
 {
@@ -59,6 +61,19 @@ Y_UTEST(fft_apn)
     }
 
     std::cerr << b << std::endl;
+    CxxArray<uint8_t> w(m+n);
+    if(m+n>0)
+    {
+        w[1]=(unsigned char) cy;
+        for (size_t j=2;j<=n+m;j++)
+            w[j]=(unsigned char) b[j-1];
+    }
+
+    for(size_t i=1;i<=m+n;++i)
+    {
+        std::cerr << Hexadecimal(w[i]) << " ";
+    }
+    std::cerr << std::endl;
 
 
 }
