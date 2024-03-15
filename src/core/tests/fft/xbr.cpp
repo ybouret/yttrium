@@ -9,6 +9,9 @@
 #include "y/fft/fft.hpp"
 #include "y/system/rtti.hpp"
 #include "../main.hpp"
+#include "y/text/hexadecimal.hpp"
+#include "y/mkl/v2d.hpp"
+#include "y/sequence/vector.hpp"
 
 #include <cstring>
 
@@ -51,16 +54,19 @@ namespace Yttrium
     static inline
     size_t BR2(T data[], const size_t size)
     {
+        static const size_t Required = 2 * sizeof(T);
+        void               *myBuffer[ Y_WORDS_GEQ(Required) ];
         assert(IsPowerOfTwo(size));
         assert(0!=data);
         const size_t n = (size<<1);
+
         for(size_t j=1,i=1;i<n;i+=2)
         {
             if(j>i)
             {
-                const T temp[2] = { data[i], data[i+1] };
-                memcpy(&data[i],&data[j],2*sizeof(T));
-                memcpy(&data[j],&temp[0],2*sizeof(T));
+                memcpy(myBuffer,&data[i],Required);
+                memcpy(&data[i],&data[j],Required);
+                memcpy(&data[j],myBuffer,Required);
             }
             size_t m=size;
             while (m >= 2 && j > m)
@@ -73,6 +79,7 @@ namespace Yttrium
         return n;
     }
 
+    //static inline Hexadecimal B2H(const uint8_t x) { return Hexadecimal(x); }
 
     template <typename T>
     static inline
@@ -91,6 +98,7 @@ namespace Yttrium
             ++cycles;
             for(size_t i=arr.size();i>0;--i)
                 arr[i] = brr[i] = Bring<T>::Get(ran);
+
             Y_ASSERT( 0 == memcmp( &arr[1], &brr[1], bytes) );
 
             {
@@ -104,6 +112,24 @@ namespace Yttrium
                 BR2(brr.legacy(),size);
                 tmxB += WallTime::Ticks()-mark;
             }
+
+            if(0!=memcmp( &arr[1], &brr[1], bytes) )
+            {
+                for(size_t i=1;i<=arr.size();++i)
+                {
+                    std::cerr << arr[i] << "/" << brr[i] << std::endl;
+                }
+                const uint8_t * const p = (uint8_t*) &arr[1];
+                const uint8_t * const q = (uint8_t*) &brr[1];
+                for(size_t i=0;i<bytes;++i)
+                {
+                    std::cerr << "\t" << Hexadecimal(p[i]) << "/" << Hexadecimal(q[i]);
+                    if(p[i]!=q[i]) std::cerr << " <--";
+                    std::cerr << std::endl;
+                }
+
+            }
+
             Y_ASSERT( 0 == memcmp( &arr[1], &brr[1], bytes) );
 
 
@@ -118,19 +144,20 @@ namespace Yttrium
         std::cerr << std::endl;
     }
 
+    typedef V2D<uint16_t> XBR;
+
     static inline
-    size_t CountXBR(const size_t size, uint64_t &imax)
+    size_t CountXBR(const uint16_t size, Vector<XBR> &xbr)
     {
         assert(IsPowerOfTwo(size));
-
-        size_t       count = 0;
+        xbr.free();
         const size_t n     = (size<<1);
-        for(size_t j=1,i=1;i<n;i+=2)
+        for(uint16_t j=1,i=1;i<n;i+=2)
         {
             if(j>i)
             {
-                count +=2;
-                imax = Max(imax,uint64_t(j+1));
+                const XBR br(i,j);
+                xbr << br;
             }
             size_t m=size;
             while (m >= 2 && j > m)
@@ -140,7 +167,7 @@ namespace Yttrium
             }
             j += m;
         }
-        return count;
+        return xbr.size();
     }
 
 
@@ -191,13 +218,39 @@ Y_UTEST(fft_xbr)
     if(argc>1) Duration = atof(argv[1]);
 
     Random::Rand ran;
-    for(unsigned shift=2;shift<=10;++shift)
+    for(unsigned shift=0;shift<=10;++shift)
     {
         const size_t size = 1 << shift;
         std::cerr << "size=" << size << std::endl;
         TestXBR<float>(size,ran);
         TestXBR<double>(size,ran);
         TestXBR<long double>(size,ran);
+
+    }
+}
+Y_UDONE()
+
+Y_UTEST(fft_xbr_build)
+{
+    Vector<XBR>  xbr;
+    for(unsigned shift=0;shift<=10;++shift)
+    {
+        const uint16_t size = 1 << shift;
+        const uint16_t nbr = CountXBR(size,xbr);
+        const size_t bytes = nbr * sizeof(XBR);
+        std::cerr << "size=" << size << " => xch=" << nbr << ", bytes=" << bytes << std::endl;
+        std::cerr << xbr << std::endl;
+
+        std::cerr << std::endl;
+        if(nbr<=0) continue;
+        
+        const String sourceName = Formatted::Get("xbr%u.cpp",size);
+        //std::cerr << "-> " << sourceName << std::endl;
+        OutputFile   source(sourceName);
+        source << "#include \"y/config/starting.cpp\"\n";
+        source << "namespace Yttrium {\n";
+
+        source << "}\n";
     }
 }
 Y_UDONE()
