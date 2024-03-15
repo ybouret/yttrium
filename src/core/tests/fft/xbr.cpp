@@ -7,8 +7,8 @@
 #include "y/stream/libc/output.hpp"
 #include "y/container/cxx/array.hpp"
 #include "y/fft/fft.hpp"
-#include "y/random/fill.hpp"
 #include "y/system/rtti.hpp"
+#include "../main.hpp"
 
 #include <cstring>
 
@@ -58,7 +58,7 @@ namespace Yttrium
         {
             if(j>i)
             {
-                const T temp[2] = { data[i], data[i+1] }; assert(2*sizeof(T)==sizeof(temp));
+                const T temp[2] = { data[i], data[i+1] };
                 memcpy(&data[i],&data[j],2*sizeof(T));
                 memcpy(&data[j],&temp[0],2*sizeof(T));
             }
@@ -89,8 +89,8 @@ namespace Yttrium
         (std::cerr << " (*) " << std::setw(16) << id << ":").flush();
         do {
             ++cycles;
-            Random::Fill::Block(&arr[1],bytes,ran,1,255);
-            memcpy( &brr[1], &arr[1], bytes);
+            for(size_t i=arr.size();i>0;--i)
+                arr[i] = brr[i] = Bring<T>::Get(ran);
             Y_ASSERT( 0 == memcmp( &arr[1], &brr[1], bytes) );
 
             {
