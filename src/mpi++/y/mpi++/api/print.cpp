@@ -13,7 +13,8 @@ namespace Yttrium
 
     static inline void OutputStringTo(FILE *fp, const String &s)
     {
-        (void) fwrite(s.ro_addr(), 1, s.measure(), fp);
+        const size_t written = fwrite(s.ro_addr(), 1, s.measure(), fp);
+        (void) written;
     }
 
 
