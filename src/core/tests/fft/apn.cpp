@@ -45,7 +45,21 @@ Y_UTEST(fft_apn)
     }
     FFT::ReverseReal(&b[1]-1,nn);
     std::cerr << b << std::endl;
-    
+
+    static const double RX = 256.0;
+    const size_t        nh = nn>>1;
+
+    double cy=0.0;
+    for(size_t j=nn;j>=1;j--)
+    {
+        const double t =  floor(b[j]/nh+cy+0.5);
+        cy=(unsigned long) (t/RX);
+        std::cerr << "t=" << t << ", cy=" << cy << std::endl;
+        b[j]=uint8_t(t-cy*RX);
+    }
+
+    std::cerr << b << std::endl;
+
 
 }
 Y_UDONE()
