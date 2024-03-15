@@ -2,6 +2,7 @@
 #include "y/mpi++/api.hpp"
 #include "y/system/exception.hpp"
 #include <cstdarg>
+#include <cstdio>
 
 namespace Yttrium
 {
