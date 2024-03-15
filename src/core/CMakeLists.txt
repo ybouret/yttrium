@@ -68,6 +68,7 @@ container/cxx
 container/algo
 string
 fft
+fft/xbitrev
 apex
 apex/m
 apex/n

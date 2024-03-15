@@ -5,6 +5,7 @@
 #include "y/random/bits.hpp"
 #include "y/text/hexadecimal.hpp"
 #include "y/type/utils.hpp"
+#include "y/mkl/complex.hpp"
 
 using namespace Yttrium;
 

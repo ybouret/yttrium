@@ -3,8 +3,7 @@
 #ifndef Y_FFT_Included
 #define Y_FFT_Included 1
 
-#include "y/mkl/complex.hpp"
-#include "y/calculus/base2.hpp"
+#include "y/fft/xbitrev.hpp"
 #include "y/calculus/xlog2.hpp"
 
 
@@ -68,7 +67,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
 
-
+#if 0
         //______________________________________________________________________
         //
         //! bit reversal of data[1..size*2]
@@ -96,6 +95,7 @@ namespace Yttrium
             }
             return n;
         }
+#endif
 
         //______________________________________________________________________
         //
@@ -413,7 +413,7 @@ data[i4] = -h1i+wr*h2i+wi*h2r;         \
             assert(0!=data); assert(IsPowerOfTwo(size));
             typedef typename LongTypeFor<T>::Type REAL;
 
-            const size_t n    = BitReversal(data,size);
+            const size_t n    = XBitRev::Run(data,size);
             const REAL  *saux = Table<REAL>::Minus2SinSq;
             size_t mmax=2;
             while(n>mmax)

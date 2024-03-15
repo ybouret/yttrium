@@ -5,6 +5,7 @@
 #include "y/type/utils.hpp"
 #include "y/memory/buffer/of.hpp"
 #include "y/container/cxx/array.hpp"
+#include <cmath>
 
 using namespace Yttrium;
 

@@ -5,6 +5,7 @@
 #include "y/container/cxx/array.hpp"
 #include "y/fft/fft.hpp"
 #include "y/text/hexadecimal.hpp"
+#include <cmath>
 
 using namespace Yttrium;
 

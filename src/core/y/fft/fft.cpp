@@ -1,5 +1,6 @@
 #include "y/fft/fft.hpp"
 #include "y/type/utils.hpp"
+#include <cmath>
 
 namespace Yttrium
 {

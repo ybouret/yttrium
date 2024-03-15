@@ -2,7 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/type/utils.hpp"
 #include "y/memory/buffer/of.hpp"
-
+#include "y/mkl/complex.hpp"
 #include <cstring>
 
 using namespace Yttrium;
@@ -134,8 +134,8 @@ Y_UTEST(fft1)
     for(unsigned shift=00; shift<=20; ++shift)
     {
         checkDualFFT<float>(shift);
-        //checkDualFFT<double>(shift);
-        //checkDualFFT<long double>(shift);
+        checkDualFFT<double>(shift);
+        checkDualFFT<long double>(shift);
     }
 
 
