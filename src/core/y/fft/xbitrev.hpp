@@ -15,6 +15,9 @@
 #include "y/fft/xbitrev/xbr128.hpp"
 #include "y/fft/xbitrev/xbr256.hpp"
 #include "y/fft/xbitrev/xbr512.hpp"
+#include "y/fft/xbitrev/xbr1024.hpp"
+#include "y/fft/xbitrev/xbr2048.hpp"
+#include "y/fft/xbitrev/xbr4096.hpp"
 
 namespace Yttrium
 {
@@ -83,6 +86,9 @@ namespace Yttrium
                     Y_XBITREV(128);
                     Y_XBITREV(256);
                     Y_XBITREV(512);
+                    Y_XBITREV(1024);
+                    Y_XBITREV(2048);
+                    Y_XBITREV(4096);
 
 
                 default: {

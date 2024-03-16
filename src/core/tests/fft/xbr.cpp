@@ -173,46 +173,10 @@ namespace Yttrium
     }
 
 
-
-
-#if 0
-    template <typename T>
-    static inline void TestXBR(const unsigned shift)
-    {
-        const size_t size = 1 << shift;
-
-        CxxArray<T> source(size*2);
-        for(size_t i=1;i<=size;++i) source[i] = T(i);
-
-        {
-            CxxArray<T> normal(source); Y_ASSERT(0==memcmp(&source[1],&normal[1],size*sizeof(T)));
-            CxxArray<T> optimz(source); Y_ASSERT(0==memcmp(&source[1],&optimz[1],size*sizeof(T)));
-            Y_ASSERT(FFT::BitReversal(  &normal[1]-1, size) == FFT::XBitReversal( &optimz[1]-1, size));
-            Y_ASSERT(0==memcmp(&optimz[1],&normal[1],size*sizeof(T)));
-        }
-
-        T *data= &source[1] - 1;
-        Timing tmx;
-        (std::cerr << std::setw(8) << size << " | Normal: ").flush();
-        Y_Timing(tmx, FFT::BitReversal(data,size), Duration);
-        const uint64_t rate = tmx.speed();
-        (std::cerr << HumanReadable(rate) << "Op/s").flush();
-        (std::cerr << std::setw(8) << size << " | Optimz: ").flush();
-        Y_Timing(tmx, FFT::XBitReversal(data,size), Duration);
-        const uint64_t xrate = tmx.speed();
-        (std::cerr << HumanReadable(xrate) << "Op/s").flush();
-        const double speedUp = double(xrate)/double(rate);
-        std::cerr << " | speedUp = " << speedUp;
-
-        std::cerr << std::endl;
-
-
-    }
-#endif
-
-
 }
 
+
+#define SHOW(SIZE) std::cerr << "#" << SIZE << " = " << sizeof(XBR##SIZE)/sizeof( XBR##SIZE  [0]) << " => " << sizeof(XBR##SIZE) << " bytes" << std::endl
 
 Y_UTEST(fft_xbr)
 {
@@ -227,8 +191,21 @@ Y_UTEST(fft_xbr)
         TestXBR<float>(size,ran);
         TestXBR<double>(size,ran);
         TestXBR<long double>(size,ran);
-
     }
+
+    SHOW(4);
+    SHOW(8);
+    SHOW(16);
+    SHOW(32);
+    SHOW(64);
+    SHOW(128);
+    SHOW(256);
+    SHOW(512);
+    SHOW(1024);
+    SHOW(2048);
+    SHOW(4096);
+
+
 }
 Y_UDONE()
 
@@ -241,13 +218,13 @@ static inline void OutputXBR(const XBR &p, OutputStream &fp)
 Y_UTEST(fft_xbr_build)
 {
     Vector<XBR>  xbr;
-    for(unsigned shift=0;shift<=10;++shift)
+    for(unsigned shift=0;shift<=12;++shift)
     {
         const uint16_t size = 1 << shift;
         const uint16_t nbr = CountXBR(size,xbr);
         const size_t bytes = nbr * sizeof(XBR);
         std::cerr << "size=" << size << " => xch=" << nbr << ", bytes=" << bytes << std::endl;
-        std::cerr << xbr << std::endl;
+        //std::cerr << xbr << std::endl;
 
         std::cerr << std::endl;
         if(nbr<=0) continue;
