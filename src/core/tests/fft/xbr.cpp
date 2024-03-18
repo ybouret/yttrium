@@ -218,7 +218,7 @@ static inline void OutputXBR(const XBR &p, OutputStream &fp)
 Y_UTEST(fft_xbr_build)
 {
     Vector<XBR>  xbr;
-    for(unsigned shift=0;shift<=12;++shift)
+    for(unsigned shift=0;shift<=14;++shift)
     {
         const uint16_t size = 1 << shift;
         const uint16_t nbr = CountXBR(size,xbr);
