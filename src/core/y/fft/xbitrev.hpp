@@ -21,6 +21,14 @@
 
 namespace Yttrium
 {
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! inline code for precomputed n
+    //
+    //
+    //__________________________________________________________________________
 #define Y_XBITREV_CODE() \
 /**/ static const size_t Required = 2 * sizeof(T);     \
 /**/ void               *tmp[ Y_WORDS_GEQ(Required) ]; \
@@ -45,17 +53,30 @@ namespace Yttrium
 /**/  return n
 
 
-
+    //__________________________________________________________________________
+    //
+    //
+    //! helper to call inline bit reversal
+    //
+    //__________________________________________________________________________
 #define Y_XBITREV(SIZE) case SIZE: Call<T,sizeof(XBR##SIZE)/sizeof( XBR##SIZE  [0])>(data,(const Info *)&XBR##SIZE[0]); return n;
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Bit Reversal Algorithms
+    //
+    //
+    //__________________________________________________________________________
     struct XBitRev
     {
 
         //______________________________________________________________________
         //
-        //! bit reversal of data[1..size*2]
+        //! legacy bit reversal of data[1..size*2]
         /**
-         \param data[1..size*2]
+         \param data [1..size*2], (re,im)[size]
          \param size a power of two
          */
         //______________________________________________________________________
@@ -70,7 +91,14 @@ namespace Yttrium
         }
 
 
-
+        //______________________________________________________________________
+        //
+        //!  bit reversal of data[1..size*2] with precomputed tables
+        /**
+         \param data [1..size*2], (re,im)[size]
+         \param size a power of two
+         */
+        //______________________________________________________________________
         template <typename T> static inline
         size_t Run(T data[], const size_t size) noexcept
         {
@@ -101,6 +129,64 @@ namespace Yttrium
             return n;
         }
 
+        //______________________________________________________________________
+        //
+        //! legacy bit reversal of data1 and data2
+        /**
+         \param data1 [1..size*2], (re,im)[size]
+         \param data2 [1..size*2], (re,im)[size]
+         \param size a power of two
+         */
+        //______________________________________________________________________
+        template <typename T> static inline
+        size_t Run_(T data1[], T data2[], const size_t size) noexcept
+        {
+            assert(0!=data1);
+            assert(0!=data2);
+            assert(IsPowerOfTwo(size));
+
+            const size_t n = (size<<1);
+            static const size_t Required = 2 * sizeof(T);
+            void               *tmp[ Y_WORDS_GEQ(Required) ];
+
+            for(size_t j=1,i=1;i<n;i+=2)
+            {
+                if(j>i)
+                {
+                    {
+                        T * const lhs = &data1[i];
+                        T * const rhs = &data1[j];
+                        memcpy(tmp,lhs,Required);
+                        memcpy(lhs,rhs,Required);
+                        memcpy(rhs,tmp,Required);
+                    }
+                    {
+                        T * const lhs = &data2[i];
+                        T * const rhs = &data2[j];
+                        memcpy(tmp,lhs,Required);
+                        memcpy(lhs,rhs,Required);
+                        memcpy(rhs,tmp,Required);
+                    }
+                }
+                size_t m=size;
+                while (m >= 2 && j > m)
+                {
+                    j -= m;
+                    m >>= 1;
+                }
+                j += m;
+            }
+            return n;
+        }
+        //______________________________________________________________________
+        //
+        //! bit reversal of data1 and data2 with prcomputed tables
+        /**
+         \param data1 [1..size*2], (re,im)[size]
+         \param data2 [1..size*2], (re,im)[size]
+         \param size a power of two
+         */
+        //______________________________________________________________________
         template <typename T> static inline
         size_t Run(T data1[], T data2[], const size_t size) noexcept
         {

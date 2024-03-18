@@ -80,7 +80,7 @@ namespace
 
 Y_UTEST(fft2)
 {
-    for(unsigned shift=0;shift<=10;++shift)
+    for(unsigned shift=0;shift<=19;++shift)
     {
         CheckFFT2<float>(shift);
         CheckFFT2<double>(shift);

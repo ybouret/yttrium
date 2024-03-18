@@ -70,35 +70,6 @@ namespace Yttrium
 #if 0
         //______________________________________________________________________
         //
-        //! bit reversal of data[1..size*2]
-        //______________________________________________________________________
-        template <typename T> static inline
-        size_t BitReversal(T data[], const size_t size) noexcept
-        {
-            assert(IsPowerOfTwo(size));
-            assert(0!=data);
-            const size_t n = (size<<1);
-            for(size_t j=1,i=1;i<n;i+=2)
-            {
-                if(j>i)
-                {
-                    Swap(data[j],data[i]);
-                    Swap(data[j+1],data[i+1]);
-                }
-                size_t m=size;
-                while (m >= 2 && j > m)
-                {
-                    j -= m;
-                    m >>= 1;
-                }
-                j += m;
-            }
-            return n;
-        }
-#endif
-
-        //______________________________________________________________________
-        //
         //! bit reversal of BOTH data1[1..size*2] AND data2[1..size*2]
         //______________________________________________________________________
         template <typename T> static inline
@@ -129,7 +100,7 @@ namespace Yttrium
             }
             return n;
         }
-
+#endif
 
 
 
@@ -458,7 +429,7 @@ data[i4] = -h1i+wr*h2i+wi*h2r;         \
             assert(0!=data1); assert(0!=data2); assert(IsPowerOfTwo(size));
             typedef typename LongTypeFor<T>::Type REAL;
 
-            const size_t n    = BitReversal(data1,data2,size);
+            const size_t n    = XBitRev::Run_(data1,data2,size);
             const REAL  *saux = Table<REAL>::Minus2SinSq;
             size_t mmax=2;
             while(n>mmax)
@@ -499,60 +470,7 @@ data[i4] = -h1i+wr*h2i+wi*h2r;         \
                 mmax=istep;
             }
         }
-
-
-
-
-#if 0
-        //______________________________________________________________________
-        //
-        //! Transform data[1..n=size*2]
-        //______________________________________________________________________
-        template <typename T>
-        static inline void Transform(T *                           data,
-                                     const size_t                  size,
-                                     typename LongTypeFor<T>::Type myPI) noexcept
-        {
-            assert(0!=data);
-            assert(IsPowerOfTwo(size));
-            typedef typename LongTypeFor<T>::Type REAL;
-            static  const    REAL half(0.5);
-            static  const    REAL two(2);
-
-            const size_t n = BitReversal(data,size);
-            size_t mmax=2;
-            while(n>mmax)
-            {
-                const size_t istep = (mmax << 1);
-                //const REAL   theta = (myPI/istep);
-                
-                const REAL   theta = (2*myPI/mmax);
-                REAL         wpi   = std::sin(theta);      // std::cerr << "pi/" << (mmax/2) <<  " = " << theta << std::endl;
-                REAL         wtemp = std::sin(half*theta); // std::cerr << "pi/" << (mmax)   << std::endl;
-                REAL         wpr   = -two*wtemp*wtemp;
-                REAL         wr    = 1.0;
-                REAL         wi    = 0.0;
-                for(size_t m=1;m<mmax;m+=2)
-                {
-                    for(size_t i=m;i<=n;i+=istep)
-                    {
-                        const size_t i1    = i+1;
-                        const size_t j     = i+mmax;
-                        const size_t j1    = j+1;
-                        const T      tempr = wr*data[j] -wi*data[j1];
-                        const T      tempi = wr*data[j1]+wi*data[j];
-                        data[j]   = data[i] -tempr;
-                        data[j1]  = data[i1]-tempi;
-                        data[i]  += tempr;
-                        data[i1] += tempi;
-                    }
-                    wr=(wtemp=wr)*wpr-wi*wpi+wr;
-                    wi=wi*wpr+wtemp*wpi+wi;
-                }
-                mmax=istep;
-            }
-        }
-#endif
+        
     };
 
 #if !defined(_MSC_VER)
