@@ -39,9 +39,7 @@ void FillArray(double         * const batch,
 
 
 
-
-
-static inline Hexadecimal D2H(const double x)
+static inline Hexadecimal D2H(const double x) noexcept
 {
     return Hexadecimal( uint8_t(x) );
 }
