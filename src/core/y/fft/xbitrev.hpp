@@ -21,6 +21,31 @@
 
 namespace Yttrium
 {
+#define Y_XBITREV_CODE() \
+/**/ static const size_t Required = 2 * sizeof(T);     \
+/**/ void               *tmp[ Y_WORDS_GEQ(Required) ]; \
+/**/  for(size_t j=1,i=1;i<n;i+=2)                     \
+/**/  {                                                \
+/**/      if(j>i)                                      \
+/**/      {                                            \
+/**/          T * const lhs = &data[i];                \
+/**/          T * const rhs = &data[j];                \
+/**/          memcpy(tmp,lhs,Required);                \
+/**/          memcpy(lhs,rhs,Required);                \
+/**/          memcpy(rhs,tmp,Required);                \
+/**/      }                                            \
+/**/      size_t m=size;                               \
+/**/      while (m >= 2 && j > m)                      \
+/**/      {                                            \
+/**/          j -= m;                                  \
+/**/          m >>= 1;                                 \
+/**/      }                                            \
+/**/      j += m;                                      \
+/**/  }                                                \
+/**/  return n
+
+
+
 #define Y_XBITREV(SIZE) case SIZE: Call<T,sizeof(XBR##SIZE)/sizeof( XBR##SIZE  [0])>(data,(const Info *)&XBR##SIZE[0]); return n;
 
     struct XBitRev
@@ -37,31 +62,11 @@ namespace Yttrium
         template <typename T> static inline
         size_t Run_(T data[], const size_t size) noexcept
         {
-            static const size_t Required = 2 * sizeof(T);
-            void               *tmp[ Y_WORDS_GEQ(Required) ];
-
             assert(IsPowerOfTwo(size));
             assert(0!=data);
+
             const size_t n = (size<<1);
-            for(size_t j=1,i=1;i<n;i+=2)
-            {
-                if(j>i)
-                {
-                    T * const lhs = &data[i];
-                    T * const rhs = &data[j];
-                    memcpy(tmp,lhs,Required);
-                    memcpy(lhs,rhs,Required);
-                    memcpy(rhs,tmp,Required);
-                }
-                size_t m=size;
-                while (m >= 2 && j > m)
-                {
-                    j -= m;
-                    m >>= 1;
-                }
-                j += m;
-            }
-            return n;
+            Y_XBITREV_CODE();
         }
 
 
@@ -76,8 +81,7 @@ namespace Yttrium
             switch(size)
             {
                 case 0:
-                case 2:
-                    return n;
+                case 2: return n;
 
                     Y_XBITREV(4);
                     Y_XBITREV(8);
@@ -91,31 +95,9 @@ namespace Yttrium
                     Y_XBITREV(2048);
                     Y_XBITREV(4096);
 
-
-                default: {
-                    static const size_t Required = 2 * sizeof(T);
-                    void               *tmp[ Y_WORDS_GEQ(Required) ];
-
-                    for(size_t j=1,i=1;i<n;i+=2)
-                    {
-                        if(j>i)
-                        {
-                            T * const lhs = &data[i];
-                            T * const rhs = &data[j];
-                            memcpy(tmp,lhs,Required);
-                            memcpy(lhs,rhs,Required);
-                            memcpy(rhs,tmp,Required);
-                        }
-                        size_t m=size;
-                        while (m >= 2 && j > m)
-                        {
-                            j -= m;
-                            m >>= 1;
-                        }
-                        j += m;
-                    }
-                } break;
+                default: { Y_XBITREV_CODE(); }
             }
+
             return n;
         }
 
