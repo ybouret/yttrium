@@ -34,7 +34,7 @@ namespace Yttrium
         //! helper to create bytes
         Y_SHALLOW_DECL(AsByte);
 
-        
+
         namespace Nexus
         {
             //__________________________________________________________________
@@ -86,25 +86,29 @@ namespace Yttrium
                                            const size_t words,
                                            const size_t WordSize,
                                            const size_t blockWords);
-                
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Proto);
             };
         }
 
-
+        //______________________________________________________________________
+        //
+        //
         //! in place data conversion
+        //
+        //______________________________________________________________________
         struct MakeBytes
         {
-            //! return &c
-            static inline const uint8_t *From( uint8_t &c ) noexcept
+            //! return big-endian &c
+            static inline const uint8_t *BE( uint8_t &c ) noexcept
             {
                 return &c;
             }
 
-            //! return rewritten &c
-            static inline const uint8_t *From( uint16_t &c ) noexcept
+            //! return big-endian &c
+            static inline const uint8_t *BE( uint16_t &c ) noexcept
             {
                 const uint8_t b0 = uint8_t(c);
                 const uint8_t b1 = uint8_t(c>>8);
@@ -114,8 +118,8 @@ namespace Yttrium
                 return p;
             }
 
-            //! return rewritten &c
-            static inline const uint8_t *From( uint32_t &c ) noexcept
+            //! return big-endian &c
+            static inline const uint8_t *BE( uint32_t &c ) noexcept
             {
                 const uint8_t b0 = uint8_t(c);
                 const uint8_t b1 = uint8_t(c>>8);
@@ -126,6 +130,39 @@ namespace Yttrium
                 p[1] = b1;
                 p[2] = b2;
                 p[3] = b3;
+                return p;
+            }
+
+
+            //! return little-endian &c
+            static inline const uint8_t *LE( uint8_t &c ) noexcept
+            {
+                return &c;
+            }
+
+            //! return little-endian &c
+            static inline const uint8_t *LE( uint16_t &c ) noexcept
+            {
+                const uint8_t b0 = uint8_t(c);
+                const uint8_t b1 = uint8_t(c>>8);
+                uint8_t      *p  = (uint8_t *)&c;
+                p[1] = b0;
+                p[0] = b1;
+                return p;
+            }
+
+            //! return little-endian &c
+            static inline const uint8_t *LE( uint32_t &c ) noexcept
+            {
+                const uint8_t b0 = uint8_t(c);
+                const uint8_t b1 = uint8_t(c>>8);
+                const uint8_t b2 = uint8_t(c>>16);
+                const uint8_t b3 = uint8_t(c>>24);
+                uint8_t      *p  = (uint8_t *)&c;
+                p[3] = b0;
+                p[2] = b1;
+                p[1] = b2;
+                p[0] = b3;
                 return p;
             }
 
@@ -163,7 +200,7 @@ namespace Yttrium
             static  const CIntType                       Radix    = CIntType(WordMaxi) + 1;         //!< alias
             static  const CoreType                       WordMask = WordMaxi;                       //!< alias
             typedef AutoPtr<Proto>                       Pointer;                                   //!< alias
-            
+
             //__________________________________________________________________
             //
             //! multiplication algorithm prototype
@@ -203,7 +240,7 @@ namespace Yttrium
             }
 
 
-            
+
 
         private:
             Y_DISABLE_ASSIGN(Proto);

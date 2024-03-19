@@ -31,7 +31,7 @@ void FillArray(double         * const batch,
     for(size_t i=nWords;i>0;--i)
     {
         WordType              W = *(w++);
-        const uint8_t * const B = MakeBytes::From(W);
+        const uint8_t * const B = MakeBytes::BE(W);
         for(size_t k=0;k<WordSize;++k)
             *(b--) = B[k];
     }

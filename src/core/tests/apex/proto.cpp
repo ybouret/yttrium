@@ -286,13 +286,27 @@ template <typename T>
 static inline void testMakeBytes(Random::Bits &ran)
 {
     T w = ran.to<T>();
-    std::cerr << "-- Getting Bytes From " << Hexadecimal(w) << " =>";
-    const uint8_t *u = Apex::MakeBytes::From(w);
-    for(size_t i=0;i<sizeof(T);++i)
+    T W = w;
+    std::cerr << "-- Getting Bytes From " << std::setw(12) << Hexadecimal(w) << " => ";
     {
-        std::cerr << ' ' << Hexadecimal(u[i]);
+        const uint8_t *u = Apex::MakeBytes::BE(w);
+        std::cerr << "BE: ";
+        for(size_t i=0;i<sizeof(T);++i)
+        {
+            std::cerr << ' ' << Hexadecimal(u[i]);
+        }
+        std::cerr << " / ";
     }
-    std::cerr << std::endl;
+    {
+        std::cerr << "LE: ";
+        const uint8_t *u = Apex::MakeBytes::LE(W);
+        for(size_t i=0;i<sizeof(T);++i)
+        {
+            std::cerr << ' ' << Hexadecimal(u[i]);
+        }
+        std::cerr << std::endl;
+    }
+
 }
 
 Y_UTEST(apex_proto)
