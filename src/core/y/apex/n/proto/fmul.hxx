@@ -152,7 +152,6 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                 Batch<double> B(nn*2);
                 double       *b = B(); // b[1..nn]
                 {
-                    //Batch<double> A(nn);
                     double *a = b+nn;  // a[1..nn]
                     FillArray(a,U,p,n);
                     FillArray(b,V,q,m);
@@ -172,9 +171,12 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                     for(size_t j=3;j<=nn;j+=2)
                     {
                         const size_t j1 = j+1;
-                        const double t  = b[j];
-                        b[j]  = t*a[j]  - b[j1]*a[j1];
-                        b[j1] = t*a[j1] + b[j1]*a[j];
+                        const double x  = b[j];
+                        const double y  = b[j1];
+                        const double re = a[j];
+                        const double im = a[j+1];
+                        b[j]  = x*re - y*im;
+                        b[j1] = x*im + y*re;
                     }
                 }
                 FFT::ReverseReal(b,nn);
@@ -187,12 +189,12 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                 static const double IRX   = 0.00390625;
                 double              carry = 0.0;
                 const double        scale = ScaleTable[ln];
-                for(size_t j=nn;j>=1;--j)
+                for(size_t j=nn;j>0;--j)
                 {
-                    double      * const f = &b[j];
-                    const double        t =  floor( (*f)*scale+carry+0.5 );
+                    double       &f =  b[j];
+                    const double  t =  floor( f*scale+carry+0.5 );
                     carry=(unsigned long) (t*IRX);
-                    *(uint8_t *)f = static_cast<uint8_t>(t-carry*RX);
+                    *(uint8_t *)&f = static_cast<uint8_t>(t-carry*RX);
                 }
 
                 if(carry>=RX)
