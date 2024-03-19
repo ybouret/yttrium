@@ -226,17 +226,15 @@ Proto * FFT_Sqr(const WordType * const U, const size_t p, uint64_t *ell)
             {                                        //
                 double * const a = b+nn;             // a[1..nn]
                 Coerce(prod) = ((uint8_t *)&a[1])-1; // prod[1..mpn]
-                FillArray(a,U,p,n);
-                //FillArray(b,U,p,n);
+                FillArray(b,U,p,n);
 
                 //__________________________________________________________
                 //
                 // forward real FFT
                 //__________________________________________________________
                 //FFT::ForwardReal(a,b,nn);
-                FFT::ForwardReal(a,nn);
-                memcpy(&b[1], &a[1],nn*sizeof(double));
-
+                FFT::ForwardReal(b,nn);
+                
                 //__________________________________________________________
                 //
                 // in-place product in b
@@ -246,12 +244,10 @@ Proto * FFT_Sqr(const WordType * const U, const size_t p, uint64_t *ell)
                 for(size_t j=3;j<=nn;j+=2)
                 {
                     const size_t j1 = j+1;
-                    const double x  = b[j];
-                    const double y  = b[j1];
-                    const double re = a[j];
-                    const double im = a[j1];
-                    b[j]  = x*re - y*im;
-                    b[j1] = x*im + y*re;
+                    const double re  = b[j];
+                    const double im  = b[j1];
+                    b[j]  = re*re - im*im;
+                    b[j1] = re*im + im*re;
                 }
             }
             FFT::ReverseReal(b,nn);
