@@ -86,13 +86,40 @@ namespace
 
 }
 
+#include "y/text/hexadecimal.hpp"
+
+
+
 Y_UTEST(fft1)
 {
 
-    
+
     Y_SIZEOF( LongTypeFor<float>::Type );
     Y_SIZEOF( LongTypeFor<double>::Type );
     Y_SIZEOF( LongTypeFor<long double>::Type );
+
+
+#if 0
+    Y_CHECK(64==sizeof(ScaleTable)/sizeof(ScaleTable[0]));
+    for(size_t i=0;i<64;++i)
+    {
+        std::cerr << ScaleTable[i] << "/";
+    }
+    std::cerr << std::endl;
+
+    if(false)
+    {
+        for(unsigned ln=0;ln<64;++ln)
+        {
+            static const uint64_t one=1;
+            const uint64_t        den=one<<ln;
+            std::cerr << "1.0/double(Y_U64(0x" <<  Hexadecimal(den) << ")), ";
+            std::cerr << std::endl;
+        }
+        return 0;
+    }
+#endif
+    
 
 #if 0
     Core::Display(std::cerr << "PosSin=", &FFT::Table<double>::PositiveSin[0], 64) << std::endl;
@@ -137,6 +164,7 @@ Y_UTEST(fft1)
         checkDualFFT<double>(shift);
         checkDualFFT<long double>(shift);
     }
+
 
 
 }

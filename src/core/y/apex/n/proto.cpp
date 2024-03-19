@@ -20,6 +20,8 @@ namespace Yttrium
 
             const char Proto:: CallSign[] = "Apex::Natural";
 
+            
+
             bool Proto:: CheckMetrics(const char  *where,
                                       const size_t nbits,
                                       const size_t bytes,

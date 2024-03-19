@@ -48,8 +48,8 @@ namespace Yttrium
             class Proto : public Object
             {
             public:
-                static const char CallSign[]; //!< "Apex::Natural"
-
+                static const char   CallSign[]; //!< "Apex::Natural"
+                
                 //______________________________________________________________
                 //
                 //
@@ -165,6 +165,36 @@ namespace Yttrium
                 p[0] = b3;
                 return p;
             }
+
+            template <typename T> static inline
+            void ReversePush(T * &top, const uint8_t c) noexcept
+            {
+                *(top--) = c;
+            }
+
+            template <typename T> static inline
+            void ReversePush(T * &top, const uint16_t c) noexcept
+            {
+                const uint8_t b0 = uint8_t(c);
+                const uint8_t b1 = uint8_t(c>>8);
+                *(top--) = b0;
+                *(top--) = b1;
+            }
+
+            template <typename T> static inline
+            void ReversePush(T * &top, const uint32_t c) noexcept
+            {
+                const uint8_t b0 = uint8_t(c);
+                const uint8_t b1 = uint8_t(c>>8);
+                const uint8_t b2 = uint8_t(c>>16);
+                const uint8_t b3 = uint8_t(c>>24);
+                *(top--) = b0;
+                *(top--) = b1;
+                *(top--) = b2;
+                *(top--) = b3;
+            }
+
+
 
         };
 

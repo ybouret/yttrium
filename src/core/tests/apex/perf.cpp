@@ -52,9 +52,9 @@ namespace
 
         const String fileName = Formatted::Get("apex%u-%u.dat",PROTO::CoreSize*8,PROTO::WordSize*8 );
         OutputFile   fp(fileName);
-        for(unsigned lbits=32;lbits<=MaxBits;lbits+=32)
+        for(unsigned lbits=32;lbits<=MaxBits;lbits <<= 1)
         {
-            for(unsigned rbits=32;rbits<=MaxBits;rbits+=32)
+            for(unsigned rbits=32;rbits<=MaxBits;rbits <<= 1)
             {
                 (std::cerr << std::setw(6) << lbits << " x " << std::setw(6) << rbits << " : ").flush();
                 uint64_t l64 = 0;
@@ -72,7 +72,7 @@ namespace
                 const double lrate = double(Loops)/double(l64);
                 const double frate = double(Loops)/double(f64);
                 std::cerr << "long: " << std::setw(15) << lrate << " | fft: " << std::setw(15) << frate << std::endl;
-                fp("%u %u %.15g %.15g\n", lbits, rbits, lrate, frate );
+                fp("%u %u %.15g %.15g\n", lbits, rbits, log10(lrate), log10(frate) );
                 if(frate>=lrate)
                 {
                     //fp("%u %u\n", lbits, rbits);
