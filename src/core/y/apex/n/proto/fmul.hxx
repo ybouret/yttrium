@@ -14,9 +14,9 @@ void FillArray(double         * const batch,
 #if 0
 static inline
 void FillArray_(double         * const batch,
-               const WordType * w,
-               const size_t     nWords,
-               const size_t     nBytes) noexcept
+                const WordType * w,
+                const size_t     nWords,
+                const size_t     nBytes) noexcept
 {
     assert(nWords*WordSize==nBytes);
     double *b = &batch[nBytes];
@@ -185,28 +185,35 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                 //
                 // in place product as array of bytes
                 //______________________________________________________________
-                static const double RX    = 256.0;
-                static const double IRX   = 0.00390625;
-                double              carry = 0.0;
-                const double        scale = ScaleTable[ln];
-                for(size_t j=nn;j>0;--j)
+                static const double  RX    = 256.0;
+                static const double  IRX   = 0.00390625;
+                double               carry = 0.0;
+                const double         scale = ScaleTable[ln];
+                const double        *addr  = &b[nn];
+                const size_t         ntop  = mpn-1;
+
+                for(size_t j=nn-ntop;j>0;--j)
                 {
-                    double       &f =  b[j];
-                    const double  t =  floor( f*scale+carry+0.5 );
-                    carry=(unsigned long) (t*IRX); //assert(carry<65536.0);
-                    *(uint8_t *)&f = static_cast<uint8_t>(t-carry*RX);
+                    const double  t =  floor( *(addr--)*scale+carry+0.5 );
+                    carry=(unsigned long) (t*IRX);
                 }
+
+
+                uint8_t *p = &prod[mpn];
+                for(size_t j=ntop;j>0;--j)
+                {
+                    const double  t =  floor( *(addr--)*scale+carry+0.5 );
+                    carry=(unsigned long) (t*IRX);
+                    *(p--) = static_cast<uint8_t>(t-carry*RX);
+                }
+
 
                 if(carry>=RX)
                     throw Specific::Exception(CallSign,"Invalid carry in FFT_Mul");
 
-                prod[1] = static_cast<uint8_t>(carry);
-                {
-                    const double *f = &b[mpn];
-                    for (size_t j=mpn;j>1;--j)
-                        prod[j] = *(const uint8_t *)(--f);
-                }
+                *p = static_cast<uint8_t>(carry);
             }
+
 
 
             //__________________________________________________________________
