@@ -19,6 +19,7 @@
 #include "y/ptr/auto.hpp"
 #include "y/fft/fft.hpp"
 #include "y/type/utils.hpp"
+#include "y/container/light-array.hpp"
 
 #include <iostream>
 #include <iomanip>

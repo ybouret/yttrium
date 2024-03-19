@@ -124,35 +124,35 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
         {
             assert(p>0);
             assert(q>0);
-            const size_t   n     = p * WordSize; // U bytes
-            const size_t   m     = q * WordSize; // V bytes
-            const size_t   mpn   = m+n;          // product bytes
-            Pointer        proto = new Proto(mpn,AsCapacity);
-            Batch<uint8_t> prod(mpn);
-            const bool     chrono = 0!=ell;
-            const uint64_t tmx    = chrono ? WallTime::Ticks() : 0;
+            const size_t    n     = p * WordSize; // U bytes
+            const size_t    m     = q * WordSize; // V bytes
+            const size_t    mpn   = m+n;          // product bytes
+            Pointer         proto = new Proto(mpn,AsCapacity);
+            const bool      chrono = 0!=ell;
+            const uint64_t  tmx    = chrono ? WallTime::Ticks() : 0;
+            uint8_t *       prod   = 0;
 
+            //______________________________________________________________
+            //
+            // prepare arrays of reals
+            //______________________________________________________________
+            size_t       nn = 1; //!< size for m+n
+            size_t       ln = 0; //!< nn/2 = 2^ln for ScaleTable
             {
-                //______________________________________________________________
-                //
-                // prepare arrays of reals
-                //______________________________________________________________
-                size_t       nn = 1;
-                size_t       ln = 0;
-                {
-                    const size_t mn = Max(m,n);
-                    while (nn < mn)
-                    {
-                        nn <<= 1;
-                        ++ln;
-                    }
+                const size_t mn = Max(m,n);
+                while (nn < mn) {
                     nn <<= 1;
-                    assert( (nn>>1) == (1<<ln) );
+                    ++ln;
                 }
-                Batch<double>  B(nn*2);
-                double * const b = B(); // b[1..nn]
-                {
-                    double * const a = b+nn;  // a[1..nn]
+                nn <<= 1;
+                assert( (nn>>1) == (1<<ln) );
+            }
+            Batch<double>  workspace(nn*2);
+            {
+                double * const b = workspace();          // b[1..nn]
+                {                                        //
+                    double * const a = b+nn;             // a[1..nn]
+                    Coerce(prod) = ((uint8_t *)&a[1])-1; // prod[1..mpn]
                     FillArray(a,U,p,n);
                     FillArray(b,V,q,m);
 
@@ -174,7 +174,7 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                         const double x  = b[j];
                         const double y  = b[j1];
                         const double re = a[j];
-                        const double im = a[j+1];
+                        const double im = a[j1];
                         b[j]  = x*re - y*im;
                         b[j1] = x*im + y*re;
                     }
@@ -189,8 +189,8 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                 static const double  IRX   = 0.00390625;
                 double               carry = 0.0;
                 const double         scale = ScaleTable[ln];
-                const double        *addr  = &b[nn];
                 const size_t         ntop  = mpn-1;
+                const double        *addr  = &b[nn];
 
                 for(size_t j=nn-ntop;j>0;--j)
                 {
