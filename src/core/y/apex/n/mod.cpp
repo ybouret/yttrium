@@ -16,10 +16,7 @@ namespace Yttrium
         //----------------------------------------------------------------------
         Natural operator%(const Natural &numer, const Natural &denom)
         {
-#if 0
-            return numer-(numer/denom)*denom;
 
-#else
             //------------------------------------------------------------------
             //
             // get proto Denom and Numer
@@ -87,7 +84,7 @@ namespace Yttrium
                     return numer - lower*denom;
                 }
             }
-#endif
+
         }
 
 

@@ -184,8 +184,7 @@ namespace Yttrium
                 *(top--) = b1;
             }
 
-            //! top[0] = b0, top[-1] = b1, top[-2] = b2, top[-3] = b[3], top=top-4            //! top[0] = b0, top[-1] = b1, top=top-2
-
+            //! top[0] = b0, top[-1] = b1, top[-2] = b2, top[-3] = b[3], top=top-4   
             template <typename T> static inline
             void ReversePush(T * &top, const uint32_t c) noexcept
             {

@@ -211,6 +211,18 @@ Y_UTEST(apex_n)
         }
     }
 
+    std::cerr << "-- Check Div, Extended [";
+    for(size_t loop=0;loop<128;++loop)
+    {
+        (std::cerr << '.').flush();
+        const apn numer(1+ran.leq(1000),ran);
+        const apn denom(1+ran.leq(1000),ran);
+        apn q,r;
+        apn::Div(q,r,numer,denom);
+        Y_ASSERT(q*denom+r==numer);
+    }
+    std::cerr << "]" << std::endl;
+
 
     
     std::cerr << "-- Check Mul/Div [";
@@ -240,6 +252,7 @@ Y_UTEST(apex_n)
         const apn      n = u;
         std::cerr << std::hex << std::setw(17) << n << " = " << std::dec << std::setw(22) << n << " / " << u << std::endl;
     }
+
 
 
 }

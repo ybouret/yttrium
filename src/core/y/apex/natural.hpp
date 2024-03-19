@@ -184,12 +184,9 @@ namespace Yttrium
             Natural & operator%=(const Natural &rhs);                         //!< this % rhs
             Natural & operator%=(const uint64_t rhs);                         //!< this % rhs
 
-            //! to be optimized
-            static void Div(Natural &quot, Natural &rem, const Natural &numer, const Natural &denom)
-            {
-                quot = numer/denom; rem = numer - quot * denom;
-            }
-
+            //! numer = quot * denom + rem
+            static void Div(Natural &quot, Natural &rem, const Natural &numer, const Natural &denom);
+            
             //__________________________________________________________________
             //
             //
