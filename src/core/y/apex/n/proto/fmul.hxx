@@ -149,10 +149,10 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                     nn <<= 1;
                     assert( (nn>>1) == (1<<ln) );
                 }
-                Batch<double> B(nn*2);
-                double       *b = B(); // b[1..nn]
+                Batch<double>  B(nn*2);
+                double * const b = B(); // b[1..nn]
                 {
-                    double *a = b+nn;  // a[1..nn]
+                    double * const a = b+nn;  // a[1..nn]
                     FillArray(a,U,p,n);
                     FillArray(b,V,q,m);
 
@@ -193,7 +193,7 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                 {
                     double       &f =  b[j];
                     const double  t =  floor( f*scale+carry+0.5 );
-                    carry=(unsigned long) (t*IRX);
+                    carry=(unsigned long) (t*IRX); //assert(carry<65536.0);
                     *(uint8_t *)&f = static_cast<uint8_t>(t-carry*RX);
                 }
 
