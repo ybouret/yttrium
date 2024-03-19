@@ -18,6 +18,20 @@ static inline Proto *Mul(const Proto &lhs,
 
 //__________________________________________________________________
 //
+//! Square of on proto
+//__________________________________________________________________
+static inline Proto *Sqr(const Proto &lhs,
+                         SqrProc      sqr,
+                         uint64_t    *ell)
+{
+    assert(0!=sqr);
+    return sqr(lhs.block.entry,
+               lhs.words,
+               ell);
+}
+
+//__________________________________________________________________
+//
 //! Multiplication of lhs by scalar rhs
 //__________________________________________________________________
 static inline Proto *Mul(const Proto   &lhs,

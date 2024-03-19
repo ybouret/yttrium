@@ -49,8 +49,8 @@ namespace Yttrium
             class Proto : public Object
             {
             public:
-                static const char   CallSign[]; //!< "Apex::Natural"
-                
+                static const char   CallSign[];     //!< "Apex::Natural"
+                static const double ScaleTable[64]; //!< 1/2^n
                 //______________________________________________________________
                 //
                 //
@@ -242,6 +242,13 @@ namespace Yttrium
             typedef Proto * (*MulProc)(const WordType * const, const size_t,
                                        const WordType * const, const size_t,
                                        uint64_t *);
+
+            //__________________________________________________________________
+            //
+            //! Square algiorithm prototype
+            //__________________________________________________________________
+            typedef Proto * (*SqrProc)(const WordType * const, const size_t, uint64_t *);
+
             //__________________________________________________________________
             //
             //

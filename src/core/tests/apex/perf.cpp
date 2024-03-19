@@ -27,7 +27,7 @@ namespace
 
 
         memset(label,0,sizeof(label));
-        snprintf(label,sizeof(label),"Apex::Proto<%3u,%3u>",PROTO::CoreSize*8,PROTO::WordSize*8 );
+        snprintf(label,sizeof(label),"Apex::Proto<%2u,%2u>",PROTO::CoreSize*8,PROTO::WordSize*8 );
         std::cerr << std::endl;
         std::cerr << label << std::endl;
 
@@ -46,8 +46,26 @@ namespace
                 const PROTO &FFT_Product = *FFT_Prod;
                 Y_ASSERT( PROTO::AreEqual(LongProduct,FFT_Product) );
             }
+
+            std::cerr << "-- Checking for squares equality" << std::endl;
+            for(size_t i=0;i<Loops;++i)
+            {
+                const PROTO  lhs(5000,ran);
+                const hPROTO LNG_Prd = PROTO::Mul(lhs,lhs,PROTO::LongMul,0);
+                const hPROTO LNG_Sqr = PROTO::Sqr(lhs,PROTO::LongSqr,0);
+                const hPROTO FFT_Sqr = PROTO::Sqr(lhs,PROTO::FFT_Sqr,0);
+
+                const PROTO &DireSquare = *LNG_Prd;
+                const PROTO &LongSquare = *LNG_Sqr;
+                const PROTO &FFT_Square = *FFT_Sqr;
+
+                Y_ASSERT( PROTO::AreEqual(DireSquare,LongSquare) );
+                Y_ASSERT( PROTO::AreEqual(DireSquare,FFT_Square) );
+
+            }
         }
 
+        return;
 
 
         const String fileName = Formatted::Get("apex%u-%u.dat",PROTO::CoreSize*8,PROTO::WordSize*8 );

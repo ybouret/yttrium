@@ -220,6 +220,11 @@ Y_UTEST(apex_n)
         apn q,r;
         apn::Div(q,r,numer,denom);
         Y_ASSERT(q*denom+r==numer);
+        if(numer<denom)
+        {
+            Y_ASSERT(0==q);
+        }
+        
     }
     std::cerr << "]" << std::endl;
 
