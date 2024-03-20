@@ -1,51 +1,11 @@
 #include "y/apex/modular.hpp"
+#include "y/apex/integer.hpp"
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;
 
 namespace {
-    /*
-     function inverse(a, n)
-       t := 0;     newt := 1
-       r := n;     newr := a
 
-       while newr ≠ 0 do
-         quotient := r div newr
-         (t, newt) := (newt, t − quotient × newt)
-         (r, newr) := (newr, r − quotient × newr)
-
-       if r > 1 then
-         return "a is not invertible"
-       if t < 0 then
-         t := t + n
-
-       return t
-     */
-
-    unsigned inverse(unsigned a, unsigned n)
-    {
-        int      t=0, newt=1;
-        unsigned r=n, newr=a;
-
-        while(newr!=0)
-        {
-            const int quotient = r/newr;
-            {
-                const int _ = t-quotient*newt;
-                t = newt;
-                newt = _;
-            }
-            {
-                const unsigned _ = r - quotient * newr;
-                r = newr;
-                newr = _;
-            }
-        }
-        if(r>1)
-            throw Exception("bad");
-        if(t<0) t+=n;
-        return t;
-    }
 }
 
 Y_UTEST(apex_modular)
@@ -72,9 +32,17 @@ Y_UTEST(apex_modular)
     {
         const unsigned a = 2;
         const unsigned n = 97;
-        const unsigned b = inverse(a,n);
-        std::cerr << a << "^(-1) [" << n << "] = " << b << std::endl;
+        //const unsigned b = inverse(a,n);
+        //std::cerr << a << "^(-1) [" << n << "] = " << b << std::endl;
+
+        const apn A = a;
+        const apn N = n;
+        const apn B = Apex::Modular::Inv(A,N);
+        std::cerr << A << "^(-1) [" << N << "] = " << B << std::endl;
+
     }
+
+
 
 }
 Y_UDONE()
