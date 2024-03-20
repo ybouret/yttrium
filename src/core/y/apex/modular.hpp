@@ -13,9 +13,12 @@ namespace Yttrium
 
         struct Modular
         {
-            static Natural Exp(const Natural &base,
-                               const Natural &exponent,
-                               const Natural &modulus);
+            static Natural Exp(const Natural &b,
+                               const Natural &e,
+                               const Natural &n);
+
+            static Natural Inv(const Natural &a,
+                               const Natural &n);
         };
 
     }

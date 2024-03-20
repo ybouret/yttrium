@@ -17,15 +17,19 @@ namespace Yttrium
             while(exponent.bytes()>0)
             {
                 if(exponent.isOdd())
-                {
-                    const Natural prod = result * base;
-                    result = prod % modulus;
-                }
+                    result = (result * base) % modulus;
                 exponent.shr();
-                const Natural base2 = base.sqr();
-                base = base2 % modulus;
+                base = base.sqr() % modulus;
             }
             return result;
+        }
+
+        Natural Modular::Inv(const Natural &a, const Natural &n)
+        {
+
+
+            return 0;
+
         }
     }
 

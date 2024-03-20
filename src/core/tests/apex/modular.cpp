@@ -15,10 +15,10 @@ Y_UTEST(apex_modular)
         result *= base;
     }
     result %= modulus;
-    std::cerr << "result = " << result << std::endl;
+    Y_CHECK(445==result);
 
     const apn check = Apex::Modular::Exp(base, exponent, modulus);
-    std::cerr << "check  = " << check << std::endl;
+    Y_CHECK(result==check);
 
 
 }
