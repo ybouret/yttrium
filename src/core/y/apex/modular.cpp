@@ -1,5 +1,7 @@
 
 #include "y/apex/modular.hpp"
+#include "y/system/exception.hpp"
+#include <iostream>
 
 namespace Yttrium
 {
@@ -24,12 +26,13 @@ namespace Yttrium
             return result;
         }
 
+
+
+
+
         Natural Modular::Inv(const Natural &a, const Natural &n)
         {
-
-
             return 0;
-
         }
     }
 
