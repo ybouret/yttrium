@@ -225,6 +225,7 @@ add_test(apex:q         test-core apex_q)
 add_test(apex:conv      test-core apex_conv)
 add_test(apex:mylar     test-core apex_mylar)
 add_test(apex:ortho     test-core apex_ortho)
+add_test(apex:modular   test-core apex_modular)
 
 #ordered
 add_test(ordered:PQ   test-core ordered_PQ)

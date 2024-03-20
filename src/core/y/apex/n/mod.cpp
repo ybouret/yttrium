@@ -102,14 +102,14 @@ namespace Yttrium
 
         Natural & Natural :: operator %=(const Natural &rhs)
         {
-            Natural q = *this / rhs;
+            Natural q = *this % rhs;
             xch(q);
             return *this;
         }
 
         Natural & Natural :: operator %=(const uint64_t rhs)
         {
-            Natural q = *this / rhs;
+            Natural q = *this % rhs;
             xch(q);
             return *this;
         }

@@ -168,6 +168,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(apex_conv);
     Y_UTEST(apex_mylar);
     Y_UTEST(apex_ortho);
+    Y_UTEST(apex_modular);
 
     Y_UTEST(ordered_PQ);
     Y_UTEST(ordered_heap);
