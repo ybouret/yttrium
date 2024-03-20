@@ -71,7 +71,7 @@ Y_UTEST(apex_modular)
 
     {
         const unsigned a = 2;
-        const unsigned n = 13;
+        const unsigned n = 97;
         const unsigned b = inverse(a,n);
         std::cerr << a << "^(-1) [" << n << "] = " << b << std::endl;
     }
