@@ -34,6 +34,23 @@ namespace Yttrium
             return *this;
         }
 
+        Natural Natural:: Sqr(const Natural &x)
+        {
+            Prototype::SqrProc sqr = Prototype::LongSqr;
+            return Natural( Prototype::Sqr(CONST_PROTO(x),sqr,0), AsImpl);
+        }
+
+        Natural Natural:: Sqr(const uint64_t x)
+        {
+            const Prototype::Splitter alias(x);
+            return Natural( Prototype::LongSqr(alias.w, alias.n, 0), AsImpl);
+        }
+
+        Natural Natural:: sqr() const
+        {
+            return Sqr(*this);
+        }
+        
     }
 
 }

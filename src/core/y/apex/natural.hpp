@@ -200,8 +200,10 @@ namespace Yttrium
             static Natural Comb(const size_t n, const size_t k);     //!< (n,k)
             static Natural Sqrt(const Natural &s);                   //!< square root
             Natural        sqrt() const;                             //!< square root
-
-
+            static Natural Sqr(const Natural &x);                    //!< x^2
+            static Natural Sqr(const uint64_t x);                    //!< x^2
+            Natural        sqr() const;                              //!< this^2
+            
             template <typename T> static
             T ToReal(const Natural &numer, const Natural &denom); //!< positive, floating point approximation float|double|long double
 

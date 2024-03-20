@@ -174,6 +174,21 @@ Y_UTEST(apex_n)
         }
     }
 
+    std::cerr << "-- Check Mul64" << std::endl;
+    for(unsigned i=0;i<=32;++i)
+    {
+        for(size_t loop=0;loop<64;++loop)
+        {
+            const uint64_t x = ran.to<uint64_t>(i);
+            const uint64_t x2 = x*x;
+            const apn      X  = x;
+            const apn      X2 = X.sqr();
+            const apn      Y2 = X * X;
+            Y_ASSERT(X2==x2);
+            Y_ASSERT(Y2==X2);
+        }
+    }
+
     std::cerr << "-- Check Div64" << std::endl;
     for(unsigned i=0;i<=64;++i)
     {
