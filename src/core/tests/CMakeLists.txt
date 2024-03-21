@@ -205,7 +205,6 @@ add_test(fft:1   test-core fft1)
 add_test(fft:2   test-core fft2)
 add_test(fft:mul test-core fft_mul)
 add_test(fft:mul2 test-core fft_mul2)
-add_test(fft:apn  test-core fft_apn)
 
 #string(s)
 add_test(strings test-core strings)

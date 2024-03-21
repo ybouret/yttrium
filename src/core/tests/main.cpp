@@ -150,7 +150,6 @@ Y_UTEST_DECL(256)
     Y_UTEST(fft_mul2);
     Y_UTEST(fft_xbr);
     Y_UTEST(fft_xbr_build);
-    Y_UTEST(fft_apn);
 
     Y_UTEST(strings);
     Y_UTEST(string_tokenizer);

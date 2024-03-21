@@ -89,7 +89,12 @@ namespace
                     }
                     const double lrate = double(Loops)/double(l64);
                     const double frate = double(Loops)/double(f64);
-                    std::cerr << "long: " << std::setw(15) << lrate << " | fft: " << std::setw(15) << frate << std::endl;
+                    std::cerr << "long: " << std::setw(15) << lrate << " | fft: " << std::setw(15) << frate;
+                    if(frate>=lrate)
+                    {
+                        std::cerr << " (*) bytes = " << (lbits/8) << ":" << (rbits/8);
+                    }
+                    std::cerr << std::endl;
                     fp("%u %u %.15g %.15g\n", lbits, rbits, log10(lrate), log10(frate) );
                 }
             }
@@ -113,7 +118,12 @@ namespace
             }
             const double lrate = double(Loops)/double(l64);
             const double frate = double(Loops)/double(f64);
-            std::cerr << "long: " << std::setw(15) << lrate << " | fft: " << std::setw(15) << frate << std::endl;
+            std::cerr << "long: " << std::setw(15) << lrate << " | fft: " << std::setw(15) << frate;
+            if(frate>=lrate)
+            {
+                std::cerr << " (*) bytes = " << (lbits/8);
+            }
+            std::cerr << std::endl;
             fp("%u %.15g %.15g\n", lbits, log10(lrate), log10(frate) );
         }
 

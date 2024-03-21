@@ -23,11 +23,11 @@ void FillArray(double         * const batch,
 //
 //______________________________________________________________________________
 static inline
-void fft2bytes(uint8_t              prod[],
-               const size_t         mpn,
-               const double * const b,
-               const size_t         nn,
-               const double         scale)
+void RealsToBytes(uint8_t              prod[],
+                  const size_t         mpn,
+                  const double * const b,
+                  const size_t         nn,
+                  const double         scale)
 {
     static const double  RX    = 256.0;
     static const double  IRX   = 0.00390625;
@@ -64,7 +64,7 @@ void fft2bytes(uint8_t              prod[],
 //
 //______________________________________________________________________________
 static inline
-void bytes2words(Pointer &             proto,
+void BytesToWords(Pointer &             proto,
                  const uint8_t * const prod,
                  const size_t          mpn) noexcept
 {
@@ -173,9 +173,9 @@ Proto * FFT_Mul(const WordType * const U, const size_t p,
                     }
                 }
                 FFT::ReverseReal(b,nn);
-                fft2bytes(prod,mpn,b,nn,ScaleTable[ln]);
+                RealsToBytes(prod,mpn,b,nn,ScaleTable[ln]);
             }
-            bytes2words(proto,prod,mpn);
+            BytesToWords(proto,prod,mpn);
 
             //__________________________________________________________________
             //
@@ -258,9 +258,9 @@ Proto * FFT_Sqr(const WordType * const U, const size_t p, uint64_t *ell)
                 }
             }
             FFT::ReverseReal(b,nn);
-            fft2bytes(prod,mpn,b,nn,ScaleTable[ln]);
+            RealsToBytes(prod,mpn,b,nn,ScaleTable[ln]);
         }
-        bytes2words(proto,prod,mpn);
+        BytesToWords(proto,prod,mpn);
 
         //__________________________________________________________________
         //
