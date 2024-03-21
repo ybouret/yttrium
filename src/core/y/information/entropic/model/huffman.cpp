@@ -10,6 +10,7 @@ namespace Yttrium
         namespace Entropic
         {
 
+#if 0
             Huffman::Node::Comparator::  Comparator() noexcept {}
             Huffman::Node::Comparator:: ~Comparator() noexcept {}
             SignType Huffman::Node::Comparator:: operator()(const Node * const lhs, const Node * const rhs) const noexcept
@@ -113,7 +114,8 @@ namespace Yttrium
                 }
 
             }
-
+#endif
+            
         }
 
     }

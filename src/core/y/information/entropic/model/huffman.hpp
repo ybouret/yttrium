@@ -15,6 +15,7 @@ namespace Yttrium
         namespace Entropic
         {
 
+#if 0
             //__________________________________________________________________
             //
             //
@@ -97,7 +98,7 @@ namespace Yttrium
 
 
             };
-
+#endif
         }
 
     }
