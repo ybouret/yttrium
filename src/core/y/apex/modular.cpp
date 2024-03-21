@@ -40,16 +40,26 @@ namespace Yttrium
             while(newr.bytes()>0)
             {
                 Natural::Div(quotient, remainder, r, newr);
-               // const apn quotient = r/newr;
                 {
+#if 0
                     const apz temp = t - quotient * newt;
                     t    = newt;
                     newt = temp;
+#else
+                    apz temp = t - quotient * newt;
+                    t.xch(newt);
+                    newt.xch(temp);
+#endif
                 }
                 {
                     //const apn _ = r - quotient * newr;
+#if 0
                     r    = newr;
                     newr = remainder;
+#else
+                    r.xch(newr);
+                    newr.xch(remainder);
+#endif
                 }
             }
             if(r>1)

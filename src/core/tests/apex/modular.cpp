@@ -82,7 +82,7 @@ Y_UTEST(apex_modular)
         {
             const uint64_t a = ran.in<uint64_t>(1,n-1);
             (std::cerr << '.').flush();
-            const apn A = ran.in<uint64_t>(1,n-1);
+            const apn A = a;
             const apn B = Apex::Modular::Inv(A,N);
             const apn P = (A*B) % N;
             Y_ASSERT(1==P);
