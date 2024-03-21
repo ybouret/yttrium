@@ -41,27 +41,14 @@ namespace Yttrium
             {
                 Natural::Div(quotient, remainder, r, newr);
                 {
-#if 0
-                    const apz temp = t - quotient * newt;
-                    t    = newt;
-                    newt = temp;
-#else
-                    apz temp = t - quotient * newt;
+                    apz _ = t - quotient * newt;
                     t.xch(newt);
-                    newt.xch(temp);
-#endif
+                    newt.xch(_);
                 }
-                {
-                    //const apn _ = r - quotient * newr;
-#if 0
-                    r    = newr;
-                    newr = remainder;
-#else
-                    r.xch(newr);
-                    newr.xch(remainder);
-#endif
-                }
+                r.xch(newr);
+                newr.xch(remainder);
             }
+
             if(r>1)
                 throw Specific::Exception("Modular::Inv","singular value");
 
