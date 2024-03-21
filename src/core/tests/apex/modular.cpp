@@ -1,6 +1,7 @@
 #include "y/apex/modular.hpp"
 #include "y/apex/integer.hpp"
 #include "y/utest/run.hpp"
+#include "y/random/bits.hpp"
 
 using namespace Yttrium;
 
@@ -27,6 +28,28 @@ Y_UTEST(apex_modular)
         Y_CHECK(result==check);
     }
 
+    Random::Rand ran;
+
+    for(size_t loop=0;loop<64;++loop)
+    {
+        const apn base(1+ran.leq(15),ran);
+        const apn exponent(1+ran.leq(10),ran);
+        const apn modulus(5+ran.leq(10),ran);
+        (std::cerr << base << "^" << exponent << "[" << modulus << "] = ").flush();
+
+        apn result = 1;
+        for(apn i=exponent;i>0;--i)
+        {
+            result *= base;
+        }
+        result %= modulus;
+        std::cerr << result;
+
+        const apn check = Apex::Modular::Exp(base, exponent, modulus);
+        std::cerr << " / " << check;
+        std::cerr << std::endl;
+
+    }
 
 
     {
