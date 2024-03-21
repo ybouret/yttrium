@@ -94,6 +94,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(calculus_xlog2);
     Y_UTEST(calculus_gray);
     Y_UTEST(calculus_prime);
+    Y_UTEST(calculus_prime32);
 
 
     Y_UTEST(concurrent_mutex);
