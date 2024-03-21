@@ -45,13 +45,13 @@ namespace Yttrium
             //------------------------------------------------------------------
             size_t p = Max<size_t>(N.nbits-D.nbits,1);
         PROBE:
-            Natural upper(TwoToThe,p);
+            Natural upper(TwoToThe,p); // upper = 2^p
             {
                 const Natural probe = upper * denom;
                 switch( Natural::Compare(probe,numer) )
                 {
                     case Negative: ++p; goto PROBE;
-                    case __Zero__: return upper;
+                    case __Zero__: return upper;     // numer = upper*denom
                     case Positive: break;
                 }
             }
@@ -102,9 +102,9 @@ namespace Yttrium
             //------------------------------------------------------------------
             switch( Prototype::Compare(N,D) )
             {
-                case Negative: quot = 0; rem = numer; return;
-                case __Zero__: quot = 1; rem = 0;     return;
-                case Positive:
+                case Negative: quot = 0; rem = numer; return; // numer < denom
+                case __Zero__: quot = 1; rem = 0;     return; // numer == denom
+                case Positive:                                // numer > denom
                     break;
             }
             assert(N.nbits>=D.nbits);
@@ -123,7 +123,7 @@ namespace Yttrium
                 switch( Natural::Compare(probe,numer) )
                 {
                     case Negative: ++p; goto PROBE;
-                    case __Zero__: quot = upper; rem = 0; return;
+                    case __Zero__: quot = upper; rem = 0; return; // numer = upper * denom + 0
                     case Positive: break;
                 }
             }
@@ -138,6 +138,9 @@ namespace Yttrium
             //------------------------------------------------------------------
             while(true)
             {
+                //--------------------------------------------------------------
+                // look up for mid value
+                //--------------------------------------------------------------
                 Natural mid = (lower+upper); PROTO(mid).shr();
                 {
                     const Natural probe = mid * denom;
@@ -145,9 +148,13 @@ namespace Yttrium
                     {
                         case Negative: mid.xch(lower); break;
                         case Positive: mid.xch(upper); break;
-                        case __Zero__: quot = mid; rem = 0; return;
+                        case __Zero__: quot = mid; rem = 0; return; // numer = mid * denom + 0
                     }
                 }
+
+                //--------------------------------------------------------------
+                // check termination
+                //--------------------------------------------------------------
                 const AutoProto limit( Prototype::Add1( PROTO(lower)) );
                 if( Negative != Prototype::Compare(*limit,CONST_PROTO(upper)))
                 {
