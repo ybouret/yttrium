@@ -15,186 +15,108 @@ namespace Yttrium
 
 
 
-            Alphabet:: Alphabet(const bool useEOS) noexcept :
-            used(),
-            emit( & Alphabet::Init ),
-            unit(0),
+            Alphabet:: Alphabet(const Mode mode) noexcept :
+            symbols(),
+            active(0),
+            symbol(0),
             nyt(0),
             eos(0),
-            sumf(0),
-            nchr(0),
-            ctrl(),
-            nctl(0),
-            wksp()
+            control(),
+            controls(0),
+            workspace()
             {
-                Coerce(unit) = static_cast<Unit *>( Y_STATIC_ZARR(wksp) );
-                Coerce(nyt)  = unit + Unit::NYT;
-                Coerce(eos)  = unit + Unit::EOS;
 
-                for(uint16_t i=0;i<Unit::Encoding;++i)
+                Coerce(symbol) = static_cast<Symbol *>(Y_STATIC_ZARR(workspace));
+
+                for(uint16_t i=0;i<Symbol::Encoding;++i)
                 {
-                    new (&unit[i]) Unit(i,8);
+                    new (symbol+i) Symbol(i,8);
                 }
 
-                for(uint16_t i=Unit::Encoding;i<Unit::Universe;++i)
+                for(uint16_t i=Symbol::Encoding;i<Symbol::Universe;++i)
                 {
-                    new ( &unit[i] ) Unit(i,0);
+                    new (symbol+i) Symbol(i,0);
                 }
 
-                Y_STATIC_ZARR(ctrl);
-                {            ctrl[Coerce(nctl)++] = nyt; }
-                if(useEOS) { ctrl[Coerce(nctl)++] = eos; }
+                Coerce(nyt) = &symbol[ Symbol::NYT ];
+                Coerce(eos) = &symbol[ Symbol::EOS ];
 
-                pushControls();
+                initControls(mode);
             }
 
-            Alphabet:: ~Alphabet() noexcept
+            void Alphabet:: initControls(const Mode mode) noexcept
             {
-                used.reset();
-                for(uint16_t i=0;i<Unit::Universe;++i)
-                    Destruct( &unit[i] );
+                memset(control,0,sizeof(control));
+                controls = 0;
+                switch(mode)
+                {
+                    case Precompiling:
+                        break;
 
+                    case SingleStream:
+                        control[controls++] = nyt;
+                        break;
+
+                    case MultiStreams:
+                        control[controls++] = nyt;
+                        control[controls++] = eos;
+                        break;
+                }
+                pushControls();
             }
 
             void Alphabet:: pushControls() noexcept
             {
-                assert(0==used.size);
-                for(size_t i=0;i<nctl;++i)
-                {
-                    Unit *ctl = ctrl[i]; assert(0!=ctl);
-                    used.pushTail(ctl);
-                }
+                for(size_t i=0;i<controls;++i) symbols.pushTail(control[i]);
             }
 
+
+            Alphabet:: ~Alphabet() noexcept
+            {
+                symbols.reset();
+            }
 
             void Alphabet:: reset() noexcept
             {
-                used.reset();
-                for(uint16_t i=0;i<Unit::Universe;++i)
-                    unit[i].reset();
-                sumf = 0;
-                nchr = 0;
-                emit = & Alphabet::Init;
+                symbols.reset();
+                active = 0;
+                for(uint16_t i=0;i<Symbol::Universe;++i)
+                    symbol[i].reset();
                 pushControls();
             }
 
+
             void Alphabet:: reduceFrequencies() noexcept
             {
-                sumf = 0;
-                for(Unit *u=used.head;u;u=u->next)
-                {
-                    u->reduceFrequency();
-                    sumf += u->freq;
-                }
+                for(Symbol *symb=symbols.head;symb;symb=symb->next)
+                    symb->reduceFrequency();
             }
+
 
             void Alphabet:: display(std::ostream &os) const
             {
-                os << "<Alphabet used='" << used.size << "'>" << std::endl;
-                for(const Unit *u=used.head;u;u=u->next)
+                os << "<Alphabet controls='" << controls << "'>" << std::endl;
+                for(const Symbol *symb=symbols.head;symb;symb=symb->next)
                 {
-                    u->display(os) << std::endl;
+                    symb->display(os << "  ") << std::endl;
                 }
-                os << "<Alphabet/>" << std::endl;
+                os << "<Alphabet>" << std::endl;
             }
 
 
-            void Alphabet:: write_(StreamBits &io, const uint8_t byte)
+            const Symbol & Alphabet:: NYT() const noexcept
             {
-                assert(used.size<=Unit::MaxAlive);
-                assert(0!=emit);
-                
-                ( (*this).*emit )(io,byte);
-                while(sumf>1000)
-                {
-                    reduceFrequencies();
-                }
+                assert(0!=nyt);
+                return *nyt;
             }
 
-            void Alphabet:: write(StreamBits &io, const uint8_t byte, Model &model)
+            const Symbol & Alphabet:: EOS() const noexcept
             {
-                write_(io,byte);
-                model.build(used);
-            }
-
-            void Alphabet:: flush(StreamBits &io)
-            {
-                io.push(eos->code, eos->bits);
-                io.fill();
-            }
-
-            
-
-
-            void Alphabet:: Init(StreamBits &io, const uint8_t byte)
-            {
-                assert(0==sumf);
-                assert(0==nchr);
-                assert(0==unit[byte].freq);
-
-                Unit &u = unit[byte];
-                u.freq++;
-                sumf++;
-                nchr++;
-                u.to(io);
-                emit = & Alphabet::Bulk;
-                used.pushHead(&u);
+                assert(0!=eos);
+                return *eos;
             }
 
 
-            static inline void Rank(ListOf<Unit> &used, Unit * const node)
-            {
-                assert(0!=node);
-                const uint32_t freq = node->freq;
-            CHECK:
-                const Unit *   prev = node->prev;
-                if(prev && prev->freq < freq )
-                {
-                    used.towardsHead(node);
-                    goto CHECK;
-                }
-            }
-
-            void Alphabet:: Bulk(StreamBits &io, const uint8_t byte)
-            {
-                assert(sumf>0);
-                assert(nchr>0);
-                assert(nchr<Unit::Encoding);
-                assert(used.owns(nyt));
-
-                Unit &u = unit[byte];
-                sumf++;
-                if(u.freq++<=0)
-                {
-                    nyt->to(io);               // new char: signal NYT
-                    used.insertBefore(nyt,&u); // insert befor NYT
-
-                    if(++nchr>=Unit::Encoding) // check status
-                    {
-                        used.pop(nyt)->reset();   // all are transmitted
-                        emit = & Alphabet:: Full; // change emit method
-                    }
-                }
-                else
-                {
-                    assert(used.owns(&u));
-                    Rank(used,&u);        // update status of already used using
-                }
-
-
-                u.to(io);
-                
-            }
-
-            void Alphabet:: Full(StreamBits &io, const uint8_t byte)
-            {
-                assert(nchr==Unit::Encoding);
-                Unit &u = unit[byte]; assert(u.freq>0);
-                u.freq++;
-                sumf++;
-                Rank(used,&u);
-                u.to(io);
-            }
         }
 
     }

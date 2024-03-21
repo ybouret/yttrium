@@ -3,9 +3,8 @@
 #ifndef Y_Information_Entropic_Alphabet_Included
 #define Y_Information_Entropic_Alphabet_Included 1
 
-#include "y/information/entropic/model.hpp"
+#include "y/information/entropic/symbol.hpp"
 #include "y/calculus/align.hpp"
-#include "y/data/list/raw.hpp"
 
 namespace Yttrium
 {
@@ -27,69 +26,46 @@ namespace Yttrium
             class Alphabet
             {
             public:
-                //______________________________________________________________
-                //
-                //
-                // Definitions
-                //
-                //______________________________________________________________
-                typedef void (Alphabet:: *Emit)(StreamBits &io, const uint8_t); //!< emit prototype
+                enum Mode
+                {
+                    Precompiling, //!< no  EOS, no  NYT
+                    SingleStream, //!< no  EOS, use NYT
+                    MultiStreams  //!< use EOS, use NYT
+                };
+                
+                static const size_t Required = Symbol::Universe * sizeof(Symbol); //!< RequiredBytes
 
-                //______________________________________________________________
-                //
-                //
-                // C++
-                //
-                //______________________________________________________________
-
-                //! setup
-                /**
-                 \param useEOS if true, assume EOS is used
-                 */
-                explicit Alphabet(const bool useEOS) noexcept;
-
-                //! cleanup
+                explicit Alphabet(const Mode mode) noexcept;
                 virtual ~Alphabet() noexcept;
 
-                //______________________________________________________________
-                //
-                //
-                // Methods
-                //
-                //______________________________________________________________
-                void reset()                   noexcept;        //!< reset all
-                void reduceFrequencies()       noexcept;        //!< reduce frequencies
-                void display(std::ostream &os)    const;        //!< display status
-                void write_(StreamBits &io, const uint8_t byte); //!< emit and check sumf
-                
-                //! todo
-                void write(StreamBits &io, const uint8_t byte, Model &model);
+                void reset() noexcept;
+                void reduceFrequencies() noexcept;
+                void display(std::ostream &os) const;
 
-                //! toto
-                void flush(StreamBits &io);
-                
+                const Symbol::List & operator*()  const noexcept;
+                const Symbol::List * operator->() const noexcept;
 
-                Unit::List   used; //!< current used units
-                Emit         emit; //!< current emit proc
-                Unit * const unit; //!< unit[0..Universe-1]
-                Unit * const nyt;  //!< NYT unit
-                Unit * const eos;  //!< EOS unit
-                uint32_t     sumf; //!< cumulative sum of frequencies
-                unsigned     nchr; //!< 0..256
+                const Symbol & NYT() const noexcept;
+                const Symbol & EOS() const noexcept;
 
-                Unit  *      ctrl[Unit::Controls]; //!< involved control units [NYT[,EOS]]
-                const size_t nctl;                 //!< 1 or 2...
+                const Symbol & operator()(const uint8_t);
+
+
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
-                static const size_t Required = sizeof(Unit) * Unit::Universe;
-                void pushControls() noexcept; //!< push ctrl to used
-                void Init(StreamBits &io, const uint8_t byte);
-                void Bulk(StreamBits &io, const uint8_t byte);
-                void Full(StreamBits &io, const uint8_t byte);
+                Symbol::List   symbols;
+                size_t         active;
+                Symbol * const symbol;
+                Symbol * const nyt;
+                Symbol * const eos;
+                Symbol *       control[Symbol::Controls];
+                size_t         controls;
+                void *         workspace[ Y_WORDS_GEQ(Required) ];
 
-
-                void *wksp[ Y_WORDS_GEQ(Required) ];
+                void initControls(const Mode) noexcept;
+                void pushControls() noexcept;
             };
 
 
