@@ -13,7 +13,6 @@ namespace Yttrium
 {
 
 
-
     const char * const OutputFile::CallSign = "OutputFile";
 
     const char * OutputFile:: callSign() const noexcept { return CallSign; }
@@ -107,4 +106,35 @@ namespace Yttrium
 
 }
 
+namespace Yttrium
+{
 
+    AppendFile:: AppendFile(const char *fn) :
+    OutputFile(fn,true)
+    {
+    }
+
+
+
+    AppendFile:: AppendFile(const Core::String<char> &fn) :
+    OutputFile(fn,true)
+    {
+    }
+
+    AppendFile:: ~AppendFile() noexcept
+    {
+    }
+
+    AppendFile:: AppendFile(const StdErr_ &_) : OutputFile(_) {}
+
+    AppendFile:: AppendFile(const StdOut_ &_) : OutputFile(_) {}
+
+}
+
+
+namespace Yttrium
+{
+
+    
+
+}

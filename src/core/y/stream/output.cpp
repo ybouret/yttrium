@@ -95,6 +95,7 @@ namespace Yttrium
             va_end(ap);
             if(res<0) throw Libc::Exception(errno,"%s(...)",fn);
         }
+        
         if(res>0)
         {
             const size_t           blockSize = res;

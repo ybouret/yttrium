@@ -57,7 +57,7 @@ namespace Yttrium
         //! overwrite filename
         static void Overwrite(const char *               filename);
 
-
+        
         //______________________________________________________________________
         //
         //
@@ -74,8 +74,22 @@ namespace Yttrium
         void emit();
     };
 
+    class AppendFile : public OutputFile
+    {
+    public:
+        virtual ~AppendFile() noexcept;
+        explicit AppendFile(const char               *);
+        explicit AppendFile(const Core::String<char> &);
+        explicit AppendFile(const StdErr_ &);
+        explicit AppendFile(const StdOut_ &);
+
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(AppendFile);
+    };
 
 }
+
 
 
 #endif

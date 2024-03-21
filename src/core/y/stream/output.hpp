@@ -57,7 +57,7 @@ namespace Yttrium
         OutputStream & operator<<(const char *);                     //!< helper
         OutputStream & operator<<(const Memory::ReadOnlyBuffer &);   //!< helper
         OutputStream & operator()(const char *fmt,...) Y_PRINTF_API; //!< helper
-
+        
         void issue(const uint8_t  &); //!< fixed size BE issue
         void issue(const uint16_t &); //!< fixed size BE issue
         void issue(const uint32_t &); //!< fixed size BE issue
