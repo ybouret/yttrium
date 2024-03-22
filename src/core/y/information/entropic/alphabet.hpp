@@ -3,7 +3,7 @@
 #ifndef Y_Information_Entropic_Alphabet_Included
 #define Y_Information_Entropic_Alphabet_Included 1
 
-#include "y/information/entropic/symbol.hpp"
+#include "y/information/entropic/model.hpp"
 #include "y/calculus/align.hpp"
 
 namespace Yttrium
@@ -48,7 +48,9 @@ namespace Yttrium
 
                 const Symbol & operator[](const uint8_t) const noexcept;
 
-                
+                void update(const Symbol &symb) noexcept;
+                void commit(Model &) noexcept;
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
@@ -62,6 +64,9 @@ namespace Yttrium
                 void *         workspace[ Y_WORDS_GEQ(Required) ];
 
                 void pushControls() noexcept;
+                void insertSymbol(Symbol * const) noexcept;
+                void updateSymbol(Symbol * const) noexcept;
+                void monitorFreqs() noexcept;
             };
 
 

@@ -28,7 +28,7 @@ namespace Yttrium
             {
             }
 
-
+         
             void Symbol:: reset() noexcept
             {
                 freq = 0;

@@ -62,7 +62,7 @@ namespace Yttrium
                         break;
 
                     case SingleStream:
-                        symbols.pushTail(nyt);
+                        symbols.pushTail(eos);
                         break;
 
                     case MultiStreams:
@@ -113,7 +113,84 @@ namespace Yttrium
                 return symbol[byte];
             }
 
-            
+            void Alphabet:: insertSymbol(Symbol * const node) noexcept
+            {
+                assert(0!=node);
+                assert(1==node->freq);
+                assert(active<Symbol::Encoding);
+                switch(mode)
+                {
+                    case Precompiling:
+                        assert(false == symbols.owns(eos));
+                        assert(false == symbols.owns(nyt));
+                        symbols.pushTail(node);
+                        break;
+
+                    case SingleStream:
+                        assert(true  == symbols.owns(eos));
+                        assert(false == symbols.owns(nyt));
+                        assert(symbols.tail==eos);
+                        symbols.insertBefore(eos,node);
+                        break;
+
+                    case MultiStreams:
+                        assert(true  == symbols.owns(eos));
+                        switch(active)
+                        {
+                            case Symbol::Encoding:
+                                assert(false == symbols.owns(nyt));
+                                symbols.insertBefore(eos,node);
+                                break;
+
+                            case Symbol::Encoding-1:
+                                assert(true == symbols.owns(nyt));
+                                assert(nyt == symbols.tail);
+                                (void) symbols.popTail();
+                                symbols.insertBefore(eos,node);
+                                break;
+
+                            default:
+                                assert(active<Symbol::Encoding-1);
+                                assert(true == symbols.owns(nyt));
+                                symbols.insertBefore(eos,node);
+                                break;
+                        }
+                        break;
+                }
+                ++active;
+            }
+
+            void Alphabet:: updateSymbol(Symbol * const mine) noexcept
+            {
+                assert(mine->freq>1);
+                const Symbol::FreqType freq = mine->freq;
+                while(mine->prev && mine->prev->freq<freq) symbols.towardsHead(mine);
+            }
+
+            void Alphabet:: monitorFreqs() noexcept
+            {
+                if(++sumFreq>=Symbol::MaxFreq)
+                    reduceFrequencies();
+            }
+
+
+            void Alphabet:: update(const Symbol &symb) noexcept
+            {
+                Symbol * const mine = & Coerce(symb);
+
+                if(mine->freq++ <= 0)
+                    insertSymbol(mine);
+                else
+                    updateSymbol(mine);
+                monitorFreqs();
+            }
+
+
+            void Alphabet:: commit(Model &model) noexcept
+            {
+                if(symbols.size>0)
+                    model.build(symbols);
+            }
 
 
 

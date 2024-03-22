@@ -37,7 +37,7 @@ namespace Yttrium
                 uint32_t       reduceFrequency()    noexcept; //!< reduce frequency
                 void           to(StreamBits &io)      const;
                 std::ostream & display(std::ostream &) const;
-
+                
 
                 Symbol *        next; //!< for List
                 Symbol *        prev; //!< for List
