@@ -182,14 +182,15 @@ namespace Yttrium
                     insertSymbol(mine);
                 else
                     updateSymbol(mine);
+                
                 monitorFreqs();
             }
 
 
             void Alphabet:: commit(Model &model) noexcept
             {
-                if(symbols.size>0)
-                    model.build(symbols);
+                assert(symbols.size>0);
+                model.build(symbols);
             }
 
 

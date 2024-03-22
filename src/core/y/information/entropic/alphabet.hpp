@@ -48,8 +48,8 @@ namespace Yttrium
 
                 const Symbol & operator[](const uint8_t) const noexcept;
 
-                void update(const Symbol &symb) noexcept;
-                void commit(Model &) noexcept;
+                void update(const Symbol &symb) noexcept; //!< update chosen symbol
+                void commit(Model &)            noexcept; //!< symbols.size>0
 
 
             private:
@@ -58,10 +58,10 @@ namespace Yttrium
                 Symbol::FreqType sumFreq; //!< sum of all frequencies
                 size_t           active;  //!< number of active
                 Symbol * const   symbol;
-                const Mode     mode;
-                Symbol * const nyt;
-                Symbol * const eos;
-                void *         workspace[ Y_WORDS_GEQ(Required) ];
+                const Mode       mode;
+                Symbol * const   nyt;
+                Symbol * const   eos;
+                void *           workspace[ Y_WORDS_GEQ(Required) ];
 
                 void pushControls() noexcept;
                 void insertSymbol(Symbol * const) noexcept;
