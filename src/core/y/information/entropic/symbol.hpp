@@ -17,10 +17,23 @@ namespace Yttrium
         namespace Entropic
         {
 
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Symbol with its information
+            //
+            //
+            //__________________________________________________________________
             class Symbol
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
                 typedef RawListOf<Symbol> List;                      //!< alias
                 static const uint16_t Encoding = 256;                //!< Encoding bytes
                 static const uint16_t Controls = 2;                  //!< Control codes
@@ -29,16 +42,33 @@ namespace Yttrium
                 static const uint16_t NYT      = Encoding;           //!< Not Yet Transmitted
                 static const uint16_t EOS      = Encoding+1;         //!< End Of Stream
 
-                Symbol(const uint16_t initCode, const uint16_t initBits) noexcept;
-                ~Symbol() noexcept;
-                
-                const char *   name()         const noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                Symbol(const uint16_t initCode, const uint16_t initBits) noexcept; //!< setup
+                ~Symbol()                                                noexcept; //!< cleanup
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                const char *   name()         const noexcept; //!< printable name
                 void           reset()              noexcept; //!< freq=0, code=_code, bits=_bits
                 uint32_t       reduceFrequency()    noexcept; //!< reduce frequency
-                void           to(StreamBits &io)      const;
-                std::ostream & display(std::ostream &) const;
-                
+                void           to(StreamBits &io)      const; //!< push code/bits to io
+                std::ostream & display(std::ostream &) const; //!< display
 
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
                 Symbol *        next; //!< for List
                 Symbol *        prev; //!< for List
                 void   *        data; //!< private data
@@ -48,8 +78,8 @@ namespace Yttrium
                 const uint16_t _code; //!< original code
                 const uint16_t _bits; //!< original bits
 
-                typedef UnsignedInt<sizeof(freq)>::Type FreqType;
-                static const FreqType MaxFreq = IntegerFor<FreqType>::Maximum;
+                typedef UnsignedInt<sizeof(freq)>::Type FreqType;              //!< alias
+                static const FreqType MaxFreq = IntegerFor<FreqType>::Maximum; //!< alias
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Symbol);

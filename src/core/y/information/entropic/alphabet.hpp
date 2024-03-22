@@ -26,30 +26,50 @@ namespace Yttrium
             class Alphabet
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+               
+                //! building mode
                 enum Mode
                 {
                     Precompiling, //!< no  EOS, no  NYT
                     SingleStream, //!< no  EOS, use NYT
                     MultiStreams  //!< use EOS, use NYT
                 };
-                static const char * ModeText(const Mode) noexcept;
+                static const char * ModeText(const Mode) noexcept;                //!< human readadle mode
                 static const size_t Required = Symbol::Universe * sizeof(Symbol); //!< RequiredBytes
 
-                explicit Alphabet(const Mode m) noexcept;
-                virtual ~Alphabet() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Alphabet(const Mode m) noexcept; //!< setup
+                virtual ~Alphabet()             noexcept; //!< cleanup
 
-                void reset() noexcept;
-                void reduceFrequencies() noexcept;
-                void display(std::ostream &os) const;
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+             
+                void reset()                noexcept; //!< reset all
+                void reduceFrequencies()    noexcept; //!< reduce all frequencies
+                void display(std::ostream &os) const; //!< display info
 
-                const char *         modeText()   const noexcept;
-                const Symbol::List & operator*()  const noexcept;
-                const Symbol::List * operator->() const noexcept;
+                const char *         modeText()   const noexcept; //!< human readable
+                const Symbol::List & operator*()  const noexcept; //!< access
+                const Symbol::List * operator->() const noexcept; //!< access
 
-                const Symbol & operator[](const uint8_t) const noexcept;
-
-                void update(const Symbol &symb) noexcept; //!< update chosen symbol
-                void commit(Model &)            noexcept; //!< symbols.size>0
+                const Symbol & operator[](const uint8_t) const noexcept; //!< access symbol
+                void update(const Symbol &symb)                noexcept; //!< update chosen symbol
+                void commit(Model &)                           noexcept; //!< symbols.size>0
 
 
             private:

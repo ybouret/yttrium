@@ -74,14 +74,22 @@ namespace Yttrium
         void emit();
     };
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! OutputFile appending to an OutputFile
+    //
+    //
+    //__________________________________________________________________________
     class AppendFile : public OutputFile
     {
     public:
-        virtual ~AppendFile() noexcept;
-        explicit AppendFile(const char               *);
-        explicit AppendFile(const Core::String<char> &);
-        explicit AppendFile(const StdErr_ &);
-        explicit AppendFile(const StdOut_ &);
+        virtual ~AppendFile() noexcept;                   //!< cleanup
+        explicit AppendFile(const char               *);  //!< append to filename
+        explicit AppendFile(const Core::String<char> &);  //!< append to filename
+        explicit AppendFile(const StdErr_ &);             //!< append to stderr
+        explicit AppendFile(const StdOut_ &);             //!< append to stdout
 
 
     private:
