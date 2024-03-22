@@ -29,7 +29,7 @@ void loadAlpha(Entropic::Alphabet &alpha, const SEQ &msg, Entropic::Model &model
     alpha.display(std::cerr);
     const size_t nb = alpha.outputBytesFor(msg);
     std::cerr << "OutputBytes: " << nb << "/" << msg.size() << std::endl;
-    
+
 #if 1
     for(unsigned i=0;i<256;++i)
     {
@@ -38,6 +38,9 @@ void loadAlpha(Entropic::Alphabet &alpha, const SEQ &msg, Entropic::Model &model
     //alpha.display(std::cerr);
 #endif
 }
+
+
+
 
 Y_UTEST(info_pack)
 {
