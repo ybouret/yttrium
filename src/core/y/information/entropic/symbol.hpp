@@ -34,7 +34,7 @@ namespace Yttrium
                 
                 const char *   name()         const noexcept;
                 void           reset()              noexcept; //!< freq=0, code=_code, bits=_bits
-                void           reduceFrequency()    noexcept; //!< reduce frequency
+                uint32_t       reduceFrequency()    noexcept; //!< reduce frequency
                 void           to(StreamBits &io)      const;
                 std::ostream & display(std::ostream &) const;
 
@@ -47,6 +47,9 @@ namespace Yttrium
                 uint32_t        bits; //!< current bits
                 const uint16_t _code; //!< original code
                 const uint16_t _bits; //!< original bits
+
+                typedef UnsignedInt<sizeof(freq)>::Type FreqType;
+                static const FreqType MaxFreq = IntegerFor<FreqType>::Maximum;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Symbol);

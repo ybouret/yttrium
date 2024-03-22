@@ -32,6 +32,7 @@ namespace Yttrium
 
             Alphabet:: Alphabet(const Mode m) noexcept :
             symbols(),
+            sumFreq(0),
             active(0),
             symbol(0),
             mode(m),
@@ -42,18 +43,13 @@ namespace Yttrium
 
                 Coerce(symbol) = static_cast<Symbol *>(Y_STATIC_ZARR(workspace));
 
-                for(uint16_t i=0;i<Symbol::Encoding;++i)
-                {
-                    new (symbol+i) Symbol(i,8);
-                }
-
-                for(uint16_t i=Symbol::Encoding;i<Symbol::Universe;++i)
-                {
-                    new (symbol+i) Symbol(i,0);
-                }
+                for(uint16_t i=0;i<Symbol::Encoding;++i)                new (symbol+i) Symbol(i,8);
+                for(uint16_t i=Symbol::Encoding;i<Symbol::Universe;++i) new (symbol+i) Symbol(i,0);
 
                 Coerce(nyt) = &symbol[ Symbol::NYT ];
                 Coerce(eos) = &symbol[ Symbol::EOS ];
+
+                pushControls();
             }
 
 
@@ -85,24 +81,25 @@ namespace Yttrium
             void Alphabet:: reset() noexcept
             {
                 symbols.reset();
-                active = 0;
+                sumFreq = 0;
+                active  = 0;
                 for(uint16_t i=0;i<Symbol::Universe;++i)
                     symbol[i].reset();
                 pushControls();
-
             }
 
 
             void Alphabet:: reduceFrequencies() noexcept
             {
+                sumFreq = 0;
                 for(Symbol *symb=symbols.head;symb;symb=symb->next)
-                    symb->reduceFrequency();
+                    sumFreq += symb->reduceFrequency();
             }
 
 
             void Alphabet:: display(std::ostream &os) const
             {
-                os << "<Alphabet mode='" << modeText() << "'>" << std::endl;
+                os << "<Alphabet mode='" << modeText() << "' sumFreq='" << sumFreq << "'>" << std::endl;
                 for(const Symbol *symb=symbols.head;symb;symb=symb->next)
                 {
                     symb->display(os << "  ") << std::endl;
@@ -110,6 +107,11 @@ namespace Yttrium
                 os << "<Alphabet>" << std::endl;
             }
 
+            const Symbol & Alphabet:: operator[](const uint8_t byte) const noexcept
+            {
+                assert(0!=symbol);
+                return symbol[byte];
+            }
 
             
 

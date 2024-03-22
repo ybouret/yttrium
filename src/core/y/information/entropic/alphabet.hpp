@@ -45,13 +45,17 @@ namespace Yttrium
                 const char *         modeText()   const noexcept;
                 const Symbol::List & operator*()  const noexcept;
                 const Symbol::List * operator->() const noexcept;
+
+                const Symbol & operator[](const uint8_t) const noexcept;
+
                 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
-                Symbol::List   symbols; //!< list of symbols+controls
-                size_t         active;  //!< number of active
-                Symbol * const symbol;
+                Symbol::List     symbols; //!< list of symbols+controls
+                Symbol::FreqType sumFreq; //!< sum of all frequencies
+                size_t           active;  //!< number of active
+                Symbol * const   symbol;
                 const Mode     mode;
                 Symbol * const nyt;
                 Symbol * const eos;

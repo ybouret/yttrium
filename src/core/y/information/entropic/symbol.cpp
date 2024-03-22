@@ -39,7 +39,7 @@ namespace Yttrium
                 prev = 0;
             }
 
-            void Symbol:: reduceFrequency() noexcept
+            uint32_t Symbol:: reduceFrequency() noexcept
             {
                 switch(freq)
                 {
@@ -50,7 +50,7 @@ namespace Yttrium
                     default:
                         freq >>= 1;
                 }
-
+                return freq;
             }
 
             const char * Symbol:: name() const noexcept
