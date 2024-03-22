@@ -15,7 +15,7 @@ namespace Yttrium
         namespace Entropic
         {
 
-#if 0
+#if 1
             //__________________________________________________________________
             //
             //
@@ -33,9 +33,9 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                static const size_t   MaxUnits = Unit::MaxAlive; //!< max alive units
-                static const size_t   MaxNodes = 2*MaxUnits-1;   //!< full binary tree
-                
+                static const size_t   MaxCodes = Symbol::MaxAlive; //!< max alive units
+                static const size_t   MaxNodes = 2*MaxCodes-1;   //!< full binary tree
+
                 //______________________________________________________________
                 //
                 //
@@ -71,7 +71,7 @@ namespace Yttrium
                 };
 
                 typedef Node *                                       HandleType; //!< alias
-                typedef Core::CompiledRawBuffer<MaxUnits,HandleType> BufferType; //!< alias
+                typedef Core::CompiledRawBuffer<MaxCodes,HandleType> BufferType; //!< alias
                 typedef Heap<HandleType,BufferType,Node::Comparator> PQueueType; //!< alias
 
                 //______________________________________________________________
@@ -84,7 +84,7 @@ namespace Yttrium
                 virtual ~Huffman() noexcept; //!< cleanup
 
                 //! build from used, used.size>0
-                virtual void build(Unit::List &used) noexcept;
+                virtual void build(Symbol::List &used) noexcept;
 
 
                 HandleType const root; //!< root node

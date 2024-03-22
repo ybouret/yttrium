@@ -4,6 +4,8 @@
 #include "y/stream/libc/output.hpp"
 #include "y/calculus/bit-count.hpp"
 
+#include <cstring>
+
 using namespace Yttrium;
 
 static int width = 12;

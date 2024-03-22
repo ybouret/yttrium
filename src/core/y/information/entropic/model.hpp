@@ -4,7 +4,7 @@
 #ifndef Y_Information_Entropic_Model_Included
 #define Y_Information_Entropic_Model_Included 1
 
-#include "y/information/entropic/unit.hpp"
+#include "y/information/entropic/symbol.hpp"
 
 namespace Yttrium
 {
@@ -30,7 +30,7 @@ namespace Yttrium
                 virtual ~Model() noexcept;
 
                 //! build from used units
-                virtual void build(Unit::List &) = 0;
+                virtual void build(Symbol::List &) = 0;
 
             protected:
                 explicit Model() noexcept;

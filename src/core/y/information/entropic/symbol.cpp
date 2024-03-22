@@ -35,6 +35,8 @@ namespace Yttrium
                 code = _code;
                 bits = _bits;
                 data = 0;
+                next = 0;
+                prev = 0;
             }
 
             void Symbol:: reduceFrequency() noexcept

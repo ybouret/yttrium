@@ -12,17 +12,31 @@ namespace Yttrium
 
         namespace Entropic
         {
+            const char * Alphabet:: ModeText(const Mode m) noexcept
+            {
+                switch(m)
+                {
+                    case Precompiling: return "Precompiling";
+                    case SingleStream: return "SingleStream";
+                    case MultiStreams: return "MultiStreams";
+                }
+                return Core::Unknown;
+            }
+
+            const char * Alphabet:: modeText()   const noexcept
+            {
+                return ModeText(mode);
+            }
 
 
 
-            Alphabet:: Alphabet(const Mode mode) noexcept :
+            Alphabet:: Alphabet(const Mode m) noexcept :
             symbols(),
             active(0),
             symbol(0),
+            mode(m),
             nyt(0),
             eos(0),
-            control(),
-            controls(0),
             workspace()
             {
 
@@ -40,34 +54,26 @@ namespace Yttrium
 
                 Coerce(nyt) = &symbol[ Symbol::NYT ];
                 Coerce(eos) = &symbol[ Symbol::EOS ];
-
-                initControls(mode);
             }
 
-            void Alphabet:: initControls(const Mode mode) noexcept
+
+
+            void Alphabet:: pushControls() noexcept
             {
-                memset(control,0,sizeof(control));
-                controls = 0;
                 switch(mode)
                 {
                     case Precompiling:
                         break;
 
                     case SingleStream:
-                        control[controls++] = nyt;
+                        symbols.pushTail(nyt);
                         break;
 
                     case MultiStreams:
-                        control[controls++] = nyt;
-                        control[controls++] = eos;
+                        symbols.pushTail(eos);
+                        symbols.pushTail(nyt);
                         break;
                 }
-                pushControls();
-            }
-
-            void Alphabet:: pushControls() noexcept
-            {
-                for(size_t i=0;i<controls;++i) symbols.pushTail(control[i]);
             }
 
 
@@ -83,6 +89,7 @@ namespace Yttrium
                 for(uint16_t i=0;i<Symbol::Universe;++i)
                     symbol[i].reset();
                 pushControls();
+
             }
 
 
@@ -95,7 +102,7 @@ namespace Yttrium
 
             void Alphabet:: display(std::ostream &os) const
             {
-                os << "<Alphabet controls='" << controls << "'>" << std::endl;
+                os << "<Alphabet mode='" << modeText() << "'>" << std::endl;
                 for(const Symbol *symb=symbols.head;symb;symb=symb->next)
                 {
                     symb->display(os << "  ") << std::endl;
@@ -104,17 +111,8 @@ namespace Yttrium
             }
 
 
-            const Symbol & Alphabet:: NYT() const noexcept
-            {
-                assert(0!=nyt);
-                return *nyt;
-            }
+            
 
-            const Symbol & Alphabet:: EOS() const noexcept
-            {
-                assert(0!=eos);
-                return *eos;
-            }
 
 
         }

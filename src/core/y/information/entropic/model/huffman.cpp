@@ -10,7 +10,7 @@ namespace Yttrium
         namespace Entropic
         {
 
-#if 0
+#if 1
             Huffman::Node::Comparator::  Comparator() noexcept {}
             Huffman::Node::Comparator:: ~Comparator() noexcept {}
             SignType Huffman::Node::Comparator:: operator()(const Node * const lhs, const Node * const rhs) const noexcept
@@ -60,7 +60,7 @@ namespace Yttrium
                 return static_cast<T *>( memset(&obj,0x00,sizeof(T)) );
             }
 
-            void Huffman:: build(Unit::List &used) noexcept
+            void Huffman:: build(Symbol::List &used) noexcept
             {
                 assert(used.size>0);
 
@@ -71,12 +71,12 @@ namespace Yttrium
                     // loading leaves into heap
                     //
                     //----------------------------------------------------------
-                    size_t    indx = 0;
-                    for(Unit *unit = used.head;unit;unit=unit->next)
+                    size_t      indx = 0;
+                    for(Symbol *symb = used.head;symb;symb=symb->next)
                     {
                         Node *node = Zeroed<Node>(knot[indx++]);
-                        node->freq = unit->freq;
-                        unit->priv = node;
+                        node->freq = symb->freq;
+                        symb->data = node;
                         heap.insert(node);
                     }
 
@@ -105,12 +105,12 @@ namespace Yttrium
                 //----------------------------------------------------------
                 Coerce(root) = heap.pull();
                 root->make();
-                for(Unit *unit = used.head;unit;unit=unit->next)
+                for(Symbol *symb = used.head;symb;symb=symb->next)
                 {
-                    assert(0!=unit->priv);
-                    const Node *node = static_cast<const Node *>(unit->priv);
-                    unit->code = node->code;
-                    unit->bits = node->bits;
+                    assert(0!=symb->data);
+                    const Node *node = static_cast<const Node *>(symb->data);
+                    symb->code = node->code;
+                    symb->bits = node->bits;
                 }
 
             }
