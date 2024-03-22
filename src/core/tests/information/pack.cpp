@@ -27,20 +27,22 @@ void loadAlpha(Entropic::Alphabet &alpha, const SEQ &msg, Entropic::Model &model
     alpha.display(std::cerr);
     alpha.commit(model);
     alpha.display(std::cerr);
-
-#if 0
+    const size_t nb = alpha.outputBytesFor(msg);
+    std::cerr << "OutputBytes: " << nb << "/" << msg.size() << std::endl;
+    
+#if 1
     for(unsigned i=0;i<256;++i)
     {
         alpha.update( alpha[i] );
     }
-    alpha.display(std::cerr);
+    //alpha.display(std::cerr);
 #endif
 }
 
 Y_UTEST(info_pack)
 {
     Random::Rand ran;
-    Vector<char> msg;
+    String       msg;
     for(unsigned i=0;i<NN;++i)
     {
         const char c=Ch[i];
@@ -54,9 +56,11 @@ Y_UTEST(info_pack)
 
     Entropic::Alphabet alphaBlock(Entropic::Alphabet::Precompiling);
     Entropic::Alphabet alphaFlux1(Entropic::Alphabet::SingleStream);
+    Entropic::Alphabet alphaFlux2(Entropic::Alphabet::MultiStreams);
 
     loadAlpha(alphaBlock,msg,huff);
     loadAlpha(alphaFlux1,msg,huff);
+    loadAlpha(alphaFlux2,msg,huff);
 
 
 

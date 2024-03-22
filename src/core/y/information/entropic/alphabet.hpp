@@ -5,6 +5,7 @@
 
 #include "y/information/entropic/model.hpp"
 #include "y/calculus/align.hpp"
+#include "y/memory/buffer/ro.hpp"
 
 namespace Yttrium
 {
@@ -70,6 +71,8 @@ namespace Yttrium
                 const Symbol & operator[](const uint8_t) const noexcept; //!< access symbol
                 void update(const Symbol &symb)                noexcept; //!< update chosen symbol
                 void commit(Model &)                           noexcept; //!< symbols.size>0
+
+                size_t outputBytesFor(const Memory::ReadOnlyBuffer &) const;
 
 
             private:

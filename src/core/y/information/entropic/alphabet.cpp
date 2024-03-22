@@ -3,6 +3,7 @@
 #include "y/text/ascii/printable.hpp"
 #include "y/memory/out-of-reach.hpp"
 #include <iomanip>
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -182,7 +183,7 @@ namespace Yttrium
                     insertSymbol(mine);
                 else
                     updateSymbol(mine);
-                
+
                 monitorFreqs();
             }
 
@@ -193,6 +194,20 @@ namespace Yttrium
                 model.build(symbols);
             }
 
+
+            size_t Alphabet:: outputBytesFor(const Memory::ReadOnlyBuffer &buffer) const
+            {
+                size_t         bits = 0;
+                const uint8_t *data = static_cast<const uint8_t *>(buffer.ro_addr());
+                for(size_t i=buffer.measure();i>0;--i)
+                {
+                    const uint8_t byte = *(data++);
+                    const Symbol &symb = symbol[byte];
+                    if(symb.freq<=0) throw  Exception("unregistered '%s' from buffer in Alphabet::outputBytesFor", symb.name());
+                    bits += symb.bits;
+                }
+                return Y_ALIGN8(bits) >> 3;
+            }
 
 
         }
