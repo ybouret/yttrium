@@ -4,7 +4,7 @@
 #define Y_CONCURRENT_FRAME_PUNCTUAL_INCLUDED 1
 
 #include "y/config/starting.hpp"
-#include <iosfwd>
+#include "y/ostream-proto.hpp"
 
 namespace Yttrium
 {
@@ -12,13 +12,21 @@ namespace Yttrium
     {
         namespace Nucleus
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Dummy class for Punctual Frame (used with Pipeline)
+            //
+            //
+            //__________________________________________________________________
             class  Punctual
             {
             public:
-                explicit Punctual() noexcept;
-                virtual ~Punctual() noexcept;
 
-                friend std::ostream & operator<<(std::ostream &, const Punctual &);
+                explicit Punctual() noexcept; //!< setup
+                virtual ~Punctual() noexcept; //!< cleanup
+                Y_OSTREAM_PROTO(Punctual);    //!< display
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Punctual);

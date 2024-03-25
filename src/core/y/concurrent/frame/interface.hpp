@@ -11,19 +11,25 @@ namespace Yttrium
 {
     namespace Concurrent
     {
-        //! MAPPING = [Nucleus::Punctual|ForLoop<T>|AutoPtr<Tiling<T>::Tile>]
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Frame with assignable mapping
+        /**
+         MAPPING = [Nucleus::Punctual|ForLoop|AutoPtr Tile]
+         */
+        //
+        //______________________________________________________________________
         template <typename MAPPING>
         class Frame : public Nucleus::Frame
         {
         protected:
-
-            explicit Frame(const ThreadContext &ctx) noexcept :
-            Nucleus::Frame(ctx), workspace()
-            {
-            }
+            inline explicit Frame(const ThreadContext &ctx) noexcept :
+            Nucleus::Frame(ctx), workspace() {}
 
         public:
-            virtual ~Frame() noexcept { quit(); }
+            inline virtual ~Frame() noexcept { quit(); }
 
             
             inline void quit() noexcept { this->workspace.erase(); }

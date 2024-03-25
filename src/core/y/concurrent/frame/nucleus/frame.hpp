@@ -12,13 +12,21 @@ namespace Yttrium
     {
         namespace Nucleus
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! base class for a Frame
+            //
+            //
+            //__________________________________________________________________
             class Frame : public ThreadContext
             {
             public:
-                virtual ~Frame() noexcept;
+                virtual ~Frame() noexcept; //!< cleanup
 
             protected:
-                explicit Frame(const ThreadContext &) noexcept;
+                explicit Frame(const ThreadContext &) noexcept; //!< setup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Frame);
