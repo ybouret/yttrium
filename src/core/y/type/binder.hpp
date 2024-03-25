@@ -11,10 +11,54 @@
 namespace Yttrium
 {
 
+    namespace Core
+    {
+        template <const bool> struct InitBlock;
+
+        //______________________________________________________________________
+        //
+        //
+        //! Init Block/Primitive
+        //
+        //______________________________________________________________________
+        template <> struct InitBlock<true>
+        {
+            //! zero block
+            static void At(const void *, const size_t) noexcept;
+        };
+
+        //______________________________________________________________________
+        //
+        //
+        //! Init Block/Compound
+        //
+        //______________________________________________________________________
+        template <> struct InitBlock<false>
+        {
+            //! do nothing
+            static void At(const void *, const size_t) noexcept;
+        };
+
+        //______________________________________________________________________
+        //
+        //
+        //! Init Default Argument
+        //
+        //______________________________________________________________________
+        template <typename T>
+        inline void InitArgument(const T &arg)
+        {
+            typedef typename TypeTraits<T>::MutableType TT;
+            InitBlock<TypeTraits<TT>::IsPrimitive>::At( &arg, sizeof(T) );
+        }
+    }
     //__________________________________________________________________________
     //
     //
     //! helper to declare parameters in Binder
+    /**
+     extract I-th argument, empty type if not in list
+     */
     //
     //__________________________________________________________________________
 #define Y_BINDER_DECL(I)                                               \
@@ -27,13 +71,17 @@ Type##I                                                      arg##I
     //
     //
     //! helper to implement derived class
+    /**
+     alias the arguments of the list
+     */
     //
     //__________________________________________________________________________
-#define Y_BINDER_ECHO(THE_LIST)                     \
-typedef typename Binder<THE_LIST>::Param1 Param1;   \
-typedef typename Binder<THE_LIST>::Param2 Param2;   \
-typedef typename Binder<THE_LIST>::Param3 Param3;   \
-typedef typename Binder<THE_LIST>::Param4 Param4;   \
+#define Y_BINDER_ECHO(THE_LIST)                       \
+typedef typename Binder<THE_LIST>::Param1   Param1;   \
+typedef typename Binder<THE_LIST>::Param2   Param2;   \
+typedef typename Binder<THE_LIST>::Param3   Param3;   \
+typedef typename Binder<THE_LIST>::Param4   Param4;   \
+typedef typename Binder<THE_LIST>::Param5   Param5;   \
 typedef typename Binder<THE_LIST>::ArgsType ArgsType
 
     //__________________________________________________________________________
@@ -46,13 +94,18 @@ typedef typename Binder<THE_LIST>::ArgsType ArgsType
 using Binder<THE_LIST>::arg1;   \
 using Binder<THE_LIST>::arg2;   \
 using Binder<THE_LIST>::arg3;   \
-using Binder<THE_LIST>::arg4
+using Binder<THE_LIST>::arg4;   \
+using Binder<THE_LIST>::arg5
 
 
     //__________________________________________________________________________
     //
     //
-    //! Binding types, using Functor approahc
+    //! Binding types, using Functor approach
+    /**
+     - extract types from the TLIST to build arg1,...,argN
+     - use constructor with matching parameter types to setup
+     */
     //
     //__________________________________________________________________________
     template <typename TLIST>
@@ -69,6 +122,8 @@ using Binder<THE_LIST>::arg4
         Y_BINDER_DECL(2); //!< arg2
         Y_BINDER_DECL(3); //!< arg3
         Y_BINDER_DECL(4); //!< arg4
+        Y_BINDER_DECL(5); //!< arg5
+
         static const size_t    ARGN = TL::LengthOf<TLIST>::Value; //!< alias
         typedef Int2Type<ARGN> ArgsType;                          //!< alias
 
@@ -81,29 +136,63 @@ using Binder<THE_LIST>::arg4
 
         //! empty/default binder
         inline explicit Binder() : 
-        arg1(), arg2(), arg3(), arg4() {}
+        arg1(), arg2(), arg3(), arg4(), arg5() 
+        {
+            Core::InitArgument(arg1);
+            Core::InitArgument(arg2);
+            Core::InitArgument(arg3);
+            Core::InitArgument(arg4);
+            Core::InitArgument(arg5);
+        }
 
         //! setup1
         inline explicit Binder(Param1 p1) : 
-        arg1(p1), arg2(), arg3(), arg4() {}
+        arg1(p1), arg2(), arg3(), arg4(), arg5() 
+        {
+            Core::InitArgument(arg2);
+            Core::InitArgument(arg3);
+            Core::InitArgument(arg4);
+            Core::InitArgument(arg5);
+        }
 
         //! setup2
         inline explicit Binder(Param1 p1,
                                Param2 p2) :
-        arg1(p1), arg2(p2), arg3(), arg4() {}
+        arg1(p1), arg2(p2), arg3(), arg4(), arg5() 
+        {
+            Core::InitArgument(arg3);
+            Core::InitArgument(arg4);
+            Core::InitArgument(arg5);
+        }
 
         //! setup3
         inline explicit Binder(Param1 p1,
                                Param2 p2,
                                Param3 p3) : 
-        arg1(p1), arg2(p2), arg3(p3), arg4() {}
+        arg1(p1), arg2(p2), arg3(p3), arg4(), arg5() 
+        {
+            Core::InitArgument(arg4);
+            Core::InitArgument(arg5);
+        }
 
         //! setup4
         inline explicit Binder(Param1 p1,
                                Param2 p2,
                                Param3 p3,
                                Param4 p4) : 
-        arg1(p1), arg2(p2), arg3(p3), arg4(p4) {}
+        arg1(p1), arg2(p2), arg3(p3), arg4(p4), arg5() 
+        {
+            Core::InitArgument(arg5);
+        }
+
+
+        //! setup5
+        inline explicit Binder(Param1 p1,
+                               Param2 p2,
+                               Param3 p3,
+                               Param4 p4,
+                               Param5 p5) :
+        arg1(p1), arg2(p2), arg3(p3), arg4(p4), arg5(p5) {}
 
         //! cleanup
         inline virtual ~Binder() noexcept {}

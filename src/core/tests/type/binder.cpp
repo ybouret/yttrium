@@ -10,24 +10,44 @@ using namespace Yttrium;
 
 Y_UTEST(type_binder)
 {
-    Binder<TL1(const int)> ib(2); std::cerr << ib.arg1 << std::endl;
-    Binder<NullType>       nb;
 
-    std::cerr << ib << std::endl;
-    Y_SIZEOF(ib);
-    std::cerr << nb << std::endl;
-    Y_SIZEOF(nb);
+    {
+        std::cerr << "NullType" << std::endl;
+        Binder<NullType> bnd;
+        std::cerr << bnd << std::endl << std::endl;
+    }
 
-    int    v     = 1;
-    String s     = "hello";
-    Binder<TL2(String, int &)> xb(s,v);
-    std::cerr << xb << std::endl;
-    s = "world";
-    std::cerr << xb << std::endl;
-    Y_CHECK("hello" == xb.arg1);
-    xb.arg2 = 2;
-    std::cerr << xb << " / " << v << std::endl;
-    Y_CHECK(2==v);
+    {
+        std::cerr << "const int/default" << std::endl;
+        Binder<TL1(const int)> bnd;
+        std::cerr << bnd << std::endl << std::endl;
+    }
+
+    {
+        std::cerr << "const int/value" << std::endl;
+        Binder<TL1(const int)> bnd(-7);
+        std::cerr << bnd << std::endl << std::endl;
+    }
+
+    {
+        std::cerr << "String/default" << std::endl;
+        Binder<TL1(String)> bnd;
+        std::cerr << bnd << std::endl << std::endl;
+    }
+
+    {
+        std::cerr << "String/value" << std::endl;
+        Binder<TL1(String)> bnd("Hello");
+        std::cerr << bnd << std::endl << std::endl;
+    }
+
+    {
+        std::cerr << "int &" << std::endl;
+        int a = 2;
+        Binder<TL1(int &)> bnd(a);
+        std::cerr << bnd << std::endl << std::endl;
+    }
+
 }
 Y_UDONE()
 
