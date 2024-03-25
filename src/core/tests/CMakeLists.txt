@@ -156,6 +156,7 @@ add_test(concurrent:topo      test-core concurrent_topo)
 add_test(concurrent:context   test-core concurrent_context)
 add_test(concurrent:loop      test-core concurrent_loop)
 add_test(concurrent:simd      test-core concurrent_simd)
+add_test(concurrent:pipeline  test-core concurrent_pipeline)
 add_test(concurrent:resource  test-core concurrent_resource)
 add_test(concurrent:dispatcher test-core concurrent_dispatcher)
 
