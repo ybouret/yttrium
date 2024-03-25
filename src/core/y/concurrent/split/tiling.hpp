@@ -520,7 +520,7 @@ namespace Yttrium
                     // compute items for this rank
                     //
                     //----------------------------------------------------------
-                    const Size start = 0;
+                    const Size          start = 0;
                     const ForLoop<Size> trek = Split::Using(count,ctx.rank,items, start);
                     assert(trek.length>0);
 

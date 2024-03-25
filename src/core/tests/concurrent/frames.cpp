@@ -27,10 +27,17 @@ namespace Yttrium
             class Frame : public ThreadContext
             {
             public:
+
                 virtual ~Frame() noexcept {}
 
+                virtual void activate()          = 0; //!< post-init
+                virtual void shutdown() noexcept = 0; //!< pre-quit
+
             protected:
-                explicit Frame(const ThreadContext &ctx) noexcept : ThreadContext(ctx) {}
+                explicit Frame(const ThreadContext &ctx) noexcept : ThreadContext(ctx) 
+                {
+                    std::cerr << "New Frame@" << name << std::endl;
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Frame);
@@ -39,8 +46,15 @@ namespace Yttrium
             class  Punctual
             {
             public:
+                typedef int Type;
                 explicit Punctual() noexcept {}
                 virtual ~Punctual() noexcept {}
+
+                friend std::ostream & operator<<(std::ostream &os, const Punctual &)
+                {
+                    os << "(punctual)";
+                    return os;
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Punctual);
@@ -58,10 +72,30 @@ namespace Yttrium
             {
             }
 
+            virtual ~Frame() noexcept
+            {
+                quit();
+            }
 
+            inline void quit() noexcept
+            {
+                if(this->workspace.isValid())
+                {
+                    this->shutdown();
+                    this->workspace.dismiss();
+                }
+            }
 
-        private:
+            inline friend std::ostream & operator<<(std::ostream &os, const Frame &frame)
+            {
+                os << "@" << frame.name << "->" << frame.workspace;
+                return os;
+            }
+
+        protected:
             Memory::Workspace<MAPPING> workspace;
+            
+        private:
             Y_DISABLE_COPY_AND_ASSIGN(Frame);
         };
 
@@ -73,12 +107,21 @@ namespace Yttrium
 
             virtual ~Frame0D() noexcept {}
 
+            void init()
+            {
+                assert(workspace.isEmpty());
+                this->workspace.build();
+                this->activate();
+            }
+
+
         protected:
             explicit Frame0D(const ThreadContext &ctx) noexcept :
             FrameType(ctx) {}
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Frame0D);
+
         };
 
         template <typename T>
@@ -89,6 +132,16 @@ namespace Yttrium
             typedef Frame<Mapping> FrameType;
 
             virtual ~Frame1D() noexcept {}
+
+            void init(const T head, const T tail, const T step)
+            {
+                assert(this->workspace.isEmpty());
+                const Mapping mapping = Split::For(*this, head, tail, step);
+                this->workspace.build(mapping);
+                this->activate();
+            }
+
+
 
         protected:
             explicit Frame1D(const ThreadContext &ctx) noexcept :
@@ -101,13 +154,15 @@ namespace Yttrium
         };
 
         template <typename T>
-        class Frame2D : public Frame< Tiling<T> >
+        class Frame2D : public Frame< AutoPtr< typename Tiling<T>::Tile > >
         {
         public:
-            typedef Tiling<T>      Mapping;
+            typedef typename Tiling<T>::Tile Tile;
+            typedef AutoPtr<Tile>  Mapping;
             typedef Frame<Mapping> FrameType;
 
             virtual ~Frame2D() noexcept {}
+
 
         protected:
             explicit Frame2D(const ThreadContext &ctx) noexcept :
@@ -178,12 +233,41 @@ namespace Yttrium
             {
             }
 
-            
-            virtual ~Frames() noexcept {}
+            inline void quit() noexcept
+            {
+                Writable<FRAME> &self = *this;
+                for(size_t i=self.size();i>0;--i)
+                    self[i].quit();
+            }
+
+            inline void init()
+            {
+                quit();
+                Writable<FRAME> &self = *this;
+                const size_t     n    = self.size();
+                try { for(size_t i=1;i<=n;++i) self[i].init(); }
+                catch(...) { quit(); throw; }
+            }
+
+            inline void init(const typename Mapping::Type head,
+                             const typename Mapping::Type tail,
+                             const typename Mapping::Type step)
+            {
+                quit();
+                Writable<FRAME> &self = *this;
+                const size_t     n    = self.size();
+                try { for(size_t i=1;i<=n;++i) self[i].init(head,tail,step); }
+                catch(...) { quit(); throw; }
+            }
+
+
+            virtual ~Frames() noexcept { quit(); }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Frames);
         };
+
+
 
 
 
@@ -206,6 +290,17 @@ namespace
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Demo0D);
+
+        virtual void activate()
+        {
+            std::cerr << "Demo0D activate@" << name << std::endl;
+        }
+
+        virtual void shutdown() noexcept
+        {
+            std::cerr << "Demo0D shutdown@" << name << std::endl;
+        }
+
     };
 
     class Demo1D : public Concurrent::Frame1D<size_t>
@@ -221,6 +316,15 @@ namespace
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Demo1D);
+        virtual void activate()
+        {
+            std::cerr << "Demo1D activate" << std::endl;
+        }
+
+        virtual void shutdown() noexcept
+        {
+            std::cerr << "Demo1D shutdown" << std::endl;
+        }
     };
 
 
@@ -237,6 +341,15 @@ namespace
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Demo2D);
+        virtual void activate()
+        {
+            std::cerr << "Demo2D activate" << std::endl;
+        }
+
+        virtual void shutdown() noexcept
+        {
+            std::cerr << "Demo2D shutdown" << std::endl;
+        }
     };
 
 
@@ -245,7 +358,7 @@ namespace
 }
 
 
-Y_UTEST(concurrent_framework)
+Y_UTEST(concurrent_frames)
 {
     Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
     const Concurrent::Topology topo;
@@ -259,10 +372,34 @@ Y_UTEST(concurrent_framework)
     Concurrent::Frames<Demo0D> f0seq(seqPipe);
     Concurrent::Frames<Demo0D> f0par(parPipe);
 
+    std::cerr << "f0seq=" << f0seq << std::endl;
+    std::cerr << "f0par=" << f0par << std::endl;
+
+
+    f0seq.init();
+    f0par.init();
+
+    std::cerr << "f0seq=" << f0seq << std::endl;
+    std::cerr << "f0par=" << f0par << std::endl;
+
+
+
     Concurrent::Frames<Demo1D> f1seq(seqLoop);
     Concurrent::Frames<Demo1D> f1par(parLoop);
 
+    std::cerr << "f1seq=" << f1seq << std::endl;
+    std::cerr << "f1par=" << f1par << std::endl;
 
+
+    f1seq.init(1,10,2);
+    f1par.init(1,10,2);
+    
+    std::cerr << "f1seq=" << f1seq << std::endl;
+    std::cerr << "f1par=" << f1par << std::endl;
+
+
+    Concurrent::Frames<Demo2D> f2seq(seqLoop);
+    Concurrent::Frames<Demo2D> f2par(parLoop);
 
 
 }

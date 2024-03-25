@@ -159,7 +159,7 @@ add_test(concurrent:simd      test-core concurrent_simd)
 add_test(concurrent:pipeline  test-core concurrent_pipeline)
 add_test(concurrent:resource  test-core concurrent_resource)
 add_test(concurrent:dispatcher test-core concurrent_dispatcher)
-add_test(concurrent:framework  test-core concurrent_framework)
+add_test(concurrent:frames     test-core concurrent_frames)
 
 #random
 add_test(random:bits     test-core random_bits)
