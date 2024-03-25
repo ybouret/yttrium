@@ -8,8 +8,9 @@
 #include "y/concurrent/thread.hpp"
 #include "y/string/env.hpp"
 
-#include "y/concurrent/frame/interface.hpp"
-#include "y/concurrent/frame/nucleus/punctual.hpp"
+#include "y/concurrent/frame/punctual.hpp"
+#include "y/concurrent/frame/1d.hpp"
+#include "y/concurrent/frame/2d.hpp"
 
 #include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
@@ -24,87 +25,6 @@ namespace Yttrium
     {
 
         
-        class Frame0D : public Frame<Nucleus::Punctual>
-        {
-        public:
-            typedef int               Type;
-            typedef Nucleus::Punctual Mapping;
-            typedef Frame<Mapping>    FrameType;
-
-            virtual ~Frame0D() noexcept {}
-
-            void init()
-            {
-                this->workspace.build();
-            }
-
-
-        protected:
-            explicit Frame0D(const ThreadContext &ctx) noexcept :
-            FrameType(ctx) {}
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Frame0D);
-
-        };
-
-        template <typename T>
-        class Frame1D : public Frame< ForLoop<T> >
-        {
-        public:
-            typedef T              Type;
-            typedef ForLoop<T>     Mapping;
-            typedef Frame<Mapping> FrameType;
-
-            virtual ~Frame1D() noexcept {}
-
-            void init(const T &head, const T &tail, const T &step)
-            {
-                const Mapping mapping = Split::For(*this, head, tail, step);
-                this->workspace.build(mapping);
-            }
-
-
-
-        protected:
-            explicit Frame1D(const ThreadContext &ctx) noexcept :
-            FrameType(ctx)
-            {
-            }
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Frame1D);
-        };
-
-        template <typename T>
-        class Frame2D : public Frame< AutoPtr< typename Tiling<T>::Tile > >
-        {
-        public:
-            typedef T                        Type;
-            typedef typename Tiling<T>::Tile Tile;
-            typedef AutoPtr<Tile>            Mapping;
-            typedef Frame<Mapping>           FrameType;
-
-            virtual ~Frame2D() noexcept {}
-
-            void init(const V2D<T> &lower, const V2D<T> &upper)
-            {
-                const Mapping mapping = Tiling<T>::Tiles::For(*this,lower,upper);
-                this->workspace.build(mapping);
-            }
-
-
-        protected:
-            explicit Frame2D(const ThreadContext &ctx) noexcept :
-            FrameType(ctx)
-            {
-            }
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Frame2D);
-        };
-
-
         namespace Nucleus
         {
             //__________________________________________________________________
@@ -218,10 +138,10 @@ using namespace Yttrium;
 
 namespace
 {
-    class Demo0D : public Concurrent::Frame0D
+    class Demo0D : public Concurrent::PunctualFrame
     {
     public:
-        explicit Demo0D(const ThreadContext &ctx) noexcept: Concurrent::Frame0D(ctx)
+        explicit Demo0D(const ThreadContext &ctx) noexcept: Concurrent::PunctualFrame(ctx)
         {
         }
 
