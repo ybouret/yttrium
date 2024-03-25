@@ -21,7 +21,7 @@ namespace Yttrium
         {
         public:
 
-            explicit Job() : Runnable()
+            explicit Job() : Runnable(), WallTime(), ran()
             {
             }
 

@@ -119,7 +119,7 @@ count( COUNT )
 
         }
 
-        //! setup DEFAULT then convert from any compatible
+        //! setup by copy of sequence-like source
         template <typename SOURCE>
         inline explicit CxxArray(const CopyOf_ &copying, SOURCE &src) :
         Y_CxxArray_Prolog(src.size()),

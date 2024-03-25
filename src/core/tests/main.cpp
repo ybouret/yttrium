@@ -109,6 +109,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(concurrent_pipeline);
     Y_UTEST(concurrent_resource);
     Y_UTEST(concurrent_dispatcher);
+    Y_UTEST(concurrent_framework);
 
 
     Y_UTEST(hashing_mix64);
