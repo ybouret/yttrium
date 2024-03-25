@@ -139,7 +139,7 @@ namespace Yttrium
                 size(0),
                 items(0),
                 base( this->lead() ),
-                scxx( base-1       ),
+                scxx( this->warp() ),
                 next(0),
                 prev(0)
                 {}

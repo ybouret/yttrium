@@ -320,7 +320,7 @@ namespace Yttrium
                 }
             }
 
-            //! V count=length; for(T i=offset;count>0;++i,--count) => Trek for context
+            //! V count=length; for(T i=offset;count>0;++i,--count) => ForLoop for context
             template <typename T, typename V> static inline
             ForLoop<T> Using(const Context &cntx,
                              const V       &length,
@@ -329,7 +329,7 @@ namespace Yttrium
                 return Using(cntx.size,cntx.rank,length,offset);
             }
 
-            //! for(size_t i=1;i<=seq.size();++i) => Trek for size.rank
+            //! for(size_t i=1;i<=seq.size();++i) => ForLoop for size.rank
             template <typename U, typename SEQUENCE> static inline
             ForLoop<size_t> Part(const U &size, const U &rank, SEQUENCE &seq)
             {
@@ -338,7 +338,7 @@ namespace Yttrium
                 return Using(size,rank,length,offset);
             }
 
-            //! for(size_t i=1;i<=seq.size();++i) => Trek for context
+            //! for(size_t i=1;i<=seq.size();++i) => ForLoop for context
             template <typename SEQUENCE> static inline
             ForLoop<size_t> Part(const Context &ctx, SEQUENCE &seq)
             {
