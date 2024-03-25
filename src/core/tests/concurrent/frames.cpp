@@ -8,7 +8,9 @@
 #include "y/concurrent/thread.hpp"
 #include "y/string/env.hpp"
 
-#include "y/memory/solitary/workspace.hpp"
+#include "y/concurrent/frame/interface.hpp"
+#include "y/concurrent/frame/nucleus/punctual.hpp"
+
 #include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 
@@ -21,83 +23,7 @@ namespace Yttrium
     namespace Concurrent
     {
 
-        namespace Nucleus
-        {
-            //! base class for all frame(s)
-            class Frame : public ThreadContext
-            {
-            public:
-
-                virtual ~Frame() noexcept {}
-
-                virtual void activate()          = 0; //!< post-init
-                virtual void shutdown() noexcept = 0; //!< pre-quit
-
-            protected:
-                explicit Frame(const ThreadContext &ctx) noexcept : ThreadContext(ctx) 
-                {
-                    std::cerr << "New Frame@" << name << std::endl;
-                }
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Frame);
-            };
-
-            class  Punctual
-            {
-            public:
-                explicit Punctual() noexcept {}
-                virtual ~Punctual() noexcept {}
-
-                friend std::ostream & operator<<(std::ostream &os, const Punctual &)
-                {
-                    os << "(punctual)";
-                    return os;
-                }
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Punctual);
-            };
-        }
-
-        template <typename MAPPING>
-        class Frame : public Nucleus::Frame
-        {
-        public:
-
-            explicit Frame(const ThreadContext &ctx) noexcept :
-            Nucleus::Frame(ctx),
-            workspace()
-            {
-            }
-
-            virtual ~Frame() noexcept
-            {
-                quit();
-            }
-
-            inline void quit() noexcept
-            {
-                if(this->workspace.isValid())
-                {
-                    this->shutdown();
-                    this->workspace.erase();
-                }
-            }
-
-            inline friend std::ostream & operator<<(std::ostream &os, const Frame &frame)
-            {
-                os << "@" << frame.name << "->" << frame.workspace;
-                return os;
-            }
-
-        protected:
-            Memory::Workspace<MAPPING> workspace;
-            
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Frame);
-        };
-
+        
         class Frame0D : public Frame<Nucleus::Punctual>
         {
         public:
@@ -109,9 +35,7 @@ namespace Yttrium
 
             void init()
             {
-                assert(workspace.isEmpty());
                 this->workspace.build();
-                this->activate();
             }
 
 
@@ -136,10 +60,8 @@ namespace Yttrium
 
             void init(const T &head, const T &tail, const T &step)
             {
-                assert(this->workspace.isEmpty());
                 const Mapping mapping = Split::For(*this, head, tail, step);
                 this->workspace.build(mapping);
-                this->activate();
             }
 
 
@@ -167,12 +89,8 @@ namespace Yttrium
 
             void init(const V2D<T> &lower, const V2D<T> &upper)
             {
-                assert(this->workspace.isEmpty());
                 const Mapping mapping = Tiling<T>::Tiles::For(*this,lower,upper);
                 this->workspace.build(mapping);
-                this->activate();
-                assert(mapping.isEmpty());
-                assert(this->workspace.isValid());
             }
 
 
@@ -313,15 +231,6 @@ namespace
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Demo0D);
 
-        virtual void activate()
-        {
-            std::cerr << "+0D@" << name << std::endl;
-        }
-
-        virtual void shutdown() noexcept
-        {
-            std::cerr << "-0D@" << name << std::endl;
-        }
 
     };
 
@@ -338,15 +247,7 @@ namespace
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Demo1D);
-        virtual void activate()
-        {
-            std::cerr << "+1D@" << name << std::endl;
-        }
-
-        virtual void shutdown() noexcept
-        {
-            std::cerr << "-1D@" << name << std::endl;
-        }
+        
     };
 
 
@@ -363,15 +264,7 @@ namespace
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Demo2D);
-        virtual void activate()
-        {
-            std::cerr << "+2D@" << name << std::endl;
-        }
 
-        virtual void shutdown() noexcept
-        {
-            std::cerr << "-2D@" << name << std::endl;
-        }
     };
 
 
