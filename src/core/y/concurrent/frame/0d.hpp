@@ -19,7 +19,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class PunctualFrame : public Frame<Nucleus::Punctual>
+        class Frame0D : public Frame<Nucleus::Punctual>
         {
         public:
             //__________________________________________________________________
@@ -50,15 +50,15 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! cleanup
-            inline virtual ~PunctualFrame() noexcept {}
+            inline virtual ~Frame0D() noexcept {}
 
         protected:
             //! setup with context and empty workspace
-            inline explicit PunctualFrame(const ThreadContext &ctx) noexcept :
+            inline explicit Frame0D(const ThreadContext &ctx) noexcept :
             FrameType(ctx) {}
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(PunctualFrame);
+            Y_DISABLE_COPY_AND_ASSIGN(Frame0D);
             
 
         };

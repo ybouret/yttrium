@@ -18,6 +18,7 @@ concurrent/pipeline/dispatcher
 concurrent/resource
 concurrent/frame
 concurrent/frame/nucleus
+concurrent/pipeline/multiplex
 locking
 config
 check

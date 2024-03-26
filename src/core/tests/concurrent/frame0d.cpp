@@ -1,9 +1,11 @@
 
 #include "y/concurrent/pipeline/alone.hpp"
 #include "y/concurrent/pipeline/queue.hpp"
-#include "y/concurrent/frame/punctual.hpp"
+#include "y/concurrent/pipeline/multiplex.hpp"
+#include "y/concurrent/pipeline/runnable.hpp"
+
+#include "y/concurrent/frame/0d.hpp"
 #include "y/concurrent/frames.hpp"
-#include "y/concurrent/pipeline/task.hpp"
 #include "y/random/bits.hpp"
 #include "y/system/wtime.hpp"
 #include "y/utest/run.hpp"
@@ -15,48 +17,8 @@ namespace Yttrium
     namespace Concurrent
     {
 
-        class MultiplexQ
-        {
-        public:
-            virtual ~MultiplexQ() noexcept { Coerce(Q) = 0; }
 
-            void flush() noexcept { assert(0!=Q); Q->flush(); }
-            TaskUUID operator()(Runnable *runnable)
-            {
-                assert(0!=Q); return Q->run(runnable);
-            }
-
-        protected:
-            explicit MultiplexQ(const SharedPipeline &sp) noexcept :
-            Q( & Coerce(*sp) )
-            {
-            }
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(MultiplexQ);
-            Pipeline * const Q;
-        };
-
-        template <typename ENGINE>
-        class Multiplex : public Frames<ENGINE>, public MultiplexQ
-        {
-        public:
-            typedef Writable<ENGINE> Engines;
-
-            explicit Multiplex(const SharedPipeline &sp) :
-            Frames<ENGINE>(sp),
-            MultiplexQ(sp)
-            {
-            }
-
-            inline virtual ~Multiplex() noexcept {}
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Multiplex);
-        };
-
+        
         template <typename ENGINE, typename TLIST>
         struct Invoke
         {
@@ -67,7 +29,7 @@ namespace Yttrium
             TaskUUID On(Multiplex<ENGINE> &plex,
                         METHOD             meth)
             {
-                return plex( new Job<METHOD>(plex,meth) );
+                return plex->run( new Job<METHOD>(plex,meth) );
             }
 
             template <typename METHOD> static inline
@@ -75,7 +37,7 @@ namespace Yttrium
                           METHOD             meth,
                           Param1             arg1)
             {
-                return plex( new Job<METHOD>(plex,meth,arg1) );
+                return plex->run( new Job<METHOD>(plex,meth,arg1) );
             }
 
             template <typename METHOD> static inline
@@ -84,7 +46,7 @@ namespace Yttrium
                         Param1             arg1,
                         Param2             arg2)
             {
-                return plex( new Job<METHOD>(plex,meth,arg1,arg2) );
+                return plex->run( new Job<METHOD>(plex,meth,arg1,arg2) );
             }
 
             template <typename METHOD> static inline
@@ -94,7 +56,7 @@ namespace Yttrium
                         Param2             arg2,
                         Param3             arg3)
             {
-                return plex( new Job<METHOD>(plex,meth,arg1,arg2,arg3) );
+                return plex->run( new Job<METHOD>(plex,meth,arg1,arg2,arg3) );
             }
 
 
@@ -106,7 +68,7 @@ namespace Yttrium
                         Param3             arg3,
                         Param4             arg4)
             {
-                return plex( new Job<METHOD>(plex,meth,arg1,arg2,arg3,arg4) );
+                return plex->run( new Job<METHOD>(plex,meth,arg1,arg2,arg3,arg4) );
             }
 
 
@@ -119,7 +81,7 @@ namespace Yttrium
                         Param4             arg4,
                         Param5             arg5)
             {
-                return plex( new Job<METHOD>(plex,meth,arg1,arg2,arg3,arg4,arg5) );
+                return plex->run( new Job<METHOD>(plex,meth,arg1,arg2,arg3,arg4,arg5) );
             }
 
 
@@ -227,11 +189,11 @@ namespace
 {
 
 
-    class Demo : public Concurrent::PunctualFrame
+    class Demo : public Concurrent::Frame0D
     {
     public:
         inline explicit Demo(const Concurrent::ThreadContext &ctx) noexcept :
-        Concurrent::PunctualFrame(ctx), ran(), tmx()
+        Concurrent::Frame0D(ctx), ran(), tmx()
         {}
 
         void call0()
@@ -308,7 +270,7 @@ Y_UTEST(concurrent_frame0d)
     {
         Invoke0::On(seq, & Demo::call0);
     }
-    seq.flush();
+    seq->flush();
     std::cerr << std::endl;
 
     std::cerr << "Parallel/0" << std::endl;
@@ -316,7 +278,7 @@ Y_UTEST(concurrent_frame0d)
     {
         Invoke0::On(par, & Demo::call0);
     }
-    par.flush();
+    par->flush();
     std::cerr << std::endl;
 
     typedef Concurrent::Invoke<Demo,TL1(double)> Invoke1;
@@ -326,7 +288,7 @@ Y_UTEST(concurrent_frame0d)
     {
         Invoke1::On(seq, & Demo::call1, i);
     }
-    seq.flush();
+    seq->flush();
     std::cerr << std::endl;
 
     std::cerr << "Parallel/1" << std::endl;
@@ -334,7 +296,7 @@ Y_UTEST(concurrent_frame0d)
     {
         Invoke1::On(par, & Demo::call1, i);
     }
-    par.flush();
+    par->flush();
     std::cerr << std::endl;
 
 
@@ -349,37 +311,17 @@ Y_UTEST(concurrent_frame0d)
         {
             Invoke2::On(seq, & Demo::call2, arr[i], int(i) );
         }
-        seq.flush();
+        seq->flush();
         Core::Display(std::cerr, arr, num) << std::endl;
 
         for(size_t i=0;i<sizeof(arr)/sizeof(arr[0]);++i)
         {
             Invoke2::On(par, & Demo::call2, arr[i], int(i) );
         }
-        par.flush();
+        par->flush();
         Core::Display(std::cerr, arr, num) << std::endl;
 
     }
-
-
-#if 0
-    seq.exec();
-    seq.exec();
-    seq.flush();
-
-    par.exec();
-    par.exec();
-    par.flush();
-
-
-    Worker worker;
-    {
-        const Duty duty(worker,seq);
-        seqEngine->load(duty);
-        seqEngine->flush();
-    }
-#endif
-
 
     seq.detach();
     par.detach();
