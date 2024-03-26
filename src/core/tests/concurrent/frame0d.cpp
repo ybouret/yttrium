@@ -14,21 +14,25 @@ namespace Yttrium
     namespace Concurrent
     {
         template <typename ENGINE>
-        class Multiplexer : public Frames<ENGINE>
+        class Router : public Frames<ENGINE>
         {
         public:
             template <typename DERIVED>
-            explicit Multiplexer(const ArcPtr<DERIVED> &stc) :
-            Frames<ENGINE>(stc)
+            explicit Router(const SharedPipeline &sp) :
+            Frames<ENGINE>(sp),
+            queue( Coerce(*sp) )
             {
             }
 
-            inline virtual ~Multiplexer() noexcept
+            inline virtual ~Router() noexcept
             {
             }
+
+            
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Multiplexer);
+            Y_DISABLE_COPY_AND_ASSIGN(Router);
+            Pipeline &queue;
         };
 
     }
