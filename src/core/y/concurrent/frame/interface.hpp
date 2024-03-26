@@ -24,6 +24,15 @@ namespace Yttrium
         template <typename MAPPING>
         class Frame : public Nucleus::Frame
         {
+        public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef MAPPING Mapping;
+
             //__________________________________________________________________
             //
             //
@@ -46,8 +55,11 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+
             //! empty workspace
             inline void detach() noexcept { this->workspace.erase(); }
+
+
 
             //! display content
             inline friend std::ostream & operator<<(std::ostream &os, const Frame &frame)

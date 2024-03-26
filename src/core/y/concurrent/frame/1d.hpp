@@ -47,6 +47,14 @@ namespace Yttrium
                 this->workspace.build(mapping);
             }
 
+            //! access sub ForLoop
+            inline const ForLoop<T> & operator*() const noexcept
+            {
+                assert(this->workspace.isValid());
+                return *(this->workspace);
+            }
+
+
             //__________________________________________________________________
             //
             //
@@ -66,6 +74,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Frame1D);
+
         };
     }
 

@@ -41,6 +41,12 @@ Y_UTEST(concurrent_frame1d)
     std::cerr << "  seq=" << seq << std::endl;
     std::cerr << "  par=" << par << std::endl;
 
+    for(size_t i=1;i<=par.size();++i)
+    {
+        const Concurrent::ForLoop<size_t> &sub = *par[i];
+        std::cerr << "sub[" << std::setw(4) << i << "] = " << sub << std::endl;
+    }
+
     seq.detach();
     par.detach();
     std::cerr << "Detached" << std::endl;
