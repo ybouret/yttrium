@@ -42,6 +42,11 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! DERIVED from ThreadContexts
+            /**
+             - keep a shared copy of contexts
+             - build one FRAME per context
+             \param stc shared ThreadContexts (class DERIVED : public ThreadContexts...)
+             */
             template <typename DERIVED>
             explicit Frames(const ArcPtr<DERIVED> &stc) :
             Nucleus::Frames(stc), CxxFrames(CopyOf,*contexts)

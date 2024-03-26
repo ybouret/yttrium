@@ -128,7 +128,7 @@ count( COUNT )
         {
         }
 
-        //! copy
+        //! default copy constructor
         inline explicit CxxArray(const CxxArray &src) :
         Y_CxxArray_Prolog(src.size()),
         OpsType(this->workspace,src),
