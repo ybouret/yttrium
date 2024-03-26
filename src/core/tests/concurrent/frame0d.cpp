@@ -14,35 +14,47 @@ namespace Yttrium
 {
     namespace Concurrent
     {
+
+        class MultiplexQ
+        {
+        public:
+            virtual ~MultiplexQ() noexcept { Coerce(Q) = 0; }
+
+            void flush() noexcept { assert(0!=Q); Q->flush(); }
+            TaskUUID operator()(Runnable *runnable)
+            {
+                assert(0!=Q); return Q->run(runnable);
+            }
+
+        protected:
+            explicit MultiplexQ(const SharedPipeline &sp) noexcept :
+            Q( & Coerce(*sp) )
+            {
+            }
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(MultiplexQ);
+            Pipeline * const Q;
+        };
+
         template <typename ENGINE>
-        class Multiplex : public Frames<ENGINE>
+        class Multiplex : public Frames<ENGINE>, public MultiplexQ
         {
         public:
             typedef Writable<ENGINE> Engines;
 
             explicit Multiplex(const SharedPipeline &sp) :
             Frames<ENGINE>(sp),
-            Q( Coerce(*sp) )
+            MultiplexQ(sp)
             {
             }
 
             inline virtual ~Multiplex() noexcept {}
 
 
-
-            inline void flush() noexcept
-            {
-                Q.flush();
-            }
-
-            TaskUUID operator()(Runnable *runnable)
-            {
-                return Q.run(runnable);
-            }
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Multiplex);
-            Pipeline &Q;
         };
 
         template <typename ENGINE, typename TLIST>
@@ -64,6 +76,50 @@ namespace Yttrium
                           Param1             arg1)
             {
                 return plex( new Job<METHOD>(plex,meth,arg1) );
+            }
+
+            template <typename METHOD> static inline
+            TaskUUID On(Multiplex<ENGINE> &plex,
+                        METHOD             meth,
+                        Param1             arg1,
+                        Param2             arg2)
+            {
+                return plex( new Job<METHOD>(plex,meth,arg1,arg2) );
+            }
+
+            template <typename METHOD> static inline
+            TaskUUID On(Multiplex<ENGINE> &plex,
+                        METHOD             meth,
+                        Param1             arg1,
+                        Param2             arg2,
+                        Param3             arg3)
+            {
+                return plex( new Job<METHOD>(plex,meth,arg1,arg2,arg3) );
+            }
+
+
+            template <typename METHOD> static inline
+            TaskUUID On(Multiplex<ENGINE> &plex,
+                        METHOD             meth,
+                        Param1             arg1,
+                        Param2             arg2,
+                        Param3             arg3,
+                        Param4             arg4)
+            {
+                return plex( new Job<METHOD>(plex,meth,arg1,arg2,arg3,arg4) );
+            }
+
+
+            template <typename METHOD> static inline
+            TaskUUID On(Multiplex<ENGINE> &plex,
+                        METHOD             meth,
+                        Param1             arg1,
+                        Param2             arg2,
+                        Param3             arg3,
+                        Param4             arg4,
+                        Param5             arg5)
+            {
+                return plex( new Job<METHOD>(plex,meth,arg1,arg2,arg3,arg4,arg5) );
             }
 
 
@@ -91,6 +147,52 @@ namespace Yttrium
                 {
                 }
 
+                inline explicit Job(Engines &eng,
+                                    METHOD   mth,
+                                    Param1   p1,
+                                    Param2   p2) noexcept :
+                Runnable(), Binder<TLIST>(p1,p2),
+                plex(eng),
+                meth(mth)
+                {
+                }
+
+                inline explicit Job(Engines &eng,
+                                    METHOD   mth,
+                                    Param1   p1,
+                                    Param2   p2,
+                                    Param3   p3) noexcept :
+                Runnable(), Binder<TLIST>(p1,p2,p3),
+                plex(eng),
+                meth(mth)
+                {
+                }
+
+                inline explicit Job(Engines &eng,
+                                    METHOD   mth,
+                                    Param1   p1,
+                                    Param2   p2,
+                                    Param3   p3,
+                                    Param4   p4) noexcept :
+                Runnable(), Binder<TLIST>(p1,p2,p3,p4),
+                plex(eng),
+                meth(mth)
+                {
+                }
+
+                inline explicit Job(Engines &eng,
+                                    METHOD   mth,
+                                    Param1   p1,
+                                    Param2   p2,
+                                    Param3   p3,
+                                    Param4   p4,
+                                    Param5   p5) noexcept :
+                Runnable(), Binder<TLIST>(p1,p2,p3,p4,p5),
+                plex(eng),
+                meth(mth)
+                {
+                }
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Job);
@@ -101,11 +203,16 @@ namespace Yttrium
                 virtual void run(const ThreadContext &ctx)
                 {
                     static const typename Binder<TLIST>::ArgsType params =  {};
-                    perform( plex[ctx.indx], params);
+                    perform(plex[ctx.indx],params);
                 }
 
                 inline void perform(ENGINE &host, const Int2Type<0> &) { (host.*meth)(); }
                 inline void perform(ENGINE &host, const Int2Type<1> &) { (host.*meth)(arg1); }
+                inline void perform(ENGINE &host, const Int2Type<2> &) { (host.*meth)(arg1,arg2); }
+                inline void perform(ENGINE &host, const Int2Type<3> &) { (host.*meth)(arg1,arg2,arg3); }
+                inline void perform(ENGINE &host, const Int2Type<4> &) { (host.*meth)(arg1,arg2,arg3,arg4); }
+                inline void perform(ENGINE &host, const Int2Type<5> &) { (host.*meth)(arg1,arg2,arg3,arg3,arg5); }
+
             };
         };
 
@@ -147,6 +254,16 @@ namespace
                 Y_LOCK(sync);
                 std::cerr << "   (*) demo[" << *this << "].double=" << x << std::endl;
             }
+            tmx.wait( ran.to<double>() );
+        }
+
+        void call2(double &x, const int a)
+        {
+            {
+                Y_LOCK(sync);
+                std::cerr << "   (*) demo[" << *this << "].double=" << x << " .int=" << a << std::endl;
+            }
+            x += a;
             tmx.wait( ran.to<double>() );
         }
 
@@ -219,6 +336,30 @@ Y_UTEST(concurrent_frame0d)
     }
     par.flush();
     std::cerr << std::endl;
+
+
+    typedef Concurrent::Invoke<Demo,TL2(double &, const int)> Invoke2;
+
+    {
+        double       arr[] = { 3, 2, 1, 0 };
+        const size_t num = sizeof(arr)/sizeof(arr[0]);
+
+        Core::Display(std::cerr, arr, num) << std::endl;
+        for(size_t i=0;i<sizeof(arr)/sizeof(arr[0]);++i)
+        {
+            Invoke2::On(seq, & Demo::call2, arr[i], int(i) );
+        }
+        seq.flush();
+        Core::Display(std::cerr, arr, num) << std::endl;
+
+        for(size_t i=0;i<sizeof(arr)/sizeof(arr[0]);++i)
+        {
+            Invoke2::On(par, & Demo::call2, arr[i], int(i) );
+        }
+        par.flush();
+        Core::Display(std::cerr, arr, num) << std::endl;
+
+    }
 
 
 #if 0
