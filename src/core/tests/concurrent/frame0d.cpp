@@ -15,99 +15,100 @@ namespace Yttrium
     namespace Concurrent
     {
         template <typename ENGINE>
-        class Router : public Frames<ENGINE>
+        class Multiplex : public Frames<ENGINE>
         {
         public:
             typedef Writable<ENGINE> Engines;
 
-            explicit Router(const SharedPipeline &sp) :
+            explicit Multiplex(const SharedPipeline &sp) :
             Frames<ENGINE>(sp),
-            queue( Coerce(*sp) )
+            Q( Coerce(*sp) )
             {
             }
 
-            inline virtual ~Router() noexcept
+            inline virtual ~Multiplex() noexcept {}
+
+
+
+            inline void flush() noexcept
             {
+                Q.flush();
+            }
+
+            TaskUUID operator()(Runnable *runnable)
+            {
+                return Q.run(runnable);
+            }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Multiplex);
+            Pipeline &Q;
+        };
+
+        template <typename ENGINE, typename TLIST>
+        struct Invoke
+        {
+            typedef Writable<ENGINE> Engines;
+            Y_BINDER_ECHO(TLIST);
+
+            template <typename METHOD> static inline
+            TaskUUID On(Multiplex<ENGINE> &plex,
+                        METHOD             meth)
+            {
+                return plex( new Job<METHOD>(plex,meth) );
+            }
+
+            template <typename METHOD> static inline
+            TaskUUID On(Multiplex<ENGINE> &plex,
+                          METHOD             meth,
+                          Param1             arg1)
+            {
+                return plex( new Job<METHOD>(plex,meth,arg1) );
             }
 
 
-            template <typename METHOD, typename TLIST>
+            template <typename METHOD>
             class Job : public Runnable, public Binder<TLIST>
             {
             public:
-                Y_BINDER_ECHO(TLIST);
-                typedef Binder<TLIST> BinderType;
-                
-                inline Job(Engines &myEngines,
-                           METHOD   userMethod) noexcept :
-                Runnable(),
-                BinderType(),
-                engines(myEngines),
-                method(userMethod)
-                {
+                Y_BINDER_ARGS(TLIST);
+                inline virtual ~Job() noexcept {}
 
+                inline explicit Job(Engines &eng,
+                                    METHOD   mth) noexcept :
+                Runnable(), Binder<TLIST>(),
+                plex(eng),
+                meth(mth)
+                {
                 }
 
-                inline virtual ~Job() noexcept {}
+                inline explicit Job(Engines &eng,
+                                    METHOD   mth,
+                                    Param1   p1) noexcept :
+                Runnable(), Binder<TLIST>(p1),
+                plex(eng),
+                meth(mth)
+                {
+                }
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Job);
-                Engines &engines;
-                METHOD   method;
+                Engines &plex;
+                METHOD   meth;
 
+                //! interface
                 virtual void run(const ThreadContext &ctx)
                 {
-                    static const typename BinderType::ArgsType choice =  {};
-                    call( engines[ctx.indx], choice);
+                    static const typename Binder<TLIST>::ArgsType params =  {};
+                    perform( plex[ctx.indx], params);
                 }
 
-                inline void call(ENGINE &host, const Int2Type<0> &)
-                {
-                    (host.*method)();
-                }
-
+                inline void perform(ENGINE &host, const Int2Type<0> &) { (host.*meth)(); }
+                inline void perform(ENGINE &host, const Int2Type<1> &) { (host.*meth)(arg1); }
             };
-
-            class Duty : public Runnable
-            {
-            public:
-                explicit Duty(Engines &eng) noexcept : engines(eng) {}
-                virtual ~Duty() noexcept {}
-
-                virtual void run(const ThreadContext &ctx)
-                {
-                    ENGINE &engine = engines[ ctx.indx ]; // find engine
-                    engine();
-                }
-
-            private:
-                Engines &engines;
-                Y_DISABLE_COPY_AND_ASSIGN(Duty);
-            };
-
-
-            void flush() noexcept
-            {
-                queue.flush();
-            }
-
-            template <typename METHOD>
-            TaskUUID call(METHOD method)
-            {
-                return queue.run(new Job<METHOD,NullType>(*this,method) );
-            }
-
-
-            TaskUUID exec()
-            {
-                return queue.run( new Duty(*this) );
-            }
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Router);
-            Pipeline &queue;
         };
+
 
     }
 
@@ -140,6 +141,14 @@ namespace
             call0();
         }
 
+        void call1(double x)
+        {
+            {
+                Y_LOCK(sync);
+                std::cerr << "   (*) demo[" << *this << "].double=" << x << std::endl;
+            }
+            tmx.wait( ran.to<double>() );
+        }
 
 
         inline virtual ~Demo() noexcept {}
@@ -161,8 +170,8 @@ Y_UTEST(concurrent_frame0d)
     Concurrent::SharedPipeline seqEngine = new Concurrent::Alone();
     Concurrent::SharedPipeline parEngine = new Concurrent::Queue(topo);
 
-    Concurrent::Router<Demo> seq(seqEngine);
-    Concurrent::Router<Demo> par(parEngine);
+    Concurrent::Multiplex<Demo> seq(seqEngine);
+    Concurrent::Multiplex<Demo> par(parEngine);
 
     std::cerr << "Empty" << std::endl;
     std::cerr << "  seq=" << seq << std::endl;
@@ -175,9 +184,43 @@ Y_UTEST(concurrent_frame0d)
     std::cerr << "  par=" << par << std::endl;
 
 
-    seq.call( & Demo::call0 );
+    typedef Concurrent::Invoke<Demo,NullType> Invoke0;
+
+    std::cerr << "Sequential/0" << std::endl;
+    for(int i=1;i<=2;++i)
+    {
+        Invoke0::On(seq, & Demo::call0);
+    }
     seq.flush();
-    
+    std::cerr << std::endl;
+
+    std::cerr << "Parallel/0" << std::endl;
+    for(int i=1;i<=4;++i)
+    {
+        Invoke0::On(par, & Demo::call0);
+    }
+    par.flush();
+    std::cerr << std::endl;
+
+    typedef Concurrent::Invoke<Demo,TL1(double)> Invoke1;
+
+    std::cerr << "Sequential/1" << std::endl;
+    for(int i=1;i<=2;++i)
+    {
+        Invoke1::On(seq, & Demo::call1, i);
+    }
+    seq.flush();
+    std::cerr << std::endl;
+
+    std::cerr << "Parallel/1" << std::endl;
+    for(int i=1;i<=4;++i)
+    {
+        Invoke1::On(par, & Demo::call1, i);
+    }
+    par.flush();
+    std::cerr << std::endl;
+
+
 #if 0
     seq.exec();
     seq.exec();
