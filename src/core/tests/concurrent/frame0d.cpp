@@ -4,7 +4,8 @@
 #include "y/concurrent/frame/punctual.hpp"
 #include "y/concurrent/frames.hpp"
 #include "y/concurrent/pipeline/task.hpp"
-
+#include "y/random/bits.hpp"
+#include "y/system/wtime.hpp"
 #include "y/utest/run.hpp"
 
 
@@ -17,7 +18,9 @@ namespace Yttrium
         class Router : public Frames<ENGINE>
         {
         public:
-            template <typename DERIVED>
+            typedef Writable<ENGINE> Engines;
+
+           // template <typename DERIVED>
             explicit Router(const SharedPipeline &sp) :
             Frames<ENGINE>(sp),
             queue( Coerce(*sp) )
@@ -28,7 +31,44 @@ namespace Yttrium
             {
             }
 
-            
+            class Job : public Runnable
+            {
+            public:
+                explicit Job(Engines &eng) noexcept : engines(eng) {}
+                virtual ~Job() noexcept {}
+
+                virtual void run(const ThreadContext &ctx)
+                {
+                    ENGINE &engine = engines[ ctx.indx ]; // find engine
+                    engine();
+                }
+
+            private:
+                Engines &engines;
+                Y_DISABLE_COPY_AND_ASSIGN(Job);
+            };
+
+            class Duty : public Task
+            {
+            public:
+                explicit Duty(Engines &eng) : Task( new Job(eng) ) {}
+                virtual ~Duty() noexcept {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Duty);
+            };
+
+            void flush() noexcept
+            {
+                queue.flush();
+            }
+
+            TaskUUID exec()
+            {
+                const Duty task(*this);
+                return queue.load(task);
+            }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Router);
@@ -49,14 +89,28 @@ namespace
     {
     public:
         inline explicit Demo(const Concurrent::ThreadContext &ctx) noexcept :
-        Concurrent::PunctualFrame(ctx)
+        Concurrent::PunctualFrame(ctx), ran(), tmx()
         {}
 
+        void operator()(void)
+        {
+            {
+                Y_LOCK(sync);
+                std::cerr << "   (*) demo[" << *this << "]" << std::endl;
+            }
+            tmx.wait( ran.to<double>() );
+        }
+
         inline virtual ~Demo() noexcept {}
+
+        Random::Rand ran;
+        WallTime     tmx;
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Demo);
     };
 
+#if 0
     class Worker
     {
     public:
@@ -116,7 +170,7 @@ namespace
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Duty);
     };
-
+#endif
 
 }
 
@@ -127,8 +181,8 @@ Y_UTEST(concurrent_frame0d)
     Concurrent::SharedPipeline seqEngine = new Concurrent::Alone();
     Concurrent::SharedPipeline parEngine = new Concurrent::Queue(topo);
 
-    Concurrent::Frames<Demo> seq(seqEngine);
-    Concurrent::Frames<Demo> par(parEngine);
+    Concurrent::Router<Demo> seq(seqEngine);
+    Concurrent::Router<Demo> par(parEngine);
 
     std::cerr << "Empty" << std::endl;
     std::cerr << "  seq=" << seq << std::endl;
@@ -140,12 +194,23 @@ Y_UTEST(concurrent_frame0d)
     std::cerr << "  seq=" << seq << std::endl;
     std::cerr << "  par=" << par << std::endl;
 
+    seq.exec();
+    seq.exec();
+    seq.flush();
+
+    par.exec();
+    par.exec();
+    par.flush();
+
+
+#if 0
     Worker worker;
     {
         const Duty duty(worker,seq);
         seqEngine->load(duty);
         seqEngine->flush();
     }
+#endif
 
 
     seq.detach();
