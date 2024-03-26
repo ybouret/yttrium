@@ -72,6 +72,7 @@ namespace Yttrium
                 void update(const Symbol &symb)                noexcept; //!< update chosen symbol
                 void commit(Model &)                           noexcept; //!< symbols.size>0
 
+                //! count current bits required to encode buffer and deduce bytes
                 size_t outputBytesFor(const Memory::ReadOnlyBuffer &) const;
 
 

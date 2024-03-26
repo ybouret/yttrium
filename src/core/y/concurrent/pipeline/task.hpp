@@ -31,8 +31,9 @@ namespace Yttrium
             // C++ : allowing to make pre-compiled, re-usable tasks
             //
             //__________________________________________________________________
-            Task(const Task &) noexcept; //!< shared copy
-            virtual ~Task()    noexcept; //!< cleanup
+            explicit Task(Runnable   *) noexcept; //!< setup from user's runnable code
+            Task(const Task &)          noexcept; //!< shared copy
+            virtual ~Task()             noexcept; //!< cleanup
 
             //__________________________________________________________________
             //
@@ -43,7 +44,6 @@ namespace Yttrium
             void process(const ThreadContext &); //!< run code on given context
 
         protected:
-            Task(Runnable   *) noexcept; //!< setup from user's runnable code
             void initialize()  noexcept; //!< withold code
 
         private:

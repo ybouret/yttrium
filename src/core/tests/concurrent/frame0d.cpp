@@ -7,7 +7,7 @@
 #include "y/random/bits.hpp"
 #include "y/system/wtime.hpp"
 #include "y/utest/run.hpp"
-
+#include "y/type/binder.hpp"
 
 
 namespace Yttrium
@@ -20,7 +20,6 @@ namespace Yttrium
         public:
             typedef Writable<ENGINE> Engines;
 
-           // template <typename DERIVED>
             explicit Router(const SharedPipeline &sp) :
             Frames<ENGINE>(sp),
             queue( Coerce(*sp) )
@@ -31,11 +30,49 @@ namespace Yttrium
             {
             }
 
-            class Job : public Runnable
+
+            template <typename METHOD, typename TLIST>
+            class Job : public Runnable, public Binder<TLIST>
             {
             public:
-                explicit Job(Engines &eng) noexcept : engines(eng) {}
-                virtual ~Job() noexcept {}
+                Y_BINDER_ECHO(TLIST);
+                typedef Binder<TLIST> BinderType;
+                
+                inline Job(Engines &myEngines,
+                           METHOD   userMethod) noexcept :
+                Runnable(),
+                BinderType(),
+                engines(myEngines),
+                method(userMethod)
+                {
+
+                }
+
+                inline virtual ~Job() noexcept {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Job);
+                Engines &engines;
+                METHOD   method;
+
+                virtual void run(const ThreadContext &ctx)
+                {
+                    static const typename BinderType::ArgsType choice =  {};
+                    call( engines[ctx.indx], choice);
+                }
+
+                inline void call(ENGINE &host, const Int2Type<0> &)
+                {
+                    (host.*method)();
+                }
+
+            };
+
+            class Duty : public Runnable
+            {
+            public:
+                explicit Duty(Engines &eng) noexcept : engines(eng) {}
+                virtual ~Duty() noexcept {}
 
                 virtual void run(const ThreadContext &ctx)
                 {
@@ -45,28 +82,25 @@ namespace Yttrium
 
             private:
                 Engines &engines;
-                Y_DISABLE_COPY_AND_ASSIGN(Job);
-            };
-
-            class Duty : public Task
-            {
-            public:
-                explicit Duty(Engines &eng) : Task( new Job(eng) ) {}
-                virtual ~Duty() noexcept {}
-
-            private:
                 Y_DISABLE_COPY_AND_ASSIGN(Duty);
             };
+
 
             void flush() noexcept
             {
                 queue.flush();
             }
 
+            template <typename METHOD>
+            TaskUUID call(METHOD method)
+            {
+                return queue.run(new Job<METHOD,NullType>(*this,method) );
+            }
+
+
             TaskUUID exec()
             {
-                const Duty task(*this);
-                return queue.load(task);
+                return queue.run( new Duty(*this) );
             }
 
 
@@ -92,7 +126,7 @@ namespace
         Concurrent::PunctualFrame(ctx), ran(), tmx()
         {}
 
-        void operator()(void)
+        void call0()
         {
             {
                 Y_LOCK(sync);
@@ -100,6 +134,13 @@ namespace
             }
             tmx.wait( ran.to<double>() );
         }
+
+        void operator()(void)
+        {
+            call0();
+        }
+
+
 
         inline virtual ~Demo() noexcept {}
 
@@ -110,67 +151,6 @@ namespace
         Y_DISABLE_COPY_AND_ASSIGN(Demo);
     };
 
-#if 0
-    class Worker
-    {
-    public:
-        explicit Worker() {}
-        virtual ~Worker() noexcept {}
-
-        void call(const Demo &dem)
-        {
-            {
-                Y_LOCK(dem.sync);
-                std::cerr << "worker[" << dem << "]" << std::endl;
-            }
-        }
-
-    private:
-        Y_DISABLE_COPY_AND_ASSIGN(Worker);
-    };
-
-
-    class Job : public Concurrent::Runnable
-    {
-    public:
-
-        explicit Job(Worker         &worker,
-                     Writable<Demo> &frames) :
-        host( worker ),
-        data( frames )
-        {
-
-        }
-
-        virtual void run(const Concurrent::ThreadContext &ctx)
-        {
-            std::cerr << "job[" << ctx.name << "]" << std::endl;
-            host.call( data[ ctx.indx ] );
-        }
-
-        virtual ~Job() noexcept {}
-
-    private:
-        Y_DISABLE_COPY_AND_ASSIGN(Job);
-        Worker                   &host;
-        Writable<Demo>           &data;
-    };
-
-    class Duty : public Concurrent::Task
-    {
-    public:
-        explicit Duty(Worker         &worker,
-                      Writable<Demo> &frames) :
-        Task( new Job(worker,frames) )
-        {
-        }
-
-        virtual ~Duty() noexcept {}
-
-    private:
-        Y_DISABLE_COPY_AND_ASSIGN(Duty);
-    };
-#endif
 
 }
 
@@ -194,6 +174,11 @@ Y_UTEST(concurrent_frame0d)
     std::cerr << "  seq=" << seq << std::endl;
     std::cerr << "  par=" << par << std::endl;
 
+
+    seq.call( & Demo::call0 );
+    seq.flush();
+    
+#if 0
     seq.exec();
     seq.exec();
     seq.flush();
@@ -203,7 +188,6 @@ Y_UTEST(concurrent_frame0d)
     par.flush();
 
 
-#if 0
     Worker worker;
     {
         const Duty duty(worker,seq);

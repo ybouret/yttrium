@@ -31,7 +31,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef MAPPING Mapping;
+            typedef MAPPING Mapping; //!< alias
 
             //__________________________________________________________________
             //

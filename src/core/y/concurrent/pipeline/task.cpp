@@ -52,21 +52,10 @@ namespace Yttrium
 
     namespace Concurrent
     {
-        namespace {
-            class BareTask : public Task
-            {
-            public:
-                inline explicit BareTask(Runnable *runnable) : Task(runnable) {}
-                inline virtual ~BareTask() noexcept {}
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(BareTask);
-            };
-        }
 
         TaskUUID TaskManager:: run(Runnable *runnable)
         {
-            const BareTask task(runnable);
+            const Task task(runnable);
             return load(task);
         }
     }
