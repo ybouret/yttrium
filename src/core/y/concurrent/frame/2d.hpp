@@ -49,12 +49,11 @@ namespace Yttrium
                 this->workspace.build(mapping);
             }
 
-            //! access sub Tile, may be NULL
-            inline const Tile * operator*() const noexcept
+            //! access AutoPtr<Tile>
+            inline const Mapping &operator*() const noexcept
             {
                 assert(this->workspace.isValid());
-                const Mapping &mapping = *(this->workspace);
-                return mapping.isValid() ? & *mapping : 0;
+                return *(this->workspace);
             }
 
             //__________________________________________________________________

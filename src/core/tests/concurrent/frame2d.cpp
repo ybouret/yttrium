@@ -45,6 +45,12 @@ Y_UTEST(concurrent_frame2d)
     std::cerr << "Attached" << std::endl;
     std::cerr << "  seq=" << seq << std::endl;
     std::cerr << "  par=" << par << std::endl;
+ 
+    for(size_t i=1;i<=par.size();++i)
+    {
+        std::cerr << "sub[" << std::setw(4) << i << "] = " << *par[i] << std::endl;
+    }
+
 
     seq.detach();
     par.detach();
