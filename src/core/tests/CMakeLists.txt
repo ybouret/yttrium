@@ -160,6 +160,10 @@ add_test(concurrent:pipeline  test-core concurrent_pipeline)
 add_test(concurrent:resource  test-core concurrent_resource)
 add_test(concurrent:dispatcher test-core concurrent_dispatcher)
 add_test(concurrent:frames     test-core concurrent_frames)
+add_test(concurrent:frame0d    test-core concurrent_frame0d)
+add_test(concurrent:frame1d    test-core concurrent_frame1d)
+add_test(concurrent:frame2d    test-core concurrent_frame2d)
+
 
 #random
 add_test(random:bits     test-core random_bits)

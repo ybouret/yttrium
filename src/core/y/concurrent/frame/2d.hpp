@@ -11,25 +11,56 @@ namespace Yttrium
 {
     namespace Concurrent
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Frame for 2D operations
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class Frame2D : public Frame< AutoPtr< typename Tiling<T>::Tile > >
         {
         public:
-            typedef T                        Type;
-            typedef typename Tiling<T>::Tile Tile;
-            typedef AutoPtr<Tile>            Mapping;
-            typedef Frame<Mapping>           FrameType;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef T                        Type;       //!< alias
+            typedef typename Tiling<T>::Tile Tile;       //!< alias
+            typedef AutoPtr<Tile>            Mapping;    //!< alias
+            typedef Frame<Mapping>           FrameType;  //!< alias
 
-            inline virtual ~Frame2D() noexcept {}
 
-            inline void init(const V2D<T> &lower, const V2D<T> &upper)
+            //__________________________________________________________________
+            //
+            //
+            // Method
+            //
+            //__________________________________________________________________
+
+            //! create sub Tile (may be null)
+            inline void attach(const V2D<T> &lower, const V2D<T> &upper)
             {
                 const Mapping mapping = Tiling<T>::Tiles::For(*this,lower,upper);
                 this->workspace.build(mapping);
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! cleanup
+            inline virtual ~Frame2D() noexcept {}
 
         protected:
+            //! setup
             inline explicit Frame2D(const ThreadContext &ctx) noexcept :
             FrameType(ctx)
             {

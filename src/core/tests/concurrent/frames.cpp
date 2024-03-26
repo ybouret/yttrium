@@ -97,8 +97,8 @@ Y_UTEST(concurrent_frames)
         std::cerr << "f0par=" << f0par << std::endl;
 
 
-        f0seq.init();
-        f0par.init();
+        f0seq.attach();
+        f0par.attach();
 
         std::cerr << "f0seq=" << f0seq << std::endl;
         std::cerr << "f0par=" << f0par << std::endl;
@@ -113,8 +113,8 @@ Y_UTEST(concurrent_frames)
         std::cerr << "f1par=" << f1par << std::endl;
 
 
-        f1seq.init(1,10,2);
-        f1par.init(1,10,2);
+        f1seq.attach(1,10,2);
+        f1par.attach(1,10,2);
 
         std::cerr << "f1seq=" << f1seq << std::endl;
         std::cerr << "f1par=" << f1par << std::endl;
@@ -130,8 +130,8 @@ Y_UTEST(concurrent_frames)
         const V2D<unit_t> lower(1,1);
         const V2D<unit_t> upper(10,10);
 
-        f2seq.init( lower, upper );
-        f2par.init( lower, upper );
+        f2seq.attach( lower, upper );
+        f2par.attach( lower, upper );
 
         std::cerr << "f2seq=" << f2seq << std::endl;
         std::cerr << "f2par=" << f2par << std::endl;

@@ -10,26 +10,56 @@ namespace Yttrium
 {
     namespace Concurrent
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Frame for 1D operations
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class Frame1D : public Frame< ForLoop<T> >
         {
         public:
-            typedef T              Type;
-            typedef ForLoop<T>     Mapping;
-            typedef Frame<Mapping> FrameType;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef T              Type;       //!< alias
+            typedef ForLoop<T>     Mapping;    //!< alias
+            typedef Frame<Mapping> FrameType;  //!< alias
 
-            virtual ~Frame1D() noexcept {}
 
-            void init(const T &head, const T &tail, const T &step)
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! make sub ForLoop
+            inline void attach(const T &head, const T &tail, const T &step)
             {
                 const Mapping mapping = Split::For(*this, head, tail, step);
                 this->workspace.build(mapping);
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
+            //! cleanup
+            inline virtual ~Frame1D() noexcept {}
 
         protected:
-            explicit Frame1D(const ThreadContext &ctx) noexcept :
+            //! setup
+            inline explicit Frame1D(const ThreadContext &ctx) noexcept :
             FrameType(ctx)
             {
             }

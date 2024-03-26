@@ -24,24 +24,46 @@ namespace Yttrium
         template <typename MAPPING>
         class Frame : public Nucleus::Frame
         {
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
         protected:
+            //! setup, copy context, empty workspace
             inline explicit Frame(const ThreadContext &ctx) noexcept :
             Nucleus::Frame(ctx), workspace() {}
 
         public:
-            inline virtual ~Frame() noexcept { quit(); }
+            //! cleanup
+            inline virtual ~Frame() noexcept {}
 
-            
-            inline void quit() noexcept { this->workspace.erase(); }
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
+            //! empty workspace
+            inline void detach() noexcept { this->workspace.erase(); }
+
+            //! display content
             inline friend std::ostream & operator<<(std::ostream &os, const Frame &frame)
             {
                 os << "@" << frame.name << "->" << frame.workspace;
                 return os;
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
         protected:
-            Memory::Workspace<MAPPING> workspace;
+            Memory::Workspace<MAPPING> workspace; //!< blank space/content
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Frame);
