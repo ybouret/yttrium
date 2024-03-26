@@ -6,8 +6,6 @@
 
 namespace Yttrium
 {
-    //Y_SHALLOW_IMPL(Functionoid);
-    //Y_SHALLOW_IMPL(CxxMethodOf);
 
     namespace Concurrent
     {
@@ -42,6 +40,36 @@ namespace Yttrium
             assert(0!=code);
             code->run(ctx);
         }
+
+    }
+}
+
+#include "y/concurrent/pipeline/task/manager.hpp"
+
+
+namespace Yttrium
+{
+
+    namespace Concurrent
+    {
+        namespace {
+            class BareTask : public Task
+            {
+            public:
+                inline explicit BareTask(Runnable *runnable) : Task(runnable) {}
+                inline virtual ~BareTask() noexcept {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(BareTask);
+            };
+        }
+
+        TaskUUID TaskManager:: run(Runnable *runnable)
+        {
+            const BareTask task(runnable);
+            return load(task);
+        }
     }
 
 }
+

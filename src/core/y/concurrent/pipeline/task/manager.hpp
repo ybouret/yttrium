@@ -13,6 +13,7 @@ namespace Yttrium
     {
 
         class Task;
+        class Runnable;
 
         //______________________________________________________________________
         //
@@ -33,8 +34,11 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! load a new task into manager
+            //! load a new pre-compiled task into manager
             virtual TaskUUID load(const Task &task) = 0;
+
+            //! load a new one-time runnable into manager
+            virtual TaskUUID run( Runnable * );
 
             //__________________________________________________________________
             //
