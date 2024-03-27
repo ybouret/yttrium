@@ -3,6 +3,7 @@
 #include "y/concurrent/frames.hpp"
 #include "y/utest/run.hpp"
 
+#include "y/type/binder.hpp"
 
 namespace Yttrium
 {
@@ -44,12 +45,58 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SIMT);
         };
+
+        template <typename ENGINE,typename TLIST>
+        struct Execute
+        {
+            typedef Writable<ENGINE> Engines; //!< alias
+
+
+            //__________________________________________________________________
+            //
+            //! ENGINE.meth()
+            //__________________________________________________________________
+            template <typename METHOD> static inline
+            void On(SIMT<ENGINE> &simt,
+                    METHOD        meth)
+            {
+                class Call : public Kernel  {
+                public:
+                    explicit Call(Engines &eng,
+                                  METHOD  &mth) noexcept :
+                    engines(eng),
+                    method(mth)
+                    {
+                    }
+
+                    virtual ~Call() noexcept {}
+
+                    virtual void operator()(const ThreadContext &ctx)
+                    {
+                        ENGINE &host = engines[ctx.indx];
+                        (host.*method)();
+                    }
+
+                private:
+                    Engines &engines;
+                    METHOD   method;
+                    Y_DISABLE_COPY_AND_ASSIGN(Call);
+                };
+
+                Call me(simt,meth);
+                simt->run1(me);
+            }
+
+        };
+
     }
 }
 
 using namespace Yttrium;
 
 #include "y/concurrent/frame/1d.hpp"
+#include "y/system/wtime.hpp"
+#include "y/random/bits.hpp"
 
 namespace
 {
@@ -57,12 +104,27 @@ namespace
     {
     public:
         explicit Demo1D(const Concurrent::ThreadContext &ctx) noexcept :
-        Concurrent::Frame1D<size_t>(ctx)
+        Concurrent::Frame1D<size_t>(ctx),
+        tmx(),
+        ran()
         {
             std::cerr << "  (*) Demo1D@" << name << std::endl;
         }
 
+        void call0()
+        {
+            assert(this->isAssigned());
+            {
+                Y_LOCK(sync);
+                std::cerr << "  (*) Demo1D.call0(" << *this << ")" << std::endl;
+            }
+            tmx.wait( ran.to<double>() );
+        }
+
         virtual ~Demo1D() noexcept {}
+
+        WallTime     tmx;
+        Random::Rand ran;
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Demo1D);
@@ -83,7 +145,16 @@ Y_UTEST(concurrent_simt)
     Concurrent::SIMT<Demo1D> seq(seqLoop);
     Concurrent::SIMT<Demo1D> par(parLoop);
 
-    
+    typedef Concurrent::Execute<Demo1D,NullType> Execute0;
+
+    seq.assign(1,10,2);
+    par.assign(1,10,2);
+
+
+    Execute0::On(seq, & Demo1D::call0 );
+    Execute0::On(par, & Demo1D::call0 );
+
+
 
 }
 Y_UDONE()
