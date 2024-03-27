@@ -28,7 +28,7 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        typedef void (AutoClean::*Meth)(void); //!< alias to a methode pointer
+        typedef void (AutoClean::*Meth)(void); //!< alias to a method pointer
 
         //______________________________________________________________________
         //
