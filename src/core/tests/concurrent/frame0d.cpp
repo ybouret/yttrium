@@ -96,8 +96,8 @@ Y_UTEST(concurrent_frame0d)
     std::cerr << "  seq=" << seq << std::endl;
     std::cerr << "  par=" << par << std::endl;
 
-    seq.attach();
-    par.attach();
+    seq.assign();
+    par.assign();
     std::cerr << "Attached" << std::endl;
     std::cerr << "  seq=" << seq << std::endl;
     std::cerr << "  par=" << par << std::endl;
@@ -163,8 +163,8 @@ Y_UTEST(concurrent_frame0d)
 
     }
 
-    seq.detach();
-    par.detach();
+    seq.loosen();
+    par.loosen();
     std::cerr << "Detached" << std::endl;
     std::cerr << "  seq=" << seq << std::endl;
     std::cerr << "  par=" << par << std::endl;

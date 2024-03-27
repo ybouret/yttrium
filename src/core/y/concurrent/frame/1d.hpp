@@ -40,8 +40,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! make sub ForLoop
-            inline void attach(const T &head, const T &tail, const T &step)
+            //! assign sub ForLoop
+            inline void assign(const T &head, const T &tail, const T &step)
             {
                 const Mapping mapping = Split::For(*this, head, tail, step);
                 this->workspace.build(mapping);

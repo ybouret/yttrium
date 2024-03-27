@@ -43,7 +43,7 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! create sub Tile (may be null)
-            inline void attach(const V2D<T> &lower, const V2D<T> &upper)
+            inline void assign(const V2D<T> &lower, const V2D<T> &upper)
             {
                 const Mapping mapping = Tiling<T>::Tiles::For(*this,lower,upper);
                 this->workspace.build(mapping);

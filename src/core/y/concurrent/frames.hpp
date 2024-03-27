@@ -55,7 +55,7 @@ namespace Yttrium
 
 
             //! cleanup
-            virtual ~Frames() noexcept { detach(); }
+            virtual ~Frames() noexcept { loosen(); }
 
             //__________________________________________________________________
             //
@@ -64,57 +64,58 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+
             //__________________________________________________________________
             //
-            //! empty all workspaces
+            //! lossen all workspaces
             //__________________________________________________________________
-            inline void detach() noexcept
+            inline void loosen() noexcept
             {
                 Writable<FRAME> &self = *this;
                 for(size_t i=self.size();i>0;--i)
-                    self[i].detach();
+                    self[i].loosen();
             }
 
             //__________________________________________________________________
             //
-            //! setup to all punctual frames
+            //! assign to all punctual frames
             //__________________________________________________________________
-            inline void attach()
+            inline void assign()
             {
-                detach();
+                loosen();
                 Writable<FRAME> &self = *this;
                 const size_t     n    = self.size();
-                try { for(size_t i=1;i<=n;++i) self[i].attach(); }
-                catch(...) { detach(); throw; }
+                try { for(size_t i=1;i<=n;++i) self[i].assign(); }
+                catch(...) { loosen(); throw; }
             }
 
             //__________________________________________________________________
             //
-            //! attach sub-ForLoop to all 1D frames
+            //! assign sub-ForLoop to all 1D frames
             //__________________________________________________________________
-            inline void attach(const typename FrameType::Type head,
+            inline void assign(const typename FrameType::Type head,
                                const typename FrameType::Type tail,
                                const typename FrameType::Type step)
             {
-                detach();
+                loosen();
                 Writable<FRAME> &self = *this;
                 const size_t     n    = self.size();
-                try { for(size_t i=1;i<=n;++i) self[i].attach(head,tail,step); }
-                catch(...) { detach(); throw; }
+                try { for(size_t i=1;i<=n;++i) self[i].assign(head,tail,step); }
+                catch(...) { loosen(); throw; }
             }
 
             //__________________________________________________________________
             //
             //! attach sub-Tiles to all 2D frames
             //__________________________________________________________________
-            inline void attach(const V2D<typename FrameType::Type> lower,
+            inline void assign(const V2D<typename FrameType::Type> lower,
                                const V2D<typename FrameType::Type> upper)
             {
-                detach();
+                loosen();
                 Writable<FRAME> &self = *this;
                 const size_t     n    = self.size();
-                try { for(size_t i=1;i<=n;++i) self[i].attach(lower,upper); }
-                catch(...) { detach(); throw; }
+                try { for(size_t i=1;i<=n;++i) self[i].assign(lower,upper); }
+                catch(...) { loosen(); throw; }
             }
 
 

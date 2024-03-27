@@ -40,8 +40,8 @@ Y_UTEST(concurrent_frame2d)
     const V2D<unit_t> lower(1,1);
     const V2D<unit_t> upper(10,8);
 
-    seq.attach(lower,upper);
-    par.attach(lower,upper);
+    seq.assign(lower,upper);
+    par.assign(lower,upper);
     std::cerr << "Attached" << std::endl;
     std::cerr << "  seq=" << seq << std::endl;
     std::cerr << "  par=" << par << std::endl;
@@ -52,8 +52,8 @@ Y_UTEST(concurrent_frame2d)
     }
 
 
-    seq.detach();
-    par.detach();
+    seq.loosen();
+    par.loosen();
     std::cerr << "Detached" << std::endl;
     std::cerr << "  seq=" << seq << std::endl;
     std::cerr << "  par=" << par << std::endl;

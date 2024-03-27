@@ -35,8 +35,8 @@ Y_UTEST(concurrent_frame1d)
     std::cerr << "  seq=" << seq << std::endl;
     std::cerr << "  par=" << par << std::endl;
 
-    seq.attach(1,10,2);
-    par.attach(1,10,2);
+    seq.assign(1,10,2);
+    par.assign(1,10,2);
     std::cerr << "Attached" << std::endl;
     std::cerr << "  seq=" << seq << std::endl;
     std::cerr << "  par=" << par << std::endl;
@@ -47,8 +47,8 @@ Y_UTEST(concurrent_frame1d)
         std::cerr << "sub[" << std::setw(4) << i << "] = " << sub << std::endl;
     }
 
-    seq.detach();
-    par.detach();
+    seq.loosen();
+    par.loosen();
     std::cerr << "Detached" << std::endl;
     std::cerr << "  seq=" << seq << std::endl;
     std::cerr << "  par=" << par << std::endl;

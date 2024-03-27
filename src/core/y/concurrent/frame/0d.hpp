@@ -40,7 +40,7 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! mark workspace as built
-            inline void attach() { this->workspace.build(); }
+            inline void assign(void) { this->workspace.build(); }
 
             //__________________________________________________________________
             //

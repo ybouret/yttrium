@@ -56,8 +56,8 @@ namespace Yttrium
             //__________________________________________________________________
 
 
-            //! empty workspace
-            inline void detach() noexcept { this->workspace.erase(); }
+            //! rease workspace
+            inline void loosen() noexcept { this->workspace.erase(); }
 
 
 
