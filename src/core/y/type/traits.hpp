@@ -132,7 +132,7 @@ namespace Yttrium
 
     public:
         enum { IsReference = ReferenceTraits<T>::Value /*!< true if 'T' can be written as 'U &'. */ };
-        typedef typename ReferenceTraits<T>::ReferredType                  &ReferenceType;      //!< returns 'U' for 'U &' and 'U'.
+        typedef typename ReferenceTraits<T>::ReferredType                  &ReferenceType;      //!< returns 'U &' for 'U &' and 'U'.
         typedef const typename ReferenceTraits<MutableType>::ReferredType  &ConstReferenceType; //!< returns 'const U &'.
 
         //______________________________________________________________________

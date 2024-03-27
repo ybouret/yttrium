@@ -46,10 +46,18 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(SIMT);
         };
 
+#define Y_CONCURRENT_EXEC_DECL(I)                                       \
+typedef typename TL::SafeTypeAt<TLIST,I-1,EmptyType>::Result Type##I;   \
+typedef typename TypeTraits<Type##I>::ParamType              Param##I; \
+typedef typename TypeTraits<Param##I>::ReferenceType         Ref##I
+
         template <typename ENGINE,typename TLIST>
         struct Execute
         {
             typedef Writable<ENGINE> Engines; //!< alias
+            Y_CONCURRENT_EXEC_DECL(1);
+            Y_CONCURRENT_EXEC_DECL(2);
+
 
 
             //__________________________________________________________________
@@ -62,16 +70,12 @@ namespace Yttrium
             {
                 class Call : public Kernel  {
                 public:
-                    explicit Call(Engines &eng,
-                                  METHOD  &mth) noexcept :
-                    engines(eng),
-                    method(mth)
-                    {
-                    }
+                    inline explicit Call(Engines &eng, METHOD  &mth) noexcept :
+                    engines(eng), method(mth) {}
 
-                    virtual ~Call() noexcept {}
+                    inline virtual ~Call() noexcept {}
 
-                    virtual void operator()(const ThreadContext &ctx)
+                    inline virtual void operator()(const ThreadContext &ctx)
                     {
                         ENGINE &host = engines[ctx.indx];
                         (host.*method)();
@@ -84,6 +88,74 @@ namespace Yttrium
                 };
 
                 Call me(simt,meth);
+                simt->run1(me);
+            }
+
+            //__________________________________________________________________
+            //
+            //! ENGINE.meth(arg1)
+            //__________________________________________________________________
+            template <typename METHOD> static inline
+            void On(SIMT<ENGINE> &simt,
+                    METHOD        meth,
+                    Param1        p1)
+            {
+                class Call : public Kernel  {
+                public:
+                    inline explicit Call(Engines &eng, METHOD  &mth, Ref1 p1) noexcept :
+                    engines(eng), method(mth), arg1(p1) {}
+
+                    inline virtual ~Call() noexcept {}
+
+                    inline virtual void operator()(const ThreadContext &ctx)
+                    {
+                        ENGINE &host = engines[ctx.indx];
+                        (host.*method)(arg1);
+                    }
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Call);
+                    Engines &engines;
+                    METHOD   method;
+                    Ref1     arg1;
+                };
+
+                Call me(simt,meth,p1);
+                simt->run1(me);
+            }
+
+            //__________________________________________________________________
+            //
+            //! ENGINE.meth(arg1,arg2)
+            //__________________________________________________________________
+            template <typename METHOD> static inline
+            void On(SIMT<ENGINE> &simt,
+                    METHOD        meth,
+                    Param1        p1,
+                    Param2        p2)
+            {
+                class Call : public Kernel  {
+                public:
+                    inline explicit Call(Engines &eng, METHOD  &mth, Ref1 p1, Ref2 p2) noexcept :
+                    engines(eng), method(mth), arg1(p1), arg2(p2) {}
+
+                    inline virtual ~Call() noexcept {}
+
+                    inline virtual void operator()(const ThreadContext &ctx)
+                    {
+                        ENGINE &host = engines[ctx.indx];
+                        (host.*method)(arg1);
+                    }
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Call);
+                    Engines &engines;
+                    METHOD   method;
+                    Ref1     arg1;
+                    Ref2     arg2;
+                };
+
+                Call me(simt,meth,p1,p2);
                 simt->run1(me);
             }
 
@@ -121,6 +193,29 @@ namespace
             tmx.wait( ran.to<double>() );
         }
 
+        void call1(const int a)
+        {
+            assert(this->isAssigned());
+            {
+                Y_LOCK(sync);
+                std::cerr << "  (*) Demo1D.call1(" << a << "," << *this << ")" << std::endl;
+            }
+            tmx.wait( ran.to<double>() );
+        }
+
+        void call1bis(double &sum)
+        {
+            assert(this->isAssigned());
+            {
+                Y_LOCK(sync);
+                std::cerr << "  (*) Demo1D.call1bis(" << sum << "," << *this << ")" << std::endl;
+                sum += indx;
+            }
+            tmx.wait( ran.to<double>() );
+        }
+
+
+
         virtual ~Demo1D() noexcept {}
 
         WallTime     tmx;
@@ -145,15 +240,41 @@ Y_UTEST(concurrent_simt)
     Concurrent::SIMT<Demo1D> seq(seqLoop);
     Concurrent::SIMT<Demo1D> par(parLoop);
 
-    typedef Concurrent::Execute<Demo1D,NullType> Execute0;
 
+    std::cerr << "Assigning..." << std::endl;
     seq.assign(1,10,2);
     par.assign(1,10,2);
 
+    {
+        std::cerr << "Execute/0" << std::endl;
+        typedef Concurrent::Execute<Demo1D,NullType> Execute0;
+        std::cerr << "...seq:" << std::endl;
+        Execute0::On(seq, & Demo1D::call0 );
+        std::cerr << "...par:" << std::endl;
+        Execute0::On(par, & Demo1D::call0 );
+    }
 
-    Execute0::On(seq, & Demo1D::call0 );
-    Execute0::On(par, & Demo1D::call0 );
+    {
+        std::cerr << "Execute/1" << std::endl;
+        typedef Concurrent::Execute<Demo1D,TL1(int)> Execute1;
+        std::cerr << "...seq:" << std::endl;
+        Execute1::On(seq, & Demo1D::call1, 12 );
+        std::cerr << "...par:" << std::endl;
+        Execute1::On(par, & Demo1D::call1, 12 );
+    }
 
+    {
+        std::cerr << "Execute/1bis" << std::endl;
+        typedef Concurrent::Execute<Demo1D,TL1(double &)> Execute1;
+        std::cerr << "...seq:" << std::endl;
+        double sum = 0;
+        Execute1::On(seq, & Demo1D::call1bis, sum );
+        std::cerr << "sum=" << sum << std::endl;
+        sum = 0;
+        std::cerr << "...par:" << std::endl;
+        Execute1::On(par, & Demo1D::call1bis, sum );
+        std::cerr << "sum=" << sum << std::endl;
+    }
 
 
 }
