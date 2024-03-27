@@ -14,7 +14,6 @@ concurrent/thread
 concurrent/loop
 concurrent/pipeline
 concurrent/pipeline/task
-concurrent/pipeline/dispatcher
 concurrent/resource
 concurrent/frame
 concurrent/frame/nucleus
