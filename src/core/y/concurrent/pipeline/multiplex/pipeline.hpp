@@ -18,7 +18,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class MultiplexQueue
+        class MultiplexPipeline
         {
         public:
             //__________________________________________________________________
@@ -36,12 +36,12 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            virtual ~MultiplexQueue()                       noexcept; //!< cleanup
+            virtual ~MultiplexPipeline()                       noexcept; //!< cleanup
         protected:
-            explicit MultiplexQueue(const SharedPipeline &) noexcept; //!< setup
+            explicit MultiplexPipeline(const SharedPipeline &) noexcept; //!< setup
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(MultiplexQueue);
+            Y_DISABLE_COPY_AND_ASSIGN(MultiplexPipeline);
             Pipeline * const Q;
         };
 

@@ -3,7 +3,7 @@
 #ifndef Y_Concurrent_Pipeline_Multiplex_Included
 #define Y_Concurrent_Pipeline_Multiplex_Included 1
 
-#include "y/concurrent/pipeline/multiplex/q.hpp"
+#include "y/concurrent/pipeline/multiplex/pipeline.hpp"
 #include "y/concurrent/frames.hpp"
 
 namespace Yttrium
@@ -23,7 +23,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename ENGINE>
-        class Multiplex : public Frames<ENGINE>, public MultiplexQueue
+        class Multiplex : public Frames<ENGINE>, public MultiplexPipeline
         {
         public:
             //__________________________________________________________________
@@ -44,7 +44,7 @@ namespace Yttrium
             //! setup ENGINEs + keep pipeline reference
             inline explicit Multiplex(const SharedPipeline &sp) :
             Frames<ENGINE>(sp),
-            MultiplexQueue(sp)
+            MultiplexPipeline(sp)
             {
             }
 
