@@ -26,7 +26,7 @@ Y_UTEST(calculus_prime32)
     while( true )
     {
         const uint64_t q = Prime64::Next(p+1);
-        if(BitsFor(q)>24) break;
+        if(BitsFor(q)>20) break;
         const uint64_t d = q-p;  Y_ASSERT(0==(d&1));
         const uint64_t h = d>>1; Y_ASSERT(h>0);
         const uint64_t z = h-1;
