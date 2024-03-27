@@ -10,16 +10,35 @@ namespace Yttrium
 {
     namespace Concurrent
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Reference to a Pipeline/Queue
+        //
+        //
+        //______________________________________________________________________
         class MultiplexQueue
         {
         public:
-            Pipeline *        operator->()       noexcept;
-            const Pipeline  * operator->() const noexcept;
-            
-            virtual ~MultiplexQueue()                       noexcept;
-        protected:
-            explicit MultiplexQueue(const SharedPipeline &) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            Pipeline *        operator->()       noexcept; //!< access
+            const Pipeline  * operator->() const noexcept; //!< access
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            virtual ~MultiplexQueue()                       noexcept; //!< cleanup
+        protected:
+            explicit MultiplexQueue(const SharedPipeline &) noexcept; //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MultiplexQueue);

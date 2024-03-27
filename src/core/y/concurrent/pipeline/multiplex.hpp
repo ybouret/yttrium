@@ -14,21 +14,41 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        //! Engine Should derive from Frame0D
+        //
+        //! ENGINEs + Pipeline
+        /**
+         - ENGINE Should derive from Frame0D
+         - create as many engines as pipeline size
+         */
         //
         //______________________________________________________________________
         template <typename ENGINE>
         class Multiplex : public Frames<ENGINE>, public MultiplexQueue
         {
         public:
-            typedef Writable<ENGINE> Engines;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef Writable<ENGINE> Engines; //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup ENGINEs + keep pipeline reference
             inline explicit Multiplex(const SharedPipeline &sp) :
             Frames<ENGINE>(sp),
             MultiplexQueue(sp)
             {
             }
 
+            //! cleanup
             inline virtual ~Multiplex() noexcept {}
 
 

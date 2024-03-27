@@ -13,12 +13,40 @@ namespace Yttrium
     namespace Concurrent
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Invoke ENGINE.methods(args)
+        /**
+         - store METHOD+ARGS into a job
+         - load job to perform on next available ENGINE in the multiplex
+         */
+        //
+        //______________________________________________________________________
         template <typename ENGINE, typename TLIST>
         struct Invoke
         {
-            typedef Writable<ENGINE> Engines;
-            Y_BINDER_ECHO(TLIST);
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef Writable<ENGINE> Engines; //!< alias
+            Y_BINDER_ECHO(TLIST);             //!< aliases
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //__________________________________________________________________
+            //
+            //! ENGINE.meth()
+            //__________________________________________________________________
             template <typename METHOD> static inline
             TaskUUID On(Multiplex<ENGINE> &plex,
                         METHOD             meth)
@@ -26,6 +54,10 @@ namespace Yttrium
                 return plex->run( new Job<METHOD>(plex,meth) );
             }
 
+            //__________________________________________________________________
+            //
+            //! ENGINE.meth(arg1)
+            //__________________________________________________________________
             template <typename METHOD> static inline
             TaskUUID On(Multiplex<ENGINE> &plex,
                         METHOD             meth,
@@ -34,6 +66,10 @@ namespace Yttrium
                 return plex->run( new Job<METHOD>(plex,meth,arg1) );
             }
 
+            //__________________________________________________________________
+            //
+            //! ENGINE.meth(arg1,arg2)
+            //__________________________________________________________________
             template <typename METHOD> static inline
             TaskUUID On(Multiplex<ENGINE> &plex,
                         METHOD             meth,
@@ -43,6 +79,10 @@ namespace Yttrium
                 return plex->run( new Job<METHOD>(plex,meth,arg1,arg2) );
             }
 
+            //__________________________________________________________________
+            //
+            //! ENGINE.meth(arg1,arg2,arg3)
+            //__________________________________________________________________
             template <typename METHOD> static inline
             TaskUUID On(Multiplex<ENGINE> &plex,
                         METHOD             meth,
@@ -53,7 +93,10 @@ namespace Yttrium
                 return plex->run( new Job<METHOD>(plex,meth,arg1,arg2,arg3) );
             }
 
-
+            //__________________________________________________________________
+            //
+            //! ENGINE.meth(arg1,arg2,arg4)
+            //__________________________________________________________________
             template <typename METHOD> static inline
             TaskUUID On(Multiplex<ENGINE> &plex,
                         METHOD             meth,
@@ -65,7 +108,10 @@ namespace Yttrium
                 return plex->run( new Job<METHOD>(plex,meth,arg1,arg2,arg3,arg4) );
             }
 
-
+            //__________________________________________________________________
+            //
+            //! ENGINE.meth(arg1,arg2,arg3,arg4,arg5)
+            //__________________________________________________________________
             template <typename METHOD> static inline
             TaskUUID On(Multiplex<ENGINE> &plex,
                         METHOD             meth,
