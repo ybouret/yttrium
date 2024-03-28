@@ -57,6 +57,32 @@ typedef typename TypeTraits<Param##I>::ReferenceType         Ref##I
             typedef Writable<ENGINE> Engines; //!< alias
             Y_CONCURRENT_EXEC_DECL(1);
             Y_CONCURRENT_EXEC_DECL(2);
+            Y_CONCURRENT_EXEC_DECL(3);
+            Y_CONCURRENT_EXEC_DECL(4);
+            Y_CONCURRENT_EXEC_DECL(5);
+
+            template <typename METHOD>
+            class ModKernel : public Kernel
+            {
+            public:
+                inline virtual ~ModKernel() noexcept {}
+
+            protected:
+                inline explicit ModKernel(Engines &eng, METHOD &mth) noexcept :
+                method(mth),
+                engines(eng)
+                {
+                }
+
+                inline ENGINE & host(const Context &ctx) noexcept {
+                    return engines[ctx.indx];
+                }
+
+                METHOD   method;
+            private:
+                Engines &engines;
+                Y_DISABLE_COPY_AND_ASSIGN(ModKernel);
+            };
 
 
 
@@ -68,22 +94,19 @@ typedef typename TypeTraits<Param##I>::ReferenceType         Ref##I
             void On(SIMT<ENGINE> &simt,
                     METHOD        meth)
             {
-                class Call : public Kernel  {
+                class Call : public ModKernel<METHOD>  {
                 public:
                     inline explicit Call(Engines &eng, METHOD  &mth) noexcept :
-                    engines(eng), method(mth) {}
+                    ModKernel<METHOD> (eng,mth) {}
 
                     inline virtual ~Call() noexcept {}
 
                     inline virtual void operator()(const ThreadContext &ctx)
                     {
-                        ENGINE &host = engines[ctx.indx];
-                        (host.*method)();
+                        (this->host(ctx).*(this->method))();
                     }
 
                 private:
-                    Engines &engines;
-                    METHOD   method;
                     Y_DISABLE_COPY_AND_ASSIGN(Call);
                 };
 
