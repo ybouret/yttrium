@@ -4,7 +4,7 @@
 #ifndef Y_CONCURRENT_FRAME_INCLUDED
 #define Y_CONCURRENT_FRAME_INCLUDED 1
 
-#include "y/concurrent/frame/nucleus/frame.hpp"
+#include "y/concurrent/thread/context.hpp"
 #include "y/memory/solitary/workspace.hpp"
 
 namespace Yttrium
@@ -22,7 +22,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename MAPPING>
-        class Frame : public Nucleus::Frame
+        class Frame : public ThreadContext
         {
         public:
             //__________________________________________________________________
@@ -42,7 +42,7 @@ namespace Yttrium
         protected:
             //! setup, copy context, empty workspace
             inline explicit Frame(const ThreadContext &ctx) noexcept :
-            Nucleus::Frame(ctx), workspace() {}
+            ThreadContext(ctx), workspace() {}
 
         public:
             //! cleanup

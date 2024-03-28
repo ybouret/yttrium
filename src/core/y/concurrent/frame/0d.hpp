@@ -19,7 +19,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Frame0D : public Concurrent::Frame<Nucleus::Punctual>
+        class Frame0D : public Frame<Nucleus::Punctual>
         {
         public:
             //__________________________________________________________________
