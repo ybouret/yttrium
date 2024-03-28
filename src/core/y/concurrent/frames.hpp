@@ -67,7 +67,7 @@ namespace Yttrium
 
             //__________________________________________________________________
             //
-            //! lossen all workspaces
+            //! loosen all workspaces
             //__________________________________________________________________
             inline void loosen() noexcept
             {
@@ -78,7 +78,7 @@ namespace Yttrium
 
             //__________________________________________________________________
             //
-            //! assign to all punctual frames
+            //! assign to all PUNCTAL frames (deriving from Frame0D)
             //__________________________________________________________________
             inline void assign()
             {

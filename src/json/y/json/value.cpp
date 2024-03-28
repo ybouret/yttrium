@@ -100,11 +100,6 @@ namespace Yttrium
         {
         }
 
-        std::ostream & Value::Indent(std::ostream &os, const size_t indent)
-        {
-            for(size_t i=indent;i>0;--i) os << "  ";
-            return os;
-        }
 
 
         template <>
@@ -135,7 +130,7 @@ namespace Yttrium
             return *static_cast<const Object *>(impl);
         }
 
-        std::ostream &  Value:: display(std::ostream &os, const size_t indent) const
+        std::ostream &  Value:: display(std::ostream &os) const
         {
             switch(type)
             {
@@ -144,15 +139,15 @@ namespace Yttrium
                 case IsFalse:  os << "false"; break;
                 case IsString: os << "\"" << as<String>() << "\""; break;
                 case IsNumber: os << as<Number>(); break;
-                case IsArray:  return as<Array>().display(os,indent);
-                case IsObject: return as<Object>().display(os,indent);
+                case IsArray:  return as<Array>().display(os);
+                case IsObject: return as<Object>().display(os);
             }
             return os;
         }
 
         std::ostream & operator<<(std::ostream &os, const Value &v)
         {
-            return v.display(os,0);
+            return v.display(os);
         }
 
     }
@@ -191,7 +186,7 @@ namespace Yttrium
             tail().swapWith(value);
         }
 
-        std::ostream & Array:: display(std::ostream &os, size_t indent) const
+        std::ostream & Array:: display(std::ostream &os) const
         {
             if(size()<=0)
             {
@@ -200,12 +195,11 @@ namespace Yttrium
             else
             {
                 os << "[";
-                indent += 1;
-                (*this)[1].display(os,indent);
+                (*this)[1].display(os);
                 for(size_t i=2;i<=size();++i)
                 {
-                    Value::Indent(os << ",\n",indent);
-                    (*this)[i].display(os,indent);
+                    os << ", ";
+                    (*this)[i].display(os);
                 }
                 os << " ]";
             }
@@ -288,7 +282,7 @@ namespace Yttrium
 
         }
 
-        std::ostream & Object:: display(std::ostream &os, const size_t indent) const
+        std::ostream & Object:: display(std::ostream &os) const
         {
 
             os << '{';
@@ -298,7 +292,7 @@ namespace Yttrium
             {
                 os << "\"" << it->key() << "\" : ";
                 os << (*it)->v;
-                if(idx<num) os << ',' << std::endl;
+                if(idx<num) os << ", ";
             }
             os << '}';
             return os;

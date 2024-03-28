@@ -76,8 +76,7 @@ namespace Yttrium
             void  swapWith(Value &) noexcept; //!< swap contents
             void  nullify() noexcept;         //!< clear content
 
-            std::ostream &        display(std::ostream &os, const size_t indent) const; //!< display
-            static std::ostream & Indent(std::ostream &os,const size_t indent);         //!< indent
+            std::ostream &        display(std::ostream &os) const; //!< display
 
             Y_OSTREAM_PROTO(Value); //!< default display
 
@@ -133,7 +132,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             void add(Value &value); //!< steal value, pushed
-            std::ostream & display(std::ostream &, const size_t ) const; //!< display
+            std::ostream & display(std::ostream &) const; //!< display
 
         };
 
@@ -212,7 +211,7 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            std::ostream & display(std::ostream &, const size_t ) const; //!< display
+            std::ostream & display(std::ostream &) const; //!< display
 
             Value &       operator[](const String &key);       //!< get/create (null) Value
             const Value & operator[](const String &key) const; //!< get existing Value
