@@ -732,7 +732,8 @@ namespace Yttrium
             assert(L.size>=2);
             assert(L.head!=node);
             assert(0!=node->prev);
-            return InsertBefore(L,node->prev,Pop(L,node));
+            NODE * const prev = node->prev;
+            return InsertBefore(L,prev,Pop(L,node));
         }
     };
 

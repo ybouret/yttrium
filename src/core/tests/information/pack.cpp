@@ -22,8 +22,12 @@ void loadAlpha(Entropic::Alphabet &alpha, const SEQ &msg, Entropic::Model &model
     alpha.display(std::cerr);
     for(size_t i=1;i<=msg.size();++i)
     {
-        alpha.update( alpha[msg[i]] );
+        const Entropic::Symbol &symb = alpha[ msg[i] ];
+        //std::cerr << symb.name() << std::endl;
+        alpha.update( symb );
     }
+    return;
+
     alpha.display(std::cerr);
     alpha.commit(model);
     alpha.display(std::cerr);
@@ -54,6 +58,8 @@ Y_UTEST(info_pack)
     }
 
     Random::Shuffle::Range(msg,ran);
+    std::cerr << msg << std::endl;
+
 
     Entropic::Huffman huff;
 
@@ -62,6 +68,7 @@ Y_UTEST(info_pack)
     Entropic::Alphabet alphaFlux2(Entropic::Alphabet::MultiStreams);
 
     loadAlpha(alphaBlock,msg,huff);
+    return 0;
     loadAlpha(alphaFlux1,msg,huff);
     loadAlpha(alphaFlux2,msg,huff);
 

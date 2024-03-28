@@ -119,6 +119,7 @@ namespace Yttrium
                 assert(0!=node);
                 assert(1==node->freq);
                 assert(active<Symbol::Encoding);
+                std::cerr << "new symbol '" << node->name() << "'" << std::endl;
                 switch(mode)
                 {
                     case Precompiling:
@@ -164,8 +165,9 @@ namespace Yttrium
             void Alphabet:: updateSymbol(Symbol * const mine) noexcept
             {
                 assert(mine->freq>1);
+                std::cerr << "upd symbol '" << mine->name() << "'" << std::endl;
                 const Symbol::FreqType freq = mine->freq;
-                while(mine->prev && mine->prev->freq<freq) symbols.towardsHead(mine);
+                while( (0 != mine->prev) && (mine->prev->freq<freq) ) symbols.towardsHead(mine);
             }
 
             void Alphabet:: monitorFreqs() noexcept
