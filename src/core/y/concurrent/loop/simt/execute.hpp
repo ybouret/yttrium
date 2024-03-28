@@ -10,47 +10,80 @@ namespace Yttrium
 {
     namespace Concurrent
     {
-        
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! helper to declare types
+        /**
+         - get Type[1..5]
+         - get its ParamType[1..5]
+         - get its refence, since Parameter is persistent during call
+         */
+        //
+        //
+        //______________________________________________________________________
 #define Y_CONCURRENT_EXEC_DECL(I)                                       \
 typedef typename TL::SafeTypeAt<TLIST,I-1,EmptyType>::Result Type##I;   \
 typedef typename TypeTraits<Type##I>::ParamType              Param##I;  \
 typedef typename TypeTraits<Param##I>::ReferenceType         Ref##I
 
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! execute a method(...) on each ENGINE of a SIMT 
+        //
+        //
+        //______________________________________________________________________
         template <typename ENGINE,typename TLIST>
         struct Execute
         {
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             typedef Writable<ENGINE> Engines; //!< alias
-            Y_CONCURRENT_EXEC_DECL(1);
-            Y_CONCURRENT_EXEC_DECL(2);
-            Y_CONCURRENT_EXEC_DECL(3);
-            Y_CONCURRENT_EXEC_DECL(4);
-            Y_CONCURRENT_EXEC_DECL(5);
+            Y_CONCURRENT_EXEC_DECL(1);        //!< alias
+            Y_CONCURRENT_EXEC_DECL(2);        //!< alias
+            Y_CONCURRENT_EXEC_DECL(3);        //!< alias
+            Y_CONCURRENT_EXEC_DECL(4);        //!< alias
+            Y_CONCURRENT_EXEC_DECL(5);        //!< alias
 
+        private:
+            //! Modular Kerne;
             template <typename METHOD>
             class ModKernel : public Kernel
             {
             public:
+                //! cleanup
                 inline virtual ~ModKernel() noexcept {}
 
             protected:
+                //! initialize with persistent engines/method
                 inline explicit ModKernel(Engines &eng, METHOD &mth) noexcept :
                 method(mth),
                 engines(eng)
                 {
                 }
 
+                //! call host from required context
                 inline ENGINE & host(const Context &ctx) noexcept {
                     return engines[ctx.indx];
                 }
 
-                METHOD const method;
+
+                METHOD const method; //!< used method
             private:
-                Engines &engines;
+                Engines &engines;    //!< SIMT
                 Y_DISABLE_COPY_AND_ASSIGN(ModKernel);
             };
 
-
+        public:
             //__________________________________________________________________
             //
             //! ENGINE.meth()

@@ -55,6 +55,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //! check that assignation was performed
             inline bool isAssigned() const noexcept { return workspace.isValid(); }
 
             //! release workspace
