@@ -17,16 +17,18 @@ namespace Yttrium
     {
 
 
-        class Job : public Runnable, public WallTime
+        class MyJob : public Runnable, public WallTime
         {
         public:
 
-            explicit Job() : Runnable(), WallTime(), ran()
+            explicit MyJob() : Runnable(),  WallTime(), ran()
             {
+                std::cerr << "+Job" << std::endl;
             }
 
-            virtual ~Job() noexcept
+            virtual ~MyJob() noexcept
             {
+                std::cerr << "-Job" << std::endl;
             }
 
             virtual void run(const ThreadContext &ctx)
@@ -41,13 +43,13 @@ namespace Yttrium
             Random::Rand ran;
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Job);
+            Y_DISABLE_COPY_AND_ASSIGN(MyJob);
         };
 
         class Todo : public Task
         {
         public:
-            explicit Todo() : Task( new Job() )
+            explicit Todo() : Task( new MyJob() )
             {
             }
 
@@ -62,33 +64,38 @@ namespace Yttrium
 
     }
 
+
 }
 
 Y_UTEST(concurrent_pipeline)
 {
+    std::cerr << "Preparing Job..." << std::endl;
+    Concurrent::Todo todo;
+
     Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
     const Concurrent::Topology topology;
-    std::cerr << topology << std::endl;
+    std::cerr << "topology=" << topology << std::endl;
+
 
     Random::Rand                ran;
     Concurrent::SharedPipeline  alone = new Concurrent::Alone();
     Concurrent::SharedPipeline  queue = new Concurrent::Queue(topology);
 
-    Concurrent::Todo todo;
-    
+
+    (std::cerr << "Loading Sequential" << std::endl).flush();
     for(size_t i=2+ran.leq(2);i>0;--i)
     {
         alone->load(todo);
     }
     alone->flush();
 
+
     for(size_t i=5+ran.leq(5);i>0;--i)
     {
         queue->load(todo);
     }
     queue->flush();
-
-
+    
 
 
 

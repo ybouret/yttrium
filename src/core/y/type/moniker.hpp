@@ -10,8 +10,14 @@
 
 namespace Yttrium
 {
-
+    //__________________________________________________________________________
+    //
+    //
+    //
     //! workaround for misaligned type
+    //
+    //
+    //______________________________________________________________________
     template <typename T>
     class Moniker
     {
@@ -32,20 +38,15 @@ namespace Yttrium
         //______________________________________________________________________
 
         //! setup from source
-        inline Moniker(ParamType src) :
-        wksp(), addr( Memory::OutOfReach::Cast<MutableType>(wksp) )
-        { new ( Y_STATIC_ZARR(wksp) ) MutableType(src); }
+        inline Moniker(ParamType src) : addr(0), wksp() { new ( link() )  MutableType(src); }
 
 
-        //! copy
-        inline Moniker(const Moniker &other) :
-        wksp(), addr( Memory::OutOfReach::Cast<MutableType>(wksp) )
-        { new ( Y_STATIC_ZARR(wksp) ) MutableType(*other); }
+        //! copy using type copy constructor
+        inline Moniker(const Moniker &other) : addr(0), wksp() { new ( link() )  MutableType(*other); }
 
 
         //! deep clean
-        inline ~Moniker() noexcept
-        { Memory::OutOfReach::Naught(addr); addr=0; }
+        inline ~Moniker() noexcept { Memory::OutOfReach::Naught(addr); addr=0; }
 
         //______________________________________________________________________
         //
@@ -66,8 +67,13 @@ namespace Yttrium
 
     private:
         Y_DISABLE_ASSIGN(Moniker);
-        void        *wksp[ Y_WORDS_FOR(T) ];
         MutableType *addr;
+        void        *wksp[ Y_WORDS_FOR(T) ];
+
+        inline void *link() noexcept
+        {
+            return (addr = static_cast<MutableType *>( Y_STATIC_ZARR(wksp) ));
+        }
 
     };
 

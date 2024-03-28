@@ -3,7 +3,7 @@
 #ifndef Y_System_WallTime_Included
 #define Y_System_WallTime_Included 1
 
-#include "y/config/starting.hpp"
+#include "y/type/moniker.hpp"
 
 namespace Yttrium
 {
@@ -46,7 +46,7 @@ namespace Yttrium
         // members
         //
         //______________________________________________________________________
-        const long double freq; //!< system ticks to time factor
+        const Moniker<long double> freq; //!< system ticks to time factor
 
 
     private:
