@@ -12,6 +12,7 @@ concurrent/quark
 concurrent/split
 concurrent/thread
 concurrent/loop
+concurrent/loop/simt
 concurrent/pipeline
 concurrent/pipeline/task
 concurrent/resource

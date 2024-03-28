@@ -98,8 +98,8 @@ typedef typename TypeTraits<Param##I>::ReferenceType         Ref##I
                     using ModKernel<METHOD>::host;
                     using ModKernel<METHOD>::method;
 
-                    inline explicit Call(Engines &eng, METHOD  &mth) noexcept : ModKernel<METHOD> (eng,mth) {}
                     inline virtual ~Call() noexcept {}
+                    inline explicit Call(Engines &eng, METHOD  &mth) noexcept : ModKernel<METHOD> (eng,mth) {}
 
                     inline virtual void operator()(const ThreadContext &ctx) 
                     {
@@ -128,8 +128,9 @@ typedef typename TypeTraits<Param##I>::ReferenceType         Ref##I
                     using ModKernel<METHOD>::host;
                     using ModKernel<METHOD>::method;
 
-                    inline explicit Call(Engines &eng, METHOD  &mth, Ref1 p1) noexcept : ModKernel<METHOD> (eng,mth), arg1(p1) {}
                     inline virtual ~Call() noexcept {}
+                    inline explicit Call(Engines &eng, METHOD  &mth, Ref1 p1) noexcept : 
+                    ModKernel<METHOD> (eng,mth), arg1(p1) {}
 
                     inline virtual void operator()(const ThreadContext &ctx)
                     {
@@ -155,23 +156,22 @@ typedef typename TypeTraits<Param##I>::ReferenceType         Ref##I
                     Param1        p1,
                     Param2        p2)
             {
-                class Call : public Kernel  {
+                class Call : public ModKernel<METHOD>  {
                 public:
-                    inline explicit Call(Engines &eng, METHOD  &mth, Ref1 p1, Ref2 p2) noexcept :
-                    engines(eng), method(mth), arg1(p1), arg2(p2) {}
+                    using ModKernel<METHOD>::host;
+                    using ModKernel<METHOD>::method;
 
                     inline virtual ~Call() noexcept {}
+                    inline explicit Call(Engines &eng, METHOD  &mth, Ref1 p1, Ref2 p2) noexcept :
+                    ModKernel<METHOD> (eng,mth), arg1(p1), arg2(p2) {}
 
                     inline virtual void operator()(const ThreadContext &ctx)
                     {
-                        ENGINE &host = engines[ctx.indx];
-                        (host.*method)(arg1);
+                        (host(ctx).*method)(arg1,arg2);
                     }
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Call);
-                    Engines &engines;
-                    METHOD   method;
                     Ref1     arg1;
                     Ref2     arg2;
                 };
@@ -235,6 +235,24 @@ namespace
             tmx.wait( ran.to<double>() );
         }
 
+        void call2(Writable<double> &sum, const int a)
+        {
+            assert(this->isAssigned());
+            {
+                Y_LOCK(sync);
+                std::cerr << "  (*) Demo1D.call2(" << sum << "," << a <<", " << *this << ")" << std::endl;
+            }
+            const Mapping &sub = **this;
+            if(sub.length>0)
+            {
+                double &target = sum[indx];
+                for(size_t i=sub.offset;i<=sub.latest;i+=sub.update)
+                {
+                    target += i * a;
+                }
+
+            }
+        }
 
 
         virtual ~Demo1D() noexcept {}
@@ -249,6 +267,7 @@ namespace
 
 #include "y/concurrent/thread.hpp"
 #include "y/string/env.hpp"
+#include "y/sequence/vector.hpp"
 
 Y_UTEST(concurrent_simt)
 {
@@ -297,6 +316,21 @@ Y_UTEST(concurrent_simt)
         std::cerr << "sum=" << sum << std::endl;
     }
 
+
+    {
+        std::cerr << "Execute/2" << std::endl;
+        typedef Concurrent::Execute<Demo1D,TL2(Writable<double> &, const int)> Execute2;
+
+        Vector<double> sum;
+        sum.adjust(seq.size(),0);
+        Execute2::On(seq, &Demo1D::call2, sum, 3);
+        std::cerr << "sum.seq=" << sum << std::endl;
+
+        sum.adjust(par.size(),0); sum.ld(0);
+        Execute2::On(par, &Demo1D::call2, sum, 3);
+        std::cerr << "sum.par=" << sum << std::endl;
+
+    }
 
 }
 Y_UDONE()
