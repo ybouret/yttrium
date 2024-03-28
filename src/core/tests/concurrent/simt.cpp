@@ -48,7 +48,7 @@ namespace Yttrium
 
 #define Y_CONCURRENT_EXEC_DECL(I)                                       \
 typedef typename TL::SafeTypeAt<TLIST,I-1,EmptyType>::Result Type##I;   \
-typedef typename TypeTraits<Type##I>::ParamType              Param##I; \
+typedef typename TypeTraits<Type##I>::ParamType              Param##I;  \
 typedef typename TypeTraits<Param##I>::ReferenceType         Ref##I
 
         template <typename ENGINE,typename TLIST>
