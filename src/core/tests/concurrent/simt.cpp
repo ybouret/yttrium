@@ -78,12 +78,11 @@ typedef typename TypeTraits<Param##I>::ReferenceType         Ref##I
                     return engines[ctx.indx];
                 }
 
-                METHOD   method;
+                METHOD const method;
             private:
                 Engines &engines;
                 Y_DISABLE_COPY_AND_ASSIGN(ModKernel);
             };
-
 
 
             //__________________________________________________________________
@@ -96,14 +95,15 @@ typedef typename TypeTraits<Param##I>::ReferenceType         Ref##I
             {
                 class Call : public ModKernel<METHOD>  {
                 public:
-                    inline explicit Call(Engines &eng, METHOD  &mth) noexcept :
-                    ModKernel<METHOD> (eng,mth) {}
+                    using ModKernel<METHOD>::host;
+                    using ModKernel<METHOD>::method;
 
+                    inline explicit Call(Engines &eng, METHOD  &mth) noexcept : ModKernel<METHOD> (eng,mth) {}
                     inline virtual ~Call() noexcept {}
 
-                    inline virtual void operator()(const ThreadContext &ctx)
+                    inline virtual void operator()(const ThreadContext &ctx) 
                     {
-                        (this->host(ctx).*(this->method))();
+                        (host(ctx).*method)();
                     }
 
                 private:
@@ -123,23 +123,21 @@ typedef typename TypeTraits<Param##I>::ReferenceType         Ref##I
                     METHOD        meth,
                     Param1        p1)
             {
-                class Call : public Kernel  {
+                class Call : public ModKernel<METHOD>  {
                 public:
-                    inline explicit Call(Engines &eng, METHOD  &mth, Ref1 p1) noexcept :
-                    engines(eng), method(mth), arg1(p1) {}
+                    using ModKernel<METHOD>::host;
+                    using ModKernel<METHOD>::method;
 
+                    inline explicit Call(Engines &eng, METHOD  &mth, Ref1 p1) noexcept : ModKernel<METHOD> (eng,mth), arg1(p1) {}
                     inline virtual ~Call() noexcept {}
 
                     inline virtual void operator()(const ThreadContext &ctx)
                     {
-                        ENGINE &host = engines[ctx.indx];
-                        (host.*method)(arg1);
+                        (host(ctx).*method)(arg1);
                     }
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Call);
-                    Engines &engines;
-                    METHOD   method;
                     Ref1     arg1;
                 };
 
