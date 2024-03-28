@@ -6,7 +6,6 @@
 
 #include "y/concurrent/loop/interface.hpp"
 
-
 namespace Yttrium
 {
     namespace Concurrent
