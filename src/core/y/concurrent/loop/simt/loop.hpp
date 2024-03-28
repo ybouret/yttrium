@@ -11,17 +11,38 @@ namespace Yttrium
     namespace Concurrent
     {
 
-        //! keep reference for SIMT
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! keep reference of Loop for SIMT
+        //
+        //
+        //______________________________________________________________________
         class SIMT_Loop
         {
         public:
-            Loop *       operator->()       noexcept;
-            const Loop * operator->() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            Loop *       operator->()       noexcept; //!< access
+            const Loop * operator->() const noexcept; //!< access
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
-            virtual ~SIMT_Loop() noexcept;
+            virtual ~SIMT_Loop()                   noexcept; //!< cleanup
         protected:
-            explicit SIMT_Loop(const SharedLoop &) noexcept;
+            explicit SIMT_Loop(const SharedLoop &) noexcept; //!< setup
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SIMT_Loop);
             Loop * const loop;

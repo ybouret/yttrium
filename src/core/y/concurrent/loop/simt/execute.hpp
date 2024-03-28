@@ -166,7 +166,7 @@ typedef typename TypeTraits<Param##I>::ReferenceType         Ref##I
 
                     inline virtual ~Call() noexcept {}
                     inline explicit Call(Engines &eng, METHOD  &mth, Ref1 p1, Ref2 p2, Ref3 p3) noexcept :
-                    ModKernel<METHOD> (eng,mth), arg1(p1), arg2(p2), arg3(p3){}
+                    ModKernel<METHOD>(eng,mth), arg1(p1), arg2(p2), arg3(p3){}
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Call);
