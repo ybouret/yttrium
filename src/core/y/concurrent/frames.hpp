@@ -12,11 +12,19 @@ namespace Yttrium
 {
     namespace Concurrent
     {
+
+#define Y_Concurrent_Frames_Assign(CODE) do {   \
+/**/ loosen();                                  \
+/**/ Writable<FRAME> &f = *this;                \
+/**/ const size_t     n = f.size();             \
+/**/ try{ for(size_t i=1;i<=n;++i) f[i].CODE ;} \
+/**/ catch(...) { loosen(); throw; } } while(false)
+
         //______________________________________________________________________
         //
         //
         //
-        //! Precompiled/dynamic Frame[0|1|2]D
+        //! Precompiled/dynamic FRAME deriving from Frame[0|1|2]D
         //
         //
         //______________________________________________________________________
@@ -80,14 +88,7 @@ namespace Yttrium
             //
             //! assign to all PUNCTAL frames (deriving from Frame0D)
             //__________________________________________________________________
-            inline void assign()
-            {
-                loosen();
-                Writable<FRAME> &self = *this;
-                const size_t     n    = self.size();
-                try { for(size_t i=1;i<=n;++i) self[i].assign(); }
-                catch(...) { loosen(); throw; }
-            }
+            inline void assign() { Y_Concurrent_Frames_Assign(assign()); }
 
             //__________________________________________________________________
             //
@@ -97,11 +98,7 @@ namespace Yttrium
                                const typename FrameType::Type tail,
                                const typename FrameType::Type step)
             {
-                loosen();
-                Writable<FRAME> &self = *this;
-                const size_t     n    = self.size();
-                try { for(size_t i=1;i<=n;++i) self[i].assign(head,tail,step); }
-                catch(...) { loosen(); throw; }
+                Y_Concurrent_Frames_Assign(assign(head,tail,step));
             }
 
             //__________________________________________________________________
@@ -111,12 +108,28 @@ namespace Yttrium
             inline void assign(const V2D<typename FrameType::Type> lower,
                                const V2D<typename FrameType::Type> upper)
             {
-                loosen();
-                Writable<FRAME> &self = *this;
-                const size_t     n    = self.size();
-                try { for(size_t i=1;i<=n;++i) self[i].assign(lower,upper); }
-                catch(...) { loosen(); throw; }
+                Y_Concurrent_Frames_Assign(assign(lower,upper));
             }
+
+            //__________________________________________________________________
+            //
+            //
+            // Helpers
+            //
+            //__________________________________________________________________
+            template <typename NODE> inline
+            void link(NODE *node) noexcept
+            {
+                assert(0!=node);
+                Writable<FRAME> &f = *this;
+                const size_t     n = f.size();
+                for(size_t i=1;i<=n;++i,node=node->next)
+                {
+                    assert(0!=node);
+                    f[i].link(node);
+                }
+            }
+
 
 
 
