@@ -45,6 +45,7 @@ namespace Yttrium
             {
                 const Mapping mapping = Split::For(*this, head, tail, step);
                 this->workspace.build(mapping);
+                this->activate();
             }
 
             //! access sub ForLoop

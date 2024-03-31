@@ -47,6 +47,7 @@ namespace Yttrium
             {
                 const Mapping mapping = Tiling<T>::Tiles::For(*this,lower,upper);
                 this->workspace.build(mapping);
+                this->activate();
             }
 
             //! access AutoPtr<Tile>

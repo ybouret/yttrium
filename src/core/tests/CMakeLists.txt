@@ -36,9 +36,13 @@ set( DATA ${HERE}/../../../var)
 
 add_library(dso MODULE dso.cpp)
 
+add_executable(test-dso dll.cpp)
+Y_LinkLibraries(test-dso)
+
+
 add_custom_command(TARGET dso POST_BUILD
-COMMAND test-core rtld_dll $<TARGET_FILE:dso>
-DEPENDS test-core dso
+COMMAND test-dso $<TARGET_FILE:dso>
+DEPENDS test-dso 
 COMMENT "[yttrium] RTLD"
 VERBATIM)
 

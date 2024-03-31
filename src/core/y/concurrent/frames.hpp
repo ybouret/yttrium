@@ -13,11 +13,17 @@ namespace Yttrium
     namespace Concurrent
     {
 
-#define Y_Concurrent_Frames_Assign(CODE) do {   \
-/**/ loosen();                                  \
-/**/ Writable<FRAME> &f = *this;                \
-/**/ const size_t     n = f.size();             \
-/**/ try{ for(size_t i=1;i<=n;++i) f[i].CODE ;} \
+        //______________________________________________________________________
+        //
+        //
+        //! helper to assign mapping to engines
+        //
+        //______________________________________________________________________
+#define Y_Concurrent_Frames_Assign(CODE) do {      \
+/**/ loosen();                                     \
+/**/ Writable<FRAME> &f = *this;                   \
+/**/ const size_t     n = f.size();                \
+/**/ try{ for(size_t i=1;i<=n;++i) f[i].CODE ;}    \
 /**/ catch(...) { loosen(); throw; } } while(false)
 
         //______________________________________________________________________
@@ -117,6 +123,8 @@ namespace Yttrium
             // Helpers
             //
             //__________________________________________________________________
+           
+            //! propagate nodes if ENGINE has a link(NODE) method
             template <typename NODE> inline
             void link(NODE *node) noexcept
             {

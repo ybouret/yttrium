@@ -51,6 +51,25 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
+            // Interface
+            //
+            //__________________________________________________________________
+           
+            //! call activate post-init, once workspace is built
+            inline virtual void activate() noexcept
+            {
+
+            }
+
+
+            //! call shutdown to cleanup befor workspace is erased
+            inline virtual void shutdown() noexcept
+            {
+            }
+
+            //__________________________________________________________________
+            //
+            //
             // Methods
             //
             //__________________________________________________________________
@@ -59,7 +78,10 @@ namespace Yttrium
             inline bool isAssigned() const noexcept { return workspace.isValid(); }
 
             //! release workspace
-            inline void loosen() noexcept { this->workspace.erase(); }
+            inline void loosen() noexcept {
+                this->shutdown();
+                this->workspace.erase();
+            }
 
 
 

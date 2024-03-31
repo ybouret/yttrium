@@ -221,7 +221,7 @@ namespace Yttrium
                 size(tile.size),
                 items(tile.items),
                 base( this->lead() ),
-                scxx( base-1       ),
+                scxx( this->warp() ),
                 next(0),
                 prev(0)
                 {
