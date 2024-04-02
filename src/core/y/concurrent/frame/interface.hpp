@@ -55,16 +55,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
            
-            //! call activate post-init, once workspace is built
-            inline virtual void activate() noexcept
+            //! after workspace change
+            virtual void revamp() noexcept
             {
 
-            }
-
-
-            //! call shutdown to cleanup befor workspace is erased
-            inline virtual void shutdown() noexcept
-            {
             }
 
             //__________________________________________________________________
@@ -79,8 +73,8 @@ namespace Yttrium
 
             //! release workspace
             inline void loosen() noexcept {
-                this->shutdown();
                 this->workspace.erase();
+                this->revamp();
             }
 
 

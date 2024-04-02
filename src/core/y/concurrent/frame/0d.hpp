@@ -42,7 +42,7 @@ namespace Yttrium
             //! mark workspace as built
             inline void assign(void) {
                 this->workspace.build();
-                this->activate();
+                this->revamp();
             }
 
             //__________________________________________________________________
