@@ -39,13 +39,13 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+            
 
             //! assign sub ForLoop
             inline void assign(const T &head, const T &tail, const T &step)
             {
                 const Mapping mapping = Split::For(*this, head, tail, step);
-                this->workspace.build(mapping);
-                this->revamp();
+                this->revamp( &  this->workspace.build(mapping) );
             }
 
             //! access sub ForLoop

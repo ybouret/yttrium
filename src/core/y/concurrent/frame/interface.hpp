@@ -55,8 +55,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
            
-            //! after workspace change
-            virtual void revamp() noexcept
+            
+            virtual void shutdown() noexcept
             {
 
             }
@@ -74,7 +74,7 @@ namespace Yttrium
             //! release workspace
             inline void loosen() noexcept {
                 this->workspace.erase();
-                this->revamp();
+                this->shutdown();
             }
 
 

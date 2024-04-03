@@ -10,14 +10,38 @@ using namespace Yttrium;
 
 namespace
 {
+    //__________________________________________________________________
+    //
+    //
+    //
+    //! Strip matching Tiling<size_t>::Segment
+    //
+    //
+    //__________________________________________________________________
+    struct Strip
+    {
+        unit_t icol; //!< initial column
+        unit_t irow; //!< initial row
+        unit_t ncol; //!< number of columns
+        unit_t cend; //!< end column
+
+        //! display
+        //friend std::ostream &operator<<(std::ostream &os, const Strip &s);
+    };
+
     class Demo : public Concurrent::Frame2D<unit_t>
     {
     public:
         inline explicit Demo(const Concurrent::ThreadContext &ctx) noexcept :
-        Concurrent::Frame2D<unit_t>(ctx)
+        Concurrent::Frame2D<unit_t>(ctx),
+        strip(0)
         {}
 
+        Strip * const strip;
+
         inline virtual ~Demo() noexcept {}
+
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Demo);
     };

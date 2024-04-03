@@ -46,8 +46,7 @@ namespace Yttrium
             inline void assign(const V2D<T> &lower, const V2D<T> &upper)
             {
                 const Mapping mapping = Tiling<T>::Tiles::For(*this,lower,upper);
-                this->workspace.build(mapping);
-                this->revamp();
+                this->revamp( & this->workspace.build(mapping) );
             }
 
             //! access AutoPtr<Tile>
