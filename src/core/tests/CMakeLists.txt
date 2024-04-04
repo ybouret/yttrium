@@ -191,6 +191,7 @@ add_test(sort:indexing test-core sort_indexing)
 add_test(ptr:auto         test-core ptr_auto)
 add_test(ptr:arc          test-core ptr_arc)
 add_test(ptr:light-string test-core ptr_light_string)
+add_test(ptr:bar          test_core ptr_bare)
 
 #io
 add_test(io:char      test-core io_char)

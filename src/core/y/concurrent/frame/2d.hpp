@@ -86,8 +86,7 @@ namespace Yttrium
         protected:
             //! setup
             inline explicit Frame2D(const ThreadContext &ctx) noexcept :
-            FrameType(ctx),
-            tile(0)
+            FrameType(ctx), tile(0)
             {
             }
 
