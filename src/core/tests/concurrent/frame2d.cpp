@@ -99,7 +99,7 @@ Y_UTEST(concurrent_frame2d)
     Y_CHECK(sizeof(Strip)==sizeof( Concurrent::Tiling<unit_t>::Segment) );
 
     const Concurrent::Tiling<unit_t>::Segment *   s = 0 ;
-    const Strip * const & S = *(const Strip **) &s;
+    const Strip * const & S = *(const Strip **) Memory::OutOfReach::Addr( &s );
     std::cerr << "S@" << S << std::endl;
     s = seg;
     std::cerr << "S@" << S << std::endl;
