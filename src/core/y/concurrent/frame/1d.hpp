@@ -32,7 +32,7 @@ namespace Yttrium
             typedef T                      Type;       //!< alias
             typedef ForLoop<T>             Mapping;    //!< alias
             typedef Frame<Mapping>         FrameType;  //!< alias
-            typedef BarePtr<const Mapping> LoopPtr;    //!< alias>
+            typedef BarePtr<const Mapping> LoopPtr;    //!< alias
 
             //__________________________________________________________________
             //
@@ -48,12 +48,8 @@ namespace Yttrium
              */
             inline void assign(const T &head, const T &tail, const T &step)
             {
-                assert(!this->isAssigned());
-                assert(0==loop);
-                const Mapping  part = Split::For(*this, head, tail, step);
-                const Mapping &here = this->workspace.build(part);
-                if(here.length>0)
-                    Coerce(loop) = &here;
+                const Mapping &here = divided(head,tail,step);
+                if(here.length>0) Coerce(loop) = &here;
             }
 
             //! access sub ForLoop
@@ -95,6 +91,14 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Frame1D);
+
+            inline const Mapping & divided(const T &head, const T &tail, const T &step) noexcept
+            {
+                assert(!this->isAssigned());
+                assert(0==loop);
+                const Mapping  part = Split::For(*this, head, tail, step);
+                return this->workspace.build(part);
+            }
 
             //! call in loosen
             inline virtual void shutdown() noexcept { Coerce(loop) = 0; }
