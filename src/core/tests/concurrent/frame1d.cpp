@@ -17,6 +17,8 @@ namespace
         {}
 
         inline virtual ~Demo() noexcept {}
+        
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Demo);
     };

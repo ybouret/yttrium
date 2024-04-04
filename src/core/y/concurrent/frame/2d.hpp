@@ -62,6 +62,16 @@ namespace Yttrium
                 assert(this->workspace.isValid());
                 return *(this->workspace);
             }
+            
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+
+            const Tile * const tile; //!< ACTIVE tile, may be null
+
 
             //__________________________________________________________________
             //
@@ -81,7 +91,6 @@ namespace Yttrium
             {
             }
 
-            const Tile * const tile;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Frame2D);

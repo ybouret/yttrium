@@ -25,7 +25,7 @@ namespace
 
         void call0()
         {
-            assert(this->isAssigned());
+            Y_ASSERT(this->isAssigned());
             {
                 Y_LOCK(sync);
                 std::cerr << "  (*) Demo1D.call0(" << *this << ")" << std::endl;
@@ -35,7 +35,7 @@ namespace
 
         void call1(const int a)
         {
-            assert(this->isAssigned());
+            Y_ASSERT(this->isAssigned());
             {
                 Y_LOCK(sync);
                 std::cerr << "  (*) Demo1D.call1(" << a << "," << *this << ")" << std::endl;
@@ -45,7 +45,7 @@ namespace
 
         void call1bis(double &sum)
         {
-            assert(this->isAssigned());
+            Y_ASSERT(this->isAssigned());
             {
                 Y_LOCK(sync);
                 std::cerr << "  (*) Demo1D.call1bis(" << sum << "," << *this << ")" << std::endl;
@@ -56,20 +56,25 @@ namespace
 
         void call2(Writable<double> &sum, const int a)
         {
-            assert(this->isAssigned());
+            Y_ASSERT(this->isAssigned());
             {
                 Y_LOCK(sync);
                 std::cerr << "  (*) Demo1D.call2(" << sum << "," << a <<", " << *this << ")" << std::endl;
             }
+
             const Mapping &sub = **this;
             if(sub.length>0)
             {
+                Y_ASSERT(0!=loop);
                 double &target = sum[indx];
-                for(size_t i=sub.offset;i<=sub.latest;i+=sub.update)
+                for(size_t i=loop->offset;i<=loop->latest;i+=loop->update)
                 {
                     target += i * a;
                 }
-
+            }
+            else
+            {
+                Y_ASSERT(0==loop);
             }
         }
 
@@ -82,13 +87,15 @@ namespace
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Demo1D);
     };
+
+
 }
 
 #include "y/concurrent/thread.hpp"
 #include "y/string/env.hpp"
 #include "y/sequence/vector.hpp"
 
-Y_UTEST(concurrent_simt)
+Y_UTEST(concurrent_simt1d)
 {
     Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
 
@@ -96,6 +103,12 @@ Y_UTEST(concurrent_simt)
     Concurrent::SharedLoop     seqLoop = new Concurrent::Mono();
     Concurrent::SharedLoop     parLoop = new Concurrent::Crew(topo);
 
+
+    //--------------------------------------------------------------------------
+    //
+    // Tests in 1D
+    //
+    //--------------------------------------------------------------------------
     Concurrent::SIMT<Demo1D> seq(seqLoop);
     Concurrent::SIMT<Demo1D> par(parLoop);
 
@@ -151,6 +164,8 @@ Y_UTEST(concurrent_simt)
 
     }
 
+
 }
 Y_UDONE()
+
 

@@ -109,13 +109,25 @@ namespace Yttrium
 
             //__________________________________________________________________
             //
-            //! attach sub-Tiles to all 2D frames
+            //! attach sub-Tiles to all 2D frames: lower --> upper
             //__________________________________________________________________
             inline void assign(const V2D<typename FrameType::Type> lower,
                                const V2D<typename FrameType::Type> upper)
             {
                 Y_Concurrent_Frames_Assign(assign(lower,upper));
             }
+
+            //__________________________________________________________________
+            //
+            //! attach sub-Tiles to all 2D frames: (1,1) --> upper
+            //__________________________________________________________________
+            inline void assign(const V2D<typename FrameType::Type> upper)
+            {
+                const V2D<typename FrameType::Type> lower(1,1);
+                assign(lower,upper);
+            }
+
+
 
             //__________________________________________________________________
             //
