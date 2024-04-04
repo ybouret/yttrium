@@ -63,6 +63,16 @@ namespace Yttrium
                 return *(this->workspace);
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            
+            //! partial ACTIVE loop
+            const ForLoop<T> * const loop;
+
 
             //__________________________________________________________________
             //
@@ -82,17 +92,11 @@ namespace Yttrium
             }
 
 
-            //__________________________________________________________________
-            //
-            //
-            // Members
-            //
-            //__________________________________________________________________
-            //! partial ACTIVE loop
-            const ForLoop<T> * const loop;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Frame1D);
+
+            //! call in loosen
             inline virtual void shutdown() noexcept { Coerce(loop) = 0; }
         };
     }
