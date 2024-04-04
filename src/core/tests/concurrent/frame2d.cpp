@@ -25,8 +25,11 @@ namespace
         unit_t ncol; //!< number of columns
         unit_t cend; //!< end column
 
-        //! display
-        //friend std::ostream &operator<<(std::ostream &os, const Strip &s);
+        inline friend std::ostream & operator<<(std::ostream &os, const Strip &S)
+        {
+            os << "(icol=" << S.icol << ",irow=" << S.irow <<",ncol=" << S.ncol << ",cend=" << S.cend << ")";
+            return os;
+        }
     };
 
     class Demo : public Concurrent::Frame2D<unit_t>
@@ -37,7 +40,7 @@ namespace
         strip(0)
         {}
 
-        Strip * const strip;
+        const Strip * const strip;
 
         inline virtual ~Demo() noexcept {}
 
@@ -81,6 +84,28 @@ Y_UTEST(concurrent_frame2d)
     std::cerr << "Detached" << std::endl;
     std::cerr << "  seq=" << seq << std::endl;
     std::cerr << "  par=" << par << std::endl;
+    std::cerr << std::endl;
+
+    std::cerr << "-- Testing transmogrify" << std::endl;
+    Concurrent::Tiling<unit_t>::Segment seg[4] =
+    { 
+        Concurrent::Tiling<unit_t>::Segment(lower,1),
+        Concurrent::Tiling<unit_t>::Segment(lower,2),
+        Concurrent::Tiling<unit_t>::Segment(lower,3),
+        Concurrent::Tiling<unit_t>::Segment(lower,4)
+    };
+
+    Core::Display(std::cerr, seg, 4) << std::endl;
+    Y_CHECK(sizeof(Strip)==sizeof( Concurrent::Tiling<unit_t>::Segment) );
+
+    const Concurrent::Tiling<unit_t>::Segment *   s = 0 ;
+    const Strip * const & S = *(const Strip **) &s;
+    std::cerr << "S@" << S << std::endl;
+    s = seg;
+    std::cerr << "S@" << S << std::endl;
+    Core::Display(std::cerr, S, 4) << std::endl;
+
+
 }
 Y_UDONE()
 

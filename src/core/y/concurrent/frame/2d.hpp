@@ -51,14 +51,15 @@ namespace Yttrium
              */
             inline void assign(const V2D<T> &lower, const V2D<T> &upper)
             {
-                assert(0==tile);
-                const Mapping   part = Tiling<T>::Tiles::For(*this,lower,upper);
-                const Mapping & here = this->workspace.build(part);
+                const Mapping & here = divided(lower,upper);
                 if( here.isValid() )
-                    Coerce(tile) = & *here;
+                {
+                    Coerce(tile)    = & *here;
+                    Coerce(segment) = tile->cxx();
+                }
             }
 
-            //! access AutoPtr<Tile>
+            //! access AutoPtr<Tile> if needed
             inline const Mapping &operator*() const noexcept
             {
                 assert(this->workspace.isValid());
@@ -72,8 +73,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            const Tile    * const tile; //!< ACTIVE tile, may be null
-            
+            const Tile    * const tile;    //!< ACTIVE tile, may be null
+            const Segment * const segment; //!< NULL or segment[1..tile->size]
+
             //__________________________________________________________________
             //
             //
@@ -87,14 +89,27 @@ namespace Yttrium
         protected:
             //! setup
             inline explicit Frame2D(const ThreadContext &ctx) noexcept :
-            FrameType(ctx), tile(0)
+            FrameType(ctx), tile(0), segment(0)
             {
             }
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Frame2D);
-            inline virtual void shutdown() noexcept { Coerce(tile) = 0; }
+            inline virtual void shutdown() noexcept 
+            {
+                Coerce(tile)     = 0;
+                Coerce(segment)  = 0;
+            }
+
+            inline const Mapping & divided(const V2D<T> &lower, const V2D<T> &upper)
+            {
+                assert(0==tile);
+                assert(0==segment);
+                const Mapping   part = Tiling<T>::Tiles::For(*this,lower,upper);
+                return  this->workspace.build(part);
+            }
+
         };
 
     }

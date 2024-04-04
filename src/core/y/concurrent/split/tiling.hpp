@@ -201,6 +201,13 @@ namespace Yttrium
                     return Memory::OutOfReach::Cast<const STRIP,const Segment>(scxx);
                 }
 
+                //! return Segment[1..size]
+                inline const Segment * cxx() const noexcept
+                {
+                    assert(0!=scxx);
+                    return scxx;
+                }
+
                 //______________________________________________________________
                 //
                 //
