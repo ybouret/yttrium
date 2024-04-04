@@ -92,7 +92,7 @@ typedef typename TypeTraits<Param##I>::ReferenceType         Ref##I
         public:
             //__________________________________________________________________
             //
-            //! ENGINE.meth()
+            //! ENGINE.meth() for each engine
             //__________________________________________________________________
             template <typename METHOD> static inline
             void On(SIMT<ENGINE> &simt,
@@ -121,7 +121,7 @@ typedef typename TypeTraits<Param##I>::ReferenceType         Ref##I
 
             //__________________________________________________________________
             //
-            //! ENGINE.meth(arg1)
+            //! ENGINE.meth(arg1) for each engine
             //__________________________________________________________________
             template <typename METHOD> static inline
             void On(SIMT<ENGINE> &simt,
@@ -154,7 +154,7 @@ typedef typename TypeTraits<Param##I>::ReferenceType         Ref##I
 
             //__________________________________________________________________
             //
-            //! ENGINE.meth(arg1,arg2)
+            //! ENGINE.meth(arg1,arg2) for each engine
             //__________________________________________________________________
             template <typename METHOD> static inline
             void On(SIMT<ENGINE> &simt,
@@ -189,7 +189,7 @@ typedef typename TypeTraits<Param##I>::ReferenceType         Ref##I
 
             //__________________________________________________________________
             //
-            //! ENGINE.meth(arg1,arg2,arg3)
+            //! ENGINE.meth(arg1,arg2,arg3) for each engine
             //__________________________________________________________________
             template <typename METHOD> static inline
             void On(SIMT<ENGINE> &simt,

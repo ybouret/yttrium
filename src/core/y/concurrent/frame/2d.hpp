@@ -30,11 +30,12 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef T                        Type;       //!< alias
-            typedef typename Tiling<T>::Tile Tile;       //!< alias
-            typedef AutoPtr<Tile>            Mapping;    //!< alias
-            typedef Frame<Mapping>           FrameType;  //!< alias
-            typedef BarePtr<const Tile>      TilePtr;    //!< alias
+            typedef T                           Type;       //!< alias
+            typedef typename Tiling<T>::Tile    Tile;       //!< alias
+            typedef typename Tiling<T>::Segment Segment; //!< alias
+            typedef AutoPtr<Tile>               Mapping;    //!< alias
+            typedef Frame<Mapping>              FrameType;  //!< alias
+            typedef BarePtr<const Tile>         TilePtr;    //!< alias
 
             //__________________________________________________________________
             //
@@ -71,9 +72,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            const Tile * const tile; //!< ACTIVE tile, may be null
-
-
+            const Tile    * const tile; //!< ACTIVE tile, may be null
+            
             //__________________________________________________________________
             //
             //

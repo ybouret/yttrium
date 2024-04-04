@@ -32,7 +32,7 @@ namespace Yttrium
         //
         //! Precompiled/dynamic FRAME deriving from Frame[0|1|2]D
         /**
-         - prepare one FRAME per context
+         - prepare one FRAME per context, a.k.a one FRAME(=resource) per thread
          - assign(FULL) => assign(PART) per context
          - loosen()     => loosen each FRAME
          */
