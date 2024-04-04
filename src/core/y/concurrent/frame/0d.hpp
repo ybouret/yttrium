@@ -39,8 +39,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! mark workspace as built
-            inline void assign(void) {
+            //! mark EMPTY workspace as built
+            inline void assign(void) noexcept {
+                assert(! this->isAssigned() );
                (void) this->workspace.build();
             }
 
@@ -56,12 +57,12 @@ namespace Yttrium
 
         protected:
             //! setup with context and empty workspace
-            inline explicit Frame0D(const ThreadContext &ctx) noexcept :
-            FrameType(ctx) {}
+            inline explicit Frame0D(const ThreadContext &_) noexcept : FrameType(_) {}
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Frame0D);
-            inline virtual void shutdown() noexcept {}
+            inline virtual void shutdown() noexcept {} //!< do nothing
 
 
         };

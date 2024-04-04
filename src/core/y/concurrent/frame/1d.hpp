@@ -40,7 +40,7 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            
+
             //! assign partial ForLoop
             /**
              - compute partial ForLoop for context
@@ -48,6 +48,7 @@ namespace Yttrium
              */
             inline void assign(const T &head, const T &tail, const T &step)
             {
+                assert(!this->isAssigned());
                 assert(0==loop);
                 const Mapping  part = Split::For(*this, head, tail, step);
                 const Mapping &here = this->workspace.build(part);
@@ -58,7 +59,7 @@ namespace Yttrium
             //! access sub ForLoop
             inline const ForLoop<T> & operator*() const noexcept
             {
-                assert(this->workspace.isValid());
+                assert(this->isAssigned());
                 return *(this->workspace);
             }
 
