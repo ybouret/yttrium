@@ -56,7 +56,6 @@ namespace Yttrium
             //__________________________________________________________________
            
             
-            virtual void shutdown() noexcept {}
 
             //__________________________________________________________________
             //
@@ -73,7 +72,6 @@ namespace Yttrium
                 this->workspace.erase();
                 this->shutdown();
             }
-
 
 
             //! display content
@@ -94,6 +92,8 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Frame);
+            virtual void shutdown() noexcept = 0; //!< cleanup after workspace erase
+
         };
     }
 

@@ -43,10 +43,17 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! create sub Tile (may be null)
+            /**
+             - assign AutoPtr
+             - if tile is not NULL, update it
+             */
             inline void assign(const V2D<T> &lower, const V2D<T> &upper)
             {
-                const Mapping mapping = Tiling<T>::Tiles::For(*this,lower,upper);
-                this->workspace.build(mapping);
+                assert(0==tile);
+                const Mapping   part = Tiling<T>::Tiles::For(*this,lower,upper);
+                const Mapping & here = this->workspace.build(part);
+                if( here.isValid() )
+                    Coerce(tile) = & *here;
             }
 
             //! access AutoPtr<Tile>
@@ -69,12 +76,16 @@ namespace Yttrium
         protected:
             //! setup
             inline explicit Frame2D(const ThreadContext &ctx) noexcept :
-            FrameType(ctx)
+            FrameType(ctx),
+            tile(0)
             {
             }
 
+            const Tile * const tile;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Frame2D);
+            inline virtual void shutdown() noexcept { Coerce(tile) = 0; }
         };
 
     }

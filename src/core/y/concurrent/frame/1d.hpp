@@ -41,11 +41,18 @@ namespace Yttrium
             //__________________________________________________________________
             
 
-            //! assign sub ForLoop
+            //! assign partial ForLoop
+            /**
+             - compute partial ForLoop for context
+             - assign loop if resulting length is positive
+             */
             inline void assign(const T &head, const T &tail, const T &step)
             {
-                const Mapping mapping = Split::For(*this, head, tail, step);
-                //this->revamp( &  this->workspace.build(mapping) );
+                assert(0==loop);
+                const Mapping  part = Split::For(*this, head, tail, step);
+                const Mapping &here = this->workspace.build(part);
+                if(here.length>0)
+                    Coerce(loop) = &here;
             }
 
             //! access sub ForLoop
@@ -69,13 +76,23 @@ namespace Yttrium
         protected:
             //! setup
             inline explicit Frame1D(const ThreadContext &ctx) noexcept :
-            FrameType(ctx)
+            FrameType(ctx), loop(0)
             {
             }
 
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            //! partial ACTIVE loop
+            const ForLoop<T> * const loop;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Frame1D);
-
+            inline virtual void shutdown() noexcept { Coerce(loop) = 0; }
         };
     }
 

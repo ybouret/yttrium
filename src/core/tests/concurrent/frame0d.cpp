@@ -10,18 +10,6 @@
 #include "y/type/binder.hpp"
 
 
-namespace Yttrium
-{
-    namespace Concurrent
-    {
-
-
-       
-
-
-    }
-
-}
 
 using namespace Yttrium;
 

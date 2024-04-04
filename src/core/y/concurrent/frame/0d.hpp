@@ -61,7 +61,8 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Frame0D);
-            
+            inline virtual void shutdown() noexcept {}
+
 
         };
 
