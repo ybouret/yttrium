@@ -16,8 +16,8 @@ namespace Yttrium
     //
     //
     //__________________________________________________________________________
-    template <typename T>
-    class BarePtr : public Ptr<T,Immediate>
+    template <typename T, template <typename> class Policy = Immediate>
+    class BarePtr : public Ptr<T,Policy>
     {
     public:
         //______________________________________________________________________
@@ -26,9 +26,9 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        typedef Ptr<T,Immediate> SelfType; //!< alias
-        Y_ARGS_EXPOSE(T,Type);             //!< aliases
-        using SelfType::handle;            //!< alias
+        typedef Ptr<T,Policy> SelfType; //!< alias
+        Y_ARGS_EXPOSE(T,Type);          //!< aliases
+        using SelfType::handle;         //!< alias
 
         //______________________________________________________________________
         //
