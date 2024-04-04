@@ -31,7 +31,11 @@ namespace Yttrium
         //
         //
         //! Precompiled/dynamic FRAME deriving from Frame[0|1|2]D
-        //
+        /**
+         - prepare one FRAME per context
+         - assign(FULL) => assign(PART) per context
+         - loosen()     => loosen each FRAME
+         */
         //
         //______________________________________________________________________
         template <typename FRAME>

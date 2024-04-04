@@ -55,7 +55,13 @@ typedef typename TypeTraits<Param##I>::ReferenceType         Ref##I
             Y_CONCURRENT_EXEC_DECL(5);        //!< alias
 
         private:
-            //! Modular Kerne;
+
+            //__________________________________________________________________
+            //
+            //
+            //! Modular Kernel
+            //
+            //__________________________________________________________________
             template <typename METHOD>
             class ModKernel : public Kernel
             {
