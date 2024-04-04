@@ -15,7 +15,7 @@ namespace Yttrium
         //
         //
         //
-        //! Frame with assignable mapping
+        //! Frame with assign/loosen mapping
         /**
          MAPPING = [Nucleus::Punctual|ForLoop|AutoPtr Tile]
          */
@@ -47,14 +47,6 @@ namespace Yttrium
         public:
             //! cleanup
             inline virtual ~Frame() noexcept {}
-
-            //__________________________________________________________________
-            //
-            //
-            // Interface
-            //
-            //__________________________________________________________________
-           
             
 
             //__________________________________________________________________
