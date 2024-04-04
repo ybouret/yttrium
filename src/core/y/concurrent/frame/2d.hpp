@@ -6,6 +6,7 @@
 
 #include "y/concurrent/split/tiling.hpp"
 #include "y/concurrent/frame/interface.hpp"
+#include "y/ptr/bare.hpp"
 
 namespace Yttrium
 {
@@ -33,7 +34,7 @@ namespace Yttrium
             typedef typename Tiling<T>::Tile Tile;       //!< alias
             typedef AutoPtr<Tile>            Mapping;    //!< alias
             typedef Frame<Mapping>           FrameType;  //!< alias
-
+            typedef BarePtr<const Tile>      TilePtr;    //!< alias
 
             //__________________________________________________________________
             //

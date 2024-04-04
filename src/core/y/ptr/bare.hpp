@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_Auto_Ptr_Included
-#define Y_Auto_Ptr_Included 1
+#ifndef Y_Bare_Ptr_Included
+#define Y_Bare_Ptr_Included 1
 
 #include "y/ptr/ptr.hpp"
 
@@ -36,14 +36,14 @@ namespace Yttrium
         // C++
         //
         //______________________________________________________________________
-        inline          BarePtr( Type *ptr )          noexcept : SelfType(ptr) {}
-        inline virtual ~BarePtr()                     noexcept { handle=0; }
-        inline          BarePtr(const BarePtr &other) noexcept : SelfType(other.handle) {}
+        inline          BarePtr( Type *ptr )          noexcept : SelfType(ptr)          {}             //!< setup
+        inline virtual ~BarePtr()                     noexcept                          { handle=0; }  //!< cleanup
+        inline          BarePtr(const BarePtr &other) noexcept : SelfType(other.handle) {}             //!< copy
         inline          BarePtr & operator=(const BarePtr &other) noexcept
         {
             handle = other.handle;
             return *this;
-        }
+        } //!< assign
 
     };
 }

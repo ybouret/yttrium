@@ -61,7 +61,7 @@ Y_UTEST(concurrent_simt2d)
     for(size_t i=1;i<=par.size();++i)
     {
         const Demo &dem = par[i];
-        std::cerr << dem << " @" << dem.tile << std::endl;
+        std::cerr << dem << " @" << Demo::TilePtr(dem.tile) << std::endl;
     }
 
 

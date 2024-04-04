@@ -5,6 +5,7 @@
 
 #include "y/concurrent/split/for-loop.hpp"
 #include "y/concurrent/frame/interface.hpp"
+#include "y/ptr/bare.hpp"
 
 namespace Yttrium
 {
@@ -28,10 +29,10 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef T              Type;       //!< alias
-            typedef ForLoop<T>     Mapping;    //!< alias
-            typedef Frame<Mapping> FrameType;  //!< alias
-
+            typedef T                      Type;       //!< alias
+            typedef ForLoop<T>             Mapping;    //!< alias
+            typedef Frame<Mapping>         FrameType;  //!< alias
+            typedef BarePtr<const Mapping> LoopPtr;    //!< alias>
 
             //__________________________________________________________________
             //
@@ -40,7 +41,6 @@ namespace Yttrium
             //
             //__________________________________________________________________
             
-
             //! assign partial ForLoop
             /**
              - compute partial ForLoop for context
