@@ -8,7 +8,7 @@
 #include "y/mkl/tao/par/driver.hpp"
 #include "y/container/matrix.hpp"
 
-#if 0
+#if 1
 namespace Yttrium
 {
     namespace MKL
@@ -32,6 +32,7 @@ namespace Yttrium
                             const Matrix<V> &rhs)
                 {
 
+#if 0
                     if( range.isEmpty() ) return;
 
                     const size_t      nrun = lhs.cols;
@@ -56,6 +57,7 @@ namespace Yttrium
                             tgt_i[j] = xadd.sum();
                         }
                     }
+#endif
                 }
             }
 
@@ -74,17 +76,17 @@ namespace Yttrium
                         const Matrix<U>    &lhs,
                         const Matrix<V>    &rhs,
                         Antelope::Caddy<W> &xma,
-                        Engine             &engine)
+                        Driver             &driver)
             {
                 assert(tgt.rows==lhs.rows);
                 assert(tgt.cols==rhs.cols);
                 assert(lhs.cols==rhs.rows);
 
-                engine.setup(tgt);                                         // parallel tiles of target
-                engine.in2D.attach(xma.make(engine.in2D.size(),lhs.cols)); // one xadd per tile
+                driver.setup(tgt);                                         // parallel tiles of target
+                driver.in2D.link(xma.make(driver.in2D.size(),lhs.cols)); // one xadd per tile
 
-                volatile Engine::Clean2D detach(engine.in2D);
-                engine.in2D(Parallel::MatMul<T,U,V,W>,tgt,lhs,rhs);
+                volatile Driver::Unlink2D willUnlink(driver.in2D);
+                driver.in2D(Parallel::MatMul<T,U,V,W>,tgt,lhs,rhs);
             }
 
 
@@ -97,12 +99,12 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 template <typename T, typename U, typename V, typename W> inline
-                void MatMulRightTranspose(Engine2D        &range,
+                void MatMulRightTranspose(Driver2D        &range,
                                           Matrix<T>       &tgt,
                                           const Matrix<U> &lhs,
                                           const Matrix<V> &rhs)
                 {
-
+#if 0
                     if( range.isEmpty() ) return;
 
                     Antelope::Add<W> &xadd = range.xadd<W>();
@@ -122,6 +124,7 @@ namespace Yttrium
                             tgt_i[j] = DotProduct<W>::Of_(lhs_i,rhs[j],xadd);
                         }
                     }
+#endif
                 }
             }
 
@@ -140,23 +143,23 @@ namespace Yttrium
                         const TransposeOf_ &,
                         const Matrix<V>    &rhs,
                         Antelope::Caddy<W> &xma,
-                        Engine             &engine)
+                        Driver             &driver)
             {
                 assert(tgt.rows==lhs.rows);
                 assert(tgt.cols==rhs.rows);
                 assert(lhs.cols==rhs.cols);
 
-                engine.setup(tgt);                                                 // parallel tiles of target
-                engine.in2D.attach(xma.make(engine.in2D.size(),lhs.cols));         // one xadd per tile
-                volatile Engine::Clean2D detach(engine.in2D);                      // cleanup anyhow
-                engine.in2D(Parallel::MatMulRightTranspose<T,U,V,W>,tgt,lhs,rhs);  // call
+                driver.setup(tgt);                                                 // parallel tiles of target
+                driver.in2D.link(xma.make(driver.in2D.size(),lhs.cols));         // one xadd per tile
+                volatile Driver::Unlink2D willUnlink(driver.in2D);                      // cleanup anyhow
+                driver.in2D(Parallel::MatMulRightTranspose<T,U,V,W>,tgt,lhs,rhs);  // call
             }
 
             namespace Parallel
             {
                 //! fill rows of range
                 template <typename T, typename ARRAY, typename V>
-                void DiagMatMul(Engine1D        &range,
+                void DiagMatMul(Driver1D        &range,
                                 Matrix<T>       &tgt,
                                 ARRAY           &lhs,
                                 const Matrix<V> &rhs)
@@ -167,6 +170,7 @@ namespace Yttrium
                     typedef typename ARRAY::Type U;
                     typedef To<T,U>              U2T;
 
+#if 0
                     if(range.length<=0) return;
                     const size_t ncol = tgt.cols;
                     for(size_t i=range.latest;i>=range.offset;--i)
@@ -177,6 +181,7 @@ namespace Yttrium
                         for(size_t j=ncol;j>0;--j)
                             tgt_i[j] = lambda * To<T,V>::Get(rhs_i[j]);
                     }
+#endif
                 }
             }
 
@@ -192,13 +197,13 @@ namespace Yttrium
             void DiagMatMul(Matrix<T>       &tgt,
                             ARRAY           &lhs,
                             const Matrix<V> &rhs,
-                            Engine          &engine)
+                            Driver          &driver)
             {
                 assert( tgt.rows == lhs.size() );
                 assert( tgt.cols == rhs.cols   );
                 
-                engine.setup(tgt.rows);
-                engine.in1D(Parallel::DiagMatMul<T,ARRAY,V>,tgt,lhs,rhs);
+                driver.setup(tgt.rows);
+                driver.in1D(Parallel::DiagMatMul<T,ARRAY,V>,tgt,lhs,rhs);
             }
         }
 
