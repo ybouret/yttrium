@@ -127,11 +127,29 @@ namespace
 
 namespace
 {
+    struct Strip
+    {
+        size_t icol; //!< initial column
+        size_t irow; //!< initial row
+        size_t ncol; //!< number of columns
+        size_t cend; //!< end column
+
+
+        inline friend std::ostream & operator<<(std::ostream &os, const Strip &S)
+        {
+            os << "(icol=" << S.icol << ",irow=" << S.irow <<",ncol=" << S.ncol << ",cend=" << S.cend << ")";
+            return os;
+        }
+    };
+
     class X2D : public Concurrent::Frame2D<size_t>
     {
     public:
         inline explicit X2D(const ThreadContext &ctx) noexcept : 
-        Concurrent::Frame2D<size_t>(ctx), node(0) {}
+        Concurrent::Frame2D<size_t>(ctx), 
+        node(0),
+        strip( *(const Strip **) Memory::OutOfReach::Addr(&segment) )
+        {}
 
         inline virtual ~X2D() noexcept {}
 
@@ -146,7 +164,8 @@ namespace
         }
 
 
-        XNode * const node;
+        XNode *       const   node;
+        const Strip * const & strip;
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(X2D);
@@ -157,6 +176,12 @@ namespace
         {
             Y_LOCK(range.sync);
             (std::cerr << "\tIn2D0 @" << range.name << " (" << X2D::TilePtr(range.tile) << ")" << std::endl).flush();
+            if(range.strip)
+            {
+                assert(0!=range.segment);
+                (Core::Display(std::cerr, range.strip+1, range.tile->size) << std::endl).flush();
+                //(std::cerr << "\t\t#strip=" << range.tile->size << " @" << range.segment << "/" << range.strip << std::endl).flush();
+            }
         }
     }
 
