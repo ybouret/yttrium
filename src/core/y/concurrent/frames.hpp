@@ -53,11 +53,15 @@ namespace Yttrium
             typedef typename FrameType::Mapping            Mapping;   //!< alias
             typedef CxxArray<FRAME,Nucleus::Frames::Model> CxxFrames; //!< alias
 
+            //__________________________________________________________________
+            //
+            //! automatic unlink resources
+            //__________________________________________________________________
             class AutoUnlink : public AutoClean
             {
             public:
-                inline explicit AutoUnlink(Frames &frames) noexcept : AutoClean(frames, & Frames::unlink) {}
-                inline virtual ~AutoUnlink()               noexcept {}
+                inline explicit AutoUnlink(Frames &frames) noexcept : AutoClean(frames, & Frames::unlink) {} //!< setup
+                inline virtual ~AutoUnlink()               noexcept {}                                       //!< cleanup
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(AutoUnlink);
             };
@@ -164,7 +168,7 @@ namespace Yttrium
                 }
             }
 
-            
+            //! propagate unlink() to ENGINE is it exists
             inline void unlink() noexcept
             {
                 Writable<FRAME> &f = *this;

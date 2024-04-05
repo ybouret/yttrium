@@ -32,10 +32,9 @@ namespace Yttrium
             Loop *       operator->()       noexcept; //!< access
             const Loop * operator->() const noexcept; //!< access
 
-
+            //! helper to run kernel(ThreadContext)
             template <typename KERNEL> inline
-            void run(KERNEL &kernel)
-            {
+            void run(KERNEL &kernel) {
                 Nucleus::Crux<KERNEL> k(kernel);
                 loop->run1(k);
             }

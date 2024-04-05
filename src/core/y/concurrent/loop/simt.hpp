@@ -31,7 +31,15 @@ namespace Yttrium
             // Definition
             //
             //__________________________________________________________________
-            typedef Writable<ENGINE> FramesType;
+            typedef Writable<ENGINE> FramesType; //!< alias
+
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
             //! setup
             inline explicit  SIMT( const SharedLoop &sl ) :
