@@ -6,6 +6,7 @@
 
 #include "y/mkl/api.hpp"
 #include "y/mkl/tao/engine.hpp"
+#include "y/mkl/tao/par/driver.hpp"
 
 namespace Yttrium
 {
