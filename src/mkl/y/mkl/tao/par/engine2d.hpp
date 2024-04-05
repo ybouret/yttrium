@@ -7,6 +7,7 @@
 
 #include "y/concurrent/resource/in2d.hpp"
 #include "y/mkl/tao/par/xaddptr.hpp"
+#include "y/mkl/tao/par/strip.hpp"
 
 namespace Yttrium
 {
@@ -14,25 +15,7 @@ namespace Yttrium
     {
         namespace Tao
         {
-            //__________________________________________________________________
-            //
-            //
-            //
-            //! Strip matching Tiling<size_t>::Segment
-            //
-            //
-            //__________________________________________________________________
-            struct Strip
-            {
-                size_t icol; //!< initial column
-                size_t irow; //!< initial row
-                size_t ncol; //!< number of columns
-                size_t cend; //!< end column
-
-                //! display
-                friend std::ostream &operator<<(std::ostream &os, const Strip &s);
-            };
-
+            
             //__________________________________________________________________
             //
             //

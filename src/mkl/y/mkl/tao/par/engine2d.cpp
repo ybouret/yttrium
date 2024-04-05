@@ -10,11 +10,7 @@ namespace Yttrium
         namespace Tao
         {
 
-            std::ostream &operator<<(std::ostream &os, const Strip &s)
-            {
-                os << "@row=" << s.irow << ",col=" << s.icol << " : +" << s.ncol;
-                return os;
-            }
+          
 
             Engine2D::  Engine2D(const Concurrent::ThreadContext &_) noexcept :
             Concurrent::Resource2D<size_t>(_),

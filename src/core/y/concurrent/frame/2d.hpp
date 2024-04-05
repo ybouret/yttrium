@@ -32,10 +32,11 @@ namespace Yttrium
             //__________________________________________________________________
             typedef T                           Type;       //!< alias
             typedef typename Tiling<T>::Tile    Tile;       //!< alias
-            typedef typename Tiling<T>::Segment Segment; //!< alias
+            typedef typename Tiling<T>::Segment Segment;    //!< alias
             typedef AutoPtr<Tile>               Mapping;    //!< alias
             typedef Frame<Mapping>              FrameType;  //!< alias
             typedef BarePtr<const Tile>         TilePtr;    //!< alias
+            typedef V2D<T>                      Vertex;     //!< alias
 
             //__________________________________________________________________
             //
@@ -49,7 +50,7 @@ namespace Yttrium
              - assign AutoPtr
              - if tile is not NULL, update it
              */
-            inline void assign(const V2D<T> &lower, const V2D<T> &upper)
+            inline void assign(const Vertex &lower, const Vertex &upper)
             {
                 const Mapping & here = divided(lower,upper);
                 if( here.isValid() )
