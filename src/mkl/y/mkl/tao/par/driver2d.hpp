@@ -14,7 +14,7 @@ namespace Yttrium
         namespace Tao
         {
 
-            
+
             //__________________________________________________________________
             //
             //
@@ -26,8 +26,21 @@ namespace Yttrium
             class Driver2D : public Concurrent::Frame2D<size_t>, public XAddPtr
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
                 explicit Driver2D(const ThreadContext &) noexcept; //!< setup
                 virtual ~Driver2D() noexcept;                      //!< cleanup
+
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
 
                 const Strip * const & strip; //!< transmogrified segments [1..tile->size] if not NULL
 
