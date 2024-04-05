@@ -72,9 +72,9 @@ namespace
         {
         }
 
-        inline void link(XNode *xn)
+        inline void link(XNode &xn)
         {
-            Coerce(node) = xn;
+            Coerce(node) = &xn;
         }
 
         inline void unlink() noexcept

@@ -23,8 +23,8 @@ namespace
 {
     template <typename T> static inline
     void testTAO(Random::Bits &ran,
-                 Tao::Engine  &seq,
-                 Tao::Engine  &par)
+                 Tao::Driver  &seq,
+                 Tao::Driver  &par)
     {
         std::cerr << "Tao<" << RTTI::Name<T>() << ">" << std::endl;
 
@@ -59,8 +59,8 @@ Y_UTEST(tao1)
     Concurrent::SharedLoop seqLoop = new Concurrent::Mono();
     Concurrent::SharedLoop parLoop = new Concurrent::Crew(topo);
 
-    Tao::Engine seq(seqLoop);
-    Tao::Engine par(parLoop);
+    Tao::Driver seq(seqLoop);
+    Tao::Driver par(parLoop);
 
     {
         Vector<double> target(8,0);

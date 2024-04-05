@@ -7,6 +7,10 @@ namespace Yttrium
         namespace Tao
         {
 
+            Driver:: ~Driver() noexcept
+            {
+            }
+            
             Driver:: Driver(const Concurrent::SharedLoop &sl) :
             in1D(sl),
             in2D(sl),

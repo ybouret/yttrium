@@ -24,8 +24,8 @@ Y_UTEST(tao2)
     Concurrent::SharedLoop seqLoop = new Concurrent::Mono();
     Concurrent::SharedLoop parLoop = new Concurrent::Crew(topo);
 
-    Tao::Engine seq(seqLoop);
-    Tao::Engine par(parLoop);
+    Tao::Driver  seq(seqLoop);
+    Tao::Driver  par(parLoop);
     Random::Rand ran;
 
     {

@@ -165,7 +165,7 @@ namespace Yttrium
                 for(size_t i=1;i<=n;++i,node=node->next)
                 {
                     assert(0!=node);
-                    f[i].link(node);
+                    f[i].link(*node);
                 }
             }
 

@@ -20,8 +20,8 @@ namespace
 {
     template <typename T>
     static inline void testTr(Random::Bits &ran,
-                              Tao::Engine  &seq,
-                              Tao::Engine  &par)
+                              Tao::Driver  &seq,
+                              Tao::Driver  &par)
     {
         typedef typename ScalarFor<T>::Type ScalarType;
         //const ScalarType _0(0);
@@ -104,8 +104,8 @@ Y_UTEST(taoTr)
     Concurrent::SharedLoop seqLoop = new Concurrent::Mono();
     Concurrent::SharedLoop parLoop = new Concurrent::Crew(topo);
 
-    Tao::Engine seq(seqLoop);
-    Tao::Engine par(parLoop);
+    Tao::Driver seq(seqLoop);
+    Tao::Driver par(parLoop);
 
 #define ARGS ran,seq,par
 

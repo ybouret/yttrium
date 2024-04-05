@@ -8,7 +8,7 @@
 #include "y/mkl/tao/ops.hpp"
 #include "y/mkl/algebra/tridiag.hpp"
 #include "y/mkl/tao/transmogrify.hpp"
-#include "y/mkl/tao/engine.hpp"
+#include "y/mkl/tao/par/driver.hpp"
 
 namespace Yttrium
 {
@@ -33,16 +33,17 @@ namespace Yttrium
                 typename SOURCE,
                 typename U,
                 typename PROC> inline
-                void TriDiagMul(Engine1D           &range,
+                void TriDiagMul(Driver1D           &range,
                                 TARGET             &target,
                                 const TriDiag<T>   &M,
                                 SOURCE             &source,
                                 PROC               &proc)
                 {
                     typedef struct Transmogrify<U> Trans;
-
-                    if(range.length<=0) return;
-                    for(size_t i=range.latest,im=i,ip=i+1;i>=range.offset;--i)
+                    const Mapping1D * const loop = range.loop;
+                    if(!loop) return;
+                    const size_t offset = loop->offset;
+                    for(size_t i=loop->latest,im=i,ip=i+1;i>=offset;--i)
                     {
                         --im;
                         assert(i-1==im);
@@ -73,7 +74,7 @@ namespace Yttrium
                 typename SOURCE,
                 typename U,
                 typename PROC> inline
-                void TriDiagMulParallel(Engine             &engine,
+                void TriDiagMulParallel(Driver             &driver,
                                         TARGET             &target,
                                         const TriDiag<T>   &M,
                                         SOURCE             &source,
@@ -107,8 +108,8 @@ namespace Yttrium
                     const size_t nm=n-1;
                     if(n>2)
                     {
-                        engine.in1D.init(2,nm,1);
-                        engine.in1D(Tao::Parallel::TriDiagMul<TARGET,T,SOURCE,U,PROC>,target,M,source,proc);
+                        driver.in1D.assign(2,nm,1);
+                        driver.in1D(Tao::Parallel::TriDiagMul<TARGET,T,SOURCE,U,PROC>,target,M,source,proc);
                     }
 
                     //----------------------------------------------------------
@@ -133,13 +134,13 @@ namespace Yttrium
             typename T,
             typename SOURCE,
             typename U> inline
-            void TriDiagMul(Engine             &engine,
+            void TriDiagMul(Driver             &driver,
                             TARGET             &target,
                             const TriDiag<T>   &M,
                             SOURCE             &source,
                             const Type2Type<U>  innerType)
             {
-                Cog::TriDiagMulParallel(engine,target,M,source,Ops<typename TARGET::Type,U>::Set,innerType);
+                Cog::TriDiagMulParallel(driver,target,M,source,Ops<typename TARGET::Type,U>::Set,innerType);
             }
 
         }

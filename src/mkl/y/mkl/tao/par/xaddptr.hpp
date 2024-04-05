@@ -43,11 +43,11 @@ namespace Yttrium
                 //______________________________________________________________
 
                 //! reset
-                void detach() noexcept;
+                void unlink() noexcept;
 
                 //! attach a XAdd
                 template <typename U> inline
-                void attach( Antelope::Add<U> &host ) noexcept
+                void link( Antelope::Add<U> &host ) noexcept
                 {
                     handle = &host;
                 }

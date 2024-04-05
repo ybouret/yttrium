@@ -5,8 +5,8 @@
 
 
 #include "y/mkl/tao/seq/level1.hpp"
+#include "y/mkl/tao/par/driver.hpp"
 #include "y/container/matrix.hpp"
-#include "y/mkl/tao/engine.hpp"
 
 namespace Yttrium
 {
@@ -20,13 +20,17 @@ namespace Yttrium
             {
                 //! Mul on range
                 template <typename TARGET, typename T, typename SOURCE, typename U, typename PROC> inline
-                void Mul(Engine1D &range, TARGET &target, const Matrix<T> &M, SOURCE &source, PROC &proc)
+                void Mul(Driver1D &range, TARGET &target, const Matrix<T> &M, SOURCE &source, PROC &proc)
                 {
-
-                    if(range.length<=0) return;
+                    const Mapping1D * const loop = range.loop;
+                    if(!loop) return;
+                    
+                    assert(Concurrent::ForLoopIncrease==loop->family);
+                    assert(loop->offset>0);
 
                     Antelope::Add<U> &xadd = range.xadd<U>();
-                    for(size_t row  = range.latest; row>=range.offset; --row)
+                    const size_t      offset = loop->offset;
+                    for(size_t row  = loop->latest; row>=offset; --row)
                     {
                         assert(xadd.isEmpty());
                         const U result = DotProduct<U>::Of_(M[row],source,xadd);
@@ -44,19 +48,19 @@ namespace Yttrium
                        const Matrix<T>    &M,
                        SOURCE             &source,
                        Antelope::Caddy<U> &xma,
-                       Engine             &engine,
+                       Driver             &driver,
                        PROC               &proc)
             {
 
                 assert( target.size() == M.rows );
                 assert( source.size() == M.cols );
 
-                const size_t   para = engine.in1D.size();
-                engine.setup(M.rows);                      // process rows in parallel
-                engine.in1D.attach(xma.make(para,M.cols)); // with help
+                const size_t   para = driver.in1D.size();
+                driver.setup(M.rows);                      // process rows in parallel
+                driver.in1D.link(xma.make(para,M.cols)); // with help
 
-                volatile Engine::Clean1D willClean(engine.in1D);
-                engine.in1D(Parallel::Mul<TARGET,T,SOURCE,U,PROC>,target,M,source,proc);
+                volatile Driver::Unlink1D willClean(driver.in1D);
+                driver.in1D(Parallel::Mul<TARGET,T,SOURCE,U,PROC>,target,M,source,proc);
             }
 
             //__________________________________________________________________
@@ -68,13 +72,13 @@ namespace Yttrium
                      const Matrix<T>    &M,
                      SOURCE             &source,
                      Antelope::Caddy<U> &xma,
-                     Engine             &engine)
+                     Driver             &driver)
             {
                 typedef typename TARGET::Type TGT;
                 typedef void    (*PROC)(TGT &, const U &);
                 static  PROC      proc = Ops<TGT,U>::Set;
 
-                MulOp(target,M,source,xma,engine,proc);
+                MulOp(target,M,source,xma,driver,proc);
             }
 
             //__________________________________________________________________
@@ -86,12 +90,12 @@ namespace Yttrium
                         const Matrix<T>    &M,
                         SOURCE             &source,
                         Antelope::Caddy<U> &xma,
-                        Engine             &engine)
+                        Driver             &driver)
             {
                 typedef typename TARGET::Type TGT;
                 typedef void    (*PROC)(TGT &, const U &);
                 static  PROC   proc = Ops<TGT,U>::Add;
-                MulOp(target,M,source,xma,engine,proc);
+                MulOp(target,M,source,xma,driver,proc);
             }
 
             //__________________________________________________________________
@@ -103,12 +107,12 @@ namespace Yttrium
                         const Matrix<T>    &M,
                         SOURCE             &source,
                         Antelope::Caddy<U> &xma,
-                        Engine             &engine)
+                        Driver             &driver)
             {
                 typedef typename TARGET::Type TGT;
                 typedef void    (*PROC)(TGT &, const U &);
                 static  PROC   proc = Ops<TGT,U>::Sub;
-                MulOp(target,M,source,xma,engine,proc);
+                MulOp(target,M,source,xma,driver,proc);
             }
 
         }
