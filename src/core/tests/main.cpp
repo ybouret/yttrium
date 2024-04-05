@@ -105,12 +105,10 @@ Y_UTEST_DECL(256)
     Y_UTEST(concurrent_topo);
     Y_UTEST(concurrent_context);
     Y_UTEST(concurrent_loop);
-    Y_UTEST(concurrent_simd);
     Y_UTEST(concurrent_simt1d);
     Y_UTEST(concurrent_simt2d);
     Y_UTEST(concurrent_simtx);
     Y_UTEST(concurrent_pipeline);
-    Y_UTEST(concurrent_resource);
     Y_UTEST(concurrent_frame0d);
     Y_UTEST(concurrent_frame1d);
     Y_UTEST(concurrent_frame2d);

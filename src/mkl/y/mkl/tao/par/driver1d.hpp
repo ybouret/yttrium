@@ -13,6 +13,7 @@ namespace Yttrium
         namespace Tao
         {
 
+
             //__________________________________________________________________
             //
             //
@@ -28,6 +29,8 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Driver1D);
             };
+
+            typedef Driver1D::Mapping Mapping1D;
 
         }
 

@@ -345,70 +345,7 @@ namespace Yttrium
 
             typedef typename Tile::Iterator Iterator; //!< syntax alias
 
-            //__________________________________________________________________
-            //
-            //
-            //! Record FULL 2D request
-            //
-            //__________________________________________________________________
-            class Locus
-            {
-            public:
-                //______________________________________________________________
-                //
-                // C++
-                //______________________________________________________________
-
-                //! setup
-                inline explicit Locus(const Vertex &org, const Vertex &end) noexcept :
-                lower(org),
-                upper(end)
-                {
-                    assert(lower.x<=upper.x);
-                    assert(lower.y<=upper.y);
-                }
-
-                //! copy
-                inline  Locus(const Locus &_) noexcept : lower(_.lower), upper(_.upper) {}
-
-                //! cleanup
-                inline ~Locus() noexcept {}
-
-                //______________________________________________________________
-                //
-                // Methods
-                //______________________________________________________________
-
-                //! display
-                inline friend std::ostream & operator<<(std::ostream &os, const Locus &my)
-                {
-                    os << '[' << my.lower << ':' << my.upper <<']';
-                    return os;
-                }
-
-                //! equality
-                inline friend bool operator==(const Locus &lhs, const Locus &rhs) noexcept
-                {
-                    return lhs.lower == rhs.lower && lhs.upper==rhs.upper;
-                }
-
-                //! difference
-                inline friend bool operator!=(const Locus &lhs, const Locus &rhs) noexcept
-                {
-                    return lhs.lower != rhs.lower || lhs.upper!=rhs.upper;
-                }
-
-                //______________________________________________________________
-                //
-                // Members
-                //______________________________________________________________
-                const Vertex lower; //!< lower coordinate
-                const Vertex upper; //!< upper coordinate
-
-            private:
-                Y_DISABLE_ASSIGN(Locus);
-            };
-
+            
             //__________________________________________________________________
             //
             //

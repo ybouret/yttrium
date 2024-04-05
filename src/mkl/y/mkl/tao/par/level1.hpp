@@ -5,7 +5,6 @@
 
 
 #include "y/mkl/api.hpp"
-#include "y/mkl/tao/engine.hpp"
 #include "y/mkl/tao/par/driver.hpp"
 
 namespace Yttrium
@@ -30,11 +29,16 @@ namespace Yttrium
 
                 //! load on range
                 template <typename TARGET, typename SOURCE> inline
-                void Load(Engine1D &range, TARGET &target, SOURCE &source)
+                void Load(Driver1D &range, TARGET &target, SOURCE &source)
                 {
-                    if(range.length<=0) return;
-                    for(size_t i=range.latest;i>=range.offset;--i)
-                        target[i] = source[i];
+                    const Mapping1D * const loop = range.loop;
+                    if(loop)
+                    {
+                        assert(Concurrent::ForLoopIncrease==loop->family);
+                        assert(loop->offset>0);
+                        for(size_t i=loop->latest;i>=loop->offset;--i)
+                            target[i] = source[i];
+                    }
                 }
 
             }
@@ -44,11 +48,11 @@ namespace Yttrium
             //! target[1..target.size()] = source[1..target.size()]
             //__________________________________________________________________
             template <typename TARGET, typename SOURCE>   inline
-            void Load(TARGET &target, SOURCE &source, Engine &engine)
+            void Load(TARGET &target, SOURCE &source, Driver &driver)
             {
                 assert(target.size()<=source.size());
-                engine.setup(target.size());
-                engine.in1D(Parallel::Load<TARGET,SOURCE>,target,source);
+                driver.setup(target.size());
+                driver.in1D(Parallel::Load<TARGET,SOURCE>,target,source);
             }
 
         }
@@ -59,7 +63,7 @@ namespace Yttrium
             {
                 //! save on range
                 template <typename TARGET, typename SOURCE> inline
-                void Save(Engine1D &range, TARGET &target, SOURCE &source)
+                void Save(Driver1D &range, TARGET &target, SOURCE &source)
                 {
                     if(range.length<=0) return;
                     for(size_t i=range.latest;i>=range.offset;--i)

@@ -42,59 +42,7 @@ namespace Yttrium
             typedef T                                     Type; //!< alias
             typedef typename UnsignedInt<sizeof(T)>::Type Size; //!< unsigned alias
 
-            //__________________________________________________________________
-            //
-            //
-            //! Record FULL 1D request
-            //
-            //__________________________________________________________________
-            class Locus
-            {
-            public:
-                //______________________________________________________________
-                //
-                // C++
-                //______________________________________________________________
-                inline  Locus(const T &h, const T &t, const T &s) noexcept : head(h), tail(t), step(s)                {} //!< setup
-                inline  Locus(const Locus &_)                     noexcept : head(_.head), tail(_.tail), step(_.step) {} //!< copy
-                inline ~Locus()                                   noexcept                                            {} //!< cleanup
-
-                //______________________________________________________________
-                //
-                // Methods
-                //______________________________________________________________
-
-                //! display
-                inline friend std::ostream & operator<<(std::ostream &os, const Locus &my)
-                {
-                    os << '[' << my.head << ':' << my.tail << ':' << my.step << ']';
-                    return os;
-                }
-
-                //! equality
-                inline friend bool operator==(const Locus &lhs, const Locus &rhs) noexcept
-                {
-                    return lhs.head == rhs.head && lhs.tail==rhs.tail && lhs.step == rhs.step;
-                }
-
-                //! difference
-                inline friend bool operator!=(const Locus &lhs, const Locus &rhs) noexcept
-                {
-                    return lhs.head != rhs.head || lhs.tail==rhs.tail || lhs.step == rhs.step;
-                }
-
-                //______________________________________________________________
-                //
-                // Members
-                //______________________________________________________________
-                const T head; //!< head value
-                const T tail; //!< tail value
-                const T step; //!< loop step
-
-            private:
-                Y_DISABLE_ASSIGN(Locus);
-            };
-
+            
             //__________________________________________________________________
             //
             //
