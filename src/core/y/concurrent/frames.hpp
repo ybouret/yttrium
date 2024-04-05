@@ -52,6 +52,7 @@ namespace Yttrium
             typedef FRAME                                  FrameType; //!< alias
             typedef typename FrameType::Mapping            Mapping;   //!< alias
             typedef CxxArray<FRAME,Nucleus::Frames::Model> CxxFrames; //!< alias
+            typedef V2D<typename FrameType::Type>          Vertex;    //!< in case of 2D
 
             //__________________________________________________________________
             //
