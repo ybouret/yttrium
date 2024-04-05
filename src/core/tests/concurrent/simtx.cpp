@@ -26,15 +26,15 @@ namespace
     public:
         typedef CxxListOf<XNode> List;
 
-        inline explicit XNode() noexcept : Object(),   next(0), prev(0) {}
+        inline explicit XNode() noexcept : Object(),   next(0), prev(0), tmx(), ran() {}
         inline virtual ~XNode() noexcept {}
 
-        XNode *next;
-        XNode *prev;
-        WallTime      tmx;
+        XNode *      next;
+        XNode *      prev;
+        WallTime     tmx;
         Random::Rand ran;
 
-        void wait() {
+        inline void wait() {
             tmx.wait( 0.1 * ran.to<double>() );
         }
 
@@ -74,19 +74,19 @@ namespace
 
         inline void link(XNode *xn)
         {
-            node = xn;
+            Coerce(node) = xn;
         }
 
         inline void unlink() noexcept
         {
-            node = 0;
+            Coerce(node) = 0;
         }
 
 
-        XNode *node;
+        XNode * const node;
 
     private:
-        Y_DISABLE_ASSIGN(X1D);
+        Y_DISABLE_COPY_AND_ASSIGN(X1D);
     };
 
     inline void DoSomething0(X1D &range)
