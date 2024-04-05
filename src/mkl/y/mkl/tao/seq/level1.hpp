@@ -6,7 +6,6 @@
 
 
 #include "y/mkl/api.hpp"
-//#include "y/mkl/tao/multiadd.hpp"
 #include "y/mkl/antelope/caddy.hpp"
 #include "y/mkl/tao/transmogrify.hpp"
 

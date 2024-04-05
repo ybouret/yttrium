@@ -259,6 +259,7 @@ namespace Yttrium
                                           const size_t numData)
                 {
 
+                    // first pass: adjust nodes=xadd
                     try
                     {
                         switch( Sign::Of(size,numVars) )
@@ -279,7 +280,7 @@ namespace Yttrium
                     catch(...) { flush(); throw; }
                     assert(numVars==size);
 
-
+                    // second pass: adjust capacities per node
                     for(XNode *node=head;node;node=node->next)
                         node->make(numData);
 
@@ -320,7 +321,7 @@ namespace Yttrium
                 }
 
 
-                //! put each summ in corresponding sequence item
+                //! put each sum in corresponding sequence item
                 template <typename SEQUENCE> inline
                 void sum(SEQUENCE &seq) {
                     assert(seq.size() == size);
