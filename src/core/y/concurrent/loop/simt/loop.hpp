@@ -31,8 +31,15 @@ namespace Yttrium
             //__________________________________________________________________
             Loop *       operator->()       noexcept; //!< access
             const Loop * operator->() const noexcept; //!< access
-            Loop &       operator*()        noexcept; //!< access
 
+
+            template <typename KERNEL> inline
+            void run(KERNEL &kernel)
+            {
+                Nucleus::Crux<KERNEL> k(kernel);
+                loop->run1(k);
+            }
+            
             //__________________________________________________________________
             //
             //
@@ -43,6 +50,8 @@ namespace Yttrium
             virtual ~SIMT_Loop()                   noexcept; //!< cleanup
         protected:
             explicit SIMT_Loop(const SharedLoop &) noexcept; //!< setup
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SIMT_Loop);

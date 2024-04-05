@@ -12,38 +12,40 @@
 #include "y/system/wtime.hpp"
 #include "y/random/bits.hpp"
 
-namespace Yttrium
-{
-    namespace Concurrent
-    {
-
-        template <typename T>
-        class X1D : public Frame1D<T>
-        {
-        public:
-
-            inline explicit X1D(const ThreadContext &ctx) noexcept : Frame1D<T>(ctx)
-            {
-            }
-
-            inline virtual ~X1D() noexcept
-            {
-            }
 
 
-
-        private:
-            Y_DISABLE_ASSIGN(X1D);
-        };
-
-    }
-}
 
 using namespace Yttrium;
 
 
 namespace
 {
+
+    class X1D : public Concurrent::Frame1D<size_t>
+    {
+    public:
+
+        inline explicit X1D(const ThreadContext &ctx) noexcept : Frame1D<size_t>(ctx)
+        {
+        }
+
+        inline virtual ~X1D() noexcept
+        {
+        }
+
+
+
+    private:
+        Y_DISABLE_ASSIGN(X1D);
+    };
+
+    inline void DoSomething0(X1D &range)
+    {
+        {
+            Y_LOCK(range.sync);
+            (std::cerr << "\tDoSomething0(" << X1D::LoopPtr(range.loop) << ")" << std::endl).flush();
+        }
+    }
 
 }
 
@@ -58,14 +60,23 @@ Y_UTEST(concurrent_simtx)
     Concurrent::SharedLoop     seqLoop = new Concurrent::Mono();
     Concurrent::SharedLoop     parLoop = new Concurrent::Crew(topo);
 
-    typedef Concurrent::X1D<size_t> Engine1D;
+    {
 
-    Concurrent::SIMT<Engine1D> seq( seqLoop );
-    Concurrent::SIMT<Engine1D> par( parLoop );
+        Concurrent::SIMT<X1D> seq( seqLoop );
+        Concurrent::SIMT<X1D> par( parLoop );
 
-    seq();
-    par();
-    
+        std::cerr << "-- Testing" << std::endl;
+        seq();
+        par();
+        std::cerr << std::endl;
+
+        seq.assign(1,10,2);
+        par.assign(1,10,2);
+        std::cerr << "-- Testing 0-arg" << std::endl;
+        seq(DoSomething0);
+        par(DoSomething0);
+
+    }
 
 }
 Y_UDONE()
