@@ -1,5 +1,5 @@
 
-#include "y/concurrent/loop/simt/execute.hpp"
+#include "y/concurrent/loop/simt.hpp"
 #include "y/concurrent/loop/crew.hpp"
 #include "y/concurrent/loop/mono.hpp"
 #include "y/utest/run.hpp"
@@ -125,6 +125,44 @@ namespace
 }
 
 
+namespace
+{
+    class X2D : public Concurrent::Frame2D<size_t>
+    {
+    public:
+        inline explicit X2D(const ThreadContext &ctx) noexcept : 
+        Concurrent::Frame2D<size_t>(ctx), node(0) {}
+
+        inline virtual ~X2D() noexcept {}
+
+        inline void link(XNode *xn)
+        {
+            Coerce(node) = xn;
+        }
+
+        inline void unlink() noexcept
+        {
+            Coerce(node) = 0;
+        }
+
+
+        XNode * const node;
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(X2D);
+    };
+
+    inline void In2D0(X2D &range)
+    {
+        {
+            Y_LOCK(range.sync);
+            (std::cerr << "\tIn2D0 @" << range.name << " (" << X2D::TilePtr(range.tile) << ")" << std::endl).flush();
+        }
+    }
+
+}
+
+
 
 
 Y_UTEST(concurrent_simtx)
@@ -135,11 +173,11 @@ Y_UTEST(concurrent_simtx)
     Concurrent::SharedLoop     seqLoop = new Concurrent::Mono();
     Concurrent::SharedLoop     parLoop = new Concurrent::Crew(topo);
 
-    {
+    XList                 xls;
 
+    {
         Concurrent::SIMT<X1D> seq( seqLoop );
         Concurrent::SIMT<X1D> par( parLoop );
-        XList                 xls;
 
         std::cerr << "-- Testing" << std::endl;
         seq();
@@ -170,6 +208,30 @@ Y_UTEST(concurrent_simtx)
             par.link(xls.head);
             par(DoSomething1,v);
         }
+        std::cerr << std::endl;
+    }
+
+
+    {
+        std::cerr << "In 2D" << std::endl;
+        Concurrent::SIMT<X2D> seq( seqLoop );
+        Concurrent::SIMT<X2D> par( parLoop );
+
+        std::cerr << "-- Testing" << std::endl;
+        seq();
+        par();
+        std::cerr << std::endl;
+
+        const V2D<size_t> lower(1,1);
+        const V2D<size_t> upper(3,4);
+
+        seq.assign(lower,upper);
+        par.assign(lower,upper);
+
+        std::cerr << "-- Testing 0-arg" << std::endl;
+        seq(In2D0);
+        par(In2D0);
+        std::cerr << std::endl;
 
     }
 
