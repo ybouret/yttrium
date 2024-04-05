@@ -31,6 +31,7 @@ namespace Yttrium
             //__________________________________________________________________
             Loop *       operator->()       noexcept; //!< access
             const Loop * operator->() const noexcept; //!< access
+            Loop &       operator*()        noexcept; //!< access
 
             //__________________________________________________________________
             //

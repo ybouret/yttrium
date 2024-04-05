@@ -7,6 +7,7 @@
 #include "y/concurrent/frame/nucleus/frames.hpp"
 #include "y/container/cxx/array.hpp"
 #include "y/mkl/v2d.hpp"
+#include "y/type/auto-clean.hpp"
 
 namespace Yttrium
 {
@@ -51,6 +52,15 @@ namespace Yttrium
             typedef FRAME                                  FrameType; //!< alias
             typedef typename FrameType::Mapping            Mapping;   //!< alias
             typedef CxxArray<FRAME,Nucleus::Frames::Model> CxxFrames; //!< alias
+
+            class AutoUnlink : public AutoClean
+            {
+            public:
+                inline explicit AutoUnlink(Frames &frames) noexcept : AutoClean(frames, & Frames::unlink) {}
+                inline virtual ~AutoUnlink()               noexcept {}
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(AutoUnlink);
+            };
 
             //__________________________________________________________________
             //
@@ -153,6 +163,15 @@ namespace Yttrium
                     f[i].link(node);
                 }
             }
+
+            
+            inline void unlink() noexcept
+            {
+                Writable<FRAME> &f = *this;
+                for(size_t i=f.size();i>0;--i)
+                    f[i].unlink();
+            }
+
 
 
 

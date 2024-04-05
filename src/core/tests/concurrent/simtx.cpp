@@ -21,11 +21,6 @@ namespace Yttrium
         class X1D : public Frame1D<T>
         {
         public:
-            using Frame1D<T>::loop;
-            using typename Frame1D<T>::LoopPtr;
-
-            typedef void (*Proto)(const ThreadContext &,
-                                  const ForLoop<T>   &);
 
             inline explicit X1D(const ThreadContext &ctx) noexcept : Frame1D<T>(ctx)
             {
@@ -35,19 +30,6 @@ namespace Yttrium
             {
             }
 
-            void run(Proto proto)
-            {
-                assert(0!=proto);
-                assert(this->isAssigned());
-                {
-                    Y_LOCK(this->sync);
-                    (std::cerr << "run @" << LoopPtr(loop) << std::endl).flush();
-                }
-                if(loop)
-                {
-                    proto(*this,*loop);
-                }
-            }
 
 
         private:
@@ -62,14 +44,7 @@ using namespace Yttrium;
 
 namespace
 {
-    void DoSomething(const Concurrent::ThreadContext   &ctx,
-                     const Concurrent::ForLoop<size_t> &loop)
-    {
-        {
-            Y_LOCK(ctx.sync);
-            (std::cerr << "\tDoSomething@" << loop <<  "/" << ctx.name << std::endl).flush();
-        }
-    }
+
 }
 
 
@@ -88,18 +63,9 @@ Y_UTEST(concurrent_simtx)
     Concurrent::SIMT<Engine1D> seq( seqLoop );
     Concurrent::SIMT<Engine1D> par( parLoop );
 
-    typedef Concurrent::Execute<Engine1D,TL1(Engine1D::Proto)> Execute1D;
-    std::cerr << "running..." << std::endl;
-
-    seq.assign(1,10,2);
-    par.assign(1,10,2);
-    std::cerr << "-------- Seq --------" << std::endl;
-    Execute1D::On(seq,&Engine1D::run,DoSomething);
-    std::cerr << "-------- Par --------" << std::endl;
-    Execute1D::On(par,&Engine1D::run,DoSomething);
-
-
-
+    seq();
+    par();
+    
 
 }
 Y_UDONE()
