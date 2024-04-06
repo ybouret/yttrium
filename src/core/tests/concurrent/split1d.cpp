@@ -7,6 +7,11 @@
 using namespace Yttrium;
 
 
+template <typename T>
+static inline void ShowIndex(const T &i)
+{
+    std::cerr << i << std::endl;
+}
 
 Y_UTEST(concurrent_split1d)
 {
@@ -15,12 +20,21 @@ Y_UTEST(concurrent_split1d)
 
     int head = 1;
     int tail = 10;
-    int step = 1;
+    int step = 2;
     if(argc>1) head = ASCII::Convert::To<int>(argv[1],"head");
     if(argc>2) tail = ASCII::Convert::To<int>(argv[2],"tail");
     if(argc>3) step = ASCII::Convert::To<int>(argv[3],"step");
 
+    const size_t             sz   = 1;
+    const size_t             rk   = 0;
 
+    Concurrent::ForLoop<int> full = Concurrent::Split::For(sz,rk, head, tail, step);
+    std::cerr << "full=" << full << std::endl;
+
+    full(ShowIndex<int>);
+
+
+    return 0;
 
     for(size_t size=1;size<=10;++size)
     {

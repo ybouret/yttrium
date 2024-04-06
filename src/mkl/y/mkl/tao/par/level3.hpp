@@ -32,6 +32,10 @@ namespace Yttrium
                             const Matrix<V> &rhs)
                 {
 
+                    const Strip * const strip = range.strip;
+                    if(!strip) return;
+                    assert(0!=range.tile);
+                    assert(range.tile->size>0);
 #if 0
                     if( range.isEmpty() ) return;
 

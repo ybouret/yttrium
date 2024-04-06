@@ -48,6 +48,9 @@ namespace Yttrium
                 Y_DISABLE_COPY_AND_ASSIGN(Driver2D);
             };
 
+            typedef Driver2D::Tile Mapping2D;
+
+
         }
 
     }
