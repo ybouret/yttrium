@@ -129,7 +129,7 @@ namespace Yttrium
             }
 
             template <typename PROC> inline
-            void operator()(PROC &proc) const
+            void sweep(PROC &proc) const
             {
                 switch(family)
                 {
@@ -143,7 +143,7 @@ namespace Yttrium
                         goto CYCLE_INC;
                     } break;
 
-                    case ForLoopDecrease: { assert(-1==update);
+                    case ForLoopDecrease: { assert( Type(-1)==update);
                         Size j = length; if(j<=0) return;
                         Type i = offset;
                     CYCLE_DEC:

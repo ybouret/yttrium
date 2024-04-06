@@ -31,7 +31,7 @@ Y_UTEST(concurrent_split1d)
     Concurrent::ForLoop<int> full = Concurrent::Split::For(sz,rk, head, tail, step);
     std::cerr << "full=" << full << std::endl;
 
-    full(ShowIndex<int>);
+    full.sweep(ShowIndex<int>);
 
 
     return 0;

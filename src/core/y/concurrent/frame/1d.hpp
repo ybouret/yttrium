@@ -53,10 +53,17 @@ namespace Yttrium
             }
 
             //! access sub ForLoop
+            inline const ForLoop<T> * operator->() const noexcept
+            {
+                assert(this->isAssigned());
+                return & *(this->workspace);
+            }
+
+            //! access sub ForLoop
             inline const ForLoop<T> & operator*() const noexcept
             {
                 assert(this->isAssigned());
-                return *(this->workspace);
+                return  *(this->workspace);
             }
 
             //__________________________________________________________________

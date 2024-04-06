@@ -22,20 +22,25 @@ namespace Yttrium
                 template <typename TARGET, typename T, typename SOURCE, typename U, typename PROC> inline
                 void Mul(Driver1D &range, TARGET &target, const Matrix<T> &M, SOURCE &source, PROC &proc)
                 {
-                    const Mapping1D * const loop = range.loop;
-                    if(!loop) return;
-                    
-                    assert(Concurrent::ForLoopIncrease==loop->family);
-                    assert(loop->offset>0);
 
-                    Antelope::Add<U> &xadd = range.xadd<U>();
-                    const size_t      offset = loop->offset;
-                    for(size_t row  = loop->latest; row>=offset; --row)
+                    struct Op
                     {
-                        assert(xadd.isEmpty());
-                        const U result = DotProduct<U>::Of_(M[row],source,xadd);
-                        proc(target[row],result);
-                    }
+                        TARGET           &target;
+                        const Matrix<T>  &M;
+                        SOURCE           &source;
+                        PROC             &proc;
+                        Antelope::Add<U> &xadd;
+
+                        inline void operator()(const size_t row)
+                        {
+                            assert(xadd.isEmpty());
+                            const U result = DotProduct<U>::Of_(M[row],source,xadd);
+                            proc(target[row],result);
+                        }
+                    };
+
+                    Op op = { target, M, source, proc, range.xadd<U>() };
+                    range->sweep(op);
                 }
             }
 
