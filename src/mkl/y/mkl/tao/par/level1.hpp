@@ -6,6 +6,7 @@
 
 #include "y/mkl/api.hpp"
 #include "y/mkl/tao/par/driver.hpp"
+#include "y/mkl/tao/ops.hpp"
 
 namespace Yttrium
 {
@@ -98,36 +99,27 @@ namespace Yttrium
 
         }
 
-        //--------------------------------------------------------------------//
-        //                                                                    //
-        //                                                                    //
-        //                                                                    //
-        // Add                                                                //
-        //                                                                    //
-        //                                                                    //
-        //                                                                    //
-        //--------------------------------------------------------------------//
         namespace Tao
         {
             namespace Parallel
             {
-
-                //! add on range
-                template <typename TARGET, typename SOURCE> inline
-                void Add(Driver1D &range, TARGET &target, SOURCE &source)
+                template <typename TARGET, typename SOURCE, typename PROC> inline
+                void Binary(Driver1D &range, TARGET &target, SOURCE &source, PROC &proc)
                 {
                     struct Op
                     {
                         TARGET &target;
                         SOURCE &source;
+                        PROC   &proc;
                         inline void operator()(const size_t i)
                         {
-                            target[i] += source[i];
+                            proc(target[i],source[i]);
                         }
                     };
-                    Op op = { target, source };
+
+                    Op op = { target, source, proc };
                     range->sweep(op);
-                }
+                };
 
             }
 
@@ -139,8 +131,30 @@ namespace Yttrium
             void Add( TARGET &target, SOURCE &source, Driver &driver)
             {
                 assert(target.size()==source.size());
+                typedef typename TARGET::Type TGT;
+                typedef typename SOURCE::Type SRC;
+                typedef void    (*PROC)(TGT &, const SRC &);
+                static PROC       proc = Ops<TGT,SRC>::Add;
+
                 driver.setup(target.size());
-                driver.in1D(Parallel::Add<TARGET,SOURCE>,target,source);
+                driver.in1D(Parallel::Binary<TARGET,SOURCE,PROC>,target,source,proc);
+            }
+
+            //__________________________________________________________________
+            //
+            //! target -= source
+            //__________________________________________________________________
+            template <typename TARGET, typename SOURCE>   inline
+            void Sub( TARGET &target, SOURCE &source, Driver &driver)
+            {
+                assert(target.size()==source.size());
+                typedef typename TARGET::Type TGT;
+                typedef typename SOURCE::Type SRC;
+                typedef void    (*PROC)(TGT &, const SRC &);
+                static PROC       proc = Ops<TGT,SRC>::Sub;
+
+                driver.setup(target.size());
+                driver.in1D(Parallel::Binary<TARGET,SOURCE,PROC>,target,source,proc);
             }
 
         }
@@ -149,25 +163,44 @@ namespace Yttrium
         {
             namespace Parallel
             {
-
-                //! add on range
-                template <typename TARGET, typename T, typename SOURCE> inline
-                void Add(Driver1D &range, TARGET &target, const T &factor, SOURCE &source)
+                template <typename TARGET, typename FACTOR, typename SOURCE, typename PROC> inline
+                void Ternary(Driver1D &range, TARGET &target, const FACTOR &factor, SOURCE &source, PROC &proc)
                 {
                     typedef typename TARGET::Type TGT;
                     struct Op
                     {
-                        TARGET  &target;
-                        const T &factor;
-                        SOURCE  &source;
+                        TARGET       &target;
+                        const FACTOR &factor;
+                        SOURCE       &source;
+                        PROC         &proc;
                         inline void operator()(const size_t i)
                         {
-                            target[i] += Transmogrify<TGT>::Product(factor,source[i]);
+                            const TGT rhs = Transmogrify<TGT>::Product(factor,source[i]);
+                            proc(target[i],rhs);
                         }
                     };
-                    Op op = { target, factor, source };
+
+                    Op op = { target, factor, source, proc };
                     range->sweep(op);
-                }
+                };
+            }
+
+            //__________________________________________________________________
+            //
+            //! target = factor * source
+            //__________________________________________________________________
+            template <typename TARGET, typename T, typename SOURCE>   inline
+            void MulSet( TARGET &target, T factor, SOURCE &source, Driver &driver)
+            {
+                assert(target.size()==source.size());
+                typedef typename TARGET::Type TGT;
+                typedef typename TARGET::Type TGT;
+                typedef typename SOURCE::Type SRC;
+                typedef void    (*PROC)(TGT &, const SRC &);
+                static PROC       proc = Ops<TGT,SRC>::Set;
+
+                driver.setup(target.size());
+                driver.in1D(Parallel::Ternary<TARGET,T,SOURCE,PROC>,target,factor,source,proc);
             }
 
             //__________________________________________________________________
@@ -178,124 +211,14 @@ namespace Yttrium
             void MulAdd( TARGET &target, T factor, SOURCE &source, Driver &driver)
             {
                 assert(target.size()==source.size());
+                typedef typename TARGET::Type TGT;
+                typedef typename TARGET::Type TGT;
+                typedef typename SOURCE::Type SRC;
+                typedef void    (*PROC)(TGT &, const SRC &);
+                static PROC       proc = Ops<TGT,SRC>::Add;
+
                 driver.setup(target.size());
-                driver.in1D(Parallel::Add<TARGET,T,SOURCE>,target,factor,source);
-            }
-
-        }
-
-        namespace Tao
-        {
-            namespace Parallel
-            {
-                //! mul add on ranges
-                template <typename TARGET,  typename SOURCE, typename T, typename VECTOR> inline
-                void Add(Driver1D &range, TARGET &target,  SOURCE &source, const T &factor, VECTOR &vector)
-                {
-                    typedef typename TARGET::Type TGT;
-                    typedef typename SOURCE::Type SRC;
-                    struct Op
-                    {
-                        TARGET  &target;
-                        SOURCE  &source;
-                        const T &factor;
-                        VECTOR  &vector;
-
-                        inline void operator()(const size_t i)
-                        {
-                            target[i] = To<TGT,SRC>::Get(source[i]) + Transmogrify<TGT>::Product(factor,vector[i]);
-                        }
-                    };
-                    Op op = { target, source, factor, vector };
-                    range->sweep(op);
-                }
-            }
-
-            //__________________________________________________________________
-            //
-            //! target = source + factor * vector
-            //__________________________________________________________________
-            template <typename TARGET,  typename SOURCE, typename T, typename VECTOR> inline
-            void MulAdd(TARGET &target,  SOURCE &source, const T &factor, VECTOR &vector, Driver &driver)
-            {
-                assert(target.size()==source.size());
-                driver.setup(target.size());
-                driver.in1D(Parallel::Add<TARGET,SOURCE,T,VECTOR>,target,source,factor,vector);
-            }
-
-        }
-
-
-        //--------------------------------------------------------------------//
-        //                                                                    //
-        //                                                                    //
-        //                                                                    //
-        // Sub                                                                //
-        //                                                                    //
-        //                                                                    //
-        //                                                                    //
-        //--------------------------------------------------------------------//
-        namespace Tao
-        {
-            namespace Parallel
-            {
-
-                //! sub on range
-                template <typename TARGET, typename SOURCE> inline
-                void Sub(Driver1D &range, TARGET &target, SOURCE &source)
-                {               
-                    struct Op
-                    {
-                        TARGET &target;
-                        SOURCE &source;
-                        inline void operator()(const size_t i)
-                        {
-                            target[i] -= source[i];
-                        }
-                    };
-                    Op op = { target, source };
-                    range->sweep(op);
-                }
-
-            }
-
-            //__________________________________________________________________
-            //
-            //! target += source
-            //__________________________________________________________________
-            template <typename TARGET, typename SOURCE>   inline
-            void Sub( TARGET &target, SOURCE &source, Driver &driver)
-            {
-                assert(target.size()==source.size());
-                driver.setup(target.size());
-                driver.in1D(Parallel::Sub<TARGET,SOURCE>,target,source);
-            }
-
-        }
-
-        namespace Tao
-        {
-            namespace Parallel
-            {
-
-                //! sub on range
-                template <typename TARGET, typename T, typename SOURCE> inline
-                void Sub(Driver1D &range, TARGET &target, const T &factor, SOURCE &source)
-                {
-                    typedef typename TARGET::Type TGT;
-                    struct Op
-                    {
-                        TARGET  &target;
-                        const T &factor;
-                        SOURCE  &source;
-                        inline void operator()(const size_t i)
-                        {
-                            target[i] -= Transmogrify<TGT>::Product(factor,source[i]);
-                        }
-                    };
-                    Op op = { target, factor, source };
-                    range->sweep(op);
-                }
+                driver.in1D(Parallel::Ternary<TARGET,T,SOURCE,PROC>,target,factor,source,proc);
             }
 
             //__________________________________________________________________
@@ -306,9 +229,16 @@ namespace Yttrium
             void MulSub( TARGET &target, T factor, SOURCE &source, Driver &driver)
             {
                 assert(target.size()==source.size());
+                typedef typename TARGET::Type TGT;
+                typedef typename TARGET::Type TGT;
+                typedef typename SOURCE::Type SRC;
+                typedef void    (*PROC)(TGT &, const SRC &);
+                static PROC       proc = Ops<TGT,SRC>::Sub;
+
                 driver.setup(target.size());
-                driver.in1D(Parallel::Sub<TARGET,T,SOURCE>,target,factor,source);
+                driver.in1D(Parallel::Ternary<TARGET,T,SOURCE,PROC>,target,factor,source,proc);
             }
+
 
         }
 
@@ -316,29 +246,50 @@ namespace Yttrium
         {
             namespace Parallel
             {
-
-                //! sub on range
-                template <typename TARGET,  typename SOURCE, typename T, typename VECTOR> inline
-                void Sub(Driver1D &range, TARGET &target,  SOURCE &source, const T &factor, VECTOR &vector)
+                template <typename TARGET,  typename SOURCE, typename FACTOR, typename VECTOR, typename PROC> inline
+                void Quaternary(Driver1D &range, TARGET &target,  SOURCE &source, const FACTOR &factor, VECTOR &vector, PROC &proc )
                 {
                     typedef typename TARGET::Type TGT;
                     typedef typename SOURCE::Type SRC;
+
                     struct Op
                     {
-                        TARGET  &target;
-                        SOURCE  &source;
-                        const T &factor;
-                        VECTOR  &vector;
-
+                        TARGET       &target;
+                        SOURCE       &source;
+                        const FACTOR &factor;
+                        VECTOR       &vector;
+                        PROC         &proc;
                         inline void operator()(const size_t i)
                         {
-                            target[i] = To<TGT,SRC>::Get(source[i]) - Transmogrify<TGT>::Product(factor,vector[i]);
+                            const TGT rhs = Transmogrify<TGT>::Product(factor,vector[i]);
+                            proc(target[i]=To<TGT,SRC>::Get(source[i]),rhs);
                         }
                     };
-                    Op op = { target, source, factor, vector };
+
+                    Op op = { target, source, factor, vector, proc };
                     range->sweep(op);
-                }
+                };
+
             }
+
+
+
+            //__________________________________________________________________
+            //
+            //! target = source + factor * vector
+            //__________________________________________________________________
+            template <typename TARGET,  typename SOURCE, typename T, typename VECTOR> inline
+            void MulAdd(TARGET &target,  SOURCE &source, const T &factor, VECTOR &vector, Driver &driver)
+            {
+                assert(target.size()==source.size());
+                typedef typename TARGET::Type TGT;
+                typedef void (*PROC)(TGT &, const TGT &);
+                static PROC    proc = Ops<TGT,TGT>::Add;
+                
+                driver.setup(target.size());
+                driver.in1D(Parallel::Quaternary<TARGET,SOURCE,T,VECTOR,PROC>,target,source,factor,vector,proc);
+            }
+
 
             //__________________________________________________________________
             //
@@ -348,8 +299,12 @@ namespace Yttrium
             void MulSub(TARGET &target,  SOURCE &source, const T &factor, VECTOR &vector, Driver &driver)
             {
                 assert(target.size()==source.size());
+                typedef typename TARGET::Type TGT;
+                typedef void (*PROC)(TGT &, const TGT &);
+                static PROC    proc = Ops<TGT,TGT>::Sub;
+
                 driver.setup(target.size());
-                driver.in1D(Parallel::Sub<TARGET,SOURCE,T,VECTOR>,target,source,factor,vector);
+                driver.in1D(Parallel::Quaternary<TARGET,SOURCE,T,VECTOR,PROC>,target,source,factor,vector,proc);
             }
 
         }

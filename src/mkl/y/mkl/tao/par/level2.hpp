@@ -61,7 +61,7 @@ namespace Yttrium
                 assert( source.size() == M.cols );
 
                 const size_t   para = driver.in1D.size();
-                driver.setup(M.rows);                      // process rows in parallel
+                driver.setup(M.rows);                    // process rows in parallel
                 driver.in1D.link(xma.make(para,M.cols)); // with help
 
                 volatile Driver::Unlink1D willClean(driver.in1D);
