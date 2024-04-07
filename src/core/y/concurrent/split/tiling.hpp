@@ -103,7 +103,10 @@ namespace Yttrium
                 Y_DISABLE_ASSIGN(Segment);
             };
 
+            //__________________________________________________________________
+            //
             //! linear memory for segments, to form a tile
+            //__________________________________________________________________
             typedef Memory::Wad<Segment,Memory::Pooled> Segments;
 
             //__________________________________________________________________
@@ -190,7 +193,7 @@ namespace Yttrium
                     return scxx[i];
                 }
 
-                //! convert Segment to binary compatible strip
+                //! convert Segment to BINARY compatible strip
                 /**
                  STRIP[1..size]
                  */
@@ -207,6 +210,7 @@ namespace Yttrium
                     assert(0!=scxx);
                     return scxx;
                 }
+
 
                 //______________________________________________________________
                 //

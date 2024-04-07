@@ -7,6 +7,7 @@
 #include "y/mkl/tao/seq/level1.hpp"
 #include "y/mkl/tao/par/driver.hpp"
 #include "y/container/matrix.hpp"
+#include "y/mkl/tao/ops.hpp"
 
 #if 1
 namespace Yttrium
@@ -19,34 +20,28 @@ namespace Yttrium
 
             namespace Parallel
             {
-                //______________________________________________________________
-                //
-                //
-                //! compute tgt[range] = lhs * rhs
-                //
-                //______________________________________________________________
-                template <typename T, typename U, typename V, typename W> inline
-                void MatMul(Driver2D        &range,
-                            Matrix<T>       &tgt,
-                            const Matrix<U> &lhs,
-                            const Matrix<V> &rhs)
-                {
 
-                    const Strip * const strip = range.strip;
+                //! proc(T &, const W &)
+                template <typename T, typename U, typename V, typename W, typename PROC> inline
+                void MatMulOp(Driver2D        &range,
+                              Matrix<T>       &tgt,
+                              const Matrix<U> &lhs,
+                              const Matrix<V> &rhs,
+                              PROC            &proc)
+                {
+                    const Strip *strip = range.strip;
                     if(!strip) return;
                     assert(0!=range.tile);
                     assert(range.tile->size>0);
-#if 0
-                    if( range.isEmpty() ) return;
 
                     const size_t      nrun = lhs.cols;
                     Antelope::Add<W> &xadd = range.xadd<W>();
                     assert(xadd.isEmpty());
                     assert(xadd.accepts(nrun));
 
-                    for(size_t s=range->size;s>0;--s)
+                    for(size_t s=range.count();s>0;--s)
                     {
-                        const Strip       &here  = range(s);
+                        const Strip       &here  = *(++strip);
                         const size_t       i     = here.irow;
                         Writable<T>       &tgt_i = tgt[i];
                         const Readable<U> &lhs_i = lhs[i];
@@ -58,11 +53,31 @@ namespace Yttrium
                                 const W p = Transmogrify<W>::Product(lhs_i[k], rhs[k][j]);
                                 xadd << p;
                             }
-                            tgt_i[j] = xadd.sum();
+                            const W  res = xadd.sum();
+                            proc(tgt_i[j],res);
                         }
                     }
-#endif
                 }
+
+            }
+
+            template <typename T, typename U, typename V, typename W, typename PROC>  inline
+            void MatMulCall(Matrix<T>          &tgt,
+                            const Matrix<U>    &lhs,
+                            const Matrix<V>    &rhs,
+                            Antelope::Caddy<W> &xma,
+                            PROC               &proc,
+                            Driver             &driver)
+            {
+                assert(tgt.rows==lhs.rows);
+                assert(tgt.cols==rhs.cols);
+                assert(lhs.cols==rhs.rows);
+
+                driver.setup(tgt);                                         // parallel tiles of target
+                driver.in2D.link(xma.make(driver.in2D.size(),lhs.cols)); // one xadd per tile
+
+                volatile Driver::Unlink2D willUnlink(driver.in2D);
+                driver.in2D(Parallel::MatMulOp<T,U,V,W,PROC>,tgt,lhs,rhs,proc);
             }
 
 
@@ -82,16 +97,55 @@ namespace Yttrium
                         Antelope::Caddy<W> &xma,
                         Driver             &driver)
             {
-                assert(tgt.rows==lhs.rows);
-                assert(tgt.cols==rhs.cols);
-                assert(lhs.cols==rhs.rows);
 
-                driver.setup(tgt);                                         // parallel tiles of target
-                driver.in2D.link(xma.make(driver.in2D.size(),lhs.cols)); // one xadd per tile
-
-                volatile Driver::Unlink2D willUnlink(driver.in2D);
-                driver.in2D(Parallel::MatMul<T,U,V,W>,tgt,lhs,rhs);
+                typedef void (*PROC)(T &, const W &);
+                static PROC proc = Ops<T,W>::Set;
+                MatMulCall(tgt,lhs,rhs,xma,proc,driver);
             }
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! parallel matrix multiplication/addition
+            //
+            //
+            //__________________________________________________________________
+            template <typename T, typename U, typename V, typename W>  inline
+            void MatMulAdd(Matrix<T>          &tgt,
+                           const Matrix<U>    &lhs,
+                           const Matrix<V>    &rhs,
+                           Antelope::Caddy<W> &xma,
+                           Driver             &driver)
+            {
+
+                typedef void (*PROC)(T &, const W &);
+                static PROC proc = Ops<T,W>::Add;
+                MatMulCall(tgt,lhs,rhs,xma,proc,driver);
+            }
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! parallel matrix multiplication/subtraction
+            //
+            //
+            //__________________________________________________________________
+            template <typename T, typename U, typename V, typename W>  inline
+            void MatMulSub(Matrix<T>          &tgt,
+                           const Matrix<U>    &lhs,
+                           const Matrix<V>    &rhs,
+                           Antelope::Caddy<W> &xma,
+                           Driver             &driver)
+            {
+
+                typedef void (*PROC)(T &, const W &);
+                static PROC proc = Ops<T,W>::Sub;
+                MatMulCall(tgt,lhs,rhs,xma,proc,driver);
+            }
+
+
 
 
             namespace Parallel

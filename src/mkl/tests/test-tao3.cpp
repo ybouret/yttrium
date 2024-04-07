@@ -30,7 +30,9 @@ Y_UTEST(tao3)
     Random::Rand         ran;
     Antelope::Caddy<int> xma;
 
-#if 0
+
+
+
     for(size_t iter=0;iter<2;++iter)
     {
         const size_t nr = 1+ran.leq(10);
@@ -71,6 +73,7 @@ Y_UTEST(tao3)
 
         }
 
+#if 0
         std::cerr << std::endl;
         std::cerr << "MatMul/Transpose" << std::endl;
         {
@@ -125,8 +128,8 @@ Y_UTEST(tao3)
             std::cerr << "partgt=" << partgt << std::endl;
             Y_CHECK(partgt==target);
         }
-    }
 #endif
+    }
 }
 Y_UDONE()
 

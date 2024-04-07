@@ -67,6 +67,11 @@ namespace Yttrium
                 return *(this->workspace);
             }
             
+            inline size_t count() const noexcept
+            {
+                return 0!=tile ? tile->size : 0;
+            }
+
             //__________________________________________________________________
             //
             //
