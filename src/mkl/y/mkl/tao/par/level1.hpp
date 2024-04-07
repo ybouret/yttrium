@@ -103,6 +103,10 @@ namespace Yttrium
         {
             namespace Parallel
             {
+                //______________________________________________________________
+                //
+                //! call proc(target[i],source[i])
+                //______________________________________________________________
                 template <typename TARGET, typename SOURCE, typename PROC> inline
                 void Binary(Driver1D &range, TARGET &target, SOURCE &source, PROC &proc)
                 {
@@ -163,6 +167,10 @@ namespace Yttrium
         {
             namespace Parallel
             {
+                //______________________________________________________________
+                //
+                //! call proc(target[i],factor*source[i])
+                //______________________________________________________________
                 template <typename TARGET, typename FACTOR, typename SOURCE, typename PROC> inline
                 void Ternary(Driver1D &range, TARGET &target, const FACTOR &factor, SOURCE &source, PROC &proc)
                 {
@@ -246,6 +254,10 @@ namespace Yttrium
         {
             namespace Parallel
             {
+                //______________________________________________________________
+                //
+                //! call target[i] = proc(source[i],factor*vector[i])
+                //______________________________________________________________
                 template <typename TARGET,  typename SOURCE, typename FACTOR, typename VECTOR, typename PROC> inline
                 void Quaternary(Driver1D &range, TARGET &target,  SOURCE &source, const FACTOR &factor, VECTOR &vector, PROC &proc )
                 {

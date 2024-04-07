@@ -61,6 +61,10 @@ namespace Yttrium
 
             }
 
+            //__________________________________________________________________
+            //
+            //! tgt = proc(lhs,rhs)
+            //__________________________________________________________________
             template <typename T, typename U, typename V, typename W, typename PROC>  inline
             void MatMulCall(Matrix<T>          &tgt,
                             const Matrix<U>    &lhs,

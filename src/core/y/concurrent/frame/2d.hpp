@@ -67,6 +67,7 @@ namespace Yttrium
                 return *(this->workspace);
             }
             
+            //! helper to get current count of segments
             inline size_t count() const noexcept
             {
                 return 0!=tile ? tile->size : 0;

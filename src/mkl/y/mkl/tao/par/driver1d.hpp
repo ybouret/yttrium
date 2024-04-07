@@ -30,6 +30,10 @@ namespace Yttrium
                 Y_DISABLE_COPY_AND_ASSIGN(Driver1D);
             };
 
+            //__________________________________________________________________
+            //
+            //! alias
+            //__________________________________________________________________
             typedef Driver1D::Mapping Mapping1D;
 
         }

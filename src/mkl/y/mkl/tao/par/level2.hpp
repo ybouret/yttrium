@@ -82,7 +82,6 @@ namespace Yttrium
                 typedef typename TARGET::Type TGT;
                 typedef void    (*PROC)(TGT &, const U &);
                 static  PROC      proc = Ops<TGT,U>::Set;
-
                 MulOp(target,M,source,xma,driver,proc);
             }
 

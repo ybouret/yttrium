@@ -128,6 +128,10 @@ namespace Yttrium
                 CoerceSwap(family,trek.family);
             }
 
+            //__________________________________________________________________
+            //
+            //! call proc(index) for each valid index
+            //__________________________________________________________________
             template <typename PROC> inline
             void sweep(PROC &proc) const
             {
