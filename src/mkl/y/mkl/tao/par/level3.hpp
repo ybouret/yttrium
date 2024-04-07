@@ -226,10 +226,10 @@ namespace Yttrium
             //! tgt = lhs * rhs'
             template <typename T, typename U, typename V, typename W>  inline
             void MatMul(Matrix<T>          &tgt,
-                            const Matrix<U>    &lhs,
-                            const TransposeOf_ &,
-                            const Matrix<V>    &rhs,
-                            Antelope::Caddy<W> &xma,
+                        const Matrix<U>    &lhs,
+                        const TransposeOf_ &_,
+                        const Matrix<V>    &rhs,
+                        Antelope::Caddy<W> &xma,
                         Driver             &driver)
             {
                 typedef void (*PROC)(T &, const W &);
@@ -238,18 +238,14 @@ namespace Yttrium
                 assert(tgt.rows==lhs.rows);
                 assert(tgt.cols==rhs.rows);
                 assert(lhs.cols==rhs.cols);
-
-                driver.setup(tgt);                                                           // parallel tiles of target
-                driver.in2D.link(xma.make(driver.in2D.size(),lhs.cols));                     // one xadd per tile
-                volatile Driver::Unlink2D willUnlink(driver.in2D);                           // cleanup anyhow
-                driver.in2D(Parallel::MatMulRightTransposeOp<T,U,V,W,PROC>,tgt,lhs,rhs,proc);  // call
+                MatMulCall(tgt,lhs,_,rhs,xma,proc,driver);
             }
 
             //! tgt += lhs * rhs'
             template <typename T, typename U, typename V, typename W>  inline
             void MatMulAdd(Matrix<T>          &tgt,
                            const Matrix<U>    &lhs,
-                           const TransposeOf_ &,
+                           const TransposeOf_ &_,
                            const Matrix<V>    &rhs,
                            Antelope::Caddy<W> &xma,
                            Driver             &driver)
@@ -260,18 +256,14 @@ namespace Yttrium
                 assert(tgt.rows==lhs.rows);
                 assert(tgt.cols==rhs.rows);
                 assert(lhs.cols==rhs.cols);
-
-                driver.setup(tgt);                                                             // parallel tiles of target
-                driver.in2D.link(xma.make(driver.in2D.size(),lhs.cols));                       // one xadd per tile
-                volatile Driver::Unlink2D willUnlink(driver.in2D);                             // cleanup anyhow
-                driver.in2D(Parallel::MatMulRightTransposeOp<T,U,V,W,PROC>,tgt,lhs,rhs,proc);  // call
+                MatMulCall(tgt,lhs,_,rhs,xma,proc,driver);
             }
 
             //! tgt -= lhs * rhs'
             template <typename T, typename U, typename V, typename W>  inline
             void MatMulSub(Matrix<T>          &tgt,
                            const Matrix<U>    &lhs,
-                           const TransposeOf_ &,
+                           const TransposeOf_ &_,
                            const Matrix<V>    &rhs,
                            Antelope::Caddy<W> &xma,
                            Driver             &driver)
@@ -282,11 +274,7 @@ namespace Yttrium
                 assert(tgt.rows==lhs.rows);
                 assert(tgt.cols==rhs.rows);
                 assert(lhs.cols==rhs.cols);
-
-                driver.setup(tgt);                                                             // parallel tiles of target
-                driver.in2D.link(xma.make(driver.in2D.size(),lhs.cols));                       // one xadd per tile
-                volatile Driver::Unlink2D willUnlink(driver.in2D);                             // cleanup anyhow
-                driver.in2D(Parallel::MatMulRightTransposeOp<T,U,V,W,PROC>,tgt,lhs,rhs,proc);  // call
+                MatMulCall(tgt,lhs,_,rhs,xma,proc,driver);
             }
 
 
@@ -337,7 +325,7 @@ namespace Yttrium
             {
                 assert( tgt.rows == lhs.size() );
                 assert( tgt.cols == rhs.cols   );
-                
+
                 driver.setup(tgt.rows);
                 driver.in1D(Parallel::DiagMatMul<T,ARRAY,V>,tgt,lhs,rhs);
             }
