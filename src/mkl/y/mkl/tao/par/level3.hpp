@@ -39,7 +39,7 @@ namespace Yttrium
                     assert(xadd.isEmpty());
                     assert(xadd.accepts(nrun));
 
-                    for(size_t s=range.count();s>0;--s)
+                    for(size_t s=range.tile->size;s>0;--s)
                     {
                         const Strip       &here  = *(++strip);
                         const size_t       i     = here.irow;
@@ -143,7 +143,6 @@ namespace Yttrium
                            Antelope::Caddy<W> &xma,
                            Driver             &driver)
             {
-
                 typedef void (*PROC)(T &, const W &);
                 static PROC proc = Ops<T,W>::Sub;
                 MatMulCall(tgt,lhs,rhs,xma,proc,driver);
@@ -154,28 +153,32 @@ namespace Yttrium
 
             namespace Parallel
             {
+
                 //______________________________________________________________
                 //
                 //
-                //! compute tgt[range] = lhs * rhs
+                //! compute tgt[range] = lhs * rhs'
                 //
                 //______________________________________________________________
-                template <typename T, typename U, typename V, typename W> inline
-                void MatMulRightTranspose(Driver2D        &range,
-                                          Matrix<T>       &tgt,
-                                          const Matrix<U> &lhs,
-                                          const Matrix<V> &rhs)
+                template <typename T, typename U, typename V, typename W, typename PROC> inline
+                void MatMulRightTransposeOp(Driver2D        &range,
+                                            Matrix<T>       &tgt,
+                                            const Matrix<U> &lhs,
+                                            const Matrix<V> &rhs,
+                                            PROC            &proc)
                 {
-#if 0
-                    if( range.isEmpty() ) return;
+                    const Strip *strip = range.strip;
+                    if(!strip) return;
+                    assert(0!=range.tile);
+                    assert(range.tile->size>0);
 
                     Antelope::Add<W> &xadd = range.xadd<W>();
                     assert(xadd.isEmpty());
                     assert(xadd.accepts(lhs.cols));
 
-                    for(size_t s=range->size;s>0;--s)
+                    for(size_t s=range.tile->size;s>0;--s)
                     {
-                        const Strip       &here  = range(s);
+                        const Strip       &here  = *(++strip);
                         const size_t       i     = here.irow;
                         Writable<T>       &tgt_i = tgt[i];
                         const Readable<U> &lhs_i = lhs[i];
@@ -183,11 +186,13 @@ namespace Yttrium
                         {
                             assert(xadd.isEmpty());
                             assert(xadd.accepts(lhs.cols));
-                            tgt_i[j] = DotProduct<W>::Of_(lhs_i,rhs[j],xadd);
+                            const W res  = DotProduct<W>::Of_(lhs_i,rhs[j],xadd);
+                            proc(tgt_i[j],res);
                         }
                     }
-#endif
+
                 }
+
             }
 
 
@@ -199,23 +204,92 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            template <typename T, typename U, typename V, typename W>  inline
-            void MatMul(Matrix<T>          &tgt,
-                        const Matrix<U>    &lhs,
-                        const TransposeOf_ &,
-                        const Matrix<V>    &rhs,
-                        Antelope::Caddy<W> &xma,
-                        Driver             &driver)
+            template <typename T, typename U, typename V, typename W, typename PROC>  inline
+            void MatMulCall(Matrix<T>          &tgt,
+                            const Matrix<U>    &lhs,
+                            const TransposeOf_ &,
+                            const Matrix<V>    &rhs,
+                            Antelope::Caddy<W> &xma,
+                            PROC               &proc,
+                            Driver             &driver)
             {
                 assert(tgt.rows==lhs.rows);
                 assert(tgt.cols==rhs.rows);
                 assert(lhs.cols==rhs.cols);
 
-                driver.setup(tgt);                                                 // parallel tiles of target
-                driver.in2D.link(xma.make(driver.in2D.size(),lhs.cols));         // one xadd per tile
-                volatile Driver::Unlink2D willUnlink(driver.in2D);                      // cleanup anyhow
-                driver.in2D(Parallel::MatMulRightTranspose<T,U,V,W>,tgt,lhs,rhs);  // call
+                driver.setup(tgt);                                                           // parallel tiles of target
+                driver.in2D.link(xma.make(driver.in2D.size(),lhs.cols));                     // one xadd per tile
+                volatile Driver::Unlink2D willUnlink(driver.in2D);                           // cleanup anyhow
+                driver.in2D(Parallel::MatMulRightTransposeOp<T,U,V,W,PROC>,tgt,lhs,rhs,proc);  // call
             }
+
+            //! tgt = lhs * rhs'
+            template <typename T, typename U, typename V, typename W>  inline
+            void MatMul(Matrix<T>          &tgt,
+                            const Matrix<U>    &lhs,
+                            const TransposeOf_ &,
+                            const Matrix<V>    &rhs,
+                            Antelope::Caddy<W> &xma,
+                        Driver             &driver)
+            {
+                typedef void (*PROC)(T &, const W &);
+                static PROC proc = Ops<T,W>::Set;
+
+                assert(tgt.rows==lhs.rows);
+                assert(tgt.cols==rhs.rows);
+                assert(lhs.cols==rhs.cols);
+
+                driver.setup(tgt);                                                           // parallel tiles of target
+                driver.in2D.link(xma.make(driver.in2D.size(),lhs.cols));                     // one xadd per tile
+                volatile Driver::Unlink2D willUnlink(driver.in2D);                           // cleanup anyhow
+                driver.in2D(Parallel::MatMulRightTransposeOp<T,U,V,W,PROC>,tgt,lhs,rhs,proc);  // call
+            }
+
+            //! tgt += lhs * rhs'
+            template <typename T, typename U, typename V, typename W>  inline
+            void MatMulAdd(Matrix<T>          &tgt,
+                           const Matrix<U>    &lhs,
+                           const TransposeOf_ &,
+                           const Matrix<V>    &rhs,
+                           Antelope::Caddy<W> &xma,
+                           Driver             &driver)
+            {
+                typedef void (*PROC)(T &, const W &);
+                static PROC proc = Ops<T,W>::Add;
+
+                assert(tgt.rows==lhs.rows);
+                assert(tgt.cols==rhs.rows);
+                assert(lhs.cols==rhs.cols);
+
+                driver.setup(tgt);                                                             // parallel tiles of target
+                driver.in2D.link(xma.make(driver.in2D.size(),lhs.cols));                       // one xadd per tile
+                volatile Driver::Unlink2D willUnlink(driver.in2D);                             // cleanup anyhow
+                driver.in2D(Parallel::MatMulRightTransposeOp<T,U,V,W,PROC>,tgt,lhs,rhs,proc);  // call
+            }
+
+            //! tgt -= lhs * rhs'
+            template <typename T, typename U, typename V, typename W>  inline
+            void MatMulSub(Matrix<T>          &tgt,
+                           const Matrix<U>    &lhs,
+                           const TransposeOf_ &,
+                           const Matrix<V>    &rhs,
+                           Antelope::Caddy<W> &xma,
+                           Driver             &driver)
+            {
+                typedef void (*PROC)(T &, const W &);
+                static PROC proc = Ops<T,W>::Sub;
+
+                assert(tgt.rows==lhs.rows);
+                assert(tgt.cols==rhs.rows);
+                assert(lhs.cols==rhs.cols);
+
+                driver.setup(tgt);                                                             // parallel tiles of target
+                driver.in2D.link(xma.make(driver.in2D.size(),lhs.cols));                       // one xadd per tile
+                volatile Driver::Unlink2D willUnlink(driver.in2D);                             // cleanup anyhow
+                driver.in2D(Parallel::MatMulRightTransposeOp<T,U,V,W,PROC>,tgt,lhs,rhs,proc);  // call
+            }
+
+
 
             namespace Parallel
             {

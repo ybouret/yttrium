@@ -73,7 +73,6 @@ Y_UTEST(tao3)
 
         }
 
-#if 0
         std::cerr << std::endl;
         std::cerr << "MatMul/Transpose" << std::endl;
         {
@@ -99,6 +98,7 @@ Y_UTEST(tao3)
             Y_CHECK(partgt==target);
         }
 
+#if 0
         std::cerr << std::endl;
         std::cerr << "DiagMatMul" << std::endl;
         {
