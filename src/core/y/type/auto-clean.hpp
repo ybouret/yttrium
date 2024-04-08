@@ -49,10 +49,12 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! convert types to anonymous
-            template <typename HOST, typename METH>
-            inline  Args(HOST &userHost, METH hostMeth)  noexcept :
+            template <typename HOST>
+            inline  Args(HOST &userHost, void (HOST::*hostMeth)(void) )  noexcept :
             host( &userHost ), meth( 0 )
             {
+                typedef void (HOST::*METH)(void);
+
                 Y_STATIC_CHECK(sizeof(METH)==sizeof(Meth),BadMethodSize);
                 // transmogrify method
                 union
