@@ -28,21 +28,21 @@ namespace Yttrium
             namespace Parallel
             {
 
-                
+                template <typename TARGET, typename SOURCE>
+                struct LoadOp {
+                    TARGET &target;
+                    SOURCE &source;
+                    inline void operator()(const size_t i)
+                    {
+                        target[i] = source[i];
+                    }
+                };
+
                 //! load on range
                 template <typename TARGET, typename SOURCE> inline
                 void Load(Driver1D &range, TARGET &target, SOURCE &source)
                 {
-                    struct Op 
-                    {
-                        TARGET &target;
-                        SOURCE &source;
-                        inline void operator()(const size_t i)
-                        {
-                            target[i] = source[i];
-                        }
-                    };
-                    Op op = { target, source };
+                    LoadOp<TARGET,SOURCE> op = { target, source };
                     range->sweep(op);
                 }
 
