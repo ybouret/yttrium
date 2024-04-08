@@ -153,9 +153,9 @@ namespace
 
         inline virtual ~X2D() noexcept {}
 
-        inline void link(XNode *xn)
+        inline void link(XNode &xn)
         {
-            Coerce(node) = xn;
+            Coerce(node) = &xn;
         }
 
         inline void unlink() noexcept
@@ -253,6 +253,10 @@ Y_UTEST(concurrent_simtx)
         seq.assign(lower,upper);
         par.assign(lower,upper);
 
+        xls.make(seq.size());
+        par.unlink();
+        par.link(xls.head);
+        
         std::cerr << "-- Testing 0-arg" << std::endl;
         seq(In2D0);
         par(In2D0);
