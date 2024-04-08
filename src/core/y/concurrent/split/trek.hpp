@@ -76,7 +76,6 @@ namespace Yttrium
             family(Qualify(update))
             {
                 assert(0!=update);
-
             }
 
             //! default setup empty
