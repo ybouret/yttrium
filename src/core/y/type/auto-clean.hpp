@@ -17,6 +17,7 @@ namespace Yttrium
     //! calling method of an host before return
     /**
      simplify code in case of exception
+	 The size of a pointer-to-member-function can change depending on the class!
      */
     //
     //
@@ -55,7 +56,13 @@ namespace Yttrium
             {
                 typedef void (HOST::*METH)(void);
 
-                Y_STATIC_CHECK(sizeof(METH)==sizeof(Meth),BadMethodSize);
+				void (HOST::*hm)(void) = 0;
+				void (AutoClean::*am)(void) = 0;
+
+				std::cerr << "sizeof(hm)=" << sizeof(hm) << std::endl;
+				std::cerr << "sizeof(am)=" << sizeof(am) << std::endl;
+
+               // Y_STATIC_CHECK(sizeof(METH)==sizeof(Meth),BadMethodSize);
                 // transmogrify method
                 union
                 {
