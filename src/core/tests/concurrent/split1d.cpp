@@ -1,5 +1,5 @@
 
-#include "y/concurrent/split/for-loop.hpp"
+#include "y/concurrent/split/trek.hpp"
 #include "y/text/ascii/convert.hpp"
 #include "y/utest/run.hpp"
 

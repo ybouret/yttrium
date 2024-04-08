@@ -7,7 +7,7 @@
 #include "y/memory/wad.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/mkl/v2d.hpp"
-#include "y/concurrent/split/for-loop.hpp"
+#include "y/concurrent/split/trek.hpp"
 #include "y/type/utils.hpp"
 #include "y/type/proxy.hpp"
 #include "y/object.hpp"

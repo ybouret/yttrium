@@ -1,7 +1,7 @@
 #include "y/concurrent/loop/mono.hpp"
 #include "y/concurrent/loop/crew.hpp"
 #include "y/concurrent/thread.hpp"
-#include "y/concurrent/split/for-loop.hpp"
+#include "y/concurrent/split/trek.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/utils.hpp"
 #include "y/sequence/vector.hpp"

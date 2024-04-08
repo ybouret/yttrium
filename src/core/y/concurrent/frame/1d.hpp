@@ -3,7 +3,7 @@
 #ifndef Y_CONCURRENT_FRAME1D_INCLUDED
 #define Y_CONCURRENT_FRAME1D_INCLUDED 1
 
-#include "y/concurrent/split/for-loop.hpp"
+#include "y/concurrent/split/trek.hpp"
 #include "y/concurrent/frame/interface.hpp"
 #include "y/ptr/bare.hpp"
 
