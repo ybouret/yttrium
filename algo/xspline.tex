@@ -30,12 +30,12 @@ The curvature is:
 \section{Cubic Splines}
 
 \subsection{Linear Interpolation}
-Let $\vec{y}_1,\ldots,\vec{y}_{N}$ be $N$ points at $t_1<\ldots<t_N$.
+Let $\vec{P}_1,\ldots,\vec{P}_{N}$ be $N$ points at $t_1<\ldots<t_N$.
 The linear interpolation gives:
 \begin{equation}
 \left\lbrace
 \begin{array}{rcl}
-	\vec{y} & = & A \, \vec{y}_i + B \, \vec{y}_{i+1} \\
+	\vec{P} & = & A \, \vec{P}_i + B \, \vec{P}_{i+1} \\
 	\\
 	A & = & \dfrac{t_{i+1}-t}{t_{i+1}-t_i}, \; A(t_i) = 1,\;A(t_{i+1})=0\\
 	\\
@@ -52,7 +52,7 @@ The linear interpolation gives:
 \begin{equation}
 \left\lbrace
 \begin{array}{rcl}
-	\vec{y}   & = & A \, \vec{y}_i + B \, \vec{y}_{i+1} + C \, \vec{y}_i'' + D \, \vec{y}_{i+1}''\\
+	\vec{P}   & = & A \, \vec{P}_i + B \, \vec{P}_{i+1} + C \, \vec{P}_i'' + D \, \vec{P}_{i+1}''\\
 	\\
 	C & = & \frac{1}{6} \left(A^3 - A\right) (t_{i+1}-t_i)^2\\
 	\\
@@ -62,61 +62,61 @@ The linear interpolation gives:
 \end{equation}
 
 \begin{equation}
-	\vec{y}' = \dfrac{1}{t_{i+1}-t_i} \left(\vec{y}_{i+1}-\vec{y}_i\right) 
-	- \dfrac{3A^2-1}{6} (t_{i+1}-t_i) \vec{y}_i''
-	+ \dfrac{3B^2-1}{6} (t_{i+1}-t_i) \vec{y}_{i+1}''
+	\vec{P}' = \dfrac{1}{t_{i+1}-t_i} \left(\vec{P}_{i+1}-\vec{P}_i\right) 
+	- \dfrac{3A^2-1}{6} (t_{i+1}-t_i) \vec{P}_i''
+	+ \dfrac{3B^2-1}{6} (t_{i+1}-t_i) \vec{P}_{i+1}''
 \end{equation}	
 
 
 \begin{equation}
-	\vec{y}'' = A \vec{y}_i'' + B \vec{y}_{i+1}''
+	\vec{P}'' = A \vec{P}_i'' + B \vec{P}_{i+1}''
 \end{equation}
 
 The first derivative continuity yields $\forall 2\leq i \leq N-1$:
 \begin{equation}
- 	\dfrac{t_{i}-t_{i-1}}{6} \vec{y}_{i-1}'' + 
-	\dfrac{t_{i+1}-t_{i-1}}{3} \vec{y}_i''
-	+\dfrac{t_{i+1}-t_{i}}{6} \vec{y}_{i+1}''  = 
-	\dfrac{1}{t_{i+1}-t_i} \left( \vec{y}_{i+1} - \vec{y}_{i} \right) -
-	\dfrac{1}{t_{i}-t_{i-1}} \left( \vec{y}_i - \vec{y}_{i-1} \right) 
+ 	\dfrac{t_{i}-t_{i-1}}{6} \vec{P}_{i-1}'' + 
+	\dfrac{t_{i+1}-t_{i-1}}{3} \vec{P}_i''
+	+\dfrac{t_{i+1}-t_{i}}{6} \vec{P}_{i+1}''  = 
+	\dfrac{1}{t_{i+1}-t_i} \left( \vec{P}_{i+1} - \vec{P}_{i} \right) -
+	\dfrac{1}{t_{i}-t_{i-1}} \left( \vec{P}_i - \vec{P}_{i-1} \right) 
 \end{equation}
 
 
 \subsubsection{Linear Case}
 The boundary conditions may be natural or with fixed first derivatives.
 \begin{itemize}
-\item At $\vec{y}_1$:
+\item At $\vec{P}_1$:
 \begin{equation}
-	\vec{y}_1'' = \vec{0} 
+	\vec{P}_1'' = \vec{0} 
 \end{equation}
 or
 \begin{equation}
-\vec{y}'_1 = \dfrac{1}{t_{2}-t_1} \left(\vec{y}_{2}-\vec{y}_1\right) 
-	- \dfrac{3A(t_1)^2-1}{6} (t_{2}-t_1) \vec{y}_1''
-	+ \dfrac{3B(t_1)^2-1}{6} (t_{2}-t_1) \vec{y}_{2}''
+\vec{P}'_1 = \dfrac{1}{t_{2}-t_1} \left(\vec{P}_{2}-\vec{P}_1\right) 
+	- \dfrac{3A(t_1)^2-1}{6} (t_{2}-t_1) \vec{P}_1''
+	+ \dfrac{3B(t_1)^2-1}{6} (t_{2}-t_1) \vec{P}_{2}''
 \end{equation}
 and with $A(t_1)=1,\,B(t_1)=0$:
 \begin{equation}
-\vec{y}'_1  = \dfrac{1}{t_{2}-t_1} \left(\vec{y}_{2}-\vec{y}_1\right) 
-	+ \dfrac{1}{3} (t_{2}-t_1) \vec{y}_1''
-	- \dfrac{1}{6} (t_{2}-t_1) \vec{y}_{2}''
+\vec{P}'_1  = \dfrac{1}{t_{2}-t_1} \left(\vec{P}_{2}-\vec{P}_1\right) 
+	+ \dfrac{1}{3} (t_{2}-t_1) \vec{P}_1''
+	- \dfrac{1}{6} (t_{2}-t_1) \vec{P}_{2}''
 \end{equation}
  
-\item At $\vec{y}_N$:
+\item At $\vec{P}_N$:
 \begin{equation}
-	\vec{y}_N'' = \vec{0} 
+	\vec{P}_N'' = \vec{0} 
 \end{equation}
 or
 \begin{equation}
-\vec{y}_N' = \dfrac{1}{t_{N}-t_{N-1}} \left(\vec{y}_{N}-\vec{y}_{N-1}\right) 
-	- \dfrac{3A^2-1}{6} (t_{N}-t_{N-1}) \vec{y}_{N-1}''
-	+ \dfrac{3B^2-1}{6} (t_{N}-t_{N-1}) \vec{y}_{N}''
+\vec{P}_N' = \dfrac{1}{t_{N}-t_{N-1}} \left(\vec{P}_{N}-\vec{P}_{N-1}\right) 
+	- \dfrac{3A^2-1}{6} (t_{N}-t_{N-1}) \vec{P}_{N-1}''
+	+ \dfrac{3B^2-1}{6} (t_{N}-t_{N-1}) \vec{P}_{N}''
 \end{equation}
 and with $A(t_N)=0,\,B(t_N)=1$:
 \begin{equation}
-	\vec{y}_N' =  \dfrac{1}{t_{N}-t_{N-1}} \left(\vec{y}_{N}-\vec{y}_{N-1}\right) 
-	+ \dfrac{1}{6} (t_{N}-t_{N-1}) \vec{y}_{N-1}''
-	+ \dfrac{1}{3} (t_{N}-t_{N-1}) \vec{y}_{N}''
+	\vec{P}_N' =  \dfrac{1}{t_{N}-t_{N-1}} \left(\vec{P}_{N}-\vec{P}_{N-1}\right) 
+	+ \dfrac{1}{6} (t_{N}-t_{N-1}) \vec{P}_{N-1}''
+	+ \dfrac{1}{3} (t_{N}-t_{N-1}) \vec{P}_{N}''
 \end{equation}
 \end{itemize}
 
@@ -124,22 +124,54 @@ and with $A(t_N)=0,\,B(t_N)=1$:
 \begin{itemize}
 \item We need to define $t_{0}$ to write:
 \begin{equation}
- 	\dfrac{t_{1}-t_{0}}{6} \vec{y}_{N}'' + 
-	\dfrac{t_{2}-t_{0}}{3} \vec{y}_1''
-	+\dfrac{t_{2}-t_{1}}{6} \vec{y}_{2}''  = 
-	\dfrac{1}{t_{2}-t_1}   \left( \vec{y}_{2} - \vec{y}_{1} \right) -
-	\dfrac{1}{t_{1}-t_{0}}  \left( \vec{y}_1 - \vec{y}_{0} \right) 
+ 	\dfrac{t_{1}-t_{0}}{6} \vec{P}_{N}'' + 
+	\dfrac{t_{2}-t_{0}}{3} \vec{P}_1''
+	+\dfrac{t_{2}-t_{1}}{6} \vec{P}_{2}''  = 
+	\dfrac{1}{t_{2}-t_1}   \left( \vec{P}_{2} - \vec{P}_{1} \right) -
+	\dfrac{1}{t_{1}-t_{0}}  \left( \vec{P}_1 - \vec{P}_{N} \right) 
 \end{equation}
 
 \item We need to define $t_{N+1}$ to write:
 \begin{equation}
- 	\dfrac{t_{N}-t_{N-1}}{6} \vec{y}_{N-1}'' + 
-	\dfrac{t_{N+1}-t_{N-1}}{3} \vec{y}_i''
-	+\dfrac{t_{N+1}-t_{N}}{6} \vec{y}_{1}''  = 
-	\dfrac{1}{t_{N+1}-t_N}   \left( \vec{y}_{1} - \vec{y}_{N} \right) -
-	\dfrac{1}{t_{N}-t_{N-1}} \left( \vec{y}_N - \vec{y}_{N-1} \right) 
+ 	\dfrac{t_{N}-t_{N-1}}{6} \vec{P}_{N-1}'' + 
+	\dfrac{t_{N+1}-t_{N-1}}{3} \vec{P}_i''
+	+\dfrac{t_{N+1}-t_{N}}{6} \vec{P}_{1}''  = 
+	\dfrac{1}{t_{N+1}-t_N}   \left( \vec{P}_{1} - \vec{P}_{N} \right) -
+	\dfrac{1}{t_{N}-t_{N-1}} \left( \vec{P}_N - \vec{P}_{N-1} \right) 
 \end{equation}
 
 \end{itemize}
+
+\subsection{Cyclic 2D unit-Spline}
+
+We use $t_i=i$:
+
+\begin{equation}
+\begin{bmatrix}
+2/3 & 1/6 &   &   & 1/6 \\
+\ddots & \ddots & \ddots &   &   \\
+  & 1/6 & 2/3 & 1/6 &  \\
+  &   & \ddots & \ddots & \ddots\\
+1/6 &   &   & 1/6 & 2/3\\
+\end{bmatrix}
+\begin{bmatrix}
+\vec{P}_1''\\
+\vdots\\
+\vec{P}_i''\\
+\vdots\\
+\vec{P}_N\\
+\end{bmatrix}
+=
+\begin{bmatrix}
+\vec{P}_N - 2\vec{P}_1 + \vec{P}_2\\
+\vdots \\
+\vec{P}_{i-1} - 2\vec{P}_i + \vec{P}_{i+1} \\
+\vdots\\
+\vec{P}_{N-1} - 2\vec{P}_N + \vec{P}_1\\
+\end{bmatrix}
+\end{equation}
+
+
+
 
 \end{document}
