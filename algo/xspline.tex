@@ -62,9 +62,9 @@ The linear interpolation gives:
 \end{equation}
 
 \begin{equation}
-	\vec{y}' = \dfrac{1}{t_{j+1}-t_j} \left(\vec{y}_{i+1}-\vec{y}_i\right) 
-	- \dfrac{3A^2-1}{6} (t_{j+1}-t_j) \vec{y}_i''
-	+ \dfrac{3B^2-1}{6} (t_{j+1}-t_j) \vec{y}_{i+1}''
+	\vec{y}' = \dfrac{1}{t_{i+1}-t_i} \left(\vec{y}_{i+1}-\vec{y}_i\right) 
+	- \dfrac{3A^2-1}{6} (t_{i+1}-t_i) \vec{y}_i''
+	+ \dfrac{3B^2-1}{6} (t_{i+1}-t_i) \vec{y}_{i+1}''
 \end{equation}	
 
 
@@ -87,7 +87,19 @@ The boundary conditions may be natural or with fixed first derivatives.
 \begin{itemize}
 \item At $\vec{y}_1$:
 \begin{equation}
-	\vec{y}_1'' = \vec{0} \text{ or } 
+	\vec{y}_1'' = \vec{0} 
+\end{equation}
+or
+\begin{equation}
+\vec{y}'_1 = \dfrac{1}{t_{2}-t_1} \left(\vec{y}_{2}-\vec{y}_1\right) 
+	- \dfrac{3A(t_1)^2-1}{6} (t_{2}-t_1) \vec{y}_1''
+	+ \dfrac{3B(t_1)^2-1}{6} (t_{2}-t_1) \vec{y}_{2}''
+\end{equation}
+and with $A(t_1)=1,\,B(t_1)=0$:
+\begin{equation}
+\vec{y}'_1  = \dfrac{1}{t_{2}-t_1} \left(\vec{y}_{2}-\vec{y}_1\right) 
+	+ \dfrac{1}{3} (t_{2}-t_1) \vec{y}_1''
+	- \dfrac{1}{6} (t_{2}-t_1) \vec{y}_{2}''
 \end{equation}
 \end{itemize}
 

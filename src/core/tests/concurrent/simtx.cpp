@@ -253,7 +253,7 @@ Y_UTEST(concurrent_simtx)
         seq.assign(lower,upper);
         par.assign(lower,upper);
 
-        xls.make(seq.size());
+        xls.make(par.size());
         par.unlink();
         par.link(xls.head);
         
