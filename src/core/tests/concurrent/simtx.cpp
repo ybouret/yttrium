@@ -220,19 +220,24 @@ Y_UTEST(concurrent_simtx)
         Vector<int> v(10,0);
         for(int i=10;i>0;--i) v[i] = i;
 
+        std::cerr << "\tseq..." << std::endl;
         {
             xls.make(seq.size());
             const Concurrent::SIMT<X1D>::AutoUnlink keep(seq);
+            Y_ASSERT(xls.size>=seq.size());
             seq.link(xls.head);
             seq(DoSomething1,v);
         }
 
+        std::cerr << "\tpar..." << std::endl;
         {
             xls.make(par.size());
+            Y_ASSERT(xls.size>=par.size());
             const Concurrent::SIMT<X1D>::AutoUnlink keep(par);
             par.link(xls.head);
             par(DoSomething1,v);
         }
+        std::cerr << "\tdone!" << std::endl;
         std::cerr << std::endl;
     }
 
@@ -254,7 +259,7 @@ Y_UTEST(concurrent_simtx)
         par.assign(lower,upper);
 
         xls.make(par.size());
-        par.unlink();
+
         par.link(xls.head);
         
         std::cerr << "-- Testing 0-arg" << std::endl;

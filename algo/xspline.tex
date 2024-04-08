@@ -101,8 +101,45 @@ and with $A(t_1)=1,\,B(t_1)=0$:
 	+ \dfrac{1}{3} (t_{2}-t_1) \vec{y}_1''
 	- \dfrac{1}{6} (t_{2}-t_1) \vec{y}_{2}''
 \end{equation}
+ 
+\item At $\vec{y}_N$:
+\begin{equation}
+	\vec{y}_N'' = \vec{0} 
+\end{equation}
+or
+\begin{equation}
+\vec{y}_N' = \dfrac{1}{t_{N}-t_{N-1}} \left(\vec{y}_{N}-\vec{y}_{N-1}\right) 
+	- \dfrac{3A^2-1}{6} (t_{N}-t_{N-1}) \vec{y}_{N-1}''
+	+ \dfrac{3B^2-1}{6} (t_{N}-t_{N-1}) \vec{y}_{N}''
+\end{equation}
+and with $A(t_N)=0,\,B(t_N)=1$:
+\begin{equation}
+	\vec{y}_N' =  \dfrac{1}{t_{N}-t_{N-1}} \left(\vec{y}_{N}-\vec{y}_{N-1}\right) 
+	+ \dfrac{1}{6} (t_{N}-t_{N-1}) \vec{y}_{N-1}''
+	+ \dfrac{1}{3} (t_{N}-t_{N-1}) \vec{y}_{N}''
+\end{equation}
 \end{itemize}
 
+\subsubsection{Cyclic Case}
+\begin{itemize}
+\item We need to define $t_{0}$ to write:
+\begin{equation}
+ 	\dfrac{t_{1}-t_{0}}{6} \vec{y}_{N}'' + 
+	\dfrac{t_{2}-t_{0}}{3} \vec{y}_1''
+	+\dfrac{t_{2}-t_{1}}{6} \vec{y}_{2}''  = 
+	\dfrac{1}{t_{2}-t_1}   \left( \vec{y}_{2} - \vec{y}_{1} \right) -
+	\dfrac{1}{t_{1}-t_{0}}  \left( \vec{y}_1 - \vec{y}_{0} \right) 
+\end{equation}
 
+\item We need to define $t_{N+1}$ to write:
+\begin{equation}
+ 	\dfrac{t_{N}-t_{N-1}}{6} \vec{y}_{N-1}'' + 
+	\dfrac{t_{N+1}-t_{N-1}}{3} \vec{y}_i''
+	+\dfrac{t_{N+1}-t_{N}}{6} \vec{y}_{1}''  = 
+	\dfrac{1}{t_{N+1}-t_N}   \left( \vec{y}_{1} - \vec{y}_{N} \right) -
+	\dfrac{1}{t_{N}-t_{N-1}} \left( \vec{y}_N - \vec{y}_{N-1} \right) 
+\end{equation}
+
+\end{itemize}
 
 \end{document}
