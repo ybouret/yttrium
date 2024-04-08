@@ -28,7 +28,8 @@ namespace Yttrium
             namespace Parallel
             {
 
-                template <typename TARGET, typename SOURCE> struct LoadOp
+                //! Load/Save kernel
+                template <typename TARGET, typename SOURCE> struct LoadKernel
                 {
                     TARGET &target;
                     SOURCE &source;
@@ -42,7 +43,7 @@ namespace Yttrium
                 template <typename TARGET, typename SOURCE> inline
                 void Load(Driver1D &range, TARGET &target, SOURCE &source)
                 {
-                    LoadOp<TARGET,SOURCE> op = { target, source };
+                    LoadKernel<TARGET,SOURCE> op = { target, source };
                     range->sweep(op);
                 }
 
@@ -84,9 +85,10 @@ namespace Yttrium
             namespace Parallel
             {
 
+                //! binary ops kernel
                 template <typename TARGET, typename SOURCE, typename PROC>
-                struct BinaryOp
-                { 
+                struct BinaryKernel
+                {
                     TARGET &target;
                     SOURCE &source;
                     PROC   &proc;
@@ -103,7 +105,7 @@ namespace Yttrium
                 template <typename TARGET, typename SOURCE, typename PROC> inline
                 void Binary(Driver1D &range, TARGET &target, SOURCE &source, PROC &proc)
                 {
-                    BinaryOp<TARGET,SOURCE,PROC>  op = { target, source, proc };
+                    BinaryKernel<TARGET,SOURCE,PROC>  op = { target, source, proc };
                     range->sweep(op);
                 };
 
@@ -150,8 +152,9 @@ namespace Yttrium
             namespace Parallel
             {
 
+                //! ternary ops kernel
                 template <typename TARGET, typename FACTOR, typename SOURCE, typename PROC>
-                struct TernaryOp
+                struct TernaryKernel
                 {
                     TARGET       &target;
                     const FACTOR &factor;
@@ -172,7 +175,7 @@ namespace Yttrium
                 template <typename TARGET, typename FACTOR, typename SOURCE, typename PROC> inline
                 void Ternary(Driver1D &range, TARGET &target, const FACTOR &factor, SOURCE &source, PROC &proc)
                 {
-                    TernaryOp<TARGET,FACTOR,SOURCE,PROC> op = { target, factor, source, proc };
+                    TernaryKernel<TARGET,FACTOR,SOURCE,PROC> op = { target, factor, source, proc };
                     range->sweep(op);
                 };
             }
@@ -240,7 +243,7 @@ namespace Yttrium
             {
 
                 template <typename TARGET,  typename SOURCE, typename FACTOR, typename VECTOR, typename PROC>
-                struct QuaternaryOp
+                struct QuaternaryKernel
                 {
                     TARGET       &target;
                     SOURCE       &source;
@@ -263,7 +266,7 @@ namespace Yttrium
                 template <typename TARGET,  typename SOURCE, typename FACTOR, typename VECTOR, typename PROC> inline
                 void Quaternary(Driver1D &range, TARGET &target,  SOURCE &source, const FACTOR &factor, VECTOR &vector, PROC &proc )
                 {
-                    QuaternaryOp<TARGET,SOURCE,FACTOR,VECTOR,PROC> op = { target, source, factor, vector, proc };
+                    QuaternaryKernel<TARGET,SOURCE,FACTOR,VECTOR,PROC> op = { target, source, factor, vector, proc };
                     range->sweep(op);
                 };
 

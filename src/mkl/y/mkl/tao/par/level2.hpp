@@ -19,7 +19,7 @@ namespace Yttrium
             namespace Parallel
             {
                 template <typename TARGET, typename T, typename SOURCE, typename U, typename PROC>
-                struct MulInfo
+                struct MulKernel
                 {
                     TARGET           &target;
                     const Matrix<T>  &M;
@@ -39,7 +39,7 @@ namespace Yttrium
                 template <typename TARGET, typename T, typename SOURCE, typename U, typename PROC> inline
                 void Mul(Driver1D &range, TARGET &target, const Matrix<T> &M, SOURCE &source, PROC &proc)
                 {
-                    MulInfo<TARGET,T,SOURCE,U,PROC> op = { target, M, source, proc, range.xadd<U>() };
+                    MulKernel<TARGET,T,SOURCE,U,PROC> op = { target, M, source, proc, range.xadd<U>() };
                     range->sweep(op);
                 }
             }

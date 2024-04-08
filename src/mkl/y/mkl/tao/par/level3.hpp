@@ -282,8 +282,9 @@ namespace Yttrium
             namespace Parallel
             {
 
+                //! diagonal * matrix kernel
                 template <typename T, typename ARRAY, typename V, typename PROC>
-                struct DiagMatMulInfo
+                struct DiagMatMulKernel
                 {
                     Matrix<T>       &tgt;
                     ARRAY           &lhs;
@@ -318,7 +319,7 @@ namespace Yttrium
                     assert( tgt.rows == lhs.size() );
                     assert( tgt.cols == rhs.cols   );
 
-                    DiagMatMulInfo<T,ARRAY,V,PROC> op = { tgt, lhs, rhs, proc };
+                    DiagMatMulKernel<T,ARRAY,V,PROC> op = { tgt, lhs, rhs, proc };
                     range->sweep(op);
 
                 }
