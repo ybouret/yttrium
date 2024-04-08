@@ -149,6 +149,22 @@ namespace Yttrium
         {
             namespace Parallel
             {
+
+                template <typename TARGET, typename FACTOR, typename SOURCE, typename PROC>
+                struct TernaryOp
+                {
+                    TARGET       &target;
+                    const FACTOR &factor;
+                    SOURCE       &source;
+                    PROC         &proc;
+                    inline void operator()(const size_t i)
+                    {
+                        typedef typename TARGET::Type TGT;
+                        const TGT rhs = Transmogrify<TGT>::Product(factor,source[i]);
+                        proc(target[i],rhs);
+                    }
+                };
+
                 //______________________________________________________________
                 //
                 //! call proc(target[i],factor*source[i])
@@ -156,21 +172,7 @@ namespace Yttrium
                 template <typename TARGET, typename FACTOR, typename SOURCE, typename PROC> inline
                 void Ternary(Driver1D &range, TARGET &target, const FACTOR &factor, SOURCE &source, PROC &proc)
                 {
-                    typedef typename TARGET::Type TGT;
-                    struct Op
-                    {
-                        TARGET       &target;
-                        const FACTOR &factor;
-                        SOURCE       &source;
-                        PROC         &proc;
-                        inline void operator()(const size_t i)
-                        {
-                            const TGT rhs = Transmogrify<TGT>::Product(factor,source[i]);
-                            proc(target[i],rhs);
-                        }
-                    };
-
-                    Op op = { target, factor, source, proc };
+                    TernaryOp<TARGET,FACTOR,SOURCE,PROC> op = { target, factor, source, proc };
                     range->sweep(op);
                 };
             }
