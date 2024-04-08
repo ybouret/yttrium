@@ -282,6 +282,31 @@ namespace Yttrium
             namespace Parallel
             {
 
+                template <typename T, typename ARRAY, typename V, typename PROC>
+                struct DiagMatMulInfo
+                {
+                    Matrix<T>       &tgt;
+                    ARRAY           &lhs;
+                    const Matrix<V> &rhs;
+                    PROC            &proc;
+
+                    inline void operator()(const size_t i)
+                    { 
+                        typedef typename ARRAY::Type U;
+                        typedef To<T,U>              U2T;
+                        typename U2T::ReturnType lambda = U2T::Get(lhs[i]);
+                        Writable<T>            & tgt_i  = tgt[i];
+                        const Readable<V>      & rhs_i  = rhs[i];
+                        const size_t              ncol  = tgt.cols;
+
+                        for(size_t j=ncol;j>0;--j)
+                        {
+                            const T res = lambda * To<T,V>::Get(rhs_i[j]);
+                            proc(tgt_i[j],res);
+                        }
+                    }
+                };
+
                 //! fill rows of range with proc
                 template <typename T, typename ARRAY, typename V, typename PROC>
                 void DiagMatMulOp(Driver1D        &range,
@@ -293,32 +318,7 @@ namespace Yttrium
                     assert( tgt.rows == lhs.size() );
                     assert( tgt.cols == rhs.cols   );
 
-                    typedef typename ARRAY::Type U;
-                    typedef To<T,U>              U2T;
-
-                    struct Op
-                    {
-                        Matrix<T>       &tgt;
-                        ARRAY           &lhs;
-                        const Matrix<V> &rhs;
-                        PROC            &proc;
-
-                        inline void operator()(const size_t i)
-                        {
-                            typename U2T::ReturnType lambda = U2T::Get(lhs[i]);
-                            Writable<T>            & tgt_i  = tgt[i];
-                            const Readable<V>      & rhs_i  = rhs[i];
-                            const size_t              ncol  = tgt.cols;
-
-                            for(size_t j=ncol;j>0;--j)
-                            {
-                                const T res = lambda * To<T,V>::Get(rhs_i[j]);
-                                proc(tgt_i[j],res);
-                            }
-                        }
-                    };
-
-                    Op op = { tgt, lhs, rhs, proc };
+                    DiagMatMulInfo<T,ARRAY,V,PROC> op = { tgt, lhs, rhs, proc };
                     range->sweep(op);
 
                 }
