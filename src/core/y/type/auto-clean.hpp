@@ -4,6 +4,8 @@
 #define Y_Type_AutoClean_Included 1
 
 #include "y/config/starting.hpp"
+#include "y/check/static.hpp"
+#include <iostream>
 
 namespace Yttrium
 {
@@ -51,6 +53,7 @@ namespace Yttrium
             inline  Args(HOST &userHost, METH hostMeth)  noexcept :
             host( &userHost ), meth( 0 )
             {
+                Y_STATIC_CHECK(sizeof(METH)==sizeof(Meth),BadMethodSize);
                 // transmogrify method
                 union
                 {
@@ -58,6 +61,9 @@ namespace Yttrium
                     Meth mine;
                 } alias = { hostMeth };
                 meth = alias.mine;
+
+
+                std::cerr << "alias.user=" << alias.user << "/" << meth << " sizeof=" << sizeof(Meth) << std::endl;
             }
 
             //! cleanup
