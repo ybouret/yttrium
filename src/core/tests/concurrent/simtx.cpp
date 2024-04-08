@@ -263,6 +263,7 @@ Y_UTEST(concurrent_simtx)
 
         xls.make(par.size());
 
+        const Concurrent::SIMT<X2D>::AutoUnlink willUnlink(par);
         par.link(xls.head);
         
         std::cerr << "-- Testing 0-arg" << std::endl;
