@@ -11,6 +11,8 @@
   	 
 \begin{document}
 
+\section{Three Points}
+
 Let $\vec{A}, \vec{B}, \vec{C}$ be three points on an arc.
 If $a,b,c$ are the length of the segments, then the semi-perimeter $s$ is:
 \begin{equation}
@@ -24,6 +26,70 @@ The curvature is:
 \begin{equation}
 	\kappa = \dfrac{\sqrt{(a+b+c)(a+b-c)(a-b+c)(-a+b+c)}}{abc}
 \end{equation}
+
+\section{Cubic Splines}
+
+\subsection{Linear Interpolation}
+Let $\vec{y}_1,\ldots,\vec{y}_{N}$ be $N$ points at $t_1<\ldots<t_N$.
+The linear interpolation gives:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\vec{y} & = & A \, \vec{y}_i + B \, \vec{y}_{i+1} \\
+	\\
+	A & = & \dfrac{t_{i+1}-t}{t_{i+1}-t_i}, \; A(t_i) = 1,\;A(t_{i+1})=0\\
+	\\
+	B & = & \dfrac{t-t_i}{t_{i+1}-t_i}, \; B(t_i) = 0,\;B(t_{i+1})=1\\
+	\end{array}
+\right.
+\end{equation}
+
+
+\subsection{Cubic Interpolation}
+
+\subsubsection{Generic Case}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\vec{y}   & = & A \, \vec{y}_i + B \, \vec{y}_{i+1} + C \, \vec{y}_i'' + D \, \vec{y}_{i+1}''\\
+	\\
+	C & = & \frac{1}{6} \left(A^3 - A\right) (t_{i+1}-t_i)^2\\
+	\\
+	D & = & \frac{1}{6} \left(B^3 - B\right) (t_{i+1}-t_i)^2\\
+\end{array}
+\right.
+\end{equation}
+
+\begin{equation}
+	\vec{y}' = \dfrac{1}{t_{j+1}-t_j} \left(\vec{y}_{i+1}-\vec{y}_i\right) 
+	- \dfrac{3A^2-1}{6} (t_{j+1}-t_j) \vec{y}_i''
+	+ \dfrac{3B^2-1}{6} (t_{j+1}-t_j) \vec{y}_{i+1}''
+\end{equation}	
+
+
+\begin{equation}
+	\vec{y}'' = A \vec{y}_i'' + B \vec{y}_{i+1}''
+\end{equation}
+
+The first derivative continuity yields $\forall 2\leq i \leq N-1$:
+\begin{equation}
+ 	\dfrac{t_{i}-t_{i-1}}{6} \vec{y}_{i-1}'' + 
+	\dfrac{t_{i+1}-t_{i-1}}{3} \vec{y}_i''
+	+\dfrac{t_{i+1}-t_{i}}{6} \vec{y}_{i+1}''  = 
+	\dfrac{1}{t_{i+1}-t_i} \left( \vec{y}_{i+1} - \vec{y}_{i} \right) -
+	\dfrac{1}{t_{i}-t_{i-1}} \left( \vec{y}_i - \vec{y}_{i-1} \right) 
+\end{equation}
+
+
+\subsubsection{Linear Case}
+The boundary conditions may be natural or with fixed first derivatives.
+\begin{itemize}
+\item At $\vec{y}_1$:
+\begin{equation}
+	\vec{y}_1'' = \vec{0} \text{ or } 
+\end{equation}
+\end{itemize}
 
 
 
