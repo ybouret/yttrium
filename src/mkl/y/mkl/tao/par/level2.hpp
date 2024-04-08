@@ -18,28 +18,28 @@ namespace Yttrium
 
             namespace Parallel
             {
+                template <typename TARGET, typename T, typename SOURCE, typename U, typename PROC>
+                struct MulInfo
+                {
+                    TARGET           &target;
+                    const Matrix<T>  &M;
+                    SOURCE           &source;
+                    PROC             &proc;
+                    Antelope::Add<U> &xadd;
+
+                    inline void operator()(const size_t row)
+                    {
+                        assert(xadd.isEmpty());
+                        const U result = DotProduct<U>::Of_(M[row],source,xadd);
+                        proc(target[row],result);
+                    }
+                };
+
                 //! Mul on range
                 template <typename TARGET, typename T, typename SOURCE, typename U, typename PROC> inline
                 void Mul(Driver1D &range, TARGET &target, const Matrix<T> &M, SOURCE &source, PROC &proc)
                 {
-
-                    struct Op
-                    {
-                        TARGET           &target;
-                        const Matrix<T>  &M;
-                        SOURCE           &source;
-                        PROC             &proc;
-                        Antelope::Add<U> &xadd;
-
-                        inline void operator()(const size_t row)
-                        {
-                            assert(xadd.isEmpty());
-                            const U result = DotProduct<U>::Of_(M[row],source,xadd);
-                            proc(target[row],result);
-                        }
-                    };
-
-                    Op op = { target, M, source, proc, range.xadd<U>() };
+                    MulInfo<TARGET,T,SOURCE,U,PROC> op = { target, M, source, proc, range.xadd<U>() };
                     range->sweep(op);
                 }
             }
