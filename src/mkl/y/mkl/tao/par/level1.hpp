@@ -238,6 +238,24 @@ namespace Yttrium
         {
             namespace Parallel
             {
+
+                template <typename TARGET,  typename SOURCE, typename FACTOR, typename VECTOR, typename PROC>
+                struct QuaternaryOp
+                {
+                    TARGET       &target;
+                    SOURCE       &source;
+                    const FACTOR &factor;
+                    VECTOR       &vector;
+                    PROC         &proc;
+                    inline void operator()(const size_t i)
+                    {
+                        typedef typename TARGET::Type TGT;
+                        typedef typename SOURCE::Type SRC;
+                        const TGT rhs = Transmogrify<TGT>::Product(factor,vector[i]);
+                        proc(target[i]=To<TGT,SRC>::Get(source[i]),rhs);
+                    }
+                };
+
                 //______________________________________________________________
                 //
                 //! call target[i] = proc(source[i],factor*vector[i])
@@ -245,24 +263,7 @@ namespace Yttrium
                 template <typename TARGET,  typename SOURCE, typename FACTOR, typename VECTOR, typename PROC> inline
                 void Quaternary(Driver1D &range, TARGET &target,  SOURCE &source, const FACTOR &factor, VECTOR &vector, PROC &proc )
                 {
-                    typedef typename TARGET::Type TGT;
-                    typedef typename SOURCE::Type SRC;
-
-                    struct Op
-                    {
-                        TARGET       &target;
-                        SOURCE       &source;
-                        const FACTOR &factor;
-                        VECTOR       &vector;
-                        PROC         &proc;
-                        inline void operator()(const size_t i)
-                        {
-                            const TGT rhs = Transmogrify<TGT>::Product(factor,vector[i]);
-                            proc(target[i]=To<TGT,SRC>::Get(source[i]),rhs);
-                        }
-                    };
-
-                    Op op = { target, source, factor, vector, proc };
+                    QuaternaryOp<TARGET,SOURCE,FACTOR,VECTOR,PROC> op = { target, source, factor, vector, proc };
                     range->sweep(op);
                 };
 
