@@ -98,7 +98,7 @@ Y_UTEST(tao3)
             Y_CHECK(partgt==target);
         }
 
-#if 0
+#if 1
         std::cerr << std::endl;
         std::cerr << "DiagMatMul" << std::endl;
         {

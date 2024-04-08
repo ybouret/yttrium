@@ -281,12 +281,14 @@ namespace Yttrium
 
             namespace Parallel
             {
-                //! fill rows of range
-                template <typename T, typename ARRAY, typename V>
-                void DiagMatMul(Driver1D        &range,
-                                Matrix<T>       &tgt,
-                                ARRAY           &lhs,
-                                const Matrix<V> &rhs)
+
+                //! fill rows of range with proc
+                template <typename T, typename ARRAY, typename V, typename PROC>
+                void DiagMatMulOp(Driver1D        &range,
+                                  Matrix<T>       &tgt,
+                                  ARRAY           &lhs,
+                                  const Matrix<V> &rhs,
+                                  PROC            &proc)
                 {
                     assert( tgt.rows == lhs.size() );
                     assert( tgt.cols == rhs.cols   );
@@ -294,26 +296,57 @@ namespace Yttrium
                     typedef typename ARRAY::Type U;
                     typedef To<T,U>              U2T;
 
-#if 0
-                    if(range.length<=0) return;
-                    const size_t ncol = tgt.cols;
-                    for(size_t i=range.latest;i>=range.offset;--i)
+                    struct Op
                     {
-                        typename U2T::ReturnType lambda = U2T::Get(lhs[i]);
-                        Writable<T>            & tgt_i  = tgt[i];
-                        const Readable<V>      & rhs_i  = rhs[i];
-                        for(size_t j=ncol;j>0;--j)
-                            tgt_i[j] = lambda * To<T,V>::Get(rhs_i[j]);
-                    }
-#endif
+                        Matrix<T>       &tgt;
+                        ARRAY           &lhs;
+                        const Matrix<V> &rhs;
+                        PROC            &proc;
+
+                        inline void operator()(const size_t i)
+                        {
+                            typename U2T::ReturnType lambda = U2T::Get(lhs[i]);
+                            Writable<T>            & tgt_i  = tgt[i];
+                            const Readable<V>      & rhs_i  = rhs[i];
+                            const size_t              ncol  = tgt.cols;
+
+                            for(size_t j=ncol;j>0;--j)
+                            {
+                                const T res = lambda * To<T,V>::Get(rhs_i[j]);
+                                proc(tgt_i[j],res);
+                            }
+                        }
+                    };
+
+                    Op op = { tgt, lhs, rhs, proc };
+                    range->sweep(op);
+
+                }
+
+                //! compute proc(tgt,lhs*rhs)*
+                template <typename T, typename ARRAY, typename V, typename PROC> inline
+                void DiagMatMulCall(Driver         &driver,
+                                    Matrix<T>       &tgt,
+                                    ARRAY           &lhs,
+                                    const Matrix<V> &rhs,
+                                    PROC            &proc)
+                {
+                    assert( tgt.rows == lhs.size() );
+                    assert( tgt.cols == rhs.cols   );
+
+                    driver.setup(tgt.rows);
+                    driver.in1D(DiagMatMulOp<T,ARRAY,V,PROC>,tgt,lhs,rhs,proc);
                 }
             }
+
+
+
 
             //__________________________________________________________________
             //
             //
             //
-            //! Diagonal Matrix times Matrix
+            //! Set Diagonal Matrix times Matrix
             //
             //
             //__________________________________________________________________
@@ -323,11 +356,53 @@ namespace Yttrium
                             const Matrix<V> &rhs,
                             Driver          &driver)
             {
+                typedef void (*PROC)(T &, const T &);
+                static PROC    proc = Ops<T,T>::Set;
                 assert( tgt.rows == lhs.size() );
                 assert( tgt.cols == rhs.cols   );
+                Parallel::DiagMatMulCall<T,ARRAY,V,PROC>(driver,tgt,lhs,rhs,proc);
+            }
 
-                driver.setup(tgt.rows);
-                driver.in1D(Parallel::DiagMatMul<T,ARRAY,V>,tgt,lhs,rhs);
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Add Diagonal Matrix times Matrix
+            //
+            //
+            //__________________________________________________________________
+            template <typename T, typename ARRAY, typename V>
+            void DiagMatMulAdd(Matrix<T>       &tgt,
+                               ARRAY           &lhs,
+                               const Matrix<V> &rhs,
+                               Driver          &driver)
+            {
+                typedef void (*PROC)(T &, const T &);
+                static PROC    proc = Ops<T,T>::Add;
+                assert( tgt.rows == lhs.size() );
+                assert( tgt.cols == rhs.cols   );
+                Parallel::DiagMatMulCall<T,ARRAY,V,PROC>(driver,tgt,lhs,rhs,proc);
+            }
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Sub Diagonal Matrix times Matrix
+            //
+            //
+            //__________________________________________________________________
+            template <typename T, typename ARRAY, typename V>
+            void DiagMatMulSub(Matrix<T>       &tgt,
+                               ARRAY           &lhs,
+                               const Matrix<V> &rhs,
+                               Driver          &driver)
+            {
+                typedef void (*PROC)(T &, const T &);
+                static PROC    proc = Ops<T,T>::Sub;
+                assert( tgt.rows == lhs.size() );
+                assert( tgt.cols == rhs.cols   );
+                Parallel::DiagMatMulCall<T,ARRAY,V,PROC>(driver,tgt,lhs,rhs,proc);
             }
         }
 
