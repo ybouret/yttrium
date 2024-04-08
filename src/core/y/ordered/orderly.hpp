@@ -106,7 +106,7 @@ namespace Yttrium
         //
         //
         //
-        //! insert data withing an ordered array
+        //! insert data within an ordered array
         //
         //
         //______________________________________________________________________
@@ -124,6 +124,7 @@ namespace Yttrium
             }
             else
             {
+                // make some room at insertion pos
                 const size_t bytes = (size-ipos) * sizeof(U);
                 U           *source = data+ipos;
                 U           *target = source+1;
