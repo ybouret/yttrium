@@ -186,6 +186,7 @@ namespace Yttrium
             //! propagate unlink() to ENGINE is it exists
             inline void unlink() noexcept
             {
+                std::cerr << "Unlinking..." << std::endl;
                 Writable<FRAME> &f = *this;
                 for(size_t i=f.size();i>0;--i)
                     f[i].unlink();
