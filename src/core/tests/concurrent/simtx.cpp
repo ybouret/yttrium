@@ -227,6 +227,7 @@ Y_UTEST(concurrent_simtx)
             Y_ASSERT(xls.size>=seq.size());
             seq.link(xls.head);
             seq(DoSomething1,v);
+            std::cerr << "\t..done" << std::endl;
         }
 
         std::cerr << "\tpar..." << std::endl;
@@ -236,8 +237,8 @@ Y_UTEST(concurrent_simtx)
             const Concurrent::SIMT<X1D>::AutoUnlink keep(par);
             par.link(xls.head);
             par(DoSomething1,v);
+            std::cerr << "\t..done" << std::endl;
         }
-        std::cerr << "\tdone!" << std::endl;
         std::cerr << std::endl;
     }
 
