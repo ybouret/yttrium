@@ -28,8 +28,8 @@ namespace Yttrium
             namespace Parallel
             {
 
-                template <typename TARGET, typename SOURCE>
-                struct LoadOp {
+                template <typename TARGET, typename SOURCE> struct LoadOp
+                {
                     TARGET &target;
                     SOURCE &source;
                     inline void operator()(const size_t i)
@@ -83,6 +83,19 @@ namespace Yttrium
         {
             namespace Parallel
             {
+
+                template <typename TARGET, typename SOURCE, typename PROC>
+                struct BinaryOp
+                { 
+                    TARGET &target;
+                    SOURCE &source;
+                    PROC   &proc;
+                    inline void operator()(const size_t i)
+                    {
+                        proc(target[i],source[i]);
+                    }
+                };
+
                 //______________________________________________________________
                 //
                 //! call proc(target[i],source[i])
@@ -90,18 +103,7 @@ namespace Yttrium
                 template <typename TARGET, typename SOURCE, typename PROC> inline
                 void Binary(Driver1D &range, TARGET &target, SOURCE &source, PROC &proc)
                 {
-                    struct Op
-                    {
-                        TARGET &target;
-                        SOURCE &source;
-                        PROC   &proc;
-                        inline void operator()(const size_t i)
-                        {
-                            proc(target[i],source[i]);
-                        }
-                    };
-
-                    Op op = { target, source, proc };
+                    BinaryOp<TARGET,SOURCE,PROC>  op = { target, source, proc };
                     range->sweep(op);
                 };
 
