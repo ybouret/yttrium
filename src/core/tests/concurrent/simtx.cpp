@@ -64,7 +64,7 @@ namespace
     public:
 
         inline explicit X1D(const ThreadContext &ctx) noexcept : 
-        Frame1D<size_t>(ctx), node(0)
+        Concurrent::Frame1D<size_t>(ctx), node(0)
         {
         }
 
