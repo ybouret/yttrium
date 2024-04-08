@@ -64,26 +64,6 @@ namespace Yttrium
 
         namespace Tao
         {
-            namespace Parallel
-            {
-                //! save on range
-                template <typename TARGET, typename SOURCE> inline
-                void Save(Driver1D &range, TARGET &target, SOURCE &source)
-                {
-                    struct Op
-                    {
-                        TARGET &target;
-                        SOURCE &source;
-                        inline void operator()(const size_t i)
-                        {
-                            target[i] = source[i];
-                        }
-                    };
-                    Op op = { target, source };
-                    range->sweep(op);
-                }
-
-            }
 
             //__________________________________________________________________
             //
@@ -94,7 +74,7 @@ namespace Yttrium
             {
                 assert(target.size()>=source.size());
                 driver.setup(source.size());
-                driver.in1D(Parallel::Save<TARGET,SOURCE>,target,source);
+                driver.in1D(Parallel::Load<TARGET,SOURCE>,target,source);
             }
 
         }
