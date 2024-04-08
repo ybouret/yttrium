@@ -45,7 +45,7 @@ Y_UTEST(concurrent_frame1d)
 
     for(size_t i=1;i<=par.size();++i)
     {
-        const Concurrent::ForLoop<size_t> &sub = *par[i];
+        const Concurrent::Trek<size_t> &sub = *par[i];
         std::cerr << "sub[" << std::setw(4) << i << "] = " << sub << std::endl;
     }
 

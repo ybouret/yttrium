@@ -20,7 +20,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename T>
-        class Frame1D : public Frame< ForLoop<T> >
+        class Frame1D : public Frame< Trek<T> >
         {
         public:
             //__________________________________________________________________
@@ -30,9 +30,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef T                      Type;       //!< alias
-            typedef ForLoop<T>             Mapping;    //!< alias
+            typedef Trek<T>                Mapping;    //!< alias
             typedef Frame<Mapping>         FrameType;  //!< alias
-            typedef BarePtr<const Mapping> LoopPtr;    //!< alias
+            typedef BarePtr<const Mapping> TrekPtr;    //!< alias
 
             //__________________________________________________________________
             //
@@ -49,18 +49,18 @@ namespace Yttrium
             inline void assign(const T &head, const T &tail, const T &step)
             {
                 const Mapping &here = divided(head,tail,step);
-                if(here.length>0) Coerce(loop) = &here;
+                if(here.length>0) Coerce(trek) = &here;
             }
 
             //! access sub ForLoop
-            inline const ForLoop<T> * operator->() const noexcept
+            inline const Trek<T> * operator->() const noexcept
             {
                 assert(this->isAssigned());
                 return & *(this->workspace);
             }
 
             //! access sub ForLoop
-            inline const ForLoop<T> & operator*() const noexcept
+            inline const Trek<T> & operator*() const noexcept
             {
                 assert(this->isAssigned());
                 return  *(this->workspace);
@@ -73,8 +73,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             
-            //! partial ACTIVE loop
-            const ForLoop<T> * const loop;
+            //! partial ACTIVE trek
+            const Trek<T> * const trek;
 
 
             //__________________________________________________________________
@@ -90,7 +90,7 @@ namespace Yttrium
         protected:
             //! setup
             inline explicit Frame1D(const ThreadContext &ctx) noexcept :
-            FrameType(ctx), loop(0)
+            FrameType(ctx), trek(0)
             {
             }
 
@@ -102,13 +102,13 @@ namespace Yttrium
             inline const Mapping & divided(const T &head, const T &tail, const T &step) noexcept
             {
                 assert(!this->isAssigned());
-                assert(0==loop);
+                assert(0==trek);
                 const Mapping  part = Split::For(*this, head, tail, step);
                 return this->workspace.build(part);
             }
 
             //! call in loosen
-            inline virtual void shutdown() noexcept { Coerce(loop) = 0; }
+            inline virtual void shutdown() noexcept { Coerce(trek) = 0; }
         };
     }
 

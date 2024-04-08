@@ -29,8 +29,8 @@ namespace   {
             assert(partial.size()>=ctx.size);
             const uint32_t offset = 1;
             const uint32_t length = count;
-            const Concurrent::ForLoop<uint32_t> trek = Concurrent::Split::Using(ctx, length, offset);
-            Y_ASSERT(Concurrent::ForLoopIncrease==trek.family);
+            const Concurrent::Trek<uint32_t> trek = Concurrent::Split::Using(ctx, length, offset);
+            Y_ASSERT(Concurrent::TrekIncrease==trek.family);
             Y_THREAD_MSG("In " << ctx.name << ": from " << trek);
             double sum = 0;
             for(uint32_t i=trek.offset,j=trek.length;j>0;--j,++i)

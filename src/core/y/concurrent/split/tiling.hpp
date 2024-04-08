@@ -421,7 +421,7 @@ namespace Yttrium
                         //
                         //------------------------------------------------------
                         const Size start = 0;
-                        const ForLoop<Size> trek = Split::Using(count, rank, items, start);
+                        const Trek<Size> trek = Split::Using(count, rank, items, start);
                         assert(trek.length>0);
                         tiling.pushTail( MakeTile(lower, upper, width, trek.offset, trek.length) );
                     }
@@ -468,8 +468,8 @@ namespace Yttrium
                     // compute items for this rank
                     //
                     //----------------------------------------------------------
-                    const Size          start = 0;
-                    const ForLoop<Size> trek = Split::Using(count,ctx.rank,items, start);
+                    const Size       start = 0;
+                    const Trek<Size> trek = Split::Using(count,ctx.rank,items, start);
                     assert(trek.length>0);
 
                     //----------------------------------------------------------

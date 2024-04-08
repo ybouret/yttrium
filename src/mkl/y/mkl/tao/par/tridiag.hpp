@@ -40,10 +40,10 @@ namespace Yttrium
                                 PROC               &proc)
                 {
                     typedef struct Transmogrify<U> Trans;
-                    const Mapping1D * const loop = range.loop;
-                    if(!loop) return;
-                    const size_t offset = loop->offset;
-                    for(size_t i=loop->latest,im=i,ip=i+1;i>=offset;--i)
+                    const Mapping1D * const trek = range.trek;
+                    if(!trek) return;
+                    const size_t offset = trek->offset;
+                    for(size_t i=trek->latest,im=i,ip=i+1;i>=offset;--i)
                     {
                         --im;
                         assert(i-1==im);

@@ -28,7 +28,7 @@ Y_UTEST(concurrent_split1d)
     const size_t             sz   = 1;
     const size_t             rk   = 0;
 
-    Concurrent::ForLoop<int> full = Concurrent::Split::For(sz,rk, head, tail, step);
+    Concurrent::Trek<int> full = Concurrent::Split::For(sz,rk, head, tail, step);
     std::cerr << "full=" << full << std::endl;
 
     full.sweep(ShowIndex<int>);
@@ -42,7 +42,7 @@ Y_UTEST(concurrent_split1d)
         std::cerr << "size=" << size << std::endl;
         for(size_t rank=0;rank<size;++rank)
         {
-            Concurrent::ForLoop<int> trek = Concurrent::Split::For(size,rank, head, tail, step);
+            Concurrent::Trek<int> trek = Concurrent::Split::For(size,rank, head, tail, step);
             std::cerr << "->" << trek << std::endl;
         }
     }

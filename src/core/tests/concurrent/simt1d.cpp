@@ -65,16 +65,16 @@ namespace
             const Mapping &sub = **this;
             if(sub.length>0)
             {
-                Y_ASSERT(0!=loop);
+                Y_ASSERT(0!=trek);
                 double &target = sum[indx];
-                for(size_t i=loop->offset;i<=loop->latest;i+=loop->update)
+                for(size_t i=trek->offset;i<=trek->latest;i+=trek->update)
                 {
                     target += i * a;
                 }
             }
             else
             {
-                Y_ASSERT(0==loop);
+                Y_ASSERT(0==trek);
             }
         }
 

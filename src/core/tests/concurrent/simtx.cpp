@@ -93,7 +93,7 @@ namespace
     {
         {
             Y_LOCK(range.sync);
-            (std::cerr << "\tDoSomething0(" << X1D::LoopPtr(range.loop) << ")" << std::endl).flush();
+            (std::cerr << "\tDoSomething0(" << X1D::TrekPtr(range.trek) << ")" << std::endl).flush();
         }
     }
 
@@ -102,9 +102,9 @@ namespace
     {
         {
             Y_LOCK(range.sync);
-            (std::cerr << "\tDoSomething1(" << X1D::LoopPtr(range.loop) << ")" << std::endl).flush();
+            (std::cerr << "\tDoSomething1(" << X1D::TrekPtr(range.trek) << ")" << std::endl).flush();
         }
-        const Concurrent::ForLoop<size_t> * const loop = range.loop;
+        const Concurrent::Trek<size_t> * const loop = range.trek;
         int sum = 0;
         if(loop)
         {
