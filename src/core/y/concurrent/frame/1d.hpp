@@ -34,24 +34,42 @@ namespace Yttrium
             typedef Frame<Mapping>         FrameType;  //!< alias
             typedef BarePtr<const Mapping> TrekPtr;    //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            //! full domaine signature
+            //
+            //__________________________________________________________________
             class Signature
             {
             public:
-                inline  Signature(const Type &h, const Type &t, const Type &s) : head(h), tail(t), step(s) {}
-                inline ~Signature() noexcept {}
-                inline  Signature(const Signature &other) : head(other.head), tail(other.tail), step(other.step) {}
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                inline  Signature(const Type &h, const Type &t, const Type &s) : head(h), tail(t), step(s) {}       //!< setup
+                inline ~Signature() noexcept {}                                                                     //!< cleanup
+                inline  Signature(const Signature &other) : head(other.head), tail(other.tail), step(other.step) {} //!< copy
 
+                //______________________________________________________________
+                //
+                // comparisons
+                //______________________________________________________________
                 inline friend bool operator==(const Signature &lhs, const Signature &rhs) noexcept {
                     return (lhs.head==rhs.head) && (lhs.tail==rhs.tail) && (lhs.step==rhs.step);
-                }
+                } //!< check equality
 
                 inline friend bool operator!=(const Signature &lhs, const Signature &rhs) noexcept {
                     return (lhs.head!=rhs.head) || (lhs.tail!=rhs.tail) || (lhs.step!=rhs.step);
-                }
+                } //!< check difference
 
-                const Type head;
-                const Type tail;
-                const Type step;
+                //______________________________________________________________
+                //
+                // Members
+                //______________________________________________________________
+                const Type head; //!< head query
+                const Type tail; //!< tail query
+                const Type step; //!< step query
             private:
                 Y_DISABLE_ASSIGN(Signature);
             };

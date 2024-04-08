@@ -18,21 +18,27 @@ namespace Yttrium
 
             namespace Parallel
             {
+
+                //______________________________________________________________
+                //
+                //! multiplication kernel
+                //______________________________________________________________
                 template <typename TARGET, typename T, typename SOURCE, typename U, typename PROC>
                 struct MulKernel
                 {
-                    TARGET           &target;
-                    const Matrix<T>  &M;
-                    SOURCE           &source;
-                    PROC             &proc;
-                    Antelope::Add<U> &xadd;
-
+                    //! apply
                     inline void operator()(const size_t row)
                     {
                         assert(xadd.isEmpty());
                         const U result = DotProduct<U>::Of_(M[row],source,xadd);
                         proc(target[row],result);
                     }
+                    
+                    TARGET           &target;
+                    const Matrix<T>  &M;
+                    SOURCE           &source;
+                    PROC             &proc;
+                    Antelope::Add<U> &xadd;
                 };
 
                 //! Mul on range

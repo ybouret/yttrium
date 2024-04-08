@@ -27,19 +27,24 @@ namespace Yttrium
 
             namespace Parallel
             {
-
+                //--------------------------------------------------------------
                 //! Load/Save kernel
+                //--------------------------------------------------------------
                 template <typename TARGET, typename SOURCE> struct LoadKernel
                 {
-                    TARGET &target;
-                    SOURCE &source;
+                    //! apply
                     inline void operator()(const size_t i)
                     {
                         target[i] = source[i];
                     }
+
+                    TARGET &target;
+                    SOURCE &source;
                 };
 
+                //--------------------------------------------------------------
                 //! load on range
+                //--------------------------------------------------------------
                 template <typename TARGET, typename SOURCE> inline
                 void Load(Driver1D &range, TARGET &target, SOURCE &source)
                 {
@@ -84,18 +89,22 @@ namespace Yttrium
         {
             namespace Parallel
             {
-
+                //--------------------------------------------------------------
                 //! binary ops kernel
+                //--------------------------------------------------------------
                 template <typename TARGET, typename SOURCE, typename PROC>
                 struct BinaryKernel
                 {
-                    TARGET &target;
-                    SOURCE &source;
-                    PROC   &proc;
+
+                    //! apply
                     inline void operator()(const size_t i)
                     {
                         proc(target[i],source[i]);
                     }
+
+                    TARGET &target;
+                    SOURCE &source;
+                    PROC   &proc;
                 };
 
                 //______________________________________________________________
@@ -151,21 +160,24 @@ namespace Yttrium
         {
             namespace Parallel
             {
-
+                //--------------------------------------------------------------
                 //! ternary ops kernel
+                //--------------------------------------------------------------
                 template <typename TARGET, typename FACTOR, typename SOURCE, typename PROC>
                 struct TernaryKernel
                 {
-                    TARGET       &target;
-                    const FACTOR &factor;
-                    SOURCE       &source;
-                    PROC         &proc;
+                    //! apply
                     inline void operator()(const size_t i)
                     {
                         typedef typename TARGET::Type TGT;
                         const TGT rhs = Transmogrify<TGT>::Product(factor,source[i]);
                         proc(target[i],rhs);
                     }
+
+                    TARGET       &target;
+                    const FACTOR &factor;
+                    SOURCE       &source;
+                    PROC         &proc;
                 };
 
                 //______________________________________________________________
@@ -245,11 +257,8 @@ namespace Yttrium
                 template <typename TARGET,  typename SOURCE, typename FACTOR, typename VECTOR, typename PROC>
                 struct QuaternaryKernel
                 {
-                    TARGET       &target;
-                    SOURCE       &source;
-                    const FACTOR &factor;
-                    VECTOR       &vector;
-                    PROC         &proc;
+
+                    //! apply
                     inline void operator()(const size_t i)
                     {
                         typedef typename TARGET::Type TGT;
@@ -257,6 +266,12 @@ namespace Yttrium
                         const TGT rhs = Transmogrify<TGT>::Product(factor,vector[i]);
                         proc(target[i]=To<TGT,SRC>::Get(source[i]),rhs);
                     }
+
+                    TARGET       &target;
+                    SOURCE       &source;
+                    const FACTOR &factor;
+                    VECTOR       &vector;
+                    PROC         &proc;
                 };
 
                 //______________________________________________________________

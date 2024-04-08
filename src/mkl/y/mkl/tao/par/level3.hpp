@@ -286,13 +286,10 @@ namespace Yttrium
                 template <typename T, typename ARRAY, typename V, typename PROC>
                 struct DiagMatMulKernel
                 {
-                    Matrix<T>       &tgt;
-                    ARRAY           &lhs;
-                    const Matrix<V> &rhs;
-                    PROC            &proc;
 
+                    //! apply
                     inline void operator()(const size_t i)
-                    { 
+                    {
                         typedef typename ARRAY::Type U;
                         typedef To<T,U>              U2T;
                         typename U2T::ReturnType lambda = U2T::Get(lhs[i]);
@@ -306,6 +303,11 @@ namespace Yttrium
                             proc(tgt_i[j],res);
                         }
                     }
+
+                    Matrix<T>       &tgt;
+                    ARRAY           &lhs;
+                    const Matrix<V> &rhs;
+                    PROC            &proc;
                 };
 
                 //! fill rows of range with proc
@@ -321,7 +323,6 @@ namespace Yttrium
 
                     DiagMatMulKernel<T,ARRAY,V,PROC> op = { tgt, lhs, rhs, proc };
                     range->sweep(op);
-
                 }
 
                 //! compute proc(tgt,lhs*rhs)*

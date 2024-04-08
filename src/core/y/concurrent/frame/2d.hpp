@@ -38,25 +38,44 @@ namespace Yttrium
             typedef BarePtr<const Tile>         TilePtr;    //!< alias
             typedef V2D<T>                      Vertex;     //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            //! full query signature
+            //
+            //__________________________________________________________________
             class Signature
             {
             public:
-                inline  Signature(const Vertex &lo, const Vertex &up) noexcept : lower(lo), upper(up) {}
-                inline  Signature(const Signature &s) noexcept : lower(s.lower), upper(s.upper) {}
-                inline ~Signature() noexcept {}
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                inline  Signature(const Vertex &lo, const Vertex &up) noexcept : lower(lo), upper(up) {} //!< setup
+                inline  Signature(const Signature &s) noexcept : lower(s.lower), upper(s.upper) {}       //!< copy
+                inline ~Signature() noexcept {}                                                          //!< cleanup
 
+                //______________________________________________________________
+                //
+                // Comparisons
+                //______________________________________________________________
                 inline friend bool operator==(const Signature &lhs, const Signature &rhs) noexcept
                 {
                     return (lhs.lower==rhs.lower) && (lhs.upper==rhs.upper);
-                }
+                } //!< check equality
 
                 inline friend bool operator!=(const Signature &lhs, const Signature &rhs) noexcept
                 {
                     return (lhs.lower!=rhs.lower) || (lhs.upper!=rhs.upper);
-                }
+                } //!< check difference
 
-                const Vertex lower;
-                const Vertex upper;
+                //______________________________________________________________
+                //
+                // Memebers
+                //______________________________________________________________
+                const Vertex lower; //!< lower query
+                const Vertex upper; //!< upper query
+
             private:
                 Y_DISABLE_ASSIGN(Signature);
             };
