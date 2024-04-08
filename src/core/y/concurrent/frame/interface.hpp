@@ -69,7 +69,7 @@ namespace Yttrium
             //! display content
             inline friend std::ostream & operator<<(std::ostream &os, const Frame &frame)
             {
-                os << "@" << frame.name << "->" << frame.workspace;
+                os << "@" << frame.name << "=>" << frame.workspace;
                 return os;
             }
 

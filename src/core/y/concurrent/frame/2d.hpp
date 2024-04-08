@@ -38,6 +38,29 @@ namespace Yttrium
             typedef BarePtr<const Tile>         TilePtr;    //!< alias
             typedef V2D<T>                      Vertex;     //!< alias
 
+            class Signature
+            {
+            public:
+                inline  Signature(const Vertex &lo, const Vertex &up) noexcept : lower(lo), upper(up) {}
+                inline  Signature(const Signature &s) noexcept : lower(s.lower), upper(s.upper) {}
+                inline ~Signature() noexcept {}
+
+                inline friend bool operator==(const Signature &lhs, const Signature &rhs) noexcept
+                {
+                    return (lhs.lower==rhs.lower) && (lhs.upper==rhs.upper);
+                }
+
+                inline friend bool operator!=(const Signature &lhs, const Signature &rhs) noexcept
+                {
+                    return (lhs.lower!=rhs.lower) || (lhs.upper!=rhs.upper);
+                }
+
+                const Vertex lower;
+                const Vertex upper;
+            private:
+                Y_DISABLE_ASSIGN(Signature);
+            };
+
             //__________________________________________________________________
             //
             //

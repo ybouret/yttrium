@@ -12,6 +12,17 @@ namespace Yttrium
 
     namespace Memory
     {
+        //______________________________________________________________________
+        //
+        //
+        //! helper for built-in constructore
+        //
+        //______________________________________________________________________
+#define Y_Memory_Solitary(CODE) do { \
+erase();                             \
+try{ CODE; }                         \
+catch(...) { dismiss(); throw; }     \
+} while(false)
 
         //______________________________________________________________________
         //
@@ -52,34 +63,30 @@ namespace Yttrium
 
             //! build with default argument
             inline Type & build() {
-                erase();
-                return *( handle = new ( get() ) T() );
+                Y_Memory_Solitary(  return *( handle = new ( get() ) T() ) );
             }
 
             //! build with one argument
             template <typename U>
             inline Type &build(U &args) {
-                erase();
-                return *( handle = new ( get() ) T(args) );
+                Y_Memory_Solitary( return *( handle = new ( get() ) T(args) ) );
             }
 
             //! build with two arguments
             template <typename U, typename V>
             inline Type &build(U &argu, V &argv) {
-                erase();
-                return *( handle = new ( get() ) T(argu,argv) );
+                Y_Memory_Solitary(  *( handle = new ( get() ) T(argu,argv) ) );
             }
 
             //! build with thhree arguments
             template <typename U, typename V, typename W>
             inline Type &build(U &argu, V &argv, W &argw) {
-                erase();
-                return *( handle = new ( get() ) T(argu,argv,argw) );
+                Y_Memory_Solitary( return *( handle = new ( get() ) T(argu,argv,argw) ) );
             }
 
             //! dismiss content, assuming it was copied elsewhere
             inline void dismiss() noexcept {
-                (void) Memory::OutOfReach::Zero(handle,sizeof(T));
+                (void) Memory::OutOfReach::Zero(get(),sizeof(T));
                 handle = 0;
             }
 

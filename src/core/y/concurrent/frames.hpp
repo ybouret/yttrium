@@ -8,6 +8,7 @@
 #include "y/container/cxx/array.hpp"
 #include "y/mkl/v2d.hpp"
 #include "y/type/auto-clean.hpp"
+#include "y/memory/solitary/workspace.hpp"
 
 namespace Yttrium
 {
@@ -20,12 +21,18 @@ namespace Yttrium
         //! helper to assign mapping to engines
         //
         //______________________________________________________________________
-#define Y_Concurrent_Frames_Assign(CODE) do {      \
-/**/ loosen();                                     \
-/**/ Writable<FRAME> &f = *this;                   \
-/**/ const size_t     n = f.size();                \
-/**/ try{ for(size_t i=1;i<=n;++i) f[i].CODE ;}    \
+#define Y_Concurrent_Frames_Assign(CODE) do {                   \
+/**/ if( signature.isValid() && (query == *signature) ) return; \
+/**/ assert(signature.isEmpty() || (query != *signature) );     \
+/**/ loosen();                                                  \
+/**/ Writable<FRAME> &f = *this;                                \
+/**/ const size_t     n = f.size();                             \
+/**/ try{                                                       \
+/**/      for(size_t i=1;i<=n;++i) { f[i].CODE;}                \
+/**/      signature.build(query);                               \
+/**/    }                                                       \
 /**/ catch(...) { loosen(); throw; } } while(false)
+
 
         //______________________________________________________________________
         //
@@ -53,6 +60,7 @@ namespace Yttrium
             typedef typename FrameType::Mapping            Mapping;   //!< alias
             typedef CxxArray<FRAME,Nucleus::Frames::Model> CxxFrames; //!< alias
             typedef V2D<typename FrameType::Type>          Vertex;    //!< in case of 2D
+            typedef typename FRAME::Signature              Signature; //!< [0|1|2]D
 
             //__________________________________________________________________
             //
@@ -82,7 +90,7 @@ namespace Yttrium
              */
             template <typename DERIVED>
             explicit Frames(const ArcPtr<DERIVED> &stc) :
-            Nucleus::Frames(stc), CxxFrames(CopyOf,*contexts)
+            Nucleus::Frames(stc), CxxFrames(CopyOf,*contexts), signature()
             {
             }
 
@@ -104,6 +112,7 @@ namespace Yttrium
             //__________________________________________________________________
             inline void loosen() noexcept
             {
+                signature.erase();
                 Writable<FRAME> &self = *this;
                 for(size_t i=self.size();i>0;--i)
                     self[i].loosen();
@@ -113,7 +122,10 @@ namespace Yttrium
             //
             //! assign to all PUNCTAL frames (deriving from Frame0D)
             //__________________________________________________________________
-            inline void assign() { Y_Concurrent_Frames_Assign(assign()); }
+            inline void assign() {
+                static const Signature query = 1;
+                Y_Concurrent_Frames_Assign(assign());
+            }
 
             //__________________________________________________________________
             //
@@ -123,6 +135,7 @@ namespace Yttrium
                                const typename FrameType::Type tail,
                                const typename FrameType::Type step)
             {
+                const Signature query(head,tail,step);
                 Y_Concurrent_Frames_Assign(assign(head,tail,step));
             }
 
@@ -133,6 +146,7 @@ namespace Yttrium
             inline void assign(const V2D<typename FrameType::Type> lower,
                                const V2D<typename FrameType::Type> upper)
             {
+                const Signature query(lower,upper);
                 Y_Concurrent_Frames_Assign(assign(lower,upper));
             }
 
@@ -178,11 +192,9 @@ namespace Yttrium
             }
 
 
-
-
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Frames);
+            Memory::Workspace<Signature> signature;
         };
 
     }

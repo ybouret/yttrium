@@ -34,6 +34,29 @@ namespace Yttrium
             typedef Frame<Mapping>         FrameType;  //!< alias
             typedef BarePtr<const Mapping> TrekPtr;    //!< alias
 
+            class Signature
+            {
+            public:
+                inline  Signature(const Type &h, const Type &t, const Type &s) : head(h), tail(t), step(s) {}
+                inline ~Signature() noexcept {}
+                inline  Signature(const Signature &other) : head(other.head), tail(other.tail), step(other.step) {}
+
+                inline friend bool operator==(const Signature &lhs, const Signature &rhs) noexcept {
+                    return (lhs.head==rhs.head) && (lhs.tail==rhs.tail) && (lhs.step==rhs.step);
+                }
+
+                inline friend bool operator!=(const Signature &lhs, const Signature &rhs) noexcept {
+                    return (lhs.head!=rhs.head) || (lhs.tail!=rhs.tail) || (lhs.step!=rhs.step);
+                }
+
+                const Type head;
+                const Type tail;
+                const Type step;
+            private:
+                Y_DISABLE_ASSIGN(Signature);
+            };
+
+
             //__________________________________________________________________
             //
             //
@@ -73,7 +96,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             
-            //! partial ACTIVE trek
+            //! partial ACTIVE trek, NULL means not active...
             const Trek<T> * const trek;
 
 

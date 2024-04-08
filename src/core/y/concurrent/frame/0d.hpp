@@ -31,6 +31,7 @@ namespace Yttrium
             typedef int               Type;       //!< N/A
             typedef Nucleus::Punctual Mapping;    //!< alias
             typedef Frame<Mapping>    FrameType;  //!< alias
+            typedef int               Signature;  //!< N/A
 
             //__________________________________________________________________
             //
