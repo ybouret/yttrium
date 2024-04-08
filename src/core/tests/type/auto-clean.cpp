@@ -31,13 +31,9 @@ namespace {
 Y_UTEST(type_auto_clean)
 {
 
-    Y_SIZEOF(void *);
-    Y_SIZEOF( void (Dummy::*)(void) );
-    Y_SIZEOF(AutoClean::Meth);
-    
     Dummy dummy;
     {
-        AutoClean ac(dummy, & Dummy::clean );
+        AutoClean<Dummy> ac(dummy, & Dummy::clean );
     }
     std::cerr << "will end..." << std::endl;
 

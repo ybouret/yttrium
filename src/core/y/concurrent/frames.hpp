@@ -7,8 +7,8 @@
 #include "y/concurrent/frame/nucleus/frames.hpp"
 #include "y/container/cxx/array.hpp"
 #include "y/mkl/v2d.hpp"
-#include "y/type/auto-clean.hpp"
 #include "y/memory/solitary/workspace.hpp"
+#include "y/type/auto-clean.hpp"
 
 namespace Yttrium
 {
@@ -66,10 +66,10 @@ namespace Yttrium
             //
             //! automatic unlink resources
             //__________________________________________________________________
-            class AutoUnlink : public AutoClean
+            class AutoUnlink : public AutoClean<Frames>
             {
             public:
-                inline explicit AutoUnlink(Frames &frames) noexcept : AutoClean(frames, & Frames::unlink) {} //!< setup
+                inline explicit AutoUnlink(Frames &frames) noexcept : AutoClean<Frames>(frames, & Frames::unlink) {} //!< setup
                 inline virtual ~AutoUnlink()               noexcept {}                                       //!< cleanup
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(AutoUnlink);

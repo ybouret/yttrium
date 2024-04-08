@@ -16,6 +16,59 @@ namespace Yttrium
     //
     //! calling method of an host before return
     /**
+     - simplify code in case of exception
+     - the size of a pointer-to-member-function can change depending on the class!
+     */
+    //
+    //
+    //__________________________________________________________________________
+    template <typename HOST>
+    class AutoClean
+    {
+    public:
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        typedef HOST  Host;
+        typedef void (Host::*Meth)(void);
+
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+
+        //! setup from persitent host and its method
+        inline explicit AutoClean(Host &h, Meth m) noexcept :
+        host(h),
+        meth(m)
+        {
+            assert(0!=meth);
+        }
+
+        //! cleanup
+        inline virtual ~AutoClean() noexcept
+        {
+            try { (host.*meth)(); } catch(...) {}
+        }
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(AutoClean);
+        Host &host;
+        Meth  meth;
+    };
+
+#if 0
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! calling method of an host before return
+    /**
      simplify code in case of exception
 	 The size of a pointer-to-member-function can change depending on the class!
      */
@@ -56,14 +109,6 @@ namespace Yttrium
             {
                 typedef void (HOST::*METH)(void);
 
-				void (HOST::*hm)(void) = 0;
-				void (AutoClean::*am)(void) = 0;
-
-				std::cerr << "sizeof(hm)=" << sizeof(hm) << std::endl;
-				std::cerr << "sizeof(am)=" << sizeof(am) << std::endl;
-
-               // Y_STATIC_CHECK(sizeof(METH)==sizeof(Meth),BadMethodSize);
-                // transmogrify method
                 union
                 {
                     METH user;
@@ -134,7 +179,8 @@ namespace Yttrium
         }
 
     };
-
+#endif
+    
 }
 
 #endif
