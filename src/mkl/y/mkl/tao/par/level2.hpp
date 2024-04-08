@@ -34,11 +34,11 @@ namespace Yttrium
                         proc(target[row],result);
                     }
                     
-                    TARGET           &target;
-                    const Matrix<T>  &M;
-                    SOURCE           &source;
-                    PROC             &proc;
-                    Antelope::Add<U> &xadd;
+                    TARGET           &target; //!< alias
+                    const Matrix<T>  &M;      //!< alias
+                    SOURCE           &source; //!< alias
+                    PROC             &proc;   //!< alias
+                    Antelope::Add<U> &xadd;   //!< alias
                 };
 
                 //! Mul on range

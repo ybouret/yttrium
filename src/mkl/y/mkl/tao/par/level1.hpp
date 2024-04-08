@@ -38,8 +38,8 @@ namespace Yttrium
                         target[i] = source[i];
                     }
 
-                    TARGET &target;
-                    SOURCE &source;
+                    TARGET &target; //!< alias
+                    SOURCE &source; //!< alias
                 };
 
                 //--------------------------------------------------------------
@@ -102,9 +102,9 @@ namespace Yttrium
                         proc(target[i],source[i]);
                     }
 
-                    TARGET &target;
-                    SOURCE &source;
-                    PROC   &proc;
+                    TARGET &target; //!< alias
+                    SOURCE &source; //!< alias
+                    PROC   &proc;   //!< alias
                 };
 
                 //______________________________________________________________
@@ -174,10 +174,10 @@ namespace Yttrium
                         proc(target[i],rhs);
                     }
 
-                    TARGET       &target;
-                    const FACTOR &factor;
-                    SOURCE       &source;
-                    PROC         &proc;
+                    TARGET       &target; //!< alias
+                    const FACTOR &factor; //!< alias
+                    SOURCE       &source; //!< alias
+                    PROC         &proc;   //!< alias
                 };
 
                 //______________________________________________________________
@@ -253,7 +253,10 @@ namespace Yttrium
         {
             namespace Parallel
             {
-
+                //______________________________________________________________
+                //
+                //! kernel for quaternary ops
+                //______________________________________________________________
                 template <typename TARGET,  typename SOURCE, typename FACTOR, typename VECTOR, typename PROC>
                 struct QuaternaryKernel
                 {
@@ -267,11 +270,11 @@ namespace Yttrium
                         proc(target[i]=To<TGT,SRC>::Get(source[i]),rhs);
                     }
 
-                    TARGET       &target;
-                    SOURCE       &source;
-                    const FACTOR &factor;
-                    VECTOR       &vector;
-                    PROC         &proc;
+                    TARGET       &target; //!< alias
+                    SOURCE       &source; //!< alias
+                    const FACTOR &factor; //!< alias
+                    VECTOR       &vector; //!< alias
+                    PROC         &proc;   //!< alias
                 };
 
                 //______________________________________________________________

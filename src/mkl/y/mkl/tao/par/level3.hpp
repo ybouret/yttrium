@@ -303,11 +303,11 @@ namespace Yttrium
                             proc(tgt_i[j],res);
                         }
                     }
-
-                    Matrix<T>       &tgt;
-                    ARRAY           &lhs;
-                    const Matrix<V> &rhs;
-                    PROC            &proc;
+ 
+                    Matrix<T>       &tgt;  //!< alias
+                    ARRAY           &lhs;  //!< alias
+                    const Matrix<V> &rhs;  //!< alias
+                    PROC            &proc; //!< alias
                 };
 
                 //! fill rows of range with proc
