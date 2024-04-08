@@ -28,7 +28,7 @@ namespace Yttrium
             using TriDiag<T>::b;
             using TriDiag<T>::c;
 
-            explicit Cyclic(const size_t n); //!< n >= 2
+            explicit Cyclic(const size_t n); //!< n >= 3
             virtual ~Cyclic() noexcept;
 
 

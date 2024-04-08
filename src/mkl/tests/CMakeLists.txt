@@ -50,6 +50,7 @@ add_test(drvs:nd test-mkl drvsND)
 
 add_test(interp:poly  test-mkl interp_poly)
 add_test(interp:ratio test-mkl interp_ratio)
+add_test(interp:cspline test-mkl interp_cspline)
 
 add_test(io:data-stream test-mkl io_data_stream ${DATA}/sample.txt)
 

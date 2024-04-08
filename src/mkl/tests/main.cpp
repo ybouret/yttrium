@@ -34,6 +34,7 @@ Y_UTEST_DECL(64)
 
     Y_UTEST(interp_poly);
     Y_UTEST(interp_ratio);
+    Y_UTEST(interp_cspline);
 
     Y_UTEST(io_data_stream);
 
