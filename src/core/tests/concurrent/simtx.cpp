@@ -79,6 +79,7 @@ namespace
 
         inline void unlink() noexcept
         {
+            std::cerr << "unlink1D @" << name << std::endl;
             Coerce(node) = 0;
         }
 
@@ -160,6 +161,7 @@ namespace
 
         inline void unlink() noexcept
         {
+            std::cerr << "unlink @" << name << std::endl;
             Coerce(node) = 0;
         }
 
