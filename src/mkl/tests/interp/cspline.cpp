@@ -39,6 +39,11 @@ namespace Yttrium
                 return code->d2P;
             }
 
+            V2D<T> operator()(const T t) const noexcept
+            {
+                return code->eval(t);
+            }
+
         private:
             class Code;
             Code *code;
@@ -58,7 +63,11 @@ namespace Yttrium
             inline explicit Code(const size_t n) :
             Object(),
             N(n),
+            lim(N),
             Nm1(N-1),
+            zero(0),
+            one(1),
+            six(6),
             P(n),
             d2P(n),
             rhs(n),
@@ -76,28 +85,30 @@ namespace Yttrium
 
             inline virtual ~Code() noexcept {}
 
-            inline T compute(const Vertex &prev,
-                             const Vertex &curr,
-                             const Vertex &next,
-                             const size_t  dim) noexcept
+            static inline T Compute(const Vertex &prev,
+                                    const Vertex &curr,
+                                    const Vertex &next,
+                                    const size_t  dim) noexcept
             {
-
                 const T mid = curr[dim];
-                return (prev[dim]-mid) + (next[dim]-mid);
+                const T res = (prev[dim]-mid) + (next[dim]-mid);
+               //std::cerr << prev[dim] << "->" << curr[dim] << "->" << next[dim] << " => " << res << std::endl;
+                return res;
             }
 
             inline void update()
             {
-                const T six = 6;
+                std::cerr << "cspline: interp #" << N << std::endl;
                 for(size_t dim=1;dim<=2;++dim)
                 {
-                    rhs[1] = six * compute(P[N],P[1],P[2],dim);
+                    rhs[1] = six * Compute(P[N],P[1],P[2],dim);
                     for(size_t i=Nm1;i>1;--i)
                     {
-                        rhs[i] = six * compute(P[i-1],P[i],P[i+1],dim);
+                        rhs[i] = six * Compute(P[i-1],P[i],P[i+1],dim);
                     }
-                    rhs[N] = six * compute(P[Nm1],P[N],P[1],dim);
+                    rhs[N] = six * Compute(P[Nm1],P[N],P[1],dim);
 
+                    //std::cerr << "dim=" << dim << " : rhs=" << rhs << std::endl;
                     mu.solve(cof,rhs);
                     for(size_t i=N;i>0;--i)
                     {
@@ -106,8 +117,30 @@ namespace Yttrium
                 }
             }
 
-            const size_t N;
-            const size_t Nm1;
+            inline V2D<T> eval(T t) const
+            {
+
+                while(t>lim)  t -= lim;
+                while(t<zero) t += lim;
+                const T       ta = Floor<T>::Of(t);
+                size_t        ia = static_cast<size_t>(ta); if(++ia>N) ia=1;
+                size_t        ib = ia;                      if(++ib>N) ib=1;
+                const T B = Clamp(zero,t-ta,one);
+                const T A = one-B;
+                const T B2 = B*B;
+                const T A2 = A*A;
+                const T D  = B*(B2-one)/six;
+                const T C  = A*(A2-one)/six;
+                return A*P[ia] + B*P[ib] + C * d2P[ia] + D * d2P[ib];
+            }
+
+
+            const size_t N;    //!< number of points
+            const T      lim;  //!< N as T
+            const size_t Nm1;  //!< N-1
+            const T      zero; //!< 0
+            const T      one;  //!< 1
+            const T      six;  //!< 6
             Vertices     P;
             Vertices     d2P;
             Tableau      rhs;
@@ -145,10 +178,13 @@ namespace Yttrium
 using namespace Yttrium;
 
 
-
+#include "y/stream/libc/output.hpp"
+#include "y/random/bits.hpp"
 
 Y_UTEST(interp_cspline)
 {
+
+    Random::Rand              ran;
     MKL::CyclicSpline<double> S(3);
 
     S[1] = V2D<double>(1,0);
@@ -158,7 +194,18 @@ Y_UTEST(interp_cspline)
     S.update();
     std::cerr << "S=" << S << std::endl;
     std::cerr << "accel=" << S.accel() << std::endl;
-    
+
+    {
+        OutputFile fp("cspline.dat");
+        for(double i=-10;i<=10;i+= 0.1 * ran.to<double>() )
+        {
+            const V2D<double> v = S(i);
+            fp("%g %g\n", v.x, v.y);
+        }
+    }
+
+
+
 }
 Y_UDONE()
 

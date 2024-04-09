@@ -13,7 +13,7 @@ namespace Yttrium
     {
         static inline size_t CheckCyclic(const size_t n)
         {
-            if(n<=2) throw Specific::Exception("Cyclic","size too small");
+            if(n<=2) throw Specific::Exception("Cyclic","size=%u too small",unsigned(n));
             return n;
         }
 

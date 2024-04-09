@@ -349,8 +349,26 @@ namespace Yttrium
             const U zero(0);
             return (b >= zero) ? Fabs<T>::Of(a) : -Fabs<T>::Of(a);
         }
+    }
 
+    namespace MKL
+    {
+        template <typename> struct Floor;
 
+        template <> struct Floor<float>
+        {
+            static inline float Of(const float &x) { return floorf(x); }
+        };
+
+        template <> struct Floor<double>
+        {
+            static inline double Of(const double &x) { return floor(x); }
+        };
+
+        template <> struct Floor<long double>
+        {
+            static inline long double Of(const long double &x) { return floorl(x); }
+        };
     }
 }
 
