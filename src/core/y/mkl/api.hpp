@@ -355,18 +355,40 @@ namespace Yttrium
     {
         template <typename> struct Floor;
 
+        //______________________________________________________________________
+        //
+        //
+        //! Floort for float
+        //
+        //______________________________________________________________________     
         template <> struct Floor<float>
         {
+            //! use std function
             static inline float Of(const float &x) { return floorf(x); }
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //! Floort for double
+        //
+        //______________________________________________________________________
         template <> struct Floor<double>
         {
+            //! use std function
+
             static inline double Of(const double &x) { return floor(x); }
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //! Floort for long double
+        //
+        //______________________________________________________________________    
         template <> struct Floor<long double>
         {
+            //! use std function
             static inline long double Of(const long double &x) { return floorl(x); }
         };
     }
