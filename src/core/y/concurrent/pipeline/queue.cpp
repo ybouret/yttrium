@@ -475,10 +475,9 @@ namespace Yttrium
         Pipeline(),
         code( new Code(topology) )
         {
-            std::cerr << " *** sizeof(Code)   = " << sizeof(Code)   << std::endl;
-            std::cerr << " *** sizeof(Worker) = " << sizeof(Worker) << std::endl;
-            std::cerr << " *** sizeof(QJob)   = " << sizeof(QJob)    << std::endl;
-
+            //std::cerr << " *** sizeof(Code)   = " << sizeof(Code)   << std::endl;
+            //std::cerr << " *** sizeof(Worker) = " << sizeof(Worker) << std::endl;
+            //std::cerr << " *** sizeof(QJob)   = " << sizeof(QJob)    << std::endl;
         }
 
 
