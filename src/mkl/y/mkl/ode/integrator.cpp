@@ -36,7 +36,7 @@ namespace Yttrium
 
                 inline virtual ~Code() noexcept {}
 
-                inline void update(Writable<T> &ystart,
+                inline void run(Writable<T> &ystart,
                                    const T      x1,
                                    const T      x2,
                                    T           &hini,
@@ -47,8 +47,6 @@ namespace Yttrium
                 {
                     static const T tiny(1e-30);
                     static const T zero(0);
-                    std::cerr << "ystart=" << ystart << ", x1=" << x1 << ", x2=" << x2 <<", hini=" << hini << std::endl;
-                    assert(hini>zero);
                     const size_t   n          = ystart.size(); assert(dims>=n);
                     T              h          = zero;
                     bool           increasing = true;
@@ -58,19 +56,26 @@ namespace Yttrium
                         case Positive: increasing=true;  h =  Fabs<T>::Of(hini); break;
                         case Negative: increasing=false; h = -Fabs<T>::Of(hini); break;
                     }
+                    assert(hini>zero);
 
+                    //----------------------------------------------------------
+                    // initializing
+                    //----------------------------------------------------------
                     T x = x1;
-                    for(size_t i=n;i>0;--i)
-                        y[i] = ystart[i];
+                    for(size_t i=n;i>0;--i) y[i] = ystart[i];
 
                     while(true)
                     {
+                        //------------------------------------------------------
                         // evaluate derivatives
+                        //------------------------------------------------------
                         drvs(dydx,x,y);
 
+                        //------------------------------------------------------
                         // compute step/xnext
+                        //------------------------------------------------------
                         bool wouldFinish = false;
-                        T xnext = x+h;
+                        T    xnext       = x+h;
                         if(increasing)
                         {
                             if(xnext>=x2) { xnext=x2; wouldFinish=true; }
@@ -79,32 +84,37 @@ namespace Yttrium
                         {
                             if(xnext<=x1) { xnext=x1; wouldFinish=true; }
                         }
+                        //------------------------------------------------------
+                        // recompute step
+                        //------------------------------------------------------
                         h = xnext - x;
 
+
+                        //------------------------------------------------------
                         // evaluate scaling
+                        //------------------------------------------------------
                         for(size_t i=n;i>0;--i)
                             yscal[i] = Fabs<T>::Of(y[i]) + Fabs<T>::Of(h*dydx[i]) + tiny;
 
+                        //------------------------------------------------------
                         // take a controlled step: y and x are updated
+                        //------------------------------------------------------
                         T hdid = 0, hnxt=0;
                         actuator.move(y, dydx, x, h, eps, yscal, hdid, hnxt, drvs, cntl);
 
+                        //------------------------------------------------------
                         // are we done ?
+                        //------------------------------------------------------
                         if( wouldFinish && Fabs<T>::Of(hdid-h) <= zero )
                         {
-                            for(size_t i=n;i>0;--i)
-                                ystart[i] = y[i];
-                            hini = Fabs<T>::Of(hnxt);
+                            for(size_t i=n;i>0;--i) ystart[i] = y[i]; // update ystart
+                            hini = Fabs<T>::Of(hnxt);                 // for next step
                             return;
                         }
 
                         // x is updated, update h for next cycle
                         h = hnxt;
                     }
-
-
-
-
 
                 }
 

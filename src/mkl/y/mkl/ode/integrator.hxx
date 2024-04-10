@@ -37,5 +37,5 @@ void Integrator<real_t>:: run(Writable<real_t> & ystart,
         Nullify(code);
         code = new Code(n);
     }
-    return code->update(ystart, x1, x2, hini, drvs, cntl, actuator, eps);
+    return code->run(ystart, x1, x2, hini, drvs, cntl, actuator, eps);
 }

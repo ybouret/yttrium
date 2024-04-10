@@ -82,7 +82,7 @@ namespace Yttrium
                         else                 hnxt=five*h;                          // increase
                         x += (hdid=h);
                         for(size_t i=n;i>0;--i) y[i]=ytemp[i];
-                        std::cerr << "hdid=" << hdid << " / hnxt=" << hnxt << std::endl;
+                        //std::cerr << "hdid=" << hdid << " / hnxt=" << hnxt << std::endl;
                     }
                     
                     
