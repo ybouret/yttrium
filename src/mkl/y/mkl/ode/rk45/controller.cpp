@@ -67,20 +67,22 @@ namespace Yttrium
                             step(y,dydx,x,h,ytemp,yerr,drvs,cntl);
                             
                             errmax=zero;
-                            for(size_t i=1;i<=n;i++) errmax=Max(errmax,Fabs<T>::Of(yerr[i]/yscal[i]));
+                            for(size_t i=1;i<=n;++i) errmax=Max(errmax,Fabs<T>::Of(yerr[i]/yscal[i]));
                             errmax /= eps;
+                            //std::cerr << "errmax=" << errmax << std::endl;
                             if (errmax <= one) break;
                             
-                            const T htemp=SAFETY*h*std::pow(errmax,PSHRNK);
+                            const T htemp = SAFETY*h*std::pow(errmax,PSHRNK); // reduce
                             h= (h >= zero ? Max(htemp,oneTenth*h) : Min(htemp,oneTenth*h));
                             volatile T xnew = x+h;
                             if( Fabs<T>::Of(xnew-x) <= zero ) throw Specific::Exception("RK45","stepsize underflow");
                         }
-                        
-                        if (errmax > ERRCON) hnxt=SAFETY*h*std::pow(errmax,PGROW);
-                        else                 hnxt=five*h;
+
+                        if (errmax > ERRCON) hnxt=SAFETY*h*std::pow(errmax,PGROW); // reduce
+                        else                 hnxt=five*h;                          // increase
                         x += (hdid=h);
                         for(size_t i=n;i>0;--i) y[i]=ytemp[i];
+                        std::cerr << "hdid=" << hdid << " / hnxt=" << hnxt << std::endl;
                     }
                     
                     

@@ -47,6 +47,7 @@ namespace Yttrium
                 {
                     static const T tiny(1e-30);
                     static const T zero(0);
+                    std::cerr << "ystart=" << ystart << ", x1=" << x1 << ", x2=" << x2 <<", hini=" << hini << std::endl;
                     assert(hini>zero);
                     const size_t   n          = ystart.size(); assert(dims>=n);
                     T              h          = zero;

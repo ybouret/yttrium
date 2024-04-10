@@ -6,12 +6,12 @@
 using namespace Yttrium;
 
 
-#define Y_SHOW(FIELD) std::cerr << std::setw(16) << #FIELD << " = " << std::setw(16) << MKL::Numeric<T>::FIELD << std::endl
+#define Y_SHOW(FIELD) std::cout << std::setw(16) << #FIELD << " = " << std::setw(16) << MKL::Numeric<T>::FIELD << std::endl
 
 template <typename T>
 static inline void displayNumeric(const char *id)
 {
-    std::cerr << "-- " << id << " --" << std::endl;
+    std::cout << "-- " << id << " --" << std::endl;
     Y_SHOW(PI);
     Y_SHOW(MIN);
     Y_SHOW(MAX);
@@ -27,7 +27,7 @@ static inline void displayNumeric(const char *id)
     Y_SHOW(SQRT_EPSILON);
     Y_SHOW(GOLDEN);
     Y_SHOW(INV_GOLDEN);
-    std::cerr << std::endl;
+    std::cout << std::endl;
 
 }
 

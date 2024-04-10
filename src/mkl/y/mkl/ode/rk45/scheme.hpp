@@ -23,7 +23,7 @@ namespace Yttrium
                 //
                 //
                 //
-                //! RK45 all--in-one integrator
+                //! RK45 all-in-one integrator
                 //
                 //
                 //______________________________________________________________
