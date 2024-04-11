@@ -4,12 +4,14 @@
 #ifndef Y_Ink_Area_Included
 #define Y_Ink_Area_Included 1
 
-#include "y/config/starting.hpp"
+#include "y/mkl/v2d.hpp"
 
 namespace Yttrium
 {
     namespace Ink
     {
+        typedef V2D<unit_t> Coord;
+
         //______________________________________________________________________
         //
         //
@@ -34,15 +36,26 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
+            // Methods
+            //
+            //__________________________________________________________________
+            Coord lower() const noexcept;
+            Coord upper() const noexcept;
+
+            //__________________________________________________________________
+            //
+            //
             // Members
             //
             //__________________________________________________________________
-            const unit_t x; //!< starting x
-            const unit_t y; //!< starting y
-            const unit_t w; //!< width
-            const unit_t h; //!< height
-            const size_t n; //!< number of items
-            
+            const unit_t x;  //!< starting x
+            const unit_t y;  //!< starting y
+            const unit_t w;  //!< width
+            const unit_t h;  //!< height
+            const size_t n;  //!< number of items
+            const unit_t xt; //!< x top
+            const unit_t yt; //!< y top
+
         private:
             Y_DISABLE_ASSIGN(Area);
 

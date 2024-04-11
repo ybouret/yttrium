@@ -7,11 +7,13 @@ namespace Yttrium
 
         Area:: ~Area() noexcept
         {
-            Coerce(x) = 0;
-            Coerce(y) = 0;
-            Coerce(w) = 0;
-            Coerce(h) = 0;
-            Coerce(n) = 0;
+            Coerce(x)  = 0;
+            Coerce(y)  = 0;
+            Coerce(w)  = 0;
+            Coerce(h)  = 0;
+            Coerce(n)  = 0;
+            Coerce(xt) = 0;
+            Coerce(yt) = 0;
         }
 
         Area:: Area(const unit_t W, const unit_t H) noexcept :
@@ -19,7 +21,9 @@ namespace Yttrium
         y(0),
         w(W),
         h(H),
-        n(w*h)
+        n(w*h),
+        xt(w-1),
+        yt(h-1)
         {
             assert(w>0);
             assert(h>0);
@@ -30,11 +34,14 @@ namespace Yttrium
         y(a.y),
         w(a.w),
         h(a.h),
-        n(a.n)
+        n(a.n),
+        xt(a.xt),
+        yt(a.yt)
         {
         }
         
-
+        Coord Area:: lower() const noexcept { return Coord(x,y);   }
+        Coord Area:: upper() const noexcept { return Coord(xt,yt); }
 
     }
 }
