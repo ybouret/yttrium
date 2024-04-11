@@ -124,7 +124,16 @@ namespace Yttrium
             Coerce(brow) = 0;
         }
 
-  
+        Bitmap:: Bitmap(const Bitmap &other) noexcept :
+        Metrics(other),
+        code(other.code),
+        brow(code->row),
+        dynamic(other.dynamic)
+        {
+            code->withhold();
+        }
+
+
 
         //! erase num first items of row
         static inline
@@ -201,6 +210,7 @@ namespace Yttrium
                 eraseBitRow(brow[--j],w,bpp,kill);
         }
 
+        Y_SHALLOW_IMPL(FromBitmap);
 
     }
 

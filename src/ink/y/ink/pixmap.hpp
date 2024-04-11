@@ -13,6 +13,7 @@ namespace Yttrium
 {
     namespace Ink
     {
+
         //______________________________________________________________________
         //
         //
@@ -76,6 +77,7 @@ namespace Yttrium
         };
 
 
+        
         //______________________________________________________________________
         //
         //
@@ -127,6 +129,24 @@ namespace Yttrium
                 assert(!dynamic);
             }
 
+            //! full shared copy
+            inline   Pixmap(const Pixmap &pixmap) noexcept :
+            Bitmap(pixmap),
+            row( this->as<RowType>() )
+            {
+
+            }
+
+            //! shared copy
+            inline Pixmap(const FromBitmap_ &, const Bitmap &bmp) noexcept :
+            Bitmap(bmp),
+            row( this->as<RowType>() )
+            {
+                assert(bmp.bpp==bpp);
+            }
+
+
+
             //! cleanup
             inline virtual ~Pixmap() noexcept
             {
@@ -166,7 +186,7 @@ namespace Yttrium
             }
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Pixmap);
+            Y_DISABLE_ASSIGN(Pixmap);
             RowType * const row;
 
             static inline void Make(void *ptr, void *)  { new (ptr) MutableType(); }

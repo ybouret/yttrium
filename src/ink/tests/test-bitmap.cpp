@@ -19,7 +19,7 @@ namespace Yttrium
 
 Y_UTEST(bitmap)
 {
-    int                 pixel[] = { 1, 2, 3, 4, 5, 6};
+    int32_t                 pixel[] = { 1, 2, 3, 4, 5, 6};
 
     {
         const unit_t        count   = sizeof(pixel)/sizeof(pixel[0]);
@@ -53,8 +53,13 @@ Y_UTEST(bitmap)
     }
 
     {
-        Ink::Pixmap<int> pix(pixel,2,2,3);
-        std::cerr << pix << std::endl;
+        Ink::Pixmap<int32_t> pix(pixel,2,2,3);
+        std::cerr << "ipix=" << pix << std::endl;
+        Ink::Pixmap<uint32_t> upix(Ink::FromBitmap,pix);
+        std::cerr << "upix=" << upix << std::endl;
+        Ink::Pixmap<float> fpix(Ink::FromBitmap,pix);
+        std::cerr << "fpix=" << fpix << std::endl;
+
     }
 
 }

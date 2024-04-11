@@ -6,6 +6,7 @@
 
 #include "y/ink/metrics.hpp"
 #include "y/memory/out-of-reach.hpp"
+#include "y/config/shallow.hpp"
 
 namespace Yttrium
 {
@@ -41,9 +42,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-
-        protected:
-
+            
             //! setup/allocate data+rows WxHxBPP
             explicit Bitmap(const unit_t W, const unit_t H, const unsigned BPP);
 
@@ -57,7 +56,10 @@ namespace Yttrium
              */
             explicit Bitmap(void *data, const unit_t W, const unit_t H, const unsigned BPP, const unit_t S);
 
-        public:
+            //! shared copy
+            Bitmap(const Bitmap &other) noexcept;
+
+
             //! cleanup
             virtual ~Bitmap() noexcept;
 
@@ -76,7 +78,7 @@ namespace Yttrium
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Bitmap);
+            Y_DISABLE_ASSIGN(Bitmap);
             class Code;
             Code *         code;    //!< internal memory
         protected:
@@ -89,6 +91,7 @@ namespace Yttrium
             ROW * as() noexcept { return Memory::OutOfReach::Cast<ROW,BitRow>(brow); }
         };
 
+        Y_SHALLOW_DECL(FromBitmap);
 
     }
 }
