@@ -120,7 +120,7 @@ namespace Yttrium
              \param H    height
              \param S    stride in items, S>=W
              */
-            inline explicit Pixmap(T * data, const unit_t W, const unit_t H, const unit_t S) :
+            inline explicit Pixmap(T * const data, const unit_t W, const unit_t H, const unit_t S) :
             Bitmap(data,W,H,sizeof(T),S*sizeof(T)),
             row( this->as<RowType>() )
             {
@@ -168,9 +168,9 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pixmap);
             RowType * const row;
-            
-            static inline void Make(void *ptr, void *)  { new (ptr) T(); }
-            static inline void Kill(void *ptr) noexcept { static_cast<T*>(ptr)->~T(); }
+
+            static inline void Make(void *ptr, void *)  { new (ptr) MutableType(); }
+            static inline void Kill(void *ptr) noexcept { Destruct( static_cast<MutableType*>(ptr) ); }
 
         };
     }

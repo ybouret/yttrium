@@ -78,13 +78,13 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Bitmap);
             class Code;
-            Code *         code; //!< internal memory
+            Code *         code;    //!< internal memory
         protected:
-            BitRow * const brow; //!< rows[h]
+            BitRow * const brow;    //!< rows[h]
         public:
             const bool     dynamic; //!< if data was allocated
         protected:
-            //! convert rows
+            //! convert rows to compatible ABI
             template <typename ROW> inline
             ROW * as() noexcept { return Memory::OutOfReach::Cast<ROW,BitRow>(brow); }
         };
