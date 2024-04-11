@@ -70,7 +70,7 @@ namespace Yttrium
             {
             public:
                 inline explicit AutoUnlink(Frames &frames) noexcept : AutoClean<Frames>(frames, & Frames::unlink) {} //!< setup
-                inline virtual ~AutoUnlink()               noexcept {}                                       //!< cleanup
+                inline virtual ~AutoUnlink()               noexcept {}                                               //!< cleanup
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(AutoUnlink);
             };
@@ -105,10 +105,33 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //! call a method for each FRAME (post-init)
+            template <typename METH> inline
+            void forEach(METH meth) {
+                assert(0!=meth);
+                Writable<FRAME> &h = *this;
+                const size_t     n = h.size();
+                for(size_t i=1;i<=n;++i)
+                    (h[i].*meth)();
+            }
+
+            //! call a method for each FRAME with arguments (post-init)
+            template <typename METH, typename ARGS> inline
+            void forEach(METH meth, ARGS &args) {
+                assert(0!=meth);
+                Writable<FRAME> &h = *this;
+                const size_t     n = h.size();
+                for(size_t i=1;i<=n;++i)
+                    (h[i].*meth)(args);
+            }
+
+
+
+
 
             //__________________________________________________________________
             //
-            //! loosen all workspaces
+            //! loosen all workspaces and erase signature
             //__________________________________________________________________
             inline void loosen() noexcept
             {
