@@ -26,6 +26,8 @@ namespace Yttrium
 
             virtual ~Slab() noexcept {}
 
+            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Slab);
         };
