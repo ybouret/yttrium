@@ -40,20 +40,32 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! access item
+            //! mutable access: direct
             inline Type & operator[](const unit_t i) noexcept
+            {
+                assert(0!=entry);
+                assert(0!=zflux);
+                assert(i>=1);
+                assert(i<zflux->size);
+                return entry[i];
+            }
+
+            //! const access: zero_flux
+            inline ConstType & operator[](const unit_t i) const noexcept
             {
                 assert(0!=entry);
                 assert(0!=zflux);
                 return entry[ (*zflux)[i] ];
             }
 
-            //! access const item
-            inline ConstType & operator[](const unit_t i) const noexcept
+            //! const (faster) direct access
+            inline ConstType & operator()(const unit_t i) const noexcept
             {
                 assert(0!=entry);
                 assert(0!=zflux);
-                return entry[ (*zflux)[i] ];
+                assert(i>=1);
+                assert(i<zflux->size);
+                return entry[i];
             }
 
             //! display
@@ -161,34 +173,27 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! direct access
-            inline RowType & operator()(const unit_t j) noexcept
+
+            //! mutable access: direct
+            inline RowType & operator[](const unit_t j) noexcept
             {
                 assert(j>=0);
                 assert(j<h);
-                return row[j];
+                return row[j];     
             }
 
-            //! direct access
+            //! const access: zeroflux
+            inline const RowType & operator[](const unit_t j) const noexcept
+            {
+                return row[ zfh[j] ];
+            }
+
+            //! direct (faster) const access
             inline const RowType & operator()(const unit_t j) const noexcept
             {
                 assert(j>=0);
                 assert(j<h);
                 return row[j];
-            }
-
-
-
-            //! access Row with zero-flux
-            inline RowType & operator[](const unit_t j) noexcept
-            {
-                return row[ zfh[j] ];
-            }
-
-            //! access const Row
-            inline const RowType & operator[](const unit_t j) const noexcept
-            {
-                return row[ zfh[j] ];
             }
 
             //! display
