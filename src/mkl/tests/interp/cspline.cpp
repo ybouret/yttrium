@@ -41,7 +41,17 @@ namespace Yttrium
 
             V2D<T> operator()(const T t) const noexcept
             {
-                return code->eval(t);
+                return code->eval(t,0,0);
+            }
+
+            V2D<T> operator()(const T t, V2D<T> &v) const noexcept
+            {
+                return code->eval(t,&v,0);
+            }
+
+            V2D<T> operator()(const T t, V2D<T> &v, V2D<T> &a) const noexcept
+            {
+                return code->eval(t,&v,&a);
             }
 
         private:
@@ -92,7 +102,6 @@ namespace Yttrium
             {
                 const T mid = curr[dim];
                 const T res = (prev[dim]-mid) + (next[dim]-mid);
-               //std::cerr << prev[dim] << "->" << curr[dim] << "->" << next[dim] << " => " << res << std::endl;
                 return res;
             }
 
@@ -117,7 +126,7 @@ namespace Yttrium
                 }
             }
 
-            inline V2D<T> eval(T t) const
+            inline V2D<T> eval(T t, V2D<T> *speed, V2D<T> *accel) const
             {
 
                 while(t>lim)  t -= lim;
@@ -131,8 +140,23 @@ namespace Yttrium
                 const T A2 = A*A;
                 const T D  = B*(B2-one)/six;
                 const T C  = A*(A2-one)/six;
-                return A*P[ia] + B*P[ib] + C * d2P[ia] + D * d2P[ib];
+                const V2D<T> &Pa = P[ia];
+                const V2D<T> &Pb = P[ib];
+                const V2D<T> &d2Pa = d2P[ia];
+                const V2D<T> &d2Pb = d2P[ib];
+                if(0!=speed)
+                {
+                    *speed = (Pb-Pa) - (3*A2-one)/six * d2Pa + (3*B2-one)/six * d2Pb;
+                }
+                if(0!=accel)
+                {
+                    *accel = A*d2Pa + B * d2Pb;
+                }
+                return A*Pa + B*Pb + C * d2Pa + D * d2Pb;;
             }
+
+
+
 
 
             const size_t N;    //!< number of points
@@ -211,8 +235,15 @@ Y_UTEST(interp_cspline)
         OutputFile fp("cspline.dat");
         for(double i=-10;i<=10;i+= 0.1 * ran.to<double>() )
         {
-            const V2D<double> v = S(i);
-            fp("%g %g\n", v.x, v.y);
+            V2D<double>       v;
+            V2D<double>       a;
+            const V2D<double> r = S(i,v,a);
+            const double      speed = v.norm();
+            const V2D<double> tv = v/speed;
+            const V2D<double> nv = tv.ortho();
+            const double      H  = (v.x*a.y-a.x*v.y)/(speed*speed*speed);
+            const V2D<double> q = r + 0.1 * (1.0/H) * nv;
+            fp("%g %g %g %g\n", r.x, r.y, q.x, q.y);
         }
     }
 
