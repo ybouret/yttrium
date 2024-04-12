@@ -6,7 +6,10 @@ namespace Yttrium
     {
         Slabs:: ~Slabs() noexcept {}
 
-        Slabs:: Slabs(const Concurrent::SharedLoop &csl) :simt(csl) {}
+        Slabs:: Slabs(const Concurrent::SharedLoop &csl) :simt(csl) 
+        {
+            simt.forEach( & Slab::honorRequest );
+        }
 
 
         void Slabs:: split(const Area &area)

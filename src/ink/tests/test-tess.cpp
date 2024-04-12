@@ -1,9 +1,7 @@
 
 #include "y/ink/pixmap.hpp"
-#include "y/ink/slabs.hpp"
 
 #include "y/utest/run.hpp"
-#include "y/string.hpp"
 #include "y/concurrent/loop/crew.hpp"
 #include "y/concurrent/loop/mono.hpp"
 
@@ -93,8 +91,8 @@ Y_UTEST(tess)
         par(Ink::LoadIndex<size_t>,indx);
         std::cerr << indx << std::endl;
     }
-    
 
+    Y_USHOW(Ink::Slab::Request);
 
 
 }

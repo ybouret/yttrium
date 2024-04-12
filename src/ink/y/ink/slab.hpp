@@ -37,6 +37,10 @@ namespace Yttrium
         class Slab : public Concurrent::Frame2D<unit_t>
         {
         public:
+            static const size_t Bytes    = 256;              //!< number of Bytes for information
+            static const size_t WordSize = sizeof(uint64_t); //!< map on uint64_t[Bytes]
+            static const size_t Request  = Bytes * WordSize; //!< memory request
+
             //__________________________________________________________________
             //
             //
@@ -49,13 +53,26 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
+            // Methods
+            //
+            //__________________________________________________________________
+            void honorRequest(); //!< once call, post init
+
+            //__________________________________________________________________
+            //
+            //
             // members
             //
             //__________________________________________________________________
             const HSegment * const & hseg; //!< transmogrified segments [1..count()]
 
+
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Slab);
+            void * const wksp;
+            const size_t wlen;
         };
 
     }

@@ -21,7 +21,12 @@ namespace Yttrium
             explicit Code(const Metrics &metrics) : Object(), Counted(), row(0), pix(0), mem(0)
             {
                 {
+                    //__________________________________________________________
+                    //
+                    //
                     // compute requests
+                    //
+                    //__________________________________________________________
                     const size_t rowOffset = 0;
                     const size_t rowLength = sizeof(BitRow) * metrics.h;
 
@@ -29,7 +34,12 @@ namespace Yttrium
                     const size_t pixLength = metrics.n * metrics.bpp;
                     const size_t blockSize = Align(pixLength+pixOffset);
 
+                    //__________________________________________________________
+                    //
+                    //
                     // allocate
+                    //
+                    //__________________________________________________________
                     mem  = 1;
                     {
                         uint8_t * const ptr = static_cast<uint8_t *>(MemMgr::Instance().acquire(mem,blockSize));
@@ -38,10 +48,14 @@ namespace Yttrium
                     }
                 }
 
+                //__________________________________________________________
+                //
+                //
                 // link
-                link(metrics);
-
-                withhold();
+                //
+                //__________________________________________________________
+                link(metrics); // no-throw
+                withhold();    // no-throw
             }
 
             explicit Code(void *data, const Metrics &metrics) : Object(), Counted(), row(0), pix(0), mem(0)

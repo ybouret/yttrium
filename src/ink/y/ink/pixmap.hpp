@@ -1,13 +1,10 @@
-
 //! \file
 
 #ifndef Y_Ink_Pixmap_Included
 #define Y_Ink_Pixmap_Included 1
 
-
 #include "y/ink/bitmap.hpp"
-#include "y/type/args.hpp"
-#include <iostream>
+#include "y/ink/slabs.hpp"
 
 namespace Yttrium
 {
@@ -199,12 +196,19 @@ namespace Yttrium
             //! display
             inline friend std::ostream & operator<<(std::ostream &os, const Pixmap &pxm)
             {
+                for(unit_t j=0;j<pxm.h-1;++j)
+                {
+                    os << ' ' << pxm[j] << '\n';
+                }
+                os <<' '<< pxm[pxm.h-1];
+#if 0
                 os << '[' << pxm[0];
                 for(unit_t j=1;j<pxm.h;++j)
                 {
                     os << ';' << pxm[j];
                 }
                 os << ']';
+#endif
                 return os;
             }
 

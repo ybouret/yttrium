@@ -91,7 +91,7 @@ namespace Yttrium
             ROW * as() noexcept { return Memory::OutOfReach::Cast<ROW,BitRow>(brow); }
         };
 
-        Y_SHALLOW_DECL(FromBitmap);
+        Y_SHALLOW_DECL(FromBitmap); //!< alias
 
     }
 }

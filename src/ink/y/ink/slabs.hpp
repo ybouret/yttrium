@@ -27,8 +27,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Slabs(const Concurrent::SharedLoop &);
-            virtual ~Slabs() noexcept;
+            explicit Slabs(const Concurrent::SharedLoop &); //!< setup+memory
+            virtual ~Slabs() noexcept;                      //!< cleanup
 
             //__________________________________________________________________
             //
@@ -37,27 +37,46 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //__________________________________________________________________
+            //
             //! computing slabs
+            //__________________________________________________________________
             void split(const Area &area);
 
+            //__________________________________________________________________
+            //
+            //! proc(slab,target)
+            //__________________________________________________________________
             template <typename PROC, typename PIXMAP> inline
             void operator()(PROC &proc, PIXMAP &target )
             {
                 split(target); simt(proc,target);
             }
 
+            //__________________________________________________________________
+            //
+            //! proc(slab,target,arg1)
+            //__________________________________________________________________
             template <typename PROC, typename PIXMAP, typename ARG1> inline
             void operator()(PROC &proc, PIXMAP &target, ARG1 &arg1)
             {
                 split(target); simt(proc,target,arg1);
             }
             
+            //__________________________________________________________________
+            //
+            //! proc(slab,target,arg1,arg2)
+            //__________________________________________________________________
             template <typename PROC, typename PIXMAP, typename ARG1, typename ARG2> inline
             void operator()(PROC &proc, PIXMAP &target, ARG1 &arg1, ARG2 &arg2)
             {
                 split(target); simt(proc,target,arg1,arg2);
             }
 
+            //__________________________________________________________________
+            //
+            //! proc(slab,target,arg1,arg2,arg3)
+            //__________________________________________________________________
             template <typename PROC, typename PIXMAP, typename ARG1, typename ARG2, typename ARG3> inline
             void operator()(PROC &proc, PIXMAP &target, ARG1 &arg1, ARG2 &arg2, ARG3 &arg3)
             {
@@ -65,9 +84,13 @@ namespace Yttrium
             }
 
 
-
-
-            Concurrent::SIMT<Slab> simt;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            Concurrent::SIMT<Slab> simt; //!< implementation of SIMT
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Slabs);
