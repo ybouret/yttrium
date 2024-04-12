@@ -45,7 +45,7 @@ namespace Yttrium
             {
                 assert(0!=entry);
                 assert(0!=zflux);
-                assert(i>=1);
+                assert(i>=0);
                 assert(i<zflux->size);
                 return entry[i];
             }
@@ -63,7 +63,7 @@ namespace Yttrium
             {
                 assert(0!=entry);
                 assert(0!=zflux);
-                assert(i>=1);
+                assert(i>=0);
                 assert(i<zflux->size);
                 return entry[i];
             }

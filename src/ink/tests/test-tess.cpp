@@ -15,7 +15,17 @@ namespace Yttrium
 
     namespace Ink
     {
-        
+        template <typename T>
+        void LoadZero(Slab &slab, Pixmap<T> &target)
+        {
+            for(size_t k=slab.count();k>0;--k)
+            {
+                const HSegment               s = slab.hseg[k];
+                typename Pixmap<T>::RowType &r = target[s.y];
+                for(unit_t i=s.w,x=s.x;i>0;--i,++x) r[x] = 0;
+            }
+        }
+
         template <typename T>
         void LoadIndex(Slab &slab, Pixmap<T> &target )
         {
@@ -39,6 +49,8 @@ namespace Yttrium
         }
 
 
+
+
     }
 
 }
@@ -56,15 +68,22 @@ Y_UTEST(tess)
     {
         Ink::Pixmap<int> ipix(2,2);
         seq.split(ipix);
-        std::cerr << seq << std::endl;
+        std::cerr << seq.simt << std::endl;
         par.split(ipix);
-        std::cerr << par << std::endl;
+        std::cerr << par.simt << std::endl;
+
+        seq(Ink::LoadZero<int>,ipix);
+        par(Ink::LoadZero<int>,ipix);
+
+        seq.simt.loosen();
+        par.simt.loosen();
 
         int value = 1;
         seq(Ink::Load<int>,ipix,value);
         std::cerr << ipix << std::endl;
         value = 2;
         par(Ink::Load<int>,ipix,value);
+     
         std::cerr << ipix << std::endl;
     }
 
@@ -74,8 +93,7 @@ Y_UTEST(tess)
         par(Ink::LoadIndex<size_t>,indx);
         std::cerr << indx << std::endl;
     }
-
-
+    
 
 
 
