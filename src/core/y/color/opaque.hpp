@@ -34,6 +34,16 @@ namespace Yttrium
             static constexpr float Value = 1.0f ;
         };
 
+        template <> struct Opaque<double>
+        {
+            static constexpr double Value = 1.0 ;
+        };
+
+        template <> struct Opaque<long double>
+        {
+            static constexpr long double Value = 1.0l ;
+        };
+
     }
 
 }
