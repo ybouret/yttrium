@@ -1,9 +1,10 @@
 
 #include "y/ink/pixmap.hpp"
+#include "y/ink/slab.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
 #include "y/concurrent/loop/simt.hpp"
-#include "y/concurrent/frame/2d.hpp"
 #include "y/concurrent/loop/crew.hpp"
 #include "y/concurrent/loop/mono.hpp"
 
@@ -15,42 +16,7 @@ namespace Yttrium
 
     namespace Ink
     {
-        typedef Concurrent::Frame2D<unit_t> ParallelFrame;
-
-        //__________________________________________________________________
-        //
-        //
-        //
-        //! HSegment matching Tiling<unit_t>::Segment
-        //
-        //
-        //__________________________________________________________________
-        struct HSegment
-        {
-            unit_t x;  //!< x
-            unit_t y;  //!< y
-            unit_t w;  //!M width
-            unit_t xt; //!< x top
-        };
-
-        class Slab : public ParallelFrame
-        {
-        public:
-            
-            explicit Slab(const ThreadContext &ctx) noexcept : 
-            ParallelFrame(ctx),
-            hseg( *(const HSegment **) Memory::OutOfReach::Addr(&segment) )
-            {
-            }
-
-            virtual ~Slab() noexcept {}
-
-            const HSegment * const & hseg; //!< transmogrified segments [1..tile->size] if not NULL
-            
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Slab);
-        };
+        
 
         class Slabs : public Concurrent::SIMT<Slab>
         {
