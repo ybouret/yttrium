@@ -16,17 +16,22 @@ namespace Yttrium
 
         template <> struct Opaque<uint8_t>
         {
-            static const uint8_t Value = 0xff;
+            static constexpr uint8_t Value = 0xff;
         };
 
         template <> struct Opaque<uint16_t>
         {
-            static const uint16_t = 0xffff;
+            static constexpr uint16_t Value = 0xffff;
         };
 
         template <> struct Opaque<uint32_t>
         {
-            static const uint32_t = 0xffffffff;
+            static constexpr uint32_t Value = 0xffffffff;
+        };
+
+        template <> struct Opaque<float>
+        {
+            static constexpr float Value = 1.0f ;
         };
 
     }
