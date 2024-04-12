@@ -15,7 +15,6 @@ namespace Yttrium
         class RGBA
         {
         public:
-            static constexpr const T OPAQUE = Opaque<T>::Value;
 
             //__________________________________________________________________
             //
@@ -24,8 +23,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             inline ~RGBA()                                 noexcept {}                                        //!< cleanup
-            inline  RGBA(const T A = OPAQUE)               noexcept : r(0), g(0), b(0), a(A) {}                     //!< zero
-            inline  RGBA(const T R, const T G, const T B, const T A = OPAQUE)  noexcept : r(R), g(G), b(B), a(A) {}                     //!< setup
+            inline  RGBA(const T A = Opaque<T>::Value)     noexcept : r(0), g(0), b(0), a(A) {}                     //!< zero
+            inline  RGBA(const T R, const T G, const T B, const T A = Opaque<T>::Value)  noexcept : r(R), g(G), b(B), a(A) {}                     //!< setup
             inline  RGBA(const RGBA &c)                    noexcept : r(c.r), g(c.g), b(c.b), a(c.a) {}               //!< copy
             inline  RGBA & operator=(const RGBA &c)        noexcept { r = c.r; g=c.g; b=c.b; a=c.a; return *this; }  //!< assign
 
