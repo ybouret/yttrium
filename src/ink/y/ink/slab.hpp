@@ -1,5 +1,3 @@
-
-
 //! \file
 
 #ifndef Y_Ink_Slab_Included

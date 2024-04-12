@@ -59,7 +59,6 @@ Y_UTEST(bitmap)
         std::cerr << "upix=" << upix << std::endl;
         Ink::Pixmap<float> fpix(Ink::FromBitmap,pix);
         std::cerr << "fpix=" << fpix << std::endl;
-
     }
 
 }
