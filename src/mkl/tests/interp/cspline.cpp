@@ -180,6 +180,7 @@ using namespace Yttrium;
 
 #include "y/stream/libc/output.hpp"
 #include "y/random/bits.hpp"
+#include "y/mkl/numeric.hpp"
 
 Y_UTEST(interp_cspline)
 {
@@ -187,13 +188,24 @@ Y_UTEST(interp_cspline)
     Random::Rand              ran;
     MKL::CyclicSpline<double> S(3);
 
-    S[1] = V2D<double>(1,0);
-    S[2] = V2D<double>(0,1);
-    S[3] = V2D<double>(-1,0);
+    const double theta0 = 0;
+    const double theta1 = 2*MKL::Numeric<double>::PI/3;
+    const double theta2 = 4*MKL::Numeric<double>::PI/3;
+    S[1] = V2D<double>(cos(theta0),sin(theta0));
+    S[2] = V2D<double>(cos(theta1),sin(theta1));
+    S[3] = V2D<double>(cos(theta2),sin(theta2));
 
     S.update();
     std::cerr << "S=" << S << std::endl;
     std::cerr << "accel=" << S.accel() << std::endl;
+    {
+        OutputFile fp("csdata.dat");
+        for(size_t i=1;i<=S.size();++i)
+        {
+            fp("%g %g\n", S[i].x, S[i].y);
+        }
+        fp("%g %g\n", S[1].x, S[1].y);
+    }
 
     {
         OutputFile fp("cspline.dat");
