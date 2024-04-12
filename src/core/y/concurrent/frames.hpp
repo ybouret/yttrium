@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_CONCURRENT_FRAMES_INCLUDED
-#define Y_CONCURRENT_FRAMES_INCLUDED 1
+#ifndef Y_Concurrent_Frames_Included
+#define Y_Concurrent_Frames_Included 1
 
 #include "y/concurrent/frame/nucleus/frames.hpp"
 #include "y/container/cxx/array.hpp"
@@ -14,6 +14,19 @@ namespace Yttrium
 {
     namespace Concurrent
     {
+
+        //______________________________________________________________________
+        //
+        //
+        //! default frames constructor
+        //
+        //______________________________________________________________________
+#define Y_Concurrent_Frames_Construct() \
+Nucleus::Frames(stc),                   \
+CxxFrames(CopyOf,*contexts),            \
+signature()
+
+
 
         //______________________________________________________________________
         //
@@ -32,6 +45,20 @@ namespace Yttrium
 /**/      signature.build(query);                               \
 /**/    }                                                       \
 /**/ catch(...) { loosen(); throw; } } while(false)
+
+
+        //______________________________________________________________________
+        //
+        //
+        //! helper to execute CODE per FRAME
+        //
+        //______________________________________________________________________
+#define Y_Concurrent_Frames_For_Each(CODE) do { \
+/**/     assert(0!=meth);                       \
+/**/     Writable<FRAME> &h = *this;            \
+/**/     const size_t     n = h.size();         \
+/**/     for(size_t i=1;i<=n;++i) { CODE; }     \
+/**/ } while(false)
 
 
         //______________________________________________________________________
@@ -89,8 +116,8 @@ namespace Yttrium
              \param stc shared ThreadContexts (class DERIVED : public ThreadContexts...)
              */
             template <typename DERIVED>
-            explicit Frames(const ArcPtr<DERIVED> &stc) :
-            Nucleus::Frames(stc), CxxFrames(CopyOf,*contexts), signature()
+            explicit Frames(const ArcPtr<DERIVED> &stc) : 
+            Y_Concurrent_Frames_Construct()
             {
             }
 
@@ -107,27 +134,11 @@ namespace Yttrium
 
             //! call a method for each FRAME (post-init)
             template <typename METH> inline
-            void forEach(METH meth) {
-                assert(0!=meth);
-                Writable<FRAME> &h = *this;
-                const size_t     n = h.size();
-                for(size_t i=1;i<=n;++i)
-                    (h[i].*meth)();
-            }
+            void forEach(METH meth) { Y_Concurrent_Frames_For_Each((h[i].*meth)()); }
 
             //! call a method for each FRAME with arguments (post-init)
             template <typename METH, typename ARGS> inline
-            void forEach(METH meth, ARGS &args) {
-                assert(0!=meth);
-                Writable<FRAME> &h = *this;
-                const size_t     n = h.size();
-                for(size_t i=1;i<=n;++i)
-                    (h[i].*meth)(args);
-            }
-
-
-
-
+            void forEach(METH meth, ARGS &args) { Y_Concurrent_Frames_For_Each((h[i].*meth)(args)); }
 
             //__________________________________________________________________
             //
