@@ -66,7 +66,7 @@ namespace Yttrium
             //__________________________________________________________________
             const HSegment * const & hseg; //!< transmogrified segments [1..count()]
 
-
+            
 
 
         private:
