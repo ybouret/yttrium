@@ -43,10 +43,18 @@ namespace Yttrium
 
             //! setup
             inline explicit  SIMT( const SharedLoop &sl ) :
-            Frames<ENGINE>(sl),
-            SIMT_Loop(sl)
+            Frames<ENGINE>(sl), SIMT_Loop(sl)
             {
             }
+
+            //! setup with postInit method
+            template <typename METH>
+            inline explicit SIMT(const SharedLoop &sl, METH meth) :
+            Frames<ENGINE>(sl,meth), SIMT_Loop(sl)
+            {
+            }
+
+
 
             //! cleanup
             inline virtual ~SIMT() noexcept {}

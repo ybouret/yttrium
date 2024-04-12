@@ -109,7 +109,7 @@ signature()
             //
             //__________________________________________________________________
 
-            //! DERIVED from ThreadContexts
+            //! build for DERIVED from ThreadContexts
             /**
              - keep a shared copy of contexts
              - build one FRAME per context
@@ -120,6 +120,7 @@ signature()
             Y_Concurrent_Frames_Construct()
             {
             }
+
 
 
             //! cleanup
@@ -139,6 +140,22 @@ signature()
             //! call a method for each FRAME with arguments (post-init)
             template <typename METH, typename ARGS> inline
             void forEach(METH meth, ARGS &args) { Y_Concurrent_Frames_For_Each((h[i].*meth)(args)); }
+
+            //__________________________________________________________________
+            //
+            //
+            // extra constructors
+            //
+            //__________________________________________________________________
+
+            //! helper to build frames + resource acquisition
+            template <typename DERIVED, typename METH>
+            explicit Frames(const ArcPtr<DERIVED> &stc, METH meth) :
+            Y_Concurrent_Frames_Construct()
+            {
+                forEach<METH>(meth);
+            }
+
 
             //__________________________________________________________________
             //

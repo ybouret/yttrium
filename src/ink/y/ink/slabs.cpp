@@ -6,9 +6,8 @@ namespace Yttrium
     {
         Slabs:: ~Slabs() noexcept {}
 
-        Slabs:: Slabs(const Concurrent::SharedLoop &csl) :simt(csl) 
+        Slabs:: Slabs(const Concurrent::SharedLoop &csl) :simt(csl,& Slab::honorRequest)
         {
-            simt.forEach( & Slab::honorRequest );
         }
 
 
