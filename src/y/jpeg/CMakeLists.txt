@@ -59,4 +59,6 @@ WORKING_DIRECTORY ${HERE}
 COMMENT "Testing JPEG"
 VERBATIM)
 
-#Y_LinkMath(y_luac)
+#add_executable(jpeg_example example.c)
+#target_link_libraries(jpeg_example y-jpeg)
+

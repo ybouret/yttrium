@@ -54,6 +54,8 @@ namespace Yttrium
             T g; //!< green
             T b; //!< blue
         };
+
+        
     }
 
 }
