@@ -161,7 +161,25 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! access Row
+            //! direct access
+            inline RowType & operator()(const unit_t j) noexcept
+            {
+                assert(j>=0);
+                assert(j<h);
+                return row[j];
+            }
+
+            //! direct access
+            inline const RowType & operator()(const unit_t j) const noexcept
+            {
+                assert(j>=0);
+                assert(j<h);
+                return row[j];
+            }
+
+
+
+            //! access Row with zero-flux
             inline RowType & operator[](const unit_t j) noexcept
             {
                 return row[ zfh[j] ];
