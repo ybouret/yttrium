@@ -1,0 +1,93 @@
+\documentclass[aps,12pt]{revtex4}
+\usepackage[a4paper]{geometry}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{chemarr}
+\usepackage{mathptmx}
+\usepackage{bookman}
+
+  	 
+\begin{document}
+
+\section{Three Points}
+
+Let $\vec{A}, \vec{B}, \vec{C}$ be three points on an arc.
+If $a,b,c$ are the length of the segments, then the semi-perimeter $s$ is:
+\begin{equation}
+s = \dfrac{a+b+c}{2},
+\end{equation}
+and the diameter of the circumcircle is:
+\begin{equation}
+	d = \dfrac{abc}{2\sqrt{s(s-a)(s-b)(s-c)}} = \dfrac{2abc}{\sqrt{(a+b+c)(a+b-c)(a-b+c)(-a+b+c)}}.
+\end{equation}
+The curvature is:
+\begin{equation}
+	\kappa = \dfrac{\sqrt{(a+b+c)(a+b-c)(a-b+c)(-a+b+c)}}{abc}
+\end{equation}
+
+\section{Circular Spline}
+
+\subsection{Definition}
+
+On $[i;i+1]$:
+\begin{equation}
+	\vec{P}(t) = (1-t) \vec{P}_i + t \vec{P}_{i+1} + E(t) \vec{P}'''_i + F(t) \vec{P}'''_{i+1}
+\end{equation}
+such that
+\begin{equation}
+	\vec{P}'''(t) = (1-t) \vec{P}'''_i + t \vec{P}'''_{i+1}
+\end{equation}
+
+\begin{equation}
+	Q(t,q) = \dfrac{t^4 - (1+q) t ^2 + q  t}{24} = \dfrac{t}{24}\left[ t^3 - (1+q) t + q\right]
+\end{equation}
+
+Functions:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	F(t) & = &Q(t,\beta)\\
+	E(t) & = &-Q(1-t,\alpha)\\
+\end{array}
+\right.
+\end{equation}
+
+First Derivatives:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcccl}
+	F'(t) & = &Q'(t,\beta) & = & \dfrac{4t^3 - 2(1+\beta) t  + \beta  }{24}\\
+	\\
+	E'(t) & = &\left[-Q(1-t,\alpha)\right]' & = & Q'(1-t,\alpha)\\
+\end{array}
+\right.
+\end{equation}
+
+Second Derivatives:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcccl}
+	F''(t) & = &Q''(t,\beta) & = & \dfrac{6t^2 - (1+\beta) }{12}\\
+	\\
+	E''(t) & = &\left[-Q(1-t,\alpha)\right]'' & = & -Q''(1-t,\alpha)\\
+\end{array}
+\right.
+\end{equation}
+
+\subsection{Continuity of first derivatives}
+
+\begin{equation}
+	\vec{P}'_i 
+	 = \vec{P}_{i+1} - \vec{P}_i + E'_i(0) \vec{P}'''_i + F'_i(0) \vec{P}'''_{i+1} 
+	 = \vec{P}_i - \vec{P}_{i-1} + E'_{i-1}(1) \vec{P}'''_{i-1} + F'_{i-1}(1) \vec{P}'''_i
+\end{equation}
+
+\begin{equation}
+	\vec{P}_{i-1} - 2 \vec{P}_i + \vec{P}_{i+1} 
+	=  \left[E'_{i-1}(1)\right] \vec{P}'''_{i-1} + \left[F'_{i-1}(1)- E'_i(0)\right] \vec{P}'''_i + \left[- F'_i(0)\right] \vec{P}'''_{i+1} 
+\end{equation}
+
+
+\end{document}
