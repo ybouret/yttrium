@@ -1,5 +1,5 @@
 
-message( STATUS "Looking for MPI implementation..." )
+message( STATUS "Looking for MPI implementation, please wait..." )
 
 find_package(MPI)
 

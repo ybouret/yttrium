@@ -56,12 +56,15 @@ if(FLTK_FOUND)
 	#-----------------------------------------------------------------------
 	# get cxxflags 
 	#-----------------------------------------------------------------------
-	#message( STATUS "  @FLTK query cxxflags..." )
+	message( STATUS "  @FLTK query cxxflags..." )
 	find_program(BASH bash REQUIRED)
 	if(FLTK_VERBOSE)
 		message( STATUS "@FLTK bash='${BASH}'" )
 	endif()
-	exec_program(${BASH} ARGS "${FLTK-CONFIG}" --cxxflags OUTPUT_VARIABLE FLTK-CXXFLAGS)
+	#exec_program(${BASH} ARGS "${FLTK-CONFIG}" --cxxflags OUTPUT_VARIABLE FLTK-CXXFLAGS)
+	execute_process(COMMAND ${BASH} "${FLTK-CONFIG}" --cxxflags 
+	                OUTPUT_VARIABLE FLTK-CXXFLAGS
+					OUTPUT_STRIP_TRAILING_WHITESPACE)
 	if(FLTK_VERBOSE)
 		message( STATUS "@FLTK-CXXFLAGS='${FLTK-CXXFLAGS}'" )
 	endif()
@@ -112,11 +115,12 @@ if(FLTK_FOUND)
 
 		#get all args
 		#message( STATUS "@FLTK --> ${THE_TARGET} | 'fltk-config ${_fltk_ldflags}'" )
-		exec_program( ${BASH} ARGS ${FLTK-CONFIG} ${_fltk_ldflags} OUTPUT_VARIABLE FLTK-LDFLAGS)
+		#exec_program( ${BASH} ARGS ${FLTK-CONFIG} ${_fltk_ldflags} OUTPUT_VARIABLE FLTK-LDFLAGS)
+		execute_process( COMMAND ${BASH} ${FLTK-CONFIG} ${_fltk_ldflags} OUTPUT_VARIABLE FLTK-LDFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
 		if(FLTK_VERBOSE)
 			message( STATUS "@FLTK-LDFLAGS='${FLTK-LDFLAGS}'")
 		endif()
-		
+ 
 		#extract libraries, link directories is already set
 		#STRING( REGEX MATCHALL "([-][l]([^ ;])+)|(-framework ([^ ;])+)" FLTK-LIBS ${FLTK-LDFLAGS})
 		#STRING( REPLACE  "-l" "" FLTK-LIBS "${FLTK-LIBS}")
