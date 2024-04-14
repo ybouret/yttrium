@@ -21,7 +21,7 @@ else(MSVC)
 	if( "" STREQUAL "${FLTK_BIN}" )
 		# automatic detection
 		message( STATUS "Looking for default FLTK")
-		FIND_PROGRAM( FLTK-CONFIG fltk-config )
+		find_program( FLTK-CONFIG fltk-config )
 		if( ${FLTK-CONFIG} STREQUAL FLTK-CONFIG-NOTFOUND )
 			message( STATUS "Can't find fltk-config" )
 		else()
@@ -57,11 +57,11 @@ if(FLTK_FOUND)
 	# get cxxflags 
 	#-----------------------------------------------------------------------
 	#message( STATUS "  @FLTK query cxxflags..." )
-	FIND_PROGRAM(BASH bash)
+	find_program(BASH bash REQUIRED)
 	if(FLTK_VERBOSE)
 		message( STATUS "@FLTK bash='${BASH}'" )
 	endif()
-	EXEC_PROGRAM(${BASH} ARGS "${FLTK-CONFIG}" --cxxflags OUTPUT_VARIABLE FLTK-CXXFLAGS)
+	exec_program(${BASH} ARGS "${FLTK-CONFIG}" --cxxflags OUTPUT_VARIABLE FLTK-CXXFLAGS)
 	if(FLTK_VERBOSE)
 		message( STATUS "@FLTK-CXXFLAGS='${FLTK-CXXFLAGS}'" )
 	endif()
@@ -69,22 +69,22 @@ if(FLTK_FOUND)
 	#-----------------------------------------------------------------------
 	# extract include directories
 	#-----------------------------------------------------------------------
-	STRING( REGEX MATCHALL "[-][I]([^ ;])+" FLTK-INCLUDES ${FLTK-CXXFLAGS} )
-	STRING( REPLACE  "-I" "" FLTK-INCLUDES "${FLTK-INCLUDES}")
-	LIST(REMOVE_DUPLICATES FLTK-INCLUDES)
-	IF(FLTK_VERBOSE)
+	string( REGEX MATCHALL "[-][I]([^ ;])+" FLTK-INCLUDES ${FLTK-CXXFLAGS} )
+	string( REPLACE  "-I" "" FLTK-INCLUDES "${FLTK-INCLUDES}")
+	list(REMOVE_DUPLICATES FLTK-INCLUDES)
+	if(FLTK_VERBOSE)
 		message( STATUS "@FLTK-INCLUDES='${FLTK-INCLUDES}'" )
-	ENDIF()
-	INCLUDE_DIRECTORIES(${FLTK-INCLUDES})
+	endif()
+	include_directories(${FLTK-INCLUDES})
 
 	#-----------------------------------------------------------------------
 	# extract definitions
 	#-----------------------------------------------------------------------
-	STRING( REGEX MATCHALL "[-][D]([^ ;])+" FLTK-DEFINES ${FLTK-CXXFLAGS} )
-	IF(FLTK_VERBOSE)
+	string( REGEX MATCHALL "[-][D]([^ ;])+" FLTK-DEFINES ${FLTK-CXXFLAGS} )
+	if(FLTK_VERBOSE)
 		message( STATUS "@FLTK-DEFINES='${FLTK-DEFINES}'")
-	ENDIF()
-	ADD_DEFINITIONS(${FLTK-DEFINES})
+	endif()
+	add_definitions(${FLTK-DEFINES})
 
 	#-----------------------------------------------------------------------
 	# extract FLTK link directory
@@ -103,19 +103,19 @@ if(FLTK_FOUND)
 	macro(TARGET_LINK_FLTK THE_TARGET)
 
 		#initialize arguments for fltk-config
-		SET(_fltk_ldflags "--ldflags" )
+		set(_fltk_ldflags "--ldflags" )
 
 		#collect extra arguments (images,gl,...)
-		FOREACH( extra ${ARGN} )
-			SET(_fltk_ldflags "${_fltk_ldflags} --use-${extra}" )
-		ENDFOREACH( extra ${ARGN} )
+		foreach( extra ${ARGN} )
+			set(_fltk_ldflags "${_fltk_ldflags} --use-${extra}" )
+		endforeach( extra ${ARGN} )
 
 		#get all args
 		#message( STATUS "@FLTK --> ${THE_TARGET} | 'fltk-config ${_fltk_ldflags}'" )
-		EXEC_PROGRAM( ${BASH} ARGS ${FLTK-CONFIG} ${_fltk_ldflags} OUTPUT_VARIABLE FLTK-LDFLAGS)
-		IF(FLTK_VERBOSE)
+		exec_program( ${BASH} ARGS ${FLTK-CONFIG} ${_fltk_ldflags} OUTPUT_VARIABLE FLTK-LDFLAGS)
+		if(FLTK_VERBOSE)
 			message( STATUS "@FLTK-LDFLAGS='${FLTK-LDFLAGS}'")
-		ENDIF()
+		endif()
 		
 		#extract libraries, link directories is already set
 		#STRING( REGEX MATCHALL "([-][l]([^ ;])+)|(-framework ([^ ;])+)" FLTK-LIBS ${FLTK-LDFLAGS})
@@ -132,9 +132,9 @@ if(FLTK_FOUND)
 	## FLUID_UIC(UI [PATH]) will produce UI_SOURCE UI_HEADER UI_SOURCES
 	########################################################################
 	macro(FLUID_UIC THE_UI)
-		SET(_UI_FL     "${CMAKE_CURRENT_SOURCE_DIR}/${THE_UI}.fl" )
-		SET(_UI_SOURCE "${CMAKE_CURRENT_BINARY_DIR}/${THE_UI}.cxx")
-		SET(_UI_HEADER "${CMAKE_CURRENT_BINARY_DIR}/${THE_UI}.h")
+		set(_UI_FL     "${CMAKE_CURRENT_SOURCE_DIR}/${THE_UI}.fl" )
+		set(_UI_SOURCE "${CMAKE_CURRENT_BINARY_DIR}/${THE_UI}.cxx")
+		set(_UI_HEADER "${CMAKE_CURRENT_BINARY_DIR}/${THE_UI}.h")
 		message( STATUS "**** <${THE_UI}> will compile"   )
 		message( STATUS "** fluid : ${_UI_FL}"     )
 		message( STATUS "** source: ${_UI_SOURCE}" )
@@ -142,28 +142,28 @@ if(FLTK_FOUND)
 		message( STATUS "@FLTK: GUI from <${THE_UI}.fl>" )
 		
 		#create the command
-		ADD_CUSTOM_COMMAND( OUTPUT  ${_UI_SOURCE} ${_UI_HEADER}
+		add_custom_command( OUTPUT  ${_UI_SOURCE} ${_UI_HEADER}
 							COMMAND ${FLUID} -c -o ${_UI_SOURCE} -h ${_UI_HEADER} ${_UI_FL} 
 							DEPENDS ${_UI_FL}
 							COMMENT "Generating Code for ${THE_UI}" )
 		
 		#register the output directory	
-		INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR} )
+		include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
 		#build the global variables
-		SET( ${THE_UI}_SOURCE  ${_UI_SOURCE} )
-		SET( ${THE_UI}_HEADER  ${_UI_HEADER} )
-		SET( ${THE_UI}_SOURCES ${_UI_SOURCE} ${_UI_HEADER} ${_UI_FL} )
+		set( ${THE_UI}_SOURCE  ${_UI_SOURCE} )
+		set( ${THE_UI}_HEADER  ${_UI_HEADER} )
+		set( ${THE_UI}_SOURCES ${_UI_SOURCE} ${_UI_HEADER} ${_UI_FL} )
 	endmacro(FLUID_UIC)
 
 endif(FLTK_FOUND)
 
 macro(Y_FLTK_SILENCE)
 	message( STATUS "@FLTK: Removing warnings" )
-	FOREACH( word IN ITEMS "-Weffc++" "-Wextra" )
-	STRING(REPLACE "${word}" "" CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG}"   )
-	STRING(REPLACE "${word}" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}" )
-ENDFOREACH()
+	foreach( word IN ITEMS "-Weffc++" "-Wextra" )
+		string(REPLACE "${word}" "" CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG}"   )
+		string(REPLACE "${word}" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}" )
+	endforeach()
 endmacro(Y_FLTK_SILENCE)
 
 endif(MSVC)

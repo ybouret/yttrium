@@ -1,4 +1,6 @@
 
+message( STATUS "Looking for MPI implementation..." )
+
 find_package(MPI)
 
 if(MPI_C_FOUND)
