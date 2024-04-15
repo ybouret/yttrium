@@ -104,6 +104,8 @@ namespace Yttrium
                 assert(0!=param);
                 assert(width>0);
 
+                std::cerr << "Build #" << numBlocks << " with Procedural Code" << std::endl;
+
                 try {
                     uint8_t       *tgt = static_cast<uint8_t *>(entry);
                     while(built<numBlocks) {

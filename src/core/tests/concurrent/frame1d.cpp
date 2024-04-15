@@ -4,6 +4,7 @@
 #include "y/concurrent/frames.hpp"
 #include "y/concurrent/thread.hpp"
 #include "y/utest/run.hpp"
+#include "y/string/env.hpp"
 
 using namespace Yttrium;
 
@@ -26,7 +27,7 @@ namespace
 
 Y_UTEST(concurrent_frame1d)
 {
-    Concurrent::Thread::Verbose = true;
+    Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
     const Concurrent::Topology topo;
     Concurrent::SharedLoop     seqEngine = new Concurrent::Mono();
     Concurrent::SharedLoop     parEngine = new Concurrent::Crew(topo);
