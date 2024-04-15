@@ -15,7 +15,9 @@ namespace
     public:
         inline explicit Demo(const Concurrent::ThreadContext &ctx) noexcept :
         Concurrent::Frame1D<size_t>(ctx)
-        {}
+        {
+            std::cerr << "New Demo " << name << " @" << (void *)this << std::endl;
+        }
 
         inline virtual ~Demo() noexcept {}
         
@@ -32,7 +34,8 @@ Y_UTEST(concurrent_frame1d)
     Concurrent::SharedLoop     seqEngine = new Concurrent::Mono();
     Concurrent::SharedLoop     parEngine = new Concurrent::Crew(topo);
 
-    
+    std::cerr << "sizeof(Demo)=" << sizeof(Demo) << std::endl;
+    std::cerr << "*seqEngine @" << & *seqEngine << std::endl;
     Concurrent::Frames<Demo> seq(seqEngine);return 0;
     Concurrent::Frames<Demo> par(parEngine);
 
