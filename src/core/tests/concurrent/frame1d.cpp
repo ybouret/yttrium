@@ -29,8 +29,7 @@ namespace
 
 Y_UTEST(concurrent_frame1d)
 {
-    Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
-    const Concurrent::Topology topo;
+
     Concurrent::SharedLoop     seqEngine = new Concurrent::Mono();
 
     std::cerr << "sizeof(Demo)=" << sizeof(Demo) << std::endl;
@@ -38,6 +37,8 @@ Y_UTEST(concurrent_frame1d)
     std::cerr << "seqEngine=" << seqEngine << std::endl;
     Concurrent::Frames<Demo> seq(seqEngine);
     return 0;
+    Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
+    const Concurrent::Topology topo;
     Concurrent::SharedLoop     parEngine = new Concurrent::Crew(topo);
     Concurrent::Frames<Demo> par(parEngine);
 
