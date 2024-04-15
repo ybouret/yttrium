@@ -32,11 +32,12 @@ Y_UTEST(concurrent_frame1d)
     Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
     const Concurrent::Topology topo;
     Concurrent::SharedLoop     seqEngine = new Concurrent::Mono();
-    Concurrent::SharedLoop     parEngine = new Concurrent::Crew(topo);
 
     std::cerr << "sizeof(Demo)=" << sizeof(Demo) << std::endl;
     std::cerr << "*seqEngine @" << & *seqEngine << std::endl;
-    Concurrent::Frames<Demo> seq(seqEngine);return 0;
+    Concurrent::Frames<Demo> seq(seqEngine);
+    return 0;
+    Concurrent::SharedLoop     parEngine = new Concurrent::Crew(topo);
     Concurrent::Frames<Demo> par(parEngine);
 
     
