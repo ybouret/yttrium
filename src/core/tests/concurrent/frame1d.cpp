@@ -35,6 +35,7 @@ Y_UTEST(concurrent_frame1d)
 
     std::cerr << "sizeof(Demo)=" << sizeof(Demo) << std::endl;
     std::cerr << "*seqEngine @" << & *seqEngine << std::endl;
+    std::cerr << "seqEngine=" << seqEngine << std::endl;
     Concurrent::Frames<Demo> seq(seqEngine);
     return 0;
     Concurrent::SharedLoop     parEngine = new Concurrent::Crew(topo);

@@ -200,6 +200,7 @@ namespace Yttrium
             assert(0!=addr);
             assert(0!=user);
             SEQUENCE &source = *static_cast<SEQUENCE *>(user);
+            
             assert(indx>=1);
             assert(indx<=source.size());
             new (addr) MutableType( source[indx] );

@@ -49,6 +49,8 @@ namespace Yttrium
             virtual ~Context()                                 noexcept; //!< cleanup
             Context(const Context &)                           noexcept; //!< copy
 
+            friend std::ostream & operator<<(std::ostream &, const Context &);
+            
             //__________________________________________________________________
             //
             //

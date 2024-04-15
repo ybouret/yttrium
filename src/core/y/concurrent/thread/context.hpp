@@ -32,6 +32,7 @@ namespace Yttrium
 
             Lockable &sync; //!< shared sync object reference
 
+
         private:
             Y_DISABLE_ASSIGN(ThreadContext);
         };

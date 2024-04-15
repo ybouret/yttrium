@@ -3,6 +3,7 @@
 
 #include <cstring>
 #include <cstdio>
+#include <iostream>
 
 namespace Yttrium
 {
@@ -134,6 +135,11 @@ namespace Yttrium
             return (rank<=0) ? last : rank-1;
         }
 
+        std::ostream & operator<<(std::ostream &os, const Context &ctx)
+        {
+            os << ctx.name;
+            return os;
+        }
     }
 
 }
