@@ -108,7 +108,7 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        Y_ARGS_EXPOSE(T,Type); //!< aliases
+        Y_ARGS_EXPOSE(T,Block); //!< aliases
 
 
         //______________________________________________________________________
@@ -159,8 +159,8 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        inline Type      * operator()(void)       noexcept { return (Type *     )(entry()); } //!< recall access
-        inline ConstType * operator()(void) const noexcept { return (ConstType *)(entry()); } //!< recall access, const
+        inline Block      * operator()(void)       noexcept { return (Block *     )(entry()); } //!< recall access
+        inline ConstBlock * operator()(void) const noexcept { return (ConstBlock *)(entry()); } //!< recall access, const
 
 
     private:
@@ -169,13 +169,13 @@ namespace Yttrium
         static inline void SelfBuild(void *addr, void *)
         {
             assert(0!=addr);
-            new (addr) MutableType();
+            new (addr) Block();
         }
 
         static inline void SelfSmash(void *addr) noexcept
         {
             assert(0!=addr);
-            Destruct(static_cast<MutableType *>(addr));
+            Destruct(static_cast<MutableBlock *>(addr));
         }
 
         template <typename U>
@@ -183,7 +183,7 @@ namespace Yttrium
         {
             assert(0!=addr);
             assert(0!=args);
-            new (addr) MutableType( *static_cast<U*>(args) );
+            new (addr) MutableBlock( *static_cast<U*>(args) );
         }
 
         template <typename U>
@@ -191,15 +191,15 @@ namespace Yttrium
         {
             assert(0!=addr);
             assert(0!=from);
-            new (addr) MutableType( *static_cast<const typename TypeTraits<U>::MutableType *>(from) );
+            new (addr) MutableBlock( *static_cast<const typename TypeTraits<U>::MutableType *>(from) );
         }
 
         template <typename SEQUENCE>
         static inline void XProcAny(void *addr, void *user, const size_t indx)
         {
-            std::cerr << "XProcAny@" << addr << ", Sequence@" << user << ", indx=" << indx << ", sizeof=" << sizeof(MutableType) << "/" << sizeof(T) << std::endl;
-            std::cerr << "MutableType: " << typeid(MutableType).name() << std::endl;
-            std::cerr << "SequenceOf : " << typeid(typename SEQUENCE::MutableType).name() << std::endl;
+            std::cerr << "XProcAny@" << addr << ", Sequence@" << user << ", indx=" << indx << ", sizeof=" << sizeof(MutableBlock) << "/" << sizeof(T) << std::endl;
+            std::cerr << "MutableBlock : " << typeid(MutableBlock).name() << std::endl;
+            std::cerr << "SequenceType : " << typeid(typename SEQUENCE::MutableType).name() << std::endl;
             assert(0!=addr);
             assert(0!=user);
             SEQUENCE &source = *static_cast<SEQUENCE *>(user);
@@ -212,7 +212,7 @@ namespace Yttrium
 
 
             typename SEQUENCE::ConstType &args = source[indx];
-            new (addr) MutableType( args );
+            new (addr) MutableBlock( args );
         }
 
 
