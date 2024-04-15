@@ -10,21 +10,21 @@ using namespace Yttrium;
 
 namespace
 {
-    class Demo : public Concurrent::Frame1D<size_t>
+    class Demo1 : public Concurrent::Frame1D<size_t>
     {
     public:
-        inline explicit Demo(const Concurrent::ThreadContext &ctx) noexcept :
+        inline explicit Demo1(const Concurrent::ThreadContext &ctx) noexcept :
         Concurrent::Frame1D<size_t>(ctx)
         {
             std::cerr << "New Demo " << name << " @" << (void *)this << std::endl;
         }
 
-        inline virtual ~Demo() noexcept {}
-        
+        inline virtual ~Demo1() noexcept {}
+
         int data[2];
         
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(Demo);
+        Y_DISABLE_COPY_AND_ASSIGN(Demo1);
     };
 }
 
@@ -33,15 +33,15 @@ Y_UTEST(concurrent_frame1d)
 
     Concurrent::SharedLoop     seqEngine = new Concurrent::Mono();
 
-    std::cerr << "sizeof(Demo)=" << sizeof(Demo) << std::endl;
+    std::cerr << "sizeof(Demo1)=" << sizeof(Demo1) << std::endl;
     std::cerr << "*seqEngine @" << & *seqEngine << std::endl;
     std::cerr << "seqEngine=" << seqEngine << std::endl;
-    Concurrent::Frames<Demo> seq(seqEngine);
+    Concurrent::Frames<Demo1> seq(seqEngine);
     return 0;
     Concurrent::Thread::Verbose = Environment::Flag("VERBOSE");
     const Concurrent::Topology topo;
     Concurrent::SharedLoop     parEngine = new Concurrent::Crew(topo);
-    Concurrent::Frames<Demo> par(parEngine);
+    Concurrent::Frames<Demo1> par(parEngine);
 
     
 

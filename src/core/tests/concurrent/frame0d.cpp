@@ -17,10 +17,10 @@ namespace
 {
 
 
-    class Demo : public Concurrent::Frame0D
+    class Demo0 : public Concurrent::Frame0D
     {
     public:
-        inline explicit Demo(const Concurrent::ThreadContext &ctx) noexcept :
+        inline explicit Demo0(const Concurrent::ThreadContext &ctx) noexcept :
         Concurrent::Frame0D(ctx), ran(), tmx()
         {}
 
@@ -58,13 +58,13 @@ namespace
         }
 
 
-        inline virtual ~Demo() noexcept {}
+        inline virtual ~Demo0() noexcept {}
 
         Random::Rand ran;
         WallTime     tmx;
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(Demo);
+        Y_DISABLE_COPY_AND_ASSIGN(Demo0);
     };
 
 
@@ -77,8 +77,8 @@ Y_UTEST(concurrent_frame0d)
     Concurrent::SharedPipeline seqEngine = new Concurrent::Alone();
     Concurrent::SharedPipeline parEngine = new Concurrent::Queue(topo);
 
-    Concurrent::Multiplex<Demo> seq(seqEngine);
-    Concurrent::Multiplex<Demo> par(parEngine);
+    Concurrent::Multiplex<Demo0> seq(seqEngine);
+    Concurrent::Multiplex<Demo0> par(parEngine);
 
     std::cerr << "Empty" << std::endl;
     std::cerr << "  seq=" << seq << std::endl;
@@ -91,12 +91,12 @@ Y_UTEST(concurrent_frame0d)
     std::cerr << "  par=" << par << std::endl;
 
 
-    typedef Concurrent::Invoke<Demo,NullType> Invoke0;
+    typedef Concurrent::Invoke<Demo0,NullType> Invoke0;
 
     std::cerr << "Sequential/0" << std::endl;
     for(int i=1;i<=2;++i)
     {
-        Invoke0::On(seq, & Demo::call0);
+        Invoke0::On(seq, & Demo0::call0);
     }
     seq->flush();
     std::cerr << std::endl;
@@ -104,17 +104,17 @@ Y_UTEST(concurrent_frame0d)
     std::cerr << "Parallel/0" << std::endl;
     for(int i=1;i<=4;++i)
     {
-        Invoke0::On(par, & Demo::call0);
+        Invoke0::On(par, & Demo0::call0);
     }
     par->flush();
     std::cerr << std::endl;
 
-    typedef Concurrent::Invoke<Demo,TL1(double)> Invoke1;
+    typedef Concurrent::Invoke<Demo0,TL1(double)> Invoke1;
 
     std::cerr << "Sequential/1" << std::endl;
     for(int i=1;i<=2;++i)
     {
-        Invoke1::On(seq, & Demo::call1, i);
+        Invoke1::On(seq, & Demo0::call1, i);
     }
     seq->flush();
     std::cerr << std::endl;
@@ -122,13 +122,13 @@ Y_UTEST(concurrent_frame0d)
     std::cerr << "Parallel/1" << std::endl;
     for(int i=1;i<=4;++i)
     {
-        Invoke1::On(par, & Demo::call1, i);
+        Invoke1::On(par, & Demo0::call1, i);
     }
     par->flush();
     std::cerr << std::endl;
 
 
-    typedef Concurrent::Invoke<Demo,TL2(double &, const int)> Invoke2;
+    typedef Concurrent::Invoke<Demo0,TL2(double &, const int)> Invoke2;
 
     {
         double       arr[] = { 3, 2, 1, 0 };
@@ -137,14 +137,14 @@ Y_UTEST(concurrent_frame0d)
         Core::Display(std::cerr, arr, num) << std::endl;
         for(size_t i=0;i<sizeof(arr)/sizeof(arr[0]);++i)
         {
-            Invoke2::On(seq, & Demo::call2, arr[i], int(i) );
+            Invoke2::On(seq, & Demo0::call2, arr[i], int(i) );
         }
         seq->flush();
         Core::Display(std::cerr, arr, num) << std::endl;
 
         for(size_t i=0;i<sizeof(arr)/sizeof(arr[0]);++i)
         {
-            Invoke2::On(par, & Demo::call2, arr[i], int(i) );
+            Invoke2::On(par, & Demo0::call2, arr[i], int(i) );
         }
         par->flush();
         Core::Display(std::cerr, arr, num) << std::endl;
