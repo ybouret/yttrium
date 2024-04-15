@@ -2,7 +2,7 @@
 #include "y/concurrent/loop/mono.hpp"
 #include "y/concurrent/frame/1d.hpp"
 #include "y/concurrent/frames.hpp"
-
+#include "y/concurrent/thread.hpp"
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;
@@ -26,14 +26,16 @@ namespace
 
 Y_UTEST(concurrent_frame1d)
 {
+    Concurrent::Thread::Verbose = true;
     const Concurrent::Topology topo;
     Concurrent::SharedLoop     seqEngine = new Concurrent::Mono();
     Concurrent::SharedLoop     parEngine = new Concurrent::Crew(topo);
 
-    return 0;
     
-    Concurrent::Frames<Demo> seq(seqEngine);
+    Concurrent::Frames<Demo> seq(seqEngine);return 0;
     Concurrent::Frames<Demo> par(parEngine);
+
+    
 
     std::cerr << "Empty" << std::endl;
     std::cerr << "  seq=" << seq << std::endl;
