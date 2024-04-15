@@ -5,6 +5,7 @@
 #include "y/container/writable.hpp"
 #include "y/type/destruct.hpp"
 #include "y/type/copy.hpp"
+#include <typeinfo>
 
 namespace Yttrium
 {
@@ -197,6 +198,8 @@ namespace Yttrium
         static inline void XProcAny(void *addr, void *user, const size_t indx)
         {
             std::cerr << "XProcAny@" << addr << ", Sequence@" << user << ", indx=" << indx << ", sizeof=" << sizeof(MutableType) << std::endl;
+            std::cerr << "MutableType: " << typeid(MutableType).name() << std::endl;
+            std::cerr << "SequenceOf : " << typeid(typename SEQUENCE::MutableType).name() << std::endl;
             assert(0!=addr);
             assert(0!=user);
             SEQUENCE &source = *static_cast<SEQUENCE *>(user);
