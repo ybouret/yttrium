@@ -29,10 +29,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
             class Code;
-            typedef void (*Build)(void *, void *);               //!< constructor prototype
-            typedef void (*XCopy)(void *, const void *);         //!< copy prototype
-            typedef void (*Smash)(void *);                       //!< destructor  prototype
-            typedef void (*XProc)(void *, void *, const size_t); //!< procedural constructor
+            typedef void (*Build)(void *, void *);               //!< anonymous constructor prototype
+            typedef void (*XCopy)(void *, const void *);         //!< anonymous copy prototype
+            typedef void (*Smash)(void *);                       //!< anonymous destructor  prototype
+            typedef void (*XProc)(void *, void *, const size_t); //!< anonymous procedural constructor
             //__________________________________________________________________
             //
             //
