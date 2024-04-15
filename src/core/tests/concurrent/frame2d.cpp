@@ -32,21 +32,21 @@ namespace
         }
     };
 
-    class Demo : public Concurrent::Frame2D<unit_t>
+    class Demo2 : public Concurrent::Frame2D<unit_t>
     {
     public:
-        inline explicit Demo(const Concurrent::ThreadContext &ctx) noexcept :
+        inline explicit Demo2(const Concurrent::ThreadContext &ctx) noexcept :
         Concurrent::Frame2D<unit_t>(ctx),
         strip(0)
         {}
 
         const Strip * const strip;
 
-        inline virtual ~Demo() noexcept {}
+        inline virtual ~Demo2() noexcept {}
 
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(Demo);
+        Y_DISABLE_COPY_AND_ASSIGN(Demo2);
     };
 }
 
@@ -57,8 +57,8 @@ Y_UTEST(concurrent_frame2d)
     Concurrent::SharedLoop     seqEngine = new Concurrent::Mono();
     Concurrent::SharedLoop     parEngine = new Concurrent::Crew(topo);
 
-    Concurrent::Frames<Demo> seq(seqEngine);
-    Concurrent::Frames<Demo> par(parEngine);
+    Concurrent::Frames<Demo2> seq(seqEngine);
+    Concurrent::Frames<Demo2> par(parEngine);
 
     std::cerr << "Empty" << std::endl;
     std::cerr << "  seq=" << seq << std::endl;
