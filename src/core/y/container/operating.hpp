@@ -197,22 +197,13 @@ namespace Yttrium
         template <typename SEQUENCE>
         static inline void XProcAny(void *addr, void *user, const size_t indx)
         {
-            std::cerr << "XProcAny@" << addr << ", Sequence@" << user << ", indx=" << indx << ", sizeof=" << sizeof(MutableType) << "/" << sizeof(T) << std::endl;
-            std::cerr << "MutableType: " << typeid(MutableType).name() << std::endl;
-            std::cerr << "SequenceOf : " << typeid(typename SEQUENCE::MutableType).name() << std::endl;
             assert(0!=addr);
             assert(0!=user);
             SEQUENCE &source = *static_cast<SEQUENCE *>(user);
 
             assert(indx>=1);
             assert(indx<=source.size());
-
-            std::cerr << "source = " << source << std::endl;
-            std::cerr << "source[" << indx << "] = " << source[indx] << std::endl;
-
-
-            typename SEQUENCE::ConstType &args = source[indx];
-            new (addr) MutableType( args );
+            new (addr) MutableType( source[indx] );
         }
 
 
