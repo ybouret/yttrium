@@ -198,6 +198,7 @@ namespace Yttrium
         {
             assert(0!=addr);
             assert(0!=user);
+            std::cerr << "XProcAny@" << addr << ", Sequence@" << user << ", indx=" << indx << std::endl;
             SEQUENCE &source = *static_cast<SEQUENCE *>(user);
             assert(indx>=1);
             assert(indx<=source.size());
