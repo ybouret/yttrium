@@ -9,22 +9,46 @@ namespace Yttrium
 {
     namespace Ink
     {
+        
+        //______________________________________________________________________
+        //
+        //
+        //
+        //!  Database of pasrsed options for Format
+        //
+        //
+        //______________________________________________________________________
         class FormatOptions
         {
         public:
-            explicit FormatOptions();
-            virtual ~FormatOptions() noexcept;
-            FormatOptions(const FormatOptions &);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit FormatOptions();             //!< setup empty
+            virtual ~FormatOptions() noexcept;    //!< setup emtpy
+            FormatOptions(const FormatOptions &); //!< copy
 
+            //! display
             friend std::ostream & operator<<(std::ostream &, const FormatOptions &);
 
-            FormatOptions & operator<<(const String &opts);
-            FormatOptions & operator<<(const char   *opts);
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
-            const String * query(const String &) const noexcept;
-            const String * query(const char   *) const;
-            const String * query(const char    ) const;
+            FormatOptions & operator<<(const String &opts); //!< append 'opt1=value1:opt2=value2...'
+            FormatOptions & operator<<(const char   *opts); //!< wrapper
 
+            const String * query(const String &) const noexcept; //!< query
+            const String * query(const char   *) const;          //!< query
+            const String * query(const char    ) const;          //!< query
+
+            //! return value/empty
             template <typename KEY> inline
             const String & operator[](const KEY &key) const
             {
