@@ -1,4 +1,5 @@
-Y_CreateTest(ink)
+Y_CreateTest(ink
+format)
 
 Y_LinkLibraries(test-ink y-ink)
 
@@ -9,3 +10,4 @@ enable_testing()
 add_test(zero_flux test-ink zero_flux)
 add_test(bitmap test-ink bitmap)
 add_test(tess   test-ink tess)
+add_test(format:options test-ink format_options)

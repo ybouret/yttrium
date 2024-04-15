@@ -69,6 +69,34 @@ namespace Yttrium
                 }
             }
 
+            //! split src and append tokens to seq
+            template <typename SEQUENCE> static inline
+            void AppendTo(SEQUENCE        &seq,
+                          const String<T> &str,
+                          const T * const sep)
+            {
+                AppendTo<SEQUENCE>(seq,str,sep,Length(sep),-1);
+            }
+
+            //! split src and append tokens to seq
+            template <typename SEQUENCE> static inline
+            void AppendTo(SEQUENCE        &seq,
+                          const String<T> &str,
+                          const String<T> &sep)
+            {
+                AppendTo<SEQUENCE>(seq,str,sep.c_str(),sep.size(),-1);
+            }
+            
+            //! split src and append tokens to seq
+            template <typename SEQUENCE> static inline
+            void AppendTo(SEQUENCE        &seq,
+                          const String<T> &str,
+                          const T          sep)
+            {
+                AppendTo<SEQUENCE>(seq,str,&sep,1,-1);
+            }
+
+
 
 
         private:

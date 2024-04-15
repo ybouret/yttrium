@@ -11,6 +11,7 @@
   	 
 \begin{document}
 
+\section{intro}
 Chemical potential:
 \begin{equation}
 	\mu_i = RT \ln a_i + z_i \mathcal{F} V = RT \ln (\gamma_i[C_i]) + z_i \mathcal{F} V
@@ -38,6 +39,10 @@ Molecular motion:
 
 \begin{equation}
 	\vec{v}_i = -\underbrace{\dfrac{k_bT}{a_i}}_{D_i} \vec{\nabla}(\ln(\gamma_i C_i))  + z_i \underbrace{\dfrac{ q}{a_i}}_{\lambda_i} \vec{E}
+\end{equation}
+
+\begin{equation}
+	\lambda_i = \frac{q}{k_bT} D_i = \dfrac{\mathcal{F}}{RT} D_i
 \end{equation}
 
 Molar flux:
@@ -76,5 +81,57 @@ Continuity equation:
 	-\mathrm{div} J_i = D_i \Delta C_i + C_i \left( D_i \Delta \Gamma_i + z_i \lambda_i \Delta V \right)
 	+ \vec{\nabla} C_i \cdot \left(  D_i \vec{\nabla}\Gamma_i - z_i \lambda_i \vec{E} \right) 
 \end{equation}
+
+\section{Steady state}
+
+\begin{equation}
+\vec{J}^{el} = \vec{0} \implies \vec{E} = \dfrac{1}{ \sum_i z_i^2 C_i \lambda_i } \left[\sum_i  z_i D_i \left( \vec{\nabla} C_i + C_i \vec{\nabla}\Gamma_i \right)\right]
+\end{equation}
+\begin{equation}
+	\vec{E} = \dfrac{RT}{\mathcal{F}} \left[\sum_i z_i^2 D_i C_i \right]^{-1} 
+	\left[\sum_i  z_i D_i \left( \vec{\nabla} C_i + C_i \vec{\nabla}\Gamma_i \right)\right]
+\end{equation}
+
+\end{document}
+
+\begin{equation}
+	\rho = 0 \implies \sum_i z_i C_i = 0
+\end{equation}
+
+
+\begin{equation}
+ \left( \vec{\nabla} C_i + C_i \vec{\nabla}\Gamma_i \right)  =   C_i z_i  \dfrac{\mathcal{F}}{RT} \vec{E}
+\end{equation}
+
+\begin{equation}
+ \left( \vec{\nabla} C_i + C_i \vec{\nabla}\Gamma_i \right)  =  
+  C_i z_i  
+  \left[\sum_j z_i^2 D_j C_j \right]^{-1} 
+	\left[\sum_j  z_j D_j \left( \vec{\nabla} C_j + C_j \vec{\nabla}\Gamma_i \right)\right]
+\end{equation}
+
+
+\subsection{Ideal Water plus counter-anion (acidic)}
+
+\begin{equation}
+	h \implies w=K_w/h \implies A = h - K_w/h > 0
+\end{equation}
+
+\begin{equation}
+	 \vec{\nabla} h =   h \dfrac{\mathcal{F}}{RT} \vec{E} =
+	  h  
+	  \left[D_h h + D_w w + D_A A \right]^{-1}
+	 \left[D_h \vec{\nabla}h - D_w \vec{\nabla}w - D_A \vec{\nabla}A\right]
+\end{equation}
+
+\begin{equation}
+ 	\vec{\nabla}h = \dfrac{h}{D_h h + D_w K_w/h + D_A (h-K_w/h)}
+	\left[D_h \vec{\nabla}h + D_w \dfrac{K_w}{h^2} \vec{\nabla}h  - D_A \left(\vec{\nabla}h + \dfrac{K_w}{h^2}\vec{\nabla}h\right)\right]
+\end{equation}
+
+Doesn't work!!
+
+
+
 
 \end{document}

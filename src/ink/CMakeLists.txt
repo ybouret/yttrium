@@ -2,6 +2,7 @@ include_directories(. ../core)
 
 Y_CreateLibrary(y-ink
 ink
+ink/format
 )
 
 add_subdirectory(tests)
