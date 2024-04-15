@@ -200,11 +200,14 @@ namespace Yttrium
             assert(0!=addr);
             assert(0!=user);
             SEQUENCE &source = *static_cast<SEQUENCE *>(user);
-            std::cerr << "source = " << source << std::endl;
-            (std::cerr << "source[" << indx << "]=").flush() << source[indx] << std::endl;
+
             assert(indx>=1);
             assert(indx<=source.size());
-            new (addr) MutableType( source[indx] );
+
+            std::cerr << "source = " << source << std::endl;
+            typename SEQUENCE::ConstType &args = source[indx];
+            (std::cerr << "source[" << indx << "]=").flush() << args << std::endl;
+            new (addr) MutableType( args );
         }
 
 
