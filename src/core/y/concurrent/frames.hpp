@@ -23,7 +23,7 @@ namespace Yttrium
         //______________________________________________________________________
 #define Y_Concurrent_Frames_Construct() \
 Nucleus::Frames(stc),                   \
-CxxFrames(CopyOf,*contexts),            \
+CxxFrames(CopyOf,static_cast<const ThreadContexts &>(*contexts)),            \
 signature()
 
 
