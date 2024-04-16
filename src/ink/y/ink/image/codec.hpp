@@ -11,11 +11,17 @@ namespace Yttrium
 {
     namespace Ink
     {
-        class Codec : public Object, public Counted
+        typedef Color::RGBA<uint8_t> RGBA;
+
+        class Codec : public Object, public Counted, public Identifiable
         {
         public:
+            typedef Pixmap<RGBA>     Image;
+            typedef Image::RowType   ImageRow;
             virtual ~Codec() noexcept;
-            
+
+
+
         protected:
             template <typename UID> inline
             explicit Codec(const UID &uid) : name(uid) {}
@@ -23,7 +29,8 @@ namespace Yttrium
         public:
             const String name;
 
-            const String & key() const noexcept;
+            virtual const char * callSign() const noexcept;
+            const String &       key()      const noexcept;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Codec);

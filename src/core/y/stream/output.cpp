@@ -7,7 +7,7 @@ namespace Yttrium
 
     OutputStream:: OutputStream() noexcept {}
 
-    void OutputStream:: write(const void *blockAddr, const size_t blockSize)
+    void OutputStream:: frame(const void *blockAddr, const size_t blockSize)
     {
         assert( Good(blockAddr,blockSize) );
         const char *C = static_cast<const char *>(blockAddr);
@@ -32,7 +32,7 @@ namespace Yttrium
 
     OutputStream & OutputStream:: operator<<(const Memory::ReadOnlyBuffer &buffer)
     {
-        write(buffer.ro_addr(),buffer.measure());
+        frame(buffer.ro_addr(),buffer.measure());
         return *this;
     }
 
@@ -107,7 +107,7 @@ namespace Yttrium
             const int chk = vsnprintf(blockAddr,bufLength,fmt,ap);
             va_end(ap);
             if(res!=chk) throw  Specific::Exception(fn,"lengths mismatch!");
-            write(blockAddr,blockSize);
+            frame(blockAddr,blockSize);
         }
 
         return *this;

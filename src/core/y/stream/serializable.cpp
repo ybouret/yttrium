@@ -16,7 +16,7 @@ namespace Yttrium
     size_t Serializable::emitMessage(OutputStream &fp, const char *msg) const
     {
         const size_t len = StringLength(msg);
-        fp.write(msg,len);
+        fp.frame(msg,len);
         return len;
     }
 }

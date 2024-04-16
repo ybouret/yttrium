@@ -51,7 +51,7 @@ namespace Yttrium
         //______________________________________________________________________
 
         //! write blocks of memory
-        void write(const void *blockAddr, const size_t blockSize);
+        void frame(const void *blockAddr, const size_t blockSize);
 
         OutputStream & operator<<(const char );                      //!< helper
         OutputStream & operator<<(const char *);                     //!< helper
@@ -87,6 +87,7 @@ namespace Yttrium
             return emit64( alias.word );
         }
 
+        
 
 
     private:

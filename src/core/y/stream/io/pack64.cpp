@@ -82,7 +82,7 @@ namespace Yttrium
         size_t Pack64:: Emit(OutputStream &os, const uint64_t qw)
         {
             const Pack64 encoded(qw);
-            os.write(encoded.data,encoded.size);
+            os.frame(encoded.data,encoded.size);
             return encoded.size;
         }
     }

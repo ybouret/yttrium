@@ -1,6 +1,4 @@
-
 #include "y/ink/pixmap.hpp"
-
 #include "y/utest/run.hpp"
 #include "y/concurrent/loop/crew.hpp"
 #include "y/concurrent/loop/mono.hpp"
