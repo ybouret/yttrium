@@ -13,27 +13,64 @@ namespace Yttrium
 {
     namespace Ink
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Format interface
+        //
+        //
+        //______________________________________________________________________
         class Format : public Object, public Counted
         {
         public:
-            typedef ArkPtr<String,Format> Handle;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef ArkPtr<String,Format> Handle; //!< alias
 
         protected:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+           
+            //! setup name
             template <typename UID> inline
             explicit Format(const UID &uid) : name(uid) {}
 
         public:
+            //! cleanup
             virtual ~Format() noexcept;
 
-            bool matches(const String &      ) const noexcept;
-            bool matches(const char   * const) const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            bool          matches(const String &      ) const noexcept; //!< matches extension
+            bool          matches(const char   * const) const noexcept; //!< matches extension
+            const String &key()                         const noexcept; //!< key for database
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
 
-            const String &key() const noexcept;
-
+            //! name of the format, a.k.a key()
             const String  name;
 
         protected:
+
+            //! helper to match case insensitive extensions
             static bool CaseInsensitiveMatch(const char * const lhs, const size_t lsz,
                                              const char * const rhs, const size_t rsz) noexcept;
 
