@@ -53,12 +53,12 @@ namespace
             ++barrier.count;
             {
                 Y_GIANT_LOCK();
-                std::cerr << "Thread with barrier @" << barrier.count << std::endl;
+                (std::cerr << "Thread with barrier @" << barrier.count << std::endl).flush();
             }
             barrier.cond.wait(barrier.mutex);// waiting on a locked mutex
             {
                 Y_GIANT_LOCK();
-                std::cerr << "Computing in thread @" << Concurrent::Thread::CurrentHandle() << std::endl;
+                (std::cerr << "Computing in thread @" << Concurrent::Thread::CurrentHandle() << std::endl).flush();
             }
         }
 
