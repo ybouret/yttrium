@@ -18,7 +18,7 @@ namespace
     class Barrier
     {
     public:
-        explicit Barrier()  : mutex(), cond(), count(0), sum(0), meg(10)
+        explicit Barrier()  : mutex(), cond(), count(0), sum(0), meg(1)
         {
         }
 
@@ -174,7 +174,6 @@ Y_UTEST(concurrent_topo)
         Y_GIANT_LOCK();
         Y_SIZEOF(Concurrent::Thread);
         Y_SIZEOF(Concurrent::Wire);
-
     }
 
 }
