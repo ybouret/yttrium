@@ -164,10 +164,7 @@ Y_UTEST(concurrent_topo)
         assert(thz.homology() == homology1);
         Y_CHECK(thz.compress(homology1));
     }
-
-
-
-
+    
     barrier.cond.broadcast();
 
     {
