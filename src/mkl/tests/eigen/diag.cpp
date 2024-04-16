@@ -47,6 +47,7 @@ namespace
             const size_t nr = values->wr.size();
             if(nr>0)
             {
+                std::cerr << "Looking for real eigenvector(s)" << std::endl;
                 Vector<size_t> eIdx(nr,0);
                 for(size_t i=1;i<=nr;++i) eIdx[i] = i;
 

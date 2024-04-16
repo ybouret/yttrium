@@ -64,11 +64,6 @@ namespace Yttrium
 #include "diag/qr.hxx"
 #include "diag/eig.hxx"
 
-
-             
-
-               
-
                 inline void guess(Writable<T>            &eVal,
                                   Matrix<T>              &eVec,
                                   const Readable<size_t> &eIdx,
