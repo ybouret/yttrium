@@ -18,7 +18,7 @@ namespace
     class Barrier
     {
     public:
-        explicit Barrier()  : mutex(), cond(), count(0), sum(0), meg(1)
+        explicit Barrier()  : mutex(), cond(), count(0), sum(0), kilo(1)
         {
         }
 
@@ -36,7 +36,7 @@ namespace
         Concurrent::Condition cond;
         size_t                count;
         double                sum;
-        size_t                meg;
+        size_t                kilo;
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Barrier);
@@ -64,7 +64,7 @@ namespace
 
         // UNLOCKED computation
         double sum = 0;
-        for(size_t i=barrier.meg * 1000000;i>0;--i)
+        for(size_t i=barrier.kilo * 1000;i>0;--i)
         {
             sum += cos(100*ran.to<double>());
         }
@@ -132,7 +132,7 @@ Y_UTEST(concurrent_topo)
 
     if(argc>1)
     {
-        barrier.meg = ASCII::Convert::To<size_t>(argv[1],"mega cycles");
+        barrier.kilo = ASCII::Convert::To<size_t>(argv[1],"kilocycles");
     }
     Concurrent::ThreadHandle primary = Concurrent::Thread::CurrentHandle();
     {
@@ -164,7 +164,7 @@ Y_UTEST(concurrent_topo)
         assert(thz.homology() == homology1);
         Y_CHECK(thz.compress(homology1));
     }
-    
+
     barrier.cond.broadcast();
 
     {
