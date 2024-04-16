@@ -84,8 +84,14 @@ Continuity equation:
 \end{equation}
 
 \begin{equation}
-	-\mathrm{div} J_i = D_i \Delta C_i + C_i \left( D_i \Delta \Gamma_i + z_i \lambda_i \Delta V \right)
+	-\mathrm{div} \vec{J}_i = D_i \Delta C_i + C_i \left( D_i \Delta \Gamma_i + z_i \lambda_i \Delta V \right)
 	+ \vec{\nabla} C_i \cdot \left(  D_i \vec{\nabla}\Gamma_i - z_i \lambda_i \vec{E} \right) 
+\end{equation}
+
+\begin{equation}
+	-\mathrm{div} \vec{J}_i =
+	 D_i \left[ \Delta C_i + C_i \left(\Delta \Gamma_i +  z_i \dfrac{\mathcal{F}\Delta V}{RT} \right) 
+	+ \vec{\nabla}C_i \cdot \left( \vec{\nabla} \Gamma_i - z_i \dfrac{\mathcal{F}}{RT} \vec{E} \right) \right] 
 \end{equation}
 
 \section{Steady state}
@@ -97,6 +103,8 @@ Continuity equation:
 	\vec{E} = \dfrac{RT}{\mathcal{F}} \left[\sum_i z_i^2 D_i C_i \right]^{-1} 
 	\left[\sum_i  z_i D_i \left( \vec{\nabla} C_i + C_i \vec{\nabla}\Gamma_i \right)\right]
 \end{equation}
+
+
 
 \end{document}
 

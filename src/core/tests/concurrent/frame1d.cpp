@@ -21,7 +21,6 @@ namespace
 
         inline virtual ~Demo1() noexcept {}
 
-        int data[2];
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Demo1);
