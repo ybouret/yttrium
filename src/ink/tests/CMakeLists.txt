@@ -1,7 +1,7 @@
 Y_CreateTest(ink
-format)
+image)
 
-Y_LinkLibraries(test-ink y-ink)
+Y_LinkLibraries(test-ink y-ink y-jive)
 
 set( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
 set( DATA ${HERE}/../../../var)

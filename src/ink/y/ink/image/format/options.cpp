@@ -1,5 +1,5 @@
 
-#include "y/ink/format/options.hpp"
+#include "y/ink/image/format/options.hpp"
 #include "y/type/nullify.hpp"
 #include "y/oversized.hpp"
 #include "y/associative/suffix/map.hpp"

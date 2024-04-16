@@ -4,15 +4,17 @@
 #ifndef Y_Ink_Format_Included
 #define Y_Ink_Format_Included 1
 
-#include "y/ink/bitmap.hpp"
-#include "y/ink/format/options.hpp"
-#include "y/counted.hpp"
+#include "y/ink/image/codec.hpp"
 #include "y/ptr/ark.hpp"
+#include "y/jive/pattern/matcher.hpp"
 
 namespace Yttrium
 {
     namespace Ink
     {
+
+        typedef Color::RGBA<uint8_t> RGBA;
+
         //______________________________________________________________________
         //
         //
@@ -21,7 +23,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Format : public Object, public Counted
+        class Format : public Codec
         {
         public:
             //__________________________________________________________________
@@ -32,6 +34,7 @@ namespace Yttrium
             //__________________________________________________________________
             typedef ArkPtr<String,Format> Handle; //!< alias
 
+
         protected:
             //__________________________________________________________________
             //
@@ -41,8 +44,11 @@ namespace Yttrium
             //__________________________________________________________________
            
             //! setup name
-            template <typename UID> inline
-            explicit Format(const UID &uid) : name(uid) {}
+            template <typename UID, typename RXP> inline
+            explicit Format(const UID &uid, const RXP &rxp) :
+            Codec(uid),
+            extension(rxp)
+            {}
 
         public:
             //! cleanup
@@ -54,9 +60,7 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            bool          matches(const String &      ) const noexcept; //!< matches extension
-            bool          matches(const char   * const) const noexcept; //!< matches extension
-            const String &key()                         const noexcept; //!< key for database
+            bool matches(const String &path);
 
             //__________________________________________________________________
             //
@@ -64,19 +68,12 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
+            Jive::Matcher extension;
 
-            //! name of the format, a.k.a key()
-            const String  name;
 
-        protected:
-
-            //! helper to match case insensitive extensions
-            static bool CaseInsensitiveMatch(const char * const lhs, const size_t lsz,
-                                             const char * const rhs, const size_t rsz) noexcept;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Format);
-            virtual bool matches(const char * const ext, const size_t len) const noexcept = 0;
         };
     }
 

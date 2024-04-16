@@ -1,4 +1,4 @@
-#include "y/ink/format/options.hpp"
+#include "y/ink/image/format/options.hpp"
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;

@@ -10,7 +10,7 @@ namespace Yttrium
 {
     namespace Ink
     {
-
+        
 
         class Bitmap:: Code : public Object, public Counted
         {
