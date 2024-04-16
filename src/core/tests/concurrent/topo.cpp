@@ -71,7 +71,7 @@ namespace
 
         {
             Y_GIANT_LOCK();
-            std::cerr << "Done Computing..." << std::endl;
+            (std::cerr << "Done Computing..." << std::endl).flush();
             barrier.sum += sum;
         }
     }
