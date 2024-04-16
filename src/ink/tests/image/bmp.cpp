@@ -97,9 +97,9 @@ namespace Yttrium
         Ink::RGBA color;
         {
             Y_LOCK(slab.sync);
-            color.r = ran.in<uint8_t>(100,256);
-            color.g = ran.in<uint8_t>(100,256);
-            color.b = ran.in<uint8_t>(100,256);
+            color.r = ran.in<uint8_t>(100,255);
+            color.g = ran.in<uint8_t>(100,255);
+            color.b = ran.in<uint8_t>(100,255);
         }
         for(size_t k=slab.count();k>0;--k)
         {

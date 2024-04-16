@@ -11,26 +11,62 @@ namespace Yttrium
 {
     namespace Ink
     {
-        typedef Color::RGBA<uint8_t> RGBA;
 
+        typedef Color::RGBA<uint8_t> RGBA; //!< alias
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Load/Save image interface
+        //
+        //
+        //______________________________________________________________________
         class Codec : public Object, public Counted, public Identifiable
         {
         public:
-            typedef Pixmap<RGBA>     Image;
-            typedef Image::RowType   ImageRow;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef Pixmap<RGBA>     Image;     //!< alias
+            typedef Image::RowType   ImageRow;  //!< alias
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! cleanup
             virtual ~Codec() noexcept;
 
-
-
         protected:
+
+            //! setup name of the Codec
             template <typename UID> inline
             explicit Codec(const UID &uid) : name(uid) {}
 
         public:
-            const String name;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            virtual const char * callSign() const noexcept; //! [Identifiable] name.c_str()
+            const String &       key()      const noexcept; //!< name
 
-            virtual const char * callSign() const noexcept;
-            const String &       key()      const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const String name; //!< identifier
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Codec);

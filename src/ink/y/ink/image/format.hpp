@@ -19,7 +19,7 @@ namespace Yttrium
         //
         //
         //
-        //! Format interface
+        //! Format interface: Codec + extension management
         //
         //
         //______________________________________________________________________
@@ -43,7 +43,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
            
-            //! setup name
+            //! setup name+extension regular expression
             template <typename UID, typename RXP> inline
             explicit Format(const UID &uid, const RXP &rxp) :
             Codec(uid),
@@ -55,6 +55,7 @@ namespace Yttrium
             virtual ~Format() noexcept;
 
 
+            //! save image according to format
             virtual void save(const Image         &image,
                               const String        &fileName,
                               const FormatOptions *options) const = 0;
@@ -65,6 +66,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
+            //! matching the extension of path
             bool matches(const String &path);
 
             //__________________________________________________________________
@@ -73,7 +76,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            Jive::Matcher extension;
+            Jive::Matcher extension; //!< regular expression matcher
 
 
 
