@@ -14,12 +14,12 @@ using namespace Yttrium;
 namespace
 {
     template <typename T>
-    static inline void testDiag( Random::Bits &ran, const size_t nmax=4)
+    static inline void testDiag( Random::Bits &ran, const size_t nmax)
     {
 
         std::cerr << "<" << RTTI::Name<T>() << ">" << std::endl;
         MKL::Eigen::Diagonalization<T> diag;
-        MKL::SVD<T>                    svd;
+        //MKL::SVD<T>                    svd;
 
         for(size_t n=1;n<=nmax;++n)
         {

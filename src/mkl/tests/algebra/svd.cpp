@@ -38,7 +38,7 @@ namespace
                 std::cerr << "a=" << a << std::endl;
                 if(!svd.build(u,w,v))
                 {
-                    std::cerr << "#failure" << std::endl;
+                    std::cerr << "#failure n=" << n << ", m=" << m  << std::endl << std::endl;
                     continue;
                 }
 
