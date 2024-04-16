@@ -1,4 +1,4 @@
-include_directories(. ../core)
+include_directories(. ../core ../jive)
 
 Y_CreateLibrary(y-ink
 ink
