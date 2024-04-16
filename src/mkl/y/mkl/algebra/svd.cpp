@@ -56,7 +56,7 @@ namespace Yttrium
                 assert(v.cols==a.cols);
                 assert(v.rows==a.cols);
                 assert(w.size()==a.cols);
-                rv1.adjust(n,zero);
+                rv1.adjust(n,zero); assert(a.cols == rv1.size());
 
                 size_t k;
                 T      c,f,h,s,x,y,z;
