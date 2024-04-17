@@ -100,7 +100,7 @@ namespace Yttrium
             color.r = ran.in<uint8_t>(100,255);
             color.g = ran.in<uint8_t>(100,255);
             color.b = ran.in<uint8_t>(100,255);
-            (std::cerr << "color[" << slab.indx << "]=" << color << std::endl).flush();
+            (std::cerr << "ran @" << (void*)&ran <<", color[" << slab.indx << "]=" << color << std::endl).flush();
         }
         for(size_t k=slab.count();k>0;--k)
         {
@@ -131,6 +131,7 @@ Y_UTEST(format_bmp)
 
     Ink::Codec::Image img(200,100);
     Random::Rand      ran;
+    std::cerr << "ran @" << (void*)&ran << std::endl;
     slabs(LoadIndx,img,ran);
 
 

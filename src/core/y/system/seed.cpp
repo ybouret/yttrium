@@ -43,7 +43,7 @@ namespace Yttrium
         //std::cerr << "qw=" << Hexadecimal(alias.qw[0]) << ":" << Hexadecimal(alias.qw[1]) << std::endl;
 
         const uint32_t seed = CRC32::Of(&alias,sizeof(alias));
-        std::cerr << "seed=0x" << Hexadecimal(seed) << std::endl;
+        //std::cerr << "seed=0x" << Hexadecimal(seed) << std::endl;
         return seed;
     }
 }
