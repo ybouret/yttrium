@@ -66,29 +66,35 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
+            // Members
+            //
+            //__________________________________________________________________
+        private:
+            Y_DISABLE_ASSIGN(Bitmap);
+            class Code;
+            Code *         code;    //!< internal memory
+
+        public:
+            BitRow * const brow;    //!< rows[h]
+            const bool     dynamic; //!< if data was allocated
+
+        protected:
+            //__________________________________________________________________
+            //
+            //
             // Methods
             //
             //__________________________________________________________________
+           
+            //! convert rows to compatible ABI
+            template <typename ROW> inline
+            ROW * as() noexcept { return Memory::OutOfReach::Cast<ROW,BitRow>(brow); }
 
             //! build all items
             void buildWith( void (*make)(void *, void*), void *args, void (*kill)(void*) );
 
             //! erase all items
             void eraseWith( void (*kill)(void *) ) noexcept;
-
-
-        private:
-            Y_DISABLE_ASSIGN(Bitmap);
-            class Code;
-            Code *         code;    //!< internal memory
-        protected:
-            BitRow * const brow;    //!< rows[h]
-        public:
-            const bool     dynamic; //!< if data was allocated
-        protected:
-            //! convert rows to compatible ABI
-            template <typename ROW> inline
-            ROW * as() noexcept { return Memory::OutOfReach::Cast<ROW,BitRow>(brow); }
         };
 
         Y_SHALLOW_DECL(FromBitmap); //!< alias
