@@ -74,10 +74,11 @@ Y_UTEST(type_ints)
     Y_SIZEOF(long);
     Y_SIZEOF(long long);
 
+    std::cerr << "LRoll" << std::endl;
     for(uint8_t i=0;i<=200;i+=10)
     {
 
-        BitLib::Display(std::cerr, i) << " -> ";
+        BitLib::Display(std::cerr << "\t", i) << " -> ";
         BitLib::Display(std::cerr, BitLib::LRoll(i) ) << std::endl;
 
     }
