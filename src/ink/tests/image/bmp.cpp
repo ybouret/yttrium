@@ -66,12 +66,20 @@ namespace Yttrium
                 bmp_w32(&bmpinfoheader[4],w);
                 bmp_w32(&bmpinfoheader[8],h);
 
+                //--------------------------------------------------------------
+                //
+                // open file and write headers
+                //
+                //--------------------------------------------------------------
                 OutputFile fp(fileName);
                 fp.frame(bmpfileheader,14);
                 fp.frame(bmpinfoheader,40);
 
-
+                //--------------------------------------------------------------
+                //
                 // write binary data
+                //
+                //--------------------------------------------------------------
                 for(unit_t j=image.h;j>0;)
                 {
                     const ImageRow  &row  = image[--j];
