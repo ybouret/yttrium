@@ -6,6 +6,7 @@
 
 #include "y/chemical/species/library.hpp"
 #include "y/singleton.hpp"
+#include "y/jive/module.hpp"
 
 namespace Yttrium
 {
@@ -18,12 +19,16 @@ namespace Yttrium
         public:
             static const char * const      CallSign;
             static const AtExit::Longevity LifeTime = 0;
+            class Compiler;
+
+            void operator()(Jive::Module *m,
+                            Library      &lib);
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Rosary);
             friend class Singleton<Rosary>;
-            class Compiler;
-            
+
             explicit Rosary();
             virtual ~Rosary() noexcept;
         };
