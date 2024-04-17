@@ -12,21 +12,24 @@
 \begin{document}
 
 \section{intro}
-Chemical potential:
+
+\subsection{Electro Chemical potential}
+
 \begin{equation}
 	\mu_i = RT \ln a_i + z_i \mathcal{F} V = RT \ln (\gamma_i[C_i]) + z_i \mathcal{F} V
 \end{equation}
 
 Poisson equation:
 \begin{equation}
-	\Delta V = - \dfrac{\rho}{\epsilon} = -\dfrac{\mathcal{N}_A}{\epsilon} k_1 \sum_i z_i C_i,\;k_1=1000
+	\Delta V = - \dfrac{\rho}{\epsilon} = -\dfrac{\mathcal{F}}{\epsilon} k_1 \sum_i z_i C_i,\;k_1=1000
 \end{equation}
-We have $\rho$ in particles/$m^3$ and $C$ in moles/$dm^3$.
+We have $\rho$ in [elementary charges/$m^3$] and $C$ in moles/$dm^3$.
 
 \begin{equation}
 	\vec{E} = -\vec{\nabla} V
 \end{equation}
 
+\subsection{Particular velocity}
 Molecular force:	
 \begin{equation}
 	\vec{F}_i = - \frac{1}{\mathcal{N}_A} \vec{\nabla} \mu_i
@@ -44,6 +47,31 @@ Molecular motion:
 \begin{equation}
 	\lambda_i = \frac{q}{k_bT} D_i = \dfrac{\mathcal{F}}{RT} D_i
 \end{equation}
+
+\begin{equation}
+\boxed{
+	\vec{v}_i = D_i \left[ - \vec{\nabla}(\ln(\gamma_i C_i)) + z_i \dfrac{\mathcal{F}}{RT} \vec{E} \right]
+}
+\end{equation}
+
+\subsection{Continuity equations}
+
+Molar flux:
+\begin{equation}
+	\vec{J}_i = C_i \vec{v}_i = D_i \left[z_i C_i  \dfrac{\mathcal{F}}{RT} \vec{E} - \left(\vec{\nabla} C_i + C_i \vec{\nabla}\Gamma_i\right) \right],\;\;\Gamma_i = \ln \gamma_i
+\end{equation}
+
+Continuity equation:
+\begin{equation}
+	\partial_t C_i + \mathrm{div} \vec{J}_i = \sigma_i
+\end{equation}
+
+Electric continuity:
+\begin{equation}
+	\partial_t \left(\sum_i z_i C_i\right) + \mathrm{div} \left(\sum_i z_i \vec{J}_i\right) = \sum_i z_i \sigma_i
+\end{equation}
+
+\end{document}
 
 Molar flux:
 \begin{equation}
