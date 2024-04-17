@@ -23,6 +23,7 @@ namespace Yttrium
         {
         public:
             explicit         ParkMiller(const int32_t seed) noexcept; //!< setup with seed
+            explicit         ParkMiller()                   noexcept; //!< setup with system seed
             virtual         ~ParkMiller()                   noexcept; //!< cleanup
             virtual uint32_t next32()                       noexcept; //!< get next dword
 

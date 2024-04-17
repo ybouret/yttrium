@@ -5,7 +5,6 @@
 #include "y/stream/libc/output.hpp"
 #include "y/concurrent/loop/crew.hpp"
 #include "y/random/park-miller.hpp"
-#include "y/system/seed.hpp"
 
 using namespace Yttrium;
 
@@ -40,24 +39,32 @@ namespace Yttrium
             {
                 (void)options;
 
+                //--------------------------------------------------------------
+                //
                 // initial headers
+                //
+                //--------------------------------------------------------------
                 unsigned char       bmpfileheader[14] = {'B','M', 0,0,0,0, 0,0, 0,0, 54,0,0,0};
                 unsigned char       bmpinfoheader[40] =
                 {   40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 24, 0,
                     0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0,
                     0,  0, 0, 0, 0, 0, 0, 0
                 };
-                const unsigned char bmppad[4] = {0,0,0,0};
+                static const unsigned char bmppad[4] = {0,0,0,0};
 
                 const uint32_t w        = uint32_t(image.w);
                 const uint32_t h        = uint32_t(image.h);
                 const uint32_t ppl      = (4-(w*3)%4)%4; //!< pad per line
                 const uint32_t filesize = 54+h*(3*w+ppl);
 
+                //--------------------------------------------------------------
+                //
                 // fill headers
+                //
+                //--------------------------------------------------------------
                 bmp_w32(&bmpfileheader[2],filesize);
-                bmp_w32(&bmpinfoheader[ 4],w);
-                bmp_w32(&bmpinfoheader[ 8],h);
+                bmp_w32(&bmpinfoheader[4],w);
+                bmp_w32(&bmpinfoheader[8],h);
 
                 OutputFile fp(fileName);
                 fp.frame(bmpfileheader,14);
@@ -131,7 +138,7 @@ Y_UTEST(format_bmp)
     }
 
     Ink::Codec::Image  img(200,100);
-    Random::ParkMiller ran( SystemSeed::Get() );
+    Random::ParkMiller ran;
     std::cerr << "ran @" << (void*)&ran << std::endl;
     slabs(LoadIndx,img,ran);
 

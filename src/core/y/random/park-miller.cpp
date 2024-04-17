@@ -1,10 +1,11 @@
 #include "y/random/park-miller.hpp"
+#include "y/system/seed.hpp"
 
 namespace Yttrium
 {
     namespace Random
     {
-#define AM (1.0/IM)
+//#define AM (1.0/IM)
 
         static const int32_t IA   = 16807;
         static const int32_t IM   = 2147483647;
@@ -15,6 +16,13 @@ namespace Yttrium
         ParkMiller:: ParkMiller(const int32_t seed) noexcept :
         Bits(IM-1),
         state(seed)
+        {
+
+        }
+
+        ParkMiller:: ParkMiller() noexcept :
+        Bits(IM-1),
+        state( SystemSeed::Get() )
         {
 
         }
