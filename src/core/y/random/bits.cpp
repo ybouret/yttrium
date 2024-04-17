@@ -318,6 +318,8 @@ namespace Yttrium
             Y_GIANT_LOCK();
             const unsigned r = rand();
             (std::cerr << "r=" << r << std::endl).flush();
+            unsigned int seed = 10;
+            rand_r(&seed);
             return r;
         }
     }
