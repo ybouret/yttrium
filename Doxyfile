@@ -947,7 +947,7 @@ INPUT                  = src/core/y \
                          src/jive/y \
                          src/mkl/y  \
                          src/ink/y  \
-                         src/chem/y \
+                         src/chemical/y \
 			 src/json/y \
                          src/mpi++/y
 

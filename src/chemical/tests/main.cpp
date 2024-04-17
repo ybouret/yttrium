@@ -3,7 +3,8 @@
 
 Y_UTEST_DECL(32)
 {
-
+    Y_UTEST(species);
+    Y_UTEST(rosary);
 }
 Y_UTEST_EXEC()
 
