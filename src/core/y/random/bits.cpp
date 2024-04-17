@@ -306,6 +306,7 @@ namespace Yttrium
     {
         Rand:: Rand() noexcept : Bits(RAND_MAX)
         {
+            Y_GIANT_LOCK();
             srand( unsigned(SystemSeed::Get()) );
         }
 
@@ -318,8 +319,8 @@ namespace Yttrium
             Y_GIANT_LOCK();
             const unsigned r = rand();
             (std::cerr << "r=" << r << std::endl).flush();
-            unsigned int seed = 10;
-            rand_r(&seed);
+            //unsigned int seed = 10;
+            //rand_r(&seed);
             return r;
         }
     }
