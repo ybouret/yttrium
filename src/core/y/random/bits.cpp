@@ -298,6 +298,8 @@ namespace Yttrium
 #include <cstdlib>
 #include "y/system/seed.hpp"
 
+#include "y/lockable.hpp"
+
 namespace Yttrium
 {
     namespace Random
@@ -313,7 +315,10 @@ namespace Yttrium
 
         uint32_t Rand:: next32() noexcept
         {
-            return rand();
+            Y_GIANT_LOCK();
+            const unsigned r = rand();
+            (std::cerr << "r=" << r << std::endl).flush();
+            return r;
         }
     }
 
