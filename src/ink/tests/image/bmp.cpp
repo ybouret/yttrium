@@ -100,6 +100,7 @@ namespace Yttrium
             color.r = ran.in<uint8_t>(100,255);
             color.g = ran.in<uint8_t>(100,255);
             color.b = ran.in<uint8_t>(100,255);
+            (std::cerr << "color[" << slab.indx << "]=" << color << std::endl).flush();
         }
         for(size_t k=slab.count();k>0;--k)
         {
