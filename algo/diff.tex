@@ -71,109 +71,25 @@ Electric continuity:
 	\partial_t \left(\sum_i z_i C_i\right) + \mathrm{div} \left(\sum_i z_i \vec{J}_i\right) = \sum_i z_i \sigma_i
 \end{equation}
 
-\end{document}
-
-Molar flux:
-\begin{equation}
-\boxed{
-	\vec{J}_i = C_i\vec{v}_i = -D_i C_i \vec{\nabla}(\ln(\gamma_i C_i)) + z_i C_i \lambda_i \vec{E}
-	}
-\end{equation}
-
-\begin{equation}
-	\vec{J}_i = - D_i \left( \vec{\nabla} C_i + C_i \vec{\nabla}\Gamma_i \right) + z_i C_i \lambda_i \vec{E}
-\end{equation}
-
-\begin{equation}
-\boxed{
-	\vec{J}_i = - D_i \left( \vec{\nabla} C_i + C_i \vec{\nabla}\Gamma_i   - C_i \dfrac{ z_i\mathcal{F}}{RT} \vec{E} \right)
-}
-\end{equation}
-
-Electric flux:
-\begin{equation}
-	\dfrac{1}{\mathcal{F}} \vec{J}_i^{el} =  z_i \vec{J}_i = - z_i D_i \left( \vec{\nabla} C_i + C_i \vec{\nabla}\Gamma_i \right) + z_i^2 C_i \lambda_i \vec{E}
-\end{equation}
-Continuity equation:
-\begin{equation}
-	\partial_t C_i + \mathrm{div} \vec{J}_i = \sigma_i
-\end{equation}
 
 \begin{equation}
 	\mathrm{div}(f\vec{g}) = f \, \mathrm{div}\vec{g} + \vec{\nabla} f \cdot \vec{g}
 \end{equation}
 
+In a constant $D_i$ bulk:
 \begin{equation}
-	\vec{J}_i = -D_i \vec{\nabla} C_i + C_i \left( z_i \lambda_i \vec{E} - D_i \vec{\nabla}\Gamma_i \right)
+\begin{array}{rcl}
+\mathrm{div} \vec{J}_i & = & D_i \left[ \dfrac{z_i\mathcal{F}}{RT} 
+\left(C_i \mathrm{div}\left(\vec{E}\right) + \vec{\nabla} C_i \cdot \vec{E} \right) 
+- \left( \Delta C_i + C_i \Delta \Gamma_i + \vec{\nabla} C_i \cdot \vec{\nabla} \Gamma_i \right)
+\right]\\
+\\
+ & = &  D_i \left[ \dfrac{z_i\mathcal{F}}{RT} 
+\left(  \vec{\nabla} C_i \cdot \vec{E} - C_i \Delta V \right) 
+- \left( \Delta C_i + C_i \Delta \Gamma_i + \vec{\nabla} C_i \cdot \vec{\nabla} \Gamma_i \right)
+\right]\\
+\end{array}
 \end{equation}
-
-\begin{equation}
-	\vec{J}_i = - \left[ D_i \vec{\nabla} C_i + C_i \left( z_i \lambda_i \vec{\nabla} V + D_i \vec{\nabla}\Gamma_i \right) \right]
-\end{equation}
-
-\begin{equation}
-	-\mathrm{div} \vec{J}_i = D_i \Delta C_i + C_i \left( D_i \Delta \Gamma_i + z_i \lambda_i \Delta V \right)
-	+ \vec{\nabla} C_i \cdot \left(  D_i \vec{\nabla}\Gamma_i - z_i \lambda_i \vec{E} \right) 
-\end{equation}
-
-\begin{equation}
-	-\mathrm{div} \vec{J}_i =
-	 D_i \left[ \Delta C_i + C_i \left(\Delta \Gamma_i +  z_i \dfrac{\mathcal{F}\Delta V}{RT} \right) 
-	+ \vec{\nabla}C_i \cdot \left( \vec{\nabla} \Gamma_i - z_i \dfrac{\mathcal{F}}{RT} \vec{E} \right) \right] 
-\end{equation}
-
-\section{Steady state}
-
-\begin{equation}
-\vec{J}^{el} = \vec{0} \implies \vec{E} = \dfrac{1}{ \sum_i z_i^2 C_i \lambda_i } \left[\sum_i  z_i D_i \left( \vec{\nabla} C_i + C_i \vec{\nabla}\Gamma_i \right)\right]
-\end{equation}
-\begin{equation}
-	\vec{E} = \dfrac{RT}{\mathcal{F}} \left[\sum_i z_i^2 D_i C_i \right]^{-1} 
-	\left[\sum_i  z_i D_i \left( \vec{\nabla} C_i + C_i \vec{\nabla}\Gamma_i \right)\right]
-\end{equation}
-
-
-
-\end{document}
-
-\begin{equation}
-	\rho = 0 \implies \sum_i z_i C_i = 0
-\end{equation}
-
-
-\begin{equation}
- \left( \vec{\nabla} C_i + C_i \vec{\nabla}\Gamma_i \right)  =   C_i z_i  \dfrac{\mathcal{F}}{RT} \vec{E}
-\end{equation}
-
-\begin{equation}
- \left( \vec{\nabla} C_i + C_i \vec{\nabla}\Gamma_i \right)  =  
-  C_i z_i  
-  \left[\sum_j z_i^2 D_j C_j \right]^{-1} 
-	\left[\sum_j  z_j D_j \left( \vec{\nabla} C_j + C_j \vec{\nabla}\Gamma_i \right)\right]
-\end{equation}
-
-
-\subsection{Ideal Water plus counter-anion (acidic)}
-
-\begin{equation}
-	h \implies w=K_w/h \implies A = h - K_w/h > 0
-\end{equation}
-
-\begin{equation}
-	 \vec{\nabla} h =   h \dfrac{\mathcal{F}}{RT} \vec{E} =
-	  h  
-	  \left[D_h h + D_w w + D_A A \right]^{-1}
-	 \left[D_h \vec{\nabla}h - D_w \vec{\nabla}w - D_A \vec{\nabla}A\right]
-\end{equation}
-
-\begin{equation}
- 	\vec{\nabla}h = \dfrac{h}{D_h h + D_w K_w/h + D_A (h-K_w/h)}
-	\left[D_h \vec{\nabla}h + D_w \dfrac{K_w}{h^2} \vec{\nabla}h  - D_A \left(\vec{\nabla}h + \dfrac{K_w}{h^2}\vec{\nabla}h\right)\right]
-\end{equation}
-
-Doesn't work!!
-
-
 
 
 \end{document}
