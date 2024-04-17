@@ -3,6 +3,7 @@
 #include "y/jive/parser.hpp"
 #include "y/jive/syntax/translator.hpp"
 #include "y/type/temporary.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -15,11 +16,12 @@ namespace Yttrium
         {
         public:
             explicit Compiler() :
-            Jive::Parser(CallSign),
+            Jive::Parser(Rosary::CallSign),
             Jive::Syntax::Translator(),
             lib(0)
             {
                 setupParser();
+                setupLinker();
             }
 
             inline virtual ~Compiler() noexcept
@@ -32,31 +34,30 @@ namespace Yttrium
                 const Temporary<Library *> temp(lib,&l);
                 Parser                    &self = *this;
                 const AutoPtr<XNode>       tree = self(m);
-                if(tree.isValid())
-                {
-                    std::cerr << "Valid Tree" << std::endl;
-                    GraphViz::Vizible::DotToPng( "rosary.dot", *tree);
+                if(tree.isEmpty()) throw Specific::Exception(Rosary::CallSign, "Unexpected Empty Syntax Tree!");
 
-                }
-                else
-                {
-                    std::cerr << "Empty Tree..." << std::endl;
-                }
+                GraphViz::Vizible::DotToPng( "rosary.dot", *tree);
+
+
             }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Compiler);
             void setupParser();
+            void setupLinker();
             Library *lib;
         };
 
+        // setting up parser
         void Rosary::Compiler::setupParser()
         {
             Agg       &ROSARY   = agg("ROSARY"); // top-level
-            //const Rule &PLUS    = term('+');
-            //const Rule &MINUS   = term('-');
-            const Rule &UUID    = term("UUID","[:alpha:][word]*");
-            const Rule &SPECIES = agg("SPECIES") << mark('[') << UUID << mark(']');
+            const Rule &PLUS    = term('+');
+            const Rule &MINUS   = term('-');
+            const Rule &UUID    = term("UUID","[:alpha:][:word:]*");
+            const Rule &ZPOS    = (agg("ZPOS") << oom(PLUS));
+            const Rule &ZNEG    = (agg("ZNEG") << oom(MINUS));
+            const Rule &SPECIES = (agg("SPECIES") << mark('[') << UUID << opt( pick(ZPOS,ZNEG) ) << mark(']'));
 
             ROSARY += zom(SPECIES);
 
@@ -65,6 +66,13 @@ namespace Yttrium
             lexer.drop("[:blank:]");
             lexer.endl("[:endl:]");
         }
+
+        // setting up linker
+        void Rosary::Compiler:: setupLinker()
+        {
+
+        }
+
 
         static void *            RosaryCompiler_[ Y_WORDS_FOR(Rosary::Compiler) ];
         static Rosary::Compiler *RosaryCompiler = 0;
