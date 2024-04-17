@@ -4,7 +4,8 @@
 #include "y/text/ops.hpp"
 #include "y/stream/libc/output.hpp"
 #include "y/concurrent/loop/crew.hpp"
-#include "y/random/bits.hpp"
+#include "y/random/park-miller.hpp"
+#include "y/system/seed.hpp"
 
 using namespace Yttrium;
 
@@ -129,8 +130,8 @@ Y_UTEST(format_bmp)
         Y_CHECK(fmtBMP->matches("Hello.BmP"));
     }
 
-    Ink::Codec::Image img(200,100);
-    Random::Rand      ran;
+    Ink::Codec::Image  img(200,100);
+    Random::ParkMiller ran( SystemSeed::Get() );
     std::cerr << "ran @" << (void*)&ran << std::endl;
     slabs(LoadIndx,img,ran);
 
