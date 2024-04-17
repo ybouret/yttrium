@@ -54,12 +54,7 @@ namespace Yttrium
             //! cleanup
             virtual ~Format() noexcept;
 
-
-            //! save image according to format
-            virtual void save(const Image         &image,
-                              const String        &fileName,
-                              const FormatOptions *options) const = 0;
-
+            
             //__________________________________________________________________
             //
             //

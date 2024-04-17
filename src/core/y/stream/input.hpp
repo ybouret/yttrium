@@ -49,7 +49,7 @@ namespace Yttrium
         //______________________________________________________________________
         static const char *From(const char *ctx) noexcept; //!< ctx/Unknown
 
-        size_t query(void *, const size_t); //!< query block of memory
+        size_t fetch(void *, const size_t); //!< query block of memory
         size_t fetch(uint8_t  &);           //!< try to read 1 byte
         size_t fetch(uint16_t &);           //!< try to read 2 bytes
         size_t fetch(uint32_t &);           //!< try to read 4 bytes

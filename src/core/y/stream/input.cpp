@@ -19,7 +19,7 @@ namespace Yttrium
     }
 
 
-    size_t InputStream:: query(void *blockAddr, const size_t blockSize)
+    size_t InputStream:: fetch(void *blockAddr, const size_t blockSize)
     {
         assert(Good(blockAddr,blockSize));
         size_t num = 0;
@@ -35,14 +35,14 @@ namespace Yttrium
 
     size_t InputStream:: fetch(uint8_t  &x)
     {
-        return query(&x,1);
+        return fetch(&x,1);
     }
 
 
     size_t InputStream:: fetch(uint16_t  &x)
     {
         uint8_t u[2] = { 0,0 };
-        const size_t  nr = query(u,2);
+        const size_t  nr = fetch(u,2);
         if(2==nr)
         {
             x = uint16_t(u[0]) + (uint16_t(u[1]) << 8);
@@ -54,7 +54,7 @@ namespace Yttrium
     size_t InputStream:: fetch(uint32_t  &x)
     {
         uint8_t       u[4] = { 0,0,0,0 };
-        const size_t  nr   = query(u,4);
+        const size_t  nr   = fetch(u,4);
         if(4==nr)
         {
             x = uint32_t(u[0])
@@ -68,7 +68,7 @@ namespace Yttrium
     size_t InputStream:: fetch(uint64_t  &x)
     {
         uint8_t       u[8] = { 0,0,0,0,0,0,0,0 };
-        const size_t  nr   = query(u,8);
+        const size_t  nr   = fetch(u,8);
         if(8==nr)
         {
             x = uint64_t(u[0])

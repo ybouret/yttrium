@@ -2,10 +2,8 @@
 #include "y/ink/image/format/bmp.hpp"
 #include "y/utest/run.hpp"
 #include "y/text/ops.hpp"
-#include "y/stream/libc/output.hpp"
 #include "y/concurrent/loop/crew.hpp"
 #include "y/random/park-miller.hpp"
-#include <cstring>
 
 using namespace Yttrium;
 
@@ -66,6 +64,7 @@ Y_UTEST(format_bmp)
 
     fmtBMP->save(img, "img.bmp", 0);
 
+    Ink::Codec::Image cpy = fmtBMP->load("img.bmp",0);
 
 
 

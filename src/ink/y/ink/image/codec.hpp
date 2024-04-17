@@ -60,6 +60,24 @@ namespace Yttrium
             virtual const char * callSign() const noexcept; //! [Identifiable] name.c_str()
             const String &       key()      const noexcept; //!< name
 
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+
+            //! save image according to format+options
+            virtual void save(const Image         &image,
+                              const String        &fileName,
+                              const FormatOptions *options) const = 0;
+
+            //! load image according to format+options
+            virtual Image load(const String        &fileName,
+                               const FormatOptions *options) const = 0;
+
             //__________________________________________________________________
             //
             //
