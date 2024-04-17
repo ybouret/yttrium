@@ -245,7 +245,7 @@ namespace Yttrium
                 op.skip(fp,fileName);
             }
 
-            return image;;
+            return image;
         }
 
     }
