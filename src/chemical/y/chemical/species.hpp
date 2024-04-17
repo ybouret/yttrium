@@ -5,6 +5,9 @@
 
 #include "y/chemical/type/entity.hpp"
 #include "y/ptr/ark.hpp"
+#include "y/data/small/light/list/bare.hpp"
+#include "y/data/small/light/list/solo.hpp"
+#include "y/data/small/light/list/coop.hpp"
 
 namespace Yttrium
 {
@@ -15,6 +18,11 @@ namespace Yttrium
         {
         public:
             typedef ArkPtr<String,Species> Handle;
+            typedef Small::BareLightList<const Species> BareList; //!< once usage
+            typedef Small::SoloLightList<const Species> SoloList; //!< standalone, multiple usage
+            typedef Small::CoopLightList<const Species> CoopList; //!< shared, multiple usage
+            typedef CoopList::ProxyType                 CoopRepo; //!< memory for CoopList
+
 
             template <typename NAME> inline
             explicit Species(const NAME  &uid,

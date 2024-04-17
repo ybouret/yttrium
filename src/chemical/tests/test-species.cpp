@@ -14,8 +14,10 @@ Y_UTEST(species)
         GraphViz::Vizible::Enter(fp, "G");
         proton.viz(fp);
         GraphViz::Vizible::Leave(fp);
-
     }
+
+    Species::CoopRepo spRepo;
+
 }
 Y_UDONE()
 

@@ -4,6 +4,7 @@
 #include "y/jive/syntax/translator.hpp"
 #include "y/type/temporary.hpp"
 #include "y/system/exception.hpp"
+#include "y/sequence/vector.hpp"
 
 namespace Yttrium
 {
@@ -15,10 +16,18 @@ namespace Yttrium
         class Rosary::Compiler : public Jive::Parser, Jive::Syntax::Translator
         {
         public:
+            enum ZSign {
+                ZPositive,
+                ZNegative
+            };
+            typedef Vector<String> Strings;
+            typedef Vector<ZSign>  Signs;
+            typedef Vector<int>    Charges;
+
             explicit Compiler() :
             Jive::Parser(Rosary::CallSign),
             Jive::Syntax::Translator(),
-            lib(0)
+            l(0)
             {
                 setupParser();
                 setupLinker();
@@ -29,23 +38,92 @@ namespace Yttrium
             }
 
             void process(Jive::Module *m,
-                         Library      &l)
+                         Library      &lib)
             {
-                const Temporary<Library *> temp(lib,&l);
+                const Temporary<Library *> temp(l,&lib);
                 Parser                    &self = *this;
                 const AutoPtr<XNode>       tree = self(m);
                 if(tree.isEmpty()) throw Specific::Exception(Rosary::CallSign, "Unexpected Empty Syntax Tree!");
 
                 GraphViz::Vizible::DotToPng( "rosary.dot", *tree);
-
-
+                translate(*tree,Jive::Syntax::Permissive);
             }
+
+
+            Strings           uuids;
+            Signs             signs;
+            Charges           charges;
+            Species::SoloList species;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Compiler);
+            Library *l;
+
             void setupParser();
             void setupLinker();
-            Library *lib;
+            void clearState() noexcept
+            {
+                uuids.free();
+                signs.free();
+                charges.free();
+                species.free();
+            }
+
+            virtual void initialize()
+            {
+                std::cerr << "*** Initializing..." << std::endl;
+                clearState();
+            }
+
+            void onUUID(  const Jive::Token &token) { uuids << token.toString(); }
+            void onPLUS(  const Jive::Token &) { signs << ZPositive; }
+            void onMINUS( const Jive::Token &) { signs << ZNegative; }
+            void onZPOS(size_t n)
+            {
+                assert(n>0);
+                int count = 0;
+                while(n-- > 0)
+                {
+                    assert(signs.size()>0);
+                    assert(ZPositive == signs.tail());
+                    signs.popTail();
+                    ++count;
+                }
+                std::cerr << "charge +" << count << std::endl;
+                charges << count;
+            }
+
+            void onZNEG(size_t n)
+            {
+                assert(n>0);
+                int count = 0;
+                while(n-- > 0)
+                {
+                    assert(signs.size()>0);
+                    assert(ZNegative == signs.tail());
+                    signs.popTail();
+                    --count;
+                }
+                charges << count;
+            }
+
+            void onSPECIES(const size_t n)
+            {
+                assert(1==n||2==n);
+                assert(uuids.size()>0);
+                const String name = uuids.pullTail();
+                int          z    = 0;
+                if(2==n)
+                {
+                    assert(charges.size()>0);
+                    z = charges.pullTail();
+                }
+                Library       &lib  = *l;
+                const Species &sp   = lib(name,z);
+                species << sp;
+            }
+
+
         };
 
         // setting up parser
@@ -58,7 +136,7 @@ namespace Yttrium
             const Rule &ZPOS    = (agg("ZPOS") << oom(PLUS));
             const Rule &ZNEG    = (agg("ZNEG") << oom(MINUS));
             const Rule &SPECIES = (agg("SPECIES") << mark('[') << UUID << opt( pick(ZPOS,ZNEG) ) << mark(']'));
-
+            
             ROSARY += zom(SPECIES);
 
 
@@ -70,7 +148,12 @@ namespace Yttrium
         // setting up linker
         void Rosary::Compiler:: setupLinker()
         {
-
+            Y_Jive_OnTerminal(Compiler,UUID);
+            forTerminal('+', *this, &Compiler::onPLUS);
+            forTerminal('-', *this, &Compiler::onMINUS);
+            Y_Jive_OnInternal(Compiler,ZPOS);
+            Y_Jive_OnInternal(Compiler,ZNEG);
+            Y_Jive_OnInternal(Compiler,SPECIES);
         }
 
 
