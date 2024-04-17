@@ -22,6 +22,8 @@ namespace Yttrium
         } alias = { { WallTime::Ticks(), BitLib::LRoll(ProcessId::Get()) } };
         for(size_t i=0;i<4;++i) alias.dw[i] = Hashing::IBJ32(alias.dw[i]);
 
-        return CRC32::Of(&alias,sizeof(alias));
+        const uint32_t seed = CRC32::Of(&alias,sizeof(alias));
+        std::cerr << "seed=" << seed << std::endl;
+        return seed;
     }
 }
