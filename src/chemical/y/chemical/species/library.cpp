@@ -17,6 +17,7 @@ namespace Yttrium
         {
         }
 
+        const char *              Library:: callSign()  const noexcept { return CallSign; }
         Library::ConstInterface & Library:: surrogate() const noexcept { return sdb; }
 
 
@@ -37,6 +38,19 @@ namespace Yttrium
             if(!sdb.insert(handle))   throw Specific::Exception(CallSign, "unexpected failed to insert '%s'", target.c_str());
             updateWith(*handle);
             return *handle;
+        }
+
+
+        std::ostream & operator<<(std::ostream &os, const Library &lib)
+        {
+            os << "<" << lib.callSign() << " species='" << lib->size() << "'>" << std::endl;
+            for(SpeciesDB::ConstIterator it=lib->begin(); it != lib->end(); ++it)
+            {
+                const Species &sp = **it;
+                lib.pad(std::cerr << "\t" << sp, sp) << " : z = " << std::setw(4) << sp.z << std::endl;
+            }
+            os << "<" << lib.callSign() << "/>";
+            return os;
         }
 
     }

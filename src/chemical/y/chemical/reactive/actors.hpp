@@ -22,7 +22,7 @@ namespace Yttrium
             String toString() const;
 
             friend std::ostream & operator<<(std::ostream &os, const Actors &A);
-
+            
 
         private:
             Y_DISABLE_ASSIGN(Actors);

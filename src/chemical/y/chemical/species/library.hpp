@@ -28,7 +28,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Library : public Proxy<SpeciesDB>, public Entities
+        class Library : public Proxy<SpeciesDB>, public Entities, public Identifiable
         {
         public:
             //__________________________________________________________________
@@ -48,12 +48,16 @@ namespace Yttrium
             explicit Library();           //!< setup empty
             virtual ~Library() noexcept;  //!< cleanup
 
+            friend std::ostream & operator<<(std::ostream &, const Library &);
+
             //__________________________________________________________________
             //
             //
             // Methods
             //
             //__________________________________________________________________
+            virtual const char * callSign() const noexcept; //!< CallSign
+
 
             //__________________________________________________________________
             //

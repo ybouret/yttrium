@@ -1,10 +1,13 @@
 
 #include "y/chemical/lang/rosary.hpp"
+#include "y/chemical/reactive/actors.hpp"
+
 #include "y/jive/parser.hpp"
 #include "y/jive/syntax/translator.hpp"
 #include "y/type/temporary.hpp"
 #include "y/system/exception.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/apex/natural.hpp"
 
 namespace Yttrium
 {
@@ -13,22 +16,43 @@ namespace Yttrium
 
         const char * const Rosary::CallSign = "ChemicalRosary";
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        // Compiler
+        //
+        //
+        //______________________________________________________________________
         class Rosary::Compiler : public Jive::Parser, Jive::Syntax::Translator
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             enum ZSign {
                 ZPositive,
                 ZNegative
             };
-            typedef Vector<String> Strings;
-            typedef Vector<ZSign>  Signs;
-            typedef Vector<int>    Charges;
+            typedef Vector<String>   Strings;
+            typedef Vector<ZSign>    Signs;
+            typedef Vector<int>      Charges;
+            typedef Vector<unsigned> Coefs;
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             explicit Compiler() :
             Jive::Parser(Rosary::CallSign),
             Jive::Syntax::Translator(),
-            uuids(), signs(), charges(), species(),
-            l(0)
+            uuids(), signs(), charges(), species(), actors(),
+            hLib(0)
             {
                 setupParser();
                 setupLinker();
@@ -38,10 +62,18 @@ namespace Yttrium
             {
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! main processing
             void process(Jive::Module *m,
                          Library      &lib)
             {
-                const Temporary<Library *> temp(l,&lib);
+                const Temporary<Library *> temp(hLib,&lib);
                 Parser                    &self = *this;
                 const AutoPtr<XNode>       tree = self(m);
                 if(tree.isEmpty()) throw Specific::Exception(Rosary::CallSign, "Unexpected Empty Syntax Tree!");
@@ -50,15 +82,23 @@ namespace Yttrium
                 translate(*tree,Jive::Syntax::Permissive);
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
 
             Strings           uuids;
             Signs             signs;
             Charges           charges;
             Species::SoloList species;
+            Coefs             coefs;
+            Actors            actors;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Compiler);
-            Library *l;
+            Library *hLib;
 
             void setupParser();
             void setupLinker();
@@ -68,6 +108,8 @@ namespace Yttrium
                 signs.free();
                 charges.free();
                 species.free();
+                coefs.free();
+                actors.release();
             }
 
             virtual void initialize()
@@ -112,18 +154,39 @@ namespace Yttrium
             {
                 assert(1==n||2==n);
                 assert(uuids.size()>0);
-                const String name = uuids.pullTail();
+                String       name = uuids.pullTail();
                 int          z    = 0;
                 if(2==n)
                 {
                     assert(charges.size()>0);
                     z = charges.pullTail();
                 }
-                Library       &lib  = *l;
+
+                switch(Sign::Of(z))
+                {
+                    case Positive: 
+                        for(int i=0;i<z;++i) name += '+';
+                        break;
+                    case __Zero__: break;
+                    case Negative:
+                        for(int i=0;i< -z;++i) name += '-';
+                        break;
+                }
+
+                Library       &lib  = *hLib;
                 const Species &sp   = lib(name,z);
                 species << sp;
             }
 
+            void onCOEF(const Jive::Token &token)
+            {
+                apn nu = 0;
+                for(const Jive::Char *ch=token.head;ch;ch=ch->next)
+                {
+                    const char code = **ch; assert(code>='0'); assert(code<='9');
+
+                }
+            }
 
         };
 
@@ -131,14 +194,22 @@ namespace Yttrium
         void Rosary::Compiler::setupParser()
         {
             Agg       &ROSARY   = agg("ROSARY"); // top-level
+            
             const Rule &PLUS    = term('+');
             const Rule &MINUS   = term('-');
             const Rule &UUID    = term("UUID","[:alpha:][:word:]*");
             const Rule &ZPOS    = (agg("ZPOS") << oom(PLUS));
             const Rule &ZNEG    = (agg("ZNEG") << oom(MINUS));
             const Rule &SPECIES = (agg("SPECIES") << mark('[') << UUID << opt( pick(ZPOS,ZNEG) ) << mark(']'));
-            
-            ROSARY += zom(SPECIES);
+
+            const Rule &COEF        = term("COEF","[:digit:]+");
+            const Rule &OPT_COEF    = opt(COEF);
+            const Rule &FIRST_ACTOR = (agg("FIRST_ACTOR") << opt(PLUS) << OPT_COEF << SPECIES);
+            const Rule &EXTRA_ACTOR = (agg("EXTRA_ACTOR") << PLUS << OPT_COEF << SPECIES);
+            const Rule &SEP         = mark(':');
+            const Rule &EQ          = (agg("EQ") << UUID << SEP << FIRST_ACTOR << zom(EXTRA_ACTOR) ) ;
+
+            ROSARY += zom(pick(SPECIES,EQ));
 
 
             renderGraphViz();
@@ -155,6 +226,8 @@ namespace Yttrium
             Y_Jive_OnInternal(Compiler,ZPOS);
             Y_Jive_OnInternal(Compiler,ZNEG);
             Y_Jive_OnInternal(Compiler,SPECIES);
+            Y_Jive_OnTerminal(Compiler,COEF);
+
         }
 
 
