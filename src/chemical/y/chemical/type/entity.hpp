@@ -58,6 +58,7 @@ namespace Yttrium
             name(uid),
             indx()
             {
+                assert(topLevel>0);
                 initialize(topLevel);
             }
 

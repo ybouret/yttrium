@@ -18,7 +18,6 @@ namespace Yttrium
         
         void Entity:: initialize(const size_t level) noexcept
         {
-            assert(level>0);
             for(size_t i=0;i<Levels;++i)
             {
                 Coerce(indx[i]) = level;

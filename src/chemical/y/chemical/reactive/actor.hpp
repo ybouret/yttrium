@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Chemical_Actor_Included
@@ -18,6 +17,9 @@ namespace Yttrium
             Actor(const Actor &) noexcept;
             virtual ~Actor() noexcept;
 
+            String asFirst() const;
+            String asExtra() const;
+
             const Species  &sp;   //!< persistent species
             const unsigned  nu;   //!< stoichiometric coefficient
             const XReal     xnu;  //!< nu as xreal
@@ -27,7 +29,10 @@ namespace Yttrium
 
         private:
             Y_DISABLE_ASSIGN(Actor);
+            void fmt(String &) const;
         };
+
+
 
     }
 

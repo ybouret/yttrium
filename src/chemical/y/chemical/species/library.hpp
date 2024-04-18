@@ -69,19 +69,7 @@ namespace Yttrium
             {
                 const size_t          sindex = sdb.size()+1;
                 const Species::Handle handle = new Species(name,z,sindex);
-                const String         &target = handle->name;
-                {
-                    const Species::Handle * const query = sdb.search(target);
-                    if(query)
-                    {
-                        const Species &mine = **query;
-                        if(mine.z != z) throwChargeMismatch(target);
-                        return mine;
-                    }
-                }
-                assert(0==sdb.search(target));
-                if(!sdb.insert(handle)) throwFailedToInsert(target);
-                return *handle;
+                return manage(handle);
             }
 
 
@@ -90,8 +78,8 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Library);
             SpeciesDB sdb;
             virtual ConstInterface & surrogate() const noexcept;
-            void    throwFailedToInsert(const String &) const;
-            void    throwChargeMismatch(const String &) const;
+            const Species &          manage(const Species::Handle &);
+
         };
 
     }

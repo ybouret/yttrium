@@ -19,14 +19,24 @@ namespace Yttrium
 
         Library::ConstInterface & Library:: surrogate() const noexcept { return sdb; }
 
-        void Library:: throwChargeMismatch(const String &name) const
-        {
-            throw Specific::Exception(CallSign, "charge mismatch for '%s'", name.c_str());
-        }
 
-        void Library:: throwFailedToInsert(const String &name) const
+
+        const Species & Library:: manage(const Species::Handle &handle)
         {
-            throw Specific::Exception(CallSign, "unexpected failed to insert '%s'", name.c_str());
+            const String         &target = handle->name;
+            {
+                const Species::Handle * const query = sdb.search(target);
+                if(query)
+                {
+                    const Species &mine = **query;
+                    if(mine.z != handle->z)  throw Specific::Exception(CallSign, "charge mismatch for '%s'", target.c_str());
+                    return mine;
+                }
+            }
+            assert(0==sdb.search(target));
+            if(!sdb.insert(handle))   throw Specific::Exception(CallSign, "unexpected failed to insert '%s'", target.c_str());
+            updateWith(*handle);
+            return *handle;
         }
 
     }

@@ -32,6 +32,28 @@ namespace Yttrium
 
         }
 
+        void Actor:: fmt(String &res) const
+        {
+            res << '[' << sp.name << ']';
+        }
+
+        String Actor:: asFirst() const
+        {
+            String res;
+            if(nu>1)
+                res += Formatted::Get("%u",nu);
+            fmt(res);
+            return res;
+        }
+
+        String Actor:: asExtra() const
+        {
+            String res = '+';
+            if(nu>1)
+                res += Formatted::Get("%u",nu);
+            fmt(res);
+            return res;
+        }
 
 
     }
