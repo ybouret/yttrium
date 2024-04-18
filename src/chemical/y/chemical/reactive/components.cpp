@@ -14,6 +14,7 @@ namespace Yttrium
         }
 
         Components:: Components() :
+        Proxy<const Component::Set>(),
         reac(),
         prod(),
         rstr(),
@@ -23,6 +24,7 @@ namespace Yttrium
         }
 
         Components:: Components(const Components &other) :
+        Proxy<const Component::Set>(),
         reac(other.reac),
         prod(other.prod),
         rstr(other.rstr),
