@@ -22,7 +22,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename T>
-        class BareLightList : public LightList<T,BareProxy>
+        class BareLightList : public LightList<T,BareProxy>, public Releasable
         {
         public:
             //__________________________________________________________________
@@ -42,10 +42,10 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! setup empty
-            inline explicit BareLightList() noexcept: ListType() {}
+            inline explicit BareLightList() noexcept: ListType(), Releasable() {}
 
             //! copy
-            inline explicit BareLightList(const BareLightList &_) : ListType(_) {}
+            inline explicit BareLightList(const BareLightList &_) : ListType(_), Releasable() {}
 
             //! cleanup
             inline virtual ~BareLightList() noexcept {}
@@ -57,6 +57,9 @@ namespace Yttrium
                 tmp.swapWith(*this);
                 return *this;
             }
+
+            //! free=release
+            inline virtual void release() noexcept { this->free_(); }
         };
     }
 

@@ -140,14 +140,14 @@ namespace Yttrium
             void setupLinker();
             void clearState() noexcept
             {
-                uuids.free();
-                charges.free();
-                species.free();
-                coefs.free();
-                actors.release();
-                reac.release();
-                prod.release();
-                Ks.free();
+                uuids.  release();
+                charges.release();
+                species.release();
+                coefs.  release();
+                actors. release();
+                reac.   release();
+                prod.   release();
+                Ks.     release();
             }
 
             virtual void initialize()
@@ -267,7 +267,8 @@ namespace Yttrium
                 Ks << k;
             }
 
-            inline void onROSARY(const size_t) noexcept {}
+            inline void onROSARY(const size_t) noexcept 
+            { clearState(); }
 
         };
 

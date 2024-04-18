@@ -23,7 +23,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename T>
-        class SoloLightList : public LightList<T,SoloProxy>
+        class SoloLightList : public LightList<T,SoloProxy>, public Releasable
         {
         public:
             //__________________________________________________________________
@@ -43,10 +43,10 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! setup empty
-            inline explicit SoloLightList() noexcept : ListType() {}
+            inline explicit SoloLightList() noexcept : ListType(), Releasable() {}
 
             //! copy
-            inline explicit SoloLightList(const SoloLightList &_) : ListType(_) {}
+            inline explicit SoloLightList(const SoloLightList &_) : ListType(_), Releasable() {}
 
             //! cleanup
             inline virtual ~SoloLightList() noexcept {}
@@ -62,6 +62,13 @@ namespace Yttrium
                 catch(...) { this->proxy->destruct(tmp); throw; }
                 swapWith(tmp);
                 return *this;
+            }
+
+            //! free+release cache
+            inline virtual void release() noexcept
+            {
+                this->free_();
+                this->proxy->release();
             }
         };
     }
