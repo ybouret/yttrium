@@ -11,21 +11,52 @@ namespace Yttrium
     namespace Chemical
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Component = algebraic coefficients + species
+        //
+        //
+        //______________________________________________________________________
         class Component
         {
         public:
-            typedef SuffixSet<String,Component> Set;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef SuffixSet<String,Component> Set; //!< alias
 
-            Component(const int coef, const Species &spec) noexcept;
-            Component(const Component &) noexcept;
-            ~Component() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            Component(const int coef, const Species &spec) noexcept; //!< setup
+            Component(const Component &) noexcept;                   //!< copy
+            ~Component() noexcept;                                   //!< cleanup
 
-            const String &key() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            const String &key() const noexcept; //!< sp.name
 
-
-            const int      nu;
-            const Species &sp;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const int      nu; //!< stoichio
+            const Species &sp; //!< species
+            
         private:
             Y_DISABLE_ASSIGN(Component);
         };

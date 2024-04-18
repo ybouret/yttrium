@@ -12,25 +12,60 @@ namespace Yttrium
     namespace Chemical
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Reactants and Products
+        //
+        //
+        //______________________________________________________________________
         class Components : public Proxy<const Component::Set>
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             static const char LeftRightArrow[]; //!< "<=>"
 
-            explicit Components();
-            Components(const Components &);
-            virtual ~Components() noexcept;
-            friend std::ostream & operator<<(std::ostream &, const Components &);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Components();           //!< setup empty
+            Components(const Components &);  //!< copy
+            virtual ~Components() noexcept;  //!< cleanup
+            friend std::ostream & operator<<(std::ostream &, const Components &); //!< default display
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+         
+            //! append a new component
             void operator()(const int nu, const Species &sp);
 
-            std::ostream & display(std::ostream &os, const size_t rmax=0, const size_t pmax=0) const;
 
-            const Actors reac;
-            const Actors prod;
-            const String rstr;
-            const String pstr;
+            //! display with padding
+            std::ostream & display(std::ostream &os, const size_t rmax=0, const size_t pmax=0) const;
+          
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const Actors reac; //!< reactants list
+            const Actors prod; //!< products  list
+            const String rstr; //!< reactants string
+            const String pstr; //!< products  string
 
 
         private:
