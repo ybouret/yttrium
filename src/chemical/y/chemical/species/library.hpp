@@ -45,10 +45,9 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Library();           //!< setup empty
-            virtual ~Library() noexcept;  //!< cleanup
-
-            friend std::ostream & operator<<(std::ostream &, const Library &);
+            explicit Library();                                                //!< setup empty
+            virtual ~Library() noexcept;                                       //!< cleanup
+            friend std::ostream & operator<<(std::ostream &, const Library &); //!< display
 
             //__________________________________________________________________
             //

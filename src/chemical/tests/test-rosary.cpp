@@ -35,6 +35,8 @@ Y_UTEST(rosary)
 
     std::cerr << lib << std::endl;
 
+    Y_SIZEOF(Actor);
+    Y_SIZEOF(Actors);
 }
 Y_UDONE()
 

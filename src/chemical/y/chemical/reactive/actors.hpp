@@ -12,17 +12,38 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class Actors : public CxxListOf<Actor>
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Actors as list
+        //
+        //
+        //______________________________________________________________________
+        class Actors :   public CxxListOf<Actor>
         {
         public:
-            explicit Actors() noexcept;
-            virtual ~Actors() noexcept;
-            Actors(const Actors &);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Actors() noexcept; //!< setup empty
+            virtual ~Actors() noexcept; //!< cleanup
+            Actors(const Actors &);     //!< copy
 
-            String toString() const;
-
+            //! display using toString
             friend std::ostream & operator<<(std::ostream &os, const Actors &A);
-            
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            String toString() const; //!< cat all actors' string
+
 
         private:
             Y_DISABLE_ASSIGN(Actors);

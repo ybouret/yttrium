@@ -48,7 +48,7 @@ namespace Yttrium
             }
 
 
-            void Analyzer:: walk(const XNode *root)
+            void Analyzer:: walk(const XNode * const root)
             {
                 assert(0!=root);
                 const String &name = *(root->rule.name);
@@ -70,7 +70,36 @@ namespace Yttrium
                     }
                 }
             }
-            
+
+            void Analyzer:: apply(XNode * const root, XProc proc, void *args)
+            {
+                assert(0!=root);
+                switch(root->type)
+                {
+                    case IsTerminal:
+                        break;
+
+                    case IsInternal:
+                    {
+                        XList &chld = Coerce(root->branch());
+                        ++Coerce(depth);
+                        for(XNode *node=chld.head;node;node=node->next)
+                        {
+                            apply(node,proc,args);
+                        }
+                        --Coerce(depth);
+                    } break;
+
+                }
+                proc(*root,args,depth);
+            }
+
+            void Analyzer:: apply(XNode &root, XProc proc, void *args)
+            {
+                Coerce(depth) = 0;
+                apply( &root, proc, args);
+            }
+
         }
 
     }

@@ -76,8 +76,24 @@ namespace Yttrium
                 const List   &   branch()                     const noexcept; //!< if internal
                 const Lexeme &   lexeme()                     const noexcept; //!< if terminal
                 size_t           weight()                     const noexcept; //!< number of terminals inside
-                void             remove(const Tag &tag)             noexcept; //!< return intenal node matching tag
+                void             remove(const Tag &  tag)           noexcept; //!< remove intenal node matching tag
                 
+                //! bool REMOVE(const XNode &) noexcept
+                template <typename REMOVE> inline
+                void removeChildIf(REMOVE &bad) noexcept
+                {
+                    assert(IsInternal==type);
+                    List  target;
+                    List &source = chld;
+                    while(source.size>0)
+                    {
+                        AutoPtr<XNode> node = source.popHead();
+                        if(bad(*node)) continue;
+                        target.pushTail(node.yield());
+                    }
+                    source.swapWith(target);
+                }
+
                 //______________________________________________________________
                 //
                 //

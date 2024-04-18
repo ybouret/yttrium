@@ -10,16 +10,42 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Actor = nu * species
+        //
+        //
+        //______________________________________________________________________
         class Actor : public Object
         {
         public:
-            explicit Actor(const unsigned, const Species &) noexcept;
-            Actor(const Actor &) noexcept;
-            virtual ~Actor() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Actor(const unsigned, const Species &) noexcept; //!< setup nu>0
+            Actor(const Actor &) noexcept;                            //!< copy;
+            virtual ~Actor()     noexcept;                            //!< cleanup
 
-            String asFirst() const;
-            String asExtra() const;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            String asFirst() const; //!< convert to string
+            String asExtra() const; //!< convert to string
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
             const Species  &sp;   //!< persistent species
             const unsigned  nu;   //!< stoichiometric coefficient
             const XReal     xnu;  //!< nu as xreal

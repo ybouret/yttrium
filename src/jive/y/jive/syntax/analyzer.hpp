@@ -28,6 +28,16 @@ namespace Yttrium
                 //______________________________________________________________
                 //
                 //
+                // Definitions
+                //
+                //______________________________________________________________
+                
+                //! procedure to apply to each node
+                typedef void (*XProc)(XNode &, void * , const int);
+
+                //______________________________________________________________
+                //
+                //
                 // C++
                 //
                 //______________________________________________________________
@@ -51,6 +61,10 @@ namespace Yttrium
 
                 //! helper to indent std::cerr using depth
                 std::ostream & indent() const;
+                
+
+                //! recurvisely apply to each node
+                void apply(XNode &root, XProc proc, void *args);
 
                 //______________________________________________________________
                 //
@@ -66,8 +80,8 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Analyzer);
-                void walk(const XNode *root);
-
+                void walk(const XNode * const root);
+                void apply(XNode * const root, XProc proc, void *args);
             };
 
         }
