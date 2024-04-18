@@ -12,6 +12,8 @@ namespace Yttrium
     {
         typedef double        Real;   //!< hardware real
         typedef XReal<double> XReal;  //!< software real
+
+        
     }
 }
 
