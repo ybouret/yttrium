@@ -10,6 +10,7 @@ namespace Yttrium
 
         Entities:: ~Entities() noexcept
         {
+            Coerce(maxLength)=0;
         }
 
         void Entities:: updateWith(const Entity &entity) noexcept

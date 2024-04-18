@@ -12,17 +12,57 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! associative string/species
+        //
+        //______________________________________________________________________
         typedef SuffixSet<String,Species::Handle> SpeciesDB;
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Libary of (topLevel) species
+        //
+        //
+        //______________________________________________________________________
         class Library : public Proxy<SpeciesDB>, public Entities
         {
         public:
-            static const char * const CallSign;
+            //__________________________________________________________________
+            //
+            //
+            // Definions
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< "Chemical::Library"
 
-            explicit Library();
-            virtual ~Library() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Library();           //!< setup empty
+            virtual ~Library() noexcept;  //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //__________________________________________________________________
+            //
+            //!  return new/existing species, checking matching chargess
+            /**
+             \param name name of the species
+             \param z    charge of the species
+             */
+            //__________________________________________________________________
             template <typename NAME> inline
             const Species & operator()(const NAME &name,
                                        const int   z)

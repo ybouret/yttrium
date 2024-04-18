@@ -8,7 +8,7 @@ namespace Yttrium
         
         Entity:: ~Entity() noexcept
         {
-
+            initialize(0);
         }
 
         const String & Entity:: key() const noexcept
@@ -18,11 +18,11 @@ namespace Yttrium
         
         void Entity:: initialize(const size_t level) noexcept
         {
+            assert(level>0);
             for(size_t i=0;i<Levels;++i)
             {
-                Coerce(indx[i]) = 0;
+                Coerce(indx[i]) = level;
             }
-            Coerce(indx[TopLevel]) = level;
         }
 
 

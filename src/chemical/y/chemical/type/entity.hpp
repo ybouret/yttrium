@@ -10,20 +10,46 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! level of indexing
+        //
+        //______________________________________________________________________
         enum Level
         {
-            TopLevel = 0,
-            SubLevel = 1,
-            AuxLevel = 2
+            TopLevel = 0, //!< global index
+            SubLevel = 1, //!< index in a  sub group
+            AuxLevel = 2  //!< index in an auxiliary group
         };
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Base class for entity with name=key() and indices
+        //
+        //
+        //______________________________________________________________________
         class Entity : public Object, public Counted, public GraphViz::Vizible
         {
         public:
-            static const size_t Levels = AuxLevel+1;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const size_t Levels = AuxLevel+1; //!< max number of levels
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup with name
             template <typename NAME> inline
             explicit Entity(const NAME &uid, const size_t topLevel) :
             Object(),
@@ -35,11 +61,25 @@ namespace Yttrium
                 initialize(topLevel);
             }
 
+            //! cleanup
             virtual ~Entity() noexcept;
             
-            const String & key() const noexcept;
-            const String name;
-            const size_t indx[Levels];
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            const String & key() const noexcept; //!< name, for sets/maps
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const String name;          //!< unique identifier
+            const size_t indx[Levels];  //!< indices
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Entity);

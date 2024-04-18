@@ -27,6 +27,7 @@ namespace Yttrium
             explicit Compiler() :
             Jive::Parser(Rosary::CallSign),
             Jive::Syntax::Translator(),
+            uuids(), signs(), charges(), species(),
             l(0)
             {
                 setupParser();

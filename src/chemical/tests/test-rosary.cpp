@@ -14,7 +14,8 @@ Y_UTEST(rosary)
     std::cerr << rosary.callSign() << std::endl;
 
     const Species &proton = lib("H+",1);
-
+    std::cerr << "proton=" << proton << std::endl;
+    
     for(int i=1;i<argc;++i)
     {
         rosary( Jive::Module::OpenData("data",argv[i]), lib);

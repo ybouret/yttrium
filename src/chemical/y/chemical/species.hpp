@@ -4,26 +4,48 @@
 #define Y_Chemical_Species_Included 1
 
 #include "y/chemical/type/entity.hpp"
-#include "y/ptr/ark.hpp"
 #include "y/data/small/light/list/bare.hpp"
 #include "y/data/small/light/list/solo.hpp"
 #include "y/data/small/light/list/coop.hpp"
+#include "y/ptr/ark.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Species = Entity + charge
+        //
+        //
+        //______________________________________________________________________
         class Species : public Entity
         {
         public:
-            typedef ArkPtr<String,Species> Handle;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef ArkPtr<String,Species>              Handle;   //!< aliase
             typedef Small::BareLightList<const Species> BareList; //!< once usage
             typedef Small::SoloLightList<const Species> SoloList; //!< standalone, multiple usage
             typedef Small::CoopLightList<const Species> CoopList; //!< shared, multiple usage
             typedef CoopList::ProxyType                 CoopRepo; //!< memory for CoopList
 
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup
             template <typename NAME> inline
             explicit Species(const NAME  &uid,
                              const int    charge,
@@ -32,11 +54,27 @@ namespace Yttrium
             {
             }
 
+            //! cleanup
             virtual ~Species() noexcept;
-            
-            void viz(OutputStream &) const;
 
-            const int z;
+            //! ddisplay
+            friend std::ostream & operator<<(std::ostream &, const Species &);
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void viz(OutputStream &) const; //!< write GraphViz code
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const int z; //!< algebraic charge
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Species);

@@ -4,6 +4,7 @@ Y_CreateLibrary(y-chemical
 chemical
 chemical/type
 chemical/species
+chemical/reactive
 chemical/lang
 )
 

@@ -11,14 +11,38 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Base class to help display entities
+        //
+        //
+        //______________________________________________________________________
         class Entities
         {
         public:
-            explicit Entities() noexcept;
-            virtual ~Entities() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Entities() noexcept; //!< setup
+            virtual ~Entities() noexcept; //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            
+            //! update maxLengths
             void updateWith(const Entity &entity) noexcept;
 
+
+            //! pad according to entity
             template <typename OSTREAM> inline
             OSTREAM & pad(OSTREAM &os, const Entity &entity) const
             {
@@ -26,8 +50,14 @@ namespace Yttrium
                 return os;
             }
 
-
-            const size_t maxLength;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const size_t maxLength; //!< max name length
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Entities);
         };

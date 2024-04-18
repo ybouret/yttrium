@@ -17,5 +17,11 @@ namespace Yttrium
             Endl(fp<<']');
         }
 
+        std::ostream & operator<<(std::ostream &os, const Species &sp)
+        {
+            os << '[' << sp.name << ']';
+            return os;
+        }
+
     }
 }

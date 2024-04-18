@@ -13,14 +13,35 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
         //! Rapid Obnoxious Species And Reactions Yoga
+        //
+        //
+        //______________________________________________________________________
         class Rosary : public Singleton<Rosary>
         {
         public:
-            static const char * const      CallSign;
-            static const AtExit::Longevity LifeTime = 0;
-            class Compiler;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            static const char * const      CallSign;       //!< ChemicalRosary
+            static const AtExit::Longevity LifeTime = 0;   //!< LifeTime
+            class Compiler;                                // internal compiler
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! parse module, populate library and eqs
             void operator()(Jive::Module *m,
                             Library      &lib);
 
