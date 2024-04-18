@@ -5,6 +5,7 @@ chemical
 chemical/type
 chemical/species
 chemical/reactive
+chemical/reactive/equilibrium
 chemical/lang
 )
 
