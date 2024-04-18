@@ -4,7 +4,6 @@
 #define Y_Chemical_Species_Library_Included 1
 
 #include "y/chemical/species.hpp"
-#include "y/associative/suffix/set.hpp"
 #include "y/type/proxy.hpp"
 #include "y/chemical/type/entities.hpp"
 
@@ -12,13 +11,6 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        //______________________________________________________________________
-        //
-        //
-        //! associative string/species
-        //
-        //______________________________________________________________________
-        typedef SuffixSet<String,Species::Handle> SpeciesDB;
 
         //______________________________________________________________________
         //
@@ -28,7 +20,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Library : public Proxy<SpeciesDB>, public Entities, public Identifiable
+        class Library : public Proxy<const Species::Set>, public Entities, public Identifiable
         {
         public:
             //__________________________________________________________________
@@ -79,7 +71,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);
-            SpeciesDB sdb;
+            Species::Set sdb;
             virtual ConstInterface & surrogate() const noexcept;
             const Species &          manage(const Species::Handle &);
 

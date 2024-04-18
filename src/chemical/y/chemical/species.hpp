@@ -7,6 +7,7 @@
 #include "y/data/small/light/list/bare.hpp"
 #include "y/data/small/light/list/solo.hpp"
 #include "y/data/small/light/list/coop.hpp"
+#include "y/associative/suffix/set.hpp"
 #include "y/ptr/ark.hpp"
 
 namespace Yttrium
@@ -31,12 +32,13 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef ArkPtr<String,Species>              Handle;   //!< aliase
             typedef Small::BareLightList<const Species> BareList; //!< once usage
             typedef Small::SoloLightList<const Species> SoloList; //!< standalone, multiple usage
             typedef Small::CoopLightList<const Species> CoopList; //!< shared, multiple usage
             typedef CoopList::ProxyType                 CoopRepo; //!< memory for CoopList
 
+            typedef ArkPtr<String,Species>              Handle;   //!< alias
+            typedef SuffixSet<String,Handle>            Set;      //!< alias
 
             //__________________________________________________________________
             //

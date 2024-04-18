@@ -44,7 +44,7 @@ namespace Yttrium
         std::ostream & operator<<(std::ostream &os, const Library &lib)
         {
             os << "<" << lib.callSign() << " species='" << lib->size() << "'>" << std::endl;
-            for(SpeciesDB::ConstIterator it=lib->begin(); it != lib->end(); ++it)
+            for(Species::Set::ConstIterator it=lib->begin(); it != lib->end(); ++it)
             {
                 const Species &sp = **it;
                 lib.pad(std::cerr << "\t" << sp, sp) << " : z = " << std::setw(4) << sp.z << std::endl;
