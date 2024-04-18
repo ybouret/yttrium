@@ -73,12 +73,14 @@ namespace Yttrium
             void process(Jive::Module *m,
                          Library      &lib)
             {
-                const Temporary<Library *> temp(hLib,&lib);
-                Parser                    &self = *this;
-                const AutoPtr<XNode>       tree = self(m);
+                const Temporary<Library *> temp(hLib,&lib); // set library
+                Parser                    &self = *this;    // get parser
+                const AutoPtr<XNode>       tree = self(m);  // get AST
                 if(tree.isEmpty()) throw Specific::Exception(Rosary::CallSign, "Unexpected Empty Syntax Tree!");
 
                 GraphViz::Vizible::DotToPng( "rosary.dot", *tree);
+
+                // translate AST
                 translate(*tree,Jive::Syntax::Permissive);
             }
 
@@ -178,14 +180,20 @@ namespace Yttrium
                 species << sp;
             }
 
-            void onCOEF(const Jive::Token &token)
+            inline void onCOEF(const Jive::Token &token)
             {
                 apn nu = 0;
                 for(const Jive::Char *ch=token.head;ch;ch=ch->next)
                 {
                     const char code = **ch; assert(code>='0'); assert(code<='9');
-
+                    nu *= 10;
+                    nu += code - '0';
                 }
+                coefs << nu.cast<int>("nu");
+            }
+
+            inline void onROSARY(const size_t) noexcept
+            {
             }
 
         };
@@ -227,6 +235,7 @@ namespace Yttrium
             Y_Jive_OnInternal(Compiler,ZNEG);
             Y_Jive_OnInternal(Compiler,SPECIES);
             Y_Jive_OnTerminal(Compiler,COEF);
+            Y_Jive_OnInternal(Compiler,ROSARY);
 
         }
 
