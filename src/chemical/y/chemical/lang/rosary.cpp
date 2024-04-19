@@ -69,10 +69,10 @@ namespace Yttrium
             Parser(Rosary::CallSign),
             Jive::Syntax::Translator(),
             uuid(),
-            charges(),
+            algZ(),
             spec(),
             coef(),
-            actors(),
+            cast(),
             reac(),
             prod(),
             Kstr(),
@@ -128,10 +128,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
             Strings            uuid;
-            Charges            charges;
+            Charges            algZ;
             Species::SoloList  spec;
             Coefs              coef;
-            Actors             actors;
+            Actors             cast;
             CxxListOf<Players> reac;
             CxxListOf<Players> prod;
             Strings            Kstr;
@@ -145,14 +145,14 @@ namespace Yttrium
 
             void clearState() noexcept
             {
-                uuid.  release();
-                charges.release();
-                spec.   release();
-                coef.  release();
-                actors. release();
-                reac.   release();
-                prod.   release();
-                Kstr.   release();
+                uuid.release();
+                algZ.release();
+                spec.release();
+                coef.release();
+                cast.release();
+                reac.release();
+                prod.release();
+                Kstr.release();
             }
 
 
@@ -172,8 +172,8 @@ namespace Yttrium
             void onUUID(  const Jive::Token &token) { uuid << token.toString(); }
             void onPLUS(  const Jive::Token &)      {  }
             void onMINUS( const Jive::Token &)      {  }
-            void onZPOS(size_t n) { assert(n>0); charges <<  int(n); }
-            void onZNEG(size_t n) { assert(n>0); charges << -int(n); }
+            void onZPOS(size_t n) { assert(n>0); algZ <<  int(n); }
+            void onZNEG(size_t n) { assert(n>0); algZ << -int(n); }
 
 
             //! create/query species with/without charge from library
@@ -191,8 +191,8 @@ namespace Yttrium
                     //----------------------------------------------------------
                     // find charge
                     //----------------------------------------------------------
-                    assert(charges.size()>0);
-                    z = charges.pullTail();
+                    assert(algZ.size()>0);
+                    z = algZ.pullTail();
                 }
 
                 switch(Sign::Of(z))
@@ -238,14 +238,14 @@ namespace Yttrium
                 unsigned       nu = 1;
                 if(2==n)
                     nu = coef.pullTail();
-                actors.pushTail( new Actor(nu,sp) );
+                cast.pushTail( new Actor(nu,sp) );
 
             }
 
             inline void gather(Players * const target, size_t n) noexcept
             {
                 assert(0!=target);
-                while(n-- > 0 ) target->pushHead( actors.popTail() );
+                while(n-- > 0 ) target->pushHead( cast.popTail() );
             }
 
             inline void onREAC(const size_t n)
