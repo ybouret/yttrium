@@ -5,12 +5,13 @@
 
 #include "y/chemical/reactive/equilibria.hpp"
 #include "y/stream/xmlog.hpp"
+#include "y/container/matrix.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
-        class Cluster : public Object, public EList, public EqFormatter
+        class Cluster : public Object, public EList
         {
         public:
             explicit Cluster(const Equilibrium &);
@@ -29,10 +30,12 @@ namespace Yttrium
 
             void compile(XMLog &xml);
 
-            const SList    species;
-            const Entities spfmt;
-            Cluster    *next;
-            Cluster    *prev;
+            const SList       species;
+            const Matrix<int> nu;
+            const EqFormatter eqfmt;
+            const Entities    spfmt;
+            Cluster          *next;
+            Cluster          *prev;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);

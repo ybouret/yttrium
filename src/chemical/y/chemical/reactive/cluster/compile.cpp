@@ -22,8 +22,8 @@ namespace Yttrium
             for(const ENode *en=head;en;en=en->next)
             {
                 const Equilibrium &eq = **en;
-                updateWith(eq);
-                modernizeWith(eq);
+                Coerce(eqfmt).updateWith(eq);
+                Coerce(eqfmt).modernizeWith(eq);
                 eq.recordSpeciesInto(book);
             }
 
@@ -34,7 +34,7 @@ namespace Yttrium
                     for(const ENode *en=head;en;en=en->next)
                     {
                         const Equilibrium &eq = **en;
-                        display( xml(), eq ) << " top=" << eq.indx[TopLevel] << " sub=" << eq.indx[SubLevel] << std::endl;
+                        eqfmt.display( xml(), eq ) << " top=" << eq.indx[TopLevel] << " sub=" << eq.indx[SubLevel] << std::endl;
                     }
                 }
             }
@@ -67,6 +67,20 @@ namespace Yttrium
                 }
             }
 
+            //------------------------------------------------------------------
+            // create topology
+            //------------------------------------------------------------------
+            assert(size>0);
+            assert(species.size>0);
+            const size_t n = size;
+            const size_t m = species.size;
+            Coerce(nu).make(n,m);
+            for(const ENode *en=head;en;en=en->next)
+            {
+                const Equilibrium &eq = **en;
+                eq.fill(Coerce(nu)[eq.indx[SubLevel]],SubLevel);
+            }
+            Y_XMLOG(xml,"nu=" << nu);
         }
     }
 

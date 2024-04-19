@@ -61,6 +61,19 @@ namespace Yttrium
             bool sharesSpeciesWith(const Components &other) const noexcept;
             void recordSpeciesInto(AddressBook &) const;
 
+            template <typename T> inline
+            void fill(Writable<T> &nu, const Level level) const
+            {
+                for(Component::Set::ConstIterator it=cdb.begin();it!=cdb.end();++it)
+                {
+                    const Component &component = *it;
+                    nu[ component.sp.indx[level] ] = component.nu;
+                }
+            }
+
+
+
+
             //__________________________________________________________________
             //
             //

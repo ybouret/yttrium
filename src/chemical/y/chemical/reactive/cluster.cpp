@@ -5,7 +5,13 @@ namespace Yttrium
     namespace Chemical
     {
 
-        Cluster:: Cluster(const Equilibrium &eq) : EList(), next(0), prev(0)
+        Cluster:: Cluster(const Equilibrium &eq) :
+        EList(),
+        species(),
+        nu(),
+        spfmt(),
+        next(0),
+        prev(0)
         {
             (*this) << eq;
         }
