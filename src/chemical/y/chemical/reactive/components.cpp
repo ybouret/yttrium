@@ -32,8 +32,8 @@ namespace Yttrium
         cdb(other.cdb)
         {
         }
-        
-        
+
+
         Components::ConstInterface & Components:: surrogate() const noexcept
         {
             return cdb;
@@ -81,7 +81,7 @@ namespace Yttrium
                     // grow actors
                     ac->pushTail( new Actor(cf,sp) );
                 }
-                catch(...) 
+                catch(...)
                 {
                     // emergency exit
                     (void) cdb.remove(name);
@@ -101,10 +101,10 @@ namespace Yttrium
                 (void) cdb.remove(name);
                 throw;
             }
-            
+
         }
 
-        std::ostream & Components:: display(std::ostream &os, const size_t rmax, const size_t pmax) const
+        std::ostream & Components:: showComponents(std::ostream &os, const size_t rmax, const size_t pmax) const
         {
             os << rstr; for(size_t i=rstr.size();i<rmax;++i) os << ' ';
             os << LeftRightArrow;
@@ -115,9 +115,34 @@ namespace Yttrium
 
         std::ostream & operator<<(std::ostream &os, const Components &components)
         {
-            components.display(os);
+            components.showComponents(os);
             return os;
         }
+
+        int Components:: charge() const noexcept
+        {
+            return prod.charge() - reac.charge();
+        }
+    }
+
+}
+
+
+#include "y/type/utils.hpp"
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        Components:: Formatting::  Formatting() noexcept : rmax(0), pmax(0) {}
+        Components:: Formatting:: ~Formatting() noexcept {}
+
+        void   Components:: Formatting::   modernizeWith(const Components &components) noexcept
+        {
+            Coerce(pmax) = Max(pmax,components.pstr.size());
+            Coerce(rmax) = Max(rmax,components.rstr.size());
+        }
+
     }
 
 }

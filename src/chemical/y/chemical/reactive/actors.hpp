@@ -36,6 +36,9 @@ namespace Yttrium
             //! display using toString
             friend std::ostream & operator<<(std::ostream &os, const Actors &A);
 
+            //! sum(charge)
+            int charge() const noexcept;
+
             //__________________________________________________________________
             //
             //

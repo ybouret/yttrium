@@ -40,8 +40,7 @@ namespace Yttrium
         inline ConstInterface & operator*()  const noexcept { return   surrogate(); } //!< access
 
         //! forward display call
-        inline friend std::ostream & operator<<(std::ostream &os, const Proxy &self)
-        { return os << self.surrogate(); }
+        inline friend std::ostream & operator<<(std::ostream &os, const Proxy &self) { return os << self.surrogate(); }
 
         //______________________________________________________________________
         //

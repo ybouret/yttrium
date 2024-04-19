@@ -12,6 +12,7 @@ namespace Yttrium
     namespace Chemical
     {
 
+
         //______________________________________________________________________
         //
         //
@@ -54,8 +55,11 @@ namespace Yttrium
 
             
             //! display with padding
-            std::ostream & display(std::ostream &os, const size_t rmax=0, const size_t pmax=0) const;
+            std::ostream & showComponents(std::ostream &os, const size_t rmax=0, const size_t pmax=0) const;
           
+            //! sum nu * z
+            int charge() const noexcept;
+
             //__________________________________________________________________
             //
             //
@@ -71,6 +75,23 @@ namespace Yttrium
             Y_DISABLE_ASSIGN(Components);
             Component::Set cdb;
             virtual ConstInterface & surrogate() const noexcept;
+
+        public:
+            class Formatting
+            {
+            public:
+                explicit Formatting() noexcept;
+                virtual ~Formatting() noexcept;
+                void     modernizeWith(const Components &) noexcept;
+
+
+
+
+                const size_t rmax;
+                const size_t pmax;
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Formatting);
+            };
         };
 
     }

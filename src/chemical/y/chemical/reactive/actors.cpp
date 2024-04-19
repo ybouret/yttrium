@@ -31,6 +31,13 @@ namespace Yttrium
             return (os << A.toString());
         }
 
+        int Actors:: charge() const noexcept
+        {
+            int res = 0;
+            for(const Actor *a=head;a;a=a->next) res += a->charge();
+            return res;
+        }
+
     }
 
 }

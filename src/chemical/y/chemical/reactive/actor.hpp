@@ -40,6 +40,8 @@ namespace Yttrium
             String asFirst() const; //!< convert to string
             String asExtra() const; //!< convert to string
 
+            int charge() const noexcept; //!< nu * sp.z
+
             //__________________________________________________________________
             //
             //

@@ -10,7 +10,7 @@ using namespace Chemical;
 
 Y_UTEST(components)
 {
-    Library  lib;
+    Library        lib;
     const Species &proton  = lib("H+",1);
     const Species &hydroxy = lib("HO-",-1);
     const Species &water   = lib("H2O",0);

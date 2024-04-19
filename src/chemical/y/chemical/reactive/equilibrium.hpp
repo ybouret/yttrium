@@ -14,11 +14,21 @@ namespace Yttrium
         class Equilibrium : public Entity, public Components
         {
         public:
+            static const char Separator = ':';
+            typedef Small::BareLightList<Equilibrium> BareList;
+            
             typedef ArkPtr<String,Equilibrium> Handle;
+            typedef SuffixSet<String,Handle>   Set;
 
-            virtual ~Equilibrium() noexcept;
+ 
+            std::ostream & showEquilibrium(std::ostream &os,
+                                           const size_t nmax=0,
+                                           const size_t rmax=0,
+                                           const size_t pmax=0) const;
+
             XReal    K(Real t);
 
+            virtual ~Equilibrium() noexcept;
         protected:
             template <typename UID> inline
             explicit Equilibrium(const UID   &uid,

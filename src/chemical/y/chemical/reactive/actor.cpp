@@ -32,6 +32,12 @@ namespace Yttrium
 
         }
 
+        int Actor:: charge() const noexcept
+        {
+            return int(nu) * sp.z;
+        }
+
+
         void Actor:: fmt(String &res) const
         {
             res << '[' << sp.name << ']';
