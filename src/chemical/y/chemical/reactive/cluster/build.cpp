@@ -6,11 +6,13 @@ namespace Yttrium
     namespace Chemical
     {
 
-        void Clusters:: build(const Equilibria &eqs, XMLog &xml)
+        void Clusters:: build(Equilibria &eqs, XMLog &xml)
         {
-
+            //------------------------------------------------------------------
+            //
             // creating raw clusters
-
+            //
+            //------------------------------------------------------------------
             Y_XML_SECTION_OPT(xml,"Clusters"," totalEqs=" << eqs->size() );
             size_t                    n = eqs->size();
             Equilibria::ConstIterator i = eqs->begin();
@@ -31,10 +33,14 @@ namespace Yttrium
                 continue;
             }
 
-            
+            //------------------------------------------------------------------
+            //
+            //
             // compiling each cluster
+            //
+            //------------------------------------------------------------------
             for(Cluster *cl=head;cl;cl=cl->next)
-                cl->compile(xml);
+                cl->compile(eqs,xml);
         }
 
         void Clusters:: merge() noexcept

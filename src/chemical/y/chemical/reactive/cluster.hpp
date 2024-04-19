@@ -28,7 +28,7 @@ namespace Yttrium
             bool sharesSpeciesWith(const Equilibrium &) const noexcept;
             bool sharesSpeciesWith(const Cluster     &) const noexcept;
 
-            void compile(XMLog &xml);
+            void compile(Equilibria &eqs, XMLog &xml);
 
             const SList       species;
             const Matrix<int> nu;

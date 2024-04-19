@@ -5,7 +5,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        Clusters:: Clusters(const Equilibria &eqs, XMLog &xml) : CxxListOf<Cluster>()
+        Clusters:: Clusters(Equilibria &eqs, XMLog &xml) : CxxListOf<Cluster>()
         {
             build(eqs,xml);
         }
