@@ -132,9 +132,13 @@ namespace Yttrium
 
         std::ostream & Components::Formatting::print(std::ostream &os, const Components &components) const
         {
-            os << components.rstr; for(size_t i=components.rstr.size();i<rmax;++i) os << ' ';
+            for(size_t i=components.rstr.size();i<rmax;++i) os << ' ';
+            os << components.rstr;
+
             os << LeftRightArrow;
-            os << components.pstr; for(size_t i=components.pstr.size();i<pmax;++i) os << ' ';
+            
+            os << components.pstr;
+            for(size_t i=components.pstr.size();i<pmax;++i) os << ' ';
 
             return os;
         }
