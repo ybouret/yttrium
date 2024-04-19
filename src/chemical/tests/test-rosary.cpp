@@ -1,5 +1,5 @@
 
-#include "y/chemical/lang/rosary.hpp"
+#include "y/chemical/rosary.hpp"
 #include "y/chemical/reactive/actors.hpp"
 #include "y/utest/run.hpp"
 
