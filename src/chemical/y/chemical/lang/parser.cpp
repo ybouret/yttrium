@@ -43,7 +43,8 @@ namespace Yttrium
             CHEMICAL += zom(pick(SPECIES,EQ,RXP));
 
 
-            renderGraphViz();
+            //renderGraphViz();
+            
             validate();
             lexer.drop("[:blank:]");
             lexer.endl("[:endl:]");
