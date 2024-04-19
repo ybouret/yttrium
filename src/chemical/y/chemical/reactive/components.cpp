@@ -33,12 +33,14 @@ namespace Yttrium
         {
         }
         
+        
         Components::ConstInterface & Components:: surrogate() const noexcept
         {
             return cdb;
         }
 
-        void Components:: operator()(const int nu, const Species &sp)
+        void Components:: operator()(const int      nu,
+                                     const Species &sp)
         {
             //------------------------------------------------------------------
             // look for species

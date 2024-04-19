@@ -52,7 +52,7 @@ namespace Yttrium
             //! append a new component
             void operator()(const int nu, const Species &sp);
 
-
+            
             //! display with padding
             std::ostream & display(std::ostream &os, const size_t rmax=0, const size_t pmax=0) const;
           
@@ -62,11 +62,10 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const Actors reac; //!< reactants list
-            const Actors prod; //!< products  list
-            const String rstr; //!< reactants string
-            const String pstr; //!< products  string
-
+            const Actors reac;   //!< reactants list
+            const Actors prod;   //!< products  list
+            const String rstr;   //!< reactants string
+            const String pstr;   //!< products  string
 
         private:
             Y_DISABLE_ASSIGN(Components);
