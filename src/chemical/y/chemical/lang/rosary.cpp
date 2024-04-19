@@ -2,7 +2,7 @@
 #include "y/chemical/lang/rosary.hpp"
 #include "y/chemical/reactive/actors.hpp"
 
-#include "y/jive/parser.hpp"
+#include "y/chemical/lang/parser.hpp"
 #include "y/jive/syntax/translator.hpp"
 #include "y/jive/lexical/plugin/rstring.hpp"
 
@@ -46,7 +46,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Rosary::Compiler : public Jive::Parser, Jive::Syntax::Translator
+        class Rosary::Compiler : public Parser, public Jive::Syntax::Translator
         {
         public:
             //__________________________________________________________________
@@ -66,20 +66,19 @@ namespace Yttrium
             //
             //__________________________________________________________________
             explicit Compiler() :
-            Jive::Parser(Rosary::CallSign),
+            Parser(Rosary::CallSign),
             Jive::Syntax::Translator(),
-            uuids(), 
+            uuid(),
             charges(),
-            species(),
-            coefs(),
+            spec(),
+            coef(),
             actors(),
             reac(),
             prod(),
-            Ks(),
+            Kstr(),
             hLib(0),
             hEqs(0)
             {
-                setupParser();
                 setupLinker();
             }
 
@@ -99,6 +98,7 @@ namespace Yttrium
                          Library       &lib,
                          LuaEquilibria &eqs)
             {
+                clearState();
                 //--------------------------------------------------------------
                 // get AST
                 //--------------------------------------------------------------
@@ -127,40 +127,35 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            Strings            uuids;
+            Strings            uuid;
             Charges            charges;
-            Species::SoloList  species;
-            Coefs              coefs;
+            Species::SoloList  spec;
+            Coefs              coef;
             Actors             actors;
             CxxListOf<Players> reac;
             CxxListOf<Players> prod;
-            Strings            Ks;
+            Strings            Kstr;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Compiler);
             Library       *hLib;
             LuaEquilibria *hEqs;
 
-            void setupParser();
             void setupLinker();
 
             void clearState() noexcept
             {
-                uuids.  release();
+                uuid.  release();
                 charges.release();
-                species.release();
-                coefs.  release();
+                spec.   release();
+                coef.  release();
                 actors. release();
                 reac.   release();
                 prod.   release();
-                Ks.     release();
+                Kstr.   release();
             }
 
-            virtual void initialize()
-            {
-                std::cerr << "*** Initializing " << name << std::endl;
-                clearState();
-            }
+
 
             static inline bool IsPLUS(const XNode &node) noexcept
             {
@@ -169,11 +164,12 @@ namespace Yttrium
 
             static inline void PostProcess(XNode &node, void *, const int) noexcept
             {
-                if( "REAC" == *(node.rule.name) || "PROD" == (*node.rule.name))
+                const String &id = *(node.rule.name);
+                if( "REAC" == id  || "PROD" == id)
                     node.removeChildIf(IsPLUS);
             }
 
-            void onUUID(  const Jive::Token &token) { uuids << token.toString(); }
+            void onUUID(  const Jive::Token &token) { uuid << token.toString(); }
             void onPLUS(  const Jive::Token &)      {  }
             void onMINUS( const Jive::Token &)      {  }
             void onZPOS(size_t n) { assert(n>0); charges <<  int(n); }
@@ -187,8 +183,8 @@ namespace Yttrium
                 // find name
                 //--------------------------------------------------------------
                 assert(1==n||2==n);
-                assert(uuids.size()>0);
-                String       name = uuids.pullTail();
+                assert(uuid.size()>0);
+                String       name = uuid.pullTail();
                 int          z    = 0;
                 if(2==n)
                 {
@@ -219,7 +215,7 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 // add to species
                 //--------------------------------------------------------------
-                species << sp;
+                spec << sp;
             }
 
             inline void onCOEF(const Jive::Token &token)
@@ -232,16 +228,16 @@ namespace Yttrium
                     nu += code - '0';
                 }
                 if(nu<=0) throw Specific::Exception(Rosary::CallSign, "zero stoichiometry");
-                coefs << nu.cast<int>("nu");
+                coef << nu.cast<int>("nu");
             }
 
             inline void onACTOR(const size_t n)
             {
                 assert( (1==n) || (2==n) );
-                const Species &sp = species.pullTail();
+                const Species &sp = spec.pullTail();
                 unsigned       nu = 1;
                 if(2==n)
-                    nu = coefs.pullTail();
+                    nu = coef.pullTail();
                 actors.pushTail( new Actor(nu,sp) );
 
             }
@@ -269,16 +265,16 @@ namespace Yttrium
                 String k = token.toString(1,1);
                 Algo::Crop(k,isspace);
                 std::cerr << "K=" << k << std::endl;
-                Ks << k;
+                Kstr << k;
             }
 
             inline void onEQ(const size_t n)
             {
                 assert(4==n);
-                const String           name = uuids.pullTail();
+                const String           name = uuid.pullTail();
                 const AutoPtr<Players> r    = reac.popTail();
                 const AutoPtr<Players> p    = prod.popTail();
-                const String           k    = Ks.pullTail();
+                const String           k    = Kstr.pullTail();
 
                 std::cerr << name << ":" << r << "<=>" << p << ":'" << k << "'" << std::endl;
 
@@ -292,44 +288,14 @@ namespace Yttrium
                 for(const Actor *a = r->head;a;a=a->next) eq(-int(a->nu),a->sp);
             }
 
-            inline void onROSARY(const size_t) noexcept
-            { clearState(); }
+            inline void onCHEMICAL(const size_t) noexcept
+            {
+                clearState();
+            }
 
         };
 
-        // setting up parser
-        void Rosary::Compiler::setupParser()
-        {
-            Agg       &ROSARY   = agg("ROSARY"); // top-level
-            
-            const Rule &PLUS    = term('+');
-            const Rule &MINUS   = term('-');
-            const Rule &UUID    = term("UUID","[:alpha:][:word:]*");
-            const Rule &ZPOS    = (agg("ZPOS") << oom(PLUS));
-            const Rule &ZNEG    = (agg("ZNEG") << oom(MINUS));
-            const Rule &SPECIES = (agg("SPECIES") << mark('[') << UUID << opt( pick(ZPOS,ZNEG) ) << mark(']'));
 
-            const Rule &COEF        = term("COEF","[:digit:]+");
-            const Rule &OPT_COEF    = opt(COEF);
-            const Rule &ACTOR       = (agg("ACTOR") << OPT_COEF << SPECIES);
-
-            const Rule &FIRST_ACTOR = (grp("FIRST_ACTOR") << opt(PLUS) << ACTOR );
-            const Rule &EXTRA_ACTOR = (grp("EXTRA_ACTOR") << PLUS << ACTOR);
-            const Rule &ACTORS      = (grp("ACTORS") << FIRST_ACTOR << zom(EXTRA_ACTOR));
-            const Rule &OPT_ACTORS  = opt(ACTORS);
-            const Rule &REAC        = (agg("REAC") << OPT_ACTORS );
-            const Rule &PROD        = (agg("PROD") << OPT_ACTORS );
-            const Rule &CONSTANT    = plug<Jive::Lexical::RString>("K");
-            const Rule &SEP         = mark(':');
-            const Rule &EQ          = (agg("EQ") << UUID << SEP << REAC << mark("<=>")  << PROD << SEP << CONSTANT) ;
-
-            ROSARY += zom(pick(SPECIES,EQ));
-
-
-            renderGraphViz();
-            lexer.drop("[:blank:]");
-            lexer.endl("[:endl:]");
-        }
 
         // setting up linker
         void Rosary::Compiler:: setupLinker()
@@ -346,7 +312,7 @@ namespace Yttrium
             Y_Jive_OnInternal(Compiler,PROD);
             Y_Jive_OnTerminal(Compiler,K);
             Y_Jive_OnInternal(Compiler,EQ);
-            Y_Jive_OnInternal(Compiler,ROSARY);
+            Y_Jive_OnInternal(Compiler,CHEMICAL);
         }
 
 
