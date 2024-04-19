@@ -110,6 +110,32 @@ namespace Yttrium
         {
             return prod.charge() - reac.charge();
         }
+
+        bool Components:: contains(const Species &sp) const noexcept
+        {
+            const Component * const pc = cdb.search(sp.name);
+            if(!pc) 
+            {
+                return false;
+            }
+            else
+            {
+                assert( &sp == &(pc->sp) );
+                return true;
+            }
+        }
+
+        bool Components:: sharesSpeciesWith(const Components &other) const noexcept
+        {
+            for(Component::Set::ConstIterator it=other.cdb.begin();it!=other.cdb.end();++it)
+            {
+                const Component &rhs = *it;
+                if(contains(rhs.sp)) return true;
+            }
+            return false;
+        }
+
+
     }
 
 }

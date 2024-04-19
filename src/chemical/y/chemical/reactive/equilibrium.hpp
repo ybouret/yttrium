@@ -28,10 +28,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const char Separator = ':';                  //!< format separator
-            typedef Small::BareLightList<Equilibrium> BareList; //!< alias
             typedef ArkPtr<String,Equilibrium>        Handle;   //!< alias
             typedef SuffixSet<String,Handle>          Set;      //!< alias
-
+            typedef Component::Set::ConstIterator     ConstIterator;
             
             //__________________________________________________________________
             //
@@ -47,6 +46,12 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
+
+            friend std::ostream & operator<<(std::ostream &os, const Equilibrium &eq)
+            {
+                os << eq.name;
+                return os;
+            }
 
             //! cleanup
             virtual ~Equilibrium() noexcept;
@@ -65,6 +70,10 @@ namespace Yttrium
             virtual XReal getK(Real t) = 0;
 
         };
+
+        typedef Small::BareLightList<const Equilibrium> EList; //!< alias
+        typedef EList::NodeType                         ENode; //!< alias
+
 
     }
 

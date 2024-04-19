@@ -82,7 +82,7 @@ namespace Yttrium
             const char * const call;
             Strings            uuid;
             Charges            algZ;
-            Species::SoloList  spec;
+            SList              spec;
             Coefs              coef;
             Actors             cast;
             CxxListOf<Players> reac;

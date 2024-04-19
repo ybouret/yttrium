@@ -32,10 +32,10 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Small::BareLightList<const Species> BareList; //!< once usage
-            typedef Small::SoloLightList<const Species> SoloList; //!< standalone, multiple usage
-            typedef Small::CoopLightList<const Species> CoopList; //!< shared, multiple usage
-            typedef CoopList::ProxyType                 CoopRepo; //!< memory for CoopList
+            //typedef Small::BareLightList<const Species> BareList; //!< once usage
+            //typedef Small::SoloLightList<const Species> SoloList; //!< standalone, multiple usage
+            //typedef Small::CoopLightList<const Species> CoopList; //!< shared, multiple usage
+            //typedef CoopList::ProxyType                 CoopRepo; //!< memory for CoopList
 
             typedef ArkPtr<String,Species>              Handle;   //!< alias
             typedef SuffixSet<String,Handle>            Set;      //!< alias
@@ -81,6 +81,9 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Species);
         };
+
+        typedef Small::BareLightList<const Species> SList;
+        typedef SList::NodeType                     SNode;
 
     }
 }

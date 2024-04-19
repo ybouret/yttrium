@@ -74,6 +74,8 @@ namespace Yttrium
             //__________________________________________________________________
 
             size_t topLevel() const noexcept; //!< next topLevel
+            Iterator begin() noexcept;
+            Iterator end()   noexcept;
 
             //! insert a newly created equilibria
             template <typename EQUILIBRIUM> inline

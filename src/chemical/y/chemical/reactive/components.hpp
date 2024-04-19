@@ -52,11 +52,12 @@ namespace Yttrium
             //! append a new component
             void operator()(const int nu, const Species &sp);
 
-            
-            
 
             //! sum nu * z
             int charge() const noexcept;
+
+            bool contains(const Species &sp) const noexcept;
+            bool sharesSpeciesWith(const Components &other) const noexcept;
 
             //__________________________________________________________________
             //

@@ -16,7 +16,7 @@ Y_UTEST(species)
         GraphViz::Vizible::Leave(fp);
     }
 
-    Species::CoopRepo spRepo;
+   // Species::CoopRepo spRepo;
 
 }
 Y_UDONE()
