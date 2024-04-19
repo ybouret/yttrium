@@ -15,20 +15,6 @@ Y_UTEST(rosary)
     LuaEquilibria eqs;
     std::cerr << rosary.callSign() << std::endl;
 
-    const Species &proton  = lib("H+",1);  
-    const Species &hydroxy = lib("HO-",-1);
-    lib.pad(std::cerr << "proton",proton)   << " = " << proton << std::endl;
-    lib.pad(std::cerr << "hydroxy",hydroxy) << " = " << hydroxy << std::endl;
-
-    Actors A;
-    A.pushTail( new Actor(1,proton) );
-    A.pushTail( new Actor(1,proton) );
-    A.pushTail( new Actor(2,proton) );
-    A.pushTail( new Actor(1,hydroxy) );
-
-    std::cerr << A << std::endl;
-
-    
     for(int i=1;i<argc;++i)
     {
         rosary( Jive::Module::OpenData("data",argv[i]), lib, eqs);
@@ -37,8 +23,6 @@ Y_UTEST(rosary)
     std::cerr << lib << std::endl;
     std::cerr << eqs << std::endl;
     
-    Y_SIZEOF(Actor);
-    Y_SIZEOF(Actors);
 }
 Y_UDONE()
 

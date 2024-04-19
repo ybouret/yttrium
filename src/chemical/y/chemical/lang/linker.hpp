@@ -15,7 +15,14 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Linker converts AST into lib/eqs
+        //
+        //
+        //______________________________________________________________________
         class Linker : public Jive::Syntax::Translator, public Identifiable
         {
         public:
@@ -25,31 +32,48 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Vector<String>     Strings;
-            typedef Vector<int>        Charges;
-            typedef Vector<unsigned>   Coefs;
+            typedef Vector<String>     Strings; //!< alias
+            typedef Vector<int>        Charges; //!< alias
+            typedef Vector<unsigned>   Coefs;   //!< alias
 
+            //! linked actors to store reac/prod
             class Players : public Object, public Actors
             {
             public:
-                explicit Players() noexcept : Object(), Actors(), next(0), prev(0) {}
-                virtual ~Players() noexcept;
+                explicit Players() noexcept; //!< setup
+                virtual ~Players() noexcept; //!< cleanup
 
-                Players *next;
-                Players *prev;
+                Players *next; //!< for list
+                Players *prev; //!< for list
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Players);
             };
 
 
-            explicit Linker(const char * const id);
-            virtual ~Linker() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Linker(const char * const id); //!< setup with persistent id
+            virtual ~Linker() noexcept;             //!< cleanup
 
-            virtual const char * callSign() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            virtual const char * callSign() const noexcept; //!< identifier
+            void                 release()        noexcept; //!< clean all
 
-            void     release() noexcept;
-            void     operator()(Jive::Syntax::XNode &tree, Library &lib, LuaEquilibria &eqs);
+            //! operates
+            void     operator()(Jive::Syntax::XNode &tree,
+                                Library             &lib,
+                                LuaEquilibria       &eqs,
+                                Sequence<String> * const rxp);
 
 
 
@@ -66,7 +90,8 @@ namespace Yttrium
             Strings            Kstr;
             Library           *hLib;
             LuaEquilibria     *hEqs;
-
+            Sequence<String>  *hRxp;
+            
             void onUUID( const Jive::Token &);
             void onPLUS( const Jive::Token &);
             void onMINUS(const Jive::Token &);
@@ -80,6 +105,7 @@ namespace Yttrium
             void onPROD(const size_t);
             void onK(const Jive::Token &);
             void onEQ(const size_t);
+            void onRXP(const Jive::Token &);
             void onCHEMICAL(const size_t) noexcept;
         };
 

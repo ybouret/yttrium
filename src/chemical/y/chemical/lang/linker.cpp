@@ -11,6 +11,7 @@ namespace Yttrium
     namespace Chemical
     {
 
+        Linker:: Players::  Players() noexcept : Object(), Actors(), next(0), prev(0) {}
         Linker:: Players:: ~Players() noexcept {}
 
 
@@ -47,6 +48,7 @@ namespace Yttrium
             Y_Jive_OnInternal(Linker,PROD);
             Y_Jive_OnTerminal(Linker,K);
             Y_Jive_OnInternal(Linker,EQ);
+            Y_Jive_OnTerminal(Linker,RXP);
             Y_Jive_OnInternal(Linker,CHEMICAL);
         }
 
@@ -77,20 +79,32 @@ namespace Yttrium
         }
 
 
-        void Linker:: operator()(Jive::Syntax::XNode &tree, Library &lib, LuaEquilibria &eqs)
+        void Linker:: operator()(Jive::Syntax::XNode &    tree,
+                                 Library &                lib,
+                                 LuaEquilibria &          eqs,
+                                 Sequence<String> * const rxp)
         {
             release();
             try
             {
+                //--------------------------------------------------------------
                 // preprocess tree
+                //--------------------------------------------------------------
                 apply(tree,PreProcess,0);
 
+                //--------------------------------------------------------------
                 // set global variables
-                const Temporary<Library *>       tlib(hLib,&lib); // set lib
-                const Temporary<LuaEquilibria *> teqs(hEqs,&eqs); // set eqs
-                
+                //--------------------------------------------------------------
+                const Temporary<Library *>          tlib(hLib,&lib); // set lib
+                const Temporary<LuaEquilibria *>    teqs(hEqs,&eqs); // set eqs
+                const Temporary<Sequence<String> *> trxp(hRxp,rxp);  // set rxp
+
+                //--------------------------------------------------------------
                 // translate
-                translate(tree,Jive::Syntax::Permissive);
+                //--------------------------------------------------------------
+                //translate(tree,Jive::Syntax::Permissive);
+                translate(tree,Jive::Syntax::Restricted);
+
             }
             catch(...)
             {
@@ -211,6 +225,16 @@ namespace Yttrium
 
             for(const Actor *a = p->head;a;a=a->next) eq(int(a->nu),a->sp);
             for(const Actor *a = r->head;a;a=a->next) eq(-int(a->nu),a->sp);
+        }
+
+        void Linker:: onRXP(const Jive::Token &token)
+        {
+            const String rx = token.toString(1,0);
+            std::cerr << "RXP='" << rx << "'" << std::endl;
+            if(hRxp) 
+                hRxp->pushTail(rx);
+            else
+                throw Specific::Exception(callSign(),"unauthorized regular expression (@%s)",rx.c_str());
         }
 
         void Linker:: onCHEMICAL(const size_t) noexcept
