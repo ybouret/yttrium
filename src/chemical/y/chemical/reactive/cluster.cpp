@@ -9,6 +9,7 @@ namespace Yttrium
         EList(),
         species(),
         nu(),
+        eqfmt(),
         spfmt(),
         next(0),
         prev(0)
