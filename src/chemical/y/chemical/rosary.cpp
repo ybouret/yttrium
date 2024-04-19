@@ -5,6 +5,7 @@
 #include "y/jive/pattern/matcher.hpp"
 #include "y/system/exception.hpp"
 #include "y/container/algo/crop.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
@@ -76,6 +77,9 @@ namespace Yttrium
                     }
                     if(count<=0) throw Specific::Exception(Rosary::CallSign,"no database entry matching '%s'", rx.c_str());
                 }
+
+                // third pass: finalize
+                eqs.finalize();
             }
 
             
