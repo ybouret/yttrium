@@ -22,7 +22,9 @@ Y_UTEST(components)
     cmp(1,hydroxy);
     cmp(-1,water);
 
-    std::cerr << cmp << std::endl;
+    std::cerr << cmp.rstr << cmp.LeftRightArrow << cmp.pstr << std::endl;
+
+   // std::cerr << cmp << std::endl;
 
 }
 Y_UDONE()

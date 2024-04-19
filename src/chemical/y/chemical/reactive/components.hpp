@@ -41,8 +41,7 @@ namespace Yttrium
             explicit Components();           //!< setup empty
             Components(const Components &);  //!< copy
             virtual ~Components() noexcept;  //!< cleanup
-            friend std::ostream & operator<<(std::ostream &, const Components &); //!< default display
-
+            
             //__________________________________________________________________
             //
             //
@@ -54,9 +53,8 @@ namespace Yttrium
             void operator()(const int nu, const Species &sp);
 
             
-            //! display with padding
-            std::ostream & showComponents(std::ostream &os, const size_t rmax=0, const size_t pmax=0) const;
-          
+            
+
             //! sum nu * z
             int charge() const noexcept;
 
@@ -77,18 +75,36 @@ namespace Yttrium
             virtual ConstInterface & surrogate() const noexcept;
 
         public:
+            //__________________________________________________________________
+            //
+            //
+            //! Formatting helper
+            //
+            //__________________________________________________________________
             class Formatting
             {
             public:
-                explicit Formatting() noexcept;
-                virtual ~Formatting() noexcept;
-                void     modernizeWith(const Components &) noexcept;
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                explicit Formatting() noexcept; //!< setup
+                virtual ~Formatting() noexcept; //!< cleanup
 
+                //______________________________________________________________
+                //
+                // Methods
+                //______________________________________________________________
+                void          modernizeWith(const Components &) noexcept;      //!< update
+                std::ostream &print(std::ostream &, const Components &) const; //!< print with current values
 
+                //______________________________________________________________
+                //
+                // Members
+                //______________________________________________________________
+                const size_t rmax; //!< max length of rstr
+                const size_t pmax; //!< max length of pstr
 
-
-                const size_t rmax;
-                const size_t pmax;
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Formatting);
             };

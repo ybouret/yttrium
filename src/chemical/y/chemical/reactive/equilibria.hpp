@@ -12,26 +12,69 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class Equilibria : 
-        public Proxy<const Equilibrium::Set>,
-        public Entities,
-        public Components::Formatting
+        class NamedComponents : public Entities, public Components::Formatting
         {
         public:
+            explicit NamedComponents() noexcept {}
+            virtual ~NamedComponents() noexcept {}
+
+            std::ostream & display(std::ostream &os, const Equilibrium &eq) const
+            {
+                pad(os << '<' << eq.name << '>',eq) << Equilibrium::Separator;
+                print(os,eq)                        << Equilibrium::Separator;
+                return os;
+            }
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(NamedComponents);
+        };
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Equilibria is a set of equilibria
+        //
+        //
+        //______________________________________________________________________
+        class Equilibria :
+        public Proxy<const Equilibrium::Set>,
+        public NamedComponents
+        {
+        public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             typedef Equilibrium::Set::ConstIterator ConstIterator; //!< alias
             typedef Equilibrium::Set::Iterator      Iterator;      //!< alias
-             static const char * const              CallSign;      //!< "Chemical::Equilibria"
+            static const char * const               CallSign;      //!< "Chemical::Equilibria"
 
-            explicit Equilibria();
-            virtual ~Equilibria() noexcept;
-            
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Equilibria();          //!< setup empty
+            virtual ~Equilibria() noexcept; //!< cleanup
+
+            //! display formatted
             friend std::ostream & operator<<(std::ostream&,const Equilibria&);
 
-            size_t   level() const noexcept;
-            //Iterator begin() noexcept;
-            //Iterator end()   noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
+            size_t topLevel() const noexcept; //!< next topLevel
 
+            //! insert a newly created equilibria
             template <typename EQUILIBRIUM> inline
             EQUILIBRIUM & insert(EQUILIBRIUM *eq)
             {
@@ -40,12 +83,14 @@ namespace Yttrium
                 return *eq;
             }
 
+            //! make a new constant equilibirum
             template <typename NAME> inline
-            Equilibrium & operator()(const NAME &name, const XReal value)
+            Equilibrium & make(const NAME &name, const XReal value)
             {
-                return insert( new ConstantEquilibrium(name,level(),value) );
+                return insert( new ConstantEquilibrium(name,topLevel(),value) );
             }
 
+            //! check valid equilibria and update formatting
             void finalize();
 
 
@@ -53,7 +98,6 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
             Equilibrium::Set edb;
-
             void                    insert(const Equilibrium::Handle &);
             virtual ConstInterface &surrogate() const noexcept;
         };

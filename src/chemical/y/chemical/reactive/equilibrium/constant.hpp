@@ -11,9 +11,19 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Equilibrium with fixed constant
+        //
+        //
+        //______________________________________________________________________
         class ConstantEquilibrium : public Equilibrium
         {
         public:
+
+            //! setup
             template <typename UID> inline
             explicit ConstantEquilibrium(const UID   &uid,
                                          const size_t topLevel,
@@ -23,6 +33,7 @@ namespace Yttrium
             {
             }
 
+            //! cleanup
             virtual ~ConstantEquilibrium() noexcept;
 
 

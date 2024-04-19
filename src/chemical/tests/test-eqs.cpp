@@ -23,20 +23,20 @@ Y_UTEST(eqs)
     LuaEquilibria eqs;
     eqs.lvm->dostring("function f(t) return 1.1 end");
     {
-        Equilibrium &water = eqs( "water", 1e-14 );
+        Equilibrium &water = eqs.make( "water", 1e-14 );
         water(1,proton);
         water(1,hydroxy);
     }
 
     {
-        Equilibrium &acid = eqs( "acid", 1e-4);
+        Equilibrium &acid = eqs.make( "acid", 1e-4);
         acid(-1,ah);
         acid(1,am);
         acid(1,proton);
     }
 
     {
-        Equilibrium &other = eqs("other","f");
+        Equilibrium &other = eqs.makeLua("other","f");
         other( -1, lib("a",0) );
         other(  1, lib("b",0) );
         std::cerr << "K=" << other.K(0) << std::endl;

@@ -18,6 +18,11 @@ namespace Yttrium
             Coerce(maxLength) = Max(maxLength,entity.name.size());
         }
 
+        Entities:: Entities(const Entities &other) noexcept :
+        maxLength(other.maxLength)
+        {
+
+        }
     }
 
 }

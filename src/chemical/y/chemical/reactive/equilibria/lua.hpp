@@ -12,20 +12,49 @@ namespace Yttrium
     namespace Chemical
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Equilibrium with a Lua VM
+        //
+        //
+        //______________________________________________________________________
         class LuaEquilibria : public Equilibria
         {
         public:
-            explicit LuaEquilibria();
-            virtual ~LuaEquilibria() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit LuaEquilibria();           //!< setup
+            virtual ~LuaEquilibria() noexcept;  //!< cleanup
 
-            template <typename NAME> inline
-            Equilibrium & operator()(const NAME &name, const String &fid)
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! create an equilibrium with a function as constant
+            template <typename EID, typename FID> inline
+            Equilibrium & makeLua(const EID &eid, const FID &fid)
             {
-                return insert( new LuaEquilibrium(name,level(),lvm,fid) );
+                return insert( new LuaEquilibrium(eid,topLevel(),lvm,fid) );
             }
 
-            Lua::VM lvm;
+            
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            Lua::VM lvm; //!< lua (shared) virtual machine
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(LuaEquilibria);
         };

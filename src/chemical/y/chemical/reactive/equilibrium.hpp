@@ -10,26 +10,49 @@ namespace Yttrium
     namespace Chemical
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Interface for equilibrium
+        //
+        //
+        //______________________________________________________________________
         class Equilibrium : public Entity, public Components
         {
         public:
-            static const char Separator = ':';
-            typedef Small::BareLightList<Equilibrium> BareList;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char Separator = ':';                  //!< format separator
+            typedef Small::BareLightList<Equilibrium> BareList; //!< alias
+            typedef ArkPtr<String,Equilibrium>        Handle;   //!< alias
+            typedef SuffixSet<String,Handle>          Set;      //!< alias
+
             
-            typedef ArkPtr<String,Equilibrium> Handle;
-            typedef SuffixSet<String,Handle>   Set;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            XReal    K(Real t); //!< checked constant at a given time
 
- 
-            std::ostream & showEquilibrium(std::ostream &os,
-                                           const size_t nmax=0,
-                                           const size_t rmax=0,
-                                           const size_t pmax=0) const;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
-            XReal    K(Real t);
-
+            //! cleanup
             virtual ~Equilibrium() noexcept;
+
         protected:
+            //! setup
             template <typename UID> inline
             explicit Equilibrium(const UID   &uid,
                                  const size_t topLevel) :

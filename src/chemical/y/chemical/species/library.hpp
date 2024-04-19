@@ -67,8 +67,8 @@ namespace Yttrium
                 return manage(handle);
             }
 
-            const Species & operator[](const String &id) const;
-            const Species & operator[](const char   *id) const;
+            const Species & operator[](const String &id) const; //!< get species by name
+            const Species & operator[](const char   *id) const; //!< get species by name
 
 
         private:

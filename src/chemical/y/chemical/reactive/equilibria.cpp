@@ -25,7 +25,7 @@ namespace Yttrium
             updateWith(*handle);
         }
 
-        size_t Equilibria:: level() const noexcept { return edb.size() + 1; }
+        size_t Equilibria:: topLevel() const noexcept { return edb.size() + 1; }
 
 
         std::ostream & operator<<(std::ostream &os, const Equilibria &eqs)
@@ -35,7 +35,11 @@ namespace Yttrium
             for(Equilibria::ConstIterator it=eqs->begin();it!=eqs->end();++it)
             {
                 const Equilibrium &eq = **it;
-                eq.showEquilibrium(os << "\t", eqs.maxLength,eqs.rmax,eqs.pmax) << std::endl;
+                eqs.display(os << "  ",eq);
+                //eqs.pad(os << "\t<" << eq.name << ">",eq) << Equilibrium::Separator;
+                //eq.showEquilibrium(os << "\t", eqs.maxLength,eqs.rmax,eqs.pmax) << std::endl;
+                //eqs.print(os,eq) << Equilibrium::Separator;
+                os << std::endl;
             }
 
             os << "<" << Equilibria::CallSign << "/>";

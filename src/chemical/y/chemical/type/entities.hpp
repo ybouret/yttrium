@@ -28,8 +28,9 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Entities() noexcept; //!< setup
-            virtual ~Entities() noexcept; //!< cleanup
+            explicit Entities()        noexcept; //!< setup
+            virtual ~Entities()        noexcept; //!< cleanup
+            Entities(const Entities &) noexcept; //!< copy
 
             //__________________________________________________________________
             //
@@ -59,7 +60,7 @@ namespace Yttrium
             const size_t maxLength; //!< max name length
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Entities);
+            Y_DISABLE_ASSIGN(Entities);
         };
 
     }

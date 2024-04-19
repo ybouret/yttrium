@@ -19,17 +19,7 @@ namespace Yttrium
             return k;
         }
 
-        std::ostream & Equilibrium:: showEquilibrium(std::ostream &os,
-                                                     const size_t nmax,
-                                                     const size_t rmax,
-                                                     const size_t pmax) const
-        {
-            os << '<' << name << '>'; for(size_t i=name.size();i<nmax;++i) os << ' ';
-            os << Separator;
-            showComponents(os,rmax,pmax) << Separator;
-            return os;
-        }
-
+      
     }
 
 }

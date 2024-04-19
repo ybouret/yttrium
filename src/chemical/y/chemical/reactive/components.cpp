@@ -104,20 +104,7 @@ namespace Yttrium
 
         }
 
-        std::ostream & Components:: showComponents(std::ostream &os, const size_t rmax, const size_t pmax) const
-        {
-            os << rstr; for(size_t i=rstr.size();i<rmax;++i) os << ' ';
-            os << LeftRightArrow;
-            os << pstr; for(size_t i=pstr.size();i<pmax;++i) os << ' ';
-
-            return os;
-        }
-
-        std::ostream & operator<<(std::ostream &os, const Components &components)
-        {
-            components.showComponents(os);
-            return os;
-        }
+        
 
         int Components:: charge() const noexcept
         {
@@ -141,6 +128,15 @@ namespace Yttrium
         {
             Coerce(pmax) = Max(pmax,components.pstr.size());
             Coerce(rmax) = Max(rmax,components.rstr.size());
+        }
+
+        std::ostream & Components::Formatting::print(std::ostream &os, const Components &components) const
+        {
+            os << components.rstr; for(size_t i=components.rstr.size();i<rmax;++i) os << ' ';
+            os << LeftRightArrow;
+            os << components.pstr; for(size_t i=components.pstr.size();i<pmax;++i) os << ' ';
+
+            return os;
         }
 
     }
