@@ -12,11 +12,11 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class EqsFormat : public Entities, public Components::Formatting
+        class EqFormatter : public Entities, public Components::Formatting
         {
         public:
-            explicit EqsFormat() noexcept {}
-            virtual ~EqsFormat() noexcept {}
+            explicit EqFormatter() noexcept {}
+            virtual ~EqFormatter() noexcept {}
 
             std::ostream & display(std::ostream &os, Equilibrium &eq) const
             {
@@ -28,7 +28,7 @@ namespace Yttrium
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(EqsFormat);
+            Y_DISABLE_COPY_AND_ASSIGN(EqFormatter);
         };
 
         //______________________________________________________________________
@@ -41,7 +41,7 @@ namespace Yttrium
         //______________________________________________________________________
         class Equilibria :
         public Proxy<const Equilibrium::Set>,
-        public EqsFormat
+        public EqFormatter
         {
         public:
             //__________________________________________________________________

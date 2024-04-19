@@ -34,7 +34,8 @@ namespace Yttrium
         prod(),
         Kstr(),
         hLib(0),
-        hEqs(0)
+        hEqs(0),
+        hRxp(0)
         {
             Y_Jive_OnTerminal(Linker,UUID);
             forTerminal('+', *this, &Linker::onPLUS);
