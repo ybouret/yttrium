@@ -3,6 +3,7 @@
 #include "y/woven/subspaces.hpp"
 #include "y/woven/survey/integer.hpp"
 #include "y/woven/survey/natural.hpp"
+#include "y/apex/mylar.hpp"
 
 namespace Yttrium
 {
@@ -85,26 +86,16 @@ namespace Yttrium
             assert(species.size>0);
             const size_t n = size;
             const size_t m = species.size;
-            Coerce(nu).make(n,m);
+            Coerce(Nu).make(n,m);
             for(const ENode *en=head;en;en=en->next)
             {
                 const Equilibrium &eq = **en;
-                eq.fill(Coerce(nu)[eq.indx[SubLevel]],SubLevel);
+                eq.fill(Coerce(Nu)[eq.indx[SubLevel]],SubLevel);
             }
-            Y_XMLOG(xml,"nu=" << nu);
-            
-            Matrix<int> mu(TransposeOf,nu);
-            WOVEn::IntegerSurvey survey(xml);
-            Y_XML_SECTION(xml, "IntegerSurvey");
-            WOVEn::Explore(mu,survey,false,xml);
+            Y_XMLOG(xml,"Nu   = " << Nu);
 
-            std::cerr << "#survey=" << survey.size << std::endl;
-            size_t i=0;
-            for(const WOVEn::IntegerArray *arr=survey.head;arr;arr=arr->next)
-            {
-                std::cerr << "w" << ++i  << " = " << *arr << " #order=" << arr->order << std::endl;
-            }
-            
+            buildCombinatorics(eqs,xml);
+           
 
         }
     }

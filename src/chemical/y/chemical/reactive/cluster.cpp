@@ -8,7 +8,7 @@ namespace Yttrium
         Cluster:: Cluster(const Equilibrium &eq) :
         EList(),
         species(),
-        nu(),
+        Nu(),
         eqfmt(),
         spfmt(),
         next(0),

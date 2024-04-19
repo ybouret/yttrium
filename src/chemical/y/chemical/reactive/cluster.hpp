@@ -31,7 +31,7 @@ namespace Yttrium
             void compile(Equilibria &eqs, XMLog &xml);
 
             const SList       species;
-            const Matrix<int> nu;
+            const Matrix<int> Nu;
             const EqFormatter eqfmt;
             const Entities    spfmt;
             Cluster          *next;
@@ -39,6 +39,8 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
+            void buildCombinatorics(Equilibria &eqs, XMLog &xml);
+            //void buildConservations();
         };
     }
 
