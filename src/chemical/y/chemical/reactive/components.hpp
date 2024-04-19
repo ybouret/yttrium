@@ -6,6 +6,7 @@
 #include "y/chemical/reactive/actors.hpp"
 #include "y/chemical/reactive/component.hpp"
 #include "y/type/proxy.hpp"
+#include "y/associative/address-book.hpp"
 
 namespace Yttrium
 {
@@ -58,6 +59,7 @@ namespace Yttrium
 
             bool contains(const Species &sp) const noexcept;
             bool sharesSpeciesWith(const Components &other) const noexcept;
+            void recordSpeciesInto(AddressBook &) const;
 
             //__________________________________________________________________
             //

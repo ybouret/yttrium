@@ -18,11 +18,11 @@ namespace Yttrium
             explicit EqFormatter() noexcept {}
             virtual ~EqFormatter() noexcept {}
 
-            std::ostream & display(std::ostream &os, Equilibrium &eq) const
+            std::ostream & display(std::ostream &os, const Equilibrium &eq) const
             {
                 pad(os << '<' << eq.name << '>',eq) << Equilibrium::Separator;
                 print(os,eq)                        << Equilibrium::Separator;
-                os << eq.K(0);
+                os << std::setw(12) << Coerce(eq).K(0);
                 return os;
             }
 

@@ -134,6 +134,12 @@ namespace Yttrium
             }
             return false;
         }
+       
+        void Components:: recordSpeciesInto(AddressBook &book) const
+        {
+            for(Component::Set::ConstIterator it=cdb.begin();it!=cdb.end();++it)
+                book |= (*it).sp;
+        }
 
 
     }

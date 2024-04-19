@@ -9,6 +9,7 @@
 #include "y/data/small/light/list/coop.hpp"
 #include "y/associative/suffix/set.hpp"
 #include "y/ptr/ark.hpp"
+#include "y/sort/merge.hpp"
 
 namespace Yttrium
 {
@@ -84,6 +85,36 @@ namespace Yttrium
 
         typedef Small::BareLightList<const Species> SList;
         typedef SList::NodeType                     SNode;
+
+        struct LightSort
+        {
+
+
+            template <typename TNODE>
+            static inline
+            SignType CompareNodes(const TNODE *lhs, const TNODE *rhs) noexcept
+            {
+                return Sign::Of( (**lhs).indx[TopLevel], (**rhs).indx[TopLevel] );
+            }
+
+            template <typename TLIST> static inline
+            void ByTopLevel(TLIST &list) noexcept
+            {
+                MergeSort::Call(list,CompareNodes<typename TLIST::NodeType>);
+            }
+
+            template <typename TLIST> static inline
+            void MakeSubLevel(TLIST &list) noexcept
+            {
+                ByTopLevel(list);
+                size_t indx = 0;
+                for(typename TLIST::NodeType *node=list.head;node;node=node->next)
+                {
+                    Coerce((**node).indx[SubLevel]) = ++indx;
+                }
+            }
+
+        };
 
     }
 }
