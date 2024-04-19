@@ -39,6 +39,7 @@ namespace Yttrium
 
 
             renderGraphViz();
+            validate();
             lexer.drop("[:blank:]");
             lexer.endl("[:endl:]");
         }
