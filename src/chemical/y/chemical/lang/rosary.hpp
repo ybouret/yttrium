@@ -5,6 +5,8 @@
 #define Y_Chemical_Rosary_Included 1
 
 #include "y/chemical/species/library.hpp"
+#include "y/chemical/reactive/equilibria/lua.hpp"
+
 #include "y/singleton.hpp"
 #include "y/jive/module.hpp"
 
@@ -42,8 +44,9 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! parse module, populate library and eqs
-            void operator()(Jive::Module *m,
-                            Library      &lib);
+            void operator()(Jive::Module  *m,
+                            Library       &lib,
+                            LuaEquilibria &eqs);
 
 
         private:

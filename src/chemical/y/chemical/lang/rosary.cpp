@@ -10,6 +10,7 @@
 #include "y/system/exception.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/apex/natural.hpp"
+#include "y/container/algo/crop.hpp"
 
 namespace Yttrium
 {
@@ -75,7 +76,8 @@ namespace Yttrium
             reac(),
             prod(),
             Ks(),
-            hLib(0)
+            hLib(0),
+            hEqs(0)
             {
                 setupParser();
                 setupLinker();
@@ -93,15 +95,17 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! main processing
-            void process(Jive::Module *m,
-                         Library      &lib)
+            void process(Jive::Module  *m,
+                         Library       &lib,
+                         LuaEquilibria &eqs)
             {
                 //--------------------------------------------------------------
                 // get AST
                 //--------------------------------------------------------------
-                const Temporary<Library *> temp(hLib,&lib); // set library
-                Parser                    &self = *this;    // get parser
-                AutoPtr<XNode>             tree = self(m);  // get AST
+                const Temporary<Library *>       tlib(hLib,&lib); // set lib
+                const Temporary<LuaEquilibria *> teqs(hEqs,&eqs); // set eqs
+                Parser &                         self = *this;    // get parser
+                AutoPtr<XNode>                   tree = self(m);  // get AST
                 if(tree.isEmpty()) throw Specific::Exception(Rosary::CallSign, "Unexpected Empty Syntax Tree!");
 
                 //--------------------------------------------------------------
@@ -134,10 +138,12 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Compiler);
-            Library *hLib;
+            Library       *hLib;
+            LuaEquilibria *hEqs;
 
             void setupParser();
             void setupLinker();
+
             void clearState() noexcept
             {
                 uuids.  release();
@@ -163,10 +169,8 @@ namespace Yttrium
 
             static inline void PostProcess(XNode &node, void *, const int) noexcept
             {
-                if( "REAC" == *(node.rule.name) )
-                {
+                if( "REAC" == *(node.rule.name) || "PROD" == (*node.rule.name))
                     node.removeChildIf(IsPLUS);
-                }
             }
 
             void onUUID(  const Jive::Token &token) { uuids << token.toString(); }
@@ -257,17 +261,38 @@ namespace Yttrium
             inline void onPROD(const size_t n)
             {
                 gather( prod.pushTail( new Players() ), n);
-                std::cerr << "reac: " << *reac.tail << std::endl;
+                std::cerr << "prod: " << *prod.tail << std::endl;
             }
 
             inline void onK(const Jive::Token &token)
             {
-                const String k = token.toString(1,1);
+                String k = token.toString(1,1);
+                Algo::Crop(k,isspace);
                 std::cerr << "K=" << k << std::endl;
                 Ks << k;
             }
 
-            inline void onROSARY(const size_t) noexcept 
+            inline void onEQ(const size_t n)
+            {
+                assert(4==n);
+                const String           name = uuids.pullTail();
+                const AutoPtr<Players> r    = reac.popTail();
+                const AutoPtr<Players> p    = prod.popTail();
+                const String           k    = Ks.pullTail();
+
+                std::cerr << name << ":" << r << "<=>" << p << ":'" << k << "'" << std::endl;
+
+                if(k.size()<=0) throw Specific::Exception(Rosary::CallSign,"<%s> empty constant string", name.c_str());
+                LuaEquilibria &eqs   = *hEqs;
+                Lua::State    &L     = *eqs.lvm;
+                const bool     isLua = isalpha(k[1]);
+                Equilibrium   &eq    = (isLua ? eqs.makeLua(name,k) : eqs.make(name, L.eval<lua_Number>(k)) );
+
+                for(const Actor *a = p->head;a;a=a->next) eq(int(a->nu),a->sp);
+                for(const Actor *a = r->head;a;a=a->next) eq(-int(a->nu),a->sp);
+            }
+
+            inline void onROSARY(const size_t) noexcept
             { clearState(); }
 
         };
@@ -320,9 +345,8 @@ namespace Yttrium
             Y_Jive_OnInternal(Compiler,REAC);
             Y_Jive_OnInternal(Compiler,PROD);
             Y_Jive_OnTerminal(Compiler,K);
-
+            Y_Jive_OnInternal(Compiler,EQ);
             Y_Jive_OnInternal(Compiler,ROSARY);
-
         }
 
 
@@ -353,11 +377,12 @@ namespace Yttrium
         }
 
 
-        void Rosary:: operator()(Jive::Module *m,
-                                 Library      &lib)
+        void Rosary:: operator()(Jive::Module  *m,
+                                 Library       &lib,
+                                 LuaEquilibria &eqs)
         {
             assert(0!=RosaryCompiler);
-            RosaryCompiler->process(m,lib);
+            RosaryCompiler->process(m,lib,eqs);
         }
     }
 

@@ -11,7 +11,8 @@ using namespace Chemical;
 Y_UTEST(rosary)
 {
     Rosary & rosary = Rosary::Instance();
-    Library  lib;
+    Library       lib;
+    LuaEquilibria eqs;
     std::cerr << rosary.callSign() << std::endl;
 
     const Species &proton  = lib("H+",1);  
@@ -30,11 +31,12 @@ Y_UTEST(rosary)
     
     for(int i=1;i<argc;++i)
     {
-        rosary( Jive::Module::OpenData("data",argv[i]), lib);
+        rosary( Jive::Module::OpenData("data",argv[i]), lib, eqs);
     }
 
     std::cerr << lib << std::endl;
-
+    std::cerr << eqs << std::endl;
+    
     Y_SIZEOF(Actor);
     Y_SIZEOF(Actors);
 }

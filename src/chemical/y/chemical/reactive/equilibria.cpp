@@ -35,7 +35,7 @@ namespace Yttrium
             for(Equilibria::ConstIterator it=eqs->begin();it!=eqs->end();++it)
             {
                 const Equilibrium &eq = **it;
-                eqs.display(os << "  ",eq);
+                eqs.display(os << "  ",Coerce(eq));
                 //eqs.pad(os << "\t<" << eq.name << ">",eq) << Equilibrium::Separator;
                 //eq.showEquilibrium(os << "\t", eqs.maxLength,eqs.rmax,eqs.pmax) << std::endl;
                 //eqs.print(os,eq) << Equilibrium::Separator;

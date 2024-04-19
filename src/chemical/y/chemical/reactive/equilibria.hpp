@@ -12,22 +12,23 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class NamedComponents : public Entities, public Components::Formatting
+        class EqsFormat : public Entities, public Components::Formatting
         {
         public:
-            explicit NamedComponents() noexcept {}
-            virtual ~NamedComponents() noexcept {}
+            explicit EqsFormat() noexcept {}
+            virtual ~EqsFormat() noexcept {}
 
-            std::ostream & display(std::ostream &os, const Equilibrium &eq) const
+            std::ostream & display(std::ostream &os, Equilibrium &eq) const
             {
                 pad(os << '<' << eq.name << '>',eq) << Equilibrium::Separator;
                 print(os,eq)                        << Equilibrium::Separator;
+                os << eq.K(0);
                 return os;
             }
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(NamedComponents);
+            Y_DISABLE_COPY_AND_ASSIGN(EqsFormat);
         };
 
         //______________________________________________________________________
@@ -40,7 +41,7 @@ namespace Yttrium
         //______________________________________________________________________
         class Equilibria :
         public Proxy<const Equilibrium::Set>,
-        public NamedComponents
+        public EqsFormat
         {
         public:
             //__________________________________________________________________
