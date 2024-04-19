@@ -1,7 +1,6 @@
 
 
-#include "y/chemical/reactive/equilibria.hpp"
-#include "y/chemical/reactive/equilibrium/constant.hpp"
+#include "y/chemical/reactive/equilibria/lua.hpp"
 
 #include "y/chemical/species/library.hpp"
 #include "y/utest/run.hpp"
@@ -21,7 +20,8 @@ Y_UTEST(eqs)
 
     std::cerr << lib << std::endl;
 
-    Equilibria eqs;
+    LuaEquilibria eqs;
+    eqs.lvm->dostring("function f(t) return 1.1 end");
     {
         Equilibrium &water = eqs( "water", 1e-14 );
         water(1,proton);
@@ -33,6 +33,13 @@ Y_UTEST(eqs)
         acid(-1,ah);
         acid(1,am);
         acid(1,proton);
+    }
+
+    {
+        Equilibrium &other = eqs("other","f");
+        other( -1, lib("a",0) );
+        other(  1, lib("b",0) );
+        std::cerr << "K=" << other.K(0) << std::endl;
     }
 
     eqs.finalize();

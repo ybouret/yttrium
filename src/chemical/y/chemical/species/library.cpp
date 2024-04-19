@@ -53,6 +53,21 @@ namespace Yttrium
             return os;
         }
 
+
+        const Species & Library:: operator[](const String &id) const
+        {
+            const Species::Handle *pps = sdb.search(id);
+            if(!pps) throw Specific::Exception(CallSign,"unknown '%s'", id.c_str());
+            return **pps;
+        }
+
+        const Species & Library:: operator[](const char *id) const
+        {
+            const String _(id);
+            return (*this)[_];
+        }
+
+
     }
 
 }
