@@ -14,7 +14,7 @@ namespace Yttrium
                                              const size_t           topLevel,
                                              const Readable<int>   &weight,
                                              const EqSubSet        &eqset,
-                                             const Readable<XReal> &topK) :
+                                             const Constants       &topK) :
         Equilibrium(id, topLevel),
         in(),
         nu(),
@@ -39,9 +39,10 @@ namespace Yttrium
             xmul.free();
             const IList::NodeType *i = in.head;
             const WList::NodeType *w = nu.head;
+            const XVector         &Kv = *K_;
             for(size_t j=in.size;j>0;--j,i=i->next,w=w->next)
             {
-                const XReal k = K_[ **i ];
+                const XReal k = Kv[ **i ];
                 const int   n = **w;        assert(0!=n);
                 if(n>0) xmul.insert(k,n); else xmul.insert(one/k,-n);
             }

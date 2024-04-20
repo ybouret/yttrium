@@ -13,13 +13,16 @@ namespace Yttrium
         class Clusters : public CxxListOf<Cluster>
         {
         public:
-            explicit Clusters(Equilibria &eqs, const Readable<XReal> &topK, XMLog &xml) ;
+            explicit Clusters(Equilibria &eqs, const Constants &topK, XMLog &xml) ;
             virtual ~Clusters() noexcept;
+
+            const Readable<XReal> & K(const Real t);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Clusters);
-            void build(Equilibria &, const Readable<XReal> &topK, XMLog &); //!< build and compile
-            void merge() noexcept;                                          //!< merge cluster sharing species
+            Constants sharedK;
+            void build(Equilibria &, XMLog &); //!< build and compile
+            void merge() noexcept;             //!< merge cluster sharing species
         };
     }
 

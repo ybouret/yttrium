@@ -5,8 +5,10 @@ namespace Yttrium
     namespace Chemical
     {
 
-        Cluster:: Cluster(const Equilibrium &eq) :
+        Cluster:: Cluster(const Equilibrium &eq,
+                          const Constants   &topK) :
         EList(),
+        sharedK(topK),
         species(),
         Nu(),
         eqfmt(),
@@ -41,7 +43,12 @@ namespace Yttrium
 
         void Cluster:: computeK(const Real t)
         {
-            
+            Writable<XReal> &K = *sharedK;
+            for(const ENode *node=head;node;node=node->next)
+            {
+                Equilibrium &eq = Coerce(**node);
+                K[eq.indx[TopLevel]] = eq.K(t);
+            }
         }
 
     }

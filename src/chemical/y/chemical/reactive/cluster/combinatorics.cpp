@@ -85,7 +85,6 @@ namespace Yttrium
 
 
         void Cluster:: buildCombinatorics(Equilibria            &eqs,
-                                          const Readable<XReal> &topK,
                                           XMLog                 &xml)
         {
             static const char here[] = "Chemical::Combinatorics";
@@ -208,7 +207,7 @@ namespace Yttrium
                 // create mixed equilibrium
                 const Readable<int> &weight = mx->weight;
                 const String         eqName = buildMixedName(weight);
-                Equilibrium         &eq = eqs.insert( new MixedEquilibrium(eqName,eqs.topLevel(),weight,eqset,topK) );
+                Equilibrium         &eq = eqs.insert( new MixedEquilibrium(eqName,eqs.topLevel(),weight,eqset,sharedK) );
 
                 // fill it with species
                 const Readable<int> &stoich = mx->stoich;

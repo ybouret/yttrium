@@ -9,7 +9,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-        void Cluster:: compile(Equilibria &eqs, const Readable<XReal> &topK, XMLog &xml)
+        void Cluster:: compile(Equilibria &eqs, XMLog &xml)
         {
             static const char here[] = "Chemical::Cluster";
             Y_XML_SECTION_OPT(xml,here, " localEqs=" << size);
@@ -114,7 +114,7 @@ namespace Yttrium
 
 
 
-            buildCombinatorics(eqs,topK,xml);
+            buildCombinatorics(eqs,xml);
 
 
         }

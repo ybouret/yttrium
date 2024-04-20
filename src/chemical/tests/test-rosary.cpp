@@ -41,10 +41,11 @@ Y_UTEST(rosary)
 
     bool verbose = true;
     XMLog xml(verbose);
-    Vector<Chemical::XReal> K;
-    Chemical::Clusters cls(eqs,K,xml);
-    K.adjust(eqs->size(),1);
+    Chemical::Constants K;
+    Chemical::Clusters  cls(eqs,K,xml);
+    //K->adjust(eqs->size(),1);
     //std::cerr << cls << std::endl;
+    (void) cls.K(0);
     std::cerr << eqs << std::endl;
 
     Y_SIZEOF(Chemical::Cluster);

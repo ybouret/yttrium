@@ -7,6 +7,7 @@
 #include "y/container/cxx/array.hpp"
 #include "y/data/small/heavy/list/bare.hpp"
 #include "y/mkl/antelope/mul.hpp"
+#include "y/chemical/type/constants.hpp"
 
 namespace Yttrium
 {
@@ -29,7 +30,7 @@ namespace Yttrium
             typedef Small::BareHeavyList<int>    WList;
             const IList                  in;
             const WList                  nu;
-            const Readable<XReal>       &K_;
+            const Constants              &K_;
             const XReal                  one;
             MKL::Antelope::Mul<XReal>    xmul;
 
@@ -37,7 +38,7 @@ namespace Yttrium
                                       const size_t           topLevel,
                                       const Readable<int>   &weight,
                                       const EqSubSet        &eqset,
-                                      const Readable<XReal> &topK);
+                                      const Constants       &topK);
 
             virtual ~MixedEquilibrium() noexcept;
 

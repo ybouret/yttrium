@@ -6,7 +6,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-        void Clusters:: build(Equilibria &eqs, const Readable<XReal> &topK, XMLog &xml)
+        void Clusters:: build(Equilibria &eqs, XMLog &xml)
         {
             //------------------------------------------------------------------
             //
@@ -28,7 +28,7 @@ namespace Yttrium
                         goto DONE;
                     }
                 }
-                pushTail( new Cluster(eq) );
+                pushTail( new Cluster(eq,sharedK) );
             DONE:
                 continue;
             }
@@ -40,7 +40,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             for(Cluster *cl=head;cl;cl=cl->next)
-                cl->compile(eqs,topK,xml);
+                cl->compile(eqs,xml);
         }
 
         void Clusters:: merge() noexcept
