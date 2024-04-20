@@ -1,18 +1,18 @@
 
 #include "y/chemical/reactive/cluster.hpp"
-#include "y/woven/subspaces.hpp"
-#include "y/woven/survey/integer.hpp"
-#include "y/woven/survey/natural.hpp"
-#include "y/apex/mylar.hpp"
+#include "y/mkl/algebra/rank.hpp"
+#include "y/system/exception.hpp"
+
 
 namespace Yttrium
 {
     namespace Chemical
     {
 
-        void Cluster:: compile(Equilibria &eqs, XMLog &xml)
+        void Cluster:: compile(Equilibria &eqs, const Readable<XReal> &topK, XMLog &xml)
         {
-            Y_XML_SECTION_OPT(xml,"Cluster", " localEqs=" << size);
+            static const char here[] = "Chemical::Cluster";
+            Y_XML_SECTION_OPT(xml,here, " localEqs=" << size);
 
             //------------------------------------------------------------------
             //
@@ -31,8 +31,7 @@ namespace Yttrium
                 for(const ENode *en=head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en;
-                    Coerce(eqfmt).updateWith(eq);
-                    Coerce(eqfmt).modernizeWith(eq);
+                    Coerce(eqfmt).upgradeWith(eq);
                     eq.recordSpeciesInto(book);
                 }
 
@@ -94,8 +93,29 @@ namespace Yttrium
             }
             Y_XMLOG(xml,"Nu   = " << Nu);
 
-            buildCombinatorics(eqs,xml);
-           
+            if( n != MKL::Rank::Of(Nu) )
+                throw Specific::Exception(here, "invalid system rank!!");
+
+            //------------------------------------------------------------------
+            //
+            // create tables
+            //
+            //------------------------------------------------------------------
+            for(const SNode *sn=species.head;sn;sn=sn->next)
+            {
+                if( ! Coerce(spset).record(**sn) ) throw Specific::Exception(here,"unexpected species multiple sub-index!");
+            }
+
+            for(const ENode *en=head;en;en=en->next)
+            {
+                if( ! Coerce(eqset).record(**en) ) throw Specific::Exception(here,"unexpected equilibirum multiple sub-index!");
+            }
+
+
+
+
+            buildCombinatorics(eqs,topK,xml);
+
 
         }
     }

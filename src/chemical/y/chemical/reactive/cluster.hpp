@@ -6,12 +6,16 @@
 #include "y/chemical/reactive/equilibria.hpp"
 #include "y/stream/xmlog.hpp"
 #include "y/container/matrix.hpp"
+#include "y/chemical/type/entity-set.hpp"
+#include "y/quantized.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
-        class Cluster : public Object, public EList
+
+
+        class Cluster : public Quantized, public EList
         {
         public:
             explicit Cluster(const Equilibrium &);
@@ -28,18 +32,22 @@ namespace Yttrium
             bool sharesSpeciesWith(const Equilibrium &) const noexcept;
             bool sharesSpeciesWith(const Cluster     &) const noexcept;
 
-            void compile(Equilibria &eqs, XMLog &xml);
+            void compile(Equilibria &eqs, const Readable<XReal> &topK, XMLog &xml);
+            void computeK(const Real t);
 
-            const SList       species;
-            const Matrix<int> Nu;
-            const EqFormatter eqfmt;
-            const Entities    spfmt;
-            Cluster          *next;
-            Cluster          *prev;
+            const SList         species;
+            const Matrix<int>   Nu;
+            const SpSubSet      spset;
+            const EqSubSet      eqset;
+            const EqFormatter   eqfmt;
+            const Entities      spfmt;
+            Cluster            *next;
+            Cluster            *prev;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
-            void buildCombinatorics(Equilibria &eqs, XMLog &xml);
+            String buildMixedName(const Readable<int> &w) const;
+            void buildCombinatorics(Equilibria &eqs, const Readable<XReal> &topK, XMLog &xml);
             //void buildConservations();
         };
     }

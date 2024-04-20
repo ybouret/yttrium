@@ -49,7 +49,7 @@ namespace Yttrium
 
             friend std::ostream & operator<<(std::ostream &os, const Equilibrium &eq)
             {
-                os << eq.name;
+                os << '<' << eq.name << '>';
                 return os;
             }
 
@@ -73,6 +73,7 @@ namespace Yttrium
 
         typedef Small::BareLightList<const Equilibrium> EList; //!< alias
         typedef EList::NodeType                         ENode; //!< alias
+        typedef EntitySet<Equilibrium,SubLevel>         EqSubSet;
 
 
         

@@ -4,6 +4,7 @@
 #include "y/utest/run.hpp"
 
 #include "y/stream/libc/output.hpp"
+#include "y/sequence/vector.hpp"
 
 using namespace Yttrium;
 using namespace Chemical;
@@ -40,9 +41,11 @@ Y_UTEST(rosary)
 
     bool verbose = true;
     XMLog xml(verbose);
-    Chemical::Clusters cls(eqs,xml);
-    std::cerr << cls << std::endl;
-
+    Vector<Chemical::XReal> K;
+    Chemical::Clusters cls(eqs,K,xml);
+    K.adjust(eqs->size(),1);
+    //std::cerr << cls << std::endl;
+    std::cerr << eqs << std::endl;
 
     Y_SIZEOF(Chemical::Cluster);
     Y_SIZEOF(Chemical::Clusters);

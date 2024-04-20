@@ -3,7 +3,7 @@
 #ifndef Y_Chemical_Species_Included
 #define Y_Chemical_Species_Included 1
 
-#include "y/chemical/type/entity.hpp"
+#include "y/chemical/type/entity-set.hpp"
 #include "y/data/small/light/list/bare.hpp"
 #include "y/data/small/light/list/solo.hpp"
 #include "y/data/small/light/list/coop.hpp"
@@ -85,6 +85,7 @@ namespace Yttrium
 
         typedef Small::BareLightList<const Species> SList;
         typedef SList::NodeType                     SNode;
+        typedef EntitySet<Species,SubLevel>         SpSubSet;
 
         struct LightSort
         {

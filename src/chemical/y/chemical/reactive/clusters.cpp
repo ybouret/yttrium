@@ -5,9 +5,9 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        Clusters:: Clusters(Equilibria &eqs, XMLog &xml) : CxxListOf<Cluster>()
+        Clusters:: Clusters(Equilibria &eqs, const Readable<XReal> &topK, XMLog &xml) : CxxListOf<Cluster>()
         {
-            build(eqs,xml);
+            build(eqs,topK,xml);
         }
 
         Clusters:: ~Clusters() noexcept

@@ -39,7 +39,10 @@ namespace Yttrium
             return false;
         }
 
-      
+        void Cluster:: computeK(const Real t)
+        {
+            
+        }
 
     }
 
