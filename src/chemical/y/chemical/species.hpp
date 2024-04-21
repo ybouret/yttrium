@@ -83,27 +83,34 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Species);
         };
 
-        typedef Small::BareLightList<const Species> SList;
-        typedef SList::NodeType                     SNode;
-        typedef EntitySet<Species,SubLevel>         SpSubSet;
+        typedef Small::BareLightList<const Species> SList;     //!< alias
+        typedef SList::NodeType                     SNode;     //!< alias
+        typedef EntitySet<Species,SubLevel>         SpSubSet;  //!< alias
 
+        //______________________________________________________________________
+        //
+        //
+        //! helper to sort Light Lists
+        //
+        //______________________________________________________________________
         struct LightSort
         {
 
-
+            //! comparison by TopLevel index
             template <typename TNODE>
-            static inline
-            SignType CompareNodes(const TNODE *lhs, const TNODE *rhs) noexcept
+            static inline SignType CompareNodes(const TNODE *lhs, const TNODE *rhs) noexcept
             {
                 return Sign::Of( (**lhs).indx[TopLevel], (**rhs).indx[TopLevel] );
             }
 
+            //! sort by increasing top level
             template <typename TLIST> static inline
             void ByTopLevel(TLIST &list) noexcept
             {
                 MergeSort::Call(list,CompareNodes<typename TLIST::NodeType>);
             }
 
+            //! sort by increasing TopLevel and deduce SubLevel
             template <typename TLIST> static inline
             void MakeSubLevel(TLIST &list) noexcept
             {

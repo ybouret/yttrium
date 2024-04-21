@@ -5,37 +5,12 @@
 #define Y_Chemical_Equilibria_Included 1
 
 #include "y/chemical/reactive/equilibrium/constant.hpp"
-#include "y/chemical/type/entities.hpp"
+#include "y/chemical/reactive/equilibrium/fmt.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
-
-        class EqFormatter : public Entities, public Components::Formatting
-        {
-        public:
-            explicit EqFormatter() noexcept {}
-            virtual ~EqFormatter() noexcept {}
-
-            void upgradeWith(const Equilibrium &eq) noexcept
-            {
-                updateWith(eq);
-                modernizeWith(eq);
-            }
-
-            std::ostream & display(std::ostream &os, const Equilibrium &eq) const
-            {
-                pad(os << '<' << eq.name << '>',eq) << Equilibrium::Separator;
-                print(os,eq)                        << Equilibrium::Separator;
-                os << std::setw(12) << Coerce(eq).K(0);
-                return os;
-            }
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(EqFormatter);
-        };
 
         //______________________________________________________________________
         //
@@ -78,10 +53,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+            size_t topLevel() const noexcept; //!< next topLevel index = size()+1
 
-            size_t topLevel() const noexcept; //!< next topLevel
-            Iterator begin() noexcept;
-            Iterator end()   noexcept;
 
             //! insert a newly created equilibria
             template <typename EQUILIBRIUM> inline

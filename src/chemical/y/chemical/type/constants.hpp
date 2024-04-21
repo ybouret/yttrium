@@ -14,26 +14,48 @@ namespace Yttrium
 {
     namespace Chemical
     {
-     
+
+        //______________________________________________________________________
+        //
+        //
+        //! base type to store constants
+        //
+        //______________________________________________________________________
         typedef Vector<XReal,Memory::Dyadic> XVectorType;
 
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! making a reference-counted vector
+        //
+        //
+        //______________________________________________________________________
         class XVector : public Object, public Counted, public XVectorType
         {
         public:
-            explicit XVector() noexcept {}
-            virtual ~XVector() noexcept {}
+            explicit XVector() noexcept; //!< create
+            virtual ~XVector() noexcept; //!< cleanup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(XVector);
         };
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! sharing constants among data
+        //
+        //
+        //______________________________________________________________________
         class Constants : public ArcPtr<XVector>
         {
         public:
-            explicit Constants() : ArcPtr<XVector>( new XVector() ) {}
-            Constants(const Constants &other) noexcept : ArcPtr<XVector>(other) {}
-            virtual ~Constants() noexcept {}
+            Constants();                           //!< create a new shared XVector
+            Constants(const Constants &) noexcept; //!< no-throw shared copy
+            virtual ~Constants()         noexcept; //!< cleanup
 
         private:
             Y_DISABLE_ASSIGN(Constants);

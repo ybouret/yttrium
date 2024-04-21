@@ -11,6 +11,8 @@ namespace Yttrium
         sharedK(topK),
         species(),
         Nu(),
+        spset(),
+        eqset(),
         eqfmt(),
         spfmt(),
         next(0),
@@ -41,7 +43,7 @@ namespace Yttrium
             return false;
         }
 
-        void Cluster:: computeK(const Real t)
+        void Cluster:: getK(const Real t)
         {
             Writable<XReal> &K = *sharedK;
             for(const ENode *node=head;node;node=node->next)

@@ -626,6 +626,7 @@ namespace Yttrium
                 inline void clearState() { state=0; empty=true; }
                 bool empty;
                 T    state;
+                
             };
         }
     }

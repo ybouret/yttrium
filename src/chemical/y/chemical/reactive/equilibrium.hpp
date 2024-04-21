@@ -27,11 +27,11 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const char Separator = ':';                  //!< format separator
-            typedef ArkPtr<String,Equilibrium>        Handle;   //!< alias
-            typedef SuffixSet<String,Handle>          Set;      //!< alias
-            typedef Component::Set::ConstIterator     ConstIterator;
-            
+            static const char Separator = ':';                       //!< format separator
+            typedef ArkPtr<String,Equilibrium>        Handle;        //!< alias
+            typedef SuffixSet<String,Handle>          Set;           //!< alias
+            typedef Component::Set::ConstIterator     ConstIterator; //!< alias
+
             //__________________________________________________________________
             //
             //
@@ -47,6 +47,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //! helper to display
             friend std::ostream & operator<<(std::ostream &os, const Equilibrium &eq)
             {
                 os << '<' << eq.name << '>';
@@ -71,9 +72,9 @@ namespace Yttrium
 
         };
 
-        typedef Small::BareLightList<const Equilibrium> EList; //!< alias
-        typedef EList::NodeType                         ENode; //!< alias
-        typedef EntitySet<Equilibrium,SubLevel>         EqSubSet;
+        typedef Small::BareLightList<const Equilibrium> EList;    //!< alias
+        typedef EList::NodeType                         ENode;    //!< alias
+        typedef EntitySet<Equilibrium,SubLevel>         EqSubSet; //!< alias
 
 
         

@@ -53,8 +53,8 @@ namespace Yttrium
             for(Equilibria::Iterator it=edb.begin();it!=edb.end();++it)
             {
                 const Equilibrium &eq = **it;
-                const char * const id = eq.name.c_str(); if(eq->size()<=0) throw Specific::Exception(CallSign,"empty <%s>", id);
-                const int          dz = eq.charge();     if(0!=dz)         throw Specific::Exception(CallSign, "<%s> charge is %d", id, dz);
+                const char * const id = eq.name.c_str();    if(eq->size()<=0) throw Specific::Exception(CallSign,"empty <%s>", id);
+                const int          dz = eq.chargeBalance(); if(0!=dz)         throw Specific::Exception(CallSign, "<%s> charge balance is %d", id, dz);
                 modernizeWith(eq);
             }
         }

@@ -20,7 +20,7 @@ namespace Yttrium
         const Readable<XReal> & Clusters :: K(const Real t)
         {
             for(Cluster *cl=head;cl;cl=cl->next)
-                cl->computeK(t);
+                cl->getK(t);
             return *sharedK;
         }
 

@@ -22,30 +22,55 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-    
         class MixedEquilibrium : public Equilibrium
         {
         public:
-            typedef Small::BareHeavyList<size_t> IList;
-            typedef Small::BareHeavyList<int>    WList;
-            const IList                  in;
-            const WList                  nu;
-            const Constants              &K_;
-            const XReal                  one;
-            MKL::Antelope::Mul<XReal>    xmul;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef Small::BareHeavyList<size_t> IList; //!< list of indices (SubLevel)
+            typedef Small::BareHeavyList<int>    WList; //!< list of weights
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //__________________________________________________________________
+            //
+            //! setup
+            /**
+             \param id       name for the equilibrium, made from primaries
+             \param topLevel TopLevel index
+             \param weight   univocal integer weights, in SubLevel space
+             \param eqset    SubLevel set of equilibria
+             \param topK     TopLevel constants
+             */
+            //__________________________________________________________________
             explicit MixedEquilibrium(const String         &id,
                                       const size_t           topLevel,
                                       const Readable<int>   &weight,
                                       const EqSubSet        &eqset,
                                       const Constants       &topK);
 
+            //! cleanup
             virtual ~MixedEquilibrium() noexcept;
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MixedEquilibrium);
             virtual XReal getK(Real);
+
+            const IList                  in;     //!< indices of primary eqs
+            const WList                  nu;     //!< coefficient per primary eq
+            const Constants              &K_;    //!< shared constants
+            const XReal                  one;    //!< 1
+            MKL::Antelope::Mul<XReal>    xmul;   //!< to compute K
         };
 
     }

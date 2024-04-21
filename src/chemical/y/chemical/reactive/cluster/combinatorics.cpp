@@ -31,7 +31,7 @@ namespace Yttrium
             static inline SignType Compare(const Mixed * lhs, const Mixed * rhs) noexcept
             {
                 assert(lhs); assert(rhs);
-                return Sign::Of(lhs->snorm1,lhs->snorm1);
+                return Sign::Of(lhs->snorm1,rhs->snorm1);
             }
 
             virtual ~Mixed() noexcept {}

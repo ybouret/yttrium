@@ -53,14 +53,13 @@ namespace Yttrium
             //! append a new component
             void operator()(const int nu, const Species &sp);
 
-
             //! sum nu * z
-            int charge() const noexcept;
+            int  chargeBalance()                            const noexcept;
+            bool contains(const Species &sp)                const noexcept; //!< look for species
+            bool sharesSpeciesWith(const Components &other) const noexcept; //!< look for shared species
+            void recordSpeciesInto(AddressBook &)           const;          //!< store all species address
 
-            bool contains(const Species &sp) const noexcept;
-            bool sharesSpeciesWith(const Components &other) const noexcept;
-            void recordSpeciesInto(AddressBook &) const;
-
+            //! fill an array of coefficients
             template <typename T> inline
             void fill(Writable<T> &nu, const Level level) const
             {
@@ -70,8 +69,6 @@ namespace Yttrium
                     nu[ component.sp.indx[level] ] = component.nu;
                 }
             }
-
-
 
 
             //__________________________________________________________________

@@ -106,7 +106,7 @@ namespace Yttrium
 
         
 
-        int Components:: charge() const noexcept
+        int Components:: chargeBalance() const noexcept
         {
             return prod.charge() - reac.charge();
         }
