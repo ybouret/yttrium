@@ -32,7 +32,10 @@ Y_UTEST(graphviz)
     Vizible::Render("viz.png", "viz.dot", true);
 
     std::cerr << "#ColorScheme: " << ColorScheme::Count << std::endl;
-
+    for(size_t i=0;i<ColorScheme::Count;++i)
+    {
+        std::cerr << ColorScheme::Table[i].name << " #" << ColorScheme::Table[i].size << std::endl;
+    }
 
 }
 Y_UDONE()

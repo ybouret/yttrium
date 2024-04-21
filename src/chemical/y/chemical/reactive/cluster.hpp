@@ -50,11 +50,7 @@ namespace Yttrium
 
             const Cluster & operator*() const noexcept { return *this; }
 
-            friend std::ostream & operator<<(std::ostream &os, const Cluster &cl)
-            {
-                const EList &el = cl;
-                return os << el;
-            }
+            friend std::ostream & operator<<(std::ostream &os, const Cluster &cl);
 
 
             bool sharesSpeciesWith(const Equilibrium &) const noexcept; //!< check if species are shared

@@ -31,6 +31,7 @@ namespace Yttrium
             typedef ArkPtr<String,Equilibrium>        Handle;        //!< alias
             typedef SuffixSet<String,Handle>          Set;           //!< alias
             typedef Component::Set::ConstIterator     ConstIterator; //!< alias
+            static const char * const Colors;
 
             //__________________________________________________________________
             //
@@ -54,6 +55,9 @@ namespace Yttrium
                 return os;
             }
 
+            void viz(OutputStream &fp) const;
+            void vizLink(OutputStream &fp) const;
+
             //! cleanup
             virtual ~Equilibrium() noexcept;
 
@@ -69,7 +73,8 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);
             virtual XReal getK(Real t) = 0;
-
+            void    vizColor(OutputStream &fp) const;
+            
         };
 
         typedef Small::BareLightList<const Equilibrium> EList;    //!< alias

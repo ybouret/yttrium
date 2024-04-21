@@ -36,7 +36,24 @@ Y_UTEST(rosary)
     std::cerr << lib << std::endl;
     std::cerr << eqs << std::endl;
 
+    {
+        OutputFile fp("eqs.dot");
+        GraphViz::Vizible::Enter(fp, "G");
 
+        for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
+        {
+            (*it)->viz(fp);
+        }
+
+        for(Equilibria::ConstIterator it=eqs->begin();it!=eqs->end();++it)
+        {
+            (*it)->viz(fp);
+            (*it)->vizLink(fp);
+        }
+
+        GraphViz::Vizible::Leave(fp);
+    }
+    GraphViz::Vizible::Render("eqs.png", "eqs.dot");
 
 
     bool verbose = true;

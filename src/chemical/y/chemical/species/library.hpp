@@ -30,7 +30,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const char * const CallSign; //!< "Chemical::Library"
-
+            typedef Species::Set::ConstIterator ConstIterator;
+            
             //__________________________________________________________________
             //
             //

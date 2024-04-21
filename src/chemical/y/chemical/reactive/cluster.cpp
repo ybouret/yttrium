@@ -53,6 +53,16 @@ namespace Yttrium
             }
         }
 
+
+        std::ostream & operator<<(std::ostream &os, const Cluster &cl)
+        {
+            for(const ENode *node=cl.head;node;node=node->next)
+            {
+                cl.eqfmt.display(os << "  ", **node) << std::endl;
+            }
+            return os;
+        }
+
     }
 
 }

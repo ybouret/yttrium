@@ -128,8 +128,8 @@ namespace Yttrium
             {
                 const ColorScheme *s = ColorScheme::Get(scheme.c_str()); assert(0!=s); assert(scheme==s->name);
                 const size_t       n = s->size; assert(n>0);
-                indx = indx%n;
-                if(indx<=0) indx=n;
+                while(indx>n)  indx -= n;
+                while(indx<=0) indx += n;
                 fp << '/' << scheme << '/';
             }
             fp("%lu", (unsigned long)indx);
