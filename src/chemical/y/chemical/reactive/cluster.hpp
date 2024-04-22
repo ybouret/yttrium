@@ -65,15 +65,15 @@ namespace Yttrium
             void getK(const Real t);
 
         private:
-            Constants           sharedK; //!< TopLevel constants
+            Constants                   sharedK; //!< TopLevel constants
         public:
-            const SList              species; //!< SubLevel, primary species
-            const Matrix<int>        Nu;      //!< SubLevel topology
-            const Matrix<unsigned>   Qm;      //!< SubLevel conservation in Nu ortho-space
-            const SpSubSet           spset;   //!< table of species
-            const EqSubSet           eqset;   //!< table of equilibria
-            const EqFormatter        eqfmt;   //!< helper to display
-            const Entities           spfmt;   //!< helper to display
+            const SList                 species; //!< SubLevel, primary species
+            const Matrix<int>           Nu;      //!< SubLevel topology
+            const Matrix<unsigned>      Qm;      //!< SubLevel conservation in Nu ortho-space
+            const SpSubSet              spset;   //!< table of species
+            const EqSubSet              eqset;   //!< table of equilibria
+            const EqFormatter           eqfmt;   //!< helper to display
+            const Entities              spfmt;   //!< helper to display
             const Conservation::Laws    claws;   //!< all conservation laws
             const Conservation::Groups  clogs;   //!< conservation law operating groups
             const Blend                 blend;   //!< order 1...blend.size() equilibria

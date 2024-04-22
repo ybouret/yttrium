@@ -17,6 +17,7 @@ namespace Yttrium
         eqfmt(),
         spfmt(),
         claws(),
+        clogs(),
         blend(),
         next(0),
         prev(0)
