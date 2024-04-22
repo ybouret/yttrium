@@ -2,6 +2,7 @@
 
 #include "y/woven/survey/natural.hpp"
 #include "y/sort/merge.hpp"
+#include "y/type/utils.hpp"
 
 namespace Yttrium
 {
@@ -16,6 +17,7 @@ namespace Yttrium
         Object(),
         NaturalArrayType(qvec.size()),
         norm1(qvec.norm1),
+        order(qvec.ncoeff),
         next(0),
         prev(0)
         {
@@ -92,7 +94,15 @@ namespace Yttrium
             MergeSort::Call(*this,CompareNaturalArrays);
         }
 
-
+        size_t NaturalSurvey:: maxOrder() const noexcept
+        {
+            size_t res = 0;
+            for(const NaturalArray *arr=head;arr;arr=arr->next)
+            {
+                res = Max(res,arr->order);
+            }
+            return res;
+        }
     }
 
 }

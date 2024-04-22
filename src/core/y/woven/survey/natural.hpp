@@ -57,6 +57,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             const apn     norm1; //!< |this|_1 > 0
+            const size_t  order; //!< number of coefficient
             NaturalArray *next;  //!< for list
             NaturalArray *prev;  //!< for list
         private:
@@ -91,9 +92,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! sort by norm1 the lexicographic
-            void sort() noexcept;
-
+            void           sort()           noexcept; //!< sort by norm1 then lexicographic
+            virtual size_t maxOrder() const noexcept; //!< maximum order
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(NaturalSurvey);

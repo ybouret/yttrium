@@ -30,7 +30,7 @@ namespace Yttrium
         class Cluster : public Quantized, public EList
         {
         public:
-            typedef Vector<EList,Memory::Dyadic> Blend;
+            typedef Vector<EList,Memory::Dyadic> Blend; //!< alias to hold blends of equilibria per order
 
             //__________________________________________________________________
             //
@@ -77,7 +77,7 @@ namespace Yttrium
             const EqSubSet      eqset;   //!< table of equilibria
             const EqFormatter   eqfmt;   //!< helper to display
             const Entities      spfmt;   //!< helper to display
-            const Blend         blend;   //!< 
+            const Blend         blend;   //!< order 1...blend.size() equilibria
             Cluster            *next;    //!< for list
             Cluster            *prev;    //!< for list
 

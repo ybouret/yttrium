@@ -119,6 +119,20 @@ namespace Yttrium
 
             //------------------------------------------------------------------
             //
+            // Registering first order into blend[1]
+            //
+            //------------------------------------------------------------------
+            {
+                EList & el = Coerce(blend[1]);
+                for(Equilibria::ConstIterator it=eqs->begin();it!=eqs->end();++it)
+                {
+                    el << **it;
+                }
+            }
+
+
+            //------------------------------------------------------------------
+            //
             // convert to stoichiometry
             //
             //------------------------------------------------------------------
@@ -220,6 +234,12 @@ namespace Yttrium
                 const String         eqName = buildMixedName(weight);
                 Equilibrium         &eq     = eqs.insert( new MixedEquilibrium(eqName,eqs.topLevel(),weight,eqset,sharedK) );
 
+
+                //--------------------------------------------------------------
+                // register in blend
+                //--------------------------------------------------------------
+                Coerce(blend[mx->order]) << eq;
+
                 //--------------------------------------------------------------
                 // fill it with species
                 //--------------------------------------------------------------
@@ -246,8 +266,16 @@ namespace Yttrium
 
                 Y_XMLOG(xml," (+) " << mx->stoich << " --> " << eq.rstr << eq.LeftRightArrow << eq.pstr);
 
-
             }
+
+            if( xml.verbose )
+            {
+                for(size_t i=2;i<=blend.size();++i)
+                {
+                    Y_XMLOG(xml, "#blend[" << std::setw(3) << i << "] = " << blend[i].size);
+                }
+            }
+
 
 
         }
