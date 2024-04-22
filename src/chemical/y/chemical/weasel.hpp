@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_Chemical_Rosary_Included
-#define Y_Chemical_Rosary_Included 1
+#ifndef Y_Chemical_Weasel_Included
+#define Y_Chemical_Weasel_Included 1
 
 #include "y/chemical/species/library.hpp"
 #include "y/chemical/reactive/equilibria/lua.hpp"
@@ -23,7 +23,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Rosary : public Singleton<Rosary>
+        class Weasel : public Singleton<Weasel>
         {
         public:
             //__________________________________________________________________
@@ -32,7 +32,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            static const char * const      CallSign;       //!< ChemicalRosary
+            static const char * const      CallSign;       //!< ChemicalWeasel
             static const AtExit::Longevity LifeTime = 0;   //!< LifeTime
             class Compiler;                                // internal compiler
 
@@ -50,11 +50,11 @@ namespace Yttrium
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Rosary);
-            friend class Singleton<Rosary>;
+            Y_DISABLE_COPY_AND_ASSIGN(Weasel);
+            friend class Singleton<Weasel>;
 
-            explicit Rosary();
-            virtual ~Rosary() noexcept;
+            explicit Weasel();
+            virtual ~Weasel() noexcept;
         };
 
 

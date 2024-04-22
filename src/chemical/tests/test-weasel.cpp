@@ -1,5 +1,5 @@
 
-#include "y/chemical/rosary.hpp"
+#include "y/chemical/weasel.hpp"
 #include "y/chemical/reactive/clusters.hpp"
 #include "y/utest/run.hpp"
 
@@ -21,16 +21,16 @@ namespace Yttrium
     }
 }
 
-Y_UTEST(rosary)
+Y_UTEST(weasel)
 {
-    Rosary & rosary = Rosary::Instance();
+    Weasel &      weasel = Weasel::Instance();
     Library       lib;
     LuaEquilibria eqs;
-    std::cerr << rosary.callSign() << std::endl;
+    std::cerr << weasel.callSign() << std::endl;
 
     for(int i=1;i<argc;++i)
     {
-        rosary( Jive::Module::OpenData("data",argv[i]), lib, eqs);
+        weasel( Jive::Module::OpenData("data",argv[i]), lib, eqs);
     }
 
     std::cerr << lib << std::endl;
@@ -53,15 +53,13 @@ Y_UTEST(rosary)
 
         GraphViz::Vizible::Leave(fp);
     }
-    GraphViz::Vizible::Render("eqs.png", "eqs.dot", true);
+    GraphViz::Vizible::Render("eqs.png", "eqs.dot");
 
 
     bool verbose = true;
     XMLog xml(verbose);
     Chemical::Constants K;
     Chemical::Clusters  cls(eqs,K,xml);
-    //K->adjust(eqs->size(),1);
-    //std::cerr << cls << std::endl;
     (void) cls.K(0);
     std::cerr << eqs << std::endl;
 

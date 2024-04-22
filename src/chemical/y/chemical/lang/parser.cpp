@@ -14,7 +14,9 @@ namespace Yttrium
         {
             Agg       &CHEMICAL   = agg("CHEMICAL"); // top-level
 
+            //------------------------------------------------------------------
             // will parse SPECIES
+            //------------------------------------------------------------------
             const Rule &PLUS    = term('+');
             const Rule &MINUS   = term('-');
             const Rule &UUID    = term("UUID","[:alpha:][:word:]*");
@@ -22,7 +24,9 @@ namespace Yttrium
             const Rule &ZNEG    = (agg("ZNEG") << oom(MINUS));
             const Rule &SPECIES = (agg("SPECIES") << mark('[') << UUID << opt( pick(ZPOS,ZNEG) ) << mark(']'));
 
+            //------------------------------------------------------------------
             // will parse EQ
+            //------------------------------------------------------------------
             const Rule &COEF        = term("COEF","[:digit:]+");
             const Rule &OPT_COEF    = opt(COEF);
             const Rule &ACTOR       = (agg("ACTOR") << OPT_COEF << SPECIES);
@@ -37,9 +41,14 @@ namespace Yttrium
             const Rule &SEP         = mark(':');
             const Rule &EQ          = (agg("EQ") << UUID << SEP << REAC << mark("<=>")  << PROD << SEP << CONSTANT) ;
 
+            //------------------------------------------------------------------
             // will parse RXP
+            //------------------------------------------------------------------
             const Rule &RXP         = term("RXP","@[^[:space:]]+");
 
+            //------------------------------------------------------------------
+            // any number of any of species,equilibrium,regular expression
+            //------------------------------------------------------------------
             CHEMICAL += zom(pick(SPECIES,EQ,RXP));
 
 

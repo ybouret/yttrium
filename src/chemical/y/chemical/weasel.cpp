@@ -1,5 +1,5 @@
 
-#include "y/chemical/rosary.hpp"
+#include "y/chemical/weasel.hpp"
 #include "y/chemical/lang/parser.hpp"
 #include "y/chemical/lang/linker.hpp"
 #include "y/jive/pattern/matcher.hpp"
@@ -20,14 +20,14 @@ namespace Yttrium
         static const size_t dbCount = sizeof(dbEntry)/sizeof(dbEntry[0]);
 
 
-        const char * const Rosary::CallSign = "ChemicalRosary";
+        const char * const Weasel::CallSign = "ChemicalWeasel";
 
-        class Rosary::Compiler
+        class Weasel::Compiler
         {
         public:
             explicit Compiler() :
-            parser(Rosary::CallSign),
-            linker(Rosary::CallSign)
+            parser(Weasel::CallSign),
+            linker(Weasel::CallSign)
             {
             }
 
@@ -41,13 +41,21 @@ namespace Yttrium
             {
                 Vector<String>               rxp;
 
+                //--------------------------------------------------------------
+                //
                 // first pass: build species/equilibria and gather rxp
+                //
+                //--------------------------------------------------------------
                 {
                     AutoPtr<Jive::Syntax::XNode> tree = parser(m); assert(tree.isValid());
                     linker(*tree,lib,eqs,&rxp);
                 }
 
+                //--------------------------------------------------------------
+                //
                 // second pass: find rxp in db
+                //
+                //--------------------------------------------------------------
                 const size_t nxp = rxp.size();
                 for(size_t i=1;i<=nxp;++i)
                 {
@@ -60,7 +68,7 @@ namespace Yttrium
                         // find entry
                         const char * const entry = dbEntry[i];
                         const char * const sep   = strchr(entry, Equilibrium::Separator);
-                        if(!sep) throw Specific::Exception(Rosary::CallSign,"corrupted internal database");
+                        if(!sep) throw Specific::Exception(Weasel::CallSign,"corrupted internal database");
 
                         // find label
                         String label(entry,sep-entry);
@@ -75,10 +83,14 @@ namespace Yttrium
                             ++count;
                         }
                     }
-                    if(count<=0) throw Specific::Exception(Rosary::CallSign,"no database entry matching '%s'", rx.c_str());
+                    if(count<=0) throw Specific::Exception(Weasel::CallSign,"no database entry matching '%s'", rx.c_str());
                 }
 
-                // third pass: finalize
+                //--------------------------------------------------------------
+                //
+                // third pass: finalize input
+                //
+                //--------------------------------------------------------------
                 eqs.finalize();
             }
 
@@ -90,38 +102,38 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Compiler);
         };
 
-        static void *            RosaryCompiler_[ Y_WORDS_FOR(Rosary::Compiler) ];
-        static Rosary::Compiler *RosaryCompiler = 0;
+        static void *            TheCompiler_[ Y_WORDS_FOR(Weasel::Compiler) ];
+        static Weasel::Compiler *TheCompiler = 0;
 
 
-        Rosary:: Rosary()
+        Weasel:: Weasel()
         {
-            assert(0==RosaryCompiler);
+            assert(0==TheCompiler);
             try {
 
-                RosaryCompiler = new ( Y_STATIC_ZARR(RosaryCompiler_) ) Rosary::Compiler();
+                TheCompiler = new ( Y_STATIC_ZARR(TheCompiler_) ) Weasel::Compiler();
             }
             catch(...)
             {
-                RosaryCompiler = 0;
+                TheCompiler = 0;
                 throw;
             }
         }
 
-        Rosary:: ~Rosary() noexcept
+        Weasel:: ~Weasel() noexcept
         {
-            assert(0!=RosaryCompiler);
-            (void)Memory::OutOfReach::Naught(RosaryCompiler);
-            RosaryCompiler = 0;
+            assert(0!=TheCompiler);
+            (void)Memory::OutOfReach::Naught(TheCompiler);
+            TheCompiler = 0;
         }
 
 
-        void Rosary:: operator()(Jive::Module  *m,
+        void Weasel:: operator()(Jive::Module  *m,
                                  Library       &lib,
                                  LuaEquilibria &eqs)
         {
-            assert(0!=RosaryCompiler);
-            RosaryCompiler->process(m,lib,eqs);
+            assert(0!=TheCompiler);
+            TheCompiler->process(m,lib,eqs);
         }
     }
 

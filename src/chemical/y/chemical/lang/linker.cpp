@@ -231,7 +231,7 @@ namespace Yttrium
         void Linker:: onRXP(const Jive::Token &token)
         {
             const String rx = token.toString(1,0);
-            std::cerr << "RXP='" << rx << "'" << std::endl;
+            //std::cerr << "RXP='" << rx << "'" << std::endl;
             if(hRxp) 
                 hRxp->pushTail(rx);
             else

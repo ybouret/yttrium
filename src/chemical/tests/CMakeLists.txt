@@ -3,8 +3,8 @@ Y_CreateTest(chemical)
 Y_LinkLibraries(test-chemical y-chemical y-mkl y-jive y-lua++ y-lua)
 
 enable_testing()
-add_test(species test-chemical species)
+add_test(species    test-chemical species)
 add_test(components test-chemical components)
 add_test(eqs        test-chemical eqs)
-add_test(rosary  test-chemical rosary)
+add_test(weasel     test-chemical weasel)
 
