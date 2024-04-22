@@ -99,7 +99,7 @@ namespace Yttrium
 
             //------------------------------------------------------------------
             //
-            // create tables
+            // create SubLevel Tables
             //
             //------------------------------------------------------------------
             for(const SNode *sn=species.head;sn;sn=sn->next)
