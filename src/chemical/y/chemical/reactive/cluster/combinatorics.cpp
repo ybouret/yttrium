@@ -124,10 +124,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             {
                 EList & el = Coerce(blend[1]);
-                for(Equilibria::ConstIterator it=eqs->begin();it!=eqs->end();++it)
-                {
-                    el << **it;
-                }
+                for(const ENode *en=head;en;en=en->next) el << **en;
             }
 
 

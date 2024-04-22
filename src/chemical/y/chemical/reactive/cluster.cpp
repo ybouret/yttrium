@@ -90,18 +90,13 @@ namespace Yttrium
 
             if(1==order)
             {
-                size_t indx=0;
                 for(const Conservation::Law *law=claws->head;law;law=law->next)
                 {
-                    law->viz(fp,++indx);
+                    law->viz(fp);
                 }
             }
 
             fp << "}\n";
-
-
-
-
         }
 
 

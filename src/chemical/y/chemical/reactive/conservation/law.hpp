@@ -20,7 +20,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Law :  public Proxy<const Actors>, public GraphViz::Vizible
+            class Law :  public Entity, public Proxy<const Actors>
             {
             public:
                 //______________________________________________________________
@@ -38,7 +38,10 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                explicit Law(const Readable<unsigned> &, const SpSubSet &);    //!< setup from SubLevel info
+                explicit Law(const String             &label,
+                             const size_t              iboth,
+                             const Readable<unsigned> &coeff,
+                             const SpSubSet           &spset);    //!< setup from SubLevel info
                 virtual ~Law() noexcept;                                       //!< cleanup
                 friend std::ostream & operator<<(std::ostream &, const Law &); //!< display
 
@@ -52,7 +55,7 @@ namespace Yttrium
 
                 bool sharesSpeciesWith(const Law &law) const noexcept;
 
-                void viz(OutputStream &fp, const size_t indx) const;
+                void viz(OutputStream &fp) const;
 
 
                 //______________________________________________________________

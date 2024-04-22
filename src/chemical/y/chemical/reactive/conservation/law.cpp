@@ -7,8 +7,11 @@ namespace Yttrium
     {
         namespace Conservation
         {
-            Law:: Law(const Readable<unsigned> &coeff,
+            Law:: Law(const String             &label,
+                      const size_t              iboth,
+                      const Readable<unsigned> &coeff,
                       const SpSubSet           &table) :
+            Entity(label,iboth),
             Proxy<const Actors>(),
             next(0),
             prev(0),
@@ -56,18 +59,34 @@ namespace Yttrium
 
             const char * const Law::Colors = "dark28";
 
-            void Law:: viz(OutputStream &fp, const size_t indx) const
+            void Law:: viz(OutputStream &fp) const
             {
                 assert(cast.size>=2);
-                const String c = Color(Colors,indx);
+                const String c = Color(Colors,indx[SubLevel]);
 
+                Node(fp,this) << '[';
+                Label(fp,name);
+                fp << ",color=" << c << ",fontcolor=" << c << ",shape=circle";
+                Endl(fp << ']');
+                for(const Actor *a=cast.head;a;a=a->next)
+                {
+                    Arrow(fp,this,&(a->sp)) << '[';
+                    fp << "color=" << c << ",fontcolor=" << c << ",arrowhead=dot";
+                    if(a->nu>1) {
+                        fp(",label=\"%u\"",a->nu);
+                    }
+                    Endl(fp << ']');
+                }
+
+#if 0
                 for(const Actor *curr=cast.head,*next=curr->next;next;curr=next,next=next->next)
                 {
+
                     Arrow(fp,&(curr->sp),&(next->sp)) << '[';
                     fp << "dir=both,arrowhead=dot,arrowtail=dot,color=" << c;
                     Endl(fp << ']');
                 }
-
+#endif
 
             }
 

@@ -20,15 +20,17 @@ namespace Yttrium
             {
                 cll.release();
                 for(size_t i=1;i<=Qm.rows;++i)
-                    cll.pushTail( new Law(Qm[i],table) );
+                {
+                    const String label = Formatted::Get("#%lu", static_cast<unsigned long>(i));
+                    cll.pushTail( new Law(label,i,Qm[i],table) );
+                }
             }
 
             void Laws:: viz(OutputStream &fp) const
             {
-                size_t indx=0;
                 for(const Law *law=cll.head;law;law=law->next)
                 {
-                    law->viz(fp,++indx);
+                    law->viz(fp);
                 }
             }
 
