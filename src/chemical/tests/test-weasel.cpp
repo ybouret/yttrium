@@ -78,7 +78,7 @@ Y_UTEST(weasel)
         }
         GraphViz::Vizible::Leave(fp);
     }
-    GraphViz::Vizible::Render("system.png", "system.dot");
+    GraphViz::Vizible::Render("system.png", "system.dot", true);
 
 
     Y_SIZEOF(Chemical::Cluster);
