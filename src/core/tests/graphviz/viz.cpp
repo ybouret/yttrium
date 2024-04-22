@@ -18,7 +18,8 @@ Y_UTEST(graphviz)
         Vizible::Node(fp,&A); //A.node(fp);
         fp << "[";
         Vizible::Label(fp, "A");
-        Vizible::Color(fp << ", color=", "accent5", 4);
+        fp << ", color=" << Vizible::Color("accent5",4);
+        //Vizible::Color(fp << ", color=", "accent5", 4);
         fp << "]";
         Vizible::Endl(fp);
 

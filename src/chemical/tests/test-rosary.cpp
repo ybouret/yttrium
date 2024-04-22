@@ -47,13 +47,13 @@ Y_UTEST(rosary)
 
         for(Equilibria::ConstIterator it=eqs->begin();it!=eqs->end();++it)
         {
-            (*it)->viz(fp);
-            (*it)->vizLink(fp);
+            (*it)->viz(fp,SubLevel);
+            (*it)->vizLink(fp,SubLevel);
         }
 
         GraphViz::Vizible::Leave(fp);
     }
-    GraphViz::Vizible::Render("eqs.png", "eqs.dot");
+    GraphViz::Vizible::Render("eqs.png", "eqs.dot", true);
 
 
     bool verbose = true;

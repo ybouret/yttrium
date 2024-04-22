@@ -21,25 +21,27 @@ namespace Yttrium
 
         const char * const Equilibrium::Colors = "set19";
 
-
-        void    Equilibrium:: vizColor(OutputStream &fp) const
+        const String Equilibrium:: vizColor(const Level level) const
         {
-            Color(fp << "color=",     Colors, indx[SubLevel]);
-            Color(fp << ",fontcolor=", Colors, indx[SubLevel]);
+            const String descr = Color(Colors,indx[level]);
+            return "color="+descr+",fontcolor="+descr;
         }
 
-        void Equilibrium:: viz(OutputStream &fp) const
+
+
+        void Equilibrium:: viz(OutputStream &fp, const Level level) const
         {
             Node(fp,this) << '[';
             Label(fp,name) << ",shape=box,";
-            vizColor(fp);
+            fp << vizColor(level);
             Endl(fp<<']');
         }
 
 
 
-        void Equilibrium:: vizLink(OutputStream &fp) const
+        void Equilibrium:: vizLink(OutputStream &fp, const Level level) const
         {
+            const String c = vizColor(level);
             for(const Actor *a=reac.head;a;a=a->next)
             {
                 Arrow(fp,&(a->sp),this) << '[';
@@ -47,7 +49,7 @@ namespace Yttrium
                 {
                     fp("label=\"%u\",",unsigned(a->nu));
                 }
-                vizColor(fp);
+                fp << c;
                 Endl(fp << ']');
             }
 
@@ -57,8 +59,8 @@ namespace Yttrium
                 if(a->nu>1)
                 {
                     fp("label=\"%u\",",unsigned(a->nu));
-                    vizColor(fp);
                 }
+                fp << c;
                 Endl(fp << ']');
             }
 

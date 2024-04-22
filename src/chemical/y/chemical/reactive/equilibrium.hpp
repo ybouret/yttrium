@@ -55,8 +55,9 @@ namespace Yttrium
                 return os;
             }
 
-            void viz(OutputStream &fp) const;
-            void vizLink(OutputStream &fp) const;
+            void         viz(OutputStream &, const Level) const;
+            void         vizLink(OutputStream &, const Level) const;
+            const String vizColor(const Level level) const;
 
             //! cleanup
             virtual ~Equilibrium() noexcept;
@@ -73,8 +74,6 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);
             virtual XReal getK(Real t) = 0;
-            void    vizColor(OutputStream &fp) const;
-            
         };
 
         typedef Small::BareLightList<const Equilibrium> EList;    //!< alias

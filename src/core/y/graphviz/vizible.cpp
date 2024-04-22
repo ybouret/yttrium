@@ -120,9 +120,10 @@ namespace Yttrium
 {
     namespace GraphViz
     {
-        OutputStream &Vizible:: Color(OutputStream &fp, const String &scheme, size_t indx)
+
+        String Vizible:: Color(const String &scheme, size_t indx)
         {
-            fp << '"';
+            String res = '"';
             const size_t len = scheme.size();
             if(len>0)
             {
@@ -130,19 +131,17 @@ namespace Yttrium
                 const size_t       n = s->size; assert(n>0);
                 while(indx>n)  indx -= n;
                 while(indx<=0) indx += n;
-                fp << '/' << scheme << '/';
+                res << '/' << scheme << '/';
             }
-            fp("%lu", (unsigned long)indx);
-
-            fp << '"';
-            return fp;
-            
+            res += Formatted::Get("%lu", static_cast<unsigned long>(indx) );
+            res += '"';
+            return res;
         }
 
-        OutputStream &Vizible:: Color(OutputStream &fp, const char *scheme, size_t indx)
+        String Vizible:: Color(const char *scheme, size_t indx)
         {
             const String _(scheme);
-            return Color(fp,_,indx);
+            return Color(_,indx);
         }
 
     }
