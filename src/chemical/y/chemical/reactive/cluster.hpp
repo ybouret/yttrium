@@ -5,12 +5,9 @@
 
 #include "y/chemical/reactive/equilibria.hpp"
 #include "y/chemical/type/constants.hpp"
-
+#include "y/chemical/reactive/conservation/laws.hpp"
 #include "y/stream/xmlog.hpp"
-#include "y/container/matrix.hpp"
 #include "y/quantized.hpp"
-#include "y/chemical/reactive/conservation/law.hpp"
-
 
 namespace Yttrium
 {
@@ -77,7 +74,7 @@ namespace Yttrium
             const EqSubSet         eqset;   //!< table of equilibria
             const EqFormatter      eqfmt;   //!< helper to display
             const Entities         spfmt;   //!< helper to display
-            const Conservation::Law::List claws;
+            const Conservation::Laws claws;
             const Blend            blend;   //!< order 1...blend.size() equilibria
             Cluster               *next;    //!< for list
             Cluster               *prev;    //!< for list

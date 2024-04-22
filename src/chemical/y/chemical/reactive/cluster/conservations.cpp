@@ -58,14 +58,14 @@ namespace Yttrium
             // create conservations laws
             //
             //--------------------------------------------------------------
-            const size_t nc = Qm.rows;
-            for(size_t i=1;i<=nc;++i)
+            Coerce(claws).writeDown(Qm,spset);
+            if(xml.verbose)
             {
-                Coerce(claws).pushTail( new Conservation::Law(Qm[i],spset));
-                Y_XMLOG(xml, *claws.tail );
+                for(const Conservation::Law *law=claws->head;law;law=law->next)
+                {
+                    xml() << *law << std::endl;
+                }
             }
-
-
         }
 
 
