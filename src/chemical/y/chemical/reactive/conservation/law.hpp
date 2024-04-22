@@ -66,6 +66,10 @@ namespace Yttrium
                 virtual ConstInterface & surrogate() const noexcept;
             };
 
+            //typedef Small::BareLightList<const Law> clList;
+            //typedef clList::NodeType                clNode;
+
+
         }
     }
 }
