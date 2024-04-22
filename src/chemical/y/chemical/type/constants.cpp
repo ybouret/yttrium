@@ -17,9 +17,9 @@ namespace Yttrium
 
         }
 
-        Constants:: Constants() : ArcPtr<XVector>( new XVector() ) {}
+        Constants:: Constants() : Yttrium::ArcPtr<XVector>( new XVector() ) {}
 
-        Constants:: Constants(const Constants &other) noexcept : ArcPtr<XVector>(other) {}
+        Constants:: Constants(const Constants &other) noexcept : Yttrium::ArcPtr<XVector>(other) {}
 
         Constants:: ~Constants() noexcept
         {
