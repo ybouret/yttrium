@@ -115,7 +115,6 @@ namespace Yttrium
 
 
             buildConservations(xml);
-            exit(0);
             buildCombinatorics(eqs,xml);
 
 
