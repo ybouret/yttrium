@@ -81,14 +81,14 @@ namespace Yttrium
                 Coerce(clogs).collect(claws);
                 if(xml.verbose)
                 {
+                    xml()  << " (*) #group=" << clogs->size << std::endl;
                     for(const Conservation::Group *grp=clogs->head;grp;grp=grp->next)
                     {
                         xml() << *grp << std::endl;
                     }
                 }
             }
-            exit(0);
-
+            
         }
 
 
