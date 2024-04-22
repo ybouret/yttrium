@@ -14,12 +14,34 @@ namespace Yttrium
         namespace Conservation
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! set of conservation laws for a cluster
+            //
+            //
+            //__________________________________________________________________
             class Laws : public Proxy<const Law::List>
             {
             public:
-                explicit Laws() noexcept;
-                virtual ~Laws() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Laws() noexcept; //!< setup
+                virtual ~Laws() noexcept; //!< cleanup
 
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                //! create the list of conservations
                 void writeDown(const Matrix<unsigned> &Qm,
                                const SpSubSet         &table);
 

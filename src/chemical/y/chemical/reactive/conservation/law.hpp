@@ -30,10 +30,11 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 typedef CxxListOf<Law> List; //!< alias
+         
                 //______________________________________________________________
                 //
                 //
-                // Definitions
+                // C++
                 //
                 //______________________________________________________________
                 explicit Law(const Readable<unsigned> &, const SpSubSet &);    //!< setup from SubLevel info

@@ -67,17 +67,17 @@ namespace Yttrium
         private:
             Constants           sharedK; //!< TopLevel constants
         public:
-            const SList            species; //!< SubLevel, primary species
-            const Matrix<int>      Nu;      //!< SubLevel topology
-            const Matrix<unsigned> Qm;      //!< SubLevel conservation in Nu ortho-space
-            const SpSubSet         spset;   //!< table of species
-            const EqSubSet         eqset;   //!< table of equilibria
-            const EqFormatter      eqfmt;   //!< helper to display
-            const Entities         spfmt;   //!< helper to display
-            const Conservation::Laws claws;
-            const Blend            blend;   //!< order 1...blend.size() equilibria
-            Cluster               *next;    //!< for list
-            Cluster               *prev;    //!< for list
+            const SList              species; //!< SubLevel, primary species
+            const Matrix<int>        Nu;      //!< SubLevel topology
+            const Matrix<unsigned>   Qm;      //!< SubLevel conservation in Nu ortho-space
+            const SpSubSet           spset;   //!< table of species
+            const EqSubSet           eqset;   //!< table of equilibria
+            const EqFormatter        eqfmt;   //!< helper to display
+            const Entities           spfmt;   //!< helper to display
+            const Conservation::Laws claws;   //!< all conservation laws
+            const Blend              blend;   //!< order 1...blend.size() equilibria
+            Cluster                 *next;    //!< for list
+            Cluster                 *prev;    //!< for list
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
