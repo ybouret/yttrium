@@ -49,6 +49,9 @@ namespace Yttrium
                 //______________________________________________________________
                 const String &key() const noexcept; //!< return actors' name
 
+                bool sharesSpeciesWith(const Law &law) const noexcept;
+
+
                 //______________________________________________________________
                 //
                 //

@@ -38,6 +38,15 @@ namespace Yttrium
             return res;
         }
 
+        bool Actors:: contains(const Species &sp) const noexcept
+        {
+            for(const Actor *a=head;a;a=a->next)
+            {
+                if( &(a->sp) == &sp) return true;
+            }
+            return false;
+        }
+
     }
 
 }

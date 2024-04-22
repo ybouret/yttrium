@@ -21,7 +21,13 @@ namespace Yttrium
                 typedef CxxListOf<Group> List;
                 
                 explicit Group(const Law &first);
+
                 virtual ~Group() noexcept;
+
+
+                bool accepts(const Law &)   const noexcept; //!< true is sharing at least one species
+                bool accepts(const Group &) const noexcept; //!< true is sharing at least one species
+                
 
                 Group *next;
                 Group *prev;

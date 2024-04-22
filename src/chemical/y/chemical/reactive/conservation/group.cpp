@@ -21,6 +21,28 @@ namespace Yttrium
                 (*this) << first;
             }
 
+
+            bool Group:: accepts(const Law &law) const noexcept
+            {
+                for(const clNode *cl=head;cl;cl=cl->next)
+                {
+                    const Law &mine = **cl;
+                    if(mine.sharesSpeciesWith(law)) return true;
+                }
+                return false;
+            }
+
+
+            bool Group:: accepts(const Group &group) const noexcept
+            {
+                for(const clNode *cl=head;cl;cl=cl->next)
+                {
+                    if(group.accepts(**cl)) return true;
+                }
+                return false;
+            }
+
+
         }
 
     }

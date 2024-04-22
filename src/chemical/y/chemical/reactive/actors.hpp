@@ -36,8 +36,7 @@ namespace Yttrium
             //! display using toString
             friend std::ostream & operator<<(std::ostream &os, const Actors &A);
 
-            //! sum(charge)
-            int charge() const noexcept;
+
 
             //__________________________________________________________________
             //
@@ -45,8 +44,9 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            String toString() const; //!< cat all actors' string
-
+            String toString()                       const; //!< cat all actors' string
+            int  charge()                  const noexcept; //!< sum(charge)
+            bool contains(const Species &) const noexcept; //!< look for species
 
         private:
             Y_DISABLE_ASSIGN(Actors);

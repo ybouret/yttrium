@@ -45,6 +45,16 @@ namespace Yttrium
             }
 
 
+            bool Law:: sharesSpeciesWith(const Law &law) const noexcept
+            {
+                for(const Actor *a=cast.head;a;a=a->next)
+                {
+                    if(law->contains(a->sp)) return true;
+                }
+                return false;
+            }
+
+
         }
 
     }

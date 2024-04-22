@@ -5,7 +5,7 @@
 
 #include "y/chemical/reactive/equilibria.hpp"
 #include "y/chemical/type/constants.hpp"
-#include "y/chemical/reactive/conservation/laws.hpp"
+#include "y/chemical/reactive/conservation/groups.hpp"
 #include "y/stream/xmlog.hpp"
 #include "y/quantized.hpp"
 
@@ -74,10 +74,11 @@ namespace Yttrium
             const EqSubSet           eqset;   //!< table of equilibria
             const EqFormatter        eqfmt;   //!< helper to display
             const Entities           spfmt;   //!< helper to display
-            const Conservation::Laws claws;   //!< all conservation laws
-            const Blend              blend;   //!< order 1...blend.size() equilibria
-            Cluster                 *next;    //!< for list
-            Cluster                 *prev;    //!< for list
+            const Conservation::Laws    claws;   //!< all conservation laws
+            const Conservation::Groups  clogs;   //!< conservation law operating groups
+            const Blend                 blend;   //!< order 1...blend.size() equilibria
+            Cluster                    *next;    //!< for list
+            Cluster                    *prev;    //!< for list
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);

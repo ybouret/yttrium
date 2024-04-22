@@ -5,6 +5,7 @@
 #define Y_Chemical_Conservation_Groups_Included 1
 
 #include "y/chemical/reactive/conservation/group.hpp"
+#include "y/chemical/reactive/conservation/laws.hpp"
 
 namespace Yttrium
 {
@@ -15,8 +16,10 @@ namespace Yttrium
             class Groups : public Proxy<const Group::List>
             {
             public:
-                explicit Groups();
+                explicit Groups() noexcept;
                 virtual ~Groups() noexcept;
+
+                void collect(const Laws &laws);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Groups);
