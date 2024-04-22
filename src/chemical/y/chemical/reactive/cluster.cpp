@@ -11,10 +11,12 @@ namespace Yttrium
         sharedK(topK),
         species(),
         Nu(),
+        Qm(),
         spset(),
         eqset(),
         eqfmt(),
         spfmt(),
+        claws(),
         blend(),
         next(0),
         prev(0)

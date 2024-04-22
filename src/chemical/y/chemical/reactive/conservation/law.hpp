@@ -12,19 +12,50 @@ namespace Yttrium
     {
         namespace Conservation
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! conservation law using Actors
+            //
+            //
+            //__________________________________________________________________
             class Law :  public Proxy<const Actors>
             {
             public:
-                typedef CxxListOf<Law> List;
-                explicit Law(const Readable<unsigned> &, const SpSubSet &);
-                virtual ~Law() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef CxxListOf<Law> List; //!< alias
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                explicit Law(const Readable<unsigned> &, const SpSubSet &);    //!< setup from SubLevel info
+                virtual ~Law() noexcept;                                       //!< cleanup
+                friend std::ostream & operator<<(std::ostream &, const Law &); //!< display
 
-                friend std::ostream & operator<<(std::ostream &, const Law &);
-                const String &key() const noexcept;
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                const String &key() const noexcept; //!< return actors' name
 
-                Law *next;
-                Law *prev;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                Law *next; //!< for list
+                Law *prev; //!< for list
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Law);
