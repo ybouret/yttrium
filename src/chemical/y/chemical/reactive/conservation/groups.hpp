@@ -26,6 +26,7 @@ namespace Yttrium
                 Group::List cgl;
 
                 virtual ConstInterface & surrogate() const noexcept;
+                void fusion() noexcept;
             };
 
 

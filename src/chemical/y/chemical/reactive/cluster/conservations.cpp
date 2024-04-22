@@ -17,11 +17,11 @@ namespace Yttrium
             Y_XML_SECTION(xml,"Conservations");
             const size_t m = Nu.cols; assert(m>0);
 
-            //--------------------------------------------------------------
+            //------------------------------------------------------------------
             //
             // use woven to explore Nu orthogonal space
             //
-            //--------------------------------------------------------------
+            //------------------------------------------------------------------
             {
 
                 WOVEn::NaturalSurvey survey(xml);
@@ -50,22 +50,45 @@ namespace Yttrium
                         for(size_t j=m;j>0;--j)    q[j] = a[j].cast<unsigned>("conservation");
                     }
                 }
+                Y_XMLOG(xml, "Nu=" << Nu);
                 Y_XMLOG(xml, "Qm=" << Q);
             }
 
-            //--------------------------------------------------------------
+            //------------------------------------------------------------------
             //
             // create conservations laws
             //
-            //--------------------------------------------------------------
-            Coerce(claws).writeDown(Qm,spset);
-            if(xml.verbose)
+            //------------------------------------------------------------------
             {
-                for(const Conservation::Law *law=claws->head;law;law=law->next)
+                Y_XML_SECTION(xml,"WriteDown");
+                Coerce(claws).writeDown(Qm,spset);
+                if(xml.verbose)
                 {
-                    xml() << *law << std::endl;
+                    for(const Conservation::Law *law=claws->head;law;law=law->next)
+                    {
+                        xml() << *law << std::endl;
+                    }
                 }
             }
+
+            //------------------------------------------------------------------
+            //
+            // create independent groups of dependant laws
+            //
+            //------------------------------------------------------------------
+            {
+                Y_XML_SECTION(xml,"Collect");
+                Coerce(clogs).collect(claws);
+                if(xml.verbose)
+                {
+                    for(const Conservation::Group *grp=clogs->head;grp;grp=grp->next)
+                    {
+                        xml() << *grp << std::endl;
+                    }
+                }
+            }
+            exit(0);
+
         }
 
 
