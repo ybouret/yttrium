@@ -78,11 +78,11 @@ namespace Yttrium
             //------------------------------------------------------------------
             {
                 Y_XML_SECTION(xml,"Collect");
-                Coerce(clogs).collect(claws);
+                Coerce(cgrps).collect(claws);
                 if(xml.verbose)
                 {
-                    xml()  << " (*) #group=" << clogs->size << std::endl;
-                    for(const Conservation::Group *grp=clogs->head;grp;grp=grp->next)
+                    xml()  << " (*) #group=" << cgrps->size << std::endl;
+                    for(const Conservation::Group *grp=cgrps->head;grp;grp=grp->next)
                     {
                         xml() << *grp << std::endl;
                     }

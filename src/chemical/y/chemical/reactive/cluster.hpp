@@ -58,11 +58,22 @@ namespace Yttrium
             bool sharesSpeciesWith(const Equilibrium &) const noexcept; //!< check if species are shared
             bool sharesSpeciesWith(const Cluster     &) const noexcept; //!< check if species are shared
 
-            //! one filled, compile all subsequent data
+            //! once filled, compile all subsequent data
+            /**
+             - sort equilibria and assign their sub-level
+             - format helpers
+             - collect species and assign their sub-level
+             - create and check topology Nu
+             - create species and equilibria table
+             - buildConservations()
+             - buildCombinatorics()
+             */
             void compile(Equilibria &eqs, XMLog &xml);
 
             //! get all K, in order to validate mixed-equilibria
             void getK(const Real t);
+
+            void viz(OutputStream &fp, const size_t order, const size_t clusterIndex) const;
 
         private:
             Constants                   sharedK; //!< TopLevel constants
@@ -70,15 +81,17 @@ namespace Yttrium
             const SList                 species; //!< SubLevel, primary species
             const Matrix<int>           Nu;      //!< SubLevel topology
             const Matrix<unsigned>      Qm;      //!< SubLevel conservation in Nu ortho-space
-            const SpSubSet              spset;   //!< table of species
-            const EqSubSet              eqset;   //!< table of equilibria
+            const SpSubSet              spset;   //!< table of SubLevel species
+            const EqSubSet              eqset;   //!< table of SubLevel equilibria
             const EqFormatter           eqfmt;   //!< helper to display
             const Entities              spfmt;   //!< helper to display
             const Conservation::Laws    claws;   //!< all conservation laws
-            const Conservation::Groups  clogs;   //!< conservation law operating groups
-            const Blend                 blend;   //!< order 1...blend.size() equilibria
-            Cluster                    *next;    //!< for list
-            Cluster                    *prev;    //!< for list
+            const Conservation::Groups  cgrps;     //!< conservation law operating groups
+            const AddressBook           unbounded; //!< unbounded species
+            const AddressBook           conserved; //!< conserved species
+            const Blend                 blend;     //!< order 1...blend.size() equilibria
+            Cluster                    *next;      //!< for list
+            Cluster                    *prev;      //!< for list
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);

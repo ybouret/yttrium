@@ -54,6 +54,22 @@ namespace Yttrium
                 return false;
             }
 
+            const char * const Law::Colors = "dark28";
+
+            void Law:: viz(OutputStream &fp, const size_t indx) const
+            {
+                assert(cast.size>=2);
+                const String c = Color(Colors,indx);
+
+                for(const Actor *curr=cast.head,*next=curr->next;next;curr=next,next=next->next)
+                {
+                    Arrow(fp,&(curr->sp),&(next->sp)) << '[';
+                    fp << c;
+                    Endl(fp << ']');
+                }
+
+
+            }
 
         }
 

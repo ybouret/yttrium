@@ -23,6 +23,15 @@ namespace Yttrium
                     cll.pushTail( new Law(Qm[i],table) );
             }
 
+            void Laws:: viz(OutputStream &fp) const
+            {
+                size_t indx=0;
+                for(const Law *law=cll.head;law;law=law->next)
+                {
+                    law->viz(fp,++indx);
+                }
+            }
+
         }
 
     }

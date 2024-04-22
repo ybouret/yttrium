@@ -20,7 +20,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Law :  public Proxy<const Actors>
+            class Law :  public Proxy<const Actors>, public GraphViz::Vizible
             {
             public:
                 //______________________________________________________________
@@ -29,8 +29,9 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef CxxListOf<Law> List; //!< alias
-         
+                typedef CxxListOf<Law>    List; //!< alias
+                static const char * const Colors; //!< default color Scheme
+
                 //______________________________________________________________
                 //
                 //
@@ -50,6 +51,8 @@ namespace Yttrium
                 const String &key() const noexcept; //!< return actors' name
 
                 bool sharesSpeciesWith(const Law &law) const noexcept;
+
+                void viz(OutputStream &fp, const size_t indx) const;
 
 
                 //______________________________________________________________

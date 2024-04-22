@@ -68,6 +68,18 @@ Y_UTEST(weasel)
         std::cerr << *cl << std::endl;
     }
 
+    {
+        OutputFile fp("system.dot");
+        GraphViz::Vizible::Enter(fp,"G");
+        size_t indx = 0;
+        for(const Chemical::Cluster *cl=cls.head;cl;cl=cl->next)
+        {
+            cl->viz(fp,1,indx++);
+        }
+        GraphViz::Vizible::Leave(fp);
+    }
+    GraphViz::Vizible::Render("system.png", "system.dot");
+
 
     Y_SIZEOF(Chemical::Cluster);
     Y_SIZEOF(Chemical::Clusters);

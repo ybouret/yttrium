@@ -17,7 +17,7 @@ namespace Yttrium
         eqfmt(),
         spfmt(),
         claws(),
-        clogs(),
+        cgrps(),
         blend(),
         next(0),
         prev(0)
@@ -68,6 +68,41 @@ namespace Yttrium
             os << "  (*) " << cl.species << std::endl;
             return os << "<Cluster/>";
         }
+
+
+        void Cluster:: viz(OutputStream &fp, const size_t order, const size_t clusterIndex) const
+        {
+            assert(order>0);
+            assert(order<=blend.size());
+            const EList &eqs = blend[order];
+            fp("subgraph cluster_%lu {\n", static_cast<unsigned long>(clusterIndex));
+            for(const SNode *sn = species.head;sn;sn=sn->next)
+            {
+                (**sn).viz(fp);
+            }
+
+            for(const ENode *en = eqs.head;en;en=en->next)
+            {
+                const Equilibrium &eq = **en;
+                eq.viz(fp,SubLevel);
+                eq.vizLink(fp,SubLevel);
+            }
+
+            if(1==order)
+            {
+                for(const Conservation::Law *law=claws->head;law;law=law->next)
+                {
+                    
+                }
+            }
+
+            fp << "}\n";
+
+
+
+
+        }
+
 
     }
 

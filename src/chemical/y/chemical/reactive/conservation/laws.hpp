@@ -45,6 +45,8 @@ namespace Yttrium
                 void writeDown(const Matrix<unsigned> &Qm,
                                const SpSubSet         &table);
 
+                void viz(OutputStream &fp) const;
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Laws);
                 Law::List cll;
