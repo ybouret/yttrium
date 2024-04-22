@@ -88,10 +88,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! sort by norm1 then lexicographic
-            void sort() noexcept;
+            void           sort()           noexcept; //!< sort by norm1 then lexicographic
+            virtual size_t maxOrder() const noexcept; //!< maximum order
 
-            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(IntegerSurvey);
             virtual void verify(const QVector &);

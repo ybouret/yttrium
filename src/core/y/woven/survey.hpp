@@ -30,8 +30,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! verify that vector is expected
-            virtual void verify(const QVector &) = 0;
+
+            virtual void   verify(const QVector &)   = 0; //!< verify that vector is expected
+            virtual size_t maxOrder() const noexcept = 0; //!< get maximum order
 
             //__________________________________________________________________
             //

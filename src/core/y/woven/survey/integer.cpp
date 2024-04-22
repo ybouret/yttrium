@@ -1,6 +1,7 @@
 
 #include "y/woven/survey/integer.hpp"
 #include "y/sort/merge.hpp"
+#include "y/type/utils.hpp"
 
 namespace Yttrium
 {
@@ -73,6 +74,15 @@ namespace Yttrium
             MergeSort::Call(*this,CompareIntegerArrays);
         }
 
+        size_t IntegerSurvey:: maxOrder() const noexcept
+        {
+            size_t res = 0;
+            for(const IntegerArray *arr=head;arr;arr=arr->next)
+            {
+                res = Max(res,arr->order);
+            }
+            return res;
+        }
 
     }
 

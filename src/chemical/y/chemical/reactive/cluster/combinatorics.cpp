@@ -5,6 +5,7 @@
 #include "y/woven/survey/integer.hpp"
 #include "y/apex/mylar.hpp"
 #include "y/system/exception.hpp"
+#include "y/type/utils.hpp"
 
 namespace Yttrium
 {
@@ -105,6 +106,15 @@ namespace Yttrium
                 Y_XMLOG(xml,"NuTx = "  << NuTx);
                 WOVEn::Explore(NuTx, survey, false, xml);
                 survey.sort();
+                const size_t maxOrder = Max<size_t>(1,survey.maxOrder());
+                Y_XMLOG(xml,"maxOrder = " << maxOrder << " / " << eqs->size() );
+                Coerce(blend).reserve(maxOrder);
+                const EList empty;
+                for(size_t i=maxOrder;i>0;--i)
+                {
+                    Coerce(blend) << empty;
+                }
+                assert(maxOrder==blend.size());
             }
 
             //------------------------------------------------------------------
@@ -202,14 +212,17 @@ namespace Yttrium
             MergeSort::Call(mixed,Mixed::Compare);
             for(const Mixed *mx=mixed.head;mx;mx=mx->next)
             {
-                Y_XMLOG(xml,mx->stoich);
 
+                //--------------------------------------------------------------
                 // create mixed equilibrium
+                //--------------------------------------------------------------
                 const Readable<int> &weight = mx->weight;
                 const String         eqName = buildMixedName(weight);
-                Equilibrium         &eq = eqs.insert( new MixedEquilibrium(eqName,eqs.topLevel(),weight,eqset,sharedK) );
+                Equilibrium         &eq     = eqs.insert( new MixedEquilibrium(eqName,eqs.topLevel(),weight,eqset,sharedK) );
 
+                //--------------------------------------------------------------
                 // fill it with species
+                //--------------------------------------------------------------
                 const Readable<int> &stoich = mx->stoich;
                 for(size_t j=1;j<=m;++j)
                 {
@@ -218,18 +231,22 @@ namespace Yttrium
                     eq(nu,sp);
                 }
 
-                std::cerr << eq << ":" << eq.reac.toString() << " <=> " << eq.prod.toString() <<  std::endl;
-
+                //--------------------------------------------------------------
                 // update this cluster and eq
+                //--------------------------------------------------------------
                 (*this) << eq;
                 Coerce(eq.indx[SubLevel]) = size; assert( ! eqset.search(size) );
                 (void)  Coerce(eqset).record(eq);
 
-                // update formatting
+                //--------------------------------------------------------------
+                // update formatting both eqs and eqfmt
+                //--------------------------------------------------------------
                 Coerce(eqfmt).upgradeWith(eq);
                 eqs.upgradeWith(eq);
 
-                //break;
+                Y_XMLOG(xml," (+) " << mx->stoich << " --> " << eq.rstr << eq.LeftRightArrow << eq.pstr);
+
+
             }
 
 

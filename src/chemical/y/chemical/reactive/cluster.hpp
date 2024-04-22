@@ -16,6 +16,9 @@ namespace Yttrium
     namespace Chemical
     {
 
+
+
+
         //______________________________________________________________________
         //
         //
@@ -27,6 +30,8 @@ namespace Yttrium
         class Cluster : public Quantized, public EList
         {
         public:
+            typedef Vector<EList,Memory::Dyadic> Blend;
+
             //__________________________________________________________________
             //
             //
@@ -72,6 +77,7 @@ namespace Yttrium
             const EqSubSet      eqset;   //!< table of equilibria
             const EqFormatter   eqfmt;   //!< helper to display
             const Entities      spfmt;   //!< helper to display
+            const Blend         blend;   //!< 
             Cluster            *next;    //!< for list
             Cluster            *prev;    //!< for list
 

@@ -21,6 +21,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             LightSort::MakeSubLevel<EList>(*this);
 
+            
             //------------------------------------------------------------------
             //
             // format helpers and collect species

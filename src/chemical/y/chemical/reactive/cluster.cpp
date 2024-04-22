@@ -15,6 +15,7 @@ namespace Yttrium
         eqset(),
         eqfmt(),
         spfmt(),
+        blend(),
         next(0),
         prev(0)
         {
