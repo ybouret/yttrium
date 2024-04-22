@@ -61,15 +61,8 @@ namespace Yttrium
             const size_t nc = Qm.rows;
             for(size_t i=1;i<=nc;++i)
             {
-                const Readable<unsigned> &q = Qm[i];
-                Actors act;
-                for(size_t j=1;j<=m;++j)
-                {
-                    const unsigned nu = q[j];
-                    if(0==nu) continue;
-                    act.pushTail( new Actor(nu,spset[j]) );
-                }
-                std::cerr << "d_[" << act << "]" << std::endl;
+                Coerce(claws).pushTail( new Conservation::Law(Qm[i],spset));
+                Y_XMLOG(xml, *claws.tail );
             }
 
 

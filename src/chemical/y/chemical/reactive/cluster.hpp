@@ -8,15 +8,14 @@
 
 #include "y/stream/xmlog.hpp"
 #include "y/container/matrix.hpp"
-#include "y/chemical/type/entity-set.hpp"
 #include "y/quantized.hpp"
+#include "y/chemical/reactive/conservation/law.hpp"
+
 
 namespace Yttrium
 {
     namespace Chemical
     {
-
-
 
 
         //______________________________________________________________________
@@ -78,6 +77,7 @@ namespace Yttrium
             const EqSubSet         eqset;   //!< table of equilibria
             const EqFormatter      eqfmt;   //!< helper to display
             const Entities         spfmt;   //!< helper to display
+            const Conservation::Law::List claws;
             const Blend            blend;   //!< order 1...blend.size() equilibria
             Cluster               *next;    //!< for list
             Cluster               *prev;    //!< for list

@@ -7,6 +7,7 @@ chemical/species
 chemical/reactive
 chemical/reactive/equilibrium
 chemical/reactive/equilibria
+chemical/reactive/conservation
 chemical/reactive/cluster
 chemical/lang
 )
