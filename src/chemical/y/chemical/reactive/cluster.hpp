@@ -84,8 +84,8 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
             String buildMixedName(const Readable<int> &w) const;
-            void buildCombinatorics(Equilibria &eqs,XMLog &xml);
-            //void buildConservations();
+            void   buildCombinatorics(Equilibria &eqs,XMLog &xml);
+            void   buildConservations(XMLog &xml);
         };
     }
 

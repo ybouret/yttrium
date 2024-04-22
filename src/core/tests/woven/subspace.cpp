@@ -44,7 +44,7 @@ Y_UTEST(woven_subspace)
     {
         WOVEn::IntegerSurvey survey(xml);
         Y_XML_SECTION(xml, "IntegerSurvey");
-        WOVEn::Explore(mu,survey,false, xml);
+        WOVEn::Explore(mu,survey,false);
 
     }
 
@@ -52,7 +52,7 @@ Y_UTEST(woven_subspace)
     {
         WOVEn::NaturalSurvey survey(xml);
         Y_XML_SECTION(xml, "NaturalSurvey");
-        WOVEn::Explore(mu,survey,true, xml);
+        WOVEn::Explore(mu,survey,true);
     }
 
     Y_SIZEOF(WOVEn::QVector);

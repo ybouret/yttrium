@@ -157,10 +157,9 @@ namespace Yttrium
         template <typename T> inline
         void Explore(const Matrix<T> &mu,
                      Survey         &survey,
-                     const bool       useTop,
-                     XMLog           &xmlog)
+                     const bool      useTop)
         {
-            SubSpaces working(mu,useTop ? &survey : 0,xmlog);
+            SubSpaces working(mu,useTop ? &survey : 0,survey.xml);
         CYCLE:
             if( working.generate(mu,&survey) )
                 goto CYCLE;

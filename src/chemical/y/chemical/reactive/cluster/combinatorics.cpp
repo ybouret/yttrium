@@ -104,7 +104,7 @@ namespace Yttrium
                 Apex::Mylar::Compress(NuTx,NuT);
                 Y_XMLOG(xml,"NuT  = "   << NuT);
                 Y_XMLOG(xml,"NuTx = "  << NuTx);
-                WOVEn::Explore(NuTx, survey, false, xml);
+                WOVEn::Explore(NuTx, survey, false);
                 survey.sort();
                 const size_t maxOrder = Max<size_t>(1,survey.maxOrder());
                 Y_XMLOG(xml,"maxOrder = " << maxOrder << " / " << eqs->size() );
