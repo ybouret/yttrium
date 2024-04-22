@@ -31,7 +31,7 @@ namespace Yttrium
             typedef ArkPtr<String,Equilibrium>        Handle;        //!< alias
             typedef SuffixSet<String,Handle>          Set;           //!< alias
             typedef Component::Set::ConstIterator     ConstIterator; //!< alias
-            static const char * const Colors;
+            static const char * const                 Colors;        //!< GraphViz color scheme
 
             //__________________________________________________________________
             //
@@ -39,8 +39,10 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            XReal    K(Real t); //!< checked constant at a given time
-
+            XReal        K(Real t);                                  //!< checked constant at a given time
+            void         viz(OutputStream &, const Level)     const; //!< output node+name
+            void         vizLink(OutputStream &, const Level) const; //!< make arrows
+            const String vizColor(const Level)                const; //!< color=...,fontocolor=...
             //__________________________________________________________________
             //
             //
@@ -55,9 +57,7 @@ namespace Yttrium
                 return os;
             }
 
-            void         viz(OutputStream &, const Level) const;
-            void         vizLink(OutputStream &, const Level) const;
-            const String vizColor(const Level level) const;
+
 
             //! cleanup
             virtual ~Equilibrium() noexcept;

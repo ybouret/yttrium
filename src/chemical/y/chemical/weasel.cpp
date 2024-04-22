@@ -60,24 +60,28 @@ namespace Yttrium
                 for(size_t i=1;i<=nxp;++i)
                 {
                     const String &rx = rxp[i];
-                    std::cerr << "Looking for " << rx << std::endl;
                     Jive::Matcher match(rx);
                     size_t        count = 0;
                     for(size_t i=0;i<dbCount;++i)
                     {
+                        //------------------------------------------------------
                         // find entry
+                        //------------------------------------------------------
                         const char * const entry = dbEntry[i];
                         const char * const sep   = strchr(entry, Equilibrium::Separator);
                         if(!sep) throw Specific::Exception(Weasel::CallSign,"corrupted internal database");
 
+                        //------------------------------------------------------
                         // find label
+                        //------------------------------------------------------
                         String label(entry,sep-entry);
                         Algo::Crop(label,isspace);
 
+                        //------------------------------------------------------
                         // test label
-                        if(match.somehow(label,label))
+                        //------------------------------------------------------
+                        if(match.exactly(label,label))
                         {
-                            std::cerr << "match <" << label << ">" << std::endl;
                             AutoPtr<Jive::Syntax::XNode> tree = parser( Jive::Module::OpenData(label,entry) ); assert(tree.isValid());
                             linker(*tree,lib,eqs,0);
                             ++count;

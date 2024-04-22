@@ -56,11 +56,13 @@ namespace Yttrium
 
         std::ostream & operator<<(std::ostream &os, const Cluster &cl)
         {
+            os << "<Cluster species='" << cl.species.size << "' eqs='" << cl.size << "'>" << std::endl;
             for(const ENode *node=cl.head;node;node=node->next)
             {
                 cl.eqfmt.display(os << "  ", **node) << std::endl;
             }
-            return os;
+            os << "  (*) " << cl.species << std::endl;
+            return os << "<Cluster/>";
         }
 
     }

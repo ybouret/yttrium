@@ -63,6 +63,12 @@ Y_UTEST(weasel)
     (void) cls.K(0);
     std::cerr << eqs << std::endl;
 
+    for(const Cluster *cl=cls.head;cl;cl=cl->next)
+    {
+        std::cerr << *cl << std::endl;
+    }
+
+
     Y_SIZEOF(Chemical::Cluster);
     Y_SIZEOF(Chemical::Clusters);
 
