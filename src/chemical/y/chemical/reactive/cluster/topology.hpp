@@ -25,7 +25,6 @@ namespace Yttrium
         protected:
             Constants                   sharedK; //!< TopLevel constants
         public:
-            const SList                 species;   //!< SubLevel, primary species
             const Matrix<int>           Nu;        //!< SubLevel topology
             const SpSubSet              spset;     //!< table of SubLevel species
             const EqSubSet              eqset;     //!< table of SubLevel equilibria

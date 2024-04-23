@@ -97,18 +97,29 @@ namespace Yttrium
         {
 
             //! comparison by TopLevel index
-            template <typename TNODE>
+            template <typename TNODE, const Level LEVEL>
             static inline SignType CompareNodes(const TNODE *lhs, const TNODE *rhs) noexcept
             {
-                return Sign::Of( (**lhs).indx[TopLevel], (**rhs).indx[TopLevel] );
+                return Sign::Of( (**lhs).indx[LEVEL], (**rhs).indx[LEVEL] );
             }
+
+
 
             //! sort by increasing top level
             template <typename TLIST> static inline
             void ByTopLevel(TLIST &list) noexcept
             {
-                MergeSort::Call(list,CompareNodes<typename TLIST::NodeType>);
+                MergeSort::Call(list,CompareNodes<typename TLIST::NodeType,TopLevel>);
             }
+
+            //! sort by increasing top level
+            template <typename TLIST> static inline
+            void BySubLevel(TLIST &list) noexcept
+            {
+                MergeSort::Call(list,CompareNodes<typename TLIST::NodeType,SubLevel>);
+            }
+
+
 
             //! sort by increasing TopLevel and deduce SubLevel
             template <typename TLIST> static inline

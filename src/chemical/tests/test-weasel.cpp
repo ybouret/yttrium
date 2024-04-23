@@ -64,14 +64,8 @@ Y_UTEST(weasel)
     (void) cls.K(0);
     std::cerr << eqs << std::endl;
 
-
-    for(const Cluster *cl=cls->head;cl;cl=cl->next)
-    {
-        std::cerr << *cl << std::endl;
-    }
-
-    Y_SIZEOF(Cluster);
     return 0;
+
 
     {
         OutputFile fp("system.dot");

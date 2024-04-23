@@ -46,7 +46,7 @@ namespace Yttrium
             {
                 if(*arr==vec)
                 {
-                    Y_XMLOG(xml, " (-) " << vec);
+                    //Y_XMLOG(xml, " (-) " << vec);
                     return;
                 }
             }

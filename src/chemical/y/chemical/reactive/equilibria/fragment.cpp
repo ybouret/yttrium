@@ -7,7 +7,12 @@ namespace Yttrium
     {
         Fragment::  Fragment() noexcept :  EList(), species() {}
         Fragment:: ~Fragment() noexcept {}
-        Fragment::  Fragment(const Fragment &sub) : EList(sub), species(sub.species) {}
+        Fragment::  Fragment(const Fragment &sub) : 
+        EList(sub), species(sub.species)
+        {
+            assert(sub.size==size);
+            assert(sub.species.size==species.size);
+        }
     }
 
 }

@@ -7,70 +7,14 @@ namespace Yttrium
     namespace Chemical
     {
 
-       
-    }
-
-}
-
-
-
-
-namespace Yttrium
-{
-    namespace Chemical
-    {
-
         Cluster:: Cluster(Equilibria        &eqs,
-                          const Fragment    &batch,
+                          const Fragment    &fragment,
                           const Constants   &topK,
                           XMLog             &xml) :
-        EList(batch),
-        sharedK(topK),
-        species(batch.species),
-        Nu(size,species.size),
-        Qm(),
-        spset(),
-        eqset(),
-        eqfmt(),
-        spfmt(),
-        blend(),
+        ClusterCombinatorics(eqs,fragment,topK,xml),
         next(0),
         prev(0)
         {
-            static const char here[] = "Chemical::Cluster";
-            Y_XML_SECTION_OPT(xml, here, " eqs='" << size << "' species='" << species.size << "'");
-
-            //------------------------------------------------------------------
-            //
-            // collect info from equilibria
-            //
-            //------------------------------------------------------------------
-            for(const ENode *en=head;en;en=en->next)
-            {
-                const Equilibrium &eq = **en;
-                Coerce(eqfmt).upgradeWith(eq);                   // format
-                Coerce(eqset).record(eq);                        // table
-                eq.fill(Coerce(Nu)[eq.indx[SubLevel]],SubLevel); // topology
-            }
-            Y_XMLOG(xml,"Nu   = " << Nu);
-
-            if( size != MKL::Rank::Of(Nu) )
-                throw Specific::Exception(here, "invalid system rank!!");
-
-            //------------------------------------------------------------------
-            //
-            // collect info from species
-            //
-            //------------------------------------------------------------------
-            for(const SNode *sn=species.head;sn;sn=sn->next)
-            {
-                const Species &sp = **sn;
-                Coerce(spfmt).updateWith(sp);
-                if( ! Coerce(spset).record(sp) ) throw Specific::Exception(here,"unexpected species multiple sub-index!");
-            }
-
-
-
 
         }
 
@@ -120,7 +64,7 @@ namespace Yttrium
 
             if(1==order)
             {
-                for(const Conservation::Law *law=claws->head;law;law=law->next)
+                for(const Conservation::Law *law=laws->head;law;law=law->next)
                 {
                     law->viz(fp);
                 }

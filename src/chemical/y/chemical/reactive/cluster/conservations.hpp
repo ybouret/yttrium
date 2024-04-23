@@ -23,6 +23,10 @@ namespace Yttrium
             const Matrix<unsigned>     Qm;
             const Conservation::Laws   laws;
             const Conservation::Groups groups;
+            const AddressBook          conserved;
+            const AddressBook          unbounded;
+            const SList                conservedSpecies;
+            const SList                unboundedSpecies;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterConservations);

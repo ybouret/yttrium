@@ -13,10 +13,17 @@ namespace Yttrium
         sharedK(topK)
         {
             Y_XML_SECTION(xml, "Chemical::Clusters" );
-            const Batches batches(eqs);
-            for(const Batch *batch=batches.head;batch;batch=batch->next)
-                clusters.pushTail( new Cluster(eqs,*batch,sharedK,xml) );
 
+            // create batches
+            const Batches batches(eqs);
+
+            // create one cluster per batch
+            for(const Batch *batch=batches.head;batch;batch=batch->next)
+            {
+                clusters.pushTail( new Cluster(eqs,*batch,sharedK,xml) );
+            }
+
+            // adjust top-level constants
             sharedK->adjust(eqs->size(),0);
         }
 
