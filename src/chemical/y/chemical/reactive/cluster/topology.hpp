@@ -13,15 +13,38 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! compute topology and helpers from a fragment
+        //
+        //
+        //______________________________________________________________________
         class ClusterTopology : public Fragment
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup
             explicit ClusterTopology(const Fragment    &fragment,
                                      const Constants   &topK,
                                      XMLog             &xml);
 
+            //! cleanup
             virtual ~ClusterTopology() noexcept;
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
         protected:
             Constants                   sharedK; //!< TopLevel constants
         public:

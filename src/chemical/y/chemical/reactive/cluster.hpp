@@ -33,9 +33,10 @@ namespace Yttrium
 
             //! initialize
             /**
-             \param eqs   global equilibria
+             \param eqs      global equilibria
              \param fragment precompiled fragment
-             \param topK  shared top-level constants
+             \param topK     shared top-level constants
+             \param xml      for output
              */
             explicit Cluster(Equilibria        &eqs,
                              const Fragment    &fragment,

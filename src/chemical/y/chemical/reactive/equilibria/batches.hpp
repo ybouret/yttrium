@@ -21,13 +21,13 @@ namespace Yttrium
         class Batches : public Batch::List
         {
         public:
-            explicit Batches(const Equilibria &eqs);
-            virtual ~Batches() noexcept;
+            explicit Batches(const Equilibria &eqs); //!< make batches
+            virtual ~Batches() noexcept;             //!< cleanup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Batches);
-            void gatherSharing(const Equilibria &eqs);
-            void lookForFusion() noexcept;
+            void gatherSharing(const Equilibria &eqs); //!< main algorithm
+            void lookForFusion() noexcept;             //!< algorithm helper
             
         };
 

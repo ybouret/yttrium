@@ -12,25 +12,54 @@ namespace Yttrium
     {
         namespace Conservation
         {
-            typedef Small::BareLightList<const Law> clList;
-            typedef clList::NodeType                clNode;
+            typedef Small::BareLightList<const Law> clList; //!< alias
+            typedef clList::NodeType                clNode; //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Group of dependent conservation laws
+            //
+            //
+            //__________________________________________________________________
             class Group : public Object, public clList
             {
             public:
-                typedef CxxListOf<Group> List;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef CxxListOf<Group> List; //!< alias
                 
-                explicit Group(const Law &first);
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Group(const Law &first); //!< setup with first law
+                virtual ~Group() noexcept;        //!< cleanup
 
-                virtual ~Group() noexcept;
-
-
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
                 bool accepts(const Law &)   const noexcept; //!< true is sharing at least one species
                 bool accepts(const Group &) const noexcept; //!< true is sharing at least one species
                 
-
-                Group *next;
-                Group *prev;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                Group *next; //!< for list
+                Group *prev; //!< for list
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Group);
             };

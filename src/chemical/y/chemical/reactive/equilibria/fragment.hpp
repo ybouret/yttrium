@@ -10,14 +10,34 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Fragment = equilibria+their species
+        //
+        //
+        //______________________________________________________________________
         class Fragment : public EList
         {
         public:
-            explicit Fragment() noexcept;
-            virtual ~Fragment() noexcept;
-            Fragment(const Fragment &);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Fragment() noexcept; //!< setup empty
+            virtual ~Fragment() noexcept; //!< cleanup
+            Fragment(const Fragment &);   //!< hard copy
 
-            const SList species;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const SList species; //!< list of species
         private:
             Y_DISABLE_ASSIGN(Fragment);
         };

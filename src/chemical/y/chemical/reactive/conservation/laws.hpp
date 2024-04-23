@@ -45,6 +45,7 @@ namespace Yttrium
                 void writeDown(const Matrix<unsigned> &Qm,
                                const SpSubSet         &table);
 
+                //! output GraphViz code
                 void viz(OutputStream &fp) const;
 
             private:

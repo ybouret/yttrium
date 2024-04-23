@@ -11,9 +11,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
-     
-
+        
         //______________________________________________________________________
         //
         //
@@ -50,7 +48,7 @@ namespace Yttrium
             //__________________________________________________________________
             bool sharesSpeciesWith(const Equilibrium &) const noexcept; //!< check if species are shared
             bool sharesSpeciesWith(const Batch       &) const noexcept; //!< check if species are shared
-            void finalize();
+            void finalize();                                            //!< setup species and sub-indices
 
             //__________________________________________________________________
             //

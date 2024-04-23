@@ -10,19 +10,47 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Compute all possible equilibria from topology and qualify them
+        //
+        //
+        //______________________________________________________________________
         class ClusterCombinatorics : public ClusterConservations
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             typedef Vector<EList,Memory::Dyadic>      Blend; //!< alias to hold blends of equilibria per order
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup
             explicit ClusterCombinatorics(Equilibria        &eqs,
                                           const Fragment    &fragment,
                                           const Constants   &topK,
                                           XMLog             &xml);
-
+            //! cleanup
             virtual ~ClusterCombinatorics() noexcept;
 
-
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            //! list of equilibria per order, always blend[1]
             const Blend blend;
             
         private:

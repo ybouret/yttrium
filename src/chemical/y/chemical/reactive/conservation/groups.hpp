@@ -13,20 +13,40 @@ namespace Yttrium
     {
         namespace Conservation
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Independent Groups of dependent conservation laws
+            //
+            //
+            //__________________________________________________________________
             class Groups : public Proxy<const Group::List>
             {
             public:
-                explicit Groups() noexcept;
-                virtual ~Groups() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Groups() noexcept; //!< setup empty
+                virtual ~Groups() noexcept; //!< cleanup
 
-                void collect(const Laws &laws);
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                void collect(const Laws &laws); //!< collect laws
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Groups);
                 Group::List cgl;
-
+                
                 virtual ConstInterface & surrogate() const noexcept;
-                void fusion() noexcept;
+                void                     fusion()          noexcept;
             };
 
 

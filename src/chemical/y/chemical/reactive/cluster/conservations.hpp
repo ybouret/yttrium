@@ -11,23 +11,46 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Conmpute conservations from topology
+        //
+        //
+        //______________________________________________________________________
         class ClusterConservations : public ClusterTopology
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup from fragment
             explicit ClusterConservations(const Fragment    &fragment,
                                           const Constants   &topK,
                                           XMLog             &xml);
 
+            //! cleanup
             virtual ~ClusterConservations() noexcept;
 
-            const Matrix<unsigned>     Qm;
-            const Conservation::Laws   laws;
-            const Conservation::Groups groups;
-            const AddressBook          conserved;
-            const AddressBook          unbounded;
-            const SList                conservedSpecies;
-            const SList                unboundedSpecies;
-            
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const Matrix<unsigned>     Qm;               //!< conservation matrix
+            const Conservation::Laws   laws;             //!< corresponding conservation laws
+            const Conservation::Groups groups;           //!< independent groups of dependents laws
+            const AddressBook          conserved;        //!< conserved species database
+            const AddressBook          unbounded;        //!< unbounded species database
+            const SList                conservedSpecies; //!< conserved species list
+            const SList                unboundedSpecies; //!< unbounded species list
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterConservations);
         };

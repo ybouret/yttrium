@@ -99,7 +99,7 @@ namespace Yttrium
         ClusterConservations(fragment,topK,xml),
         blend()
         {
-            static const char here[] = "Chemical::Cluster:: Combinatorics";
+            static const char here[] = "Chemical::Cluster::Combinatorics";
             static const char mesg[] = "corrupted topology: ";
             Y_XML_SECTION(xml,here);
             WOVEn::IntegerSurvey survey(xml);

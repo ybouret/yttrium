@@ -41,7 +41,7 @@ namespace Yttrium
                 explicit Law(const String             &label,
                              const size_t              iboth,
                              const Readable<unsigned> &coeff,
-                             const SpSubSet           &spset);    //!< setup from SubLevel info
+                             const SpSubSet           &spset);                 //!< setup from SubLevel info
                 virtual ~Law() noexcept;                                       //!< cleanup
                 friend std::ostream & operator<<(std::ostream &, const Law &); //!< display
 
@@ -51,11 +51,11 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
-                const String &key() const noexcept; //!< return actors' name
+                const String &key() const noexcept;        //!< return actors' name
+                void          viz(OutputStream &fp) const; //!< GraphViz
 
+                //! check if common species
                 bool sharesSpeciesWith(const Law &law) const noexcept;
-
-                void viz(OutputStream &fp) const;
 
 
                 //______________________________________________________________
