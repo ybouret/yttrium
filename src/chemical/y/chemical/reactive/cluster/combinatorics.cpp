@@ -96,7 +96,8 @@ namespace Yttrium
                                                     const Fragment    &fragment,
                                                     const Constants   &topK,
                                                     XMLog             &xml) :
-        ClusterConservations(fragment,topK,xml)
+        ClusterConservations(fragment,topK,xml),
+        blend()
         {
             static const char here[] = "Chemical::Cluster:: Combinatorics";
             static const char mesg[] = "corrupted topology: ";
