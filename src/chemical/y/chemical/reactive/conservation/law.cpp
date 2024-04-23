@@ -77,17 +77,7 @@ namespace Yttrium
                     }
                     Endl(fp << ']');
                 }
-
-#if 0
-                for(const Actor *curr=cast.head,*next=curr->next;next;curr=next,next=next->next)
-                {
-
-                    Arrow(fp,&(curr->sp),&(next->sp)) << '[';
-                    fp << "dir=both,arrowhead=dot,arrowtail=dot,color=" << c;
-                    Endl(fp << ']');
-                }
-#endif
-
+                
             }
 
         }

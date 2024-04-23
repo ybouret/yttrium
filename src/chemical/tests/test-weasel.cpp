@@ -55,13 +55,22 @@ Y_UTEST(weasel)
     }
     GraphViz::Vizible::Render("eqs.png", "eqs.dot");
 
+    const Batches batches(eqs);
+    for(const Batch *batch=batches.head;batch;batch=batch->next)
+    {
+        std::cerr << "batch: " << *batch << " / " << batch->species << std::endl;
+    }
 
+    Y_SIZEOF(Batch);
+
+    return 0;
     bool verbose = true;
     XMLog xml(verbose);
     Chemical::Constants K;
     Chemical::Clusters  cls(eqs,K,xml);
     (void) cls.K(0);
     std::cerr << eqs << std::endl;
+
 
     for(const Cluster *cl=cls.head;cl;cl=cl->next)
     {

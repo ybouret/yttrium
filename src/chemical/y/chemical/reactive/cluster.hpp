@@ -3,7 +3,7 @@
 #ifndef Y_Chemical_Cluster_Included
 #define Y_Chemical_Cluster_Included 1
 
-#include "y/chemical/reactive/equilibria.hpp"
+#include "y/chemical/reactive/equilibria/batches.hpp"
 #include "y/chemical/type/constants.hpp"
 #include "y/chemical/reactive/conservation/groups.hpp"
 #include "y/stream/xmlog.hpp"
@@ -19,7 +19,7 @@ namespace Yttrium
         //
         //
         //
-        //! Cluster of coupled species
+        //! Cluster of coupled equilibria and species
         //
         //
         //______________________________________________________________________
