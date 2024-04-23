@@ -29,8 +29,8 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef CxxListOf<Law>    List; //!< alias
-                static const char * const Colors; //!< default color Scheme
+                typedef CxxListOf<Law>    List;   //!< alias
+                static const char * const Colors; //!< default Color Scheme
 
                 //______________________________________________________________
                 //

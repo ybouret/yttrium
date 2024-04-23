@@ -7,8 +7,7 @@ namespace Yttrium
 
         Batch:: Batch(const Equilibrium &first) : 
         Oversized(),
-        EList(),
-        species(),
+        Fragment(),
         next(0),
         prev(0)
         {

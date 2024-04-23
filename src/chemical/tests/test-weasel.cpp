@@ -70,6 +70,7 @@ Y_UTEST(weasel)
         std::cerr << *cl << std::endl;
     }
 
+    Y_SIZEOF(Cluster);
     return 0;
 
     {

@@ -4,7 +4,7 @@
 #ifndef Y_Chemical_Equilibria_Batch_Included
 #define Y_Chemical_Equilibria_Batch_Included 1
 
-#include "y/chemical/reactive/equilibria.hpp"
+#include "y/chemical/reactive/equilibria/fragment.hpp"
 #include "y/oversized.hpp"
 
 namespace Yttrium
@@ -12,6 +12,7 @@ namespace Yttrium
     namespace Chemical
     {
 
+     
 
         //______________________________________________________________________
         //
@@ -21,7 +22,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Batch : public Oversized, public EList
+        class Batch : public Oversized, public Fragment
         {
         public:
             //__________________________________________________________________
@@ -57,7 +58,6 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const SList      species; //!< shared species
             Batch           *next;    //!< for list
             Batch           *prev;    //!< for list
         private:

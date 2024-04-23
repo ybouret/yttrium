@@ -3,7 +3,7 @@
 #ifndef Y_Chemical_Cluster_Included
 #define Y_Chemical_Cluster_Included 1
 
-#include "y/chemical/reactive/equilibria/batch.hpp"
+#include "y/chemical/reactive/cluster/topology.hpp"
 #include "y/chemical/type/constants.hpp"
 #include "y/chemical/reactive/conservation/groups.hpp"
 #include "y/stream/xmlog.hpp"
@@ -14,6 +14,23 @@ namespace Yttrium
     namespace Chemical
     {
 
+       
+
+        class ClusterConservations : public ClusterTopology
+        {
+        public:
+            explicit ClusterConservations(const Fragment    &fragment,
+                                          const Constants   &topK,
+                                          XMLog             &xml);
+
+            virtual ~ClusterConservations() noexcept;
+
+            const Matrix<unsigned>    Qm;
+            const Conservation::Laws  claws;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(ClusterConservations);
+        };
 
         //______________________________________________________________________
         //
@@ -26,8 +43,8 @@ namespace Yttrium
         class Cluster : public Quantized, public EList
         {
         public:
-            typedef CxxListOf<Cluster>           List;  //!< alias
-            typedef Vector<EList,Memory::Dyadic> Blend; //!< alias to hold blends of equilibria per order
+            typedef CxxListOf<Cluster>                List;  //!< alias
+            typedef Vector<EList,Memory::Dyadic>      Blend; //!< alias to hold blends of equilibria per order
 
             //__________________________________________________________________
             //
@@ -43,7 +60,7 @@ namespace Yttrium
              \param topK  shared top-level constants
              */
             explicit Cluster(Equilibria        &eqs,
-                             const Batch       &batch,
+                             const Fragment    &batch,
                              const Constants   &topK,
                              XMLog             &xml);
 
@@ -78,10 +95,10 @@ namespace Yttrium
             const EqSubSet              eqset;     //!< table of SubLevel equilibria
             const EqFormatter           eqfmt;     //!< helper to display
             const Entities              spfmt;     //!< helper to display
-            const Conservation::Laws    claws;     //!< all conservation laws
+            const Conservation::Laws    claws;
             const Conservation::Groups  cgrps;     //!< conservation law operating groups
-            const AddressBook           unbounded; //!< unbounded species
-            const AddressBook           conserved; //!< conserved species
+           // const AddressBook           unbounded; //!< unbounded species
+           //const AddressBook           conserved; //!< conserved species
             const Blend                 blend;     //!< order 1...blend.size() equilibria
             Cluster                    *next;      //!< for list
             Cluster                    *prev;      //!< for list
