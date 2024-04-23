@@ -3,7 +3,7 @@
 #ifndef Y_Chemical_Cluster_Included
 #define Y_Chemical_Cluster_Included 1
 
-#include "y/chemical/reactive/equilibria/batches.hpp"
+#include "y/chemical/reactive/equilibria/batch.hpp"
 #include "y/chemical/type/constants.hpp"
 #include "y/chemical/reactive/conservation/groups.hpp"
 #include "y/stream/xmlog.hpp"
@@ -26,6 +26,7 @@ namespace Yttrium
         class Cluster : public Quantized, public EList
         {
         public:
+            typedef CxxListOf<Cluster>           List;  //!< alias
             typedef Vector<EList,Memory::Dyadic> Blend; //!< alias to hold blends of equilibria per order
 
             //__________________________________________________________________
@@ -35,9 +36,16 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! initialize with first equilibrium and TopLevel constants
-            explicit Cluster(const Equilibrium &first,
-                             const Constants   &topK);
+            //! initialize
+            /**
+             \param eqs   global equilibria
+             \param batch precompiled batch
+             \param topK  shared top-level constants
+             */
+            explicit Cluster(Equilibria        &eqs,
+                             const Batch       &batch,
+                             const Constants   &topK,
+                             XMLog             &xml);
 
             //! cleaup
             virtual ~Cluster() noexcept;
@@ -54,21 +62,6 @@ namespace Yttrium
             //! formatted output
             friend std::ostream & operator<<(std::ostream &os, const Cluster &cl);
 
-
-            bool sharesSpeciesWith(const Equilibrium &) const noexcept; //!< check if species are shared
-            bool sharesSpeciesWith(const Cluster     &) const noexcept; //!< check if species are shared
-
-            //! once filled, compile all subsequent data
-            /**
-             - sort equilibria and assign their sub-level
-             - format helpers
-             - collect species and assign their sub-level
-             - create and check topology Nu
-             - create species and equilibria table
-             - buildConservations()
-             - buildCombinatorics()
-             */
-            void compile(Equilibria &eqs, XMLog &xml);
 
             //! get all K, in order to validate mixed-equilibria
             void getK(const Real t);

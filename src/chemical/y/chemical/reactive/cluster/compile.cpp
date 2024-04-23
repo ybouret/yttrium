@@ -9,6 +9,7 @@ namespace Yttrium
     namespace Chemical
     {
 
+#if 0
         void Cluster:: compile(Equilibria &eqs, XMLog &xml)
         {
             static const char here[] = "Chemical::Cluster";
@@ -119,6 +120,7 @@ namespace Yttrium
 
 
         }
+#endif
     }
 
 }

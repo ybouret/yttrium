@@ -1,33 +1,70 @@
 #include "y/chemical/reactive/cluster.hpp"
+#include "y/mkl/algebra/rank.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
 
-        Cluster:: Cluster(const Equilibrium &eq,
-                          const Constants   &topK) :
-        EList(),
+        Cluster:: Cluster(Equilibria        &eqs,
+                          const Batch       &batch,
+                          const Constants   &topK,
+                          XMLog             &xml) :
+        EList(batch),
         sharedK(topK),
-        species(),
-        Nu(),
+        species(batch.species),
+        Nu(size,species.size),
         Qm(),
         spset(),
         eqset(),
         eqfmt(),
         spfmt(),
-        claws(),
-        cgrps(),
         blend(),
         next(0),
         prev(0)
         {
-            (*this) << eq;
+            static const char here[] = "Chemical::Cluster";
+            Y_XML_SECTION_OPT(xml, here, " eqs='" << size << "' species='" << species.size << "'");
+
+            //------------------------------------------------------------------
+            //
+            // collect info from equilibria
+            //
+            //------------------------------------------------------------------
+            for(const ENode *en=head;en;en=en->next)
+            {
+                const Equilibrium &eq = **en;
+                Coerce(eqfmt).upgradeWith(eq);                   // format
+                Coerce(eqset).record(eq);                        // table
+                eq.fill(Coerce(Nu)[eq.indx[SubLevel]],SubLevel); // topology
+            }
+            Y_XMLOG(xml,"Nu   = " << Nu);
+
+            if( size != MKL::Rank::Of(Nu) )
+                throw Specific::Exception(here, "invalid system rank!!");
+
+            //------------------------------------------------------------------
+            //
+            // collect info from species
+            //
+            //------------------------------------------------------------------
+            for(const SNode *sn=species.head;sn;sn=sn->next)
+            {
+                const Species &sp = **sn;
+                Coerce(spfmt).updateWith(sp);
+                if( ! Coerce(spset).record(sp) ) throw Specific::Exception(here,"unexpected species multiple sub-index!");
+            }
+
+
+
+
         }
 
         Cluster::  ~Cluster() noexcept {}
 
 
+#if 0
         bool Cluster:: sharesSpeciesWith(const Equilibrium &rhs) const noexcept
         {
             for(const ENode *mine=head;mine;mine=mine->next)
@@ -46,6 +83,8 @@ namespace Yttrium
             }
             return false;
         }
+
+#endif
 
         void Cluster:: getK(const Real t)
         {

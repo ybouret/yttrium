@@ -57,9 +57,9 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const SList species; //!< shared species
-            Batch      *next;    //!< for list
-            Batch      *prev;    //!< for list
+            const SList      species; //!< shared species
+            Batch           *next;    //!< for list
+            Batch           *prev;    //!< for list
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Batch);
             void prepareSpecies();

@@ -5,6 +5,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
+#if 0
 
         void Clusters:: build(Equilibria &eqs, XMLog &xml)
         {
@@ -45,7 +46,7 @@ namespace Yttrium
 
         void Clusters:: merge() noexcept
         {
-            CxxListOf<Cluster> store;
+             CxxListOf<Cluster> store;
             while(size>0)
             {
                 AutoPtr<Cluster> tmp = popHead();
@@ -64,6 +65,7 @@ namespace Yttrium
             }
             swapWith(store);
         }
+#endif
 
     }
 

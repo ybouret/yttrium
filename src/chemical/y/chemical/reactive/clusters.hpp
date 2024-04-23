@@ -18,7 +18,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Clusters : public CxxListOf<Cluster>
+        class Clusters : public Proxy<const Cluster::List>
         {
         public:
             //! setup from primary equilibria
@@ -27,7 +27,9 @@ namespace Yttrium
              \param topK shared constants
              \param xml  for verbose output
              */
-            explicit Clusters(Equilibria &eqs, const Constants &topK, XMLog &xml) ;
+            explicit Clusters(Equilibria      &eqs,
+                              const Constants &topK,
+                              XMLog           &xml) ;
 
             //! cleanup
             virtual ~Clusters() noexcept;
@@ -38,9 +40,10 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Clusters);
-            Constants sharedK;
-            void build(Equilibria &, XMLog &); //!< build and compile
-            void merge() noexcept;             //!< merge cluster sharing species
+            Cluster::List clusters;
+            Constants     sharedK;
+
+            virtual ConstInterface & surrogate() const noexcept;
         };
     }
 
