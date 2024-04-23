@@ -16,21 +16,7 @@ namespace Yttrium
 
        
 
-        class ClusterConservations : public ClusterTopology
-        {
-        public:
-            explicit ClusterConservations(const Fragment    &fragment,
-                                          const Constants   &topK,
-                                          XMLog             &xml);
-
-            virtual ~ClusterConservations() noexcept;
-
-            const Matrix<unsigned>    Qm;
-            const Conservation::Laws  claws;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(ClusterConservations);
-        };
+       
 
         //______________________________________________________________________
         //
