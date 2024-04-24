@@ -29,6 +29,7 @@ namespace Yttrium
         Qm(),
         laws(),
         groups(),
+        maxGroupSize(0),
         conserved(),
         unbounded(),
         conservedSpecies(),
@@ -130,14 +131,16 @@ namespace Yttrium
             {
                 Y_XML_SECTION(xml,"Collect");
                 Coerce(groups).collect(laws);
-                if(xml.verbose)
+                Y_XMLOG(xml, " (*) #group=" << groups->size);
+
+                for(const Conservation::Group *grp=groups->head;grp;grp=grp->next)
                 {
-                    xml()  << " (*) #group=" << groups->size << std::endl;
-                    for(const Conservation::Group *grp=groups->head;grp;grp=grp->next)
-                    {
-                        xml() << *grp << std::endl;
-                    }
+                    Coerce(maxGroupSize) = Max(maxGroupSize,grp->size);
+                    Y_XMLOG(xml, " (+) # " << std::setw(2) << grp->size << " @" << *grp);
                 }
+                Y_XMLOG(xml, " (*) #group=" << groups->size);
+                Y_XMLOG(xml, " (*) maxGroupSize = " << maxGroupSize);
+
             }
         }
     }
