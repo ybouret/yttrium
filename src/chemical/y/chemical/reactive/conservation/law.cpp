@@ -13,20 +13,23 @@ namespace Yttrium
                       const SpSubSet           &table) :
             Entity(label,iboth),
             Proxy<const Actors>(),
-            next(0),
-            prev(0),
+            nrm2(0),
             cast(),
-            uuid()
+            uuid(),
+            next(0),
+            prev(0)
             {
-
                 const size_t m = coeff.size();
+                apn          d = 0;
                 for(size_t j=1;j<=m;++j)
                 {
                     const unsigned nu=coeff[j]; if(0==nu) continue;
                     cast.pushTail( new Actor(nu,table[j]) );
+                    d += (nu*nu);
                 }
                 String s = cast.toString();
                 Coerce(uuid).swapWith(s);
+                Coerce(nrm2) = static_cast<double>( d.cast<uint64_t>("Chemical Law Norm2") );
             }
 
 
@@ -43,7 +46,7 @@ namespace Yttrium
 
             std::ostream & operator<<(std::ostream &os, const Law &law)
             {
-                os << "d_(" << law.uuid << ")";
+                os << "d_(" << law.uuid << ")/" ;//<< double(law.nrm2);
                 return os;
             }
 

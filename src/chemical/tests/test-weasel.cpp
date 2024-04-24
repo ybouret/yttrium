@@ -64,8 +64,11 @@ Y_UTEST(weasel)
     (void) cls.K(0);
     std::cerr << eqs << std::endl;
 
-    return 0;
+    Y_SIZEOF(Chemical::Conservation::Law);
+    Y_SIZEOF(Chemical::Cluster);
+    Y_SIZEOF(Chemical::Clusters);
 
+    
 
     {
         OutputFile fp("system.dot");
@@ -80,8 +83,7 @@ Y_UTEST(weasel)
     GraphViz::Vizible::Render("system.png", "system.dot", true);
 
 
-    Y_SIZEOF(Chemical::Cluster);
-    Y_SIZEOF(Chemical::Clusters);
+
 
 }
 Y_UDONE()

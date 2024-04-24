@@ -6,7 +6,6 @@
 #include "y/chemical/reactive/equilibrium.hpp"
 #include "y/container/cxx/array.hpp"
 #include "y/data/small/heavy/list/bare.hpp"
-#include "y/mkl/antelope/mul.hpp"
 #include "y/chemical/type/constants.hpp"
 
 namespace Yttrium
@@ -66,11 +65,11 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(MixedEquilibrium);
             virtual XReal getK(Real);
 
-            const IList                  in;     //!< indices of primary eqs
-            const WList                  nu;     //!< coefficient per primary eq
-            const Constants              &K_;    //!< shared constants
-            const XReal                  one;    //!< 1
-            MKL::Antelope::Mul<XReal>    xmul;   //!< to compute K
+            const IList      in;     //!< indices of primary eqs
+            const WList      nu;     //!< coefficient per primary eq
+            const Constants  &K_;    //!< shared constants
+            const XReal      one;    //!< 1
+            XMul             xmul;   //!< to compute K
         };
 
     }

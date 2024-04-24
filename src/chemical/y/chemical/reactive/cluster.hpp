@@ -51,8 +51,7 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-
-
+            
             const Cluster & operator*() const noexcept { return *this; }
 
             //! formatted output
@@ -62,6 +61,7 @@ namespace Yttrium
             //! get all K, in order to validate mixed-equilibria
             void getK(const Real t);
 
+            //! emit GraphViz Code
             void viz(OutputStream &fp, const size_t order, const size_t clusterIndex) const;
 
 

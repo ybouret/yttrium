@@ -41,7 +41,7 @@ namespace Yttrium
                 explicit Law(const String             &label,
                              const size_t              iboth,
                              const Readable<unsigned> &coeff,
-                             const SpSubSet           &spset);                 //!< setup from SubLevel info
+                             const SpSubSet           &table);                 //!< setup from SubLevel info
                 virtual ~Law() noexcept;                                       //!< cleanup
                 friend std::ostream & operator<<(std::ostream &, const Law &); //!< display
 
@@ -53,10 +53,7 @@ namespace Yttrium
                 //______________________________________________________________
                 const String &key() const noexcept;        //!< return actors' name
                 void          viz(OutputStream &fp) const; //!< GraphViz
-
-                //! check if common species
-                bool sharesSpeciesWith(const Law &law) const noexcept;
-
+                bool          sharesSpeciesWith(const Law &law) const noexcept;//! check if common species with another law
 
                 //______________________________________________________________
                 //
@@ -64,15 +61,17 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                Law *next; //!< for list
-                Law *prev; //!< for list
+                const XReal nrm2;
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Law);
                 Actors       cast;
                 const String uuid;
-
                 virtual ConstInterface & surrogate() const noexcept;
+            public:
+                Law        *next; //!< for list
+                Law        *prev; //!< for list
             };
 
             //typedef Small::BareLightList<const Law> clList;

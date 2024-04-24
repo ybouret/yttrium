@@ -9,7 +9,7 @@ namespace Yttrium
         {
 
             Laws:: ~Laws() noexcept {}
-            Laws:: Laws() noexcept :  Proxy<const Law::List>(), cll() {}
+            Laws::  Laws() noexcept :  Proxy<const Law::List>(), cll() {}
 
             Laws::ConstInterface & Laws:: surrogate() const noexcept { return cll; }
 
@@ -19,6 +19,7 @@ namespace Yttrium
 
             {
                 cll.release();
+                XAdd xadd(Qm.cols);
                 for(size_t i=1;i<=Qm.rows;++i)
                 {
                     const String label = Formatted::Get("#%lu", static_cast<unsigned long>(i));

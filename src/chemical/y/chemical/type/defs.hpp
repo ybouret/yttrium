@@ -5,6 +5,8 @@
 
 #include "y/mkl/api.hpp"
 #include "y/memory/out-of-reach.hpp"
+#include "y/mkl/antelope/mul.hpp"
+#include "y/mkl/antelope/add.hpp"
 
 namespace Yttrium
 {
@@ -13,7 +15,10 @@ namespace Yttrium
         typedef double        Real;   //!< hardware real
         typedef XReal<double> XReal;  //!< software real
 
-        
+        typedef MKL::Antelope::Add<XReal> XAdd;
+        typedef MKL::Antelope::Mul<XReal> XMul;
+
+
     }
 }
 
