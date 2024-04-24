@@ -58,7 +58,10 @@ namespace Yttrium
             static void Render(const String &pngFile,
                                const String &dotFile,
                                const bool    keepDot = false);
-            
+
+            //! render png from dotfile
+            static void RenderPNG(const String &dotFile, const bool keepDot);
+
             //______________________________________________________________________
             //
             //
@@ -101,7 +104,6 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Vizible);
             static OutputStream *OpenFile(const String &dotFile);
-            static void          RenderPNG(const String &dotFile, const bool keepDot);
         };
         
     }

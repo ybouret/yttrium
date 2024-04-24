@@ -42,6 +42,8 @@ namespace Yttrium
             //! cleanup
             const Readable<xreal_t> & K(const real_t t);
 
+            void graphViz(const String &root) const;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Clusters);
             Cluster::List clusters;
@@ -51,6 +53,7 @@ namespace Yttrium
             GList        groups; //!< all conservation groups
             const size_t maxSPC; //!< max Species Per Cluster
             const size_t maxCPG; //!< max Conservations Per Group
+            const size_t maxDEG; //!< maximum degree of combinations
         };
     }
 

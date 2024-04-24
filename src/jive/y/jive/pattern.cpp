@@ -66,7 +66,21 @@ namespace Yttrium
             viz(fp);
             Vizible::Leave(fp);
         }
-        
+
+        String Pattern:: ToRegExp(const String &s)
+        {
+            const size_t n = s.size();
+            String res(4*n,AsCapacity,false);
+            for(size_t i=1;i<=n;++i)
+            {
+                char          buff[8] = {0,0,0,0,0,0,0,0};
+                const uint8_t byte    = s[i];
+                snprintf(buff,sizeof(buff)-1,"\\x%02x",byte);
+                res += buff;
+            }
+            return res;
+        }
+
     }
 
 }

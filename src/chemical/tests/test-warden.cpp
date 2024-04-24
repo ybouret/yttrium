@@ -24,6 +24,7 @@ Y_UTEST(warden)
     XMLog xml(verbose);
     Chemical::Constants K;
     Chemical::Clusters  cls(eqs,K,xml);
+    cls.graphViz("system");
     Chemical::Conservation::Warden warden(cls);
 
 

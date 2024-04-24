@@ -12,7 +12,8 @@ namespace Yttrium
         clusters(),
         sharedK(topK),
         maxSPC(0),
-        maxCPG(0)
+        maxCPG(0),
+        maxDEG(0)
         {
             Y_XML_SECTION(xml, "Chemical::Clusters" );
 
@@ -36,17 +37,20 @@ namespace Yttrium
                     Coerce(maxCPG) = Max(g->size,maxCPG);
                     Coerce(groups) << g;
                 }
-                Coerce(maxSPC) = Max(cl->species.size,maxSPC);
+                Coerce(maxSPC) = Max(maxSPC,cl->species.size);
+                Coerce(maxDEG) = Max(maxDEG,cl->blend.size());
             }
 
             //__________________________________________________________________
             //
-            // finalize
+            // finalize: adjust top-level constants
             //__________________________________________________________________
+            sharedK->adjust(eqs->size(),0);
             {
                 Y_XML_SECTION(xml, "Summary");
                 Y_XMLOG(xml, "  (*) #Cluster                   : " << clusters.size);
                 Y_XMLOG(xml, "  (*) Max Species Per Cluster    : " << maxSPC);
+                Y_XMLOG(xml, "  (*) Max Degree  Per Cluster    : " << maxDEG);
                 Y_XMLOG(xml, "  (*) #Conservation Group        : " << groups.size);
                 for(const GNode *gn=groups.head;gn;gn=gn->next)
                 {
@@ -55,8 +59,7 @@ namespace Yttrium
                 Y_XMLOG(xml, "  (*) Max Conservation Per Group : " << maxCPG);
             }
 
-            // adjust top-level constants
-            sharedK->adjust(eqs->size(),0);
+
         }
 
         Clusters::ConstInterface & Clusters:: surrogate() const noexcept
@@ -74,6 +77,61 @@ namespace Yttrium
             for(Cluster *cl=clusters.head;cl;cl=cl->next)
                 cl->getK(t);
             return *sharedK;
+        }
+
+    }
+
+}
+
+#include "y/vfs/local-fs.hpp"
+#include "y/jive/pattern/vfs.hpp"
+#include "y/stream/libc/output.hpp"
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        void Clusters:: graphViz(const String &root) const
+        {
+            VFS          &fs = LocalFS::Instance();
+
+            // remove 'root[:digit:]*.(dot|png)'
+            {
+                VFS::Entries entries;
+                {
+                    const String  rx = Jive::Pattern::ToRegExp(root) +"[:digit:]*[.](dot|png)&";
+                    Jive::Matcher match(rx); GraphViz::Vizible::DotToPng("motif.dot", *match.motif);
+                    Jive::VirtualFileSystem::Find(fs, ".", entries, match);
+                }
+
+                for(const VFS::Entry *ep=entries.head;ep;ep=ep->next)
+                {
+                    std::cerr << "--> " << *ep << std::endl;
+                    fs.tryRemoveFile(ep->path);
+                }
+            }
+
+            // one graph per degreee
+            for(size_t deg=1;deg<=maxDEG;++deg)
+            {
+
+                const String dotName = root + Formatted::Get("%u.dot",unsigned(deg));
+                {
+                    OutputFile fp(dotName);
+                    GraphViz::Vizible::Enter(fp, "G");
+                    size_t clusterIndex = 1;
+                    for(const Cluster *cl=clusters.head;cl;cl=cl->next,++clusterIndex)
+                    {
+                        if(deg<=cl->blend.size())
+                        {
+                            cl->viz(fp,deg,clusterIndex);
+                        }
+                    }
+                    GraphViz::Vizible::Leave(fp);
+                }
+                std::cerr << " (*) Rendering '" << dotName << "'..." << std::endl;
+                GraphViz::Vizible::RenderPNG(dotName,false);
+            }
         }
 
 

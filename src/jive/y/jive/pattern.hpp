@@ -123,7 +123,7 @@ namespace Yttrium
             // saving
             //__________________________________________________________________
             void graphViz(OutputStream &) const; //!< call viz
-
+            static String ToRegExp(const String &);
 
 
             //__________________________________________________________________
