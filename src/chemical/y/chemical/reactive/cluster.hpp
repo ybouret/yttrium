@@ -63,7 +63,7 @@ namespace Yttrium
 
             //! emit GraphViz Code
             void viz(OutputStream &fp, const size_t order, const size_t clusterIndex) const;
-
+            
 
         public:
             Cluster                    *next;      //!< for list

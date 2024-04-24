@@ -23,6 +23,11 @@ namespace Yttrium
             return os;
         }
 
+        xreal_t Species:: Concentration(Random::Bits &ran)
+        {
+            const real_t p = ran.in<real_t>(PMIN,PMAX);
+            return pow(10.0,p);
+        }
 
     }
 }

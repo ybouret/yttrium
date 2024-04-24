@@ -10,6 +10,7 @@
 #include "y/associative/suffix/set.hpp"
 #include "y/ptr/ark.hpp"
 #include "y/sort/merge.hpp"
+#include "y/random/bits.hpp"
 
 namespace Yttrium
 {
@@ -33,13 +34,12 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            //typedef Small::BareLightList<const Species> BareList; //!< once usage
-            //typedef Small::SoloLightList<const Species> SoloList; //!< standalone, multiple usage
-            //typedef Small::CoopLightList<const Species> CoopList; //!< shared, multiple usage
-            //typedef CoopList::ProxyType                 CoopRepo; //!< memory for CoopList
-
             typedef ArkPtr<String,Species>              Handle;   //!< alias
             typedef SuffixSet<String,Handle>            Set;      //!< alias
+            static  const int                           PMIN=-10;
+            static  const int                           PMAX=1;
+
+            static xreal_t Concentration(Random::Bits &);
 
             //__________________________________________________________________
             //

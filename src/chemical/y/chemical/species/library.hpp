@@ -71,6 +71,18 @@ namespace Yttrium
             const Species & operator[](const String &id) const; //!< get species by name
             const Species & operator[](const char   *id) const; //!< get species by name
 
+            template <typename ARRAY> inline
+            std::ostream & operator()(std::ostream &os, ARRAY &array) const
+            {
+                os << '{' << std::endl;
+                for(ConstIterator it=sdb.begin();it!=sdb.end();++it)
+                {
+                    const Species &sp = **it;
+                    pad(os << "    " << '[' << sp.name << ']',sp) << " = " << array[ sp.indx[TopLevel] ] << std::endl;
+                }
+                return os << '}';
+            }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);

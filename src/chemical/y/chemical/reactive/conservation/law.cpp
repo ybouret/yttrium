@@ -91,7 +91,7 @@ namespace Yttrium
                                    const Level            incoming,
                                    XAdd                  &xadd) const
             {
-                // initialize (outgoint) dC
+                // initialize (outgoin) dC
                 dC.ld(zero);
                 xadd.free();
 

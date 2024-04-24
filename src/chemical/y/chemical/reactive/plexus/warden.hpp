@@ -22,9 +22,9 @@ namespace Yttrium
                 explicit Warden(const Clusters &clusters);
                 virtual ~Warden() noexcept;
 
-                void process(Writable<xreal_t>         &C,
-                             Writable<xreal_t>         &I,
-                             const Conservation::Group &G);
+                void process(Writable<xreal_t>  &C,
+                             Writable<xreal_t>  &I,
+                             const Group        &G);
 
                 
 
@@ -33,6 +33,7 @@ namespace Yttrium
                 Matrix<xreal_t> dC;
                 Repo            repo;
                 Jail            jail;
+                XAdd            xadd;
             };
         }
 
