@@ -78,7 +78,7 @@ namespace Yttrium
                 for(ConstIterator it=sdb.begin();it!=sdb.end();++it)
                 {
                     const Species &sp = **it;
-                    pad(os << "    " << '[' << sp.name << ']',sp) << " = " << array[ sp.indx[TopLevel] ] << std::endl;
+                    pad(os << "    " << '[' << sp.name << ']',sp) << " = " << real_t(array[ sp.indx[TopLevel] ]) << std::endl;
                 }
                 return os << '}';
             }

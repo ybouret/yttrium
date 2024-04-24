@@ -13,6 +13,7 @@ namespace Yttrium
         sharedK(topK),
         maxSPC(0),
         maxCPG(0),
+        maxSPG(0),
         maxDEG(0)
         {
             Y_XML_SECTION(xml, "Chemical::Clusters" );
@@ -35,6 +36,7 @@ namespace Yttrium
                 {
                     const Conservation::Group &g = *grp;
                     Coerce(maxCPG) = Max(g->size,maxCPG);
+                    Coerce(maxSPG) = Max(maxSPG,g.species.size);
                     Coerce(groups) << g;
                 }
                 Coerce(maxSPC) = Max(maxSPC,cl->species.size);
@@ -57,6 +59,8 @@ namespace Yttrium
                     Y_XMLOG(xml,"   |-" << **gn);
                 }
                 Y_XMLOG(xml, "  (*) Max Conservation Per Group : " << maxCPG);
+                Y_XMLOG(xml, "  (*) Max Species      Per Group : " << maxSPG);
+
             }
 
 

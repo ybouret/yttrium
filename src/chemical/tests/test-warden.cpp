@@ -21,7 +21,7 @@ Y_UTEST(warden)
         weasel( Jive::Module::OpenData("data",argv[i]), lib, eqs);
     }
     
-    Vector<Chemical::xreal_t> C0(lib->size(),0);
+    Vector<Chemical::xreal_t> C0(lib->size(),0),Injected(C0);
     for(size_t i=C0.size();i>0;--i)
     {
         C0[i] = Chemical::Species::Concentration(ran);
@@ -42,6 +42,7 @@ Y_UTEST(warden)
     cls.graphViz("system");
     Chemical::Conservation::Warden warden(cls);
 
+    warden(C0, Injected, cls.groups);
 
 
 

@@ -25,7 +25,7 @@ namespace Yttrium
 
         xreal_t Species:: Concentration(Random::Bits &ran)
         {
-            const real_t p = ran.in<real_t>(PMIN,PMAX);
+            const real_t p = PMIN + (PMAX-PMIN)*ran.to<real_t>();
             return pow(10.0,p);
         }
 

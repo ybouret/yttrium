@@ -53,9 +53,10 @@ namespace Yttrium
                 //______________________________________________________________
                 bool accepts(const Law &)   const noexcept; //!< true is sharing at least one species
                 bool accepts(const Group &) const noexcept; //!< true is sharing at least one species
-                void compile();                //!< gather all species and make their AuxLevel indices
-                void append(const Law &);      //!< append a new law
-                void append(Group &) noexcept; //!< steal new group content
+                void append(const Law &);                   //!< append a new law
+                void append(Group &) noexcept;              //!< steal new group content
+
+                void compile();                             //!< gather all species and make their AuxLevel indices
 
                 //______________________________________________________________
                 //

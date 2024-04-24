@@ -53,6 +53,7 @@ namespace Yttrium
             GList        groups; //!< all conservation groups
             const size_t maxSPC; //!< max Species Per Cluster
             const size_t maxCPG; //!< max Conservations Per Group
+            const size_t maxSPG; //!< max Specie Per Group
             const size_t maxDEG; //!< maximum degree of combinations
         };
     }
