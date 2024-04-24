@@ -138,7 +138,6 @@ namespace Yttrium
                     Coerce(maxGroupSize) = Max(maxGroupSize,grp->size);
                     Y_XMLOG(xml, " (+) # " << std::setw(2) << grp->size << " @" << *grp);
                 }
-                Y_XMLOG(xml, " (*) #group=" << groups->size);
                 Y_XMLOG(xml, " (*) maxGroupSize = " << maxGroupSize);
 
             }

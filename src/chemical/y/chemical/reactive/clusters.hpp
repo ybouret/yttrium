@@ -42,8 +42,9 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Clusters);
             Cluster::List clusters;
             Constants     sharedK;
-
             virtual ConstInterface & surrogate() const noexcept;
+        public:
+            const size_t maxGroupSize; //!< over all clusters
         };
     }
 

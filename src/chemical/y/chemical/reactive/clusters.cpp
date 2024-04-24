@@ -10,7 +10,8 @@ namespace Yttrium
                             const Constants &topK,
                             XMLog           &xml) :
         clusters(),
-        sharedK(topK)
+        sharedK(topK),
+        maxGroupSize(0)
         {
             Y_XML_SECTION(xml, "Chemical::Clusters" );
 
@@ -20,9 +21,11 @@ namespace Yttrium
             // create one cluster per batch
             for(const Batch *batch=batches.head;batch;batch=batch->next)
             {
-                clusters.pushTail( new Cluster(eqs,*batch,sharedK,xml) );
+                const Cluster *cl = clusters.pushTail( new Cluster(eqs,*batch,sharedK,xml) );
+                Coerce(maxGroupSize) = Max(cl->maxGroupSize,maxGroupSize);
             }
-
+            Y_XMLOG(xml, "  (*) #cluster=" << clusters.size );
+            Y_XMLOG(xml, "  (*) conservation max group size : " << maxGroupSize);
             // adjust top-level constants
             sharedK->adjust(eqs->size(),0);
         }

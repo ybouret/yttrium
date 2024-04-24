@@ -9,6 +9,7 @@ chemical/reactive/equilibrium
 chemical/reactive/equilibria
 chemical/reactive/conservation
 chemical/reactive/cluster
+chemical/reactive/plexus
 chemical/lang
 )
 
