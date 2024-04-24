@@ -61,7 +61,7 @@ namespace Yttrium
                 return false;
             }
 
-            const char * const Law::Colors = "dark28";
+            const char * const Law::Colors = "set28";
 
             void Law:: viz(OutputStream &fp) const
             {

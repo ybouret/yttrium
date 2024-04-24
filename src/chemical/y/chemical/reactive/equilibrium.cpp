@@ -19,7 +19,7 @@ namespace Yttrium
             return k;
         }
 
-        const char * const Equilibrium::Colors = "set19";
+        const char * const Equilibrium::Colors = "dark28";
 
         const String Equilibrium:: vizColor(const Level level) const
         {
