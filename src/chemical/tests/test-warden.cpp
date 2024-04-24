@@ -1,20 +1,19 @@
 #include "y/chemical/weasel.hpp"
-#include "y/chemical/reactive/clusters.hpp"
+#include "y/chemical/reactive/plexus/warden.hpp"
 #include "y/utest/run.hpp"
 
 #include "y/stream/libc/output.hpp"
 #include "y/sequence/vector.hpp"
 
 using namespace Yttrium;
-using namespace Chemical;
 
 
 
 Y_UTEST(warden)
 {
-    Weasel &      weasel = Weasel::Instance();
-    Library       lib;
-    LuaEquilibria eqs;
+    Chemical::Weasel &        weasel = Chemical::Weasel::Instance();
+    Chemical::Library         lib;
+    Chemical::LuaEquilibria   eqs;
 
     for(int i=1;i<argc;++i)
     {
@@ -25,6 +24,8 @@ Y_UTEST(warden)
     XMLog xml(verbose);
     Chemical::Constants K;
     Chemical::Clusters  cls(eqs,K,xml);
-    
+    Chemical::Conservation::Warden warden(cls);
+
+
 }
 Y_UDONE()

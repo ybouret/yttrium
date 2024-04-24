@@ -51,15 +51,15 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
-                const String &key() const noexcept;        //!< return actors' name
-                void          viz(OutputStream &fp) const; //!< GraphViz
-                bool          sharesSpeciesWith(const Law &law) const noexcept;//! check if common species with another law
-              
-                XReal         required(Writable<XReal>       &dC,
-                                       const Level            outgoing,
-                                       const Readable<XReal> &C,
-                                       const Level            incoming,
-                                       XAdd                  &xadd) const;
+                const String &key()                             const noexcept; //!< return actors' name
+                void          viz(OutputStream &fp)                      const; //!< GraphViz
+                bool          sharesSpeciesWith(const Law &law) const noexcept; //!< check if common species with another law
+                
+                xreal_t       required(Writable<xreal_t>       &dC,
+                                       const Level             outgoing,
+                                       const Readable<xreal_t> &C,
+                                       const Level             incoming,
+                                       XAdd                   &xadd) const;
 
                 //______________________________________________________________
                 //
@@ -67,8 +67,8 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                const XReal nrm2;
-                const XReal zero;
+                const xreal_t nrm2; //!< |this|^2
+                const xreal_t zero; //!< 0
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Law);

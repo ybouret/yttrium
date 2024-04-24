@@ -42,11 +42,16 @@ namespace Yttrium
 
         void Batch:: prepareSpecies()
         {
-            AddressBook   book;
-            SList        &spec = Coerce(species); spec.free();
-            for(const ENode *en=head;en;en=en->next)                         (**en).recordSpeciesInto(book);
-            for(AddressBook::Iterator it=book.begin(); it!=book.end(); ++it) spec << *static_cast<const Species *>( *it );
-            LightSort::MakeSubLevel(spec);
+            {
+                SList        &spec = Coerce(species); spec.free();
+                {
+                    AddressBook   book;
+                    for(const ENode *en=head;en;en=en->next) (**en).recordSpeciesInto(book);
+                    SendBookTo<SList>(spec,book);
+                }
+                LightSort::MakeSubLevel(spec);
+            }
+            assert( species.size == (**species.tail).indx[SubLevel] );
         }
 
     }

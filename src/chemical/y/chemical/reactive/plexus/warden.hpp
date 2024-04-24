@@ -11,16 +11,30 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class Warden
+        namespace Conservation
         {
-        public:
-            explicit Warden();
-            virtual ~Warden() noexcept;
-            
+            class Warden
+            {
+            public:
+                typedef Small::CoopLightList<const Law> Jail;
+                typedef Jail::ProxyType                 Repo;
 
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Warden);
-        };
+                explicit Warden(const Clusters &clusters);
+                virtual ~Warden() noexcept;
+
+                void process(Writable<xreal_t>         &C,
+                             Writable<xreal_t>         &I,
+                             const Conservation::Group &G);
+
+                
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Warden);
+                Matrix<xreal_t> dC;
+                Repo            repo;
+                Jail            jail;
+            };
+        }
 
     }
 

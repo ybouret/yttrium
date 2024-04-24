@@ -11,21 +11,50 @@ namespace Yttrium
                             XMLog           &xml) :
         clusters(),
         sharedK(topK),
-        maxGroupSize(0)
+        maxSPC(0),
+        maxCPG(0)
         {
             Y_XML_SECTION(xml, "Chemical::Clusters" );
 
+            //__________________________________________________________________
+            //
             // create batches
+            //
+            //__________________________________________________________________
             const Batches batches(eqs);
 
+            //__________________________________________________________________
+            //
             // create one cluster per batch
+            //__________________________________________________________________
             for(const Batch *batch=batches.head;batch;batch=batch->next)
             {
                 const Cluster *cl = clusters.pushTail( new Cluster(eqs,*batch,sharedK,xml) );
-                Coerce(maxGroupSize) = Max(cl->maxGroupSize,maxGroupSize);
+                for(const Conservation::Group *grp=cl->groups->head;grp;grp=grp->next)
+                {
+                    const Conservation::Group &g = *grp;
+                    Coerce(maxCPG) = Max(g->size,maxCPG);
+                    Coerce(groups) << g;
+                }
+                Coerce(maxSPC) = Max(cl->species.size,maxSPC);
             }
-            Y_XMLOG(xml, "  (*) #cluster=" << clusters.size );
-            Y_XMLOG(xml, "  (*) conservation max group size : " << maxGroupSize);
+
+            //__________________________________________________________________
+            //
+            // finalize
+            //__________________________________________________________________
+            {
+                Y_XML_SECTION(xml, "Summary");
+                Y_XMLOG(xml, "  (*) #Cluster                   : " << clusters.size);
+                Y_XMLOG(xml, "  (*) Max Species Per Cluster    : " << maxSPC);
+                Y_XMLOG(xml, "  (*) #Conservation Group        : " << groups.size);
+                for(const GNode *gn=groups.head;gn;gn=gn->next)
+                {
+                    Y_XMLOG(xml,"   |-" << **gn);
+                }
+                Y_XMLOG(xml, "  (*) Max Conservation Per Group : " << maxCPG);
+            }
+
             // adjust top-level constants
             sharedK->adjust(eqs->size(),0);
         }
@@ -40,7 +69,7 @@ namespace Yttrium
         {
         }
 
-        const Readable<XReal> & Clusters :: K(const Real t)
+        const Readable<xreal_t> & Clusters :: K(const real_t t)
         {
             for(Cluster *cl=clusters.head;cl;cl=cl->next)
                 cl->getK(t);

@@ -39,7 +39,7 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            XReal        K(Real t);                                  //!< checked constant at a given time
+            xreal_t      K(real_t t);                                  //!< checked constant at a given time
             void         viz(OutputStream &, const Level)     const; //!< output node+name
             void         vizLink(OutputStream &, const Level) const; //!< make arrows
             const String vizColor(const Level)                const; //!< color=...,fontocolor=...
@@ -73,7 +73,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);
-            virtual XReal getK(Real t) = 0;
+            virtual xreal_t getK(real_t t) = 0;
         };
 
         typedef Small::BareLightList<const Equilibrium> EList;    //!< alias

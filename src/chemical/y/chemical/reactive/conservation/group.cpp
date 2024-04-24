@@ -1,6 +1,6 @@
 
 #include "y/chemical/reactive/conservation/group.hpp"
-
+#include "y/associative/address-book.hpp"
 namespace Yttrium
 {
     namespace Chemical
@@ -14,17 +14,34 @@ namespace Yttrium
 
             Group:: Group(const Law &first) :
             Object(),
-            clList(),
+            Proxy<const LawList>(),
+            species(),
             next(0),
-            prev(0)
+            prev(0),
+            laws()
             {
-                (*this) << first;
+                laws << first;
             }
 
+            Group:: ConstInterface & Group:: surrogate() const noexcept
+            {
+                return laws;
+            }
+
+            void Group:: append(const Law &law)
+            {
+                laws << law;
+                updateWith(law);
+            }
+
+            void Group:: append(Group &group) noexcept
+            {
+                laws.mergeTail(group.laws);
+            }
 
             bool Group:: accepts(const Law &law) const noexcept
             {
-                for(const clNode *cl=head;cl;cl=cl->next)
+                for(const LawNode *cl=laws.head;cl;cl=cl->next)
                 {
                     const Law &mine = **cl;
                     if(mine.sharesSpeciesWith(law)) return true;
@@ -35,13 +52,38 @@ namespace Yttrium
 
             bool Group:: accepts(const Group &group) const noexcept
             {
-                for(const clNode *cl=head;cl;cl=cl->next)
+                for(const LawNode *cl=laws.head;cl;cl=cl->next)
                 {
                     if(group.accepts(**cl)) return true;
                 }
                 return false;
             }
 
+
+            void Group:: compile()
+            {
+                Coerce(maxLength) = 0;
+                {
+                    SList &target = Coerce(species);
+                    target.free();
+                    {
+                        AddressBook book;
+                        for(const LawNode *cl=laws.head;cl;cl=cl->next)
+                        {
+                            const Law &law = **cl;
+                            for(const Actor *a=law->head;a;a=a->next)
+                            {
+                                updateWith(a->sp);
+                                book |= a->sp;
+                            }
+                        }
+                        SendBookTo<SList>(target,book);
+                    }
+                    LightSort::MakeAuxLevel(target);
+                }
+                assert(species.size>0);
+                assert( (**(species.tail)).indx[AuxLevel] == species.size);
+            }
 
         }
 

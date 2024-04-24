@@ -25,9 +25,9 @@ namespace Yttrium
 
             //! setup
             template <typename UID> inline
-            explicit ConstantEquilibrium(const UID   &uid,
-                                         const size_t topLevel,
-                                         const XReal  value) :
+            explicit ConstantEquilibrium(const UID     &uid,
+                                         const size_t   topLevel,
+                                         const xreal_t  value) :
             Equilibrium(uid,topLevel),
             K_(value)
             {
@@ -39,8 +39,8 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ConstantEquilibrium);
-            const XReal K_;
-            virtual XReal getK(Real) noexcept;
+            const xreal_t K_;
+            virtual xreal_t getK(real_t) noexcept;
         };
 
     }

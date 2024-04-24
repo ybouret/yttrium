@@ -47,7 +47,7 @@ namespace Yttrium
 
             std::ostream & operator<<(std::ostream &os, const Law &law)
             {
-                os << "d_(" << law.uuid << ")/" ;//<< double(law.nrm2);
+                os << "d_(" << law.uuid << ")" ;//<< double(law.nrm2);
                 return os;
             }
 
@@ -81,15 +81,15 @@ namespace Yttrium
                     }
                     Endl(fp << ']');
                 }
-                
+
             }
 
 
-            XReal Law:: required(Writable<XReal>       &dC,
-                                 const Level            outgoing,
-                                 const Readable<XReal> &C,
-                                 const Level            incoming,
-                                 XAdd                  &xadd) const
+            xreal_t Law:: required(Writable<xreal_t>       &dC,
+                                   const Level            outgoing,
+                                   const Readable<xreal_t> &C,
+                                   const Level            incoming,
+                                   XAdd                  &xadd) const
             {
                 // initialize (outgoint) dC
                 dC.ld(zero);
@@ -100,7 +100,7 @@ namespace Yttrium
                 {
                     xadd << a->xnu * C[ a->sp.indx[incoming] ];
                 }
-                const XReal scale = xadd.sum();
+                const xreal_t scale = xadd.sum();
                 assert(xadd.isEmpty());
 
                 // act accordingly
@@ -108,7 +108,7 @@ namespace Yttrium
                 {
                     for(const Actor *a=cast.head;a;a=a->next)
                     {
-                        const XReal d = -(scale * a->xnu)/nrm2;
+                        const xreal_t d = -(scale * a->xnu)/nrm2;
                         dC[ a->sp.indx[outgoing] ] = d;
                         xadd << d*d;
                     }

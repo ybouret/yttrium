@@ -11,7 +11,7 @@ namespace Yttrium
             
         }
 
-        XReal LuaEquilibrium:: getK(Real t)
+        xreal_t LuaEquilibrium:: getK(real_t t)
         {
             return F(t);
         }

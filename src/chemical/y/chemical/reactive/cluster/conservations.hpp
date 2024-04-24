@@ -46,7 +46,6 @@ namespace Yttrium
             const Matrix<unsigned>     Qm;               //!< conservation matrix
             const Conservation::Laws   laws;             //!< corresponding conservation laws
             const Conservation::Groups groups;           //!< independent groups of dependents laws
-            const size_t               maxGroupSize;     //!< maximum 
             const AddressBook          conserved;        //!< conserved species database
             const AddressBook          unbounded;        //!< unbounded species database
             const SList                conservedSpecies; //!< conserved species list

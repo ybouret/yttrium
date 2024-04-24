@@ -10,7 +10,7 @@ namespace Yttrium
         {
         }
 
-        XReal ConstantEquilibrium:: getK(Real) noexcept
+        xreal_t ConstantEquilibrium:: getK(real_t) noexcept
         {
             return K_;
         }

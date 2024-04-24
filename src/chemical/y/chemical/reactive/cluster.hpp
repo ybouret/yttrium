@@ -59,7 +59,7 @@ namespace Yttrium
 
 
             //! get all K, in order to validate mixed-equilibria
-            void getK(const Real t);
+            void getK(const real_t t);
 
             //! emit GraphViz Code
             void viz(OutputStream &fp, const size_t order, const size_t clusterIndex) const;

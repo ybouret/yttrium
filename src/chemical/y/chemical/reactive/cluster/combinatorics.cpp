@@ -138,6 +138,7 @@ namespace Yttrium
                 for(const ENode *en=head;en;en=en->next) el << **en;
             }
 
+            if(survey.size<=0) return;
 
             //------------------------------------------------------------------
             //

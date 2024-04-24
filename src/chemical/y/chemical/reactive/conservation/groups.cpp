@@ -25,6 +25,7 @@ namespace Yttrium
             void Groups:: collect(const Laws &laws)
             {
                 cgl.release();
+
                 for(const Law *law = laws->head; law; law=law->next)
                 {
 
@@ -32,7 +33,7 @@ namespace Yttrium
                     {
                         if(group->accepts(*law))
                         {
-                            (*group) << *law;
+                            group->append(*law);
                             fusion();
                             goto DONE;
                         }
@@ -42,6 +43,12 @@ namespace Yttrium
                     cgl.pushTail( new Group(*law) );
                 DONE:
                     continue;
+                }
+
+                
+                for(Group *group=cgl.head;group;group=group->next)
+                {
+                    group->compile();
                 }
             }
 
@@ -56,7 +63,7 @@ namespace Yttrium
                     {
                         if(lhs->accepts(*rhs))
                         {
-                            lhs->mergeTail(*rhs);
+                            lhs->append(*rhs);
                             goto DONE;
                         }
                     }

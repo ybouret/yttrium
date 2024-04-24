@@ -15,10 +15,7 @@ namespace Yttrium
 
         static inline void TransferTo(SList &target, const AddressBook &source)
         {
-            for(AddressBook::ConstIterator it=source.begin();it!=source.end();++it)
-            {
-                target << *static_cast<const Species *>( *it );
-            }
+            SendBookTo<SList>(target,source);
             LightSort::BySubLevel(target);
         }
 
@@ -29,7 +26,6 @@ namespace Yttrium
         Qm(),
         laws(),
         groups(),
-        maxGroupSize(0),
         conserved(),
         unbounded(),
         conservedSpecies(),
@@ -83,6 +79,10 @@ namespace Yttrium
             //------------------------------------------------------------------
             {
                 Y_XML_SECTION(xml,"WriteDown");
+
+                //--------------------------------------------------------------
+                // create laws from Qm
+                //--------------------------------------------------------------
                 Coerce(laws).writeDown(Qm,spset);
                 if(xml.verbose)
                 {
@@ -91,10 +91,14 @@ namespace Yttrium
                         xml() << *law << std::endl;
                     }
                 }
+
+                //--------------------------------------------------------------
+                // reckon species
+                //--------------------------------------------------------------
                 for(const SNode *sn=species.head;sn;sn=sn->next)
                 {
-                    const Species &sp = **sn;
-                    const size_t   j = sp.indx[SubLevel];
+                    const Species &sp    = **sn;
+                    const size_t   j     = sp.indx[SubLevel];
                     bool           found = false;
 
                     for(size_t i=Qm.rows;i>0;--i)
@@ -132,14 +136,6 @@ namespace Yttrium
                 Y_XML_SECTION(xml,"Collect");
                 Coerce(groups).collect(laws);
                 Y_XMLOG(xml, " (*) #group=" << groups->size);
-
-                for(const Conservation::Group *grp=groups->head;grp;grp=grp->next)
-                {
-                    Coerce(maxGroupSize) = Max(maxGroupSize,grp->size);
-                    Y_XMLOG(xml, " (+) # " << std::setw(2) << grp->size << " @" << *grp);
-                }
-                Y_XMLOG(xml, " (*) maxGroupSize = " << maxGroupSize);
-
             }
         }
     }

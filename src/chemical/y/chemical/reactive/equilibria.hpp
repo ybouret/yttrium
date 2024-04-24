@@ -67,7 +67,7 @@ namespace Yttrium
 
             //! make a new constant equilibirum
             template <typename NAME> inline
-            Equilibrium & make(const NAME &name, const XReal value)
+            Equilibrium & make(const NAME &name, const xreal_t value)
             {
                 return insert( new ConstantEquilibrium(name,topLevel(),value) );
             }

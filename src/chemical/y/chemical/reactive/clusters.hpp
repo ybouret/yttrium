@@ -10,6 +10,10 @@ namespace Yttrium
 {
     namespace Chemical
     {
+
+        typedef Small::BareLightList<const Conservation::Group> GList;
+        typedef GList::NodeType                                 GNode;
+        
         //______________________________________________________________________
         //
         //
@@ -36,7 +40,7 @@ namespace Yttrium
 
 
             //! cleanup
-            const Readable<XReal> & K(const Real t);
+            const Readable<xreal_t> & K(const real_t t);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Clusters);
@@ -44,7 +48,9 @@ namespace Yttrium
             Constants     sharedK;
             virtual ConstInterface & surrogate() const noexcept;
         public:
-            const size_t maxGroupSize; //!< over all clusters
+            GList        groups; //!< all conservation groups
+            const size_t maxSPC; //!< max Species Per Cluster
+            const size_t maxCPG; //!< max Conservations Per Group
         };
     }
 

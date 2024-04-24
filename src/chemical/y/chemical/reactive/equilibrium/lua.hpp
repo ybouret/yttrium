@@ -40,8 +40,8 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(LuaEquilibrium);
-            Lua::Function<Real> F;
-            virtual XReal getK(Real t);
+            Lua::Function<real_t> F;
+            virtual xreal_t getK(real_t t);
         };
     }
 

@@ -11,10 +11,10 @@ namespace Yttrium
         {
         }
         
-        XReal Equilibrium:: K(Real t)
+        xreal_t Equilibrium:: K(real_t t)
         {
-            static const XReal _0(0);
-            const XReal k = getK(t);
+            static const xreal_t _0(0);
+            const xreal_t k = getK(t);
             if(k<=_0) throw Specific::Exception("Chemical::Equilibrium", "%s.K=%g at t=%g", name.c_str(), double(k), double(t) );
             return k;
         }

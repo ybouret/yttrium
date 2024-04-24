@@ -50,7 +50,7 @@ namespace Yttrium
             //__________________________________________________________________
             const Species  &sp;   //!< persistent species
             const unsigned  nu;   //!< stoichiometric coefficient
-            const XReal     xnu;  //!< nu as xreal
+            const xreal_t   xnu;  //!< nu as xreal
             const unsigned  nu1;  //!< nu-1
             Actor          *next; //!< for list
             Actor          *prev; //!< for list

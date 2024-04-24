@@ -21,7 +21,7 @@ namespace Yttrium
         //! base type to store constants
         //
         //______________________________________________________________________
-        typedef Vector<XReal,Memory::Dyadic> XVectorType;
+        typedef Vector<xreal_t,Memory::Dyadic> XVectorType;
 
 
         //______________________________________________________________________

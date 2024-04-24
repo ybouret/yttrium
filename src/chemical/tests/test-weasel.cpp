@@ -54,6 +54,16 @@ Y_UTEST(weasel)
     (void) cls.K(0);
     std::cerr << eqs << std::endl;
 
+    Vector<xreal_t> C0(lib->size(),0);
+
+    for(const Cluster *cl=cls->head;cl;cl=cl->next)
+    {
+        cl->spfmt.show(std::cerr, "[", cl->species, "]", C0, TopLevel);
+    }
+
+
+
+
     Y_SIZEOF(Chemical::Conservation::Law);
     Y_SIZEOF(Chemical::Cluster);
     Y_SIZEOF(Chemical::Clusters);

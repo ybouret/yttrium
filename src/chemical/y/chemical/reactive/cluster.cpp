@@ -21,9 +21,9 @@ namespace Yttrium
         Cluster::  ~Cluster() noexcept {}
 
 
-        void Cluster:: getK(const Real t)
+        void Cluster:: getK(const real_t t)
         {
-            Writable<XReal> &K = *sharedK;
+            Writable<xreal_t> &K = *sharedK;
             for(const ENode *node=head;node;node=node->next)
             {
                 Equilibrium &eq = Coerce(**node);

@@ -63,12 +63,12 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MixedEquilibrium);
-            virtual XReal getK(Real);
+            virtual xreal_t getK(real_t);
 
             const IList      in;     //!< indices of primary eqs
             const WList      nu;     //!< coefficient per primary eq
             const Constants  &K_;    //!< shared constants
-            const XReal      one;    //!< 1
+            const xreal_t    one;    //!< 1
             XMul             xmul;   //!< to compute K
         };
 

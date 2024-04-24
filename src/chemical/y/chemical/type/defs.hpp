@@ -7,17 +7,25 @@
 #include "y/memory/out-of-reach.hpp"
 #include "y/mkl/antelope/mul.hpp"
 #include "y/mkl/antelope/add.hpp"
+#include "y/associative/address-book.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
-        typedef double        Real;   //!< hardware real
-        typedef XReal<double> XReal;  //!< software real
+        typedef double        real_t;   //!< hardware real
+        typedef XReal<real_t> xreal_t;  //!< software real
 
-        typedef MKL::Antelope::Add<XReal> XAdd;
-        typedef MKL::Antelope::Mul<XReal> XMul;
+        typedef MKL::Antelope::Add<xreal_t> XAdd; //!< alias
+        typedef MKL::Antelope::Mul<xreal_t> XMul; //!< alias
 
+        //! helper to load a Small List from addressess
+        template <typename TARGET>
+        void SendBookTo(TARGET &target, const AddressBook &book)
+        {
+            for(AddressBook::ConstIterator it=book.begin();it!=book.end();++it)
+                target << *static_cast<typename TARGET::ConstType *>( *it );
+        }
 
     }
 }

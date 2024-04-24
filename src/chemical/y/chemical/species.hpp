@@ -118,19 +118,31 @@ namespace Yttrium
             {
                 MergeSort::Call(list,CompareNodes<typename TLIST::NodeType,SubLevel>);
             }
-
-
-
+            
             //! sort by increasing TopLevel and deduce SubLevel
-            template <typename TLIST> static inline
-            void MakeSubLevel(TLIST &list) noexcept
+            template <typename TLIST, const Level LEVEL> static inline
+            void MakeLevel(TLIST &list) noexcept
             {
                 ByTopLevel(list);
                 size_t indx = 0;
                 for(typename TLIST::NodeType *node=list.head;node;node=node->next)
                 {
-                    Coerce((**node).indx[SubLevel]) = ++indx;
+                    Coerce((**node).indx[LEVEL]) = ++indx;
                 }
+            }
+
+            //! create sub-indices
+            template <typename TLIST> static inline
+            void MakeSubLevel(TLIST &list) noexcept
+            {
+                MakeLevel<TLIST,SubLevel>(list);
+            }
+
+            //! create aux-indices
+            template <typename TLIST> static inline
+            void MakeAuxLevel(TLIST &list) noexcept
+            {
+                MakeLevel<TLIST,AuxLevel>(list);
             }
 
         };
