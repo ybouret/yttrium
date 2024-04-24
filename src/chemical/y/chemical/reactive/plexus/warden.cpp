@@ -61,8 +61,10 @@ namespace Yttrium
             {
                 Y_XML_SECTION_OPT(xml, "Chemical::Warden::Group"," size='" << G->size << "'");
                 static const xreal_t zero(0);
-                const size_t         nlaw = G->size; assert(nlaw>0); assert(nlaw<=dC.rows);
-                jail.free();                         assert(repo->stowage()>=nlaw);
+                assert( G->size>0 );
+                assert( G->size<=dC.rows);
+                assert(repo->stowage()>=G->size);
+                jail.free();
 
                 //--------------------------------------------------------------
                 // init
