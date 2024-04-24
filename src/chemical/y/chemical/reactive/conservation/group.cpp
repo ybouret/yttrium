@@ -62,10 +62,18 @@ namespace Yttrium
 
             void Group:: compile()
             {
+                //--------------------------------------------------------------
+                // init
+                //--------------------------------------------------------------
                 Coerce(maxLength) = 0;
+                Table  &T = Coerce(topIndx);
+                T.free();
                 {
-                    SList &target = Coerce(species);
-                    target.free();
+                    SList  &L = Coerce(species);
+                    L.free();
+                    //----------------------------------------------------------
+                    // collect all species
+                    //----------------------------------------------------------
                     {
                         AddressBook book;
                         for(const LawNode *cl=laws.head;cl;cl=cl->next)
@@ -77,12 +85,19 @@ namespace Yttrium
                                 book |= a->sp;
                             }
                         }
-                        SendBookTo<SList>(target,book);
+                        SendBookTo<SList>(L,book);
                     }
-                    LightSort::MakeAuxLevel(target);
+                    LightSort::MakeAuxLevel(L);
                 }
+                //--------------------------------------------------------------
+                // create table
+                //--------------------------------------------------------------
                 assert(species.size>0);
                 assert( (**(species.tail)).indx[AuxLevel] == species.size);
+                for(const SNode *node=species.head;node;node=node->next)
+                {
+                    T << (**node).indx[TopLevel];
+                }
             }
 
         }

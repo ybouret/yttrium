@@ -6,7 +6,7 @@
 
 #include "y/chemical/reactive/conservation/law.hpp"
 #include "y/chemical/type/entities.hpp"
-
+#include "y/sequence/vector.hpp"
 
 namespace Yttrium
 {
@@ -34,8 +34,9 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef CxxListOf<Group> List; //!< alias
-                
+                typedef CxxListOf<Group>              List; //!< alias
+                typedef Vector<size_t,Memory::Dyadic> Table;
+
                 //______________________________________________________________
                 //
                 //
@@ -65,6 +66,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 const SList species; //!< species within laws
+                const Table topIndx; //!< topIndex[auxIndex] = topIndex
                 Group      *next;    //!< for list
                 Group      *prev;    //!< for list
             private:

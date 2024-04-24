@@ -20,39 +20,43 @@ namespace Yttrium
                 class Broken
                 {
                 public:
-                    Broken(const Law &, const xreal_t) noexcept;
+
+                    Broken(const Law &, const xreal_t, Writable<xreal_t> &) noexcept;
                     Broken(const Broken&) noexcept;
                     ~Broken() noexcept;
 
-                    friend std::ostream & operator<<(std::ostream &os, const Broken &);
-
-                    const Law    &law;
-                    const xreal_t bad;
+                    
+                    const Law               &law;
+                    xreal_t                  bad;
+                    Writable<xreal_t>       &del;
 
                 private:
                     Y_DISABLE_ASSIGN(Broken);
                 };
-
-                typedef Small::CoopHeavyList<const Broken> Jail;
-                typedef Jail::ProxyType                    Repo;
+                typedef Small::CoopHeavyList<Broken> BrokenList;
+                typedef BrokenList::ProxyType        BrokenRepo;
+                typedef BrokenList::NodeType         BrokenNode;
+                
 
                 explicit Warden(const Clusters &clusters);
                 virtual ~Warden() noexcept;
                 
                 void operator()(Writable<xreal_t>  &C,
                                 Writable<xreal_t>  &I,
-                                const GList        &G);
+                                const GList        &G,
+                                XMLog              &xml);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Warden);
                 Matrix<xreal_t> dC;
-                Repo            repo;
-                Jail            jail;
-                XAdd            xadd;
+                BrokenRepo    repo;
+                BrokenList    jail;
+                XAdd          xadd;
 
                 void process(Writable<xreal_t>  &C,
                              Writable<xreal_t>  &I,
-                             const Group        &G);
+                             const Group        &G,
+                             XMLog              &xml);
             };
         }
 

@@ -42,7 +42,7 @@ Y_UTEST(warden)
     cls.graphViz("system");
     Chemical::Conservation::Warden warden(cls);
 
-    warden(C0, Injected, cls.groups);
+    warden(C0, Injected, cls.groups,xml);
 
 
 
