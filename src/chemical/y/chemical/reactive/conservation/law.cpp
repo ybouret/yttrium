@@ -14,6 +14,7 @@ namespace Yttrium
             Entity(label,iboth),
             Proxy<const Actors>(),
             nrm2(0),
+            zero(0),
             cast(),
             uuid(),
             next(0),
@@ -81,6 +82,42 @@ namespace Yttrium
                     Endl(fp << ']');
                 }
                 
+            }
+
+
+            XReal Law:: required(Writable<XReal>       &dC,
+                                 const Level            outgoing,
+                                 const Readable<XReal> &C,
+                                 const Level            incoming,
+                                 XAdd                  &xadd) const
+            {
+                // initialize (outgoint) dC
+                dC.ld(zero);
+                xadd.free();
+
+                // collect negative balance
+                for(const Actor *a=cast.head;a;a=a->next)
+                {
+                    xadd << a->xnu * C[ a->sp.indx[incoming] ];
+                }
+                const XReal scale = xadd.sum();
+                assert(xadd.isEmpty());
+
+                // act accordingly
+                if(scale<zero)
+                {
+                    for(const Actor *a=cast.head;a;a=a->next)
+                    {
+                        const XReal d = -(scale * a->xnu)/nrm2;
+                        dC[ a->sp.indx[outgoing] ] = d;
+                        xadd << d*d;
+                    }
+                    return xadd.sum();
+                }
+                else
+                {
+                    return zero;
+                }
             }
 
         }

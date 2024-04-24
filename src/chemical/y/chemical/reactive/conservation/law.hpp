@@ -54,6 +54,12 @@ namespace Yttrium
                 const String &key() const noexcept;        //!< return actors' name
                 void          viz(OutputStream &fp) const; //!< GraphViz
                 bool          sharesSpeciesWith(const Law &law) const noexcept;//! check if common species with another law
+              
+                XReal         required(Writable<XReal>       &dC,
+                                       const Level            outgoing,
+                                       const Readable<XReal> &C,
+                                       const Level            incoming,
+                                       XAdd                  &xadd) const;
 
                 //______________________________________________________________
                 //
@@ -62,7 +68,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 const XReal nrm2;
-
+                const XReal zero;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Law);

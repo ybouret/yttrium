@@ -30,7 +30,9 @@ namespace Yttrium
         laws(),
         groups(),
         conserved(),
-        unbounded()
+        unbounded(),
+        conservedSpecies(),
+        unboundedSpecies()
         {
             static const char here[] = "Cluster::Conservations";
             Y_XML_SECTION(xml,here);
