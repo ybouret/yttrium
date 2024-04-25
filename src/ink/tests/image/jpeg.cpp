@@ -1,5 +1,6 @@
 
-#include "y/ink/image/format/bmp.hpp"
+
+#include "y/ink/image/format/jpeg.hpp"
 #include "y/utest/run.hpp"
 #include "y/text/ops.hpp"
 #include "y/concurrent/loop/crew.hpp"
@@ -13,7 +14,7 @@ namespace Yttrium
     {
 
 
-      
+
     }
 
     static inline
@@ -43,29 +44,27 @@ namespace Yttrium
 
 }
 
-Y_UTEST(format_bmp)
+Y_UTEST(format_jpeg)
 {
 
     Concurrent::Topology   topo;
     Concurrent::SharedLoop crew = new Concurrent::Crew(topo);
     Ink::Slabs             slabs( crew );
     Ink::FormatOptions     opts;
-    Ink::Format::Handle    fmtBMP = new Ink::FormatBMP();
+    Ink::Format::Handle    fmt = new Ink::FormatJPEG();
 
     {
-        Y_CHECK(fmtBMP->matches("hello.bmp"));
-        Y_CHECK(fmtBMP->matches("Hello.BmP"));
+        Y_CHECK(fmt->matches("hello.jpg"));
+        Y_CHECK(fmt->matches("Hello.jPEg"));
     }
 
     Ink::Codec::Image  img(200,100);
     Random::ParkMiller ran;
-    std::cerr << "ran @" << (void*)&ran << std::endl;
     slabs(LoadIndx,img,ran);
 
+    fmt->save(img, "img.jpg", 0);
 
-    fmtBMP->save(img, "img.bmp", 0);
-
-    Ink::Codec::Image cpy = fmtBMP->load("img.bmp",0);
+    //Ink::Codec::Image cpy = fmtBMP->load("img.bmp",0);
 
 
 

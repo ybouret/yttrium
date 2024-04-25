@@ -56,6 +56,20 @@ namespace Yttrium
                 return ps ? *ps : empty();
             }
 
+            template <typename NAME>
+            static const String * Query(const FormatOptions * const options, const NAME &name) noexcept
+            {
+                if( options )
+                {
+                    return options->query(name);
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+
+
         private:
             Y_DISABLE_ASSIGN(FormatOptions);
             const String &empty() const noexcept;

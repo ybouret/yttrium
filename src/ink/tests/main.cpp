@@ -8,6 +8,7 @@ Y_UTEST_DECL(16)
 
     Y_UTEST(format_options);
     Y_UTEST(format_bmp);
+    Y_UTEST(format_jpeg);
 }
 Y_UTEST_EXEC()
 
