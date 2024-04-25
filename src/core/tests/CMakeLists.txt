@@ -313,6 +313,7 @@ add_test(info:pack  test-core info_pack)
 #WOVEn
 add_test(woven:indices  test-core woven_indices)
 add_test(woven:subspace test-core woven_subspace)
+add_test(woven:conservation test-core woven_conservation)
 
 #rtld
 #add_test(NAME rtld:dll COMMAND test-core rtld_dll $<TARGET_FILE:dso> COMMAND_EXPAND_LISTS)

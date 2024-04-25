@@ -239,6 +239,7 @@ Y_UTEST_DECL(256)
 
     Y_UTEST(woven_indices);
     Y_UTEST(woven_subspace);
+    Y_UTEST(woven_conservation);
 
     Y_UTEST(rtld_dll);
 
