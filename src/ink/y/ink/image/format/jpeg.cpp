@@ -248,7 +248,90 @@ namespace Yttrium
 {
     namespace Ink
     {
-        
+        // wrapper for JSAMPARR
+        class JPEG_Buffer
+        {
+        public:
+
+            static inline JSAMPLE * acquire(size_t &n, size_t &b)
+            {
+                static Memory::Allocator &mgr = Memory::Dyadic::Instance();
+                return mgr.allocate<JSAMPLE>(n,b);
+            }
+
+            inline explicit JPEG_Buffer(const unsigned W, const unsigned D) :
+            width(W),
+            depth(D),
+            stride(depth*width),
+            items(stride),
+            bytes(0),
+            //samples( memory_allocator::instance().allocate<JSAMPLE>(items,bytes) ),
+            samples( acquire(items,bytes) ),
+            buffer(),
+            jsbuff(buffer)
+            {
+                buffer[0] = samples;
+            }
+
+            inline virtual ~JPEG_Buffer() noexcept
+            {
+                static Memory::Allocator &mgr = Memory::Dyadic::Location();
+                mgr.withdraw(samples,items,bytes);
+                items = 0;
+                buffer[0] = NULL;
+            }
+
+            inline JSAMPLE ** & operator*() noexcept { return jsbuff; }
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(JPEG_Buffer);
+            const unsigned width;
+            const unsigned depth;
+            const unsigned stride;
+            size_t         items;
+            size_t         bytes;
+            JSAMPLE       *samples;
+            JSAMPLE       *buffer[1];
+            JSAMPLE      **jsbuff;
+        };
+
+
+
+        static inline
+        void JPEG_Row_Convert1(PixRow<RGBA>   &row,
+                               const JSAMPLE *samples,
+                               const unit_t   width) noexcept
+        {
+            assert(samples);
+            assert(row.zflux->size == width);
+            for(unit_t i=0;i<width;++i)
+            {
+                const uint8_t c = *(samples++);
+                row(i) = RGBA(c,c,c,0xff);
+            }
+        }
+
+        static inline
+        void JPEG_Row_Convert3(pixrow<rgba>   &row,
+                               const JSAMPLE *samples,
+                               const unit_t   width) noexcept
+        {
+            assert(samples);
+            assert(*row.w == width);
+            for(unit_t i=0;i<width;++i)
+            {
+                const uint8_t r = *(samples++);
+                const uint8_t g = *(samples++);
+                const uint8_t b = *(samples++);
+                row(i) = rgba(r,g,b,0xff);
+            }
+        }
+
+        typedef void (*JPEG_Row_Convert)(pixrow<rgba>  &,
+                                         const JSAMPLE *,
+                                         const unit_t);
+
         Codec::Image FormatJPEG:: load(const String        &fileName,
                                        const FormatOptions *) const
         {
