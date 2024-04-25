@@ -6,6 +6,8 @@
 #include "y/text/ascii/convert.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/mkl/algebra/ortho-space.hpp"
+#include "y/random/shuffle.hpp"
+
 using namespace Yttrium;
 
 
@@ -40,14 +42,26 @@ Y_UTEST(algebra_woven)
     WOVEn::Explore(Q,survey,true);
 
     survey.sort();
-    
-    size_t indx=0;
-    for(const WOVEn::IntegerArray *arr=survey.head;arr;arr=arr->next)
+
     {
-        std::cerr << "Q" << ++indx << " = " << *arr << std::endl;
+        size_t indx=0;
+        for(const WOVEn::IntegerArray *arr=survey.head;arr;arr=arr->next)
+        {
+            std::cerr << "Q" << ++indx << " = " << *arr << std::endl;
+        }
     }
 
-    
+
+
+    Apex::Ortho::Family family(Apex::Ortho::Basis,dims-1,survey);
+
+    {
+        size_t indx=0;
+        for(const Apex::Ortho::Vector *v=family.head;v;v=v->next)
+        {
+            std::cerr << "V" << ++indx  << " = " << *v << std::endl;
+        }
+    }
 
 
 }

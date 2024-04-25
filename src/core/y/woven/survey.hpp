@@ -29,10 +29,9 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-
-
-            virtual void   verify(const QVector &)   = 0; //!< verify that vector is expected
-            virtual size_t maxOrder() const noexcept = 0; //!< get maximum order
+            virtual size_t dimensions() const noexcept = 0; //!< get dimension from first vector
+            virtual void   verify(const QVector &)     = 0; //!< verify and insert vector
+            virtual size_t maxOrder() const noexcept   = 0; //!< get maximum order
 
             //__________________________________________________________________
             //

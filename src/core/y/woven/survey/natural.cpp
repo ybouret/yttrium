@@ -103,6 +103,13 @@ namespace Yttrium
             }
             return res;
         }
+
+        size_t NaturalSurvey:: dimensions() const noexcept
+        {
+            assert(size>0);
+            return head->size();
+        }
+
     }
 
 }

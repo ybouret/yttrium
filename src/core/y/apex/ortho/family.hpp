@@ -16,6 +16,7 @@ namespace Yttrium
         namespace Ortho
         {
            
+            Y_SHALLOW_DECL(Basis);
 
             //__________________________________________________________________
             //
@@ -96,7 +97,7 @@ namespace Yttrium
                 const Vector &expandFrom(QArrayType &);
 
 
-                
+
 
                 //______________________________________________________________
                 //
@@ -109,6 +110,34 @@ namespace Yttrium
             private:
                 Y_DISABLE_ASSIGN(Family);
                 bool wouldAccept();
+
+
+            public:
+                //______________________________________________________________
+                //
+                //
+                //! helper to extract from WOVEn survey
+                //
+                //______________________________________________________________
+                template <typename ARRAY_LIST> inline
+                explicit Family(const Basis_     &,
+                                const size_t      nvec,
+                                const ARRAY_LIST &survey) :
+                Metrics( survey.dimensions() ), Vectors(), remaining(dimensions)
+                {
+                    for( const typename ARRAY_LIST::NodeType *node = survey.head;node;node=node->next)
+                    {
+                        if(size<nvec)
+                        {
+                            if( wouldAccept( *node ) ) expand();
+                        }
+                        else
+                            break;
+                    }
+
+                }
+
+
             };
 
         }

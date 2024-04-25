@@ -88,10 +88,10 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+            virtual size_t dimensions() const noexcept; //!< from first array
+            void           sort()             noexcept; //!< sort by norm1 then lexicographic
+            virtual size_t maxOrder()   const noexcept; //!< maximum order
 
-            void           sort()           noexcept; //!< sort by norm1 then lexicographic
-            virtual size_t maxOrder() const noexcept; //!< maximum order
-            
 
 
         private:

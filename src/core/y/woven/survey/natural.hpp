@@ -91,9 +91,9 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-
-            void           sort()           noexcept; //!< sort by norm1 then lexicographic
-            virtual size_t maxOrder() const noexcept; //!< maximum order
+            virtual size_t dimensions() const noexcept; //!< from first array
+            void           sort()             noexcept; //!< sort by norm1 then lexicographic
+            virtual size_t maxOrder()   const noexcept; //!< maximum order
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(NaturalSurvey);

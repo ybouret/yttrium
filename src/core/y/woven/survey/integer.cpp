@@ -84,6 +84,12 @@ namespace Yttrium
             return res;
         }
 
+        size_t IntegerSurvey:: dimensions() const noexcept
+        {
+            assert(size>0);
+            return head->size();
+        }
+
     }
 
 }

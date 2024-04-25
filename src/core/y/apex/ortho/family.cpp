@@ -9,6 +9,7 @@ namespace Yttrium
 
         namespace Ortho
         {
+            Y_SHALLOW_IMPL(Basis);
 
             Family:: ~Family() noexcept
             {
