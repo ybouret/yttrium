@@ -110,9 +110,8 @@ namespace Yttrium
                     {
                         const xreal_t d = -(scale * a->xnu)/nrm2;
                         dC[ a->sp.indx[outgoing] ] = d;
-                        xadd << d*d;
                     }
-                    return xadd.sum();
+                    return (scale*scale)/nrm2;
                 }
                 else
                 {
