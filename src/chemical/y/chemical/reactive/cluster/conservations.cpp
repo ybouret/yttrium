@@ -88,7 +88,7 @@ namespace Yttrium
                 {
                     for(const Conservation::Law *law=laws->head;law;law=law->next)
                     {
-                        xml() << *law  << " | beta=" << law->beta << std::endl;
+                        xml() << *law  << std::endl; //" | beta=" << law->beta << std::endl;
                     }
                 }
 

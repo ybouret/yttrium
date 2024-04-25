@@ -71,7 +71,7 @@ namespace Yttrium
                 //______________________________________________________________
                 const xreal_t         nrm2; //!< |this|^2
                 const xreal_t         zero; //!< 0
-                const Matrix<xreal_t> beta; //!< nrm2 * Id - law'*law
+                //const Matrix<xreal_t> beta; //!< nrm2 * Id - law'*law
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Law);
