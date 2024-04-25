@@ -304,31 +304,31 @@ namespace Yttrium
                                const unit_t   width) noexcept
         {
             assert(samples);
-            assert(row.zflux->size == width);
+            assert(row.w() == width);
             for(unit_t i=0;i<width;++i)
             {
                 const uint8_t c = *(samples++);
-                row(i) = RGBA(c,c,c,0xff);
+                row[i] = RGBA(c,c,c,0xff);
             }
         }
 
         static inline
-        void JPEG_Row_Convert3(pixrow<rgba>   &row,
+        void JPEG_Row_Convert3(PixRow<RGBA>   &row,
                                const JSAMPLE *samples,
                                const unit_t   width) noexcept
         {
             assert(samples);
-            assert(*row.w == width);
+            assert(row.w() == width);
             for(unit_t i=0;i<width;++i)
             {
                 const uint8_t r = *(samples++);
                 const uint8_t g = *(samples++);
                 const uint8_t b = *(samples++);
-                row(i) = rgba(r,g,b,0xff);
+                row[i] = RGBA(r,g,b,0xff);
             }
         }
 
-        typedef void (*JPEG_Row_Convert)(pixrow<rgba>  &,
+        typedef void (*JPEG_Row_Convert)(PixRow<RGBA>  &,
                                          const JSAMPLE *,
                                          const unit_t);
 

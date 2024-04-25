@@ -78,7 +78,7 @@ namespace Yttrium
                 return os;
             }
 
-
+            inline unit_t w() const noexcept { assert(0!=zflux); return zflux->size; }
 
         private:
             MutableType *   entry;
