@@ -28,6 +28,7 @@ Y_UTEST_DECL(64)
     Y_UTEST(algebra_tridiag);
     Y_UTEST(algebra_cyclic);
     Y_UTEST(algebra_svd);
+    Y_UTEST(algebra_woven);
 
     Y_UTEST(drvs1D);
     Y_UTEST(drvsND);
