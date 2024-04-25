@@ -55,6 +55,7 @@ namespace Yttrium
                 void          viz(OutputStream &fp)                      const; //!< GraphViz
                 bool          sharesSpeciesWith(const Law &law) const noexcept; //!< check if common species with another law
                 
+                //! TODO
                 xreal_t       required(Writable<xreal_t>       &dC,
                                        const Level             outgoing,
                                        const Readable<xreal_t> &C,

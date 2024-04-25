@@ -122,8 +122,8 @@ namespace Yttrium
             //
             // saving
             //__________________________________________________________________
-            void graphViz(OutputStream &) const; //!< call viz
-            static String ToRegExp(const String &);
+            void graphViz(OutputStream &) const;    //!< call viz
+            static String ToRegExp(const String &); //!< convert a string into its exact matching pattern
 
 
             //__________________________________________________________________

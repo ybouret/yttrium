@@ -34,8 +34,8 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef CxxListOf<Group>              List; //!< alias
-                typedef Vector<size_t,Memory::Dyadic> Table;
+                typedef CxxListOf<Group>              List;  //!< alias
+                typedef Vector<size_t,Memory::Dyadic> Table; //!< table to address
 
                 //______________________________________________________________
                 //

@@ -11,9 +11,9 @@ namespace Yttrium
     namespace Chemical
     {
 
-        typedef Small::BareLightList<const Conservation::Group> GList;
-        typedef GList::NodeType                                 GNode;
-        
+        typedef Small::BareLightList<const Conservation::Group> GList; //!< list of group
+        typedef GList::NodeType                                 GNode; //!< alias>
+
         //______________________________________________________________________
         //
         //
@@ -42,6 +42,7 @@ namespace Yttrium
             //! cleanup
             const Readable<xreal_t> & K(const real_t t);
 
+            //! saving full reactive systems
             void graphViz(const String &root) const;
 
         private:

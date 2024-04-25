@@ -36,10 +36,9 @@ namespace Yttrium
             //__________________________________________________________________
             typedef ArkPtr<String,Species>              Handle;   //!< alias
             typedef SuffixSet<String,Handle>            Set;      //!< alias
-            static  const int                           PMIN=-10;
-            static  const int                           PMAX=1;
-
-            static xreal_t Concentration(Random::Bits &);
+            static  const int                           PMIN=-10; //!< Cmin = 10^(-PMIN)
+            static  const int                           PMAX=  1; //!< Cmax = 10^(-PMAX)
+            static xreal_t         Concentration(Random::Bits &); //!< 10^(rand(PMIN,PMAX))
 
             //__________________________________________________________________
             //

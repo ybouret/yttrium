@@ -15,8 +15,7 @@ namespace Yttrium
 
         namespace Ortho
         {
-           
-            Y_SHALLOW_DECL(Basis);
+
 
             //__________________________________________________________________
             //
@@ -25,6 +24,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef CxxListOf<Vector> Vectors; //!< base type for Family
+            Y_SHALLOW_DECL(Basis);             //!< helper for constructor
 
             //__________________________________________________________________
             //
@@ -115,9 +115,11 @@ namespace Yttrium
             public:
                 //______________________________________________________________
                 //
-                //
-                //! helper to extract from WOVEn survey
-                //
+                //! helper to extract an orthogonal basis from a WOVEn survey
+                /**
+                 \param nvec   number of vector in the basis
+                 \param survey list of available vectors
+                 */
                 //______________________________________________________________
                 template <typename ARRAY_LIST> inline
                 explicit Family(const Basis_     &,

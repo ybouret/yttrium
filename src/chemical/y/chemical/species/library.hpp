@@ -71,6 +71,7 @@ namespace Yttrium
             const Species & operator[](const String &id) const; //!< get species by name
             const Species & operator[](const char   *id) const; //!< get species by name
 
+            //! display the full TopLevel array per species
             template <typename ARRAY> inline
             std::ostream & operator()(std::ostream &os, ARRAY &array) const
             {

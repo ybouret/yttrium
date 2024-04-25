@@ -51,6 +51,7 @@ namespace Yttrium
                 return os;
             }
 
+            //! helper to present array of matching data per species
             template <typename OSTREAM, typename LIST, typename ARRAY> inline
             void show(OSTREAM &os, const char *pfx, LIST &list, const char *sfx, ARRAY &array, const Level level) const
             {
