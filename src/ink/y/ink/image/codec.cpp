@@ -10,6 +10,21 @@ namespace Yttrium
         const char *   Codec:: callSign() const noexcept { return name.c_str(); }
         const String & Codec:: key()      const noexcept { return name; }
 
+
+        void Codec::save(const Image         &image,
+                         const char          *fileName,
+                         const FormatOptions *options)
+        {
+            const String _(fileName);
+            save(image,_,options);
+        }
+
+        Codec::Image Codec:: load(const char          *fileName,
+                                  const FormatOptions *options) const
+        {
+            const String _(fileName);
+            return load(_,options);
+        }
     }
 
 }

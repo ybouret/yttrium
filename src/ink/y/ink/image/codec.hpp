@@ -59,8 +59,12 @@ namespace Yttrium
             //__________________________________________________________________
             virtual const char * callSign() const noexcept; //! [Identifiable] name.c_str()
             const String &       key()      const noexcept; //!< name
+            void save(const Image         &image,
+                      const char          *fileName,
+                      const FormatOptions *options);
 
-
+            Image load(const char          *fileName,
+                       const FormatOptions *options) const;
 
             //__________________________________________________________________
             //
@@ -77,6 +81,8 @@ namespace Yttrium
             //! load image according to format+options
             virtual Image load(const String        &fileName,
                                const FormatOptions *options) const = 0;
+
+
 
             //__________________________________________________________________
             //
