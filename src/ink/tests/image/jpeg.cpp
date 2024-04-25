@@ -29,7 +29,6 @@ namespace Yttrium
             color.r = ran.in<uint8_t>(100,255);
             color.g = ran.in<uint8_t>(100,255);
             color.b = ran.in<uint8_t>(100,255);
-            (std::cerr << "ran @" << (void*)&ran <<", color[" << slab.indx << "]=" << color << std::endl).flush();
         }
         for(size_t k=slab.count();k>0;--k)
         {
@@ -62,9 +61,10 @@ Y_UTEST(format_jpeg)
     Random::ParkMiller ran;
     slabs(LoadIndx,img,ran);
 
-    fmt->save(img, "img.jpg", 0);
+    opts << "quality=70";
+    fmt->save(img, "img.jpg", &opts);
 
-    //Ink::Codec::Image cpy = fmtBMP->load("img.bmp",0);
+    Ink::Codec::Image cpy = fmt->load("img.jpg",0);
 
 
 
