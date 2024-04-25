@@ -38,7 +38,8 @@ Y_UTEST(algebra_woven)
     XMLog xml(verbose);
     WOVEn::IntegerSurvey survey(xml);
     WOVEn::Explore(Q,survey,true);
-
+    survey.sort();
+    
     size_t indx=0;
     for(const WOVEn::IntegerArray *arr=survey.head;arr;arr=arr->next)
     {
