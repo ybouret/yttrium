@@ -8,6 +8,7 @@
 
 namespace Yttrium
 {
+
     namespace WOVEn
     {
         //______________________________________________________________________
@@ -90,6 +91,8 @@ namespace Yttrium
 
             void           sort()           noexcept; //!< sort by norm1 then lexicographic
             virtual size_t maxOrder() const noexcept; //!< maximum order
+            
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(IntegerSurvey);

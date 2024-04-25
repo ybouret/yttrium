@@ -89,13 +89,14 @@ namespace Yttrium
                 bool contains(const Vectors &vecs);
 
 
-
                 //! expand family from remaining vector
                 const Vector &expand();
 
                 //! expand family from another remaining
                 const Vector &expandFrom(QArrayType &);
 
+
+                
 
                 //______________________________________________________________
                 //
