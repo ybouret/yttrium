@@ -110,13 +110,9 @@ namespace Yttrium
                     }
 
                     if( found )
-                    {
                         Coerce(conserved) |= sp;
-                    }
                     else
-                    {
                         Coerce(unbounded) |= sp;
-                    }
                 }
                 assert(species.size == conserved.size() + unbounded.size());
 
