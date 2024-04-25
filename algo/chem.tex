@@ -14,7 +14,7 @@
 
 \section{Correcting Conservation}
 
-Let $\vec{\alpha}\in\mathbb{R}_+^M$ be a conservation vector, meaning that for any $\vec{C}_0$:
+Let $\vec{\alpha}\in\mathbb{N}_+^M$ be a conservation vector, meaning that for any $\vec{C}_0$:
 \begin{equation}
 d\,\left(\langle \vec{\alpha} \vert \vec{C}_0 \rangle\right) = 0.
 \end{equation}
@@ -40,6 +40,31 @@ We find:
 
 \begin{equation}
 	\delta\vec{C}^2 = \dfrac{\langle \vec{\alpha} \vert \vec{C}_0 \rangle^2}{\vec{\alpha}^2}
+\end{equation}
+
+\begin{equation}
+	\vec{C}_0' = \vec{C_0} - \delta\vec{C} = \dfrac{1}{\vec{\alpha}^2}
+	\left[ \vec{\alpha}^2 \bm{I} - \vert \vec{\alpha} \rangle \langle \vec{\alpha} \vert \right] \vec{C}_0
+\end{equation}
+
+\end{document}
+
+In that case we obtain:
+\begin{equation}
+	\vec{C}_0' = \vec{C}_0 - \delta\vec{C},\; \vec{C}_0' \in \vec{\alpha}^\perp
+\end{equation}	
+	
+Let assume that we know $\lbrace \vec{\beta}_i \rbrace$  vectors of $\mathbb{Z}^M$ as an orthogonal basis of $\vec{\alpha}^\perp$:
+\begin{equation}
+	\forall i,\; \langle \vec{\beta}_i \vert \vec{\alpha} \rangle = 0, \;\; \forall j\not=i,\;\langle \vec{\beta}_i \vert \vec{\beta}_j \rangle = 0
+\end{equation}
+then
+\begin{equation}
+	\vec{C}_0' = \sum_i b_i \vec{\beta}_j \implies b_i = \dfrac{\langle \vec{\beta}_i \vert \vec{C}_0 \rangle}{\vec{\beta}_i^2}
+\end{equation}
+and
+\begin{equation}
+	\vec{C}_0' = \sum_i \dfrac{\langle \vec{\beta}_i \vert \vec{C}_0 \rangle}{\vec{\beta}_i^2} \vec{\beta}_i = \left( \right) \vec{C}_0
 \end{equation}
 	
 %\begin{equation}

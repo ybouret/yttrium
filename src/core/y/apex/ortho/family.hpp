@@ -96,9 +96,7 @@ namespace Yttrium
                 //! expand family from another remaining
                 const Vector &expandFrom(QArrayType &);
 
-
-
-
+                
                 //______________________________________________________________
                 //
                 //

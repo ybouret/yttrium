@@ -22,7 +22,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Laws : public Proxy<const Law::List>
+            class Laws :  public Proxy<const Law::List>
             {
             public:
                 //______________________________________________________________

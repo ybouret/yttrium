@@ -15,6 +15,7 @@ namespace Yttrium
             Proxy<const Actors>(),
             nrm2(0),
             zero(0),
+            beta(coeff.size(),coeff.size()),
             cast(),
             uuid(),
             next(0),
@@ -30,7 +31,18 @@ namespace Yttrium
                 }
                 String s = cast.toString();
                 Coerce(uuid).swapWith(s);
-                Coerce(nrm2) = static_cast<double>( d.cast<uint64_t>("Chemical Law Norm2") );
+                Coerce(nrm2) = static_cast<double>( d.cast<uint64_t>("|Chemical Law|^2") );
+                for(size_t i=1;i<=m;++i)
+                {
+                    Writable<xreal_t> &beta_i = Coerce(beta)[i];
+                    const unsigned     coeff_i = coeff[i];
+                    for(size_t j=1;j<=m;++j)
+                    {
+                        if(i==j)
+                            beta_i[i] = nrm2;
+                        beta_i[j] -= xreal_t( coeff_i * coeff[j] );
+                    }
+                }
             }
 
 

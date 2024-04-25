@@ -4,6 +4,7 @@
 #define Y_Chemical_Conservation_Law_Included 1
 
 #include "y/chemical/reactive/actors.hpp"
+#include "y/container/matrix.hpp"
 #include "y/type/proxy.hpp"
 
 namespace Yttrium
@@ -68,9 +69,10 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                const xreal_t nrm2; //!< |this|^2
-                const xreal_t zero; //!< 0
-
+                const xreal_t         nrm2; //!< |this|^2
+                const xreal_t         zero; //!< 0
+                const Matrix<xreal_t> beta; //!< nrm2 * Id - law'*law
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Law);
                 Actors       cast;
