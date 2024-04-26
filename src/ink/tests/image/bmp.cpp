@@ -4,44 +4,11 @@
 #include "y/text/ops.hpp"
 #include "y/concurrent/loop/crew.hpp"
 #include "y/random/park-miller.hpp"
+#include "y/ink/parallel/index-to-rgba.hpp"
 
 using namespace Yttrium;
 
-namespace Yttrium
-{
-    namespace Ink
-    {
 
-
-      
-    }
-
-    static inline
-    void LoadIndx(Ink::Slab          &slab,
-                  Ink::Codec::Image &target,
-                  Random::Bits      &ran)
-    {
-
-        Ink::RGBA color;
-        {
-            Y_LOCK(slab.sync);
-            color.r = ran.in<uint8_t>(100,255);
-            color.g = ran.in<uint8_t>(100,255);
-            color.b = ran.in<uint8_t>(100,255);
-            (std::cerr << "ran @" << (void*)&ran <<", color[" << slab.indx << "]=" << color << std::endl).flush();
-        }
-        for(size_t k=slab.count();k>0;--k)
-        {
-            const Ink::HSegment    s = slab.hseg[k];
-            Ink::Codec::ImageRow &r = target[s.y];
-            for(unit_t i=s.w,x=s.x;i>0;--i,++x)
-            {
-                r[x] = color;
-            }
-        }
-    }
-
-}
 
 Y_UTEST(format_bmp)
 {
@@ -49,25 +16,21 @@ Y_UTEST(format_bmp)
     Concurrent::Topology   topo;
     Concurrent::SharedLoop crew = new Concurrent::Crew(topo);
     Ink::Slabs             slabs( crew );
+  
     Ink::FormatOptions     opts;
-    Ink::Format::Handle    fmtBMP = new Ink::FormatBMP();
+    Ink::Format::Handle    fmt = new Ink::FormatBMP();
 
     {
-        Y_CHECK(fmtBMP->matches("hello.bmp"));
-        Y_CHECK(fmtBMP->matches("Hello.BmP"));
+        Y_CHECK(fmt->matches("hello.bmp"));
+        Y_CHECK(fmt->matches("Hello.BmP"));
     }
 
     Ink::Codec::Image  img(200,100);
     Random::ParkMiller ran;
-    std::cerr << "ran @" << (void*)&ran << std::endl;
-    slabs(LoadIndx,img,ran);
+    Ink::IndexToRGBA::Load(img,slabs,ran);
 
-
-    fmtBMP->save(img, "img.bmp", 0);
-
-    Ink::Codec::Image cpy = fmtBMP->load("img.bmp",0);
-
-
+    fmt->save(img, "img.bmp", 0);
+    Ink::Codec::Image cpy = fmt->load("img.bmp",0);
 
 
 }

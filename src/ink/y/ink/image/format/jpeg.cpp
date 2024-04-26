@@ -96,12 +96,12 @@ namespace Yttrium
         {
             static const char quality_info[] = "quality";
 
-            // options
             int           quality = 75;
             const String *ps = FormatOptions::Query(opt,quality_info);
             if(ps)
             {
                 quality = Clamp<int>(10,ASCII::Convert::To<int>( *ps,quality_info),100);
+                std::cerr << "[quality=" << quality << "]" << std::endl;
             }
             return quality;
         }
