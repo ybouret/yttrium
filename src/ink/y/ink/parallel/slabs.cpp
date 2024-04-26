@@ -1,4 +1,4 @@
-#include "y/ink/slabs.hpp"
+#include "y/ink/parallel/slabs.hpp"
 
 namespace Yttrium
 {

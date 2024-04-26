@@ -5,6 +5,7 @@ include_directories(.. ${CMAKE_CURRENT_BINARY_DIR}/../y/jpeg)
 
 Y_CreateLibrary(y-ink
 ink
+ink/parallel
 ink/image
 ink/image/format
 )

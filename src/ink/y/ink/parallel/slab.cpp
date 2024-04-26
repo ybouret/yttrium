@@ -1,5 +1,5 @@
 
-#include "y/ink/slab.hpp"
+#include "y/ink/parallel/slab.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 
 namespace Yttrium

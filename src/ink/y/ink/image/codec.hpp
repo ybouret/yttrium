@@ -3,8 +3,8 @@
 #ifndef Y_Ink_Image_Codec_Included
 #define Y_Ink_Image_Codec_Included 1
 
+#include "y/ink/types.hpp"
 #include "y/ink/pixmap.hpp"
-#include "y/color/rgba.hpp"
 #include "y/ink/image/format/options.hpp"
 
 namespace Yttrium
@@ -12,7 +12,6 @@ namespace Yttrium
     namespace Ink
     {
 
-        typedef Color::RGBA<uint8_t> RGBA; //!< alias
 
         //______________________________________________________________________
         //

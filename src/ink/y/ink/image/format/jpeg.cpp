@@ -20,6 +20,7 @@ namespace Yttrium
 
 #include "y/stream/libc/output.hpp"
 #include "y/system/exception.hpp"
+#include "y/text/ascii/convert.hpp"
 
 namespace Yttrium
 {
@@ -100,7 +101,7 @@ namespace Yttrium
             const String *ps = FormatOptions::Query(opt,quality_info);
             if(ps)
             {
-                //quality = clamp<int>(10,ios::ascii::convert::to<int>( *ps,quality_info),100);
+                quality = Clamp<int>(10,ASCII::Convert::To<int>( *ps,quality_info),100);
             }
             return quality;
         }

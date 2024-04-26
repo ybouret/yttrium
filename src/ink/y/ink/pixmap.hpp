@@ -4,7 +4,7 @@
 #define Y_Ink_Pixmap_Included 1
 
 #include "y/ink/bitmap.hpp"
-#include "y/ink/slabs.hpp"
+#include "y/ink/parallel/slabs.hpp"
 
 namespace Yttrium
 {

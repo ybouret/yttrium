@@ -4,7 +4,7 @@
 #define Y_Ink_Slabs_Included 1
 
 #include "y/concurrent/loop/simt.hpp"
-#include "y/ink/slab.hpp"
+#include "y/ink/parallel/slab.hpp"
 
 namespace Yttrium
 {
