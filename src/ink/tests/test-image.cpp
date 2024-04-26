@@ -1,6 +1,7 @@
 
 #include "y/ink/image/format/bmp.hpp"
 #include "y/ink/image/format/jpeg.hpp"
+#include "y/ink/image/format/png.hpp"
 #include "y/ink/image/codecs.hpp"
 #include "y/utest/run.hpp"
 
@@ -17,6 +18,7 @@ Y_UTEST(image)
 
     IMG( new Ink::FormatBMP()  );
     IMG( new Ink::FormatJPEG() );
+    IMG( new Ink::FormatPNG() );
 
 
 }

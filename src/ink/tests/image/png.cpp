@@ -19,7 +19,6 @@ Y_UTEST(format_png)
     Ink::Slabs             slabs( crew );
     Ink::FormatOptions     opts;
 
-#if 1
     Ink::Format::Handle    fmt = new Ink::FormatPNG();
 
     {
@@ -33,8 +32,7 @@ Y_UTEST(format_png)
 
     fmt->save(img, "img.png", 0);
     Ink::Codec::Image cpy = fmt->load("img.png",0);
-#endif
-
+    
 }
 Y_UDONE()
 
