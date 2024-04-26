@@ -83,7 +83,7 @@ namespace Yttrium
                 //______________________________________________________________
                 const xreal_t         nrm2;  //!< |this|^2
                 const xreal_t         zero;  //!< 0
-                const VecType         alpha; //!< in AuxLevel
+                const VecType         alpha; //!< coefficient in AuxLevel
                 const MatType         beta;  //!< nrm2 * Id - alpha'*alpha
 
             private:

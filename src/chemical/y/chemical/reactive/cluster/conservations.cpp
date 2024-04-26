@@ -139,11 +139,11 @@ namespace Yttrium
                     for(const Conservation::LawNode *l=group->head;l;l=l->next)
                     {
                         const Conservation::Law &law = **l;
-                        Y_XMLOG(xml, law << " : alpha=" << law.alpha);
+                        Y_XMLOG(xml, law << " : alpha=" << law.alpha << "; beta=" << law.beta);
                     }
                 }
             }
-            
+
         }
     }
 
