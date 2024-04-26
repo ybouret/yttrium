@@ -11,16 +11,43 @@ namespace Yttrium
 {
     namespace Ink
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Database of Formats
+        //
+        //
+        //______________________________________________________________________
         class Codecs : public Codec, public Singleton<Codecs>
         {
         public:
-            static const char * const      CallSign;
-            static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 20;
-            class Code;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const      CallSign;                                 //!< "Ink::Codecs"
+            static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 20; //!< life time
+            class Code; // forward
 
-            void operator()(Format * const codec);
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
+            //! record a newly created format
+            void operator()(Format * const);
+
+            //__________________________________________________________________
+            //
+            //
+            // Interfrace
+            //
+            //__________________________________________________________________
             //! save image according to format+options
             virtual void save(const Image         &image,
                               const String        &fileName,

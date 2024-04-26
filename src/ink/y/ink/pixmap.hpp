@@ -78,6 +78,7 @@ namespace Yttrium
                 return os;
             }
 
+            //! fetch zflux size a.k.a width
             inline unit_t w() const noexcept { assert(0!=zflux); return zflux->size; }
 
         private:

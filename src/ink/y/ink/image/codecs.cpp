@@ -17,7 +17,7 @@ namespace Yttrium
         {
         public:
 
-            inline explicit Code() : SuffixSet<String,Format::Handle>() {}
+            inline explicit Code(Lockable &master) : SuffixSet<String,Format::Handle>(), sync(master){}
             inline virtual ~Code() noexcept {}
 
             inline void record(Format * const fmt)
@@ -29,7 +29,7 @@ namespace Yttrium
 
             const Format & findFor(const String &path)
             {
-
+                Y_LOCK(sync);
                 for(Iterator it=begin();it!=end();++it)
                 {
                     Format &fmt = **it;
@@ -41,6 +41,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
+            Lockable &sync;
         };
 
         static void *         code_[ Y_WORDS_FOR(Codecs::Code) ];
@@ -49,9 +50,9 @@ namespace Yttrium
 
         Codecs:: Codecs() : Codec(CallSign)
         {
-            try {
-                code = new ( Y_STATIC_ZARR(code_) ) Code();
-                //std::cerr << "sizeof(Code)=" << sizeof(Code) << " / " << sizeof(code_) << std::endl;
+            try
+            {
+                code = new ( Y_STATIC_ZARR(code_) ) Code(access);
             }
             catch(...)
             {
@@ -79,14 +80,15 @@ namespace Yttrium
                            const String        &fileName,
                            const FormatOptions *options) const
         {
-
+            assert(0!=code);
+            code->findFor(fileName).save(image,fileName,options);
         }
 
-        //! load image according to format+options
         Codec::Image Codecs:: load(const String        &fileName,
                                    const FormatOptions *options) const
         {
-
+            assert(0!=code);
+            return code->findFor(fileName).load(fileName,options);
         }
 
     }
