@@ -101,7 +101,7 @@ namespace Yttrium
             if(ps)
             {
                 quality = Clamp<int>(10,ASCII::Convert::To<int>( *ps,quality_info),100);
-                std::cerr << "[quality=" << quality << "]" << std::endl;
+                //std::cerr << "[quality=" << quality << "]" << std::endl;
             }
             return quality;
         }

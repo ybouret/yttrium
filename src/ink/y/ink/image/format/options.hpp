@@ -56,17 +56,14 @@ namespace Yttrium
                 return ps ? *ps : empty();
             }
 
-            template <typename NAME>
-            static const String * Query(const FormatOptions * const options, const NAME &name) noexcept
+            //__________________________________________________________________
+            //
+            //! return string query if options is not NULL, always NULL otherwise
+            //__________________________________________________________________
+            template <typename NAME> static inline 
+            const String * Query(const FormatOptions * const options, const NAME &name) noexcept
             {
-                if( options )
-                {
-                    return options->query(name);
-                }
-                else
-                {
-                    return 0;
-                }
+                return (0!=options) ? options->query(name) : 0;
             }
 
 

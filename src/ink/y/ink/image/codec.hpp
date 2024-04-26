@@ -6,6 +6,7 @@
 #include "y/ink/types.hpp"
 #include "y/ink/pixmap.hpp"
 #include "y/ink/image/format/options.hpp"
+#include "y/ptr/ark.hpp"
 
 namespace Yttrium
 {
@@ -21,7 +22,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Codec : public Object, public Counted, public Identifiable
+        class Codec : public Object, public Counted
         {
         public:
             //__________________________________________________________________
@@ -30,8 +31,9 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Pixmap<RGBA>     Image;     //!< alias
-            typedef Image::RowType   ImageRow;  //!< alias
+            typedef Pixmap<RGBA>               Image;     //!< alias
+            typedef Image::RowType             ImageRow;  //!< alias
+            typedef ArkPtr<String,const Codec> Handle; //!< alias
 
             //__________________________________________________________________
             //
@@ -56,12 +58,14 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            virtual const char * callSign() const noexcept; //! [Identifiable] name.c_str()
             const String &       key()      const noexcept; //!< name
+
+            //! wrapper for save
             void save(const Image         &image,
                       const char          *fileName,
                       const FormatOptions *options);
 
+            //! wrapper for load
             Image load(const char          *fileName,
                        const FormatOptions *options) const;
 
