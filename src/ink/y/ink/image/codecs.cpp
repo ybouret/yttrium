@@ -27,13 +27,13 @@ namespace Yttrium
                 if(!insert(handle)) throw Specific::Exception(CallSign,"multiple format '%s'", handle->key().c_str());
             }
 
-            const Format & findFor(const String &path) const
+            const Format & findFor(const String &path)
             {
-                const char * const ext = VFS::Extension(path); if(!ext) throw Specific::Exception(CallSign,"no file extension '%s'", VFS::BaseName(path));
 
-                for(ConstIterator it=begin();it!=end();++it)
+                for(Iterator it=begin();it!=end();++it)
                 {
-                    
+                    Format &fmt = **it;
+                    if(fmt.matches(path)) return fmt;
                 }
 
                 throw Specific::Exception(CallSign,"unknown file type '%s'",VFS::BaseName(path));
@@ -51,7 +51,7 @@ namespace Yttrium
         {
             try {
                 code = new ( Y_STATIC_ZARR(code_) ) Code();
-                std::cerr << "sizeof(Code)=" << sizeof(Code) << " / " << sizeof(code_) << std::endl;
+                //std::cerr << "sizeof(Code)=" << sizeof(Code) << " / " << sizeof(code_) << std::endl;
             }
             catch(...)
             {
