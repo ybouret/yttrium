@@ -2,6 +2,7 @@
 #include "y/ink/image/format/png.hpp"
 #include "y/system/exception.hpp"
 #include "y/stream/libc/input.hpp"
+#include "y/stream/libc/output.hpp"
 #include "y/png/png.h"
 #include "y/text/ascii/convert.hpp"
 
@@ -193,47 +194,46 @@ namespace Yttrium
             return res;
         }
 
-#if 0
 
 
-        void png_format:: save(const pixmap<rgba> &img, const string &filename, const options *opts) const
+        void FormatPNG:: save(const Image &img, const String &filename, const FormatOptions *opts) const
         {
-            ios::file_proxy<ios::writable_file> fp(filename,false);
+            OutputFile fp(filename);
 
             png_structp png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
             if (!png)
             {
-                throw exception("png_create_write_struct");
+                throw Specific::Exception(CallSign,"png_create_write_struct");
             }
 
             png_infop info = png_create_info_struct(png);
             if (!info)
             {
                 png_destroy_write_struct(&png, NULL);
-                throw exception("png_create_info_struct for writer");
+                throw Specific::Exception(CallSign,"png_create_info_struct for writer");
             }
 
             if (setjmp(png_jmpbuf(png)))
             {
                 png_destroy_write_struct(&png, &info);
-                throw exception("png_format::save('%s')",filename());
+                throw Specific::Exception(CallSign,"png_format::save('%s')",filename());
             }
 
-            png_init_io(png, *fp);
+            png_init_io(png, (FILE*)fp.handle);
 
-            const bool alpha = get_alpha(opts);
+            const bool alpha = getAlpha(opts);
             // Output is 8bit depth, RGB(A) format.
             png_set_IHDR(png,
                          info,
-                         img.w,
-                         img.h,
+                         static_cast<png_uint_32>(img.w),
+                         static_cast<png_uint_32>(img.h),
                          8,
                          alpha ? PNG_COLOR_TYPE_RGBA : PNG_COLOR_TYPE_RGB,
                          PNG_INTERLACE_NONE,
                          PNG_COMPRESSION_TYPE_DEFAULT,
                          PNG_FILTER_TYPE_DEFAULT
                          );
-            png_set_compression_level(png,get_level(opts));
+            png_set_compression_level(png,getLevel(opts));
 
             png_write_info(png, info);
 
@@ -246,7 +246,7 @@ namespace Yttrium
 
             {
                 const size_t height = img.h;
-                cxx_array<png_bytep,memory_allocator> row(height);
+                CxxArray<png_bytep,Memory::Dyadic> row(height);
                 for(size_t i=0;i<height;++i)
                 {
                     row[i+1] = (png_byte*)&img[i][0];
@@ -259,7 +259,6 @@ namespace Yttrium
             png_destroy_write_struct(&png, &info);
         }
 
-#endif
 
     }
 }
