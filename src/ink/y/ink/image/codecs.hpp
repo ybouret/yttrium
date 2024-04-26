@@ -39,13 +39,26 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! record a newly created format
-            void operator()(Format * const);
+
+            void operator()(Format * const);            //!< record a newly created format
+            bool has(const String &fid) const noexcept; //!< check if format is loaded
+            bool has(const char * const fid)     const; //!< check if format is loaded
+
+            //! check if FORMAT::CallSign is in use
+            template <typename FORMAT> inline
+            bool uses() const { return has( FORMAT::CallSign ); }
+
+            //! safely use FORMAT
+            template <typename FORMAT> inline
+            void use() { if(!uses<FORMAT>()) (*this)( new FORMAT() ); }
+
+            Codecs & std();
+            static Codecs & Std();
 
             //__________________________________________________________________
             //
             //
-            // Interfrace
+            // Interface
             //
             //__________________________________________________________________
             //! save image according to format+options

@@ -77,6 +77,21 @@ namespace Yttrium
             code->record(fmt);
         }
 
+        bool Codecs:: has(const String &fid) const noexcept
+        {
+            assert(0!=code);
+            return 0 != code->search(fid);
+        }
+
+        bool Codecs:: has(const char * const fid) const
+        {
+            const String _(fid);
+            return has(_);
+        }
+
+
+
+
         void Codecs:: save(const Image         &image,
                            const String        &fileName,
                            const FormatOptions *options) const
