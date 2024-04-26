@@ -78,7 +78,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             {
-                Y_XML_SECTION(xml,"WriteDown");
+                Y_XML_SECTION(xml,"Chemical::Conservation::Laws::WriteDown");
 
                 //--------------------------------------------------------------
                 // create laws from Qm
@@ -88,7 +88,7 @@ namespace Yttrium
                 {
                     for(const Conservation::Law *law=laws->head;law;law=law->next)
                     {
-                        xml() << *law  << std::endl; //" | beta=" << law->beta << std::endl;
+                        xml() << " (+) " << *law  << std::endl;
                     }
                 }
 
@@ -118,8 +118,8 @@ namespace Yttrium
 
                 TransferTo( Coerce(unboundedSpecies), unbounded); assert(unboundedSpecies.size==unbounded.size());
                 TransferTo( Coerce(conservedSpecies), conserved); assert(conservedSpecies.size==conserved.size());
-                Y_XMLOG(xml, "conserved: " << conservedSpecies);
-                Y_XMLOG(xml, "unbounded: " << unboundedSpecies);
+                Y_XMLOG(xml, " (*) conserved: " << conservedSpecies);
+                Y_XMLOG(xml, " (*) unbounded: " << unboundedSpecies);
 
             }
 
@@ -129,10 +129,21 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             {
-                Y_XML_SECTION(xml,"Collect");
+                Y_XML_SECTION(xml,"Chemical::Conservation::Groups::Collect");
                 Coerce(groups).collect(laws);
                 Y_XMLOG(xml, " (*) #group=" << groups->size);
+                for(const Conservation::Group *g=groups->head;g;g=g->next)
+                {
+                    const Conservation::Group &group = *g;
+                    Y_XML_SECTION_OPT(xml, "Group", " laws='" << group->size << "' species='" << group.species.size << "'");
+                    for(const Conservation::LawNode *l=group->head;l;l=l->next)
+                    {
+                        const Conservation::Law &law = **l;
+                        Y_XMLOG(xml, law << " : alpha=" << law.alpha);
+                    }
+                }
             }
+            
         }
     }
 

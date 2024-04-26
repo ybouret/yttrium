@@ -98,6 +98,40 @@ namespace Yttrium
 
             }
 
+            void Law:: makeAlgebraic(const size_t numSpeciesInGroup)
+            {
+                assert(numSpeciesInGroup>=2);
+                assert(cast.maxIndex(AuxLevel)>=1);
+                assert(cast.maxIndex(AuxLevel)<=numSpeciesInGroup);
+                const size_t n = numSpeciesInGroup;
+
+                // build Alpha
+                {
+                    VecType     &Alpha = Coerce(alpha); Alpha.adjust(n,zero);
+                    for(const Actor *a=cast.head;a;a=a->next)
+                    {
+                        Alpha[a->sp.indx[AuxLevel]] = a->xnu;
+                    }
+                }
+
+                // build Beta
+                MatType     &Beta = Coerce(beta);  Beta.make(n,n);
+                for(size_t i=1;i<=n;++i)
+                {
+                    Writable<xreal_t> &beta_i  = Beta[i];
+                    const xreal_t      alpha_i = alpha[i];
+                    for(size_t j=1;j<=n;++j)
+                    {
+                        if(i==j)
+                            beta_i[i] = nrm2;
+                        beta_i[j] -= alpha_i * alpha[j];
+                    }
+                }
+
+
+            }
+
+
 
             xreal_t Law:: required(Writable<xreal_t>       &dC,
                                    const Level            outgoing,

@@ -5,6 +5,7 @@
 
 #include "y/chemical/reactive/actors.hpp"
 #include "y/container/matrix.hpp"
+#include "y/sequence/vector.hpp"
 #include "y/type/proxy.hpp"
 
 namespace Yttrium
@@ -32,6 +33,8 @@ namespace Yttrium
                 //______________________________________________________________
                 typedef CxxListOf<Law>    List;   //!< alias
                 static const char * const Colors; //!< default Color Scheme
+                typedef Vector<xreal_t,Memory::Dyadic> VecType;
+                typedef Matrix<xreal_t,Memory::Dyadic> MatType;
 
                 //______________________________________________________________
                 //
@@ -39,10 +42,18 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
+
+                //! initialize a new conservation law
+                /**
+                 \param label law label, mostly for GraphViz
+                 \param iboth index for entity Top/Sublevel
+                 \param coeff coefficients, Sublevel
+                 \param table species = table[1..coeff.size()]
+                 */
                 explicit Law(const String             &label,
                              const size_t              iboth,
                              const Readable<unsigned> &coeff,
-                             const SpSubSet           &table);                 //!< setup from SubLevel info
+                             const SpSubSet           &table);
                 virtual ~Law() noexcept;                                       //!< cleanup
                 friend std::ostream & operator<<(std::ostream &, const Law &); //!< display
 
@@ -55,7 +66,8 @@ namespace Yttrium
                 const String &key()                             const noexcept; //!< return actors' name
                 void          viz(OutputStream &fp)                      const; //!< GraphViz
                 bool          sharesSpeciesWith(const Law &law) const noexcept; //!< check if common species with another law
-                
+                void          makeAlgebraic(const size_t numSpeciesInGroup);
+
                 //! TODO
                 xreal_t       required(Writable<xreal_t>       &dC,
                                        const Level             outgoing,
@@ -69,10 +81,11 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                const xreal_t         nrm2; //!< |this|^2
-                const xreal_t         zero; //!< 0
-                //const Matrix<xreal_t> beta; //!< nrm2 * Id - law'*law
-                
+                const xreal_t         nrm2;  //!< |this|^2
+                const xreal_t         zero;  //!< 0
+                const VecType         alpha; //!< in AuxLevel
+                const MatType         beta;  //!< nrm2 * Id - alpha'*alpha
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Law);
                 Actors       cast;

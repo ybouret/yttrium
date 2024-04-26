@@ -47,6 +47,13 @@ namespace Yttrium
             return false;
         }
 
+        size_t Actors:: maxIndex(const Level level) const noexcept
+        {
+            size_t res = 0;
+            for(const Actor *a=head;a;a=a->next) res = Max(res,a->sp.indx[level]);
+            return res;
+        }
+        
     }
 
 }

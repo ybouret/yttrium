@@ -32,11 +32,7 @@ namespace Yttrium
             explicit Actors() noexcept; //!< setup empty
             virtual ~Actors() noexcept; //!< cleanup
             Actors(const Actors &);     //!< copy
-
-            //! display using toString
-            friend std::ostream & operator<<(std::ostream &os, const Actors &A);
-
-
+            Y_OSTREAM_PROTO(Actors);    //! display using toString
 
             //__________________________________________________________________
             //
@@ -44,9 +40,10 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            String toString()                       const; //!< cat all actors' string
-            int  charge()                  const noexcept; //!< sum(charge)
-            bool contains(const Species &) const noexcept; //!< look for species
+            String toString()                           const; //!< cat all actors' string
+            int    charge()                    const noexcept; //!< sum(charge)
+            bool   contains(const Species &)   const noexcept; //!< look for species
+            size_t maxIndex(const Level level) const noexcept; //!< max indx[level]
 
         private:
             Y_DISABLE_ASSIGN(Actors);

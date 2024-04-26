@@ -89,6 +89,7 @@ namespace Yttrium
                     }
                     LightSort::MakeAuxLevel(L);
                 }
+                
                 //--------------------------------------------------------------
                 // create table
                 //--------------------------------------------------------------
@@ -98,6 +99,16 @@ namespace Yttrium
                 {
                     T << (**node).indx[TopLevel];
                 }
+
+                //--------------------------------------------------------------
+                // make algebraic laws
+                //--------------------------------------------------------------
+                const size_t numSpeciesInGroup = species.size;
+                for(LawNode *law=laws.head;law;law=law->next)
+                {
+                    Coerce(**law).makeAlgebraic(numSpeciesInGroup);
+                }
+
             }
 
         }
