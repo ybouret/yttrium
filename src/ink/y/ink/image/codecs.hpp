@@ -39,7 +39,6 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-
             void operator()(Format * const);            //!< record a newly created format
             bool has(const String &fid) const noexcept; //!< check if format is loaded
             bool has(const char * const fid)     const; //!< check if format is loaded
@@ -54,6 +53,11 @@ namespace Yttrium
 
             Codecs &        std(); //!< load std formats
             static Codecs & Std(); //!< instance with std formats
+
+            //! append used formats
+            void fetch(Sequence<Format::Handle> &formats) const;
+
+
 
             //__________________________________________________________________
             //

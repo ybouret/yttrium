@@ -22,6 +22,11 @@ namespace Yttrium
         }
 
 
+        std::ostream & operator<<(std::ostream &os, const Format &fmt)
+        {
+            return os << '"' << fmt.key() << '"';
+        }
+
 
 
     }

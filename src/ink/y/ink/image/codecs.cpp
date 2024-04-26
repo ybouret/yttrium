@@ -107,6 +107,18 @@ namespace Yttrium
             return code->findFor(fileName).load(fileName,options);
         }
 
+
+        void Codecs:: fetch(Sequence<Format::Handle> &formats) const
+        {
+            assert(0!=code);
+            for(Code::Iterator it=code->begin();it!=code->end();++it)
+            {
+                const Format::Handle &handle = *it;
+                formats << handle;
+            }
+        }
+
+
     }
 
 }
