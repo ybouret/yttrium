@@ -119,8 +119,8 @@ namespace Yttrium
                     (void) bytes_per_row;
                     //std::cerr << "bytes_per_row=" << bytes_per_row << std::endl;
 
-                    Codec::Image                       pxm(width,height);
-                    CxxArray<png_bytep,Memory::Dyadic> row(height);
+                    Codec::Image                    pxm(width,height);
+                    CxxArray<png_bytep,MemoryModel> row(height);
                     for(size_t i=0;i<height;++i)
                     {
                         row[i+1] = (png_byte*)&pxm[i][0];
@@ -246,7 +246,7 @@ namespace Yttrium
 
             {
                 const size_t height = img.h;
-                CxxArray<png_bytep,Memory::Dyadic> row(height);
+                CxxArray<png_bytep,MemoryModel> row(height);
                 for(size_t i=0;i<height;++i)
                 {
                     row[i+1] = (png_byte*)&img[i][0];

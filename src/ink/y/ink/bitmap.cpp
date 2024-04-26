@@ -1,9 +1,9 @@
 #include "y/ink/bitmap.hpp"
+#include "y/ink/types.hpp"
 #include "y/object.hpp"
 #include "y/counted.hpp"
 #include "y/type/nullify.hpp"
 #include "y/calculus/align.hpp"
-#include "y/memory/allocator/dyadic.hpp"
 #include <cstring>
 
 namespace Yttrium
@@ -16,7 +16,6 @@ namespace Yttrium
         {
         public:
             static inline size_t Align(const size_t x) noexcept { return Y_MEMALIGN(x); }
-            typedef Memory::Dyadic MemMgr;
 
             explicit Code(const Metrics &metrics) : Object(), Counted(), row(0), pix(0), mem(0)
             {
@@ -42,7 +41,7 @@ namespace Yttrium
                     //__________________________________________________________
                     mem  = 1;
                     {
-                        uint8_t * const ptr = static_cast<uint8_t *>(MemMgr::Instance().acquire(mem,blockSize));
+                        uint8_t * const ptr = static_cast<uint8_t *>(MemoryModel::Instance().acquire(mem,blockSize));
                         row = static_cast<BitRow *>( Memory::OutOfReach::Addr( &ptr[rowOffset]) );
                         pix = &ptr[pixOffset];
                     }
@@ -70,7 +69,7 @@ namespace Yttrium
                     // allocate
                     mem  = 1;
                     {
-                        uint8_t * const ptr = static_cast<uint8_t *>(MemMgr::Instance().acquire(mem,blockSize));
+                        uint8_t * const ptr = static_cast<uint8_t *>(MemoryModel::Instance().acquire(mem,blockSize));
                         row = static_cast<BitRow *>( Memory::OutOfReach::Addr( &ptr[rowOffset]) );
                         pix = data;
                     }
@@ -87,7 +86,7 @@ namespace Yttrium
             virtual ~Code() noexcept
             {
                 void *ptr = Memory::OutOfReach::Addr(row);
-                MemMgr::Location().release(ptr,mem);
+                MemoryModel::Location().release(ptr,mem);
                 row = 0;
                 pix = 0;
             }

@@ -56,11 +56,8 @@ namespace Yttrium
             {
             }
 
-            //! cleanup
-            virtual ~Species() noexcept;
-
-            //! ddisplay
-            friend std::ostream & operator<<(std::ostream &, const Species &);
+            virtual ~Species() noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Species);    //!< display
 
             //__________________________________________________________________
             //

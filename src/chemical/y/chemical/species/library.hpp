@@ -38,9 +38,9 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Library();                                                //!< setup empty
-            virtual ~Library() noexcept;                                       //!< cleanup
-            friend std::ostream & operator<<(std::ostream &, const Library &); //!< display
+            explicit Library();          //!< setup empty
+            virtual ~Library() noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Library);    //!< display
 
             //__________________________________________________________________
             //

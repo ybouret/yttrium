@@ -1,6 +1,6 @@
 
 #include "y/ink/parallel/slab.hpp"
-#include "y/memory/allocator/dyadic.hpp"
+#include "y/ink/types.hpp"
 
 namespace Yttrium
 {
@@ -16,7 +16,7 @@ namespace Yttrium
 
         void Slab:: honorRequest()
         {
-            static Memory::Dyadic &mgr = Memory::Dyadic::Instance();
+            static Memory::Allocator &mgr = MemoryModel::Instance();
             assert(0==wksp);
             assert(0==wlen);
             Coerce(wksp) = mgr.acquire(Coerce(wlen)=1,Request);
@@ -27,7 +27,7 @@ namespace Yttrium
             if(0!=wksp)
             {
                 assert(wlen>0);
-                static Memory::Dyadic &mgr = Memory::Dyadic::Location();
+                static Memory::Allocator &mgr = MemoryModel::Location();
                 mgr.release( Coerce(wksp), Coerce(wlen) );
             }
         }

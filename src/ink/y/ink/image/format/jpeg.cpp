@@ -79,7 +79,7 @@ namespace Yttrium
         }
 
 
-        typedef CxxArray<unsigned char,Memory::Dyadic> RGB_Line;
+        typedef CxxArray<unsigned char,MemoryModel> RGB_Line;
 
         class JPEG_RGB_Line : public RGB_Line
         {
@@ -256,7 +256,7 @@ namespace Yttrium
 
             static inline JSAMPLE * acquire(size_t &n, size_t &b)
             {
-                static Memory::Allocator &mgr = Memory::Dyadic::Instance();
+                static Memory::Allocator &mgr = MemoryModel::Instance();
                 return mgr.allocate<JSAMPLE>(n,b);
             }
 
@@ -276,7 +276,7 @@ namespace Yttrium
 
             inline virtual ~JPEG_Buffer() noexcept
             {
-                static Memory::Allocator &mgr = Memory::Dyadic::Location();
+                static Memory::Allocator &mgr = MemoryModel::Location();
                 mgr.withdraw(samples,items,bytes);
                 items = 0;
                 buffer[0] = NULL;
