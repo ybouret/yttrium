@@ -113,11 +113,11 @@ namespace Yttrium
 
                     png_read_update_info(png, info);
 
-                    std::cerr << width << "x" << height << " : bpp=" << unsigned(bit_depth) << std::endl;
+                    //std::cerr << width << "x" << height << " : bpp=" << unsigned(bit_depth) << std::endl;
 
                     const size_t bytes_per_row = png_get_rowbytes(png,info);
-
-                    std::cerr << "bytes_per_row=" << bytes_per_row << std::endl;
+                    (void) bytes_per_row;
+                    //std::cerr << "bytes_per_row=" << bytes_per_row << std::endl;
 
                     Codec::Image                       pxm(width,height);
                     CxxArray<png_bytep,Memory::Dyadic> row(height);
