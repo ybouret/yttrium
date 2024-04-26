@@ -30,7 +30,7 @@ namespace Yttrium
             //__________________________________________________________________
             static const char * const      CallSign;                                 //!< "Ink::Codecs"
             static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 20; //!< life time
-            class Code; // forward
+            class Code;                                                              // forward declaration
 
             //__________________________________________________________________
             //
@@ -52,8 +52,8 @@ namespace Yttrium
             template <typename FORMAT> inline
             void use() { if(!uses<FORMAT>()) (*this)( new FORMAT() ); }
 
-            Codecs & std();
-            static Codecs & Std();
+            Codecs &        std(); //!< load std formats
+            static Codecs & Std(); //!< instance with std formats
 
             //__________________________________________________________________
             //
