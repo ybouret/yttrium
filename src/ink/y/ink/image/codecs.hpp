@@ -4,7 +4,7 @@
 #ifndef Y_Ink_Image_Codecs_Included
 #define Y_Ink_Image_Codecs_Included 1
 
-#include "y/ink/image/codec.hpp"
+#include "y/ink/image/format.hpp"
 
 
 namespace Yttrium
@@ -18,6 +18,8 @@ namespace Yttrium
             static const char * const      CallSign;
             static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 20;
             class Code;
+
+            void operator()(Format * const codec);
 
             //! save image according to format+options
             virtual void save(const Image         &image,

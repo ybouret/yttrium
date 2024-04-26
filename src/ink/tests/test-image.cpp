@@ -15,6 +15,10 @@ Y_UTEST(image)
 
     std::cerr << IMG.callSign() << std::endl;
 
+    IMG( new Ink::FormatBMP()  );
+    IMG( new Ink::FormatJPEG() );
+
+
 }
 Y_UDONE()
 

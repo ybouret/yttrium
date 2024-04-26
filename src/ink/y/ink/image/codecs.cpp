@@ -1,5 +1,8 @@
 
 #include "y/ink/image/codecs.hpp"
+#include "y/associative/suffix/set.hpp"
+#include "y/system/exception.hpp"
+#include "y/vfs/vfs.hpp"
 
 
 namespace Yttrium
@@ -8,11 +11,33 @@ namespace Yttrium
     {
         const char * const Codecs:: CallSign = "Ink::Image::Codecs";
 
-        class Codecs:: Code
+
+
+        class Codecs:: Code : public SuffixSet<String,Format::Handle>
         {
         public:
-            inline explicit Code() {}
+
+            inline explicit Code() : SuffixSet<String,Format::Handle>() {}
             inline virtual ~Code() noexcept {}
+
+            inline void record(Format * const fmt)
+            {
+                assert(0!=fmt);
+                const Format::Handle handle(fmt);
+                if(!insert(handle)) throw Specific::Exception(CallSign,"multiple format '%s'", handle->key().c_str());
+            }
+
+            const Format & findFor(const String &path) const
+            {
+                const char * const ext = VFS::Extension(path); if(!ext) throw Specific::Exception(CallSign,"no file extension '%s'", VFS::BaseName(path));
+
+                for(ConstIterator it=begin();it!=end();++it)
+                {
+                    
+                }
+
+                throw Specific::Exception(CallSign,"unknown file type '%s'",VFS::BaseName(path));
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
@@ -41,6 +66,13 @@ namespace Yttrium
             assert(0!=code);
             Memory::OutOfReach::Naught(code);
             code=0;
+        }
+
+        void Codecs:: operator()(Format * const fmt)
+        {
+            assert(0!=fmt);
+            assert(0!=code);
+            code->record(fmt);
         }
 
         void Codecs:: save(const Image         &image,

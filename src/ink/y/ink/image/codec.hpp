@@ -6,7 +6,6 @@
 #include "y/ink/types.hpp"
 #include "y/ink/pixmap.hpp"
 #include "y/ink/image/format/options.hpp"
-#include "y/ptr/ark.hpp"
 
 namespace Yttrium
 {
@@ -33,7 +32,6 @@ namespace Yttrium
             //__________________________________________________________________
             typedef Pixmap<RGBA>               Image;     //!< alias
             typedef Image::RowType             ImageRow;  //!< alias
-            typedef ArkPtr<String,const Codec> Handle; //!< alias
 
             //__________________________________________________________________
             //
