@@ -16,6 +16,7 @@ add_subdirectory(bzip2)
 add_subdirectory(png)
 add_subdirectory(jbig)
 add_subdirectory(lua)
+add_subdirectory(tiff)
 
 add_custom_target(ThirdParty 
 DEPENDS 
