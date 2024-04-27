@@ -186,6 +186,7 @@ namespace Yttrium
                 return row[ zfh[j] ];
             }
 
+
             //! direct (faster) const access
             inline const RowType & operator()(const unit_t j) const noexcept
             {
@@ -202,14 +203,6 @@ namespace Yttrium
                     os << ' ' << pxm[j] << '\n';
                 }
                 os <<' '<< pxm[pxm.h-1];
-#if 0
-                os << '[' << pxm[0];
-                for(unit_t j=1;j<pxm.h;++j)
-                {
-                    os << ';' << pxm[j];
-                }
-                os << ']';
-#endif
                 return os;
             }
 

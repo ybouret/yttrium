@@ -4,6 +4,8 @@ include_directories(. ../core ../jive )
 include_directories(..)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/../y/jpeg)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/../y/png)
+include_directories(../y/tiff/libtiff)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/../y/tiff/libtiff)
 
 Y_CreateLibrary(y-ink
 ink
