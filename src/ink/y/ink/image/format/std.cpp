@@ -4,6 +4,7 @@
 #include "y/ink/image/format/bmp.hpp"
 #include "y/ink/image/format/jpeg.hpp"
 #include "y/ink/image/format/png.hpp"
+#include "y/ink/image/format/tiff.hpp"
 
 
 
@@ -19,6 +20,7 @@ namespace Yttrium
             use<FormatBMP>();
             use<FormatPNG>();
             use<FormatJPEG>();
+            use<FormatTIFF>();
             return *this;
         }
 
