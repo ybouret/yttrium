@@ -12,7 +12,7 @@ namespace Yttrium
         {
             assert(handle);
             TIFFClose( static_cast<TIFF *>(handle) );
-            handle = 0;
+            Coerce(handle) = 0;
         }
 
         tiffxx:: tiffxx(const String &filename, const char *mode) :

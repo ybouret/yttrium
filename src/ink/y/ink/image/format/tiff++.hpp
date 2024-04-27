@@ -12,7 +12,7 @@ namespace Yttrium
 {
     namespace Ink
     {
-
+        
         //__________________________________________________________________
         //
         //
@@ -26,7 +26,7 @@ namespace Yttrium
 
         protected:
             explicit tiffxx(const String &, const char *mode); //!< TIFFOpen
-            void *handle; //!< TIFF
+            void * const handle; //!< TIFF
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(tiffxx);

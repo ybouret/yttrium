@@ -2,7 +2,7 @@ Y_CreateTest(ink
 image)
 
 #link_directories(${CMAKE_CURRENT_BIN_DIR})
-Y_LinkLibraries(test-ink y-ink y-jive y-jpeg png_static y-z)
+Y_LinkLibraries(test-ink y-ink y-jive y-jpeg png_static y-z tiff)
 
 set( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
 set( DATA ${HERE}/../../../var)
@@ -15,4 +15,5 @@ add_test(format:options test-ink format_options)
 add_test(format:bmp     test-ink format_bmp)
 add_test(format:jpeg    test-ink format_jpeg)
 add_test(format:png     test-ink format_png)
+add_test(format:tiff    test-ink format_tiff)
 add_test(image          test-ink image)
