@@ -115,16 +115,15 @@ signature()
              - build one FRAME per context
              \param stc shared ThreadContexts (class DERIVED : public ThreadContexts...)
              */
-            template <typename DERIVED>
-            explicit Frames(const ArcPtr<DERIVED> &stc) : 
+            template <typename DERIVED> inline
+            explicit Frames(const ArcPtr<DERIVED> &stc) :
             Y_Concurrent_Frames_Construct()
             {
             }
 
 
-
             //! cleanup
-            virtual ~Frames() noexcept { loosen(); }
+            inline virtual ~Frames() noexcept { loosen(); }
 
             //__________________________________________________________________
             //

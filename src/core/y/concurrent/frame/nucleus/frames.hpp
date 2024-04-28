@@ -39,14 +39,7 @@ namespace Yttrium
                 contexts(CopyOf,stc)
                 {
                 }
-
-                //! setup from newly created DERIVED from ThreadContexts
-                template <typename DERIVED> inline
-                explicit Frames(DERIVED * const ptc) noexcept :
-                contexts( static_cast<ThreadContexts *>(ptc) )
-                {
-
-                }
+                
 
                 //! local shared contexts
                 ArcPtr<ThreadContexts>  contexts;

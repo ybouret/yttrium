@@ -43,8 +43,7 @@ namespace Yttrium
 
             //! setup ENGINEs + keep pipeline reference inside MultiplexPipeline
             inline explicit Multiplex(const SharedPipeline &sp) :
-            Frames<ENGINE>(sp),
-            MultiplexPipeline(sp)
+            Frames<ENGINE>(sp), MultiplexPipeline(sp)
             {
             }
 
