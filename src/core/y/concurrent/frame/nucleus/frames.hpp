@@ -34,10 +34,18 @@ namespace Yttrium
                 /**
                  DERIVED can be Loop/Mono/Crew or Pipeline/Alone/Queue
                  */
-                template <typename DERIVED>
+                template <typename DERIVED> inline
                 explicit Frames(const ArcPtr<DERIVED> &stc) noexcept :
                 contexts(CopyOf,stc)
                 {
+                }
+
+                //! setup from newly created DERIVED from ThreadContexts
+                template <typename DERIVED> inline
+                explicit Frames(DERIVED * const ptc) noexcept :
+                contexts( static_cast<ThreadContexts *>(ptc) )
+                {
+
                 }
 
                 //! local shared contexts
