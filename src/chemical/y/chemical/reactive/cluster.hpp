@@ -52,7 +52,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             
-            const Cluster & operator*() const noexcept { return *this; }
+            const Cluster & operator*() const noexcept { return *this; } //!< helper to display
 
             //! formatted output
             friend std::ostream & operator<<(std::ostream &os, const Cluster &cl);

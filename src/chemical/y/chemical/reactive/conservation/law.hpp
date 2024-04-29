@@ -74,7 +74,6 @@ namespace Yttrium
 
                 /**
                  \param Caux enough space to hold species concentrations
-                 \param spec species from Group
                  \param Ctop toplevel concentration to change
                  \param xadd helper
 

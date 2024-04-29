@@ -54,6 +54,7 @@ namespace Yttrium
             //! cleanup
             virtual ~Format() noexcept;
 
+            //! display
             Y_OSTREAM_PROTO(Format);
 
             //__________________________________________________________________

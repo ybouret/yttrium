@@ -14,9 +14,26 @@ namespace Yttrium
 
         namespace Conservation
         {
+            //__________________________________________________________________
+            //
+            //
+            //! Warden of conservations laws
+            //
+            //__________________________________________________________________
             class Warden
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+
+                //______________________________________________________________
+                //
+                //! Broken law description
+                //______________________________________________________________
                 class Broken
                 {
                 public:
@@ -26,23 +43,46 @@ namespace Yttrium
                     ~Broken() noexcept;
 
                     
-                    const Law               &law;
-                    xreal_t                  bad;
-                    Writable<xreal_t>       &cok;
-                    const size_t             pad;
-                    
+                    const Law               &law; //!< the law
+                    xreal_t                  bad; //!< the deviation
+                    Writable<xreal_t>       &cok; //!< concentration OK
+                    const size_t             pad; //!< helper to display
+
                 private:
                     Y_DISABLE_ASSIGN(Broken);
                 };
                 
-                typedef Small::CoopHeavyList<Broken> BrokenList;
-                typedef BrokenList::ProxyType        BrokenRepo;
-                typedef BrokenList::NodeType         BrokenNode;
-                
+                typedef Small::CoopHeavyList<Broken> BrokenList; //!< alias
+                typedef BrokenList::ProxyType        BrokenRepo; //!< alias
+                typedef BrokenList::NodeType         BrokenNode; //!< alias
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! allocate resources to process any group of any cluster
                 explicit Warden(const Clusters &clusters);
+
+                //! cleanup
                 virtual ~Warden() noexcept;
-                
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                //! inject matter if necessary
+                /**
+                 \param C TopLevel initial concentration
+                 \param I TopLevel injected concentration
+                 \param G list of groups to process
+                 \param xml for verbosity
+                 */
                 void operator()(Writable<xreal_t>  &C,
                                 Writable<xreal_t>  &I,
                                 const GList        &G,
