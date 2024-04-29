@@ -7,6 +7,7 @@
 #include "y/ink/parallel/index-to-rgba.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/color/grayscale.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
