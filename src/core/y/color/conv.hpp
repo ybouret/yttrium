@@ -27,9 +27,11 @@ namespace Yttrium
 
             static const  T Gray[255*3+1]; //!< [0..255*3]/(255*3);
             static inline T From(const uint8_t r, const uint8_t g, const uint8_t b) noexcept;
-
         };
+
         
+
+
 #if !defined(_MSC_VER)
         template <> const float       Conv<float>      ::Unit[]; //!< decl
         template <> const double      Conv<double>     ::Unit[]; //!< decl
