@@ -9,6 +9,8 @@ namespace Yttrium
 {
     namespace Color
     {
+        template <typename> class RGBA;
+
         //______________________________________________________________________
         //
         //
@@ -32,6 +34,8 @@ namespace Yttrium
             inline  RGB(const T R, const T G, const T B) noexcept : r(R), g(G), b(B) {}                     //!< setup
             inline  RGB(const RGB &c)                    noexcept : r(c.r), g(c.g), b(c.b) {}               //!< copy
             inline  RGB & operator=(const RGB &c)        noexcept { r = c.r; g=c.g; b=c.b; return *this; }  //!< assign
+            inline  RGB(const RGBA<T> &)                 noexcept;
+            inline  RGB & operator=(const RGBA<T> &)     noexcept;
 
             //! display
             inline friend std::ostream & operator<<(std::ostream &os, const RGB &c)

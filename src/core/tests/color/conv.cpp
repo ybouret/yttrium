@@ -6,6 +6,12 @@
 using namespace Yttrium;
 
 
+template <typename T> static inline
+size_t GrayToIndx(const T &f)
+{
+    static const T half(0.5);
+    return floor(f*765+half);
+}
 
 Y_UTEST(color_conv)
 {
@@ -40,6 +46,24 @@ Y_UTEST(color_conv)
         }
     }
 
+#if 0
+    {
+        for(size_t i=0;i<=765;++i)
+        {
+            std::cerr << "G(" << std::setw(3) << i << "), ";
+            if( (i+1) % 16 == 0 )
+                std::cerr << "\\" << std::endl;
+        }
+
+    }
+#endif
+
+    for(size_t k=0;k<=255*3;++k)
+    {
+        Y_ASSERT( k == GrayToIndx( Color::Conv<float>::Gray[k]) );
+        Y_ASSERT( k == GrayToIndx( Color::Conv<double>::Gray[k]) );
+        Y_ASSERT( k == GrayToIndx( Color::Conv<long double>::Gray[k]) );
+    }
 
 
 }
