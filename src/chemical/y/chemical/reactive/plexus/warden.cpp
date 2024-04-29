@@ -122,14 +122,17 @@ namespace Yttrium
                         const Species &sp = a->sp;
                         const size_t   ii = sp.indx[TopLevel];
                         const xreal_t  cc = broken.cok[sp.indx[AuxLevel]];
-                        //std::cerr << sp << " + " << real_t(dd) << std::endl;
                         const xreal_t  c0 = C[ii];
                         const xreal_t  dc = cc - c0;
                         I[ii] += dc;
                         C[ii]  = cc;
                         if(xml.verbose)
                         {
-                            G.pad( xml() << "  |_" << sp, sp )<< " = " << std::setw(15) << real_t(C[ii]) << " <- " << real_t(c0) <<  " + " << dc << std::endl;
+                            G.pad( xml() << "  |_" << sp, sp )
+                            << " = " << std::setw(15) << real_t(C[ii])
+                            << " = " << std::setw(15) << real_t(c0)
+                            << " + " << std::setw(15) << real_t(dc)
+                            << std::endl;
                         }
                     }
                     //broken.bad = broken.law.required(broken.del, AuxLevel, C, TopLevel, xadd);
