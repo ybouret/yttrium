@@ -66,6 +66,8 @@ namespace Yttrium
                  */
                 void compile();
 
+                std::ostream & padLaw(std::ostream &os, const Law &) const;
+
                 //______________________________________________________________
                 //
                 //
@@ -80,6 +82,8 @@ namespace Yttrium
                 Y_DISABLE_COPY_AND_ASSIGN(Group);
                 LawList     laws;
                 virtual ConstInterface & surrogate() const noexcept;
+            public:
+                const size_t maxUUID;
             };
 
 

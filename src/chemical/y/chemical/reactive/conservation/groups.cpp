@@ -51,7 +51,7 @@ namespace Yttrium
                     group->compile();
                     for(const LawNode *ln=(*group)->head;ln;ln=ln->next)
                     {
-                        const Law &law = **ln;
+                        const Law &law = **ln; (void)law;
                         assert(law.alpha.size()==law.beta.cols);
                         assert(law.alpha.size()==law.beta.rows);
                         assert(law.alpha.size()==group->species.size);

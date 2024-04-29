@@ -21,18 +21,20 @@ namespace Yttrium
                 {
                 public:
 
-                    Broken(const Law &, const xreal_t, Writable<xreal_t> &) noexcept;
+                    Broken(const Law &, const xreal_t, Writable<xreal_t> &, const size_t) noexcept;
                     Broken(const Broken&) noexcept;
                     ~Broken() noexcept;
 
                     
                     const Law               &law;
                     xreal_t                  bad;
-                    Writable<xreal_t>       &del;
-
+                    Writable<xreal_t>       &cok;
+                    const size_t             pad;
+                    
                 private:
                     Y_DISABLE_ASSIGN(Broken);
                 };
+                
                 typedef Small::CoopHeavyList<Broken> BrokenList;
                 typedef BrokenList::ProxyType        BrokenRepo;
                 typedef BrokenList::NodeType         BrokenNode;
@@ -48,10 +50,10 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Warden);
-                Matrix<xreal_t> dC;
-                BrokenRepo    repo;
-                BrokenList    jail;
-                XAdd          xadd;
+                Matrix<xreal_t> Caux;
+                BrokenRepo      repo;
+                BrokenList      jail;
+                XAdd            xadd;
 
                 void process(Writable<xreal_t>  &C,
                              Writable<xreal_t>  &I,

@@ -11,6 +11,7 @@ namespace Yttrium
                             XMLog           &xml) :
         clusters(),
         sharedK(topK),
+        groups(),
         maxSPC(0),
         maxCPG(0),
         maxSPG(0),

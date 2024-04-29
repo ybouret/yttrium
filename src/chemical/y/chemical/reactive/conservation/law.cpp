@@ -99,22 +99,24 @@ namespace Yttrium
 
             }
 
-            void Law:: makeAlgebraic(const size_t numSpeciesInGroup)
+            void Law:: makeAlgebraic(const SList &species)
             {
-                assert(numSpeciesInGroup>=2);
+                assert(species.size>=2);
                 assert(cast.maxIndex(AuxLevel)>=1);
-                assert(cast.maxIndex(AuxLevel)<=numSpeciesInGroup);
-                const size_t n = numSpeciesInGroup;
+                assert(cast.maxIndex(AuxLevel)<=species.size);
+                const size_t n = species.size;
 
                 //______________________________________________________________
                 //
                 // build Alpha
                 //______________________________________________________________
                 {
-                    VecType     &Alpha = Coerce(alpha); Alpha.adjust(n,zero);
+                    VecType     &Alpha = Coerce(alpha); 
+                    Alpha.adjust(n,zero);
                     for(const Actor *a=cast.head;a;a=a->next)
                     {
-                        Alpha[a->sp.indx[AuxLevel]] = a->xnu;
+                        const Species &sp = a->sp; assert(species.has(sp));
+                        Alpha[sp.indx[AuxLevel]] = a->xnu;
                     }
                 }
 
@@ -122,7 +124,8 @@ namespace Yttrium
                 //
                 // build Beta
                 //______________________________________________________________
-                MatType     &Beta = Coerce(beta);  Beta.make(n,n);
+                MatType     &Beta = Coerce(beta); 
+                Beta.make(n,n);
                 for(size_t i=1;i<=n;++i)
                 {
                     Writable<xreal_t> &beta_i  = Beta[i];
@@ -170,6 +173,48 @@ namespace Yttrium
                 }
                 else
                 {
+                    return zero;
+                }
+            }
+
+            xreal_t Law:: required(Writable<xreal_t>       &Caux,
+                                   const Readable<xreal_t> &Ctop,
+                                   XAdd                    &xadd) const
+            {
+                const size_t ns = alpha.size(); assert(Caux.size()>=ns);
+
+                xadd.make(ns);
+
+                // collect dot product
+                for(const Actor *a=cast.head;a;a=a->next)
+                {
+                    xadd << a->xnu * Ctop[ a->sp.indx[TopLevel] ];
+                }
+
+                // compute scale
+                const xreal_t scale = xadd.sum();
+                assert(xadd.isEmpty());
+
+                if(scale<zero)
+                {
+                    // bad: in place compute Caux = (beta*Ctop)/nrm2
+                    for(size_t i=ns;i>0;--i)
+                    {
+                        {
+                            const Readable<xreal_t> &beta_i = beta[i];
+                            for(const Actor *a=cast.head;a;a=a->next)
+                            {
+                                const Species &sp = a->sp;
+                                xadd << beta_i[ sp.indx[AuxLevel] ] * Ctop[ sp.indx[TopLevel] ];
+                            }
+                        }
+                        Caux[i] = xadd.sum()/nrm2;
+                    }
+                    return (scale*scale)/nrm2;
+                }
+                else
+                {
+                    // law is fullfilled
                     return zero;
                 }
             }

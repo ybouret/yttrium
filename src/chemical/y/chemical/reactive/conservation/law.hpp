@@ -67,7 +67,7 @@ namespace Yttrium
                 const String &key()                             const noexcept; //!< return actors' name
                 void          viz(OutputStream &fp)                      const; //!< GraphViz
                 bool          sharesSpeciesWith(const Law &law) const noexcept; //!< check if common species with another law
-                void          makeAlgebraic(const size_t numSpeciesInGroup);    //!< make alpha and beta
+                void          makeAlgebraic(const SList &species);              //!< make alpha and beta for species.size
 
                 //! TODO
                 xreal_t       required(Writable<xreal_t>       &dC,
@@ -76,8 +76,9 @@ namespace Yttrium
                                        const Level             incoming,
                                        XAdd                   &xadd) const;
 
-                xreal_t required(Writable<xreal_t> &Caux,
-                                 const Readable<xreal_t> &Xtop);
+                xreal_t required(Writable<xreal_t>       &Caux,
+                                 const Readable<xreal_t> &Ctop,
+                                 XAdd                    &Xadd) const;
 
                 //______________________________________________________________
                 //
@@ -93,12 +94,12 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Law);
                 Actors       cast;
-                const String uuid;
                 virtual ConstInterface & surrogate() const noexcept;
 
             public:
-                Law        *next; //!< for list
-                Law        *prev; //!< for list
+                const String uuid; //!< made from actors
+                Law         *next; //!< for list
+                Law         *prev; //!< for list
             };
             
 

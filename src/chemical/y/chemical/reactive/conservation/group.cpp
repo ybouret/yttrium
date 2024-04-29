@@ -16,12 +16,21 @@ namespace Yttrium
             Object(),
             Proxy<const LawList>(),
             species(),
+            topIndx(),
             next(0),
             prev(0),
-            laws()
+            laws(),
+            maxUUID(0)
             {
                 laws << first;
             }
+
+            std::ostream & Group:: padLaw(std::ostream &os, const Law &law) const
+            {
+                for(size_t i=maxUUID;i<=law.uuid.size();++i) os << ' ';
+                return os;
+            }
+
 
             Group:: ConstInterface & Group:: surrogate() const noexcept
             {
@@ -66,6 +75,7 @@ namespace Yttrium
                 // init
                 //--------------------------------------------------------------
                 Coerce(maxLength) = 0;
+                Coerce(maxUUID)   = 0;
                 Table  &T = Coerce(topIndx);
                 T.free();
                 {
@@ -79,6 +89,7 @@ namespace Yttrium
                         for(const LawNode *cl=laws.head;cl;cl=cl->next)
                         {
                             const Law &law = **cl;
+                            Coerce(maxUUID) = Max(maxUUID,law.uuid.size());
                             for(const Actor *a=law->head;a;a=a->next)
                             {
                                 updateWith(a->sp);
@@ -103,10 +114,10 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 // make algebraic laws
                 //--------------------------------------------------------------
-                const size_t numSpeciesInGroup = species.size;
+                //const size_t numSpeciesInGroup = species.size;
                 for(LawNode *law=laws.head;law;law=law->next)
                 {
-                    Coerce(**law).makeAlgebraic(numSpeciesInGroup);
+                    Coerce(**law).makeAlgebraic(species);
                 }
 
             }
