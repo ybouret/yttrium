@@ -50,7 +50,7 @@ namespace Yttrium
             xadd(clusters.maxSPG)
             {
                 repo->reserve(clusters.maxCPG);
-                std::cerr << "Caux=" << Caux << std::endl;
+                //std::cerr << "Caux=" << Caux << std::endl;
             }
 
             Warden:: ~Warden() noexcept
@@ -73,7 +73,6 @@ namespace Yttrium
                 assert( G->size>0 );
                 assert( G->size<=Caux.rows);
                 assert(repo->stowage()>=G->size);
-                const SList &spec = G.species;
 
                 //--------------------------------------------------------------
                 // init with all unbalanced laws
@@ -84,7 +83,7 @@ namespace Yttrium
                 {
                     const Law         &law = **node;
                     Writable<xreal_t> &cok = Caux[jail.size+1];
-                    const xreal_t      bad = law.required(cok,spec,C,xadd);
+                    const xreal_t      bad = law.required(cok,C,xadd);
                     if(bad>zero)
                     {
                         const Broken broken(law,bad,cok,G.maxUUID);
@@ -156,7 +155,7 @@ namespace Yttrium
                     for(size_t i=jail.size;i>0;--i)
                     {
                         Broken &probe = **(jail.head);
-                        probe.bad = probe.law.required(probe.cok,spec,C,xadd);
+                        probe.bad = probe.law.required(probe.cok,C,xadd);
                         if(probe.bad>zero)
                         {
                             Y_XMLOG(xml, " (+) " << probe);
@@ -176,8 +175,15 @@ namespace Yttrium
                 if(injected)
                 {
                     Y_XMLOG(xml, " (*) [modified]");
-                    G.show(std::cerr, "         [", G.species, "]", C, TopLevel);
-                    G.show(std::cerr, "injected_[", G.species, "]", I, TopLevel);
+                    if(xml.verbose)
+                    {
+                        xml() << "C={" << std::endl;
+                        G.show(*xml, "\t[", G.species, "]", C, TopLevel);
+                        xml() << "}" << std::endl;
+                        xml() << "Injected={" << std::endl;
+                        G.show(std::cerr, "\t[", G.species, "]", I, TopLevel);
+                        xml() << "}" << std::endl;
+                    }
 
                 }
                 else

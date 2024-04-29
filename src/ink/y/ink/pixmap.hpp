@@ -171,7 +171,6 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-
             //! mutable access: direct
             inline RowType & operator[](const unit_t j) noexcept
             {
@@ -205,6 +204,14 @@ namespace Yttrium
                 os <<' '<< pxm[pxm.h-1];
                 return os;
             }
+
+            //__________________________________________________________________
+            //
+            //
+            // Operations
+            //
+            //__________________________________________________________________
+
 
         private:
             Y_DISABLE_ASSIGN(Pixmap);

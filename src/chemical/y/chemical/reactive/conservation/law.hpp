@@ -83,7 +83,6 @@ namespace Yttrium
                  - else compute Caux= ((nrm2 * Id - alpha*alpha') Ctop)/nrm2 and return (scale*scale/nrm2 = |dC|^2
                  */
                 xreal_t required(Writable<xreal_t>       &Caux,
-                                 const SList             &spec,
                                  const Readable<xreal_t> &Ctop,
                                  XAdd                    &xadd) const;
 
