@@ -76,6 +76,9 @@ namespace Yttrium
                                        const Level             incoming,
                                        XAdd                   &xadd) const;
 
+                xreal_t required(Writable<xreal_t> &Caux,
+                                 const Readable<xreal_t> &Xtop);
+
                 //______________________________________________________________
                 //
                 //
@@ -92,13 +95,12 @@ namespace Yttrium
                 Actors       cast;
                 const String uuid;
                 virtual ConstInterface & surrogate() const noexcept;
+
             public:
                 Law        *next; //!< for list
                 Law        *prev; //!< for list
             };
-
-            //typedef Small::BareLightList<const Law> clList;
-            //typedef clList::NodeType                clNode;
+            
 
 
         }

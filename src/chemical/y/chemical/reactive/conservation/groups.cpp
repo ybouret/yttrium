@@ -49,6 +49,14 @@ namespace Yttrium
                 for(Group *group=cgl.head;group;group=group->next)
                 {
                     group->compile();
+                    for(const LawNode *ln=(*group)->head;ln;ln=ln->next)
+                    {
+                        const Law &law = **ln;
+                        assert(law.alpha.size()==law.beta.cols);
+                        assert(law.alpha.size()==law.beta.rows);
+                        assert(law.alpha.size()==group->species.size);
+
+                    }
                 }
             }
 
