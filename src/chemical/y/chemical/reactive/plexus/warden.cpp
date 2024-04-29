@@ -124,11 +124,12 @@ namespace Yttrium
                         const xreal_t  cc = broken.cok[sp.indx[AuxLevel]];
                         //std::cerr << sp << " + " << real_t(dd) << std::endl;
                         const xreal_t  c0 = C[ii];
-                        I[ii] += cc - c0;
+                        const xreal_t  dc = cc - c0;
+                        I[ii] += dc;
                         C[ii]  = cc;
                         if(xml.verbose)
                         {
-                            G.pad( xml() << "  |_" << sp, sp )<< " = " << std::setw(15) << real_t(C[ii]) << " <- " << real_t(c0) << std::endl;
+                            G.pad( xml() << "  |_" << sp, sp )<< " = " << std::setw(15) << real_t(C[ii]) << " <- " << real_t(c0) <<  " + " << dc << std::endl;
                         }
                     }
                     //broken.bad = broken.law.required(broken.del, AuxLevel, C, TopLevel, xadd);
@@ -166,7 +167,9 @@ namespace Yttrium
                 if(injected)
                 {
                     Y_XMLOG(xml, " (*) [modified]");
-                    
+                    G.show(std::cerr, "         [", G.species, "]", C, TopLevel);
+                    G.show(std::cerr, "injected_[", G.species, "]", I, TopLevel);
+
                 }
                 else
                 {
