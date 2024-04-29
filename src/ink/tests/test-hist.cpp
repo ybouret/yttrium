@@ -13,6 +13,40 @@ namespace Yttrium
 {
     namespace  Ink
     {
+
+        template <typename T>
+        class Histogram
+        {
+        public:
+            static const unsigned BINS = 256;
+            explicit Histogram() noexcept : data()
+            {
+                ldz();
+            }
+
+            virtual ~Histogram() noexcept
+            {
+                ldz();
+            }
+
+            void ldz() noexcept {
+                memset(data,0,sizeof(data));
+            }
+
+            inline T        & operator[](const uint8_t x)       noexcept { return data[x]; }
+            inline const  T & operator[](const uint8_t x) const noexcept { return data[x]; }
+
+            //static inline void Make(Slab &slab);
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Histogram);
+            T data[BINS];
+        };
+
+
+
+
         void MakeHist(Slab &slab, const Pixmap<RGBA> &img)
         {
             size_t * const H = slab.as<size_t>(256);
