@@ -128,6 +128,13 @@ G(752), G(753), G(754), G(755), G(756), G(757), G(758), G(759), G(760), G(761), 
             GG
         };
 
+#undef G
+#define G(i) static_cast<uint8_t>( ( unsigned(i) * 765)/765 ) 
+
+        const uint8_t Conv8:: Gray[766] =
+        {
+            GG
+        };
     }
 
 }

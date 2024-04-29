@@ -26,10 +26,14 @@ namespace Yttrium
             }
 
             static const  T Gray[255*3+1]; //!< [0..255*3]/(255*3);
-            static inline T From(const uint8_t r, const uint8_t g, const uint8_t b) noexcept;
+            //static inline T From(const uint8_t r, const uint8_t g, const uint8_t b) noexcept;
         };
 
-        
+        struct Conv8
+        {
+            static const uint8_t Gray[255*3+1]; // ([0..255]*765)/765
+        };
+
 
 
 #if !defined(_MSC_VER)
