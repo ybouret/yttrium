@@ -56,7 +56,15 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void honorRequest(); //!< once call, post init
+            void honorRequest(); //!< once called, post initializatio
+
+            template <typename T> inline
+            T *as(const size_t n)
+            {
+                checkRequest(n,sizeof(T));
+                return static_cast<T*>(wksp);
+            }
+
 
             //__________________________________________________________________
             //
@@ -73,6 +81,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Slab);
             void * const wksp;
             const size_t wlen;
+            void checkRequest(const size_t n, const size_t bs) const;
         };
 
     }

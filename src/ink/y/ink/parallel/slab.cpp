@@ -1,6 +1,7 @@
 
 #include "y/ink/parallel/slab.hpp"
 #include "y/ink/types.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -31,6 +32,14 @@ namespace Yttrium
                 mgr.release( Coerce(wksp), Coerce(wlen) );
             }
         }
+
+        void Slab:: checkRequest(const size_t n, const size_t bs) const
+        {
+            const size_t numBytes = n * bs;
+            if(numBytes>wlen)
+                throw Specific::Exception("Ink::Slab", "insufficient local memory");
+        }
+
     }
 
 }
