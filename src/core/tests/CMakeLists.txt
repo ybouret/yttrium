@@ -249,6 +249,7 @@ add_test(container:cxx-array  test-core container_cxx_array)
 add_test(container:cxx-series test-core container_cxx_series)
 add_test(container:iterator   test-core container_iterator)
 add_test(container:matrix     test-core container_matrix)
+add_test(container:matrix-ops test-core container_matrix_ops)
 add_test(container:operating  test-core container_operating)
 add_test(container:algo       test-core container_algo)
 

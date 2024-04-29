@@ -106,7 +106,10 @@ namespace Yttrium
                 assert(cast.maxIndex(AuxLevel)<=numSpeciesInGroup);
                 const size_t n = numSpeciesInGroup;
 
+                //______________________________________________________________
+                //
                 // build Alpha
+                //______________________________________________________________
                 {
                     VecType     &Alpha = Coerce(alpha); Alpha.adjust(n,zero);
                     for(const Actor *a=cast.head;a;a=a->next)
@@ -115,7 +118,10 @@ namespace Yttrium
                     }
                 }
 
+                //______________________________________________________________
+                //
                 // build Beta
+                //______________________________________________________________
                 MatType     &Beta = Coerce(beta);  Beta.make(n,n);
                 for(size_t i=1;i<=n;++i)
                 {

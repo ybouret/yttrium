@@ -57,7 +57,14 @@ namespace Yttrium
                 void append(const Law &);                   //!< append a new law
                 void append(Group &) noexcept;              //!< steal new group content
 
-                void compile();                             //!< gather all species and make their AuxLevel indices
+                //! compile species and law
+                /**
+                 - gather all species
+                 - make their aux level
+                 - make the topLevel table
+                 - make algebraic laws
+                 */
+                void compile();
 
                 //______________________________________________________________
                 //

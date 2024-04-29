@@ -31,10 +31,10 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef CxxListOf<Law>    List;   //!< alias
-                static const char * const Colors; //!< default Color Scheme
-                typedef Vector<xreal_t,Memory::Dyadic> VecType;
-                typedef Matrix<xreal_t,Memory::Dyadic> MatType;
+                typedef CxxListOf<Law>                 List;   //!< alias
+                static const char * const              Colors; //!< default Color Scheme
+                typedef Vector<xreal_t,Memory::Dyadic> VecType; //!< alias
+                typedef Matrix<xreal_t,Memory::Dyadic> MatType; //!< alias
 
                 //______________________________________________________________
                 //
@@ -45,6 +45,7 @@ namespace Yttrium
 
                 //! initialize a new conservation law
                 /**
+                 - fill actors, left alpha and beta untouched
                  \param label law label, mostly for GraphViz
                  \param iboth index for entity Top/Sublevel
                  \param coeff coefficients, Sublevel
@@ -66,7 +67,7 @@ namespace Yttrium
                 const String &key()                             const noexcept; //!< return actors' name
                 void          viz(OutputStream &fp)                      const; //!< GraphViz
                 bool          sharesSpeciesWith(const Law &law) const noexcept; //!< check if common species with another law
-                void          makeAlgebraic(const size_t numSpeciesInGroup);
+                void          makeAlgebraic(const size_t numSpeciesInGroup);    //!< make alpha and beta
 
                 //! TODO
                 xreal_t       required(Writable<xreal_t>       &dC,

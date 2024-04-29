@@ -186,6 +186,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(container_cxx_series);
     Y_UTEST(container_iterator);
     Y_UTEST(container_matrix);
+    Y_UTEST(container_matrix_ops);
     Y_UTEST(container_operating);
     Y_UTEST(container_algo);
 
