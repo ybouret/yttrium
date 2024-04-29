@@ -36,7 +36,23 @@ namespace Yttrium
             inline T        & operator[](const uint8_t x)       noexcept { return data[x]; }
             inline const  T & operator[](const uint8_t x) const noexcept { return data[x]; }
 
-            //static inline void Make(Slab &slab);
+            template <typename COLOR, typename PROC>
+            static inline
+            void Make(Slab &slab, const Pixmap<COLOR> &img, PROC &ColorToByte)
+            {
+                T * const H = slab.as<size_t>(256);
+                memset(H,0,sizeof(T)*256);
+                for(size_t k=slab.count();k>0;--k)
+                {
+                    const Ink::HSegment    s = slab.hseg[k];
+                    const PixRow<RGBA>    &r = img[s.y];
+                    for(unit_t i=s.w,x=s.x;i>0;--i,++x)
+                    {
+                        const uint8_t u = ColorToByte(r(x));
+                        ++H[u];
+                    }
+                }
+            }
 
 
         private:
