@@ -66,7 +66,7 @@ namespace Yttrium
                  */
                 void compile();
 
-                std::ostream & padLaw(std::ostream &os, const Law &) const;
+                //std::ostream & padLaw(std::ostream &os, const Law &) const;
 
                 //______________________________________________________________
                 //
@@ -83,7 +83,7 @@ namespace Yttrium
                 LawList     laws;
                 virtual ConstInterface & surrogate() const noexcept;
             public:
-                const size_t maxUUID;
+                const size_t maxUUID; //!< maximum of UUID.soze
             };
 
 

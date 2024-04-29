@@ -33,19 +33,7 @@ namespace Yttrium
                 String s = cast.toString();
                 Coerce(uuid).swapWith(s);
                 Coerce(nrm2) = static_cast<double>( d.cast<uint64_t>("|Chemical Law|^2") );
-#if 0
-                for(size_t i=1;i<=m;++i)
-                {
-                    Writable<xreal_t> &beta_i = Coerce(beta)[i];
-                    const unsigned     coeff_i = coeff[i];
-                    for(size_t j=1;j<=m;++j)
-                    {
-                        if(i==j)
-                            beta_i[i] = nrm2;
-                        beta_i[j] -= xreal_t( coeff_i * coeff[j] );
-                    }
-                }
-#endif
+
             }
 
 
@@ -62,7 +50,7 @@ namespace Yttrium
 
             std::ostream & operator<<(std::ostream &os, const Law &law)
             {
-                os << "d_(" << law.uuid << ")" ;//<< double(law.nrm2);
+                os << "d_(" << law.uuid << ")" ;
                 return os;
             }
 
@@ -142,69 +130,48 @@ namespace Yttrium
             }
 
 
-
-            xreal_t Law:: required(Writable<xreal_t>       &dC,
-                                   const Level            outgoing,
-                                   const Readable<xreal_t> &C,
-                                   const Level            incoming,
-                                   XAdd                  &xadd) const
-            {
-                // initialize (outgoin) dC
-                dC.ld(zero);
-                xadd.free();
-
-                // collect negative balance
-                for(const Actor *a=cast.head;a;a=a->next)
-                {
-                    xadd << a->xnu * C[ a->sp.indx[incoming] ];
-                }
-                const xreal_t scale = xadd.sum();
-                assert(xadd.isEmpty());
-
-                // act accordingly
-                if(scale<zero)
-                {
-                    for(const Actor *a=cast.head;a;a=a->next)
-                    {
-                        const xreal_t d = -(scale * a->xnu)/nrm2;
-                        dC[ a->sp.indx[outgoing] ] = d;
-                    }
-                    return (scale*scale)/nrm2;
-                }
-                else
-                {
-                    return zero;
-                }
-            }
+            
 
             xreal_t Law:: required(Writable<xreal_t>       &Caux,
+                                   const SList             &spec,
                                    const Readable<xreal_t> &Ctop,
                                    XAdd                    &xadd) const
             {
-                const size_t ns = alpha.size(); assert(Caux.size()>=ns);
+                assert(spec.size==alpha.size());
+                const size_t ns = spec.size; assert(Caux.size()>=ns);
 
                 xadd.make(ns);
 
-                // collect dot product
+                Vector<xreal_t> C0(ns,0);
+
+                //______________________________________________________________
+                //
+                //
+                // collect dot product from cast only
+                //
+                //______________________________________________________________
                 for(const Actor *a=cast.head;a;a=a->next)
                 {
                     xadd << a->xnu * Ctop[ a->sp.indx[TopLevel] ];
                 }
 
-                // compute scale
                 const xreal_t scale = xadd.sum();
                 assert(xadd.isEmpty());
 
                 if(scale<zero)
                 {
-                    // bad: in place compute Caux = (beta*Ctop)/nrm2
+                    //______________________________________________________________
+                    //
+                    // bad: in place compute Caux = (beta*Ctop)/nrm2 with all spec
+                    //______________________________________________________________
                     for(size_t i=ns;i>0;--i)
                     {
                         {
                             const Readable<xreal_t> &beta_i = beta[i];
-                            for(const Actor *a=cast.head;a;a=a->next)
+                            for(const SNode *a=spec.head;a;a=a->next)
                             {
-                                const Species &sp = a->sp;
+                                const Species &sp = **a;
+                                C0[ sp.indx[AuxLevel] ] = Ctop[ sp.indx[TopLevel] ];
                                 xadd << beta_i[ sp.indx[AuxLevel] ] * Ctop[ sp.indx[TopLevel] ];
                             }
                         }
@@ -214,7 +181,10 @@ namespace Yttrium
                 }
                 else
                 {
+                    //______________________________________________________________
+                    //
                     // law is fullfilled
+                    //______________________________________________________________
                     return zero;
                 }
             }

@@ -25,12 +25,13 @@ namespace Yttrium
                 laws << first;
             }
 
+#if 0
             std::ostream & Group:: padLaw(std::ostream &os, const Law &law) const
             {
                 for(size_t i=maxUUID;i<=law.uuid.size();++i) os << ' ';
                 return os;
             }
-
+#endif
 
             Group:: ConstInterface & Group:: surrogate() const noexcept
             {

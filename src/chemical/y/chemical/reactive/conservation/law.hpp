@@ -69,16 +69,23 @@ namespace Yttrium
                 bool          sharesSpeciesWith(const Law &law) const noexcept; //!< check if common species with another law
                 void          makeAlgebraic(const SList &species);              //!< make alpha and beta for species.size
 
-                //! TODO
-                xreal_t       required(Writable<xreal_t>       &dC,
-                                       const Level             outgoing,
-                                       const Readable<xreal_t> &C,
-                                       const Level             incoming,
-                                       XAdd                   &xadd) const;
+                
+                //! compute required |dC|^2
 
+                /**
+                 \param Caux enough space to hold species concentrations
+                 \param spec species from Group
+                 \param Ctop toplevel concentration to change
+                 \param xadd helper
+
+                 - compute scale = <alpha|C>
+                 - if scale>=0, return 0, nothing is changed
+                 - else compute Caux= ((nrm2 * Id - alpha*alpha') Ctop)/nrm2 and return (scale*scale/nrm2 = |dC|^2
+                 */
                 xreal_t required(Writable<xreal_t>       &Caux,
+                                 const SList             &spec,
                                  const Readable<xreal_t> &Ctop,
-                                 XAdd                    &Xadd) const;
+                                 XAdd                    &xadd) const;
 
                 //______________________________________________________________
                 //
@@ -90,7 +97,8 @@ namespace Yttrium
                 const xreal_t         zero;  //!< 0
                 const VecType         alpha; //!< coefficient in AuxLevel
                 const MatType         beta;  //!< nrm2 * Id - alpha'*alpha
-
+                const SList           extra; //!< extra from cast
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Law);
                 Actors       cast;

@@ -34,7 +34,11 @@ namespace Yttrium
                 //os << std::setw(15) << real_t(self.bad) << " @"  << self.law;
                 os << self.law;
                 for(size_t i=self.law.uuid.size();i<=self.pad;++i) os << ' ';
-                os <<  " = " << std::setw(15) << real_t(self.bad) << " @" << self.cok;
+                os <<  " = " << std::setw(15) << real_t(self.bad) << " @";
+                os << '[';
+                os << real_t(self.cok[1]);
+                for(size_t j=2;j<=self.cok.size();++j) os << ';' << real_t(self.cok[j]);
+                os << ']';
                 return os;
             }
 #endif
@@ -69,6 +73,7 @@ namespace Yttrium
                 assert( G->size>0 );
                 assert( G->size<=Caux.rows);
                 assert(repo->stowage()>=G->size);
+                const SList &spec = G.species;
 
                 //--------------------------------------------------------------
                 // init with all unbalanced laws
@@ -79,7 +84,7 @@ namespace Yttrium
                 {
                     const Law         &law = **node;
                     Writable<xreal_t> &cok = Caux[jail.size+1];
-                    const xreal_t      bad = law.required(cok,C,xadd);
+                    const xreal_t      bad = law.required(cok,spec,C,xadd);
                     if(bad>zero)
                     {
                         const Broken broken(law,bad,cok,G.maxUUID);
@@ -99,18 +104,21 @@ namespace Yttrium
                 const bool injected = jail.size>0;
                 while(jail.size>0)
                 {
-                    Y_XMLOG(xml, " (*) [sorting #" << jail.size << "]" );
-                    //----------------------------------------------------------
-                    // find greatest |dC|^2
-                    //----------------------------------------------------------
-                    MergeSort::Call(jail,BrokenCompare);
-                    for(const BrokenNode *node=jail.head;node;node=node->next)
+                    if(jail.size>1)
                     {
-                        const Broken &bk = **node;
-                        Y_XMLOG(xml, "  |- " << bk);
+                        Y_XMLOG(xml, " (*) [sorting #" << jail.size << "]" );
+                        //----------------------------------------------------------
+                        // find greatest |dC|^2
+                        //----------------------------------------------------------
+                        MergeSort::Call(jail,BrokenCompare);
+                        for(const BrokenNode *node=jail.head;node;node=node->next)
+                        {
+                            const Broken &bk = **node;
+                            Y_XMLOG(xml, "  |- " << bk);
 
+                        }
                     }
-                    //Y_XMLOG(xml, " (*) " << jail);
+
                     Broken &broken = **(jail.head);
 
                     //----------------------------------------------------------
@@ -123,7 +131,7 @@ namespace Yttrium
                         const size_t   ii = sp.indx[TopLevel];
                         const xreal_t  cc = broken.cok[sp.indx[AuxLevel]];
                         const xreal_t  c0 = C[ii];
-                        const xreal_t  dc = cc - c0;
+                        const xreal_t  dc = cc - c0; assert(dc>=zero);
                         I[ii] += dc;
                         C[ii]  = cc;
                         if(xml.verbose)
@@ -135,8 +143,7 @@ namespace Yttrium
                             << std::endl;
                         }
                     }
-                    //broken.bad = broken.law.required(broken.del, AuxLevel, C, TopLevel, xadd);
-                    //std::cerr << "new bad=" << broken.bad << std::endl;
+
                     //----------------------------------------------------------
                     // remove it
                     //----------------------------------------------------------
@@ -149,7 +156,7 @@ namespace Yttrium
                     for(size_t i=jail.size;i>0;--i)
                     {
                         Broken &probe = **(jail.head);
-                        probe.bad = probe.law.required(probe.cok, AuxLevel, C, TopLevel,xadd);
+                        probe.bad = probe.law.required(probe.cok,spec,C,xadd);
                         if(probe.bad>zero)
                         {
                             Y_XMLOG(xml, " (+) " << probe);
@@ -163,8 +170,7 @@ namespace Yttrium
                     }
                     Y_XMLOG(xml, " (*) [remaining #" << jail.size << "]");
 
-                    //std::cerr << "remaining: " << jail.size << std::endl;
-
+                    
                 }
 
                 if(injected)

@@ -9,10 +9,11 @@
 namespace Yttrium
 {
 
+    //! straight matrix operations
     struct MatrixOps
     {
 
-
+        //! target = M * source
         template <typename TARGET,typename T, typename SOURCE, typename U> static inline
         TARGET & Mul(TARGET &target, const Matrix<T> &M, SOURCE &source, MKL::Antelope::Add<U> &xadd)
         {
@@ -31,7 +32,6 @@ namespace Yttrium
                 }
                 target[i] = xadd.sum();
             }
-
             return target;
         }
     };
