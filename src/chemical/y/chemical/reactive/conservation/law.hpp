@@ -19,7 +19,10 @@ namespace Yttrium
             //
             //
             //! conservation law using Actors
-            //
+            /*
+             - initialized with a cast from the conservation matrix
+             - finalized with extra species to complete the group
+             */
             //
             //__________________________________________________________________
             class Law :  public Entity, public Proxy<const Actors>
@@ -31,8 +34,8 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef CxxListOf<Law>                 List;   //!< alias
-                static const char * const              Colors; //!< default Color Scheme
+                typedef CxxListOf<Law>                 List;    //!< alias
+                static const char * const              Colors;  //!< default Color Scheme
                 typedef Vector<xreal_t,Memory::Dyadic> VecType; //!< alias
                 typedef Matrix<xreal_t,Memory::Dyadic> MatType; //!< alias
 
@@ -67,7 +70,9 @@ namespace Yttrium
                 const String &key()                             const noexcept; //!< return actors' name
                 void          viz(OutputStream &fp)                      const; //!< GraphViz
                 bool          sharesSpeciesWith(const Law &law) const noexcept; //!< check if common species with another law
-                void          makeAlgebraic(const SList &species);              //!< make alpha and beta for species.size
+
+                //! make alpha and beta for species
+                void          makeAlgebraic(const SList &species);
 
                 
                 //! compute required |dC|^2
@@ -79,7 +84,7 @@ namespace Yttrium
 
                  - compute scale = <alpha|C>
                  - if scale>=0, return 0, nothing is changed
-                 - else compute Caux= ((nrm2 * Id - alpha*alpha') Ctop)/nrm2 and return (scale*scale/nrm2 = |dC|^2
+                 - else compute Caux= ((nrm2 * Id - alpha*alpha') Ctop)/nrm2 and return (scale*scale)/nrm2 = |dC|^2
                  */
                 xreal_t required(Writable<xreal_t>       &Caux,
                                  const Readable<xreal_t> &Ctop,

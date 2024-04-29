@@ -37,12 +37,18 @@ namespace Yttrium
                 class Broken
                 {
                 public:
+                    //__________________________________________________________
+                    //
+                    // C++
+                    //__________________________________________________________
+                    Broken(const Law &, const xreal_t, Writable<xreal_t> &, const size_t) noexcept; //!< setu[
+                    Broken(const Broken&) noexcept;                                                 //!< copy
+                    ~Broken() noexcept;                                                             //!< cleanup
 
-                    Broken(const Law &, const xreal_t, Writable<xreal_t> &, const size_t) noexcept;
-                    Broken(const Broken&) noexcept;
-                    ~Broken() noexcept;
-
-                    
+                    //__________________________________________________________
+                    //
+                    // Members
+                    //__________________________________________________________
                     const Law               &law; //!< the law
                     xreal_t                  bad; //!< the deviation
                     Writable<xreal_t>       &cok; //!< concentration OK

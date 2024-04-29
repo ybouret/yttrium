@@ -167,12 +167,18 @@ namespace Yttrium
 
                 if(scale<zero)
                 {
+                    //----------------------------------------------------------
+                    // copy for   concentration of extra
+                    //----------------------------------------------------------
                     for(const SNode *node=extra.head;node;node=node->next)
                     {
                         const Species &sp = **node;
                         Caux[ sp.indx[AuxLevel] ] = Ctop[ sp.indx[TopLevel] ];
                     }
 
+                    //----------------------------------------------------------
+                    // projection for concentration of the cast
+                    //----------------------------------------------------------
                     for(const Actor *node=cast.head;node;node=node->next)
                     {
                         const Species           &sp = node->sp;
@@ -189,24 +195,6 @@ namespace Yttrium
                         Caux[i] = xadd.sum()/nrm2;
                     }
 
-#if 0
-                    //______________________________________________________________
-                    //
-                    // bad: in place compute Caux = (beta*Ctop)/nrm2 with all spec
-                    //______________________________________________________________
-                    for(size_t i=ns;i>0;--i)
-                    {
-                        {
-                            const Readable<xreal_t> &beta_i = beta[i];
-                            for(const SNode *a=spec.head;a;a=a->next)
-                            {
-                                const Species &sp = **a;
-                                xadd << beta_i[ sp.indx[AuxLevel] ] * Ctop[ sp.indx[TopLevel] ];
-                            }
-                        }
-                        Caux[i] = xadd.sum()/nrm2;
-                    }
-#endif
                     return (scale*scale)/nrm2;
                 }
                 else
