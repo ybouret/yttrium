@@ -44,6 +44,7 @@ namespace Yttrium
             int    charge()                    const noexcept; //!< sum(charge)
             bool   contains(const Species &)   const noexcept; //!< look for species
             size_t maxIndex(const Level level) const noexcept; //!< max indx[level]
+            
 
         private:
             Y_DISABLE_ASSIGN(Actors);

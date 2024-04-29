@@ -17,6 +17,7 @@ namespace Yttrium
             zero(0),
             alpha(),
             beta(),
+            extra(),
             cast(),
             uuid(),
             next(0),
@@ -126,7 +127,16 @@ namespace Yttrium
                     }
                 }
 
-
+                //______________________________________________________________
+                //
+                // build extra
+                //______________________________________________________________
+                for(const SNode *node=species.head;node;node=node->next)
+                {
+                    const Species &sp = **node;
+                    if(cast.contains(sp)) continue;
+                    Coerce(extra) << sp;
+                }
             }
 
 
@@ -142,7 +152,6 @@ namespace Yttrium
 
                 xadd.make(ns);
 
-                Vector<xreal_t> C0(ns,0);
 
                 //______________________________________________________________
                 //
@@ -171,7 +180,6 @@ namespace Yttrium
                             for(const SNode *a=spec.head;a;a=a->next)
                             {
                                 const Species &sp = **a;
-                                C0[ sp.indx[AuxLevel] ] = Ctop[ sp.indx[TopLevel] ];
                                 xadd << beta_i[ sp.indx[AuxLevel] ] * Ctop[ sp.indx[TopLevel] ];
                             }
                         }
