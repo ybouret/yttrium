@@ -227,10 +227,7 @@ namespace Yttrium
                 Y_XML_SECTION(xml, "Chemical::Warden");
 
                 for(const GNode *gn =G.head;gn;gn=gn->next)
-                {
-                    const Group &g = **gn;
-                    process(C,I,g,xml);
-                }
+                    process(C,I,**gn,xml);
 
             }
 
