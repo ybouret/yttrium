@@ -34,10 +34,10 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef CxxListOf<Law>                 List;    //!< alias
-                static const char * const              Colors;  //!< default Color Scheme
-                typedef Vector<xreal_t,Memory::Dyadic> VecType; //!< alias
-                typedef Matrix<xreal_t,Memory::Dyadic> MatType; //!< alias
+                typedef CxxListOf<Law>              List;    //!< alias
+                static const char * const           Colors;  //!< default Color Scheme
+                typedef Vector<xreal_t,MemoryModel> VecType; //!< alias
+                typedef Matrix<xreal_t,MemoryModel> MatType; //!< alias
 
                 //______________________________________________________________
                 //
@@ -98,7 +98,7 @@ namespace Yttrium
                 //______________________________________________________________
                 const xreal_t         nrm2;  //!< |this|^2
                 const xreal_t         zero;  //!< 0
-                const VecType         alpha; //!< coefficient in AuxLevel
+                const VecType         alpha; //!< coefficient in AuxLevel   
                 const MatType         beta;  //!< nrm2 * Id - alpha'*alpha
                 const SList           extra; //!< extra from cast
                 

@@ -47,7 +47,8 @@ namespace Yttrium
             Caux(clusters.maxCPG,clusters.maxSPG),
             repo(),
             jail(repo),
-            xadd(clusters.maxSPG)
+            xadd(clusters.maxSPG),
+            xinj(clusters.maxSPG)
             {
                 repo->reserve(clusters.maxCPG);
                 //std::cerr << "Caux=" << Caux << std::endl;

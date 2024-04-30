@@ -6,6 +6,7 @@
 
 #include "y/chemical/reactive/clusters.hpp"
 #include "y/data/small/heavy/list/coop.hpp"
+#include "y/container/cxx/array.hpp"
 
 namespace Yttrium
 {
@@ -29,6 +30,7 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
+                typedef CxxArray<XAdd,MemoryModel> XAdds;
 
                 //______________________________________________________________
                 //
@@ -100,7 +102,8 @@ namespace Yttrium
                 BrokenRepo      repo;
                 BrokenList      jail;
                 XAdd            xadd;
-
+                XAdds           xinj;
+                
                 void process(Writable<xreal_t>  &C,
                              Writable<xreal_t>  &I,
                              const Group        &G,

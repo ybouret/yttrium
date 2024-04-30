@@ -13,12 +13,11 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        typedef double        real_t;   //!< hardware real
-        typedef XReal<real_t> xreal_t;  //!< software real
-
-        typedef MKL::Antelope::Add<xreal_t> XAdd; //!< alias
-        typedef MKL::Antelope::Mul<xreal_t> XMul; //!< alias
-
+        typedef double                      real_t;      //!< hardware real
+        typedef XReal<real_t>               xreal_t;     //!< software real
+        typedef MKL::Antelope::Add<xreal_t> XAdd;        //!< alias
+        typedef MKL::Antelope::Mul<xreal_t> XMul;        //!< alias
+        typedef Memory::Dyadic              MemoryModel; //!< alias
         
 
 

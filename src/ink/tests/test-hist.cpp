@@ -62,23 +62,7 @@ namespace Yttrium
 
 
 
-
-        void MakeHist(Slab &slab, const Pixmap<RGBA> &img)
-        {
-            size_t * const H = slab.as<size_t>(256);
-            memset(H,0,sizeof(size_t)*256);
-
-            for(size_t k=slab.count();k>0;--k)
-            {
-                const Ink::HSegment    s = slab.hseg[k];
-                const PixRow<RGBA>    &r = img[s.y];
-                for(unit_t i=s.w,x=s.x;i>0;--i,++x)
-                {
-                    const uint8_t u = Color::GrayScale::Make(r(x));
-                    ++H[u];
-                }
-            }
-        }
+        
     }
 }
 
@@ -99,8 +83,8 @@ Y_UTEST(hist)
     {
         Pixmap<RGBA> img = IMG.Codec::load(argv[1],0);
 
-        slabs(MakeHist,img);
-        
+        //slabs(MakeHist,img);
+
         //IMG.save(img, "img.png",0);
     }
 
