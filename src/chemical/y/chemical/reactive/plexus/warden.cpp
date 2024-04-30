@@ -51,7 +51,10 @@ namespace Yttrium
             xinj(clusters.maxSPG)
             {
                 repo->reserve(clusters.maxCPG);
-                //std::cerr << "Caux=" << Caux << std::endl;
+                for(size_t i=1;i<=clusters.maxSPG;++i)
+                {
+                    xinj[i].make(clusters.maxCPG); //each law can modify at most once the injection
+                }
             }
 
             Warden:: ~Warden() noexcept
@@ -74,6 +77,17 @@ namespace Yttrium
                 assert( G->size>0 );
                 assert( G->size<=Caux.rows);
                 assert(repo->stowage()>=G->size);
+
+                //--------------------------------------------------------------
+                // setup Injected and injectors
+                //--------------------------------------------------------------
+                for(const SNode *sn=G.species.head;sn;sn=sn->next)
+                {
+                    const Species       &sp = **sn;
+                    const size_t * const i  = sp.indx;
+                    I[    i[TopLevel] ] = 0;
+                    xinj[ i[AuxLevel] ].free();
+                }
 
                 //--------------------------------------------------------------
                 // init with all unbalanced laws
@@ -127,19 +141,22 @@ namespace Yttrium
                     Y_XMLOG(xml, " ($) " << broken);
                     for(const Actor *a=broken.law->head;a;a=a->next)
                     {
-                        const Species &sp = a->sp;
-                        const size_t   ii = sp.indx[TopLevel];
-                        const xreal_t  cc = broken.cok[sp.indx[AuxLevel]];
-                        const xreal_t  c0 = C[ii];
-                        const xreal_t  dc = cc - c0; assert(dc>=zero);
-                        I[ii] += dc;
-                        C[ii]  = cc;
+                        const Species &sp   = a->sp;                           // species
+                        const size_t   itop = sp.indx[TopLevel];               // top index
+                        const size_t   iaux = sp.indx[AuxLevel];               // aux index
+                        const xreal_t  Cnew = broken.cok[iaux];                // new concentration
+                        const xreal_t  Cold = C[itop];                         // old concentration
+                        const xreal_t  delC = Cnew - Cold; assert(delC>=zero); // delta
+
+                        C[itop] = Cnew;       // update C
+                        xinj[iaux] << delC;   // store dC
+
                         if(xml.verbose)
                         {
                             G.pad( xml() << "  |_" << sp, sp )
-                            << " = " << std::setw(15) << real_t(C[ii])
-                            << " = " << std::setw(15) << real_t(c0)
-                            << " + " << std::setw(15) << real_t(dc)
+                            << " = " << std::setw(15) << real_t(Cnew)
+                            << " = " << std::setw(15) << real_t(Cold)
+                            << " + " << std::setw(15) << real_t(delC)
                             << std::endl;
                         }
                     }
@@ -176,6 +193,13 @@ namespace Yttrium
                 if(injected)
                 {
                     Y_XMLOG(xml, " (*) [modified]");
+                    for(const SNode *sn=G.species.head;sn;sn=sn->next)
+                    {
+                        const Species       &sp = **sn;
+                        const size_t * const i  = sp.indx;
+                        I[ i[TopLevel] ] = xinj[ i[AuxLevel] ].sum();
+                    }
+
                     if(xml.verbose)
                     {
                         xml() << "C={" << std::endl;
@@ -201,10 +225,11 @@ namespace Yttrium
                                      XMLog              &xml)
             {
                 Y_XML_SECTION(xml, "Chemical::Warden");
-                I.ld(0);
-                for(const GNode *grp =G.head;grp;grp=grp->next)
+
+                for(const GNode *gn =G.head;gn;gn=gn->next)
                 {
-                    process(C,I,**grp,xml);
+                    const Group &g = **gn;
+                    process(C,I,g,xml);
                 }
 
             }
