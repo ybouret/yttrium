@@ -100,15 +100,25 @@ namespace Yttrium
         {
             VFS          &fs = LocalFS::Instance();
 
+            //------------------------------------------------------------------
+            //
             // remove 'root[:digit:]*.(dot|png)'
+            //
+            //------------------------------------------------------------------
             {
+                //--------------------------------------------------------------
+                // collect entries
+                //--------------------------------------------------------------
                 VFS::Entries entries;
                 {
-                    const String  rx = Jive::Pattern::ToRegExp(root) +"[:digit:]*[.](dot|png)&";
+                    const String  rx = Jive::Pattern::ToRegExp(root) +"[:digit:]*[.](dot|png)";
                     Jive::Matcher match(rx); //GraphViz::Vizible::DotToPng("motif.dot", *match.motif);
                     Jive::VirtualFileSystem::Find(fs, ".", entries, match);
                 }
 
+                //--------------------------------------------------------------
+                //
+                //--------------------------------------------------------------
                 for(const VFS::Entry *ep=entries.head;ep;ep=ep->next)
                 {
                     std::cerr << "--> " << *ep << std::endl;
@@ -116,7 +126,11 @@ namespace Yttrium
                 }
             }
 
+            //------------------------------------------------------------------
+            //
             // one graph per degreee
+            //
+            //------------------------------------------------------------------
             for(size_t deg=1;deg<=maxDEG;++deg)
             {
 

@@ -71,7 +71,8 @@ namespace Yttrium
         String Pattern:: ToRegExp(const String &s)
         {
             const size_t n = s.size();
-            String res(4*n,AsCapacity,false);
+            String res(4*n+2,AsCapacity,false);
+            res << '(';
             for(size_t i=1;i<=n;++i)
             {
                 char          buff[8] = {0,0,0,0,0,0,0,0};
@@ -79,6 +80,7 @@ namespace Yttrium
                 snprintf(buff,sizeof(buff)-1,"\\x%02x",byte);
                 res += buff;
             }
+            res << ')';
             return res;
         }
 

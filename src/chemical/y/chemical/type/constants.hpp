@@ -5,8 +5,6 @@
 #define Y_Chemical_Types_Constants_Included 1
 
 #include "y/chemical/type/defs.hpp"
-#include "y/sequence/vector.hpp"
-#include "y/memory/allocator/dyadic.hpp"
 #include "y/counted.hpp"
 #include "y/ptr/arc.hpp"
 
@@ -14,14 +12,6 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
-        //______________________________________________________________________
-        //
-        //
-        //! base type to store constants
-        //
-        //______________________________________________________________________
-        typedef Vector<xreal_t,MemoryModel> XVectorType;
         
         //______________________________________________________________________
         //
