@@ -23,6 +23,7 @@ namespace Yttrium
             }
 
 
+            //! u -> (u,u,u,...)
             template <typename COLOR> static inline COLOR ByteTo(const uint8_t u) noexcept
             {
                 return COLOR(u,u,u);

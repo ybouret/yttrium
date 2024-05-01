@@ -217,6 +217,7 @@ namespace Yttrium
                 return os;
             }
 
+            //! pixel-wise load
             template <typename PROC, typename U> inline
             Pixmap<T> & ld(Slabs &slabs, PROC &proc, const Pixmap<U> &src)
             {

@@ -31,8 +31,8 @@ namespace Yttrium
         //! 8-bits precomputed table
         struct Conv8
         {
-            static const uint8_t Gray[255*3+1]; //!< ([0..255]*765)/765
-            static uint8_t       From(const uint8_t r, const uint8_t g, const uint8_t b) noexcept;
+            static const uint8_t Gray[255*3+1]; //!< ([0..765]*255)/765
+            static uint8_t       From(const uint8_t r, const uint8_t g, const uint8_t b) noexcept; //!< r,g,b -> grey
         };
 
 
