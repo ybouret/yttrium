@@ -129,8 +129,9 @@ G(752), G(753), G(754), G(755), G(756), G(757), G(758), G(759), G(760), G(761), 
         };
 
 #undef G
-#define GMAX (unsigned(765))
-#define G(i) static_cast<uint8_t>( ( unsigned(i) * GMAX)/GMAX )
+#define BMAX ( unsigned(0xff) )
+#define GMAX ( unsigned(765)  )
+#define G(i) static_cast<uint8_t>( ( unsigned(i) * BMAX)/GMAX )
 
         const uint8_t Conv8:: Gray[766] =
         {

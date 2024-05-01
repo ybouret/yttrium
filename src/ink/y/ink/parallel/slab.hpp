@@ -67,6 +67,14 @@ namespace Yttrium
                 return static_cast<T*>(wksp);
             }
 
+            //! return cast of internal workspace
+            template <typename T> inline
+            const T *as(const size_t n) const
+            {
+                checkRequest(n,sizeof(T));
+                return static_cast<const T*>(wksp);
+            }
+
 
             //__________________________________________________________________
             //
