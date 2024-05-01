@@ -105,7 +105,7 @@ namespace Yttrium
                 VFS::Entries entries;
                 {
                     const String  rx = Jive::Pattern::ToRegExp(root) +"[:digit:]*[.](dot|png)&";
-                    Jive::Matcher match(rx); GraphViz::Vizible::DotToPng("motif.dot", *match.motif);
+                    Jive::Matcher match(rx); //GraphViz::Vizible::DotToPng("motif.dot", *match.motif);
                     Jive::VirtualFileSystem::Find(fs, ".", entries, match);
                 }
 
