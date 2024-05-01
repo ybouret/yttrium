@@ -36,23 +36,32 @@ namespace Yttrium
             inline T        & operator[](const uint8_t x)       noexcept { return data[x]; }
             inline const  T & operator[](const uint8_t x) const noexcept { return data[x]; }
 
+            template <typename COLOR, typename PROC> inline
+            void make(Slabs &slabs, const Pixmap<COLOR> &img, PROC &ColorToByte, Pixmap<uint8_t> &msk)
+            {
+                slabs(Make<COLOR,PROC>,img,ColorToByte,msk);
+            }
+
             template <typename COLOR, typename PROC>
             static inline
-            void Make(Slab &slab, const Pixmap<COLOR> &img, PROC &ColorToByte)
+            void Make(Slab &slab, const Pixmap<COLOR> &img, PROC &ColorToByte, Pixmap<uint8_t> &msk)
             {
-                T * const H = slab.as<size_t>(256);
-                memset(H,0,sizeof(T)*256);
+                assert(msk.hasSameSizesThan(img));
+                T * const H = slab.ldz().as<size_t>(256);
                 for(size_t k=slab.count();k>0;--k)
                 {
                     const Ink::HSegment    s = slab.hseg[k];
                     const PixRow<RGBA>    &r = img[s.y];
+                    PixRow<uint8_t>       &m = msk[s.y];
                     for(unit_t i=s.w,x=s.x;i>0;--i,++x)
                     {
                         const uint8_t u = ColorToByte(r(x));
-                        ++H[u];
+                        ++H[ m[x] = u ];
                     }
                 }
             }
+
+
 
 
         private:
@@ -78,10 +87,13 @@ Y_UTEST(hist)
     Concurrent::Topology   topo;
     Concurrent::SharedLoop crew = new Concurrent::Crew(topo);
     Slabs                  slabs( crew );
+    Histogram<size_t>       hist;
 
     if(argc>1)
     {
-        Pixmap<RGBA> img = IMG.Codec::load(argv[1],0);
+        Pixmap<RGBA>    img = IMG.Codec::load(argv[1],0);
+        Pixmap<uint8_t> msk(img.w,img.h);
+        hist.make(slabs,img, Color::GrayScale::From<RGBA>, msk);
 
         //slabs(MakeHist,img);
 

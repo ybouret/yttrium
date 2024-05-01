@@ -2,6 +2,7 @@
 #include "y/ink/parallel/slab.hpp"
 #include "y/ink/types.hpp"
 #include "y/system/exception.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
@@ -21,6 +22,12 @@ namespace Yttrium
             assert(0==wksp);
             assert(0==wlen);
             Coerce(wksp) = mgr.acquire(Coerce(wlen)=1,Request);
+        }
+
+        Slab & Slab:: ldz() noexcept
+        {
+            (void) memset(wksp,0,Request);
+            return *this;
         }
 
         Slab:: ~Slab() noexcept

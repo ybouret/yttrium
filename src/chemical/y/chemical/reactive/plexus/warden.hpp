@@ -18,7 +18,7 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            //! Warden of conservations laws
+            //! Warden of conservations laws, resources for a set of clusters
             //
             //__________________________________________________________________
             class Warden
@@ -30,7 +30,7 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef CxxArray<XAdd,MemoryModel> XAdds;
+                typedef CxxArray<XAdd,MemoryModel> XAdds; //!< alias
 
                 //______________________________________________________________
                 //

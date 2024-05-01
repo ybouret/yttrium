@@ -43,6 +43,11 @@ namespace Yttrium
         Coord Area:: lower() const noexcept { return Coord(x,y);   }
         Coord Area:: upper() const noexcept { return Coord(xt,yt); }
 
+
+        bool Area:: hasSameSizesThan(const Area &a) const noexcept
+        {
+            return (w == a.w) && (h == a.h);
+        }
     }
 }
 

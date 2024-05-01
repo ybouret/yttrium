@@ -45,8 +45,9 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            Coord lower() const noexcept; //!< (x,y)
-            Coord upper() const noexcept; //!< (xt,ty)
+            Coord lower()                       const noexcept; //!< (x,y)
+            Coord upper()                       const noexcept; //!< (xt,ty)
+            bool hasSameSizesThan(const Area &) const noexcept; //!< check same w/h
 
             //__________________________________________________________________
             //

@@ -56,8 +56,10 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void honorRequest(); //!< once called, post initializatio
+            void  honorRequest(); //!< once called, post initializatio
+            Slab &ldz() noexcept; //!< clear content
 
+            //! return cast of internal workspace
             template <typename T> inline
             T *as(const size_t n)
             {

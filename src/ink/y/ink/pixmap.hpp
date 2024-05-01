@@ -155,6 +155,14 @@ namespace Yttrium
                 assert(bmp.bpp==bpp);
             }
 
+            //! build with parallel transformation
+            template <typename PROC, typename U> inline
+            Pixmap(Slabs &slabs, PROC &proc, const Pixmap<U> &src) :
+            Bitmap(w,h,bpp),
+            row( this->as<RowType>() )
+            {
+                slabs(*this,proc,src);
+            }
 
 
             //! cleanup
