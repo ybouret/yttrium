@@ -163,23 +163,10 @@ namespace Yttrium
             Bitmap(src.w,src.h,sizeof(T)),
             row( this->as<RowType>() )
             {
-                slabs(ForEach<PROC,U>,*this,proc,src);
+                (void)ld<PROC,U>(slabs,proc,src);
             }
 
-            template <typename PROC, typename U> static inline
-            void ForEach(Slab &slab, Pixmap<T> &tgt, PROC &proc, const Pixmap<U> &src)
-            {
-                for(size_t k=slab.count();k>0;--k)
-                {
-                    const  HSegment       s = slab.hseg[k];
-                    const  PixRow<U>     &source = src[s.y];
-                    PixRow<T>            &target = tgt[s.y];
-                    for(unit_t i=s.w,x=s.x;i>0;--i,++x)
-                    {
-                        target[x] = proc(source(x));
-                    }
-                }
-            }
+
 
 
             //! cleanup
@@ -230,7 +217,15 @@ namespace Yttrium
                 return os;
             }
 
-            
+            template <typename PROC, typename U> inline
+            Pixmap<T> & ld(Slabs &slabs, PROC &proc, const Pixmap<U> &src)
+            {
+                assert(hasSameSizesThan(src));
+                slabs(ForEach<PROC,U>,*this,proc,src);
+                return *this;
+            }
+
+
 
         private:
             Y_DISABLE_ASSIGN(Pixmap);
@@ -239,7 +234,20 @@ namespace Yttrium
             static inline void Make(void *ptr, void *)  { new (ptr) MutableType(); }
             static inline void Kill(void *ptr) noexcept { Destruct( static_cast<MutableType*>(ptr) ); }
 
-
+            template <typename PROC, typename U> static inline
+            void ForEach(Slab &slab, Pixmap<T> &tgt, PROC &proc, const Pixmap<U> &src)
+            {
+                for(size_t k=slab.count();k>0;--k)
+                {
+                    const  HSegment       seg    = slab.hseg[k];
+                    const  PixRow<U>     &source = src[seg.y];
+                    PixRow<T>            &target = tgt[seg.y];
+                    for(unit_t i=seg.w,x=seg.x;i>0;--i,++x)
+                    {
+                        target[x] = proc(source(x));
+                    }
+                }
+            }
 
         };
     }
