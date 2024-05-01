@@ -155,13 +155,30 @@ namespace Yttrium
                 assert(bmp.bpp==bpp);
             }
 
+            
+
             //! build with parallel transformation
             template <typename PROC, typename U> inline
             Pixmap(Slabs &slabs, PROC &proc, const Pixmap<U> &src) :
-            Bitmap(w,h,bpp),
+            Bitmap(src.w,src.h,sizeof(T)),
             row( this->as<RowType>() )
             {
-                slabs(*this,proc,src);
+                slabs(ForEach<PROC,U>,*this,proc,src);
+            }
+
+            template <typename PROC, typename U> static inline
+            void ForEach(Slab &slab, Pixmap<T> &tgt, PROC &proc, const Pixmap<U> &src)
+            {
+                for(size_t k=slab.count();k>0;--k)
+                {
+                    const  HSegment       s = slab.hseg[k];
+                    const  PixRow<U>     &source = src[s.y];
+                    PixRow<T>            &target = tgt[s.y];
+                    for(unit_t i=s.w,x=s.x;i>0;--i,++x)
+                    {
+                        target[x] = proc(source(x));
+                    }
+                }
             }
 
 
@@ -221,6 +238,8 @@ namespace Yttrium
 
             static inline void Make(void *ptr, void *)  { new (ptr) MutableType(); }
             static inline void Kill(void *ptr) noexcept { Destruct( static_cast<MutableType*>(ptr) ); }
+
+
 
         };
     }

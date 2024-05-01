@@ -33,6 +33,7 @@ Y_UTEST(color_conv)
 #endif
 
     {
+        std::cerr << "Testing Bytes..." << std::endl;
         size_t k=0;
         for(size_t i=0;i<16;++i)
         {
@@ -58,6 +59,7 @@ Y_UTEST(color_conv)
     }
 #endif
 
+    std::cerr << "Testing GrayScale..." << std::endl;
     for(size_t k=0;k<=255*3;++k)
     {
         Y_ASSERT( k == GrayToIndx( Color::Conv<float>::Gray[k]) );

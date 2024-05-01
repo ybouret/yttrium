@@ -42,6 +42,12 @@ namespace Yttrium
                 slabs(Make<COLOR,PROC>,img,ColorToByte,msk);
             }
 
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Histogram);
+            T data[BINS];
+
             template <typename COLOR, typename PROC>
             static inline
             void Make(Slab &slab, const Pixmap<COLOR> &img, PROC &ColorToByte, Pixmap<uint8_t> &msk)
@@ -60,13 +66,6 @@ namespace Yttrium
                     }
                 }
             }
-
-
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Histogram);
-            T data[BINS];
         };
 
 
@@ -86,18 +85,21 @@ Y_UTEST(hist)
 
     Concurrent::Topology   topo;
     Concurrent::SharedLoop crew = new Concurrent::Crew(topo);
-    Slabs                  slabs( crew );
-    Histogram<size_t>       hist;
+    Slabs                  par( crew );
+    Histogram<size_t>      hist;
 
     if(argc>1)
     {
         Pixmap<RGBA>    img = IMG.Codec::load(argv[1],0);
         Pixmap<uint8_t> msk(img.w,img.h);
-        hist.make(slabs,img, Color::GrayScale::From<RGBA>, msk);
+        
+        hist.make(par,img, Color::GrayScale::From<RGBA>, msk);
+        Pixmap<RGBA>    tgt(par, Color::GrayScale::ByteTo<RGBA>, msk);
 
-        //slabs(MakeHist,img);
+        
+        IMG.save(img, "hist-img.png",0);
+        IMG.save(tgt, "hist-msk.png",0);
 
-        //IMG.save(img, "img.png",0);
     }
 
 

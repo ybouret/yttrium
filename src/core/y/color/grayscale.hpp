@@ -23,14 +23,17 @@ namespace Yttrium
             }
 
 
-            //! (r,b,g,...) -> (gray,gray,gray,...)
-            template <typename COLOR> static inline COLOR ToColor(const COLOR &c) noexcept
+            template <typename COLOR> static inline COLOR ByteTo(const uint8_t u) noexcept
             {
-                const uint8_t u = Make<COLOR>(c);
                 return COLOR(u,u,u);
             }
 
-
+            //! (r,b,g,...) -> (gray,gray,gray,...)
+            template <typename COLOR> static inline COLOR Convert(const COLOR &c) noexcept
+            {
+                const uint8_t u = From<COLOR>(c);
+                return ByteTo<COLOR>(u);
+            }
         };
 
     }
