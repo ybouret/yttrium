@@ -23,6 +23,7 @@ namespace Yttrium
         class RGB
         {
         public:
+            typedef T Type;
             static const unsigned NumChannels = 3;
             static const unsigned AllChannels = 3;
 

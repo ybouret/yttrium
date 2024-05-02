@@ -206,6 +206,22 @@ namespace Yttrium
                 return row[j];
             }
 
+
+            inline T & operator[](const Coord coord) noexcept
+            {
+                return (*this)[coord.y][coord.x];
+            }
+
+            inline const T & operator[](const Coord coord) const noexcept
+            {
+                return (*this)[coord.y][coord.x];
+            }
+
+            inline const T & operator()(const Coord coord) const noexcept
+            {
+                return (*this)(coord.y)(coord.x);
+            }
+
             //! display
             inline friend std::ostream & operator<<(std::ostream &os, const Pixmap &pxm)
             {

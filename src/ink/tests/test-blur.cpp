@@ -7,7 +7,7 @@
 #include "y/mkl/antelope/add.hpp"
 #include "y/ink/image/codecs.hpp"
 #include "y/color/grayscale.hpp"
-#include "y/color/scalar-conv.hpp"
+#include "y/color/channels.hpp"
 
 namespace Yttrium
 {
@@ -48,104 +48,6 @@ namespace Yttrium
             };
 
 
-
-            template <typename T>
-            struct Channels
-            {
-                enum { Value = 1 };
-
-                template <typename U> static inline
-                void Ldz(U * const channels) noexcept
-                {
-                    assert(0!=channels);
-                    channels[0] = 0;
-                }
-
-                template <typename U> static inline
-                void Add(U * const channels, const U &cof, const T &arg) noexcept
-                {
-                    assert(0!=channels);
-                    channels[0] += cof * static_cast<U>(arg);
-                }
-
-                template <typename U> static inline
-                void Div(U * const channels, const U &den) noexcept
-                {
-                    assert(0!=channels);
-                    channels[0] /= den;
-                }
-
-            };
-
-            template <typename TYPE>
-            struct Channels< Color::RGBA<TYPE> >
-            {
-                typedef typename Color::RGBA<TYPE> COLOR;
-                enum { Value = 3 };
-
-                template <typename U> static inline
-                void Ldz(U * const channels) noexcept
-                {
-                    assert(0!=channels);
-                    channels[0] = 0;
-                    channels[1] = 0;
-                    channels[2] = 0;
-                }
-
-                template <typename U> static inline
-                void Add(U * const channels, const U &cof, const COLOR &arg) noexcept
-                {
-                    assert(0!=channels);
-                    const TYPE * const c = (const TYPE *) &arg;
-                    channels[0] += cof * static_cast<U>(c[0]);
-                    channels[1] += cof * static_cast<U>(c[1]);
-                    channels[2] += cof * static_cast<U>(c[2]);
-                }
-
-                template <typename U> static inline
-                void Div(U * const channels, const U &den) noexcept
-                {
-                    assert(0!=channels);
-                    channels[0] /= den;
-                    channels[1] /= den;
-                    channels[2] /= den;
-                }
-            };
-
-            template <typename TYPE>
-            struct Channels< Color::RGB<TYPE> >
-            {
-                typedef typename Color::RGB<TYPE> COLOR;
-                enum { Value = 3 };
-
-                template <typename U> static inline
-                void Ldz(U * const channels) noexcept
-                {
-                    assert(0!=channels);
-                    channels[0] = 0;
-                    channels[1] = 0;
-                    channels[2] = 0;
-                }
-
-                template <typename U> static inline
-                void Add(U * const channels, const U &cof, const COLOR &arg) noexcept
-                {
-                    assert(0!=channels);
-                    const TYPE * const c = (const TYPE *) &arg;
-                    channels[0] += cof * static_cast<U>(c[0]);
-                    channels[1] += cof * static_cast<U>(c[1]);
-                    channels[2] += cof * static_cast<U>(c[2]);
-                }
-
-                template <typename U> static inline
-                void Div(U * const channels, const U &den) noexcept
-                {
-                    assert(0!=channels);
-                    channels[0] /= den;
-                    channels[1] /= den;
-                    channels[2] /= den;
-                }
-            };
 
 
 
@@ -231,20 +133,30 @@ namespace Yttrium
             }
 
             template <typename COLOR> inline
-            void apply(T * const            channels,
+            void apply(COLOR               &target,
                        const Pixmap<COLOR> &source,
                        const Coord          origin) const
             {
-                typedef Crux::Channels<COLOR> CHANNELS;
-                CHANNELS::Ldz(channels);
+                typedef Color::Channels<COLOR> Ops;
+                T channel[4] = {0,0,0,0};
+                Ops::Ldz(channel,source(origin));
+                Core::Display(std::cerr,channel,4) << std::endl;
                 for(const WNode *node=weights.head;node;node=node->next)
                 {
                     const Weight  w = **node;
                     const Coord   p = w.coord + origin;
-                    Crux::Channels<COLOR>::Add(channels,w.value,source[p.y][p.x]);
+                    Ops::Add(channel,w.value,source[p]);
                 }
-                CHANNELS::Div(channels,scale);
+                Core::Display(std::cerr,channel,4) << std::endl;
+                Ops::Div(channel,scale);
+                Core::Display(std::cerr,channel,4) << std::endl;
+                Ops::Get(target,channel);
+                std::cerr << "->" << target << std::endl;
+                exit(0);
             }
+
+
+
 
 
 
@@ -288,20 +200,26 @@ Y_UTEST(blur)
         Concurrent::Topology   topo;
         Concurrent::SharedLoop crew = new Concurrent::Crew(topo);
         Slabs                  par( crew );
-        
+
         Codecs &        IMG = Ink::Codecs::Std();
         Pixmap<RGBA>    img = IMG.load(argv[2],0);
         Pixmap<RGBA>    blr(img.w,img.h);
         Pixmap<uint8_t> img8(par,Color::GrayScale::From<RGBA>,img);
-        float           ch[4] = { 0,0,0,0 };
+        Pixmap<uint8_t> blr8(img.w,img.h);
+
 
         for(unit_t y=0;y<img.h;++y)
         {
             for(unit_t x=0;x<img.w;++x)
             {
-                blur.apply(ch,img, Coord(x,y) );
+                blur.apply(blr[y][x], img,  Coord(x,y)  );
+                blur.apply(img8[y][x],img8, Coord(x,y) );
             }
         }
+
+        IMG.save(img,"blur-inp.png",0);
+        IMG.save(blr,"blur-out.png",0);
+
     }
 
 
