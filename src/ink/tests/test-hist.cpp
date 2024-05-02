@@ -1,10 +1,9 @@
 
-
+#include "y/ink/ops/histogram.hpp"
 #include "y/ink/image/codecs.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/concurrent/loop/crew.hpp"
-#include "y/random/park-miller.hpp"
-#include "y/ink/parallel/index-to-rgba.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/color/grayscale.hpp"
 #include "y/hashing/sha1.hpp"
@@ -14,94 +13,7 @@
 #include "y/text/human-readable.hpp"
 #include <cstring>
 
-namespace Yttrium
-{
-    namespace  Ink
-    {
 
-        template <typename T>
-        class Histogram
-        {
-        public:
-            static const unsigned BINS = 256;
-            explicit Histogram() noexcept : data()
-            {
-                ldz();
-            }
-
-            virtual ~Histogram() noexcept
-            {
-                ldz();
-            }
-
-            void ldz() noexcept {
-                memset(data,0,sizeof(data));
-            }
-
-            Digest hashWith(Hashing::Function &H) const
-            {
-                return Hashing::MD::Of(H,data,sizeof(data));
-            }
-
-
-            inline T        & operator[](const uint8_t x)       noexcept { return data[x]; }
-            inline const  T & operator[](const uint8_t x) const noexcept { return data[x]; }
-
-            template <typename COLOR, typename PROC> inline
-            void make(Slabs               &slabs,
-                      const Pixmap<COLOR> &img,
-                      PROC                &ColorToByte,
-                      Pixmap<uint8_t>     &msk)
-            {
-                ldz();
-                // compute sub-histograms
-                slabs(Make<COLOR,PROC>,img,ColorToByte,msk);
-                // collect
-                for(size_t i=slabs.simt.size();i>0;--i)
-                {
-                    const T * const H = slabs.simt[i].as<size_t>(BINS);
-                    for(size_t j=0;j<BINS;++j)
-                    {
-                        data[i] += H[i];
-                    }
-                }
-            }
-
-
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Histogram);
-            T data[BINS];
-
-            template <typename COLOR, typename PROC>
-            static inline
-            void Make(Slab                &slab,
-                      const Pixmap<COLOR> &img,
-                      PROC                &ColorToByte,
-                      Pixmap<uint8_t>     &msk)
-            {
-                assert(msk.hasSameSizesThan(img));
-                T * const H = slab.ldz().as<size_t>(BINS);
-                for(size_t k=slab.count();k>0;--k)
-                {
-                    const Ink::HSegment    s = slab.hseg[k];
-                    const PixRow<RGBA>    &r = img[s.y];
-                    PixRow<uint8_t>       &m = msk[s.y];
-                    for(unit_t i=s.w,x=s.x;i>0;--i,++x)
-                    {
-                        const uint8_t u = ColorToByte(r(x));
-                        ++H[ m[x] = u ];
-                    }
-                }
-            }
-        };
-
-
-
-        
-    }
-}
 
 using namespace Yttrium;
 using namespace Ink;
@@ -134,7 +46,7 @@ Y_UTEST(hist)
             std::cerr << "rate=" << rate << " Mpx/s" << std::endl;
         }
 
-        const Digest    hh = hist.hashWith(hfn);
+        const Digest    hh = Hashing::MD::Of(hfn,hist);
         std::cerr << "hash=" << hh << std::endl;
         Pixmap<RGBA>    tgt(par, Color::GrayScale::ByteTo<RGBA>, msk);
 
