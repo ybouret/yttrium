@@ -4,6 +4,7 @@
 #define Y_Ink_Histogram_Included 1
 
 #include "y/ink/pixmap.hpp"
+#include "y/stream/libc/output.hpp"
 
 namespace Yttrium
 {

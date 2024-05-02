@@ -13,11 +13,16 @@
 #include "y/text/human-readable.hpp"
 #include <cstring>
 
-
+#include "y/color/gradation.hpp"
+#include "y/color/conv.hpp"
 
 using namespace Yttrium;
 using namespace Ink;
 
+static inline float Byte2Float(const uint8_t u) noexcept
+{
+    return Color::Conv<float>::Unit[u];
+}
 
 Y_UTEST(hist)
 {
@@ -29,6 +34,13 @@ Y_UTEST(hist)
     Concurrent::SharedLoop crew = new Concurrent::Crew(topo);
     Slabs                  par( crew );
     Histogram<size_t>      hist;
+
+    static const RGBA Grad[] = { 
+        RGBA(0,0,0),
+        RGBA(0,0,0xff),
+        RGBA(0,0xff,0),
+        RGBA(0xff,0,0) };
+    static const Color::Gradation Gradient(Grad,sizeof(Grad)/sizeof(Grad[0]));
 
     if(argc>1)
     {
@@ -53,6 +65,11 @@ Y_UTEST(hist)
         (std::cerr << "Saving..." << std::endl).flush();
         IMG.save(img, "hist-img.png",0);
         IMG.save(tgt, "hist-msk.png",0);
+
+        Pixmap<float> pxf(par,Byte2Float,msk);
+        IMG.Codec::save(pxf, "hist-flt.png", 0, par, Gradient);
+
+
 
     }
 
