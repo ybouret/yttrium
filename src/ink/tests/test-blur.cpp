@@ -30,7 +30,7 @@ Y_UTEST(blur)
         Pixmap<uint8_t> img8(par,Color::GrayScale::From<RGBA>,img);
         Pixmap<uint8_t> blr8(img.w,img.h);
 
-
+#if 0
         for(unit_t y=0;y<img.h;++y)
         {
             for(unit_t x=0;x<img.w;++x)
@@ -39,6 +39,10 @@ Y_UTEST(blur)
                 blur.apply(blr8[y][x],img8, Coord(x,y) );
             }
         }
+#endif
+
+        blur(par,blr,img);
+        blur(par,blr8,img8);
 
         IMG.save(img,"blur-in.png",0);
         IMG.save(blr,"blur-out.png",0);

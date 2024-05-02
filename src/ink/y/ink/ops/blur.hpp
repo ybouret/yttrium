@@ -89,6 +89,11 @@ namespace Yttrium
                 Ops::Get(target,channel);
             }
 
+            template <typename COLOR> inline
+            void operator()(Slabs &slabs, Pixmap<COLOR> &target, const Pixmap<COLOR> &source)
+            {
+                slabs( Apply<COLOR>, target, *this, source);
+            }
 
 
         private:
@@ -100,6 +105,21 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Blur);
             inline virtual const Weights & surrogate() const noexcept { return weights; }
+
+            template <typename COLOR> static inline
+            void Apply(Slab &slab, Pixmap<COLOR> &target, const Blur &blur, const Pixmap<COLOR> &source)
+            {
+                for(size_t k=slab.count();k>0;--k)
+                {
+                    const Ink::HSegment     seg = slab.hseg[k];
+                    Coord                   pos(seg.x,seg.y);
+                    PixRow<COLOR>          &tgt = target[pos.y];
+                    for(unit_t i=seg.w;i>0;--i,++pos.x)
+                    {
+                        blur.apply(tgt[pos.x],source,pos);
+                    }
+                }
+            }
 
             static inline T Sigma2(const T sig)
             {
