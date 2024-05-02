@@ -83,6 +83,20 @@ namespace Yttrium
             virtual Image load(const String        &fileName,
                                const FormatOptions *options) const = 0;
 
+            //! saving with conversion
+            template <
+            typename PIXEL,
+            typename FILENAME,
+            typename PIXEL2RGBA> inline
+            void save(const Pixmap<PIXEL> &surface,
+                      const FILENAME      &fileName,
+                      const FormatOptions *options,
+                      Slabs               &slabs,
+                      PIXEL2RGBA          &pixel2rgba)
+            {
+                const Image image(slabs,pixel2rgba,surface);
+                save(image,fileName,options);
+            }
 
 
             //__________________________________________________________________

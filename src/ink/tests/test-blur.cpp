@@ -139,6 +139,7 @@ namespace Yttrium
             {
                 typedef Color::Channels<COLOR> Ops;
                 T channel[4] = {0,0,0,0};
+                
                 // convert target to floating-point channel(s)
                 target = source(origin);
                 Ops::Ldz(channel);
@@ -154,11 +155,9 @@ namespace Yttrium
                 // rescale to floating point in units of COLOR
                 Ops::Div(channel,scale);
 
+
                 // floating-point channel->target
                 Ops::Get(target,channel);
-                //Core::Display(std::cerr, channel, Ops::NCH);
-                //std::cerr << "->" << target << std::endl;
-                //exit(0);
             }
 
 
@@ -219,12 +218,15 @@ Y_UTEST(blur)
             for(unit_t x=0;x<img.w;++x)
             {
                 blur.apply(blr[y][x], img,  Coord(x,y)  );
-                blur.apply(img8[y][x],img8, Coord(x,y) );
+                blur.apply(blr8[y][x],img8, Coord(x,y) );
             }
         }
 
-        IMG.save(img,"blur-inp.png",0);
+        IMG.save(img,"blur-in.png",0);
         IMG.save(blr,"blur-out.png",0);
+
+        IMG.Codec::save(img8, "blur8-in.png", 0, par, Color::GrayScale::ByteTo<RGBA>);
+        IMG.Codec::save(blr8, "blur8-out.png", 0, par, Color::GrayScale::ByteTo<RGBA>);
 
     }
 
