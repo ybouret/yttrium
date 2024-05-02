@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Ink_Histogram_Included

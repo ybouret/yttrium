@@ -1,122 +1,6 @@
-#include "y/ink/crux/coefficients.hpp"
-#include "y/ink/pixmap.hpp"
+#include "y/ink/ops/blur.hpp"
 #include "y/utest/run.hpp"
-#include "y/data/small/heavy/list/bare.hpp"
-#include "y/sort/merge.hpp"
-#include "y/mkl/api.hpp"
-#include "y/type/proxy.hpp"
-#include "y/mkl/antelope/add.hpp"
 #include "y/ink/image/codecs.hpp"
-#include "y/color/channels.hpp"
-
-namespace Yttrium
-{
-    namespace Ink
-    {
-        namespace Crux
-        {
-            
-        }
-
-
-
-        template <typename T>
-        class Blur : public Proxy< Crux::Coefficients<T> >
-        {
-        public:
-            typedef Crux::Coefficient<T>       Weight;
-            typedef Crux::Coefficients<T>      Weights;
-            typedef typename Weights::NodeType WNode;
-
-            explicit Blur(const T sig) :
-            Proxy<Weights>(),
-            weights(),
-            scale(0),
-            sigma( MKL::Fabs<T>::Of(sig) ),
-            sigma2( Sigma2(sig) )
-            {
-                const T      one   = 1;
-                const T      wmin  = one/256;
-                const T      r2max = 12 * sigma2;
-                const T      rrmax = MKL::Sqrt<T>::Of(r2max);
-                const unit_t rmax  = static_cast<unit_t>(MKL::Floor<T>::Of(rrmax));
-                //std::cerr << "sqrt(" << r2max << ")=" << rrmax << " => " << rmax << std::endl;
-                const T den = sigma2+sigma2;
-                MKL::Antelope::Add<T> xadd;
-                for(unit_t y=-rmax;y<=rmax;++y)
-                {
-                    const unit_t y2 = y*y;
-                    for(unit_t x=-rmax;x<=rmax;++x)
-                    {
-                        const unit_t x2 = x*x;
-                        const T      r2 = (y2+x2);
-                        const T      arg = -r2/den;
-                        const T      w   = exp(arg);
-                        //std::cerr << "r2=" << r2 << "=>" << w << " (" << (w>=1.0/256) << ")" << std::endl;
-                        if(w>=wmin)
-                        {
-                            const Weight weight(x,y,w);
-                            weights << weight;
-                            xadd    << weight.value;
-                        }
-                    }
-                }
-                weights.sortByIncreasingValue();
-                Coerce(scale) = xadd.sum();
-                std::cerr << weights << std::endl;
-                std::cerr << "#w=" << weights.size << std::endl;
-                std::cerr << "scale=" << scale << std::endl;
-            }
-
-            template <typename COLOR> inline
-            void apply(COLOR               &target,
-                       const Pixmap<COLOR> &source,
-                       const Coord          origin) const
-            {
-                typedef Color::Channels<COLOR> Ops;
-                T channel[4] = {0,0,0,0};
-                
-                // convert target to floating-point channel(s)
-                target = source(origin);
-                Ops::Ldz(channel);
-
-                // perform floating-point computation
-                for(const WNode *node=weights.head;node;node=node->next)
-                {
-                    const Weight  w = **node;
-                    const Coord   p = w.coord + origin;
-                    Ops::Add(channel,w.value,source[p]);
-                }
-
-                // rescale to floating point in units of COLOR
-                Ops::Div(channel,scale);
-
-                // floating-point channel->target
-                Ops::Get(target,channel);
-            }
-
-
-
-        private:
-            Weights     weights;
-        public:
-            const T     scale;
-            const T     sigma;
-            const T     sigma2;
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Blur);
-            inline virtual const Weights & surrogate() const noexcept { return weights; }
-
-            static inline T Sigma2(const T sig)
-            {
-                if(sig<=0) throw Exception("sigma<=0");
-                return sig*sig;
-            }
-        };
-
-    }
-}
-
 #include "y/text/ascii/convert.hpp"
 #include "y/concurrent/loop/crew.hpp"
 #include "y/color/grayscale.hpp"
@@ -131,7 +15,8 @@ Y_UTEST(blur)
     {
         sig = ASCII::Convert::ToReal<float>(argv[1],"sigma");
     }
-    Blur<float> blur(sig);
+
+    Blur<long double> blur(sig);
 
     if(argc>2)
     {
@@ -158,10 +43,14 @@ Y_UTEST(blur)
         IMG.save(img,"blur-in.png",0);
         IMG.save(blr,"blur-out.png",0);
 
-        IMG.Codec::save(img8, "blur8-in.png", 0, par, Color::GrayScale::ByteTo<RGBA>);
+        IMG.Codec::save(img8, "blur8-in.png",  0, par, Color::GrayScale::ByteTo<RGBA>);
         IMG.Codec::save(blr8, "blur8-out.png", 0, par, Color::GrayScale::ByteTo<RGBA>);
 
     }
+
+    Y_SIZEOF(Blur<float>);
+    Y_SIZEOF(Blur<double>);
+    Y_SIZEOF(Blur<long double>);
 
 
 
