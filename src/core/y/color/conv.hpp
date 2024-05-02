@@ -9,7 +9,14 @@ namespace Yttrium
 {
     namespace Color
     {
+        //______________________________________________________________________
+        //
+        //
+        //
         //! T=[float|double|long double]
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         struct Conv
         {
@@ -34,7 +41,7 @@ namespace Yttrium
             static uint8_t       From(const uint8_t r, const uint8_t g, const uint8_t b) noexcept; //!< r,g,b -> grey
         };
 
-
+       
 
 #if !defined(_MSC_VER)
         template <> const float       Conv<float>      ::Unit[]; //!< decl

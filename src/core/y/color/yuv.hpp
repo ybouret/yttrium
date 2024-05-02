@@ -23,6 +23,9 @@ namespace Yttrium
         class YUV
         {
         public:
+            static const unsigned NumChannels = 1;
+            static const unsigned AllChannels = 3;
+
             //__________________________________________________________________
             //
             //

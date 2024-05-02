@@ -331,5 +331,6 @@ add_test(color:rgb test-core color_rgb)
 add_test(color:rgba test-core color_rgba)
 add_test(color:yuv test-core color_yuv)
 add_test(color:conv test-core color_conv)
+add_test(color:channels test-core color_channels)
 
 

@@ -23,7 +23,9 @@ namespace Yttrium
         class RGBA
         {
         public:
-
+            static const unsigned NumChannels = 3;
+            static const unsigned AllChannels = 4;
+            
             //__________________________________________________________________
             //
             //
