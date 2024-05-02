@@ -206,17 +206,19 @@ namespace Yttrium
                 return row[j];
             }
 
-
+            //! access by coordinate, direct
             inline T & operator[](const Coord coord) noexcept
             {
                 return (*this)[coord.y][coord.x];
             }
 
+            //! const access by coordinate, wrapped
             inline const T & operator[](const Coord coord) const noexcept
             {
                 return (*this)[coord.y][coord.x];
             }
 
+            //! const acess by coordiante, direct
             inline const T & operator()(const Coord coord) const noexcept
             {
                 return (*this)(coord.y)(coord.x);

@@ -23,10 +23,10 @@ namespace Yttrium
         class RGBA
         {
         public:
-            typedef T Type;
-            static const unsigned NumChannels = 3;
-            static const unsigned AllChannels = 4;
-            
+            typedef T Type;                        //!< alias
+            static const unsigned NumChannels = 3; //!< alias
+            static const unsigned AllChannels = 4; //!< alias
+
             //__________________________________________________________________
             //
             //

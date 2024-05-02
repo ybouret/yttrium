@@ -10,12 +10,14 @@ namespace Yttrium
     namespace Color
     {
 
+        //! todo
         template <typename TARGET, typename SOURCE>
         struct ScalarConv
         {
             static TARGET From(const SOURCE source) noexcept;
         };
 
+        //! todo
         template <typename TARGET>
         struct ScalarConv<TARGET,TARGET>
         {

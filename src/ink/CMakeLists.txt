@@ -12,6 +12,7 @@ ink
 ink/parallel
 ink/image
 ink/image/format
+ink/crux
 ink/ops
 )
 

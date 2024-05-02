@@ -1,3 +1,4 @@
+#include "y/ink/crux/coefficients.hpp"
 #include "y/ink/pixmap.hpp"
 #include "y/utest/run.hpp"
 #include "y/data/small/heavy/list/bare.hpp"
@@ -6,7 +7,6 @@
 #include "y/type/proxy.hpp"
 #include "y/mkl/antelope/add.hpp"
 #include "y/ink/image/codecs.hpp"
-#include "y/color/grayscale.hpp"
 #include "y/color/channels.hpp"
 
 namespace Yttrium
@@ -15,71 +15,7 @@ namespace Yttrium
     {
         namespace Crux
         {
-            template <typename T>
-            class Coefficient
-            {
-            public:
-                typedef Small::BareHeavyList<Coefficient> List;
-
-                inline Coefficient(const unit_t x, const unit_t y, const T w) noexcept :
-                coord(x,y), value(w)
-                {
-                }
-
-                inline Coefficient(const Coefficient &coef) noexcept :
-                coord(coef.coord),
-                value(coef.value)
-                {
-                }
-
-                inline ~Coefficient() noexcept {}
-
-                inline friend std::ostream & operator<<(std::ostream &os, const Coefficient &self)
-                {
-                    os << self.value << "@" << self.coord;
-                    return os;
-                }
-
-                const Coord coord;
-                const T     value;
-
-            private:
-                Y_DISABLE_ASSIGN(Coefficient);
-            };
-
-
-
-
-
-
-
-
-            template <typename T>
-            class Coefficients : public Coefficient<T>::List
-            {
-            public:
-                typedef Coefficient<T>              CoefType;
-                typedef typename CoefType::List     ListType;
-                typedef typename ListType::NodeType NodeType;
-
-                inline explicit Coefficients() noexcept : ListType() {}
-                inline virtual ~Coefficients() noexcept {}
-
-                inline void sortByIncreasingValue() noexcept
-                {
-                    MergeSort::Call(*this,Compare);
-                }
-
-
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Coefficients);
-                static inline
-                SignType Compare(const NodeType * const lhs, const NodeType * const rhs) noexcept
-                {
-                    return Sign::Of( (**lhs).value, (**rhs).value );
-                }
-            };
+            
         }
 
 
@@ -155,13 +91,9 @@ namespace Yttrium
                 // rescale to floating point in units of COLOR
                 Ops::Div(channel,scale);
 
-
                 // floating-point channel->target
                 Ops::Get(target,channel);
             }
-
-
-
 
 
 
@@ -187,6 +119,7 @@ namespace Yttrium
 
 #include "y/text/ascii/convert.hpp"
 #include "y/concurrent/loop/crew.hpp"
+#include "y/color/grayscale.hpp"
 
 using namespace Yttrium;
 using namespace Ink;

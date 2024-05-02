@@ -4,20 +4,13 @@
 #ifndef Y_Ink_Area_Included
 #define Y_Ink_Area_Included 1
 
-#include "y/mkl/v2d.hpp"
+#include "y/ink/coord.hpp"
 
 namespace Yttrium
 {
     namespace Ink
     {
-        //______________________________________________________________________
-        //
-        //
-        //! Physical Coordinate
-        //
-        //______________________________________________________________________
-        typedef V2D<unit_t> Coord;
-
+       
         //______________________________________________________________________
         //
         //

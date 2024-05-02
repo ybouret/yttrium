@@ -23,9 +23,9 @@ namespace Yttrium
         class YUV
         {
         public:
-            typedef T Type;
-            static const unsigned NumChannels = 1;
-            static const unsigned AllChannels = 3;
+            typedef T Type;                        //!< alias
+            static const unsigned NumChannels = 1; //!< alias
+            static const unsigned AllChannels = 3; //!< alias
 
             //__________________________________________________________________
             //
