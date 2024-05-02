@@ -17,28 +17,57 @@ namespace Yttrium
 
         namespace Crux
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! base class for Blur
+            //
+            //
+            //__________________________________________________________________
             class Blur : public Object, public Counted
             {
             public:
                 static const char * const CallSign; //!< "Ink::Blur"
-                virtual ~Blur() noexcept;
+                virtual ~Blur() noexcept;           //!< cleanup
             protected:
-                explicit Blur() noexcept;
-                static void ThrowInvalidSigma(const double sig);
-
+                explicit Blur() noexcept;           //!< setup
+                static void ThrowInvalidSigma(const double); //!< raise exception
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Blur);
             };
         }
 
+        //__________________________________________________________________
+        //
+        //
+        //
+        //! Blur as a list of coefficients
+        //
+        //
+        //__________________________________________________________________
         template <typename T>
         class Blur : public Crux::Blur, public Proxy< Crux::Coefficients<T> >
         {
         public:
-            typedef Crux::Coefficient<T>       Weight;
-            typedef Crux::Coefficients<T>      Weights;
-            typedef typename Weights::NodeType WNode;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef Crux::Coefficient<T>       Weight;  //!< alias
+            typedef Crux::Coefficients<T>      Weights; //!< alias
+            typedef typename Weights::NodeType WNode;   //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup for exp(-r^2/(2*sig^2)) <= 1/256
             explicit Blur(const T sig) :
             Crux::Blur(),
             Proxy<Weights>(),
@@ -49,6 +78,36 @@ namespace Yttrium
             {
                 setup();
             }
+
+            //! cleanup
+            virtual ~Blur() noexcept {}
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! apply from source to target
+            template <typename COLOR> inline
+            void operator()(Slabs &slabs, Pixmap<COLOR> &target, const Pixmap<COLOR> &source)
+            {
+                slabs( Apply<COLOR>, target, *this, source);
+            }
+
+
+        private:
+            Weights     weights; //!< internal weights
+        public:
+            const T     scale;   //!< sum of weights
+            const T     sigma;   //!< standard deviatiom
+            const T     sigma2;  //!< variance
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Blur);
+            inline virtual const Weights & surrogate() const noexcept { return weights; }
 
             template <typename COLOR> inline
             void apply(COLOR               &target,
@@ -88,24 +147,6 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 Ops::Get(target,channel);
             }
-
-            template <typename COLOR> inline
-            void operator()(Slabs &slabs, Pixmap<COLOR> &target, const Pixmap<COLOR> &source)
-            {
-                slabs( Apply<COLOR>, target, *this, source);
-            }
-
-
-        private:
-            Weights     weights;
-        public:
-            const T     scale;
-            const T     sigma;
-            const T     sigma2;
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Blur);
-            inline virtual const Weights & surrogate() const noexcept { return weights; }
-
             template <typename COLOR> static inline
             void Apply(Slab &slab, Pixmap<COLOR> &target, const Blur &blur, const Pixmap<COLOR> &source)
             {
