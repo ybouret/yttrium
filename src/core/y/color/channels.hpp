@@ -11,6 +11,20 @@ namespace Yttrium
     namespace Color
     {
 
+        template <typename TARGET, typename REAL>
+        struct RealToPixel
+        {
+            static inline TARGET Convert(const REAL f) noexcept { return static_cast<TARGET>(f); }
+        };
+
+        template <typename REAL>
+        struct RealToPixel<uint8_t,REAL>
+        {
+            static inline uint8_t Convert(const REAL f) noexcept {
+                static const REAL half(0.5);
+                return static_cast<uint8_t>(floor(f+half));
+            }
+        };
 
 
         template <typename T>
@@ -19,7 +33,7 @@ namespace Yttrium
             static const unsigned NCH = 1;
 
             template <typename U> static inline
-            void Ldz(U * const channel, const T &) noexcept
+            void Ldz(U * const channel) noexcept
             {
                 assert(0!=channel);
                 channel[0] = 0;
@@ -43,7 +57,7 @@ namespace Yttrium
             void Get(T &target, const U * const channel) noexcept
             {
                 assert(0!=channel);
-                target = ScalarConv<T,U>::From( channel[0] );
+                target = RealToPixel<T,U>::Convert( channel[0] );
             }
 
 
@@ -53,16 +67,13 @@ namespace Yttrium
         struct Channels< COLOR<T> >
         {
             static const unsigned NCH = COLOR<T>::NumChannels;
-            static const unsigned ACH = COLOR<T>::AllChannels;
 
             template <typename U> static inline
-            void Ldz(U * const channel, const COLOR<T> &C) noexcept
+            void Ldz(U * const channel) noexcept
             {
                 assert(0!=channel);
                 for(unsigned i=0;i<NCH;++i)
                     channel[i] = 0;
-                const T * const c = (const T *)&C;
-                for(unsigned i=NCH;i<ACH;++i) channel[i] = c[i];
             }
 
             template <typename U> static inline
@@ -87,7 +98,7 @@ namespace Yttrium
             {
                 assert(0!=channel);
                 T * const tgt = (T *)&target;
-                for(unsigned i=0;i<ACH;++i) tgt[i] = ScalarConv<T,U>::From( channel[i] );
+                for(unsigned i=0;i<NCH;++i) tgt[i] = RealToPixel<T,U>::Convert( channel[i] );
             }
 
         };

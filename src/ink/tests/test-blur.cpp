@@ -139,20 +139,26 @@ namespace Yttrium
             {
                 typedef Color::Channels<COLOR> Ops;
                 T channel[4] = {0,0,0,0};
-                Ops::Ldz(channel,source(origin));
-                Core::Display(std::cerr,channel,4) << std::endl;
+                // convert target to floating-point channel(s)
+                target = source(origin);
+                Ops::Ldz(channel);
+
+                // perform floating-point computation
                 for(const WNode *node=weights.head;node;node=node->next)
                 {
                     const Weight  w = **node;
                     const Coord   p = w.coord + origin;
                     Ops::Add(channel,w.value,source[p]);
                 }
-                Core::Display(std::cerr,channel,4) << std::endl;
+
+                // rescale to floating point in units of COLOR
                 Ops::Div(channel,scale);
-                Core::Display(std::cerr,channel,4) << std::endl;
+
+                // floating-point channel->target
                 Ops::Get(target,channel);
-                std::cerr << "->" << target << std::endl;
-                exit(0);
+                //Core::Display(std::cerr, channel, Ops::NCH);
+                //std::cerr << "->" << target << std::endl;
+                //exit(0);
             }
 
 
