@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Color_Conv_Included

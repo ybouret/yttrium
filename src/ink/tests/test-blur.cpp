@@ -17,8 +17,7 @@ namespace Yttrium
             {
             public:
                 typedef Small::BareHeavyList<Coefficient> List;
-                //typedef typename List::NodeType           Node;
-
+                
                 inline Coefficient(const unit_t x, const unit_t y, const T w) noexcept :
                 coord(x,y), value(w)
                 {
@@ -83,8 +82,9 @@ namespace Yttrium
         class Blur : public Proxy< Crux::Coefficients<T> >
         {
         public:
-            typedef Crux::Coefficient<T>  Weight;
-            typedef Crux::Coefficients<T> Weights;
+            typedef Crux::Coefficient<T>       Weight;
+            typedef Crux::Coefficients<T>      Weights;
+            typedef typename Weights::NodeType WNode;
 
             explicit Blur(const T sig) :
             Proxy<Weights>(),
@@ -98,7 +98,7 @@ namespace Yttrium
                 const T      r2max = 12 * sigma2;
                 const T      rrmax = MKL::Sqrt<T>::Of(r2max);
                 const unit_t rmax  = static_cast<unit_t>(MKL::Floor<T>::Of(rrmax));
-                std::cerr << "sqrt(" << r2max << ")=" << rrmax << " => " << rmax << std::endl;
+                //std::cerr << "sqrt(" << r2max << ")=" << rrmax << " => " << rmax << std::endl;
                 const T den = sigma2+sigma2;
                 MKL::Antelope::Add<T> xadd;
                 for(unit_t y=-rmax;y<=rmax;++y)
@@ -125,6 +125,20 @@ namespace Yttrium
                 std::cerr << "#w=" << weights.size << std::endl;
                 std::cerr << "scale=" << scale << std::endl;
             }
+
+            template <typename COLOR> inline
+            COLOR apply(const Pixmap<COLOR> &source,
+                        const Coord          origin) const
+            {
+                for(const WNode *node=weights.head;node;node=node->next)
+                {
+                    const Weight  w = **node;
+                    const Coord   p = w.coord + origin;
+                    const COLOR  &c = source[p.y][p.x];
+                }
+            }
+
+
 
         private:
             Weights     weights;
