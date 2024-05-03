@@ -25,6 +25,10 @@ namespace Yttrium
             static const int          Data[3][3];
         };
 
+    }
+
+    namespace Ink
+    {
         struct Prewitt5X
         {
             static const char * const Name;
@@ -38,10 +42,27 @@ namespace Yttrium
             static const int          Data[5][5];
         };
 
+    }
+
+    namespace Ink
+    {
+        struct Prewitt7X
+        {
+            static const char * const Name;
+            static const int          Data[7][7];
+        };
 
 
+        struct Prewitt7Y
+        {
+            static const char * const Name;
+            static const int          Data[7][7];
+        };
 
     }
+
+
+
 
 }
 
