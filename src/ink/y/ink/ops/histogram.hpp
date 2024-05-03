@@ -51,6 +51,9 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Histogram);
+            public:
+                const uint8_t lower;
+                const uint8_t upper;
             };
         }
 
@@ -93,8 +96,24 @@ namespace Yttrium
 
 
             inline void       ldz()                             noexcept { ldz_(data,sizeof(T)); } //!< reset all data
-            inline T        & operator[](const uint8_t x)       noexcept { return data[x]; }       //!< access bin
             inline const  T & operator[](const uint8_t x) const noexcept { return data[x]; }       //!< access bin
+
+            inline void write(OutputStream &fp) const
+            {
+                for(unsigned j=0;j<BINS;++j)
+                {
+                    fp("%u %g\n",j,double(data[j]));
+                }
+            }
+
+            template <typename FILENAME>
+            inline void save(const FILENAME & fileName) const
+            {
+                OutputFile fp(fileName);
+                write(fp);
+            }
+
+
 
             //__________________________________________________________________
             //
@@ -128,10 +147,22 @@ namespace Yttrium
                 for(size_t i=slabs.simt.size();i>0;--i)
                 {
                     const T * const H = slabs.simt[i].as<size_t>(BINS);
-                    for(size_t j=0;j<BINS;++j)
-                    {
-                        data[i] += H[i];
-                    }
+                    for(unsigned j=0;j<BINS;++j)
+                        data[j] += H[j];
+                }
+
+                for(unsigned j=0;j<BINS;++j)
+                {
+                    if(data[j]<=0) continue;
+                    Coerce(lower) = uint8_t(j);
+                    break;
+                }
+
+                for(int j=BINS-1;j>0;--j)
+                {
+                    if(data[j]<=0) continue;
+                    Coerce(upper) = uint8_t(j);
+                    break;
                 }
             }
 

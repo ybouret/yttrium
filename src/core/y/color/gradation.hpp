@@ -22,11 +22,10 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Gradation);
-
-            const RampColor * const cmin; //!< min color
-            const size_t            size; //!< number of colors
-            const size_t            imax; //!< size-1
-            const RampColor * const cmax; //!< cmin[imax]
+            const RampColor * const head;
+            const size_t            size;
+            const size_t            imax;
+            const RampColor * const tail;
         };
 
     }

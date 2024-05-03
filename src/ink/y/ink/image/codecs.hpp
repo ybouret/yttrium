@@ -9,6 +9,9 @@
 
 namespace Yttrium
 {
+
+    namespace Color { class Ramp; }
+
     namespace Ink
     {
         //______________________________________________________________________
@@ -57,7 +60,8 @@ namespace Yttrium
             //! append used formats
             void fetch(Sequence<Format::Handle> &formats) const;
 
-
+            //! render a Ramp
+            void renderRamp(const String &fileName,const Color::Ramp &ramp,const unit_t W, const unit_t H) const;
 
             //__________________________________________________________________
             //

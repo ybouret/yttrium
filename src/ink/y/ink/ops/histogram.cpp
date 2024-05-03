@@ -11,7 +11,7 @@ namespace Yttrium
             {
             }
 
-            Histogram:: Histogram() noexcept
+            Histogram:: Histogram() noexcept : lower(0), upper(0)
             {
             }
             
@@ -20,6 +20,8 @@ namespace Yttrium
                 assert(0!=blocks);
                 assert(blockSize>0);
                 memset(blocks,0,blockSize*BINS);
+                Coerce(lower) = 0;
+                Coerce(upper) = BINS-1;
             }
             
         }

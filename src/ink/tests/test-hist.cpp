@@ -19,7 +19,7 @@
 using namespace Yttrium;
 using namespace Ink;
 
-static inline float Byte2Float(const uint8_t u) noexcept
+static inline float ByteToFloat(const uint8_t u) noexcept
 {
     return Color::Conv<float>::Unit[u];
 }
@@ -36,10 +36,10 @@ Y_UTEST(hist)
     Histogram<size_t>      hist;
 
     static const RGBA Grad[] = { 
-        RGBA(0,0,0),
-        RGBA(0,0,0xff),
-        RGBA(0,0xff,0),
-        RGBA(0xff,0,0) };
+        RGBA(0x00,0x00,0x00),
+        RGBA(0x00,0x00,0xff),
+        RGBA(0x00,0xff,0x00),
+        RGBA(0xff,0x00,0x00) };
     static const Color::Gradation Gradient(Grad,sizeof(Grad)/sizeof(Grad[0]));
 
     if(argc>1)
@@ -60,17 +60,21 @@ Y_UTEST(hist)
 
         const Digest    hh = Hashing::MD::Of(hfn,hist);
         std::cerr << "hash=" << hh << std::endl;
+        std::cerr << "lower=" << int(hist.lower) << std::endl;
+        std::cerr << "upper=" << int(hist.upper) << std::endl;
+
         Pixmap<RGBA>    tgt(par, Color::GrayScale::ByteTo<RGBA>, msk);
 
         (std::cerr << "Saving..." << std::endl).flush();
         IMG.save(img, "hist-img.png",0);
         IMG.save(tgt, "hist-msk.png",0);
 
-        Pixmap<float> pxf(par,Byte2Float,msk);
+        IMG.renderRamp("ramp.png", Gradient, 800, 200);
+
+        Pixmap<float> pxf(par,ByteToFloat,msk);
         IMG.Codec::save(pxf, "hist-flt.png", 0, par, Gradient);
-
-
-
+        hist.save("hist.dat");
+        
     }
 
 

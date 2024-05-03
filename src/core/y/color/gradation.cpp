@@ -10,13 +10,13 @@ namespace Yttrium
         Gradation:: ~Gradation() noexcept {}
         Gradation::  Gradation(const RampColor * const entry,
                                const size_t            count) noexcept :
-        cmin(entry),
+        head(entry),
         size(count),
         imax(size-1),
-        cmax(cmin+imax)
+        tail(head+imax)
         {
-            assert(0!=cmin);
-            assert(0!=cmax);
+            assert(0!=head);
+            assert(0!=tail);
             assert(size>0);
         }
 
@@ -38,25 +38,23 @@ namespace Yttrium
         RampColor Gradation:: operator()(const float x) const noexcept
         {
             if(x<=0.0f)
-                return cmin[0];
+                return *head;
             else
             {
                 if(x>=1.0f)
                 {
-                    return cmax[0];
+                    return *tail;
                 }
                 else
                 {
-                    const float     scaling = imax*x;
-                    const float     nearest = floorf(scaling+0.5f);
-                    const size_t    inear   = static_cast<size_t>(nearest);
-                    const size_t    upper   = Max(imax,(nearest>=scaling) ? inear : inear+1);
-                    const size_t    lower   = upper-1;
-                    const RampColor cLo     = cmin[lower];
-                    const RampColor cUp     = cmin[upper];
-                    const float     wLo     = Clamp<float>(0.0f,static_cast<float>(upper)-scaling,1.0f);
-                    const float     wUp     = 1.0f-wLo;
-                    return Mix(cLo,wLo,cUp,wUp);
+                    const float  scaling = x * imax; // in [0:imax]
+                    const float  nearest = floorf(scaling+0.5f);
+                    const size_t closest = static_cast<size_t>(nearest);
+                    const size_t upper   = Min(imax,((nearest>=scaling) ? closest : closest+1));
+                    const size_t lower   = upper-1;
+                    const float  upperWeight = scaling - static_cast<float>(lower);
+                    const float  lowerWeight = 1.0f - upperWeight;
+                    return Mix(head[lower],lowerWeight,head[upper],upperWeight);
                 }
             }
         }
