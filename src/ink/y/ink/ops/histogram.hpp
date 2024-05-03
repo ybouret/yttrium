@@ -52,8 +52,8 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Histogram);
             public:
-                const uint8_t lower;
-                const uint8_t upper;
+                const uint8_t lower; //!< lower not zero bin
+                const uint8_t upper; //!< upper not zero bin
             };
         }
 
@@ -98,6 +98,7 @@ namespace Yttrium
             inline void       ldz()                             noexcept { ldz_(data,sizeof(T)); } //!< reset all data
             inline const  T & operator[](const uint8_t x) const noexcept { return data[x]; }       //!< access bin
 
+            //! write content to output
             inline void write(OutputStream &fp) const
             {
                 for(unsigned j=0;j<BINS;++j)
@@ -106,15 +107,14 @@ namespace Yttrium
                 }
             }
 
+            //! save content to file
             template <typename FILENAME>
             inline void save(const FILENAME & fileName) const
             {
                 OutputFile fp(fileName);
                 write(fp);
             }
-
-
-
+            
             //__________________________________________________________________
             //
             //! build histogram and 8-bits gray map

@@ -11,13 +11,37 @@ namespace Yttrium
     namespace Color
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Gradation over an arbitratry number of colors
+        //
+        //
+        //______________________________________________________________________
         class Gradation : public Ramp
         {
         public:
-            virtual ~Gradation() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            
+            //! setup with persisent colors
             explicit Gradation(const RampColor *entry,
                                const size_t     count) noexcept;
 
+            //! cleanup
+            virtual ~Gradation() noexcept;
+
+            //__________________________________________________________________
+            //
+            //
+            // interface
+            //
+            //__________________________________________________________________
             virtual RampColor operator()(const float x) const noexcept;
 
         private:

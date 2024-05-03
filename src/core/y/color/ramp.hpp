@@ -9,16 +9,44 @@ namespace Yttrium
 {
     namespace Color
     {
+        //______________________________________________________________________
+        //
+        //
+        //! internal color for Ramps
+        //
+        //______________________________________________________________________
         typedef RGBA<uint8_t> RampColor;
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Color Ramp interface
+        //
+        //
+        //______________________________________________________________________
         class Ramp
         {
         public:
-            virtual ~Ramp() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+
+            //! return a color for x in [0:1]
             virtual RampColor operator()(const float x) const noexcept = 0;
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            virtual ~Ramp() noexcept; //!< cleanup
         protected:
-            explicit Ramp() noexcept;
+            explicit Ramp() noexcept; //!< setup
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Ramp);
         };

@@ -1,6 +1,7 @@
-
+#include "y/ink/ops/lut8.hpp"
 #include "y/ink/ops/histogram.hpp"
 #include "y/ink/image/codecs.hpp"
+
 
 #include "y/utest/run.hpp"
 #include "y/concurrent/loop/crew.hpp"
@@ -15,6 +16,7 @@
 
 #include "y/color/gradation.hpp"
 #include "y/color/conv.hpp"
+#include "y/text/hexadecimal.hpp"
 
 using namespace Yttrium;
 using namespace Ink;
@@ -69,14 +71,33 @@ Y_UTEST(hist)
         IMG.save(img, "hist-img.png",0);
         IMG.save(tgt, "hist-msk.png",0);
 
-        IMG.renderRamp("ramp.png", Gradient, 800, 200);
+        IMG.renderRamp("ramp.png", Gradient, 800, 100);
 
         Pixmap<float> pxf(par,ByteToFloat,msk);
         IMG.Codec::save(pxf, "hist-flt.png", 0, par, Gradient);
+
+        LookUpTable8 lut;
+        lut.stretch(hist.lower,hist.upper);
+        lut(par,msk);
+        pxf.ld(par, ByteToFloat,msk);
+        IMG.Codec::save(pxf, "hist-nrm.png", 0, par, Gradient);
+
         hist.save("hist.dat");
         
     }
 
+    if(false)
+    {
+        uint8_t k=0;
+        for(unsigned i=0;i<16;++i)
+        {
+            for(unsigned j=0;j<16;++j)
+            {
+                std::cerr << " 0x" << Hexadecimal(k++) << ",";
+            }
+            std::cerr << std::endl;
+        }
+    }
 
 
 
