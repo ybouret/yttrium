@@ -13,19 +13,50 @@ namespace Yttrium
 
         namespace Crux
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! base class for SquarFilter
+            //
+            //
+            //__________________________________________________________________
             class SquareFilter
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! check that numData is a square
                 explicit SquareFilter(const char * const theName,
                                       const unsigned     numData);
+
+                //! cleanup
                 virtual ~SquareFilter() noexcept;
 
-                const unit_t width_;
-                const unit_t delta_;
-                const Area   layout() const noexcept
-                {
-                    return Area( Coord(delta_,delta_), width_, width_ );
-                }
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                //! return Filter area
+                const Area layout() const noexcept;
+
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const unit_t width_; //!< width of area
+                const unit_t delta_; //!< offset of area
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(SquareFilter);
             };

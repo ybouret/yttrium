@@ -25,7 +25,10 @@ namespace Yttrium
             {
             }
 
-
+            const Area SquareFilter:: layout() const noexcept
+            {
+                return Area( Coord(delta_,delta_), width_, width_ );
+            }
         }
 
     }
