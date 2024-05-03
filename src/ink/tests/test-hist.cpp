@@ -54,7 +54,7 @@ Y_UTEST(hist)
         {
             const uint64_t pixels = img.n;
             const uint64_t mark = WallTime::Ticks();
-            hist.make(par,img, Color::GrayScale::From<RGBA>, msk);
+            hist.make(par,img, Color::GrayScale::Pack<uint8_t,RGBA>, msk);
             const uint64_t ell  = WallTime::Ticks() - mark;
             const long double rate = (static_cast<long double>(pixels) / tmx(ell))*1e-6L;
             std::cerr << "rate=" << rate << " Mpx/s" << std::endl;

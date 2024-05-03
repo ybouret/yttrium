@@ -32,6 +32,9 @@ namespace Yttrium
             virtual ~Area()                      noexcept; //!< cleanup
             Area(const Area &)                   noexcept; //!< copy
 
+            //!  setup origin+W, origin+J
+            Area(const Coord origin, const unit_t W, const unit_t H) noexcept;
+
             //__________________________________________________________________
             //
             //

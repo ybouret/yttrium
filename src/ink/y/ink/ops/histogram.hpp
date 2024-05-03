@@ -146,7 +146,9 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 for(size_t i=slabs.simt.size();i>0;--i)
                 {
-                    const T * const H = slabs.simt[i].as<size_t>(BINS);
+                    const Slab &slab = slabs.simt[i];
+                    if(slab.count()<=0) continue;
+                    const T * const H = slab.as<size_t>(BINS);
                     for(unsigned j=0;j<BINS;++j)
                         data[j] += H[j];
                 }

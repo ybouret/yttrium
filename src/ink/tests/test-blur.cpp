@@ -27,7 +27,7 @@ Y_UTEST(blur)
         Codecs &        IMG = Ink::Codecs::Std();
         Pixmap<RGBA>    img = IMG.load(argv[2],0);
         Pixmap<RGBA>    blr(img.w,img.h);
-        Pixmap<uint8_t> img8(par,Color::GrayScale::From<RGBA>,img);
+        Pixmap<uint8_t> img8(par,Color::GrayScale::Pack<uint8_t,RGBA>,img);
         Pixmap<uint8_t> blr8(img.w,img.h);
 
 #if 0

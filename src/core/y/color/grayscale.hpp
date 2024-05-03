@@ -15,11 +15,12 @@ namespace Yttrium
         {
             //! r,g,b -> gray
             template <typename T>     static T              Make(const uint8_t r, const uint8_t g, const uint8_t b) noexcept;
-          
+
+
             //! (r,g,b,...) -> gray
-            template <typename COLOR> static inline uint8_t From(const COLOR &c) noexcept
+            template <typename T, typename COLOR> static inline T Pack(const COLOR &c) noexcept
             {
-                return Make<uint8_t>(c.r,c.g,c.b);
+                return Make<T>(c.r,c.g,c.b);
             }
 
 
@@ -32,7 +33,7 @@ namespace Yttrium
             //! (r,b,g,...) -> (gray,gray,gray,...)
             template <typename COLOR> static inline COLOR Convert(const COLOR &c) noexcept
             {
-                const uint8_t u = From<COLOR>(c);
+                const uint8_t u = Pack<uint8_t,COLOR>(c);
                 return ByteTo<COLOR>(u);
             }
         };

@@ -29,6 +29,21 @@ namespace Yttrium
             assert(h>0);
         }
 
+        Area:: Area(const Coord origin, const unit_t W, const unit_t H) noexcept :
+        x(origin.x),
+        y(origin.y),
+        w(W),
+        h(H),
+        n(w*h),
+        xt(x+w-1),
+        yt(y+h-1)
+        {
+            assert(w>0);
+            assert(h>0);
+        }
+
+
+
         Area:: Area(const Area &a) noexcept :
         x(a.x),
         y(a.y),

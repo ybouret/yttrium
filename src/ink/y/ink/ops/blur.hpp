@@ -6,7 +6,7 @@
 #define Y_Ink_Blur_Included 1
 
 #include "y/ink/pixmap.hpp"
-#include "y/ink/crux/coefficients.hpp"
+#include "y/ink/ops/blur/coefficients.hpp"
 #include "y/mkl/antelope/add.hpp"
 #include "y/color/channels.hpp"
 
