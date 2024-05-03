@@ -11,6 +11,7 @@
 #include "y/container/cxx/series.hpp"
 #include "y/mkl/antelope/add.hpp"
 #include "y/color/channels.hpp"
+#include "y/ptr/ark.hpp"
 
 namespace Yttrium
 {
@@ -27,7 +28,7 @@ namespace Yttrium
             //! base class for Filter
             //
             //__________________________________________________________________
-            class Filter : public Object
+            class Filter : public Object, public Counted
             {
             public:
                 //______________________________________________________________
@@ -173,6 +174,7 @@ namespace Yttrium
             typedef Crux::Factors<T>               Factors;  //!< alias
             typedef typename Factors::NodeType     FNode;    //!< alias
             typedef CxxSeries<Factors,MemoryModel> HFactors; //!< alias
+            typedef ArkPtr<String,const Filter>    Handle;   //!< alias
 
             //__________________________________________________________________
             //
@@ -226,6 +228,7 @@ namespace Yttrium
 
             virtual ~Filter() noexcept {}
 
+            
 
             //__________________________________________________________________
             //

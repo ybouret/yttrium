@@ -15,6 +15,7 @@ Y_UTEST_DECL(16)
     Y_UTEST(hist);
     Y_UTEST(blur);
     Y_UTEST(filter);
+    Y_UTEST(grad);
 }
 Y_UTEST_EXEC()
 
