@@ -12,7 +12,7 @@ namespace Yttrium
         const char * const Codecs:: CallSign = "Ink::Image::Codecs";
 
 
-        typedef Yttrium::SuffixSet<String,Format::Handle> FormatDB;
+        typedef Yttrium::SuffixSet<String,Format::Handle>  FormatDB;
 
         class Codecs:: Code : public FormatDB
         {

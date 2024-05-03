@@ -52,15 +52,17 @@ namespace Yttrium
             explicit GradMap(const unit_t W, const unit_t H) :
             vec(W,H),
             nrm(W,H),
-            gmin(0),
-            gmax(0)
+            opt(W,H),
+            nmin(0),
+            nmax(0)
             {
             }
 
             const Pixmap<Vertex> vec;
             const Pixmap<T>      nrm;
-            const T              gmin;
-            const T              gmax;
+            const Pixmap<T>      opt;
+            const T              nmin;
+            const T              nmax;
 
             template <typename U> inline
             T apply(const Pixmap<U>   &source,
@@ -90,7 +92,51 @@ namespace Yttrium
                 assert(source.hasSameSizesThan(nrm));
                 slabs.split(vec);
                 slabs.simt(Apply<U>,*this,drvs,source);
-                slabs.getMinMax(Coerce(gmin), Coerce(gmax));
+                slabs.getMinMax(Coerce(nmin), Coerce(nmax));
+                slabs.simt(Optimize,*this);
+            }
+
+
+
+            static void Optimize(Slab &slab, GradMap &g)
+            {
+                const T zero(0);
+                const T half(0.5);
+                for(size_t k=slab.count();k>0;--k)
+                {
+                    const HSegment       &seg = slab.hseg[k];
+                    const unit_t          y   = seg.y;
+                    const PixRow<Vertex> &vec = g.vec(y);
+                    const PixRow<T>      &nrm = g.nrm(y);
+                    PixRow<T>            &opt = Coerce(g.opt(y));
+                    for(unit_t i=seg.w,x=seg.x;i>0;--i,++x)
+                    {
+                        const T      g0  = nrm(x);
+                        T           &out = opt[x];
+                        if(g0<=zero)
+                        {
+                            out = zero; continue;
+                        }
+                        else
+                        {
+                            const Vertex v  = vec(x);
+                            const unit_t dx = static_cast<unit_t>( floor(v.x+half) ); assert( dx>=-1 && dx <=1 );
+                            const unit_t dy = static_cast<unit_t>( floor(v.y+half) ); assert( dy>=-1 && dy <=1 );
+
+                            if( g.nrm[y+dy][x+dx] > g0 )
+                            {
+                                out = zero; continue;
+                            }
+
+                            if( g.nrm[y-dy][x-dx] > g0 )
+                            {
+                                out = zero; continue;
+                            }
+
+                            out = g0;
+                        }
+                    }
+                }
             }
 
         private:
@@ -102,11 +148,15 @@ namespace Yttrium
                 {
                     const HSegment &seg = slab.hseg[k];
                     Coord           pos = seg.start();
-                    for(size_t i=seg.w;i>0;--i,++pos.x)
+                    for(unit_t i=seg.w;i>0;--i,++pos.x)
+                    {
                         g.apply(source,pos,drvs);
+                    }
                 }
                 slab.scanMinMax(g.nrm);
             }
+
+
 
         };
 
@@ -174,53 +224,56 @@ Y_UTEST(grad)
       
         g(par,Prewitt3,pxf);
         {
-            const Color::FlexibleRamp ramp(ColorGradient,g.gmin,g.gmax);
+            const Color::FlexibleRamp ramp(ColorGradient,g.nmin,g.nmax);
             IMG.Codec::save(g.nrm, "img-prewitt3.png", 0, par, ramp);
         }
       
         g(par,Prewitt5,pxf);
         {
-            const Color::FlexibleRamp ramp(ColorGradient,g.gmin,g.gmax);
+            const Color::FlexibleRamp ramp(ColorGradient,g.nmin,g.nmax);
             IMG.Codec::save(g.nrm, "img-prewitt5.png", 0, par, ramp);
         }
 
         g(par,Prewitt7,pxf);
         {
-            const Color::FlexibleRamp ramp(ColorGradient,g.gmin,g.gmax);
+            const Color::FlexibleRamp ramp(ColorGradient,g.nmin,g.nmax);
             IMG.Codec::save(g.nrm, "img-prewitt7.png", 0, par, ramp);
         }
 
         g(par,Sobel3,pxf);
         {
-            const Color::FlexibleRamp ramp(ColorGradient,g.gmin,g.gmax);
+            const Color::FlexibleRamp ramp(ColorGradient,g.nmin,g.nmax);
             IMG.Codec::save(g.nrm, "img-sobel3.png", 0, par, ramp);
         }
 
         g(par,Sobel5,pxf);
         {
-            const Color::FlexibleRamp ramp(ColorGradient,g.gmin,g.gmax);
+            const Color::FlexibleRamp ramp(ColorGradient,g.nmin,g.nmax);
             IMG.Codec::save(g.nrm, "img-sobel5.png", 0, par, ramp);
         }
 
         g(par,Sobel7,pxf);
         {
-            const Color::FlexibleRamp ramp(ColorGradient,g.gmin,g.gmax);
+            const Color::FlexibleRamp ramp(ColorGradient,g.nmin,g.nmax);
             IMG.Codec::save(g.nrm, "img-sobel7.png", 0, par, ramp);
         }
 
         g(par,Scharr3,pxf);
         {
-            const Color::FlexibleRamp ramp(ColorGradient,g.gmin,g.gmax);
+            const Color::FlexibleRamp ramp(ColorGradient,g.nmin,g.nmax);
             IMG.Codec::save(g.nrm, "img-scharr3.png", 0, par, ramp);
         }
 
         g(par,Scharr5,pxf);
         {
-            const Color::FlexibleRamp ramp(ColorGradient,g.gmin,g.gmax);
+            const Color::FlexibleRamp ramp(ColorGradient,g.nmin,g.nmax);
             IMG.Codec::save(g.nrm, "img-scharr5.png", 0, par, ramp);
+            IMG.Codec::save(g.opt, "opt-scharr5.png", 0, par, ramp);
+
         }
 
     }
+
 
 
 

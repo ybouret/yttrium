@@ -6,7 +6,6 @@
 
 #include "y/ink/image/format.hpp"
 
-
 namespace Yttrium
 {
 

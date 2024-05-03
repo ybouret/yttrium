@@ -62,19 +62,29 @@ namespace Yttrium
             };
         }
 
-
+        //__________________________________________________________________
+        //
+        //
+        //
+        //! SquareFilter from FILTER::Name and FILTER::Data
+        //
+        //
+        //__________________________________________________________________
         template <typename T, typename FILTER>
         class SquareFilter : public Crux::SquareFilter, public Filter<T>
         {
         public:
+            //! compute number of coefficients
             static const unsigned NumData = sizeof(FILTER::Data)/sizeof(FILTER::Data[0][0]);
 
+            //! setup
             inline explicit SquareFilter() :
             Crux::SquareFilter(FILTER::Name,NumData),
             Filter<T>(FILTER::Name,&FILTER::Data[0][0],layout())
             {
             }
 
+            //! cleanup
             inline virtual ~SquareFilter() noexcept {}
 
         private:
