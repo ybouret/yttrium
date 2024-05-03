@@ -18,4 +18,6 @@ add_test(format:png     test-ink format_png)
 add_test(format:tiff    test-ink format_tiff)
 add_test(image          test-ink image)
 add_test(hist           test-ink hist)
-add_test(blur           test-ink hist)
+add_test(blur           test-ink blur)
+add_test(filter         test-ink filter)
+
