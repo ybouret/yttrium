@@ -1,4 +1,7 @@
 
+#include "y/color/ramp/flexible.hpp"
+#include "y/color/ramp/gradation.hpp"
+
 #include "y/ink/ops/filter.hpp"
 #include "y/utest/run.hpp"
 #include "y/ink/image/codecs.hpp"
@@ -27,6 +30,12 @@ Y_UTEST(filter)
     Slabs                  par( crew );
     Codecs &               IMG = Ink::Codecs::Std();
 
+    static const RGBA Grad[] = {
+        RGBA(0x00,0x00,0xff),
+        RGBA(0x00,0x00,0x00),
+        RGBA(0xff,0x00,0x00) };
+    static const Color::Gradation Gradient(Grad,sizeof(Grad)/sizeof(Grad[0]));
+
     if(argc>1)
     {
         Pixmap<RGBA>    img = IMG.load(argv[1],0);
@@ -36,6 +45,9 @@ Y_UTEST(filter)
         float fmin=0, fmax=0;
         F(par,pxf,fmin,fmax,pxu);
         std::cerr << "fmin=" << fmin << ", fmax=" << fmax << std::endl;
+        const Color::FlexibleRamp ramp(Gradient,fmin,fmax);
+        IMG.Codec::save(pxf, "img-f.png", 0, par, ramp);
+
     }
 
 

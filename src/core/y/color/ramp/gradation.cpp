@@ -1,4 +1,4 @@
-#include "y/color/gradation.hpp"
+#include "y/color/ramp/gradation.hpp"
 #include "y/type/utils.hpp"
 #include "y/color/conv.hpp"
 

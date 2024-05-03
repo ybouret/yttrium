@@ -14,7 +14,7 @@
 #include "y/text/human-readable.hpp"
 #include <cstring>
 
-#include "y/color/gradation.hpp"
+#include "y/color/ramp/gradation.hpp"
 #include "y/color/conv.hpp"
 #include "y/text/hexadecimal.hpp"
 
