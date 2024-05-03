@@ -4,6 +4,8 @@
 #include "y/color/ramp/gradation.hpp"
 
 #include "y/ink/ops/filter/prewitt.hpp"
+#include "y/ink/ops/filter/sobel.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/ink/image/codecs.hpp"
 #include "y/concurrent/loop/crew.hpp"
@@ -141,6 +143,17 @@ Y_UTEST(grad)
     Filter<float>::Handle Prewitt7DY = new SquareFilter<float,Prewitt7Y>();
     GradDrvs<float>       Prewitt7(Prewitt7DX,Prewitt7DY);
 
+    Filter<float>::Handle Sobel3DX = new SquareFilter<float,Sobel3X>();
+    Filter<float>::Handle Sobel3DY = new SquareFilter<float,Sobel3Y>();
+    GradDrvs<float>       Sobel3(Sobel3DX,Sobel3DY);
+
+    Filter<float>::Handle Sobel5DX = new SquareFilter<float,Sobel5X>();
+    Filter<float>::Handle Sobel5DY = new SquareFilter<float,Sobel5Y>();
+    GradDrvs<float>       Sobel5(Sobel5DX,Sobel5DY);
+
+    Filter<float>::Handle Sobel7DX = new SquareFilter<float,Sobel7X>();
+    Filter<float>::Handle Sobel7DY = new SquareFilter<float,Sobel7Y>();
+    GradDrvs<float>       Sobel7(Sobel7DX,Sobel7DY);
 
 
     if(argc>1)
@@ -149,6 +162,7 @@ Y_UTEST(grad)
         Pixmap<float>   pxf(par,Color::GrayScale::Pack<float,RGBA>,img);
         IMG.save(img, "img.png", 0);
         GradMap<float> g(img.w,img.h);
+      
         g(par,Prewitt3,pxf);
         {
             const Color::FlexibleRamp ramp(ColorGradient,g.gmin,g.gmax);
@@ -167,6 +181,23 @@ Y_UTEST(grad)
             IMG.Codec::save(g.nrm, "img-prewitt7.png", 0, par, ramp);
         }
 
+        g(par,Sobel3,pxf);
+        {
+            const Color::FlexibleRamp ramp(ColorGradient,g.gmin,g.gmax);
+            IMG.Codec::save(g.nrm, "img-sobel3.png", 0, par, ramp);
+        }
+
+        g(par,Sobel5,pxf);
+        {
+            const Color::FlexibleRamp ramp(ColorGradient,g.gmin,g.gmax);
+            IMG.Codec::save(g.nrm, "img-sobel5.png", 0, par, ramp);
+        }
+
+        g(par,Sobel7,pxf);
+        {
+            const Color::FlexibleRamp ramp(ColorGradient,g.gmin,g.gmax);
+            IMG.Codec::save(g.nrm, "img-sobel7.png", 0, par, ramp);
+        }
 
 
     }
