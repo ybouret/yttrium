@@ -5,6 +5,7 @@
 
 #include "y/ink/ops/filter/prewitt.hpp"
 #include "y/ink/ops/filter/sobel.hpp"
+#include "y/ink/ops/filter/scharr.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/ink/image/codecs.hpp"
@@ -155,6 +156,14 @@ Y_UTEST(grad)
     Filter<float>::Handle Sobel7DY = new SquareFilter<float,Sobel7Y>();
     GradDrvs<float>       Sobel7(Sobel7DX,Sobel7DY);
 
+    Filter<float>::Handle Scharr3DX = new SquareFilter<float,Scharr3X>();
+    Filter<float>::Handle Scharr3DY = new SquareFilter<float,Scharr3Y>();
+    GradDrvs<float>       Scharr3(Scharr3DX,Scharr3DY);
+
+    Filter<float>::Handle Scharr5DX = new SquareFilter<float,Scharr5X>();
+    Filter<float>::Handle Scharr5DY = new SquareFilter<float,Scharr5Y>();
+    GradDrvs<float>       Scharr5(Scharr5DX,Scharr5DY);
+
 
     if(argc>1)
     {
@@ -199,6 +208,17 @@ Y_UTEST(grad)
             IMG.Codec::save(g.nrm, "img-sobel7.png", 0, par, ramp);
         }
 
+        g(par,Scharr3,pxf);
+        {
+            const Color::FlexibleRamp ramp(ColorGradient,g.gmin,g.gmax);
+            IMG.Codec::save(g.nrm, "img-scharr3.png", 0, par, ramp);
+        }
+
+        g(par,Scharr5,pxf);
+        {
+            const Color::FlexibleRamp ramp(ColorGradient,g.gmin,g.gmax);
+            IMG.Codec::save(g.nrm, "img-scharr5.png", 0, par, ramp);
+        }
 
     }
 
