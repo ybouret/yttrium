@@ -84,6 +84,30 @@ namespace Yttrium
                 split(target); simt(proc,target,arg1,arg2,arg3);
             }
 
+            template <typename T> inline
+            void getMinMax(T &tmin, T &tmax) noexcept
+            {
+                tmin = tmax = 0;
+                bool first = true;
+                for(size_t i = simt.size();i>0;--i)
+                {
+                    const Slab &slab = simt[i];
+                    if(slab.count()<=0) continue;;
+                    const T * const data = slab.as<T>(2);
+                    if(first)
+                    {
+                        tmin = data[0];
+                        tmax = data[1];
+                        first = false;
+                    }
+                    else
+                    {
+                        tmin = Min(tmin,data[0]);
+                        tmax = Max(tmax,data[1]);
+                    }
+                }
+
+            }
 
             //__________________________________________________________________
             //

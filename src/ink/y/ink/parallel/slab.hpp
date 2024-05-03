@@ -24,6 +24,8 @@ namespace Yttrium
             unit_t y;  //!< y
             unit_t w;  //!< width
             unit_t xt; //!< x top
+
+            inline const Coord start() const noexcept { return Coord(x,y); }
         };
 
         //______________________________________________________________________
@@ -75,6 +77,27 @@ namespace Yttrium
                 return static_cast<const T*>(wksp);
             }
 
+            template <typename PIXMAP> inline
+            void scanMinMax(const PIXMAP &pxm)
+            {
+                const size_t nseg = count(); if(nseg<=0) return;
+                typedef typename PIXMAP::MutableType T;
+                T * const data = static_cast<T*>(wksp);
+                T &tmin = data[0];
+                T &tmax = data[1];
+                tmin = tmax = pxm( hseg[1].start() );
+                for(size_t j=nseg;j>0;--j)
+                {
+                    const HSegment                 &seg = hseg[j];
+                    const typename PIXMAP::RowType &row = pxm(seg.y);
+                    for(unit_t i=seg.w,x=seg.x;i>0;--i,++x)
+                    {
+                        const T &temp = row(x);
+                        tmin = Min(tmin,temp);
+                        tmax = Max(tmax,temp);
+                    }
+                }
+            }
 
             //__________________________________________________________________
             //

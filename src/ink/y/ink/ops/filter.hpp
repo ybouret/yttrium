@@ -152,19 +152,14 @@ namespace Yttrium
             }
 
             template <typename U, typename V> inline
-            U operator()(Slabs           &slabs,
-                         Pixmap<U>       &target,
-                         const Pixmap<V> &source)
+            void operator()(Slabs           &slabs,
+                            Pixmap<U>       &target,
+                            U               &umin,
+                            U               &umax,
+                            const Pixmap<V> &source)
             {
                 slabs( Apply<U,V>, target, *this, source );
-                U umax = 0;
-                for(size_t i=slabs.simt.size();i>0;--i)
-                {
-                    const Slab &slab = slabs.simt[i];
-                    if(slab.count()<=0) continue;
-                    umax = Max(umax, *slab.as<U>(1) );
-                }
-                return umax;
+                slabs.getMinMax(umin,umax);
             }
 
 
@@ -174,13 +169,10 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Filter);
             HFactors hfac;
 
-
-            //! apply and keep max value into slab
+            //! apply and scan Min/Max into slab
             template <typename U, typename V> static inline
             void Apply(Slab &slab, Pixmap<U> &target, const Filter &F, const Pixmap<V> &source)
             {
-                U &umax = *slab.as<U>(1);
-                umax = 0;
                 for(size_t k=slab.count();k>0;--k)
                 {
                     const Ink::HSegment     seg = slab.hseg[k];
@@ -188,9 +180,10 @@ namespace Yttrium
                     PixRow<U>              &tgt = target[pos.y];
                     for(unit_t i=seg.w;i>0;--i,++pos.x)
                     {
-                        umax = Max(umax,F.apply(tgt[pos.x],source,pos));
+                        F.apply(tgt[pos.x],source,pos);
                     }
                 }
+                slab.scanMinMax(target);
             }
         };
 

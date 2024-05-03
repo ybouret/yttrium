@@ -33,7 +33,9 @@ Y_UTEST(filter)
         IMG.save(img, "img.png", 0);
         Pixmap<uint8_t>  pxu(par,Color::GrayScale::Pack<uint8_t,RGBA>,img);
         Pixmap<float>    pxf(img.w,img.h);
-        F(par,pxf,pxu);
+        float fmin=0, fmax=0;
+        F(par,pxf,fmin,fmax,pxu);
+        std::cerr << "fmin=" << fmin << ", fmax=" << fmax << std::endl;
     }
 
 
