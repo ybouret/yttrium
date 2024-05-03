@@ -25,6 +25,7 @@ namespace Yttrium
             unit_t w;  //!< width
             unit_t xt; //!< x top
 
+            //! convert x,y to coord
             inline const Coord start() const noexcept { return Coord(x,y); }
         };
 
@@ -77,6 +78,7 @@ namespace Yttrium
                 return static_cast<const T*>(wksp);
             }
 
+            //! scan min/max over the slab
             template <typename PIXMAP> inline
             void scanMinMax(const PIXMAP &pxm)
             {

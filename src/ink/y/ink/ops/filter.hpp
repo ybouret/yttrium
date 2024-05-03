@@ -21,49 +21,116 @@ namespace Yttrium
 
         namespace Crux
         {
+            //__________________________________________________________________
+            //
+            //
+            //! base class for Filter
+            //
+            //__________________________________________________________________
             class Filter : public Object
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+              
+                //! setup
                 template <typename NAME> inline
                 explicit Filter(const NAME &id) : name(id) {}
-                virtual ~Filter() noexcept; //!< cleanup
 
-                const String name;
+                //! cleanup
+                virtual ~Filter() noexcept;
+
+                //______________________________________________________________
+                //
+                //
+                // Members+
+                //
+                //______________________________________________________________
+                const String name; //!< identifier
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Filter);
             };
 
+            //__________________________________________________________________
+            //
+            //
+            //! horizontal factor
+            //
+            //__________________________________________________________________
             template <typename T>
             class Factor
             {
             public:
-                typedef Small::BareHeavyList<Factor> List;
-                inline  Factor(const unit_t X, const T W) noexcept : x(X), w(W) {}
-                inline ~Factor() noexcept {}
-                inline  Factor(const Factor &F) noexcept : x(F.x), w(F.w) {}
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef Small::BareHeavyList<Factor> List; //!< alias
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                inline  Factor(const unit_t X, const T W) noexcept : x(X), w(W) {} //!< setup
+                inline  Factor(const Factor &F) noexcept : x(F.x), w(F.w) {}       //!< copy
+                inline ~Factor() noexcept {}                                       //!< cleanup
+
+                //! display
                 inline friend std::ostream & operator<<(std::ostream &os, const Factor &self)
                 {
                     os << self.w << "@[" << self.x << "]";
                     return os;
                 }
 
-                const unit_t x;
-                const T      w;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const unit_t x; //!< horizontal offset
+                const T      w; //!< weight
             private:
                 Y_DISABLE_ASSIGN(Factor);
             };
 
+            //__________________________________________________________________
+            //
+            //
+            //! list of horizontal factors at a vertical offset
+            //
+            //__________________________________________________________________
             template <typename T>
             class Factors : public Factor<T>::List
             {
             public:
-                typedef typename Factor<T>::List ListType;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef typename Factor<T>::List ListType; //!< alias
 
-                inline explicit Factors(const unit_t Y) noexcept : y(Y) {}
-                inline virtual ~Factors() noexcept {}
-                inline          Factors(const Factors &other) : ListType(other), y(other.y) {}
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                inline explicit Factors(const unit_t Y) noexcept : y(Y) {}                     //!< setup
+                inline          Factors(const Factors &other) : ListType(other), y(other.y) {} //!< copy
+                inline virtual ~Factors() noexcept {}                                          //!< cleanup
 
+                //! display
                 inline friend std::ostream & operator<<(std::ostream &os, const Factors &self)
                 {
                     const ListType &l = self;
@@ -71,26 +138,55 @@ namespace Yttrium
                     return os;
                 }
 
-                const unit_t y;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const unit_t y; //!< vertical offset
             private:
                 Y_DISABLE_ASSIGN(Factors);
             };
 
-
-
-
-
         }
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Filter for a scalar pixmap
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class Filter : public Crux::Filter
         {
         public:
-            typedef Crux::Factor<T>  Factor;
-            typedef Crux::Factors<T> Factors;
-            typedef typename Factors::NodeType FNode;
-            typedef CxxSeries<Factors,MemoryModel> HFactors;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef Crux::Factor<T>                Factor;   //!< alias
+            typedef Crux::Factors<T>               Factors;  //!< alias
+            typedef typename Factors::NodeType     FNode;    //!< alias
+            typedef CxxSeries<Factors,MemoryModel> HFactors; //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+          
+            //! setup
+            /**
+             \param id     name of filter
+             \param F      linear coefficients
+             \param layout layout of F[h][w], with (x,y) = offset
+             */
             template <
             typename NAME,
             typename U>
@@ -131,7 +227,10 @@ namespace Yttrium
             virtual ~Filter() noexcept {}
 
 
+            //__________________________________________________________________
+            //
             //! apply filter at one point and return the value
+            //__________________________________________________________________
             template <typename U, typename V> inline
             const U apply(U               &target,
                           const Pixmap<V> &source,
@@ -151,6 +250,10 @@ namespace Yttrium
                 return (target = static_cast<U>(sum));
             }
 
+            //__________________________________________________________________
+            //
+            //! apply filter over slabs and collect min/max
+            //__________________________________________________________________
             template <typename U, typename V> inline
             void operator()(Slabs           &slabs,
                             Pixmap<U>       &target,
@@ -162,9 +265,7 @@ namespace Yttrium
                 slabs.getMinMax(umin,umax);
             }
 
-
-
-            const T  norm;
+            const T  norm; //!< norm of coefficients
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Filter);
             HFactors hfac;

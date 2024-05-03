@@ -84,8 +84,9 @@ namespace Yttrium
                 split(target); simt(proc,target,arg1,arg2,arg3);
             }
 
+            //! collect min/max after scanMinMax of each slab
             template <typename T> inline
-            void getMinMax(T &tmin, T &tmax) noexcept
+            void getMinMax(T &tmin, T &tmax) const noexcept
             {
                 tmin = tmax = 0;
                 bool first = true;
