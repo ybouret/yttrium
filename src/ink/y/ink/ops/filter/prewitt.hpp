@@ -27,11 +27,12 @@ namespace Yttrium
                 static const int          Data[3][3]; //!< data
             };
 
+            //! Prewitt3
             struct Prewitt3
             {
-                static const char * const Name;
-                typedef Prewitt3X         X;
-                typedef Prewitt3Y         Y;
+                static const char * const Name; //!< name
+                typedef Prewitt3X         X;    //!< alias
+                typedef Prewitt3Y         Y;    //!< alias
             };
 
 
@@ -49,11 +50,12 @@ namespace Yttrium
                 static const int          Data[5][5]; //!< data
             };
 
+            //! Prewitt5
             struct Prewitt5
             {
-                static const char * const Name;
-                typedef Prewitt5X         X;
-                typedef Prewitt5Y         Y;
+                static const char * const Name; //!< name
+                typedef Prewitt5X         X;    //!< alias
+                typedef Prewitt5Y         Y;    //!< alias
             };
 
 
@@ -71,11 +73,12 @@ namespace Yttrium
                 static const int          Data[7][7]; //!< data
             };
 
+            //! Prewitt7
             struct Prewitt7
             {
-                static const char * const Name;
-                typedef Prewitt7X         X;
-                typedef Prewitt7Y         Y;
+                static const char * const Name; //!< name
+                typedef Prewitt7X         X;    //!< alias
+                typedef Prewitt7Y         Y;    //!< alias
             };
         }
 

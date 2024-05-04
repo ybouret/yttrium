@@ -13,18 +13,45 @@ namespace Yttrium
 
         namespace Crux
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Base class for Gradient
+            //
+            //
+            //__________________________________________________________________
             class Gradient : public Object, public Counted
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                const String &key() const noexcept; //!< name
 
-                const String &key() const noexcept;
-                virtual ~Gradient() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                virtual ~Gradient() noexcept; //!< cleanuo
             protected:
+                //! setup
                 template <typename NAME> inline
                 explicit Gradient(const NAME &id) : name(id) {}
 
             public:
-                const String name;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const String name; //!< identifier
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Gradient);

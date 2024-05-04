@@ -84,7 +84,10 @@ namespace Yttrium
                 split(target); simt(proc,target,arg1,arg2,arg3);
             }
 
-            //! collect min/max after scanMinMax of each slab
+            //__________________________________________________________________
+            //
+            //! retrieve local min/max after local scanMinMax of each slab
+            //__________________________________________________________________
             template <typename T> inline
             void getMinMax(T &tmin, T &tmax) const noexcept
             {

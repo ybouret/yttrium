@@ -82,12 +82,23 @@ namespace Yttrium
             template <typename PIXMAP> inline
             void scanMinMax(const PIXMAP &pxm)
             {
+                //--------------------------------------------------------------
+                // check active
+                //--------------------------------------------------------------
                 const size_t nseg = count(); if(nseg<=0) return;
+
+                //--------------------------------------------------------------
+                // initialize using internal memory
+                //--------------------------------------------------------------
                 typedef typename PIXMAP::MutableType T;
-                T * const data = static_cast<T*>(wksp);
-                T &tmin = data[0];
-                T &tmax = data[1];
+                T * const data = as<T>(2);
+                T &tmin        = data[0];
+                T &tmax        = data[1];
                 tmin = tmax = pxm( hseg[1].start() );
+
+                //--------------------------------------------------------------
+                // loop
+                //--------------------------------------------------------------
                 for(size_t j=nseg;j>0;--j)
                 {
                     const HSegment                 &seg = hseg[j];

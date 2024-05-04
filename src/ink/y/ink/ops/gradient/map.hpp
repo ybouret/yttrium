@@ -20,13 +20,26 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-
         template <typename T>
         class GradientMap
         {
         public:
-            typedef V2D<T> Vertex;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef V2D<T> Vertex; //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup
             inline explicit GradientMap(const unit_t W, const unit_t H) :
             direction(W,H),
             intensity(W,H),
@@ -35,14 +48,46 @@ namespace Yttrium
             {
             }
 
+            //! cleanup
             inline virtual ~GradientMap() noexcept {}
 
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! compute gradient and retrieve min/max
+            template <typename U> inline
+            void operator()(Slabs &slabs, const Gradient<T> &grad, const Pixmap<U> &source)
+            {
+                assert(source.hasSameSizesThan(direction));
+                assert(source.hasSameSizesThan(intensity));
+                slabs.split(direction);
+                slabs.simt(Apply<U>,*this,grad,source);
+                slabs.getMinMax(Coerce(nmin), Coerce(nmax));
+                //slabs.simt(Optimize,*this);
+            }
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
             const Pixmap<Vertex> direction; //!< normalized direction
             const Pixmap<T>      intensity; //!< intensity
-            const T              nmin;
-            const T              nmax;
+            const T              nmin;      //!< minimal norm
+            const T              nmax;      //!< maximal norm
 
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(GradientMap);
+
+            //! compute gradient at source[origin]
             template <typename U> inline
             T apply(const Pixmap<U>   &source,
                     const Coord        origin,
@@ -64,24 +109,7 @@ namespace Yttrium
                 }
             }
 
-            template <typename U> inline
-            void operator()(Slabs &slabs, const Gradient<T> &grad, const Pixmap<U> &source)
-            {
-                assert(source.hasSameSizesThan(direction));
-                assert(source.hasSameSizesThan(intensity));
-                slabs.split(direction);
-                slabs.simt(Apply<U>,*this,grad,source);
-                slabs.getMinMax(Coerce(nmin), Coerce(nmax));
-                //slabs.simt(Optimize,*this);
-            }
-
-
-
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(GradientMap);
-
+            //! parallel apply
             template <typename U> static inline
             void Apply(Slab &slab, GradientMap &self, const Gradient<T> &grad, const Pixmap<U> &source)
             {
