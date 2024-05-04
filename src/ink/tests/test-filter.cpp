@@ -27,8 +27,8 @@ Y_UTEST(filter)
         RGBA(0xff,0x00,0x00) };
     static const Color::Gradation Gradient(Grad,sizeof(Grad)/sizeof(Grad[0]));
 
-    SquareFilter<float,Prewitt3X> F3X;
-    SquareFilter<float,Prewitt3Y> F3Y;
+    SquareFilter<float,Crux::Prewitt3X> F3X;
+    SquareFilter<float,Crux::Prewitt3Y> F3Y;
 
     if(argc>1)
     {

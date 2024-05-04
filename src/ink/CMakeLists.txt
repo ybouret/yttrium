@@ -15,6 +15,7 @@ ink/image/format
 ink/ops
 ink/ops/blur
 ink/ops/filter
+ink/ops/gradient
 )
 
 add_subdirectory(tests)

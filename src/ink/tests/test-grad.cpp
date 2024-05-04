@@ -6,6 +6,7 @@
 #include "y/ink/ops/filter/prewitt.hpp"
 #include "y/ink/ops/filter/sobel.hpp"
 #include "y/ink/ops/filter/scharr.hpp"
+#include "y/ink/ops/gradient/filters.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/ink/image/codecs.hpp"
@@ -20,27 +21,8 @@ namespace Yttrium
     namespace Ink
     {
 
-        template <typename T>
-        class GradDrvs
-        {
-        public:
-            typedef typename Filter<T>::Handle FilterHandle;
-            typedef V2D<T>                     Vertex;
 
-            inline explicit GradDrvs(const FilterHandle &DX,
-                                     const FilterHandle &DY) noexcept :
-            fdx(DX), fdy(DY)
-            {
-            }
-
-
-
-            inline virtual ~GradDrvs() noexcept {}
-            const FilterHandle   fdx;
-            const FilterHandle   fdy;
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(GradDrvs);
-        };
+        
 
         template <typename T>
         class GradMap
@@ -52,7 +34,6 @@ namespace Yttrium
             explicit GradMap(const unit_t W, const unit_t H) :
             vec(W,H),
             nrm(W,H),
-            opt(W,H),
             nmin(0),
             nmax(0)
             {
@@ -60,18 +41,17 @@ namespace Yttrium
 
             const Pixmap<Vertex> vec;
             const Pixmap<T>      nrm;
-            const Pixmap<T>      opt;
             const T              nmin;
             const T              nmax;
 
             template <typename U> inline
             T apply(const Pixmap<U>   &source,
                     const Coord        origin,
-                    const GradDrvs<T> &drvs)
+                    const Gradient<T> &grad)
             {
                 Vertex &vtx = Coerce(vec(origin));
-                const T gx  = drvs.fdx->apply(vtx.x,source,origin);
-                const T gy  = drvs.fdy->apply(vtx.y,source,origin);
+                const T gx  = grad.dx().apply(vtx.x,source,origin);
+                const T gy  = grad.dy().apply(vtx.y,source,origin);
                 const T gn  = (Coerce(nrm(origin)) = MKL::Hypotenuse(gx,gy));
                 if(gn>0)
                 {
@@ -86,18 +66,19 @@ namespace Yttrium
             }
 
             template <typename U> inline
-            void operator()(Slabs &slabs, const GradDrvs<T> &drvs, const Pixmap<U> &source)
+            void operator()(Slabs &slabs, const Gradient<T> &grad, const Pixmap<U> &source)
             {
                 assert(source.hasSameSizesThan(vec));
                 assert(source.hasSameSizesThan(nrm));
                 slabs.split(vec);
-                slabs.simt(Apply<U>,*this,drvs,source);
+                slabs.simt(Apply<U>,*this,grad,source);
                 slabs.getMinMax(Coerce(nmin), Coerce(nmax));
-                slabs.simt(Optimize,*this);
+                //slabs.simt(Optimize,*this);
             }
 
 
 
+#if 0
             static void Optimize(Slab &slab, GradMap &g)
             {
                 const T zero(0);
@@ -138,11 +119,12 @@ namespace Yttrium
                     }
                 }
             }
+#endif
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(GradMap);
             template <typename U> static inline
-            void Apply(Slab &slab, GradMap &g, const GradDrvs<T> &drvs, const Pixmap<U> &source)
+            void Apply(Slab &slab, GradMap &g, const Gradient<T> &grad, const Pixmap<U> &source)
             {
                 for(size_t k=slab.count();k>0;--k)
                 {
@@ -150,14 +132,11 @@ namespace Yttrium
                     Coord           pos = seg.start();
                     for(unit_t i=seg.w;i>0;--i,++pos.x)
                     {
-                        g.apply(source,pos,drvs);
+                        g.apply(source,pos,grad);
                     }
                 }
                 slab.scanMinMax(g.nrm);
             }
-
-
-
         };
 
 
@@ -181,6 +160,12 @@ Y_UTEST(grad)
         RGBA(0xff,0x00,0x00),
         RGBA(0xff,0xff,0xff) };
     static const Color::Gradation ColorGradient(Grad,sizeof(Grad)/sizeof(Grad[0]));
+
+    GradientFilters<float,Crux::Prewitt3> Prewitt3;
+    GradientFilters<float,Crux::Prewitt5> Prewitt5;
+    GradientFilters<float,Crux::Prewitt7> Prewitt7;
+
+#if 0
 
     Filter<float>::Handle Prewitt3DX = new SquareFilter<float,Prewitt3X>();
     Filter<float>::Handle Prewitt3DY = new SquareFilter<float,Prewitt3Y>();
@@ -213,6 +198,7 @@ Y_UTEST(grad)
     Filter<float>::Handle Scharr5DX = new SquareFilter<float,Scharr5X>();
     Filter<float>::Handle Scharr5DY = new SquareFilter<float,Scharr5Y>();
     GradDrvs<float>       Scharr5(Scharr5DX,Scharr5DY);
+#endif
 
 
     if(argc>1)
@@ -228,6 +214,7 @@ Y_UTEST(grad)
             IMG.Codec::save(g.nrm, "img-prewitt3.png", 0, par, ramp);
         }
       
+#if 0
         g(par,Prewitt5,pxf);
         {
             const Color::FlexibleRamp ramp(ColorGradient,g.nmin,g.nmax);
@@ -271,6 +258,7 @@ Y_UTEST(grad)
             IMG.Codec::save(g.opt, "opt-scharr5.png", 0, par, ramp);
 
         }
+#endif
 
     }
 

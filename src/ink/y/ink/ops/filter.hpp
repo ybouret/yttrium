@@ -215,7 +215,7 @@ namespace Yttrium
                             factors << factor;
                         }
                     }
-                    std::cerr << factors << std::endl;
+                    //std::cerr << factors << std::endl;
                     if(factors.size>0)
                         hfac << factors;
                 }
