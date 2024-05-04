@@ -22,7 +22,8 @@ namespace Yttrium
         class GradientThinner
         {
         public:
-            typedef V2D<T> Vertex;
+            typedef V2D<T>                   Vertex;
+            typedef CxxSeries<T,MemoryModel> Series;
 
             inline explicit GradientThinner(const unit_t W, const unit_t H) :
             intensity(W,H),
@@ -42,7 +43,7 @@ namespace Yttrium
                 Coerce(nmax) = gmap.nmax;
                 {
                     T &gmin = ( Coerce(nmin) = nmax );
-                    for(size_t i= slabs.simt.size();i>0;--i)
+                    for(size_t i=slabs.simt.size();i>0;--i)
                     {
                         const Slab &slab = slabs.simt[i]; if(slab.count()<=0) continue;
                         gmin = Min(gmin, *slab.as<T>(1) );
@@ -96,6 +97,9 @@ namespace Yttrium
 using namespace Yttrium;
 using namespace Ink;
 
+#include "y/sequence/vector.hpp"
+#include "y/sort/heap.hpp"
+#include "y/stream/libc/output.hpp"
 
 static inline
 void processGrad(Slabs                  &par,
@@ -112,6 +116,27 @@ void processGrad(Slabs                  &par,
     thin(par,gmap);
     std::cerr << "thin: " << thin.nmin << " -> " << thin.nmax << std::endl;
     (std::cerr << "saving..." << std::endl).flush();
+
+    Vector<float> g;
+    for(unit_t j=0;j<thin.intensity.h;++j)
+    {
+        for(unit_t i=0;i<thin.intensity.w;++i)
+        {
+            const float temp = thin.intensity[j][i]; assert(temp>=0);
+            if(temp>0)
+                g << temp;
+        }
+    }
+    std::cerr << "#g=" << g.size() << std::endl;
+    HeapSort::Call(g,Comparison::Increasing<float>);
+    {
+        OutputFile fp("g.dat");
+        for(size_t i=1;i<=g.size();++i)
+        {
+            fp("%u %g\n", unsigned(i), g[i]);
+        }
+    }
+
     {
         {
             const Color::FlexibleRamp ramp(cr,gmap.nmin,gmap.nmax);

@@ -245,7 +245,6 @@ namespace Yttrium
             }
 
 
-
         private:
             Y_DISABLE_ASSIGN(Pixmap);
             RowType * const row;
