@@ -31,18 +31,46 @@ namespace Yttrium
             };
         }
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Gradient interface
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class Gradient : public Crux::Gradient
         {
         public:
-            typedef Filter<T>                     FilterType;
-            typedef ArkPtr<String,const Gradient> Handle;
-            
-            virtual const FilterType & dx() const noexcept = 0;
-            virtual const FilterType & dy() const noexcept = 0;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef Filter<T>                     FilterType; //!< alias
+            typedef ArkPtr<String,const Gradient> Handle;     //!< alias
 
-            inline virtual ~Gradient() noexcept {}
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual const FilterType & dx() const noexcept = 0; //!< to compute dx
+            virtual const FilterType & dy() const noexcept = 0; //!< to compute dy
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            inline virtual ~Gradient() noexcept {} //!< cleanup
+       
         protected:
+            //! setup
             template <typename NAME>
             inline explicit Gradient(const NAME &id) :
             Crux::Gradient(id) {}

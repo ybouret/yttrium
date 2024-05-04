@@ -11,38 +11,53 @@ namespace Yttrium
     namespace Ink
     {
 
-        //! Scharr3X
-        struct Scharr3X
+        namespace Crux
         {
-            static const char * const Name;       //!< name
-            static const int          Data[3][3]; //!< data
-        };
+            //! Scharr3X
+            struct Scharr3X
+            {
+                static const char * const Name;       //!< name
+                static const int          Data[3][3]; //!< data
+            };
+            
+            //! Scharr3Y
+            struct Scharr3Y
+            {
+                static const char * const Name;       //!< name
+                static const int          Data[3][3]; //!< data
+            };
+            
+            //! Scharr3
+            struct Scharr3
+            {
+                static const char * const Name; //!< name
+                typedef Scharr3X X;             //!< alias
+                typedef Scharr3Y Y;             //!< alias
+            };
 
-        //! Scharr3Y
-        struct Scharr3Y
-        {
-            static const char * const Name;       //!< name
-            static const int          Data[3][3]; //!< data
-        };
 
-    }
-
-    namespace Ink
-    {
-        //! Scharr5X
-        struct Scharr5X
-        {
-            static const char * const Name;       //!< name
-            static const int          Data[5][5]; //!< data
-        };
-
-        //! Scharr5Y
-        struct Scharr5Y
-        {
-            static const char * const Name;       //!< name
-            static const int          Data[5][5]; //!< data
-        };
-
+            //! Scharr5X
+            struct Scharr5X
+            {
+                static const char * const Name;       //!< name
+                static const int          Data[5][5]; //!< data
+            };
+            
+            //! Scharr5Y
+            struct Scharr5Y
+            {
+                static const char * const Name;       //!< name
+                static const int          Data[5][5]; //!< data
+            };
+            
+            //! Scharr5
+            struct Scharr5
+            {
+                static const char * const Name; //!< name
+                typedef Scharr5X X;             //!< alias
+                typedef Scharr5Y Y;             //!< alias
+            };
+        }
     }
 
 }

@@ -11,16 +11,42 @@ namespace Yttrium
 
     namespace Ink
     {
-        
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Gradient with built-in filters
+        //
+        //
+        //______________________________________________________________________
         template <typename T, typename FILTER>
         class GradientFilters : public Gradient<T>
         {
         public:
-            typedef typename Gradient<T>::FilterType FilterType;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef typename Gradient<T>::FilterType FilterType; //!< alias
 
-            inline explicit GradientFilters() : Gradient<T>(FILTER::Name), dxf(), dyf() {}
-            inline virtual ~GradientFilters() noexcept {}
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            inline explicit GradientFilters() : Gradient<T>(FILTER::Name), dxf(), dyf() {} //!< setup
+            inline virtual ~GradientFilters() noexcept {}                                  //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
             inline virtual const FilterType & dx() const noexcept { return dxf; }
             inline virtual const FilterType & dy() const noexcept { return dyf; }
 
