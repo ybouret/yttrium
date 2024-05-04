@@ -132,47 +132,6 @@ namespace Yttrium
 
 }
 
-#if 0
-static void Optimize(Slab &slab, GradMap &g)
-{
-    const T zero(0);
-    const T half(0.5);
-    for(size_t k=slab.count();k>0;--k)
-    {
-        const HSegment       &seg = slab.hseg[k];
-        const unit_t          y   = seg.y;
-        const PixRow<Vertex> &vec = g.vec(y);
-        const PixRow<T>      &nrm = g.nrm(y);
-        PixRow<T>            &opt = Coerce(g.opt(y));
-        for(unit_t i=seg.w,x=seg.x;i>0;--i,++x)
-        {
-            const T      g0  = nrm(x);
-            T           &out = opt[x];
-            if(g0<=zero)
-            {
-                out = zero; continue;
-            }
-            else
-            {
-                const Vertex v  = vec(x);
-                const unit_t dx = static_cast<unit_t>( floor(v.x+half) ); assert( dx>=-1 && dx <=1 );
-                const unit_t dy = static_cast<unit_t>( floor(v.y+half) ); assert( dy>=-1 && dy <=1 );
 
-                if( g.nrm[y+dy][x+dx] > g0 )
-                {
-                    out = zero; continue;
-                }
-
-                if( g.nrm[y-dy][x-dx] > g0 )
-                {
-                    out = zero; continue;
-                }
-
-                out = g0;
-            }
-        }
-    }
-}
-#endif
 
 #endif
