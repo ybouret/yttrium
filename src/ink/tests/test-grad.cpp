@@ -39,6 +39,15 @@ namespace Yttrium
                 assert(intensity.hasSameSizesThan(gmap.intensity));
                 slabs.split(intensity);
                 slabs.simt(Optimize,*this,gmap);
+                Coerce(nmax) = gmap.nmax;
+                {
+                    T &gmin = ( Coerce(nmin) = nmax );
+                    for(size_t i= slabs.simt.size();i>0;--i)
+                    {
+                        const Slab &slab = slabs.simt[i]; if(slab.count()<=0) continue;
+                        gmin = Min(gmin, *slab.as<T>(1) );
+                    }
+                }
             }
 
             static void Optimize(Slab                 &slab,
@@ -48,6 +57,7 @@ namespace Yttrium
             {
                 const T zero(0);
                 const T half(0.5);
+                T     & gmin = (*slab.as<T>(1)=gmap.nmax);
                 for(size_t k=slab.count();k>0;--k)
                 {
                     const HSegment       &seg = slab.hseg[k];
@@ -58,26 +68,15 @@ namespace Yttrium
                     for(unit_t i=seg.w,x=seg.x;i>0;--i,++x)
                     {
                         const T      g0  = nrm(x);
-                        T           &out = opt[x];
-                        if(g0<=zero)
-                        {
-                            out = zero; continue;
-                        }
+                        T           &out = opt[x]; if(g0<=zero) { out = zero; continue; }
+                        const Vertex v   = vec(x);
+                        const unit_t dx  = static_cast<unit_t>( floor(v.x+half) ); assert( dx>=-1 && dx <=1 );
+                        const unit_t dy  = static_cast<unit_t>( floor(v.y+half) ); assert( dy>=-1 && dy <=1 );
 
-                        const Vertex v  = vec(x);
-                        const unit_t dx = static_cast<unit_t>( floor(v.x+half) ); assert( dx>=-1 && dx <=1 );
-                        const unit_t dy = static_cast<unit_t>( floor(v.y+half) ); assert( dy>=-1 && dy <=1 );
-
-                        if( gmap.intensity[y+dy][x+dx] > g0 ) {
-                            out = zero; continue;
-                        }
-
-                        if( gmap.intensity[y-dy][x-dx] > g0 ) {
-                            out = zero; continue;
-                        }
-
+                        if( gmap.intensity[y+dy][x+dx] > g0 ) { out = zero; continue; }
+                        if( gmap.intensity[y-dy][x-dx] > g0 ) { out = zero; continue; }
                         out = g0;
-
+                        if(g0<gmin) gmin = g0;
                     }
                 }
             }
@@ -109,16 +108,19 @@ void processGrad(Slabs                  &par,
     std::cerr << "Apply " << grad.name << std::endl;
     Codec &IMG = Codecs::Location();
     gmap(par,grad,pxf);
+    std::cerr << "gmap: " << gmap.nmin << " -> " << gmap.nmax << std::endl;
     thin(par,gmap);
+    std::cerr << "thin: " << thin.nmin << " -> " << thin.nmax << std::endl;
     (std::cerr << "saving..." << std::endl).flush();
     {
-        const Color::FlexibleRamp ramp(cr,gmap.nmin,gmap.nmax);
         {
+            const Color::FlexibleRamp ramp(cr,gmap.nmin,gmap.nmax);
             const String fileName = "grad-" + grad.name + ".png";
             IMG.save(gmap.intensity,fileName, 0, par, ramp);
         }
 
         {
+            const Color::FlexibleRamp ramp(cr,thin.nmin,thin.nmax);
             const String fileName = "thin-" + grad.name + ".png";
             IMG.save(thin.intensity,fileName, 0, par, ramp);
         }
