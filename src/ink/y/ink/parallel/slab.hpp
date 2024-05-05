@@ -78,6 +78,21 @@ namespace Yttrium
                 return static_cast<const T*>(wksp);
             }
 
+            template <typename PIXMAP> inline
+            void load(PIXMAP &pxm, typename PIXMAP::ConstType &arg)
+            {
+                for(size_t j=count();j>0;--j)
+                {
+                    const HSegment            seg = hseg[j];
+                    typename PIXMAP::RowType &row = pxm[seg.y];
+                    for(unit_t i=seg.w,x=seg.x;i>0;--i,++x)
+                    {
+                        row[x] = arg;
+                    }
+                }
+            }
+
+
             //! scan min/max over the slab
             template <typename PIXMAP> inline
             void scanMinMax(const PIXMAP &pxm)

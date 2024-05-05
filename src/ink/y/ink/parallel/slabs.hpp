@@ -15,7 +15,10 @@ namespace Yttrium
         //
         //
         //! Slabs to setup tessellation for a given area
-        //
+        /**
+         - internal SIMT can be directly use
+         - or use API to use with Pixmap as first argument
+         */
         //
         //______________________________________________________________________
         class Slabs : public Writable<Slab>
@@ -36,24 +39,23 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            virtual size_t       size() const noexcept { return simt.size(); }
-            virtual Slab       & operator[](const size_t i) noexcept { return simt[i]; }
-            virtual const Slab & operator[](const size_t i) const noexcept { return simt[i]; }
-            virtual const char * callSign() const noexcept { return "Ink::Slabs"; }
+            virtual size_t       size()                   const noexcept; //!< simt.size()
+            virtual Slab       & operator[](const size_t)       noexcept; //!< access
+            virtual const Slab & operator[](const size_t) const noexcept; //!< access
+            virtual const char * callSign()               const noexcept; //!< "Ink::Slabs"
 
             //__________________________________________________________________
             //
             //! computing slabs
             //__________________________________________________________________
-            void split(const Area &area);
+            void split(const Area &area); //!< prepare slabs for a given area
 
             //__________________________________________________________________
             //
             //! proc(slab,target)
             //__________________________________________________________________
             template <typename PROC, typename PIXMAP> inline
-            void operator()(PROC &proc, PIXMAP &target )
-            {
+            void operator()(PROC &proc, PIXMAP &target ) {
                 split(target); simt(proc,target);
             }
 
@@ -62,8 +64,7 @@ namespace Yttrium
             //! proc(slab,target,arg1)
             //__________________________________________________________________
             template <typename PROC, typename PIXMAP, typename ARG1> inline
-            void operator()(PROC &proc, PIXMAP &target, ARG1 &arg1)
-            {
+            void operator()(PROC &proc, PIXMAP &target, ARG1 &arg1) {
                 split(target); simt(proc,target,arg1);
             }
             
@@ -72,8 +73,7 @@ namespace Yttrium
             //! proc(slab,target,arg1,arg2)
             //__________________________________________________________________
             template <typename PROC, typename PIXMAP, typename ARG1, typename ARG2> inline
-            void operator()(PROC &proc, PIXMAP &target, ARG1 &arg1, ARG2 &arg2)
-            {
+            void operator()(PROC &proc, PIXMAP &target, ARG1 &arg1, ARG2 &arg2) {
                 split(target); simt(proc,target,arg1,arg2);
             }
 
@@ -82,8 +82,7 @@ namespace Yttrium
             //! proc(slab,target,arg1,arg2,arg3)
             //__________________________________________________________________
             template <typename PROC, typename PIXMAP, typename ARG1, typename ARG2, typename ARG3> inline
-            void operator()(PROC &proc, PIXMAP &target, ARG1 &arg1, ARG2 &arg2, ARG3 &arg3)
-            {
+            void operator()(PROC &proc, PIXMAP &target, ARG1 &arg1, ARG2 &arg2, ARG3 &arg3) {
                 split(target); simt(proc,target,arg1,arg2,arg3);
             }
 

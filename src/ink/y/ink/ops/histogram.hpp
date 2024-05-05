@@ -11,25 +11,55 @@ namespace Yttrium
     namespace Ink
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Histogram
+        //
+        //
+        //______________________________________________________________________
         class Histogram : public Memory::ReadOnlyBuffer
         {
         public:
-            static const unsigned Bins = 256;
-            typedef size_t        Word;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const unsigned Bins = 256; //!< 8bits bins
+            typedef size_t        Word;       //!< data per bin
 
-            explicit Histogram() noexcept;
-            virtual ~Histogram() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Histogram() noexcept; //!< setup
+            virtual ~Histogram() noexcept; //!< cleanup
 
-            virtual size_t      measure() const noexcept;
-            virtual const void *ro_addr() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual size_t      measure() const noexcept; //!< internal bytes
+            virtual const void *ro_addr() const noexcept; //!< internal data
 
-            Word operator[](const uint8_t) const noexcept;
-            void ldz()                           noexcept;
-            void add(const Word * const h)       noexcept;
-            bool find(uint8_t &lower, uint8_t &upper) const noexcept;
-
-
-
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            Word operator[](const uint8_t) const noexcept;            //!< access
+            void ldz()                           noexcept;            //!< reset
+            void add(const Word * const h)       noexcept;            //!< update
+            bool find(uint8_t &lower, uint8_t &upper) const noexcept; //!< non-zero indices
+            
             //! write content to output
             void write(OutputStream &fp) const;
 
@@ -38,6 +68,9 @@ namespace Yttrium
             inline void save(const FILENAME & fileName) const {
                 OutputFile fp(fileName); write(fp);
             }
+
+            //! zeroed workpsace
+            static Word * BinsFrom(Slab &slab);
 
 
             //! load values from mask

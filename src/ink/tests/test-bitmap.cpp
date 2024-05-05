@@ -3,17 +3,6 @@
 
 using namespace Yttrium;
 
-namespace Yttrium
-{
-
-    namespace Ink
-    {
-       
-
-
-    }
-
-}
 
 #include "y/string.hpp"
 

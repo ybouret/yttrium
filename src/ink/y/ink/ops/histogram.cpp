@@ -84,6 +84,11 @@ namespace Yttrium
             }
         }
 
+        Histogram:: Word * Histogram:: BinsFrom(Slab &slab)
+        {
+            return slab.ldz().as<Word>(Bins);
+        }
+
         void Histogram:: load(Slabs &slabs, const Pixmap<uint8_t> &mask)
         {
             ldz();

@@ -14,34 +14,23 @@ namespace Yttrium
         template <typename T>
         void LoadZero(Slab &slab, Pixmap<T> &target)
         {
-            for(size_t k=slab.count();k>0;--k)
-            {
-                const HSegment               s = slab.hseg[k];
-                typename Pixmap<T>::RowType &r = target[s.y];
-                for(unit_t i=s.w,x=s.x;i>0;--i,++x) r[x] = 0;
-            }
+            const T zero(0);
+            slab.load(target,zero);
+
         }
 
         template <typename T>
         void LoadIndex(Slab &slab, Pixmap<T> &target )
         {
-            for(size_t k=slab.count();k>0;--k)
-            {
-                const HSegment               s = slab.hseg[k];
-                typename Pixmap<T>::RowType &r = target[s.y];
-                for(unit_t i=s.w,x=s.x;i>0;--i,++x) r[x] = slab.indx;
-            }
+            const T value(slab.indx);
+            slab.load(target,value);
         }
 
         template <typename T>
         void Load(Slab &slab, Pixmap<T> &target, typename Pixmap<T>::ParamType value)
         {
-            for(size_t k=slab.count();k>0;--k)
-            {
-                const HSegment               s = slab.hseg[k];
-                typename Pixmap<T>::RowType &r = target[s.y];
-                for(unit_t i=s.w,x=s.x;i>0;--i,++x) r[x] = value;
-            }
+            slab.load(target,value);
+
         }
 
 

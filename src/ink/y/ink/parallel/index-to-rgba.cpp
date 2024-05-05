@@ -16,15 +16,7 @@ namespace Yttrium
                 color.g = ran.in<uint8_t>(100,255);
                 color.b = ran.in<uint8_t>(100,255);
             }
-            for(size_t k=slab.count();k>0;--k)
-            {
-                const Ink::HSegment    s = slab.hseg[k];
-                PixRow<RGBA>          &r = target[s.y];
-                for(unit_t i=s.w,x=s.x;i>0;--i,++x)
-                {
-                    r[x] = color;
-                }
-            }
+            slab.load(target,color);
         }
 
         void IndexToRGBA:: Load(Pixmap<RGBA> &target,
