@@ -18,7 +18,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Slabs
+        class Slabs : public Writable<Slab>
         {
         public:
             //__________________________________________________________________
@@ -36,7 +36,10 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-
+            virtual size_t       size() const noexcept { return simt.size(); }
+            virtual Slab       & operator[](const size_t i) noexcept { return simt[i]; }
+            virtual const Slab & operator[](const size_t i) const noexcept { return simt[i]; }
+            virtual const char * callSign() const noexcept { return "Ink::Slabs"; }
 
             //__________________________________________________________________
             //

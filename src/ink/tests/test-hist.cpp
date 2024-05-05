@@ -35,7 +35,7 @@ Y_UTEST(hist)
     Concurrent::Topology   topo;
     Concurrent::SharedLoop crew = new Concurrent::Crew(topo);
     Slabs                  par( crew );
-    Histogram<size_t>      hist;
+    Histogram              hist;
 
     static const RGBA Grad[] = { 
         RGBA(0x00,0x00,0x00),
@@ -54,7 +54,7 @@ Y_UTEST(hist)
         {
             const uint64_t pixels = img.n;
             const uint64_t mark = WallTime::Ticks();
-            hist.make(par,img, Color::GrayScale::Pack<uint8_t,RGBA>, msk);
+            hist.load(par,img, Color::GrayScale::Pack<uint8_t,RGBA>, msk);
             const uint64_t ell  = WallTime::Ticks() - mark;
             const long double rate = (static_cast<long double>(pixels) / tmx(ell))*1e-6L;
             std::cerr << "rate=" << rate << " Mpx/s" << std::endl;
@@ -62,8 +62,8 @@ Y_UTEST(hist)
 
         const Digest    hh = Hashing::MD::Of(hfn,hist);
         std::cerr << "hash=" << hh << std::endl;
-        std::cerr << "lower=" << int(hist.lower) << std::endl;
-        std::cerr << "upper=" << int(hist.upper) << std::endl;
+        //std::cerr << "lower=" << int(hist.lower) << std::endl;
+        //std::cerr << "upper=" << int(hist.upper) << std::endl;
 
         Pixmap<RGBA>    tgt(par, Color::GrayScale::ByteTo<RGBA>, msk);
 
@@ -77,12 +77,17 @@ Y_UTEST(hist)
         IMG.Codec::save(pxf, "hist-flt.png", 0, par, Gradient);
 
         LookUpTable8 lut;
-        lut.stretch(hist.lower,hist.upper);
+        uint8_t lower=0,upper=0;
+        if(hist.find(lower,upper))
+        {
+            std::cerr << "find: " << int(lower) << " -> " << int(upper) << std::endl;
+            lut.stretch(lower,upper);
+        }
         lut(par,msk);
         pxf.ld(par, ByteToFloat,msk);
         IMG.Codec::save(pxf, "hist-nrm.png", 0, par, Gradient);
 
-        hist.save("hist.dat");
+        //hist.save("hist.dat");
         
     }
 
