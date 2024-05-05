@@ -78,6 +78,7 @@ namespace Yttrium
                 return static_cast<const T*>(wksp);
             }
 
+            //! load all active pixels of the slab
             template <typename PIXMAP> inline
             void load(PIXMAP &pxm, typename PIXMAP::ConstType &arg)
             {

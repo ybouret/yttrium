@@ -72,6 +72,9 @@ namespace Yttrium
             //! zeroed workpsace
             static Word * BinsFrom(Slab &slab);
 
+            //! collect sub-histogram stored in (active) slabs
+            void        collect(const Slabs &slabs);
+
 
             //! load values from mask
             void load(Slabs &slabs, const Pixmap<uint8_t> &mask);
@@ -91,7 +94,6 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Histogram);
             Word data[Bins];
-            void        collect(const Slabs &slabs);
             static void LoadDirectly(Slab &slab, const Pixmap<uint8_t> &mask);
 
             //! parallel function

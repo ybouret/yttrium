@@ -2,6 +2,7 @@
 
 #include "y/color/ramp/flexible.hpp"
 #include "y/color/ramp/gradation.hpp"
+#include "y/color/ramp/map8.hpp"
 
 #include "y/ink/ops/filter/prewitt.hpp"
 #include "y/ink/ops/filter/sobel.hpp"
@@ -38,12 +39,7 @@ namespace Yttrium
                 assert(intensity.hasSameSizesThan(gmap.intensity));
                 slabs.split(intensity);
                 slabs.simt(Optimize<T>,*this,gmap);
-                {
-                    for(size_t i=slabs.size();i>0;--i)
-                    {
-                        const Slab &slab = slabs[i]; if(slab.count()<=0) continue;
-                    }
-                }
+                hist.collect(slabs);
             }
 
             template <typename T>
@@ -107,10 +103,6 @@ using namespace Ink;
 #include "y/stream/libc/output.hpp"
 
 
-static inline RGBA ByteToRGBA(const uint8_t c)
-{
-    return RGBA(c,c,c);
-}
 
 static inline
 void processGrad(Slabs                  &par,
@@ -122,7 +114,7 @@ void processGrad(Slabs                  &par,
 {
     std::cerr << "Apply " << grad.name << std::endl;
     Codec &IMG = Codecs::Location();
-    Histogram( hist );
+    Histogram hist;
     gmap(par,grad,pxf);
     std::cerr << "gmap: " << gmap.nmin << " -> " << gmap.nmax << std::endl;
     thin(par,hist,gmap);
@@ -138,9 +130,16 @@ void processGrad(Slabs                  &par,
         }
 
         {
+            const Color::Map8 ramp(cr);
             const String fileName = "thin-" + grad.name + ".png";
-            IMG.save(thin.intensity,fileName, 0,par,ByteToRGBA);
+            IMG.save(thin.intensity,fileName, 0,par,ramp);
         }
+
+        {
+            const String fileName = "hist-" + grad.name + ".dat";
+            hist.save(fileName);
+        }
+
     }
 }
 
