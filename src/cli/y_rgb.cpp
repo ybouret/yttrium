@@ -23,6 +23,8 @@ typedef Color::RGB<uint8_t> RGB;
 
 Y_Program()
 {
+    const char * field[4] = { 0, "red", "blue", "green" };
+
     HashMap<String,RGB> cmap;
     if(argc>1)
     {
@@ -42,8 +44,17 @@ Y_Program()
                 word[1] = toupper(word[1]);
                 name << word;
             }
-            if(cmap.search(name)) continue;;
-            std::cerr << "name='" << name << "'" << std::endl;
+            if(cmap.search(name)) continue;
+
+            //std::cerr << "name='" << name << "'" << std::endl;
+            RGB color;
+            uint8_t * const target = static_cast<uint8_t*>(Memory::OutOfReach::Addr(&color.r))-1;
+            for(size_t i=1;i<=3;++i)
+            {
+                const String which = field[i] + ( " of " + name);
+                target[i] = GetField(words[i], which.c_str());
+            }
+            std::cerr << "'" << name << "'=" << color << std::endl;
         }
     }
 
