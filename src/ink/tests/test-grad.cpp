@@ -15,6 +15,91 @@
 #include "y/color/grayscale.hpp"
 #include "y/ink/ops/gradient/thinner.hpp"
 
+#include "y/data/small/heavy/list/coop.hpp"
+
+namespace Yttrium
+{
+    namespace Ink
+    {
+
+        typedef Small::CoopHeavyList<Coord> CoordList;
+        typedef CoordList::NodeType         CoordNode;
+        typedef CoordList::ProxyType        CoordBank;
+
+        class Edge : public Object, public CoordList
+        {
+        public:
+            typedef CxxListOf<Edge> List;
+            explicit Edge(const size_t i, const CoordBank &bank) :
+            CoordList(bank),
+            label(i),
+            next(0),
+            prev(0)
+            {
+            }
+
+            virtual ~Edge() noexcept
+            {
+            }
+
+            const size_t label;
+            Edge        *next;
+            Edge        *prev;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Edge);
+        };
+
+        class Edges : public Proxy< const Edge::List >
+        {
+        public:
+            static const Coord Delta[8];
+
+            explicit Edges() : Proxy<const Edge::List>() {}
+            virtual ~Edges() noexcept {}
+
+            static inline void ZeroLabel(Slab &slab, Pixmap<size_t> &label)
+            {
+                static const size_t zero = 0;
+                slab.load(label,zero);
+            }
+
+            void build(Slabs                 &slabs,
+                       const GradientThinner &g)
+            {
+                const Pixmap<uint8_t> &force = g.intensity;
+                Pixmap<size_t>        &label = Coerce(g.label);
+
+                edges.release();
+                slabs(ZeroLabel,label);
+                cbank->reserve(force.n);
+
+            }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Edges);
+            virtual ConstInterface & surrogate() const noexcept { return edges; }
+            Edge::List edges;
+            CoordBank  cbank;
+        };
+
+        const Coord Edges:: Delta[8] =
+        {
+            Coord( 1, 0),
+            Coord( 0, 1),
+            Coord(-1, 0),
+            Coord( 0,-1),
+            Coord( 1, 1),
+            Coord(-1, 1),
+            Coord(-1,-1),
+            Coord( 1,-1)
+        };
+
+
+
+
+    }
+}
 
 
 using namespace Yttrium;
@@ -55,6 +140,8 @@ void processGrad(Slabs                  &par,
             const String fileName = "thin-" + grad.name + ".png";
             IMG.save(thin.intensity,fileName, 0,par,ramp);
         }
+
+        Edges edges;
 
 #if 0
         {

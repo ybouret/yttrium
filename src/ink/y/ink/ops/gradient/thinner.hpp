@@ -23,7 +23,8 @@ namespace Yttrium
         enum PixelPower
         {
             Strong = 255, //!< well defined
-            Feeble = 127  //!< ill  defined
+            Feeble = 127, //!< ill  defined
+            Vanish = 0    //!< 
         };
 
         //______________________________________________________________________
@@ -80,7 +81,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             const Pixmap<uint8_t> intensity; //!< intensity/power map
-
+            const Pixmap<size_t>  label;     //!< map of edge label
+                                             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(GradientThinner);
             void finalize(Slabs &slabs, Histogram &hist);

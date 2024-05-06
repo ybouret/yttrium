@@ -7,7 +7,9 @@ namespace Yttrium
     {
         GradientThinner:: ~GradientThinner() noexcept {}
         
-        GradientThinner:: GradientThinner(const unit_t W, const unit_t H) : intensity(W,H)
+        GradientThinner:: GradientThinner(const unit_t W, const unit_t H) : 
+        intensity(W,H),
+        label(W,H)
         {
         }
 
@@ -24,7 +26,7 @@ namespace Yttrium
                 for(unit_t i=seg.w,x=seg.x;i>0;--i,++x)
                 {
                     uint8_t &pix = opt[x];
-                    if(pix<feeble)  { pix=0;      continue; }
+                    if(pix<feeble)  { pix=Vanish; continue; }
                     if(pix>=strong) { pix=Strong; continue; }
                     pix = Feeble;
                 }
