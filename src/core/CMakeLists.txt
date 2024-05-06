@@ -113,6 +113,7 @@ field/memory
 field/meta-key
 color
 color/ramp
+color/rgb
 )
 
 source_group(concurrent FILES ${quark})

@@ -18,6 +18,8 @@
 #include "y/data/small/heavy/list/coop.hpp"
 #include "y/data/small/heavy/list/bare.hpp"
 
+#include "y/color/rgb/x11.hpp"
+
 namespace Yttrium
 {
     namespace Ink
@@ -189,7 +191,7 @@ void processGrad(Slabs                  &par,
         }
 
         {
-            Color::RampColor       bwc[2] = { RGBA(0,0,0), RGBA(255,255,255) };
+            Color::RampColor       bwc[2] = { Y_Black, Y_White };
             const Color::Gradation bwg(bwc,2);
             const Color::Map8      ramp(bwg);
             const String fileName = "thin-" + grad.name + ".png";

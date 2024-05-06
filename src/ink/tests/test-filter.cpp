@@ -8,6 +8,7 @@
 #include "y/text/ascii/convert.hpp"
 #include "y/concurrent/loop/crew.hpp"
 #include "y/color/grayscale.hpp"
+#include "y/color/rgb/x11.hpp"
 
 using namespace Yttrium;
 using namespace Ink;
@@ -22,9 +23,9 @@ Y_UTEST(filter)
     Codecs &               IMG = Ink::Codecs::Std();
 
     static const RGBA Grad[] = {
-        RGBA(0x00,0x00,0xff),
-        RGBA(0x00,0x00,0x00),
-        RGBA(0xff,0x00,0x00) };
+        Y_Blue,
+        Y_Black,
+        Y_Red };
     static const Color::Gradation Gradient(Grad,sizeof(Grad)/sizeof(Grad[0]));
 
     SquareFilter<float,Crux::Prewitt3X> F3X;
