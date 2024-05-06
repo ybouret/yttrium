@@ -22,9 +22,9 @@ namespace Yttrium
         //______________________________________________________________________
         enum PixelPower
         {
-            Strong = 255, //!< well defined
-            Feeble = 127, //!< ill  defined
-            Vanish = 0    //!< 
+            StrongPixel = 255, //!< well defined
+            FeeblePixel = 127, //!< ill  defined
+            NaughtPixel = 0    //!<
         };
 
         //______________________________________________________________________

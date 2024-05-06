@@ -63,6 +63,18 @@ namespace Yttrium
         {
             return (w == a.w) && (h == a.h);
         }
+
+        bool  Area:: contains(const unit_t X, const unit_t Y) const noexcept
+        {
+            return (X>=x) && (X<=xt) && (Y>=y) && (Y<=yt);
+        }
+
+        bool Area:: contains(const Coord &p) const noexcept
+        {
+            return contains(p.x,p.y);
+        }
+
+
     }
 }
 

@@ -44,6 +44,8 @@ namespace Yttrium
             Coord lower()                        const noexcept; //!< (x,y)
             Coord upper()                        const noexcept; //!< (xt,yt)
             bool  hasSameSizesThan(const Area &) const noexcept; //!< check same w/h
+            bool  contains(const unit_t X, const unit_t Y) const noexcept;
+            bool  contains(const Coord &) const noexcept;
 
             //__________________________________________________________________
             //

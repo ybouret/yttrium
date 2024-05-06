@@ -16,6 +16,7 @@
 #include "y/ink/ops/gradient/thinner.hpp"
 
 #include "y/data/small/heavy/list/coop.hpp"
+#include "y/data/small/heavy/list/bare.hpp"
 
 namespace Yttrium
 {
@@ -25,10 +26,18 @@ namespace Yttrium
         typedef Small::CoopHeavyList<Coord> CoordList;
         typedef CoordList::NodeType         CoordNode;
         typedef CoordList::ProxyType        CoordBank;
+        typedef Small::BareHeavyList<Coord> CoordStore;
 
         class Edge : public Object, public CoordList
         {
         public:
+            enum Connectivity
+            {
+                Connect4 = 4,
+                Connect8 = 8
+            };
+            static const Coord Delta[8];
+
             typedef CxxListOf<Edge> List;
             explicit Edge(const size_t i, const CoordBank &bank) :
             CoordList(bank),
@@ -50,10 +59,9 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Edge);
         };
 
-        class Edges : public Proxy< const Edge::List >
+        class Edges : public Proxy<const Edge::List>
         {
         public:
-            static const Coord Delta[8];
 
             explicit Edges() : Proxy<const Edge::List>() {}
             virtual ~Edges() noexcept {}
@@ -64,15 +72,61 @@ namespace Yttrium
                 slab.load(label,zero);
             }
 
-            void build(Slabs                 &slabs,
-                       const GradientThinner &g)
+            void build(Slabs                    &slabs,
+                       Pixmap<size_t>           &label,
+                       const Pixmap<uint8_t>    &force,
+                       const Edge::Connectivity &conn)
             {
-                const Pixmap<uint8_t> &force = g.intensity;
-                Pixmap<size_t>        &label = Coerce(g.label);
-
+                //______________________________________________________________
+                //
+                //
+                // initializing
+                //
+                //______________________________________________________________
                 edges.release();
                 slabs(ZeroLabel,label);
-                cbank->reserve(force.n);
+                //cbank->ensure(force.n);
+
+                const unit_t h = force.h;
+                const unit_t w = force.w;
+                for(unit_t j=0;j<h;++j)
+                {
+                    PixRow<size_t>        &label_j = label[j];
+                    const PixRow<uint8_t> &force_j = force[j];
+                    for(unit_t i=0;i<w;++i)
+                    {
+                        size_t &label_ji = label_j[i];
+                        if(label_ji>0)  continue; // in another edge
+                        if(force_j[i]<=0) continue; // nothing here
+                        Edge         *edge = edges.pushTail( new Edge( edges.size+1, cbank) );
+                        CoordList     scan(cbank);
+                        const size_t  indx = edge->label;
+                        scan     << Coord(i,j);
+                        label_ji = indx;
+
+                        while(scan.size>0)
+                        {
+                            const size_t n = scan.size;
+                            for(size_t k=n;k>0;--k)
+                            {
+                                CoordNode  *node = edge->pushTail(scan.popTail());
+                                const Coord here = **node; assert(indx==label[here]);
+
+                                for(unsigned p=0;p<conn;++p)
+                                {
+                                    const Coord pos = here + Edge::Delta[p];
+                                    if(!label.contains(pos)) continue;
+                                    if(label[pos]>0) { assert(indx==label[pos]); continue; }
+                                    if(force[pos]<=0) continue;
+                                    scan       << pos;
+                                    label[pos] = indx;
+                                }
+                            }
+                        }
+                        std::cerr << "#edge=" << edge->size << std::endl;
+                    }
+                }
+                std::cerr << "#edges=" << edges.size << std::endl;
 
             }
 
@@ -83,16 +137,17 @@ namespace Yttrium
             CoordBank  cbank;
         };
 
-        const Coord Edges:: Delta[8] =
+        const Coord Edge:: Delta[8] =
         {
             Coord( 1, 0),
             Coord( 0, 1),
             Coord(-1, 0),
             Coord( 0,-1),
-            Coord( 1, 1),
-            Coord(-1, 1),
-            Coord(-1,-1),
-            Coord( 1,-1)
+
+            Coord( 1, 1), // +x, +y
+            Coord(-1, 1), // -x, +y
+            Coord(-1,-1), // -x, -y
+            Coord( 1,-1)  // +x, -y
         };
 
 
@@ -141,7 +196,10 @@ void processGrad(Slabs                  &par,
             IMG.save(thin.intensity,fileName, 0,par,ramp);
         }
 
+        std::cerr << "building edges..." << std::endl;
         Edges edges;
+        edges.build(par,Coerce(thin.label), thin.intensity, Edge::Connect8);
+
 
 #if 0
         {
@@ -201,6 +259,7 @@ Y_UTEST(grad)
         GradientThinner        thin(img.w,img.h);
 
         processGrad(par,gmap,Prewitt3,thin,pxf,cr);
+        return 0;
         processGrad(par,gmap,Prewitt5,thin,pxf,cr);
         processGrad(par,gmap,Prewitt7,thin,pxf,cr);
         processGrad(par,gmap,Sobel3,thin,pxf,cr);

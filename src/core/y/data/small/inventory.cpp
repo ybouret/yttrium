@@ -55,6 +55,15 @@ namespace Yttrium
             }
         }
 
+        void Inventory:: ensure(size_t n)
+        {
+            if(n>stowage())
+            {
+                reserve(n-stowage());
+            }
+            assert(stowage()>=n);
+        }
+
     }
 
 }

@@ -26,9 +26,9 @@ namespace Yttrium
                 for(unit_t i=seg.w,x=seg.x;i>0;--i,++x)
                 {
                     uint8_t &pix = opt[x];
-                    if(pix<feeble)  { pix=Vanish; continue; }
-                    if(pix>=strong) { pix=Strong; continue; }
-                    pix = Feeble;
+                    if(pix<feeble)  { pix=NaughtPixel; continue; }
+                    if(pix>=strong) { pix=StrongPixel; continue; }
+                    pix = FeeblePixel;
                 }
             }
         }
