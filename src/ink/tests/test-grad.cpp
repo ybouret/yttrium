@@ -65,7 +65,7 @@ namespace Yttrium
         {
         public:
 
-            explicit Edges() : Proxy<const Edge::List>() {}
+            explicit Edges() : Proxy<const Edge::List>(), edges(), cbank() {}
             virtual ~Edges() noexcept {}
 
             static inline void ZeroLabel(Slab &slab, Pixmap<size_t> &label)
