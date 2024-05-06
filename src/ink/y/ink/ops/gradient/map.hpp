@@ -68,7 +68,6 @@ namespace Yttrium
                 slabs.split(direction);
                 slabs.simt(Apply<U>,*this,grad,source);
                 slabs.getMinMax(Coerce(nmin), Coerce(nmax));
-                //slabs.simt(Optimize,*this);
             }
 
 

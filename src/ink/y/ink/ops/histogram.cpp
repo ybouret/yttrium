@@ -114,30 +114,52 @@ namespace Yttrium
                 }
             }
         }
-
-#if 0
-
-        namespace Crux
+        
+        long double Histogram:: computeWeightedVariance(const unsigned lower, const unsigned upper) const
         {
-            Histogram:: ~Histogram() noexcept
+            size_t num = 0;
+            size_t sum = 0;
+            for(size_t i=lower;i<upper;++i)
             {
+                const size_t n = data[i];
+                num += n;
+                sum += n * i;
             }
-
-            Histogram:: Histogram() noexcept : lower(0), upper(0)
+            if(num>0)
             {
+                const long double proba    = static_cast<long double>(num)/total;
+                const long double average  = static_cast<long double>(sum)/num;
+                long double       variance = 0;
+                for(size_t i=lower;i<upper;++i)
+                {
+                    const long double n = static_cast<long double>(data[i]);
+                    const long double d = static_cast<long double>(i) - average;
+                    variance += n * d*d;
+                }
+                variance /= num;
+                return proba * variance;
             }
-            
-            void Histogram:: ldz_(void *const blocks, const size_t blockSize) const noexcept
+            else
             {
-                assert(0!=blocks);
-                assert(blockSize>0);
-                memset(blocks,0,blockSize*BINS);
-                Coerce(lower) = 0;
-                Coerce(upper) = BINS-1;
+                return 0;
             }
-            
         }
-#endif
+
+        long double Histogram:: fetchVarianceSeparation(const uint8_t t) const {
+            return computeWeightedVariance(0,t) + computeWeightedVariance(t,255);
+        }
+
+        uint8_t Histogram:: threshold() const
+        {
+            long double sprev = fetchVarianceSeparation(0);
+            for(unsigned i=1;i<=255;++i)
+            {
+                const long double scurr = fetchVarianceSeparation(i);
+                if(scurr>=sprev) return i-1;
+                sprev=scurr;
+            }
+            return 255;
+        }
 
     }
 

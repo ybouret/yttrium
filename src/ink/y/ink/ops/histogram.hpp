@@ -91,52 +91,8 @@ namespace Yttrium
                 collect(slabs);
             }
 
-            long double compute(const unsigned lower, const unsigned upper) const
-            {
-                size_t num = 0;
-                size_t sum = 0;
-                for(size_t i=lower;i<upper;++i)
-                {
-                    const size_t n = data[i];
-                    num += n;
-                    sum += n * i;
-                }
-                if(num>0)
-                {
-                    const long double proba    = static_cast<long double>(num)/total;
-                    const long double average  = static_cast<long double>(sum)/num;
-                    long double       variance = 0;
-                    for(size_t i=lower;i<upper;++i)
-                    {
-                        const long double n = static_cast<long double>(data[i]);
-                        const long double d = static_cast<long double>(i) - average;
-                        variance += n * d*d;
-                    }
-                    variance /= num;
-                    return proba * variance;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
 
-            long double separation(const uint8_t t) const {
-                return compute(0,t) + compute(t,255);
-            }
-
-            uint8_t threshold() const
-            {
-                long double sprev = separation(0);
-                for(unsigned i=1;i<=255;++i)
-                {
-                    const long double scurr = separation(i);
-                    if(scurr>=sprev) return i-1;
-                    sprev=scurr;
-                }
-                return 255;
-            }
-
+            uint8_t     threshold() const; //!< minimal separation
 
             //__________________________________________________________________
             //
@@ -144,7 +100,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const size_t total;
+            const size_t total; //!< up to date population
 
 
 
@@ -173,6 +129,9 @@ namespace Yttrium
                     }
                 }
             }
+
+            long double computeWeightedVariance(const unsigned lower, const unsigned upper) const;
+            long double fetchVarianceSeparation(const uint8_t t) const ;
         };
         
 
