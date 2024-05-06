@@ -19,6 +19,9 @@
 #include "y/data/small/heavy/list/bare.hpp"
 
 #include "y/color/rgb/x11.hpp"
+#include "y/color/ramp/map-index.hpp"
+
+
 
 namespace Yttrium
 {
@@ -130,6 +133,8 @@ namespace Yttrium
                 }
                 std::cerr << "#edges=" << edges.size << std::endl;
 
+
+
             }
 
         private:
@@ -201,7 +206,12 @@ void processGrad(Slabs                  &par,
         std::cerr << "building edges..." << std::endl;
         Edges edges;
         edges.build(par,Coerce(thin.label), thin.intensity, Edge::Connect8);
-
+        {
+            Color::RampColor       ecr[] = { Y_White, Y_Blue, Y_Red, Y_Green };
+            const Color::MapIndex  icr(ecr,sizeof(ecr)/sizeof(ecr[0]));
+            const String fileName = "edge-" + grad.name + ".png";
+            IMG.save(thin.label,fileName, 0,par,icr);
+        }
 
 #if 0
         {
