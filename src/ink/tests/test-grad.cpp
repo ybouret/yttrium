@@ -20,6 +20,12 @@ namespace Yttrium
 {
     namespace Ink
     {
+        enum PixelPower
+        {
+            Strong = 255,
+            Feeble = 127
+        };
+
         class GradientThinner
         {
         public:
@@ -40,6 +46,29 @@ namespace Yttrium
                 slabs.split(intensity);
                 slabs.simt(Optimize<T>,*this,gmap);
                 hist.collect(slabs);
+                const uint8_t strong = hist.threshold();
+                const uint8_t feeble = strong >> 1;
+                slabs(Separate,Coerce(intensity),feeble,strong);
+            }
+
+            static void Separate(Slab            &slab,
+                                 Pixmap<uint8_t> &grad,
+                                 const uint8_t    feeble,
+                                 const uint8_t    strong)
+            {
+                for(size_t k=slab.count();k>0;--k)
+                {
+                    const HSegment        seg = slab.hseg[k];
+                    PixRow<uint8_t>      &opt = grad[seg.y];
+                    for(unit_t i=seg.w,x=seg.x;i>0;--i,++x)
+                    {
+                        uint8_t &pix = opt[x];
+                        if(pix<feeble)  { pix=0;      continue; }
+                        if(pix>=strong) { pix=Strong; continue; }
+                        pix = Feeble;
+                    }
+
+                }
             }
 
             template <typename T>
@@ -130,15 +159,30 @@ void processGrad(Slabs                  &par,
         }
 
         {
-            const Color::Map8 ramp(cr);
+            Color::RampColor       bwc[2] = { RGBA(0,0,0), RGBA(255,255,255) };
+            const Color::Gradation bwg(bwc,2);
+            const Color::Map8      ramp(bwg);
             const String fileName = "thin-" + grad.name + ".png";
             IMG.save(thin.intensity,fileName, 0,par,ramp);
         }
 
+#if 0
         {
             const String fileName = "hist-" + grad.name + ".dat";
             hist.save(fileName);
         }
+
+        {
+            const String fileName = "sep-" + grad.name + ".dat";
+            OutputFile fp(fileName);
+            for(unsigned i=0;i<256;++i)
+            {
+                fp("%g %g\n", double(i), double( hist.separation(i)));
+            }
+            const uint8_t t = hist.threshold();
+            std::cerr << "threshold= " << int(t) << std::endl;
+        }
+#endif
 
     }
 }

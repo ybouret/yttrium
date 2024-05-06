@@ -8,13 +8,14 @@ namespace Yttrium
 
         Histogram:: ~Histogram() noexcept {}
         
-        Histogram:: Histogram() noexcept : data()
+        Histogram:: Histogram() noexcept :total(0),  data()
         {
             ldz();
         }
 
         void Histogram:: ldz() noexcept {
             memset(data,0,sizeof(data));
+            Coerce(total) = 0;
         }
 
         Histogram::Word Histogram:: operator[](const uint8_t i) const noexcept
@@ -27,7 +28,9 @@ namespace Yttrium
             assert(0!=h);
             for(unsigned i=0;i<Bins;++i)
             {
-                data[i] += h[i];
+                const size_t delta = h[i];
+                data[i] += delta;
+                Coerce(total) += delta;
             }
         }
 
