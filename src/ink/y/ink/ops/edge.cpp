@@ -16,6 +16,18 @@ namespace Yttrium
         {
         }
 
+        const Coord Edge:: Delta[8] =
+        {
+            Coord( 1, 0),
+            Coord( 0, 1),
+            Coord(-1, 0),
+            Coord( 0,-1),
+
+            Coord( 1, 1), // +x, +y
+            Coord(-1, 1), // -x, +y
+            Coord(-1,-1), // -x, -y
+            Coord( 1,-1)  // +x, -y
+        };
     }
 
 }
