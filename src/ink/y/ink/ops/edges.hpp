@@ -33,6 +33,7 @@ namespace Yttrium
             virtual ConstInterface & surrogate() const noexcept { return edges; }
             Edge::List edges;
             CoordBank  cbank;
+            static Edge *RemoveEdge(Edge *, Labels &) noexcept;
         };
 
        

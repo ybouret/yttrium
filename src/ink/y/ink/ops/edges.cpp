@@ -24,8 +24,20 @@ namespace Yttrium
             return Sign::Of(rhs->size,lhs->size);
         }
 
+
+        Edge * Edges:: RemoveEdge(Edge * const edge, Labels &label) noexcept
+        {
+            assert(0!=edge);
+            for(const CoordNode *node = edge->head; node; node=node->next)
+            {
+                const Coord pos = **node;
+                label[pos] = 0;
+            }
+            return edge;
+        }
+
         void Edges:: operator()(Slabs                    &slabs,
-                                Pixmap<size_t>           &label,
+                                Labels                   &label,
                                 const Pixmap<uint8_t>    &force,
                                 const Edge::Connectivity conn)
         {
@@ -116,12 +128,7 @@ namespace Yttrium
                     //std::cerr << "#edge=" << edge->size << " / ripe=" << ripe << std::endl;
                     if(!ripe)
                     {
-                        for(const CoordNode *node = edge->head; node; node=node->next)
-                        {
-                            const Coord pos = **node;
-                            label[pos] = 0;
-                        }
-                        delete edges.popTail();
+                        delete RemoveEdge( edges.popTail(), label);
                     }
                 }
             }
@@ -134,6 +141,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             MergeSort::Call(edges,ByDecreasingSize);
+            //while(edges.tail && edges.tail->size <= 1) delete RemoveEdge( edges.popTail(), label);
             std::cerr << "#edges=" << edges.size << std::endl;
             if(edges.size)
             {

@@ -32,7 +32,7 @@ namespace Yttrium
             
             explicit Edge(const size_t, const CoordBank &);
             virtual ~Edge() noexcept;
-
+            
 
             const size_t label;
             Edge        *next;
