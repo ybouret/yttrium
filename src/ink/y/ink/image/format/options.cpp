@@ -141,6 +141,24 @@ namespace Yttrium
             return query(_);
         }
 
+        String & FormatOptions:: fetch(const String &key)
+        {
+            assert(0!=code);
+            (void) code->insert(key,code->empty);
+            return *(code->search(key));
+        }
+
+        String & FormatOptions:: fetch(const char * const key)
+        {
+            const String _(key); return fetch(_);
+        }
+
+
+        String & FormatOptions:: fetch(const char key)
+        {
+            const String _(key); return fetch(_);
+        }
+
         const String & FormatOptions:: empty() const noexcept
         {
             assert(0!=code);

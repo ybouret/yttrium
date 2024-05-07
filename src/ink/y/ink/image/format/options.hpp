@@ -47,6 +47,9 @@ namespace Yttrium
             const String * query(const String &) const noexcept; //!< query
             const String * query(const char   *) const;          //!< query
             const String * query(const char    ) const;          //!< query
+            String       & fetch(const String &key);             //!< create new empty / recall
+            String       & fetch(const char *);                  //!< wrapper
+            String       & fetch(const char  );                  //!< wrapper
 
             //! return value/empty
             template <typename KEY> inline
@@ -55,6 +58,14 @@ namespace Yttrium
                 const String *ps = query(key);
                 return ps ? *ps : empty();
             }
+
+            //! recall or on-the-fly create
+            template <typename KEY> inline
+            String & operator[](const KEY &key)
+            {
+                return fetch(key);
+            }
+
 
             //__________________________________________________________________
             //
