@@ -63,6 +63,7 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+            static String LowerCaseExt(const String &path);
 
             //! matching the extension of path
             bool matches(const String &path);

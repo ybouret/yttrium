@@ -7,10 +7,11 @@ Y_UTEST_DECL(16)
     Y_UTEST(tess);
 
     Y_UTEST(format_options);
-    Y_UTEST(format_bmp);
-    Y_UTEST(format_jpeg);
-    Y_UTEST(format_png);
-    Y_UTEST(format_tiff);
+    Y_UTEST(bmp);
+    Y_UTEST(jpeg);
+    Y_UTEST(png);
+    Y_UTEST(tiff);
+    Y_UTEST(pnm);
     Y_UTEST(image);
     Y_UTEST(hist);
     Y_UTEST(blur);

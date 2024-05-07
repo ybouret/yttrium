@@ -10,7 +10,7 @@ using namespace Yttrium;
 
 
 
-Y_UTEST(format_bmp)
+Y_UTEST(bmp)
 {
 
     Concurrent::Topology   topo;

@@ -27,6 +27,22 @@ namespace Yttrium
             return os << '"' << fmt.key() << '"';
         }
 
+        String Format:: LowerCaseExt(const String &path)
+        {
+            String res;
+            const char * ext = VFS::Extension(path);
+            if(!ext++) return res;
+
+            while( '\0' != *ext )
+            {
+                res += tolower(*ext);
+                ++ext;
+            }
+
+            return res;
+        }
+
+
 
 
     }

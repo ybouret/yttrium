@@ -1,6 +1,6 @@
 
 #include "y/ink/image/format/pnm.hpp"
-#include "y/text/ops.hpp"
+#include "y/string/boolean.hpp"
 
 namespace Yttrium
 {
@@ -13,22 +13,27 @@ namespace Yttrium
 
         static   bool QueryBinary(const FormatOptions * const options)
         {
-            const String *bin = FormatOptions::Query(options,"binary");
-            if(0==bin) return false;
-            String res = *bin;
-            TextOps::ToLower(&res[1], res.size());
-            if( "1" == res || "on" == res || "true" == res) return true;
-
-            return false;
+            static const char    name[] = "binary";
+            const String * const args = FormatOptions::Query(options,"binary");
+            if(0==args) return false;
+            return StringToBoolean::Get(*args,name);
         }
 
         void  FormatPNM:: save(const Image         &image,
                                const String        &fileName,
                                const FormatOptions *options) const
         {
+            const bool   binary = QueryBinary(options);
+            const String ext    = LowerCaseExt(fileName);
+            std::cerr << "ext=" << ext << " / binary=" << binary << std::endl;
 
         }
 
+        Codec::Image FormatPNM:: load(const String        &fileName,
+                                      const FormatOptions *options) const
+        {
+            return Image(1,1);
+        }
     }
 }
 

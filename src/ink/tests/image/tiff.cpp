@@ -11,7 +11,7 @@ using namespace Yttrium;
 
 
 
-Y_UTEST(format_tiff)
+Y_UTEST(tiff)
 {
 
     Concurrent::Topology   topo;

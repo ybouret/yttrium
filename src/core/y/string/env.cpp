@@ -1,7 +1,6 @@
 #include "y/string/env.hpp"
 #include "y/lockable.hpp"
-#include "y/text/ops.hpp"
-#include "y/system/exception.hpp"
+#include "y/string/boolean.hpp"
 
 #if defined(Y_BSD)
 #include <cstdlib>
@@ -48,7 +47,9 @@ namespace Yttrium
 
         String value;
         if(!Get(value,name)) return false;
+        return StringToBoolean:: Get(value, name.c_str() );
 
+#if 0
         TextOps::ToLower(&value[1], value.size());
 
         // true ?
@@ -78,7 +79,7 @@ namespace Yttrium
         }
 
         throw Specific::Exception("Environment::Flag","invalid value = '%s'", value.c_str());
-
+#endif
     }
 
 
