@@ -32,6 +32,13 @@ namespace Yttrium
                 fp("%3u",gs);
             }
 
+            static inline void ToPPM(OutputStream       &fp,
+                                     const RGBA         &c)
+            {
+                fp("%3u %3u %3u",c.r, c.g, c.b);
+            }
+
+
             template <typename PROC>
             static inline void WriteRGBA(OutputStream       &fp,
                                          const Codec::Image &image,
@@ -73,6 +80,20 @@ namespace Yttrium
                 WriteRGBA(fp,image,ToPGM);
             }
 
+            static inline
+            void SaveP3(const Codec::Image &image,
+                        const String       &filename,
+                        const FormatOptions *options)
+            {
+                OutputFile fp(filename);
+                fp << "P3\n";
+                EmitWxH(fp,image);
+                fp << "255\n";
+                WriteRGBA(fp,image,ToPPM);
+            }
+
+
+
 
 
         }
@@ -92,7 +113,7 @@ namespace Yttrium
 
         FormatPNM:: Kind FormatPNM:: GetKind(const String &lowerCaseExt, const bool binary)
         {
-            if("ppm" == lowerCaseExt) return binary ? P4 : P1;
+            if("pbm" == lowerCaseExt) return binary ? P4 : P1;
             if("pgm" == lowerCaseExt) return binary ? P5 : P2;
             if("ppm" == lowerCaseExt) return binary ? P6 : P3;
             throw Specific::Exception(CallSign, "invalid extension '%s'", lowerCaseExt.c_str());
@@ -113,13 +134,15 @@ namespace Yttrium
             {
                     Y_PNM_SAVE(P1);
                     Y_PNM_SAVE(P2);
+                    Y_PNM_SAVE(P3);
                 default: throw Specific::Exception(CallSign,"%s not implemented yet", ext.c_str());
             }
         }
 
         Codec::Image FormatPNM:: load(const String        &fileName,
-                                      const FormatOptions *options) const
+                                      const FormatOptions * ) const
         {
+            throw Specific::Exception(CallSign,"load is not implemented yet for '%s'", fileName.c_str());
             return Image(1,1);
         }
     }
