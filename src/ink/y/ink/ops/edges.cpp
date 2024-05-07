@@ -38,7 +38,7 @@ namespace Yttrium
 
         void Edges:: operator()(Slabs                    &slabs,
                                 Labels                   &label,
-                                const Pixmap<uint8_t>    &force,
+                                Pixels                   &force,
                                 const Edge::Connectivity conn)
         {
             //__________________________________________________________________

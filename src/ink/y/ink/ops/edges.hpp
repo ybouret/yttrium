@@ -18,14 +18,14 @@ namespace Yttrium
         public:
             typedef Small::BareHeavyList<Coord> CoordStore;
             typedef Pixmap<size_t>              Labels;
-
+            typedef Pixmap<uint8_t>             Pixels;
             explicit Edges() noexcept;
             virtual ~Edges() noexcept;
 
            
             void operator()(Slabs                    &slabs,
                             Labels                   &labels,
-                            const Pixmap<uint8_t>    &force,
+                            Pixels                   &force,
                             const Edge::Connectivity  conn);
 
         private:

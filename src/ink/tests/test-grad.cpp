@@ -66,7 +66,7 @@ void processGrad(Slabs                  &par,
         std::cerr << "building edges..." << std::endl;
         Edges          edges;
         Pixmap<size_t> label(pxf.w,pxf.h);
-        edges(par,label, thin.force, Edge::Connect8);
+        edges(par,label, Coerce(thin.force), Edge::Connect8);
         {
             Color::RampColor       ecr[] = { Y_Black, Y_White, Y_Blue, Y_Red, Y_Green, Y_Magenta, Y_Cyan};
             const Color::MapIndex  icr(ecr,sizeof(ecr)/sizeof(ecr[0]));
