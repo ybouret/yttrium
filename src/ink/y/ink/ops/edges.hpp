@@ -22,7 +22,6 @@ namespace Yttrium
             explicit Edges() noexcept;
             virtual ~Edges() noexcept;
 
-           
             void operator()(Slabs                    &slabs,
                             Labels                   &labels,
                             Pixels                   &force,
@@ -33,7 +32,7 @@ namespace Yttrium
             virtual ConstInterface & surrogate() const noexcept { return edges; }
             Edge::List edges;
             CoordBank  cbank;
-            static Edge *RemoveEdge(Edge *, Labels &) noexcept;
+            static Edge *RemoveEdge(Edge *, Labels &, Pixels &) noexcept;
         };
 
        

@@ -5,6 +5,7 @@
 
 #include "y/ink/ops/gradient/map.hpp"
 #include "y/ink/ops/histogram.hpp"
+#include "y/ink/ops/gradient/pixel-force.hpp"
 
 namespace Yttrium
 {
@@ -12,20 +13,7 @@ namespace Yttrium
     namespace Ink
     {
 
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! Pixel power from dual threshold
-        //
-        //
-        //______________________________________________________________________
-        enum PixelPower
-        {
-            StrongPixel = 255, //!< well defined
-            FeeblePixel = 127, //!< ill  defined
-            NaughtPixel = 0    //!<
-        };
+       
 
         //______________________________________________________________________
         //

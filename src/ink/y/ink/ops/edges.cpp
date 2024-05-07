@@ -1,6 +1,7 @@
 
 #include "y/ink/ops/edges.hpp"
 #include "y/sort/merge.hpp"
+#include "y/ink/ops/gradient/pixel-force.hpp"
 
 namespace Yttrium
 {
@@ -25,13 +26,16 @@ namespace Yttrium
         }
 
 
-        Edge * Edges:: RemoveEdge(Edge * const edge, Labels &label) noexcept
+        Edge * Edges:: RemoveEdge(Edge * const edge, 
+                                  Labels      &label,
+                                  Pixels      &pixel) noexcept
         {
             assert(0!=edge);
             for(const CoordNode *node = edge->head; node; node=node->next)
             {
                 const Coord pos = **node;
                 label[pos] = 0;
+                pixel[pos] = 0;
             }
             return edge;
         }
@@ -67,8 +71,8 @@ namespace Yttrium
                 // loop over each row
                 //
                 //______________________________________________________________
-                PixRow<size_t>        &label_j = label[j];
-                const PixRow<uint8_t> &force_j = force[j];
+                Labels::RowType  &label_j = label[j];
+                Pixels::RowType  &force_j = force[j];
                 for(unit_t i=0;i<w;++i)
                 {
                     //__________________________________________________________
@@ -77,8 +81,8 @@ namespace Yttrium
                     // probe current pixel status
                     //
                     //__________________________________________________________
-                    size_t &      label_ji = label_j[i]; if(label_ji>0)    { assert(label_ji<=edges.size); continue; } // in another edge
-                    const uint8_t force_ij = force_j[i]; if(force_j[i]<=0) continue;                                   // nothing here
+                    size_t  & label_ji = label_j[i]; if(label_ji>0)    { assert(label_ji<=edges.size); continue; } // in another edge
+                    uint8_t & force_ij = force_j[i]; if(force_j[i]<=NaughtPixel) continue;                                   // nothing here
 
                     //__________________________________________________________
                     //
@@ -98,7 +102,7 @@ namespace Yttrium
                     //__________________________________________________________
                     scan     << Coord(i,j);
                     label_ji = indx;
-                    ripe     = (force_ij >= 255);
+                    ripe     = (force_ij >= StrongPixel);
 
                     //__________________________________________________________
                     //
@@ -126,14 +130,21 @@ namespace Yttrium
                         }
                     }
                     //std::cerr << "#edge=" << edge->size << " / ripe=" << ripe << std::endl;
-                    if(!ripe)
+                    if(ripe)
                     {
-                        delete RemoveEdge( edges.popTail(), label);
+                        for(const CoordNode *node = edge->head; node; node=node->next)
+                        {
+                            const Coord pos = **node;
+                            force[pos] = StrongPixel;;
+                        }
+                    }
+                    else
+                    {
+                        delete RemoveEdge( edges.popTail(), label, force);
                     }
                 }
             }
-            //std::cerr << "#edges=" << edges.size << std::endl;
-
+            
             //__________________________________________________________________
             //
             //
