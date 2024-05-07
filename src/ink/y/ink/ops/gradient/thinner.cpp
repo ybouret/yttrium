@@ -8,8 +8,7 @@ namespace Yttrium
         GradientThinner:: ~GradientThinner() noexcept {}
         
         GradientThinner:: GradientThinner(const unit_t W, const unit_t H) : 
-        intensity(W,H),
-        label(W,H)
+        force(W,H)
         {
         }
 
@@ -39,7 +38,7 @@ namespace Yttrium
             hist.collect(slabs);
             const uint8_t strong = hist.threshold();
             const uint8_t feeble = strong >> 1;
-            slabs(Separate,Coerce(intensity),feeble,strong);
+            slabs(Separate,Coerce(force),feeble,strong);
         }
 
     }

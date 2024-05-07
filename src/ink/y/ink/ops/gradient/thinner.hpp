@@ -66,8 +66,8 @@ namespace Yttrium
                                    Histogram            &hist,
                                    const GradientMap<T> &gmap)
             {
-                assert(intensity.hasSameSizesThan(gmap.intensity));
-                slabs.split(intensity);
+                assert(force.hasSameSizesThan(gmap.intensity));
+                slabs.split(force);
                 slabs.simt(Optimize<T>,*this,gmap);
                 finalize(slabs,hist);
             }
@@ -80,9 +80,8 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const Pixmap<uint8_t> intensity; //!< intensity/power map
-            const Pixmap<size_t>  label;     //!< map of edge label
-                                             
+            const Pixmap<uint8_t> force; //!< pixel force
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(GradientThinner);
             void finalize(Slabs &slabs, Histogram &hist);
@@ -107,7 +106,7 @@ namespace Yttrium
                 Histogram::Word * const H = Histogram::BinsFrom(slab);
                 if(gmax<=zero)
                 {
-                    slab.load( Coerce(self.intensity), zero );
+                    slab.load( Coerce(self.force), zero );
                 }
                 else
                 {
@@ -118,7 +117,7 @@ namespace Yttrium
                         const unit_t          y   = seg.y;
                         const PixRow<Vertex> &vec = gmap.direction(y);
                         const PixRow<T>      &nrm = gmap.intensity(y);
-                        PixRow<uint8_t>      &opt = Coerce(self.intensity(y));
+                        PixRow<uint8_t>      &opt = Coerce(self.force(y));
                         for(unit_t i=seg.w,x=seg.x;i>0;--i,++x)
                         {
                             const T      g0  = nrm(x);

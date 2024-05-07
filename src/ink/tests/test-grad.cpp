@@ -14,8 +14,8 @@
 #include "y/concurrent/loop/crew.hpp"
 #include "y/color/grayscale.hpp"
 #include "y/ink/ops/gradient/thinner.hpp"
+#include "y/ink/ops/edge.hpp"
 
-#include "y/data/small/heavy/list/coop.hpp"
 #include "y/data/small/heavy/list/bare.hpp"
 
 #include "y/color/rgb/x11.hpp"
@@ -28,41 +28,9 @@ namespace Yttrium
     namespace Ink
     {
 
-        typedef Small::CoopHeavyList<Coord> CoordList;
-        typedef CoordList::NodeType         CoordNode;
-        typedef CoordList::ProxyType        CoordBank;
+       
+
         typedef Small::BareHeavyList<Coord> CoordStore;
-
-        class Edge : public Object, public CoordList
-        {
-        public:
-            enum Connectivity
-            {
-                Connect4 = 4,
-                Connect8 = 8
-            };
-            static const Coord Delta[8];
-
-            typedef CxxListOf<Edge> List;
-            explicit Edge(const size_t i, const CoordBank &bank) :
-            CoordList(bank),
-            label(i),
-            next(0),
-            prev(0)
-            {
-            }
-
-            virtual ~Edge() noexcept
-            {
-            }
-
-            const size_t label;
-            Edge        *next;
-            Edge        *prev;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Edge);
-        };
 
         class Edges : public Proxy<const Edge::List>
         {
@@ -200,17 +168,18 @@ void processGrad(Slabs                  &par,
             const Color::Gradation bwg(bwc,2);
             const Color::Map8      ramp(bwg);
             const String fileName = "thin-" + grad.name + ".png";
-            IMG.save(thin.intensity,fileName, 0,par,ramp);
+            IMG.save(thin.force,fileName, 0,par,ramp);
         }
 
         std::cerr << "building edges..." << std::endl;
-        Edges edges;
-        edges.build(par,Coerce(thin.label), thin.intensity, Edge::Connect8);
+        Edges          edges;
+        Pixmap<size_t> label(pxf.w,pxf.h);
+        edges.build(par,label, thin.force, Edge::Connect8);
         {
             Color::RampColor       ecr[] = { Y_White, Y_Blue, Y_Red, Y_Green };
             const Color::MapIndex  icr(ecr,sizeof(ecr)/sizeof(ecr[0]));
             const String fileName = "edge-" + grad.name + ".png";
-            IMG.save(thin.label,fileName, 0,par,icr);
+            IMG.save(label,fileName, 0,par,icr);
         }
 
 #if 0
