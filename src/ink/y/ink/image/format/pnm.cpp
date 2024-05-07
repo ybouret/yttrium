@@ -36,8 +36,6 @@ namespace Yttrium
             const bool   binary = QueryBinary(options);
             const String ext    = LowerCaseExt(fileName); std::cerr << "ext=" << ext << " / binary=" << binary << std::endl;
             const Kind   kind   = GetKind(ext,binary);
-            
-
         }
 
         Codec::Image FormatPNM:: load(const String        &fileName,
