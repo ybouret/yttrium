@@ -45,6 +45,19 @@ void processGrad(Slabs                  &par,
     thin(par,hist,gmap);
     (std::cerr << "saving..." << std::endl).flush();
 
+    {
+        const String fileName = "hist-" + grad.name + ".dat";
+        hist.save(fileName);
+    }
+
+    {
+        const String fileName = "vsep-" + grad.name + ".dat";
+        OutputFile fp(fileName);
+        for(unsigned i=0;i<256;++i)
+        {
+            fp("%u %g\n", i, double( hist.fetchVarianceSeparation(i)));
+        }
+    }
 
 
     {

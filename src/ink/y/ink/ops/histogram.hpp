@@ -131,6 +131,7 @@ namespace Yttrium
             }
 
             long double computeWeightedVariance(const unsigned lower, const unsigned upper) const;
+        public:
             long double fetchVarianceSeparation(const uint8_t t) const ;
         };
         

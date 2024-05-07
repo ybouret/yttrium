@@ -38,6 +38,7 @@ namespace Yttrium
             hist.collect(slabs);
             const uint8_t strong = hist.threshold();
             const uint8_t feeble = strong >> 1;
+            std::cerr << "Strong@" << int(strong) << ", Feeble@" << int(feeble) << std::endl;
             slabs(Separate,Coerce(force),feeble,strong);
         }
 
