@@ -13,30 +13,61 @@ namespace Yttrium
     namespace Ink
     {
 
-        typedef Small::CoopHeavyList<Coord> CoordList;
-        typedef CoordList::NodeType         CoordNode;
-        typedef CoordList::ProxyType        CoordBank;
+        //______________________________________________________________________
+        //
+        //
+        // Aliases
+        //
+        //______________________________________________________________________
+        typedef Small::CoopHeavyList<Coord> CoordList; //!< coop list of coordinates
+        typedef CoordList::NodeType         CoordNode; //!< alias
+        typedef CoordList::ProxyType        CoordBank; //!< shared bank of coordinate
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Edge is a list of coordinates
+        //
+        //
+        //______________________________________________________________________
         class Edge : public Object, public CoordList
         {
         public:
-            typedef CxxListOf<Edge> List;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef CxxListOf<Edge> List; //!< alias
 
+            //! building connectivity
             enum Connectivity
             {
-                Connect4 = 4,
-                Connect8 = 8
+                Connect4 = 4, //!< four neighbours
+                Connect8 = 8  //!< eight neighbours
             };
-            static const Coord Delta[8];
+            static const Coord Delta[8]; //!< directions lookup
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Edge(const size_t, const CoordBank &); //!< setup with label and bank
+            virtual ~Edge() noexcept;                       //!< cleanup
             
-            explicit Edge(const size_t, const CoordBank &);
-            virtual ~Edge() noexcept;
-            
-
-            const size_t label;
-            Edge        *next;
-            Edge        *prev;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const size_t label; //!< label>0
+            Edge        *next;  //!< for list
+            Edge        *prev;  //!< for list
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Edge);

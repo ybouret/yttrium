@@ -31,16 +31,18 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const char * const CallSign; //!< "BMP"
+           
+            //! supported Kind of PNM
             enum Kind
             {
-                P1,
-                P2,
-                P3,
-                P4,
-                P5,
-                P6
+                P1, //!< b/w, text
+                P2, //!< g/s, text
+                P3, //!< rgb, test
+                P4, //!< todo
+                P5, //!< todo
+                P6  //!< todo
             };
-            static Kind GetKind(const String &lowerCaseExt, const bool binary);
+            static Kind GetKind(const String &lowerCaseExt, const bool binary); //!< guess Kind
             
             //__________________________________________________________________
             //

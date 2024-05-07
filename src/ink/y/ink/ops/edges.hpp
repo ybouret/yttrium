@@ -5,7 +5,6 @@
 #define Y_Ink_Edges_Included 1
 
 #include "y/ink/ops/edge.hpp"
-#include "y/data/small/heavy/list/bare.hpp"
 #include "y/ink/pixmap.hpp"
 
 namespace Yttrium
@@ -13,15 +12,49 @@ namespace Yttrium
     namespace Ink
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Edges is a list of edges
+        //
+        //
+        //______________________________________________________________________
         class Edges : public Proxy<const Edge::List>
         {
         public:
-            typedef Small::BareHeavyList<Coord> CoordStore;
-            typedef Pixmap<size_t>              Labels;
-            typedef Pixmap<uint8_t>             Pixels;
-            explicit Edges() noexcept;
-            virtual ~Edges() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef Pixmap<size_t>              Labels;     //!< alias
+            typedef Pixmap<uint8_t>             Pixels;     //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Edges() noexcept; //!< setup
+            virtual ~Edges() noexcept; //!< cleanup
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! build edges
+            /**
+             \param slabs  slabs to operate
+             \param labels target labels
+             \param force  input/fortified output
+             \param conn   connectivity
+             */
             void operator()(Slabs                    &slabs,
                             Labels                   &labels,
                             Pixels                   &force,

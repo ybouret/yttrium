@@ -11,16 +11,25 @@ namespace Yttrium
     namespace Color
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! convert indices to background or cyclic color
+        //
+        //
+        //______________________________________________________________________
         class MapIndex
         {
         public:
-            //! setup with persisent colors
+            //! setup with count>=2 persisent colors
             explicit MapIndex(const RampColor *entry,
                               const size_t     count) noexcept;
 
             //! cleanup
             virtual ~MapIndex() noexcept;
 
+            //! return background or colors otherwise
             RampColor operator()(const size_t indx) const noexcept;
 
         private:

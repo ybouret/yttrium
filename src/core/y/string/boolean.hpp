@@ -10,12 +10,13 @@
 namespace Yttrium
 {
 
+    //! converting string to boolean
     struct StringToBoolean
     {
-        static bool MeansTrue(const char  * const lower) noexcept;
-        static bool MeansFalse(const char * const lower) noexcept;
-        static bool Get(const char *buffer, const size_t buflen, const char *field);
-        static bool Get(const Core::String<char> &name, const char *field);
+        static bool MeansTrue(const char  * const lower) noexcept;                   //!< "1" or "on" of "true"
+        static bool MeansFalse(const char * const lower) noexcept;                   //!< "0" or "off" or "false"
+        static bool Get(const char *buffer, const size_t buflen, const char *field); //!< convert or throw
+        static bool Get(const Core::String<char> &name, const char *field);          //!< convert or throw
     };
 
 }
