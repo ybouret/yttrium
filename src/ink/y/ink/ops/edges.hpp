@@ -23,7 +23,6 @@ namespace Yttrium
             virtual ~Edges() noexcept;
 
            
-
             void build(Slabs                    &slabs,
                        Labels                   &labels,
                        const Pixmap<uint8_t>    &force,

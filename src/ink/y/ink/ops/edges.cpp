@@ -22,27 +22,46 @@ namespace Yttrium
                            const Pixmap<uint8_t>    &force,
                            const Edge::Connectivity &conn)
         {
-            //______________________________________________________________
+            //__________________________________________________________________
             //
             //
             // initializing
             //
-            //______________________________________________________________
+            //__________________________________________________________________
             edges.release();
             slabs(ZeroLabel,label);
             //cbank->ensure(force.n);
 
+            //__________________________________________________________________
+            //
+            //
+            // loop over each pixel
+            //
+            //__________________________________________________________________
             const unit_t h = force.h;
             const unit_t w = force.w;
             for(unit_t j=0;j<h;++j)
             {
+                //______________________________________________________________
+                //
+                //
+                // loop over each row
+                //
+                //______________________________________________________________
                 PixRow<size_t>        &label_j = label[j];
                 const PixRow<uint8_t> &force_j = force[j];
                 for(unit_t i=0;i<w;++i)
                 {
+                    //__________________________________________________________
+                    //
+                    //
+                    // probe current pixel status
+                    //
+                    //__________________________________________________________
                     size_t &label_ji = label_j[i];
-                    if(label_ji>0)  continue; // in another edge
-                    if(force_j[i]<=0) continue; // nothing here
+                    if(label_ji>0)    { assert(label_ji<=edges.size); continue; } // in another edge
+                    if(force_j[i]<=0) continue;                                   // nothing here
+                    
                     Edge         *edge = edges.pushTail( new Edge( edges.size+1, cbank) );
                     CoordList     scan(cbank);
                     const size_t  indx = edge->label;
