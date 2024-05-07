@@ -23,10 +23,10 @@ namespace Yttrium
             virtual ~Edges() noexcept;
 
            
-            void build(Slabs                    &slabs,
-                       Labels                   &labels,
-                       const Pixmap<uint8_t>    &force,
-                       const Edge::Connectivity &conn);
+            void operator()(Slabs                    &slabs,
+                            Labels                   &labels,
+                            const Pixmap<uint8_t>    &force,
+                            const Edge::Connectivity  conn);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Edges);

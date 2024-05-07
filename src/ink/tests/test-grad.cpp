@@ -66,9 +66,9 @@ void processGrad(Slabs                  &par,
         std::cerr << "building edges..." << std::endl;
         Edges          edges;
         Pixmap<size_t> label(pxf.w,pxf.h);
-        edges.build(par,label, thin.force, Edge::Connect8);
+        edges(par,label, thin.force, Edge::Connect8);
         {
-            Color::RampColor       ecr[] = { Y_White, Y_Blue, Y_Red, Y_Green };
+            Color::RampColor       ecr[] = { Y_Black, Y_White, Y_Blue, Y_Red, Y_Green, Y_Magenta, Y_Cyan};
             const Color::MapIndex  icr(ecr,sizeof(ecr)/sizeof(ecr[0]));
             const String fileName = "edge-" + grad.name + ".png";
             IMG.save(label,fileName, 0,par,icr);
@@ -132,7 +132,6 @@ Y_UTEST(grad)
         GradientThinner        thin(img.w,img.h);
 
         processGrad(par,gmap,Prewitt3,thin,pxf,cr);
-        return 0;
         processGrad(par,gmap,Prewitt5,thin,pxf,cr);
         processGrad(par,gmap,Prewitt7,thin,pxf,cr);
         processGrad(par,gmap,Sobel3,thin,pxf,cr);

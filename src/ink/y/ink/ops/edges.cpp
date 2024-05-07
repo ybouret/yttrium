@@ -1,5 +1,6 @@
 
 #include "y/ink/ops/edges.hpp"
+#include "y/sort/merge.hpp"
 
 namespace Yttrium
 {
@@ -17,10 +18,16 @@ namespace Yttrium
             slab.load(label,zero);
         }
 
-        void Edges:: build(Slabs                    &slabs,
-                           Pixmap<size_t>           &label,
-                           const Pixmap<uint8_t>    &force,
-                           const Edge::Connectivity &conn)
+        static inline SignType ByDecreasingSize(const Edge * const lhs,
+                                                const Edge * const rhs) noexcept
+        {
+            return Sign::Of(rhs->size,lhs->size);
+        }
+
+        void Edges:: operator()(Slabs                    &slabs,
+                                Pixmap<size_t>           &label,
+                                const Pixmap<uint8_t>    &force,
+                                const Edge::Connectivity conn)
         {
             //__________________________________________________________________
             //
@@ -58,16 +65,35 @@ namespace Yttrium
                     // probe current pixel status
                     //
                     //__________________________________________________________
-                    size_t &label_ji = label_j[i];
-                    if(label_ji>0)    { assert(label_ji<=edges.size); continue; } // in another edge
-                    if(force_j[i]<=0) continue;                                   // nothing here
-                    
+                    size_t &      label_ji = label_j[i]; if(label_ji>0)    { assert(label_ji<=edges.size); continue; } // in another edge
+                    const uint8_t force_ij = force_j[i]; if(force_j[i]<=0) continue;                                   // nothing here
+
+                    //__________________________________________________________
+                    //
+                    //
+                    // Create a new edge
+                    //
+                    //__________________________________________________________
                     Edge         *edge = edges.pushTail( new Edge( edges.size+1, cbank) );
                     CoordList     scan(cbank);
                     const size_t  indx = edge->label;
+                    bool          ripe = false;
+                    //__________________________________________________________
+                    //
+                    //
+                    // initialize search
+                    //
+                    //__________________________________________________________
                     scan     << Coord(i,j);
                     label_ji = indx;
+                    ripe     = (force_ij >= 255);
 
+                    //__________________________________________________________
+                    //
+                    //
+                    // search
+                    //
+                    //__________________________________________________________
                     while(scan.size>0)
                     {
                         const size_t n = scan.size;
@@ -75,22 +101,44 @@ namespace Yttrium
                         {
                             CoordNode  *node = edge->pushTail(scan.popTail());
                             const Coord here = **node; assert(indx==label[here]);
-
                             for(unsigned p=0;p<conn;++p)
                             {
                                 const Coord pos = here + Edge::Delta[p];
-                                if(!label.contains(pos)) continue;
-                                if(label[pos]>0) { assert(indx==label[pos]); continue; }
-                                if(force[pos]<=0) continue;
+                                if(!label.contains(pos))                     continue;    // out of domain
+                                if(label[pos]>0) { assert(indx==label[pos]); continue; }  // already visited
+                                const uint8_t f = force[pos]; if(f<=0)       continue;    // background
                                 scan       << pos;
                                 label[pos] = indx;
+                                if(f>=255) ripe = true;
                             }
                         }
                     }
-                    std::cerr << "#edge=" << edge->size << std::endl;
+                    //std::cerr << "#edge=" << edge->size << " / ripe=" << ripe << std::endl;
+                    if(!ripe)
+                    {
+                        for(const CoordNode *node = edge->head; node; node=node->next)
+                        {
+                            const Coord pos = **node;
+                            label[pos] = 0;
+                        }
+                        delete edges.popTail();
+                    }
                 }
             }
+            //std::cerr << "#edges=" << edges.size << std::endl;
+
+            //__________________________________________________________________
+            //
+            //
+            // sorting edges
+            //
+            //__________________________________________________________________
+            MergeSort::Call(edges,ByDecreasingSize);
             std::cerr << "#edges=" << edges.size << std::endl;
+            if(edges.size)
+            {
+                std::cerr << "\tfrom " << edges.head->size << " to " << edges.tail->size << std::endl;
+            }
         }
     }
 

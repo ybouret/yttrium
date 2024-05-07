@@ -25,8 +25,9 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MapIndex);
-            const RampColor * const head;
-            const size_t            size;
+            const RampColor * const head; //!< head[0..size-1]
+            const size_t            size; //!< size>1
+            const size_t            smod; //!< size-1
         };
 
     }

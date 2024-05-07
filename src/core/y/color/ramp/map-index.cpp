@@ -9,15 +9,16 @@ namespace Yttrium
         MapIndex::  MapIndex(const RampColor * const entry,
                              const size_t            count) noexcept :
         head(entry),
-        size(count)
+        size(count),
+        smod(size-1)
         {
             assert(0!=head);
-            assert(size>0);
+            assert(size>1);
         }
 
         RampColor MapIndex:: operator()(const size_t indx) const noexcept
         {
-            return head[indx%size];
+            return head[ indx <= 0 ? 0 : 1 + (indx%smod) ];
         }
 
     }
