@@ -31,7 +31,8 @@ Y_UTEST(pnm)
     Ink::IndexToRGBA::Load(img,slabs,ran);
     for(int i=1;i<argc;++i) opts << argv[i];
 
-    fmt->save(img, "img.ppm", &opts);
+    fmt->save(img, "img.ppm", &opts); // would be all black
+    fmt->save(img, "img.pgm", &opts);
     //Ink::Codec::Image cpy = fmt->load("img.bmp",0);
 
 

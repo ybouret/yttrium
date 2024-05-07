@@ -41,7 +41,7 @@ namespace Yttrium
                 P6
             };
             static Kind GetKind(const String &lowerCaseExt, const bool binary);
-
+            
             //__________________________________________________________________
             //
             //

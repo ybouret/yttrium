@@ -62,6 +62,7 @@ void processGrad(Slabs                  &par,
             IMG.save(thin.force,fileName, 0,par,ramp);
         }
 
+        
         std::cerr << "building edges..." << std::endl;
         Edges          edges;
         Pixmap<size_t> label(pxf.w,pxf.h);
