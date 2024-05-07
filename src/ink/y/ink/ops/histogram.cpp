@@ -151,14 +151,19 @@ namespace Yttrium
 
         uint8_t Histogram:: threshold() const
         {
-            long double sprev = fetchVarianceSeparation(0);
+            unsigned    imin  = 0;
+            long double smin = fetchVarianceSeparation(0);
+
             for(unsigned i=1;i<=255;++i)
             {
-                const long double scurr = fetchVarianceSeparation(i);
-                if(scurr>=sprev) return i-1;
-                sprev=scurr;
+                const long double stmp = fetchVarianceSeparation(i);
+                if(stmp<=smin)
+                {
+                    imin = i;
+                    smin = stmp;
+                }
             }
-            return 255;
+            return static_cast<uint8_t>(imin);
         }
 
     }

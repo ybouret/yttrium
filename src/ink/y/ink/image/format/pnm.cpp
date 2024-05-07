@@ -25,6 +25,7 @@ namespace Yttrium
                 if (c.r>0||c.g>0||c.b>0) fp << '0'; else fp << '1';
             }
 
+            //! gray scale
             static inline void ToPGM(OutputStream       &fp,
                                      const RGBA         &c)
             {
@@ -32,6 +33,7 @@ namespace Yttrium
                 fp("%3u",gs);
             }
 
+            //! color
             static inline void ToPPM(OutputStream       &fp,
                                      const RGBA         &c)
             {
@@ -57,12 +59,25 @@ namespace Yttrium
             }
 
             static inline
+            void WriteComments(OutputStream &fp, const FormatOptions * const options)
+            {
+                const String *com = FormatOptions:: Query(options, "comment");
+                if(0!=com)
+                {
+                    fp << "# " << *com << '\n';
+                }
+            }
+
+            
+
+            static inline
             void SaveP1(const Codec::Image &image,
                         const String       &filename,
                         const FormatOptions *options)
             {
                 OutputFile fp(filename);
                 fp << "P1\n";
+                WriteComments(fp,options);
                 EmitWxH(fp,image);
                 WriteRGBA(fp,image,ToPBM);
             }
@@ -75,6 +90,7 @@ namespace Yttrium
             {
                 OutputFile fp(filename);
                 fp << "P2\n";
+                WriteComments(fp,options);
                 EmitWxH(fp,image);
                 fp << "255\n";
                 WriteRGBA(fp,image,ToPGM);
@@ -87,6 +103,7 @@ namespace Yttrium
             {
                 OutputFile fp(filename);
                 fp << "P3\n";
+                WriteComments(fp,options);
                 EmitWxH(fp,image);
                 fp << "255\n";
                 WriteRGBA(fp,image,ToPPM);

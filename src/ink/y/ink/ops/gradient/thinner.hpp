@@ -23,7 +23,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class GradientThinner
+        class GradientThinner : public Pixmap<uint8_t>
         {
         public:
             //__________________________________________________________________
@@ -54,21 +54,14 @@ namespace Yttrium
                                    Histogram            &hist,
                                    const GradientMap<T> &gmap)
             {
-                assert(force.hasSameSizesThan(gmap.intensity));
-                slabs.split(force);
-                slabs.simt(Optimize<T>,*this,gmap);
+                assert(hasSameSizesThan(gmap.intensity));
+                //slabs.split(force);
+                slabs(Optimize<T>,*this,gmap);
                 finalize(slabs,hist);
             }
 
 
 
-            //__________________________________________________________________
-            //
-            //
-            // Members
-            //
-            //__________________________________________________________________
-            const Pixmap<uint8_t> force; //!< pixel force
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(GradientThinner);
@@ -94,7 +87,7 @@ namespace Yttrium
                 Histogram::Word * const H = Histogram::BinsFrom(slab);
                 if(gmax<=zero)
                 {
-                    slab.load( Coerce(self.force), zero );
+                    slab.load(self,zero);
                 }
                 else
                 {
@@ -105,7 +98,7 @@ namespace Yttrium
                         const unit_t          y   = seg.y;
                         const PixRow<Vertex> &vec = gmap.direction(y);
                         const PixRow<T>      &nrm = gmap.intensity(y);
-                        PixRow<uint8_t>      &opt = Coerce(self.force(y));
+                        RowType              &opt = self[y];
                         for(unit_t i=seg.w,x=seg.x;i>0;--i,++x)
                         {
                             const T      g0  = nrm(x);

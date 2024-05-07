@@ -45,11 +45,13 @@ void processGrad(Slabs                  &par,
     thin(par,hist,gmap);
     (std::cerr << "saving..." << std::endl).flush();
 
+    if(false)
     {
         const String fileName = "hist-" + grad.name + ".dat";
         hist.save(fileName);
     }
 
+    if(false)
     {
         const String fileName = "vsep-" + grad.name + ".dat";
         OutputFile fp(fileName);
@@ -68,18 +70,18 @@ void processGrad(Slabs                  &par,
         }
 
         {
-            Color::RampColor       bwc[2] = { Y_Black, Y_White };
-            const Color::Gradation bwg(bwc,2);
-            const Color::Map8      ramp(bwg);
+            //const Color::RampColor bwc[2] = { Y_Black, Y_White };
+            //const Color::Gradation bwg(bwc,2);
+            const Color::Map8      ramp(cr);
             const String fileName = "thin-" + grad.name + ".png";
-            IMG.save(thin.force,fileName, 0,par,ramp);
+            IMG.save(thin,fileName, 0,par,ramp);
         }
 
         
         std::cerr << "building edges..." << std::endl;
         Edges          edges;
         Pixmap<size_t> label(pxf.w,pxf.h);
-        edges(par,label, Coerce(thin.force), Edge::Connect8);
+        edges(par,label,thin, Edge::Connect8);
         {
             Color::RampColor       ecr[] = { Y_Black, Y_White, Y_Blue, Y_Red, Y_Green, Y_Magenta, Y_Cyan};
             const Color::MapIndex  icr(ecr,sizeof(ecr)/sizeof(ecr[0]));
@@ -87,23 +89,13 @@ void processGrad(Slabs                  &par,
             IMG.save(label,fileName, 0,par,icr);
         }
 
-#if 0
         {
-            const String fileName = "hist-" + grad.name + ".dat";
-            hist.save(fileName);
+            const Color::Map8      ramp(cr);
+            const String fileName = "edges-" + grad.name + ".png";
+            IMG.save(thin,fileName,0,par,ramp);
         }
 
-        {
-            const String fileName = "sep-" + grad.name + ".dat";
-            OutputFile fp(fileName);
-            for(unsigned i=0;i<256;++i)
-            {
-                fp("%g %g\n", double(i), double( hist.separation(i)));
-            }
-            const uint8_t t = hist.threshold();
-            std::cerr << "threshold= " << int(t) << std::endl;
-        }
-#endif
+
 
     }
 }
@@ -122,6 +114,7 @@ Y_UTEST(grad)
         RGBA(0x00,0xff,0x00),
         RGBA(0xff,0x00,0x00),
         RGBA(0xff,0xff,0xff) };
+
     static const Color::Gradation cr(Grad,sizeof(Grad)/sizeof(Grad[0]));
 
     GradientFilters<float,Crux::Prewitt3> Prewitt3;

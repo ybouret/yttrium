@@ -7,8 +7,8 @@ namespace Yttrium
     {
         GradientThinner:: ~GradientThinner() noexcept {}
         
-        GradientThinner:: GradientThinner(const unit_t W, const unit_t H) : 
-        force(W,H)
+        GradientThinner:: GradientThinner(const unit_t W, const unit_t H) :
+        Pixmap<uint8_t>(W,H)
         {
         }
 
@@ -38,8 +38,7 @@ namespace Yttrium
             hist.collect(slabs);
             const uint8_t strong = hist.threshold();
             const uint8_t feeble = strong >> 1;
-            std::cerr << "Strong@" << int(strong) << ", Feeble@" << int(feeble) << std::endl;
-            slabs(Separate,Coerce(force),feeble,strong);
+            slabs(Separate,*this,feeble,strong);
         }
 
     }
