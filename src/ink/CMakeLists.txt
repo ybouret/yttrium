@@ -12,6 +12,7 @@ ink
 ink/parallel
 ink/image
 ink/image/format
+ink/image/format/pnm
 ink/ops
 ink/ops/blur
 ink/ops/filter
