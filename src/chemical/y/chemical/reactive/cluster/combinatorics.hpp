@@ -50,7 +50,8 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            //! list of equilibria per order, always blend[1]
+
+            //! lists of equilibria per order, always blend[1]
             const Blend blend;
             
         private:
