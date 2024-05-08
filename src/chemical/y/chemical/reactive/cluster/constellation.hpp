@@ -27,12 +27,9 @@ namespace Yttrium
                                           XMLog             &xml);
             virtual ~ClusterConstellation() noexcept;
 
-            const AddressBook hasOnlyReac; //!< roaming with only reac
-            const AddressBook hasOnlyProd; //!< roaming with only prod
-            const AddressBook roamingNone; //!< at least one reac and one prod not roaming
-            const AddressBook roamingBoth; //!< reactants and products are ALL roaming
-            const AddressBook roamingReac; //!< reactants are ALL roaming
-            const AddressBook roamingProd; //!< products  are ALL roaming
+            const AddressBook hasOnlyReac;
+            const AddressBook hasOnlyProd;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterConstellation);
         };

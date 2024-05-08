@@ -6,33 +6,17 @@ namespace Yttrium
     namespace Chemical
     {
 
-        static inline
-        bool AreRoaming(const Actors &actors, const AddressBook &conserved)
-        {
-            for(const Actor *a=actors.head;a;a=a->next)
-            {
-                if(conserved.search(a->sp)) return false;
-            }
-            return true; //! all actors are unbounded
-        }
 
         ClusterConstellation:: ClusterConstellation(Equilibria        &eqs,
                                                     const Fragment    &fragment,
                                                     const Constants   &topK,
                                                     XMLog             &xml) :
-        ClusterCombinatorics(eqs,fragment,topK,xml),
-        roamingBoth(),
-        roamingReac(),
-        roamingProd()
+        ClusterCombinatorics(eqs,fragment,topK,xml)
         {
 
             static const char here[] = "Chemical::Cluster::Constellation";
             Y_XML_SECTION_OPT(xml, here, " eqs='" << size << "'");
 
-            static const unsigned ROAMING_NONE = 0x00;
-            static const unsigned ROAMING_REAC = 0x01;
-            static const unsigned ROAMING_PROD = 0x02;
-            static const unsigned ROAMING_BOTH = ROAMING_REAC | ROAMING_PROD;
 
             for(const ENode *node=head;node;node=node->next)
             {
@@ -42,7 +26,7 @@ namespace Yttrium
 
                 if(xml.verbose)
                 {
-                    eqfmt.pad(xml() << eq, eq) << " : ";
+                    eqfmt.pad(xml() << " (*) " << eq, eq) << " : ";
                     eqfmt.print(*xml, eq) << " @ ";
                 }
 
@@ -64,6 +48,25 @@ namespace Yttrium
 
                 assert(eq.reac.size>0);
                 assert(eq.prod.size>0);
+
+                Components regulator;
+                for(Components::ConstIterator it=eq->begin();it!=eq->end();++it)
+                {
+                    const Component &cc = *it;
+                    const Species   &sp = cc.sp;
+                    if(conserved.search(sp)) regulator(cc);
+                }
+
+                if(regulator.reac.size>0 && regulator.prod.size>0)
+                {
+                    if(xml.verbose) *xml << "regulates" << std::endl;
+                }
+                else
+                {
+                    if(xml.verbose) *xml << "redundant" << std::endl;
+                }
+
+#if 0
 
                 unsigned flag = ROAMING_NONE;
                 if(AreRoaming(eq.reac,conserved)) flag |= ROAMING_REAC;
@@ -94,6 +97,7 @@ namespace Yttrium
                         throw Specific::Exception(here, "corrupted <%s>", eq.name.c_str());
 
                 }
+#endif
 
             }
 

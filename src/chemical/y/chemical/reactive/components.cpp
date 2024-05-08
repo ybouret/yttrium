@@ -39,6 +39,12 @@ namespace Yttrium
             return cdb;
         }
 
+
+        void Components:: operator()(const Component &cc)
+        {
+            (*this)(cc.nu,cc.sp);
+        }
+
         void Components:: operator()(const int      nu,
                                      const Species &sp)
         {

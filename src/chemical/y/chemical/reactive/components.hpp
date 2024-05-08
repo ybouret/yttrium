@@ -32,7 +32,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const char LeftRightArrow[]; //!< "<=>"
-
+            typedef Component::Set::ConstIterator ConstIterator;
+            
             //__________________________________________________________________
             //
             //
@@ -52,6 +53,9 @@ namespace Yttrium
          
             //! append a new component
             void operator()(const int nu, const Species &sp);
+
+            //! append a new component
+            void operator()(const Component &);
 
             //! sum nu * z
             int  chargeBalance()                            const noexcept;
