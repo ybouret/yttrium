@@ -92,16 +92,16 @@ namespace Yttrium
 
 
 
-        void Codecs:: save(const Image         &image,
-                           const String        &fileName,
-                           const FormatOptions *options) const
+        void Codecs:: save(const Image  &image,
+                           const String &fileName,
+                           const Options *options) const
         {
             assert(0!=code);
             code->findFor(fileName).save(image,fileName,options);
         }
 
-        Codec::Image Codecs:: load(const String        &fileName,
-                                   const FormatOptions *options) const
+        Codec::Image Codecs:: load(const String  &fileName,
+                                   const Options *options) const
         {
             assert(0!=code);
             return code->findFor(fileName).load(fileName,options);

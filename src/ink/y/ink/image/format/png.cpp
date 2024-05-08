@@ -5,6 +5,7 @@
 #include "y/stream/libc/output.hpp"
 #include "y/png/png.h"
 #include "y/text/ascii/convert.hpp"
+#include "y/string/boolean.hpp"
 
 namespace Yttrium
 {
@@ -138,7 +139,7 @@ namespace Yttrium
 
 
 
-        Codec::Image FormatPNG:: load(const String &filename, const FormatOptions *) const
+        Codec::Image FormatPNG:: load(const String &filename, const Options *) const
         {
             PNG_Reader *io = new PNG_Reader(filename);
             try
@@ -160,33 +161,25 @@ namespace Yttrium
 
         }
 
-        static inline bool getAlpha(const FormatOptions *opts)
+        static inline bool getAlpha(const Options *opts)
         {
             static const char txt[] = "alpha";
-            const String *opt = FormatOptions::Query(opts,txt);
+            const String *opt = Options::Query(opts,txt);
             if(opt)
             {
                 const String &alpha = *opt;
-                if("1"==alpha||"on"==alpha||"true"==alpha)
-                {
-                    return true;
-                }
-
-                if("0"==alpha||"off"==alpha||"false"==alpha)
-                {
-                    return false;
-                }
-
+                if( StringToBoolean::MeansTrue(alpha.c_str())  ) return true;
+                if( StringToBoolean::MeansFalse(alpha.c_str()) ) return false;
                 throw Specific::Exception(FormatPNG::CallSign,"invalid option alpha='%s'", alpha());
             }
             return false;
         }
 
-        static inline int getLevel(const FormatOptions *opts)
+        static inline int getLevel(const Options *opts)
         {
             const char    txt[] = "level";
             int           res = 6;
-            const String *opt = FormatOptions::Query(opts,txt);
+            const String *opt = Options::Query(opts,txt);
             if(opt)
             {
                 res = Clamp<int>(1, ASCII::Convert::To<int>(*opt,txt),9);
@@ -196,7 +189,7 @@ namespace Yttrium
 
 
 
-        void FormatPNG:: save(const Image &img, const String &filename, const FormatOptions *opts) const
+        void FormatPNG:: save(const Image &img, const String &filename, const Options *opts) const
         {
             OutputFile fp(filename);
 

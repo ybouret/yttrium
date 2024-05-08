@@ -5,7 +5,7 @@ using namespace Yttrium;
 
 Y_UTEST(format_options)
 {
-    Ink::FormatOptions opts;
+    Ink::Options opts;
 
     for(int i=1;i<argc;++i)
     {

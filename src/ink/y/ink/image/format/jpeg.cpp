@@ -92,12 +92,12 @@ namespace Yttrium
         };
 
 
-        static inline int getQuality(const FormatOptions *opt)
+        static inline int getQuality(const Options *opt)
         {
             static const char quality_info[] = "quality";
 
             int           quality = 75;
-            const String *ps = FormatOptions::Query(opt,quality_info);
+            const String *ps = Options::Query(opt,quality_info);
             if(ps)
             {
                 quality = Clamp<int>(10,ASCII::Convert::To<int>( *ps,quality_info),100);
@@ -106,9 +106,9 @@ namespace Yttrium
             return quality;
         }
 
-        void FormatJPEG:: save(const Image         &img,
-                               const String        &fileName,
-                               const FormatOptions *options) const
+        void FormatJPEG:: save(const Image  &img,
+                               const String &fileName,
+                               const Options *options) const
         {
 
 
@@ -334,7 +334,7 @@ namespace Yttrium
                                          const unit_t);
 
         Codec::Image FormatJPEG:: load(const String        &fileName,
-                                       const FormatOptions *) const
+                                       const Options       *) const
         {
             /* This struct contains the JPEG decompression parameters and pointers to
              * working space (which is allocated as needed by the JPEG library).

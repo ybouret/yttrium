@@ -59,13 +59,13 @@ namespace Yttrium
             const String &       key()      const noexcept; //!< name
 
             //! wrapper for save
-            void save(const Image         &image,
-                      const char          *fileName,
-                      const FormatOptions *options);
+            void save(const Image   &image,
+                      const char    *fileName,
+                      const Options *options);
 
             //! wrapper for load
-            Image load(const char          *fileName,
-                       const FormatOptions *options) const;
+            Image load(const char    *fileName,
+                       const Options *options) const;
 
             //__________________________________________________________________
             //
@@ -75,24 +75,24 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! save image according to format+options
-            virtual void save(const Image         &image,
-                              const String        &fileName,
-                              const FormatOptions *options) const = 0;
+            virtual void save(const Image  &image,
+                              const String &fileName,
+                              const Options *options) const = 0;
 
             //! load image according to format+options
-            virtual Image load(const String        &fileName,
-                               const FormatOptions *options) const = 0;
+            virtual Image load(const String  &fileName,
+                               const Options *options) const = 0;
 
             //! saving with conversion
             template <
             typename PIXEL,
             typename FILENAME,
             typename PIXEL2RGBA> inline
-            void save(const Pixmap<PIXEL> &surface,
-                      const FILENAME      &fileName,
-                      const FormatOptions *options,
-                      Slabs               &slabs,
-                      PIXEL2RGBA          &pixel2rgba)
+            void save(const Pixmap<PIXEL>  &surface,
+                      const FILENAME       &fileName,
+                      const Options * const options,
+                      Slabs                &slabs,
+                      PIXEL2RGBA           &pixel2rgba)
             {
                 const Image image(slabs,pixel2rgba,surface);
                 save(image,fileName,options);

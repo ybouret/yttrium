@@ -136,9 +136,9 @@ namespace Yttrium
         }
 
 
-        void FormatBMP:: save(const Image         &image,
-                              const String        &fileName,
-                              const FormatOptions *options) const
+        void FormatBMP:: save(const Image   & image,
+                              const String  & fileName,
+                              const Options * options) const
         {
             (void)options;
 
@@ -219,8 +219,8 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(InputBMP);
         };
 
-        Codec::Image FormatBMP:: load(const String        &fileName,
-                                      const FormatOptions *options) const
+        Codec::Image FormatBMP:: load(const String &fileName,
+                                      const Options *options) const
         {
             (void)options;
 

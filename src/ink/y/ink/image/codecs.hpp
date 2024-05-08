@@ -69,13 +69,13 @@ namespace Yttrium
             //
             //__________________________________________________________________
             //! save image according to format+options
-            virtual void save(const Image         &image,
-                              const String        &fileName,
-                              const FormatOptions *options) const;
+            virtual void save(const Image  &image,
+                              const String &fileName,
+                              const Options *options) const;
 
             //! load image according to format+options
-            virtual Image load(const String        &fileName,
-                               const FormatOptions *options) const;
+            virtual Image load(const String  &fileName,
+                               const Options *options) const;
 
 
         private:

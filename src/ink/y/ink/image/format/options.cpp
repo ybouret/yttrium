@@ -27,7 +27,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class FormatOptions:: Code : public Oversized, public FmtOptsDB
+        class Options:: Code : public Oversized, public FmtOptsDB
         {
         public:
             //__________________________________________________________________
@@ -94,22 +94,22 @@ namespace Yttrium
             Y_DISABLE_ASSIGN(Object);
         };
 
-        FormatOptions:: ~FormatOptions() noexcept
+        Options:: ~Options() noexcept
         {
             assert(0!=code);
             Nullify(code);
         }
 
-        FormatOptions:: FormatOptions() : code( new Code() )
+        Options:: Options() : code( new Code() )
         {
         }
 
-        FormatOptions:: FormatOptions(const FormatOptions &other) :
+        Options:: Options(const Options &other) :
         code( new Code( *other.code ) )
         {
         }
 
-        FormatOptions & FormatOptions:: operator<<(const String &opts)
+        Options & Options:: operator<<(const String &opts)
         {
             assert(0!=code);
             code->load(opts);
@@ -117,55 +117,55 @@ namespace Yttrium
         }
 
 
-        FormatOptions & FormatOptions:: operator<<(const char *opts)
+        Options & Options:: operator<<(const char *opts)
         {
             const String _(opts);
             return (*this) << _;
         }
 
-        const String * FormatOptions:: query(const String &key) const noexcept
+        const String * Options:: query(const String &key) const noexcept
         {
             assert(0!=code);
             return code->search(key);
         }
 
-        const String * FormatOptions:: query(const char   *key) const
+        const String * Options:: query(const char   *key) const
         {
             const String _(key);
             return query(_);
         }
 
-        const String * FormatOptions:: query(const char   key) const
+        const String * Options:: query(const char   key) const
         {
             const String _(key);
             return query(_);
         }
 
-        String & FormatOptions:: fetch(const String &key)
+        String & Options:: fetch(const String &key)
         {
             assert(0!=code);
             (void) code->insert(key,code->empty);
             return *(code->search(key));
         }
 
-        String & FormatOptions:: fetch(const char * const key)
+        String & Options:: fetch(const char * const key)
         {
             const String _(key); return fetch(_);
         }
 
 
-        String & FormatOptions:: fetch(const char key)
+        String & Options:: fetch(const char key)
         {
             const String _(key); return fetch(_);
         }
 
-        const String & FormatOptions:: empty() const noexcept
+        const String & Options:: empty() const noexcept
         {
             assert(0!=code);
             return code->empty;
         }
 
-        std::ostream & operator<<(std::ostream &os, const FormatOptions &opt)
+        std::ostream & operator<<(std::ostream &os, const Options &opt)
         {
             assert(0!=opt.code);
             return (os << (*opt.code) );

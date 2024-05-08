@@ -52,16 +52,17 @@ namespace Yttrium
                     for(unit_t i=0;i<image.w;++i)
                     {
                         proc(fp,line(i));
-                        if(i<image.xt) fp << ' ';
+                        //if(i<image.xt) fp << ' ';
+                        fp << '\n';
                     }
-                    fp << '\n';
+
                 }
             }
 
             static inline
-            void WriteComments(OutputStream &fp, const FormatOptions * const options)
+            void WriteComments(OutputStream &fp, const Options * const options)
             {
-                const String *com = FormatOptions:: Query(options, "comment");
+                const String *com = Options:: Query(options, "comment");
                 if(0!=com)
                 {
                     fp << "# " << *com << '\n';
@@ -73,7 +74,7 @@ namespace Yttrium
             static inline
             void SaveP1(const Codec::Image &image,
                         const String       &filename,
-                        const FormatOptions *options)
+                        const Options      *options)
             {
                 OutputFile fp(filename);
                 fp << "P1\n";
@@ -84,9 +85,9 @@ namespace Yttrium
 
 
             static inline
-            void SaveP2(const Codec::Image &image,
-                        const String       &filename,
-                        const FormatOptions *options)
+            void SaveP2(const Codec::Image    &image,
+                        const String          &filename,
+                        const Options * const  options)
             {
                 OutputFile fp(filename);
                 fp << "P2\n";
@@ -97,9 +98,9 @@ namespace Yttrium
             }
 
             static inline
-            void SaveP3(const Codec::Image &image,
-                        const String       &filename,
-                        const FormatOptions *options)
+            void SaveP3(const Codec::Image   &image,
+                        const String         &filename,
+                        const Options * const options)
             {
                 OutputFile fp(filename);
                 fp << "P3\n";
@@ -120,10 +121,10 @@ namespace Yttrium
 
         const char * const FormatPNM:: CallSign = "PNM";
 
-        static   bool QueryBinary(const FormatOptions * const options)
+        static   bool QueryBinary(const Options * const options)
         {
             static const char    name[] = "binary";
-            const String * const args = FormatOptions::Query(options,"binary");
+            const String * const args = Options::Query(options,"binary");
             if(0==args) return false;
             return StringToBoolean::Get(*args,name);
         }
@@ -140,9 +141,9 @@ namespace Yttrium
 
 #define Y_PNM_SAVE(FMT) case FMT: Save##FMT(image,fileName,options); break
 
-        void  FormatPNM:: save(const Image         &image,
-                               const String        &fileName,
-                               const FormatOptions *options) const
+        void  FormatPNM:: save(const Image   &image,
+                               const String  &fileName,
+                               const Options *options) const
         {
             const bool   binary = QueryBinary(options);
             const String ext    = LowerCaseExt(fileName); std::cerr << "ext=" << ext << " / binary=" << binary << std::endl;
@@ -156,8 +157,8 @@ namespace Yttrium
             }
         }
 
-        Codec::Image FormatPNM:: load(const String        &fileName,
-                                      const FormatOptions * ) const
+        Codec::Image FormatPNM:: load(const String &fileName,
+                                      const Options * ) const
         {
             throw Specific::Exception(CallSign,"load is not implemented yet for '%s'", fileName.c_str());
             return Image(1,1);

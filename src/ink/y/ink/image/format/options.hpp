@@ -18,7 +18,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class FormatOptions
+        class Options
         {
         public:
             //__________________________________________________________________
@@ -27,12 +27,12 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit FormatOptions();             //!< setup empty
-            virtual ~FormatOptions() noexcept;    //!< setup emtpy
-            FormatOptions(const FormatOptions &); //!< copy
+            explicit Options();             //!< setup empty
+            virtual ~Options() noexcept;    //!< setup emtpy
+            Options(const Options &); //!< copy
 
             //! display
-            friend std::ostream & operator<<(std::ostream &, const FormatOptions &);
+            friend std::ostream & operator<<(std::ostream &, const Options &);
 
             //__________________________________________________________________
             //
@@ -41,8 +41,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            FormatOptions & operator<<(const String &opts); //!< append 'opt1=value1:opt2=value2...'
-            FormatOptions & operator<<(const char   *opts); //!< wrapper
+            Options & operator<<(const String &opts); //!< append 'opt1=value1:opt2=value2...'
+            Options & operator<<(const char   *opts); //!< wrapper
 
             const String * query(const String &) const noexcept; //!< query
             const String * query(const char   *) const;          //!< query
@@ -72,14 +72,14 @@ namespace Yttrium
             //! return string query if options is not NULL, always NULL otherwise
             //__________________________________________________________________
             template <typename NAME> static inline 
-            const String * Query(const FormatOptions * const options, const NAME &name) noexcept
+            const String * Query(const Options * const options, const NAME &name) noexcept
             {
                 return (0!=options) ? options->query(name) : 0;
             }
 
 
         private:
-            Y_DISABLE_ASSIGN(FormatOptions);
+            Y_DISABLE_ASSIGN(Options);
             const String &empty() const noexcept;
             class Code;
             Code *code;

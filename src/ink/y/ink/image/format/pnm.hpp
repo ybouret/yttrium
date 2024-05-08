@@ -61,13 +61,18 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! saving
-            virtual void  save(const Image         &image,
-                               const String        &fileName,
-                               const FormatOptions *options) const;
+            /**
+             options are:
+             - 'binary=[on|off]'
+             - 'zoom=x[,y]'
+             */
+            virtual void  save(const Image   &image,
+                               const String  &fileName,
+                               const Options *options) const;
 
             //! loading
-            virtual Image load(const String        &fileName,
-                               const FormatOptions *options) const;
+            virtual Image load(const String  &fileName,
+                               const Options *options) const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(FormatPNM);

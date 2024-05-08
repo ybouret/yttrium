@@ -32,7 +32,7 @@ namespace Yttrium
         }
 
 
-        Codec::Image FormatTIFF:: load(const String &filename, const FormatOptions *) const
+        Codec::Image FormatTIFF:: load(const String &filename, const Options *) const
         {
             itiff tif(filename);
             const unit_t w = tif.width();  if(w<=0) throw Specific::Exception(CallSign,"w=0 in '%s'",filename());
@@ -53,7 +53,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(tiff_output);
         };
 
-        void FormatTIFF:: save(const Image &img, const String &filename, const FormatOptions *) const
+        void FormatTIFF:: save(const Image &img, const String &filename, const Options *) const
         {
             tiff_output tif(filename);
             int compression = COMPRESSION_NONE;

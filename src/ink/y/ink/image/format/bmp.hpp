@@ -48,13 +48,13 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! saving
-            virtual void  save(const Image         &image,
-                               const String        &fileName,
-                               const FormatOptions *options) const;
+            virtual void  save(const Image  &image,
+                               const String &fileName,
+                               const Options *options) const;
 
             //! loading
-            virtual Image load(const String        &fileName,
-                               const FormatOptions *options) const;
+            virtual Image load(const String  &fileName,
+                               const Options *options) const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(FormatBMP);

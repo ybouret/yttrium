@@ -17,8 +17,7 @@ Y_UTEST(tiff)
     Concurrent::Topology   topo;
     Concurrent::SharedLoop crew = new Concurrent::Crew(topo);
     Ink::Slabs             slabs( crew );
-
-    Ink::FormatOptions     opts;
+    Ink::Options           opts;
 
 #if 1
     Ink::Format::Handle    fmt = new Ink::FormatTIFF();

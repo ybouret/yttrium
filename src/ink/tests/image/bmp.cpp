@@ -17,8 +17,8 @@ Y_UTEST(bmp)
     Concurrent::SharedLoop crew = new Concurrent::Crew(topo);
     Ink::Slabs             slabs( crew );
   
-    Ink::FormatOptions     opts;
-    Ink::Format::Handle    fmt = new Ink::FormatBMP();
+    Ink::Options        opts;
+    Ink::Format::Handle fmt = new Ink::FormatBMP();
 
     {
         Y_CHECK(fmt->matches("hello.bmp"));
