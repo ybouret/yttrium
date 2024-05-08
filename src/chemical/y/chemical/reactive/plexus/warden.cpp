@@ -64,7 +64,7 @@ namespace Yttrium
             static inline
             SignType BrokenCompare(const Warden::BrokenNode *lhs, const Warden::BrokenNode *rhs) noexcept
             {
-                return Sign::Of( (**rhs).bad, (**lhs).bad );
+                return Sign::Of( (**lhs).bad, (**rhs).bad );
             }
 
             void Warden:: process(Writable<xreal_t>  &C,
@@ -122,7 +122,7 @@ namespace Yttrium
                     {
                         Y_XMLOG(xml, " (*) [sorting #" << jail.size << "]" );
                         //----------------------------------------------------------
-                        // find greatest |dC|^2
+                        // find smallest |dC|^2
                         //----------------------------------------------------------
                         MergeSort::Call(jail,BrokenCompare);
                         for(const BrokenNode *node=jail.head;node;node=node->next)
