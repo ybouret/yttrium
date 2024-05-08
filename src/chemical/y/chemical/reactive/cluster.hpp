@@ -3,7 +3,7 @@
 #ifndef Y_Chemical_Cluster_Included
 #define Y_Chemical_Cluster_Included 1
 
-#include "y/chemical/reactive/cluster/combinatorics.hpp"
+#include "y/chemical/reactive/cluster/constellation.hpp"
 #include "y/quantized.hpp"
 
 namespace Yttrium
@@ -19,7 +19,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Cluster : public Quantized, public ClusterCombinatorics
+        class Cluster : public Quantized, public ClusterConstellation
         {
         public:
             typedef CxxListOf<Cluster>                List;  //!< alias
@@ -66,8 +66,8 @@ namespace Yttrium
             
 
         public:
-            Cluster                    *next;      //!< for list
-            Cluster                    *prev;      //!< for list
+            Cluster          *next;      //!< for list
+            Cluster          *prev;      //!< for list
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);

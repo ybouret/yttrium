@@ -284,9 +284,8 @@ namespace Yttrium
                     Y_XMLOG(xml, "#blend[" << std::setw(3) << i << "] = " << blend[i].size);
                 }
             }
-            
-        }
 
+        }
 
 
 

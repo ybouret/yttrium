@@ -11,10 +11,11 @@ namespace Yttrium
                           const Fragment    &fragment,
                           const Constants   &topK,
                           XMLog             &xml) :
-        ClusterCombinatorics(eqs,fragment,topK,xml),
+        ClusterConstellation(eqs,fragment,topK,xml),
         next(0),
         prev(0)
         {
+
 
         }
 

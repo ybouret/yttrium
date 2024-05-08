@@ -14,7 +14,7 @@ namespace Yttrium
         //
         //
         //
-        //! Compute all possible equilibria from topology and qualify them
+        //! Compute all possible equilibria from topology
         //
         //
         //______________________________________________________________________
@@ -52,12 +52,11 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! lists of equilibria per order, always blend[1]
-            const Blend blend;
-            
+            const Blend       blend;
+           
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterCombinatorics);
             String buildMixedName(const Readable<int> &w) const;
-
         };
     }
 
