@@ -17,7 +17,7 @@ namespace Yttrium
         //
         //
         //
-        //! compute topology and helpers from a fragment
+        //! compute topology and helpers from a pre-computed Fragment
         //
         //
         //______________________________________________________________________
@@ -46,7 +46,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
         protected:
-            Constants                   sharedK; //!< TopLevel constants
+            Constants                   sharedK;   //!< TopLevel constants
         public:
             const Matrix<int>           Nu;        //!< SubLevel topology
             const SpSubSet              spset;     //!< table of SubLevel species

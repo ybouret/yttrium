@@ -51,6 +51,7 @@ void processGrad(Slabs                  &par,
         hist.save(fileName);
     }
 
+#if 0
     if(false)
     {
         const String fileName = "vsep-" + grad.name + ".dat";
@@ -60,7 +61,8 @@ void processGrad(Slabs                  &par,
             fp("%u %g\n", i, double( hist.fetchVarianceSeparation(i)));
         }
     }
-
+#endif
+    
 
     {
         {

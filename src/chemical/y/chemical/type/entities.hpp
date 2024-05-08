@@ -65,6 +65,30 @@ namespace Yttrium
                 }
             }
 
+            template <typename ITERATOR, typename ARRAY, typename PROC> inline
+            std::ostream & show(std::ostream &os,
+                                const size_t indent,
+                                const char  *pfx,
+                                ITERATOR     it,
+                                const size_t nn,
+                                const char  *sfx,
+                                PROC        &proc,
+                                ARRAY       &array,
+                                const Level  level) const
+            {
+                static const char _[] = "";
+                if(!pfx) pfx = _;
+                if(!sfx) sfx = _;
+                for(size_t k=nn;k>0;--k,++it)
+                {
+                    const Entity &entity = **it;
+                    for(size_t j=indent;j>0;--j) os << ' ';
+                    pad( Core::Indent(os,indent) << pfx << entity.name  << sfx, entity) << " = " << proc(array[ entity.indx[level] ]) << std::endl;
+                }
+                return os;
+            }
+
+
             //__________________________________________________________________
             //
             //
