@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_String_Tokenizer_Included
-#define Y_String_Tokenizer_Included 1
+#ifndef Y_String_Boolean_Included
+#define Y_String_Boolean_Included 1
 
 #include "y/config/starting.hpp"
 #include "y/string/fwd.hpp"
