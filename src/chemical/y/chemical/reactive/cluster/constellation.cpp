@@ -6,7 +6,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-
+        
         ClusterConstellation:: ClusterConstellation(Equilibria        &eqs,
                                                     const Fragment    &fragment,
                                                     const Constants   &topK,
@@ -49,6 +49,17 @@ namespace Yttrium
                 assert(eq.reac.size>0);
                 assert(eq.prod.size>0);
 
+                Regulator regulator(eq,conserved);
+                if(regulator->reac.size>0 && regulator->prod.size>0)
+                {
+                    if(xml.verbose) *xml << "regulates";
+                    eqfmt.print(*xml,*regulator) << std::endl;
+                }
+                else
+                {
+                    if(xml.verbose) *xml << "redundant" << std::endl;
+                }
+#if 0
                 Components regulator;
                 for(Components::ConstIterator it=eq->begin();it!=eq->end();++it)
                 {
@@ -65,6 +76,7 @@ namespace Yttrium
                 {
                     if(xml.verbose) *xml << "redundant" << std::endl;
                 }
+#endif
 
 #if 0
 
