@@ -3,7 +3,7 @@
 
 using namespace Yttrium;
 
-Y_UTEST(format_options)
+Y_UTEST(options)
 {
     Ink::Options opts;
 
