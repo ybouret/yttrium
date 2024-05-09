@@ -69,8 +69,6 @@ Y_UTEST(weasel)
     Y_SIZEOF(Chemical::Clusters);
 
     cls.graphViz("system");
-    return 0;
-
 
 }
 Y_UDONE()

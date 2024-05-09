@@ -51,14 +51,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
          
-            //! append a new component
-            void operator()(const int nu, const Species &sp);
 
-            //! append a new component
-            void operator()(const Component &);
-
-            //! sum nu * z
-            int  chargeBalance()                            const noexcept;
+            void operator()(const int nu, const Species &sp);               //!< append a new component
+            void operator()(const Component &);                             //!< append a new component
+            int  chargeBalance()                            const noexcept; //!< sum nu * z
             bool contains(const Species &sp)                const noexcept; //!< look for species
             bool sharesSpeciesWith(const Components &other) const noexcept; //!< look for shared species
             void recordSpeciesInto(AddressBook &)           const;          //!< store all species address
@@ -74,6 +70,10 @@ namespace Yttrium
                 }
             }
 
+
+            bool isTheSameThan(const Components &) const noexcept; //!< same reac and prod
+            bool isFlippedWith(const Components &) const noexcept; //!< mirror reac and prod
+            bool isAnalogousTo(const Components &) const noexcept; //!< same or flipped
 
             //__________________________________________________________________
             //

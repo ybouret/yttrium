@@ -38,9 +38,6 @@ namespace Yttrium
             {
                 const Equilibrium &eq = **it;
                 eqs.display(os << "  ",Coerce(eq));
-                //eqs.pad(os << "\t<" << eq.name << ">",eq) << Equilibrium::Separator;
-                //eq.showEquilibrium(os << "\t", eqs.maxLength,eqs.rmax,eqs.pmax) << std::endl;
-                //eqs.print(os,eq) << Equilibrium::Separator;
                 os << std::endl;
             }
 

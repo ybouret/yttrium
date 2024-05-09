@@ -11,36 +11,43 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class Regulator : public Object, public Proxy<const Components>
+        class Controller : public Object
         {
         public:
             typedef Components::ConstIterator ConstIterator;
 
-            explicit Regulator(const Equilibrium &eq,
-                               const AddressBook &conserved) :
-            Proxy<const Components>(),
+            explicit Controller(const Equilibrium &eq,
+                                const AddressBook &conserved) :
             primary(eq),
+            components(),
             next(0),
             prev(0)
             {
+                Components &self = Coerce(components);
                 for(ConstIterator it=eq->begin();it!=eq->end();++it)
                 {
                     const Component &component = *it;
-                    if( conserved.search(component.sp)) components(component);
+                    if( conserved.search(component.sp) ) self(component);
                 }
             }
 
-            virtual ~Regulator() noexcept {}
+            virtual ~Controller() noexcept {}
+
+            bool isEquivalentTo(const Controller &other) const noexcept
+            {
+                return components.isAnalogousTo(other.components);
+            }
 
             const Equilibrium &primary;
-            Regulator         *next;
-            Regulator         *prev;
+            const Components   components;
+            Controller        *next;
+            Controller        *prev;
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Regulator);
-            Components components;
-            virtual ConstInterface & surrogate() const noexcept { return components; }
+            Y_DISABLE_COPY_AND_ASSIGN(Controller);
         };
+
+        typedef CxxListOf<Controller> Controllers;
 
         //______________________________________________________________________
         //
@@ -59,9 +66,10 @@ namespace Yttrium
                                           XMLog             &xml);
             virtual ~ClusterConstellation() noexcept;
 
-            const AddressBook hasOnlyReac;
-            const AddressBook hasOnlyProd;
-
+            const EList       hasOnlyReac;
+            const EList       hasOnlyProd;
+            const Controllers controllers;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterConstellation);
         };

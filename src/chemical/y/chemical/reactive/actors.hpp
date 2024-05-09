@@ -41,10 +41,14 @@ namespace Yttrium
             //
             //__________________________________________________________________
             String toString()                           const; //!< cat all actors' string
+            bool   checked()                   const noexcept; //!< different species with positive nu
             int    charge()                    const noexcept; //!< sum(charge)
             bool   contains(const Species &)   const noexcept; //!< look for species
+            bool   contains(const Actor   &)   const noexcept; //!< look for species+coeff
             size_t maxIndex(const Level level) const noexcept; //!< max indx[level]
-            
+
+            friend bool operator==(const Actors &lhs, const Actors &rhs) noexcept;
+
 
         private:
             Y_DISABLE_ASSIGN(Actors);

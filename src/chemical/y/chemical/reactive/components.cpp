@@ -147,7 +147,20 @@ namespace Yttrium
                 book |= (*it).sp;
         }
 
+        bool Components:: isTheSameThan(const Components &other) const noexcept
+        {
+            return (reac==other.reac) && (prod==other.prod);
+        }
 
+        bool Components:: isFlippedWith(const Components &other) const noexcept
+        {
+            return (reac==other.prod) && (prod==other.reac);
+        }
+
+        bool Components:: isAnalogousTo(const Components &other) const noexcept
+        {
+            return isTheSameThan(other) || isFlippedWith(other);
+        }
     }
 
 }
