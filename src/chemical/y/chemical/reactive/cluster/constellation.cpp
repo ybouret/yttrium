@@ -57,12 +57,22 @@ namespace Yttrium
                 {
                     if(xml.verbose) *xml << "regulates";
                     eqfmt.print(*xml,cntl->components) << std::endl;
+                    for(const Controller *node=controllers.head;node;node=node->next)
+                    {
+                        if(node->isEquivalentTo(*cntl))
+                        {
+                            std::cerr << "EQUIVALENT to " << node->primary << std::endl;
+                            goto CONTINUE;
+                        }
+                    }
+                    Coerce(controllers).pushTail( cntl.yield() );
                 }
                 else
                 {
                     if(xml.verbose) *xml << "redundant" << std::endl;
                 }
- 
+
+            CONTINUE: continue;
 
             }
 
