@@ -92,22 +92,46 @@ namespace Yttrium
 
             //------------------------------------------------------------------
             //
-            //
-            // check againt tail limit
+            // check against tail limit
             //
             //------------------------------------------------------------------
-            LimitsNode *upper = tail; assert(upper!=lower);
+            LimitsNode * const upper = tail; assert(upper!=lower);
             {
                 Limit &mine = **upper;
                 switch( Sign::Of(mine.extent,here.extent) )
                 {
                     case Negative: self << here;         return;
                     case __Zero__: mine.mergeTail(here); return;
-                    case Positive:                       break;;
+                    case Positive:                       break;
                 }
             }
 
-            throw Exception("not implemented yet");
+            //------------------------------------------------------------------
+            //
+            // look for insertion point
+            //
+            //------------------------------------------------------------------
+            while(lower->next!=upper)
+            {
+                assert( (**lower).extent < here.extent );
+                assert(  here.extent < (**upper).extent );
+                LimitsNode * const next = lower->next;
+                Limit &            mine = **next;
+                switch( Sign::Of(mine.extent,here.extent) )
+                {
+                    case Negative: break;
+                    case __Zero__: mine.mergeTail(here); return;
+                    case Positive: goto FOUND;
+                }
+                lower = next;
+            }
+
+        FOUND:
+            assert(0!=lower);
+            assert(0!=lower->next);
+            assert( (**lower).extent < here.extent );
+            assert( here.extent < (**(lower->next)).extent );
+            insertAfter(lower,generate(here));
 
         }
 
