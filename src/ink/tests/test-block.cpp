@@ -4,11 +4,15 @@
 #include "y/concurrent/loop/mono.hpp"
 #include "y/ink/image/codecs.hpp"
 #include "y/color/channels.hpp"
+#include "y/color/grayscale.hpp"
+#include "y/color/ramp/gradation.hpp"
+#include "y/color/rgb/x11.hpp"
 
 namespace Yttrium
 {
     namespace Ink
     {
+
 
         template <size_t DeltaX, size_t DeltaY>
         class Block
@@ -22,30 +26,62 @@ namespace Yttrium
             static const unit_t H  = Y*2+1;
             static const size_t N  = W*H;
 
-            explicit Block() {}
+            explicit Block()   {}
             virtual ~Block() noexcept {}
 
 
+            template <typename TARGET, typename SOURCE, typename PROC> inline
+            void operator()(Slabs &slabs, Pixmap<TARGET> &target, PROC &proc, const Pixmap<SOURCE> &source)
+            {
+                slabs(Apply<TARGET,PROC,SOURCE>,target,*this,proc,source);
+            }
+
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Block);
+
+            template <typename TARGET, typename PROC, typename SOURCE> static inline
+            void Apply(Slab                 &slab,
+                       Pixmap<TARGET>       &target,
+                       Block                &block,
+                       PROC                 &proc,
+                       const Pixmap<SOURCE> &source)
+            {
+                // local memory for all slab operations
+                static const size_t Required = N * sizeof(SOURCE);
+                static const size_t NumWords = Y_WORDS_GEQ(Required);
+                void   *       wksp[NumWords];
+                SOURCE * const data = static_cast<SOURCE *>( Memory::OutOfReach::Addr(wksp) );
+                for(size_t k=slab.count();k>0;--k)
+                {
+                    const HSegment  seg = slab[k];
+                    const unit_t    y   = seg.y;
+                    PixRow<TARGET> &tgt = target[y];
+                    Coord           pos(seg.x,y);
+                    for(unit_t i=seg.w;i>0;--i,++pos.x)
+                    {
+                        block.load(data,source,pos);
+                        proc(tgt[pos.x],data);
+                    }
+                }
+            }
+
             template <typename T> inline
-            void load(T *              target,
+            void load(T               *target,
                       const Pixmap<T> &source,
                       const Coord      origin) const
             {
-                assert(0!=target);
                 for(unit_t y=Y;y>=Y0;--y)
                 {
                     const PixRow<T> &row = source[origin.y+y];
-                    for(unit_t x=X;x>=X0;--x)
+                    unit_t           x   = origin.x+X0;
+                    for(unit_t i=W;i>0;--i,++x)
                     {
                         *(target++) = row[x];
                     }
                 }
             }
-
-            
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Block);
         };
 
     }
@@ -54,19 +90,38 @@ namespace Yttrium
 using namespace Yttrium;
 using namespace Ink;
 
+template <size_t N, typename T> static inline
+void BlockAverage(T &out, const T * const arr)
+{
+    assert(N>0);
+    T sum = 0;
+    for(size_t i=0;i<N;++i) sum += arr[i];
+    out = sum/N;
+}
+
 Y_UTEST(block)
 {
     Concurrent::Topology   topo;
     Concurrent::SharedLoop crew = new Concurrent::Crew(topo);
     Slabs                  par( crew );
+    const Color::RampColor bw[2] = { Y_Black, Y_White };
+    const Color::Gradation cr(bw,2);
 
     Codec &IMG = Codecs::Std();
 
     if(argc>1)
     {
-        Pixmap<RGBA> img = IMG.load(argv[1],0);
-        Block<1,1>   blk;
+        const Pixmap<RGBA>  img = IMG.load(argv[1],0);
+        const Pixmap<float> pxf(par,Color::GrayScale::Pack<float,RGBA>,img);
+
+        Pixmap<float>       out(img.w,img.h);
+        Block<1,1>          blk;
+        blk(par,out,BlockAverage<Block<1,1>::N,float>,pxf);
+        IMG.save(pxf, "pxf.png", 0, par, cr);
+        IMG.save(out, "out.png", 0, par, cr);
+
     }
+
 
 }
 Y_UDONE()

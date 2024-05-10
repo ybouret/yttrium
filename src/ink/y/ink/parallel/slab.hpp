@@ -78,6 +78,12 @@ namespace Yttrium
                 return static_cast<const T*>(wksp);
             }
 
+            inline const HSegment & operator[](const size_t k) const noexcept
+            {
+                assert(k>0);assert(k<=count());
+                return hseg[k];
+            }
+
             //! load all active pixels of the slab
             template <typename PIXMAP> inline
             void load(PIXMAP &pxm, typename PIXMAP::ConstType &arg)
