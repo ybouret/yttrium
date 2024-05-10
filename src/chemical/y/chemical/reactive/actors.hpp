@@ -46,8 +46,7 @@ namespace Yttrium
             bool   contains(const Species &)   const noexcept; //!< look for species
             bool   contains(const Actor   &)   const noexcept; //!< look for species+coeff
             size_t maxIndex(const Level level) const noexcept; //!< max indx[level]
-
-            friend bool operator==(const Actors &lhs, const Actors &rhs) noexcept;
+            friend bool operator==(const Actors & , const Actors & ) noexcept; //!< check same content
 
 
         private:

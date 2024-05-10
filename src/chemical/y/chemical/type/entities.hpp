@@ -65,6 +65,7 @@ namespace Yttrium
                 }
             }
 
+            //! generic helper to show value associated with database/list
             template <typename ITERATOR, typename ARRAY, typename PROC> inline
             std::ostream & show(std::ostream &os,
                                 const size_t indent,

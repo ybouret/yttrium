@@ -32,7 +32,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const char LeftRightArrow[]; //!< "<=>"
-            typedef Component::Set::ConstIterator ConstIterator;
+            typedef Component::Set::ConstIterator ConstIterator; //!< alias
             
             //__________________________________________________________________
             //
@@ -73,7 +73,7 @@ namespace Yttrium
 
             bool isTheSameThan(const Components &) const noexcept; //!< same reac and prod
             bool isFlippedWith(const Components &) const noexcept; //!< mirror reac and prod
-            bool isAnalogousTo(const Components &) const noexcept; //!< same or flipped
+            bool isAnalogousTo(const Components &) const noexcept; //!< isTheSameThan or isFlippedWith
 
             //__________________________________________________________________
             //

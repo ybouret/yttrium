@@ -78,6 +78,7 @@ namespace Yttrium
                 return static_cast<const T*>(wksp);
             }
 
+            //! access HSegment
             inline const HSegment & operator[](const size_t k) const noexcept
             {
                 assert(k>0);assert(k<=count());
