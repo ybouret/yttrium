@@ -12,6 +12,7 @@ namespace Yttrium
     namespace Chemical
     {
         typedef Small::CoopHeavyList<Limit> LimitsType;
+        typedef LimitsType::NodeType        LimitsNode;
         typedef LimitsType::ProxyType       LimitsBank;
 
 
@@ -23,7 +24,12 @@ namespace Yttrium
                             const SBank      &sbank) noexcept;
             virtual ~Limits() noexcept;
 
-            
+            bool contains(const Species &s) const noexcept;
+
+            //! the extent make species disappear
+            void operator()(const Species &s,
+                            const xreal_t  x);
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Limits);
             const SBank repo;

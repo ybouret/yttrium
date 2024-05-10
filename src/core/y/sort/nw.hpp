@@ -127,6 +127,7 @@ const unsigned * const start = table.index
                           }
                     );
             }
+
         };
 
         //! AdHoc algorithms

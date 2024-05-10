@@ -117,6 +117,16 @@ void BlockMax(T &out, const T * const arr)
     out = res;
 }
 
+#include "y/sort/nw.hpp"
+template <size_t N, typename T> static inline
+void BlockMed(T &out,  T * const arr)
+{
+    assert(N>0);
+    T * const tableau = arr-1;
+    NetworkSort::Algo<N>::Increasing(tableau);
+    out = arr[N>>1];
+}
+
 
 Y_UTEST(block)
 {
@@ -134,10 +144,12 @@ Y_UTEST(block)
     {
         const Pixmap<RGBA>  img = IMG.load(argv[1],0);
         const Pixmap<float> pxf(par,Color::GrayScale::Pack<float,RGBA>,img);
-
+        
+        IMG.save(img, "img.png", 0);
         Pixmap<float>       out(img.w,img.h);
         Blk3x3              blk;
         IMG.save(pxf, "pxf.png", 0, par, cr);
+
 
         blk(par,out,BlockAverage<Blk3x3::N,float>,pxf);
         IMG.save(out, "ave.png", 0, par, cr);
@@ -147,6 +159,11 @@ Y_UTEST(block)
 
         blk(par,out,BlockMax<Blk3x3::N,float>,pxf);
         IMG.save(out, "max.png", 0, par, cr);
+
+        blk(par,out,BlockMed<Blk3x3::N,float>,pxf);
+        IMG.save(out, "med.png", 0, par, cr);
+
+
 
     }
 
