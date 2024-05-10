@@ -99,6 +99,25 @@ void BlockAverage(T &out, const T * const arr)
     out = sum/N;
 }
 
+template <size_t N, typename T> static inline
+void BlockMin(T &out, const T * const arr)
+{
+    assert(N>0);
+    T res = arr[0];
+    for(size_t i=1;i<N;++i) res = Min(res,arr[i]);
+    out = res;
+}
+
+template <size_t N, typename T> static inline
+void BlockMax(T &out, const T * const arr)
+{
+    assert(N>0);
+    T res = arr[0];
+    for(size_t i=1;i<N;++i) res = Max(res,arr[i]);
+    out = res;
+}
+
+
 Y_UTEST(block)
 {
     Concurrent::Topology   topo;
@@ -109,16 +128,25 @@ Y_UTEST(block)
 
     Codec &IMG = Codecs::Std();
 
+    typedef Block<1,1> Blk3x3;
+
     if(argc>1)
     {
         const Pixmap<RGBA>  img = IMG.load(argv[1],0);
         const Pixmap<float> pxf(par,Color::GrayScale::Pack<float,RGBA>,img);
 
         Pixmap<float>       out(img.w,img.h);
-        Block<1,1>          blk;
-        blk(par,out,BlockAverage<Block<1,1>::N,float>,pxf);
+        Blk3x3              blk;
         IMG.save(pxf, "pxf.png", 0, par, cr);
-        IMG.save(out, "out.png", 0, par, cr);
+
+        blk(par,out,BlockAverage<Blk3x3::N,float>,pxf);
+        IMG.save(out, "ave.png", 0, par, cr);
+
+        blk(par,out,BlockMin<Blk3x3::N,float>,pxf);
+        IMG.save(out, "min.png", 0, par, cr);
+
+        blk(par,out,BlockMax<Blk3x3::N,float>,pxf);
+        IMG.save(out, "max.png", 0, par, cr);
 
     }
 
