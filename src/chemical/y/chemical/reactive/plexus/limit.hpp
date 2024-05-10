@@ -23,7 +23,9 @@ namespace Yttrium
                            const SBank   &bank);
             virtual ~Limit() noexcept;
             Limit(const Limit &other);
+            Y_OSTREAM_PROTO(Limit);
             
+
             const xreal_t extent;
 
 

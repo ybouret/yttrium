@@ -6,6 +6,7 @@ Y_UTEST_DECL(32)
     Y_UTEST(species);
     Y_UTEST(components);
     Y_UTEST(eqs);
+    Y_UTEST(limits);
     Y_UTEST(weasel);
     Y_UTEST(warden);
 }

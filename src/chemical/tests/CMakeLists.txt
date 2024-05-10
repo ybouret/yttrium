@@ -6,6 +6,7 @@ enable_testing()
 add_test(species    test-chemical species)
 add_test(components test-chemical components)
 add_test(eqs        test-chemical eqs)
+add_test(limits     test-chemical limits)
 add_test(weasel     test-chemical weasel)
 add_test(warden     test-chemical warden)
 
