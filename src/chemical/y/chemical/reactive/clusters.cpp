@@ -59,7 +59,10 @@ namespace Yttrium
                 {
                     Y_XML_SECTION(xml, "Group");
                     const Conservation::Group &g = **gn;
-                    Y_XMLOG(xml,"   |-" << g);
+                    for(const Conservation::LawNode *ln=g->head;ln;ln=ln->next)
+                    {
+                        Y_XMLOG(xml,"   |-" << **ln);
+                    }
                 }
                 Y_XMLOG(xml, "  (*) Max Conservation Per Group : " << maxCPG);
                 Y_XMLOG(xml, "  (*) Max Species      Per Group : " << maxSPG);
