@@ -82,6 +82,8 @@ namespace Yttrium
         typedef Small::BareLightList<const Species> SList;     //!< alias
         typedef SList::NodeType                     SNode;     //!< alias
         typedef EntitySet<Species,SubLevel>         SpSubSet;  //!< alias
+        typedef Small::CoopLightList<const Species> SRepo;     //!< alias
+        typedef SRepo::ProxyType                    SBank;     //!< alias
 
         //______________________________________________________________________
         //
