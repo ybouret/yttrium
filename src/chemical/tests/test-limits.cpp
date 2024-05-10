@@ -34,6 +34,29 @@ Y_UTEST(limits)
     limits(proton,0.2);
     std::cerr << "limits=" << limits << std::endl;
 
+    limits.free();
+    limits(hydroxy,0.1);
+    limits(proton,0.2);
+    limits(AH,0.0);
+    std::cerr << "limits=" << limits << std::endl;
+
+    limits.free();
+    limits(hydroxy,0.1);
+    limits(proton,0.2);
+    limits(AH,0.1);
+    std::cerr << "limits=" << limits << std::endl;
+
+    limits.free();
+    limits(hydroxy,0.1);
+    limits(proton,0.2);
+    limits(AH,0.25);
+    std::cerr << "limits=" << limits << std::endl;
+
+    limits.free();
+    limits(hydroxy,0.1);
+    limits(proton,0.2);
+    limits(AH,0.2);
+    std::cerr << "limits=" << limits << std::endl;
 
 }
 Y_UDONE()

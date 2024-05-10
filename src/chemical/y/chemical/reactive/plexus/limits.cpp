@@ -33,11 +33,29 @@ namespace Yttrium
                                  const xreal_t  x)
         {
             assert( !contains(s) );
+            //------------------------------------------------------------------
+            //
+            // create new Limit
+            //
+            //------------------------------------------------------------------
             LimitsType &self = *this;
             Limit       here(s,x,repo); assert(1==here.size);
+
+            //------------------------------------------------------------------
+            //
+            // detect case
+            //
+            //------------------------------------------------------------------
             switch(size)
             {
-                case 0: self << here; break;
+                    //----------------------------------------------------------
+                    // initialize
+                    //----------------------------------------------------------
+                case 0: self << here; return;
+
+                    //----------------------------------------------------------
+                    // only one node
+                    //----------------------------------------------------------
                 case 1: {
                     Limit &mine = **head;
                     switch( Sign::Of(mine.extent,here.extent) )
@@ -46,10 +64,51 @@ namespace Yttrium
                         case __Zero__: mine.mergeTail(here); break;
                         case Positive: self >> here;         break;
                     }
-                } break;
+                } return;
+
+                    //----------------------------------------------------------
+                    // generic case
+                    //----------------------------------------------------------
                 default:
-                    throw Exception("not implemented");
+                    break;
             }
+
+            assert(size>=2);
+            //------------------------------------------------------------------
+            //
+            // check against head limit
+            //
+            //------------------------------------------------------------------
+            LimitsNode *lower = head;
+            {
+                Limit &mine = **lower;
+                switch( Sign::Of(mine.extent,here.extent) )
+                {
+                    case Negative:                       break;
+                    case __Zero__: mine.mergeTail(here); return;
+                    case Positive: self >> here;         return;
+                }
+            }
+
+            //------------------------------------------------------------------
+            //
+            //
+            // check againt tail limit
+            //
+            //------------------------------------------------------------------
+            LimitsNode *upper = tail; assert(upper!=lower);
+            {
+                Limit &mine = **upper;
+                switch( Sign::Of(mine.extent,here.extent) )
+                {
+                    case Negative: self << here;         return;
+                    case __Zero__: mine.mergeTail(here); return;
+                    case Positive:                       break;;
+                }
+            }
+
+            throw Exception("not implemented yet");
+
         }
 
     }
