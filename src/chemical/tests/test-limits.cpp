@@ -15,7 +15,7 @@ Y_UTEST(limits)
     Library      lib;
     BBank        bbank;
     SBank        sbank;
-    Boundaries   limits(bbank,sbank);
+    Boundaries   bnd(bbank,sbank);
 
     for(size_t ns=1;ns<=8;++ns)
     {
@@ -37,13 +37,13 @@ Y_UTEST(limits)
             for(size_t cycle=1;cycle<=4;++cycle)
             {
                 Random::Shuffle::Range(xi,ran);
-                limits.reset();
+                bnd.reset();
                 size_t ii = 1;
                 for(const SNode *node=species.head;node;node=node->next,++ii)
                 {
-                    limits(**node,xi[1+(ii%nx)]);
+                    bnd(**node,xi[1+(ii%nx)]);
                 }
-                std::cerr << "limits=" << limits << std::endl;
+                std::cerr << "boundaries=" << bnd << std::endl;
             }
         }
 
