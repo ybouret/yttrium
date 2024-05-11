@@ -5,7 +5,7 @@
 #define Y_Chemical_Controller_Included 1
 
 #include "y/chemical/reactive/equilibrium.hpp"
-#include "y/chemical/reactive/plexus/limits.hpp"
+#include "y/chemical/reactive/plexus/boundaries.hpp"
 
 namespace Yttrium
 {

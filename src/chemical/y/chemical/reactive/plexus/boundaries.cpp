@@ -1,5 +1,5 @@
 
-#include "y/chemical/reactive/plexus/limits.hpp"
+#include "y/chemical/reactive/plexus/boundaries.hpp"
 #include "y/exception.hpp"
 
 namespace Yttrium
@@ -7,32 +7,32 @@ namespace Yttrium
     namespace Chemical
     {
 
-        Limits:: ~Limits() noexcept
+        Boundaries:: ~Boundaries() noexcept
         {
         }
 
-        Limits:: Limits(const LimitsBank &lbank,
-                        const SBank      &sbank) noexcept :
-        impl(lbank),
+        Boundaries:: Boundaries(const BBank &bbank,
+                                const SBank &sbank) noexcept :
+        impl(bbank),
         repo(sbank)
         {
         }
 
-        bool Limits:: contains(const Species &s) const noexcept
+        bool Boundaries:: contains(const Species &s) const noexcept
         {
-            for(const LimitsNode *node=impl.head;node;node=node->next)
+            for(const BNode *node=impl.head;node;node=node->next)
             {
-                const Limit &l = **node;
+                const Boundary &l = **node;
                 if(l->has(s)) return true;
             }
             return false;
         }
 
-        bool Limits:: validate() const noexcept
+        bool Boundaries:: validate() const noexcept
         {
             if(impl.size<=1) return true;
 
-            for(const LimitsNode *node=impl.head;node->next;node=node->next)
+            for(const BNode *node=impl.head;node->next;node=node->next)
             {
                 if( (**node).xi >= (**(node->next)).xi ) return false;
             }
@@ -40,15 +40,15 @@ namespace Yttrium
             return true;
         }
 
-        void Limits:: reset() noexcept
+        void Boundaries:: reset() noexcept
         {
             impl.free();
         }
 
 
 
-        void Limits:: operator()(const Species &s,
-                                 const xreal_t  x)
+        void Boundaries:: operator()(const Species &s,
+                                     const xreal_t  x)
         {
             assert( !contains(s) );
             assert(validate());
@@ -58,8 +58,8 @@ namespace Yttrium
             // create new Limit
             //
             //------------------------------------------------------------------
-            LimitsType &self = impl;
-            Limit       here(s,x,repo); assert(1==here->size);
+            BList         &self = impl;
+            const Boundary here(s,x,repo); assert(1==here->size);
 
             //------------------------------------------------------------------
             //
@@ -77,7 +77,7 @@ namespace Yttrium
                     // only one node
                     //----------------------------------------------------------
                 case 1: {
-                    Limit &mine = **(impl.head);
+                    Boundary &mine = **(impl.head);
                     switch( Sign::Of(mine.xi,here.xi) )
                     {
                         case Negative: self << here; assert(validate()); return;
@@ -99,9 +99,9 @@ namespace Yttrium
             // check against head limit
             //
             //------------------------------------------------------------------
-            LimitsNode *lower = impl.head;
+            BNode *lower = impl.head;
             {
-                Limit &mine = **lower;
+                Boundary &mine = **lower;
                 switch( Sign::Of(mine.xi,here.xi) )
                 {
                     case Negative:                                   break; // take next step
@@ -115,9 +115,9 @@ namespace Yttrium
             // check against tail limit
             //
             //------------------------------------------------------------------
-            LimitsNode * const upper = impl.tail; assert(upper!=lower);
+            BNode * const upper = impl.tail; assert(upper!=lower);
             {
-                Limit &mine = **upper;
+                Boundary &mine = **upper;
                 switch( Sign::Of(mine.xi,here.xi) )
                 {
                     case Negative: self << here; assert(validate()); return;
@@ -135,8 +135,8 @@ namespace Yttrium
             {
                 assert( (**lower).xi < here.xi );
                 assert(  here.xi < (**upper).xi );
-                LimitsNode * const next = lower->next;
-                Limit &            mine = **next;
+                BNode    * const next = lower->next;
+                Boundary &       mine = **next;
                 switch( Sign::Of(mine.xi,here.xi) )
                 {
                     case Negative:                                break;

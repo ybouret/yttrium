@@ -1,5 +1,5 @@
 
-#include "y/chemical/reactive/plexus/limits.hpp"
+#include "y/chemical/reactive/plexus/boundaries.hpp"
 #include "y/chemical/species/library.hpp"
 
 #include "y/utest/run.hpp"
@@ -13,9 +13,9 @@ Y_UTEST(limits)
 {
     Random::Rand ran;
     Library      lib;
-    LimitsBank   lbank;
+    BBank        bbank;
     SBank        sbank;
-    Limits       limits(lbank,sbank);
+    Boundaries   limits(bbank,sbank);
 
     for(size_t ns=1;ns<=8;++ns)
     {
@@ -52,57 +52,7 @@ Y_UTEST(limits)
     }
 
 
-#if 0
-
-
-    limits(proton,0.1);
-    limits(hydroxy,0.2);
     
-    std::cerr << "limits=" << limits << std::endl;
-   
-    limits.free();
-    limits(hydroxy,0.2);
-    limits(proton,0.1);
-    std::cerr << "limits=" << limits << std::endl;
-
-
-    limits.free();
-    limits(hydroxy,0.2);
-    limits(proton,0.2);
-    std::cerr << "limits=" << limits << std::endl;
-
-    limits.free();
-    limits(hydroxy,0.1);
-    limits(proton,0.2);
-    limits(AH,0.0);
-    std::cerr << "limits=" << limits << std::endl;
-
-    limits.free();
-    limits(hydroxy,0.1);
-    limits(proton,0.2);
-    limits(AH,0.1);
-    std::cerr << "limits=" << limits << std::endl;
-
-    limits.free();
-    limits(hydroxy,0.1);
-    limits(proton,0.2);
-    limits(AH,0.25);
-    std::cerr << "limits=" << limits << std::endl;
-
-    limits.free();
-    limits(hydroxy,0.1);
-    limits(proton,0.2);
-    limits(AH,0.2);
-    std::cerr << "limits=" << limits << std::endl;
-
-    limits.free();
-    limits(hydroxy,0.1);
-    limits(proton,0.2);
-    limits(AH,0.15);
-    std::cerr << "limits=" << limits << std::endl;
-
-#endif
-
 
 }
 Y_UDONE()

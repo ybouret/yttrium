@@ -11,19 +11,19 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        typedef Small::CoopHeavyList<Boundary> LimitsType; //!< alias
-        typedef LimitsType::NodeType        LimitsNode; //!< alias
-        typedef LimitsType::ProxyType       LimitsBank; //!< alias
+        typedef Small::CoopHeavyList<Boundary> BList; //!< alias
+        typedef BList::NodeType                BNode; //!< alias
+        typedef BList::ProxyType               BBank; //!< alias
 
         //______________________________________________________________________
         //
         //
         //
-        //! List of ordered limits
+        //! List of ordered boundaries
         //
         //
         //______________________________________________________________________
-        class Limits : public Proxy<const LimitsType>
+        class Boundaries : public Proxy<const BList>
         {
         public:
             //__________________________________________________________________
@@ -34,9 +34,9 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! setup with shared banks for allocation
-            explicit Limits(const LimitsBank &lbank,
-                            const SBank      &sbank) noexcept;
-            virtual ~Limits() noexcept; //!< cleanup
+            explicit Boundaries(const BBank &bbank,
+                                const SBank &sbank) noexcept;
+            virtual ~Boundaries() noexcept; //!< cleanup
 
             //__________________________________________________________________
             //
@@ -55,34 +55,15 @@ namespace Yttrium
                             const xreal_t  x);
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Limits);
-            LimitsType  impl;
+            Y_DISABLE_COPY_AND_ASSIGN(Boundaries);
+            BList       impl;
             const SBank repo;
 
             virtual ConstInterface & surrogate() const noexcept { return impl; }
         };
 
-        class Boundaries
-        {
-        public:
-            explicit Boundaries(const LimitsBank &lbank,
-                                const SBank      &sbank) noexcept :
-            reac(lbank,sbank),
-            prod(lbank,sbank)
-            {
-            }
-
-            virtual ~Boundaries() noexcept {}
-            void     reset()      noexcept { reac.reset(); prod.reset(); }
-
-            Limits reac;
-            Limits prod;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Boundaries);
-        };
-
         
+
 
 
 
