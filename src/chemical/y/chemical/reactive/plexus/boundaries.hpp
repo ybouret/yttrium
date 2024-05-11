@@ -96,9 +96,9 @@ namespace Yttrium
                 switch(self.state())
                 {
                     case USE_NONE: break;
-                    case USE_REAC: os << "reac=" << self.reac; break;
-                    case USE_PROD: os << "prod=" << self.prod; break;
-                    case USE_BOTH: os << "reac=" << self.reac << "|prod=" << self.prod; break;
+                    case USE_REAC: self.outReac(os); break;
+                    case USE_PROD: self.outProd(os); break;
+                    case USE_BOTH: self.outReac(os); os << '|'; self.outProd(os); break;
                 }
                 os << ')';
                 return os;
@@ -108,6 +108,9 @@ namespace Yttrium
             Boundaries prod;
         private:
             Y_DISABLE_ASSIGN(Limits);
+            void outReac(std::ostream &os) const { os << "reac=" << reac; }
+            void outProd(std::ostream &os) const { os << "prod=" << prod; }
+
         };
 
 
