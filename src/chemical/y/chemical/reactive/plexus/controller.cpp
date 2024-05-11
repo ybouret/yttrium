@@ -28,6 +28,46 @@ namespace Yttrium
             return components.isAnalogousTo(other.components);
         }
 
+        void Controller:: shape(Landscape       &landscape,
+                                const XReadable &C,
+                                const Level      level) const
+        {
+            const xreal_t zero = 0;
+            landscape.reset();
+
+            // scan reactants
+            for(const Actor *a=components.reac.head;a;a=a->next)
+            {
+                const Species &sp = a->sp;
+                const xreal_t  nu = a->xnu;
+                const xreal_t  cc = C[sp.indx[level]];
+                if(cc>=zero)
+                {
+                    landscape.capping.reac(sp,cc/nu);
+                }
+                else
+                {
+                    landscape.missing.reac(sp,(-cc)/nu);
+                }
+            }
+
+            // scan products
+            for(const Actor *a=components.prod.head;a;a=a->next)
+            {
+                const Species &sp = a->sp;
+                const xreal_t  nu = a->xnu;
+                const xreal_t  cc = C[sp.indx[level]];
+                if(cc>=zero)
+                {
+                    landscape.capping.prod(sp,cc/nu);
+                }
+                else
+                {
+                    landscape.missing.prod(sp,(-cc)/nu);
+                }
+            }
+        }
+
     }
 
 }

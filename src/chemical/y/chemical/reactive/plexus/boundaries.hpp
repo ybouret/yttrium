@@ -37,6 +37,7 @@ namespace Yttrium
             explicit Boundaries(const BBank &bbank,
                                 const SBank &sbank) noexcept;
             virtual ~Boundaries() noexcept; //!< cleanup
+            Boundaries(const Boundaries &); //!< copy
 
             //__________________________________________________________________
             //
@@ -47,15 +48,14 @@ namespace Yttrium
 
             bool contains(const Species &s) const noexcept; //!< mostly to debug
             bool validate()                 const noexcept; //!< mostly to debug
-
-            void reset() noexcept;
+            void reset()                          noexcept; //!< free
 
             //! the extent make species disappear
             void operator()(const Species &s,
                             const xreal_t  x);
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Boundaries);
+            Y_DISABLE_ASSIGN(Boundaries);
             BList       impl;
             const SBank repo;
 
@@ -63,7 +63,27 @@ namespace Yttrium
         };
 
         
+        class Limits
+        {
+        public:
+            explicit Limits(const BBank &bbank,
+                            const SBank &sbank) noexcept :
+            reac(bbank,sbank),
+            prod(bbank,sbank)
+            {
+            }
 
+            Limits(const Limits &other) : reac(other.reac), prod(other.prod) {}
+
+            virtual ~Limits() noexcept {}
+
+            void reset() noexcept { reac.reset(); prod.reset(); }
+
+            Boundaries reac;
+            Boundaries prod;
+        private:
+            Y_DISABLE_ASSIGN(Limits);
+        };
 
 
 

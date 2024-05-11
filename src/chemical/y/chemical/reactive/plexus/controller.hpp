@@ -12,6 +12,32 @@ namespace Yttrium
     namespace Chemical
     {
 
+
+        class Landscape
+        {
+        public:
+            Landscape(const BBank &bbank,
+                      const SBank &sbank) noexcept :
+            capping(bbank,sbank),
+            missing(bbank,sbank)
+            {
+            }
+            
+            Landscape(const Landscape &other) : capping(other.capping), missing(other.missing)
+            {
+            }
+
+            ~Landscape() noexcept {}
+
+            void reset() noexcept { capping.reset(); missing.reset(); }
+
+            Limits capping;
+            Limits missing;
+
+        private:
+            Y_DISABLE_ASSIGN(Landscape);
+        };
+
         //______________________________________________________________________
         //
         //
@@ -55,6 +81,11 @@ namespace Yttrium
            
             //! true if analogous components
             bool isEquivalentTo(const Controller &) const noexcept;
+
+            void shape(Landscape       &landscape,
+                       const XReadable &C,
+                       const Level      level) const;
+
 
             //__________________________________________________________________
             //

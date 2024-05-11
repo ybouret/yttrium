@@ -23,6 +23,8 @@ namespace Yttrium
         typedef Memory::Dyadic              MemoryModel; //!< alias
         typedef Vector<xreal_t,MemoryModel> XVectorType; //!< vector of xreals
         typedef Matrix<xreal_t,MemoryModel> XMatrixType; //!< matrix of xreals
+        typedef Readable<xreal_t>           XReadable;
+        typedef Writable<xreal_t>           XWritable;
 
         //! helper to load a Small List from addresses
         template <typename TARGET>

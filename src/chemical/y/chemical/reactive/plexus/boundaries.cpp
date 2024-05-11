@@ -13,10 +13,20 @@ namespace Yttrium
 
         Boundaries:: Boundaries(const BBank &bbank,
                                 const SBank &sbank) noexcept :
+        Proxy<const BList>(),
         impl(bbank),
         repo(sbank)
         {
         }
+
+        Boundaries:: Boundaries(const Boundaries &other) :
+        Proxy<const BList>(),
+        impl(other.impl),
+        repo(other.repo)
+        {
+        }
+        
+
 
         bool Boundaries:: contains(const Species &s) const noexcept
         {
