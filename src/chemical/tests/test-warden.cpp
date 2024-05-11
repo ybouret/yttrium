@@ -6,7 +6,7 @@
 #include "y/sequence/vector.hpp"
 
 using namespace Yttrium;
-
+using namespace Chemical;
 
 
 Y_UTEST(warden)
@@ -37,10 +37,23 @@ Y_UTEST(warden)
 
     lib(std::cerr << "C=",C0) << std::endl;
 
-
-
     cls.graphViz("system");
-    
+
+    BBank        bbank;
+    SBank        sbank;
+    Landscape    landscape(bbank,sbank);
+
+    for(const Cluster *cl=cls->head;cl;cl=cl->next)
+    {
+        Y_XML_SECTION_OPT(xml, "Cluster::Shaping"," cntl='" << cl->controllers.size << "'");
+        for(const Controller *cntl=cl->controllers.head;cntl;cntl=cntl->next)
+        {
+            cntl->shape(landscape, C0, TopLevel);
+            std::cerr << landscape << std::endl;
+        }
+    }
+
+
     Chemical::Conservation::Warden warden(cls);
 
     warden(C0, Injected, cls.groups,xml);

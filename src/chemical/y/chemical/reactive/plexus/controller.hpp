@@ -29,6 +29,12 @@ namespace Yttrium
 
             ~Landscape() noexcept {}
 
+            friend std::ostream & operator<<(std::ostream &os, const Landscape &self)
+            {
+                os << "capping=" << self.capping << " / missing=" << self.missing;
+                return os;
+            }
+
             void reset() noexcept { capping.reset(); missing.reset(); }
 
             Limits capping;

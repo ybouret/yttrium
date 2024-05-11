@@ -28,7 +28,19 @@ namespace Yttrium
 
         std::ostream & operator<<(std::ostream &os, const Boundary &l)
         {
-            os << l.sr;
+            os << '{';
+            {
+                const SNode *node=l.sr.head;
+                if(node)
+                {
+                    os << (**node).name;
+                }
+                for(node=node->next;node;node=node->next)
+                {
+                    os << ',' << (**node).name;
+                }
+            }
+            os << '}';
             os << '@' << real_t(l.xi);
             return os;
         }
