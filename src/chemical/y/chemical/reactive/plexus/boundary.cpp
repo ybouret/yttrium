@@ -1,11 +1,11 @@
 
-#include "y/chemical/reactive/plexus/limit.hpp"
+#include "y/chemical/reactive/plexus/boundary.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
-        Limit:: Limit(const Species &s,
+        Boundary:: Boundary(const Species &s,
                       const xreal_t  x,
                       const SBank   &b) :
         Proxy<const SRepo>(),
@@ -15,24 +15,25 @@ namespace Yttrium
             (*this) << s;
         }
 
-        Limit:: ~Limit() noexcept {}
-        Limit:: Limit(const Limit &other) :
+        Boundary:: ~Boundary() noexcept {}
+        
+        Boundary:: Boundary(const Boundary &other) :
         Proxy<const SRepo>(),
         xi(other.xi),
         sr(other.sr)
         {
         }
         
-        Limit::ConstInterface & Limit:: surrogate() const noexcept { return sr; }
+        Boundary::ConstInterface & Boundary:: surrogate() const noexcept { return sr; }
 
-        std::ostream & operator<<(std::ostream &os, const Limit &l)
+        std::ostream & operator<<(std::ostream &os, const Boundary &l)
         {
             os << l.sr;
             os << '@' << real_t(l.xi);
             return os;
         }
 
-        Limit & Limit:: operator<<(const Species &sp)
+        Boundary & Boundary:: operator<<(const Species &sp)
         {
             assert( !sr.has(sp) );
             sr << sp;

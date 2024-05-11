@@ -1,12 +1,13 @@
 
 //! \file
 
-#ifndef Y_Chemical_Limit_Included
-#define Y_Chemical_Limit_Included 1
+#ifndef Y_Chemical_Boundary_Included
+#define Y_Chemical_Boundary_Included 1
 
 #include "y/chemical/reactive/actors.hpp"
 #include "y/data/small/heavy/list/coop.hpp"
 #include "y/type/proxy.hpp"
+
 namespace Yttrium
 {
     namespace Chemical
@@ -16,11 +17,11 @@ namespace Yttrium
         //
         //
         //
-        //! Limit = extent with one or more species
+        //! Boundary = extent with one or more species
         //
         //
         //______________________________________________________________________
-        class Limit : public Proxy<const SRepo>
+        class Boundary : public Proxy<const SRepo>
         {
         public:
             //__________________________________________________________________
@@ -31,20 +32,20 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! record first species with its extent
-            explicit Limit(const Species &s,
+            explicit Boundary(const Species &s,
                            const xreal_t  x,
                            const SBank   &bank);
-            virtual ~Limit() noexcept; //!< cleanup
-            Limit(const Limit &other); //!< full copy
-            Y_OSTREAM_PROTO(Limit);    //!< display list+xi
-            
+            virtual ~Boundary() noexcept; //!< cleanup
+            Boundary(const Boundary &other); //!< full copy
+            Y_OSTREAM_PROTO(Boundary);    //!< display list+xi
+
             //__________________________________________________________________
             //
             //
             // Methods
             //
             //__________________________________________________________________
-            Limit & operator<<(const Species &); //!< append another species
+            Boundary & operator<<(const Species &); //!< append another species
 
             //__________________________________________________________________
             //
@@ -55,7 +56,7 @@ namespace Yttrium
             const xreal_t xi; //!< extent
 
         private:
-            Y_DISABLE_ASSIGN(Limit);
+            Y_DISABLE_ASSIGN(Boundary);
             virtual ConstInterface & surrogate() const noexcept;
             SRepo sr;
         };

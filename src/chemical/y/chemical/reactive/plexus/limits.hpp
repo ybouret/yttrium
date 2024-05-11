@@ -4,14 +4,14 @@
 #ifndef Y_Chemical_Limits_Included
 #define Y_Chemical_Limits_Included 1
 
-#include "y/chemical/reactive/plexus/limit.hpp"
+#include "y/chemical/reactive/plexus/boundary.hpp"
 #include "y/data/small/heavy/list/coop.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
-        typedef Small::CoopHeavyList<Limit> LimitsType; //!< alias
+        typedef Small::CoopHeavyList<Boundary> LimitsType; //!< alias
         typedef LimitsType::NodeType        LimitsNode; //!< alias
         typedef LimitsType::ProxyType       LimitsBank; //!< alias
 
@@ -82,14 +82,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Boundaries);
         };
 
-        class Restraints
-        {
-        public:
-
-            virtual ~Restraints();
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Restraints);
-        };
+        
 
 
 
