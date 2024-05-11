@@ -37,7 +37,7 @@ Y_UTEST(limits)
             for(size_t cycle=1;cycle<=4;++cycle)
             {
                 Random::Shuffle::Range(xi,ran);
-                limits.free();
+                limits.reset();
                 size_t ii = 1;
                 for(const SNode *node=species.head;node;node=node->next,++ii)
                 {

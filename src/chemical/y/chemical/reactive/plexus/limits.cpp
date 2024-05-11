@@ -13,56 +13,76 @@ namespace Yttrium
 
         Limits:: Limits(const LimitsBank &lbank,
                         const SBank      &sbank) noexcept :
-        LimitsType(lbank),
+        impl(lbank),
         repo(sbank)
         {
         }
 
         bool Limits:: contains(const Species &s) const noexcept
         {
-            for(const LimitsNode *node=head;node;node=node->next)
+            for(const LimitsNode *node=impl.head;node;node=node->next)
             {
                 const Limit &l = **node;
-                if(l.has(s)) return true;
+                if(l->has(s)) return true;
             }
             return false;
         }
+
+        bool Limits:: validate() const noexcept
+        {
+            if(impl.size<=1) return true;
+
+            for(const LimitsNode *node=impl.head;node->next;node=node->next)
+            {
+                if( (**node).xi >= (**(node->next)).xi ) return false;
+            }
+
+            return true;
+        }
+
+        void Limits:: reset() noexcept
+        {
+            impl.free();
+        }
+
 
 
         void Limits:: operator()(const Species &s,
                                  const xreal_t  x)
         {
             assert( !contains(s) );
+            assert(validate());
+
             //------------------------------------------------------------------
             //
             // create new Limit
             //
             //------------------------------------------------------------------
-            LimitsType &self = *this;
-            Limit       here(s,x,repo); assert(1==here.size);
+            LimitsType &self = impl;
+            Limit       here(s,x,repo); assert(1==here->size);
 
             //------------------------------------------------------------------
             //
             // detect case
             //
             //------------------------------------------------------------------
-            switch(size)
+            switch(impl.size)
             {
                     //----------------------------------------------------------
                     // initialize
                     //----------------------------------------------------------
-                case 0: self << here; return;
+                case 0: self << here; assert(validate()); return;
 
                     //----------------------------------------------------------
                     // only one node
                     //----------------------------------------------------------
                 case 1: {
-                    Limit &mine = **head;
-                    switch( Sign::Of(mine.extent,here.extent) )
+                    Limit &mine = **(impl.head);
+                    switch( Sign::Of(mine.xi,here.xi) )
                     {
-                        case Negative: self << here;         break;
-                        case __Zero__: mine.mergeTail(here); break;
-                        case Positive: self >> here;         break;
+                        case Negative: self << here; assert(validate()); return;
+                        case __Zero__: mine << s;    assert(validate()); return;
+                        case Positive: self >> here; assert(validate()); return;
                     }
                 } return;
 
@@ -73,20 +93,20 @@ namespace Yttrium
                     break;
             }
 
-            assert(size>=2);
+            assert(impl.size>=2);
             //------------------------------------------------------------------
             //
             // check against head limit
             //
             //------------------------------------------------------------------
-            LimitsNode *lower = head;
+            LimitsNode *lower = impl.head;
             {
                 Limit &mine = **lower;
-                switch( Sign::Of(mine.extent,here.extent) )
+                switch( Sign::Of(mine.xi,here.xi) )
                 {
-                    case Negative:                       break;
-                    case __Zero__: mine.mergeTail(here); return;
-                    case Positive: self >> here;         return;
+                    case Negative:                                   break; // take next step
+                    case __Zero__: mine << s;    assert(validate()); return;
+                    case Positive: self >> here; assert(validate()); return;
                 }
             }
 
@@ -95,14 +115,14 @@ namespace Yttrium
             // check against tail limit
             //
             //------------------------------------------------------------------
-            LimitsNode * const upper = tail; assert(upper!=lower);
+            LimitsNode * const upper = impl.tail; assert(upper!=lower);
             {
                 Limit &mine = **upper;
-                switch( Sign::Of(mine.extent,here.extent) )
+                switch( Sign::Of(mine.xi,here.xi) )
                 {
-                    case Negative: self << here;         return;
-                    case __Zero__: mine.mergeTail(here); return;
-                    case Positive:                       break;
+                    case Negative: self << here; assert(validate()); return;
+                    case __Zero__: mine << s;    assert(validate()); return;
+                    case Positive:                                   break; // generic
                 }
             }
 
@@ -113,14 +133,14 @@ namespace Yttrium
             //------------------------------------------------------------------
             while(lower->next!=upper)
             {
-                assert( (**lower).extent < here.extent );
-                assert(  here.extent < (**upper).extent );
+                assert( (**lower).xi < here.xi );
+                assert(  here.xi < (**upper).xi );
                 LimitsNode * const next = lower->next;
                 Limit &            mine = **next;
-                switch( Sign::Of(mine.extent,here.extent) )
+                switch( Sign::Of(mine.xi,here.xi) )
                 {
-                    case Negative: break;
-                    case __Zero__: mine.mergeTail(here); return;
+                    case Negative:                                break;
+                    case __Zero__: mine << s; assert(validate()); return;
                     case Positive: goto FOUND;
                 }
                 lower = next;
@@ -129,10 +149,10 @@ namespace Yttrium
         FOUND:
             assert(0!=lower);
             assert(0!=lower->next);
-            assert( (**lower).extent < here.extent );
-            assert( here.extent < (**(lower->next)).extent );
-            insertAfter(lower,generate(here));
-
+            assert( (**lower).xi < here.xi );
+            assert( here.xi < (**(lower->next)).xi );
+            impl.insertAfter(lower,impl.generate(here));
+            assert(validate());
         }
 
     }
