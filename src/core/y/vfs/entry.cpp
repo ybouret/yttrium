@@ -62,6 +62,19 @@ namespace Yttrium
         return VFS::EntryTypeText(type);
     }
 
+    String VFS::Entry:: pry(const Part part) const
+    {
+        switch(part)
+        {
+            case Path:   return path;
+            case PathWE: return ext ? String(path.c_str(),ext-path.c_str()) : path;
+            case Base:   return String(base);
+            case BaseWE: return ext ? String(base,ext-base) : String(base);
+            case Ext:    return String(ext?ext+1:0);
+        }
+        return String();
+    }
+
     std::ostream & operator<<(std::ostream &os, const VFS::Entry &ep)
     {
         os << '[';

@@ -90,6 +90,19 @@ namespace Yttrium
         class Entry : public Object
         {
         public:
+            //______________________________________________________________________
+            //
+            //! for file name operations
+            //______________________________________________________________________
+            enum Part
+            {
+                Path,      //!< use path
+                Base,      //!< use base name
+                PathWE,    //!< use path without extension
+                BaseWE,    //!< use base without extension
+                Ext        //!< use extension
+            };
+
             //__________________________________________________________________
             //
             // C++
@@ -107,6 +120,7 @@ namespace Yttrium
             const char * typeText() const noexcept; //!< EntryTypeText(type)
             bool         isReg()    const noexcept; //!< type == IsReg
             bool         isDir()    const noexcept; //!< type == IsDir
+            String       pry(const Part)     const; //!< convert to string for ops
 
             //! lexicographic path comparison
             static SignType CompareByPath(const Entry *lhs, const Entry *rhs) noexcept;
@@ -131,13 +145,7 @@ namespace Yttrium
             Y_DISABLE_ASSIGN(Entry);
         };
 
-        //! for file name operation
-        enum EntryPart
-        {
-            OnFullPath,
-            OnBaseName,
-            OnExtension
-        };
+
 
         //______________________________________________________________________
         //

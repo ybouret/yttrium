@@ -26,6 +26,8 @@ Y_UTEST(vfs_names)
             const String we = VFS::RemovedExtension(path);
             std::cerr << "we=" << we << std::endl;
         }
+        
+
     }
 }
 Y_UDONE()

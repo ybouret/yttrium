@@ -16,6 +16,13 @@ Y_UTEST(vfs_entry)
         const VFS::Entry    cp = *ep;
         std::cerr << ep << std::endl;
         std::cerr << cp << std::endl;
+#define SHOW_AS(ID) std::cerr << std::setw(32) << #ID << " = " << ep->pry(ID) << std::endl
+
+        SHOW_AS(VFS::Entry::Path);
+        SHOW_AS(VFS::Entry::PathWE);
+        SHOW_AS(VFS::Entry::Base);
+        SHOW_AS(VFS::Entry::BaseWE);
+        SHOW_AS(VFS::Entry::Ext);
 
     }
 }
