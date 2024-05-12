@@ -19,7 +19,11 @@ namespace
         static const uint32_t Count  = (1<<Pixels);
         //static const size_t   DataSize = Pixels * sizeof(Type);
 
-        explicit Patch() : PixmapType(Width,Width), data( &(*this)[0][0] ) {}
+        explicit Patch() : 
+        PixmapType(Width,Width),
+        data( &(*this)[0][0] ),
+        ramp()
+        {}
         virtual ~Patch() noexcept {}
 
         bool encode(const uint32_t word) noexcept

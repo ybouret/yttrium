@@ -8,7 +8,7 @@
 #include "y/text/ascii/convert.hpp"
 #include "y/concurrent/loop/crew.hpp"
 #include "y/color/grayscale.hpp"
-#include "y/color/rgb/x11.hpp"
+#include "y/color/ramp/cold-to-hot.hpp"
 
 using namespace Yttrium;
 using namespace Ink;
@@ -22,12 +22,8 @@ Y_UTEST(filter)
     Slabs                  par( crew );
     Codecs &               IMG = Ink::Codecs::Std();
 
-    static const RGBA Grad[] = {
-        Y_Blue,
-        Y_Black,
-        Y_Red };
-    static const Color::Gradation Gradient(Grad,sizeof(Grad)/sizeof(Grad[0]));
 
+    const Color::ColdToHot              Gradient;
     SquareFilter<float,Crux::Prewitt3X> F3X;
     SquareFilter<float,Crux::Prewitt3Y> F3Y;
 

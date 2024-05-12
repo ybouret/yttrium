@@ -8,10 +8,10 @@ namespace Yttrium
     {
         BlackAndWhite:: ~BlackAndWhite() noexcept {}
 
-        static const RampColor bw[2] = { Y_White, Y_Black };
+        static const RampColor bw[2] = { Y_Black, Y_White };
 
         BlackAndWhite:: BlackAndWhite() noexcept : 
-        Gradation( bw, sizeof(bw)/sizeof(bw[0]))
+        Gradation( Y_COLOR_GRADATION(bw) )
         {
         }
         

@@ -52,6 +52,8 @@ namespace Yttrium
             const RampColor * const tail;
         };
 
+#define Y_COLOR_GRADATION(ARR) ARR, sizeof(ARR)/sizeof(ARR[0])
+
     }
 
 }

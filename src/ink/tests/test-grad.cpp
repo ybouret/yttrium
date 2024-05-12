@@ -17,8 +17,9 @@
 #include "y/ink/ops/edges.hpp"
 
 
-#include "y/color/rgb/x11.hpp"
+#include "y/color/ramp/cold-to-hot.hpp"
 #include "y/color/ramp/map-index.hpp"
+#include "y/color/rgb/x11.hpp"
 
 
 
@@ -109,15 +110,7 @@ Y_UTEST(grad)
     Concurrent::SharedLoop crew = new Concurrent::Crew(topo);
     Slabs                  par( crew );
     Codecs &               IMG = Ink::Codecs::Std();
-
-    static const RGBA Grad[] = {
-        RGBA(0x00,0x00,0x00),
-        RGBA(0x00,0x00,0xff),
-        RGBA(0x00,0xff,0x00),
-        RGBA(0xff,0x00,0x00),
-        RGBA(0xff,0xff,0xff) };
-
-    static const Color::Gradation cr(Grad,sizeof(Grad)/sizeof(Grad[0]));
+    const Color::ColdToHot cr;
 
     GradientFilters<float,Crux::Prewitt3> Prewitt3;
     GradientFilters<float,Crux::Prewitt5> Prewitt5;
