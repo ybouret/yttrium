@@ -36,6 +36,60 @@ namespace Yttrium
             }
 
             void reset() noexcept { capping.reset(); missing.reset(); }
+            
+            void shape(const Components &components,
+                       const XReadable  &C,
+                       const Level       level)
+            {
+                //--------------------------------------------------------------
+                //
+                // initialize
+                //
+                //--------------------------------------------------------------
+                const xreal_t zero = 0;
+                reset();
+
+                //--------------------------------------------------------------
+                //
+                // scan reactants
+                //
+                //--------------------------------------------------------------
+                for(const Actor *a=components.reac.head;a;a=a->next)
+                {
+                    const Species &sp = a->sp;
+                    const xreal_t  nu = a->xnu;
+                    const xreal_t  cc = C[sp.indx[level]];
+                    if(cc>=zero)
+                    {
+                        capping.reac(sp,cc/nu);
+                    }
+                    else
+                    {
+                        missing.reac(sp,(-cc)/nu);
+                    }
+                }
+
+                //--------------------------------------------------------------
+                //
+                // scan products
+                //
+                //--------------------------------------------------------------
+                for(const Actor *a=components.prod.head;a;a=a->next)
+                {
+                    const Species &sp = a->sp;
+                    const xreal_t  nu = a->xnu;
+                    const xreal_t  cc = C[sp.indx[level]];
+                    if(cc>=zero)
+                    {
+                        capping.prod(sp,cc/nu);
+                    }
+                    else
+                    {
+                        missing.prod(sp,(-cc)/nu);
+                    }
+                }
+            }
+
 
             Limits capping;
             Limits missing;
@@ -87,10 +141,7 @@ namespace Yttrium
            
             //! true if analogous components
             bool isEquivalentTo(const Controller &) const noexcept;
-
-            void shape(Landscape       &landscape,
-                       const XReadable &C,
-                       const Level      level) const;
+            
 
 
             //__________________________________________________________________

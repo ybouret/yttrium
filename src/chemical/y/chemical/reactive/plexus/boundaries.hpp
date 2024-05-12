@@ -83,6 +83,7 @@ namespace Yttrium
             virtual ~Limits() noexcept {}
 
             void     reset() noexcept { reac.reset(); prod.reset(); }
+            
             unsigned state() const noexcept {
                 unsigned         flag  = USE_NONE;
                 if(reac->size>0) flag |= USE_REAC;

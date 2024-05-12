@@ -28,6 +28,7 @@ namespace Yttrium
             return components.isAnalogousTo(other.components);
         }
 
+#if 0
         void Controller:: shape(Landscape       &landscape,
                                 const XReadable &C,
                                 const Level      level) const
@@ -67,7 +68,8 @@ namespace Yttrium
                 }
             }
         }
-
+#endif
+        
     }
 
 }
