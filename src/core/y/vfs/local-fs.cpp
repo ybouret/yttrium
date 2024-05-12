@@ -167,7 +167,7 @@ namespace Yttrium
     {
     public:
         explicit LocalScanner(const VFS &fsys, const String &dirName) :
-        VFS::Scanner(fsys),
+        VFS::Scanner(fsys,dirName),
         fData(),
         hFind(INVALID_HANDLE_VALUE),
         ready(TRUE)

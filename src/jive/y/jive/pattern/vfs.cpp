@@ -6,10 +6,11 @@ namespace Yttrium
 {
     namespace Jive
     {
-        void VirtualFileSystem:: Find(VFS          &vfs,
-                                      const String &dname,
-                                      VFS::Entries &elist,
-                                      Matcher      &match)
+        void VirtualFileSystem:: Find(VFS              &vfs,
+                                      const String     &dname,
+                                      VFS::Entries     &elist,
+                                      Matcher          &match,
+                                      VFS::Entry::Part  part)
         {
             elist.release();
             const String          path = VFS::MakeDirName(dname);
@@ -18,7 +19,8 @@ namespace Yttrium
             while( (ep = scan->get() ).isValid() )
             {
                 if(!ep->isReg()) continue;
-                if( match.exactly(ep->path,ep->base) )
+                const String data = ep->pry(part);
+                if( match.exactly(ep->path,data) )
                 {
                     elist.pushTail( ep.yield() );
                 }
@@ -29,10 +31,11 @@ namespace Yttrium
         void VirtualFileSystem:: Find(VFS          &       vfs,
                                       const char   * const dname,
                                       VFS::Entries &       elist,
-                                      Matcher      &       match)
+                                      Matcher      &       match,
+                                      VFS::Entry::Part     part)
         {
             const String _(dname);
-            Find(vfs,_,elist,match);
+            Find(vfs,_,elist,match,part);
         }
     }
 }

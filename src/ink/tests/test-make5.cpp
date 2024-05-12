@@ -70,22 +70,9 @@ Y_UTEST(make5)
     const String outDir = "make5/";
     fs.makeDirectory(outDir,true);
     {
-        AutoPtr<VFS::Scanner> scan = fs.openDirectory(outDir);
         VFS::Entries          toRemove;
-        for(;;)
-        {
-            AutoPtr<VFS::Entry> ep = scan->get();
-            if(!ep.isValid()) break;
-            //std::cerr << ep->path << " " << ep->typeText() << std::endl;
-            if(!ep->isReg())  continue;
-            const char * ext = VFS::Extension(ep->path);
-            if(!ext) continue;
-            const String Ext = ++ext;
-            if("pbm" != Ext) continue;
-            std::cerr << "found '" << ep->path << "'" << std::endl;
-            toRemove.pushTail( ep.yield() );
-        }
-        std::cerr << "Cleaning #" << toRemove.size << std::endl;
+        Jive::Matcher         match = "pbm";
+        Jive::VirtualFileSystem::Find(fs, outDir, toRemove, match, VFS::Entry::Ext);
         for(const VFS::Entry *ep=toRemove.head;ep;ep=ep->next)
         {
             fs.tryRemoveFile(ep->path);

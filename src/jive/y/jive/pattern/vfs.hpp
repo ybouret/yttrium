@@ -22,16 +22,18 @@ namespace Yttrium
         struct VirtualFileSystem
         {
             //! find in VFS directory the list of matching regular entries
-            static void Find(VFS          &vfs,
-                             const String &dname,
-                             VFS::Entries &elist,
-                             Matcher      &match);
+            static void Find(VFS            &vfs,
+                             const String    &dname,
+                             VFS::Entries    &elist,
+                             Matcher         &match,
+                             VFS::Entry::Part part);
 
             //! alias
             static void Find(VFS          &       vfs,
                              const char   * const dname,
                              VFS::Entries &       elist,
-                             Matcher      &       match);
+                             Matcher      &       match,
+                             VFS::Entry::Part     part);
         };
     }
 }
