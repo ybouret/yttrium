@@ -18,6 +18,7 @@ Y_UTEST_DECL(16)
     Y_UTEST(filter);
     Y_UTEST(grad);
     Y_UTEST(block);
+    Y_UTEST(make5);
 }
 Y_UTEST_EXEC()
 
