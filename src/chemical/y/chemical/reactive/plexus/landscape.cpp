@@ -23,6 +23,64 @@ namespace Yttrium
             return os;
         }
 
+        void Landscape:: reset() noexcept { capping.reset(); missing.reset(); }
+
+
+        void Landscape:: shape(const Components &components,
+                               const XReadable  &C,
+                               const Level       level)
+        {
+            //--------------------------------------------------------------
+            //
+            // initialize
+            //
+            //--------------------------------------------------------------
+            const xreal_t zero = 0;
+            reset();
+
+            //--------------------------------------------------------------
+            //
+            // scan reactants
+            //
+            //--------------------------------------------------------------
+            for(const Actor *a=components.reac.head;a;a=a->next)
+            {
+                const Species &sp = a->sp;
+                const xreal_t  nu = a->xnu;
+                const xreal_t  cc = C[sp.indx[level]];
+                if(cc>=zero)
+                {
+                    capping.reac(sp,cc/nu);
+                }
+                else
+                {
+                    missing.reac(sp,(-cc)/nu);
+                }
+            }
+
+            //--------------------------------------------------------------
+            //
+            // scan products
+            //
+            //--------------------------------------------------------------
+            for(const Actor *a=components.prod.head;a;a=a->next)
+            {
+                const Species &sp = a->sp;
+                const xreal_t  nu = a->xnu;
+                const xreal_t  cc = C[sp.indx[level]];
+                if(cc>=zero)
+                {
+                    capping.prod(sp,cc/nu);
+                }
+                else
+                {
+                    missing.prod(sp,(-cc)/nu);
+                }
+            }
+
+
+
+        }
     }
 
 }
