@@ -50,7 +50,6 @@ namespace Yttrium
             const EList       hasOnlyProd; //!< equilibria with only prod
             const Controllers controllers; //!< controlling equilibria
 
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterConstellation);
         };

@@ -15,7 +15,8 @@ namespace Yttrium
         maxSPC(0),
         maxCPG(0),
         maxSPG(0),
-        maxDEG(0)
+        maxDEG(0),
+        maxCPC(0)
         {
             Y_XML_SECTION(xml, "Chemical::Clusters" );
 
@@ -42,6 +43,7 @@ namespace Yttrium
                 }
                 Coerce(maxSPC) = Max(maxSPC,cl->species.size);
                 Coerce(maxDEG) = Max(maxDEG,cl->blend.size());
+                Coerce(maxCPC) = Max(maxCPC,cl->controllers.size);
             }
 
             //__________________________________________________________________
@@ -51,10 +53,10 @@ namespace Yttrium
             sharedK->adjust(eqs->size(),0);
             {
                 Y_XML_SECTION(xml, "Summary");
-                Y_XMLOG(xml, "  (*) #Cluster                   : " << clusters.size);
-                Y_XMLOG(xml, "  (*) Max Species Per Cluster    : " << maxSPC);
-                Y_XMLOG(xml, "  (*) Max Degree  Per Cluster    : " << maxDEG);
-                Y_XMLOG(xml, "  (*) #Conservation Group        : " << groups.size);
+                Y_XMLOG(xml, "  (*) #Cluster                     : " << clusters.size);
+                Y_XMLOG(xml, "  (*) Max Species Per Cluster      : " << maxSPC);
+                Y_XMLOG(xml, "  (*) Max Degree  Per Cluster      : " << maxDEG);
+                Y_XMLOG(xml, "  (*) #Conservation Group          : " << groups.size);
                 for(const GNode *gn=groups.head;gn;gn=gn->next)
                 {
                     Y_XML_SECTION(xml, "Group");
@@ -64,8 +66,9 @@ namespace Yttrium
                         Y_XMLOG(xml,"   |-" << **ln);
                     }
                 }
-                Y_XMLOG(xml, "  (*) Max Conservation Per Group : " << maxCPG);
-                Y_XMLOG(xml, "  (*) Max Species      Per Group : " << maxSPG);
+                Y_XMLOG(xml, "  (*) Max Conservation Per Group   : " << maxCPG);
+                Y_XMLOG(xml, "  (*) Max Species      Per Group   : " << maxSPG);
+                Y_XMLOG(xml, "  (*) Max Controllers  Per Cluster : " << maxCPC);
 
             }
 

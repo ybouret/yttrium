@@ -50,12 +50,14 @@ namespace Yttrium
             Cluster::List clusters;
             Constants     sharedK;
             virtual ConstInterface & surrogate() const noexcept;
+
         public:
             GList        groups; //!< all conservation groups
-            const size_t maxSPC; //!< max Species Per Cluster
-            const size_t maxCPG; //!< max Conservations Per Group
-            const size_t maxSPG; //!< max Species Per Group
+            const size_t maxSPC; //!< maxSpeciesPerCluster
+            const size_t maxCPG; //!< maxConservationsPerGroup
+            const size_t maxSPG; //!< maxSpeciesPerGroup
             const size_t maxDEG; //!< maximum degree of combinations
+            const size_t maxCPC; //!< maximum Constrollers Per Cluster
         };
     }
 
