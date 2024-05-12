@@ -12,7 +12,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-
+        
         class Landscape
         {
         public:
@@ -24,13 +24,16 @@ namespace Yttrium
             //! reset all limits
             void reset() noexcept;
 
-            //! shape limits from components and concentrations
+            //! shape limits from CONSERVED components and concentrations
             void shape(const Components &components,
                        const XReadable  &C,
                        const Level       level);
 
-
+            Equilibrium::Status study();
             
+
+
+
             Limits capping;
             Limits missing;
 
