@@ -172,7 +172,7 @@ namespace Yttrium
                                const Options *options) const
         {
             const bool   binary = QueryBinary(options);
-            const String ext    = LowerCaseExt(fileName); std::cerr << "ext=" << ext << " / binary=" << binary << std::endl;
+            const String ext    = LowerCaseExt(fileName); //std::cerr << "ext=" << ext << " / binary=" << binary << std::endl;
             const Kind   kind   = GetKind(ext,binary);
             switch(kind)
             {

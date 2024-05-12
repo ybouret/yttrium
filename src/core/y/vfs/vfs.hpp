@@ -147,9 +147,10 @@ namespace Yttrium
             virtual       ~Scanner() noexcept;            //!< cleanup
             virtual Entry *get()          = 0;            //!< get next entry
         protected:
-            explicit       Scanner(const VFS &) noexcept; //!< setup
-            const VFS     &fs;                            //!< original vfs
-            
+            explicit       Scanner(const VFS &,const String &) ; //!< setup
+            const VFS     &fs;                                   //!< original vfs
+            const String   directory;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Scanner);
         };

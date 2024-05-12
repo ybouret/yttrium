@@ -3,6 +3,7 @@
 #include "y/concurrent/loop/crew.hpp"
 #include "y/ink/image/codecs.hpp"
 #include "y/color/ramp/black-and-white.hpp"
+#include "y/vfs/local-fs.hpp"
 
 using namespace Yttrium;
 using namespace Ink;
@@ -56,6 +57,8 @@ namespace
 
 }
 
+//#include "y/jive/pattern/vfs.hpp"
+
 Y_UTEST(make5)
 {
     Concurrent::Topology   topo;
@@ -63,6 +66,33 @@ Y_UTEST(make5)
     Slabs                  par( crew );
     Codec  &               IMG = Ink::Codecs::Std();
     Y_USHOW(Patch::Count);
+    VFS &fs = LocalFS::Instance();
+    const String outDir = "make5/";
+    fs.makeDirectory(outDir,true);
+    {
+        AutoPtr<VFS::Scanner> scan = fs.openDirectory(outDir);
+        VFS::Entries          toRemove;
+        for(;;)
+        {
+            AutoPtr<VFS::Entry> ep = scan->get();
+            if(!ep.isValid()) break;
+            //std::cerr << ep->path << " " << ep->typeText() << std::endl;
+            if(!ep->isReg())  continue;
+            const char * ext = VFS::Extension(ep->path);
+            if(!ext) continue;
+            const String Ext = ++ext;
+            if("pbm" != Ext) continue;
+            std::cerr << "found '" << ep->path << "'" << std::endl;
+            toRemove.pushTail( ep.yield() );
+        }
+        std::cerr << "Cleaning #" << toRemove.size << std::endl;
+        for(const VFS::Entry *ep=toRemove.head;ep;ep=ep->next)
+        {
+            fs.tryRemoveFile(ep->path);
+        }
+    }
+
+    return 0;
 
     Patch    patch;
     uint32_t num = 0;
@@ -72,7 +102,7 @@ Y_UTEST(make5)
         if(patch.encode(i))
         {
             ++num;
-            const String fileName = Formatted::Get("patch%08x.pbm",i);
+            const String fileName = outDir + Formatted::Get("patch%08x.pbm",i);
             IMG.save(patch, fileName, &opt, par, patch.ramp);
             if(num>=100) return 0;
         }

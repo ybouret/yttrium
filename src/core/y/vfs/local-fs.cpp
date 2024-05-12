@@ -74,7 +74,7 @@ namespace Yttrium
         {
         public:
             explicit LocalScanner(const VFS &fsys, const String &dirName) :
-            VFS::Scanner(fsys), dir(Setup(dirName))
+            VFS::Scanner(fsys,dirName), dir(Setup(dirName))
             {
             }
 
@@ -106,9 +106,10 @@ namespace Yttrium
             {
                 Y_GIANT_LOCK();
                 assert(0 != dir);
-                const dirent *dp = readdir(dir);
+                const dirent * const dp = readdir(dir);
                 if (!dp) return 0;
-                return new VFS::Entry(fs, dp->d_name);
+                const String path = directory + dp->d_name;
+                return new VFS::Entry(fs,path);
             }
         };
     }
@@ -129,7 +130,7 @@ namespace Yttrium
 
         if( S_ISLNK(m) )
         {
-            std::cerr << "->link" << std::endl;
+            //std::cerr << "->link" << std::endl;
             link = true;
             Y_STATIC_ZVAR(buf);
             if(0!=stat(path.c_str(),&buf))
