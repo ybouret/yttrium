@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_Chemical_Limits_Included
-#define Y_Chemical_Limits_Included 1
+#ifndef Y_Chemical_Boundaries_Included
+#define Y_Chemical_Boundaries_Included 1
 
 #include "y/chemical/reactive/plexus/boundary.hpp"
 #include "y/data/small/heavy/list/coop.hpp"
@@ -63,57 +63,7 @@ namespace Yttrium
         };
 
         
-        class Limits
-        {
-        public:
-            static const unsigned USE_NONE = 0x00;
-            static const unsigned USE_REAC = 0x01;
-            static const unsigned USE_PROD = 0x02;
-            static const unsigned USE_BOTH = USE_REAC | USE_PROD;
-
-            explicit Limits(const BBank &bbank,
-                            const SBank &sbank) noexcept :
-            reac(bbank,sbank),
-            prod(bbank,sbank)
-            {
-            }
-
-            Limits(const Limits &other) : reac(other.reac), prod(other.prod) {}
-
-            virtual ~Limits() noexcept {}
-
-            void     reset() noexcept { reac.reset(); prod.reset(); }
-            
-            unsigned state() const noexcept {
-                unsigned         flag  = USE_NONE;
-                if(reac->size>0) flag |= USE_REAC;
-                if(prod->size>0) flag |= USE_PROD;
-                return flag;
-            }
-
-            friend std::ostream & operator<<(std::ostream &os, const Limits &self)
-            {
-                os << '(';
-                switch(self.state())
-                {
-                    case USE_NONE: break;
-                    case USE_REAC: self.outReac(os); break;
-                    case USE_PROD: self.outProd(os); break;
-                    case USE_BOTH: self.outReac(os); os << '|'; self.outProd(os); break;
-                }
-                os << ')';
-                return os;
-            }
-
-            Boundaries reac;
-            Boundaries prod;
-        private:
-            Y_DISABLE_ASSIGN(Limits);
-            void outReac(std::ostream &os) const { os << "reac=" << reac; }
-            void outProd(std::ostream &os) const { os << "prod=" << prod; }
-
-        };
-
+       
 
 
     }
