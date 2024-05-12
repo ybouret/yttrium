@@ -57,7 +57,7 @@ namespace
 
 }
 
-//#include "y/jive/pattern/vfs.hpp"
+#include "y/jive/pattern/vfs.hpp"
 
 Y_UTEST(make5)
 {
