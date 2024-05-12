@@ -72,7 +72,7 @@ namespace Yttrium
         {
             if('.'==*dot) return dot;
         }
-        
+
         return 0;
     }
 
@@ -90,10 +90,10 @@ namespace Yttrium
 
 namespace Yttrium
 {
-    String VFS:: ChangeExtension(const char * const newExt,
-                                 const size_t       extLen,
-                                 const char * const path,
-                                 const size_t       size)
+    String VFS:: ChangedExtension(const char * const newExt,
+                                  const size_t       extLen,
+                                  const char * const path,
+                                  const size_t       size)
     {
         assert(Good(newExt,extLen));
         assert(Good(path,size));
@@ -113,17 +113,41 @@ namespace Yttrium
         }
     }
 
-    String VFS:: ChangeExtension(const char * const  newExt, const String & path)
+    String VFS:: ChangedExtension(const char * const  newExt, const String & path)
     {
-        return ChangeExtension(newExt, StringLength(newExt),path(),path.size());
+        return ChangedExtension(newExt, StringLength(newExt),path(),path.size());
     }
 
-    String VFS:: ChangeExtension(const String & newExt, const String & path)
+    String VFS:: ChangedExtension(const String & newExt, const String & path)
     {
-        return ChangeExtension(newExt(), newExt.size(),path(),path.size());
+        return ChangedExtension(newExt(), newExt.size(),path(),path.size());
     }
 
 }
+
+namespace Yttrium
+{
+    String VFS:: RemovedExtension(const char * const path, const size_t size)
+    {
+        assert(Good(path,size));
+        const char *ext = Extension(path,size);
+        if(!ext)
+        {
+            return String(path,size);
+        }
+        else
+        {
+            return String(path,ext-path);
+        }
+    }
+
+    String VFS:: RemovedExtension(const String& path)
+    {
+        return RemovedExtension(path.c_str(), path.size());
+    }
+
+}
+
 
 namespace Yttrium
 {

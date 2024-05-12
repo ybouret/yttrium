@@ -183,7 +183,7 @@ namespace Yttrium
 
         void Vizible:: RenderPNG(const String &dotFile, const bool keepDot)
         {
-            String pngFile = VFS::ChangeExtension("png", dotFile);
+            String pngFile = VFS::ChangedExtension("png", dotFile);
             Render(pngFile,dotFile,keepDot);
         }
     }

@@ -18,9 +18,14 @@ Y_UTEST(vfs_names)
         std::cerr << std::endl;
 
         const String tmp = path;
-        const String xxx = VFS::ChangeExtension("xxx", path);
-        std::cerr << xxx << std::endl;
-
+        {
+            const String xxx = VFS::ChangedExtension("xxx", path);
+            std::cerr << "xxx=" << xxx << std::endl;
+        }
+        {
+            const String we = VFS::RemovedExtension(path);
+            std::cerr << "we=" << we << std::endl;
+        }
     }
 }
 Y_UDONE()

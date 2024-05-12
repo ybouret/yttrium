@@ -37,12 +37,17 @@ namespace Yttrium
         static const char *Extension(const String &     path)                    noexcept; //!< NULL or .ext
 
         //! changing extension
-        static String ChangeExtension(const char * const newExt,
-                                      const size_t       extLen,
-                                      const char * const path,
-                                      const size_t       size);
-        static String ChangeExtension(const char * const  newExt, const String & path); //!< change extension
-        static String ChangeExtension(const String      & newExt, const String & path); //!< change extension
+        static String ChangedExtension(const char * const newExt,
+                                       const size_t       extLen,
+                                       const char * const path,
+                                       const size_t       size);
+        static String ChangedExtension(const char * const  newExt, const String & path); //!< change extension
+        static String ChangedExtension(const String      & newExt, const String & path); //!< change extension
+
+
+        static String RemovedExtension(const char * const path, const size_t size); //! path with removed extension
+        static String RemovedExtension(const String& path);                         //! path with removed extension
+
 
         //______________________________________________________________________
         //
@@ -121,9 +126,17 @@ namespace Yttrium
             const EntryType     type; //!< from fs
             Entry              *next; //!< for list
             Entry              *prev; //!< fir list
-            
+
         private:
             Y_DISABLE_ASSIGN(Entry);
+        };
+
+        //! for file name operation
+        enum EntryPart
+        {
+            OnFullPath,
+            OnBaseName,
+            OnExtension
         };
 
         //______________________________________________________________________
@@ -178,7 +191,7 @@ namespace Yttrium
         EntryType    findEntryType(const char * const path, bool &lnk) const;        //!< alias
         void         makeDirectory(const char * const dirName, const bool mayExist); //!< alias
         bool         tryEraseEmpty(const char * const dirName);                      //!< alias
-        
+
         //______________________________________________________________________
         //
         //

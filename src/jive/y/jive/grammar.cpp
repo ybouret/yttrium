@@ -460,7 +460,7 @@ namespace Yttrium
         void Grammar:: renderGraphViz(const bool keepDot) const
         {
             assert(0!=code);
-            const String      dotFileName = VFS::ChangeExtension("dot", *name);
+            const String      dotFileName = VFS::ChangedExtension("dot", *name);
             GraphViz::Vizible::DotToPng(dotFileName,*this,keepDot);
         }
     }

@@ -12,10 +12,11 @@ namespace Yttrium
     namespace Chemical
     {
 
-        
+
         class Landscape
         {
         public:
+            
             Landscape(const BBank &, const SBank &) noexcept ;
             Landscape(const Landscape &);
             ~Landscape() noexcept;
