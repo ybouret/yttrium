@@ -27,14 +27,12 @@ namespace Yttrium
         public:
             static const unsigned RUNNING = 0x00; //!< no negative
             static const unsigned BLOCKED = 0x01; //!< blocked
-            static const unsigned ST_MASK = RUNNING | BLOCKED;
+            static const unsigned PARTIAL = 0x02; //!< partially solved
+            static const unsigned EQUATED = 0x04; //!< totally solved
+            static const unsigned ST_MASK = RUNNING | BLOCKED | PARTIAL | EQUATED;
 
-            static const unsigned PARTIAL = 0x02;
-            static const unsigned EQUATED = 0x04;
-            static const unsigned UP_MASK = PARTIAL | EQUATED;
-
-            static const unsigned BY_REAC = 0x08;
-            static const unsigned BY_PROD = 0x10;
+            static const unsigned BY_REAC = 0x08; //!< by use of reac
+            static const unsigned BY_PROD = 0x10; //!< by use of prod
             static const unsigned BY_BOTH = BY_REAC | BY_PROD;
             static const unsigned ID_MASK = BY_REAC | BY_PROD | BY_BOTH;
 
