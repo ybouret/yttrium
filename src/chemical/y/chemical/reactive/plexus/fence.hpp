@@ -25,12 +25,18 @@ namespace Yttrium
         class Fence
         {
         public:
-            static const unsigned RUNNING = 0x00;
-            static const unsigned BLOCKED = 0x01;
+            static const unsigned RUNNING = 0x00; //!< no negative
+            static const unsigned BLOCKED = 0x01; //!< blocked
+            static const unsigned ST_MASK = RUNNING | BLOCKED;
+
             static const unsigned PARTIAL = 0x02;
             static const unsigned EQUATED = 0x04;
+            static const unsigned UP_MASK = PARTIAL | EQUATED;
+
             static const unsigned BY_REAC = 0x08;
             static const unsigned BY_PROD = 0x10;
+            static const unsigned BY_BOTH = BY_REAC | BY_PROD;
+            static const unsigned ID_MASK = BY_REAC | BY_PROD | BY_BOTH;
 
             //__________________________________________________________________
             //
