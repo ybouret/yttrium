@@ -13,6 +13,74 @@ namespace Yttrium
     namespace Ink
     {
 
+        template <typename T>
+        struct BlockOps
+        {
+            template <size_t N>
+            static void Minimum(T &out, const T * const arr)
+            {
+                assert(0!=arr);
+                T res = arr[0];
+                for(size_t i=1;i<N;++i) res = Min(res,arr[i]);
+                out = res;
+            }
+
+            template <size_t N>
+            static void Maximum(T &out, const T * const arr)
+            {
+                assert(0!=arr);
+                T res = arr[0];
+                for(size_t i=1;i<N;++i) res = Max(res,arr[i]);
+                out = res;
+            }
+        };
+
+        template <template <typename> class COLOR, typename T>
+        struct BlockOps< COLOR<T> >
+        {
+            typedef COLOR<T> ColorType;
+            static const unsigned NCH = ColorType::NumChannels;
+
+            template <size_t N> static void Load( T chan[NCH][N], const ColorType * const arr ) noexcept
+            {
+                for(size_t i=0;i<N;++i)
+                {
+                    const ColorType C = arr[i];
+                    const T * const c = (const T *) &C;
+                    for(size_t j=0;j<NCH;++j)
+                    {
+                        chan[j][i] = c[j];
+                    }
+                }
+            }
+
+            template <size_t N>
+            static void Minimum(ColorType &out, const ColorType * const arr)
+            {
+                assert(0!=arr);
+                T chan[NCH][N];
+                Load<N>(chan,arr);
+                T * const c = (T*)&out;
+                for(size_t j=0;j<NCH;++j)
+                    BlockOps<T>::template Minimum<N>(c[j], chan[j]);
+            }
+
+            template <size_t N>
+            static void Maximum(ColorType &out, const ColorType * const arr)
+            {
+                assert(0!=arr);
+                T chan[NCH][N];
+                Load<N>(chan,arr);
+                T * const c = (T*)&out;
+                for(size_t j=0;j<NCH;++j)
+                    BlockOps<T>::template Maximum<N>(c[j], chan[j]);
+            }
+
+
+
+        };
+
+
 
         template <size_t DeltaX, size_t DeltaY>
         class Block
@@ -99,23 +167,8 @@ void BlockAverage(T &out, const T * const arr)
     out = sum/N;
 }
 
-template <size_t N, typename T> static inline
-void BlockMin(T &out, const T * const arr)
-{
-    assert(N>0);
-    T res = arr[0];
-    for(size_t i=1;i<N;++i) res = Min(res,arr[i]);
-    out = res;
-}
 
-template <size_t N, typename T> static inline
-void BlockMax(T &out, const T * const arr)
-{
-    assert(N>0);
-    T res = arr[0];
-    for(size_t i=1;i<N;++i) res = Max(res,arr[i]);
-    out = res;
-}
+
 
 #include "y/sort/nw.hpp"
 template <size_t N, typename T> static inline
@@ -145,23 +198,35 @@ Y_UTEST(block)
         const Pixmap<RGBA>  img = IMG.load(argv[1],0);
         const Pixmap<float> pxf(par,Color::GrayScale::Pack<float,RGBA>,img);
         
-        IMG.save(img, "img.png", 0);
+        IMG.save(img, "img-rgb.png", 0);
+        Pixmap<RGBA>        tgt(img.w,img.h);
         Pixmap<float>       out(img.w,img.h);
+
         Blk3x3              blk;
-        IMG.save(pxf, "pxf.png", 0, par, cr);
+        IMG.save(pxf, "img-flt.png", 0, par, cr);
 
 
         blk(par,out,BlockAverage<Blk3x3::N,float>,pxf);
-        IMG.save(out, "ave.png", 0, par, cr);
+        IMG.save(out, "ave-flt.png", 0, par, cr);
 
-        blk(par,out,BlockMin<Blk3x3::N,float>,pxf);
-        IMG.save(out, "min.png", 0, par, cr);
 
-        blk(par,out,BlockMax<Blk3x3::N,float>,pxf);
-        IMG.save(out, "max.png", 0, par, cr);
+        blk(par,out,BlockOps<float>::Minimum<Blk3x3::N>,pxf);
+        IMG.save(out, "min-flt.png", 0, par, cr);
+
+        blk(par,tgt,BlockOps<RGBA>::Minimum<Blk3x3::N>,img);
+        IMG.save(tgt, "min-rgb.png", 0);
+
+
+        blk(par,out,BlockOps<float>::Maximum<Blk3x3::N>,pxf);
+        IMG.save(out, "max-flt.png", 0, par, cr);
+
+        blk(par,tgt,BlockOps<RGBA>::Maximum<Blk3x3::N>,img);
+        IMG.save(tgt, "max-rgb.png", 0);
+
+
 
         blk(par,out,BlockMed<Blk3x3::N,float>,pxf);
-        IMG.save(out, "med.png", 0, par, cr);
+        IMG.save(out, "med-flt.png", 0, par, cr);
 
 
 
