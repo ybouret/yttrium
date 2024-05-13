@@ -1,34 +1,34 @@
-#include "y/chemical/reactive/plexus/landscape.hpp"
+#include "y/chemical/reactive/plexus/fence.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
-        Landscape:: ~Landscape() noexcept {}
-        
-        Landscape:: Landscape(const BBank &bbank,
-                              const SBank &sbank) noexcept :
+        Fence:: ~Fence() noexcept {}
+
+        Fence:: Fence(const BBank &bbank,
+                      const SBank &sbank) noexcept :
         capping(bbank,sbank),
         missing(bbank,sbank)
         {
         }
 
-        Landscape:: Landscape(const Landscape &other) : capping(other.capping), missing(other.missing)
+        Fence:: Fence(const Fence &other) : capping(other.capping), missing(other.missing)
         {
         }
 
-        std::ostream & operator<<(std::ostream &os, const Landscape &self)
+        std::ostream & operator<<(std::ostream &os, const Fence &self)
         {
             os << "capping=" << self.capping << " / missing=" << self.missing;
             return os;
         }
 
-        void Landscape:: reset() noexcept { capping.reset(); missing.reset(); }
+        void Fence:: reset() noexcept { capping.reset(); missing.reset(); }
 
 
-        void  Landscape:: shape(const Components &components,
-                                const XReadable  &C,
-                                const Level       level)
+        void  Fence:: shape(const Components &components,
+                            const XReadable  &C,
+                            const Level       level)
         {
             //--------------------------------------------------------------
             //
@@ -82,50 +82,57 @@ namespace Yttrium
         }
 
 
-        void Landscape:: study()
+        Fence::Status Fence:: study(const Boundary * &how, XMLog &xml)
         {
             static const unsigned MISSING_NONE = 0x00;
             static const unsigned MISSING_REAC = 0x01;
             static const unsigned MISSING_PROD = 0x02;
             static const unsigned MISSING_BOTH = MISSING_REAC|MISSING_PROD;;
 
+            how = 0;
             unsigned                 flag  = MISSING_NONE;
             if(missing.reac->size>0) flag |= MISSING_REAC;
             if(missing.prod->size>0) flag |= MISSING_PROD;
 
             switch(flag)
             {
-                case MISSING_NONE: return; // RUNNING
+                case MISSING_NONE:
+                    Y_XMLOG(xml, "MISSING_NONE");
+                    return Running; // RUNNING
 
                 case MISSING_REAC:
+                    Y_XMLOG(xml, "MISSING_REAC");
                     assert(0==missing.prod->size);
                     assert(missing.reac->size>0);
+                    std::cerr << "MISSING_REAC todo" << std::endl;
+                    exit(0);
                     break;
 
+
                 case MISSING_PROD: {
+                    Y_XMLOG(xml, "MISSING_PROD");
                     assert(0==missing.reac->size);
                     assert(missing.prod->size>0);
                     const Boundary * const dom = capping.reac.dominant();
                     if(0==dom)
                     {
-                        
+
                     }
                     else
                     {
 
                     }
+                    std::cerr << "MISSING_PROD todo" << std::endl;
+                    exit(0);
                 }   break;
 
-
-
-
                 case MISSING_BOTH:
-                    break;
                 default:
+                    Y_XMLOG(xml, "MISSING_BOTH");
                     break;
             }
             assert(MISSING_BOTH==flag);
-            return; // BLOCKED
+            return BlockedByBoth;
         }
     }
 

@@ -5,15 +5,13 @@
 #define Y_Chemical_Controller_Included 1
 
 #include "y/chemical/reactive/equilibrium.hpp"
-#include "y/chemical/reactive/plexus/landscape.hpp"
+#include "y/chemical/reactive/plexus/fence.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
-
-
-
+        
         //______________________________________________________________________
         //
         //

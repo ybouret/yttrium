@@ -1,39 +1,46 @@
 
 //! \file
 
-#ifndef Y_Chemical_Landscape_Included
-#define Y_Chemical_Landscape_Included 1
+#ifndef Y_Chemical_Fence_Included
+#define Y_Chemical_Fence_Included 1
 
 #include "y/chemical/reactive/equilibrium.hpp"
 #include "y/chemical/reactive/plexus/limits.hpp"
+#include "y/stream/xmlog.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
-        
+
 
         //______________________________________________________________________
         //
         //
         //
-        //! Landscape of boundaries for a controller
+        //! Fence made of boundaries for a controller
         //
         //
         //______________________________________________________________________
-        class Landscape
+        class Fence
         {
         public:
+            enum Status
+            {
+                Running,
+                BlockedByBoth
+            };
+
             //__________________________________________________________________
             //
             //
             // C++
             //
             //__________________________________________________________________
-            Landscape(const BBank &, const SBank &) noexcept ; //!< setup
-            Landscape(const Landscape &);                      //!< copy
-            ~Landscape() noexcept;                             //!< cleanup
-            Y_OSTREAM_PROTO(Landscape);                        //!< display
+            Fence(const BBank &, const SBank &) noexcept ; //!< setup
+            Fence(const Fence &);                          //!< copy
+            ~Fence() noexcept;                             //!< cleanup
+            Y_OSTREAM_PROTO(Fence);                        //!< display
 
             //__________________________________________________________________
             //
@@ -51,8 +58,8 @@ namespace Yttrium
                        const Level       level);
 
             //! todo
-            void study();
-            
+            Status study(const Boundary * &how, XMLog &xml);
+
 
             //__________________________________________________________________
             //
@@ -64,7 +71,7 @@ namespace Yttrium
             Limits missing; //!< missing by negative concentrations
 
         private:
-            Y_DISABLE_ASSIGN(Landscape);
+            Y_DISABLE_ASSIGN(Fence);
         };
 
     }
