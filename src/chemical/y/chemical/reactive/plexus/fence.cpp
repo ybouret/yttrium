@@ -119,56 +119,63 @@ namespace Yttrium
             {
                     //----------------------------------------------------------
                     //
-                case MISSING_NONE: Y_XMLOG(xml, "MISSING_NONE");
+                case MISSING_NONE: Y_XMLOG(xml, "missing none");
                     //
                     //----------------------------------------------------------
-                    return 0; // RUNNING
+                    return RUNNING;
 
                     //----------------------------------------------------------
                     //
-                case MISSING_REAC: Y_XMLOG(xml, "MISSING_REAC");
+                case MISSING_REAC: {
+                    assert(0==missing.prod->size); assert(missing.reac->size>0);
                     //
                     //----------------------------------------------------------
-
-                    assert(0==missing.prod->size);
-                    assert(missing.reac->size>0);
-                    std::cerr << "MISSING_REAC todo" << std::endl;
-                    exit(0);
-                    break;
-
-                    //----------------------------------------------------------
-                    //
-                case MISSING_PROD: Y_XMLOG(xml, "MISSING_PROD");
-                    //
-                    //----------------------------------------------------------
-                {
-
-                    assert(0==missing.reac->size);
-                    assert(missing.prod->size>0);
-                    const Boundary * const bad = & **(missing.prod->head);
-                    const Boundary * const dom = capping.reac.dominant();
+                    const Boundary * const bad = & **(missing.reac->head); Y_XMLOG(xml, "missing  reac=" << *bad);
+                    const Boundary * const dom = capping.prod.dominant();
                     if(0==dom)
                     {
+                        Y_XMLOG(xml, "no dominant prod");
                         how = bad;
+                        return EQUATED;
                     }
                     else
                     {
-
+                        Y_XMLOG(xml, "dominant prod=" << *dom );
                     }
-                    std::cerr << "MISSING_PROD todo" << std::endl;
                     exit(0);
-                }   break;
+                } return -1;
+
+                    //----------------------------------------------------------
+                    //
+                case MISSING_PROD: {
+                    assert(0==missing.reac->size); assert(missing.prod->size>0);
+                    //
+                    //----------------------------------------------------------
+                    const Boundary * const bad = & **(missing.prod->head); Y_XMLOG(xml, "missing  prod=" << *bad);
+                    const Boundary * const dom = capping.reac.dominant();
+                    if(0==dom)
+                    {
+                        Y_XMLOG(xml, "no dominant reac");
+                        how = bad;
+                        return EQUATED;
+                    }
+                    else
+                    {
+                        Y_XMLOG(xml, "dominant reac=" << *dom );
+                    }
+                    exit(0);
+                } return -1;
 
                     //----------------------------------------------------------
                     //
                 case MISSING_BOTH:
-                default:           Y_XMLOG(xml, "MISSING_BOTH");
+                default:           Y_XMLOG(xml, "missing both");
                     //
                     //----------------------------------------------------------
                     break;
             }
             assert(MISSING_BOTH==flag);
-            return 1;
+            return BLOCKED | BY_BOTH;
         }
     }
 

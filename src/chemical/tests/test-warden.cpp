@@ -50,7 +50,7 @@ Y_UTEST(warden)
         for(const Controller *cntl=cl->controllers.head;cntl;cntl=cntl->next)
         {
             fence.shape(cntl->components, C0, TopLevel);
-            std::cerr << fence << std::endl;
+            Y_XMLOG(xml,fence);
             fence.study(how,xml);
         }
     }
