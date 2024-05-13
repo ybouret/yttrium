@@ -7,6 +7,7 @@
 #include "y/color/grayscale.hpp"
 #include "y/color/ramp/gradation.hpp"
 #include "y/color/rgb/x11.hpp"
+#include "y/sort/nw.hpp"
 
 namespace Yttrium
 {
@@ -32,6 +33,14 @@ namespace Yttrium
                 T res = arr[0];
                 for(size_t i=1;i<N;++i) res = Max(res,arr[i]);
                 out = res;
+            }
+
+            template <size_t N>
+            static void Median(T &out, T * const arr)
+            {
+                T * const tableau = arr-1;
+                NetworkSort::Algo<N>::Increasing(tableau);
+                out = arr[N>>1];
             }
         };
 
@@ -76,7 +85,16 @@ namespace Yttrium
                     BlockOps<T>::template Maximum<N>(c[j], chan[j]);
             }
 
-
+            template <size_t N>
+            static void Median(ColorType &out, const ColorType * const arr)
+            {
+                assert(0!=arr);
+                T chan[NCH][N];
+                Load<N>(chan,arr);
+                T * const c = (T*)&out;
+                for(size_t j=0;j<NCH;++j)
+                    BlockOps<T>::template Median<N>(c[j], chan[j]);
+            }
 
         };
 
@@ -170,16 +188,6 @@ void BlockAverage(T &out, const T * const arr)
 
 
 
-#include "y/sort/nw.hpp"
-template <size_t N, typename T> static inline
-void BlockMed(T &out,  T * const arr)
-{
-    assert(N>0);
-    T * const tableau = arr-1;
-    NetworkSort::Algo<N>::Increasing(tableau);
-    out = arr[N>>1];
-}
-
 
 Y_UTEST(block)
 {
@@ -223,12 +231,11 @@ Y_UTEST(block)
         blk(par,tgt,BlockOps<RGBA>::Maximum<Blk3x3::N>,img);
         IMG.save(tgt, "max-rgb.png", 0);
 
-
-
-        blk(par,out,BlockMed<Blk3x3::N,float>,pxf);
+        blk(par,out,BlockOps<float>::Median<Blk3x3::N>,pxf);
         IMG.save(out, "med-flt.png", 0, par, cr);
 
-
+        blk(par,tgt,BlockOps<RGBA>::Median<Blk3x3::N>,img);
+        IMG.save(tgt, "med-rgb.png", 0);
 
     }
 
