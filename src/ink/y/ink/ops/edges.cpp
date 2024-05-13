@@ -115,9 +115,10 @@ namespace Yttrium
                         const size_t n = scan.size;
                         for(size_t k=n;k>0;--k)
                         {
-                            CoordNode  *node = edge->pushTail(scan.popTail());
-                            const Coord here = **node; assert(indx==label[here]);
-                            for(unsigned p=0;p<conn;++p)
+                            CoordNode     *node = edge->pushTail(scan.popTail());
+                            const Coord    here = **node; assert(indx==label[here]);
+                            const unsigned npos = conn;
+                            for(unsigned p=0;p<npos;++p)
                             {
                                 const Coord pos = here + Edge::Delta[p];
                                 if(!label.contains(pos))                     continue;    // out of domain

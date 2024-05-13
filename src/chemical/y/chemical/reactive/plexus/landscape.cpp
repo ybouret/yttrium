@@ -107,6 +107,8 @@ namespace Yttrium
                     assert(missing.prod->size>0);
                     break;
 
+                case MISSING_BOTH:
+                    break;
                 default:
                     break;
             }
