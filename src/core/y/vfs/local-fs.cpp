@@ -203,7 +203,7 @@ namespace Yttrium
             Y_GIANT_LOCK();
             if (ready)
             {
-                AutoPtr<VFS::Entry> ep = new VFS::Entry(fs, fData.cFileName);
+                AutoPtr<VFS::Entry> ep = new VFS::Entry(vfs, fData.cFileName);
                 ready = ::FindNextFile(hFind, &fData);
                 return ep.yield();
             }
