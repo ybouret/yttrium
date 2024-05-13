@@ -43,15 +43,14 @@ Y_UTEST(warden)
     SBank        sbank;
     Fence        fence(bbank,sbank);
 
-    const Boundary *how = 0;
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
         Y_XML_SECTION_OPT(xml, "Cluster::Shaping"," cntl='" << cl->controllers.size << "'");
         for(const Controller *cntl=cl->controllers.head;cntl;cntl=cntl->next)
         {
             fence.shape(cntl->components, C0, TopLevel);
-            Y_XMLOG(xml,fence);
-            fence.study(how,xml);
+            Y_XMLOG(xml," (*) " << fence);
+            fence.study(xml);
         }
     }
 

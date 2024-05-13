@@ -63,7 +63,7 @@ namespace Yttrium
                        const Level       level);
 
             //! todo
-            unsigned study(const Boundary * &how, XMLog &xml);
+            unsigned study(XMLog &xml);
 
 
             //__________________________________________________________________
@@ -72,11 +72,13 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            Limits capping; //!< capping by positive concentrations
-            Limits missing; //!< missing by negative concentrations
-
+            const Limits   capping; //!< capping by positive concentrations
+            const Limits   missing; //!< missing by negative concentrations
+            const xreal_t  cursor;  //!< strategy when possible
+            const SRepo    zeroed;  //!< vanishing when possible
         private:
             Y_DISABLE_ASSIGN(Fence);
+            void initWith(const Boundary * const bad, const bool reverse);
         };
 
     }

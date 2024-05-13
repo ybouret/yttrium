@@ -69,6 +69,14 @@ namespace Yttrium
                 return *this;
             }
 
+            //! mergeTail another list
+            inline LightList & operator<<( const LightList &other )
+            {
+                LightList temp(other);
+                this->mergeTail(temp);
+                return *this;
+            }
+
             //! pushHead
             inline LightList & operator>>( Type &args )
             {

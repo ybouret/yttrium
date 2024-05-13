@@ -9,11 +9,17 @@ namespace Yttrium
         Fence:: Fence(const BBank &bbank,
                       const SBank &sbank) noexcept :
         capping(bbank,sbank),
-        missing(bbank,sbank)
+        missing(bbank,sbank),
+        cursor(0),
+        zeroed(sbank)
         {
         }
 
-        Fence:: Fence(const Fence &other) : capping(other.capping), missing(other.missing)
+        Fence:: Fence(const Fence &other) : 
+        capping(other.capping),
+        missing(other.missing),
+        cursor(other.cursor),
+        zeroed(other.zeroed)
         {
         }
 
@@ -23,7 +29,12 @@ namespace Yttrium
             return os;
         }
 
-        void Fence:: reset() noexcept { capping.reset(); missing.reset(); }
+        void Fence:: reset() noexcept { 
+            Coerce(capping).reset();
+            Coerce(missing).reset();
+            Coerce(cursor) = 0;
+            Coerce(zeroed).free();
+        }
 
 
         void  Fence:: shape(const Components &components,
@@ -50,11 +61,11 @@ namespace Yttrium
                 const xreal_t  cc = C[sp.indx[level]];
                 if(cc>=zero)
                 {
-                    capping.reac(sp,cc/nu);
+                    Coerce(capping).reac(sp,cc/nu);
                 }
                 else
                 {
-                    missing.reac(sp,(-cc)/nu);
+                    Coerce(missing).reac(sp,(-cc)/nu);
                 }
             }
 
@@ -70,11 +81,11 @@ namespace Yttrium
                 const xreal_t  cc = C[sp.indx[level]];
                 if(cc>=zero)
                 {
-                    capping.prod(sp,cc/nu);
+                    Coerce(capping).prod(sp,cc/nu);
                 }
                 else
                 {
-                    missing.prod(sp,(-cc)/nu);
+                    Coerce(missing).prod(sp,(-cc)/nu);
                 }
             }
 
@@ -82,8 +93,20 @@ namespace Yttrium
         }
 
 
-        unsigned Fence:: study(const Boundary * &how, XMLog &xml)
+        void Fence:: initWith(const Boundary * const bad, const bool reverse)
         {
+            assert(0!=bad);
+            const Boundary &bnd = *bad;
+            Coerce(cursor) = reverse ? -(bnd.xi) : bnd.xi;
+            Coerce(zeroed) << *bnd;
+            assert(zeroed.size==bnd->size);
+        }
+
+        unsigned Fence:: study(XMLog &xml)
+        {
+            assert(0==zeroed.size);
+            assert(MKL::Fabs<xreal_t>::Of(cursor) <= xreal_t(0));
+
             //------------------------------------------------------------------
             //
             //
@@ -103,7 +126,6 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            how = 0;
             unsigned                 flag  = MISSING_NONE;
             if(missing.reac->size>0) flag |= MISSING_REAC;
             if(missing.prod->size>0) flag |= MISSING_PROD;
@@ -119,57 +141,63 @@ namespace Yttrium
             {
                     //----------------------------------------------------------
                     //
-                case MISSING_NONE: Y_XMLOG(xml, "missing none");
+                    //
+                case MISSING_NONE: Y_XMLOG(xml, " (-) missing none");
+                    //
                     //
                     //----------------------------------------------------------
                     return RUNNING;
 
                     //----------------------------------------------------------
                     //
-                case MISSING_REAC: {
-                    assert(0==missing.prod->size); assert(missing.reac->size>0);
+                    //
+                case MISSING_REAC: {  assert(0==missing.prod->size); assert(missing.reac->size>0);
+                    //
                     //
                     //----------------------------------------------------------
-                    const Boundary * const bad = & **(missing.reac->head); Y_XMLOG(xml, "missing  reac=" << *bad);
+                    const Boundary * const bad = & **(missing.reac->head); Y_XMLOG(xml, " (+) missing  reac=" << *bad);
                     const Boundary * const dom = capping.prod.dominant();
                     if(0==dom)
                     {
-                        Y_XMLOG(xml, "no dominant prod");
-                        how = bad;
-                        return EQUATED;
+                        Y_XMLOG(xml, " (-) no dominant prod");
+                        initWith(bad,false);
+                        return EQUATED | BY_REAC;
                     }
                     else
                     {
-                        Y_XMLOG(xml, "dominant prod=" << *dom );
+                        Y_XMLOG(xml, " (+) dominant prod=" << *dom );
                     }
                     exit(0);
                 } return -1;
 
                     //----------------------------------------------------------
+                    //
                     //
                 case MISSING_PROD: {
                     assert(0==missing.reac->size); assert(missing.prod->size>0);
                     //
+                    //
                     //----------------------------------------------------------
-                    const Boundary * const bad = & **(missing.prod->head); Y_XMLOG(xml, "missing  prod=" << *bad);
+                    const Boundary * const bad = & **(missing.prod->head); Y_XMLOG(xml, " (+) missing  prod=" << *bad);
                     const Boundary * const dom = capping.reac.dominant();
                     if(0==dom)
                     {
-                        Y_XMLOG(xml, "no dominant reac");
-                        how = bad;
-                        return EQUATED;
+                        Y_XMLOG(xml, " (-) no dominant reac");
+                        initWith(bad,true);
+                        return EQUATED | BY_PROD;
                     }
                     else
                     {
-                        Y_XMLOG(xml, "dominant reac=" << *dom );
+                        Y_XMLOG(xml, " (+) dominant reac=" << *dom );
                     }
                     exit(0);
                 } return -1;
 
                     //----------------------------------------------------------
                     //
+                    //
                 case MISSING_BOTH:
-                default:           Y_XMLOG(xml, "missing both");
+                default:           Y_XMLOG(xml, " (+) missing both");
                     //
                     //----------------------------------------------------------
                     break;
