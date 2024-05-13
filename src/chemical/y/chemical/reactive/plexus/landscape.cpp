@@ -102,22 +102,22 @@ namespace Yttrium
                     assert(missing.reac->size>0);
                     break;
 
-                case MISSING_PROD:
+                case MISSING_PROD: {
                     assert(0==missing.reac->size);
                     assert(missing.prod->size>0);
-
-                    if(0==capping.reac->size)
-                    {
-                        // no capping reactant
-                        return; //
-                    }
-                    else
+                    const Boundary * const dom = capping.reac.dominant();
+                    if(0==dom)
                     {
                         
                     }
+                    else
+                    {
+
+                    }
+                }   break;
 
 
-                    break;
+
 
                 case MISSING_BOTH:
                     break;
