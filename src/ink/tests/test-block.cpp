@@ -8,11 +8,48 @@
 #include "y/color/ramp/gradation.hpp"
 #include "y/color/rgb/x11.hpp"
 #include "y/sort/nw.hpp"
+#include "y/type/traits.hpp"
 
 namespace Yttrium
 {
     namespace Ink
     {
+
+
+
+        template <typename T>
+        struct BlockAverage
+        {
+
+        private:
+            //! assuming integral type
+            template <size_t N> static inline
+            void Compute( const Int2Type<true> &, T &out, const T * const arr)
+            {
+                uint64_t sum = arr[0];
+                for(size_t i=1;i<N;++i) sum += arr[i];
+                out = static_cast<T>(sum/N);
+            }
+
+            //! assuming floating point type
+            template <size_t N> static inline
+            void Compute( const Int2Type<false> &, T &out, const T * const arr)
+            {
+                T       sum = arr[0];
+                for(size_t i=1;i<N;++i) sum += arr[i];
+                out = sum/T(N);
+            }
+
+        public:
+            template <size_t N> static inline
+            void Compute(T &out, const T * const arr)
+            {
+                static const Int2Type<TypeTraits<T>::IsIntegral> Choice;
+                Compute<N>(Choice,out,arr);
+            }
+        };
+
+
 
         template <typename T>
         struct BlockOps
@@ -41,6 +78,12 @@ namespace Yttrium
                 T * const tableau = arr-1;
                 NetworkSort::Algo<N>::Increasing(tableau);
                 out = arr[N>>1];
+            }
+
+            template <size_t N>
+            static void Average(T &out, const T * const arr)
+            {
+                BlockAverage<T>:: template Compute<N>(out,arr);
             }
         };
 
@@ -94,6 +137,17 @@ namespace Yttrium
                 T * const c = (T*)&out;
                 for(size_t j=0;j<NCH;++j)
                     BlockOps<T>::template Median<N>(c[j], chan[j]);
+            }
+
+            template <size_t N>
+            static void Average(ColorType &out, const ColorType * const arr)
+            {
+                assert(0!=arr);
+                T chan[NCH][N];
+                Load<N>(chan,arr);
+                T * const c = (T*)&out;
+                for(size_t j=0;j<NCH;++j)
+                    BlockOps<T>::template Average<N>(c[j], chan[j]);
             }
 
         };
@@ -176,17 +230,6 @@ namespace Yttrium
 using namespace Yttrium;
 using namespace Ink;
 
-template <size_t N, typename T> static inline
-void BlockAverage(T &out, const T * const arr)
-{
-    assert(N>0);
-    T sum = 0;
-    for(size_t i=0;i<N;++i) sum += arr[i];
-    out = sum/N;
-}
-
-
-
 
 
 Y_UTEST(block)
@@ -214,8 +257,11 @@ Y_UTEST(block)
         IMG.save(pxf, "img-flt.png", 0, par, cr);
 
 
-        blk(par,out,BlockAverage<Blk3x3::N,float>,pxf);
+        blk(par,out,BlockOps<float>::Average<Blk3x3::N>,pxf);
         IMG.save(out, "ave-flt.png", 0, par, cr);
+
+        blk(par,tgt,BlockOps<RGBA>::Average<Blk3x3::N>,img);
+        IMG.save(tgt, "ave-rgb.png", 0);
 
 
         blk(par,out,BlockOps<float>::Minimum<Blk3x3::N>,pxf);
