@@ -74,19 +74,19 @@ namespace Yttrium
         {
         public:
             explicit LocalScanner(const VFS &fsys, const String &dirName) :
-            VFS::Scanner(fsys,dirName), dir(Setup(dirName))
+            VFS::Scanner(fsys,dirName), handle(Setup(dirName))
             {
             }
 
             virtual ~LocalScanner() noexcept
             {
                 Y_GIANT_LOCK();
-                assert(0 != dir);
-                closedir(dir);
-                dir = 0;
+                assert(0 != handle);
+                closedir(handle);
+                Coerce(handle) = 0;
             }
 
-            DIR *dir;
+            DIR * const handle;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(LocalScanner);
@@ -106,10 +106,10 @@ namespace Yttrium
             {
                 Y_GIANT_LOCK();
                 assert(0 != dir);
-                const dirent * const dp = readdir(dir);
+                const dirent * const dp = readdir(handle);
                 if (!dp) return 0;
-                const String path = directory + dp->d_name;
-                return new VFS::Entry(fs,path);
+                const String path = dir + dp->d_name;
+                return new VFS::Entry(vfs,path);
             }
         };
     }

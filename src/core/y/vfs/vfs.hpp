@@ -169,8 +169,8 @@ namespace Yttrium
             virtual Entry *get()          = 0;            //!< get next entry
         protected:
             explicit       Scanner(const VFS &,const String &) ; //!< setup
-            const VFS     &fs;                                   //!< original vfs
-            const String   directory;
+            const VFS     &vfs;                                  //!< original vfs
+            const String   dir;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Scanner);

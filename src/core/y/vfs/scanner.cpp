@@ -6,10 +6,10 @@ namespace Yttrium
 {
 
     VFS::Scanner:: Scanner(const VFS &_, const String &__)  :
-    fs(_), directory(__)
+    vfs(_), dir(__)
     {
-        String tmp = MakeDirName(directory);
-        Coerce(directory).swapWith(tmp);
+        String tmp = MakeDirName(dir);
+        Coerce(dir).swapWith(tmp);
     }
 
     VFS::Scanner:: ~Scanner() noexcept
