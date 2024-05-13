@@ -82,7 +82,7 @@ namespace Yttrium
         }
 
 
-        Equilibrium::Status Landscape:: study()
+        void Landscape:: study()
         {
             static const unsigned MISSING_NONE = 0x00;
             static const unsigned MISSING_REAC = 0x01;
@@ -95,8 +95,8 @@ namespace Yttrium
 
             switch(flag)
             {
-                case MISSING_NONE: return Equilibrium::Running;
-                    
+                case MISSING_NONE: return; // RUNNING
+
                 case MISSING_REAC:
                     assert(0==missing.prod->size);
                     assert(missing.reac->size>0);
@@ -105,6 +105,18 @@ namespace Yttrium
                 case MISSING_PROD:
                     assert(0==missing.reac->size);
                     assert(missing.prod->size>0);
+
+                    if(0==capping.reac->size)
+                    {
+                        // no capping reactant
+                        return; //
+                    }
+                    else
+                    {
+                        
+                    }
+
+
                     break;
 
                 case MISSING_BOTH:
@@ -113,7 +125,7 @@ namespace Yttrium
                     break;
             }
             assert(MISSING_BOTH==flag);
-            return Equilibrium::Blocked;
+            return; // BLOCKED
         }
     }
 

@@ -54,6 +54,8 @@ namespace Yttrium
             void operator()(const Species &s,
                             const xreal_t  x);
 
+            const Boundary *dominant() const noexcept;
+            
         private:
             Y_DISABLE_ASSIGN(Boundaries);
             BList       impl;

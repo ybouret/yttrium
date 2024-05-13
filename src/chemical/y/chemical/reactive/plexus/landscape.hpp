@@ -50,7 +50,7 @@ namespace Yttrium
                        const Level       level);
 
             //! todo
-            Equilibrium::Status study();
+            void study();
             
 
             //__________________________________________________________________
