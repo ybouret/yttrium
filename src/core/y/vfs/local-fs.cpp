@@ -48,6 +48,7 @@ namespace Yttrium
 
 namespace Yttrium
 {
+	// to use FindNextFile API
     String LocalFS:: MakeWin32Path(const String &dirName)
     {
         static const char xtnd[] = { '\\', '*', 0, 0 };
@@ -203,7 +204,10 @@ namespace Yttrium
             Y_GIANT_LOCK();
             if (ready)
             {
-                AutoPtr<VFS::Entry> ep = new VFS::Entry(vfs, fData.cFileName);
+				const char * const cFileName = fData.cFileName;
+				const String       cFilePath = dir + cFileName;
+				//std::cerr << "cFileName=" << cFileName << std::endl;
+                AutoPtr<VFS::Entry> ep = new VFS::Entry(vfs,cFilePath);
                 ready = ::FindNextFile(hFind, &fData);
                 return ep.yield();
             }
@@ -215,6 +219,7 @@ namespace Yttrium
     VFS::EntryType LocalFS:: findEntryType(const String &path, bool &link) const
     {
 		Y_GIANT_LOCK();
+		std::cerr << "Win32 findEntryType('" << path << "')" << std::endl;
 		link = false;
 		const DWORD res = ::GetFileAttributes(path.c_str());
 		if (INVALID_FILE_ATTRIBUTES == res)
