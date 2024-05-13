@@ -12,7 +12,7 @@ namespace Yttrium
 
         void Codec::save(const Image   &image,
                          const char    *fileName,
-                         const Options *options)
+                         const Options *options) const
         {
             const String _(fileName);
             save(image,_,options);

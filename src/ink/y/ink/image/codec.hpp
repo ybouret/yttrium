@@ -61,7 +61,7 @@ namespace Yttrium
             //! wrapper for save
             void save(const Image   &image,
                       const char    *fileName,
-                      const Options *options);
+                      const Options *options) const;
 
             //! wrapper for load
             Image load(const char    *fileName,
@@ -92,7 +92,7 @@ namespace Yttrium
                       const FILENAME       &fileName,
                       const Options * const options,
                       Slabs                &slabs,
-                      PIXEL2RGBA           &pixel2rgba)
+                      PIXEL2RGBA           &pixel2rgba) const
             {
                 const Image image(slabs,pixel2rgba,surface);
                 save(image,fileName,options);
