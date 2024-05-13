@@ -8,6 +8,7 @@
 
 #if defined(Y_WIN)
 #include <windows.h>
+#include "y/exception.hpp"
 #endif
 
 namespace Yttrium
