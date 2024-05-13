@@ -25,11 +25,12 @@ namespace Yttrium
         class Fence
         {
         public:
-            enum Status
-            {
-                Running,
-                BlockedByBoth
-            };
+            static const unsigned RUNNING = 0x00;
+            static const unsigned BLOCKED = 0x01;
+            static const unsigned PARTIAL = 0x02;
+            static const unsigned EQUATED = 0x04;
+            static const unsigned BY_REAC = 0x08;
+            static const unsigned BY_PROD = 0x10;
 
             //__________________________________________________________________
             //
@@ -58,7 +59,7 @@ namespace Yttrium
                        const Level       level);
 
             //! todo
-            Status study(const Boundary * &how, XMLog &xml);
+            unsigned study(const Boundary * &how, XMLog &xml);
 
 
             //__________________________________________________________________
