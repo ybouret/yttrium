@@ -206,7 +206,6 @@ namespace Yttrium
             {
 				const char * const cFileName = fData.cFileName;
 				const String       cFilePath = dir + cFileName;
-				//std::cerr << "cFileName=" << cFileName << std::endl;
                 AutoPtr<VFS::Entry> ep = new VFS::Entry(vfs,cFilePath);
                 ready = ::FindNextFile(hFind, &fData);
                 return ep.yield();
@@ -219,19 +218,20 @@ namespace Yttrium
     VFS::EntryType LocalFS:: findEntryType(const String &path, bool &link) const
     {
 		Y_GIANT_LOCK();
-		std::cerr << "Win32 findEntryType('" << path << "')" << std::endl;
 		link = false;
 		const DWORD res = ::GetFileAttributes(path.c_str());
 		if (INVALID_FILE_ATTRIBUTES == res)
 		{
+			//Win32::Exception excp(::GetLastError(), "GetFileAttr");
+			//excp.display();
 			return IsUnk;
 		}
 		//std::cerr << "res=" << res << std::endl;
 		
-		if (res & FILE_ATTRIBUTE_DIRECTORY)
+		if ( 0 != (res & FILE_ATTRIBUTE_DIRECTORY) )
 			return IsDir;
 
-		if (res & FILE_ATTRIBUTE_NORMAL)
+		if ( 0 != (res & FILE_ATTRIBUTE_ARCHIVE) )
 			return IsReg;
 
         return IsUnk;

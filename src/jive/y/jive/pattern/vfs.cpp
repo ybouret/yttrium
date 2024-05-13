@@ -18,7 +18,7 @@ namespace Yttrium
             AutoPtr<VFS::Entry>   ep   = 0;
             while( (ep = scan->get() ).isValid() )
             {
-				std::cerr << "[" << ep << "]" << std::endl;
+				//std::cerr << "[" << ep << "]" << std::endl;
                 if(!ep->isReg()) continue;
                 const String data = ep->pry(part);
                 if( match.exactly(ep->path,data) )
