@@ -11,11 +11,17 @@ namespace Yttrium
     namespace Color
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! Black To White Gradation
+        //
+        //______________________________________________________________________
         class BlackAndWhite : public Gradation
         {
         public:
-            explicit BlackAndWhite() noexcept;
-            virtual ~BlackAndWhite() noexcept;
+            explicit BlackAndWhite() noexcept; //!< setup
+            virtual ~BlackAndWhite() noexcept; //!< cleanup
         private:
             Y_DISABLE_COPY_AND_ASSIGN(BlackAndWhite);
         };

@@ -11,12 +11,17 @@ namespace Yttrium
 {
     namespace Color
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! Cold To Hot Gradation
+        //
+        //______________________________________________________________________
         class ColdToHot : public Gradation
         {
         public:
-            explicit ColdToHot() noexcept;
-            virtual ~ColdToHot() noexcept;
+            explicit ColdToHot() noexcept; //!< setup
+            virtual ~ColdToHot() noexcept; //!< cleanup
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ColdToHot);
         };

@@ -52,6 +52,7 @@ namespace Yttrium
             const RampColor * const tail;
         };
 
+        //! helper to build gradation from static array
 #define Y_COLOR_GRADATION(ARR) ARR, sizeof(ARR)/sizeof(ARR[0])
 
     }

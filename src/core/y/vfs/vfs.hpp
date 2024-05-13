@@ -45,8 +45,8 @@ namespace Yttrium
         static String ChangedExtension(const String      & newExt, const String & path); //!< change extension
 
 
-        static String RemovedExtension(const char * const path, const size_t size); //! path with removed extension
-        static String RemovedExtension(const String& path);                         //! path with removed extension
+        static String RemovedExtension(const char * const path, const size_t size); //!< path with removed extension
+        static String RemovedExtension(const String& path);                         //!< path with removed extension
 
 
         //______________________________________________________________________

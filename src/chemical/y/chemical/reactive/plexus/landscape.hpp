@@ -12,14 +12,34 @@ namespace Yttrium
     namespace Chemical
     {
 
-        
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Landscape of boundaries for a controller
+        //
+        //
+        //______________________________________________________________________
         class Landscape
         {
         public:
-            Landscape(const BBank &, const SBank &) noexcept ;
-            Landscape(const Landscape &);
-            ~Landscape() noexcept;
-            Y_OSTREAM_PROTO(Landscape);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            Landscape(const BBank &, const SBank &) noexcept ; //!< setup
+            Landscape(const Landscape &);                      //!< copy
+            ~Landscape() noexcept;                             //!< cleanup
+            Y_OSTREAM_PROTO(Landscape);                        //!< display
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
             //! reset all limits
             void reset() noexcept;
@@ -29,13 +49,18 @@ namespace Yttrium
                        const XReadable  &C,
                        const Level       level);
 
+            //! todo
             Equilibrium::Status study();
             
 
-
-
-            Limits capping;
-            Limits missing;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            Limits capping; //!< capping by positive concentrations
+            Limits missing; //!< missing by negative concentrations
 
         private:
             Y_DISABLE_ASSIGN(Landscape);
