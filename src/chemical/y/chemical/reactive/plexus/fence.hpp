@@ -57,13 +57,13 @@ namespace Yttrium
             //! reset all limits
             void reset() noexcept;
 
-            //! shape limits from CONSERVED components and concentrations
+            //! shape limits from components and concentrations
             void shape(const Components &components,
                        const XReadable  &C,
                        const Level       level);
 
             //! todo
-            unsigned study(XMLog &xml);
+            unsigned studyController(XMLog &xml);
 
 
             //__________________________________________________________________
@@ -78,7 +78,7 @@ namespace Yttrium
             const SRepo    zeroed;  //!< vanishing when possible
         private:
             Y_DISABLE_ASSIGN(Fence);
-            void initWith(const Boundary * const bad, const bool reverse);
+            void initWith(const Boundary &bad, const bool reverse);
         };
 
     }

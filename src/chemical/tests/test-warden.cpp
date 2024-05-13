@@ -50,7 +50,7 @@ Y_UTEST(warden)
         {
             fence.shape(cntl->components, C0, TopLevel);
             Y_XMLOG(xml," (*) " << fence);
-            fence.study(xml);
+            fence.studyController(xml);
         }
     }
 

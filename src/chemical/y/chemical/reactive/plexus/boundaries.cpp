@@ -26,20 +26,7 @@ namespace Yttrium
         {
         }
         
-        const Boundary * Boundaries:: dominant() const noexcept
-        {
-            const BNode * const node = impl.head;
-            if(0!=node)
-            {
-                return & **node;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-
-
+        
         bool Boundaries:: contains(const Species &s) const noexcept
         {
             for(const BNode *node=impl.head;node;node=node->next)

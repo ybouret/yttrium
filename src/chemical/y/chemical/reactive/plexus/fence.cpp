@@ -93,16 +93,14 @@ namespace Yttrium
         }
 
 
-        void Fence:: initWith(const Boundary * const bad, const bool reverse)
+        void Fence:: initWith(const Boundary &  bad, const bool reverse)
         {
-            assert(0!=bad);
-            const Boundary &bnd = *bad;
-            Coerce(cursor) = reverse ? -(bnd.xi) : bnd.xi;
-            Coerce(zeroed) << *bnd;
-            assert(zeroed.size==bnd->size);
+            Coerce(cursor) = reverse ? -(bad.xi) : bad.xi;
+            Coerce(zeroed) << *bad;
+            assert(zeroed.size==bad->size);
         }
 
-        unsigned Fence:: study(XMLog &xml)
+        unsigned Fence:: studyController(XMLog &xml)
         {
             assert(0==zeroed.size);
             assert(MKL::Fabs<xreal_t>::Of(cursor) <= xreal_t(0));
@@ -151,22 +149,16 @@ namespace Yttrium
                     //----------------------------------------------------------
                     //
                     //
-                case MISSING_REAC: {  assert(0==missing.prod->size); assert(missing.reac->size>0);
+                case MISSING_REAC: { 
+                    assert(0==missing.prod->size); assert(missing.reac->size>0); assert(capping.prod->size>0);
                     //
                     //
                     //----------------------------------------------------------
-                    const Boundary * const bad = & **(missing.reac->head); Y_XMLOG(xml, " (+) missing  reac=" << *bad);
-                    const Boundary * const dom = capping.prod.dominant();
-                    if(0==dom)
-                    {
-                        Y_XMLOG(xml, " (-) no dominant prod");
-                        initWith(bad,false);
-                        return EQUATED | BY_REAC;
-                    }
-                    else
-                    {
-                        Y_XMLOG(xml, " (+) dominant prod=" << *dom );
-                    }
+                    const Boundary & bad =  **(missing.reac->head);
+                    const Boundary & dom =  **(capping.prod->head);
+                    Y_XMLOG(xml, " (+) missing  reac=" << bad);
+                    Y_XMLOG(xml, " (+) dominant prod=" << dom );
+
                     exit(0);
                 } return -1;
 
@@ -174,22 +166,15 @@ namespace Yttrium
                     //
                     //
                 case MISSING_PROD: {
-                    assert(0==missing.reac->size); assert(missing.prod->size>0);
+                    assert(0==missing.reac->size); assert(missing.prod->size>0); assert(capping.reac->size>0);
                     //
                     //
                     //----------------------------------------------------------
-                    const Boundary * const bad = & **(missing.prod->head); Y_XMLOG(xml, " (+) missing  prod=" << *bad);
-                    const Boundary * const dom = capping.reac.dominant();
-                    if(0==dom)
-                    {
-                        Y_XMLOG(xml, " (-) no dominant reac");
-                        initWith(bad,true);
-                        return EQUATED | BY_PROD;
-                    }
-                    else
-                    {
-                        Y_XMLOG(xml, " (+) dominant reac=" << *dom );
-                    }
+                    const Boundary & bad = **(missing.prod->head);
+                    const Boundary & dom = **(capping.reac->head);
+                    Y_XMLOG(xml, " (+) missing  prod=" << bad);
+                    Y_XMLOG(xml, " (+) dominant reac=" << dom );
+
                     exit(0);
                 } return -1;
 
