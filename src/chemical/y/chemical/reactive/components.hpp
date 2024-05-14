@@ -81,12 +81,17 @@ namespace Yttrium
              - negative concentration remain negative
              - zeroed species are enforce
              */
-            void moveControl(XWritable       &target,
-                             const Level      tgtlvl,
-                             const xreal_t    cursor,
-                             const SNode *    node,
-                             const XReadable &source,
-                             const Level      srclvl) const;
+            xreal_t moveControl(XWritable       &target,
+                                const Level      tgtlvl,
+                                const xreal_t    cursor,
+                                const SNode *    node,
+                                const XReadable &source,
+                                const Level      srclvl,
+                                XAdd            &xadd) const;
+
+            xreal_t balance(const XReadable &source,
+                            const Level      srclvl,
+                            XAdd            &xadd) const;
 
             //__________________________________________________________________
             //

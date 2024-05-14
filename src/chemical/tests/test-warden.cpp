@@ -44,6 +44,7 @@ Y_UTEST(warden)
     BBank        bbank;
     SBank        sbank;
     Fence        fence(bbank,sbank);
+    XAdd         xadd;
 
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
@@ -60,8 +61,15 @@ Y_UTEST(warden)
                 {
                     C1[i] = C0[i];
                 }
-                cntl->primary.moveControl(C1, TopLevel, fence.cursor, fence.zeroed.head, C0, TopLevel);
+                const xreal_t gain = cntl->primary.moveControl(C1, TopLevel, fence.cursor, fence.zeroed.head, C0, TopLevel, xadd);
                 lib(std::cerr << "C1=",C1) << std::endl;
+                const xreal_t b0 =cntl->primary.balance(C0, TopLevel, xadd);
+                const xreal_t b1 =cntl->primary.balance(C1, TopLevel, xadd);
+
+                std::cerr << "|C0| = " << real_t(b0) << std::endl;
+                std::cerr << "|C1| = " << real_t(b1) << std::endl;
+
+                std::cerr << "gain = " << real_t(gain) << " / " << real_t(b0-b1) << std::endl;
 
             }
 
