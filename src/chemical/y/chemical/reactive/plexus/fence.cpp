@@ -209,6 +209,7 @@ namespace Yttrium
                 case __Zero__:
                     startUpWith(bad,Equilibrium::Forward);
                     proceedWith(dom);
+                    Y_XMLOG(xml, " (*) equated  both=" << zeroed << "@" << real_t(cursor) );
                     assert(cursor>zero);
                     return EQUATED | BY_BOTH;
 
@@ -248,6 +249,7 @@ namespace Yttrium
                 case __Zero__:
                     startUpWith(bad,Equilibrium::Reverse);
                     proceedWith(dom);
+                    Y_XMLOG(xml, " (*) equated  both=" << zeroed << "@" << real_t(cursor) );
                     assert(cursor<zero);
                     return EQUATED | BY_BOTH;
 
