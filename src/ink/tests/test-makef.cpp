@@ -155,18 +155,52 @@ static int UniformWeight(int,int)
 
 static apq OneOverRadius(int i, int j)
 {
-    const int r2 = 1 + 10*(i*i + j*j);
+    const int dx = 1+abs(i);
+    const int dy = 1+abs(j);
+    const int r2 = dx*dx+dy*dy;
     const int r  = IntegerSquareRoot(r2);
     return apq(1,r);
 }
+
+static apq OneOverRadiusSquare(int i, int j)
+{
+    const int dx = 1+abs(i);
+    const int dy = 1+abs(j);
+    const int r2 = dx*dx+dy*dy;
+    //const int r  = IntegerSquareRoot(r2);
+    return apq(1,r2);
+}
+
+
 
 
 Y_UTEST(makef)
 {
 
     MakeFilter mkf;
+    std::cerr << "Uniform 3x3" << std::endl;
     mkf.build(3, UniformWeight);
+    std::cerr << std::endl;
+
+    std::cerr << "Uniform 5x5" << std::endl;
     mkf.build(5, UniformWeight);
+    std::cerr << std::endl;
+
+    std::cerr << "OverR 3x3" << std::endl;
+    mkf.build(3, OneOverRadius);
+    std::cerr << std::endl;
+
+    std::cerr << "OverR 5x5" << std::endl;
+    mkf.build(5, OneOverRadius);
+    std::cerr << std::endl;
+
+    std::cerr << "OverR2 3x3" << std::endl;
+    mkf.build(3, OneOverRadiusSquare);
+    std::cerr << std::endl;
+
+    std::cerr << "OverR2 5x5" << std::endl;
+    mkf.build(5, OneOverRadiusSquare);
+    std::cerr << std::endl;
 
 }
 Y_UDONE()
