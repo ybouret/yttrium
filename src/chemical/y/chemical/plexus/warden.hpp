@@ -5,7 +5,6 @@
 #define Y_Chemical_Warden_Included 1
 
 #include "y/chemical/reactive/clusters.hpp"
-#include "y/data/small/heavy/list/coop.hpp"
 #include "y/container/cxx/array.hpp"
 
 namespace Yttrium
