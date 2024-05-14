@@ -1,0 +1,90 @@
+\documentclass[aps,onecolumn]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{bm}
+
+\usepackage{bookman}
+
+\begin{document}
+
+Let us approximate a surface by:
+\begin{equation}
+	s(x,y) = s_0+ u x + v y + \alpha x^2 + \gamma x y + \beta y^2
+\end{equation}
+
+\begin{equation}
+	D^2 = \dfrac{1}{2} \sum_{i,j} w_{ij} \left[ f_{ij} - s(i,j) \right]^2
+\end{equation}
+
+\begin{equation}
+	\partial_{s_0} D^2 = 0 \implies \sum_{i,j}  w_{ij} f_{ij} = \sum_{i,j} w_{ij} s(i,j)
+\end{equation}
+
+\begin{equation}
+	\partial_{u} D^2 = 0 \implies \sum_{i,j} i w_{ij} f_{ij} = \sum_{i,j} i w_{ij} s(i,j)
+\end{equation}
+
+\begin{equation}
+	\partial_{v} D^2 = 0 \implies \sum_{i,j} j w_{ij} f_{ij} = \sum_{i,j} j w_{ij} s(i,j)
+\end{equation}
+
+\begin{equation}
+	\partial_{\alpha} D^2 = 0 \implies \sum_{i,j} i^2 w_{ij} f_{ij} = \sum_{i,j} i^2 w_{ij} s(i,j)
+\end{equation}
+
+\begin{equation}
+	\partial_{\beta} D^2 = 0 \implies \sum_{i,j} j^2 w_{ij} f_{ij} = \sum_{i,j} j^2 w_{ij} s(i,j)
+\end{equation}
+
+\begin{equation}
+	\partial_{\gamma} D^2 = 0 \implies \sum_{i,j} ij w_{ij} f_{ij} = \sum_{i,j} ij w_{ij} s(i,j)
+\end{equation}
+
+
+\begin{equation}
+\begin{bmatrix}
+\sum w_{ij} & \sum iw_{ij} & \sum jw_{ij} & \sum i^2w_{ij} & \sum j^2w_{ij} & \sum ijw_{ij} \\
+\\
+\sum iw_{ij} & \sum i^2w_{ij} & \sum ijw_{ij} & \sum i^3w_{ij} & \sum ij^2w_{ij} & \sum i^2jw_{ij} \\
+\\
+\sum jw_{ij} & \sum ijw_{ij} & \sum j^2 w_{ij} & \sum i^2 j w_{ij} & \sum j^3 w_{ij} & \sum ij^2 w_{ij} \\
+\\
+\sum i^2w_{ij} & \sum i^3w_{ij} & \sum i^2jw_{ij} & \sum i^4w_{ij} & \sum i^2j^2w_{ij} & \sum i^3jw_{ij} \\
+\\
+\sum j^2w_{ij} & \sum ij^2 w_{ij} & \sum j^3 w_{ij} & \sum i^2j^2 w_{ij} & \sum j^4 w_{ij} & \sum ij^3 w_{ij} \\
+\\
+\sum ij w_{ij} & \sum i^2j w_{ij} & \sum ij^2 w_{ij} & \sum i^3j w_{ij} & \sum ij^3w_{ij} & \sum i^2j^2w_{ij} \\
+\end{bmatrix}
+\begin{bmatrix}
+s_0\\
+\\
+u\\
+\\
+v\\
+\\
+\alpha\\
+\\
+\beta\\
+\\
+\gamma\\
+\end{bmatrix}
+=
+\begin{bmatrix}
+\overrightarrow{(w_{ij})}^t\\
+\\
+\overrightarrow{(iw_{ij})}^t\\
+\\
+\overrightarrow{(jw_{ij})}^t\\
+\\
+\overrightarrow{(i^2w_{ij})}^t\\
+\\
+\overrightarrow{(j^2w_{ij})}^t\\
+\\
+\overrightarrow{(ijw_{ij})}^t\\
+\end{bmatrix}
+\overrightarrow{(f_{ij})}
+\end{equation}
+
+
+
+\end{document}
