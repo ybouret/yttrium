@@ -32,11 +32,15 @@ namespace Yttrium
             typedef SuffixSet<String,Handle>          Set;           //!< alias
             typedef Component::Set::ConstIterator     ConstIterator; //!< alias
             static const char * const                 Colors;        //!< GraphViz color scheme
-            enum Status
+
+
+            enum Direction
             {
-                Running,
-                Blocked
+                Forward,
+                Reverse
             };
+
+            
 
             //__________________________________________________________________
             //

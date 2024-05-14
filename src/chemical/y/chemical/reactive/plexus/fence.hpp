@@ -36,6 +36,8 @@ namespace Yttrium
             static const unsigned BY_BOTH = BY_REAC | BY_PROD;
             static const unsigned ID_MASK = BY_REAC | BY_PROD | BY_BOTH;
 
+           
+
             //__________________________________________________________________
             //
             //
@@ -58,12 +60,12 @@ namespace Yttrium
             void reset() noexcept;
 
             //! shape limits from components and concentrations
-            void shape(const Components &components,
-                       const XReadable  &C,
-                       const Level       level);
+            void shapeFull(const Components &components,
+                           const XReadable  &C,
+                           const Level       level);
 
-            //! todo
-            unsigned studyController(XMLog &xml);
+            //! compute cursor for controller
+            unsigned studyFull(XMLog &xml);
 
 
             //__________________________________________________________________
@@ -78,7 +80,11 @@ namespace Yttrium
             const SRepo    zeroed;  //!< vanishing when possible
         private:
             Y_DISABLE_ASSIGN(Fence);
-            void initWith(const Boundary &bad, const bool reverse);
+
+            void     startUpWith(const Boundary &bnd, const Equilibrium::Direction dir);
+            void     proceedWith(const Boundary &bnd); //!< append species to be zeroed
+            unsigned missingProd(XMLog &xml);
+            unsigned missingReac(XMLog &xml);
         };
 
     }

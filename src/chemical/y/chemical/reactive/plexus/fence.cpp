@@ -1,4 +1,5 @@
 #include "y/chemical/reactive/plexus/fence.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -15,7 +16,7 @@ namespace Yttrium
         {
         }
 
-        Fence:: Fence(const Fence &other) : 
+        Fence:: Fence(const Fence &other) :
         capping(other.capping),
         missing(other.missing),
         cursor(other.cursor),
@@ -29,7 +30,7 @@ namespace Yttrium
             return os;
         }
 
-        void Fence:: reset() noexcept { 
+        void Fence:: reset() noexcept {
             Coerce(capping).reset();
             Coerce(missing).reset();
             Coerce(cursor) = 0;
@@ -37,9 +38,9 @@ namespace Yttrium
         }
 
 
-        void  Fence:: shape(const Components &components,
-                            const XReadable  &C,
-                            const Level       level)
+        void  Fence:: shapeFull(const Components &components,
+                                const XReadable  &C,
+                                const Level       level)
         {
             //--------------------------------------------------------------
             //
@@ -93,14 +94,26 @@ namespace Yttrium
         }
 
 
-        void Fence:: initWith(const Boundary &  bad, const bool reverse)
+        void Fence:: startUpWith(const Boundary &             bnd,
+                                 const Equilibrium::Direction dir)
         {
-            Coerce(cursor) = reverse ? -(bad.xi) : bad.xi;
-            Coerce(zeroed) << *bad;
-            assert(zeroed.size==bad->size);
+            assert(bnd.xi>xreal_t(0));
+            switch(dir)
+            {
+                case Equilibrium::Forward: Coerce(cursor) =  bnd.xi; break;
+                case Equilibrium::Reverse: Coerce(cursor) = -bnd.xi; break;
+            }
+            Coerce(zeroed) << *bnd;
+            assert(zeroed.size==bnd->size);
         }
 
-        unsigned Fence:: studyController(XMLog &xml)
+        void Fence:: proceedWith(const Boundary &bnd)
+        {
+            Coerce(zeroed) << *bnd;
+        }
+
+
+        unsigned Fence:: studyFull(XMLog &xml)
         {
             assert(0==zeroed.size);
             assert(MKL::Fabs<xreal_t>::Of(cursor) <= xreal_t(0));
@@ -139,47 +152,26 @@ namespace Yttrium
             {
                     //----------------------------------------------------------
                     //
-                    //
-                case MISSING_NONE: Y_XMLOG(xml, " (-) missing none");
-                    //
-                    //
-                    //----------------------------------------------------------
+                case MISSING_NONE:
+                    Y_XMLOG(xml, " (-) missing none");
                     return RUNNING;
+                    //----------------------------------------------------------
 
                     //----------------------------------------------------------
                     //
                     //
-                case MISSING_REAC: { 
-                    assert(0==missing.prod->size); assert(missing.reac->size>0); assert(capping.prod->size>0);
-                    //
+                case MISSING_REAC: return missingReac(xml);
                     //
                     //----------------------------------------------------------
-                    const Boundary & bad =  **(missing.reac->head);
-                    const Boundary & dom =  **(capping.prod->head);
-                    Y_XMLOG(xml, " (+) missing  reac=" << bad);
-                    Y_XMLOG(xml, " (+) dominant prod=" << dom );
 
-                    exit(0);
-                } return -1;
 
                     //----------------------------------------------------------
                     //
-                    //
-                case MISSING_PROD: {
-                    assert(0==missing.reac->size); assert(missing.prod->size>0); assert(capping.reac->size>0);
-                    //
+                case MISSING_PROD: return missingProd(xml);
                     //
                     //----------------------------------------------------------
-                    const Boundary & bad = **(missing.prod->head);
-                    const Boundary & dom = **(capping.reac->head);
-                    Y_XMLOG(xml, " (+) missing  prod=" << bad);
-                    Y_XMLOG(xml, " (+) dominant reac=" << dom );
-
-                    exit(0);
-                } return -1;
 
                     //----------------------------------------------------------
-                    //
                     //
                 case MISSING_BOTH:
                 default:           Y_XMLOG(xml, " (+) missing both");
@@ -190,6 +182,65 @@ namespace Yttrium
             assert(MISSING_BOTH==flag);
             return BLOCKED | BY_BOTH;
         }
+
+
+        unsigned Fence:: missingProd(XMLog &xml)
+        {
+            static const char fn[] = "Chemical::Fence::missingProd";
+
+            assert(0==missing.reac->size); 
+            assert(missing.prod->size>0);
+            assert(capping.reac->size>0);
+
+            const Boundary & bad = **(missing.prod->head);
+            const Boundary & dom = **(capping.reac->head);
+            Y_XMLOG(xml, " (+) missing  prod=" << bad);
+            Y_XMLOG(xml, " (+) dominant reac=" << dom );
+
+            switch( Sign::Of(dom.xi,bad.xi) )
+            {
+                case Negative:
+                    assert(dom.xi<bad.xi);
+                    startUpWith(dom,Equilibrium::Forward);
+                    Y_XMLOG(xml, " (*) partial  reac=" << zeroed << "@" << real_t(cursor) );
+                    return PARTIAL | BY_REAC;
+
+                case __Zero__:
+                    startUpWith(bad,Equilibrium::Forward);
+                    proceedWith(dom);
+                    return EQUATED | BY_BOTH;
+
+                case Positive:
+                    assert(dom.xi>bad.xi);
+                    startUpWith(bad,Equilibrium::Forward);
+                    Y_XMLOG(xml, " (*) equated  prod=" << zeroed << "@" << real_t(cursor) );
+                    return EQUATED | BY_PROD;
+            }
+            throw Specific::Exception(fn, "corrupted signs");
+            return -1;
+        }
+
+        unsigned Fence:: missingReac(XMLog &xml)
+        {
+            static const char fn[] = "Chemical::Fence::missingReac";
+
+            assert(0==missing.prod->size);
+            assert(missing.reac->size>0);
+            assert(capping.prod->size>0);
+
+            const Boundary & bad =  **(missing.reac->head);
+            const Boundary & dom =  **(capping.prod->head);
+            Y_XMLOG(xml, " (+) missing  reac=" << bad);
+            Y_XMLOG(xml, " (+) dominant prod=" << dom );
+
+
+            exit(0);
+
+            throw Specific::Exception(fn, "corrupted signs");
+            return -1;
+        }
+
+
     }
 
 }

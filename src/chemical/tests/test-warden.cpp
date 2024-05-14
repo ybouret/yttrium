@@ -48,9 +48,9 @@ Y_UTEST(warden)
         Y_XML_SECTION_OPT(xml, "Cluster::Shaping"," cntl='" << cl->controllers.size << "'");
         for(const Controller *cntl=cl->controllers.head;cntl;cntl=cntl->next)
         {
-            fence.shape(cntl->components, C0, TopLevel);
+            fence.shapeFull(cntl->components, C0, TopLevel);
             Y_XMLOG(xml," (*) " << fence);
-            fence.studyController(xml);
+            fence.studyFull(xml);
         }
     }
 
