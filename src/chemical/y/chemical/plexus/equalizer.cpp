@@ -5,6 +5,11 @@ namespace Yttrium
     namespace Chemical
     {
 
+        Equalizer:: ~Equalizer() noexcept
+        {
+        }
+
+        
     }
 
 }

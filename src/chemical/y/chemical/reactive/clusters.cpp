@@ -43,7 +43,7 @@ namespace Yttrium
                 }
                 Coerce(maxSPC) = Max(maxSPC,cl->species.size);
                 Coerce(maxDEG) = Max(maxDEG,cl->blend.size());
-                Coerce(maxCPC) = Max(maxCPC,cl->controllers.size);
+                Coerce(maxCPC) = Max(maxCPC,cl->maxSimultaneous());
             }
 
             //__________________________________________________________________

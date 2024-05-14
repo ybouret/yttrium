@@ -43,12 +43,22 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
+            // Methods
+            //
+            //__________________________________________________________________
+            size_t maxSimultaneous() const noexcept; //!< studied together max
+
+
+            //__________________________________________________________________
+            //
+            //
             // Members
             //
             //__________________________________________________________________
             const EList       hasOnlyReac; //!< equilibria with only reac
             const EList       hasOnlyProd; //!< equilibria with only prod
             const Controllers controllers; //!< controlling equilibria
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterConstellation);

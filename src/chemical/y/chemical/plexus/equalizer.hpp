@@ -14,7 +14,12 @@ namespace Yttrium
         class Equalizer
         {
         public:
+            explicit Equalizer(const Clusters &);
+            virtual ~Equalizer() noexcept;
+            
 
+            XMatrixType Ceqz;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equalizer);
         };

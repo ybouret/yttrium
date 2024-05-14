@@ -6,7 +6,12 @@ namespace Yttrium
     namespace Chemical
     {
 
-        
+        size_t ClusterConstellation:: maxSimultaneous() const noexcept
+        {
+            return Max( hasOnlyProd.size + hasOnlyReac.size, controllers.size );
+        }
+
+
         ClusterConstellation:: ClusterConstellation(Equilibria        &eqs,
                                                     const Fragment    &fragment,
                                                     const Constants   &topK,
