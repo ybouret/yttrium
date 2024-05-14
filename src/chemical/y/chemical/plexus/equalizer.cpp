@@ -9,7 +9,11 @@ namespace Yttrium
         {
         }
 
-        
+        Equalizer:: Equalizer(const Clusters &clusters) :
+        Ceqz( clusters.maxCPC, clusters.maxCPC > 0 ? clusters.maxSPC : 0)
+        {
+        }
+
     }
 
 }
