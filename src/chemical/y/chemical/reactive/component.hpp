@@ -55,6 +55,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             const int      nu; //!< stoichio
+            const xreal_t  xn; //!< xreal_t(nu)
             const Species &sp; //!< species
             
         private:

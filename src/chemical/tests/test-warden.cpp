@@ -21,11 +21,13 @@ Y_UTEST(warden)
         weasel( Jive::Module::OpenData("data",argv[i]), lib, eqs);
     }
     
-    Vector<Chemical::xreal_t> C0(lib->size(),0),Injected(C0);
+    Vector<Chemical::xreal_t> C0(lib->size(),0),Injected(C0), C1(C0);
+
     for(size_t i=C0.size();i>0;--i)
     {
         C0[i] = Chemical::Species::Concentration(ran);
         if( ran.choice() ) C0[i] = - C0[i];
+        C1[i] = C0[i];
     }
 
 
@@ -35,7 +37,7 @@ Y_UTEST(warden)
     Chemical::Constants K;
     Chemical::Clusters  cls(eqs,K,xml);
 
-    lib(std::cerr << "C=",C0) << std::endl;
+    lib(std::cerr << "C0=",C0) << std::endl;
 
     cls.graphViz("system");
 
@@ -50,7 +52,19 @@ Y_UTEST(warden)
         {
             fence.shapeFull(cntl->components, C0, TopLevel);
             Y_XMLOG(xml," (*) " << fence);
-            fence.studyFull(xml);
+            const unsigned res = fence.studyFull(xml);
+            if( (res&Fence::IMPROVE) )
+            {
+                std::cerr << "Should improve..." << std::endl;
+                for(size_t i=C0.size();i>0;--i)
+                {
+                    C1[i] = C0[i];
+                }
+                cntl->primary.moveControl(C1, TopLevel, fence.cursor, fence.zeroed.head, C0, TopLevel);
+                lib(std::cerr << "C1=",C1) << std::endl;
+
+            }
+
         }
     }
 

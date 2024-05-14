@@ -110,7 +110,7 @@ namespace Yttrium
 
         }
 
-        
+
 
         int Components:: chargeBalance() const noexcept
         {
@@ -120,7 +120,7 @@ namespace Yttrium
         bool Components:: contains(const Species &sp) const noexcept
         {
             const Component * const pc = cdb.search(sp.name);
-            if(!pc) 
+            if(!pc)
             {
                 return false;
             }
@@ -140,7 +140,7 @@ namespace Yttrium
             }
             return false;
         }
-       
+
         void Components:: recordSpeciesInto(AddressBook &book) const
         {
             for(Component::Set::ConstIterator it=cdb.begin();it!=cdb.end();++it)
@@ -161,8 +161,45 @@ namespace Yttrium
         {
             return isTheSameThan(other) || isFlippedWith(other);
         }
-    }
 
+
+        void Components:: moveControl(XWritable       &target,
+                                      const Level      tgtlvl,
+                                      const xreal_t    cursor,
+                                      const SNode     *node,
+                                      const XReadable &source,
+                                      const Level      srclvl) const
+        {
+            assert(0!=node);
+            
+            const xreal_t zero;
+
+            // apply
+            ConstIterator it=cdb.begin();
+            for(size_t i=cdb.size();i>0;--i,++it)
+            {
+                const Component &component = *it;
+                const Species   &sp        = component.sp;
+                const xreal_t    xn        = component.nu;
+                const xreal_t    c0        = source[ sp.indx[srclvl] ];
+                const xreal_t    dc        = xn * cursor;
+                xreal_t         &cc        = target[sp.indx[tgtlvl]];
+                switch(Sign::Of(c0))
+                {
+                    case Negative: cc = Min(c0+dc,zero); break;
+                    case __Zero__: break; // TODO, error
+                    case Positive: cc = Max(c0+dc,zero); break;
+                }
+            }
+
+            // enforce
+            for(;node;node=node->next)
+            {
+                target[ (**node).indx[tgtlvl] ] = zero;
+            }
+        }
+
+    }
 }
 
 

@@ -7,6 +7,7 @@ namespace Yttrium
     {
         Component:: Component(const int coef, const Species &spec) noexcept :
         nu(coef),
+        xn(nu),
         sp(spec)
         {
             assert(0!=nu);
@@ -18,6 +19,7 @@ namespace Yttrium
 
         Component:: Component(const Component &other) noexcept :
         nu(other.nu),
+        xn(other.xn),
         sp(other.sp)
         {
         }
