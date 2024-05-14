@@ -12,7 +12,8 @@ namespace Yttrium
         capping(bbank,sbank),
         missing(bbank,sbank),
         cursor(0),
-        zeroed(sbank)
+        zeroed(sbank),
+        zero(0)
         {
         }
 
@@ -20,7 +21,8 @@ namespace Yttrium
         capping(other.capping),
         missing(other.missing),
         cursor(other.cursor),
-        zeroed(other.zeroed)
+        zeroed(other.zeroed),
+        zero(other.zero)
         {
         }
 
@@ -47,7 +49,6 @@ namespace Yttrium
             // initialize
             //
             //--------------------------------------------------------------
-            const xreal_t zero = 0;
             reset();
 
             //--------------------------------------------------------------
@@ -97,7 +98,7 @@ namespace Yttrium
         void Fence:: startUpWith(const Boundary &             bnd,
                                  const Equilibrium::Direction dir)
         {
-            assert(bnd.xi>xreal_t(0));
+            assert(bnd.xi>zero);
             switch(dir)
             {
                 case Equilibrium::Forward: Coerce(cursor) =  bnd.xi; break;
@@ -116,7 +117,7 @@ namespace Yttrium
         unsigned Fence:: studyFull(XMLog &xml)
         {
             assert(0==zeroed.size);
-            assert(MKL::Fabs<xreal_t>::Of(cursor) <= xreal_t(0));
+            assert(MKL::Fabs<xreal_t>::Of(cursor) <= zero);
 
             //------------------------------------------------------------------
             //
@@ -173,8 +174,7 @@ namespace Yttrium
 
                     //----------------------------------------------------------
                     //
-                case MISSING_BOTH:
-                default:           Y_XMLOG(xml, " (+) missing both");
+                case MISSING_BOTH: Y_XMLOG(xml, " (+) missing both"); default:
                     //
                     //----------------------------------------------------------
                     break;
@@ -192,8 +192,8 @@ namespace Yttrium
             assert(missing.prod->size>0);
             assert(capping.reac->size>0);
 
-            const Boundary & bad = **(missing.prod->head);
-            const Boundary & dom = **(capping.reac->head);
+            const Boundary & bad = **(missing.prod->head); // bad is first prod
+            const Boundary & dom = **(capping.reac->head); // dom is first reac
             Y_XMLOG(xml, " (+) missing  prod=" << bad);
             Y_XMLOG(xml, " (+) dominant reac=" << dom );
 
@@ -203,17 +203,20 @@ namespace Yttrium
                     assert(dom.xi<bad.xi);
                     startUpWith(dom,Equilibrium::Forward);
                     Y_XMLOG(xml, " (*) partial  reac=" << zeroed << "@" << real_t(cursor) );
+                    assert(cursor>zero);
                     return PARTIAL | BY_REAC;
 
                 case __Zero__:
                     startUpWith(bad,Equilibrium::Forward);
                     proceedWith(dom);
+                    assert(cursor>zero);
                     return EQUATED | BY_BOTH;
 
                 case Positive:
                     assert(dom.xi>bad.xi);
                     startUpWith(bad,Equilibrium::Forward);
                     Y_XMLOG(xml, " (*) equated  prod=" << zeroed << "@" << real_t(cursor) );
+                    assert(cursor>zero);
                     return EQUATED | BY_PROD;
             }
             throw Specific::Exception(fn, "corrupted signs");
@@ -228,14 +231,33 @@ namespace Yttrium
             assert(missing.reac->size>0);
             assert(capping.prod->size>0);
 
-            const Boundary & bad =  **(missing.reac->head);
-            const Boundary & dom =  **(capping.prod->head);
+            const Boundary & bad =  **(missing.reac->head); // bad is first reactant
+            const Boundary & dom =  **(capping.prod->head); // dom is first product
             Y_XMLOG(xml, " (+) missing  reac=" << bad);
             Y_XMLOG(xml, " (+) dominant prod=" << dom );
 
+            switch( Sign::Of(dom.xi,bad.xi) )
+            {
+                case Negative:
+                    assert(dom.xi<bad.xi);
+                    startUpWith(dom,Equilibrium::Reverse);
+                    Y_XMLOG(xml, " (*) partial  prod=" << zeroed << "@" << real_t(cursor) );
+                    assert(cursor<zero);
+                    return PARTIAL | BY_PROD;
 
-            exit(0);
+                case __Zero__:
+                    startUpWith(bad,Equilibrium::Reverse);
+                    proceedWith(dom);
+                    assert(cursor<zero);
+                    return EQUATED | BY_BOTH;
 
+                case Positive:
+                    assert(dom.xi>bad.xi);
+                    startUpWith(bad,Equilibrium::Reverse);
+                    Y_XMLOG(xml, " (*) equated  reac=" << zeroed << "@" << real_t(cursor) );
+                    assert(cursor<zero);
+                    return EQUATED | BY_REAC;
+            }
             throw Specific::Exception(fn, "corrupted signs");
             return -1;
         }

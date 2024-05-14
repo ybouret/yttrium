@@ -78,6 +78,8 @@ namespace Yttrium
             const Limits   missing; //!< missing by negative concentrations
             const xreal_t  cursor;  //!< strategy when possible
             const SRepo    zeroed;  //!< vanishing when possible
+            const xreal_t  zero;    //!< alias
+            
         private:
             Y_DISABLE_ASSIGN(Fence);
 
