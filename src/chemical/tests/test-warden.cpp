@@ -1,5 +1,5 @@
 #include "y/chemical/weasel.hpp"
-#include "y/chemical/reactive/plexus/warden.hpp"
+#include "y/chemical/plexus/warden.hpp"
 #include "y/utest/run.hpp"
 
 #include "y/stream/libc/output.hpp"

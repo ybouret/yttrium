@@ -1,5 +1,5 @@
 
-#include "y/chemical/reactive/plexus/limits.hpp"
+#include "y/chemical/plexus/limits.hpp"
 
 namespace Yttrium
 {

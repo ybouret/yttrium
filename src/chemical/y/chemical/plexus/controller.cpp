@@ -1,4 +1,4 @@
-#include "y/chemical/reactive/plexus/controller.hpp"
+#include "y/chemical/plexus/controller.hpp"
 
 namespace Yttrium
 {

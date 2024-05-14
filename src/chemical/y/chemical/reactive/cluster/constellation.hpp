@@ -5,7 +5,7 @@
 #define Y_Chemical_Cluster_Constellation_Included 1
 
 #include "y/chemical/reactive/cluster/combinatorics.hpp"
-#include "y/chemical/reactive/plexus/controller.hpp"
+#include "y/chemical/plexus/controller.hpp"
 
 namespace Yttrium
 {

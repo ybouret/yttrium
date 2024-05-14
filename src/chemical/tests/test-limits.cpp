@@ -1,5 +1,5 @@
 
-#include "y/chemical/reactive/plexus/boundaries.hpp"
+#include "y/chemical/plexus/boundaries.hpp"
 #include "y/chemical/species/library.hpp"
 
 #include "y/utest/run.hpp"

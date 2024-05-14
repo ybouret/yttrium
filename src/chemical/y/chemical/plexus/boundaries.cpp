@@ -1,5 +1,5 @@
 
-#include "y/chemical/reactive/plexus/boundaries.hpp"
+#include "y/chemical/plexus/boundaries.hpp"
 #include "y/exception.hpp"
 
 namespace Yttrium

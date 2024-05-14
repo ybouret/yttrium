@@ -4,7 +4,7 @@
 #ifndef Y_Chemical_Limits_Included
 #define Y_Chemical_Limits_Included 1
 
-#include "y/chemical/reactive/plexus/boundaries.hpp"
+#include "y/chemical/plexus/boundaries.hpp"
 
 namespace Yttrium
 {

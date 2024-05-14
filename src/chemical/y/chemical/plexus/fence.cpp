@@ -1,4 +1,4 @@
-#include "y/chemical/reactive/plexus/fence.hpp"
+#include "y/chemical/plexus/fence.hpp"
 #include "y/system/exception.hpp"
 
 namespace Yttrium
