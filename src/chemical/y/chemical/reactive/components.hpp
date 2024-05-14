@@ -89,6 +89,7 @@ namespace Yttrium
                                 const Level      srclvl,
                                 XAdd            &xadd) const;
 
+            //! -(sum(source<0))
             xreal_t balance(const XReadable &source,
                             const Level      srclvl,
                             XAdd            &xadd) const;

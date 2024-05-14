@@ -25,18 +25,17 @@ namespace Yttrium
         class Fence
         {
         public:
-            static const unsigned RUNNING = 0x01; //!< no negative
-            static const unsigned BLOCKED = 0x02; //!< blocked
-            static const unsigned PARTIAL = 0x04; //!< partially solved
-            static const unsigned EQUATED = 0x08; //!< totally solved
-            static const unsigned DISCARD = RUNNING | BLOCKED;
-            static const unsigned IMPROVE = PARTIAL | EQUATED;
-            static const unsigned ST_MASK = DISCARD | IMPROVE;
-
-            static const unsigned BY_REAC = 0x10; //!< by use of reac
-            static const unsigned BY_PROD = 0x20; //!< by use of prod
-            static const unsigned BY_BOTH = BY_REAC | BY_PROD;
-            static const unsigned ID_MASK = BY_REAC | BY_PROD | BY_BOTH;
+            static const unsigned RUNNING = 0x01;                        //!< no negative
+            static const unsigned BLOCKED = 0x02;                        //!< blocked
+            static const unsigned PARTIAL = 0x04;                        //!< partially solved
+            static const unsigned EQUATED = 0x08;                        //!< totally solved
+            static const unsigned DISCARD = RUNNING | BLOCKED;           //!< cannot move
+            static const unsigned IMPROVE = PARTIAL | EQUATED;           //!< can improve
+            static const unsigned ST_MASK = DISCARD | IMPROVE;           //!< status mask
+            static const unsigned BY_REAC = 0x10;                        //!< by use of reac
+            static const unsigned BY_PROD = 0x20;                        //!< by use of prod
+            static const unsigned BY_BOTH = BY_REAC | BY_PROD;           //!< alias
+            static const unsigned ID_MASK = BY_REAC | BY_PROD | BY_BOTH; //!< alias
 
            
 

@@ -170,7 +170,7 @@ namespace Yttrium
         protected:
             explicit       Scanner(const VFS &,const String &) ; //!< setup
             const VFS     &vfs;                                  //!< original vfs
-            const String   dir;
+            const String   dir;                                  //!< original directory
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Scanner);

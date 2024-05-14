@@ -33,11 +33,11 @@ namespace Yttrium
             typedef Component::Set::ConstIterator     ConstIterator; //!< alias
             static const char * const                 Colors;        //!< GraphViz color scheme
 
-
+            //! setting algbraic direction from extent
             enum Direction
             {
-                Forward,
-                Reverse
+                Forward, //!< xi>=0
+                Reverse  //!< xi<=0
             };
 
             
