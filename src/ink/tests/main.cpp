@@ -1,6 +1,6 @@
 #include "y/utest/driver.hpp"
 
-Y_UTEST_DECL(16)
+Y_UTEST_DECL(32)
 {
     Y_UTEST(zero_flux);
     Y_UTEST(bitmap);
@@ -19,6 +19,7 @@ Y_UTEST_DECL(16)
     Y_UTEST(grad);
     Y_UTEST(block);
     Y_UTEST(make5);
+    Y_UTEST(makef);
 }
 Y_UTEST_EXEC()
 
