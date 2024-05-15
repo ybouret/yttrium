@@ -11,10 +11,11 @@ namespace Yttrium
     {
 
 
-
+        //! chaining two operators
         template <typename OP1, typename OP2>
         struct Chain2
         {
+            //! call with a temporary field
             template <typename T> static inline
             void Call(Slabs           &slabs,
                       Pixmap<T>       &target,
@@ -26,9 +27,11 @@ namespace Yttrium
             }
         };
 
+        //! chaining three operators
         template <typename OP1, typename OP2, typename OP3>
         struct Chain3
         {
+            //! call with a temporary field
             template <typename T> static inline
             void Call(Slabs           &slabs,
                       Pixmap<T>       &target,
