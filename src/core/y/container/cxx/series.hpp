@@ -165,13 +165,7 @@ namespace Yttrium
                 throw;
             }
         }
-
-        template <typename U> inline
-        void append(const U &args) {
-            grow_(args);
-        }
-
-
+        
         //! free content
         virtual void free() noexcept { free_(); }
 

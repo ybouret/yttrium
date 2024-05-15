@@ -38,6 +38,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //! transfer for each species
             void transfer(XWritable       &target,
                           const Level      tgtlvl,
                           const XReadable &source,

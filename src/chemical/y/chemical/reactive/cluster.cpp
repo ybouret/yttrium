@@ -99,7 +99,7 @@ namespace Yttrium
         }
 
 
-        void Cluster:: moveControlled(XWritable       &target,
+        void Cluster:: equalize(XWritable       &target,
                                       const Level      tgtlvl,
                                       const Components &components,
                                       const xreal_t    cursor,
@@ -107,7 +107,7 @@ namespace Yttrium
                                       const XReadable &source,
                                       const Level      srclvl) const
         {
-            static const char here[] = "Chemical::Cluster::moveControlled";
+            static const char here[] = "Chemical::Cluster::equalize";
             const xreal_t     zero;
             const size_t      n = components->size();
 

@@ -5,7 +5,7 @@
 #define Y_Chemical_Fence_Included 1
 
 #include "y/chemical/reactive/equilibrium.hpp"
-#include "y/chemical/plexus/limits.hpp"
+#include "y/chemical/plexus/banks.hpp"
 #include "y/stream/xmlog.hpp"
 
 namespace Yttrium
@@ -13,17 +13,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class Banks
-        {
-        public:
-            Banks() : hb(), ls()  {}
-            ~Banks() {}
-            BBank hb; //!< heavy boundaries
-            SBank ls; //!< light species
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Banks);
-        };
+        
 
         //______________________________________________________________________
         //

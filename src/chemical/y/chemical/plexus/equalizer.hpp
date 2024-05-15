@@ -11,13 +11,38 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! equalize negative concentrations
+        //
+        //
+        //______________________________________________________________________
         class Equalizer
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! prepare for a list of clusters
             explicit Equalizer(const Clusters &);
+
+            //! cleanup
             virtual ~Equalizer() noexcept;
             
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! tune
             void tune(XWritable     &C0,
                       const Cluster &cluster,
                       XMLog         &xml);

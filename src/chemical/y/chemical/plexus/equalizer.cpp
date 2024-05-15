@@ -76,7 +76,7 @@ namespace Yttrium
 
                     {
                         XWritable         &C1 = Ceqz[index];
-                        cluster.moveControlled(C1, SubLevel, eq, fence.cursor, fence.zeroed.head, C0, TopLevel);
+                        cluster.equalize(C1, SubLevel, eq, fence.cursor, fence.zeroed.head, C0, TopLevel);
                         if(xml.verbose)
                         {
                             // cluster.spfmt.show(std::cerr, "[", cluster.species, "]", Ceqz[index], SubLevel);

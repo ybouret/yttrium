@@ -23,8 +23,8 @@ namespace Yttrium
         class Cluster : public Quantized, public ClusterConstellation
         {
         public:
-            typedef CxxListOf<Cluster>         List;  //!< alias
-            typedef CxxArray<bool,MemoryModel> Booleans;
+            typedef CxxListOf<Cluster>         List;     //!< alias
+            typedef CxxArray<bool,MemoryModel> Booleans; //!< alias
 
             //__________________________________________________________________
             //
@@ -64,20 +64,30 @@ namespace Yttrium
 
             //! emit GraphViz Code
             void viz(OutputStream &fp, const size_t order, const size_t clusterIndex) const;
-            
+
             //! limited[ sp.indx[SubLevel] ]
             bool isLimited(const Species &sp) const noexcept;
 
-            void moveControlled(XWritable       &target,
-                                const Level       tgtlvl,
-                                const Components &components,
-                                const xreal_t     cursor,
-                                const SNode     *zeroed,
-                                const XReadable &source,
-                                const Level      srclvl) const;
+            //! equalize concentrations
+            /**
+             \param target     target concentrations
+             \param tgtlvl     target level
+             \param components components to equalize
+             \param cursor     extent to apply
+             \param zeroed     enforcing zeroed concentrations
+             \param source     source concentrations
+             \param srclvl     source level
+             */
+            void equalize(XWritable       &target,
+                          const Level       tgtlvl,
+                          const Components &components,
+                          const xreal_t     cursor,
+                          const SNode     *zeroed,
+                          const XReadable &source,
+                          const Level      srclvl) const;
 
         public:
-            const Booleans    limited;  
+            const Booleans    limited;   //!< sub-level limited species
             Cluster          *next;      //!< for list
             Cluster          *prev;      //!< for list
 
