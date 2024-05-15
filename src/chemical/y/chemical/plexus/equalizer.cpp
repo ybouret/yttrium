@@ -90,8 +90,9 @@ namespace Yttrium
                     // process controller with outcome
                     //__________________________________________________________
                     {
+                        XAdd xadd;
                         XWritable         &C1 = Ceqz[index];
-                        cluster.equalize(C1, SubLevel, eq, fence.cursor, fence.zeroed.head, C0, TopLevel);
+                        const xreal_t      g1 = cluster.equalized(C1, SubLevel, eq, fence.cursor, fence.zeroed.head, C0, TopLevel,xadd);
                         if(xml.verbose)
                         {
                             for(const SNode *node=species.head;node;node=node->next)
@@ -103,6 +104,7 @@ namespace Yttrium
                                 *xml << std::setw(15) << real_t( C1[ sp.indx[SubLevel]] );
                                 *xml << std::endl;
                             }
+                            Y_XMLOG(xml, "gain=" << real_t(g1));
                         }
                     }
 

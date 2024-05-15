@@ -77,14 +77,16 @@ namespace Yttrium
              \param zeroed     enforcing zeroed concentrations
              \param source     source concentrations
              \param srclvl     source level
+             \return positive gain
              */
-            void equalize(XWritable       &target,
-                          const Level       tgtlvl,
-                          const Components &components,
-                          const xreal_t     cursor,
-                          const SNode     *zeroed,
-                          const XReadable &source,
-                          const Level      srclvl) const;
+            xreal_t equalized(XWritable       &target,
+                              const Level       tgtlvl,
+                              const Components &components,
+                              const xreal_t     cursor,
+                              const SNode     *zeroed,
+                              const XReadable &source,
+                              const Level      srclvl,
+                              XAdd            &xadd) const;
 
         public:
             const Booleans    limited;   //!< sub-level limited species
