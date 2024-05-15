@@ -12,12 +12,36 @@ namespace Yttrium
                           const Constants   &topK,
                           XMLog             &xml) :
         ClusterConstellation(eqs,fragment,topK,xml),
+        limited(species.size,true),
         next(0),
         prev(0)
         {
+            for(const SNode *node=unboundedSpecies.head;node;node=node->next)
+            {
+                const size_t i = (**node).indx[SubLevel];
+                Coerce(limited[i]) = false;
+            }
 
+            for(const SNode *node=conservedSpecies.head;node;node=node->next)
+            {
+                const size_t i = (**node).indx[SubLevel];
+                Coerce(limited[i]) = true;
+            }
 
+           // std::cerr << "limited=" << limited << std::endl;
+            //exit(0);
+            for(const SNode *node=species.head;node;node=node->next)
+            {
+                Y_XMLOG(xml, "limited " << **node << " = " << isLimited(**node));
+            }
         }
+
+        bool Cluster:: isLimited(const Species &sp) const noexcept
+        {
+            assert(species.has(sp));
+            return limited[sp.indx[SubLevel]];
+        }
+
 
         Cluster::  ~Cluster() noexcept {}
 
@@ -74,6 +98,71 @@ namespace Yttrium
             fp << "}\n";
         }
 
+
+        void Cluster:: moveControlled(XWritable       &target,
+                                      const Level      tgtlvl,
+                                      const Components &components,
+                                      const xreal_t    cursor,
+                                      const SNode     *zeroed,
+                                      const XReadable &source,
+                                      const Level      srclvl) const
+        {
+            static const char here[] = "Chemical::Cluster::moveControlled";
+            const xreal_t     zero;
+            const size_t      n = components->size();
+
+            transfer(target,tgtlvl,source,srclvl);
+
+            // pass 1: compute new set of concentrations
+            {
+                Components::ConstIterator it = components->begin();
+                for(size_t i=n;i>0;--i,++it)
+                {
+                    const Component     &cm = *it;
+                    const Species       &sp = cm.sp;
+                    const size_t * const id = sp.indx;
+                    const xreal_t        nu = cm.xn;
+                    const xreal_t        dc = nu * cursor;
+                    const xreal_t        c0 = source[ id[srclvl] ];
+                    const xreal_t        c1 = c0+dc;
+                    xreal_t             &cc = target[ id[tgtlvl] ];
+                   
+                    if( isLimited(sp) )
+                    {
+                        switch( Sign::Of(c0) )
+                        {
+                            case Negative:
+                                if(dc<zero) throw Specific::Exception(here, "negative extent for negative [%s]", sp.name.c_str());
+                                cc = Min(zero,c1);
+                                break;
+
+                            case __Zero__:
+                                if(dc<zero) throw Specific::Exception(here, "negative extent for zero [%s]", sp.name.c_str());
+                                assert(c1>=zero);
+                                cc = c1;
+                                break;
+
+                            case Positive:
+                                cc = Max(zero,c1);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        cc = c1;
+                    }
+
+                }
+            }
+
+            // pass 2: enforce zeroed
+            for(;zeroed;zeroed=zeroed->next)
+            {
+                target[ (**zeroed).indx[tgtlvl] ] = zero;
+            }
+
+            // pass 3, compute gain
+        }
 
     }
 

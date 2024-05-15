@@ -163,93 +163,9 @@ namespace Yttrium
         }
 
 
-        xreal_t Components:: balance(const XReadable &source,
-                                     const Level      srclvl,
-                                     XAdd            &xadd) const
-        {
-            const xreal_t zero;
-            const size_t  m = cdb.size();
-            xadd.make(m);
-            {
-                ConstIterator it=cdb.begin();
-                for(size_t i=m;i>0;--i,++it)
-                {
-                    const xreal_t c = source[ (*it).sp.indx[srclvl] ];
-                    if(c<zero)
-                        xadd << -c;
-                }
-            }
-            return xadd.sum();
 
-        }
 
-        xreal_t Components:: moveControl(XWritable       &target,
-                                      const Level      tgtlvl,
-                                      const xreal_t    cursor,
-                                      const SNode     *node,
-                                      const XReadable &source,
-                                      const Level      srclvl,
-                                      XAdd            &xadd) const
-        {
-            assert(0!=node);
-            
-            const xreal_t zero;
-            const size_t  m = cdb.size();
-            xadd.make(m);
-
-            // apply
-            {
-                ConstIterator it=cdb.begin();
-                for(size_t i=m;i>0;--i,++it)
-                {
-                    const Component &component = *it;
-                    const Species   &sp        = component.sp;
-                    const xreal_t    xn        = component.nu;
-                    const xreal_t    c0        = source[ sp.indx[srclvl] ];
-                    const xreal_t    dc        = xn * cursor;
-                    xreal_t         &cc        = target[sp.indx[tgtlvl]];
-                    switch(Sign::Of(c0))
-                    {
-                        case Negative: cc = Min(c0+dc,zero); break;
-                        case __Zero__: break; // TODO, error
-                        case Positive: cc = Max(c0+dc,zero); break;
-                    }
-                }
-            }
-
-            // enforce
-            for(;node;node=node->next)
-            {
-                target[ (**node).indx[tgtlvl] ] = zero;
-            }
-
-            // compute gain
-            {
-                ConstIterator it=cdb.begin();
-                for(size_t i=m;i>0;--i,++it)
-                {
-                    const Component &component = *it;
-                    const Species   &sp        = component.sp;
-                    const xreal_t    xn        = component.nu;
-                    const xreal_t    cOld      = source[ sp.indx[srclvl] ];
-                    const xreal_t    cNew      = target[ sp.indx[tgtlvl] ];
-                    std::cerr << sp << " : " << real_t(cOld) << " -> " << real_t(cNew) << std::endl;
-                    if(cOld<=zero)
-                    {
-                        assert(cNew<=zero);
-                        assert(cNew>=cOld);
-                        xadd << (cNew-cOld);
-                    }
-                    else
-                    {
-                        assert(cNew>=zero);
-                    }
-                }
-            }
-
-            return xadd.sum();
-        }
-
+        
     }
 }
 
@@ -275,7 +191,7 @@ namespace Yttrium
             os << components.rstr;
 
             os << LeftRightArrow;
-            
+
             os << components.pstr;
             for(size_t i=components.pstr.size();i<pmax;++i) os << ' ';
 

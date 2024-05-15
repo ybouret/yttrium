@@ -5,6 +5,7 @@
 
 #include "y/chemical/reactive/cluster/constellation.hpp"
 #include "y/quantized.hpp"
+#include "y/container/cxx/array.hpp"
 
 namespace Yttrium
 {
@@ -22,7 +23,8 @@ namespace Yttrium
         class Cluster : public Quantized, public ClusterConstellation
         {
         public:
-            typedef CxxListOf<Cluster>                List;  //!< alias
+            typedef CxxListOf<Cluster>         List;  //!< alias
+            typedef CxxArray<bool,MemoryModel> Booleans;
 
             //__________________________________________________________________
             //
@@ -45,18 +47,17 @@ namespace Yttrium
 
             //! cleaup
             virtual ~Cluster() noexcept;
+
             //__________________________________________________________________
             //
             //
             // Methods
             //
             //__________________________________________________________________
-            
             const Cluster & operator*() const noexcept { return *this; } //!< helper to display
 
             //! formatted output
             friend std::ostream & operator<<(std::ostream &os, const Cluster &cl);
-
 
             //! get all K, in order to validate mixed-equilibria
             void getK(const real_t t);
@@ -64,8 +65,19 @@ namespace Yttrium
             //! emit GraphViz Code
             void viz(OutputStream &fp, const size_t order, const size_t clusterIndex) const;
             
+            //! limited[ sp.indx[SubLevel] ]
+            bool isLimited(const Species &sp) const noexcept;
+
+            void moveControlled(XWritable       &target,
+                                const Level       tgtlvl,
+                                const Components &components,
+                                const xreal_t     cursor,
+                                const SNode     *zeroed,
+                                const XReadable &source,
+                                const Level      srclvl) const;
 
         public:
+            const Booleans    limited;  
             Cluster          *next;      //!< for list
             Cluster          *prev;      //!< for list
 

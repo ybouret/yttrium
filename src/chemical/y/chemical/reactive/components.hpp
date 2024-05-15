@@ -75,24 +75,7 @@ namespace Yttrium
             bool isFlippedWith(const Components &) const noexcept; //!< mirror reac and prod
             bool isAnalogousTo(const Components &) const noexcept; //!< isTheSameThan or isFlippedWith
 
-            //! moving from possibly negative conc
-            /**
-             - positive concentration remain positive
-             - negative concentration remain negative
-             - zeroed species are enforce
-             */
-            xreal_t moveControl(XWritable       &target,
-                                const Level      tgtlvl,
-                                const xreal_t    cursor,
-                                const SNode *    node,
-                                const XReadable &source,
-                                const Level      srclvl,
-                                XAdd            &xadd) const;
-
-            //! -(sum(source<0))
-            xreal_t balance(const XReadable &source,
-                            const Level      srclvl,
-                            XAdd            &xadd) const;
+            
 
             //__________________________________________________________________
             //

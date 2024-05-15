@@ -37,7 +37,7 @@ namespace Yttrium
             //! cleanup
             virtual ~ClusterConservations() noexcept;
 
-            
+
             //__________________________________________________________________
             //
             //
@@ -51,7 +51,7 @@ namespace Yttrium
             const AddressBook          unbounded;        //!< unbounded species database
             const SList                conservedSpecies; //!< conserved species list
             const SList                unboundedSpecies; //!< unbounded species list
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterConservations);
         };

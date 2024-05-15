@@ -72,8 +72,8 @@ namespace Yttrium
             void reset() noexcept;
 
             //! shape limits from components and concentrations
-            void shapeFull(const Components &components,
-                           const XReadable  &Ctop);
+            Fence & shapeFull(const Components &components,
+                              const XReadable  &Ctop);
 
             //! compute cursor for controller
             unsigned studyFull(XMLog &xml);

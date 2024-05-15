@@ -39,7 +39,7 @@ namespace Yttrium
         }
 
 
-        void  Fence:: shapeFull(const Components &components,
+        Fence & Fence:: shapeFull(const Components &components,
                                 const XReadable  &C)
         {
             //--------------------------------------------------------------
@@ -89,6 +89,7 @@ namespace Yttrium
                 }
             }
 
+            return *this;
 
         }
 

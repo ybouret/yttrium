@@ -62,15 +62,9 @@ Y_UTEST(warden)
                 {
                     C1[i] = C0[i];
                 }
-                const xreal_t gain = cntl->primary.moveControl(C1, TopLevel, fence.cursor, fence.zeroed.head, C0, TopLevel, xadd);
-                lib(std::cerr << "C1=",C1) << std::endl;
-                const xreal_t b0 =cntl->primary.balance(C0, TopLevel, xadd);
-                const xreal_t b1 =cntl->primary.balance(C1, TopLevel, xadd);
-
-                std::cerr << "|C0| = " << real_t(b0) << std::endl;
-                std::cerr << "|C1| = " << real_t(b1) << std::endl;
-
-                std::cerr << "gain = " << real_t(gain) << " / " << real_t(b0-b1) << std::endl;
+                //const xreal_t gain = cntl->primary.moveControl(C1, TopLevel, fence.cursor, fence.zeroed.head, C0, TopLevel, xadd);
+                //lib(std::cerr << "C1=",C1) << std::endl;
+                //std::cerr << "gain = " << real_t(gain) << std::endl;
 
             }
 
