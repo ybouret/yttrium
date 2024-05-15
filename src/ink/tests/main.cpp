@@ -20,6 +20,9 @@ Y_UTEST_DECL(32)
     Y_UTEST(block);
     Y_UTEST(make5);
     Y_UTEST(makef);
+
+    Y_UTEST(dilate);
+
 }
 Y_UTEST_EXEC()
 

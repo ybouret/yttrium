@@ -7,9 +7,11 @@ namespace Yttrium
         Slabs:: ~Slabs() noexcept {}
 
         Slabs:: Slabs(const Concurrent::SharedLoop &csl) :
-        simt(csl,& Slab::honorRequest)
+        mill(csl),
+        simt(mill,& Slab::honorRequest)
         {
         }
+
 
 
         void Slabs:: split(const Area &area)
@@ -25,6 +27,41 @@ namespace Yttrium
         Slab       & Slabs:: operator[](const size_t i)       noexcept { return simt[i]; }
         const Slab & Slabs:: operator[](const size_t i) const noexcept { return simt[i]; }
         const char * Slabs:: callSign()                 const noexcept { return "Ink::Slabs"; }
+    }
+
+}
+
+#include "y/concurrent/loop/mono.hpp"
+
+namespace Yttrium
+{
+    namespace Ink
+    {
+        Slabs:: Slabs(const Sequential_ &):
+        mill( new Concurrent::Mono() ),
+        simt(mill,& Slab::honorRequest)
+        {
+        }
+
+    }
+
+}
+
+
+#include "y/concurrent/loop/crew.hpp"
+
+namespace Yttrium
+{
+    namespace Ink
+    {
+        
+
+        Slabs:: Slabs(const InParallel_ &):
+        mill( Concurrent::Crew::Create() ),
+        simt(mill,& Slab::honorRequest)
+        {
+        }
+
     }
 
 }

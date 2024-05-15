@@ -269,9 +269,9 @@ namespace Yttrium
         code( new Code(topology) )
         {
         }
-        
 
-        
+
+
         const char * const Crew:: CallSign = "Concurrent::Crew";
         const char *       Crew:: callSign() const noexcept { return CallSign; }
         size_t             Crew:: size()     const noexcept { assert(0!=code); return code->size; }
@@ -310,6 +310,48 @@ namespace Yttrium
             return code->size;
         }
 
+    }
+
+}
+
+#include "y/ptr/auto.hpp"
+
+namespace Yttrium
+{
+
+    namespace Concurrent
+    {
+
+        class DefaultTopology : public Object, public Topology
+        {
+        public:
+            inline explicit DefaultTopology() : Object(), Topology() {}
+            inline virtual ~DefaultTopology() noexcept {}
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(DefaultTopology);
+        };
+
+        class DefaultCrew : public AutoPtr<const DefaultTopology>, public Crew
+        {
+        public:
+            inline explicit DefaultCrew() :
+            AutoPtr<const DefaultTopology>( new DefaultTopology() ),
+            Crew( **this )
+            {
+            }
+
+            inline virtual ~DefaultCrew() noexcept {}
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(DefaultCrew);
+        };
+
+
+        Crew * Crew:: Create()
+        {
+            return new DefaultCrew();
+        }
     }
 
 }

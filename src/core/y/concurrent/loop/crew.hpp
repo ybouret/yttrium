@@ -59,12 +59,17 @@ namespace Yttrium
             virtual const Thread & getThread(const size_t i) const noexcept; //!< getThread(1..size)
             virtual size_t         numThreads()              const noexcept; //!< size
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            static Crew *Create(); //!< create from environment topology
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Crew);
             Code *code;
-
-
         };
 
     }

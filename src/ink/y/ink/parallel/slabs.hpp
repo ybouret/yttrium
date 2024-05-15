@@ -3,6 +3,7 @@
 #ifndef Y_Ink_Slabs_Included
 #define Y_Ink_Slabs_Included 1
 
+#include "y/concurrent/defs.hpp"
 #include "y/concurrent/loop/simt.hpp"
 #include "y/ink/parallel/slab.hpp"
 
@@ -10,6 +11,7 @@ namespace Yttrium
 {
     namespace Ink
     {
+
         //______________________________________________________________________
         //
         //
@@ -30,8 +32,10 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Slabs(const Concurrent::SharedLoop &); //!< setup+memory
-            virtual ~Slabs() noexcept;                      //!< cleanup
+            Slabs(const Concurrent::SharedLoop &); //!< setup+memory
+            Slabs(const Sequential_ &);            //!< use sequential loop
+            Slabs(const InParallel_ &);            //!< use parallel loop
+            virtual ~Slabs() noexcept;             //!< cleanup
 
             //__________________________________________________________________
             //
@@ -121,8 +125,11 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            Concurrent::SIMT<Slab> simt; //!< implementation of SIMT
-            
+        private:
+            const Concurrent::SharedLoop mill;
+        public:
+            Concurrent::SIMT<Slab>       simt; //!< implementation of SIMT
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Slabs);
         };

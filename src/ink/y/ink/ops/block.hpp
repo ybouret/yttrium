@@ -10,6 +10,8 @@ namespace Yttrium
     namespace Ink
     {
 
+
+
         //______________________________________________________________________
         //
         //
@@ -112,6 +114,28 @@ namespace Yttrium
                     }
                 }
             }
+        };
+
+
+        namespace Crux
+        {
+            template <bool> struct IsOdd;
+            template <> struct IsOdd<true> { enum { Flag = true }; };
+        }
+
+        template <size_t W>
+        struct FindBlockSize
+        {
+            static const bool   Flag  = Crux::IsOdd<0!=(W&1)>::Flag;
+            static const unit_t Delta = (W-1)>>1;
+        };
+
+        template <size_t W, size_t H>
+        struct BlockFor
+        {
+            static const unit_t DeltaX = FindBlockSize<W>::Delta;
+            static const unit_t DeltaY = FindBlockSize<H>::Delta;
+            typedef Block<DeltaX,DeltaY> Type;
         };
     }
 
