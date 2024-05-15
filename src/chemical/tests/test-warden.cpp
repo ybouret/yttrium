@@ -1,5 +1,7 @@
 #include "y/chemical/weasel.hpp"
 #include "y/chemical/plexus/warden.hpp"
+#include "y/chemical/plexus/equalizer.hpp"
+
 #include "y/utest/run.hpp"
 
 #include "y/stream/libc/output.hpp"
@@ -75,6 +77,11 @@ Y_UTEST(warden)
         }
     }
 
+    Equalizer equalizer(cls);
+    for(const Cluster *cl=cls->head;cl;cl=cl->next)
+    {
+        equalizer.tune(C0,*cl,xml);
+    }
 
     return 0;
     Chemical::Conservation::Warden warden(cls);

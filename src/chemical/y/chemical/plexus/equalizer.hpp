@@ -19,12 +19,14 @@ namespace Yttrium
             virtual ~Equalizer() noexcept;
             
             void tune(XWritable     &C0,
-                      const Cluster &cluster);
+                      const Cluster &cluster,
+                      XMLog         &xml);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equalizer);
             XMatrixType                 Ceqz;
             Banks                       banks;
+            SRepo                       negative;
             CxxArray<Fence,MemoryModel> fences;
         };
     }

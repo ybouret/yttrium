@@ -39,6 +39,8 @@ namespace Yttrium
             //! cleanup
             virtual ~ClusterTopology() noexcept;
 
+         
+
             //__________________________________________________________________
             //
             //

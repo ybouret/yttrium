@@ -54,6 +54,9 @@ namespace Yttrium
         ClusterTopology:: ~ClusterTopology() noexcept
         {
         }
+
+
+        
     }
 
 }
