@@ -52,7 +52,7 @@ Y_UTEST(warden)
         Y_XML_SECTION_OPT(xml, "Cluster::Shaping"," cntl='" << cl->controllers.size << "'");
         for(const Controller *cntl=cl->controllers.head;cntl;cntl=cntl->next)
         {
-            fence.shapeFull(cntl->components, C0, TopLevel);
+            fence.shapeFull(cntl->components, C0);
             Y_XMLOG(xml," (*) " << fence);
             const unsigned res = fence.studyFull(xml);
             if( (res&Fence::IMPROVE) )

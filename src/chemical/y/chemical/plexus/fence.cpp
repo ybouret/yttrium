@@ -40,8 +40,7 @@ namespace Yttrium
 
 
         void  Fence:: shapeFull(const Components &components,
-                                const XReadable  &C,
-                                const Level       level)
+                                const XReadable  &C)
         {
             //--------------------------------------------------------------
             //
@@ -59,7 +58,7 @@ namespace Yttrium
             {
                 const Species &sp = a->sp;
                 const xreal_t  nu = a->xnu;
-                const xreal_t  cc = C[sp.indx[level]];
+                const xreal_t  cc = C[sp.indx[TopLevel]];
                 if(cc>=zero)
                 {
                     Coerce(capping).reac(sp,cc/nu);
@@ -79,7 +78,7 @@ namespace Yttrium
             {
                 const Species &sp = a->sp;
                 const xreal_t  nu = a->xnu;
-                const xreal_t  cc = C[sp.indx[level]];
+                const xreal_t  cc = C[sp.indx[TopLevel]];
                 if(cc>=zero)
                 {
                     Coerce(capping).prod(sp,cc/nu);

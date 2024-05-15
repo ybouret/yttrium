@@ -53,7 +53,10 @@ namespace Yttrium
                 size_t active = 0;
                 for(const Controller *cntl=controllers.head;cntl;cntl=cntl->next)
                 {
-                    
+                    const size_t  pos  = active+1;
+                    Fence       &fence = fences[pos];
+                    fence.shapeFull(cntl->components,C0);
+                    Y_XMLOG(xml,fence);
                 }
             }
 

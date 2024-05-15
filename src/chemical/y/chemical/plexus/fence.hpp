@@ -73,11 +73,11 @@ namespace Yttrium
 
             //! shape limits from components and concentrations
             void shapeFull(const Components &components,
-                           const XReadable  &C,
-                           const Level       level);
+                           const XReadable  &Ctop);
 
             //! compute cursor for controller
             unsigned studyFull(XMLog &xml);
+
 
 
             //__________________________________________________________________
