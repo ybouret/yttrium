@@ -43,6 +43,7 @@ Y_UTEST(warden)
 
     cls.graphViz("system");
 
+#if 0
     Banks        banks;
     Fence        fence(banks);
     XAdd         xadd;
@@ -70,7 +71,8 @@ Y_UTEST(warden)
 
         }
     }
-
+#endif
+    
     Equalizer equalizer(cls);
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {

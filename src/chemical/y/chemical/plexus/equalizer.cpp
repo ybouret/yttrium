@@ -38,13 +38,20 @@ namespace Yttrium
                 const Species &sp = **node;
                 if( C0[ sp.indx[TopLevel]] < zero ) negative << sp;
             }
-            Y_XMLOG(xml,"negative=" << negative);
-            if(negative.size<=0) return;
+            if(negative.size<=0)
+            {
+                Y_XMLOG(xml,"no negative concentration");
+                return;
+            }
+            else
+            {
+                Y_XMLOG(xml,"negative=" << negative);
+            }
 
             //__________________________________________________________________
             //
             //
-            // first part:
+            // first part: scanning controllers
             //
             //__________________________________________________________________
             const Controllers &controllers = cluster.controllers;
@@ -55,8 +62,11 @@ namespace Yttrium
                 size_t active = 0;
                 for(const Controller *cntl=controllers.head;cntl;cntl=cntl->next)
                 {
+                    //__________________________________________________________
+                    //
+                    // scan current controller
+                    //__________________________________________________________
                     const Equilibrium &eq = cntl->primary;
-                    //Y_XMLOG(xml, " (@) " << eq);
                     Y_XML_SECTION(xml, eq.name);
                     const size_t   index  = active+1;
                     Fence         &fence = fences[index].shapeFull(cntl->components,C0);
@@ -68,21 +78,26 @@ namespace Yttrium
                         case Fence::RUNNING: goto CONTINUE;
                         case Fence::BLOCKED: goto CONTINUE;
                         case Fence::EQUATED:
+                            break;
                         case Fence::PARTIAL:
                             break;
                         default:
                             throw Exception("Flags %u Not Handled", flags);
                     }
 
+                    //__________________________________________________________
+                    //
+                    // process controller with outcome
+                    //__________________________________________________________
                     {
                         XWritable         &C1 = Ceqz[index];
                         cluster.equalize(C1, SubLevel, eq, fence.cursor, fence.zeroed.head, C0, TopLevel);
                         if(xml.verbose)
                         {
-                            // cluster.spfmt.show(std::cerr, "[", cluster.species, "]", Ceqz[index], SubLevel);
                             for(const SNode *node=species.head;node;node=node->next)
                             {
                                 const Species &sp = **node;
+                                if(!eq.contains(sp)) continue;
                                 cluster.spfmt.pad( xml() << " (|) " << sp,sp) << " = ";
                                 *xml << std::setw(15) << real_t( C0[ sp.indx[TopLevel]] ) << " -> ";
                                 *xml << std::setw(15) << real_t( C1[ sp.indx[SubLevel]] );
