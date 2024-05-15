@@ -21,7 +21,6 @@ namespace Yttrium
                 apz         dP2 = 0;  // determinant(P*P')
                 Matrix<apz> aP2(p,p); // adjoint(P*P')
                 Matrix<apz> P2(p,p);  // P*P'
-                //P.mmul(P2,TransposeOf,P);
                 Tao::MatMul(P2, P, TransposeOf, P, xm);
 
                 // compute det/adj using LU
@@ -38,6 +37,7 @@ namespace Yttrium
                     lu.adjoint(aP2_,P2_);
                     aP2.make(aP2_);
                 }
+
 
                 // finalize QQ
                 {
@@ -60,11 +60,12 @@ namespace Yttrium
                 }
 
                 for(size_t i=d;i>0;--i) QQ[i][i] += dP2;
+
             }
 
             // make univocal
             Apex::Mylar::MakeUnivocal(QQ);
-            
+
             // avoid trivial repetitions
             Apex::Mylar::Compress(Q,QQ);
 
