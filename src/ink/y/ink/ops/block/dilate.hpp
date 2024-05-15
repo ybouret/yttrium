@@ -12,11 +12,21 @@ namespace Yttrium
     namespace Ink
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Replace by local maximum
+        //
+        //
+        //______________________________________________________________________
         template <size_t W, size_t H>
         struct Dilate
         {
-            typedef typename BlockFor<W,H>::Type BlockType;
+            //! alias
+            typedef  Block<W,H> BlockType;
 
+            //! call
             template <typename T> static inline
             void Call(Slabs           &slabs,
                       Pixmap<T>       &target,

@@ -24,5 +24,10 @@ add_test(filter    test-ink filter)
 add_test(grad      test-ink grad)
 add_test(block     test-ink block)
 add_test(makef     test-ink makef)
+add_test(dilate    test-ink dilate)
+add_test(erode     test-ink erode)
+add_test(median    test-ink median)
+add_test(mean      test-ink mean)
+
 
 

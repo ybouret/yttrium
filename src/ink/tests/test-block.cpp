@@ -93,8 +93,8 @@ void Process(Pixmap<T>       &target,
              Slabs           &slabs,
              PIXEL2RGBA      &p2c)
 {
-    { Block<1,1> blk3; Process(target, source, slabs, blk3, p2c); }
-    { Block<2,2> blk5; Process(target, source, slabs, blk5, p2c); }
+    { Block<3,3> blk3; Process(target, source, slabs, blk3, p2c); }
+    { Block<5,5> blk5; Process(target, source, slabs, blk5, p2c); }
 }
 
 static inline RGBA RGBA_To_RGBA(const RGBA   &c) { return c; }
@@ -142,48 +142,7 @@ Y_UTEST(block)
         }
 
 
-
-
-#if 0
-        const Pixmap<RGBA>  img = IMG.load(argv[1],0);
-        const Pixmap<float> pxf(par,Color::GrayScale::Pack<float,RGBA>,img);
         
-        IMG.save(img, "img-rgb.png", 0);
-        Pixmap<RGBA>        tgt(img.w,img.h);
-        Pixmap<float>       out(img.w,img.h);
-        IMG.save(pxf, "img-flt.png", 0, par, cr);
-
-#endif
-
-
-
-#if 0
-        blk(par,out,BlockOps<float>::Average<Blk3x3::N>,pxf);
-        IMG.save(out, "ave-flt.png", 0, par, cr);
-
-        blk(par,tgt,BlockOps<RGBA>::Average<Blk3x3::N>,img);
-        IMG.save(tgt, "ave-rgb.png", 0);
-
-
-        blk(par,out,BlockOps<float>::Minimum<Blk3x3::N>,pxf);
-        IMG.save(out, "min-flt.png", 0, par, cr);
-
-        blk(par,tgt,BlockOps<RGBA>::Minimum<Blk3x3::N>,img);
-        IMG.save(tgt, "min-rgb.png", 0);
-
-
-        blk(par,out,BlockOps<float>::Maximum<Blk3x3::N>,pxf);
-        IMG.save(out, "max-flt.png", 0, par, cr);
-
-        blk(par,tgt,BlockOps<RGBA>::Maximum<Blk3x3::N>,img);
-        IMG.save(tgt, "max-rgb.png", 0);
-
-        blk(par,out,BlockOps<float>::Median<Blk3x3::N>,pxf);
-        IMG.save(out, "med-flt.png", 0, par, cr);
-
-        blk(par,tgt,BlockOps<RGBA>::Median<Blk3x3::N>,img);
-        IMG.save(tgt, "med-rgb.png", 0);
-#endif
     }
 
 

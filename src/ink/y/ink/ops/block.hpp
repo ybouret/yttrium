@@ -10,7 +10,20 @@ namespace Yttrium
     namespace Ink
     {
 
+        namespace Crux
+        {
+            template <bool> struct IsOdd;
+            //! specialized only for true
+            template <> struct IsOdd<true> { enum { Flag = true }; };
+        }
 
+        //! helper to compute Delta from Width
+        template <size_t W>
+        struct FindBlockSize
+        {
+            static const bool   Flag  = Crux::IsOdd<0!=(W&1)>::Flag; //!< alias
+            static const unit_t Delta = (W-1)>>1;                    //!< alias
+        };
 
         //______________________________________________________________________
         //
@@ -20,7 +33,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        template <size_t DeltaX, size_t DeltaY>
+        template <size_t WIDTH, size_t HEIGHT>
         class Block
         {
         public:
@@ -30,8 +43,8 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const unit_t X  = DeltaX; //!< max X offset
-            static const unit_t Y  = DeltaY; //!< max Y offset
+            static const unit_t X  = FindBlockSize<WIDTH>  :: Delta; //!< max X
+            static const unit_t Y  = FindBlockSize<HEIGHT> :: Delta; //!< max
             static const unit_t X0 = -X;     //!< min X offset
             static const unit_t Y0 = -Y;     //!< min Y offset
             static const unit_t W  = X*2+1;  //!< width
@@ -116,27 +129,7 @@ namespace Yttrium
             }
         };
 
-
-        namespace Crux
-        {
-            template <bool> struct IsOdd;
-            template <> struct IsOdd<true> { enum { Flag = true }; };
-        }
-
-        template <size_t W>
-        struct FindBlockSize
-        {
-            static const bool   Flag  = Crux::IsOdd<0!=(W&1)>::Flag;
-            static const unit_t Delta = (W-1)>>1;
-        };
-
-        template <size_t W, size_t H>
-        struct BlockFor
-        {
-            static const unit_t DeltaX = FindBlockSize<W>::Delta;
-            static const unit_t DeltaY = FindBlockSize<H>::Delta;
-            typedef Block<DeltaX,DeltaY> Type;
-        };
+        
     }
 
 }
