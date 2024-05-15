@@ -25,7 +25,7 @@ Y_UTEST_DECL(32)
     Y_UTEST(erode);
     Y_UTEST(median);
     Y_UTEST(mean);
-
+    Y_UTEST(chain);
 }
 Y_UTEST_EXEC()
 
