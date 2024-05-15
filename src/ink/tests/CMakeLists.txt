@@ -29,5 +29,4 @@ add_test(erode     test-ink erode)
 add_test(median    test-ink median)
 add_test(mean      test-ink mean)
 add_test(chain     test-ink chain)
-
-
+add_test(edges     test-ink edges)
