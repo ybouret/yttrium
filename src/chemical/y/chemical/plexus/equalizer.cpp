@@ -90,9 +90,14 @@ namespace Yttrium
                     // process controller with outcome
                     //__________________________________________________________
                     {
-                        XAdd xadd;
+                        xadd.free();
+                        FList              fixed(fbank);
                         XWritable         &C1 = Ceqz[index];
                         const xreal_t      g1 = cluster.equalized(C1, SubLevel, eq, fence.cursor, fence.zeroed.head, C0, TopLevel,xadd);
+
+                        const Fixed f(g1,C1);
+                        fixed << f;
+
                         if(xml.verbose)
                         {
                             for(const SNode *node=species.head;node;node=node->next)

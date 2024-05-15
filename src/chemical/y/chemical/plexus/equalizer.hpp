@@ -22,6 +22,38 @@ namespace Yttrium
         class Equalizer
         {
         public:
+
+            class Fixed
+            {
+            public:
+                Fixed(const xreal_t    g,
+                      const XReadable &c) noexcept :
+                gain(g),
+                conc(c)
+                {
+                }
+
+                ~Fixed() noexcept {}
+
+                Fixed(const Fixed &other) noexcept :
+                gain(other.gain),
+                conc(other.conc)
+                {
+                }
+
+
+                const xreal_t     gain;
+                const XReadable & conc;
+
+            private:
+                Y_DISABLE_ASSIGN(Fixed);
+            };
+
+            typedef Small::CoopHeavyList<Fixed> FList;
+            typedef FList::NodeType             FNode;
+            typedef FList::ProxyType            FBank;
+
+
             //__________________________________________________________________
             //
             //
@@ -53,6 +85,9 @@ namespace Yttrium
             Banks                       banks;
             SRepo                       negative;
             CxxArray<Fence,MemoryModel> fences;
+            XAdd                        xadd;
+            FBank                       fbank;
+            
         };
     }
 
