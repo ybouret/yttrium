@@ -41,9 +41,8 @@ Y_UTEST(warden)
 
     cls.graphViz("system");
 
-    BBank        bbank;
-    SBank        sbank;
-    Fence        fence(bbank,sbank);
+    Banks        banks;
+    Fence        fence(banks);
     XAdd         xadd;
 
     for(const Cluster *cl=cls->head;cl;cl=cl->next)

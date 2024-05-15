@@ -7,12 +7,11 @@ namespace Yttrium
     {
         Fence:: ~Fence() noexcept {}
 
-        Fence:: Fence(const BBank &bbank,
-                      const SBank &sbank) noexcept :
-        capping(bbank,sbank),
-        missing(bbank,sbank),
+        Fence:: Fence(Banks &banks) noexcept :
+        capping(banks.hb,banks.ls),
+        missing(banks.hb,banks.ls),
         cursor(0),
-        zeroed(sbank),
+        zeroed(banks.ls),
         zero(0)
         {
         }

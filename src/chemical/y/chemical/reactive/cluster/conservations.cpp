@@ -48,6 +48,7 @@ namespace Yttrium
                     if(!MKL::OrthoSpace::Make(Q,Nu))
                         throw Specific::Exception("Cluster::BuildConservations", "singular topology orthogonal space");
                     Y_XMLOG(xml, "NuOrtho=" << Q);
+                    exit(0);
                     WOVEn::Explore(Q,survey,true);
                 }
                 Y_XMLOG(xml,"#conservation = " << survey.size);

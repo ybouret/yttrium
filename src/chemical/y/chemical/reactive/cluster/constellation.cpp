@@ -8,7 +8,9 @@ namespace Yttrium
 
         size_t ClusterConstellation:: maxSimultaneous() const noexcept
         {
-            return Max( hasOnlyProd.size + hasOnlyReac.size, controllers.size );
+            const size_t res = Max( hasOnlyProd.size + hasOnlyReac.size, controllers.size );
+            assert(res>0);
+            return res;
         }
 
 

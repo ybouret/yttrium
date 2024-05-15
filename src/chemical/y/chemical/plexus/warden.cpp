@@ -219,10 +219,10 @@ namespace Yttrium
 
             }
 
-            void Warden:: operator()(Writable<xreal_t>  &C,
-                                     Writable<xreal_t>  &I,
-                                     const GList        &G,
-                                     XMLog              &xml)
+            void Warden:: operator()(XWritable    &C,
+                                     XWritable    &I,
+                                     const GList  &G,
+                                     XMLog        &xml)
             {
                 Y_XML_SECTION(xml, "Chemical::Warden");
 

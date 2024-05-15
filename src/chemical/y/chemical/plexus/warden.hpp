@@ -90,10 +90,10 @@ namespace Yttrium
                  \param G list of groups to process
                  \param xml for verbosity
                  */
-                void operator()(Writable<xreal_t>  &C,
-                                Writable<xreal_t>  &I,
-                                const GList        &G,
-                                XMLog              &xml);
+                void operator()(XWritable   &C,
+                                XWritable   &I,
+                                const GList &G,
+                                XMLog       &xml);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Warden);

@@ -13,6 +13,17 @@ namespace Yttrium
     namespace Chemical
     {
 
+        class Banks
+        {
+        public:
+            Banks() : hb(), ls()  {}
+            ~Banks() {}
+            BBank hb; //!< heavy boundaries
+            SBank ls; //!< light species
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Banks);
+        };
 
         //______________________________________________________________________
         //
@@ -45,10 +56,10 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            Fence(const BBank &, const SBank &) noexcept ; //!< setup
-            Fence(const Fence &);                          //!< copy
-            ~Fence() noexcept;                             //!< cleanup
-            Y_OSTREAM_PROTO(Fence);                        //!< display
+            Fence(Banks &) noexcept ; //!< setup
+            Fence(const Fence &);     //!< copy
+            ~Fence() noexcept;        //!< cleanup
+            Y_OSTREAM_PROTO(Fence);   //!< display
 
             //__________________________________________________________________
             //

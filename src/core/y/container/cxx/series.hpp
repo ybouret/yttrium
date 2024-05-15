@@ -166,6 +166,12 @@ namespace Yttrium
             }
         }
 
+        template <typename U> inline
+        void append(const U &args) {
+            grow_(args);
+        }
+
+
         //! free content
         virtual void free() noexcept { free_(); }
 
@@ -191,6 +197,16 @@ namespace Yttrium
             new ( & entry[count+1] ) MutableType(args);
             ++Coerce(count);
         }
+
+        template <typename U, typename V>
+        inline void grow_(const U &u, const V &v) {
+            assert(count<total);
+            assert(0!=entry);
+            new ( & entry[count+1] ) MutableType(u,v);
+            ++Coerce(count);
+        }
+
+
 
         virtual ConstType *getBaseForward() const noexcept { return cdata; }
         virtual ConstType *getLastForward() const noexcept { return cdata+count; }
