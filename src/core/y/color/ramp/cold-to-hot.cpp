@@ -9,7 +9,7 @@ namespace Yttrium
     {
         ColdToHot:: ~ColdToHot() noexcept {}
 
-        static const RampColor cr[] = { Y_Blue, Y_Cyan, Y_Green, Y_Yellow, Y_Red };;
+        static const RampColor cr[] = { Y_Blue, Y_Cyan, Y_Green, Y_Yellow, Y_Red };
 
         ColdToHot:: ColdToHot() noexcept :
         Gradation( Y_COLOR_GRADATION(cr) )

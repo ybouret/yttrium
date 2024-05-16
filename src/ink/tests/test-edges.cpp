@@ -13,6 +13,8 @@
 #include "y/color/grayscale.hpp"
 #include "y/color/ramp/black-and-white.hpp"
 #include "y/color/ramp/cold-to-hot.hpp"
+#include "y/color/ramp/dark-to-bright.hpp"
+
 #include "y/color/ramp/flexible.hpp"
 #include "y/color/ramp/map8.hpp"
 
@@ -26,7 +28,7 @@ Y_UTEST(edges)
     GradientFilters<float,Crux::Scharr5>  scharr5;
     Histogram                             hist;
     const Color::BlackAndWhite            bw;
-    const Color::ColdToHot                cr;
+    const Color::DarkToBright             cr;
     const Color::Map8                     cm8(bw);
     const Blur<float>                     blur(1.4f);
 
