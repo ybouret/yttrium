@@ -106,6 +106,7 @@ namespace Yttrium
 
                 assert(0!=(flags&Fence::IMPROVE));
                 {
+                    XWritable &C = Ceqz[index];
                     
                 }
 
