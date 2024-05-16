@@ -114,7 +114,7 @@ namespace Yttrium
 
                     png_read_update_info(png, info);
 
-                    //std::cerr << width << "x" << height << " : bpp=" << unsigned(bit_depth) << std::endl;
+                    std::cerr << width << "x" << height << " : bpp=" << unsigned(bit_depth) << std::endl;
 
                     const size_t bytes_per_row = png_get_rowbytes(png,info);
                     (void) bytes_per_row;
@@ -122,11 +122,25 @@ namespace Yttrium
 
                     Codec::Image                    pxm(width,height);
                     CxxArray<png_bytep,MemoryModel> row(height);
-                    for(size_t i=0;i<height;++i)
+                    for(size_t i=0,j=1;i<height;++i,++j)
                     {
-                        row[i+1] = (png_byte*)&pxm[i][0];
+                        row[j] = (png_byte*)&pxm[i][0];
+                       // std::cerr << "row[" << j << "]@" << (void*)row[j] << std::endl;
                     }
                     png_read_image(png,&row[1]);
+
+#if 0
+                    {
+                        const Codec::Image &cst = pxm;
+                        for(size_t i=0;i<height;++i)
+                        {
+                            std::cerr << "row[" << i << "]=" << pxm[i] << std::endl;
+                            std::cerr << "cst[" << i << "]=" << cst[i] << std::endl;
+
+                        }
+                    }
+#endif
+                    std::cerr << "load32=" << pxm.crc32() << std::endl;
                     return pxm;
                 }
 
@@ -248,9 +262,7 @@ namespace Yttrium
                 }
                 png_write_image(png, &row[1]);
             }
-            //exit(0);
             png_write_end(png, NULL);
-
 
             png_destroy_write_struct(&png, &info);
         }

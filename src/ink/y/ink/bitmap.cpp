@@ -4,6 +4,7 @@
 #include "y/counted.hpp"
 #include "y/type/nullify.hpp"
 #include "y/calculus/align.hpp"
+#include "y/check/crc32.hpp"
 #include <cstring>
 
 namespace Yttrium
@@ -25,6 +26,7 @@ namespace Yttrium
             mem(0),
             zfw(metrics.zfw)
             {
+                std::cerr << "zfw: " << zfw.size << " / " << zfw.symm << std::endl;
                 {
                     //__________________________________________________________
                     //
@@ -59,8 +61,8 @@ namespace Yttrium
                 // link
                 //
                 //__________________________________________________________
-                link(metrics); // no-throw
-                withhold();    // no-throw
+                link(metrics.h,metrics.s);
+                withhold();    
             }
 
             explicit Code(void *data, const Metrics &metrics) : 
@@ -88,7 +90,7 @@ namespace Yttrium
                 }
 
                 // link
-                link(metrics);
+                link(metrics.h,metrics.s);
                 withhold();
             }
 
@@ -102,6 +104,11 @@ namespace Yttrium
                 pix = 0;
             }
 
+            uint32_t crc32() const noexcept
+            {
+                return CRC32::Of(row,mem);
+            }
+
             BitRow        *row;
             void          *pix;
             size_t         mem;
@@ -109,11 +116,10 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
-            inline void link(const Metrics &metrics) noexcept
+            inline void link(const unit_t height, const unit_t stride) noexcept
             {
                 uint8_t *    entry  = static_cast<uint8_t *>(pix);
-                const unit_t stride = metrics.s;
-                for(unit_t j=0;j<metrics.h;++j, entry += stride )
+                for(unit_t j=0;j<height;++j, entry += stride )
                 {
                     BitRow &r = row[j];
                     r.entry   = entry;
@@ -123,6 +129,13 @@ namespace Yttrium
             }
 
         };
+
+        uint32_t Bitmap:: crc32() const noexcept
+        {
+            assert(0!=code);
+            return code->crc32();
+        }
+
 
         Bitmap:: Bitmap(const unit_t W, const unit_t H, const unsigned BPP) :
         Metrics(W,H,BPP),
@@ -157,6 +170,7 @@ namespace Yttrium
         dynamic(other.dynamic)
         {
             code->withhold();
+            std::cerr << "BitmapShared Copy of crc32=" << crc32() << std::endl;
         }
 
 

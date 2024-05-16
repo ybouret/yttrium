@@ -78,14 +78,16 @@ namespace Yttrium
             BitRow * const brow;    //!< rows[h]
             const bool     dynamic; //!< if data was allocated
 
-        protected:
             //__________________________________________________________________
             //
             //
             // Methods
             //
             //__________________________________________________________________
-           
+            uint32_t crc32() const noexcept;
+
+        protected:
+
             //! convert rows to compatible ABI
             template <typename ROW> inline
             ROW * as() noexcept { return Memory::OutOfReach::Cast<ROW,BitRow>(brow); }
@@ -95,6 +97,7 @@ namespace Yttrium
 
             //! erase all items
             void eraseWith( void (*kill)(void *) ) noexcept;
+
         };
 
         Y_SHALLOW_DECL(FromBitmap); //!< alias

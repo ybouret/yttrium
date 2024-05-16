@@ -31,13 +31,11 @@ namespace Yttrium
             const Format & findFor(const String &path)
             {
                 Y_LOCK(sync);
-                std::cerr << "[CODECS] find for '" << path << "'" << std::endl;
                 for(Iterator it=begin();it!=end();++it)
                 {
                     Format &fmt = **it;
                     if(fmt.matches(path)) 
                     {
-                        std::cerr << "[CODECS] found " << fmt.name << std::endl;
                         return fmt;
                     }
                 }
@@ -102,9 +100,7 @@ namespace Yttrium
                            const Options *options) const
         {
             assert(0!=code);
-            std::cerr << "[CODECS] saving '" << fileName << "'" << std::endl;
             const Format &fmt = code->findFor(fileName);
-            std::cerr << "Saving with [" << fmt.name << "]" << std::endl;
             fmt.save(image,fileName,options);
         }
 

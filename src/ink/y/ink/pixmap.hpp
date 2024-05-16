@@ -191,7 +191,7 @@ namespace Yttrium
             {
                 assert(j>=0);
                 assert(j<h);
-                return row[j];     
+                return row[j];
             }
 
             //! const access: zeroflux
@@ -221,7 +221,7 @@ namespace Yttrium
                 return (*this)[coord.y][coord.x];
             }
 
-            //! const acess by coordiante, direct
+            //! const acess by coordinate, direct
             inline const T & operator()(const Coord coord) const noexcept
             {
                 return (*this)(coord.y)(coord.x);

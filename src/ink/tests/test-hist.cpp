@@ -14,7 +14,7 @@
 #include "y/text/human-readable.hpp"
 #include <cstring>
 
-#include "y/color/ramp/gradation.hpp"
+#include "y/color/ramp/dark-to-bright.hpp"
 #include "y/color/conv.hpp"
 #include "y/text/hexadecimal.hpp"
 
@@ -37,19 +37,22 @@ Y_UTEST(hist)
     Slabs                  par( crew );
     Histogram              hist;
 
-    static const RGBA Grad[] = { 
-        RGBA(0x00,0x00,0x00),
-        RGBA(0x00,0x00,0xff),
-        RGBA(0x00,0xff,0x00),
-        RGBA(0xff,0x00,0x00) };
-    static const Color::Gradation Gradient(Grad,sizeof(Grad)/sizeof(Grad[0]));
+
+    const Color::DarkToBright Gradient;
 
     if(argc>1)
     {
         (std::cerr << "Loading " << argv[1] << std::endl).flush();
-        Pixmap<RGBA>    img = IMG.Codec::load(argv[1],0);
+        Pixmap<RGBA> img = IMG.load(argv[1],0);
+        std::cerr << "img32 =" << img.crc32() << std::endl;
+        //std::cerr << img << std::endl;
+        IMG.save(img, "hist-img.png",0);
+        return 0;
 
         Pixmap<uint8_t> msk(img.w,img.h);
+        //std::cerr << img << std::endl;
+
+
         (std::cerr << "Building Histogram..." << std::endl).flush();
         {
             const uint64_t pixels = img.n;
@@ -60,24 +63,24 @@ Y_UTEST(hist)
             std::cerr << "rate=" << rate << " Mpx/s" << std::endl;
         }
 
+        // hashing
         const Digest    hh = Hashing::MD::Of(hfn,hist);
         std::cerr << "hash=" << hh << std::endl;
-        //std::cerr << "lower=" << int(hist.lower) << std::endl;
-        //std::cerr << "upper=" << int(hist.upper) << std::endl;
+
+        return 0;
 
         Pixmap<RGBA>    tgt(par, Color::GrayScale::ByteTo<RGBA>, msk);
 
         (std::cerr << "Saving..." << std::endl).flush();
         IMG.save(img, "hist-img.png",0);
-        //IMG.save(tgt, "hist-msk.png",0);
+        IMG.save(tgt, "hist-msk.png",0);
 
         //IMG.renderRamp("ramp.png", Gradient, 800, 100);
 
         std::cerr << "Converting mask to GreyScale" << std::endl;
         Pixmap<float> pxf(par,ByteToFloat,msk);
         IMG.save(pxf, "hist-flt.png", 0, par, Gradient);
-
-        return 0;
+        
 
         LookUpTable8 lut;
         uint8_t lower=0,upper=0;
