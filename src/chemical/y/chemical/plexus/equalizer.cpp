@@ -1,5 +1,5 @@
 #include "y/chemical/plexus/equalizer.hpp"
-#include "y/exception.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -26,6 +26,8 @@ namespace Yttrium
                                          XMLog         &xml)
 
         {
+            static const char here[] = "Chemical::Equalizer::tuneControllers";
+
             //__________________________________________________________________
             //
             //
@@ -49,15 +51,16 @@ namespace Yttrium
                 if( C0[ sp.indx[TopLevel] ] < zero ) negative += sp;
             }
 
-            Y_XML_SECTION_OPT(xml, "Controllers"," negative='" << negative.size() << "' conserved='" << species.size);
+            Y_XML_SECTION_OPT(xml,here," negative='" << negative.size() << "' conserved='" << species.size);
             if(negative.size()<=0)
                 return;
 
             if(xml.verbose) negative.display<Species>( xml() <<"negative=") << std::endl;
+           
             //__________________________________________________________________
             //
             //
-            // probing negative conserved species
+            // looping over concerned controllers
             //
             //__________________________________________________________________
             size_t active = 0;
@@ -71,12 +74,42 @@ namespace Yttrium
                     continue;
                 }
 
+                //______________________________________________________________
+                //
+                // current controller may handle a negative concentration
+                //______________________________________________________________
                 Y_XMLOG(xml, " (+) " << eq);
 
-                const size_t   index = active+1;
-                Fence &        fence = fences[index];
-                const unsigned state = fence(cm,C0,xml);
-                
+                const size_t   index = active+1;               // new index
+                Fence &        fence = fences[index];          // get trial fence
+                const unsigned state = fence(cm,C0,xml);       // build the fence
+                const unsigned flags = (state&Fence::ST_MASK); // get the flags
+
+                //______________________________________________________________
+                //
+                // current controller may handle a negative concentration
+                //______________________________________________________________
+                switch( flags )
+                {
+                    case Fence::BLOCKED: goto CONTINUE;
+
+                    case Fence::PARTIAL:
+                        break;
+
+                    case Fence::EQUATED:
+                        break;
+
+                    default:
+                        throw Specific::Exception(here,"invalid flags='%s'", Fence::StatusText(flags) );
+
+                }
+
+                assert(0!=(flags&Fence::IMPROVE));
+                {
+                    
+                }
+
+            CONTINUE:;
             }
 
         }

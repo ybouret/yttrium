@@ -38,7 +38,7 @@ namespace Yttrium
             static const unsigned BY_BOTH = BY_REAC | BY_PROD;           //!< alias
             static const unsigned ID_MASK = BY_REAC | BY_PROD | BY_BOTH; //!< alias
 
-
+            static const char * StatusText(const unsigned) noexcept; //!< RUNNING|BLOCKED|PARTIAL|EQUATED
 
             //__________________________________________________________________
             //

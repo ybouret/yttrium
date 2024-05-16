@@ -39,6 +39,23 @@ namespace Yttrium
         }
 
 
+#define Y_CHEM_FENCE(ST) case ST: return #ST
+
+        const char * Fence:: StatusText(const unsigned flags) noexcept
+        {
+            switch(flags)
+            {
+                    Y_CHEM_FENCE(RUNNING);
+                    Y_CHEM_FENCE(BLOCKED);
+                    Y_CHEM_FENCE(PARTIAL);
+                    Y_CHEM_FENCE(EQUATED);
+                default:
+                    break;
+            }
+            return Core::Unknown;
+        }
+
+
         void Fence:: buildLimits(const Components &components,
                                  const XReadable  &C)
         {

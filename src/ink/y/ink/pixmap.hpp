@@ -108,6 +108,8 @@ namespace Yttrium
             //__________________________________________________________________
             Y_ARGS_DECL(T,Type);        //!< aliases
             typedef PixRow<T> RowType;  //!< alias
+
+            //! identity operator for pixel-wise copy
             inline static ConstType & Id(ConstType &pixel) noexcept { return pixel; }
 
             //__________________________________________________________________

@@ -72,6 +72,7 @@ namespace Yttrium
         template <typename T> inline
         AddressBook & operator|=( T &obj ) { (void) insert(obj); return *this; }
 
+        //! display as a set of T
         template <typename T> inline
         std::ostream & display(std::ostream &os) const
         {

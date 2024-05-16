@@ -49,9 +49,9 @@ namespace Yttrium
                 Y_DISABLE_ASSIGN(Fixed);
             };
 
-            typedef Small::CoopHeavyList<Fixed> FList;
-            typedef FList::NodeType             FNode;
-            typedef FList::ProxyType            FBank;
+            typedef Small::CoopHeavyList<Fixed> FList; //!< alias
+            typedef FList::NodeType             FNode; //!< alias
+            typedef FList::ProxyType            FBank; //!< alias
 
 
             //__________________________________________________________________

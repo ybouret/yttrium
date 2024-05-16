@@ -77,6 +77,7 @@ namespace Yttrium
              \param zeroed     enforcing zeroed concentrations
              \param source     source concentrations
              \param srclvl     source level
+             \param xadd       auxiliary 
              \return positive gain
              */
             xreal_t equalized(XWritable       &target,
