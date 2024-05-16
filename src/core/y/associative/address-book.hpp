@@ -6,6 +6,7 @@
 
 #include "y/associative/suffix/map.hpp"
 #include "y/associative/little-endian-address.hpp"
+#include "y/ptr/core.hpp"
 
 namespace Yttrium
 {
@@ -79,10 +80,10 @@ namespace Yttrium
             if(n>0)
             {
                 ConstIterator it = begin();
-                os << *static_cast<const T*>(*it);
+                Display<T>(os,it);
                 for(--n,++it;n>0;--n,++it)
                 {
-                    os << ',' << *static_cast<const T*>(*it);
+                    Display<T>(os<<',',it);
                 }
             }
             os << '}';
@@ -92,6 +93,13 @@ namespace Yttrium
     private:
         Y_DISABLE_ASSIGN(AddressBook);
         void throwSameAddress(const void *p) const;
+        
+        template <typename T> static inline
+        void Display(std::ostream &os, const ConstIterator &it)
+        {
+            const void * const addr = *it;
+            if(0==addr) os << Core::Ptr::Nil; else os << *static_cast<const T *>(addr);
+        }
 
     };
 
