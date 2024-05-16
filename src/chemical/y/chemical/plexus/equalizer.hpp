@@ -86,9 +86,11 @@ namespace Yttrium
             AddressBook                 negative;
             CxxArray<Fence,MemoryModel> fences;
             XAdd                        xadd;
-            FBank                       fbank;
-            
-            
+            FBank                       bank;
+
+            void tuneControllers(XWritable     &C0,
+                                 const Cluster &cluster,
+                                 XMLog         &xml);
 
         };
     }

@@ -16,8 +16,27 @@ namespace Yttrium
         negative(),
         fences(clusters.maxCPC,banks),
         xadd(),
-        fbank()
+        bank()
         {
+        }
+
+
+        void Equalizer:: tuneControllers(XWritable     &C0,
+                                         const Cluster &cluster,
+                                         XMLog         &xml)
+
+        {
+            const xreal_t zero;
+            negative.free();
+            for(const SNode *node=cluster.conservedSpecies.head;node;node=node->next)
+            {
+                const Species &sp = **node; assert( cluster.isLimited(sp) );
+                if( C0[ sp.indx[TopLevel] ] < zero ) negative += sp;
+            }
+
+            Y_XML_SECTION_OPT(xml, "Controllers"," negative='" << negative.size() << "'");
+            if(negative.size()<=0) return;
+
         }
 
         void Equalizer:: tune(XWritable     &C0,
@@ -26,104 +45,8 @@ namespace Yttrium
         {
 
             Y_XML_SECTION(xml, "Chemical::Equalizer::Tune");
-            const xreal_t zero;
 
-            //__________________________________________________________________
-            //
-            //
-            // initialize negative concentrations
-            //
-            //__________________________________________________________________
-            negative.free();
-            for(const SNode *node=cluster.species.head;node;node=node->next)
-            {
-                const Species &sp = **node;
-                if( C0[ sp.indx[TopLevel] ] < zero ) negative += sp;
-            }
-
-            if(negative.size()<=0)
-            {
-                Y_XMLOG(xml,"no negative concentration");
-                return;
-            }
-            else
-            {
-               if(xml.verbose)
-               {
-                   negative.display<Species>( xml() << "negative=" ) << std::endl;
-               }
-            }
-
-            //__________________________________________________________________
-            //
-            //
-            // first part: scanning controllers
-            //
-            //__________________________________________________________________
-            const Controllers &controllers = cluster.controllers;
-            const SList       &species     = cluster.species;
-            if(controllers.size>0)
-            {
-                Y_XML_SECTION(xml, "Controllers");
-                size_t active = 0;
-                for(const Controller *cntl=controllers.head;cntl;cntl=cntl->next)
-                {
-                    //__________________________________________________________
-                    //
-                    // scan current controller
-                    //__________________________________________________________
-                    const Equilibrium &eq = cntl->primary;
-                    Y_XML_SECTION(xml, eq.name);
-                    const size_t   index  = active+1;
-                    Fence         &fence = fences[index];
-                    const unsigned state = fence(cntl->components,C0,xml);
-                    const unsigned flags = (state&Fence::ST_MASK);
-                    Y_XMLOG(xml, " (*) " << fence);
-                    switch( flags )
-                    {
-                        case Fence::RUNNING: goto CONTINUE;
-                        case Fence::BLOCKED: goto CONTINUE;
-                        case Fence::EQUATED:
-                            break;
-                        case Fence::PARTIAL:
-                            break;
-                        default:
-                            throw Exception("Flags %u Not Handled", flags);
-                    }
-
-                    //__________________________________________________________
-                    //
-                    // process controller with outcome
-                    //__________________________________________________________
-                    {
-                        
-                        FList              fixed(fbank);
-                        XWritable         &C1 = Ceqz[index];
-                        const xreal_t      g1 = cluster.equalized(C1, SubLevel, eq, fence.cursor, fence.zeroed.head, C0, TopLevel,xadd);
-
-                        const Fixed f(g1,C1);
-                        fixed << f;
-
-                        if(xml.verbose)
-                        {
-                            for(const SNode *node=species.head;node;node=node->next)
-                            {
-                                const Species &sp = **node;
-                                if(!eq.contains(sp)) continue;
-                                cluster.spfmt.pad( xml() << " (|) " << sp,sp) << " = ";
-                                *xml << std::setw(15) << real_t( C0[ sp.indx[TopLevel]] ) << " -> ";
-                                *xml << std::setw(15) << real_t( C1[ sp.indx[SubLevel]] );
-                                *xml << std::endl;
-                            }
-                            Y_XMLOG(xml, "gain=" << real_t(g1));
-                        }
-                    }
-
-                CONTINUE:;
-                }
-            }
-
-
+            tuneControllers(C0,cluster,xml);
 
         }
 
