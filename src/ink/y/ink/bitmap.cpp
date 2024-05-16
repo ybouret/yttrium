@@ -27,7 +27,6 @@ namespace Yttrium
             zfw(metrics.zfw)
             {
                 std::cerr << "[+Bitmap::Code]" << std::endl;
-                std::cerr << "zfw: " << zfw.size << " / " << zfw.symm << std::endl;
                 {
                     //__________________________________________________________
                     //
@@ -266,6 +265,7 @@ namespace Yttrium
 
         void Bitmap:: eraseWith(void (*kill)(void *)) noexcept
         {
+            std::cerr << "eraseWith" << std::endl;
             assert(0!=kill);
             for(unit_t j=h;j>0;)
                 eraseBitRow(brow[--j],w,bpp,kill);
