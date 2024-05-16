@@ -136,7 +136,7 @@ namespace Yttrium
                         for(const CoordNode *node = edge->head; node; node=node->next)
                         {
                             const Coord pos = **node;
-                            force[pos] = StrongPixel;;
+                            force[pos] = StrongPixel;
                         }
                     }
                     else

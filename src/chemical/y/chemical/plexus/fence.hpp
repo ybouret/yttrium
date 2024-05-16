@@ -61,7 +61,7 @@ namespace Yttrium
             //! reset all limits
             void reset() noexcept;
 
-            //! shape limits from components and concentrations
+            //! shape limits from components and top-level concentrations
             Fence & shapeFull(const Components &components,
                               const XReadable  &Ctop);
 

@@ -8,6 +8,7 @@
 #include "y/ink/ops/block/erode.hpp"
 #include "y/ink/ops/blur.hpp"
 
+#include "y/ink/ops/edges.hpp"
 
 #include "y/color/grayscale.hpp"
 #include "y/color/ramp/black-and-white.hpp"
@@ -61,6 +62,14 @@ Y_UTEST(edges)
             IMG.save(gmap.intensity, "img4-gmap.png", 0, par, gr);
         }
         IMG.save(thin, "img5-thin.png", 0, par, cm8);
+
+        Pixmap<size_t> labels(img.w,img.h);
+        Edges          edges;
+
+        edges(par,labels,thin,Edge::Connect8);
+
+        IMG.save(thin, "img6-thin.png", 0, par, cm8);
+
 
 
     }
