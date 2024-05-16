@@ -147,7 +147,7 @@ namespace Yttrium
             Bitmap(pixmap),
             row( this->as<RowType>() )
             {
-                std::cerr << "Pixmap Shared Copy of crc32=" << crc32() << " @row=" << row << std::endl;
+                std::cerr << "Pixmap Shared Copy of crc32=" << Hexadecimal(crc32()) << " @row=" << row << ", heart@" << heart() << std::endl;
             }
 
             //! shared copy

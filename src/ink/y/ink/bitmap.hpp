@@ -7,6 +7,7 @@
 #include "y/ink/metrics.hpp"
 #include "y/memory/out-of-reach.hpp"
 #include "y/config/shallow.hpp"
+#include "y/text/hexadecimal.hpp"
 
 namespace Yttrium
 {
@@ -84,7 +85,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            uint32_t crc32() const noexcept;
+            uint32_t    crc32() const noexcept;
+            const void *heart() const noexcept;
 
         protected:
 

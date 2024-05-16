@@ -140,7 +140,7 @@ namespace Yttrium
                         }
                     }
 #endif
-                    std::cerr << "load32=" << pxm.crc32() << std::endl;
+                    std::cerr << "                       ld32=" << Hexadecimal(pxm.crc32()) << std::endl;
                     return pxm;
                 }
 

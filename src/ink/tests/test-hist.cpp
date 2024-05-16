@@ -17,6 +17,7 @@
 #include "y/color/conv.hpp"
 #include "y/text/hexadecimal.hpp"
 
+
 using namespace Yttrium;
 using namespace Ink;
 
@@ -41,14 +42,15 @@ Y_UTEST(hist)
         (std::cerr << "Loading " << argv[1] << std::endl).flush();
         Pixmap<RGBA> img = IMG.load(argv[1],0);
 
-        std::cerr << "img32 =" << img.crc32() << " @row=" << img.brow << std::endl;
+        std::cerr << "                      crc32=" << Hexadecimal(img.crc32()) << " @row=" << img.brow << ", heart@" << img.heart() << std::endl;
+
+        return 0;
         
         //std::cerr << img << std::endl;
         IMG.save(img, "hist-img.png",0);
-        return 0;
+
 
         Pixmap<uint8_t> msk(img.w,img.h);
-        //std::cerr << img << std::endl;
 
 
         (std::cerr << "Building Histogram..." << std::endl).flush();
@@ -65,12 +67,10 @@ Y_UTEST(hist)
         const Digest    hh = Hashing::MD::Of(hfn,hist);
         std::cerr << "hash=" << hh << std::endl;
 
-        return 0;
 
         Pixmap<RGBA>    tgt(par, Color::GrayScale::ByteTo<RGBA>, msk);
 
         (std::cerr << "Saving..." << std::endl).flush();
-        IMG.save(img, "hist-img.png",0);
         IMG.save(tgt, "hist-msk.png",0);
 
         //IMG.renderRamp("ramp.png", Gradient, 800, 100);

@@ -136,6 +136,12 @@ namespace Yttrium
             return code->crc32();
         }
 
+        const void * Bitmap:: heart() const noexcept
+        {
+            return code;
+        }
+
+
 
         Bitmap:: Bitmap(const unit_t W, const unit_t H, const unsigned BPP) :
         Metrics(W,H,BPP),
@@ -170,7 +176,7 @@ namespace Yttrium
         dynamic(other.dynamic)
         {
             code->withhold();
-            std::cerr << "Bitmap Shared Copy of crc32=" << crc32() << " @row=" << brow << std::endl;
+            std::cerr << "Bitmap Shared Copy of crc32=" << Hexadecimal(crc32()) << " @row=" << brow << ", heart@" << heart() << std::endl;
         }
 
 
