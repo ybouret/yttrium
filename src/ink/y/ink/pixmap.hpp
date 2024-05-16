@@ -125,6 +125,7 @@ namespace Yttrium
             row( this->as<RowType>() )
             {
                 buildWith(Make,0,Kill);
+                displayInfo("Built Pixmap");
             }
             
 
@@ -147,7 +148,6 @@ namespace Yttrium
             Bitmap(pixmap),
             row( this->as<RowType>() )
             {
-                
             }
 
             //! shared copy
@@ -157,8 +157,6 @@ namespace Yttrium
             {
                 assert(bmp.bpp==bpp);
             }
-
-            
 
             //! build with parallel transformation
             template <typename PROC, typename U> inline

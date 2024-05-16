@@ -26,6 +26,7 @@ namespace Yttrium
             mem(0),
             zfw(metrics.zfw)
             {
+                std::cerr << "[+Bitmap::Code]" << std::endl;
                 std::cerr << "zfw: " << zfw.size << " / " << zfw.symm << std::endl;
                 {
                     //__________________________________________________________
@@ -62,7 +63,6 @@ namespace Yttrium
                 //
                 //__________________________________________________________
                 link(metrics.h,metrics.s);
-                withhold();    
             }
 
             explicit Code(void *data, const Metrics &metrics) : 
@@ -91,13 +91,13 @@ namespace Yttrium
 
                 // link
                 link(metrics.h,metrics.s);
-                withhold();
             }
 
 
 
             virtual ~Code() noexcept
             {
+                std::cerr << "[~Bitmap::Code]" << std::endl;
                 void *ptr = Memory::OutOfReach::Addr(row);
                 MemoryModel::Location().release(ptr,mem);
                 row = 0;
@@ -125,7 +125,7 @@ namespace Yttrium
                     r.entry   = entry;
                     r.zflux   = &zfw;
                 }
-                
+                withhold();
             }
 
         };
@@ -143,8 +143,17 @@ namespace Yttrium
             assert(0!=code);
             assert(0!=where);
             std::cerr << "<Bitmap where='" << where << "', w='" << w << "' h='" << h << "'>" << std::endl;
-            std::cerr << "   code @ " << code << std::endl;
+            std::cerr << "   code @ " << code << "  | rows @ " << code->row << std::endl;
             std::cerr << "  crc32 = " << Hexadecimal( crc32() ) << std::endl;
+            uint32_t row32 = 0x00;
+            for(unit_t j=0;j<h;++j)
+            {
+                const BitRow &r = brow[j];
+                if(r.zflux != &(code->zfw) ) std::cerr << "invalid zflux@" << j << std::endl;
+                //std::cerr << r.entry << "/";
+                row32 = CRC32::Run(row32, &(r.entry), sizeof(r.entry));
+            }
+            std::cerr << "  row32 = " << Hexadecimal( row32 ) << std::endl;
             std::cerr << "<Bitmap/>" << std::endl;
         }
 
