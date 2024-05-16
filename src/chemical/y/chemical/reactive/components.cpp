@@ -162,7 +162,15 @@ namespace Yttrium
             return isTheSameThan(other) || isFlippedWith(other);
         }
 
-
+        bool Components:: isConcernedBy(const AddressBook &sdb) const noexcept
+        {
+            size_t n = cdb.size();
+            for(ConstIterator it=cdb.begin();n>0;--n,++it)
+            {
+                if(sdb.search((*it).sp)) return true;
+            }
+            return false;
+        }
 
 
         

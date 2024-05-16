@@ -140,6 +140,8 @@ namespace Yttrium
             if(missing.reac->size>0) flag |= MISSING_REAC;
             if(missing.prod->size>0) flag |= MISSING_PROD;
 
+            Y_XMLOG(xml, " (@) " << *this);
+
             //------------------------------------------------------------------
             //
             //

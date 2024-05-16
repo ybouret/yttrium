@@ -74,8 +74,7 @@ namespace Yttrium
             bool isTheSameThan(const Components &) const noexcept; //!< same reac and prod
             bool isFlippedWith(const Components &) const noexcept; //!< mirror reac and prod
             bool isAnalogousTo(const Components &) const noexcept; //!< isTheSameThan or isFlippedWith
-
-            
+            bool isConcernedBy(const AddressBook&) const noexcept; //!< test if one of species in database matches component
 
             //__________________________________________________________________
             //
