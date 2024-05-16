@@ -239,20 +239,13 @@ namespace Yttrium
             if(!alpha)
                 png_set_filler(png, 0, PNG_FILLER_AFTER);
 
-            std::cerr << "ready to write " << img.w << "x" << img.h << std::endl;
             {
                 const size_t                    height = static_cast<size_t>(img.h);
-                CxxArray<png_bytep,MemoryModel> row(height); assert(height==row.size());
-                for(size_t i=0;i<height;++i)
+                CxxArray<png_bytep,MemoryModel> row(height);
+                for(size_t i=0,j=1;i<height;++i,++j)
                 {
-                    const Image::RowType  &r = img[i];
-                    const Image::Type     &c = r[0];
-                    (void) c;
-                    //row[i+1] = (png_byte*)&img[i][0];
-
+                    row[j] = (png_byte*)&img(i)(0);
                 }
-                std::cerr << " *** Aborting..." << std::endl;
-                abort();
                 png_write_image(png, &row[1]);
             }
             //exit(0);

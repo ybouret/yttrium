@@ -17,7 +17,13 @@ namespace Yttrium
         public:
             static inline size_t Align(const size_t x) noexcept { return Y_MEMALIGN(x); }
 
-            explicit Code(const Metrics &metrics) : Object(), Counted(), row(0), pix(0), mem(0)
+            explicit Code(const Metrics &metrics) : 
+            Object(),
+            Counted(),
+            row(0),
+            pix(0),
+            mem(0),
+            zfw(metrics.zfw)
             {
                 {
                     //__________________________________________________________
@@ -57,7 +63,13 @@ namespace Yttrium
                 withhold();    // no-throw
             }
 
-            explicit Code(void *data, const Metrics &metrics) : Object(), Counted(), row(0), pix(0), mem(0)
+            explicit Code(void *data, const Metrics &metrics) : 
+            Object(),
+            Counted(),
+            row(0),
+            pix(0),
+            mem(0),
+            zfw(metrics.zfw)
             {
                 assert(0!=data);
                 {
@@ -77,7 +89,6 @@ namespace Yttrium
 
                 // link
                 link(metrics);
-
                 withhold();
             }
 
@@ -91,9 +102,10 @@ namespace Yttrium
                 pix = 0;
             }
 
-            BitRow *row;
-            void   *pix;
-            size_t  mem;
+            BitRow        *row;
+            void          *pix;
+            size_t         mem;
+            const ZeroFlux zfw;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
@@ -105,7 +117,7 @@ namespace Yttrium
                 {
                     BitRow &r = row[j];
                     r.entry   = entry;
-                    r.zflux   = &metrics.zfw;
+                    r.zflux   = &zfw;
                 }
                 
             }

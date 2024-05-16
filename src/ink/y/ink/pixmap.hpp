@@ -50,9 +50,8 @@ namespace Yttrium
             //! const access: zero_flux
             inline ConstType & operator[](const unit_t i) const noexcept
             {
-                (std::cerr << "[" << i << "]").flush() << "zflux@" << zflux << ", w=" << zflux->size << std::endl;
-                assert(0!=entry); if(!entry) std::cerr << "no entry" << std::endl;
-                assert(0!=zflux); if(!zflux) std::cerr << "no zflux" << std::endl;
+                assert(0!=entry);
+                assert(0!=zflux); 
                 return entry[ (*zflux)[i] ];
             }
 
