@@ -14,7 +14,9 @@ namespace Yttrium
         Ceqz( clusters.maxCPC, clusters.maxSPC),
         banks(),
         negative(banks.ls),
-        fences(clusters.maxCPC,banks)
+        fences(clusters.maxCPC,banks),
+        xadd(),
+        fbank()
         {
         }
 
@@ -38,6 +40,7 @@ namespace Yttrium
                 const Species &sp = **node;
                 if( C0[ sp.indx[TopLevel]] < zero ) negative << sp;
             }
+
             if(negative.size<=0)
             {
                 Y_XMLOG(xml,"no negative concentration");
@@ -90,7 +93,7 @@ namespace Yttrium
                     // process controller with outcome
                     //__________________________________________________________
                     {
-                        xadd.free();
+                        
                         FList              fixed(fbank);
                         XWritable         &C1 = Ceqz[index];
                         const xreal_t      g1 = cluster.equalized(C1, SubLevel, eq, fence.cursor, fence.zeroed.head, C0, TopLevel,xadd);
