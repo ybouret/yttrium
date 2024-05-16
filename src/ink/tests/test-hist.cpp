@@ -4,7 +4,6 @@
 
 
 #include "y/utest/run.hpp"
-#include "y/concurrent/loop/crew.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/color/grayscale.hpp"
 #include "y/hashing/sha1.hpp"
@@ -31,11 +30,8 @@ Y_UTEST(hist)
     Hashing::SHA1 hfn;
     WallTime      tmx;
     Codec  &      IMG = Ink::Codecs::Std();
-
-    Concurrent::Topology   topo;
-    Concurrent::SharedLoop crew = new Concurrent::Crew(topo);
-    Slabs                  par( crew );
-    Histogram              hist;
+    Slabs         par( InParallel );
+    Histogram    hist;
 
 
     const Color::DarkToBright Gradient;
@@ -44,7 +40,9 @@ Y_UTEST(hist)
     {
         (std::cerr << "Loading " << argv[1] << std::endl).flush();
         Pixmap<RGBA> img = IMG.load(argv[1],0);
-        std::cerr << "img32 =" << img.crc32() << std::endl;
+
+        std::cerr << "img32 =" << img.crc32() << " @row=" << img.brow << std::endl;
+        
         //std::cerr << img << std::endl;
         IMG.save(img, "hist-img.png",0);
         return 0;

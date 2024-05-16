@@ -143,11 +143,11 @@ namespace Yttrium
             }
 
             //! full shared copy
-            inline   Pixmap(const Pixmap &pixmap) noexcept :
+            inline Pixmap(const Pixmap &pixmap) noexcept :
             Bitmap(pixmap),
             row( this->as<RowType>() )
             {
-
+                std::cerr << "Pixmap Shared Copy of crc32=" << crc32() << " @row=" << row << std::endl;
             }
 
             //! shared copy

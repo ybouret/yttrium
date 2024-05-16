@@ -170,7 +170,7 @@ namespace Yttrium
         dynamic(other.dynamic)
         {
             code->withhold();
-            std::cerr << "BitmapShared Copy of crc32=" << crc32() << std::endl;
+            std::cerr << "Bitmap Shared Copy of crc32=" << crc32() << " @row=" << brow << std::endl;
         }
 
 

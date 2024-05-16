@@ -30,7 +30,7 @@ Y_UTEST(bmp)
     Ink::IndexToRGBA::Load(img,slabs,ran);
 
     fmt->save(img, "img.bmp", 0);
-    Ink::Codec::Image cpy = fmt->load("img.bmp",0);
+    Ink::Codec::Image cpy( fmt->load("img.bmp",0) );
 
 
 }
