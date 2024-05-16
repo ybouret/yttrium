@@ -90,7 +90,7 @@ namespace Yttrium
 
             //! apply from source to target
             template <typename COLOR> inline
-            void operator()(Slabs &slabs, Pixmap<COLOR> &target, const Pixmap<COLOR> &source)
+            void operator()(Slabs &slabs, Pixmap<COLOR> &target, const Pixmap<COLOR> &source) const
             {
                 slabs( Apply<COLOR>, target, *this, source);
             }

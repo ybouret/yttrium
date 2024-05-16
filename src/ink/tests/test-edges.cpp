@@ -6,6 +6,7 @@
 #include "y/ink/ops/gradient/thinner.hpp"
 #include "y/ink/ops/block/dilate.hpp"
 #include "y/ink/ops/block/erode.hpp"
+#include "y/ink/ops/blur.hpp"
 
 
 #include "y/color/grayscale.hpp"
@@ -26,33 +27,40 @@ Y_UTEST(edges)
     const Color::BlackAndWhite            bw;
     const Color::ColdToHot                cr;
     const Color::Map8                     cm8(bw);
+    const Blur<float>                     blur(1.4f);
 
     if(argc>1)
     {
-        const Pixmap<RGBA>  img = IMG.load(argv[1],0);                       IMG.save(img, "img.png", 0);
-        Pixmap<float>       pxf(par,Color::GrayScale::Pack<float,RGBA>,img); IMG.save(pxf, "pxf.png", 0, par, bw);
+        std::cerr << "Loading " << argv[1] << std::endl;
+        const Pixmap<RGBA>  img = IMG.load(argv[1],0);
+        std::cerr << "Converting to GrayScale" << std::endl;
+        Pixmap<float>       pxf(par,Color::GrayScale::Pack<float,RGBA>,img);
+        Pixmap<float>       blr(par,Pixmap<float>::Id,pxf);
         GradientMap<float>  gmap(img.w,img.h);
         GradientThinner     thin(img.w,img.h);
 
+        //blur(par,blr,pxf);
+        blr.ld(par, Pixmap<float>::Id, pxf);
+
+        // compute gradient intensity/direction
+        std::cerr << "Computing gradient" << std::endl;
         gmap(par,scharr5,pxf);
         std::cerr << "gmap: " << gmap.nmin << " -> " << gmap.nmax << std::endl;
+
+
+        // keep only maxima of gradient and double thresholding
+        std::cerr << "Thinning" << std::endl;
+        thin(par,hist,gmap);
+
+        std::cerr << "Saving..." << std::endl;
+        IMG.save(img, "img1-data.png", 0);
+        IMG.save(pxf, "img2-grey.png", 0, par, bw);
+        IMG.save(blr, "img3-blur.png", 0, par, bw);
         {
             const Color::FlexibleRamp gr(cr, gmap.nmin, gmap.nmax);
-            IMG.save(gmap.intensity, "gmap.png", 0, par, gr);
+            IMG.save(gmap.intensity, "img4-gmap.png", 0, par, gr);
         }
-
-        thin(par,hist,gmap);
-        IMG.save(thin, "thin.png", 0, par, cm8);
-        
-
-#if 0
-        Pixmap<uint8_t> dilated(img.w,img.h);
-        Dilate<3,3>::Call(par,dilated,thin);
-        IMG.save(dilated, "dilated.png", 0, par, cm8);
-        Pixmap<uint8_t> eroded(img.w,img.h);
-        Erode<3,3>::Call(par,eroded,dilated);
-        IMG.save(eroded, "eroded.png", 0, par, cm8);
-#endif
+        IMG.save(thin, "img5-thin.png", 0, par, cm8);
 
 
     }
