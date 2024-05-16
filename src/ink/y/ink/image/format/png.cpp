@@ -125,21 +125,10 @@ namespace Yttrium
                     for(size_t i=0,j=1;i<height;++i,++j)
                     {
                         row[j] = (png_byte*)&pxm[i][0];
-                       // std::cerr << "row[" << j << "]@" << (void*)row[j] << std::endl;
                     }
                     png_read_image(png,&row[1]);
 
-#if 0
-                    {
-                        const Codec::Image &cst = pxm;
-                        for(size_t i=0;i<height;++i)
-                        {
-                            std::cerr << "row[" << i << "]=" << pxm[i] << std::endl;
-                            std::cerr << "cst[" << i << "]=" << cst[i] << std::endl;
-
-                        }
-                    }
-#endif
+                    
                     std::cerr << "                       ld32=" << Hexadecimal(pxm.crc32()) << std::endl;
                     return pxm;
                 }
