@@ -83,7 +83,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Equalizer);
             XMatrixType                 Ceqz;
             Banks                       banks;
-            SRepo                       negative;
+            AddressBook                 negative;
             CxxArray<Fence,MemoryModel> fences;
             XAdd                        xadd;
             FBank                       fbank;

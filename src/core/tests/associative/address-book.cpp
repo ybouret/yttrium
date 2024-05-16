@@ -21,6 +21,9 @@ Y_UTEST(associative_addrbook)
         std::cerr << *(const int *)addr << std::endl;
     }
 
+    book.display<int>(std::cerr << "book=" ) << std::endl;
+
+
 }
 Y_UDONE()
 

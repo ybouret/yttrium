@@ -13,7 +13,7 @@ namespace Yttrium
         Equalizer:: Equalizer(const Clusters &clusters) :
         Ceqz( clusters.maxCPC, clusters.maxSPC),
         banks(),
-        negative(banks.ls),
+        negative(),
         fences(clusters.maxCPC,banks),
         xadd(),
         fbank()
@@ -38,10 +38,10 @@ namespace Yttrium
             for(const SNode *node=cluster.species.head;node;node=node->next)
             {
                 const Species &sp = **node;
-                if( C0[ sp.indx[TopLevel]] < zero ) negative << sp;
+                if( C0[ sp.indx[TopLevel] ] < zero ) negative += sp;
             }
 
-            if(negative.size<=0)
+            if(negative.size()<=0)
             {
                 Y_XMLOG(xml,"no negative concentration");
                 return;

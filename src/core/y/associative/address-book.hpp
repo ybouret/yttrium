@@ -71,6 +71,24 @@ namespace Yttrium
         template <typename T> inline
         AddressBook & operator|=( T &obj ) { (void) insert(obj); return *this; }
 
+        template <typename T> inline
+        std::ostream & display(std::ostream &os) const
+        {
+            os << '{';
+            size_t n = size();
+            if(n>0)
+            {
+                ConstIterator it = begin();
+                os << *static_cast<const T*>(*it);
+                for(--n,++it;n>0;--n,++it)
+                {
+                    os << ',' << *static_cast<const T*>(*it);
+                }
+            }
+            os << '}';
+            return os;
+        }
+
     private:
         Y_DISABLE_ASSIGN(AddressBook);
         void throwSameAddress(const void *p) const;
