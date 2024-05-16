@@ -331,11 +331,13 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(DefaultTopology);
         };
 
-        class DefaultCrew : public AutoPtr<const DefaultTopology>, public Crew
+        typedef Yttrium::AutoPtr<const DefaultTopology> TopologyHandle;
+
+        class DefaultCrew : public TopologyHandle, public Crew
         {
         public:
             inline explicit DefaultCrew() :
-            AutoPtr<const DefaultTopology>( new DefaultTopology() ),
+            TopologyHandle( new DefaultTopology() ),
             Crew( **this )
             {
             }
