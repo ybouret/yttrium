@@ -39,8 +39,8 @@ Y_UTEST(edges)
         GradientMap<float>  gmap(img.w,img.h);
         GradientThinner     thin(img.w,img.h);
 
-        //blur(par,blr,pxf);
-        blr.ld(par, Pixmap<float>::Id, pxf);
+        blur(par,blr,pxf);
+        //blr.ld(par, Pixmap<float>::Id, pxf);
 
         // compute gradient intensity/direction
         std::cerr << "Computing gradient" << std::endl;
