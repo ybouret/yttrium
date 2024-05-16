@@ -48,7 +48,10 @@ namespace Yttrium
             }
             else
             {
-                Y_XMLOG(xml,"negative=" << negative);
+               if(xml.verbose)
+               {
+                   negative.display<Species>( xml() << "negative=" ) << std::endl;
+               }
             }
 
             //__________________________________________________________________

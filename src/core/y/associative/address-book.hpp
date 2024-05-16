@@ -82,9 +82,7 @@ namespace Yttrium
                 ConstIterator it = begin();
                 Display<T>(os,it);
                 for(--n,++it;n>0;--n,++it)
-                {
                     Display<T>(os<<',',it);
-                }
             }
             os << '}';
             return os;
