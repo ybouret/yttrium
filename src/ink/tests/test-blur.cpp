@@ -15,8 +15,9 @@ Y_UTEST(blur)
     {
         sig = ASCII::Convert::ToReal<float>(argv[1],"sigma");
     }
+    std::cerr << "sigma=" << sig << std::endl;
 
-    Blur<long double> blur(sig);
+    Blur<double> blur(sig);
 
     if(argc>2)
     {
