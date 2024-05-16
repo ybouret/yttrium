@@ -39,8 +39,8 @@ namespace Yttrium
         }
 
 
-        Fence & Fence:: shapeFull(const Components &components,
-                                const XReadable  &C)
+        void Fence:: buildLimits(const Components &components,
+                                 const XReadable  &C)
         {
             //--------------------------------------------------------------
             //
@@ -89,8 +89,6 @@ namespace Yttrium
                 }
             }
 
-            return *this;
-
         }
 
 
@@ -113,10 +111,11 @@ namespace Yttrium
         }
 
 
-        unsigned Fence:: studyFull(XMLog &xml)
+        unsigned Fence:: operator()(const Components &components,
+                                    const XReadable  &C,
+                                    XMLog            &xml)
         {
-            assert(0==zeroed.size);
-            assert(MKL::Fabs<xreal_t>::Of(cursor) <= zero);
+            buildLimits(components,C);
 
             //------------------------------------------------------------------
             //

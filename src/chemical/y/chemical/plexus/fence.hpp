@@ -13,7 +13,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-        
+
 
         //______________________________________________________________________
         //
@@ -38,7 +38,7 @@ namespace Yttrium
             static const unsigned BY_BOTH = BY_REAC | BY_PROD;           //!< alias
             static const unsigned ID_MASK = BY_REAC | BY_PROD | BY_BOTH; //!< alias
 
-           
+
 
             //__________________________________________________________________
             //
@@ -61,12 +61,12 @@ namespace Yttrium
             //! reset all limits
             void reset() noexcept;
 
-            //! shape limits from components and top-level concentrations
-            Fence & shapeFull(const Components &components,
-                              const XReadable  &Ctop);
+
 
             //! compute cursor for controller
-            unsigned studyFull(XMLog &xml);
+            unsigned operator()(const Components &components,
+                                const XReadable  &Ctop,
+                                XMLog            &xml);
 
 
 
@@ -81,7 +81,7 @@ namespace Yttrium
             const xreal_t  cursor;  //!< strategy when possible
             const SRepo    zeroed;  //!< vanishing when possible
             const xreal_t  zero;    //!< alias
-            
+
         private:
             Y_DISABLE_ASSIGN(Fence);
 
@@ -89,6 +89,7 @@ namespace Yttrium
             void     proceedWith(const Boundary &bnd); //!< append species to be zeroed
             unsigned missingProd(XMLog &xml);
             unsigned missingReac(XMLog &xml);
+            void     buildLimits(const Components &, const XReadable &);
         };
 
     }

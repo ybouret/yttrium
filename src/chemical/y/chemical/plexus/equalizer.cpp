@@ -75,10 +75,10 @@ namespace Yttrium
                     const Equilibrium &eq = cntl->primary;
                     Y_XML_SECTION(xml, eq.name);
                     const size_t   index  = active+1;
-                    Fence         &fence = fences[index].shapeFull(cntl->components,C0);
-                    Y_XMLOG(xml, " (*) " << fence);
-                    const unsigned state = fence.studyFull(xml);
+                    Fence         &fence = fences[index];
+                    const unsigned state = fence(cntl->components,C0,xml);
                     const unsigned flags = (state&Fence::ST_MASK);
+                    Y_XMLOG(xml, " (*) " << fence);
                     switch( flags )
                     {
                         case Fence::RUNNING: goto CONTINUE;
