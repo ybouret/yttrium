@@ -54,7 +54,7 @@ namespace Yttrium
             template <size_t N> static inline
             void Compute(T &out, const T * const arr)
             {
-                static const Int2Type<TypeTraits<T>::IsIntegral> Choice;
+                static const Int2Type<TypeTraits<T>::IsIntegral> Choice = {};
                 Compute<N>(Choice,out,arr);
             }
         };
