@@ -180,7 +180,7 @@ namespace Yttrium
             const char    txt[] = "level";
             int           res = 6;
             const String *opt = Options::Query(opts,txt);
-            if(opt)
+            if(0!=opt)
             {
                 res = Clamp<int>(1, ASCII::Convert::To<int>(*opt,txt),9);
             }
@@ -194,17 +194,19 @@ namespace Yttrium
             OutputFile fp(filename);
 
             png_structp png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-            if (!png)
+            if(!png)
             {
                 throw Specific::Exception(CallSign,"png_create_write_struct");
             }
 
+
             png_infop info = png_create_info_struct(png);
-            if (!info)
+            if(!info)
             {
                 png_destroy_write_struct(&png, NULL);
                 throw Specific::Exception(CallSign,"png_create_info_struct for writer");
             }
+
 
             if (setjmp(png_jmpbuf(png)))
             {
@@ -212,9 +214,10 @@ namespace Yttrium
                 throw Specific::Exception(CallSign,"png_format::save('%s')",filename());
             }
 
-            png_init_io(png, (FILE*)fp.handle);
+            png_init_io(png, static_cast<FILE*>(fp.handle) );
 
             const bool alpha = getAlpha(opts);
+
             // Output is 8bit depth, RGB(A) format.
             png_set_IHDR(png,
                          info,
@@ -226,26 +229,33 @@ namespace Yttrium
                          PNG_COMPRESSION_TYPE_DEFAULT,
                          PNG_FILTER_TYPE_DEFAULT
                          );
+
             png_set_compression_level(png,getLevel(opts));
 
-            png_write_info(png, info);
+            png_write_info(png,info);
 
             // To remove the alpha channel for PNG_COLOR_TYPE_RGB format,
             // Use png_set_filler().
             if(!alpha)
-            {
                 png_set_filler(png, 0, PNG_FILLER_AFTER);
-            }
 
+            std::cerr << "ready to write " << img.w << "x" << img.h << std::endl;
             {
-                const size_t height = img.h;
-                CxxArray<png_bytep,MemoryModel> row(height);
+                const size_t                    height = static_cast<size_t>(img.h);
+                CxxArray<png_bytep,MemoryModel> row(height); assert(height==row.size());
                 for(size_t i=0;i<height;++i)
                 {
-                    row[i+1] = (png_byte*)&img[i][0];
+                    const Image::RowType  &r = img[i];
+                    const Image::Type     &c = r[0];
+                    (void) c;
+                    //row[i+1] = (png_byte*)&img[i][0];
+
                 }
+                std::cerr << " *** Aborting..." << std::endl;
+                abort();
                 png_write_image(png, &row[1]);
             }
+            //exit(0);
             png_write_end(png, NULL);
 
 

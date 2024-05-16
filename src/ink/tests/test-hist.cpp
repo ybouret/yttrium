@@ -30,7 +30,7 @@ Y_UTEST(hist)
 {
     Hashing::SHA1 hfn;
     WallTime      tmx;
-    Codecs &      IMG = Ink::Codecs::Std();
+    Codec  &      IMG = Ink::Codecs::Std();
 
     Concurrent::Topology   topo;
     Concurrent::SharedLoop crew = new Concurrent::Crew(topo);
@@ -69,12 +69,15 @@ Y_UTEST(hist)
 
         (std::cerr << "Saving..." << std::endl).flush();
         IMG.save(img, "hist-img.png",0);
-        IMG.save(tgt, "hist-msk.png",0);
+        //IMG.save(tgt, "hist-msk.png",0);
 
-        IMG.renderRamp("ramp.png", Gradient, 800, 100);
+        //IMG.renderRamp("ramp.png", Gradient, 800, 100);
 
+        std::cerr << "Converting mask to GreyScale" << std::endl;
         Pixmap<float> pxf(par,ByteToFloat,msk);
-        IMG.Codec::save(pxf, "hist-flt.png", 0, par, Gradient);
+        IMG.save(pxf, "hist-flt.png", 0, par, Gradient);
+
+        return 0;
 
         LookUpTable8 lut;
         uint8_t lower=0,upper=0;
