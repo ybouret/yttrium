@@ -125,9 +125,8 @@ namespace Yttrium
             row( this->as<RowType>() )
             {
                 buildWith(Make,0,Kill);
-                displayInfo("Built Pixmap");
             }
-            
+
 
             //! based on user's data
             /**
@@ -166,14 +165,11 @@ namespace Yttrium
             {
                 (void)ld<PROC,U>(slabs,proc,src);
             }
-
-
-
-
+            
             //! cleanup
             inline virtual ~Pixmap() noexcept
             {
-                if(dynamic)
+                if(dynamic && (counted.quantity()<=1) )
                     eraseWith(Kill);
             }
 

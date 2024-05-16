@@ -117,8 +117,7 @@ namespace Yttrium
 
                     const size_t bytes_per_row = png_get_rowbytes(png,info);
                     (void) bytes_per_row;
-                    //std::cerr << "bytes_per_row=" << bytes_per_row << std::endl;
-
+                    
                     Codec::Image                    pxm(width,height);
                     CxxArray<png_bytep,MemoryModel> row(height);
                     for(size_t i=0,j=1;i<height;++i,++j)
@@ -127,7 +126,6 @@ namespace Yttrium
                     }
                     png_read_image(png,&row[1]);
 
-                    pxm.displayInfo("PNG");
                     return pxm;
                 }
 

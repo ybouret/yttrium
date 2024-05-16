@@ -26,7 +26,6 @@ namespace Yttrium
             mem(0),
             zfw(metrics.zfw)
             {
-                std::cerr << "[+Bitmap::Code]" << std::endl;
                 {
                     //__________________________________________________________
                     //
@@ -96,7 +95,6 @@ namespace Yttrium
 
             virtual ~Code() noexcept
             {
-                std::cerr << "[~Bitmap::Code]" << std::endl;
                 void *ptr = Memory::OutOfReach::Addr(row);
                 MemoryModel::Location().release(ptr,mem);
                 row = 0;
@@ -129,50 +127,27 @@ namespace Yttrium
 
         };
 
-        uint32_t Bitmap:: crc32() const noexcept
-        {
-            assert(0!=code);
-            return code->crc32();
-        }
 
 
 
-        void Bitmap:: displayInfo(const char * const where) const
-        {
-            assert(0!=code);
-            assert(0!=where);
-            std::cerr << "<Bitmap where='" << where << "', w='" << w << "' h='" << h << "'>" << std::endl;
-            std::cerr << "   code @ " << code << "  | rows @ " << code->row << std::endl;
-            std::cerr << "  crc32 = " << Hexadecimal( crc32() ) << std::endl;
-            uint32_t row32 = 0x00;
-            for(unit_t j=0;j<h;++j)
-            {
-                const BitRow &r = brow[j];
-                if(r.zflux != &(code->zfw) ) std::cerr << "invalid zflux@" << j << std::endl;
-                //std::cerr << r.entry << "/";
-                row32 = CRC32::Run(row32, &(r.entry), sizeof(r.entry));
-            }
-            std::cerr << "  row32 = " << Hexadecimal( row32 ) << std::endl;
-            std::cerr << "<Bitmap/>" << std::endl;
-        }
 
 
         Bitmap:: Bitmap(const unit_t W, const unit_t H, const unsigned BPP) :
         Metrics(W,H,BPP),
         code( new Code(*this) ),
         brow( code->row ),
-        dynamic(true)
+        dynamic(true),
+        counted(*code)
         {
-            displayInfo("Dynamic Constructor");
         }
 
         Bitmap:: Bitmap(void *data, const unit_t W, const unit_t H, const unsigned BPP, const unit_t S) :
         Metrics(W,H,BPP,S),
         code( new Code(data,*this) ),
         brow(code->row),
-        dynamic(false)
+        dynamic(false),
+        counted(*code)
         {
-            displayInfo("Static Constructor");
         }
 
 
@@ -187,9 +162,9 @@ namespace Yttrium
         Metrics(other),
         code(other.code),
         brow(code->row),
-        dynamic(other.dynamic)
+        dynamic(other.dynamic),
+        counted(*code)
         {
-            displayInfo("Shared Copy");
             code->withhold();
         }
 
@@ -265,7 +240,6 @@ namespace Yttrium
 
         void Bitmap:: eraseWith(void (*kill)(void *)) noexcept
         {
-            std::cerr << "eraseWith" << std::endl;
             assert(0!=kill);
             for(unit_t j=h;j>0;)
                 eraseBitRow(brow[--j],w,bpp,kill);

@@ -41,11 +41,6 @@ Y_UTEST(hist)
     {
         (std::cerr << "Loading " << argv[1] << std::endl).flush();
         Pixmap<RGBA> img = IMG.load(argv[1],0);
-
-        img.displayInfo("In Program");
-        return 0;
-        
-        //std::cerr << img << std::endl;
         IMG.save(img, "hist-img.png",0);
 
 

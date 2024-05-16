@@ -11,6 +11,8 @@
 
 namespace Yttrium
 {
+    class Counted;
+    
     namespace Ink
     {
 
@@ -78,16 +80,9 @@ namespace Yttrium
         public:
             BitRow * const brow;    //!< rows[h]
             const bool     dynamic; //!< if data was allocated
+            const Counted &counted; //!< internale counted
 
-            //__________________________________________________________________
-            //
-            //
-            // Methods
-            //
-            //__________________________________________________________________
-            uint32_t    crc32() const noexcept;
-            void displayInfo(const char * const where) const;
-
+            
 
         protected:
 
