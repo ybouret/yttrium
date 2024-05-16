@@ -27,14 +27,18 @@ namespace Yttrium
 
         {
             const xreal_t zero;
+            const SList  &species = cluster.conservedSpecies;
+            if(species.size<=0) return;
+
+            // probing negative conserved Species
             negative.free();
-            for(const SNode *node=cluster.conservedSpecies.head;node;node=node->next)
+            for(const SNode *node=species.head;node;node=node->next)
             {
                 const Species &sp = **node; assert( cluster.isLimited(sp) );
                 if( C0[ sp.indx[TopLevel] ] < zero ) negative += sp;
             }
 
-            Y_XML_SECTION_OPT(xml, "Controllers"," negative='" << negative.size() << "'");
+            Y_XML_SECTION_OPT(xml, "Controllers"," negative='" << negative.size() << "' conserved='" << species.size);
             if(negative.size()<=0) return;
 
         }
