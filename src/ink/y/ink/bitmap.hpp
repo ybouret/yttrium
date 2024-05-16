@@ -86,7 +86,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             uint32_t    crc32() const noexcept;
-            const void *heart() const noexcept;
+            void displayInfo(const char * const where) const;
+
 
         protected:
 

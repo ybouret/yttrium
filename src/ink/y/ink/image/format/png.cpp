@@ -114,7 +114,6 @@ namespace Yttrium
 
                     png_read_update_info(png, info);
 
-                    std::cerr << width << "x" << height << " : bpp=" << unsigned(bit_depth) << std::endl;
 
                     const size_t bytes_per_row = png_get_rowbytes(png,info);
                     (void) bytes_per_row;
@@ -128,8 +127,7 @@ namespace Yttrium
                     }
                     png_read_image(png,&row[1]);
 
-                    
-                    std::cerr << "                       ld32=" << Hexadecimal(pxm.crc32()) << std::endl;
+                    pxm.displayInfo("PNG");
                     return pxm;
                 }
 

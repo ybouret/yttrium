@@ -136,11 +136,17 @@ namespace Yttrium
             return code->crc32();
         }
 
-        const void * Bitmap:: heart() const noexcept
-        {
-            return code;
-        }
 
+
+        void Bitmap:: displayInfo(const char * const where) const
+        {
+            assert(0!=code);
+            assert(0!=where);
+            std::cerr << "<Bitmap where='" << where << "', w='" << w << "' h='" << h << "'>" << std::endl;
+            std::cerr << "   code @ " << code << std::endl;
+            std::cerr << "  crc32 = " << Hexadecimal( crc32() ) << std::endl;
+            std::cerr << "<Bitmap/>" << std::endl;
+        }
 
 
         Bitmap:: Bitmap(const unit_t W, const unit_t H, const unsigned BPP) :
@@ -149,7 +155,7 @@ namespace Yttrium
         brow( code->row ),
         dynamic(true)
         {
-
+            displayInfo("Dynamic Constructor");
         }
 
         Bitmap:: Bitmap(void *data, const unit_t W, const unit_t H, const unsigned BPP, const unit_t S) :
@@ -158,7 +164,7 @@ namespace Yttrium
         brow(code->row),
         dynamic(false)
         {
-
+            displayInfo("Static Constructor");
         }
 
 
@@ -175,8 +181,8 @@ namespace Yttrium
         brow(code->row),
         dynamic(other.dynamic)
         {
+            displayInfo("Shared Copy");
             code->withhold();
-            std::cerr << "Bitmap Shared Copy of crc32=" << Hexadecimal(crc32()) << " @row=" << brow << ", heart@" << heart() << std::endl;
         }
 
 

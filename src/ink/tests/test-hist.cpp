@@ -42,8 +42,7 @@ Y_UTEST(hist)
         (std::cerr << "Loading " << argv[1] << std::endl).flush();
         Pixmap<RGBA> img = IMG.load(argv[1],0);
 
-        std::cerr << "                      crc32=" << Hexadecimal(img.crc32()) << " @row=" << img.brow << ", heart@" << img.heart() << std::endl;
-
+        img.displayInfo("In Program");
         return 0;
         
         //std::cerr << img << std::endl;
