@@ -136,6 +136,7 @@ namespace Yttrium
             // cooperativity
             //
             //------------------------------------------------------------------
+            Y_XML_SECTION(xml,"Cooperativity");
             {
                 BMatrix &coop = Coerce(cooperative);
                 coop.make(n,n);
@@ -146,19 +147,14 @@ namespace Yttrium
                     for(const Controller *rhs=lhs->next;rhs;rhs=rhs->next)
                     {
                         const size_t j = **rhs;
-                        coop[i][j] = false;
+                        coop[i][j] = coop[j][i] = !(lhs->components.sharesSpeciesWith(rhs->components));
                     }
+                    if(xml.verbose)  eqfmt.pad( xml() << lhs->primary, lhs->primary) << " : " << cooperative[i] << std::endl;
+
                 }
             }
 
-            if(xml.verbose)
-            {
-                Y_XML_SECTION(xml,"Cooperativity");
-                for(const Controller *lhs=controllers.head;lhs;lhs=lhs->next)
-                {
-                    eqfmt.pad( xml() << lhs->primary, lhs->primary) << " : " << cooperative[**lhs] << std::endl;
-                }
-            }
+
 
 
         }
