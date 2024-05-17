@@ -22,14 +22,19 @@ namespace Yttrium
         class Equalizer
         {
         public:
+            typedef CxxArray<Fence,MemoryModel> Fences;
 
             class Fixed
             {
             public:
-                Fixed(const xreal_t    g,
-                      const XReadable &c) noexcept :
-                gain(g),
-                conc(c)
+                Fixed(const xreal_t     theGain,
+                      const XReadable  &theConc,
+                      const Controller &theCntl,
+                      const Fence      &theWall) noexcept :
+                gain(theGain),
+                conc(theConc),
+                cntl(theCntl),
+                wall(theWall)
                 {
                 }
 
@@ -37,13 +42,17 @@ namespace Yttrium
 
                 Fixed(const Fixed &other) noexcept :
                 gain(other.gain),
-                conc(other.conc)
+                conc(other.conc),
+                cntl(other.cntl),
+                wall(other.wall)
                 {
                 }
 
 
-                const xreal_t     gain;
-                const XReadable & conc;
+                const xreal_t      gain;
+                const XReadable  & conc;
+                const Controller & cntl;
+                const Fence      & wall;
 
             private:
                 Y_DISABLE_ASSIGN(Fixed);
@@ -83,7 +92,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Equalizer);
             XMatrixType                 Ceqz;
             Banks                       banks;
-            Fence                       fence;
+            Fences                      fences;
             AddressBook                 negative;
             XAdd                        xadd;
             FBank                       bank;

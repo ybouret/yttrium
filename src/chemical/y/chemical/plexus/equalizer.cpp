@@ -13,7 +13,7 @@ namespace Yttrium
         Equalizer:: Equalizer(const Clusters &clusters) :
         Ceqz(clusters.maxCPC,clusters.maxSPC),
         banks(),
-        fence(banks),
+        fences(clusters.maxCPC,banks),
         negative(),
         xadd(),
         bank()
@@ -78,18 +78,17 @@ namespace Yttrium
                 //
                 // current controller may handle a negative concentration
                 //______________________________________________________________
-                if(xml.verbose)
-                {
-                    cluster.eqfmt.print( xml() << " (+) " << eq << " : ", eq) << std::endl;
-                }
+                if(xml.verbose) cluster.eqfmt.print( xml() << " (+) " << eq << " : ", eq) << std::endl;
 
-                const size_t   index = flist.size+1;               // new index
+
+                const size_t   index = flist.size+1;           // new index
+                Fence         &fence = fences[index];          // get a new fence
                 const unsigned state = fence(cm,C0,xml);       // build the fence
                 const unsigned flags = (state&Fence::ST_MASK); // get the flags
 
                 //______________________________________________________________
                 //
-                // current controller may handle a negative concentration
+                // act upon result
                 //______________________________________________________________
                 switch( flags )
                 {
@@ -102,8 +101,7 @@ namespace Yttrium
                         break;
 
                     default:
-                        throw Specific::Exception(here,"invalid flags='%s'", Fence::StatusText(flags) );
-
+                        throw Specific::Exception(here,"corrupted flags='%s'", Fence::StatusText(flags) );
                 }
 
                 //______________________________________________________________
@@ -114,7 +112,7 @@ namespace Yttrium
                 {
                     XWritable    &C1 = Ceqz[index];
                     const xreal_t g1 = cluster.equalized(C1, SubLevel, eq, fence.cursor, fence.zeroed.head, C0, TopLevel, xadd);
-                    const Fixed   f(g1,C1);
+                    const Fixed   f(g1,C1,*cntl,fence);
                     flist << f;
                     if(xml.verbose)
                     {
@@ -132,6 +130,9 @@ namespace Yttrium
 
             CONTINUE:;
             }
+
+            std::cerr << "#Fixed=" << flist.size << std::endl;
+
 
         }
 

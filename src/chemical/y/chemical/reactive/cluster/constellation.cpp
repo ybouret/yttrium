@@ -105,6 +105,22 @@ namespace Yttrium
 
             }
 
+            //------------------------------------------------------------------
+            //
+            // re-labelling equilibria AuxLevel
+            //
+            //------------------------------------------------------------------
+            //LightList;
+            size_t indx=0;
+            for(const Controller *cntl=controllers.head;cntl;cntl=cntl->next)
+            {
+                const Equilibrium   &eq = cntl->primary;
+                const size_t * const id = eq.indx;
+                Coerce(id[AuxLevel]) = ++indx;
+                if(xml.verbose) eqfmt.pad( xml() << eq, eq ) << std::setw(4) << id[TopLevel] << " -> " << id[AuxLevel] << std::endl;
+            }
+
+
 
         }
         
