@@ -114,6 +114,7 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equalizer);
             XMatrixType                 Ceqz;
+            XVectorType                 Cout;
             Banks                       banks;
             Fences                      fences;
             AddressBook                 negative;

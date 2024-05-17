@@ -12,6 +12,7 @@ namespace Yttrium
 
         Equalizer:: Equalizer(const Clusters &clusters) :
         Ceqz(clusters.maxCPC,clusters.maxSPC),
+        Cout(clusters.maxSPC,0),
         banks(),
         fences(clusters.maxCPC,banks),
         negative(),
