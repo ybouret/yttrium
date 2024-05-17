@@ -66,6 +66,7 @@ namespace Yttrium
                 return os;
             }
 
+            std::ostream & displayCompact(std::ostream &, const XReadable &, const Level) const;
 
 
             //! cleanup

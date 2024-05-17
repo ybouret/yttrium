@@ -65,7 +65,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             const Equilibrium &primary;    //!< persistent primary equilibrium
-            const Components   components; //!< conserved components
+            const Components   custom;     //!< conserved components
+            const SList        roving;     //!< shared, unbounded components
             Controller        *next;       //!< for list
             Controller        *prev;       //!< for list
 

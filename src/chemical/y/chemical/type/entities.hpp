@@ -61,7 +61,7 @@ namespace Yttrium
                 for(const typename LIST::NodeType *node=list.head;node;node=node->next)
                 {
                     const Entity &entity = **node;
-                    pad(os << pfx<< entity.name  << sfx, entity) << " = " << real_t(array[ entity.indx[level] ]) << '\n';
+                    pad(os << pfx<< entity.name  << sfx, entity) << " = " << std::setw(15) << real_t(array[ entity.indx[level] ]) << '\n';
                 }
             }
 

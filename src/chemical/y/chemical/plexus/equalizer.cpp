@@ -78,7 +78,7 @@ namespace Yttrium
             for(const Controller *cntl=cluster.controllers.head;cntl;cntl=cntl->next)
             {
                 const Equilibrium &eq = cntl->primary;
-                const Components  &cm = cntl->components;
+                const Components  &cm = cntl->custom;
                 if( ! cm.isConcernedBy(negative) )
                 {
                     Y_XMLOG(xml,BAD << eq);
@@ -146,13 +146,26 @@ namespace Yttrium
             if(flist.size<=0)
                 return;
 
+            //------------------------------------------------------------------
+            //
+            //
             // sort by decreasing gain
+            //
+            //
+            //------------------------------------------------------------------
             MergeSort::Call(flist,CompareFixed);
             for(const FNode *node=flist.head;node;node=node->next)
             {
                 (**node).to(xml,WIN);
             }
 
+            //------------------------------------------------------------------
+            //
+            //
+            // select cooperative solution
+            //
+            //
+            //------------------------------------------------------------------
             {
                 Y_XML_SECTION(xml, "Selecting");
                
@@ -196,7 +209,26 @@ namespace Yttrium
                     }
                 }
             }
-            
+
+            //------------------------------------------------------------------
+            //
+            //
+            // build solution
+            //
+            //
+            //------------------------------------------------------------------
+            {
+                Y_XML_SECTION(xml, "Improving");
+                cluster.spfmt.show(std::cerr, "[", cluster.species, "]", C0, TopLevel);
+                for(const FNode *node=glist.head;node;node=node->next)
+                {
+                    const Fixed &f = **node;
+                    if(xml.verbose)
+                    f.cntl.primary.displayCompact( xml() << ADD, f.conc,SubLevel) << std::endl;
+                }
+
+            }
+
 
 
 

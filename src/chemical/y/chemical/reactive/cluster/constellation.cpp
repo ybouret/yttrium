@@ -84,7 +84,7 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 AutoPtr<Controller> cntl = new Controller(eq,conserved);
-                if(cntl->components.reac.size>0 && cntl->components.prod.size>0)
+                if(cntl->custom.reac.size>0 && cntl->custom.prod.size>0)
                 {
                     for(const Controller *node=controllers.head;node;node=node->next)
                     {
@@ -98,7 +98,7 @@ namespace Yttrium
                         }
                     }
                     if(xml.verbose)
-                        eqfmt.print(*xml << "<regulates> : ",cntl->components) << std::endl;
+                        eqfmt.print(*xml << "<regulates> : ",cntl->custom) << std::endl;
                     Coerce(controllers).pushTail( cntl.yield() );
 
 
@@ -147,7 +147,7 @@ namespace Yttrium
                     for(const Controller *rhs=lhs->next;rhs;rhs=rhs->next)
                     {
                         const size_t j = **rhs;
-                        coop[i][j] = coop[j][i] = !(lhs->components.sharesSpeciesWith(rhs->components));
+                        coop[i][j] = coop[j][i] = !(lhs->custom.sharesSpeciesWith(rhs->custom));
                     }
                     if(xml.verbose)  eqfmt.pad( xml() << lhs->primary, lhs->primary) << " : " << cooperative[i] << std::endl;
 

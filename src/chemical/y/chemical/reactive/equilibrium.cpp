@@ -67,6 +67,21 @@ namespace Yttrium
         }
 
 
+        std::ostream & Equilibrium::displayCompact(std::ostream &os, const XReadable &C, const Level level)  const
+        {
+            const Equilibrium &self = *this;
+            os << self << "={";
+            ConstIterator it=self->begin();
+            for(size_t i=self->size();i>0;--i,++it)
+            {
+                const Component &cm = *it;
+                const Species   &sp = cm.sp;
+                os << sp << '=' << real_t(C[ sp.indx[level]] );
+                if(i>1) os << ',';
+            }
+            os << "}";
+            return os;
+        }
 
 
     }
