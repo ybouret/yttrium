@@ -78,7 +78,10 @@ namespace Yttrium
                 //
                 // current controller may handle a negative concentration
                 //______________________________________________________________
-                Y_XMLOG(xml, " (+) " << eq);
+                if(xml.verbose)
+                {
+                    cluster.eqfmt.print( xml() << " (+) " << eq << " : ", eq) << std::endl;
+                }
 
                 const size_t   index = flist.size+1;               // new index
                 const unsigned state = fence(cm,C0,xml);       // build the fence
@@ -109,10 +112,22 @@ namespace Yttrium
                 //______________________________________________________________
                 assert(0!=(flags&Fence::IMPROVE));
                 {
-                    XWritable    &c = Ceqz[index];
-                    const xreal_t g = cluster.equalized(c, SubLevel, eq, fence.cursor, fence.zeroed.head, C0, TopLevel, xadd);
-                    const Fixed   f(g,c);
+                    XWritable    &C1 = Ceqz[index];
+                    const xreal_t g1 = cluster.equalized(C1, SubLevel, eq, fence.cursor, fence.zeroed.head, C0, TopLevel, xadd);
+                    const Fixed   f(g1,C1);
                     flist << f;
+                    if(xml.verbose)
+                    {
+                        for(Components::ConstIterator it=eq->begin();it!=eq->end();++it)
+                        {
+                            const Species &sp = (*it).sp;
+                            cluster.spfmt.pad( xml() << " (|) " << sp, sp)
+                            << " : "   << std::setw(15) << real_t(C0[sp.indx[TopLevel]])
+                            << " -> "  << std::setw(15) << real_t(C1[sp.indx[SubLevel]])
+                            << std::endl;
+                        }
+                        xml() << " ($) " << real_t(g1) << std::endl;
+                    }
                 }
 
             CONTINUE:;
