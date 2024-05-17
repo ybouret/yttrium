@@ -60,6 +60,12 @@ namespace Yttrium
                     Y_XMLOG(xml, pfx << "gain = " << std::setw(15) << real_t(gain) << " @" << cntl.primary);
                 }
 
+                std::ostream &  displayCompact( std::ostream &os ) const
+                {
+                    cntl.primary.displayCompact(os,conc,SubLevel);
+                    return os;
+                }
+
 
                 const xreal_t      gain;
                 const XReadable  & conc;

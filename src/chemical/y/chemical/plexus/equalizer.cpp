@@ -219,12 +219,19 @@ namespace Yttrium
             //------------------------------------------------------------------
             {
                 Y_XML_SECTION(xml, "Improving");
-                cluster.spfmt.show(std::cerr, "[", cluster.species, "]", C0, TopLevel);
-                for(const FNode *node=glist.head;node;node=node->next)
+                cluster.spfmt.show(std::cerr, "init@[", cluster.species, "]", C0, TopLevel);
+
+                // assign first one
+                const FNode *node = glist.head; assert(0!=node);
                 {
                     const Fixed &f = **node;
-                    if(xml.verbose)
-                    f.cntl.primary.displayCompact( xml() << ADD, f.conc,SubLevel) << std::endl;
+                    if(xml.verbose) f.displayCompact( xml() << " (*) ") << std::endl;
+                }
+
+                for(node=node->next;node;node=node->next)
+                {
+                    const Fixed &f = **node;
+                    if(xml.verbose) f.displayCompact( xml() << ADD ) << std::endl;
                 }
 
             }

@@ -109,14 +109,22 @@ namespace Yttrium
                                     const Level      srclvl,
                                     XAdd            &xadd) const
         {
+            //------------------------------------------------------------------
+            //
             // initialize
+            //
+            //------------------------------------------------------------------
             static const char here[] = "Chemical::Cluster::equalize";
             const xreal_t     zero;
             const size_t      n = components->size();
             xadd.make(n);
-            transfer(target,tgtlvl,source,srclvl);
+            transfer(target,tgtlvl,source,srclvl); // is it necessary ?
 
+            //------------------------------------------------------------------
+            //
             // pass 1: compute new set of concentrations
+            //
+            //------------------------------------------------------------------
             {
                 Components::ConstIterator it = components->begin();
                 for(size_t i=n;i>0;--i,++it)
@@ -158,22 +166,30 @@ namespace Yttrium
                 }
             }
 
+            //------------------------------------------------------------------
+            //
             // pass 2: enforce zeroed
+            //
+            //------------------------------------------------------------------
             for(;zeroed;zeroed=zeroed->next)
             {
                 target[ (**zeroed).indx[tgtlvl] ] = zero;
             }
 
+            //------------------------------------------------------------------
+            //
             // pass 3, compute gain
+            //
+            //------------------------------------------------------------------
             {
                 Components::ConstIterator it = components->begin();
                 for(size_t i=n;i>0;--i,++it)
                 {
-                    const Component     &cm = *it;
-                    const Species       &sp = cm.sp; if(!isLimited(sp)) continue;
-                    const size_t * const id = sp.indx;
-                    const xreal_t        c0 = source[ id[srclvl] ]; if(c0>=zero) continue;
-                    const xreal_t        c1 = target[ id[tgtlvl] ];
+                    const Component     &cm   = *it;
+                    const Species       &sp   = cm.sp; if(!isLimited(sp)) continue;
+                    const size_t * const id   = sp.indx;
+                    const xreal_t        c0   = source[ id[srclvl] ]; if(c0>=zero) continue;
+                    const xreal_t        c1   = target[ id[tgtlvl] ];
                     const xreal_t        diff = c1-c0;
                     xadd << diff;
                 }

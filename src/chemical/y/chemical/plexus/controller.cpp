@@ -27,6 +27,7 @@ namespace Yttrium
                     Coerce(roving) << sp;
                 }
             }
+            assert(primary->size() == roving.size + custom->size());
         }
 
         Controller::  ~Controller() noexcept {}
