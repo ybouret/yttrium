@@ -11,10 +11,10 @@ namespace Yttrium
         }
 
         Equalizer:: Equalizer(const Clusters &clusters) :
-        Ceqz( clusters.maxCPC, clusters.maxSPC),
+        Ceqz(clusters.maxCPC,clusters.maxSPC),
         banks(),
+        fence(banks),
         negative(),
-        fences(clusters.maxCPC,banks),
         xadd(),
         bank()
         {
@@ -63,7 +63,7 @@ namespace Yttrium
             // looping over concerned controllers
             //
             //__________________________________________________________________
-            size_t active = 0;
+            FList  flist(bank);
             for(const Controller *cntl=cluster.controllers.head;cntl;cntl=cntl->next)
             {
                 const Equilibrium &eq = cntl->primary;
@@ -80,8 +80,7 @@ namespace Yttrium
                 //______________________________________________________________
                 Y_XMLOG(xml, " (+) " << eq);
 
-                const size_t   index = active+1;               // new index
-                Fence &        fence = fences[index];          // get trial fence
+                const size_t   index = flist.size+1;               // new index
                 const unsigned state = fence(cm,C0,xml);       // build the fence
                 const unsigned flags = (state&Fence::ST_MASK); // get the flags
 
@@ -104,10 +103,16 @@ namespace Yttrium
 
                 }
 
+                //______________________________________________________________
+                //
+                // compute and store improved state
+                //______________________________________________________________
                 assert(0!=(flags&Fence::IMPROVE));
                 {
-                    XWritable &C = Ceqz[index];
-                    
+                    XWritable    &c = Ceqz[index];
+                    const xreal_t g = cluster.equalized(c, SubLevel, eq, fence.cursor, fence.zeroed.head, C0, TopLevel, xadd);
+                    const Fixed   f(g,c);
+                    flist << f;
                 }
 
             CONTINUE:;
