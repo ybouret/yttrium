@@ -68,6 +68,11 @@ namespace Yttrium
             typedef FList::NodeType             FNode; //!< alias
             typedef FList::ProxyType            FBank; //!< alias
 
+            static SignType CompareFixed(const FNode * const lhs,
+                                         const FNode * const rhs) noexcept
+            {
+                return Sign::Of( (**rhs).gain, (**lhs).gain );
+            }
 
             //__________________________________________________________________
             //

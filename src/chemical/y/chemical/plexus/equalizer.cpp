@@ -21,6 +21,8 @@ namespace Yttrium
         }
 
 
+        
+
         void Equalizer:: tuneControllers(XWritable     &C0,
                                          const Cluster &cluster,
                                          XMLog         &xml)
@@ -135,11 +137,17 @@ namespace Yttrium
             }
 
             Y_XMLOG(xml, " (#) fixed=" << flist.size);
-            
             if(flist.size<=0)
-            {
+                return;
 
+            MergeSort::Call(flist,CompareFixed);
+            for(const FNode *node=flist.head;node;node=node->next)
+            {
+                const Fixed &f = **node;
+                std::cerr << "gain=" << real_t(f.gain) << " @" << f.cntl.primary << std::endl;
             }
+
+
 
             return;
             goto CYCLE;
