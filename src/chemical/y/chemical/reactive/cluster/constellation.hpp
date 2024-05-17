@@ -12,6 +12,7 @@ namespace Yttrium
     namespace Chemical
     {
 
+        typedef Matrix<bool,MemoryModel> BMatrix; //!< alias
 
         //______________________________________________________________________
         //
@@ -30,7 +31,6 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Matrix<bool,MemoryModel> BMatrix; //!< alias
 
             //__________________________________________________________________
             //

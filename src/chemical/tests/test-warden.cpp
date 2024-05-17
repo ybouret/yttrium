@@ -41,7 +41,7 @@ Y_UTEST(warden)
 
     lib(std::cerr << "C0=",C0) << std::endl;
 
-    cls.graphViz("system");
+    //cls.graphViz("system");
 
 #if 0
     Banks        banks;

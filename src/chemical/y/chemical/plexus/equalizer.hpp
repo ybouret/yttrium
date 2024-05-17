@@ -54,6 +54,12 @@ namespace Yttrium
                 {
                 }
 
+                void to(XMLog &xml, const char *pfx = 0) const
+                {
+                    if(!pfx) pfx = "";
+                    Y_XMLOG(xml, pfx << "gain = " << std::setw(15) << real_t(gain) << " @" << cntl.primary);
+                }
+
 
                 const xreal_t      gain;
                 const XReadable  & conc;
@@ -105,8 +111,10 @@ namespace Yttrium
             Banks                       banks;
             Fences                      fences;
             AddressBook                 negative;
+            FBank                       fbank;
+            FList                       flist;
+            FList                       glist;
             XAdd                        xadd;
-            FBank                       bank;
 
             void tuneControllers(XWritable     &C0,
                                  const Cluster &cluster,

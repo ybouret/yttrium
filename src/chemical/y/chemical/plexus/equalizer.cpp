@@ -15,8 +15,10 @@ namespace Yttrium
         banks(),
         fences(clusters.maxCPC,banks),
         negative(),
-        xadd(),
-        bank()
+        fbank(),
+        flist(fbank),
+        glist(fbank),
+        xadd()
         {
         }
 
@@ -29,6 +31,9 @@ namespace Yttrium
 
         {
             static const char here[] = "Chemical::Equalizer::tuneControllers";
+            static const char ADD[]  = " (+) ";
+            static const char BAD[]  = " (-) ";
+            static const char WIN[]  = " ($) ";
 
             //__________________________________________________________________
             //
@@ -59,7 +64,6 @@ namespace Yttrium
 
             if(xml.verbose) negative.display<Species>( xml() <<"negative=") << std::endl;
 
-            FList flist(bank);
 
             //__________________________________________________________________
             //
@@ -67,15 +71,17 @@ namespace Yttrium
             // looping over concerned controllers
             //
             //__________________________________________________________________
+            const BMatrix &coop = cluster.cooperative;
         CYCLE:
             flist.free();
+            glist.free();
             for(const Controller *cntl=cluster.controllers.head;cntl;cntl=cntl->next)
             {
                 const Equilibrium &eq = cntl->primary;
                 const Components  &cm = cntl->components;
                 if( ! cm.isConcernedBy(negative) )
                 {
-                    Y_XMLOG(xml," (-) " << eq);
+                    Y_XMLOG(xml,BAD << eq);
                     continue;
                 }
 
@@ -83,7 +89,7 @@ namespace Yttrium
                 //
                 // current controller may handle a negative concentration
                 //______________________________________________________________
-                if(xml.verbose) cluster.eqfmt.print( xml() << " (+) " << eq << " : ", eq) << std::endl;
+                if(xml.verbose) cluster.eqfmt.print( xml() << ADD << eq << " : ", eq) << std::endl;
 
 
                 const size_t   index = flist.size+1;           // new index
@@ -129,7 +135,7 @@ namespace Yttrium
                             << " -> "  << std::setw(15) << real_t(C1[sp.indx[SubLevel]])
                             << std::endl;
                         }
-                        xml() << " ($) " << real_t(g1) << std::endl;
+                        xml() << WIN << real_t(g1) << std::endl;
                     }
                 }
 
@@ -140,12 +146,57 @@ namespace Yttrium
             if(flist.size<=0)
                 return;
 
+            // sort by decreasing gain
             MergeSort::Call(flist,CompareFixed);
             for(const FNode *node=flist.head;node;node=node->next)
             {
-                const Fixed &f = **node;
-                std::cerr << "gain=" << real_t(f.gain) << " @" << f.cntl.primary << std::endl;
+                (**node).to(xml,WIN);
             }
+
+            {
+                Y_XML_SECTION(xml, "Selecting");
+               
+                //--------------------------------------------------------------
+                //
+                // select first one
+                //
+                //--------------------------------------------------------------
+                glist.pushTail( flist.popHead() );
+                (**glist.head).to(xml, ADD);
+
+                //--------------------------------------------------------------
+                //
+                // append cooperating with glist
+                //
+                //--------------------------------------------------------------
+                while( flist.size > 0 )
+                {
+                    const Fixed          &rhs        = **flist.head;
+                    const Readable<bool> &flag       = coop[*rhs.cntl];
+                    bool                  cooperates = true;
+                    for(const FNode *node=glist.head;node;node=node->next)
+                    {
+                        const Fixed &lhs = **node;
+                        const bool   ok  = flag[ *lhs.cntl ];
+                        if(!ok)
+                        {
+                            cooperates=false;
+                            break;
+                        }
+                    }
+
+                    if(cooperates)
+                    {
+                        rhs.to(xml,ADD);
+                        glist.pushTail( flist.popHead() );
+                    }
+                    else
+                    {
+                        flist.cutHead();
+                    }
+                }
+            }
+
 
 
 
