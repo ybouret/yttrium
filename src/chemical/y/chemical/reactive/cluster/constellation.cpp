@@ -27,7 +27,8 @@ namespace Yttrium
         ClusterCombinatorics(eqs,fragment,topK,xml),
         hasOnlyReac(),
         hasOnlyProd(),
-        controllers()
+        controllers(),
+        cooperative()
         {
 
             static const char here[] = "Chemical::Cluster::Constellation";
