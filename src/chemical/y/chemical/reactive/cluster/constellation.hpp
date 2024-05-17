@@ -24,7 +24,13 @@ namespace Yttrium
         class ClusterConstellation : public ClusterCombinatorics
         {
         public:
-            typedef Matrix<bool,MemoryModel> BMatrix;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef Matrix<bool,MemoryModel> BMatrix; //!< alias
 
             //__________________________________________________________________
             //

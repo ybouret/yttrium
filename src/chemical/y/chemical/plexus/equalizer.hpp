@@ -22,7 +22,13 @@ namespace Yttrium
         class Equalizer
         {
         public:
-            typedef CxxArray<Fence,MemoryModel> Fences;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef CxxArray<Fence,MemoryModel> Fences; //!< alias
 
             class Fixed
             {
