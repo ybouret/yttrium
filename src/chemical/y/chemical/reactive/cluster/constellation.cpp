@@ -13,6 +13,12 @@ namespace Yttrium
             return res;
         }
 
+        static inline
+        SignType CompareControllers(const Controller * const lhs,
+                                    const Controller * const rhs) noexcept
+        {
+            return Sign::Of(lhs->primary.indx[TopLevel],rhs->primary.indx[TopLevel]);
+        }
 
         ClusterConstellation:: ClusterConstellation(Equilibria        &eqs,
                                                     const Fragment    &fragment,
@@ -105,21 +111,53 @@ namespace Yttrium
 
             }
 
+            const size_t n = controllers.size;
+            if(n<=0) return;;
             //------------------------------------------------------------------
             //
             // re-labelling equilibria AuxLevel
             //
             //------------------------------------------------------------------
-            //LightList;
-            size_t indx=0;
-            for(const Controller *cntl=controllers.head;cntl;cntl=cntl->next)
+            MergeSort::Call( Coerce(controllers), CompareControllers);
             {
-                const Equilibrium   &eq = cntl->primary;
-                const size_t * const id = eq.indx;
-                Coerce(id[AuxLevel]) = ++indx;
-                if(xml.verbose) eqfmt.pad( xml() << eq, eq ) << std::setw(4) << id[TopLevel] << " -> " << id[AuxLevel] << std::endl;
+                size_t indx=0;
+                for(const Controller *cntl=controllers.head;cntl;cntl=cntl->next)
+                {
+                    const Equilibrium   &eq = cntl->primary;
+                    const size_t * const id = eq.indx;
+                    Coerce(id[AuxLevel]) = ++indx;
+                    if(xml.verbose) eqfmt.pad( xml() << eq, eq ) << std::setw(4) << id[TopLevel] << " -> " << id[AuxLevel] << std::endl;
+                }
             }
 
+            //------------------------------------------------------------------
+            //
+            // cooperativity
+            //
+            //------------------------------------------------------------------
+            {
+                BMatrix &coop = Coerce(cooperative);
+                coop.make(n,n);
+                for(const Controller *lhs=controllers.head;lhs;lhs=lhs->next)
+                {
+                    const size_t i = **lhs;
+                    coop[i][i] = false;
+                    for(const Controller *rhs=lhs->next;rhs;rhs=rhs->next)
+                    {
+                        const size_t j = **rhs;
+                        coop[i][j] = false;
+                    }
+                }
+            }
+
+            if(xml.verbose)
+            {
+                Y_XML_SECTION(xml,"Cooperativity");
+                for(const Controller *lhs=controllers.head;lhs;lhs=lhs->next)
+                {
+                    eqfmt.pad( xml() << lhs->primary, lhs->primary) << " : " << cooperative[**lhs] << std::endl;
+                }
+            }
 
 
         }

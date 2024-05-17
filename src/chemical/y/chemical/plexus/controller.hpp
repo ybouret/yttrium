@@ -56,7 +56,7 @@ namespace Yttrium
             //! true if analogous components
             bool isEquivalentTo(const Controller &) const noexcept;
             
-
+            size_t operator*() const noexcept; //!< primary.indx[AuxLevel];
 
             //__________________________________________________________________
             //

@@ -24,6 +24,8 @@ namespace Yttrium
         class ClusterConstellation : public ClusterCombinatorics
         {
         public:
+            typedef Matrix<bool,MemoryModel> BMatrix;
+
             //__________________________________________________________________
             //
             //
@@ -58,7 +60,7 @@ namespace Yttrium
             const EList       hasOnlyReac; //!< equilibria with only reac
             const EList       hasOnlyProd; //!< equilibria with only prod
             const Controllers controllers; //!< controlling equilibria
-
+            const BMatrix     cooperative; //!< cooperative controlles
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterConstellation);

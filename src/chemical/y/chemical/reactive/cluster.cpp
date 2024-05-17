@@ -28,12 +28,13 @@ namespace Yttrium
                 Coerce(limited[i]) = true;
             }
 
-           // std::cerr << "limited=" << limited << std::endl;
-            //exit(0);
+#if 0
             for(const SNode *node=species.head;node;node=node->next)
             {
                 Y_XMLOG(xml, "limited " << **node << " = " << isLimited(**node));
             }
+#endif
+            
         }
 
         bool Cluster:: isLimited(const Species &sp) const noexcept

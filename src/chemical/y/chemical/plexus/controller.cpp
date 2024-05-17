@@ -28,6 +28,11 @@ namespace Yttrium
             return components.isAnalogousTo(other.components);
         }
 
+        size_t Controller:: operator*() const noexcept
+        {
+            return primary.indx[AuxLevel];
+        }
+
 #if 0
         void Controller:: shape(Landscape       &landscape,
                                 const XReadable &C,

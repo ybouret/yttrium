@@ -56,14 +56,17 @@ namespace Yttrium
                 return;
 
             if(xml.verbose) negative.display<Species>( xml() <<"negative=") << std::endl;
-           
+
+            FList flist(bank);
+
             //__________________________________________________________________
             //
             //
             // looping over concerned controllers
             //
             //__________________________________________________________________
-            FList  flist(bank);
+        CYCLE:
+            flist.free();
             for(const Controller *cntl=cluster.controllers.head;cntl;cntl=cntl->next)
             {
                 const Equilibrium &eq = cntl->primary;
@@ -131,8 +134,15 @@ namespace Yttrium
             CONTINUE:;
             }
 
-            std::cerr << "#Fixed=" << flist.size << std::endl;
+            Y_XMLOG(xml, " (#) fixed=" << flist.size);
+            
+            if(flist.size<=0)
+            {
 
+            }
+
+            return;
+            goto CYCLE;
 
         }
 
