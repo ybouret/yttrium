@@ -66,6 +66,11 @@ namespace Yttrium
                     return os;
                 }
 
+                void set(XWritable &C, const Level level) const
+                {
+                    cntl.primary.transfer(C, level, conc, SubLevel);
+                }
+
 
                 const xreal_t      gain;
                 const XReadable  & conc;
@@ -123,7 +128,6 @@ namespace Yttrium
             FList                       glist;
             XAdd                        xadd;
 
-            void removeNegative(const Fixed &);
             void tuneControllers(XWritable     &C0,
                                  const Cluster &cluster,
                                  XMLog         &xml);

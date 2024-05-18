@@ -52,13 +52,17 @@ namespace Yttrium
         virtual const char * callSign() const throw(); //!< "AddressBook"
         bool insert_(const void *addr);                //!< insert new address
         bool search_(const void *addr) const noexcept; //!< search address
-
+        bool remove_(const void *addr)       noexcept; //!< remove address
 
         //! search an object's address
-        template <typename T> inline bool search(T &obj) const { return search_( &obj ); }
+        template <typename T> inline bool search(T &obj) const noexcept { return search_( &obj ); }
 
         //! insert a new object's address
         template <typename T> inline bool insert(T &obj) { return insert_( &obj ); }
+
+        //! remove an object's address
+        template <typename T> inline bool remove(T &obj) noexcept{ return remove_( &obj ); }
+
 
         //! append a NEW object's address
         template <typename T> inline

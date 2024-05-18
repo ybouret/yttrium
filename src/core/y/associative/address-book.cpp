@@ -31,6 +31,13 @@ namespace Yttrium
         return  AddressMap::search(key);
     }
 
+    bool AddressBook:: remove_(const void *addr) noexcept
+    {
+        const LittleEndianKey key(addr);
+        return  AddressMap::remove(key);
+    }
+
+
     const char * AddressBook:: callSign() const noexcept { return "AddressBook"; }
 
     void AddressBook:: throwSameAddress(const void *p) const
