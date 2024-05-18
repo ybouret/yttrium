@@ -24,8 +24,8 @@ namespace Yttrium
         }
 
 
-        size_t Equalizer:: probeNegative(const XReadable &C0,
-                                       const Cluster   &cluster)
+        size_t Equalizer:: getNegativeCntl(const XReadable &C0,
+                                           const Cluster   &cluster)
         {
             const xreal_t zero;
             negative.free();
@@ -65,7 +65,7 @@ namespace Yttrium
             // probing negative conserved species
             //
             //__________________________________________________________________
-            if(probeNegative(C0, cluster)<=0) {
+            if(getNegativeCntl(C0, cluster)<=0) {
                 Y_XMLOG(xml, AST << "no negative conserved");
                 return;
             }
@@ -269,7 +269,7 @@ namespace Yttrium
 
             }
 
-            if( probeNegative(C0,cluster) )
+            if( getNegativeCntl(C0,cluster) )
             {
                 goto CYCLE;
             }

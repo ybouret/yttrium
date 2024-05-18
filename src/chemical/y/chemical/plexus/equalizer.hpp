@@ -128,7 +128,7 @@ namespace Yttrium
             FList                       glist;
             XAdd                        xadd;
 
-            size_t probeNegative(const XReadable &C0, const Cluster &cluster);
+            size_t getNegativeCntl(const XReadable &C0, const Cluster &cluster);
             void   tuneControllers(XWritable &C0, const Cluster &cluster, XMLog &xml);
 
         };
