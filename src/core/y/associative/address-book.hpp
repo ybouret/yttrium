@@ -61,7 +61,7 @@ namespace Yttrium
         template <typename T> inline bool insert(T &obj) { return insert_( &obj ); }
 
         //! remove an object's address
-        template <typename T> inline bool remove(T &obj) noexcept{ return remove_( &obj ); }
+        //template <typename T> inline bool remove(T &obj) noexcept { return remove_( &obj ); }
 
 
         //! append a NEW object's address
