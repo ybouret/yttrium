@@ -172,8 +172,20 @@ namespace Yttrium
             return false;
         }
 
+        void Components:: transfer(XWritable       &target,
+                                   const Level      tgtlvl,
+                                   const XReadable &source,
+                                   const Level     &srclvl) const
+        {
+            size_t n = cdb.size();
+            for(ConstIterator it=cdb.begin();n>0;--n,++it)
+            {
+                const size_t * const id = (*it).sp.indx;
+                target[ id[tgtlvl] ] = source[ id[srclvl] ];
+            }
+        }
 
-        
+
     }
 }
 

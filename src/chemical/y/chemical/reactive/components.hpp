@@ -70,6 +70,12 @@ namespace Yttrium
                 }
             }
 
+            //! transfer for each species
+            void transfer(XWritable       &target,
+                          const Level      tgtlvl,
+                          const XReadable &source,
+                          const Level     &srclvl) const;
+
 
             bool isTheSameThan(const Components &) const noexcept; //!< same reac and prod
             bool isFlippedWith(const Components &) const noexcept; //!< mirror reac and prod

@@ -5,7 +5,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        
+
         Species::~Species() noexcept
         {
         }
@@ -33,12 +33,12 @@ namespace Yttrium
         SList:: SList() noexcept : SList_() {}
         SList:: ~SList() noexcept {}
         SList:: SList(const SList &other) : SList_(other) {}
-        
+
 
         void SList:: transfer(XWritable       &target,
                               const Level      tgtlvl,
                               const XReadable &source,
-                              const Level     &srclvl) const noexcept
+                              const Level     &srclvl) const
         {
             for(const SNode *node=head;node;node=node->next)
             {
