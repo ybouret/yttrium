@@ -83,7 +83,7 @@ namespace Yttrium
         CYCLE:
             ++cycle;
             Y_XMLOG(xml, "-------- cycle = " << cycle << " --------");
-            if(xml.verbose) negative.display<Species>( xml() << "negative=") << std::endl;
+            if(xml.verbose) negative.display<Species>( xml() << BAD << "negative=") << std::endl;
             flist.free();
             for(const Controller *cntl=cluster.controllers.head;cntl;cntl=cntl->next)
             {
@@ -155,7 +155,7 @@ namespace Yttrium
             Y_XMLOG(xml, " (#) fixed=" << flist.size);
             if(flist.size<=0)
             {
-                Y_XMLOG(xml,"unfinished...");
+                if(xml.verbose) negative.display<Species>( xml() << BAD << "negative=") << std::endl;
                 return;
             }
 
