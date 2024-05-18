@@ -62,8 +62,7 @@ namespace Yttrium
             void reset() noexcept;
 
 
-
-            //! compute cursor for controller
+            //! compute cursor for controller (reac+prod)
             unsigned operator()(const Components &components,
                                 const XReadable  &Ctop,
                                 XMLog            &xml);

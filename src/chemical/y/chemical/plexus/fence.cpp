@@ -65,6 +65,8 @@ namespace Yttrium
             //
             //--------------------------------------------------------------
             reset();
+            assert(components.reac.size>0);
+            assert(components.prod.size>0);
 
             //--------------------------------------------------------------
             //
@@ -214,6 +216,12 @@ namespace Yttrium
             Y_XMLOG(xml, " (+) missing  prod=" << bad);
             Y_XMLOG(xml, " (+) dominant reac=" << dom );
 
+            assert(bad.xi>zero);
+            if(dom.xi<=zero) {
+                Y_XMLOG(xml, " (*) blocked");
+                return BLOCKED | BY_REAC;
+            }
+
             switch( Sign::Of(dom.xi,bad.xi) )
             {
                 case Negative:
@@ -227,16 +235,18 @@ namespace Yttrium
                     startUpWith(bad,Equilibrium::Forward);
                     proceedWith(dom);
                     Y_XMLOG(xml, " (*) equated  both=" << zeroed << "@" << real_t(cursor) );
-                    assert(cursor>=zero);
+                    assert(cursor>zero);
                     return EQUATED | BY_BOTH;
 
                 case Positive:
                     assert(dom.xi>bad.xi);
                     startUpWith(bad,Equilibrium::Forward);
                     Y_XMLOG(xml, " (*) equated  prod=" << zeroed << "@" << real_t(cursor) );
-                    assert(cursor>=zero);
+                    assert(cursor>zero);
                     return EQUATED | BY_PROD;
             }
+
+
             throw Specific::Exception(fn, "corrupted signs");
             return -1;
         }
@@ -253,6 +263,11 @@ namespace Yttrium
             const Boundary & dom =  **(capping.prod->head); // dom is first product
             Y_XMLOG(xml, " (+) missing  reac=" << bad);
             Y_XMLOG(xml, " (+) dominant prod=" << dom );
+            assert(bad.xi>zero);
+            if(dom.xi<=zero) {
+                Y_XMLOG(xml, " (*) blocked");
+                return BLOCKED | BY_PROD;
+            }
 
             switch( Sign::Of(dom.xi,bad.xi) )
             {
