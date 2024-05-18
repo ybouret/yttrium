@@ -112,7 +112,7 @@ namespace Yttrium
         void Fence:: startUpWith(const Boundary &             bnd,
                                  const Equilibrium::Direction dir)
         {
-            assert(bnd.xi>zero);
+            assert(bnd.xi>=zero);
             switch(dir)
             {
                 case Equilibrium::Forward: Coerce(cursor) =  bnd.xi; break;
@@ -227,14 +227,14 @@ namespace Yttrium
                     startUpWith(bad,Equilibrium::Forward);
                     proceedWith(dom);
                     Y_XMLOG(xml, " (*) equated  both=" << zeroed << "@" << real_t(cursor) );
-                    assert(cursor>zero);
+                    assert(cursor>=zero);
                     return EQUATED | BY_BOTH;
 
                 case Positive:
                     assert(dom.xi>bad.xi);
                     startUpWith(bad,Equilibrium::Forward);
                     Y_XMLOG(xml, " (*) equated  prod=" << zeroed << "@" << real_t(cursor) );
-                    assert(cursor>zero);
+                    assert(cursor>=zero);
                     return EQUATED | BY_PROD;
             }
             throw Specific::Exception(fn, "corrupted signs");
@@ -260,21 +260,21 @@ namespace Yttrium
                     assert(dom.xi<bad.xi);
                     startUpWith(dom,Equilibrium::Reverse);
                     Y_XMLOG(xml, " (*) partial  prod=" << zeroed << "@" << real_t(cursor) );
-                    assert(cursor<zero);
+                    assert(cursor<=zero);
                     return PARTIAL | BY_PROD;
 
                 case __Zero__:
                     startUpWith(bad,Equilibrium::Reverse);
                     proceedWith(dom);
                     Y_XMLOG(xml, " (*) equated  both=" << zeroed << "@" << real_t(cursor) );
-                    assert(cursor<zero);
+                    assert(cursor<=zero);
                     return EQUATED | BY_BOTH;
 
                 case Positive:
                     assert(dom.xi>bad.xi);
                     startUpWith(bad,Equilibrium::Reverse);
                     Y_XMLOG(xml, " (*) equated  reac=" << zeroed << "@" << real_t(cursor) );
-                    assert(cursor<zero);
+                    assert(cursor<=zero);
                     return EQUATED | BY_REAC;
             }
             throw Specific::Exception(fn, "corrupted signs");

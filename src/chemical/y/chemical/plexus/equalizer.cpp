@@ -24,8 +24,20 @@ namespace Yttrium
         }
 
 
-        
+        size_t Equalizer:: probeNegative(const XReadable &C0,
+                                       const Cluster   &cluster)
+        {
+            const xreal_t zero;
+            negative.free();
+            for(const SNode *node=cluster.conservedSpecies.head;node;node=node->next)
+            {
+                const Species &sp = **node; assert( cluster.isLimited(sp) );
+                if( C0[ sp.indx[TopLevel] ] < zero ) negative += sp;
+            }
+            return negative.size();
+        }
 
+        
         void Equalizer:: tuneControllers(XWritable     &C0,
                                          const Cluster &cluster,
                                          XMLog         &xml)
@@ -35,6 +47,7 @@ namespace Yttrium
             static const char ADD[]  = " (+) ";
             static const char BAD[]  = " (-) ";
             static const char WIN[]  = " ($) ";
+            static const char AST[]  = " (*) ";
 
             //__________________________________________________________________
             //
@@ -52,18 +65,12 @@ namespace Yttrium
             // probing negative conserved species
             //
             //__________________________________________________________________
-            negative.free();
-            for(const SNode *node=species.head;node;node=node->next)
-            {
-                const Species &sp = **node; assert( cluster.isLimited(sp) );
-                if( C0[ sp.indx[TopLevel] ] < zero ) negative += sp;
+            if(probeNegative(C0, cluster)<=0) {
+                Y_XMLOG(xml, AST << "no negative conserved");
+                return;
             }
 
-            Y_XML_SECTION_OPT(xml,here," negative='" << negative.size() << "' conserved='" << species.size);
-            if(negative.size()<=0)
-                return;
 
-            if(xml.verbose) negative.display<Species>( xml() <<"negative=") << std::endl;
 
 
             //__________________________________________________________________
@@ -72,10 +79,12 @@ namespace Yttrium
             // looping over concerned controllers
             //
             //__________________________________________________________________
-            const BMatrix &coop = cluster.cooperative;
+            unsigned cycle = 0;
         CYCLE:
+            ++cycle;
+            Y_XMLOG(xml, "-------- cycle = " << cycle << " --------");
+            if(xml.verbose) negative.display<Species>( xml() << "negative=") << std::endl;
             flist.free();
-            glist.free();
             for(const Controller *cntl=cluster.controllers.head;cntl;cntl=cntl->next)
             {
                 const Equilibrium &eq = cntl->primary;
@@ -145,7 +154,10 @@ namespace Yttrium
 
             Y_XMLOG(xml, " (#) fixed=" << flist.size);
             if(flist.size<=0)
+            {
+                Y_XMLOG(xml,"unfinished...");
                 return;
+            }
 
             //------------------------------------------------------------------
             //
@@ -155,9 +167,12 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             MergeSort::Call(flist,CompareFixed);
-            for(const FNode *node=flist.head;node;node=node->next)
+            if(xml.verbose)
             {
-                (**node).to(xml,WIN);
+                for(const FNode *node=flist.head;node;node=node->next)
+                {
+                    (**node).to(xml,WIN);
+                }
             }
 
             //------------------------------------------------------------------
@@ -169,7 +184,8 @@ namespace Yttrium
             //------------------------------------------------------------------
             {
                 Y_XML_SECTION(xml, "Selecting");
-               
+                const BMatrix &coop = cluster.cooperative;
+                glist.free();
                 //--------------------------------------------------------------
                 //
                 // select first one
@@ -227,7 +243,8 @@ namespace Yttrium
 
 
                 const FNode *node = glist.head; assert(0!=node);
-                const Fixed &first = **node; if(xml.verbose) first.displayCompact( xml() << " (*) ") << std::endl;
+                const Fixed &first = **node; 
+                if(xml.verbose) first.displayCompact( xml() << AST ) << std::endl;
                 if(glist.size<=1)
                 {
                     // direct
@@ -252,12 +269,12 @@ namespace Yttrium
 
             }
 
+            if( probeNegative(C0,cluster) )
+            {
+                goto CYCLE;
+            }
 
-
-
-            return;
-            goto CYCLE;
-
+            Y_XMLOG(xml, AST << "done");
         }
 
         
