@@ -79,11 +79,28 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Species);
         };
 
-        typedef Small::BareLightList<const Species> SList;     //!< alias
-        typedef SList::NodeType                     SNode;     //!< alias
-        typedef EntitySet<Species,SubLevel>         SpSubSet;  //!< alias
-        typedef Small::CoopLightList<const Species> SRepo;     //!< alias
-        typedef SRepo::ProxyType                    SBank;     //!< alias
+        typedef Small::BareLightList<const Species>  SList_;     //!< alias
+        typedef SList_::NodeType                     SNode;     //!< alias
+        typedef EntitySet<Species,SubLevel>          SpSubSet;  //!< alias
+        typedef Small::CoopLightList<const Species>  SRepo;     //!< alias
+        typedef SRepo::ProxyType                     SBank;     //!< alias
+
+        class SList : public SList_
+        {
+        public:
+            explicit SList() noexcept;
+            virtual ~SList() noexcept;
+            SList(const SList &);
+
+            //! transfer for each species
+            void transfer(XWritable       &target,
+                          const Level      tgtlvl,
+                          const XReadable &source,
+                          const Level     &srclvl) const noexcept;
+            
+        private:
+            Y_DISABLE_ASSIGN(SList);
+        };
 
         //______________________________________________________________________
         //

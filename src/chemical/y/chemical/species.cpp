@@ -29,5 +29,23 @@ namespace Yttrium
             return pow(10.0,p);
         }
 
+
+        SList:: SList() noexcept : SList_() {}
+        SList:: ~SList() noexcept {}
+        SList:: SList(const SList &other) : SList_(other) {}
+        
+
+        void SList:: transfer(XWritable       &target,
+                              const Level      tgtlvl,
+                              const XReadable &source,
+                              const Level     &srclvl) const noexcept
+        {
+            for(const SNode *node=head;node;node=node->next)
+            {
+                const size_t * const indx = (**node).indx;
+                target[ indx[tgtlvl] ] = source[ indx[srclvl] ];
+            }
+        }
+
     }
 }

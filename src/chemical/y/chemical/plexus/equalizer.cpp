@@ -220,20 +220,35 @@ namespace Yttrium
             //------------------------------------------------------------------
             {
                 Y_XML_SECTION(xml, "Improving");
-                cluster.spfmt.show(std::cerr, "init@[", cluster.species, "]", C0, TopLevel);
+                cluster.spfmt.show(std::cerr, "ini@[", cluster.species, "]", C0, TopLevel);
 
-                // assign first one
+                assert(glist.size>0);
+                assert(0!=glist.head);
+
+
+                //always use first node
                 const FNode *node = glist.head; assert(0!=node);
                 {
                     const Fixed &f = **node;
                     if(xml.verbose) f.displayCompact( xml() << " (*) ") << std::endl;
                 }
 
-                for(node=node->next;node;node=node->next)
+                if(glist.size<=1)
                 {
-                    const Fixed &f = **node;
-                    if(xml.verbose) f.displayCompact( xml() << ADD ) << std::endl;
+                    // easy, directly to c0
+                    
                 }
+                else
+                {
+
+                    for(node=node->next;node;node=node->next)
+                    {
+                        const Fixed &f = **node;
+                        if(xml.verbose) f.displayCompact( xml() << ADD ) << std::endl;
+                    }
+                }
+
+
 
             }
 
@@ -244,6 +259,12 @@ namespace Yttrium
             goto CYCLE;
 
         }
+
+        void Equalizer:: removeNegative(const Fixed &)
+        {
+
+        }
+
 
         void Equalizer:: tune(XWritable     &C0,
                               const Cluster &cluster,

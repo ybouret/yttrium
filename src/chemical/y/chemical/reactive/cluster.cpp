@@ -118,7 +118,7 @@ namespace Yttrium
             const xreal_t     zero;
             const size_t      n = components->size();
             xadd.make(n);
-            transfer(target,tgtlvl,source,srclvl); // is it necessary ?
+            species.transfer(target,tgtlvl,source,srclvl); // is it necessary ?
 
             //------------------------------------------------------------------
             //

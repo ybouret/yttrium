@@ -123,6 +123,7 @@ namespace Yttrium
             FList                       glist;
             XAdd                        xadd;
 
+            void removeNegative(const Fixed &);
             void tuneControllers(XWritable     &C0,
                                  const Cluster &cluster,
                                  XMLog         &xml);
