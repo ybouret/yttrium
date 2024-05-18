@@ -16,7 +16,7 @@ namespace Yttrium
         static inline void TransferTo(SList &target, const AddressBook &source)
         {
             SendBookTo<SList>(target,source);
-            LightSort::BySubLevel(target);
+            Entities::BySubLevel(target);
         }
 
         ClusterConservations:: ClusterConservations(const Fragment    &fragment,

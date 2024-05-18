@@ -99,7 +99,7 @@ namespace Yttrium
                         }
                         SendBookTo<SList>(L,book);
                     }
-                    LightSort::MakeAuxLevel(L);
+                    Entities::MakeAuxLevel(L);
                 }
                 
                 //--------------------------------------------------------------

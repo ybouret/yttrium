@@ -36,7 +36,7 @@ namespace Yttrium
 
         void Batch:: finalize()
         {
-            LightSort::MakeSubLevel(*this);
+            Entities::MakeSubLevel(*this);
             prepareSpecies();
         }
 
@@ -49,7 +49,7 @@ namespace Yttrium
                     for(const ENode *en=head;en;en=en->next) (**en).recordSpeciesInto(book);
                     SendBookTo<SList>(spec,book);
                 }
-                LightSort::MakeSubLevel(spec);
+                Entities::MakeSubLevel(spec);
             }
             assert( species.size == (**species.tail).indx[SubLevel] );
         }

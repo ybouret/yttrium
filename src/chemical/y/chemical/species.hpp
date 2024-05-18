@@ -9,7 +9,6 @@
 #include "y/data/small/light/list/coop.hpp"
 #include "y/associative/suffix/set.hpp"
 #include "y/ptr/ark.hpp"
-#include "y/sort/merge.hpp"
 #include "y/random/bits.hpp"
 
 namespace Yttrium
@@ -132,6 +131,7 @@ namespace Yttrium
             Y_DISABLE_ASSIGN(SList);
         };
 
+#if 0
         //______________________________________________________________________
         //
         //
@@ -198,6 +198,7 @@ namespace Yttrium
             }
 
         };
+#endif
 
     }
 }
