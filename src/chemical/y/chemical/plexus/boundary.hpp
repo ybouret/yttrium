@@ -33,11 +33,11 @@ namespace Yttrium
 
             //! record first species with its extent
             explicit Boundary(const Species &s,
-                           const xreal_t  x,
-                           const SBank   &bank);
-            virtual ~Boundary() noexcept; //!< cleanup
+                              const xreal_t  x,
+                              const SBank   &bank);
+            virtual ~Boundary() noexcept;    //!< cleanup
             Boundary(const Boundary &other); //!< full copy
-            Y_OSTREAM_PROTO(Boundary);    //!< display list+xi
+            Y_OSTREAM_PROTO(Boundary);       //!< display list+xi
 
             //__________________________________________________________________
             //
@@ -61,7 +61,7 @@ namespace Yttrium
             SRepo sr;
         };
 
-       
+
 
     }
 

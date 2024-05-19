@@ -55,17 +55,16 @@ namespace Yttrium
             // initialize
             //
             //__________________________________________________________________
-            const xreal_t zero;
             const SList  &species = cluster.conservedSpecies;
             if(species.size<=0) return;
 
             //__________________________________________________________________
             //
             //
-            // probing negative conserved species
+            // probing negative conserved species ?
             //
             //__________________________________________________________________
-            if(getNegativeCntl(C0, cluster)<=0) {
+            if( getNegativeCntl(C0, cluster)<=0 ) {
                 Y_XMLOG(xml, AST << "no negative conserved");
                 return;
             }
@@ -83,7 +82,9 @@ namespace Yttrium
         CYCLE:
             ++cycle;
             Y_XMLOG(xml, "-------- cycle = " << cycle << " --------");
+            assert(negative.size()>0);
             if(xml.verbose) negative.display<Species>( xml() << BAD << "negative=") << std::endl;
+            
             flist.free();
             for(const Controller *cntl=cluster.controllers.head;cntl;cntl=cntl->next)
             {
@@ -260,6 +261,7 @@ namespace Yttrium
                     {
                         const Fixed &f = **node;
                         if(xml.verbose) f.displayCompact( xml() << ADD ) << std::endl;
+                        
                     }
 
                     std::cerr << "Not Done" << std::endl;

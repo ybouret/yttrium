@@ -63,6 +63,13 @@ namespace Yttrium
 
 
             //! compute cursor for controller (reac+prod)
+            /**
+             build limits then study what is possible
+             \param components controller's components, a.k.a conserved species
+             \param Ctop       top-level concentrations
+             \param xml        verbosity
+             \return a matching flag
+             */
             unsigned operator()(const Components &components,
                                 const XReadable  &Ctop,
                                 XMLog            &xml);
@@ -79,7 +86,6 @@ namespace Yttrium
             const Limits   missing; //!< missing by negative concentrations
             const xreal_t  cursor;  //!< strategy when possible
             const SRepo    zeroed;  //!< vanishing when possible
-            const xreal_t  zero;    //!< alias
 
         private:
             Y_DISABLE_ASSIGN(Fence);

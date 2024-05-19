@@ -13,7 +13,7 @@ namespace Yttrium
         //
         //
         //
-        //! Boundary/Species bank for Coop lists and build Fences
+        //! Boundary/Species banks to build Fences
         //
         //
         //______________________________________________________________________
@@ -26,8 +26,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            Banks();
-            ~Banks() noexcept;
+            Banks();            //!< initialize
+            ~Banks() noexcept;  //!< cleanup
 
             //__________________________________________________________________
             //

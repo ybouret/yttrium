@@ -48,9 +48,13 @@ namespace Yttrium
 
             bool contains(const Species &s) const noexcept; //!< mostly to debug
             bool validate()                 const noexcept; //!< mostly to debug
-            void reset()                          noexcept; //!< free
+            void reset()                          noexcept; //!< free content
 
             //! the extent make species disappear
+            /**
+             \param s species that vanishes
+             \param x extent that makes species vanish
+             */
             void operator()(const Species &s,
                             const xreal_t  x);
 

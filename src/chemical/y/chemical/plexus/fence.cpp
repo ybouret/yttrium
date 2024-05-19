@@ -11,8 +11,7 @@ namespace Yttrium
         capping(banks.hb,banks.ls),
         missing(banks.hb,banks.ls),
         cursor(0),
-        zeroed(banks.ls),
-        zero(0)
+        zeroed(banks.ls)
         {
         }
 
@@ -20,8 +19,7 @@ namespace Yttrium
         capping(other.capping),
         missing(other.missing),
         cursor(other.cursor),
-        zeroed(other.zeroed),
-        zero(other.zero)
+        zeroed(other.zeroed)
         {
         }
 
@@ -67,6 +65,7 @@ namespace Yttrium
             reset();
             assert(components.reac.size>0);
             assert(components.prod.size>0);
+            const xreal_t zero;
 
             //--------------------------------------------------------------
             //
@@ -114,7 +113,7 @@ namespace Yttrium
         void Fence:: startUpWith(const Boundary &             bnd,
                                  const Equilibrium::Direction dir)
         {
-            assert(bnd.xi>=zero);
+            assert(bnd.xi>=xreal_t(0));
             switch(dir)
             {
                 case Equilibrium::Forward: Coerce(cursor) =  bnd.xi; break;
@@ -126,6 +125,7 @@ namespace Yttrium
 
         void Fence:: proceedWith(const Boundary &bnd)
         {
+            assert(bnd.xi>=xreal_t(0));
             Coerce(zeroed) << *bnd;
         }
 
@@ -173,7 +173,7 @@ namespace Yttrium
                     //----------------------------------------------------------
                     //
                 case MISSING_NONE:
-                    Y_XMLOG(xml, " (-) missing none");
+                    Y_XMLOG(xml, " (-) missing none"); // running
                     return RUNNING;
                     //----------------------------------------------------------
 
@@ -211,6 +211,7 @@ namespace Yttrium
             assert(missing.prod->size>0);
             assert(capping.reac->size>0);
 
+            const xreal_t    zero;
             const Boundary & bad = **(missing.prod->head); // bad is first prod
             const Boundary & dom = **(capping.reac->head); // dom is first reac
             Y_XMLOG(xml, " (+) missing  prod=" << bad);
@@ -259,10 +260,12 @@ namespace Yttrium
             assert(missing.reac->size>0);
             assert(capping.prod->size>0);
 
+            const xreal_t    zero;
             const Boundary & bad =  **(missing.reac->head); // bad is first reactant
             const Boundary & dom =  **(capping.prod->head); // dom is first product
             Y_XMLOG(xml, " (+) missing  reac=" << bad);
             Y_XMLOG(xml, " (+) dominant prod=" << dom );
+            
             assert(bad.xi>zero);
             if(dom.xi<=zero) {
                 Y_XMLOG(xml, " (*) blocked");
