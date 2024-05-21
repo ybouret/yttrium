@@ -11,6 +11,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/container/matrix.hpp"
+#include "y/container/cxx/array.hpp"
 
 namespace Yttrium
 {
@@ -25,6 +26,7 @@ namespace Yttrium
         typedef Matrix<xreal_t,MemoryModel> XMatrixType; //!< matrix of xreals
         typedef Readable<xreal_t>           XReadable;   //!< alias
         typedef Writable<xreal_t>           XWritable;   //!< alias
+        typedef CxxArray<XAdd,MemoryModel>  XAddArray;   //!< alias
 
         //! helper to load a Small List from addresses
         template <typename TARGET>

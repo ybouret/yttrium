@@ -12,13 +12,14 @@ namespace Yttrium
 
         Equalizer:: Equalizer(const Clusters &clusters) :
         Ceqz(clusters.maxCPC,clusters.maxSPC),
-        Cout(clusters.maxSPC,0),
+        xadds(clusters.maxSPC),
         banks(),
         fences(clusters.maxCPC,banks),
         negative(),
         fbank(),
         flist(fbank),
         glist(fbank),
+        rover(),
         xadd()
         {
         }
@@ -236,7 +237,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             {
-                Y_XML_SECTION(xml, "Improving");
+                Y_XML_SECTION_OPT(xml, "Improving"," count='" << glist.size << "'");
                 cluster.spfmt.show(std::cerr, "ini@[", cluster.species, "]", C0, TopLevel, xml.depth);
 
                 assert(glist.size>0);
@@ -248,23 +249,55 @@ namespace Yttrium
                 if(xml.verbose) first.displayCompact( xml() << AST ) << std::endl;
                 if(glist.size<=1)
                 {
+                    //----------------------------------------------------------
                     // direct
-                    first.set(C0,TopLevel);
+                    //----------------------------------------------------------
+                    first.set(C0);
                     cluster.spfmt.show(std::cerr, "end@[", cluster.species, "]", C0, TopLevel, xml.depth);
 
                 }
                 else
                 {
+                    //----------------------------------------------------------
                     // multiple
-                    first.set(Cout,SubLevel);
+                    //----------------------------------------------------------
+                    rover.free();
+                    for(const SNode *sn=species.head;sn;sn=sn->next)
+                    {
+                        xadds[(**sn).indx[SubLevel]].free();
+                    }
+
+                    //----------------------------------------------------------
+                    // add all roving and set all custom
+                    //----------------------------------------------------------
+                    first.add(xadds,C0,rover);
                     for(node=node->next;node;node=node->next)
                     {
                         const Fixed &f = **node;
                         if(xml.verbose) f.displayCompact( xml() << ADD ) << std::endl;
-                        
+                        f.add(xadds,C0,rover);
                     }
 
-                    std::cerr << "Not Done" << std::endl;
+                    if(xml.verbose) rover.display<Species>( xml() << ADD << "roving=") << std::endl;
+
+                    // upgrading roving species
+                    {
+                        size_t nr = rover.size();
+                        for(AddressBook::Iterator it = rover.begin();nr>0;--nr,++it)
+                        {
+                            const Species &      sp = *static_cast<const Species *>(*it);
+                            const size_t * const id = sp.indx;
+                            xreal_t             &c0 = C0[id[TopLevel]];
+                            XAdd                &xa = xadds[id[SubLevel]];
+                            xa << c0;
+                            const xreal_t c0old = c0;
+                            c0 = xa.sum();
+                            if(xml.verbose) cluster.spfmt.pad( xml() << AST << sp, sp ) << " : " << real_t(c0old) << " -> " << real_t(c0) << std::endl;;
+                        }
+                    }
+
+
+                    std::cerr << "Not Finished Yet" << std::endl;
                     exit(0);
                 }
 

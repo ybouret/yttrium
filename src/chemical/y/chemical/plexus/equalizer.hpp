@@ -66,12 +66,27 @@ namespace Yttrium
                     return os;
                 }
 
-                void set(XWritable &C, const Level level) const
+                //! set primary components into TopLevel C
+                void set(XWritable &Ctop) const
                 {
-                    cntl.primary.transfer(C, level, conc, SubLevel);
+                    cntl.primary.transfer(Ctop,TopLevel,conc,SubLevel);
                 }
 
-                
+                void add(XAddArray &xadds, XWritable &Ctop, AddressBook &rover) const
+                {
+                    cntl.custom.transfer(Ctop,TopLevel,conc,SubLevel);
+                    for(const SNode *node=cntl.roving.head;node;node=node->next)
+                    {
+                        const Species &sp = **node;
+                        rover |= sp;
+                        const size_t  si = sp.indx[SubLevel];
+                        const size_t  ti = sp.indx[TopLevel];
+                        const xreal_t dc = conc[si]-Ctop[ti]; // nu * xi
+                        xadds[si] << dc;
+                    }
+                }
+
+
 
                 const xreal_t      gain;
                 const XReadable  & conc;
@@ -120,13 +135,14 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equalizer);
             XMatrixType                 Ceqz;
-            XVectorType                 Cout;
+            XAddArray                   xadds;
             Banks                       banks;
             Fences                      fences;
             AddressBook                 negative;
             FBank                       fbank;
             FList                       flist;
             FList                       glist;
+            AddressBook                 rover;
             XAdd                        xadd;
 
             size_t getNegativeCntl(const XReadable &C0, const Cluster &cluster);

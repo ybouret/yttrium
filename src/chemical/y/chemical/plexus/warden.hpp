@@ -29,7 +29,6 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef CxxArray<XAdd,MemoryModel> XAdds; //!< alias
 
                 //______________________________________________________________
                 //
@@ -101,7 +100,7 @@ namespace Yttrium
                 BrokenRepo      repo;
                 BrokenList      jail;
                 XAdd            xadd;
-                XAdds           xinj;
+                XAddArray       xinj;
                 
                 void process(Writable<xreal_t>  &C,
                              Writable<xreal_t>  &I,
