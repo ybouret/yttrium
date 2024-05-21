@@ -81,7 +81,7 @@ namespace Yttrium
             //__________________________________________________________________
             unsigned cycle = 0;
         CYCLE:
-            ++cycle;
+            ++cycle; assert(negative.size()>0);
             Y_XMLOG(xml, "-------- cycle = " << cycle << " --------");
             assert(negative.size()>0);
             if(xml.verbose) negative.display<Species>( xml() << BAD << "negative=") << std::endl;
@@ -154,6 +154,13 @@ namespace Yttrium
             CONTINUE:;
             }
 
+            //------------------------------------------------------------------
+            //
+            //
+            // check fixed from controllers
+            //
+            //
+            //------------------------------------------------------------------
             Y_XMLOG(xml, " (#) fixed=" << flist.size);
             if(flist.size<=0)
             {
@@ -280,7 +287,9 @@ namespace Yttrium
 
                     if(xml.verbose) rover.display<Species>( xml() << ADD << "roving=") << std::endl;
 
+                    //----------------------------------------------------------
                     // upgrading roving species
+                    //----------------------------------------------------------
                     {
                         size_t nr = rover.size();
                         for(AddressBook::Iterator it = rover.begin();nr>0;--nr,++it)
@@ -295,10 +304,6 @@ namespace Yttrium
                             if(xml.verbose) cluster.spfmt.pad( xml() << AST << sp, sp ) << " : " << real_t(c0old) << " -> " << real_t(c0) << std::endl;;
                         }
                     }
-
-
-                    std::cerr << "Not Finished Yet" << std::endl;
-                    exit(0);
                 }
 
 
