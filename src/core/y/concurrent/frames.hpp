@@ -156,6 +156,16 @@ signature()
             }
 
 
+            //! helper to build frames + resource acquisition
+            template <typename DERIVED, typename METH, typename ARGS>
+            explicit Frames(const ArcPtr<DERIVED> &stc, METH meth, ARGS &args) :
+            Y_Concurrent_Frames_Construct()
+            {
+                forEach<METH>(meth,args);
+            }
+
+
+
             //__________________________________________________________________
             //
             //! loosen all workspaces and erase signature
