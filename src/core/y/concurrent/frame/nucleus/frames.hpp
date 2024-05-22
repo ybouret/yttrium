@@ -40,7 +40,7 @@ namespace Yttrium
                 {
                 }
                 
-
+                
                 //! local shared contexts
                 ArcPtr<ThreadContexts>  contexts;
 

@@ -5,13 +5,14 @@
 #ifndef Y_Concurrent_SIMT_Included
 #define Y_Concurrent_SIMT_Included 1
 
-#include "y/concurrent/loop/simt/loop.hpp"
+#include "y/concurrent/loop/simt/mill.hpp"
 #include "y/concurrent/frames.hpp"
 
 namespace Yttrium
 {
     namespace Concurrent
     {
+
 
         //______________________________________________________________________
         //
@@ -22,7 +23,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename ENGINE>
-        class SIMT : public Frames<ENGINE>, public SIMT_Loop
+        class SIMT : public SIMT_Mill, public Frames<ENGINE>
         {
         public:
             //__________________________________________________________________
@@ -43,14 +44,14 @@ namespace Yttrium
 
             //! setup
             inline explicit  SIMT( const SharedLoop &sl ) :
-            Frames<ENGINE>(sl), SIMT_Loop(sl)
+            SIMT_Mill(sl), Frames<ENGINE>(sl)
             {
             }
 
             //! setup with postInit method
             template <typename METH>
             inline explicit SIMT(const SharedLoop &sl, METH meth) :
-            Frames<ENGINE>(sl,meth), SIMT_Loop(sl)
+            SIMT_Mill(sl), Frames<ENGINE>(sl,meth)
             {
             }
 
