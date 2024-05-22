@@ -32,14 +32,22 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
+
+            //! setup slabs
+            /**
+             args may be:
+             - Concurrent::SharedLoop
+             - InParallel_
+             - Sequential_
+             */
             template <typename ARGS> inline
             explicit Slabs(const ARGS &args) :
             simt(args, & Slab::honorRequest )
             {
             }
 
-
-            virtual ~Slabs() noexcept;             //!< cleanup
+            //! cleanup
+            virtual ~Slabs() noexcept;
 
             //__________________________________________________________________
             //

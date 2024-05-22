@@ -5,6 +5,66 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        Equalizer:: Fixed:: ~Fixed() noexcept {}
+
+        Equalizer:: Fixed:: Fixed(const xreal_t     theGain,
+                                  const XReadable  &theConc,
+                                  const Controller &theCntl,
+                                  const Fence      &theWall) noexcept :
+        gain(theGain),
+        conc(theConc),
+        cntl(theCntl),
+        wall(theWall)
+        {
+        }
+
+        Equalizer:: Fixed:: Fixed(const Fixed &other) noexcept :
+        gain(other.gain),
+        conc(other.conc),
+        cntl(other.cntl),
+        wall(other.wall)
+        {
+        }
+
+        void Equalizer:: Fixed:: to(XMLog &xml, const char *pfx) const
+        {
+            if(!pfx) pfx = "";
+            Y_XMLOG(xml, pfx << "gain = " << std::setw(15) << real_t(gain) << " @" << cntl.primary);
+        }
+
+        std::ostream &  Equalizer:: Fixed:: displayCompact( std::ostream &os ) const
+        {
+            cntl.primary.displayCompact(os,conc,SubLevel);
+            return os;
+        }
+
+        void Equalizer:: Fixed:: set(XWritable &Ctop) const
+        {
+            cntl.primary.transfer(Ctop,TopLevel,conc,SubLevel);
+        }
+
+        void Equalizer:: Fixed:: add(XAddArray &xadds, XWritable &Ctop, AddressBook &rover) const
+        {
+            cntl.custom.transfer(Ctop,TopLevel,conc,SubLevel);
+            for(const SNode *node=cntl.roving.head;node;node=node->next)
+            {
+                const Species &sp = **node;
+                const size_t  si = sp.indx[SubLevel];
+                const size_t  ti = sp.indx[TopLevel];
+                const xreal_t dc = conc[si]-Ctop[ti]; // nu * xi
+                rover     |= sp;
+                xadds[si] << dc;
+            }
+        }
+
+    }
+
+}
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
 
         Equalizer:: ~Equalizer() noexcept
         {
@@ -38,7 +98,7 @@ namespace Yttrium
             return negative.size();
         }
 
-        
+
         void Equalizer:: tuneControllers(XWritable     &C0,
                                          const Cluster &cluster,
                                          XMLog         &xml)
@@ -85,7 +145,7 @@ namespace Yttrium
             Y_XMLOG(xml, "-------- cycle = " << cycle << " --------");
             assert(negative.size()>0);
             if(xml.verbose) negative.display<Species>( xml() << BAD << "negative=") << std::endl;
-            
+
             flist.free();
             for(const Controller *cntl=cluster.controllers.head;cntl;cntl=cntl->next)
             {
@@ -252,7 +312,7 @@ namespace Yttrium
 
 
                 const FNode *node = glist.head; assert(0!=node);
-                const Fixed &first = **node; 
+                const Fixed &first = **node;
                 if(xml.verbose) first.displayCompact( xml() << AST ) << std::endl;
                 if(glist.size<=1)
                 {
@@ -317,7 +377,7 @@ namespace Yttrium
             Y_XMLOG(xml, AST << "done");
         }
 
-        
+
 
 
         void Equalizer:: tune(XWritable     &C0,

@@ -41,9 +41,16 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! setup ENGINEs + keep pipeline reference inside MultiplexPipeline
-            inline explicit Multiplex(const SharedPipeline &sp) :
-            MultiplexMill(sp), Frames<ENGINE>(mill)
+            //! setup ENGINEs
+            /**
+             ARGS may be:
+             - SharedPipeline
+             - Sequential_
+             - InParallel_
+             */
+            template <typename ARGS> inline
+            explicit Multiplex(const ARGS &args) :
+            MultiplexMill(args), Frames<ENGINE>(mill)
             {
             }
 

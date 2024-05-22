@@ -30,68 +30,55 @@ namespace Yttrium
             //__________________________________________________________________
             typedef CxxArray<Fence,MemoryModel> Fences; //!< alias
 
+            //__________________________________________________________________
+            //
+            //! Fixed phase space
+            //__________________________________________________________________
             class Fixed
             {
             public:
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+             
+                //! setup with all parameters
                 Fixed(const xreal_t     theGain,
                       const XReadable  &theConc,
                       const Controller &theCntl,
-                      const Fence      &theWall) noexcept :
-                gain(theGain),
-                conc(theConc),
-                cntl(theCntl),
-                wall(theWall)
-                {
-                }
+                      const Fence      &theWall) noexcept;
 
-                ~Fixed() noexcept {}
+                //! cleanup
+                ~Fixed() noexcept;
 
-                Fixed(const Fixed &other) noexcept :
-                gain(other.gain),
-                conc(other.conc),
-                cntl(other.cntl),
-                wall(other.wall)
-                {
-                }
+                //! copy
+                Fixed(const Fixed &) noexcept;
 
-                void to(XMLog &xml, const char *pfx = 0) const
-                {
-                    if(!pfx) pfx = "";
-                    Y_XMLOG(xml, pfx << "gain = " << std::setw(15) << real_t(gain) << " @" << cntl.primary);
-                }
+                //______________________________________________________________
+                //
+                // Methods
+                //______________________________________________________________
 
-                std::ostream &  displayCompact( std::ostream &os ) const
-                {
-                    cntl.primary.displayCompact(os,conc,SubLevel);
-                    return os;
-                }
+                //! display
+                void to(XMLog &xml, const char *pfx = 0) const;
 
-                //! set primary components into TopLevel C
-                void set(XWritable &Ctop) const
-                {
-                    cntl.primary.transfer(Ctop,TopLevel,conc,SubLevel);
-                }
+                //! forward to cntl.primary
+                std::ostream &  displayCompact( std::ostream &os ) const;
 
-                void add(XAddArray &xadds, XWritable &Ctop, AddressBook &rover) const
-                {
-                    cntl.custom.transfer(Ctop,TopLevel,conc,SubLevel);
-                    for(const SNode *node=cntl.roving.head;node;node=node->next)
-                    {
-                        const Species &sp = **node;
-                        rover |= sp;
-                        const size_t  si = sp.indx[SubLevel];
-                        const size_t  ti = sp.indx[TopLevel];
-                        const xreal_t dc = conc[si]-Ctop[ti]; // nu * xi
-                        xadds[si] << dc;
-                    }
-                }
+                //! set cntl.primary components into TopLevel C
+                void set(XWritable &Ctop) const;
 
-
-
-                const xreal_t      gain;
-                const XReadable  & conc;
-                const Controller & cntl;
-                const Fence      & wall;
+                //! set custom components and store roving components
+                void add(XAddArray &xadds, XWritable &Ctop, AddressBook &rover) const;
+                
+                //______________________________________________________________
+                //
+                // Members
+                //______________________________________________________________
+                const xreal_t      gain; //!< gain from custom
+                const XReadable  & conc; //!< improved phase space
+                const Controller & cntl; //!< matching controller
+                const Fence      & wall; //!< matching fence
 
             private:
                 Y_DISABLE_ASSIGN(Fixed);
@@ -101,6 +88,7 @@ namespace Yttrium
             typedef FList::NodeType             FNode; //!< alias
             typedef FList::ProxyType            FBank; //!< alias
 
+            //! compare by decreasing gain
             static SignType CompareFixed(const FNode * const lhs,
                                          const FNode * const rhs) noexcept
             {

@@ -50,7 +50,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            SharedPipeline mill;
+            SharedPipeline mill; //!< implementation
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MultiplexMill);
