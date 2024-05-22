@@ -11,6 +11,7 @@ Y_CreateLibrary(y
 concurrent/quark
 concurrent/split
 concurrent/thread
+concurrent/topology
 concurrent/loop
 concurrent/loop/simt
 concurrent/pipeline

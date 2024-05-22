@@ -314,7 +314,7 @@ namespace Yttrium
 
 }
 
-#include "y/ptr/auto.hpp"
+#include "y/concurrent/topology/default.hpp"
 
 namespace Yttrium
 {
@@ -322,22 +322,12 @@ namespace Yttrium
     namespace Concurrent
     {
 
-        class DefaultTopology : public Object, public Topology
-        {
-        public:
-            inline explicit DefaultTopology() : Object(), Topology() {}
-            inline virtual ~DefaultTopology() noexcept {}
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(DefaultTopology);
-        };
-
-        typedef Yttrium::AutoPtr<const DefaultTopology> TopologyHandle;
-
-        class DefaultCrew : public TopologyHandle, public Crew
+        
+        class DefaultCrew : public DefaultTopology::Handle, public Crew
         {
         public:
             inline explicit DefaultCrew() :
-            TopologyHandle( new DefaultTopology() ),
+            DefaultTopology::Handle( new DefaultTopology() ),
             Crew( **this )
             {
             }

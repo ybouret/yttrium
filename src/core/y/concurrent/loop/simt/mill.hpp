@@ -12,11 +12,17 @@ namespace Yttrium
 {
     namespace Concurrent
     {
-        
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Manager for SIMT
+        //
+        //
+        //______________________________________________________________________
         class SIMT_Mill
         {
         public:
-            virtual ~SIMT_Mill() noexcept;
 
             //__________________________________________________________________
             //
@@ -34,12 +40,26 @@ namespace Yttrium
                 mill->run1(k);
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            virtual ~SIMT_Mill() noexcept; //!< cleanup
         protected:
-            explicit SIMT_Mill(const SharedLoop &sl) noexcept;
-            explicit SIMT_Mill(const Sequential_  &);
-            explicit SIMT_Mill(const InParallel_  &);
+            explicit SIMT_Mill(const SharedLoop &sl) noexcept; //!< manual setup
+            explicit SIMT_Mill(const Sequential_  &);          //!< with inner Mono()
+            explicit SIMT_Mill(const InParallel_  &);          //!< with inner Crew()
 
-            SharedLoop mill;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            SharedLoop mill; //!< implementation
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SIMT_Mill);
         };
