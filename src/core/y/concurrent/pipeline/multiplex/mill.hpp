@@ -42,7 +42,8 @@ namespace Yttrium
         protected:
             explicit MultiplexMill(const SharedPipeline &) noexcept; //!< manual setup
             explicit MultiplexMill(const Sequential_    &);          //!< use Alone()
-            
+            explicit MultiplexMill(const InParallel_    &);          //!< use Queue()
+
             //__________________________________________________________________
             //
             //
