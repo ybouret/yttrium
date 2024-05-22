@@ -5,14 +5,7 @@ namespace Yttrium
     namespace Ink
     {
         Slabs:: ~Slabs() noexcept {}
-
-        Slabs:: Slabs(const Concurrent::SharedLoop &csl) :
-        mill(csl),
-        simt(mill,& Slab::honorRequest)
-        {
-        }
-
-
+        
 
         void Slabs:: split(const Area &area)
         {
@@ -31,37 +24,3 @@ namespace Yttrium
 
 }
 
-#include "y/concurrent/loop/mono.hpp"
-
-namespace Yttrium
-{
-    namespace Ink
-    {
-        Slabs:: Slabs(const Sequential_ &):
-        mill( new Concurrent::Mono() ),
-        simt(mill,& Slab::honorRequest)
-        {
-        }
-
-    }
-
-}
-
-
-#include "y/concurrent/loop/crew.hpp"
-
-namespace Yttrium
-{
-    namespace Ink
-    {
-        
-
-        Slabs:: Slabs(const InParallel_ &):
-        mill( Concurrent::Crew::Create() ),
-        simt(mill,& Slab::honorRequest)
-        {
-        }
-
-    }
-
-}

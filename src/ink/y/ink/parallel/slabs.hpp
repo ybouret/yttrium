@@ -32,9 +32,13 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            Slabs(const Concurrent::SharedLoop &); //!< setup+memory
-            Slabs(const Sequential_ &);            //!< use sequential loop
-            Slabs(const InParallel_ &);            //!< use parallel loop
+            template <typename ARGS> inline
+            explicit Slabs(const ARGS &args) :
+            simt(args, & Slab::honorRequest )
+            {
+            }
+
+
             virtual ~Slabs() noexcept;             //!< cleanup
 
             //__________________________________________________________________
@@ -116,7 +120,6 @@ namespace Yttrium
                         tmax = Max(tmax,data[1]);
                     }
                 }
-
             }
 
             //__________________________________________________________________
@@ -125,10 +128,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-        private:
-            const Concurrent::SharedLoop mill;
-        public:
-            Concurrent::SIMT<Slab>       simt; //!< implementation of SIMT
+            Concurrent::SIMT<Slab> simt; //!< implementation of SIMT
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Slabs);
