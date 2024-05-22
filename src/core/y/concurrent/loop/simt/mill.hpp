@@ -6,6 +6,7 @@
 #define Y_Concurrent_SIMT_Mill_Included 1
 
 #include "y/concurrent/loop/interface.hpp"
+#include "y/concurrent/defs.hpp"
 
 namespace Yttrium
 {
@@ -35,6 +36,8 @@ namespace Yttrium
 
         protected:
             explicit SIMT_Mill(const SharedLoop &sl) noexcept;
+            explicit SIMT_Mill(const Sequential_  &);
+            explicit SIMT_Mill(const InParallel_  &);
 
             SharedLoop mill;
         private:

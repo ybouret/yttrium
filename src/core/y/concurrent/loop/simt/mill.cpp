@@ -14,9 +14,10 @@ namespace Yttrium
         {
         }
 
+        
         Loop *       SIMT_Mill:: operator->()       noexcept { return & *mill; }
         const Loop * SIMT_Mill:: operator->() const noexcept { return & *mill; }
-        
+
 
     }
 

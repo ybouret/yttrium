@@ -43,15 +43,24 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! setup
-            inline explicit  SIMT( const SharedLoop &sl ) :
-            SIMT_Mill(sl), Frames<ENGINE>(sl)
+            /**
+             ARGS may be:
+             - SharedLoop for a manual setup
+             - Sequential_ to use Mono()
+             - InParallel_ to use Crew::Create()
+             */
+            template <typename ARGS>
+            inline explicit  SIMT( const ARGS &args ) :
+            SIMT_Mill(args), Frames<ENGINE>(mill)
             {
             }
 
+
+
             //! setup with postInit method
-            template <typename METH>
-            inline explicit SIMT(const SharedLoop &sl, METH meth) :
-            SIMT_Mill(sl), Frames<ENGINE>(sl,meth)
+            template <typename ARGS, typename METH>
+            inline explicit SIMT(const ARGS &sl, METH meth) :
+            SIMT_Mill(sl), Frames<ENGINE>(mill,meth)
             {
             }
 
