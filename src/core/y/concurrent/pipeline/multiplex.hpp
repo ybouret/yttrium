@@ -54,6 +54,19 @@ namespace Yttrium
             {
             }
 
+            //! setup with postInit method
+            template <typename ARGS, typename METH>
+            inline explicit Multiplex(const ARGS &args, METH meth) :
+            MultiplexMill(args), Frames<ENGINE>(mill,meth)
+            {}
+
+            //! setup with postInit method
+            template <typename ARGS, typename METH, typename PRMS>
+            inline explicit Multiplex(const ARGS &args, METH meth, PRMS &prms) :
+            MultiplexMill(args), Frames<ENGINE>(mill,meth,prms)
+            {}
+
+
             //! cleanup
             inline virtual ~Multiplex() noexcept {}
 

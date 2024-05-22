@@ -55,12 +55,17 @@ namespace Yttrium
             {
             }
 
-
-
             //! setup with postInit method
             template <typename ARGS, typename METH>
             inline explicit SIMT(const ARGS &args, METH meth) :
             SIMT_Mill(args), Frames<ENGINE>(mill,meth)
+            {
+            }
+
+            //! setup with postInit method+params
+            template <typename ARGS, typename METH, typename PRMS>
+            inline explicit SIMT(const ARGS &args, METH meth, PRMS &prms) :
+            SIMT_Mill(args), Frames<ENGINE>(mill,meth,prms)
             {
             }
 
