@@ -554,3 +554,31 @@ namespace Yttrium
 
 }
 
+#include "y/concurrent/topology/default.hpp"
+
+namespace Yttrium
+{
+    namespace   Concurrent
+    {
+
+        class DefaultQueue : public DefaultTopology::Handle, public Queue
+        {
+        public:
+            inline explicit DefaultQueue() :
+            DefaultTopology::Handle( new DefaultTopology() ),
+            Queue( **this )
+            {
+            }
+            
+            inline virtual ~DefaultQueue() noexcept {}
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(DefaultQueue);
+        };
+
+        Pipeline * Queue:: Create()
+        {
+            return new DefaultQueue();
+        }
+    }
+}
+

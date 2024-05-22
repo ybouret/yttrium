@@ -54,7 +54,9 @@ namespace Yttrium
             virtual TaskFlag       query(const TaskUUID)     const noexcept; //!< probe task id
             virtual const Thread & getThread(const size_t i) const noexcept; //!< getThread(1..size)
             virtual size_t         numThreads()              const noexcept; //!< size
-            
+
+            static Pipeline * Create(); //!< create with DefaultTopology
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Queue);
             Code *code;

@@ -3,7 +3,7 @@
 #ifndef Y_Concurrent_Pipeline_Multiplex_Included
 #define Y_Concurrent_Pipeline_Multiplex_Included 1
 
-#include "y/concurrent/pipeline/multiplex/pipeline.hpp"
+#include "y/concurrent/pipeline/multiplex/mill.hpp"
 #include "y/concurrent/frames.hpp"
 
 namespace Yttrium
@@ -15,7 +15,7 @@ namespace Yttrium
         //
         //
         //
-        //! ENGINEs + Pipeline
+        //! Mill + ENGINEs
         /**
          - ENGINE Should derive from Frame0D
          - create as many engines as pipeline size
@@ -23,7 +23,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename ENGINE>
-        class Multiplex : public Frames<ENGINE>, public MultiplexPipeline
+        class Multiplex : public MultiplexMill, public Frames<ENGINE>
         {
         public:
             //__________________________________________________________________
@@ -43,7 +43,7 @@ namespace Yttrium
 
             //! setup ENGINEs + keep pipeline reference inside MultiplexPipeline
             inline explicit Multiplex(const SharedPipeline &sp) :
-            Frames<ENGINE>(sp), MultiplexPipeline(sp)
+            MultiplexMill(sp), Frames<ENGINE>(mill)
             {
             }
 
