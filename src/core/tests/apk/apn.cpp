@@ -69,7 +69,10 @@ namespace Yttrium
                 AsWords
             };
 
-            virtual ~Inner() noexcept {}
+            virtual ~Inner() noexcept
+            {
+                Memory::Archon::Release(byte,shift);
+            }
 
         protected:
             explicit Inner(const size_t usrBytes) :

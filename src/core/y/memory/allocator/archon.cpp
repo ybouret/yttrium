@@ -81,7 +81,13 @@ namespace Yttrium
             return self.acquire(shift);
         }
 
-        
+        void Archon:: Release(void * entry, const unsigned shift) noexcept
+        {
+            assert(0!=entry);
+            static Archon &self = Location();
+            self.release(entry,shift);
+        }
+
 
     }
 }
