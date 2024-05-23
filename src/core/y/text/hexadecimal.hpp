@@ -97,6 +97,13 @@ namespace Yttrium
         Y_OUTPUT_STREAM(Hexadecimal);              //!< output
         static Hexadecimal Address(const void *) noexcept; //!< make from address
 
+        //! helper to display data
+        template <typename T> static inline
+        Hexadecimal From(const T &value) noexcept
+        {
+            return Hexadecimal(value);
+        }
+
     private:
         Y_DISABLE_ASSIGN(Hexadecimal);
         char data[ DataSize ];

@@ -131,13 +131,14 @@ namespace Yttrium
             return archon.acquire(shift);
         }
 
+        //! common parts
         class Grades
         {
         public:
             static const size_t MinBytes = sizeof(uint64_t);
 
         protected:
-            explicit Grades(const size_t required)   :
+            explicit Grades(const size_t required) :
             bits(0),
             bytes(0),
             maxBytes( MaxBytesFor(required) ),
@@ -148,7 +149,8 @@ namespace Yttrium
             }
 
         public:
-            virtual ~Grades() noexcept {
+            virtual ~Grades() noexcept 
+            {
                 static Archon &archon = Archon::Location();
                 archon.release(entry,shift);
             }
@@ -169,24 +171,55 @@ namespace Yttrium
             void * const    entry;
 
         private:
-            Y_DISABLE_ASSIGN(Grades);
+            Y_DISABLE_COPY_AND_ASSIGN(Grades);
         };
 
+        template <typename T> struct MemOps;
 
-        template <typename T>
-        static inline Hexadecimal ToHex(const T &x)
+        template <> struct MemOps<uint16_t>
         {
-            return Hexadecimal(x);
-        }
+            static inline void WordToBytes(uint8_t * const byte, const uint16_t word) noexcept
+            {
+                byte[0] = static_cast<uint8_t>(word);
+                byte[1] = static_cast<uint8_t>(word>>8);
+            }
+
+            static inline uint16_t BytesToWord( const uint8_t * const byte) noexcept
+            {
+                const uint16_t b0 = byte[0];
+                const uint16_t b1 = byte[1];
+                return b0 | (b1<<8);
+            }
+        };
+
+        template <> struct MemOps<uint32_t>
+        {
+            static inline void WordToBytes(uint8_t * const byte, const uint32_t word) noexcept
+            {
+                byte[0] = static_cast<uint8_t>(word);
+                byte[1] = static_cast<uint8_t>(word>>8);
+                byte[2] = static_cast<uint8_t>(word>>16);
+                byte[3] = static_cast<uint8_t>(word>>24);
+            }
+
+            static inline uint32_t BytesToWord( const uint8_t * const byte) noexcept
+            {
+                const uint32_t b0 = byte[0];
+                const uint32_t b1 = byte[1];
+                const uint32_t b2 = byte[2];
+                const uint32_t b3 = byte[3];
+                return b0 | (b1<<8) | (b2<<16) | (b3<<24);
+            }
+        };
+
 
         template <typename WORD_TYPE>
         class Element : public Grades
         {
         public:
-            typedef WORD_TYPE WordType;
+            typedef WORD_TYPE WordType; // uint16_t | uint32_t
 
-
-            explicit Element(const size_t required) : 
+            explicit Element(const size_t required) :
             Grades(required),
             words(0),
             maxWords(maxBytes/sizeof(WordType)),
@@ -204,6 +237,24 @@ namespace Yttrium
             virtual ~Element() noexcept 
             {
 
+            }
+
+            void toBytes() noexcept
+            {
+                assert(bytes<=words*sizeof(WordType));
+                uint8_t        *b = byte;
+                const WordType *w = word;
+                for(size_t i=words;i>0;--i,b += sizeof(WordType))
+                    MemOps<WordType>::WordTyoBytes(b,*(w++));
+            }
+
+            void toWords() noexcept
+            { 
+                assert(bytes<=words*sizeof(WordType));
+                const uint8_t *b = byte;
+                WordType      *w = word;
+                for(size_t i=words;i>0;--i,b += sizeof(WordType))
+                    *(w++) = MemOps<WordType>::BytesToWords(bytes);
             }
 
             size_t           words;
@@ -233,6 +284,9 @@ namespace Yttrium
                 Coerce(byte)  = static_cast<uint8_t *>(entry);
 
             }
+
+            inline void toWords() noexcept {}
+            inline void toBytes() noexcept {}
 
             virtual ~Element() noexcept {}
 
