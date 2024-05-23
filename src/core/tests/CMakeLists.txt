@@ -13,6 +13,7 @@ io
 fft
 string
 apex
+apk
 ordered
 counting
 container
@@ -333,4 +334,6 @@ add_test(color:yuv test-core color_yuv)
 add_test(color:conv test-core color_conv)
 add_test(color:channels test-core color_channels)
 
+#apk
+add_test(apk:n test-core apk_n)
 
