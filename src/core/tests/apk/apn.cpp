@@ -1,12 +1,11 @@
 #include "y/utest/run.hpp"
 
-#include "y/singleton.hpp"
-#include "y/memory/quarry.hpp"
-#include "y/memory/corpus.hpp"
-#include "y/memory/album.hpp"
+#include "y/memory/allocator/archon.hpp"
+#include "y/object.hpp"
 #include "y/system/exception.hpp"
 #include "y/type/utils.hpp"
 #include "y/text/hexadecimal.hpp"
+#include "y/calculus/base2.hpp"
 
 #include <cstring>
 
@@ -18,163 +17,7 @@ namespace Yttrium
     namespace APK
     {
 
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! singleton for cache of memory blocks
-        //
-        //
-        //______________________________________________________________________
-        class Archon : public Singleton<Archon>
-        {
-        public:
-            //__________________________________________________________________
-            //
-            //
-            // Definition
-            //
-            //__________________________________________________________________
-            static const char * const      CallSign;                                //!< "Apex::Archon"
-            static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 5; //!< alias
-            
-            class Engine;
-
-            //__________________________________________________________________
-            //
-            //
-            // Methods
-            //
-            //__________________________________________________________________
-            void * acquire(unsigned &shift);                            //!< fetch block 2^(MaxOf(shift,MinShift)), shift<=MaxShift
-            void   release(void *entry, const unsigned shift) noexcept; //!< store previously acquire blocks
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Archon);
-            explicit Archon() noexcept;
-            virtual ~Archon() noexcept;
-            friend class Singleton<Archon>;
-
-
-        };
-
-
-        const char * const Archon:: CallSign = "Apex::Archon";
-
-        namespace
-        {
-            class CoreEngine
-            {
-            public:
-                inline   CoreEngine() : album(), corpus(album) { }
-                virtual ~CoreEngine() noexcept {}
-
-                Memory::Album  album;
-                Memory::Corpus corpus;
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(CoreEngine);
-            };
-        }
-
-        class Archon:: Engine : public CoreEngine, public Memory::Quarry
-        {
-        public:
-            explicit Engine() : CoreEngine(), Memory::Quarry(corpus)
-            {
-            }
-            virtual ~Engine() noexcept {
-            }
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Engine);
-        };
-
-
-
-        static Archon::Engine *engine = 0;
-        static void           *engine_[ Y_WORDS_FOR(Archon::Engine) ];
-
-
-        Archon:: ~Archon() noexcept
-        {
-            assert(0!=engine);
-            Destruct(engine);
-            engine = 0;
-            Y_STATIC_ZARR(engine_);
-        }
-
-        Archon:: Archon() noexcept : Singleton<Archon>()
-        {
-            assert(0==engine);
-            engine = new ( Y_STATIC_ZARR(engine_) ) Engine();
-        }
-
-        void * Archon:: acquire(unsigned &shift)
-        {
-            assert(0!=engine);
-            Y_LOCK(access);
-            return engine->acquire(shift);
-        }
-
-        void Archon:: release(void *entry, const unsigned shift) noexcept
-        {
-            assert(0!=engine);
-            assert(0!=entry);
-            Y_LOCK(access);
-            engine->release(entry,shift);
-        }
-
-        static inline void * AcquireLinear(unsigned &shift)
-        {
-            static Archon &archon = Archon::Instance();
-            return archon.acquire(shift);
-        }
-
-        //! common parts
-        class Grades
-        {
-        public:
-            static const size_t MinBytes = sizeof(uint64_t);
-
-        protected:
-            explicit Grades(const size_t required) :
-            bits(0),
-            bytes(0),
-            maxBytes( MaxBytesFor(required) ),
-            byte(0),
-            shift(0),
-            entry(0)
-            {
-            }
-
-        public:
-            virtual ~Grades() noexcept 
-            {
-                static Archon &archon = Archon::Location();
-                archon.release(entry,shift);
-            }
-
-            static inline size_t MaxBytesFor(const size_t required)
-            {
-                if(required>=Base2<size_t>::MaxPowerOfTwo-1) throw Specific::Exception(Archon::CallSign, "required overflow");
-                return NextPowerOfTwo( Max(required,MinBytes) );
-            }
-
-            size_t          bits;
-            size_t          bytes;
-            const size_t    maxBytes;
-            uint8_t * const byte;
-
-        protected:
-            const unsigned  shift;
-            void * const    entry;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Grades);
-        };
-
-        template <typename T> struct MemOps;
+        template <typename> struct MemOps;
 
         template <> struct MemOps<uint16_t>
         {
@@ -184,12 +27,13 @@ namespace Yttrium
                 byte[1] = static_cast<uint8_t>(word>>8);
             }
 
-            static inline uint16_t BytesToWord( const uint8_t * const byte) noexcept
+            static inline uint16_t BytesToWord(const uint8_t * const byte) noexcept
             {
                 const uint16_t b0 = byte[0];
                 const uint16_t b1 = byte[1];
                 return b0 | (b1<<8);
             }
+
         };
 
         template <> struct MemOps<uint32_t>
@@ -202,103 +46,163 @@ namespace Yttrium
                 byte[3] = static_cast<uint8_t>(word>>24);
             }
 
-            static inline uint32_t BytesToWord( const uint8_t * const byte) noexcept
+            static inline uint32_t BytesToWord(const uint8_t * const byte) noexcept
             {
                 const uint32_t b0 = byte[0];
                 const uint32_t b1 = byte[1];
                 const uint32_t b2 = byte[2];
                 const uint32_t b3 = byte[3];
-                return b0 | (b1<<8) | (b2<<16) | (b3<<24);
+                return b0 | (b1<<8) | (b2<<16) | (b3<<16);
             }
         };
 
 
-        template <typename WORD_TYPE>
-        class Element : public Grades
+
+
+        class Inner : public Object
         {
         public:
-            typedef WORD_TYPE WordType; // uint16_t | uint32_t
+            static const size_t SZ1 = 1;
+            enum State
+            {
+                AsBytes,
+                AsWords
+            };
 
-            explicit Element(const size_t required) :
-            Grades(required),
+            virtual ~Inner() noexcept {}
+
+        protected:
+            explicit Inner(const size_t usrBytes) :
+            bits(0),
+            bytes(0),
+            shift(0),
+            state(AsBytes),
+            maxBytes( MaxBytesFor(usrBytes,Coerce(shift) ) ),
+            byte( static_cast<uint8_t *>(Memory::Archon::Acquire( Coerce(shift) ) ) )
+            {
+                Coerce(maxBytes) = (SZ1 << shift);
+            }
+
+        public:
+
+            inline void Make(const State target) noexcept
+            {
+                if(target!=state)
+                {
+                    switch(target)
+                    {
+                        case AsBytes: 
+                            assert(AsWords==state);
+                            WordsToBytes();
+                            Coerce(state) = AsWords;
+                            break;
+
+                        case AsWords:
+                            assert(AsBytes==state);
+                            BytesToWords();
+                            Coerce(state) = AsBytes;
+                            break;
+                    }
+                }
+            }
+
+
+
+            const size_t    bits;
+            const size_t    bytes;
+            const unsigned  shift;
+            const State     state;
+            const size_t    maxBytes;
+            uint8_t * const byte;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Inner);
+            virtual void BytesToWords() const noexcept = 0;
+            virtual void WordsToBytes() const noexcept = 0;
+
+            static inline size_t MaxBytesFor(const size_t usrBytes, unsigned &shift)
+            {
+                if(usrBytes>=Base2<size_t>::MaxPowerOfTwo) throw Specific::Exception("APK","inner bytes overflow");
+
+                size_t count = sizeof(uint64_t);
+                shift        = iLog2<sizeof(uint64_t)>::Value; assert( (1<<shift) == count);
+                while(count<usrBytes)
+                {
+                    count <<= 1;
+                    ++shift;
+                }
+                return count;
+            }
+        };
+
+
+
+        template <typename WORD>
+        class Outer : public Inner
+        {
+        public:
+            typedef WORD WordType;
+
+            inline explicit Outer(const size_t usrBytes) :
+            Inner(usrBytes),
+            maxWords(maxBytes/sizeof(WORD)),
             words(0),
-            maxWords(maxBytes/sizeof(WordType)),
-            word(0)
+            word( (WordType *)byte )
             {
-                assert( IsPowerOfTwo(maxBytes) );
-                assert( IsPowerOfTwo(maxWords) );
-                assert( sizeof(WordType) * maxWords == maxBytes );
-                assert(maxBytes< Base2<size_t>::MaxPowerOfTwo );
-                Coerce(entry) = AcquireLinear( Coerce(shift) = Base2<size_t>::Log(maxWords) + 1 );
-                Coerce(byte)  = static_cast<uint8_t *>(entry);
-                Coerce(word)  = (WordType *)(byte+maxBytes);
             }
 
-            virtual ~Element() noexcept 
-            {
+            inline virtual ~Outer() noexcept {}
 
-            }
-
-            void toBytes() noexcept
-            {
-                assert(bytes<=words*sizeof(WordType));
-                uint8_t        *b = byte;
-                const WordType *w = word;
-                for(size_t i=words;i>0;--i,b += sizeof(WordType))
-                    MemOps<WordType>::WordTyoBytes(b,*(w++));
-            }
-
-            void toWords() noexcept
-            { 
-                assert(bytes<=words*sizeof(WordType));
-                const uint8_t *b = byte;
-                WordType      *w = word;
-                for(size_t i=words;i>0;--i,b += sizeof(WordType))
-                    *(w++) = MemOps<WordType>::BytesToWords(bytes);
-            }
-
-            size_t           words;
             const size_t     maxWords;
+            const size_t     words;
             WordType * const word;
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Element);
+            Y_DISABLE_COPY_AND_ASSIGN(Outer);
+            virtual void BytesToWords() const noexcept 
+            {
+                const uint8_t *b = byte;
+                WORD          *w = word;
+                for(size_t i=words;i>0;--i,b+=sizeof(WORD))
+                    *(w++) = MemOps<WORD>::BytesToWord(b);
+            }
+
+            virtual void WordsToBytes() const noexcept
+            {
+                uint8_t    *b = byte;
+                const WORD *w = word;
+                for(size_t i=words;i>0;--i,b+=sizeof(WORD))
+                    MemOps<WORD>::WordToBytes(b,*(w++));
+            }
         };
 
+
         template <>
-        class Element<uint8_t> : public Grades
+        class Outer<uint8_t> : public Inner
         {
         public:
             typedef uint8_t WordType;
 
-            explicit Element(const size_t required) :
-            Grades(required),
-            words(bytes),
+            inline explicit Outer(const size_t usrBytes) noexcept :
+            Inner(usrBytes),
             maxWords(maxBytes),
-            word(byte)
+            words(bytes),
+            word( (WordType *)byte )
             {
-                assert( IsPowerOfTwo(maxBytes) );
-                assert( IsPowerOfTwo(maxWords) );
-                assert( maxBytes == maxWords   );
-                Coerce(entry) = AcquireLinear( Coerce(shift) = Base2<size_t>::Log(maxWords) );
-                Coerce(byte)  = static_cast<uint8_t *>(entry);
-
             }
 
-            inline void toWords() noexcept {}
-            inline void toBytes() noexcept {}
 
-            virtual ~Element() noexcept {}
+            inline virtual ~Outer() noexcept {}
 
-            const size_t      &words;
-            const size_t      &maxWords;
-            WordType * const  &word;
+            const size_t &   maxWords;
+            const size_t &   words;
+            WordType * const word;
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Element);
+            Y_DISABLE_COPY_AND_ASSIGN(Outer);
+            virtual void BytesToWords() const noexcept {}
+            virtual void WordsToBytes() const noexcept {}
         };
-
-
 
 
     }
@@ -311,12 +215,17 @@ Y_UTEST(apk_n)
     {
         std::cerr << i << std::endl;
 
-        { APK::Element<uint8_t>  el(i); std::cerr << "maxBytes=" << el.maxBytes << ", maxWords=" << el.maxWords << std::endl; }
-        { APK::Element<uint16_t> el(i); std::cerr << "maxBytes=" << el.maxBytes << ", maxWords=" << el.maxWords << std::endl; }
-        { APK::Element<uint32_t> el(i); std::cerr << "maxBytes=" << el.maxBytes << ", maxWords=" << el.maxWords << std::endl; }
+        { APK::Outer<uint8_t>  el(i); }
+        { APK::Outer<uint16_t> el(i); }
+        { APK::Outer<uint32_t> el(i); }
 
 
     }
+
+    Y_SIZEOF(APK::Outer<uint8_t>);
+    Y_SIZEOF(APK::Outer<uint16_t>);
+    Y_SIZEOF(APK::Outer<uint32_t>);
+
 
 }
 Y_UDONE()
