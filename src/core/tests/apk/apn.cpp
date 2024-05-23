@@ -140,7 +140,7 @@ namespace Yttrium
             explicit Grades(const size_t required)   :
             bits(0),
             bytes(0),
-            maxBytes( MaxBytes(required) ),
+            maxBytes( MaxBytesFor(required) ),
             byte(0),
             shift(0),
             entry(0)
@@ -148,13 +148,12 @@ namespace Yttrium
             }
 
         public:
-            virtual ~Grades() noexcept
-            {
+            virtual ~Grades() noexcept {
                 static Archon &archon = Archon::Location();
                 archon.release(entry,shift);
             }
 
-            static inline size_t MaxBytes(const size_t required)
+            static inline size_t MaxBytesFor(const size_t required)
             {
                 if(required>=Base2<size_t>::MaxPowerOfTwo-1) throw Specific::Exception(Archon::CallSign, "required overflow");
                 return NextPowerOfTwo( Max(required,MinBytes) );
@@ -200,9 +199,6 @@ namespace Yttrium
                 Coerce(entry) = AcquireLinear( Coerce(shift) = Base2<size_t>::Log(maxWords) + 1 );
                 Coerce(byte)  = static_cast<uint8_t *>(entry);
                 Coerce(word)  = (WordType *)(byte+maxBytes);
-
-
-
             }
 
             virtual ~Element() noexcept 
