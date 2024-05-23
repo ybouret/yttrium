@@ -135,7 +135,7 @@ namespace Yttrium
 
                         words.free();
                         Tokenizer::AppendTo(words,line, " \t", 2);
-                        std::cerr << "words: " << words << std::endl;
+                        //std::cerr << "words: " << words << std::endl;
 
                         const size_t       nw = words.size();
                         DataBase::Iterator it = init;
