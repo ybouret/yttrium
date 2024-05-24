@@ -73,6 +73,7 @@ container/algo
 string
 fft
 fft/xbitrev
+apk
 apex
 apex/m
 apex/n

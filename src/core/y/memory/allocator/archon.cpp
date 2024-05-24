@@ -10,6 +10,7 @@ namespace Yttrium
 
         const char * const Archon:: CallSign = "Memory::Archon";
         const unsigned     Archon:: MinShift = Quarry::MinShift;
+        const size_t       Archon:: MinBytes = (size_t(1) << Quarry::MinShift);
 
         namespace
         {
