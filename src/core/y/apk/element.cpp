@@ -5,6 +5,7 @@
 #include "y/type/utils.hpp"
 #include "y/calculus/base2.hpp"
 #include "y/calculus/bit-count.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
@@ -46,6 +47,8 @@ maxNum64(maxBytes/sizeof(uint64_t))
         Y_APK_Element_Ctor_Epilog(bytes)
         {
         }
+
+
 
 
         Element::~Element() noexcept
@@ -91,8 +94,24 @@ maxNum64(maxBytes/sizeof(uint64_t))
             *(uint64_t *)entry = qw;
             Coerce(state) = AsNum64;
             Coerce(bits)  = BitCount::For(qw);
-            Coerce(bytes) = Y_ALIGN8(bits) / 8;
+            Coerce(bytes) = Y_ALIGN8(bits)  / 8;
+            Coerce(num16) = Y_ALIGN16(bits) / 16;
+            Coerce(num32) = Y_ALIGN32(bits) / 32;
+            Coerce(num64) = Y_ALIGN64(bits) / 64;
         }
+
+        template <typename TARGET, typename SOURCE>
+        struct Transmogrify
+        {
+            static const int How = sizeof(TARGET) > sizeof(SOURCE)
+            static inline void To(TARGET * & target, const SOURCE * &source) noexcept
+            {
+
+            }
+
+        private:
+
+        };
 
 
     }

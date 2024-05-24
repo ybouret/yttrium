@@ -30,10 +30,12 @@ maxNum64(maxBytes/sizeof(uint64_t))
                 AsNum64
             };
 
+            // C++
             explicit Element(const size_t usrBytes);
             explicit Element(const Element &);
             virtual ~Element() noexcept;
 
+            // Methods
             void ldz() noexcept;
             void set(const uint64_t qw) noexcept;
 

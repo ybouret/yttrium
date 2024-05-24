@@ -29,6 +29,7 @@
 #define Y_ALIGN8(N)   Y_ALIGN_LN2(3,N) //!< align on 8 bytes  | 64 bits
 #define Y_ALIGN16(N)  Y_ALIGN_LN2(4,N) //!< align on 16 bytes | 128 bits
 #define Y_ALIGN32(N)  Y_ALIGN_LN2(5,N) //!< align on 32 bytes | 256 bits
+#define Y_ALIGN64(N)  Y_ALIGN_LN2(6,N) //!< align on 64 bytes | 512 bits
 
 
 //! align on power of two SIZE

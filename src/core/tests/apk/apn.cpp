@@ -2,6 +2,7 @@
 #include "y/apk/element.hpp"
 #include "y/random/park-miller.hpp"
 #include "y/calculus/bit-count.hpp"
+#include "y/text/hexadecimal.hpp"
 
 #include <cstring>
 
@@ -38,6 +39,15 @@ Y_UTEST(apk_n)
         const uint64_t qw = ran.to<uint64_t>(i); Y_ASSERT(i==BitCount::For(qw));
         el.set(qw);
         Y_ASSERT(i==el.bits);
+        std::cerr << Hexadecimal(qw)
+        << " bits="  << std::setw(2) << el.bits
+        << " bytes=" << std::setw(2) << el.bytes
+        << " num16=" << std::setw(2) << el.num16
+        << " num32=" << std::setw(2) << el.num32
+        << " num64=" << std::setw(2) << el.num64
+
+        << std::endl;
+
     }
 
 
