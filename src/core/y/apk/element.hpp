@@ -24,16 +24,20 @@ maxNum64(maxBytes/sizeof(uint64_t))
 
             enum State
             {
-                AsByte,
-                AsU16,
-                AsU32,
-                AsU64
+                AsBytes,
+                AsNum16,
+                AsNum32,
+                AsNum64
             };
 
             explicit Element(const size_t usrBytes);
             explicit Element(const Element &);
             virtual ~Element() noexcept;
 
+            void ldz() noexcept;
+            void set(const uint64_t qw) noexcept;
+
+            // Members
             const size_t   bits;
             const State    state;
             const size_t   bytes;
@@ -42,7 +46,9 @@ maxNum64(maxBytes/sizeof(uint64_t))
             const size_t   num64;
             const unsigned shift;
             const size_t   maxBytes;
+        private:
             void * const   entry;
+        public:
             const size_t   maxNum16;
             const size_t   maxNum32;
             const size_t   maxNum64;

@@ -4,6 +4,8 @@
 #include "y/system/exception.hpp"
 #include "y/type/utils.hpp"
 #include "y/calculus/base2.hpp"
+#include "y/calculus/bit-count.hpp"
+
 namespace Yttrium
 {
 
@@ -21,7 +23,7 @@ maxNum64(maxBytes/sizeof(uint64_t))
         Element:: Element(const size_t usrBytes) :
         Object(),
         bits(0),
-        state(AsByte),
+        state(AsBytes),
         bytes(0),
         num16(0),
         num32(0),
@@ -68,8 +70,31 @@ maxNum64(maxBytes/sizeof(uint64_t))
                 ++shift;
             }
             return count;
-
         }
+
+        void Element:: ldz() noexcept
+        {
+            memset(entry,0,maxBytes);
+            Coerce(bits)  = 0;
+            Coerce(bytes) = 0;
+            Coerce(num16) = 0;
+            Coerce(num32) = 0;
+            Coerce(num64) = 0;
+            Coerce(state) = AsBytes;
+        }
+
+
+        void Element:: set(const uint64_t qw) noexcept
+        {
+            assert(maxBytes>=sizeof(qw));
+            if(qw<=0) return;
+            *(uint64_t *)entry = qw;
+            Coerce(state) = AsNum64;
+            Coerce(bits)  = BitCount::For(qw);
+            Coerce(bytes) = Y_ALIGN8(bits) / 8;
+        }
+
+
     }
 
 }
