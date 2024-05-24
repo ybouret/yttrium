@@ -29,7 +29,8 @@ namespace Yttrium
             //__________________________________________________________________
             static const char * const      CallSign;                                //!< "Memory::Archon"
             static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 5; //!< alias
-
+            static const unsigned          MinShift;                                //!< Quarry::MinShift
+            
             class Engine;
 
             //__________________________________________________________________

@@ -40,6 +40,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(memory_digest);
     Y_UTEST(memory_specimen);
     Y_UTEST(memory_objloc);
+    Y_UTEST(memory_archon);
 
     Y_UTEST(type_ints);
     Y_UTEST(type_div);

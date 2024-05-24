@@ -9,6 +9,7 @@ namespace Yttrium
     {
 
         const char * const Archon:: CallSign = "Memory::Archon";
+        const unsigned     Archon:: MinShift = Quarry::MinShift;
 
         namespace
         {
@@ -63,7 +64,9 @@ namespace Yttrium
         {
             assert(0!=engine);
             Y_LOCK(access);
-            return engine->acquire(shift);
+            void * const addr =  engine->acquire(shift);
+            assert(shift>=MinShift);
+            return addr;
         }
 
         void Archon:: release(void *entry, const unsigned shift) noexcept
