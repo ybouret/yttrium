@@ -240,49 +240,70 @@ namespace Yttrium
                     static Forward  const forward = (Forward) TransProc[t][s]; if(0==forward) throw Exception("Bad Forward");
                     static Reverse  const reverse = (Reverse) TransProc[s][t]; if(0==reverse) throw Exception("Bad Reverse");
 
+                    //----------------------------------------------------------
+                    //
+                    // clean all
+                    //
+                    //----------------------------------------------------------
                     ldz();
 
-                    std::cerr << "target: " << std::setw(3) << sizeof(TARGET) * 16 << " -> t=" << t << " NT=" << NT << std::endl;
-                    std::cerr << "source: " << std::setw(3) << sizeof(SOURCE) * 16 << " -> s=" << s << " NS=" << NS <<  std::endl;
+                    std::cerr << "target: " << std::setw(3) << sizeof(TARGET) * 8 << " bits -> t=" << t << " NT=" << NT << std::endl;
+                    std::cerr << "source: " << std::setw(3) << sizeof(SOURCE) * 8 << " bits -> s=" << s << " NS=" << NS <<  std::endl;
                     TARGET * const target = (TARGET *) arr[t];
                     SOURCE * const source = (SOURCE *) arr[s];
 
+                    // initialize source
                     for(size_t i=0;i<NS;++i) source[i] = ran.to<SOURCE>();
 
-                    uint8_t sorg[SLEN] = { 0 }; memcpy(sorg,source,SLEN);
+                    uint8_t sorg[SLEN] = { 0 };
                     uint8_t torg[TLEN] = { 0 };
+                    memcpy(sorg,source,SLEN); // save original source
 
                     Core::Display(std::cerr << "source=", source, NS, Hexadecimal::From<SOURCE> ) << std::endl;
 
-                    std::cerr << "Forward" << std::endl;
+                    //std::cerr << "Forward" << std::endl;
                     {
                         TARGET *      tgt = target;
                         const SOURCE *src = source;
-                        forward(tgt,src);
+                        for(size_t i=NT;i>0;--i)
+                            forward(tgt,src);
                         if( memcmp(source,sorg,SLEN) != 0) throw Exception("Corrupted Source on Forward");
                         memcpy(torg,target,TLEN);
                     }
                     Core::Display(std::cerr << "target=", target, NT, Hexadecimal::From<TARGET> ) << std::endl;
 
 
-                    std::cerr << "Reverse" << std::endl;
+
+                    //std::cerr << "Reverse" << std::endl;
                     {
                         const TARGET *tgt = target;
                         SOURCE       *src = source;
                         memset(src,0,SLEN);
-                        reverse(src,tgt);
+                        for(size_t i=NT;i>0;--i)
+                            reverse(src,tgt);
                         if( 0 != memcmp(target,torg,TLEN)) throw Exception("Corrupted Target on Reverse");
                     }
                     Core::Display(std::cerr << "source=", source, NS, Hexadecimal::From<SOURCE> ) << std::endl;
-
-
+                    if( memcmp(source,sorg,SLEN) != 0) throw Exception("Corrupted Reverse");
 
                 }
 
                 void check(Random::Bits &ran)
                 {
-                    run<uint64_t,uint16_t>(ran);
+                    {
+                        run<uint64_t,uint8_t>(ran);
+                        run<uint64_t,uint16_t>(ran);
+                        run<uint64_t,uint32_t>(ran);
+                    }
 
+                    {
+                        run<uint32_t,uint8_t>(ran);
+                        run<uint32_t,uint16_t>(ran);
+                    }
+
+                    {
+                        run<uint16_t,uint8_t>(ran);
+                    }
                 }
 
 
@@ -303,10 +324,11 @@ namespace Yttrium
         void Element:: Check()
         {
             std::cerr << "APK::Element::Check" << std::endl;
-            TransCheck<1>      chk;
             Random::ParkMiller ran;
-
-            chk.check(ran);
+            { TransCheck<1> chk; chk.check(ran); }
+            { TransCheck<2> chk; chk.check(ran); }
+            { TransCheck<3> chk; chk.check(ran); }
+            { TransCheck<4> chk; chk.check(ran); }
 
         }
 
