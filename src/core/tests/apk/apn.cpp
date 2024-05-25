@@ -19,6 +19,8 @@ namespace Yttrium
     }
 }
 
+#include "y/concurrent/mutex.hpp"
+
 Y_UTEST(apk_n)
 {
     Random::ParkMiller ran;
@@ -50,7 +52,7 @@ Y_UTEST(apk_n)
 
     }
 
-
+    Y_SIZEOF(Concurrent::Mutex);
 
 }
 Y_UDONE()

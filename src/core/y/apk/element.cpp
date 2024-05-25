@@ -5,6 +5,7 @@
 #include "y/type/utils.hpp"
 #include "y/calculus/base2.hpp"
 #include "y/calculus/bit-count.hpp"
+#include "y/check/static.hpp"
 #include <cstring>
 
 namespace Yttrium
@@ -100,17 +101,32 @@ maxNum64(maxBytes/sizeof(uint64_t))
             Coerce(num64) = Y_ALIGN64(bits) / 64;
         }
 
+        enum How
+        {
+            Collect,
+            Nothing,
+            Scatter
+        };
+
+
         template <typename TARGET, typename SOURCE>
         struct Transmogrify
         {
-            static const int How = sizeof(TARGET) > sizeof(SOURCE)
+            static const unsigned TargetSize = sizeof(TARGET);
+            static const unsigned SourceSize = sizeof(SOURCE);
+            static const How      Working    = (TargetSize>SourceSize) ? Collect : ( TargetSize<SourceSize ? Scatter : Nothing );
+            typedef Int2Type<Working> Choice;
+
             static inline void To(TARGET * & target, const SOURCE * &source) noexcept
             {
-
+                static const Choice choice = {};
             }
 
         private:
+            static inline void To(TARGET * & target, const SOURCE * &source, const Int2Type<Collect> &) noexcept
+            {
 
+            }
         };
 
 
