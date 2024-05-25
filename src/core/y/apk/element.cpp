@@ -107,6 +107,7 @@ maxNum64(maxBytes/sizeof(uint64_t))
 
         namespace
         {
+            
             enum How
             {
                 Collect,
@@ -329,6 +330,10 @@ namespace Yttrium
             { TransCheck<2> chk; chk.check(ran); }
             { TransCheck<3> chk; chk.check(ran); }
             { TransCheck<4> chk; chk.check(ran); }
+            { TransCheck<5> chk; chk.check(ran); }
+            { TransCheck<6> chk; chk.check(ran); }
+            { TransCheck<7> chk; chk.check(ran); }
+            { TransCheck<8> chk; chk.check(ran); }
 
         }
 
