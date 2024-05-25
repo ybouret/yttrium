@@ -79,6 +79,21 @@ Y_UTEST(apk_n)
         el.show(std::cerr << "el=") << std::endl;
     }
 
+    for(unsigned i=0;i<=80;++i)
+    {
+        std::cerr << "---- bits=" << i << std::endl;
+        APK::Element el(i,ran);
+        Y_ASSERT(APK::AsBytes==el.state);
+        Y_ASSERT(i==el.bits);
+        const uint64_t q1 = el.u64();
+        const uint64_t q2 = el.set(APK::AsNum16).u64();
+        const uint64_t q4 = el.set(APK::AsNum32).u64();
+        const uint64_t q8 = el.set(APK::AsNum64).u64();
+
+        std::cerr << Hexadecimal(q1) << "," << Hexadecimal(q2) << "," << Hexadecimal(q4) << "," << Hexadecimal(q8) << std::endl;
+
+    }
+
 }
 Y_UDONE()
 

@@ -40,9 +40,10 @@ maxNum64(maxBytes/sizeof(uint64_t))
             virtual ~Element() noexcept;
 
             // Methods
-            void ldz() noexcept;
-            void ld(const uint64_t qw) noexcept;
-            void set(const ElementState) noexcept;
+            Element  & ldz()                         noexcept;
+            Element  & ld(const uint64_t qw)         noexcept;
+            Element  & set(const ElementState)       noexcept;
+            uint64_t   u64()                   const noexcept;
 
             std::ostream & show(std::ostream &os) const; //!< show with current state
 

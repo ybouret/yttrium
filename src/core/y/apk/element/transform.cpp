@@ -160,15 +160,16 @@ namespace Yttrium
             { TransCheck<8> chk; chk.check(ran); }
         }
 
-        void Element:: set(const ElementState newState)  noexcept
+        Element  & Element:: set(const ElementState newState)  noexcept
         {
             switch(newState)
             {
-                case AsBytes: convertToBytes(); return;
-                case AsNum16: convertToNum16(); return;
-                case AsNum32: convertToNum32(); return;
-                case AsNum64: convertToNum64(); return;
+                case AsBytes: convertToBytes(); break;;
+                case AsNum16: convertToNum16(); break;
+                case AsNum32: convertToNum32(); break;
+                case AsNum64: convertToNum64(); break;
             }
+            return *this;
         }
 
 

@@ -7,8 +7,10 @@
 #include "y/calculus/bit-count.hpp"
 #include "y/check/static.hpp"
 #include "y/random/bits.hpp"
-#include <cstring>
+#include "y/system/error.hpp"
 
+#include <cstring>
+#include <cerrno>
 
 namespace Yttrium
 {
@@ -54,6 +56,7 @@ maxNum64(maxBytes/sizeof(uint64_t))
                 case AsNum32: memcpy(entry,el.entry,num32<<2); break;
                 case AsNum64: memcpy(entry,el.entry,num64<<3); break;
             }
+            
 
         }
 
@@ -78,7 +81,7 @@ maxNum64(maxBytes/sizeof(uint64_t))
                 assert(8*msb+msn==bits);
                 for(size_t i=0;i<msb;++i)
                     byte[i] = ran.to<uint8_t>();
-                byte[msb] =   ran.to<uint8_t>(msn);
+                byte[msb] =    ran.to<uint8_t>(msn);
             }
         }
 
@@ -106,7 +109,7 @@ maxNum64(maxBytes/sizeof(uint64_t))
             return count;
         }
 
-        void Element:: ldz() noexcept
+        Element  & Element:: ldz() noexcept
         {
             memset(entry,0,maxBytes);
             Coerce(bits)  = 0;
@@ -115,13 +118,14 @@ maxNum64(maxBytes/sizeof(uint64_t))
             Coerce(num32) = 0;
             Coerce(num64) = 0;
             Coerce(state) = AsBytes;
+            return *this;
         }
 
 
-        void Element:: ld(const uint64_t qw) noexcept
+        Element  & Element:: ld(const uint64_t qw) noexcept
         {
             assert(maxBytes>=sizeof(qw));
-            if(qw<=0) return;
+            if(qw<=0) return *this;
             *(uint64_t *)entry = qw;
             Coerce(state) = AsNum64;
             Coerce(bits)  = BitCount::For(qw);
@@ -129,7 +133,49 @@ maxNum64(maxBytes/sizeof(uint64_t))
             Coerce(num16) = Y_ALIGN16(bits) / 16;
             Coerce(num32) = Y_ALIGN32(bits) / 32;
             Coerce(num64) = Y_ALIGN64(bits) / 64;
+            return *this;
         }
+
+        uint64_t Element:: u64() const noexcept
+        {
+
+            switch(state)
+            {
+                case AsBytes: {
+                    const uint8_t * const p = static_cast<const uint8_t *>(entry);
+                    const uint64_t b0 = p[0];
+                    const uint64_t b1 = p[1];
+                    const uint64_t b2 = p[2];
+                    const uint64_t b3 = p[3];
+                    const uint64_t b4 = p[4];
+                    const uint64_t b5 = p[5];
+                    const uint64_t b6 = p[6];
+                    const uint64_t b7 = p[7];
+                    return b0 | (b1<<8) | (b2<<16) | (b3<<24) | (b4<<32) | (b5<<40) | (b6<<48) | (b7<<54);
+                }
+
+                case AsNum16: {
+                    const uint16_t * const p = static_cast<const uint16_t *>(entry);
+                    const uint64_t w0 = p[0];
+                    const uint64_t w1 = p[1];
+                    const uint64_t w2 = p[2];
+                    const uint64_t w3 = p[3];
+                    return w0 | (w1<<16) | (w2<<32) | (w3<<48);
+                }
+
+                case AsNum32: {
+                    const uint32_t * const p = static_cast<const uint32_t *>(entry);
+                    const uint64_t dw0 = p[0];
+                    const uint64_t dw1 = p[1];
+                    return dw0 | (dw1<<32);
+                }
+
+                case AsNum64: return *static_cast<const uint64_t *>(entry);
+            }
+            Libc::CriticalError(EINVAL, "shouldn't get here");
+            return 0;
+        }
+
 
     }
 
