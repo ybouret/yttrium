@@ -1,5 +1,5 @@
-#include "y/utest/run.hpp"
 #include "y/apk/element.hpp"
+#include "y/utest/run.hpp"
 #include "y/random/park-miller.hpp"
 #include "y/calculus/bit-count.hpp"
 #include "y/text/hexadecimal.hpp"
@@ -39,7 +39,7 @@ Y_UTEST(apk_n)
     for(unsigned i=0;i<=64;++i)
     {
         const uint64_t qw = ran.to<uint64_t>(i); Y_ASSERT(i==BitCount::For(qw));
-        el.set(qw);
+        el.ld(qw);
         Y_ASSERT(i==el.bits);
         std::cerr << Hexadecimal(qw)
         << " bits="  << std::setw(2) << el.bits
@@ -47,14 +47,37 @@ Y_UTEST(apk_n)
         << " num16=" << std::setw(2) << el.num16
         << " num32=" << std::setw(2) << el.num32
         << " num64=" << std::setw(2) << el.num64
-
         << std::endl;
 
     }
 
     APK::Element::CheckTransmogrify();
 
-    Y_SIZEOF(Concurrent::Mutex);
+    {
+        APK::Element el;
+        el.show(std::cerr << "el=") << std::endl;
+        el.ld(0x123456);
+        el.show(std::cerr << "el=") << std::endl;
+        el.set(APK::AsBytes);
+        el.show(std::cerr << "el=") << std::endl;
+        el.set(APK::AsNum16);
+        el.show(std::cerr << "el=") << std::endl;
+        el.set(APK::AsNum32);
+        el.show(std::cerr << "el=") << std::endl;
+    }
+
+    for(unsigned i=0;i<=80;++i)
+    {
+        std::cerr << "---- bits=" << i << std::endl;
+        APK::Element el(i,ran);
+        el.show(std::cerr << "el=") << std::endl;
+        el.set(APK::AsNum16);
+        el.show(std::cerr << "el=") << std::endl;
+        el.set(APK::AsNum32);
+        el.show(std::cerr << "el=") << std::endl;
+        el.set(APK::AsNum64);
+        el.show(std::cerr << "el=") << std::endl;
+    }
 
 }
 Y_UDONE()

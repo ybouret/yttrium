@@ -158,8 +158,138 @@ namespace Yttrium
             { TransCheck<6> chk; chk.check(ran); }
             { TransCheck<7> chk; chk.check(ran); }
             { TransCheck<8> chk; chk.check(ran); }
-
         }
+
+        void Element:: set(const ElementState newState)  noexcept
+        {
+            switch(newState)
+            {
+                case AsBytes: convertToBytes(); return;
+                case AsNum16: convertToNum16(); return;
+                case AsNum32: convertToNum32(); return;
+                case AsNum64: convertToNum64(); return;
+            }
+        }
+
+
+        void Element:: convertToBytes() noexcept
+        {
+            uint8_t        * target = static_cast<uint8_t  *>(entry);
+            switch(state)
+            {
+                case AsBytes: return;
+
+                case AsNum16: {
+                    const uint16_t * source = static_cast<uint16_t *>(entry);
+                    for(size_t i=num16;i>0;--i)
+                        Transmogrify<uint8_t,uint16_t>::To(target,source);
+                } break;
+
+                case AsNum32: {
+                    const uint32_t * source = static_cast<uint32_t *>(entry);
+                    for(size_t i=num32;i>0;--i)
+                        Transmogrify<uint8_t,uint32_t>::To(target,source);
+                } break;
+
+                case AsNum64: {
+                    const uint64_t * source = static_cast<uint64_t *>(entry);
+                    for(size_t i=num64;i>0;--i)
+                        Transmogrify<uint8_t,uint64_t>::To(target,source);
+                } break;
+
+            }
+            Coerce(state) = AsBytes;
+        }
+
+
+        void Element:: convertToNum16() noexcept
+        {
+            uint16_t * target = static_cast<uint16_t *>(entry);
+            switch(state)
+            {
+                case AsBytes: {
+                    const uint8_t * source = static_cast<uint8_t *>(entry);
+                    for(size_t i=bytes;i>0;--i)
+                        Transmogrify<uint16_t,uint8_t>::To(target,source);
+                } break;
+
+                case AsNum16: return;
+
+                case AsNum32: {
+                    const uint32_t * source = static_cast<uint32_t *>(entry);
+                    for(size_t i=num32;i>0;--i)
+                        Transmogrify<uint16_t,uint32_t>::To(target,source);
+                } break;
+
+                case AsNum64: {
+                    const uint64_t * source = static_cast<uint64_t *>(entry);
+                    for(size_t i=num32;i>0;--i)
+                        Transmogrify<uint16_t,uint64_t>::To(target,source);
+                } break;
+            }
+            Coerce(state) = AsNum16;
+        }
+
+        void Element:: convertToNum32() noexcept
+        {
+            uint32_t * target = static_cast<uint32_t  *>(entry);
+            switch(state)
+            {
+                case AsBytes: {
+                    const uint8_t * source = static_cast<uint8_t *>(entry);
+                    for(size_t i=bytes;i>0;--i)
+                        Transmogrify<uint32_t,uint8_t>::To(target,source);
+                } break;
+
+                case AsNum16: {
+                    const uint16_t * source = static_cast<uint16_t *>(entry);
+                    for(size_t i=num16;i>0;--i)
+                        Transmogrify<uint32_t,uint16_t>::To(target,source);
+                } break;
+
+                case AsNum32: return;
+
+                case AsNum64: {
+                    const uint64_t * source = static_cast<uint64_t *>(entry);
+                    for(size_t i=num32;i>0;--i)
+                        Transmogrify<uint32_t,uint64_t>::To(target,source);
+                } break;
+
+            }
+            Coerce(state) = AsNum32;
+        }
+
+        void Element:: convertToNum64() noexcept
+        {
+            uint64_t * target = static_cast<uint64_t  *>(entry);
+            switch(state)
+            {
+                case AsBytes: {
+                    const uint8_t * source = static_cast<uint8_t *>(entry);
+                    for(size_t i=bytes;i>0;--i)
+                        Transmogrify<uint64_t,uint8_t>::To(target,source);
+                } break;
+
+                case AsNum16: {
+                    const uint16_t * source = static_cast<uint16_t *>(entry);
+                    for(size_t i=num16;i>0;--i)
+                        Transmogrify<uint64_t,uint16_t>::To(target,source);
+                } break;
+
+                case AsNum32: {
+                    const uint32_t * source = static_cast<uint32_t *>(entry);
+                    for(size_t i=num32;i>0;--i)
+                        Transmogrify<uint64_t,uint32_t>::To(target,source);
+                } break;
+
+
+                case AsNum64: return;
+
+            }
+            Coerce(state) = AsNum64;
+        }
+
+
 
     }
 
