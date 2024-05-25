@@ -6,6 +6,7 @@
 #include "y/calculus/base2.hpp"
 #include "y/calculus/bit-count.hpp"
 #include "y/check/static.hpp"
+#include "y/text/hexadecimal.hpp"
 
 
 #include <cstring>
@@ -113,11 +114,6 @@ maxNum64(maxBytes/sizeof(uint64_t))
                 Scatter
             };
 
-            static const unsigned BShift[8] =
-            {
-                0,   8, 16, 24,
-                32, 40, 48, 56
-            };
 
             template <typename TARGET, typename SOURCE>
             struct Transmogrify
@@ -126,37 +122,64 @@ maxNum64(maxBytes/sizeof(uint64_t))
                 static const unsigned SourceSize = sizeof(SOURCE);
                 static const How      Direction  = (TargetSize>SourceSize) ? Collect : ( TargetSize<SourceSize ? Scatter : Nothing );
                 typedef Int2Type<Direction> Choice;
+                typedef void (*Proc)(TARGET * &  , const SOURCE * & );
 
                 static inline void To(TARGET * & target, const SOURCE * &source) noexcept
                 {
                     static const Choice choice = {};
-                    To(target,source,choice);
+                    Run(target,source,choice);
                 }
 
             private:
-                static inline void To(TARGET * & target, const SOURCE * &source, const Int2Type<Collect> &) noexcept
+                //! collect source items into larger target item
+                static inline void Run(TARGET * & target, const SOURCE * &source, const Int2Type<Collect> &) noexcept
                 {
                     Y_STATIC_CHECK(TargetSize>SourceSize,BadSetup);
-                    static const size_t Words = TargetSize/SourceSize;
-                    static const size_t Loops = Words-1;
+                    static const size_t   Words = TargetSize/SourceSize; assert(Words>0);
+                    static const unsigned Shift = SourceSize * 8;
                     TARGET   result = *(source++);
-                    for(size_t i=1;i<=Loops;++i)
+                    unsigned bshift = 0;
+                    for(size_t i=1;i<Words;++i)
                     {
                         TARGET src = *(source++);
-                        result |= (src <<= BShift[i]);
+                        result |= (src <<= (bshift += Shift));
                     }
                     *(target++) = result;
                 }
+
+                //! scatter source item into smaller target items
+                static inline void Run(TARGET * & target, const SOURCE * &source, const Int2Type<Scatter> &) noexcept
+                {
+                    Y_STATIC_CHECK(TargetSize<SourceSize,BadSetup);
+                    static const size_t   Words = SourceSize/TargetSize; assert(Words>0);
+                    static const unsigned Shift = TargetSize * 8;
+
+                    SOURCE value = *(source++);
+                    for(size_t i=0;i<Words;++i,value>>=Shift)
+                        *(target++) = static_cast<TARGET>(value);
+                }
             };
+
+#define Y_APK_TRANS(TGT,SRC) (void*) Transmogrify<uint##TGT##_t,uint##SRC##_t>::To
+
+            // TranProc<TARGET,SOURCE>
+            static  void *TransProc[4][4] =
+            {
+                {                 0,  Y_APK_TRANS(8,16),  Y_APK_TRANS(8,32), Y_APK_TRANS(8,64)  },
+                { Y_APK_TRANS(16,8),                  0, Y_APK_TRANS(16,32), Y_APK_TRANS(16,64) },
+                { Y_APK_TRANS(32,8), Y_APK_TRANS(32,16),                  0, Y_APK_TRANS(32,64) },
+                { Y_APK_TRANS(64,8), Y_APK_TRANS(64,16), Y_APK_TRANS(64,32),                  0 }
+            };
+
 
         }
 
     }
 }
 
-#include "y/text/hexadecimal.hpp"
 #include "y/random/park-miller.hpp"
 #include "y/hashing/sha1.hpp"
+#include <iomanip>
 
 namespace Yttrium
 {
@@ -170,51 +193,104 @@ namespace Yttrium
             {
             public:
 
-                inline  TransCheck() noexcept : data() { memset(&data,0,sizeof(data)); }
-                inline ~TransCheck() noexcept {}
-
-                void init(Random::Bits &ran) noexcept
+                inline  TransCheck() noexcept :
+                a8(),
+                a16(),
+                a32(),
+                a64(),
+                arr()
                 {
-                    for(unsigned i=0;i<sizeof(data.a8);++i)
-                    {
-                        data.a8[i] = ran.to<uint8_t>();
-                    }
+                    arr[0] = &a8;
+                    arr[1] = &a16;
+                    arr[2] = &a32;
+                    arr[3] = &a64;
+
+#if 0
+                    num[0] = 8*N;
+                    num[1] = 4*N;
+                    num[2] = 2*N;
+                    num[3] = 1*N;
+#endif
                 }
 
+                inline ~TransCheck() noexcept {}
+
+                void ldz() noexcept
+                {
+                    memset(a8,0,sizeof(a8));
+                    memset(a16,0,sizeof(a16));
+                    memset(a32,0,sizeof(a32));
+                    memset(a64,0,sizeof(a64));
+                }
+
+                template <typename TARGET, typename SOURCE>
+                inline void run(Random::Bits &ran)
+                {
+
+                    std::cerr << "running" << std::endl;
+                    typedef typename Transmogrify<TARGET,SOURCE>::Proc Forward;
+                    typedef typename Transmogrify<SOURCE,TARGET>::Proc Reverse;
+
+                    static const unsigned t    = iLog2Of<TARGET>::Value;
+                    static const unsigned s    = iLog2Of<SOURCE>::Value;
+                    static const unsigned NT   = (1 << (3-t) )*N;
+                    static const unsigned NS   = (1 << (3-s) )*N;
+                    static const size_t   SLEN = NS * sizeof(SOURCE);   
+                    static const size_t   TLEN = NT * sizeof(TARGET);
+                    static Forward  const forward = (Forward) TransProc[t][s]; if(0==forward) throw Exception("Bad Forward");
+                    static Reverse  const reverse = (Reverse) TransProc[s][t]; if(0==reverse) throw Exception("Bad Reverse");
+
+                    ldz();
+
+                    std::cerr << "target: " << std::setw(3) << sizeof(TARGET) * 16 << " -> t=" << t << " NT=" << NT << std::endl;
+                    std::cerr << "source: " << std::setw(3) << sizeof(SOURCE) * 16 << " -> s=" << s << " NS=" << NS <<  std::endl;
+                    TARGET * const target = (TARGET *) arr[t];
+                    SOURCE * const source = (SOURCE *) arr[s];
+
+                    for(size_t i=0;i<NS;++i) source[i] = ran.to<SOURCE>();
+
+                    uint8_t sorg[SLEN] = { 0 }; memcpy(sorg,source,SLEN);
+                    uint8_t torg[TLEN] = { 0 };
+
+                    Core::Display(std::cerr << "source=", source, NS, Hexadecimal::From<SOURCE> ) << std::endl;
+
+                    std::cerr << "Forward" << std::endl;
+                    {
+                        TARGET *      tgt = target;
+                        const SOURCE *src = source;
+                        forward(tgt,src);
+                        if( memcmp(source,sorg,SLEN) != 0) throw Exception("Corrupted Source on Forward");
+                        memcpy(torg,target,TLEN);
+                    }
+                    Core::Display(std::cerr << "target=", target, NT, Hexadecimal::From<TARGET> ) << std::endl;
+
+
+                    std::cerr << "Reverse" << std::endl;
+                    {
+                        const TARGET *tgt = target;
+                        SOURCE       *src = source;
+                        memset(src,0,SLEN);
+                        reverse(src,tgt);
+                        if( 0 != memcmp(target,torg,TLEN)) throw Exception("Corrupted Target on Reverse");
+                    }
+                    Core::Display(std::cerr << "source=", source, NS, Hexadecimal::From<SOURCE> ) << std::endl;
+
+
+
+                }
 
                 void check(Random::Bits &ran)
                 {
-                    init(ran);
-                    uint8_t org[sizeof(data.a8)] = { 0 };
-                    memcpy(org,data.a8,sizeof(data.a8)); assert( 0 == memcmp(data.a8, org, sizeof(data.a8)));
-
-                    Core::Display(std::cerr << "data=", data.a8, sizeof(data.a8), Hexadecimal::From<uint8_t> ) << std::endl;
-                    {
-                        const uint8_t *src = data.a8;
-                        uint64_t      *tgt = data.a64;
-                        for(size_t i=N;i>0;--i)
-                        {
-                            Transmogrify<uint64_t,uint8_t>::To(tgt,src);
-                        }
-                        if(data.a8  + 8*N != src) throw Exception("bad source pointer");
-                        if(data.a64 + 1*N != tgt) throw Exception("bad target pointer");
-
-                        Core::Display(std::cerr << "a64 =", data.a64, N, Hexadecimal::From<uint64_t> ) << std::endl;
-                    }
-
-
+                    run<uint64_t,uint16_t>(ran);
 
                 }
 
 
-                union
-                {
-                    uint8_t   a8[8*N];
-                    uint16_t a16[4*N];
-                    uint32_t a32[2*N];
-                    uint64_t a64[1*N];
-                } data;
-
+                uint8_t   a8[8*N];
+                uint16_t a16[4*N];
+                uint32_t a32[2*N];
+                uint64_t a64[1*N];
+                void *   arr[4];
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(TransCheck);
