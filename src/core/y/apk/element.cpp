@@ -6,6 +6,8 @@
 #include "y/calculus/base2.hpp"
 #include "y/calculus/bit-count.hpp"
 #include "y/check/static.hpp"
+
+
 #include <cstring>
 
 namespace Yttrium
@@ -101,33 +103,136 @@ maxNum64(maxBytes/sizeof(uint64_t))
             Coerce(num64) = Y_ALIGN64(bits) / 64;
         }
 
-        enum How
+
+        namespace
         {
-            Collect,
-            Nothing,
-            Scatter
-        };
+            enum How
+            {
+                Collect,
+                Nothing,
+                Scatter
+            };
 
+            static const unsigned BShift[8] =
+            {
+                0,   8, 16, 24,
+                32, 40, 48, 56
+            };
 
-        template <typename TARGET, typename SOURCE>
-        struct Transmogrify
+            template <typename TARGET, typename SOURCE>
+            struct Transmogrify
+            {
+                static const unsigned TargetSize = sizeof(TARGET);
+                static const unsigned SourceSize = sizeof(SOURCE);
+                static const How      Direction  = (TargetSize>SourceSize) ? Collect : ( TargetSize<SourceSize ? Scatter : Nothing );
+                typedef Int2Type<Direction> Choice;
+
+                static inline void To(TARGET * & target, const SOURCE * &source) noexcept
+                {
+                    static const Choice choice = {};
+                    To(target,source,choice);
+                }
+
+            private:
+                static inline void To(TARGET * & target, const SOURCE * &source, const Int2Type<Collect> &) noexcept
+                {
+                    Y_STATIC_CHECK(TargetSize>SourceSize,BadSetup);
+                    static const size_t Words = TargetSize/SourceSize;
+                    static const size_t Loops = Words-1;
+                    TARGET   result = *(source++);
+                    for(size_t i=1;i<=Loops;++i)
+                    {
+                        TARGET src = *(source++);
+                        result |= (src <<= BShift[i]);
+                    }
+                    *(target++) = result;
+                }
+            };
+
+        }
+
+    }
+}
+
+#include "y/text/hexadecimal.hpp"
+#include "y/random/park-miller.hpp"
+#include "y/hashing/sha1.hpp"
+
+namespace Yttrium
+{
+    namespace APK
+    {
+
+        namespace
         {
-            static const unsigned TargetSize = sizeof(TARGET);
-            static const unsigned SourceSize = sizeof(SOURCE);
-            static const How      Working    = (TargetSize>SourceSize) ? Collect : ( TargetSize<SourceSize ? Scatter : Nothing );
-            typedef Int2Type<Working> Choice;
-
-            static inline void To(TARGET * & target, const SOURCE * &source) noexcept
+            template <const size_t N>
+            class TransCheck
             {
-                static const Choice choice = {};
-            }
+            public:
 
-        private:
-            static inline void To(TARGET * & target, const SOURCE * &source, const Int2Type<Collect> &) noexcept
-            {
+                inline  TransCheck() noexcept : data() { memset(&data,0,sizeof(data)); }
+                inline ~TransCheck() noexcept {}
 
-            }
-        };
+                void init(Random::Bits &ran) noexcept
+                {
+                    for(unsigned i=0;i<sizeof(data.a8);++i)
+                    {
+                        data.a8[i] = ran.to<uint8_t>();
+                    }
+                }
+
+
+                void check(Random::Bits &ran)
+                {
+                    init(ran);
+                    uint8_t org[sizeof(data.a8)] = { 0 };
+                    memcpy(org,data.a8,sizeof(data.a8)); assert( 0 == memcmp(data.a8, org, sizeof(data.a8)));
+
+                    Core::Display(std::cerr << "data=", data.a8, sizeof(data.a8), Hexadecimal::From<uint8_t> ) << std::endl;
+                    {
+                        const uint8_t *src = data.a8;
+                        uint64_t      *tgt = data.a64;
+                        for(size_t i=N;i>0;--i)
+                        {
+                            Transmogrify<uint64_t,uint8_t>::To(tgt,src);
+                        }
+                        if(data.a8  + 8*N != src) throw Exception("bad source pointer");
+                        if(data.a64 + 1*N != tgt) throw Exception("bad target pointer");
+
+                        Core::Display(std::cerr << "a64 =", data.a64, N, Hexadecimal::From<uint64_t> ) << std::endl;
+                    }
+
+
+
+                }
+
+
+                union
+                {
+                    uint8_t   a8[8*N];
+                    uint16_t a16[4*N];
+                    uint32_t a32[2*N];
+                    uint64_t a64[1*N];
+                } data;
+
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(TransCheck);
+            };
+
+
+        }
+
+
+        void Element:: Check()
+        {
+            std::cerr << "APK::Element::Check" << std::endl;
+            TransCheck<1>      chk;
+            Random::ParkMiller ran;
+
+            chk.check(ran);
+
+        }
 
 
     }

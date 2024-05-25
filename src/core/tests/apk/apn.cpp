@@ -52,6 +52,8 @@ Y_UTEST(apk_n)
 
     }
 
+    APK::Element::Check();
+
     Y_SIZEOF(Concurrent::Mutex);
 
 }
