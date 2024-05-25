@@ -52,7 +52,7 @@ Y_UTEST(apk_n)
 
     }
 
-    APK::Element::Check();
+    APK::Element::CheckTransmogrify();
 
     Y_SIZEOF(Concurrent::Mutex);
 

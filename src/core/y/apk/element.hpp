@@ -39,7 +39,7 @@ maxNum64(maxBytes/sizeof(uint64_t))
             void ldz() noexcept;
             void set(const uint64_t qw) noexcept;
 
-            static void Check();
+            static void CheckTransmogrify();
 
             // Members
             const size_t   bits;

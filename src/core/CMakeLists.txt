@@ -74,6 +74,7 @@ string
 fft
 fft/xbitrev
 apk
+apk/element
 apex
 apex/m
 apex/n
