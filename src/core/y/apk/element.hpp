@@ -69,7 +69,7 @@ namespace Yttrium
             uint64_t       u64()             const noexcept; //!< check least significant uint64_t
             std::ostream & show(std::ostream &os)     const; //!< show with current state
 
-            static InnerState TuneUp(Element &lhs, Element &rhs) noexcept;
+            static InnerState   TuneUp(Element &lhs, Element &rhs) noexcept;
 
             //__________________________________________________________________
             //
@@ -78,6 +78,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static SignType Compare(Element &lhs, Element &rhs) noexcept;
+            static SignType Compare(Element &lhs, uint64_t rhs) noexcept;
+            static SignType Compare(uint64_t lhs, Element &rhs) noexcept;
+
 
             static void CheckTransmogrify(); //!< internal tests
 

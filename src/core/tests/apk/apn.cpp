@@ -113,20 +113,15 @@ Y_UTEST(apk_n)
                     {
                         I.set(APK::Element::State[k]);
                         J.set(APK::Element::State[l]);
-#if 0
-                        if( APK::Element::Compare(I,J) != res )
-                        {
-                            std::cerr << "Comparison Failure : " << ((1<<k)*8) << " / " << ( (1<<l) * 8) << std::endl;
-                            std::cerr << "lhs=" << Hexadecimal(ii) << std::endl;
-                            std::cerr << "rhs=" << Hexadecimal(jj) << std::endl;
-
-                        }
-#endif
                         Y_ASSERT( APK::Element::Compare(I,J) == res);
+                        
+                        I.set(APK::Element::State[k]);
+                        Y_ASSERT( APK::Element::Compare(I,jj) == res);
+                        J.set(APK::Element::State[l]);
+                        Y_ASSERT( APK::Element::Compare(ii,J) == res);
+
                     }
                 }
-
-
             }
         }
     }

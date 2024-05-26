@@ -62,9 +62,40 @@ case __Zero__: return CompareData<TYPE>(lhs.entry,rhs.entry,LHS);\
                 case AsNum32: Y_RETURN_ELEMENT_COMPARE(lhs.num32,rhs.num32,uint32_t);
                 case AsNum64: Y_RETURN_ELEMENT_COMPARE(lhs.num64,rhs.num64,uint64_t);
             }
-            Libc::CriticalError(EINVAL, "%s::Compare", CallSign);
+            Libc::CriticalError(EINVAL, "%s::Compare(Element,Element)", CallSign);
             return __Zero__;
         }
+
+
+
+        SignType Element:: Compare(Element &lhs, const uint64_t R) noexcept
+        {
+
+            if( lhs.set(AsNum64).num64 > 1 )
+            {
+                return Positive;
+            }
+            else
+            {
+                const uint64_t L = *static_cast<const uint64_t *>(lhs.entry);
+                return Sign::Of(L,R);
+            }
+
+        }
+
+        SignType Element:: Compare(uint64_t L, Element &rhs) noexcept
+        {
+            if( rhs.set(AsNum64).num64 > 1 )
+            {
+                return Negative;
+            }
+            else
+            {
+                const uint64_t R = *static_cast<const uint64_t *>(rhs.entry);
+                return Sign::Of(L,R);
+            }
+        }
+
 
 
     }
