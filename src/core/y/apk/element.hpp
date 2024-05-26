@@ -44,6 +44,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const char * const CallSign; //!< "APK::Element"
+            static const InnerState   State[4]; //!< all the possible states
 
             //__________________________________________________________________
             //
@@ -59,14 +60,24 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // C++
+            // Methods
             //
             //__________________________________________________________________    
-            Element  & ldz()                   noexcept; //!< clean all, set AsBytes
-            Element  & u64(const uint64_t qw)  noexcept; //!< nothrow make u64
-            Element  & set(const InnerState)   noexcept;  //!< change inner state
-            uint64_t   u64()             const noexcept; //!< check least significant uint64_t
-            std::ostream & show(std::ostream &os) const; //!< show with current state
+            Element  &     ldz()                   noexcept; //!< clean all, set AsBytes
+            Element  &     u64(const uint64_t qw)  noexcept; //!< nothrow make u64
+            Element  &     set(const InnerState)   noexcept;  //!< change inner state
+            uint64_t       u64()             const noexcept; //!< check least significant uint64_t
+            std::ostream & show(std::ostream &os)     const; //!< show with current state
+
+            static InnerState TuneUp(Element &lhs, Element &rhs) noexcept;
+
+            //__________________________________________________________________
+            //
+            //
+            // Comparisons
+            //
+            //__________________________________________________________________
+            static SignType Compare(Element &lhs, Element &rhs) noexcept;
 
             static void CheckTransmogrify(); //!< internal tests
 

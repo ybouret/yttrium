@@ -18,6 +18,7 @@ namespace Yttrium
     {
 
         const char * const Element:: CallSign = "APK::Element";
+        const InnerState   Element:: State[4] = { AsBytes, AsNum16, AsNum32, AsNum64 };
 
 #define Y_APK_Element_Ctor_Epilog(COUNT)         \
 maxBytes( MaxBytesFor(COUNT,Coerce(shift) ) ),   \

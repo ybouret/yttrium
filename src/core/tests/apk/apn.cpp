@@ -95,6 +95,43 @@ Y_UTEST(apk_n)
         }
     }
 
+    {
+        std::cerr << "<Compare64>" << std::endl;
+        for(unsigned i=0;i<=64;++i)
+        {
+            APK::Element    I(i,ran);     Y_ASSERT(I.bits==i);
+            const uint64_t  ii = I.u64(); Y_ASSERT(BitCount::For(ii) == i);
+            for(unsigned j=0;j<=64;++j)
+            {
+                APK::Element J(j,ran);        Y_ASSERT(J.bits==j);
+                const uint64_t jj  = J.u64(); Y_ASSERT(BitCount::For(jj) == j);
+                const SignType res = Sign::Of(ii,jj);
+
+                for(unsigned k=0;k<4;++k)
+                {
+                    for(unsigned l=0;l<4;++l)
+                    {
+                        I.set(APK::Element::State[k]);
+                        J.set(APK::Element::State[l]);
+#if 0
+                        if( APK::Element::Compare(I,J) != res )
+                        {
+                            std::cerr << "Comparison Failure : " << ((1<<k)*8) << " / " << ( (1<<l) * 8) << std::endl;
+                            std::cerr << "lhs=" << Hexadecimal(ii) << std::endl;
+                            std::cerr << "rhs=" << Hexadecimal(jj) << std::endl;
+
+                        }
+#endif
+                        Y_ASSERT( APK::Element::Compare(I,J) == res);
+                    }
+                }
+
+
+            }
+        }
+    }
+
+
 }
 Y_UDONE()
 
