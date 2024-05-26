@@ -73,7 +73,7 @@ maxNum64(maxBytes/sizeof(uint64_t))
         shift(0),
         Y_APK_Element_Ctor_Epilog(bytes)
         {
-            std::cerr << "bits=" << bits << " => bytes=" << bytes << std::endl;
+            //std::cerr << "bits=" << bits << " => bytes=" << bytes << std::endl;
 
             if(bytes>0)
             {
