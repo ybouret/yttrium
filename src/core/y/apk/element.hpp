@@ -63,12 +63,13 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________    
-            Element  &     ldz()                   noexcept; //!< clean all, set AsBytes
-            Element  &     u64(const uint64_t qw)  noexcept; //!< nothrow make u64
-            Element  &     set(const InnerState)   noexcept; //!< change inner state
-            Element  &     set(Random::Bits &)     noexcept; //!< change to random state
-            uint64_t       u64()             const noexcept; //!< check least significant uint64_t
-            std::ostream & show(std::ostream &os)     const; //!< show with current state
+            Element  &     ldz()                         noexcept; //!< clean all, set AsBytes
+            Element  &     u64(const uint64_t qw)        noexcept; //!< nothrow make u64
+            Element  &     set(const InnerState)         noexcept; //!< change inner state
+            Element  &     set(Random::Bits &)           noexcept; //!< change to random state
+            uint64_t       u64()                   const noexcept; //!< check least significant uint64_t
+            std::ostream & show(std::ostream &os)           const; //!< show with current state
+            void           upgrade()                     noexcept; //!< find most significant, bits and cleanup
 
             //! promote to the same state, which is returned
             static InnerState   TuneUp(Element &lhs, Element &rhs) noexcept;
@@ -124,15 +125,11 @@ namespace Yttrium
             void convertToNum32() noexcept;
             void convertToNum64() noexcept;
 
-            template <typename CoreType,typename WordType> static inline
-            Element * Add(const WordType * lhs, size_t nl,
-                          const WordType * rhs, size_t nr)
-            {
-                assert(0!=lhs);
-                assert(0!=rhs);
-
-            }
-
+            void upgradeAsBytes() noexcept;
+            void upgradeAsNum16() noexcept;
+            void upgradeAsNum32() noexcept;
+            void upgradeAsNum64() noexcept;
+            void updateFromBits() noexcept;
         };
 
 
