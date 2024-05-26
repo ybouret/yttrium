@@ -151,7 +151,7 @@ maxNum64(maxBytes/sizeof(uint64_t))
                     const uint64_t b5 = p[5];
                     const uint64_t b6 = p[6];
                     const uint64_t b7 = p[7];
-                    return b0 | (b1<<8) | (b2<<16) | (b3<<24) | (b4<<32) | (b5<<40) | (b6<<48) | (b7<<54);
+                    return b0 | (b1<<8) | (b2<<16) | (b3<<24) | (b4<<32) | (b5<<40) | (b6<<48) | (b7<<56);
                 }
 
                 case AsNum16: {

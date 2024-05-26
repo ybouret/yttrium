@@ -90,7 +90,14 @@ Y_UTEST(apk_n)
         const uint64_t q4 = el.set(APK::AsNum32).u64();
         const uint64_t q8 = el.set(APK::AsNum64).u64();
 
-        std::cerr << Hexadecimal(q1) << "," << Hexadecimal(q2) << "," << Hexadecimal(q4) << "," << Hexadecimal(q8) << std::endl;
+        std::cerr << "q1 = " << Hexadecimal(q1) << std::endl;
+        std::cerr << "q2 = " << Hexadecimal(q2) << std::endl;
+        std::cerr << "q4 = " << Hexadecimal(q4) << std::endl;
+        std::cerr << "q8 = " << Hexadecimal(q8) << std::endl;
+        Y_ASSERT(q1==q2);
+        Y_ASSERT(q1==q4);
+        Y_ASSERT(q1==q8);
+        
 
     }
 
