@@ -17,6 +17,8 @@ namespace Yttrium
     namespace APK
     {
 
+        const char * const Element:: CallSign = "APK::Element";
+
 #define Y_APK_Element_Ctor_Epilog(COUNT)         \
 maxBytes( MaxBytesFor(COUNT,Coerce(shift) ) ),   \
 entry( Memory::Archon::Acquire(Coerce(shift) ) ),\
@@ -97,7 +99,7 @@ maxNum64(maxBytes/sizeof(uint64_t))
             static const unsigned MinShift   = Max(MinShift64,MinShiftIO);
             static const size_t   MinBytes   = size_t(1) << MinShift;
 
-            if(usrBytes>=Base2<size_t>::MaxPowerOfTwo) throw Libc::Exception(ENOMEM, "APK::Element");
+            if(usrBytes>=Base2<size_t>::MaxPowerOfTwo) throw Libc::Exception(ENOMEM, "%s(%lu bytes)", CallSign, static_cast<unsigned long>(usrBytes));
 
             size_t count = MinBytes;
             shift        = MinShift;
@@ -172,7 +174,7 @@ maxNum64(maxBytes/sizeof(uint64_t))
 
                 case AsNum64: return *static_cast<const uint64_t *>(entry);
             }
-            Libc::CriticalError(EINVAL, "shouldn't get here");
+            Libc::CriticalError(EINVAL, "%s shouldn't get here", CallSign);
             return 0;
         }
 

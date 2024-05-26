@@ -31,7 +31,7 @@ maxNum64(maxBytes/sizeof(uint64_t))
         {
         public:
 
-
+            static const char * const CallSign; //!< "APK::Element"
 
             // C++
             explicit Element(const size_t usrBytes=0);
