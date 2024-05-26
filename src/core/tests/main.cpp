@@ -257,7 +257,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(color_conv);
     Y_UTEST(color_channels);
     
-    Y_UTEST(apk_n);
+    Y_UTEST(apk_element);
 
 }
 Y_UTEST_EXEC()

@@ -13,13 +13,13 @@ namespace Yttrium
 {
     namespace APK
     {
-      
+
     }
 }
 
 #include "y/concurrent/mutex.hpp"
 
-Y_UTEST(apk_n)
+Y_UTEST(apk_element)
 {
     Random::ParkMiller ran;
 

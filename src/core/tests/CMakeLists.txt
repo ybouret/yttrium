@@ -336,5 +336,5 @@ add_test(color:conv test-core color_conv)
 add_test(color:channels test-core color_channels)
 
 #apk
-add_test(apk:n test-core apk_n)
+add_test(apk:element test-core apk_element)
 
