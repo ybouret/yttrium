@@ -53,7 +53,7 @@ namespace Yttrium
                         uint32_t *p = (uint32_t *)addr;
                         for(size_t i=0,j=1;i<2;++i,++j)
                         {
-                            if( (p[i] = static_cast<uint16_t>(w>>(32*i))) > 0) size = j;
+                            if( (p[i] = static_cast<uint32_t>(w>>(32*i))) > 0) size = j;
                         }
                         assert(size>0);
                     } break;

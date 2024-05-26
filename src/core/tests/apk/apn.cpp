@@ -66,8 +66,33 @@ Y_UTEST(apk_element)
                 uint64_t temp = qw;
                 size_t   count = 0;
                 void *   entry = APK::Element::Tuned(temp,count, APK::AsBytes);
-                Core::Display(std::cerr << "as8=", (uint8_t*) entry, count, Hexadecimal::From<uint8_t>) << std::endl;
+                Core::Display(std::cerr << "as8  = ", (uint8_t*) entry, count, Hexadecimal::From<uint8_t>) << std::endl;
+                const uint8_t * const q = (const uint8_t *)entry;
+                const uint64_t w[8] = { q[0], q[1], q[2], q[3], q[4], q[5], q[6], q[7] };
+                Y_ASSERT( (w[0] | (w[1]<<8) | (w[2] << 16) | (w[3] << 24) | (w[4] << 32) | (w[5] << 40) | (w[6] << 48) | (w[7] << 56)) == qw );
             }
+
+            {
+                uint64_t temp = qw;
+                size_t   count = 0;
+                void *   entry = APK::Element::Tuned(temp,count, APK::AsNum16);
+                Core::Display(std::cerr << "as16 = ", (uint16_t*) entry, count, Hexadecimal::From<uint16_t>) << std::endl;
+                const uint16_t * const q = (const uint16_t *)entry;
+                const uint64_t w[4] = { q[0], q[1], q[2], q[3] };
+                Y_ASSERT( (w[0] | (w[1]<<16) | (w[2] << 32) | (w[3] << 48)) == qw);
+            }
+
+
+            {
+                uint64_t temp = qw;
+                size_t   count = 0;
+                void *   entry = APK::Element::Tuned(temp,count, APK::AsNum32);
+                Core::Display(std::cerr << "as32 = ", (uint32_t*) entry, count, Hexadecimal::From<uint32_t>) << std::endl;
+                const uint32_t * const q = (const uint32_t *)entry;
+                const uint64_t w[4] = { q[0], q[1] };
+                Y_ASSERT( (w[0] | (w[1]<<32)) ==  qw);
+            }
+
 
         }
         return 0;
