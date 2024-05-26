@@ -56,6 +56,23 @@ Y_UTEST(apk_element)
         el.show(std::cerr << "el=") << std::endl;
     }
 
+
+    {
+        for(unsigned i=0;i<=64;++i)
+        {
+            const uint64_t qw = ran.to<uint64_t>(i);
+            std::cerr << Hexadecimal(qw) << std::endl;
+            {
+                uint64_t temp = qw;
+                size_t   count = 0;
+                void *   entry = APK::Element::Tuned(temp,count, APK::AsBytes);
+                Core::Display(std::cerr << "as8=", (uint8_t*) entry, count, Hexadecimal::From<uint8_t>) << std::endl;
+            }
+
+        }
+        return 0;
+    }
+
     {
         std::cerr << "<Random Bits>" << std::endl;
         for(unsigned i=0;i<=80;++i)

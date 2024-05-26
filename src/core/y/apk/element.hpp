@@ -70,7 +70,9 @@ namespace Yttrium
             uint64_t       u64()             const noexcept; //!< check least significant uint64_t
             std::ostream & show(std::ostream &os)     const; //!< show with current state
 
+            //! promote to the same state, which is returned
             static InnerState   TuneUp(Element &lhs, Element &rhs) noexcept;
+            static void *       Tuned(uint64_t &data, size_t &size, const InnerState &what) noexcept;
 
             //__________________________________________________________________
             //
@@ -78,9 +80,18 @@ namespace Yttrium
             // Comparisons
             //
             //__________________________________________________________________
-            static SignType Compare(Element &lhs, Element &rhs) noexcept;
-            static SignType Compare(Element &lhs, uint64_t rhs) noexcept;
-            static SignType Compare(uint64_t lhs, Element &rhs) noexcept;
+            static SignType Compare(Element &lhs, Element &rhs) noexcept; //!< compare, tuned
+            static SignType Compare(Element &lhs, uint64_t rhs) noexcept; //!< compare, tuned
+            static SignType Compare(uint64_t lhs, Element &rhs) noexcept; //!< compare, tuned
+
+
+            //__________________________________________________________________
+            //
+            //
+            // addition
+            //
+            //__________________________________________________________________
+            static Element * Add(Element &lhs, Element &rhs);
 
 
             static void CheckTransmogrify(); //!< internal tests
@@ -91,7 +102,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________ 
-            const size_t        bits;    //!< number of bits
+            const size_t       bits;     //!< number of bits
             const InnerState   state;    //!< inner state
             const size_t       bytes;    //!< number of bytes    to hold bits
             const size_t       num16;    //!< number of uint16_t to hold bits
@@ -99,9 +110,7 @@ namespace Yttrium
             const size_t       num64;    //!< number of uint64_t to hold bits
             const unsigned     shift;    //!< maxBytes = 2^shifht
             const size_t       maxBytes; //!< maximum number of bytes
-        private:
             void * const       entry;    //!< internal memory
-        public:
             const size_t       maxNum16; //!< maxBytes/2
             const size_t       maxNum32; //!< maxBytes/4
             const size_t       maxNum64; //!< maxBytes/8
@@ -114,6 +123,16 @@ namespace Yttrium
             void convertToNum16() noexcept;
             void convertToNum32() noexcept;
             void convertToNum64() noexcept;
+
+            template <typename CoreType,typename WordType> static inline
+            Element * Add(const WordType * lhs, size_t nl,
+                          const WordType * rhs, size_t nr)
+            {
+                assert(0!=lhs);
+                assert(0!=rhs);
+
+            }
+
         };
 
 
