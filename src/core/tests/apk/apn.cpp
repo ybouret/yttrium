@@ -157,7 +157,7 @@ Y_UTEST(apk_element)
 
     }
 
-
+    Y_SIZEOF(APK::Element);
 }
 Y_UDONE()
 
