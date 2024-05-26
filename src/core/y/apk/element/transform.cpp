@@ -173,6 +173,11 @@ namespace Yttrium
             return *this;
         }
 
+        Element & Element:: set(Random::Bits &ran) noexcept
+        {
+            return set( State[ ran.in<unsigned>(0,3) ] );
+        }
+
 
         void Element:: convertToBytes() noexcept
         {

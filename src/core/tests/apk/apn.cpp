@@ -13,8 +13,6 @@ namespace Yttrium
 {
     namespace APK
     {
-
-
       
     }
 }
@@ -124,6 +122,39 @@ Y_UTEST(apk_n)
                 }
             }
         }
+
+        {
+            std::cerr << "<CompareFull>" << std::endl;
+            for(unsigned i=0;i<=256;++i)
+            {
+                APK::Element    I(i,ran);     Y_ASSERT(I.bits==i);
+                Y_ASSERT( __Zero__ == APK::Element::Compare(I,I) );
+                for(unsigned j=0;j<=256;++j)
+                {
+                    APK::Element J(j,ran);        Y_ASSERT(J.bits==j);
+                    if(i<j)
+                    {
+                        Y_ASSERT( Negative == APK::Element::Compare(I.set(ran),J.set(ran)) );
+                        Y_ASSERT( Positive == APK::Element::Compare(J.set(ran),I.set(ran)) );
+                    }
+                    else
+                    {
+                        if(i>j)
+                        {
+                            Y_ASSERT( Positive == APK::Element::Compare(I.set(ran),J.set(ran)) );
+                            Y_ASSERT( Negative == APK::Element::Compare(J.set(ran),I.set(ran)) );
+                        }
+                        else
+                        {
+                            assert(i==j);
+                            Y_ASSERT( APK::Element::Compare(I.set(ran),J.set(ran)) == Sign::Opposite(APK::Element::Compare(J.set(ran),I.set(ran))));
+                        }
+                    }
+                }
+
+            }
+        }
+
     }
 
 

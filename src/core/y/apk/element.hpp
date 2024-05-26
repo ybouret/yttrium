@@ -65,7 +65,8 @@ namespace Yttrium
             //__________________________________________________________________    
             Element  &     ldz()                   noexcept; //!< clean all, set AsBytes
             Element  &     u64(const uint64_t qw)  noexcept; //!< nothrow make u64
-            Element  &     set(const InnerState)   noexcept;  //!< change inner state
+            Element  &     set(const InnerState)   noexcept; //!< change inner state
+            Element  &     set(Random::Bits &)     noexcept; //!< change to random state
             uint64_t       u64()             const noexcept; //!< check least significant uint64_t
             std::ostream & show(std::ostream &os)     const; //!< show with current state
 
