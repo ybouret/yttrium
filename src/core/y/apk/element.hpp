@@ -9,61 +9,87 @@
 namespace Yttrium
 {
 
-#define Y_APK_Element_Ctor_Epilog(COUNT)         \
-maxBytes( MaxBytesFor(COUNT,Coerce(shift) ) ),   \
-entry( Memory::Archon::Acquire(Coerce(shift) ) ),\
-maxNum16(maxBytes/sizeof(uint16_t)),             \
-maxNum32(maxBytes/sizeof(uint32_t)),             \
-maxNum64(maxBytes/sizeof(uint64_t))
     
     namespace APK
     {
-
-        enum ElementState
+        //______________________________________________________________________
+        //
+        //
+        //! Inner State
+        //
+        //______________________________________________________________________
+        enum InnerState
         {
-            AsBytes=1,
-            AsNum16=2,
-            AsNum32=4,
-            AsNum64=8
+            AsBytes=1, //!< uint8_t
+            AsNum16=2, //!< uint16_t
+            AsNum32=4, //!< uint32_t
+            AsNum64=8  //!< uint64_t
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Versatile Element
+        //
+        //
+        //______________________________________________________________________
         class Element : public Object
         {
         public:
-
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             static const char * const CallSign; //!< "APK::Element"
 
+            //__________________________________________________________________
+            //
+            //
             // C++
-            explicit Element(const size_t usrBytes=0);
-            explicit Element(const size_t nbits, Random::Bits &ran);
-            explicit Element(const Element &);
-            virtual ~Element() noexcept;
+            //
+            //__________________________________________________________________
+            explicit Element(const size_t usrBytes=0);                //!< setup for usrBytes
+            explicit Element(const size_t nbits, Random::Bits &ran);  //!< setup with exactly nbits
+            explicit Element(const Element &);                        //!< full copy
+            virtual ~Element() noexcept;                              //!< cleanup
 
-            // Methods
-            Element  & ldz()                         noexcept;
-            Element  & ld(const uint64_t qw)         noexcept;
-            Element  & set(const ElementState)       noexcept;
-            uint64_t   u64()                   const noexcept;
-
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________    
+            Element  & ldz()                   noexcept; //!< clean all, set AsBytes
+            Element  & u64(const uint64_t qw)  noexcept; //!< nothrow make u64
+            Element  & set(const InnerState)   noexcept;  //!< change inner state
+            uint64_t   u64()             const noexcept; //!< check least significant uint64_t
             std::ostream & show(std::ostream &os) const; //!< show with current state
 
-            static void CheckTransmogrify();
+            static void CheckTransmogrify(); //!< internal tests
 
+            //__________________________________________________________________
+            //
+            //
             // Members
-            const size_t        bits;
-            const ElementState state;
-            const size_t       bytes;
-            const size_t       num16;
-            const size_t       num32;
-            const size_t       num64;
-            const unsigned     shift;
-            const size_t       maxBytes;
+            //
+            //__________________________________________________________________ 
+            const size_t        bits;    //!< number of bits
+            const InnerState   state;    //!< inner state
+            const size_t       bytes;    //!< number of bytes    to hold bits
+            const size_t       num16;    //!< number of uint16_t to hold bits
+            const size_t       num32;    //!< number of uint32_t to hold bits
+            const size_t       num64;    //!< number of uint64_t to hold bits
+            const unsigned     shift;    //!< maxBytes = 2^shifht
+            const size_t       maxBytes; //!< maximum number of bytes
         private:
-            void * const       entry;
+            void * const       entry;    //!< internal memory
         public:
-            const size_t       maxNum16;
-            const size_t       maxNum32;
-            const size_t       maxNum64;
+            const size_t       maxNum16; //!< maxBytes/2
+            const size_t       maxNum32; //!< maxBytes/4
+            const size_t       maxNum64; //!< maxBytes/8
 
 
         private:

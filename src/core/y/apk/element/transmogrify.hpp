@@ -12,23 +12,44 @@ namespace Yttrium
 
     namespace APK
     {
-        enum TransmogrifyWay
+        //______________________________________________________________________
+        //
+        //
+        //! Transmogrify Action
+        //
+        //______________________________________________________________________
+        enum TransmogrifyAction
         {
-            Collect,
-            Nothing,
-            Scatter
+            Collect, //!< TargetSize >  SourceSize
+            Nothing, //!< TargetSize == SourceSize
+            Scatter  //!< TargetSize <  SourceSize
         };
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Transmogrify Algorithms
+        //
+        //
+        //______________________________________________________________________
         template <typename TARGET, typename SOURCE>
         struct Transmogrify
         {
-            typedef void               (*Proc)(TARGET * & ,const SOURCE * & );
-            static const unsigned        TargetSize = sizeof(TARGET);
-            static const unsigned        SourceSize = sizeof(SOURCE);
-            static const TransmogrifyWay Process    = (TargetSize>SourceSize) ? Collect : ( TargetSize<SourceSize ? Scatter : Nothing );
-            typedef Int2Type<Process>    Choice;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef void               (*Proc)(TARGET * & ,const SOURCE * & ); //!< alias
+            static const unsigned        TargetSize = sizeof(TARGET);          //!< alias
+            static const unsigned        SourceSize = sizeof(SOURCE);          //!< alias
+            //! select action
+            static const TransmogrifyAction Action    = (TargetSize>SourceSize) ? Collect : ( TargetSize<SourceSize ? Scatter : Nothing );
+            typedef Int2Type<Action>        Choice; //!< alias
 
+            //! action selection to convert source to target
             static inline void To(TARGET * & target, const SOURCE * &source) noexcept
             {
                 static const Choice choice = {};
@@ -65,9 +86,10 @@ namespace Yttrium
             }
         };
 
+        //! helper to perform checks
         struct TransmogrifyProc
         {
-            static void *Table[4][4];
+            static void *Table[4][4]; //!< address of functions
         };
 
 

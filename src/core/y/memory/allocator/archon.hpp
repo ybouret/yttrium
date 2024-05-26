@@ -42,8 +42,8 @@ namespace Yttrium
             void * acquire(unsigned &shift);                            //!< fetch block 2^(MaxOf(shift,MinShift)), shift<=MaxShift
             void   release(void *entry, const unsigned shift) noexcept; //!< store previously acquire blocks
 
-            static void * Acquire(unsigned &shift);
-            static void   Release(void * entry, const unsigned shift) noexcept;
+            static void * Acquire(unsigned &shift);                             //!< acquire with internal instance
+            static void   Release(void * entry, const unsigned shift) noexcept; //!< release with internal location
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Archon);

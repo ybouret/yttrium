@@ -39,7 +39,7 @@ Y_UTEST(apk_n)
     for(unsigned i=0;i<=64;++i)
     {
         const uint64_t qw = ran.to<uint64_t>(i); Y_ASSERT(i==BitCount::For(qw));
-        el.ld(qw);
+        el.u64(qw);
         Y_ASSERT(i==el.bits);
         std::cerr << Hexadecimal(qw)
         << " bits="  << std::setw(2) << el.bits
@@ -56,7 +56,7 @@ Y_UTEST(apk_n)
     {
         APK::Element el;
         el.show(std::cerr << "el=") << std::endl;
-        el.ld(0x123456);
+        el.u64(0x123456);
         el.show(std::cerr << "el=") << std::endl;
         el.set(APK::AsBytes);
         el.show(std::cerr << "el=") << std::endl;

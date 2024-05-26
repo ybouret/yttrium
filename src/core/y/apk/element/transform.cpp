@@ -13,6 +13,7 @@ namespace Yttrium
 
         namespace
         {
+            
             template <const size_t N>
             class TransCheck
             {
@@ -148,7 +149,7 @@ namespace Yttrium
 
         void Element:: CheckTransmogrify()
         {
-            std::cerr << "APK::Element::CheckTranmogrify" << std::endl;
+            std::cerr << CallSign <<  ":CheckTransmogrify" << std::endl;
             Random::ParkMiller ran;
             { TransCheck<1> chk; chk.check(ran); }
             { TransCheck<2> chk; chk.check(ran); }
@@ -160,7 +161,7 @@ namespace Yttrium
             { TransCheck<8> chk; chk.check(ran); }
         }
 
-        Element  & Element:: set(const ElementState newState)  noexcept
+        Element  & Element:: set(const InnerState newState)  noexcept
         {
             switch(newState)
             {

@@ -124,7 +124,7 @@ maxNum64(maxBytes/sizeof(uint64_t))
         }
 
 
-        Element  & Element:: ld(const uint64_t qw) noexcept
+        Element  & Element:: u64(const uint64_t qw) noexcept
         {
             assert(maxBytes>=sizeof(qw));
             if(qw<=0) return *this;
