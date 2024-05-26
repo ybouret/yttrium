@@ -58,7 +58,7 @@ maxNum64(maxBytes/sizeof(uint64_t))
                 case AsNum32: memcpy(entry,el.entry,num32<<2); break;
                 case AsNum64: memcpy(entry,el.entry,num64<<3); break;
             }
-            
+            assert( 0 == memcmp(entry,el.entry,maxBytes) );
 
         }
 
