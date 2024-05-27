@@ -83,6 +83,7 @@ num64(entry,num32.space>>1)
         public:
             static const char * const CallSign;
             static const size_t       One =  1;
+            static const InnerState   State[4];
 
             explicit Component(const size_t usrBytes) :
             Object(),
@@ -229,12 +230,13 @@ num64(entry,num32.space>>1)
         };
 
         const char * const Component:: CallSign = "APK::Component";
-
+        const InnerState   Component:: State[4] = { AsBytes, AsNum16, AsNum32, AsNum64 };
 
     }
 
 }
 
+#include "y/sequence/vector.hpp"
 
 using namespace Yttrium;
 
@@ -257,8 +259,25 @@ Y_UTEST(apk_component)
         std::cerr << cm.set(APK::AsNum16) << std::endl;
         std::cerr << cm.set(APK::AsNum32) << std::endl;
         std::cerr << cm.set(APK::AsNum64) << std::endl;
-
         std::cerr << std::endl;
+    }
+
+
+    for(size_t i=1;i<=1024;++i)
+    {
+        APK::Component  cm(i,ran);
+        Vector<uint8_t> org(cm.bytes.count,AsCapacity);
+        for(size_t j=0;j<cm.bytes.count;++j) org << cm.bytes.entry[j];
+        Y_ASSERT(0==memcmp(cm.bytes.entry,&org[1],cm.bytes.count));
+
+        for(size_t j=0;j<10;++j)
+        {
+            cm.set( APK::Component::State[ ran.in<unsigned>(0,3)] );
+        }
+        cm.set(APK::AsBytes);
+        Y_ASSERT(0==memcmp(cm.bytes.entry,&org[1],cm.bytes.count));
+        
+
     }
 
 
