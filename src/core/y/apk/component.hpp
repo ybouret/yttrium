@@ -1,0 +1,73 @@
+//! \file
+
+#ifndef Y_APK_Component_Included
+#define Y_APK_Component_Included 1
+
+#include "y/apk/component/assembly.hpp"
+#include "y/object.hpp"
+#include "y/random/bits.hpp"
+
+namespace Yttrium
+{
+    namespace APK
+    {
+        //______________________________________________________________________
+        //
+        //
+        //! Inner State
+        //
+        //______________________________________________________________________
+        enum InnerState
+        {
+            AsBytes, //!< uint8_t
+            AsNum16, //!< uint16_t
+            AsNum32, //!< uint32_t
+            AsNum64  //!< uint64_t
+        };
+
+
+
+
+        class Component : public Object
+        {
+        public:
+            static const char * const CallSign;
+            static const size_t       One =  1;
+            static const InnerState   State[4];
+
+            explicit Component(const size_t usrBytes);
+            explicit Component(const size_t numBits, Random::Bits &ran);
+            virtual ~Component() noexcept;
+            Y_OSTREAM_PROTO(Component);
+
+
+            Component & set(const InnerState st) noexcept;
+
+            const size_t       bits;
+            const InnerState   state;
+        private:
+            unsigned           shift;
+            void *const        entry;
+        public:
+            Assembly<uint8_t>  bytes;
+            Assembly<uint16_t> num16;
+            Assembly<uint32_t> num32;
+            Assembly<uint64_t> num64;
+
+
+        private:
+            Y_DISABLE_ASSIGN(Component);
+
+            static void * EntryFor(const size_t usrBytes,
+                                   unsigned    &usrShift);
+
+        };
+
+      
+
+    }
+
+}
+
+#endif
+
