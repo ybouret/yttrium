@@ -90,6 +90,10 @@ namespace Yttrium
             {
                 buffer.curr = buffer.entry;
             }
+            if( 0 != fflush(static_cast<FILE*>(handle)) )
+            {
+                throw Libc::Exception(errno,"fflush()");
+            }
         }
     }
 
