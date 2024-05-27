@@ -47,7 +47,7 @@ namespace Yttrium
                 TOW::Transmute(entry,source.entry,cycles);
             }
 
-            size_t       count; //!< valid entries
+            const size_t count; //!< valid entries
             const size_t space; //!< maximum count
             T * const    entry; //!< data
 
