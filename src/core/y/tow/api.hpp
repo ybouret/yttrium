@@ -88,14 +88,14 @@ namespace Yttrium
             {
                 Y_STATIC_CHECK(TargetSize>SourceSize,BadSetup);
                 static const unsigned Words = TargetSize/SourceSize; assert(Words>0);
-                static const unsigned Shift = SourceSize * 8;
+                static const unsigned SBits = SourceSize * 8;
 
                 TARGET   result = *(source++);
                 unsigned bshift = 0;
                 for(unsigned i=1;i<Words;++i)
                 {
                     TARGET src = *(source++);
-                    result |= (src <<= (bshift += Shift));
+                    result    |= (src <<= (bshift += SBits));
                 }
                 *(target++) = result;
             }
