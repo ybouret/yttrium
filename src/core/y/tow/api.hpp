@@ -69,6 +69,11 @@ namespace Yttrium
                 Run(target,source,action);
             }
 
+            static inline size_t Cycles(const size_t targetBlocks, const size_t sourceBlocks) noexcept
+            {
+                static const Int2Type<Action>  action = {};
+                return Cycles(targetBlocks,sourceBlocks,action);
+            }
 
             //__________________________________________________________________
             //
@@ -114,6 +119,23 @@ namespace Yttrium
                 for(size_t i=0;i<Words;++i,value>>=Shift)
                     *(target++) = static_cast<TARGET>(value);
             }
+
+        private:
+            static inline size_t Cycles(const size_t targetBlocks, const size_t, const Int2Type<Collect> &) noexcept
+            {
+                return targetBlocks;
+            }
+
+            static inline size_t Cycles(const size_t targetBlocks, const size_t  , const Int2Type<RawCopy> &) noexcept
+            {
+                return targetBlocks;
+            }
+
+            static inline size_t Cycles(const size_t  , const size_t sourceBlocks, const Int2Type<Scatter> &) noexcept
+            {
+                return sourceBlocks;
+            }
+
         };
 
 

@@ -30,19 +30,35 @@ namespace Yttrium
         template <typename T>
         class Assembly {
         public:
-            inline Assembly(void * const blockAddr, const size_t numBlocks) noexcept :
-            count(0),
+            inline Assembly(void * const blockAddr, 
+                            const size_t numBlocks,
+                            const size_t numActive=0) noexcept :
+            count( numActive ),
             space( numBlocks ),
             entry( static_cast<T *>(blockAddr) )
             {
+                assert(0!=entry);
+                assert(space>0);
+                assert(count<=space);
             }
 
             inline ~Assembly() noexcept {}
 
             inline friend std::ostream & operator<<(std::ostream &os, const Assembly &self)
             {
-                os << '[' << std::setw(4) << self.count << '/' << std::setw(4) << self.space << ']' << '@' << (const void *)(self.entry);
+                os 
+                << '[' << std::setw(4) << self.count << '/' << std::setw(4) << self.space << ']'
+                << '@' << (const void *)(self.entry);
+                Hexadecimal::Display(os << '=',self.entry,self.count);
                 return os;
+            }
+
+            template <typename U> inline
+            void load(const Assembly<U> &source)
+            {
+                // TARGET = T, SOURCE = U
+                const size_t cycles = TOW::API<T,U>::Cycles(space,source.space);
+                TOW::Transmute(entry,source.entry,cycles);
             }
 
             const size_t count; //!< valid entries
@@ -50,12 +66,17 @@ namespace Yttrium
             T * const    entry; //!< data
 
         private:
-            Y_DISABLE_ASSIGN(Assembly);
+            Y_DISABLE_COPY_AND_ASSIGN(Assembly);
         };
 
 
 
 
+#define Y_APK_Component_Ctor()   \
+bytes(entry,One  <<  shift),     \
+num16(entry,bytes.space>>1),     \
+num32(entry,num16.space>>1),     \
+num64(entry,num32.space>>1)
 
         class Component : public Object
         {
@@ -69,10 +90,7 @@ namespace Yttrium
             state(AsBytes),
             shift(0),
             entry( EntryFor(usrBytes,shift) ),
-            bytes(entry,One  <<  shift),
-            num16(entry,bytes.space>>1),
-            num32(entry,num16.space>>1),
-            num64(entry,num32.space>>1)
+            Y_APK_Component_Ctor()
             {
                 std::cerr << "bytes : " << bytes << std::endl;
                 std::cerr << "num16 : " << num16 << std::endl;
@@ -80,6 +98,22 @@ namespace Yttrium
                 std::cerr << "num64 : " << num64 << std::endl;
 
             }
+
+            explicit Component(const size_t numBits, Random::Bits &ran) :
+            Object(),
+            bits(numBits),
+            state(AsBytes),
+            shift(0),
+            entry(  EntryFor( Y_ALIGN8(bits)/8,shift) ),
+            Y_APK_Component_Ctor()
+            {
+                if(bits>0)
+                {
+                    Coerce(bytes.count) = Y_ALIGN8(bits)/8; assert(bytes.count>0);
+                    
+                }
+            }
+
 
             virtual ~Component() noexcept 
             {
@@ -138,7 +172,7 @@ Y_UTEST(apk_component)
 
     APK::Component cm(0);
 
-
+    Y_SIZEOF(APK::Component);
 }
 Y_UDONE()
 
