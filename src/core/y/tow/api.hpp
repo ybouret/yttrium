@@ -122,13 +122,13 @@ namespace Yttrium
         template <typename TARGET, typename SOURCE>
         inline void Transmute(TARGET *       target,
                               const SOURCE * source,
-                              size_t         targetCount) noexcept
+                              size_t         cycles) noexcept
         {
             typedef API<TARGET,SOURCE>             TheAPI;
             static const Int2Type<TheAPI::Action>  action = {};
-            assert(Good(target,targetCount));
-            assert(Good(source,targetCount));
-            while(targetCount-- > 0)
+            assert(Good(target,cycles));
+            assert(Good(source,cycles));
+            while(cycles-- > 0)
                TheAPI::Run(target,source,action);
         }
 

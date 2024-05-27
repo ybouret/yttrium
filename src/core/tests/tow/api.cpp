@@ -6,6 +6,7 @@
 #include "y/system/rtti.hpp"
 #include "y/random/fill.hpp"
 #include "y/text/hexadecimal.hpp"
+#include "y/type/utils.hpp"
 
 using namespace Yttrium;
 static uint64_t rate[4][4];
@@ -27,21 +28,24 @@ static inline uint64_t Perform(TARGET * const target,SOURCE * const source,
         case TOW::Scatter: targetCount = sizeof(SOURCE)/sizeof(TARGET); sourceCount = 1; break;
     }
     const size_t sourceBytes = sourceCount * sizeof(SOURCE);
+    const size_t cycles      = Min(sourceCount,targetCount);
+    Y_ASSERT(1==cycles);
 
     std::cerr << sourceCount << "*" << sname << " => " << targetCount << "*" << tname << std::endl;
     Random::Fill::Block(source, sourceBytes, ran);
     Hexadecimal::Display(std::cerr << "\tsource=", source, sourceCount) << std::endl;
 
-    TOW::Transmute(target,source,targetCount);
+    TOW::Transmute(target,source,cycles);
     Hexadecimal::Display(std::cerr << "\ttarget=", target, targetCount) << std::endl;
 
+
     tmx.reset();
-    
+
     do
     {
         Random::Fill::Block(source, sourceBytes, ran);
         const uint64_t mark = WallTime::Ticks();
-        TOW::Transmute(target,source,targetCount);
+        TOW::Transmute(target,source,cycles);
         tmx.renew(mark);
     } while(tmx.probe()<0.1);
 
@@ -85,7 +89,6 @@ Y_UTEST(tow_api)
     rate[2][2] =  Perform(a32,a32,ran,tmx);
     rate[3][2] =  Perform(a64,a32,ran,tmx);
     std::cerr << std::endl;
-    goto DONE;
 
 
     std::cerr << "Source=a64" << std::endl;
@@ -95,13 +98,12 @@ Y_UTEST(tow_api)
     rate[3][3] =  Perform(a64,a64,ran,tmx);
     std::cerr << std::endl;
 
-DONE:
     for(unsigned t=0;t<4;++t)
     {
         std::cerr << "target=" << std::setw(2) << (1<<t)*8 << "bits";
         for(unsigned s=0;s<4;++s)
         {
-            std::cerr << " | " <<  (rate[t][s]);
+            std::cerr << " | " <<  HumanReadable(rate[t][s]);
         }
         std::cerr << std::endl;
     }
