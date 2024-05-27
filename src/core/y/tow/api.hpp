@@ -20,7 +20,7 @@ namespace Yttrium
         //! transformation action depending one type sizes
         //
         //______________________________________________________________________
-        enum Action
+        enum ActionType
         {
             Collect, //!< TargetSize >  SourceSize
             RawCopy, //!< TargetSize == SourceSize
@@ -44,12 +44,12 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const unsigned TargetSize = sizeof(TARGET);             //!< alias
-            static const unsigned SourceSize = sizeof(SOURCE);             //!< alias
-            static const bool     RunCollect = (TargetSize >  SourceSize); //!< alias
-            static const bool     RunScatter = (TargetSize <  SourceSize); //!< alias
-            static const bool     RunRawCopy = (TargetSize == SourceSize); //!< alias
-            static const Action   ActionType = RunCollect ? Collect : ( RunScatter ? Scatter : RawCopy ); //!< action
+            static const unsigned   TargetSize = sizeof(TARGET);             //!< alias
+            static const unsigned   SourceSize = sizeof(SOURCE);             //!< alias
+            static const bool       RunCollect = (TargetSize >  SourceSize); //!< alias
+            static const bool       RunScatter = (TargetSize <  SourceSize); //!< alias
+            static const bool       RunRawCopy = (TargetSize == SourceSize); //!< alias
+            static const ActionType Action     = RunCollect ? Collect : ( RunScatter ? Scatter : RawCopy ); //!< action
 
             //__________________________________________________________________
             //
@@ -65,7 +65,7 @@ namespace Yttrium
              */
             static inline void To(TARGET * & target, const SOURCE * &source) noexcept
             {
-                static const Int2Type<ActionType>  action = {};
+                static const Int2Type<Action>  action = {};
                 Run(target,source,action);
             }
 
@@ -124,8 +124,8 @@ namespace Yttrium
                               const SOURCE * source,
                               size_t         targetCount) noexcept
         {
-            typedef API<TARGET,SOURCE>                 TheAPI;
-            static const Int2Type<TheAPI::ActionType>  action = {};
+            typedef API<TARGET,SOURCE>             TheAPI;
+            static const Int2Type<TheAPI::Action>  action = {};
             assert(Good(target,targetCount));
             assert(Good(source,targetCount));
             while(targetCount-- > 0)

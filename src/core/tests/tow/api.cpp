@@ -15,11 +15,22 @@ static inline void Perform(TARGET * const target,SOURCE * const source, Random::
     const String &tname = RTTI::Name<TARGET>();
     const String &sname = RTTI::Name<SOURCE>();
 
+    size_t sourceCount = 0;
+    size_t targetCount = 0;
+    switch( TOW::API<TARGET,SOURCE>::Action )
+    {
+        case TOW::Collect: targetCount = 1; sourceCount = sizeof(TARGET)/sizeof(SOURCE); break;
+        case TOW::RawCopy: sourceCount = targetCount = 1; break;
+        case TOW::Scatter: targetCount = sizeof(SOURCE)/sizeof(TARGET); sourceCount = 1; break;
+    }
+
     std::cerr << sname << " => " << tname << std::endl;
-    Random::Fill::Fuzzy(*source,ran);
-    Hexadecimal::Display(std::cerr << "source=", source,1) << std::endl;
-    
-    TOW::Transmute(target,source,1);
+    Random::Fill::Block(source, sourceCount*sizeof(SOURCE), ran);
+    Hexadecimal::Display(std::cerr << "\tsource=", source, sourceCount) << std::endl;
+
+    TOW::Transmute(target,source,targetCount);
+    Hexadecimal::Display(std::cerr << "\ttarget=", target, targetCount) << std::endl;
+
 }
 
 
@@ -33,9 +44,19 @@ Y_UTEST(tow_api)
     uint64_t a64[1]; Y_STATIC_ZARR(a64);
 
 
-    // collect
+    std::cerr << "Source=a8" << std::endl;
+    Perform( a8,a8,ran);
     Perform(a16,a8,ran);
+    Perform(a32,a8,ran);
+    Perform(a64,a8,ran);
+    std::cerr << std::endl;
 
+    std::cerr << "Source=a16" << std::endl;
+    Perform( a8,a16,ran);
+    Perform(a16,a16,ran);
+    Perform(a32,a16,ran);
+    Perform(a64,a16,ran);
+    std::cerr << std::endl;
 
 }
 Y_UDONE()
