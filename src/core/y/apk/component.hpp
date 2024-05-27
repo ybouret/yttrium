@@ -26,7 +26,7 @@ namespace Yttrium
         };
 
 
-
+        Y_SHALLOW_DECL(FromNum64);
 
         class Component : public Object
         {
@@ -37,6 +37,8 @@ namespace Yttrium
 
             explicit Component(const size_t usrBytes);
             explicit Component(const size_t numBits, Random::Bits &ran);
+            explicit Component(const Component &other);
+            explicit Component(const FromNum64_ &, const uint64_t qw);
             virtual ~Component() noexcept;
             Y_OSTREAM_PROTO(Component);
 

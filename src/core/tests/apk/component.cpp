@@ -29,13 +29,15 @@ Y_UTEST(apk_component)
 
     Random::ParkMiller ran;
 
+    std::cerr << "<Empty>" << std::endl;
     for(size_t i=0;i<=80;++i)
     {
         APK::Component cm(i);
         Y_ASSERT(cm.bytes.space>=i);
-        //std::cerr << cm << std::endl;
     }
 
+
+    std::cerr << "<Random>" << std::endl;
     for(size_t i=0;i<=64;++i)
     {
         APK::Component cm(i,ran); Y_ASSERT(APK::AsBytes==cm.state);
@@ -46,7 +48,7 @@ Y_UTEST(apk_component)
         std::cerr << std::endl;
     }
 
-
+    std::cerr << "<Scramble>" << std::endl;
     for(size_t i=1;i<=1024;++i)
     {
         APK::Component  cm(i,ran);
@@ -60,8 +62,15 @@ Y_UTEST(apk_component)
         }
         cm.set(APK::AsBytes);
         Y_ASSERT(0==memcmp(cm.bytes.entry,&org[1],cm.bytes.count));
+    }
 
-
+    std::cerr << "<uint64_t>" << std::endl;
+    for(unsigned i=0;i<=64;++i)
+    {
+        const uint64_t qw = ran.to<uint64_t>(i);
+        APK::Component cm( APK::FromNum64, qw);
+        Y_ASSERT(cm.bits==i);
+        std::cerr << Hexadecimal(qw) << "/" << cm << std::endl;
     }
 
 
