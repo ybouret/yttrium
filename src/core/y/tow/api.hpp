@@ -69,6 +69,7 @@ namespace Yttrium
                 Run(target,source,action);
             }
 
+            //! compute cycles to run
             static inline size_t Cycles(const size_t targetBlocks, const size_t sourceBlocks) noexcept
             {
                 static const Int2Type<Action>  action = {};

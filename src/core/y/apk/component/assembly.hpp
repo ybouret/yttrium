@@ -12,10 +12,26 @@ namespace Yttrium
 {
     namespace APK
     {
-        //! inner assembly
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! inner assembly of unsigned types
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class Assembly {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup from user's data
             inline Assembly(void * const blockAddr,
                             const size_t numBlocks,
                             const size_t numActive=0) noexcept :
@@ -28,8 +44,10 @@ namespace Yttrium
                 assert(count<=space);
             }
 
+            //! cleanup
             inline ~Assembly() noexcept {}
 
+            //! display
             inline friend std::ostream & operator<<(std::ostream &os, const Assembly &self)
             {
                 os
@@ -39,6 +57,14 @@ namespace Yttrium
                 return os;
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! transmogrify
             template <typename U> inline
             void load(const Assembly<U> &source)
             {
@@ -47,7 +73,12 @@ namespace Yttrium
                 TOW::Transmute(entry,source.entry,cycles);
             }
 
-
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
             size_t       count; //!< valid entries
             const size_t space; //!< maximum count
             T * const    entry; //!< data

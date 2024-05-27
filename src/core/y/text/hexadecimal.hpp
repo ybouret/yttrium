@@ -109,6 +109,7 @@ namespace Yttrium
         template <typename T> static inline
         Hexadecimal From(const T &value) noexcept { return Hexadecimal(value); }
 
+        //! display arrays as hexadecimal vector
         template <typename OSTREAM, typename T> static inline
         OSTREAM & Display(OSTREAM &os, const T * const arr, const size_t num )
         {
