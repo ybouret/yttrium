@@ -2,13 +2,14 @@
 #include "y/apk/element.hpp"
 #include "y/system/error.hpp"
 #include "y/text/hexadecimal.hpp"
+#include <cerrno>
 
 namespace Yttrium
 {
     namespace APK
     {
 
-
+        
 
         template <typename T> static inline
         SignType CompareData(const void * const lhs,
