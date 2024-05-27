@@ -73,38 +73,49 @@ Y_UTEST(apk_component)
         Y_ASSERT(cm.bits==i);
         std::cerr << Hexadecimal(qw) << "/" << cm << std::endl;
         {
-            uint64_t temp = qw;
-            size_t   size = 0;
+            uint64_t     temp = qw;
+            size_t       size = 0;
             void * const addr = APK::Component::Tuned(APK::AsNum64, temp, size);
+            cm.set(APK::AsNum64);
             Y_ASSERT(size==cm.num64.count);
             Y_ASSERT(0==memcmp(addr,cm.num64.entry,size*sizeof(uint64_t)));
         }
 
         {
-            uint64_t temp = qw;
-            size_t   size = 0;
+            uint64_t     temp = qw;
+            size_t       size = 0;
             void * const addr = APK::Component::Tuned(APK::AsNum32, temp, size);
+            cm.set(APK::AsNum32);
             Y_ASSERT(size==cm.num32.count);
             Y_ASSERT(0==memcmp(addr,cm.num32.entry,size*sizeof(uint32_t)));
         }
 
         {
-            uint64_t temp = qw;
-            size_t   size = 0;
+            uint64_t     temp = qw;
+            size_t       size = 0;
             void * const addr = APK::Component::Tuned(APK::AsNum16, temp, size);
+            cm.set(APK::AsNum16);
             Y_ASSERT(size==cm.num16.count);
             Y_ASSERT(0==memcmp(addr,cm.num16.entry,size*sizeof(uint16_t)));
         }
 
         {
-            uint64_t temp = qw;
-            size_t   size = 0;
+            uint64_t     temp = qw;
+            size_t       size = 0;
             void * const addr = APK::Component::Tuned(APK::AsBytes, temp, size);
+            cm.set(APK::AsNum32);
             Y_ASSERT(size==cm.bytes.count);
             Y_ASSERT(0==memcmp(addr,cm.bytes.entry,size*sizeof(uint8_t)));
         }
 
+        Y_ASSERT( cm.set(APK::AsBytes).u64() == qw );
+        Y_ASSERT( cm.set(APK::AsNum16).u64() == qw );
+        Y_ASSERT( cm.set(APK::AsNum32).u64() == qw );
+        Y_ASSERT( cm.set(APK::AsNum64).u64() == qw );
+
     }
+
+
 
 
     Y_SIZEOF(APK::Component);

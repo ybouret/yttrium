@@ -44,8 +44,12 @@ namespace Yttrium
 
 
             Component & set(const InnerState st) noexcept;
+            uint64_t    u64() const noexcept; //!< get least significant u64
 
             static void * Tuned(const InnerState st, uint64_t &qw, size_t &nc) noexcept;
+            static void   TuneUp(Component &lhs, Component &rhs) noexcept;
+
+
 
 
             const size_t             bits;
