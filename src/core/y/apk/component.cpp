@@ -182,11 +182,12 @@ num64(entry,num32.space>>1)
             return *this;
         }
 
-        void   Component:: TuneUp(Component &lhs, Component &rhs) noexcept
+        InnerState Component:: TuneUp(Component &lhs, Component &rhs) noexcept
         {
             const InnerState st = Max(lhs.state,rhs.state);
             lhs.set(st);
             rhs.set(st);
+            return st;
         }
 
 

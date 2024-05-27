@@ -6,6 +6,7 @@
 #include "y/apk/component/assembly.hpp"
 #include "y/object.hpp"
 #include "y/random/bits.hpp"
+#include "y/type/signs.hpp"
 
 namespace Yttrium
 {
@@ -73,8 +74,10 @@ namespace Yttrium
             uint64_t    u64() const noexcept;              //!< get least significant u64
 
             //! prepare a uint64_t workspace
-            static void * Tuned(const InnerState st, uint64_t &qw, size_t &nc) noexcept;
-            static void   TuneUp(Component &lhs, Component &rhs) noexcept; //!< tune to the highest word
+            static void *     Tuned(const InnerState st, uint64_t &qw, size_t &nc) noexcept;
+            static InnerState TuneUp(Component &lhs, Component &rhs) noexcept; //!< tune to the highest word
+            static SignType   Compare(Component &lhs, Component &rhs) noexcept;
+
 
             //__________________________________________________________________
             //
