@@ -5,6 +5,7 @@
 #include "y/text/hexadecimal.hpp"
 #include <iomanip>
 #include <cstring>
+#include <cerrno>
 
 namespace Yttrium
 {
