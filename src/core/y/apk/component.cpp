@@ -4,6 +4,7 @@
 #include "y/system/exception.hpp"
 #include "y/type/utils.hpp"
 #include "y/calculus/bit-count.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
@@ -203,7 +204,7 @@ num64(entry,num32.space>>1)
                         if( ( p[5] = w[5] ) > 0) nc=6;
                         if( ( p[6] = w[6] ) > 0) nc=7;
                         if( ( p[7] = w[7] ) > 0) nc=8;
-                        assert(nc>1);
+                        assert(nc>=1);
                     } break;
 
                     case AsNum16: {
@@ -213,7 +214,7 @@ num64(entry,num32.space>>1)
                         if( ( p[1] = w[1] ) > 0) nc=2;
                         if( ( p[2] = w[2] ) > 0) nc=3;
                         if( ( p[3] = w[3] ) > 0) nc=4;
-                        assert(nc>1);
+                        assert(nc>=1);
                     } break;
 
                     case AsNum32: {
@@ -221,14 +222,14 @@ num64(entry,num32.space>>1)
                         const uint32_t   w[2] = { uint32_t(qw), uint32_t(qw>>32) };
                         if( ( p[0] = w[0] ) > 0) nc=1;
                         if( ( p[1] = w[1] ) > 0) nc=2;
-                        assert(nc>1);
+                        assert(nc>=1);
                     } break;
 
                     case AsNum64:
                         nc=1;
                         break;
                 }
-                assert(nc>1);
+                assert(nc>=1);
             }
 
             return addr;
