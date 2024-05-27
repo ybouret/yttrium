@@ -145,5 +145,17 @@ num64(entry,num32.space>>1)
             return *this;
         }
 
+
+        void * Component:: Tuned(const InnerState st, uint64_t &qw, size_t &nc) noexcept
+        {
+            void * const addr = &qw;
+            nc                = 0;
+            if(qw>0)
+            {
+
+            }
+
+            return addr;
+        }
     }
 }

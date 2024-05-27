@@ -42,18 +42,20 @@ namespace Yttrium
 
 
             Component & set(const InnerState st) noexcept;
-            
 
-            const size_t       bits;
-            const InnerState   state;
+            static void * Tuned(const InnerState st, uint64_t &qw, size_t &nc) noexcept;
+
+
+            const size_t             bits;
+            const InnerState         state;
         private:
-            unsigned           shift;
-            void *const        entry;
+            unsigned                 shift;
+            void *const              entry;
         public:
-            Assembly<uint8_t>  bytes;
-            Assembly<uint16_t> num16;
-            Assembly<uint32_t> num32;
-            Assembly<uint64_t> num64;
+            const Assembly<uint8_t>  bytes;
+            const Assembly<uint16_t> num16;
+            const Assembly<uint32_t> num32;
+            const Assembly<uint64_t> num64;
 
 
         private:
