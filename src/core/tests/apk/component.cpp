@@ -116,9 +116,9 @@ num64(entry,num32.space>>1)
                     for(size_t i=0;i<msi;++i) Coerce(bytes.entry[i]) = ran.to<uint8_t>();
                    
                     Coerce(bytes.entry[msi]) = ran.to<uint8_t>(msn);
-                    Coerce(num16.count) = Y_ALIGN16(bits)/16;
-                    Coerce(num32.count) = Y_ALIGN32(bits)/32;
-                    Coerce(num64.count) = Y_ALIGN64(bits)/64;
+                    Coerce(num16.count)      = Y_ALIGN16(bits)/16;
+                    Coerce(num32.count)      = Y_ALIGN32(bits)/32;
+                    Coerce(num64.count)      = Y_ALIGN64(bits)/64;
                 }
             }
 
@@ -276,7 +276,7 @@ Y_UTEST(apk_component)
         }
         cm.set(APK::AsBytes);
         Y_ASSERT(0==memcmp(cm.bytes.entry,&org[1],cm.bytes.count));
-        
+
 
     }
 
