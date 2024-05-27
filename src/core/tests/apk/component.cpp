@@ -12,6 +12,19 @@ namespace Yttrium
 {
     namespace APK
     {
+        //______________________________________________________________________
+        //
+        //
+        //! Inner State
+        //
+        //______________________________________________________________________
+        enum InnerState
+        {
+            AsBytes, //!< uint8_t
+            AsNum16, //!< uint16_t
+            AsNum32, //!< uint32_t
+            AsNum64  //!< uint64_t
+        };
 
 
         template <typename T>
@@ -53,6 +66,7 @@ namespace Yttrium
             explicit Component(const size_t usrBytes) :
             Object(),
             bits(0),
+            state(AsBytes),
             shift(0),
             entry( EntryFor(usrBytes,shift) ),
             bytes(entry,One  <<  shift),
@@ -73,6 +87,7 @@ namespace Yttrium
             }
 
             const size_t            bits;
+            const InnerState        state;
         private:
             unsigned                shift;
             void *const             entry;
