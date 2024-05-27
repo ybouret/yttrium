@@ -44,9 +44,12 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const unsigned TargetSize = sizeof(TARGET);          //!< alias
-            static const unsigned SourceSize = sizeof(SOURCE);          //!< alias
-            static const Action   ActionType = (TargetSize>SourceSize) ? Collect : ( TargetSize<SourceSize ? Scatter : RawCopy ); //!< action
+            static const unsigned TargetSize = sizeof(TARGET);             //!< alias
+            static const unsigned SourceSize = sizeof(SOURCE);             //!< alias
+            static const bool     RunCollect = (TargetSize >  SourceSize); //!< alias
+            static const bool     RunScatter = (TargetSize <  SourceSize); //!< alias
+            static const bool     RunRawCopy = (TargetSize == SourceSize); //!< alias
+            static const Action   ActionType = RunCollect ? Collect : ( RunScatter ? Scatter : RawCopy ); //!< action
 
             //__________________________________________________________________
             //
@@ -66,7 +69,7 @@ namespace Yttrium
                 Run(target,source,action);
             }
 
-        private:
+
             //__________________________________________________________________
             //
             //! collect source items into larger target item
@@ -113,6 +116,21 @@ namespace Yttrium
             }
         };
 
+
+
+        //! transmute source to target
+        template <typename TARGET, typename SOURCE>
+        inline void Transmute(TARGET *       target,
+                              const SOURCE * source,
+                              size_t         targetCount) noexcept
+        {
+            typedef API<TARGET,SOURCE>                 TheAPI;
+            static const Int2Type<TheAPI::ActionType>  action = {};
+            assert(Good(target,targetCount));
+            assert(Good(source,targetCount));
+            while(targetCount-- > 0)
+               TheAPI::Run(target,source,action);
+        }
 
     };
 

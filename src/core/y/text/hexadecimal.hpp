@@ -109,6 +109,13 @@ namespace Yttrium
         template <typename T> static inline
         Hexadecimal From(const T &value) noexcept { return Hexadecimal(value); }
 
+        template <typename OSTREAM, typename T> static inline
+        OSTREAM & Display(OSTREAM &os, const T * const arr, const size_t num )
+        {
+            return Core::Display(os,arr,num,From<T>);
+
+        }
+
 
     private:
         Y_DISABLE_ASSIGN(Hexadecimal);
