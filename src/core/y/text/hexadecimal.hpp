@@ -91,18 +91,24 @@ namespace Yttrium
         }
 
 
-        Hexadecimal(const Hexadecimal &) noexcept; //!< copy data
-        ~Hexadecimal() noexcept;                   //!< cleanup
-        Y_OSTREAM_PROTO(Hexadecimal);              //!< display
-        Y_OUTPUT_STREAM(Hexadecimal);              //!< output
-        static Hexadecimal Address(const void *) noexcept; //!< make from address
+        Hexadecimal(const Hexadecimal &) noexcept;         //!< copy data
+        ~Hexadecimal() noexcept;                           //!< cleanup
+        Y_OSTREAM_PROTO(Hexadecimal);                      //!< display
+        Y_OUTPUT_STREAM(Hexadecimal);                      //!< output
 
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        //! make from address
+        static Hexadecimal Address(const void *) noexcept;
+        
         //! helper to display data
         template <typename T> static inline
-        Hexadecimal From(const T &value) noexcept
-        {
-            return Hexadecimal(value);
-        }
+        Hexadecimal From(const T &value) noexcept { return Hexadecimal(value); }
+
 
     private:
         Y_DISABLE_ASSIGN(Hexadecimal);

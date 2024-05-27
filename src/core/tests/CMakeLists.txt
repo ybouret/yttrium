@@ -14,6 +14,7 @@ fft
 string
 apex
 apk
+tow
 ordered
 counting
 container
@@ -335,6 +336,8 @@ add_test(color:yuv test-core color_yuv)
 add_test(color:conv test-core color_conv)
 add_test(color:channels test-core color_channels)
 
+#tow
+add_test(tow:api test-core tow_api)
 #apk
 add_test(apk:element test-core apk_element)
 
