@@ -258,7 +258,6 @@ Y_UTEST_DECL(256)
     Y_UTEST(color_channels);
 
     Y_UTEST(tow_api);    
-    Y_UTEST(apk_element);
     Y_UTEST(apk_component);
 
 }

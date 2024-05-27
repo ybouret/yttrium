@@ -42,6 +42,7 @@ namespace Yttrium
 
 
             Component & set(const InnerState st) noexcept;
+            
 
             const size_t       bits;
             const InnerState   state;

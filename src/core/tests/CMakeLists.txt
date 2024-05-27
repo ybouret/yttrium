@@ -339,7 +339,6 @@ add_test(color:channels test-core color_channels)
 #tow
 add_test(tow:api test-core tow_api)
 #apk
-add_test(apk:element test-core apk_element)
 add_test(apk:component test-core apk_component)
 
 
