@@ -8,6 +8,7 @@
 #include "y/text/hexadecimal.hpp"
 
 using namespace Yttrium;
+static uint64_t rate[4][4];
 
 template <typename TARGET, typename SOURCE>
 static inline uint64_t Perform(TARGET * const target,SOURCE * const source,
@@ -27,7 +28,7 @@ static inline uint64_t Perform(TARGET * const target,SOURCE * const source,
     }
     const size_t sourceBytes = sourceCount * sizeof(SOURCE);
 
-    std::cerr << sname << " => " << tname << std::endl;
+    std::cerr << sourceCount << "*" << sname << " => " << targetCount << "*" << tname << std::endl;
     Random::Fill::Block(source, sourceBytes, ran);
     Hexadecimal::Display(std::cerr << "\tsource=", source, sourceCount) << std::endl;
 
@@ -35,7 +36,7 @@ static inline uint64_t Perform(TARGET * const target,SOURCE * const source,
     Hexadecimal::Display(std::cerr << "\ttarget=", target, targetCount) << std::endl;
 
     tmx.reset();
-
+    
     do
     {
         Random::Fill::Block(source, sourceBytes, ran);
@@ -55,7 +56,6 @@ Y_UTEST(tow_api)
 {
     Random::ParkMiller ran;
     Timing             tmx;
-    uint64_t           rate[4][4];
     memset(&rate[0][0],0,sizeof(rate));
 
     uint8_t   a8[8]; Y_STATIC_ZARR(a8);
