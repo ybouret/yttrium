@@ -259,6 +259,7 @@ Y_UTEST_DECL(256)
 
     Y_UTEST(tow_api);    
     Y_UTEST(apk_component);
+    Y_UTEST(apk_natural);
 
 }
 Y_UTEST_EXEC()
