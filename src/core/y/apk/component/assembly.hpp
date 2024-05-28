@@ -3,7 +3,7 @@
 #ifndef Y_APK_Component_Assembly_Included
 #define Y_APK_Component_Assembly_Included 1
 
-#include "y/apk/component/rework.hpp"
+#include "y/apk/component/push64.hpp"
 #include "y/apk/component/pull64.hpp"
 #include "y/tow/api.hpp"
 #include "y/text/hexadecimal.hpp"
@@ -52,7 +52,7 @@ namespace Yttrium
             inline Assembly(uint64_t &qw) noexcept :
             space(   sizeof(uint64_t)   ),
             entry(      (T*)&qw         ),
-            count( Rework::To(entry,qw) )
+            count( Push64::To(entry,qw) )
             {
                 
             }

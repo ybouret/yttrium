@@ -76,6 +76,7 @@ fft/xbitrev
 tow
 apk
 apk/component
+apk/n
 apex
 apex/m
 apex/n

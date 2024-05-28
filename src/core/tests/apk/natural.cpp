@@ -1,5 +1,6 @@
 
 #include "y/apk/natural.hpp"
+#include "y/apk/n/supervisor.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/random/park-miller.hpp"

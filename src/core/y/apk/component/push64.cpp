@@ -1,10 +1,10 @@
-#include "y/apk/component/rework.hpp"
+#include "y/apk/component/push64.hpp"
 
 namespace Yttrium
 {
     namespace APK
     {
-        size_t Rework:: To(uint8_t  * const p, const uint64_t qw) noexcept
+        size_t Push64:: To(uint8_t  * const p, const uint64_t qw) noexcept
         {
             assert(0!=p);
             size_t count = 0;
@@ -19,7 +19,7 @@ namespace Yttrium
             return count;
         }
 
-        size_t Rework:: To(uint16_t  *const p, const uint64_t qw) noexcept
+        size_t Push64:: To(uint16_t  *const p, const uint64_t qw) noexcept
         {
             assert(0!=p);
             size_t count = 0;
@@ -30,7 +30,7 @@ namespace Yttrium
             return count;
         }
 
-        size_t Rework:: To(uint32_t  * const p,  const uint64_t qw) noexcept
+        size_t Push64:: To(uint32_t  * const p,  const uint64_t qw) noexcept
         {
             assert(0!=p);
             size_t count = 0;
@@ -39,7 +39,7 @@ namespace Yttrium
             return count;
         }
 
-        size_t Rework:: To(uint64_t  * const,  const uint64_t qw) noexcept
+        size_t Push64:: To(uint64_t  * const,  const uint64_t qw) noexcept
         {
             return qw > 0 ? 1 : 0;
         }

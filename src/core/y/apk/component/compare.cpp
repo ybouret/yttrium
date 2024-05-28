@@ -43,18 +43,24 @@ namespace Yttrium
             return CompareAssembly(lhs.num64, rhs.num64);
         }
 
+        template <typename T> static inline
+        SignType CompareAssembly(const Assembly<T> &lhs, uint64_t   rhs) noexcept
+        {
+            const Assembly<T> R(rhs);
+            return CompareAssembly(lhs,R);
+        }
+
         SignType Component:: Compare(const Component &lhs, uint64_t   rhs) noexcept
         {
 
             switch(lhs.state)
             {
-                case AsBytes: { const Bytes R(rhs); return CompareAssembly(lhs.bytes,R); }
-                case AsNum16: { const Num16 R(rhs); return CompareAssembly(lhs.num16,R); }
-                case AsNum32: { const Num32 R(rhs); return CompareAssembly(lhs.num32,R); }
-                case AsNum64:
-                    break;
+                case AsBytes:  return CompareAssembly(lhs.bytes,rhs);
+                case AsNum16:  return CompareAssembly(lhs.num16,rhs);
+                case AsNum32:  return CompareAssembly(lhs.num32,rhs);
+                case AsNum64: break;
             }
-            const Num64 R(rhs); return CompareAssembly(lhs.num64,R);
+            return CompareAssembly(lhs.num64,rhs);
 
         }
 
