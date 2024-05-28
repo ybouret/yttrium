@@ -118,14 +118,33 @@ Y_UTEST(apk_component)
     std::cerr << "<Compare64>" << std::endl;
     for(unsigned i=0;i<=64;++i)
     {
-        const uint64_t       l = ran.to<uint64_t>(i);
-        const APK::Component L( APK::FromNum64, l);
+        const uint64_t l = ran.to<uint64_t>(i);
+        APK::Component L( APK::FromNum64, l);
         Y_ASSERT(L.bits==i);
+
+        for(unsigned k=0;k<4;++k)
+        {
+            L.set( APK::Component::State[k] );
+            Y_ASSERT(__Zero__== APK::Component::Compare(L,L) );
+        }
+
         for(unsigned j=0;j<=64;++j)
         {
-            const uint64_t       r = ran.to<uint64_t>(j);
-            const APK::Component R( APK::FromNum64, r);
+            const uint64_t r = ran.to<uint64_t>(j);
+            APK::Component R( APK::FromNum64, r);
             Y_ASSERT(R.bits==j);
+
+            const SignType cmp = Sign::Of(l,r);
+
+            for(unsigned p=0;p<4;++p)
+            {
+                for(unsigned q=0;q<4;++q)
+                {
+                    L.set( APK::Component::State[p] );
+                    R.set( APK::Component::State[q] );
+                    Y_ASSERT( APK::Component::Compare(L,R) == cmp );
+                }
+            }
 
 
 
