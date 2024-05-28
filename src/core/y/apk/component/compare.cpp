@@ -38,8 +38,9 @@ namespace Yttrium
                 case AsBytes: return CompareAssembly(lhs.bytes, rhs.bytes);
                 case AsNum16: return CompareAssembly(lhs.num16, rhs.num16);
                 case AsNum32: return CompareAssembly(lhs.num32, rhs.num32);
-                case AsNum64: return CompareAssembly(lhs.num64, rhs.num64);
+                case AsNum64: break;
             }
+            return CompareAssembly(lhs.num64, rhs.num64);
         }
 
     }
