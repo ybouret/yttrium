@@ -57,7 +57,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Component(const size_t usrBytes);                   //!< setup for bytes
+            explicit Component(const size_t usrBytes=0);                 //!< setup for bytes
             explicit Component(const size_t numBits, Random::Bits &ran); //!< setup for random bits
             explicit Component(const Component &other);                  //!< copy
             explicit Component(const FromNum64_ &, const uint64_t qw);   //!< setup for uint64_t
