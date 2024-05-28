@@ -10,12 +10,13 @@ namespace Yttrium
     namespace APK
     {
 
+        //! reworking 64-bits input into another uint64_t
         struct Rework
         {
-            static size_t To(uint8_t  * const p, const uint64_t qw) noexcept;
-            static size_t To(uint16_t * const p, const uint64_t qw) noexcept;
-            static size_t To(uint32_t * const p, const uint64_t qw) noexcept;
-            static size_t To(uint64_t * const p, const uint64_t qw) noexcept;
+            static size_t To(uint8_t  * const p, const uint64_t qw) noexcept; //!< split, return bytes
+            static size_t To(uint16_t * const p, const uint64_t qw) noexcept; //!< split, return words
+            static size_t To(uint32_t * const p, const uint64_t qw) noexcept; //!< split, return dwords
+            static size_t To(uint64_t * const p, const uint64_t qw) noexcept; //!< do nothing, return qw>0
         };
 
     }

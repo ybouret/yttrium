@@ -4,6 +4,7 @@
 #define Y_APK_Component_Assembly_Included 1
 
 #include "y/apk/component/rework.hpp"
+#include "y/apk/component/pull64.hpp"
 #include "y/tow/api.hpp"
 #include "y/text/hexadecimal.hpp"
 #include "y/calculus/byte-count.hpp"
@@ -49,8 +50,8 @@ namespace Yttrium
 
             //! make a TEMPORARY assembly from a PERSISTENT uint64_t, used as workspace
             inline Assembly(uint64_t &qw) noexcept :
-            space( sizeof(uint64_t)   ),
-            entry( (T*)&qw ),
+            space(   sizeof(uint64_t)   ),
+            entry(      (T*)&qw         ),
             count( Rework::To(entry,qw) )
             {
                 
@@ -86,7 +87,7 @@ namespace Yttrium
                 TOW::Transmute(entry,source.entry,cycles);
             }
 
-
+            inline uint64_t u64() const noexcept { return Pull64::From(entry); }
 
             //__________________________________________________________________
             //

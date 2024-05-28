@@ -30,10 +30,11 @@ Y_UTEST(apk_component)
 
     Random::ParkMiller ran;
 
-
+    std::cerr << "<Rework>" << std::endl;
+    for(unsigned i=0;i<=64;++i)
     {
 
-        const uint64_t qw = 0x12345;
+        const uint64_t qw = ran.to<uint64_t>(i);
         std::cerr << Hexadecimal(qw) << std::endl;
         {
             uint64_t                     work = qw;
@@ -60,12 +61,9 @@ Y_UTEST(apk_component)
             std::cerr << "\t" << llqw << std::endl;
         }
 
-
-
     }
 
-    return 0;
-
+    
     std::cerr << "<Empty>" << std::endl;
     for(size_t i=0;i<=80;++i)
     {
@@ -102,6 +100,7 @@ Y_UTEST(apk_component)
     }
 
 
+#if 0
     std::cerr << "<uint64_t>" << std::endl;
     for(unsigned i=0;i<=64;++i)
     {
@@ -151,6 +150,7 @@ Y_UTEST(apk_component)
         Y_ASSERT( cm.set(APK::AsNum64).u64() == qw );
 
     }
+#endif
 
 
 

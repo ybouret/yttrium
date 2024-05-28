@@ -6,6 +6,7 @@ namespace Yttrium
     namespace APK
     {
 
+#if 0
         void * Component:: Tuned(const InnerState st, uint64_t &qw, size_t &nc) noexcept
         {
             void * const addr = &qw;
@@ -59,7 +60,8 @@ namespace Yttrium
             return addr;
         }
 
-
+#endif
+        
     }
 
 }
