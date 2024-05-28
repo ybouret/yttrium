@@ -195,28 +195,12 @@ num64(entry,num32.space>>1)
         {
             switch(state)
             {
-                case AsBytes: {
-                    const uint8_t * const p = bytes.entry;
-                    const uint64_t w[8] = { p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7] };
-                    return w[0] | (w[1]<<8) | (w[2]<<16) | (w[3]<<24) | (w[4]<<32) | (w[5]<<40) | (w[6]<<48) | (w[7]<<56);
-                }
-
-                case AsNum16: {
-                    const uint16_t * const p = num16.entry;
-                    const uint64_t w[4] = { p[0], p[1], p[2], p[3] };
-                    return w[0] | (w[1]<<16) | (w[2]<<32) | (w[3]<<48);
-                }
-
-                case AsNum32: {
-                    const uint32_t * const p = num32.entry;
-                    const uint64_t w[2] = { p[0], p[1] };
-                    return w[0] | (w[1]<<32);
-                }
-
-                case AsNum64:
-                    break;
+                case AsBytes: return bytes.u64();
+                case AsNum16: return num16.u64();
+                case AsNum32: return num32.u64();
+                case AsNum64: break;
             }
-            return num64.entry[0];
+            return num64.u64();
         }
 
 
