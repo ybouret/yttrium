@@ -11,16 +11,22 @@ namespace Yttrium
     namespace APK
     {
 
-        class Component;
 
         class Natural : public Number
         {
         public:
-            explicit Natural();
             virtual ~Natural() noexcept;
+            Natural();
+            Natural(const Natural &other);
+            Natural(const uint64_t);
+            Natural &operator=(const Natural &);
+            
+
+            String toHex() const;
             
         private:
-            Component *cm;
+            class Code;
+            mutable Code *code;
         };
 
     }
