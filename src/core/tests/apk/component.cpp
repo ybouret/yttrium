@@ -126,6 +126,8 @@ Y_UTEST(apk_component)
         {
             L.set( APK::Component::State[k] );
             Y_ASSERT(__Zero__== APK::Component::Compare(L,L) );
+            Y_ASSERT(__Zero__== APK::Component::Compare(L,l) );
+            Y_ASSERT(__Zero__== APK::Component::Compare(l,L) );
         }
 
         for(unsigned j=0;j<=64;++j)
@@ -143,13 +145,19 @@ Y_UTEST(apk_component)
                     L.set( APK::Component::State[p] );
                     R.set( APK::Component::State[q] );
                     Y_ASSERT( APK::Component::Compare(L,R) == cmp );
+                    L.set( APK::Component::State[p] );
+                    R.set( APK::Component::State[q] );
+                    Y_ASSERT( APK::Component::Compare(L,r) == cmp );
+                    Y_ASSERT( APK::Component::Compare(l,R) == cmp );
                 }
             }
-
-
-
         }
     }
+
+
+
+
+
 
 
     Y_SIZEOF(APK::Component);

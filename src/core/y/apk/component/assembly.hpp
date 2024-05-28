@@ -105,10 +105,10 @@ namespace Yttrium
         };
 
 
-        typedef Assembly<uint8_t>  Bytes;
-        typedef Assembly<uint16_t> Num16;
-        typedef Assembly<uint32_t> Num32;
-        typedef Assembly<uint64_t> Num64;
+        typedef Assembly<uint8_t>  Bytes; //!< alias
+        typedef Assembly<uint16_t> Num16; //!< alias
+        typedef Assembly<uint32_t> Num32; //!< alias
+        typedef Assembly<uint64_t> Num64; //!< alias
 
     }
 
