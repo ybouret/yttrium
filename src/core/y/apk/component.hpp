@@ -76,7 +76,8 @@ namespace Yttrium
             
             static InnerState TuneUp(Component &lhs,  Component &rhs) noexcept; //!< tune to the highest word
             static SignType   Compare(Component &lhs, Component &rhs) noexcept; //!< comparison
-
+            static SignType   Compare(const Component &lhs, uint64_t rhs) noexcept; //!< comparison
+            static SignType   Compare(uint64_t lhs, const Component &rhs) noexcept; 
 
             //__________________________________________________________________
             //
@@ -84,16 +85,16 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const size_t             bits;  //!< bits
-            const InnerState         state; //!< inner state
+            const size_t     bits;  //!< bits
+            const InnerState state; //!< inner state
         private:
-            unsigned                 shift; //!< bytes.space = 2^shift
-            void *const              entry; //!< memory entry
+            unsigned         shift; //!< bytes.space = 2^shift
+            void *const      entry; //!< memory entry
         public:
-            const Assembly<uint8_t>  bytes; //!< as uint8_t
-            const Assembly<uint16_t> num16; //!< as uint16_t
-            const Assembly<uint32_t> num32; //!< as uint32_t
-            const Assembly<uint64_t> num64; //!< as uint64_t
+            const Bytes      bytes; //!< as uint8_t
+            const Num16      num16; //!< as uint16_t
+            const Num32      num32; //!< as uint32_t
+            const Num64      num64; //!< as uint64_t
 
 
         private:
