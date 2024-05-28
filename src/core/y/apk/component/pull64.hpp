@@ -14,10 +14,10 @@ namespace Yttrium
         //! reworking 64-bits input into another uint64_t
         struct Pull64
         {
-            static uint64_t From(const uint8_t * const) noexcept;
-            static uint64_t From(const uint16_t * const) noexcept;
-            static uint64_t From(const uint32_t * const) noexcept;
-            static uint64_t From(const uint64_t * const) noexcept;
+            static uint64_t From(const uint8_t  * const) noexcept; //!< rebuild from bytes
+            static uint64_t From(const uint16_t * const) noexcept; //!< rebuild from words
+            static uint64_t From(const uint32_t * const) noexcept; //!< rebuild from dwords
+            static uint64_t From(const uint64_t * const) noexcept; //!< read
 
         };
 

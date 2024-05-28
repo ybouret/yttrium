@@ -74,8 +74,8 @@ namespace Yttrium
             uint64_t    u64() const noexcept;              //!< get least significant u64
 
             
-            static InnerState TuneUp(Component &lhs, Component &rhs) noexcept; //!< tune to the highest word
-            static SignType   Compare(Component &lhs, Component &rhs) noexcept;
+            static InnerState TuneUp(Component &lhs,  Component &rhs) noexcept; //!< tune to the highest word
+            static SignType   Compare(Component &lhs, Component &rhs) noexcept; //!< comparison
 
 
             //__________________________________________________________________

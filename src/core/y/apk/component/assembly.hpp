@@ -87,6 +87,7 @@ namespace Yttrium
                 TOW::Transmute(entry,source.entry,cycles);
             }
 
+            //! extract least significant word
             inline uint64_t u64() const noexcept { return Pull64::From(entry); }
 
             //__________________________________________________________________
