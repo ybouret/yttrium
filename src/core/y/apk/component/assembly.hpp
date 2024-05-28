@@ -3,8 +3,11 @@
 #ifndef Y_APK_Component_Assembly_Included
 #define Y_APK_Component_Assembly_Included 1
 
+#include "y/apk/component/rework.hpp"
 #include "y/tow/api.hpp"
 #include "y/text/hexadecimal.hpp"
+#include "y/calculus/byte-count.hpp"
+
 #include <iostream>
 #include <iomanip>
 
@@ -44,8 +47,18 @@ namespace Yttrium
                 assert(count<=space);
             }
 
+            //! make a TEMPORARY assembly from a PERSISTENT uint64_t, used as workspace
+            inline Assembly(uint64_t &qw) noexcept :
+            count( ByteCount::For(qw) ),
+            space( sizeof(uint64_t)   ),
+            entry( (T*)&qw )
+            {
+                Rework::To(entry,qw);
+            }
+
+
             //! cleanup
-            inline ~Assembly() noexcept {}
+            inline ~Assembly() noexcept { Coerce(count)=0; Coerce(space)=0; Coerce(entry)=0; }
 
             //! display
             inline friend std::ostream & operator<<(std::ostream &os, const Assembly &self)
@@ -81,7 +94,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            size_t       count; //!< valid entries
+            const size_t count; //!< valid entries
             const size_t space; //!< maximum count
             T * const    entry; //!< data
 

@@ -27,7 +27,30 @@ using namespace Yttrium;
 Y_UTEST(apk_component)
 {
 
+
     Random::ParkMiller ran;
+
+
+    {
+
+        const uint64_t qw = 0x12345;
+        std::cerr << Hexadecimal(qw) << std::endl;
+        {
+            uint64_t                     work = qw;
+            const APK::Assembly<uint8_t> llqw(work);
+            std::cerr << "\t" << llqw << std::endl;
+        }
+
+        {
+            uint64_t                     work = qw;
+            const APK::Assembly<uint16_t> llqw(work);
+            std::cerr << "\t" << llqw << std::endl;
+        }
+
+
+    }
+
+    return 0;
 
     std::cerr << "<Empty>" << std::endl;
     for(size_t i=0;i<=80;++i)
