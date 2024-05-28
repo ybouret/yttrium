@@ -38,9 +38,9 @@ namespace Yttrium
             inline Assembly(void * const blockAddr,
                             const size_t numBlocks,
                             const size_t numActive=0) noexcept :
-            count( numActive ),
             space( numBlocks ),
-            entry( static_cast<T *>(blockAddr) )
+            entry( static_cast<T *>(blockAddr) ),
+            count( numActive )
             {
                 assert(0!=entry);
                 assert(space>0);
@@ -49,11 +49,11 @@ namespace Yttrium
 
             //! make a TEMPORARY assembly from a PERSISTENT uint64_t, used as workspace
             inline Assembly(uint64_t &qw) noexcept :
-            count( ByteCount::For(qw) ),
             space( sizeof(uint64_t)   ),
-            entry( (T*)&qw )
+            entry( (T*)&qw ),
+            count( Rework::To(entry,qw) )
             {
-                Rework::To(entry,qw);
+                
             }
 
 
@@ -94,9 +94,9 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const size_t count; //!< valid entries
             const size_t space; //!< maximum count
             T * const    entry; //!< data
+            const size_t count; //!< valid entries
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Assembly);

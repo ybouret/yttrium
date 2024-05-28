@@ -48,6 +48,20 @@ Y_UTEST(apk_component)
         }
 
 
+        {
+            uint64_t                      work = qw;
+            const APK::Assembly<uint32_t> llqw(work);
+            std::cerr << "\t" << llqw << std::endl;
+        }
+
+        {
+            uint64_t                      work = qw;
+            const APK::Assembly<uint64_t> llqw(work);
+            std::cerr << "\t" << llqw << std::endl;
+        }
+
+
+
     }
 
     return 0;

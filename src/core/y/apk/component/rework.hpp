@@ -12,10 +12,10 @@ namespace Yttrium
 
         struct Rework
         {
-            static void To(uint8_t  * const p, const uint64_t qw) noexcept;
-            static void To(uint16_t * const p, const uint64_t qw) noexcept;
-            static void To(uint32_t * const p, const uint64_t qw) noexcept;
-            static void To(uint64_t * const p, const uint64_t qw) noexcept;
+            static size_t To(uint8_t  * const p, const uint64_t qw) noexcept;
+            static size_t To(uint16_t * const p, const uint64_t qw) noexcept;
+            static size_t To(uint32_t * const p, const uint64_t qw) noexcept;
+            static size_t To(uint64_t * const p, const uint64_t qw) noexcept;
         };
 
     }
