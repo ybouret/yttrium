@@ -104,6 +104,15 @@ namespace Yttrium
             {
             }
 
+            inline Assembly(const void * const data,
+                            const size_t       capa,
+                            const size_t       npos=0) noexcept :
+            Metrics(npos,capa),
+            entry( static_cast<const T *>(data) )
+            {
+                assert(0!=entry);
+            }
+
             inline friend std::ostream & operator<<(std::ostream &os, const Assembly &self)
             {
                 os << '[' << std::setw(3) << self.positive << '/' << std::setw(3) << self.capacity <<  ']' << '@' << (const void *) self.entry;
