@@ -8,6 +8,8 @@
 #include "y/text/hexadecimal.hpp"
 #include "y/memory/allocator/archon.hpp"
 #include "y/system/exception.hpp"
+#include "y/tow/api.hpp"
+#include "y/type/copy.hpp"
 #include <cerrno>
 
 namespace Yttrium
@@ -78,6 +80,7 @@ namespace Yttrium
             {
                 assert(positive<=capacity);
                 assert(capacity>0);
+                assert(IsPowerOfTwo(capacity));
             }
 
         public:
@@ -116,7 +119,19 @@ namespace Yttrium
                 assert(0!=entry);
             }
 
+            template <typename U>
+            inline Assembly(const CopyOf_ &, const Assembly<U> &source) noexcept :
+            Metrics(0,1),
+            entry( (T*)source.entry )
+            {
+                typedef TOW::API<T,U>            TOW_API;
+                typedef typename TOW_API::Action Action;
+                // TARGET = T, SOURCE = U
+                //const size_t cycles = TOW::API<T,U>::Cycles(count,source.count);
+                //TOW::Transmute(entry,source.entry,cycles);
+            }
 
+            
 
             inline friend std::ostream & operator<<(std::ostream &os, const Assembly &self)
             {
@@ -142,6 +157,7 @@ namespace Yttrium
                     }
                     Coerce(positive) = msi;
                 }
+                assert(0==positive);
                 return 0;
             }
 
