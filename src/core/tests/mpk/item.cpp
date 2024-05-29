@@ -61,23 +61,53 @@ namespace Yttrium
             return qw > 0 ? 1 : 0;
         }
 
+        //! interface for assebmly
+        class Metrics
+        {
+        public:
+            virtual ~Metrics() noexcept { Coerce(positive)=0; Coerce(capacity)=0; }
+
+        protected:
+            explicit Metrics(const size_t num,
+                             const size_t max) noexcept :
+            positive(num),
+            capacity(max)
+            {
+                assert(positive<=capacity);
+                assert(capacity>0);
+            }
+
+        public:
+            virtual size_t updateBits() noexcept = 0;
+
+        public:
+            const size_t positive;
+            const size_t capacity;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Metrics);
+        };
 
 
         template <typename T>
-        class Assembly
+        class Assembly : public Metrics
         {
         public:
+            typedef T             WordType;
+            static const unsigned WordSize = sizeof(WordType);
+            static const unsigned WordBits = WordSize << 3;
+            static const unsigned Log2WordBits = iLog2<WordBits>::Value;
+
             inline Assembly(uint64_t &qw) noexcept :
-            units( sizeof(uint64_t) / sizeof(T) ),
-            entry( (T*) & qw ),
-            count( Push64::To(entry,qw) )
+            Metrics( Push64::To( (T*)&qw, qw),sizeof(uint64_t) / WordSize ),
+            entry( (T*) & qw )
             {
             }
 
             inline friend std::ostream & operator<<(std::ostream &os, const Assembly &self)
             {
-                os << '[' << std::setw(3) << self.units << ']' << '@' << (const void *) self.entry;
-                Hexadecimal::Display(os << '=',self.entry,self.count);
+                os << '[' << std::setw(3) << self.positive << '/' << std::setw(3) << self.capacity <<  ']' << '@' << (const void *) self.entry;
+                Hexadecimal::Display(os << '=',self.entry,self.positive);
                 return os;
             }
 
@@ -85,15 +115,38 @@ namespace Yttrium
             {
             }
 
-            const size_t    units;
-            T * const       entry;
-            const size_t    count;
+            //! checking number of bits with most significant word
+            virtual size_t updateBits() noexcept
+            {
+                while(positive>0)
+                {
+                    const size_t msi = positive-1;
+                    const T      top = entry[msi];
+                    if(top>0)
+                    {
+                        return (msi<<Log2WordBits) + BitCount::For(top);
+                    }
+                    Coerce(positive) = msi;
+                }
+                return 0;
+            }
+
+
+            const T * const entry;
 
         private:
             Y_DISABLE_ASSIGN(Assembly);
         };
 
-        
+
+        class Item
+        {
+        public:
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Item);
+        };
+
 
 
     }
