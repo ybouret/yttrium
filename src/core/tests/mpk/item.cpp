@@ -6,6 +6,9 @@
 
 #include "y/random/park-miller.hpp"
 #include "y/text/hexadecimal.hpp"
+#include "y/memory/allocator/archon.hpp"
+#include "y/system/exception.hpp"
+#include <cerrno>
 
 namespace Yttrium
 {
@@ -94,8 +97,8 @@ namespace Yttrium
         {
         public:
             typedef T             WordType;
-            static const unsigned WordSize = sizeof(WordType);
-            static const unsigned WordBits = WordSize << 3;
+            static const unsigned WordSize     = sizeof(WordType);
+            static const unsigned WordBits     = WordSize << 3;
             static const unsigned Log2WordBits = iLog2<WordBits>::Value;
 
             inline Assembly(uint64_t &qw) noexcept :
@@ -112,6 +115,8 @@ namespace Yttrium
             {
                 assert(0!=entry);
             }
+
+
 
             inline friend std::ostream & operator<<(std::ostream &os, const Assembly &self)
             {
@@ -147,14 +152,78 @@ namespace Yttrium
             Y_DISABLE_ASSIGN(Assembly);
         };
 
+        typedef Assembly<uint8_t>  Bytes;
+        typedef Assembly<uint16_t> Num16;
+        typedef Assembly<uint32_t> Num32;
+        typedef Assembly<uint64_t> Num64;
 
-        class Item
+        enum  State
+        {
+            AsBytes,
+            AsNum16,
+            AsNum32,
+            AsNum64
+        };
+
+
+        class Element : public Object
         {
         public:
+            static const char * const CallSign;
+            static const size_t       One = 1;
+
+            explicit Element(const size_t usrBytes) :
+            state( AsBytes ),
+            bits( 0 ),
+            shift( ShiftFor( usrBytes ) ),
+            entry( Memory::Archon::Acquire( Coerce(shift) ) ),
+            count( One << shift ),
+            wksp()
+            {
+                bytes = new (wksp) Bytes(entry,count,0);
+            }
+
+            ~Element() noexcept
+            {
+                Memory::Archon::Release(entry,shift);
+                Coerce(bits)  = 0;
+                Coerce(shift) = 0;
+                Coerce(entry) = 0;
+                Coerce(count) = 0;
+            }
+
+            const State    state;
+            const size_t   bits;
+            const unsigned shift;
+            void  * const  entry;
+            const size_t   count;
+            union {
+                const Bytes *bytes;
+                const Num16 *num16;
+                const Num32 *num32;
+                const Num64 *num64;
+            };
+            void *wksp[Y_WORDS_FOR(Bytes)];
+
+            static inline unsigned ShiftFor(const size_t usrBytes)
+            {
+                static const unsigned MinShift = Memory::Archon::MinShift;
+                if( usrBytes > Base2<size_t>::MaxPowerOfTwo ) throw Libc::Exception(EINVAL,"%s Overflow", CallSign);
+                unsigned s = MinShift;
+                size_t   n = One << s;
+                while(n<usrBytes)
+                {
+                    n <<= 1;
+                    ++s;
+                }
+                return s;
+            }
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Item);
+            Y_DISABLE_COPY_AND_ASSIGN(Element);
         };
+
+        const char * const Element:: CallSign = "MPK::Element";
 
 
 
@@ -174,8 +243,17 @@ Y_UTEST(mpk_item)
         { uint64_t temp = qw; const MPK::Assembly<uint16_t> a(temp); std::cerr << a << std::endl; }
         { uint64_t temp = qw; const MPK::Assembly<uint32_t> a(temp); std::cerr << a << std::endl; }
         { uint64_t temp = qw; const MPK::Assembly<uint64_t> a(temp); std::cerr << a << std::endl; }
-
     }
+
+    Y_SIZEOF(MPK::Bytes);
+    Y_SIZEOF(MPK::Num16);
+    Y_SIZEOF(MPK::Num32);
+    Y_SIZEOF(MPK::Num64);
+    Y_SIZEOF(MPK::Element);
+
+
+
+    MPK::Element el(0);
 
 }
 Y_UDONE()
