@@ -161,7 +161,7 @@ Y_UTEST(mpk_item)
     {
         const uint64_t qw = ran.to<uint64_t>(i); Y_ASSERT(BitCount::For(qw)==i);
 
-        { uint64_t temp = qw; const MPK::Assembly<uint8_t> a(temp); std::cerr << a << std::endl; }
+        { uint64_t temp = qw; const MPK::Assembly<uint8_t>  a(temp); std::cerr << a << std::endl; }
         { uint64_t temp = qw; const MPK::Assembly<uint16_t> a(temp); std::cerr << a << std::endl; }
         { uint64_t temp = qw; const MPK::Assembly<uint32_t> a(temp); std::cerr << a << std::endl; }
         { uint64_t temp = qw; const MPK::Assembly<uint64_t> a(temp); std::cerr << a << std::endl; }
