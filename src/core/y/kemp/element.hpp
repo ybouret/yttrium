@@ -15,6 +15,14 @@ namespace Yttrium
 {
     namespace Kemp
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        // global definitions
+        //
+        //
+        //______________________________________________________________________
 
         typedef Assembly<uint8_t>  Bytes; //!< alias
         typedef Assembly<uint16_t> Num16; //!< alias
@@ -82,10 +90,11 @@ namespace Yttrium
             // Manipulations methods
             //
             //__________________________________________________________________  
+            template <typename T>
+            Assembly<T> &get()                        noexcept; //!< return prepared assembly
             uint64_t     u64()                  const noexcept; //!< least significant 64 bits
             Element &    set(const State)             noexcept; //!< ensure state
             static State TuneUp(Element &, Element &) noexcept; //!< tune to largest integral
-            template <typename T> Assembly<T> &get() noexcept;
 
             //__________________________________________________________________
             //
