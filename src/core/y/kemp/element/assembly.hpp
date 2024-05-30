@@ -130,7 +130,7 @@ namespace Yttrium
             T * const       item;
 
         private:
-            Y_DISABLE_ASSIGN(Assembly);
+            Y_DISABLE_COPY_AND_ASSIGN(Assembly);
         };
     }
 
