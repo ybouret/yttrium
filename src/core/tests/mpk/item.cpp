@@ -13,6 +13,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/memory/buffer/ro.hpp"
 #include <cerrno>
+#include <cstring>
 
 namespace Yttrium
 {
