@@ -9,7 +9,8 @@
 #include "y/memory/allocator/archon.hpp"
 #include "y/system/exception.hpp"
 #include "y/tow/api.hpp"
-#include "y/type/copy.hpp"
+#include "y/type/capacity.hpp"
+
 #include <cerrno>
 
 namespace Yttrium
@@ -66,37 +67,15 @@ namespace Yttrium
             return qw > 0 ? 1 : 0;
         }
 
-        //! interface for assebmly
-        class Metrics
-        {
-        public:
-            virtual ~Metrics() noexcept { Coerce(positive)=0; Coerce(capacity)=0; }
+        Y_SHALLOW_DECL(AsBits);
 
-        protected:
-            explicit Metrics(const size_t num,
-                             const size_t max) noexcept :
-            positive(num),
-            capacity(max)
-            {
-                assert(positive<=capacity);
-                assert(capacity>0);
-                assert(IsPowerOfTwo(capacity));
-            }
-
-        public:
-            virtual size_t updateBits() noexcept = 0;
-
-        public:
-            const size_t positive;
-            const size_t capacity;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Metrics);
-        };
+        Y_SHALLOW_IMPL(AsBits);
 
 
+
+        //! the number of positive items is handled by Element
         template <typename T>
-        class Assembly : public Metrics
+        class Assembly
         {
         public:
             typedef T             WordType;
@@ -104,65 +83,97 @@ namespace Yttrium
             static const unsigned WordBits     = WordSize << 3;
             static const unsigned Log2WordBits = iLog2<WordBits>::Value;
 
+            static inline size_t BitsToPositive(const size_t bits) noexcept
+            {
+                return (Y_ALIGN_LN2(Log2WordBits,bits)) >> Log2WordBits;
+            }
+
+            //! build from a PERSISTENT QWORD
             inline Assembly(uint64_t &qw) noexcept :
-            Metrics( Push64::To( (T*)&qw, qw),sizeof(uint64_t) / WordSize ),
-            entry( (T*) & qw )
+            capacity( sizeof(uint64_t) / WordSize ),
+            positive( Push64::To( (T*)&qw, qw)    ),
+            item( (T*) & qw )
             {
+                assert(0!=item);
+                assert(capacity>0);
+                assert(positive<=capacity);
+                assert(IsPowerOfTwo(capacity));
             }
 
-            inline Assembly(const void * const data,
+            //! build from PERSISTENT user data
+            inline Assembly(void * const       data,
                             const size_t       capa,
-                            const size_t       npos=0) noexcept :
-            Metrics(npos,capa),
-            entry( static_cast<const T *>(data) )
+                            const size_t       npos) noexcept :
+            capacity(capa),
+            positive(npos),
+            item( static_cast<T *>(data) )
             {
-                assert(0!=entry);
+                assert(0!=item);
+                assert(capacity>0);
+                assert(positive<=capacity);
+                assert(IsPowerOfTwo(capacity));
             }
 
-            template <typename U>
-            inline Assembly(const CopyOf_ &, const Assembly<U> &source) noexcept :
-            Metrics(0,1),
-            entry( (T*)source.entry )
+            //! build from PERSISTENT user data
+            inline Assembly(void * const       data,
+                            const size_t       capa,
+                            const size_t       bits,
+                            const AsBits_      &) noexcept :
+            capacity(capa),
+            positive( BitsToPositive(bits) ),
+            item( static_cast<T *>(data) )
             {
-                typedef TOW::API<T,U>            TOW_API;
-                typedef typename TOW_API::Action Action;
-                // TARGET = T, SOURCE = U
-                //const size_t cycles = TOW::API<T,U>::Cycles(count,source.count);
-                //TOW::Transmute(entry,source.entry,cycles);
+                assert(0!=item);
+                assert(capacity>0);
+                assert(positive<=capacity);
+                assert(IsPowerOfTwo(capacity));
             }
 
-            
 
             inline friend std::ostream & operator<<(std::ostream &os, const Assembly &self)
             {
-                os << '[' << std::setw(3) << self.positive << '/' << std::setw(3) << self.capacity <<  ']' << '@' << (const void *) self.entry;
-                Hexadecimal::Display(os << '=',self.entry,self.positive);
+                os << '[' << std::setw(3) << self.positive << '/' << std::setw(3) << self.capacity <<  ']' << '@' << (const void *) self.item;
+                Hexadecimal::Display(os << '=',self.item,self.positive);
                 return os;
             }
 
             inline ~Assembly() noexcept
             {
+                Coerce(capacity) = 0;
+                positive         = 0;
+                Coerce(item)     = 0;
+            }
+
+
+            //! transmogrify from another assembly
+            template <typename U> inline
+            void load(const Assembly<U> &source)
+            {
+                // TARGET = T, SOURCE = U
+                const size_t cycles = TOW::API<T,U>::Cycles(capacity,source.capacity);
+                TOW::Transmute(item,source.item,cycles);
             }
 
             //! checking number of bits with most significant word
-            virtual size_t updateBits() noexcept
+            inline size_t updateBits() noexcept
             {
                 while(positive>0)
                 {
                     const size_t msi = positive-1;
-                    const T      top = entry[msi];
+                    const T      top = item[msi];
                     if(top>0)
                     {
                         return (msi<<Log2WordBits) + BitCount::For(top);
                     }
-                    Coerce(positive) = msi;
+                    positive = msi;
                 }
                 assert(0==positive);
                 return 0;
             }
 
-
-            const T * const entry;
+            const size_t    capacity;
+            size_t          positive;
+            T * const       item;
 
         private:
             Y_DISABLE_ASSIGN(Assembly);
@@ -181,6 +192,10 @@ namespace Yttrium
             AsNum64
         };
 
+        Y_SHALLOW_DECL(ToNum64);
+
+        Y_SHALLOW_IMPL(ToNum64);
+
 
         class Element : public Object
         {
@@ -188,39 +203,68 @@ namespace Yttrium
             static const char * const CallSign;
             static const size_t       One = 1;
 
-            explicit Element(const size_t usrBytes) :
+            explicit Element(const size_t usrBytes, const AsCapacity_ &) :
             state( AsBytes ),
             bits( 0 ),
             shift( ShiftFor( usrBytes ) ),
             entry( Memory::Archon::Acquire( Coerce(shift) ) ),
-            count( One << shift ),
-            wksp()
+            bytes(entry,One<<shift,       0),
+            num16(entry,bytes.capacity>>1,0),
+            num32(entry,num16.capacity>>1,0),
+            num64(entry,num32.capacity>>1,0)
             {
-                bytes = new (wksp) Bytes(entry,count,0);
             }
 
-            ~Element() noexcept
+            explicit Element(const Element &el) :
+            state(el.state),
+            bits(el.bits),
+            shift( ShiftFor(el.bytes.positive) ),
+            entry( Memory::Archon::Acquire( Coerce(shift) ) ),
+            bytes(entry,One<<shift,el.bytes.positive),
+            num16(entry,bytes.capacity>>1,el.num16.positive),
+            num32(entry,num16.capacity>>1,el.num32.positive),
+            num64(entry,num32.capacity>>1,el.num64.positive)
+            {
+                memcpy(entry,el.entry,bytes.capacity);
+            }
+
+            explicit Element(const ToNum64_ &, const uint64_t qw) :
+            state(AsNum64),
+            bits( BitCount::For(qw) ),
+            shift( ShiftFor( sizeof(uint64_t)) ),
+            entry( Memory::Archon::Acquire( Coerce(shift) ) ),
+            bytes(entry,One<<shift,bits,AsBits),
+            num16(entry,bytes.capacity>>1,bits,AsBits),
+            num32(entry,num16.capacity>>1,bits,AsBits),
+            num64(entry,num32.capacity>>1,bits,AsBits)
+            {
+                num64.item[0] = qw;
+            }
+
+            virtual ~Element() noexcept
             {
                 Memory::Archon::Release(entry,shift);
-                Coerce(bits)  = 0;
-                Coerce(shift) = 0;
+                state         = AsBytes;
+                bits          = 0;
                 Coerce(entry) = 0;
-                Coerce(count) = 0;
+                Coerce(shift) = 0;
             }
 
-            const State    state;
-            const size_t   bits;
-            const unsigned shift;
-            void  * const  entry;
-            const size_t   count;
-            union {
-                const Bytes *bytes;
-                const Num16 *num16;
-                const Num32 *num32;
-                const Num64 *num64;
-            };
-            void *wksp[Y_WORDS_FOR(Bytes)];
+            State          state; //!< current state
+            size_t         bits;  //!< current number of bits
+        private:
+            const unsigned shift; //!< 2^shift = allocated bytes
+            void  * const  entry; //!< workspace
+        public:
+            Bytes          bytes; //!< as bytes and primary metrics
+            Num16          num16; //!< as num16
+            Num32          num32; //!< as num32
+            Num64          num64; //!< as num64
 
+
+
+        private:
+            Y_DISABLE_ASSIGN(Element);
             static inline unsigned ShiftFor(const size_t usrBytes)
             {
                 static const unsigned MinShift = Memory::Archon::MinShift;
@@ -234,9 +278,6 @@ namespace Yttrium
                 }
                 return s;
             }
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Element);
         };
 
         const char * const Element:: CallSign = "MPK::Element";
@@ -269,7 +310,20 @@ Y_UTEST(mpk_item)
 
 
 
-    MPK::Element el(0);
+    MPK::Element el(0,AsCapacity);
+    MPK::Element el2(el);
+
+    for(size_t bits=0;bits<=80;++bits)
+    {
+        std::cerr << std::setw(3) << bits;
+        std::cerr << " : " <<  std::setw(3) << MPK::Assembly<uint8_t>:: BitsToPositive(bits);
+        std::cerr << " : " <<  std::setw(3) << MPK::Assembly<uint16_t>::BitsToPositive(bits);
+        std::cerr << " : " <<  std::setw(3) << MPK::Assembly<uint32_t>::BitsToPositive(bits);
+        std::cerr << " : " <<  std::setw(3) << MPK::Assembly<uint64_t>::BitsToPositive(bits);
+        std::cerr << std::endl;
+    }
+
+    
 
 }
 Y_UDONE()
