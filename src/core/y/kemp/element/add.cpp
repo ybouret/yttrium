@@ -2,6 +2,7 @@
 #include "y/kemp/element.hpp"
 #include "y/type/utils.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/system/wtime.hpp"
 
 namespace Yttrium
 {
@@ -55,22 +56,120 @@ namespace Yttrium
             s[q] = static_cast<WORD>(carry);
             sum.positive = q+1;
 
-            
+
             return sum.updateBits();
         }
 
 
+#define TMX_INI() const uint64_t   t = 0!=tmx ? WallTime::Ticks() : 0
+#define TMX_END() if(0!=tmx) *tmx += WallTime::Ticks() - t
+
+        template <typename ARG>
+        static inline Element *CreateAddFor(const ARG &l, const ARG &r)
+        {
+            return new Element( (Max(l.positive,r.positive)+1) * ARG::WordSize, AsCapacity);
+        }
+
+
+        // CORE = 64 bits
         template <>
-        Element * Element:: Add<uint64_t,uint32_t>(Element &lhs,
-                                                   Element &rhs)
+        Element * Element:: Add<uint64_t,uint32_t>(Element &        lhs,
+                                                   Element &        rhs,
+                                                   uint64_t * const tmx)
         {
             const Num32     &l = lhs.set(AsNum32).num32;
             const Num32     &r = rhs.set(AsNum32).num32;
-            const size_t     n = Max(l.positive,r.positive)+1;
-            AutoPtr<Element> s = new Element(n*sizeof(uint32_t),AsCapacity);
+            AutoPtr<Element> s = CreateAddFor(l,r);
+
+            TMX_INI();
             s->bits = AddAssembly<uint64_t,uint32_t>(s->set(AsNum32).num32,l,r);
+            TMX_END();
+
             return s.yield();
         }
+
+        template <>
+        Element * Element:: Add<uint64_t,uint16_t>(Element &        lhs,
+                                                   Element &        rhs,
+                                                   uint64_t * const tmx)
+        {
+            const Num16     &l = lhs.set(AsNum16).num16;
+            const Num16     &r = rhs.set(AsNum16).num16;
+            AutoPtr<Element> s = CreateAddFor(l,r);
+
+            TMX_INI();
+            s->bits = AddAssembly<uint64_t,uint16_t>(s->set(AsNum16).num16,l,r);
+            TMX_END();
+            return s.yield();
+        }
+        
+
+
+        template <>
+        Element * Element:: Add<uint64_t,uint8_t>(Element &        lhs,
+                                                  Element &        rhs,
+                                                  uint64_t * const tmx)
+        {
+            const Bytes     &l = lhs.set(AsBytes).bytes;
+            const Bytes     &r = rhs.set(AsBytes).bytes;
+            AutoPtr<Element> s = CreateAddFor(l,r); assert(AsBytes==s->state);
+
+            TMX_INI();
+            s->bits = AddAssembly<uint64_t,uint8_t>(s->bytes,l,r);
+            TMX_END();
+            return s.yield();
+        }
+
+
+        // CORE = 32 bits
+
+        template <>
+        Element * Element:: Add<uint32_t,uint16_t>(Element &        lhs,
+                                                   Element &        rhs,
+                                                   uint64_t * const tmx)
+        {
+            const Num16     &l = lhs.set(AsNum16).num16;
+            const Num16     &r = rhs.set(AsNum16).num16;
+            AutoPtr<Element> s = CreateAddFor(l,r);
+
+            TMX_INI();
+            s->bits = AddAssembly<uint32_t,uint16_t>(s->set(AsNum16).num16,l,r);
+            TMX_END();
+            return s.yield();
+        }
+
+        template <>
+        Element * Element:: Add<uint32_t,uint8_t>(Element &        lhs,
+                                                  Element &        rhs,
+                                                  uint64_t * const tmx)
+        {
+            const Bytes     &l = lhs.set(AsBytes).bytes;
+            const Bytes     &r = rhs.set(AsBytes).bytes;
+            AutoPtr<Element> s = CreateAddFor(l,r); assert(AsBytes==s->state);
+
+            TMX_INI();
+            s->bits = AddAssembly<uint32_t,uint8_t>(s->bytes,l,r);
+            TMX_END();
+            return s.yield();
+        }
+
+        // CORE = 16 bits
+        template <>
+        Element * Element:: Add<uint16_t,uint8_t>(Element &        lhs,
+                                                  Element &        rhs,
+                                                  uint64_t * const tmx)
+        {
+            const Bytes     &l = lhs.set(AsBytes).bytes;
+            const Bytes     &r = rhs.set(AsBytes).bytes;
+            AutoPtr<Element> s = CreateAddFor(l,r); assert(AsBytes==s->state);
+
+            TMX_INI();
+            s->bits = AddAssembly<uint16_t,uint8_t>(s->bytes,l,r);
+            TMX_END();
+            return s.yield();
+        }
+
+        
 
     }
 

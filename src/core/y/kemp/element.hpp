@@ -107,7 +107,8 @@ namespace Yttrium
 
             template <typename CORE, typename WORD>
             static Element * Add(Element &lhs,
-                                 Element &rhs);
+                                 Element &rhs,
+                                 uint64_t * const tmx = 0);
 
 
 

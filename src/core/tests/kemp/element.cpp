@@ -3,8 +3,10 @@
 #include "y/random/park-miller.hpp"
 #include "y/sequence/vector.hpp"
 #include <cstring>
+#include <cmath>
 #include "y/ptr/auto.hpp"
-
+#include "y/system/wtime.hpp"
+#include "y/text/human-readable.hpp"
 
 using namespace Yttrium;
 
@@ -102,24 +104,96 @@ Y_UTEST(kemp_element)
     }
 
     std::cerr << "<Add64>" << std::endl;
+    uint64_t tmx64_32 = 0;
+    uint64_t tmx64_16 = 0;
+    uint64_t tmx64_8  = 0;
+    uint64_t tmx32_16 = 0;
+    uint64_t tmx32_8  = 0;
+    uint64_t tmx16_8  = 0;
+
+    size_t total = 0;
     for(unsigned i=0;i<=63;++i)
     {
         for(unsigned j=0;j<=63;++j)
         {
-            const uint64_t l = ran.to<uint64_t>(i);
-            const uint64_t r = ran.to<uint64_t>(j);
-            const uint64_t s = l+r; Y_ASSERT(s-l==r); Y_ASSERT(s-r==l);
-            const size_t   b = BitCount::For(s);
+            for(size_t cycle=0;cycle<128;++cycle)
+            {
+                ++total;
 
-            Kemp::Element          L(l, Kemp::ToNum64); Y_ASSERT(L.bits==i); Y_ASSERT(L.u64()==l);
-            Kemp::Element          R(r, Kemp::ToNum64); Y_ASSERT(R.bits==j); Y_ASSERT(R.u64()==r);
-            AutoPtr<Kemp::Element> S = Kemp::Element::Add<uint64_t,uint32_t>(L,R);
-            Y_ASSERT(S->bits==b);
-            Y_ASSERT(S->u64()==s);
+                const uint64_t l = ran.to<uint64_t>(i);
+                const uint64_t r = ran.to<uint64_t>(j);
+                const uint64_t s = l+r; Y_ASSERT(s-l==r); Y_ASSERT(s-r==l);
+                const size_t   b = BitCount::For(s);
+                
+                Kemp::Element          L(l, Kemp::ToNum64); Y_ASSERT(L.bits==i); Y_ASSERT(L.u64()==l);
+                Kemp::Element          R(r, Kemp::ToNum64); Y_ASSERT(R.bits==j); Y_ASSERT(R.u64()==r);
+                {
+                    L.set(Kemp::AsNum32);
+                    R.set(Kemp::AsNum32);
+                    AutoPtr<Kemp::Element> S = Kemp::Element::Add<uint64_t,uint32_t>(L,R,&tmx64_32);
+                    Y_ASSERT(S->bits==b);
+                    Y_ASSERT(S->u64()==s);
+                }
+                
+                {
+                    L.set(Kemp::AsNum16);
+                    R.set(Kemp::AsNum16);
+                    AutoPtr<Kemp::Element> S = Kemp::Element::Add<uint64_t,uint16_t>(L,R,&tmx64_16);
+                    Y_ASSERT(S->bits==b);
+                    Y_ASSERT(S->u64()==s);
+                }
+                
+                {
+                    L.set(Kemp::AsBytes);
+                    R.set(Kemp::AsBytes);
+                    AutoPtr<Kemp::Element> S = Kemp::Element::Add<uint64_t,uint8_t>(L,R,&tmx64_8);
+                    Y_ASSERT(S->bits==b);
+                    Y_ASSERT(S->u64()==s);
+                }
+
+
+                {
+                    L.set(Kemp::AsNum16);
+                    R.set(Kemp::AsNum16);
+                    AutoPtr<Kemp::Element> S = Kemp::Element::Add<uint32_t,uint16_t>(L,R,&tmx32_16);
+                    Y_ASSERT(S->bits==b);
+                    Y_ASSERT(S->u64()==s);
+                }
+
+                {
+                    L.set(Kemp::AsBytes);
+                    R.set(Kemp::AsBytes);
+                    AutoPtr<Kemp::Element> S = Kemp::Element::Add<uint32_t,uint8_t>(L,R,&tmx32_8);
+                    Y_ASSERT(S->bits==b);
+                    Y_ASSERT(S->u64()==s);
+                }
+
+                {
+                    L.set(Kemp::AsBytes);
+                    R.set(Kemp::AsBytes);
+                    AutoPtr<Kemp::Element> S = Kemp::Element::Add<uint16_t,uint8_t>(L,R,&tmx16_8);
+                    Y_ASSERT(S->bits==b);
+                    Y_ASSERT(S->u64()==s);
+                }
+
+            }
 
         }
 
     }
+
+    WallTime chrono;
+
+#define RATE(VAR) std::cerr << std::setw(12) <<  #VAR << " = " << HumanReadable(ceil(static_cast<long double>(total)/chrono(VAR))) << std::endl
+
+    RATE(tmx64_32);
+    RATE(tmx64_16);
+    RATE(tmx64_8 );
+    RATE(tmx32_16);
+    RATE(tmx32_8 );
+    RATE(tmx16_8 );
+
+
 
 
     Y_SIZEOF(Kemp::Bytes);
