@@ -175,7 +175,7 @@ namespace Yttrium
             return *this;
         }
 
-        State   & Element:: TuneUp(Element &lhs, Element &rhs) noexcept
+        State  Element:: TuneUp(Element &lhs, Element &rhs) noexcept
         {
             switch( Sign::Of(lhs.state,rhs.state) )
             {
@@ -184,8 +184,9 @@ namespace Yttrium
                 case __Zero__: break;
             }
             return lhs.state;
-
         }
+
+ 
 
 
     }

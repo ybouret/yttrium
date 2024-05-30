@@ -49,9 +49,13 @@ namespace Yttrium
             virtual size_t       measure() const noexcept { return bytes.capacity; }
             virtual const void * ro_addr() const noexcept { return entry; }
 
-            uint64_t  u64() const noexcept;
-            Element & set(const State newState) noexcept;
-            State   & TuneUp(Element &, Element &) noexcept;
+            uint64_t     u64() const noexcept;
+            Element &    set(const State newState) noexcept;
+            static State TuneUp(Element &, Element &) noexcept;
+
+            static SignType Compare(Element &, Element&) noexcept;
+            static SignType Compare(const Element &, uint64_t qw) noexcept;
+            static SignType Compare(uint64_t qw, const Element &) noexcept;
 
 
             State          state; //!< current state

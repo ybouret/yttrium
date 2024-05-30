@@ -25,7 +25,7 @@ Y_UTEST(kemp_element)
     Y_SIZEOF(Kemp::Num32);
     Y_SIZEOF(Kemp::Num64);
     Y_SIZEOF(Kemp::Element);
-    
+
 
     for(size_t bits=0;bits<=80;++bits)
     {
@@ -75,8 +75,38 @@ Y_UTEST(kemp_element)
                 Y_ASSERT( 0 == memcmp( &org[1], el.ro_addr(), el.measure() ) );
             }
         }
-
     }
+
+
+    std::cerr << "<Compare64>" << std::endl;
+    for(unsigned i=0;i<=64;++i)
+    {
+        for(unsigned j=0;j<=64;++j)
+        {
+            const uint64_t lhs = ran.to<uint64_t>(i);
+            const uint64_t rhs = ran.to<uint64_t>(j);
+            const SignType cmp = Sign::Of(lhs,rhs);
+
+            Kemp::Element  L(lhs, Kemp::ToNum64);
+            Kemp::Element  R(rhs, Kemp::ToNum64);
+
+            for(unsigned k=0;k<4;++k)
+            {
+                for(unsigned l=0;l<4;++l)
+                {
+                    L.set( Kemp::Element::Inner[k]);
+                    R.set( Kemp::Element::Inner[l]);
+                    Y_ASSERT( cmp == Kemp::Element::Compare(L,R) );
+                    L.set( Kemp::Element::Inner[k]);
+                    R.set( Kemp::Element::Inner[l]);
+                    Y_ASSERT( cmp == Kemp::Element::Compare(lhs,R) );
+                    Y_ASSERT( cmp == Kemp::Element::Compare(L,rhs) );
+
+                }
+            }
+        }
+    }
+
 
 }
 Y_UDONE()
