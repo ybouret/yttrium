@@ -184,7 +184,7 @@ Y_UTEST(kemp_element)
 
     WallTime chrono;
 
-#define RATE(VAR) std::cerr << std::setw(12) <<  #VAR << " = " << HumanReadable(ceil(static_cast<long double>(total)/chrono(VAR))) << std::endl
+#define RATE(VAR) std::cerr << std::setw(12) <<  #VAR << " = " << HumanReadable(ceil(static_cast<long double>(total)/chrono(VAR))) << "op/s" << std::endl
 
     RATE(tmx64_32);
     RATE(tmx64_16);
@@ -195,7 +195,7 @@ Y_UTEST(kemp_element)
 
 
 
-
+    std::cerr << std::endl;
     Y_SIZEOF(Kemp::Bytes);
     Y_SIZEOF(Kemp::Num16);
     Y_SIZEOF(Kemp::Num32);
