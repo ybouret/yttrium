@@ -13,7 +13,6 @@ io
 fft
 string
 apex
-apk
 kemp
 tow
 ordered
@@ -339,9 +338,6 @@ add_test(color:channels test-core color_channels)
 
 #tow
 add_test(tow:api test-core tow_api)
-#apk
-add_test(apk:component test-core apk_component)
-add_test(apk:natural   test-core apk_natural)
 
 #kemp
 add_test(kemp:element test-core kemp_element)

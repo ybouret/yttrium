@@ -74,9 +74,6 @@ string
 fft
 fft/xbitrev
 tow
-apk
-apk/component
-apk/natural
 kemp
 kemp/element
 apex
