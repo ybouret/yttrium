@@ -19,23 +19,43 @@ namespace Yttrium
     namespace Kemp
     {
 
-        Y_SHALLOW_DECL(AsBits);
+        Y_SHALLOW_DECL(AsBits); //!< alias
 
 
-        //! the number of positive items is handled by Element
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Assembly of items, the number of positive ones is handled by Element
+        //
+        //
+        //______________________________________________________________________
         template <typename T>
         class Assembly
         {
         public:
-            typedef T             WordType;
-            static const unsigned WordSize     = sizeof(WordType);
-            static const unsigned WordBits     = WordSize << 3;
-            static const unsigned Log2WordBits = iLog2<WordBits>::Value;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef T             WordType;                              //!< alias
+            static const unsigned WordSize     = sizeof(WordType);       //!< alias
+            static const unsigned WordBits     = WordSize << 3;          //!< alias
+            static const unsigned Log2WordBits = iLog2<WordBits>::Value; //!< alias
 
-            static inline size_t BitsToPositive(const size_t bits) noexcept
-            {
+            //! bits to number of positive items
+            static inline size_t BitsToPositive(const size_t bits) noexcept {
                 return (Y_ALIGN_LN2(Log2WordBits,bits)) >> Log2WordBits;
             }
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
             //! build from a PERSISTENT QWORD
             inline Assembly(uint64_t &qw) noexcept :
@@ -63,7 +83,7 @@ namespace Yttrium
                 assert(IsPowerOfTwo(capacity));
             }
 
-            //! build from PERSISTENT user data
+            //! build from PERSISTENT user data and given bits
             inline Assembly(void * const       data,
                             const size_t       capa,
                             const size_t       bits,
@@ -78,14 +98,7 @@ namespace Yttrium
                 assert(IsPowerOfTwo(capacity));
             }
 
-
-            inline friend std::ostream & operator<<(std::ostream &os, const Assembly &self)
-            {
-                os << '[' << std::setw(3) << self.positive << '/' << std::setw(3) << self.capacity <<  ']' << '@' << (const void *) self.item;
-                Hexadecimal::Display(os << '=',self.item,self.positive);
-                return os;
-            }
-
+            //! cleanup
             inline ~Assembly() noexcept
             {
                 Coerce(capacity) = 0;
@@ -93,6 +106,20 @@ namespace Yttrium
                 Coerce(item)     = 0;
             }
 
+            //! detailed output
+            inline friend std::ostream & operator<<(std::ostream &os, const Assembly &self)
+            {
+                os << '[' << std::setw(3) << self.positive << '/' << std::setw(3) << self.capacity <<  ']' << '@' << (const void *) self.item;
+                Hexadecimal::Display(os << '=',self.item,self.positive);
+                return os;
+            }
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
             //! transmogrify from another assembly
             template <typename U> inline
@@ -120,14 +147,18 @@ namespace Yttrium
                 return 0;
             }
 
-            inline uint64_t pull64() const noexcept
-            {
-                return Pull64::From(item);
-            }
+            //! get leat significant 64 bits
+            inline uint64_t pull64() const noexcept { return Pull64::From(item); }
 
-            const size_t    capacity;
-            size_t          positive;
-            T * const       item;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const size_t    capacity; //!< current capacity
+            size_t          positive; //!< current positive itmes
+            T * const       item;     //!< items
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Assembly);

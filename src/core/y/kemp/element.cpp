@@ -28,6 +28,8 @@ namespace Yttrium
 
 
         Element:: Element(const Element &el) :
+        Object(),
+        Memory::ReadOnlyBuffer(),
         state(el.state),
         bits(el.bits),
         shift( ShiftFor(el.bytes.positive) ),
@@ -86,6 +88,12 @@ namespace Yttrium
             Coerce(entry) = 0;
             Coerce(shift) = 0;
         }
+
+
+        size_t       Element ::measure() const noexcept { return bytes.capacity; }
+        const void * Element:: ro_addr() const noexcept { return entry; }
+        
+
 
 
         std::ostream & operator<<(std::ostream &os, const Element &el)

@@ -16,48 +16,93 @@ namespace Yttrium
     namespace Kemp
     {
 
-        typedef Assembly<uint8_t>  Bytes;
-        typedef Assembly<uint16_t> Num16;
-        typedef Assembly<uint32_t> Num32;
-        typedef Assembly<uint64_t> Num64;
+        typedef Assembly<uint8_t>  Bytes; //!< alias
+        typedef Assembly<uint16_t> Num16; //!< alias
+        typedef Assembly<uint32_t> Num32; //!< alias
+        typedef Assembly<uint64_t> Num64; //!< alias
 
+        //! internal state representation
         enum  State
         {
-            AsBytes,
-            AsNum16,
-            AsNum32,
-            AsNum64
+            AsBytes, //!< use Bytes
+            AsNum16, //!< use Num16
+            AsNum32, //!< use Num32
+            AsNum64  //!< use Num64
         };
 
+        //! alias
         Y_SHALLOW_DECL(ToNum64);
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Element with mutltiple synchronous assemblies
+        //
+        //
+        //______________________________________________________________________
         class Element : public Object, public Memory::ReadOnlyBuffer
         {
         public:
-            static const char * const CallSign;
-            static const size_t       One = 1;
-            static const State        Inner[4];
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< "Kemp::Element"
+            static const size_t       One = 1;  //!< alias
+            static const State        Inner[4]; //!< aliases
 
-            explicit Element(const size_t, const AsCapacity_ &);
-            explicit Element(const Element &);
-            explicit Element(const uint64_t, const ToNum64_ &);
-            explicit Element(const size_t, Random::Bits &);
-            virtual ~Element() noexcept;
-            Y_OSTREAM_PROTO(Element);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Element(const size_t, const AsCapacity_ &); //!< setup with capacity
+            explicit Element(const Element &);                   //!< full copy
+            explicit Element(const uint64_t, const ToNum64_ &);  //!< setup from qword
+            explicit Element(const size_t, Random::Bits &);      //!< setup to random bits
+            virtual ~Element() noexcept;                         //!< cleanup
+            Y_OSTREAM_PROTO(Element);                            //!< display
 
-            virtual size_t       measure() const noexcept { return bytes.capacity; }
-            virtual const void * ro_addr() const noexcept { return entry; }
+            //__________________________________________________________________
+            //
+            //
+            // [Memory::ReadOnlyBuffer]
+            //
+            //__________________________________________________________________
+            virtual size_t       measure() const noexcept;
+            virtual const void * ro_addr() const noexcept;
 
-            uint64_t     u64() const noexcept;
-            Element &    set(const State newState) noexcept;
-            static State TuneUp(Element &, Element &) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Manipulations methods
+            //
+            //__________________________________________________________________  
+            uint64_t     u64()                  const noexcept; //!< least significant 64 bits
+            Element &    set(const State)             noexcept; //!< ensure state
+            static State TuneUp(Element &, Element &) noexcept; //!< tune to largest integral
 
-            static SignType Compare(Element &, Element&) noexcept;
-            static SignType Compare(const Element &, uint64_t qw) noexcept;
-            static SignType Compare(uint64_t qw, const Element &) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Comparisons
+            //
+            //__________________________________________________________________
+            static SignType Compare(Element &, Element&)          noexcept; //!< compare with TuneUp
+            static SignType Compare(const Element &, uint64_t qw) noexcept; //!< compare using element's state
+            static SignType Compare(uint64_t qw, const Element &) noexcept; //!< compare using element's state
 
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
             State          state; //!< current state
             size_t         bits;  //!< current number of bits
         private:

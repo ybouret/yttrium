@@ -20,12 +20,6 @@ Y_UTEST(kemp_element)
         { uint64_t temp = qw; const Kemp::Assembly<uint64_t> a(temp); std::cerr << a << std::endl; }
     }
 
-    Y_SIZEOF(Kemp::Bytes);
-    Y_SIZEOF(Kemp::Num16);
-    Y_SIZEOF(Kemp::Num32);
-    Y_SIZEOF(Kemp::Num64);
-    Y_SIZEOF(Kemp::Element);
-
 
     for(size_t bits=0;bits<=80;++bits)
     {
@@ -106,6 +100,14 @@ Y_UTEST(kemp_element)
             }
         }
     }
+
+
+    Y_SIZEOF(Kemp::Bytes);
+    Y_SIZEOF(Kemp::Num16);
+    Y_SIZEOF(Kemp::Num32);
+    Y_SIZEOF(Kemp::Num64);
+    Y_SIZEOF(Kemp::Element);
+
 
 
 }
