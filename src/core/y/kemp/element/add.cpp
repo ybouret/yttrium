@@ -9,7 +9,7 @@ namespace Yttrium
     namespace Kemp
     {
 
-
+        // core algorithm for pre-allocated sum
         template <typename CORE,typename WORD>
         static inline
         size_t AddAssembly(Assembly<WORD>       &sum,
@@ -21,6 +21,7 @@ namespace Yttrium
             WORD * const s     = sum.item;
             CORE         carry = 0;
 
+            
             // select big/little
             const Assembly<WORD> *big = &lhs;
             const Assembly<WORD> *lit = &rhs;
@@ -98,7 +99,6 @@ namespace Yttrium
 
             TMX_INI();
             s->bits = BuildAdd<uint64_t>::For(s->get<uint32_t>(),l,r);
-            //s->bits = AddAssembly<uint64_t,uint32_t>(s->set(AsNum32).num32,l,r);
             TMX_END();
 
             return s.yield();
