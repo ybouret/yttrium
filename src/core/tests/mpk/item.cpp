@@ -10,13 +10,54 @@
 #include "y/system/exception.hpp"
 #include "y/tow/api.hpp"
 #include "y/type/capacity.hpp"
-
+#include "y/sequence/vector.hpp"
+#include "y/memory/buffer/ro.hpp"
 #include <cerrno>
 
 namespace Yttrium
 {
     namespace MPK
     {
+
+        //! reworking 64-bits input into another uint64_t
+        struct Pull64
+        {
+            static uint64_t From(const uint8_t  * const) noexcept; //!< rebuild from bytes
+            static uint64_t From(const uint16_t * const) noexcept; //!< rebuild from words
+            static uint64_t From(const uint32_t * const) noexcept; //!< rebuild from dwords
+            static uint64_t From(const uint64_t * const) noexcept; //!< read
+
+        };
+
+        
+        uint64_t Pull64:: From(const uint8_t * const p) noexcept
+        {
+            assert(0!=p);
+            const uint64_t w[8] = { p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7] };
+            return w[0] | (w[1]<<8) | (w[2]<<16) | (w[3]<<24) | (w[4]<<32) | (w[5]<<40) | (w[6]<<48) | (w[7]<<56);
+        }
+
+
+        uint64_t Pull64:: From(const uint16_t * const p) noexcept
+        {
+            assert(0!=p);
+            const uint64_t w[4] = { p[0], p[1], p[2], p[3] };
+            return w[0] | (w[1]<<16) | (w[2]<<32) | (w[3]<<48);
+        }
+
+        uint64_t Pull64:: From(const uint32_t * const p) noexcept
+        {
+            assert(0!=p);
+            const uint64_t w[2] = { p[0], p[1] };
+            return w[0] | (w[1]<<32);
+        }
+
+        uint64_t Pull64:: From(const uint64_t * const p) noexcept
+        {
+            assert(0!=p);
+            return *p;
+        }
+
 
         //! reworking 64-bits input into another uint64_t
         struct Push64
@@ -171,6 +212,11 @@ namespace Yttrium
                 return 0;
             }
 
+            inline uint64_t pull64() const noexcept
+            {
+                return Pull64::From(item);
+            }
+
             const size_t    capacity;
             size_t          positive;
             T * const       item;
@@ -197,11 +243,12 @@ namespace Yttrium
         Y_SHALLOW_IMPL(ToNum64);
 
 
-        class Element : public Object
+        class Element : public Object, public Memory::ReadOnlyBuffer
         {
         public:
             static const char * const CallSign;
             static const size_t       One = 1;
+            static const State        Inner[4];
 
             explicit Element(const size_t usrBytes, const AsCapacity_ &) :
             state( AsBytes ),
@@ -228,18 +275,41 @@ namespace Yttrium
                 memcpy(entry,el.entry,bytes.capacity);
             }
 
-            explicit Element(const ToNum64_ &, const uint64_t qw) :
+            explicit Element(const uint64_t qw, const ToNum64_ &) :
             state(AsNum64),
-            bits( BitCount::For(qw) ),
+            bits(  BitCount::For(qw) ),
             shift( ShiftFor( sizeof(uint64_t)) ),
             entry( Memory::Archon::Acquire( Coerce(shift) ) ),
-            bytes(entry,One<<shift,bits,AsBits),
+            bytes(entry,One<<shift,       bits,AsBits),
             num16(entry,bytes.capacity>>1,bits,AsBits),
             num32(entry,num16.capacity>>1,bits,AsBits),
             num64(entry,num32.capacity>>1,bits,AsBits)
             {
                 num64.item[0] = qw;
             }
+
+            explicit Element(const size_t nbits, Random::Bits &ran) :
+            state( AsBytes ),
+            bits( nbits ),
+            shift( ShiftFor( Bytes::BitsToPositive(bits)) ),
+            entry( Memory::Archon::Acquire( Coerce(shift) ) ),
+            bytes(entry,One<<shift,       bits,AsBits),
+            num16(entry,bytes.capacity>>1,bits,AsBits),
+            num32(entry,num16.capacity>>1,bits,AsBits),
+            num64(entry,num32.capacity>>1,bits,AsBits)
+            {
+                if(bits>0)
+                {
+                    assert(bytes.positive>0);
+                    const size_t msi = bytes.positive-1;
+                    const size_t msb = bits - (msi<<3);  assert(msb>0); assert(bits==msi*8+msb);
+                    for(size_t i=0;i<msi;++i) bytes.item[i] = ran.to<uint8_t>();
+                    bytes.item[msi] = ran.to<uint8_t>( unsigned(msb) );
+
+                    assert(bits==bytes.updateBits());
+                }
+            }
+
 
             virtual ~Element() noexcept
             {
@@ -249,6 +319,82 @@ namespace Yttrium
                 Coerce(entry) = 0;
                 Coerce(shift) = 0;
             }
+
+            friend std::ostream & operator<<(std::ostream &os, const Element &el)
+            {
+                switch(el.state)
+                {
+                    case AsBytes: os << el.bytes; break;
+                    case AsNum16: os << el.num16; break;
+                    case AsNum32: os << el.num32; break;
+                    case AsNum64: os << el.num64; break;
+                }
+                return os;
+            }
+
+            virtual size_t       measure() const noexcept { return bytes.capacity; }
+            virtual const void * ro_addr() const noexcept { return entry; }
+
+            uint64_t u64() const noexcept
+            {
+                switch(state)
+                {
+                    case AsBytes: return bytes.pull64();
+                    case AsNum16: return num16.pull64();
+                    case AsNum32: return num32.pull64();
+                    case AsNum64: break;
+                }
+                return num64.pull64();
+            }
+
+            Element & set(const State newState) noexcept
+            {
+                switch(newState)
+                {
+                    case AsBytes: 
+                        switch(state)
+                        {
+                            case AsBytes: return *this;
+                            case AsNum16: bytes.load(num16); break;
+                            case AsNum32: bytes.load(num32); break;
+                            case AsNum64: bytes.load(num64); break;
+                        }
+                        break;
+
+                    case AsNum16:
+                        switch(state)
+                        {
+                            case AsBytes: num16.load(bytes); break;
+                            case AsNum16: return *this;
+                            case AsNum32: num16.load(num32); break;
+                            case AsNum64: num16.load(num64); break;
+                        }
+                        break;
+                    case AsNum32:
+                        switch(state)
+                        {
+                            case AsBytes: num32.load(bytes); break;
+                            case AsNum16: num32.load(num16); break;
+                            case AsNum32: return *this;
+                            case AsNum64: num32.load(num64); break;
+                        }
+                        break;
+
+                    case AsNum64:
+                        switch(state)
+                        {
+                            case AsBytes: num64.load(bytes); break;
+                            case AsNum16: num64.load(num16); break;
+                            case AsNum32: num64.load(num32); break;
+                            case AsNum64: return *this;
+                        }
+                        break;
+                }
+                assert(newState!=state);
+                state = newState;
+                return *this;
+            }
+
 
             State          state; //!< current state
             size_t         bits;  //!< current number of bits
@@ -281,7 +427,7 @@ namespace Yttrium
         };
 
         const char * const Element:: CallSign = "MPK::Element";
-
+        const State        Element:: Inner[4] = { AsBytes, AsNum16, AsNum32, AsNum64 };
 
 
     }
@@ -323,7 +469,46 @@ Y_UTEST(mpk_item)
         std::cerr << std::endl;
     }
 
-    
+    std::cerr << "<ToNum64>" << std::endl;
+    for(unsigned i=0;i<=64;++i)
+    {
+        const uint64_t qw = ran.to<uint64_t>(i); Y_ASSERT(i==BitCount::For(qw));
+        MPK::Element   el(qw,MPK::ToNum64);
+        Y_ASSERT(el.bits == i);
+        Y_ASSERT(MPK::AsNum64 == el.state);
+        for(unsigned k=0;k<4;++k)
+        {
+            for(unsigned l=0;l<4;++l)
+            {
+                Y_ASSERT( el.set( MPK::Element::Inner[k]).u64() == qw );
+                Y_ASSERT( el.set( MPK::Element::Inner[l]).u64() == qw );
+            }
+        }
+
+    }
+
+    std::cerr << "<Random>" << std::endl;
+    for(unsigned i=0;i<=1024;++i)
+    {
+        MPK::Element    el(i,ran);
+        Vector<uint8_t> org(el.bytes.capacity,AsCapacity);
+        for(size_t j=0;j<el.bytes.capacity;++j) {
+            org << el.bytes.item[j];
+        }
+        Y_ASSERT(org.size()==el.measure());
+
+        for(unsigned k=0;k<4;++k)
+        {
+            for(unsigned l=0;l<4;++l)
+            {
+                (void) el.set( MPK::Element::Inner[k]);
+                (void) el.set( MPK::Element::Inner[l]);
+                el.set(MPK::AsBytes);
+                Y_ASSERT( 0 == memcmp( &org[1], el.ro_addr(), el.measure() ) );
+            }
+        }
+
+    }
 
 }
 Y_UDONE()
