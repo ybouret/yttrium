@@ -138,9 +138,7 @@ namespace Yttrium
                     const size_t msi = positive-1;
                     const T      top = item[msi];
                     if(top>0)
-                    {
                         return (msi<<Log2WordBits) + BitCount::For(top);
-                    }
                     positive = msi;
                 }
                 assert(0==positive);

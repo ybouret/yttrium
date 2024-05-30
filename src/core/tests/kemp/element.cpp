@@ -3,6 +3,7 @@
 #include "y/random/park-miller.hpp"
 #include "y/sequence/vector.hpp"
 #include <cstring>
+#include "y/ptr/auto.hpp"
 
 
 using namespace Yttrium;
@@ -95,10 +96,29 @@ Y_UTEST(kemp_element)
                     R.set( Kemp::Element::Inner[l]);
                     Y_ASSERT( cmp == Kemp::Element::Compare(lhs,R) );
                     Y_ASSERT( cmp == Kemp::Element::Compare(L,rhs) );
-
                 }
             }
         }
+    }
+
+    std::cerr << "<Add64>" << std::endl;
+    for(unsigned i=0;i<=63;++i)
+    {
+        for(unsigned j=0;j<=63;++j)
+        {
+            const uint64_t l = ran.to<uint64_t>(i);
+            const uint64_t r = ran.to<uint64_t>(j);
+            const uint64_t s = l+r; Y_ASSERT(s-l==r); Y_ASSERT(s-r==l);
+            const size_t   b = BitCount::For(s);
+
+            Kemp::Element          L(l, Kemp::ToNum64); Y_ASSERT(L.bits==i); Y_ASSERT(L.u64()==l);
+            Kemp::Element          R(r, Kemp::ToNum64); Y_ASSERT(R.bits==j); Y_ASSERT(R.u64()==r);
+            AutoPtr<Kemp::Element> S = Kemp::Element::Add<uint64_t,uint32_t>(L,R);
+            Y_ASSERT(S->bits==b);
+            Y_ASSERT(S->u64()==s);
+
+        }
+
     }
 
 
