@@ -64,10 +64,25 @@ namespace Yttrium
 #define TMX_INI() const uint64_t   t = 0!=tmx ? WallTime::Ticks() : 0
 #define TMX_END() if(0!=tmx) *tmx += WallTime::Ticks() - t
 
-        template <typename ARG>
-        static inline Element *CreateAddFor(const ARG &l, const ARG &r)
+        namespace
         {
-            return new Element( (Max(l.positive,r.positive)+1) * ARG::WordSize, AsCapacity);
+            template <typename ARG>
+            static inline Element *CreateAdd(const ARG &l, const ARG &r)
+            {
+                return new Element( (Max(l.positive,r.positive)+1) * ARG::WordSize, AsCapacity);
+            }
+
+            template <typename CORE>
+            struct BuildAdd
+            {
+                template <typename ARG> static inline
+                size_t For(ARG &s, const ARG &l, const ARG &r)
+                {
+                    return AddAssembly<CORE,typename ARG::WordType>(s,l,r);
+                }
+            };
+
+
         }
 
 
@@ -77,12 +92,13 @@ namespace Yttrium
                                                    Element &        rhs,
                                                    uint64_t * const tmx)
         {
-            const Num32     &l = lhs.set(AsNum32).num32;
-            const Num32     &r = rhs.set(AsNum32).num32;
-            AutoPtr<Element> s = CreateAddFor(l,r);
+            const Num32     &l = lhs.get<uint32_t>();
+            const Num32     &r = rhs.get<uint32_t>();
+            AutoPtr<Element> s = CreateAdd(l,r);
 
             TMX_INI();
-            s->bits = AddAssembly<uint64_t,uint32_t>(s->set(AsNum32).num32,l,r);
+            s->bits = BuildAdd<uint64_t>::For(s->get<uint32_t>(),l,r);
+            //s->bits = AddAssembly<uint64_t,uint32_t>(s->set(AsNum32).num32,l,r);
             TMX_END();
 
             return s.yield();
@@ -95,7 +111,7 @@ namespace Yttrium
         {
             const Num16     &l = lhs.set(AsNum16).num16;
             const Num16     &r = rhs.set(AsNum16).num16;
-            AutoPtr<Element> s = CreateAddFor(l,r);
+            AutoPtr<Element> s = CreateAdd(l,r);
 
             TMX_INI();
             s->bits = AddAssembly<uint64_t,uint16_t>(s->set(AsNum16).num16,l,r);
@@ -112,7 +128,7 @@ namespace Yttrium
         {
             const Bytes     &l = lhs.set(AsBytes).bytes;
             const Bytes     &r = rhs.set(AsBytes).bytes;
-            AutoPtr<Element> s = CreateAddFor(l,r); assert(AsBytes==s->state);
+            AutoPtr<Element> s = CreateAdd(l,r); assert(AsBytes==s->state);
 
             TMX_INI();
             s->bits = AddAssembly<uint64_t,uint8_t>(s->bytes,l,r);
@@ -130,7 +146,7 @@ namespace Yttrium
         {
             const Num16     &l = lhs.set(AsNum16).num16;
             const Num16     &r = rhs.set(AsNum16).num16;
-            AutoPtr<Element> s = CreateAddFor(l,r);
+            AutoPtr<Element> s = CreateAdd(l,r);
 
             TMX_INI();
             s->bits = AddAssembly<uint32_t,uint16_t>(s->set(AsNum16).num16,l,r);
@@ -145,7 +161,7 @@ namespace Yttrium
         {
             const Bytes     &l = lhs.set(AsBytes).bytes;
             const Bytes     &r = rhs.set(AsBytes).bytes;
-            AutoPtr<Element> s = CreateAddFor(l,r); assert(AsBytes==s->state);
+            AutoPtr<Element> s = CreateAdd(l,r); assert(AsBytes==s->state);
 
             TMX_INI();
             s->bits = AddAssembly<uint32_t,uint8_t>(s->bytes,l,r);
@@ -161,7 +177,7 @@ namespace Yttrium
         {
             const Bytes     &l = lhs.set(AsBytes).bytes;
             const Bytes     &r = rhs.set(AsBytes).bytes;
-            AutoPtr<Element> s = CreateAddFor(l,r); assert(AsBytes==s->state);
+            AutoPtr<Element> s = CreateAdd(l,r); assert(AsBytes==s->state);
 
             TMX_INI();
             s->bits = AddAssembly<uint16_t,uint8_t>(s->bytes,l,r);

@@ -122,6 +122,25 @@ namespace Yttrium
             return s;
         }
 
+
+        template <> Assembly<uint8_t> & Element:: get<uint8_t>() noexcept {
+            return set(AsBytes).bytes;
+        }
+
+        template <> Assembly<uint16_t> & Element:: get<uint16_t>() noexcept {
+            return set(AsNum16).num16;
+        }
+
+        template <> Assembly<uint32_t> & Element:: get<uint32_t>() noexcept {
+            return set(AsNum32).num32;
+        }
+
+
+        template <> Assembly<uint64_t> & Element:: get<uint64_t>() noexcept {
+            return set(AsNum64).num64;
+        }
+
+
         uint64_t Element:: u64() const noexcept
         {
             switch(state)

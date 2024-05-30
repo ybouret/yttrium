@@ -85,6 +85,7 @@ namespace Yttrium
             uint64_t     u64()                  const noexcept; //!< least significant 64 bits
             Element &    set(const State)             noexcept; //!< ensure state
             static State TuneUp(Element &, Element &) noexcept; //!< tune to largest integral
+            template <typename T> Assembly<T> &get() noexcept;
 
             //__________________________________________________________________
             //
@@ -103,11 +104,11 @@ namespace Yttrium
             // Addition
             //
             //__________________________________________________________________
-            typedef Element (*BinaryProc)(Element &, Element&);
 
+            //! addition functions
             template <typename CORE, typename WORD>
-            static Element * Add(Element &lhs,
-                                 Element &rhs,
+            static Element * Add(Element &        lhs,
+                                 Element &        rhs,
                                  uint64_t * const tmx = 0);
 
 
