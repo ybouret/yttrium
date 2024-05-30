@@ -261,6 +261,6 @@ Y_UTEST_DECL(256)
     Y_UTEST(apk_component);
     Y_UTEST(apk_natural);
     
-    Y_UTEST(mpk_item);
+    Y_UTEST(kemp_element);
 }
 Y_UTEST_EXEC()

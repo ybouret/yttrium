@@ -436,7 +436,7 @@ namespace Yttrium
 
 using namespace Yttrium;
 
-Y_UTEST(mpk_item)
+Y_UTEST(kemp_element)
 {
     Random::ParkMiller ran;
     for(unsigned i=0;i<=64;++i)

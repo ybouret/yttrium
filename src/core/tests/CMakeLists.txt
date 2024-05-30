@@ -14,7 +14,7 @@ fft
 string
 apex
 apk
-mpk
+kemp
 tow
 ordered
 counting
@@ -343,5 +343,6 @@ add_test(tow:api test-core tow_api)
 add_test(apk:component test-core apk_component)
 add_test(apk:natural   test-core apk_natural)
 
-add_test(mpk:item test-core mpk_item)
+#kemp
+add_test(kemp:element test-core kemp_element)
 
