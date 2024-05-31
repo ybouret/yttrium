@@ -122,6 +122,9 @@ namespace Yttrium
             //__________________________________________________________________
           
             //! test if shrinkable with capacity*WordSize > minBytes
+            /**
+             can happen after subtraction of division
+             */
             inline bool mayShrinkAbove(const size_t minBytes) const noexcept
             {
                 const bool flag = ( (capacity*WordSize>minBytes) && (positive < (capacity>>1)) );
@@ -131,9 +134,8 @@ namespace Yttrium
 
             //! transmogrify from another assembly
             template <typename U> inline
-            void load(const Assembly<U> &source)
+            void load(const Assembly<U> &source) noexcept
             {
-                // TARGET = T, SOURCE = U
                 const size_t cycles = TOW::API<T,U>::Cycles(capacity,source.capacity);
                 TOW::Transmute(item,source.item,cycles);
             }

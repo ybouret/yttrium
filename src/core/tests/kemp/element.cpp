@@ -9,7 +9,7 @@
 #include "y/text/human-readable.hpp"
 
 
-//#include "y/kemp/element/sub.hpp"
+#include "y/kemp/element/mul.hpp"
 
 using namespace Yttrium;
 
@@ -208,6 +208,35 @@ RATE(tmx[Kemp::Ops16_8])
         }
     }
     RATES(); std::cerr << std::endl;
+
+    std::cerr << "<Mul64>" << std::endl;
+
+
+    total = 0;
+    memset(tmx,0,sizeof(tmx));
+    for(unsigned i=0;i<=32;++i)
+    {
+        for(unsigned j=0;j<=32;++j)
+        {
+            for(size_t cycle=0;cycle<16;++cycle)
+            {
+                ++total;
+                uint64_t lhs = ran.to<uint64_t>(i);
+                uint64_t rhs = ran.to<uint64_t>(j);
+                const uint64_t mul = lhs*rhs;
+                const size_t b = BitCount::For(mul);
+
+                Kemp::Element L(lhs,Kemp::ToNum64);
+                Kemp::Element R(rhs,Kemp::ToNum64);
+               // std::cerr << lhs << "*" << rhs << " = 0x" << Hexadecimal(mul) << std::endl;
+                AutoPtr<Kemp::Element> P = Kemp::ElementMulSTD<uint16_t,uint8_t>(L,R);
+                Y_ASSERT(P->bits == b);
+                Y_ASSERT(P->u64()==mul);
+            }
+
+        }
+
+    }
 
 
     std::cerr << std::endl;
