@@ -106,6 +106,7 @@ Y_UTEST(kemp_element)
         }
     }
 
+    WallTime chrono;
     size_t   total = 0;
     uint64_t tmx[Kemp::Element::Kinds] = { 0 };
     std::cerr << "<Add64>" << std::endl;
@@ -149,7 +150,6 @@ Y_UTEST(kemp_element)
     }
 
 
-    WallTime chrono;
 
 #define RATE(VAR) std::cerr << std::setw(20) <<  #VAR << " = " << HumanReadable(ceil(static_cast<long double>(total)/chrono(VAR))) << "op/s" << std::endl
 #define RATES()            \
@@ -169,7 +169,7 @@ RATE(tmx[Kemp::Ops16_8])
     {
         for(unsigned j=0;j<=64;++j)
         {
-            for(size_t cycle=0;cycle<1;++cycle)
+            for(size_t cycle=0;cycle<16;++cycle)
             {
                 ++total;
                 uint64_t lhs = ran.to<uint64_t>(i);
