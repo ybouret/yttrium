@@ -29,7 +29,12 @@ namespace Yttrium
         typedef Assembly<uint32_t> Num32; //!< alias
         typedef Assembly<uint64_t> Num64; //!< alias
 
+        //______________________________________________________________________
+        //
+        //
         //! internal state representation
+        //
+        //______________________________________________________________________
         enum  State
         {
             AsBytes, //!< use Bytes
@@ -38,6 +43,23 @@ namespace Yttrium
             AsNum64  //!< use Num64
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //! internal operations interface
+        //
+        //______________________________________________________________________
+        enum Ops
+        {
+            // 64 bits core
+            Ops64_32, //!< CORE=uint64_t, WORD=uint32_t
+            Ops64_16, //!< CORE=uint64_t, WORD=uint16_t
+            Ops64_8,  //!< CORE=uint64_t, WORD=uint8_t
+            Ops32_16, //!< CORE=uint32_t, WORD=uint16_t
+            Ops32_8,  //!< CORE=uint32_t, WORD=uint8_t
+            Ops16_8   //!< CORE=uint16_t, WORD=uint8_t
+        };
+        
         //! alias
         Y_SHALLOW_DECL(ToNum64);
 
@@ -58,9 +80,12 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const char * const CallSign; //!< "Kemp::Element"
-            static const size_t       One = 1;  //!< alias
-            static const State        Inner[4]; //!< aliases
+            static const char * const CallSign;     //!< "Kemp::Element"
+            static const size_t       One = 1;      //!< alias
+            static const unsigned     Sizes = 4;    //!< 8,16,32 and 64 bits
+            static const State        Inner[Sizes]; //!< aliases
+            static const unsigned     Kinds = ( Sizes *(Sizes-1 )) / 2; //!< combinations
+            static const Ops          Proto[Kinds];                     //!< aliases
 
             //__________________________________________________________________
             //
@@ -113,13 +138,10 @@ namespace Yttrium
             // Addition
             //
             //__________________________________________________________________
-
-            //! addition functions
-            template <typename CORE, typename WORD>
-            static Element * Add(Element &        lhs,
-                                 Element &        rhs,
-                                 uint64_t * const tmx = 0);
-
+            typedef Element * (*BinaryProc)(Element &lhs, Element &rhs);               //!< binary procedure
+            typedef Element * (*BinaryProcEx)(Element &lhs, Element &rhs, uint64_t &); //!< binary procedure with timing
+            static  const BinaryProc   Add[Kinds];   //!< additions
+            static  const BinaryProcEx AddEx[Kinds]; //!< additions with timing
 
 
             //__________________________________________________________________
@@ -146,6 +168,19 @@ namespace Yttrium
             static   unsigned ShiftFor(const size_t usrBytes);
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //! implementing CODE<CORE,WORD>
+        //
+        //______________________________________________________________________
+#define Y_Kemp_Ops(CODE)  \
+CODE<uint64_t,uint32_t>,  \
+CODE<uint64_t,uint16_t>,  \
+CODE<uint64_t,uint8_t>,   \
+CODE<uint32_t,uint16_t>,  \
+CODE<uint32_t,uint8_t>,   \
+CODE<uint16_t,uint8_t>    \
 
 
     }

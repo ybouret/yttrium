@@ -1,14 +1,21 @@
 
-#include "y/kemp/element.hpp"
-#include "y/type/utils.hpp"
-#include "y/ptr/auto.hpp"
-#include "y/system/wtime.hpp"
+#include "y/kemp/element/add.hpp"
 
 namespace Yttrium
 {
     namespace Kemp
     {
+        const Element::BinaryProc Element:: Add[Kinds] =
+        {
+            Y_Kemp_Ops(ElementAdd)
+        };
 
+        const Element::BinaryProcEx Element:: AddEx[Kinds] =
+        {
+            Y_Kemp_Ops(ElementAddEx)
+        };
+
+#if 0
         // core algorithm for pre-allocated sum
         template <typename CORE,typename WORD>
         static inline
@@ -61,6 +68,18 @@ namespace Yttrium
             return sum.updateBits();
         }
 
+        template <typename CORE, typename WORD>
+        inline Element * AddElements(Element &lhs,
+                                     Element &rhs)
+        {
+            typedef Assembly<WORD> AssemblyType;
+            AssemblyType     &l = lhs.get<WORD>();
+            AssemblyType     &r = rhs.get<WORD>();
+            AutoPtr<Element>  s = new Element( (Max(l.positive,r.positive)+1) * sizeof(WORD), AsCapacity);
+            s->bits = AddAssembly<CORE>( s->get<WORD>(), l, r);
+            return s.yield();
+        }
+
 
 #define TMX_INI() const uint64_t   t = 0!=tmx ? WallTime::Ticks() : 0
 #define TMX_END() if(0!=tmx) *tmx += WallTime::Ticks() - t
@@ -85,7 +104,6 @@ namespace Yttrium
 
 
         }
-
 
         // CORE = 64 bits
         template <>
@@ -184,7 +202,7 @@ namespace Yttrium
             TMX_END();
             return s.yield();
         }
-
+#endif
         
 
     }

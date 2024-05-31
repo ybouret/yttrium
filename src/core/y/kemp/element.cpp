@@ -12,7 +12,17 @@ namespace Yttrium
         Y_SHALLOW_IMPL(ToNum64);
 
         const char * const Element:: CallSign = "MPK::Element";
-        const State        Element:: Inner[4] = { AsBytes, AsNum16, AsNum32, AsNum64 };
+        const State        Element:: Inner[Sizes] = { AsBytes, AsNum16, AsNum32, AsNum64 };
+        const Ops          Element:: Proto[Kinds] =
+        {
+            Ops64_32,
+            Ops64_16,
+            Ops64_8,
+            Ops32_16,
+            Ops32_8,
+            Ops16_8
+        };
+
 
         Element:: Element(const size_t usrBytes, const AsCapacity_ &) :
         state( AsBytes ),
