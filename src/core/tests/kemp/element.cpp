@@ -228,15 +228,25 @@ RATE(tmx[Kemp::Ops16_8])
 
                 Kemp::Element L(lhs,Kemp::ToNum64);
                 Kemp::Element R(rhs,Kemp::ToNum64);
-               // std::cerr << lhs << "*" << rhs << " = 0x" << Hexadecimal(mul) << std::endl;
-                AutoPtr<Kemp::Element> P = Kemp::ElementMulSTD<uint16_t,uint8_t>(L,R);
-                Y_ASSERT(P->bits == b);
-                Y_ASSERT(P->u64()==mul);
+                for(unsigned k=0;k<Kemp::Element::Kinds;++k)
+                {
+                    {
+                        AutoPtr<Kemp::Element> P = Kemp::Element::MulStd[k](L,R);
+                        Y_ASSERT(P->bits==b);
+                        Y_ASSERT(P->u64()==mul);
+                    }
+
+                    {
+                        AutoPtr<Kemp::Element> S = Kemp::Element::MulStdEx[k](L,R,tmx[k]);
+                        Y_ASSERT(S->bits==b);
+                        Y_ASSERT(S->u64()==mul);
+                    }
+                }
             }
-
         }
-
     }
+    RATES(); std::cerr << std::endl;
+
 
 
     std::cerr << std::endl;

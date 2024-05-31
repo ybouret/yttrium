@@ -5,17 +5,15 @@ namespace Yttrium
 {
     namespace Kemp
     {
-#if 0
-        const Element::BinaryProc Element:: Add[Kinds] =
+        const Element::BinaryProc Element:: MulStd[Kinds] =
         {
-            Y_Kemp_Ops(ElementAdd)
+            Y_Kemp_Ops(ElementMulStd)
         };
 
-        const Element::BinaryProcEx Element:: AddEx[Kinds] =
+        const Element::BinaryProcEx Element:: MulStdEx[Kinds] =
         {
-            Y_Kemp_Ops(ElementAddEx)
+            Y_Kemp_Ops(ElementMulStdEx)
         };
-#endif
 
     }
 

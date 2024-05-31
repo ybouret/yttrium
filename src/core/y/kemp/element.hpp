@@ -66,12 +66,21 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const char * const CallSign;     //!< "Kemp::Element"
-            static const size_t       One = 1;      //!< alias
-            static const unsigned     Sizes = 4;    //!< 8,16,32 and 64 bits
-            static const State        Inner[Sizes]; //!< aliases
+            static const char * const CallSign;                         //!< "Kemp::Element"
+            static const size_t       One = 1;                          //!< alias
+            static const unsigned     Sizes = 4;                        //!< 8,16,32 and 64 bits
+            static const State        Inner[Sizes];                     //!< aliases
             static const unsigned     Kinds = ( Sizes *(Sizes-1 )) / 2; //!< combinations
             static const Ops          Proto[Kinds];                     //!< aliases
+
+            //__________________________________________________________________
+            //
+            //
+            // Procedures
+            //
+            //__________________________________________________________________
+            typedef Element * (*BinaryProc)(Element &lhs, Element &rhs);               //!< binary procedure
+            typedef Element * (*BinaryProcEx)(Element &lhs, Element &rhs, uint64_t &); //!< binary procedure with timing
 
             //__________________________________________________________________
             //
@@ -126,13 +135,26 @@ namespace Yttrium
             // Addition
             //
             //__________________________________________________________________
-            typedef Element * (*BinaryProc)(Element &lhs, Element &rhs);               //!< binary procedure
-            typedef Element * (*BinaryProcEx)(Element &lhs, Element &rhs, uint64_t &); //!< binary procedure with timing
-           
             static  const BinaryProc   Add[Kinds];   //!< additions
             static  const BinaryProcEx AddEx[Kinds]; //!< additions with timing
+         
+            //__________________________________________________________________
+            //
+            //
+            // Subtraction
+            //
+            //__________________________________________________________________
             static  const BinaryProc   Sub[Kinds];   //!< additions
             static  const BinaryProcEx SubEx[Kinds]; //!< additions with timing
+            
+            //__________________________________________________________________
+            //
+            //
+            // Multiplications
+            //
+            //__________________________________________________________________
+            static  const BinaryProc   MulStd[Kinds];     //!< standard multiplication
+            static  const BinaryProcEx MulStdEx[Kinds];   //!< standard multiplication with timing
 
 
 

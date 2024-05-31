@@ -19,7 +19,7 @@ namespace Yttrium
         //______________________________________________________________________
         template <typename CORE,typename WORD>
         static inline
-        size_t AssemblyMulSTD(Assembly<WORD>       &prod,
+        size_t AssemblyMulStd(Assembly<WORD>       &prod,
                               const Assembly<WORD> &lhs,
                               const Assembly<WORD> &rhs) noexcept
         {
@@ -31,19 +31,19 @@ namespace Yttrium
             if(p<=0||q<=0) return 0;
 
             const WORD * const a = lhs.item;
-            const WORD * const b = rhs.item;
-            WORD       * const product = prod.item;
-
-            for(size_t j=0;j<q;++j)
+            const WORD *       b = rhs.item;
+            WORD       *       product = prod.item;
+            for(size_t j=q;j>0;--j,++product)
             {
-                CORE carry = 0;
+                const CORE B     = static_cast<CORE>(*(b++));
+                CORE       carry = 0;
                 for(size_t i=0;i<p;++i)
                 {
-                    carry += static_cast<CORE>(product[i+j]) + static_cast<CORE>(a[i]) * static_cast<CORE>(b[j]);
-                    product[i+j] = static_cast<WORD>(carry);
+                    carry += static_cast<CORE>(product[i]) + static_cast<CORE>(a[i]) * B;
+                    product[i] = static_cast<WORD>(carry);
                     carry >>= Assembly<WORD>::WordBits;
                 }
-                product[j + p] =  static_cast<WORD>(carry);
+                product[p] =  static_cast<WORD>(carry);
             }
 
             prod.positive = p+q;
@@ -52,16 +52,33 @@ namespace Yttrium
 
 
         template <typename CORE, typename WORD>
-        inline Element * ElementMulSTD(Element &lhs,
+        inline Element * ElementMulStd(Element &lhs,
                                        Element &rhs)
         {
             typedef Assembly<WORD> AssemblyType;
             AssemblyType     &l = lhs.get<WORD>();
             AssemblyType     &r = rhs.get<WORD>();
             AutoPtr<Element>  s = new Element( (l.positive+r.positive) * sizeof(WORD), AsCapacity);
-            s->bits = AssemblyMulSTD<CORE>( s->get<WORD>(), l, r);
+            s->bits = AssemblyMulStd<CORE>( s->get<WORD>(), l, r);
             return s.yield();
         }
+
+        template <typename CORE, typename WORD>
+        inline Element * ElementMulStdEx(Element &lhs,
+                                         Element &rhs,
+                                         uint64_t &tmx)
+        {
+            typedef Assembly<WORD> AssemblyType;
+            AssemblyType     &l = lhs.get<WORD>();
+            AssemblyType     &r = rhs.get<WORD>();
+            AutoPtr<Element>  s = new Element( (l.positive+r.positive) * sizeof(WORD), AsCapacity);
+            const uint64_t    t = WallTime::Ticks();
+            s->bits = AssemblyMulStd<CORE>( s->get<WORD>(), l, r);
+            tmx += (WallTime::Ticks() - t);
+            return s.yield();
+        }
+
+
 
     }
 
