@@ -112,7 +112,7 @@ Y_UTEST(kemp_element)
     {
         for(unsigned j=0;j<=63;++j)
         {
-            for(size_t cycle=0;cycle<128;++cycle)
+            for(size_t cycle=0;cycle<256;++cycle)
             {
                 ++total;
 

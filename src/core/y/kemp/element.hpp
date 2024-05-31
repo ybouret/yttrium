@@ -161,8 +161,6 @@ namespace Yttrium
             Num32          num32; //!< as num32
             Num64          num64; //!< as num64
 
-
-
         private:
             Y_DISABLE_ASSIGN(Element);
             static   unsigned ShiftFor(const size_t usrBytes);
