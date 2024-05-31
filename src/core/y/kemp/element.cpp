@@ -187,6 +187,7 @@ namespace Yttrium
                         case AsNum64: num16.load(num64); break;
                     }
                     break;
+                    
                 case AsNum32:
                     switch(state)
                     {

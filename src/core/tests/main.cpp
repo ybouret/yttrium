@@ -260,5 +260,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(tow_api);    
     
     Y_UTEST(kemp_element);
+    Y_UTEST(kemp_natural);
+
 }
 Y_UTEST_EXEC()
