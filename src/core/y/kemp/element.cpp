@@ -53,29 +53,30 @@ namespace Yttrium
         }
 
 
+#define Y_Element_Ctor_Bits() \
+entry( Memory::Archon::Acquire( Coerce(shift) ) ),\
+bytes(entry,One<<shift,       bits,AsBits),\
+num16(entry,bytes.capacity>>1,bits,AsBits),\
+num32(entry,num16.capacity>>1,bits,AsBits),\
+num64(entry,num32.capacity>>1,bits,AsBits)
+
         Element:: Element(const uint64_t qw, const ToNum64_ &) :
         state(AsNum64),
         bits(  BitCount::For(qw) ),
         shift( ShiftFor( sizeof(uint64_t)) ),
-        entry( Memory::Archon::Acquire( Coerce(shift) ) ),
-        bytes(entry,One<<shift,       bits,AsBits),
-        num16(entry,bytes.capacity>>1,bits,AsBits),
-        num32(entry,num16.capacity>>1,bits,AsBits),
-        num64(entry,num32.capacity>>1,bits,AsBits)
+        Y_Element_Ctor_Bits()
         {
             num64.item[0] = qw;
         }
+
+
 
 
         Element:: Element(const size_t nbits, Random::Bits &ran) :
         state( AsBytes ),
         bits( nbits ),
         shift( ShiftFor( Bytes::BitsToPositive(bits)) ),
-        entry( Memory::Archon::Acquire( Coerce(shift) ) ),
-        bytes(entry,One<<shift,       bits,AsBits),
-        num16(entry,bytes.capacity>>1,bits,AsBits),
-        num32(entry,num16.capacity>>1,bits,AsBits),
-        num64(entry,num32.capacity>>1,bits,AsBits)
+        Y_Element_Ctor_Bits()
         {
             if(bits>0)
             {
@@ -87,6 +88,24 @@ namespace Yttrium
 
                 assert(bits==bytes.updateBits());
             }
+        }
+
+        Element:: Element(const TwoToThe_ &, const size_t i) :
+        state( AsBytes ),
+        bits( i+1 ),
+        shift( ShiftFor( Bytes::BitsToPositive(bits)) ),
+        Y_Element_Ctor_Bits()
+        {
+
+            assert(bytes.positive>0);
+            const size_t msi = bytes.positive-1;
+            const size_t msb = bits - (msi<<3);  
+            assert(msb>=1);
+            assert(msb<=8);
+            assert(bits==msi*8+msb);
+            static const uint8_t one = 1;
+            bytes.item[msi] = (one << (msb-1));
+
         }
 
 

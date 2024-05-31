@@ -4,6 +4,7 @@
 #ifndef Y_Kemp_Element_Included
 #define Y_Kemp_Element_Included 1
 
+#include "y/kemp/types.hpp"
 #include "y/kemp/element/assembly.hpp"
 #include "y/object.hpp"
 #include "y/memory/buffer/ro.hpp"
@@ -97,6 +98,7 @@ namespace Yttrium
             explicit Element(const Element &);                   //!< full copy
             explicit Element(const uint64_t, const ToNum64_ &);  //!< setup from qword
             explicit Element(const size_t, Random::Bits &);      //!< setup to random bits
+            explicit Element(const TwoToThe_ &, const size_t i); //!< 2^i
             virtual ~Element() noexcept;                         //!< cleanup
             Y_OSTREAM_PROTO(Element);                            //!< display
 

@@ -37,6 +37,13 @@ Y_UTEST(kemp_element)
         std::cerr << std::endl;
     }
 
+    std::cerr << "2^bits" << std::endl;
+    for(size_t bits=0;bits<=80;++bits)
+    {
+        const Kemp::Element el(Kemp::TwoToThe,bits);
+        std::cerr << el << std::endl;
+    }
+
     std::cerr << "<ToNum64>" << std::endl;
     for(unsigned i=0;i<=64;++i)
     {
