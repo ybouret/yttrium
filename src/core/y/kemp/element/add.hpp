@@ -101,36 +101,35 @@ namespace Yttrium
             const Assembly<WORD> *lit = &rhs;
             if(big->positive<lit->positive) Swap(lit,big);
             assert(lit->positive<=big->positive);
-
-            const WORD * a = lit->item;
-            const size_t p = lit->positive;
-
-            const WORD * b = big->item;
             size_t       q = big->positive;
-
-            assert(p<=q);
             assert(sum.capacity>q);
-
-            //__________________________________________________________________
-            //
-            // sum over shared size
-            //__________________________________________________________________
-            for(size_t i=p;i>0;--i)
             {
-                carry  += static_cast<CORE>(*(a++)) + static_cast<CORE>(*(b++));
-                *(s++)  = static_cast<WORD>(carry);
-                carry >>= Assembly<WORD>::WordBits;
-            }
+                const WORD * b = big->item;
+                const size_t p = lit->positive; assert(p<=q);
+                //______________________________________________________________
+                //
+                // sum over shared size
+                //______________________________________________________________
+                {
+                    const WORD * a = lit->item;
+                    for(size_t i=p;i>0;--i)
+                    {
+                        carry  += static_cast<CORE>(*(a++)) + static_cast<CORE>(*(b++));
+                        *(s++)  = static_cast<WORD>(carry);
+                        carry >>= Assembly<WORD>::WordBits;
+                    }
+                }
 
-            //__________________________________________________________________
-            //
-            // sum over remaining size
-            //__________________________________________________________________
-            for(size_t i=q++ - p;i>0;--i)
-            {
-                carry += static_cast<CORE>(*(b++));
-                *(s++) = static_cast<WORD>(carry);
-                carry >>= Assembly<WORD>::WordBits;
+                //______________________________________________________________
+                //
+                // sum over remaining size
+                //______________________________________________________________
+                for(size_t i=q++ - p;i>0;--i)
+                {
+                    carry += static_cast<CORE>(*(b++));
+                    *(s++) = static_cast<WORD>(carry);
+                    carry >>= Assembly<WORD>::WordBits;
+                }
             }
 
             //__________________________________________________________________
