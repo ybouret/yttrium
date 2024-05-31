@@ -2,6 +2,7 @@
 #include "y/kemp/element.hpp"
 #include "y/memory/allocator/archon.hpp"
 #include "y/system/exception.hpp"
+#include "y/ptr/auto.hpp"
 #include <cerrno>
 #include <cstring>
 
@@ -42,9 +43,9 @@ namespace Yttrium
         Memory::ReadOnlyBuffer(),
         state(el.state),
         bits(el.bits),
-        shift( ShiftFor(el.bytes.positive) ),
+        shift( ShiftFor( el.bytes.positive)  ),
         entry( Memory::Archon::Acquire( Coerce(shift) ) ),
-        bytes(entry,One<<shift,el.bytes.positive),
+        bytes(entry,One<<shift,       el.bytes.positive),
         num16(entry,bytes.capacity>>1,el.num16.positive),
         num32(entry,num16.capacity>>1,el.num32.positive),
         num64(entry,num32.capacity>>1,el.num64.positive)
@@ -53,11 +54,11 @@ namespace Yttrium
         }
 
 
-#define Y_Element_Ctor_Bits() \
-entry( Memory::Archon::Acquire( Coerce(shift) ) ),\
-bytes(entry,One<<shift,       bits,AsBits),\
-num16(entry,bytes.capacity>>1,bits,AsBits),\
-num32(entry,num16.capacity>>1,bits,AsBits),\
+#define Y_Element_Ctor_Bits()                      \
+entry( Memory::Archon::Acquire( Coerce(shift) ) ), \
+bytes(entry,One<<shift,       bits,AsBits),        \
+num16(entry,bytes.capacity>>1,bits,AsBits),        \
+num32(entry,num16.capacity>>1,bits,AsBits),        \
 num64(entry,num32.capacity>>1,bits,AsBits)
 
         Element:: Element(const uint64_t qw, const ToNum64_ &) :
@@ -243,7 +244,31 @@ num64(entry,num32.capacity>>1,bits,AsBits)
             return lhs.state;
         }
 
- 
+        Element * Element:: Shrink(Element *el)
+        {
+            static const size_t MinBytes = Memory::Archon::MinBytes;
+            AutoPtr<Element>    guard(el);
+            switch(el->state)
+            {
+                case AsBytes: 
+                    if(el->bytes.mayShrinkAbove(MinBytes)) return new Element(*el);
+                    break;
+
+                case AsNum16:
+                    if(el->num16.mayShrinkAbove(MinBytes)) return new Element(*el);
+                    break;
+
+                case AsNum32:
+                    if(el->num32.mayShrinkAbove(MinBytes)) return new Element(*el);
+                    break;
+
+                case AsNum64:
+                    if(el->num64.mayShrinkAbove(MinBytes)) return new Element(*el);
+                    break;
+            }
+
+            return guard.yield();
+        }
 
 
     }

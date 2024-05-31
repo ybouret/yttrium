@@ -12,26 +12,53 @@ namespace Yttrium
     {
         class Element;
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Natural, unsing internal Element
+        //
+        //
+        //______________________________________________________________________
         class Natural : public Number
         {
-        public:
-            virtual ~Natural() noexcept;
-            Y_OSTREAM_PROTO(Natural);
-            
-            Natural();
-            
-            Natural(const Natural &);
-            Natural(const uint64_t);
-            
-            Natural(const size_t nbits, Random::Bits &);
-            Natural(const TwoToThe_ &, const size_t ibit);
+        public:    
+            //__________________________________________________________________
+            //
+            //
+            // definitions
+            //
+            //__________________________________________________________________
+            static Ops Strategy; //!< global strategy
 
-            Natural &operator=(const Natural &);
-            Natural &operator=(const uint64_t);
-            
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            Y_OSTREAM_PROTO(Natural);    //!< display decimal/hexadecimal
+            virtual ~Natural() noexcept; //!< cleanup
 
-            void xch(Natural &) noexcept;
-            String toHex() const;
+            Natural();                //!< default setup = 0
+            Natural(const Natural &); //!< copy
+            Natural(const uint64_t);  //!< set to qword
+
+            Natural(const size_t nbits, Random::Bits &);   //!< exactly nbits random bits
+            Natural(const TwoToThe_ &, const size_t ibit); //!< 2^ibit
+
+            Natural &operator=(const Natural &); //!< assign
+            Natural &operator=(const uint64_t);  //!< assign qword
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            void xch(Natural &) noexcept; //!< noexcept exchange content
+            String toHex()         const; //!< render to hexadecimal
 
 
         private:
@@ -39,7 +66,7 @@ namespace Yttrium
         };
 
     }
-    typedef Kemp::Natural apn;
+    typedef Kemp::Natural apn; //!< alias
     
 }
 

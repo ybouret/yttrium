@@ -95,7 +95,7 @@ namespace Yttrium
             if(l.positive<r.positive) throw Libc::Exception(EDOM, "%s::Sub(lhs<rhs)", Element::CallSign);
             AutoPtr<Element>  s = new Element(l.positive*sizeof(WORD), AsCapacity);
             s->bits = AssemblySub<CORE>( s->get<WORD>(), l, r);
-            return s.yield();
+            return Element::Shrink(s.yield());
         }
 
         template <typename CORE, typename WORD>
@@ -111,7 +111,7 @@ namespace Yttrium
             const uint64_t    t = WallTime::Ticks();
             s->bits = AssemblySub<CORE>(s->get<WORD>(), l, r);
             tmx += (WallTime::Ticks()-t);
-            return s.yield();
+            return Element::Shrink(s.yield());
         }
 
     }

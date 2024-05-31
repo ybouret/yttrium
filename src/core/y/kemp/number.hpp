@@ -1,4 +1,4 @@
-//! \fi;e
+//! \file
 
 #ifndef Y_Kemp_Number_Included
 #define Y_Kemp_Number_Included 1
@@ -10,6 +10,14 @@ namespace Yttrium
     namespace Kemp
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! base class for Natural/Integer/Rational
+        //
+        //
+        //______________________________________________________________________
         class Number
         {
         public:

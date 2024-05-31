@@ -7,6 +7,9 @@ namespace Yttrium
     namespace Kemp
     {
 
+        Ops Natural::Strategy = Ops64_32;
+        
+
         Natural:: ~Natural() noexcept
         {
             assert(0!=code);
