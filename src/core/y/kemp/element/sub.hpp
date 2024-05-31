@@ -33,37 +33,39 @@ namespace Yttrium
             const size_t nl = lhs.positive;
             {
                 const WORD  *l  = lhs.item;
-                const WORD  *r  = rhs.item;
                 const size_t nr = rhs.positive;
                 WORD  *      s  = sub.item;
                 
                 CarryType carry = 0;
-                for(size_t i=0;i<nr;++i)
                 {
-                    carry += static_cast<CarryType>(l[i]) - static_cast<CarryType>(r[i]);
-                    if(carry<0)
+                    const WORD  *r  = rhs.item;
+                    for(size_t i=nr;i>0;--i)
                     {
-                        s[i]  = static_cast<WORD>(carry+Radix);
-                        carry = -1;
-                    }
-                    else
-                    {
-                        s[i]  = static_cast<WORD>(carry);
-                        carry = 0;
+                        carry += static_cast<CarryType>(*(l++)) - static_cast<CarryType>(*(r++));
+                        if(carry<0)
+                        {
+                            *(s++)  = static_cast<WORD>(carry+Radix);
+                            carry = -1;
+                        }
+                        else
+                        {
+                            *(s++)  = static_cast<WORD>(carry);
+                            carry = 0;
+                        }
                     }
                 }
-                
-                for(size_t i=nr;i<nl;++i)
+
+                for(size_t i=nl-nr;i>0;--i)
                 {
-                    carry += static_cast<CarryType>(l[i]);
+                    carry += static_cast<CarryType>(*(l++));
                     if(carry<0)
                     {
-                        s[i]  = static_cast<WORD>(carry+Radix);
+                        *(s++)  = static_cast<WORD>(carry+Radix);
                         carry = -1;
                     }
                     else
                     {
-                        s[i]  = static_cast<WORD>(carry);
+                        *(s++) = static_cast<WORD>(carry);
                         carry = 0;
                     }
                 }
