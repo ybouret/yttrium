@@ -75,6 +75,14 @@ namespace Yttrium
             return sum.updateBits();
         }
 
+        template <typename CORE,typename WORD>
+        inline Element * ElementAdd(const Assembly<WORD> &l,
+                                    const Assembly<WORD> &r)
+        {
+            AutoPtr<Element>  s = new Element( (Max(l.positive,r.positive)+1) * sizeof(WORD), AsCapacity);
+            s->bits = AssemblyAdd<CORE>( s->get<WORD>(), l, r);
+            return s.yield();
+        }
 
         template <typename CORE, typename WORD>
         inline Element * ElementAdd(Element &lhs,
