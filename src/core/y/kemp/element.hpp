@@ -140,8 +140,12 @@ namespace Yttrium
             //__________________________________________________________________
             typedef Element * (*BinaryProc)(Element &lhs, Element &rhs);               //!< binary procedure
             typedef Element * (*BinaryProcEx)(Element &lhs, Element &rhs, uint64_t &); //!< binary procedure with timing
+           
             static  const BinaryProc   Add[Kinds];   //!< additions
             static  const BinaryProcEx AddEx[Kinds]; //!< additions with timing
+            static  const BinaryProc   Sub[Kinds];   //!< additions
+            static  const BinaryProcEx SubEx[Kinds]; //!< additions with timing
+
 
 
             //__________________________________________________________________

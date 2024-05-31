@@ -12,12 +12,7 @@ namespace Yttrium
 {
     namespace Kemp
     {
-        struct SubErr
-        {
-            static const char Message[];
-            static const char Level1[];
-            static const char Level2[];
-        };
+
         //______________________________________________________________________
         //
         // core algorithm for pre-allocated sum
@@ -29,18 +24,54 @@ namespace Yttrium
                            const Assembly<WORD> &rhs) noexcept
         {
             Y_STATIC_CHECK(sizeof(CORE)>sizeof(WORD),BadSetup);
-            typedef SignedInt<sizeof(CORE)> CarryType;
+            typedef typename SignedInt<sizeof(CORE)>::Type CarryType;
+            static  const CarryType Radix =  CarryType(1) << (sizeof(WORD) << 3);
 
             assert(sub.capacity>=lhs.positive);
             assert(lhs.positive>=rhs.positive);
 
-            const WORD  *l  = lhs.item;
             const size_t nl = lhs.positive;
-            const WORD  *r  = rhs.item;
-            const size_t nr = rhs.positive;
-            
+            {
+                const WORD  *l  = lhs.item;
+                const WORD  *r  = rhs.item;
+                const size_t nr = rhs.positive;
+                WORD  *      s  = sub.item;
+                
+                CarryType carry = 0;
+                for(size_t i=0;i<nr;++i)
+                {
+                    carry += static_cast<CarryType>(l[i]) - static_cast<CarryType>(r[i]);
+                    if(carry<0)
+                    {
+                        s[i]  = static_cast<WORD>(carry+Radix);
+                        carry = -1;
+                    }
+                    else
+                    {
+                        s[i]  = static_cast<WORD>(carry);
+                        carry = 0;
+                    }
+                }
+                
+                for(size_t i=nr;i<nl;++i)
+                {
+                    carry += static_cast<CarryType>(l[i]);
+                    if(carry<0)
+                    {
+                        s[i]  = static_cast<WORD>(carry+Radix);
+                        carry = -1;
+                    }
+                    else
+                    {
+                        s[i]  = static_cast<WORD>(carry);
+                        carry = 0;
+                    }
+                }
+            }
 
-            return 0;
+
+            sub.positive = nl;
+            return sub.updateBits();
         }
 
         template <typename CORE, typename WORD>
@@ -53,6 +84,22 @@ namespace Yttrium
             if(l.positive<r.positive) throw Libc::Exception(EDOM, "%s::Sub(lhs<rhs)", Element::CallSign);
             AutoPtr<Element>  s = new Element(l.positive*sizeof(WORD), AsCapacity);
             s->bits = AssemblySub<CORE>( s->get<WORD>(), l, r);
+            return s.yield();
+        }
+
+        template <typename CORE, typename WORD>
+        inline Element * ElementSubEx(Element  &lhs,
+                                      Element  &rhs,
+                                      uint64_t &tmx)
+        {
+            typedef Assembly<WORD> AssemblyType;
+            AssemblyType     &l = lhs.get<WORD>();
+            AssemblyType     &r = rhs.get<WORD>();
+            if(l.positive<r.positive) throw Libc::Exception(EDOM, "%sEx::Sub(lhs<rhs)", Element::CallSign);
+            AutoPtr<Element>  s = new Element(l.positive*sizeof(WORD), AsCapacity);
+            const uint64_t    t = WallTime::Ticks();
+            s->bits = AssemblySub<CORE>(s->get<WORD>(), l, r);
+            tmx += (WallTime::Ticks()-t);
             return s.yield();
         }
 
