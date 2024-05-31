@@ -30,17 +30,17 @@ namespace Yttrium
             const size_t q=rhs.positive;
             if(p<=0||q<=0) return 0;
 
-            const WORD * const a = lhs.item-1;
-            const WORD * const b = rhs.item-1;
-            WORD       * const product = prod.item-1;
+            const WORD * const a = lhs.item;
+            const WORD * const b = rhs.item;
+            WORD       * const product = prod.item;
 
-            for(size_t j=1;j<=q;++j)
+            for(size_t j=0;j<q;++j)
             {
                 CORE carry = 0;
-                for(size_t i=1;i<=p;++i)
+                for(size_t i=0;i<p;++i)
                 {
-                    carry += static_cast<CORE>(product[i+j-1]) + static_cast<CORE>(a[i]) * static_cast<CORE>(b[j]);
-                    product[i+j-1] = static_cast<WORD>(carry);
+                    carry += static_cast<CORE>(product[i+j]) + static_cast<CORE>(a[i]) * static_cast<CORE>(b[j]);
+                    product[i+j] = static_cast<WORD>(carry);
                     carry >>= Assembly<WORD>::WordBits;
                 }
                 product[j + p] =  static_cast<WORD>(carry);
