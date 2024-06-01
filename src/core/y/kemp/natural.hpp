@@ -11,6 +11,7 @@ namespace Yttrium
     namespace Kemp
     {
         class Element;
+        Y_SHALLOW_DECL(AsElement);
 
         //______________________________________________________________________
         //
@@ -50,19 +51,69 @@ namespace Yttrium
             Natural &operator=(const Natural &); //!< assign
             Natural &operator=(const uint64_t);  //!< assign qword
 
+            Element & operator*() const noexcept; //!< get internal element
+
             //__________________________________________________________________
             //
             //
             // Methods
             //
             //__________________________________________________________________
-
             void xch(Natural &) noexcept; //!< noexcept exchange content
             String toHex()         const; //!< render to hexadecimal
 
 
+            //__________________________________________________________________
+            //
+            //
+            // Comparisons
+            //
+            //__________________________________________________________________
+            static SignType Compare(const Natural &lhs, const Natural &rhs) noexcept; //!< comparison
+            static SignType Compare(const uint64_t lhs, const Natural &rhs) noexcept; //!< comparison
+            static SignType Compare(const Natural &lhs, const uint64_t rhs) noexcept; //!< comparison
+
+            //! helper to duplicate arguments with same code
+#define Y_Kemp_Natural_Binary_NoExcept(RET,FUNC,CODE) \
+/**/ RET FUNC(const Natural &lhs, const Natural &rhs) noexcept { CODE; } \
+/**/ RET FUNC(const uint64_t lhs, const Natural &rhs) noexcept { CODE; } \
+/**/ RET FUNC(const Natural &lhs, const uint64_t rhs) noexcept { CODE; }
+
+
+            //! generate compartors with various arguments
+#define Y_Kemp_Natural_Cmp(OP,EXPR) \
+Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXPR)
+
+            //! aliases
+            Y_Kemp_Natural_Cmp(operator==, ==__Zero__)
+            Y_Kemp_Natural_Cmp(operator<,  ==Negative)
+            Y_Kemp_Natural_Cmp(operator<=, !=Positive)
+            Y_Kemp_Natural_Cmp(operator>,  ==Positive)
+            Y_Kemp_Natural_Cmp(operator>=, !=Negative)
+
+#define Y_Kemp_Natural_Binary_Decl(FUNC)           \
+/**/ friend Natural FUNC(const Natural &lhs, const Natural &rhs); \
+/**/ friend Natural FUNC(const uint64_t lhs, const Natural &rhs); \
+/**/ friend Natural FUNC(const Natural &lhs, const uint64_t rhs)
+
+            //__________________________________________________________________
+            //
+            //
+            // Additions
+            //
+            //__________________________________________________________________
+            Natural   operator+() const;            //!< unary +
+            Natural & operator+=(const Natural &);  //!< in place +
+            Natural & operator+=(const uint64_t );  //!< in place +
+            Natural & operator++();                 //!< pre-increment
+            Natural   operator++(int);              //!< pos-decrement
+            Y_Kemp_Natural_Binary_Decl(operator+);  //!< aliases
+
+
         private:
             mutable Element *code;
+            void incr();
+            Natural(Element * const, const AsElement_ &) noexcept;
         };
 
     }

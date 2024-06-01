@@ -10,6 +10,20 @@ namespace Yttrium
         Ops Natural::Strategy = Ops64_32;
         
 
+        Y_SHALLOW_IMPL(AsElement);
+
+        Natural:: Natural(Element * const el, const AsElement_ &) noexcept :
+        code(el)
+        {
+            assert(0!=code);
+        }
+
+
+        Element & Natural:: operator*() const noexcept
+        {
+            return *code;
+        }
+
         Natural:: ~Natural() noexcept
         {
             assert(0!=code);
@@ -43,10 +57,7 @@ namespace Yttrium
             {Natural _(qw); xch(_);}
             return *this;
         }
-
-
-
-
+        
         Natural::Natural(const uint64_t qw) : Number(), code( new Element(qw,ToNum64) )
         {
         }

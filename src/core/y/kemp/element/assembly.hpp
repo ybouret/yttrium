@@ -155,6 +155,16 @@ namespace Yttrium
                 return 0;
             }
 
+            inline void updateBits(const size_t bits) noexcept
+            {
+                assert(bits<=capacity*WordBits);
+                positive = BitsToPositive(bits);
+#if !defined(NDEBUG)
+                if(positive>0) assert(0!=item[positive-1]);
+#endif
+                
+            }
+
             //! get leat significant 64 bits
             inline uint64_t pull64() const noexcept { return Pull64::From(item); }
 
