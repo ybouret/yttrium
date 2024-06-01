@@ -10,13 +10,18 @@ namespace Yttrium
 {
     namespace Kemp
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! Long Subtraction
+        //
+        //______________________________________________________________________
         template <typename CORE, typename WORD>
         struct Subtraction
         {
             //__________________________________________________________________
             //
-            // core algorithm for pre-allocated sum
+            //! core algorithm for pre-allocated sub
             //__________________________________________________________________
             static inline
             size_t Run(Assembly<WORD>       &sub,
@@ -85,6 +90,10 @@ namespace Yttrium
                 return sub.updateBits();
             }
 
+            //__________________________________________________________________
+            //
+            //! new empty element matching the lhs positive
+            //__________________________________________________________________
             static inline Element *New(const Assembly<WORD> &l,
                                        const Assembly<WORD> &r)
             {

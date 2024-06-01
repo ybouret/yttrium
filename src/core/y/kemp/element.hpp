@@ -81,19 +81,24 @@ namespace Yttrium
             //__________________________________________________________________
             typedef Element * (*BinaryProc)(Element &lhs, Element &rhs);               //!< binary procedure
             typedef Element * (*BinaryProcEx)(Element &lhs, Element &rhs, uint64_t &); //!< binary procedure with timing
-            typedef Element * (*BinL64Proc)(uint64_t lhs, Element &rhs);
-            typedef Element * (*BinR64Proc)(Element &lhs, uint64_t rhs);
-          
+            typedef Element * (*BinL64Proc)(uint64_t lhs, Element &rhs);               //!< binary procedure with unsigned lhs
+            typedef Element * (*BinR64Proc)(Element &lhs, uint64_t rhs);               //!< binary procedure with unsigned rhs
+
+            //__________________________________________________________________
+            //
+            //! set of Binary procedures
+            //__________________________________________________________________
             struct BinaryAPI
             {
-                BinaryProc   const Result;
-                BinaryProcEx const ResTMX;
-                BinL64Proc   const ResL64;
-                BinR64Proc   const ResR64;
-                inline Element * operator()(Element &lhs, Element &rhs)                const { return Result(lhs,rhs); }
-                inline Element * operator()(Element &lhs, Element &rhs, uint64_t &tmx) const { return ResTMX(lhs,rhs,tmx); }
-                inline Element * operator()(uint64_t lhs, Element &rhs)                const { return ResL64(lhs,rhs); }
-                inline Element * operator()(Element &lhs, uint64_t rhs)                const { return ResR64(lhs,rhs); }
+                BinaryProc   const Result; //!< produce result (lhs,rhs)
+                BinaryProcEx const ResTMX; //!< produce result (lhs,rhs,tmx)
+                BinL64Proc   const ResL64; //!< produce result (qw,rhs)
+                BinR64Proc   const ResR64; //!< produce result (rhs,qw)
+
+                inline Element * operator()(Element &lhs, Element &rhs)                const { return Result(lhs,rhs);     } //!< select result
+                inline Element * operator()(Element &lhs, Element &rhs, uint64_t &tmx) const { return ResTMX(lhs,rhs,tmx); } //!< select result
+                inline Element * operator()(uint64_t lhs, Element &rhs)                const { return ResL64(lhs,rhs);     } //!< select result
+                inline Element * operator()(Element &lhs, uint64_t rhs)                const { return ResR64(lhs,rhs);     } //!< select result
 
             };
 
@@ -140,7 +145,7 @@ namespace Yttrium
             // Bits
             //
             //__________________________________________________________________
-            Element & shr() noexcept;
+            Element & shr() noexcept; //!< in place shift right 1 bit, noexcept (a.k.a fast divide by two)
 
             //__________________________________________________________________
             //
@@ -159,9 +164,9 @@ namespace Yttrium
             // Ops
             //
             //__________________________________________________________________
-            static const BinaryAPI Add[Kinds];
-            static const BinaryAPI Sub[Kinds];
-            static const BinaryAPI Mul[Kinds];
+            static const BinaryAPI Add[Kinds]; //!< all possible additions
+            static const BinaryAPI Sub[Kinds]; //!< all possible subtractions
+            static const BinaryAPI Mul[Kinds]; //!< all possible long multiplications
 
             //__________________________________________________________________
             //

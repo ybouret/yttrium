@@ -9,13 +9,20 @@ namespace Yttrium
 {
     namespace Kemp
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! Long Mutliplication
+        //
+        //______________________________________________________________________
         template <typename CORE,typename WORD>
         struct Multiplication
         {
             //__________________________________________________________________
             //
-            // core algorithm for pre-allocated prod
+            //
+            //! core algorithm for pre-allocated prod
+            //
             //__________________________________________________________________
             static inline
             size_t Run(Assembly<WORD>       &prod,
@@ -52,7 +59,7 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            //! New element for input metric
+            //! New element for input metrics
             //
             //__________________________________________________________________
             static inline
@@ -77,6 +84,12 @@ namespace Yttrium
                 return s.yield();
             }
 
+            //__________________________________________________________________
+            //
+            //
+            //! low level compute from two assemblies+timing
+            //
+            //__________________________________________________________________
             static inline
             Element *GetEx(const Assembly<WORD> &l,
                            const Assembly<WORD> &r,
