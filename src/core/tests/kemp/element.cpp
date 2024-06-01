@@ -140,25 +140,25 @@ Y_UTEST(kemp_element)
                 for(unsigned k=0;k<Kemp::Element::Kinds;++k)
                 {
                     {
-                        AutoPtr<Kemp::Element> S = Kemp::Element::Add[k].Result(L,R);
+                        AutoPtr<Kemp::Element> S = Kemp::Element::Add[k](L,R);
                         Y_ASSERT(S->bits==b);
                         Y_ASSERT(S->u64()==s);
                     }
 
                     {
-                        AutoPtr<Kemp::Element> S = Kemp::Element::Add[k].ResL64(l,R);
+                        AutoPtr<Kemp::Element> S = Kemp::Element::Add[k](l,R);
                         Y_ASSERT(S->bits==b);
                         Y_ASSERT(S->u64()==s);
                     }
 
                     {
-                        AutoPtr<Kemp::Element> S = Kemp::Element::Add[k].ResR64(L,r);
+                        AutoPtr<Kemp::Element> S = Kemp::Element::Add[k](L,r);
                         Y_ASSERT(S->bits==b);
                         Y_ASSERT(S->u64()==s);
                     }
 
                     {
-                        AutoPtr<Kemp::Element> S = Kemp::Element::Add[k].ResTMX(L,R,tmx[k]);
+                        AutoPtr<Kemp::Element> S = Kemp::Element::Add[k](L,R,tmx[k]);
                         Y_ASSERT(S->bits==b);
                         Y_ASSERT(S->u64()==s);
                     }
@@ -208,25 +208,25 @@ RATE(tmx[Kemp::Ops16_8])
                 for(unsigned k=0;k<Kemp::Element::Kinds;++k)
                 {
                     {
-                        AutoPtr<Kemp::Element> S = Kemp::Element::Sub[k].Result(L,R);
+                        AutoPtr<Kemp::Element> S = Kemp::Element::Sub[k](L,R);
                         Y_ASSERT(S->bits==b);
                         Y_ASSERT(S->u64()==sub);
                     }
 
                     {
-                        AutoPtr<Kemp::Element> S = Kemp::Element::Sub[k].ResL64(lhs,R);
+                        AutoPtr<Kemp::Element> S = Kemp::Element::Sub[k](lhs,R);
                         Y_ASSERT(S->bits==b);
                         Y_ASSERT(S->u64()==sub);
                     }
 
                     {
-                        AutoPtr<Kemp::Element> S = Kemp::Element::Sub[k].ResR64(L,rhs);
+                        AutoPtr<Kemp::Element> S = Kemp::Element::Sub[k](L,rhs);
                         Y_ASSERT(S->bits==b);
                         Y_ASSERT(S->u64()==sub);
                     }
 
                     {
-                        AutoPtr<Kemp::Element> S = Kemp::Element::Sub[k].ResTMX(L,R,tmx[k]);
+                        AutoPtr<Kemp::Element> S = Kemp::Element::Sub[k](L,R,tmx[k]);
                         Y_ASSERT(S->bits==b);
                         Y_ASSERT(S->u64()==sub);
                     }

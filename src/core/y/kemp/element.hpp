@@ -87,9 +87,14 @@ namespace Yttrium
             struct BinaryAPI
             {
                 BinaryProc   const Result;
-                BinaryProcEx const ResTMX;;
+                BinaryProcEx const ResTMX;
                 BinL64Proc   const ResL64;
                 BinR64Proc   const ResR64;
+                inline Element * operator()(Element &lhs, Element &rhs)                const { return Result(lhs,rhs); }
+                inline Element * operator()(Element &lhs, Element &rhs, uint64_t &tmx) const { return ResTMX(lhs,rhs,tmx); }
+                inline Element * operator()(uint64_t lhs, Element &rhs)                const { return ResL64(lhs,rhs); }
+                inline Element * operator()(Element &lhs, uint64_t rhs)                const { return ResR64(lhs,rhs); }
+
             };
 
             //__________________________________________________________________
