@@ -16,6 +16,18 @@ namespace Yttrium
         };
 
 
+        const Element::BinaryAPI toto[Element::Kinds] =
+        Y_Kemp_BinaryAPI_Table(Addition);
+        
+#if 0
+        {
+            Compute<Addition,uint64_t,uint32_t>::Result,
+            Compute<Addition,uint64_t,uint32_t>::ResTMX,
+            Compute<Addition,uint64_t,uint32_t>::ResL64,
+            Compute<Addition,uint64_t,uint32_t>::ResR64
+        };
+#endif
+
     }
 
 }

@@ -81,6 +81,16 @@ namespace Yttrium
             //__________________________________________________________________
             typedef Element * (*BinaryProc)(Element &lhs, Element &rhs);               //!< binary procedure
             typedef Element * (*BinaryProcEx)(Element &lhs, Element &rhs, uint64_t &); //!< binary procedure with timing
+            typedef Element * (*BinL64Proc)(uint64_t lhs, Element &rhs);
+            typedef Element * (*BinR64Proc)(Element &lhs, uint64_t rhs);
+          
+            struct BinaryAPI
+            {
+                BinaryProc   const result;
+                BinaryProcEx const resTMX;;
+                BinL64Proc   const resL64;
+                BinR64Proc   const resR64;
+            };
 
             //__________________________________________________________________
             //
