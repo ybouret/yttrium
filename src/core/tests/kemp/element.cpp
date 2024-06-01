@@ -186,7 +186,7 @@ RATE(tmx[Kemp::Ops16_8])
     RATES(); std::cerr << std::endl;
 
 
-    std::cerr << "<Sub4>" << std::endl;
+    std::cerr << "<Sub64>" << std::endl;
     total = 0;
     memset(tmx,0,sizeof(tmx));
     for(unsigned i=0;i<=64;++i)
@@ -276,7 +276,7 @@ RATE(tmx[Kemp::Ops16_8])
                         Y_ASSERT(P->bits==b);
                         Y_ASSERT(P->u64()==mul);
                     }
-                    
+
                     {
                         AutoPtr<Kemp::Element> S = Kemp::Element::Mul[k](L,R,tmx[k]);
                         Y_ASSERT(S->bits==b);
@@ -287,6 +287,22 @@ RATE(tmx[Kemp::Ops16_8])
         }
     }
     RATES(); std::cerr << std::endl;
+
+
+    std::cerr << "<SHR>" << std::endl;
+    for(unsigned k=0;k<4;++k)
+    {
+        std::cerr << "bits=" << ((1<<k) * 8) << std::endl;
+        Kemp::Element x(Kemp::TwoToThe,80);
+        x.set(Kemp::Element::Inner[k]);
+        while(x.bits>0)
+        {
+            const size_t nextBits = x.bits-1;
+            std::cerr << std::setw(3) << x.bits << x  << std::endl;
+            x.shr();
+            Y_ASSERT(nextBits==x.bits);
+        }
+    }
 
 
     std::cerr << std::endl;

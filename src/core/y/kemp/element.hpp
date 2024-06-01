@@ -131,7 +131,16 @@ namespace Yttrium
             uint64_t        u64()                  const noexcept; //!< least significant 64 bits
             Element &       set(const State)             noexcept; //!< ensure state
             static State    TuneUp(Element &, Element &) noexcept; //!< tune to largest integral
-            static Element *Shrink(Element *);                   //!< try to reduce capacity
+            static Element *Shrink(Element *)            noexcept; //!< try to reduce capacity
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Bits
+            //
+            //__________________________________________________________________
+            Element & shr() noexcept;
 
             //__________________________________________________________________
             //

@@ -244,29 +244,31 @@ num64(entry,num32.capacity>>1,bits,AsBits)
             return lhs.state;
         }
 
-        Element * Element:: Shrink(Element *el)
+        Element * Element:: Shrink(Element *el) noexcept
         {
             static const size_t MinBytes = Memory::Archon::MinBytes;
             AutoPtr<Element>    guard(el);
-            switch(el->state)
-            {
-                case AsBytes: 
-                    if(el->bytes.mayShrinkAbove(MinBytes)) return new Element(*el);
-                    break;
+            try {
+                switch(el->state)
+                {
+                    case AsBytes:
+                        if(el->bytes.mayShrinkAbove(MinBytes)) return new Element(*el);
+                        break;
 
-                case AsNum16:
-                    if(el->num16.mayShrinkAbove(MinBytes)) return new Element(*el);
-                    break;
+                    case AsNum16:
+                        if(el->num16.mayShrinkAbove(MinBytes)) return new Element(*el);
+                        break;
 
-                case AsNum32:
-                    if(el->num32.mayShrinkAbove(MinBytes)) return new Element(*el);
-                    break;
+                    case AsNum32:
+                        if(el->num32.mayShrinkAbove(MinBytes)) return new Element(*el);
+                        break;
 
-                case AsNum64:
-                    if(el->num64.mayShrinkAbove(MinBytes)) return new Element(*el);
-                    break;
+                    case AsNum64:
+                        if(el->num64.mayShrinkAbove(MinBytes)) return new Element(*el);
+                        break;
+                }
             }
-
+            catch(...) {}
             return guard.yield();
         }
 
