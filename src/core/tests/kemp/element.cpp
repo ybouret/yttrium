@@ -238,7 +238,6 @@ RATE(tmx[Kemp::Ops16_8])
     }
     RATES(); std::cerr << std::endl;
 
-#if 0
     std::cerr << "<Mul64>" << std::endl;
 
 
@@ -261,13 +260,25 @@ RATE(tmx[Kemp::Ops16_8])
                 for(unsigned k=0;k<Kemp::Element::Kinds;++k)
                 {
                     {
-                        AutoPtr<Kemp::Element> P = Kemp::Element::MulStd[k](L,R);
+                        AutoPtr<Kemp::Element> P = Kemp::Element::Mul[k](L,R);
                         Y_ASSERT(P->bits==b);
                         Y_ASSERT(P->u64()==mul);
                     }
 
                     {
-                        AutoPtr<Kemp::Element> S = Kemp::Element::MulStdEx[k](L,R,tmx[k]);
+                        AutoPtr<Kemp::Element> P = Kemp::Element::Mul[k](lhs,R);
+                        Y_ASSERT(P->bits==b);
+                        Y_ASSERT(P->u64()==mul);
+                    }
+
+                    {
+                        AutoPtr<Kemp::Element> P = Kemp::Element::Mul[k](L,rhs);
+                        Y_ASSERT(P->bits==b);
+                        Y_ASSERT(P->u64()==mul);
+                    }
+                    
+                    {
+                        AutoPtr<Kemp::Element> S = Kemp::Element::Mul[k](L,R,tmx[k]);
                         Y_ASSERT(S->bits==b);
                         Y_ASSERT(S->u64()==mul);
                     }
@@ -276,7 +287,6 @@ RATE(tmx[Kemp::Ops16_8])
         }
     }
     RATES(); std::cerr << std::endl;
-#endif
 
 
     std::cerr << std::endl;

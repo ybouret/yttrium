@@ -152,6 +152,7 @@ namespace Yttrium
             //__________________________________________________________________
             static const BinaryAPI Add[Kinds];
             static const BinaryAPI Sub[Kinds];
+            static const BinaryAPI Mul[Kinds];
 
             //__________________________________________________________________
             //

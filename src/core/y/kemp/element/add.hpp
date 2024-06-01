@@ -124,9 +124,9 @@ namespace Yttrium
                            uint64_t             &tmx)
             {
                 AutoPtr<Element>  s = New(l,r);
-                const uint64_t    t = WallTime::Ticks();
+                Y_Kemp_TMX_Ini();
                 s->bits = Run( s->get<WORD>(), l, r);
-                tmx += (WallTime::Ticks() - t);
+                Y_Kemp_TMX_Add();
                 return s.yield();
             }
             

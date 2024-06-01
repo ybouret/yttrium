@@ -57,6 +57,9 @@ Y_Kemp_BinaryAPI(ENGINE,uint32_t,uint8_t),  \
 Y_Kemp_BinaryAPI(ENGINE,uint16_t,uint8_t),  \
 }
 
+#define Y_Kemp_TMX_Ini() const uint64_t ini64 = WallTime::Ticks()
+#define Y_Kemp_TMX_Add() tmx += (WallTime::Ticks()-ini64)
+
     }
 
 }
