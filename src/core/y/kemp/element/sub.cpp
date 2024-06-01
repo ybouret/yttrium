@@ -4,15 +4,8 @@ namespace Yttrium
 {
     namespace Kemp
     {
-        const Element::BinaryProc Element:: Sub[Kinds] =
-        {
-            Y_Kemp_Ops(ElementSub)
-        };
+        const Element::BinaryAPI Element::Sub[Kinds] = Y_Kemp_BinaryAPI_Table(Subtraction);
 
-        const Element::BinaryProcEx Element:: SubEx[Kinds] =
-        {
-            Y_Kemp_Ops(ElementSubEx)
-        };
     }
 
 }

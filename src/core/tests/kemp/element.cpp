@@ -116,6 +116,7 @@ Y_UTEST(kemp_element)
     WallTime chrono;
     size_t   total = 0;
     uint64_t tmx[Kemp::Element::Kinds] = { 0 };
+
     std::cerr << "<Add64>" << std::endl;
 
     total = 0;
@@ -139,15 +140,30 @@ Y_UTEST(kemp_element)
                 for(unsigned k=0;k<Kemp::Element::Kinds;++k)
                 {
                     {
-                        AutoPtr<Kemp::Element> S = Kemp::Element::Add[k](L,R);
+                        AutoPtr<Kemp::Element> S = Kemp::Element::Add[k].Result(L,R);
                         Y_ASSERT(S->bits==b);
                         Y_ASSERT(S->u64()==s);
                     }
+
                     {
-                        AutoPtr<Kemp::Element> S = Kemp::Element::AddEx[k](L,R,tmx[k]);
+                        AutoPtr<Kemp::Element> S = Kemp::Element::Add[k].ResL64(l,R);
                         Y_ASSERT(S->bits==b);
                         Y_ASSERT(S->u64()==s);
                     }
+
+                    {
+                        AutoPtr<Kemp::Element> S = Kemp::Element::Add[k].ResR64(L,r);
+                        Y_ASSERT(S->bits==b);
+                        Y_ASSERT(S->u64()==s);
+                    }
+
+                    {
+                        AutoPtr<Kemp::Element> S = Kemp::Element::Add[k].ResTMX(L,R,tmx[k]);
+                        Y_ASSERT(S->bits==b);
+                        Y_ASSERT(S->u64()==s);
+                    }
+
+
                 }
 
             }
@@ -168,6 +184,7 @@ RATE(tmx[Kemp::Ops32_8]);  \
 RATE(tmx[Kemp::Ops16_8])
 
     RATES(); std::cerr << std::endl;
+
 
     std::cerr << "<Sub4>" << std::endl;
     total = 0;
@@ -191,13 +208,25 @@ RATE(tmx[Kemp::Ops16_8])
                 for(unsigned k=0;k<Kemp::Element::Kinds;++k)
                 {
                     {
-                        AutoPtr<Kemp::Element> S = Kemp::Element::Sub[k](L,R);
+                        AutoPtr<Kemp::Element> S = Kemp::Element::Sub[k].Result(L,R);
                         Y_ASSERT(S->bits==b);
                         Y_ASSERT(S->u64()==sub);
                     }
 
                     {
-                        AutoPtr<Kemp::Element> S = Kemp::Element::SubEx[k](L,R,tmx[k]);
+                        AutoPtr<Kemp::Element> S = Kemp::Element::Sub[k].ResL64(lhs,R);
+                        Y_ASSERT(S->bits==b);
+                        Y_ASSERT(S->u64()==sub);
+                    }
+
+                    {
+                        AutoPtr<Kemp::Element> S = Kemp::Element::Sub[k].ResR64(L,rhs);
+                        Y_ASSERT(S->bits==b);
+                        Y_ASSERT(S->u64()==sub);
+                    }
+
+                    {
+                        AutoPtr<Kemp::Element> S = Kemp::Element::Sub[k].ResTMX(L,R,tmx[k]);
                         Y_ASSERT(S->bits==b);
                         Y_ASSERT(S->u64()==sub);
                     }
@@ -209,6 +238,7 @@ RATE(tmx[Kemp::Ops16_8])
     }
     RATES(); std::cerr << std::endl;
 
+#if 0
     std::cerr << "<Mul64>" << std::endl;
 
 
@@ -246,7 +276,7 @@ RATE(tmx[Kemp::Ops16_8])
         }
     }
     RATES(); std::cerr << std::endl;
-
+#endif
 
 
     std::cerr << std::endl;

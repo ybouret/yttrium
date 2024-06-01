@@ -42,10 +42,10 @@ namespace Yttrium
         };
 
 #define Y_Kemp_BinaryAPI(ENGINE,CORE,WORD) { \
-Compute<Addition,CORE,WORD>::Result, \
-Compute<Addition,CORE,WORD>::ResTMX, \
-Compute<Addition,CORE,WORD>::ResL64, \
-Compute<Addition,CORE,WORD>::ResR64  \
+Compute<ENGINE,CORE,WORD>::Result, \
+Compute<ENGINE,CORE,WORD>::ResTMX, \
+Compute<ENGINE,CORE,WORD>::ResL64, \
+Compute<ENGINE,CORE,WORD>::ResR64  \
 }
 
 #define Y_Kemp_BinaryAPI_Table(ENGINE) {    \

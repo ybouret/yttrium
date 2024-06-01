@@ -86,10 +86,10 @@ namespace Yttrium
           
             struct BinaryAPI
             {
-                BinaryProc   const result;
-                BinaryProcEx const resTMX;;
-                BinL64Proc   const resL64;
-                BinR64Proc   const resR64;
+                BinaryProc   const Result;
+                BinaryProcEx const ResTMX;;
+                BinL64Proc   const ResL64;
+                BinR64Proc   const ResR64;
             };
 
             //__________________________________________________________________
@@ -142,31 +142,11 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // Addition
+            // Ops
             //
             //__________________________________________________________________
-            static  const BinaryProc   Add[Kinds];   //!< additions
-            static  const BinaryProcEx AddEx[Kinds]; //!< additions with timing
-         
-            //__________________________________________________________________
-            //
-            //
-            // Subtraction
-            //
-            //__________________________________________________________________
-            static  const BinaryProc   Sub[Kinds];   //!< additions
-            static  const BinaryProcEx SubEx[Kinds]; //!< additions with timing
-            
-            //__________________________________________________________________
-            //
-            //
-            // Multiplications
-            //
-            //__________________________________________________________________
-            static  const BinaryProc   MulStd[Kinds];     //!< standard multiplication
-            static  const BinaryProcEx MulStdEx[Kinds];   //!< standard multiplication with timing
-
-
+            static const BinaryAPI Add[Kinds];
+            static const BinaryAPI Sub[Kinds];
 
             //__________________________________________________________________
             //
