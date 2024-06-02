@@ -7,8 +7,8 @@ namespace Yttrium
     namespace Kemp
     {
 
-        Ops Natural::Strategy = Ops64_32;
-        
+        Ops                Natural:: Strategy = Ops64_32;
+        const char * const Natural:: CallSign = "Kemp::Natural";
 
         Y_SHALLOW_IMPL(AsElement);
 

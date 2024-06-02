@@ -65,7 +65,8 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             //
             //__________________________________________________________________
             static Ops Strategy; //!< global strategy
-
+            static const char * const CallSign;
+            
             //__________________________________________________________________
             //
             //
@@ -150,6 +151,17 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             Natural & operator*=(const uint64_t );  //!< in place *
             Y_Kemp_Natural_Binary_Decl(operator*);  //!< aliases
 
+            //__________________________________________________________________
+            //
+            //
+            // Divisions
+            //
+            //__________________________________________________________________
+            Natural & operator/=(const Natural &);  //!< in place /
+            Natural & operator/=(const uint64_t );  //!< in place /
+            Y_Kemp_Natural_Binary_Decl(operator/);  //!< aliases
+
+
         private:
             mutable Element *code;
 
@@ -157,6 +169,8 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             void incr();                    //!< add 1
             void decr();                    //!< sub 1
             void make(Element *) noexcept;  //!< replace code
+
+            static Natural Divide(const Natural &den, const Natural &num);
         };
 
     }
