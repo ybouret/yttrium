@@ -11,7 +11,41 @@ namespace Yttrium
     namespace Kemp
     {
         class Element;
-        Y_SHALLOW_DECL(AsElement);
+        Y_SHALLOW_DECL(AsElement); //!< alias for internal constructor
+
+
+        //______________________________________________________________________
+        //
+        //
+        //! helper to duplicate arguments with same code
+        //
+        //______________________________________________________________________
+#define Y_Kemp_Natural_Binary_NoExcept(RET,FUNC,CODE) \
+/**/ RET FUNC(const Natural &lhs, const Natural &rhs) noexcept { CODE; } \
+/**/ RET FUNC(const uint64_t lhs, const Natural &rhs) noexcept { CODE; } \
+/**/ RET FUNC(const Natural &lhs, const uint64_t rhs) noexcept { CODE; }
+
+        //______________________________________________________________________
+        //
+        //
+        //! generate comparators with various arguments
+        //
+        //______________________________________________________________________
+#define Y_Kemp_Natural_Cmp(OP,EXPR) \
+Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXPR)
+
+
+        //______________________________________________________________________
+        //
+        //
+        //! helper to duplicate arguments with same code
+        //
+        //______________________________________________________________________
+#define Y_Kemp_Natural_Binary_Decl(FUNC)                          \
+/**/ friend Natural FUNC(const Natural &lhs, const Natural &rhs); \
+/**/ friend Natural FUNC(const uint64_t lhs, const Natural &rhs); \
+/**/ friend Natural FUNC(const Natural &lhs, const uint64_t rhs)
+
 
         //______________________________________________________________________
         //
@@ -23,7 +57,7 @@ namespace Yttrium
         //______________________________________________________________________
         class Natural : public Number
         {
-        public:    
+        public:
             //__________________________________________________________________
             //
             //
@@ -73,16 +107,6 @@ namespace Yttrium
             static SignType Compare(const uint64_t lhs, const Natural &rhs) noexcept; //!< comparison
             static SignType Compare(const Natural &lhs, const uint64_t rhs) noexcept; //!< comparison
 
-            //! helper to duplicate arguments with same code
-#define Y_Kemp_Natural_Binary_NoExcept(RET,FUNC,CODE) \
-/**/ RET FUNC(const Natural &lhs, const Natural &rhs) noexcept { CODE; } \
-/**/ RET FUNC(const uint64_t lhs, const Natural &rhs) noexcept { CODE; } \
-/**/ RET FUNC(const Natural &lhs, const uint64_t rhs) noexcept { CODE; }
-
-
-            //! generate compartors with various arguments
-#define Y_Kemp_Natural_Cmp(OP,EXPR) \
-Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXPR)
 
             //! aliases
             Y_Kemp_Natural_Cmp(operator==, ==__Zero__)
@@ -90,11 +114,6 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             Y_Kemp_Natural_Cmp(operator<=, !=Positive)
             Y_Kemp_Natural_Cmp(operator>,  ==Positive)
             Y_Kemp_Natural_Cmp(operator>=, !=Negative)
-
-#define Y_Kemp_Natural_Binary_Decl(FUNC)           \
-/**/ friend Natural FUNC(const Natural &lhs, const Natural &rhs); \
-/**/ friend Natural FUNC(const uint64_t lhs, const Natural &rhs); \
-/**/ friend Natural FUNC(const Natural &lhs, const uint64_t rhs)
 
             //__________________________________________________________________
             //
@@ -120,7 +139,7 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
 
     }
     typedef Kemp::Natural apn; //!< alias
-    
+
 }
 
 #endif

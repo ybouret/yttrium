@@ -155,7 +155,8 @@ namespace Yttrium
                 return 0;
             }
 
-            inline void updateBits(const size_t bits) noexcept
+            //! update positive items from bits
+            inline void updatePositive(const size_t bits) noexcept
             {
                 assert(bits<=capacity*WordBits);
                 positive = BitsToPositive(bits);
@@ -164,6 +165,7 @@ namespace Yttrium
 #endif
             }
 
+            //! check positive are matching bits (debug)
             inline bool areMatching(const size_t bits) const noexcept
             {
                 assert(capacity>0);

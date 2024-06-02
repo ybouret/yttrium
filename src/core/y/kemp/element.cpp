@@ -288,27 +288,27 @@ num64(entry,num32.capacity>>1,bits,AsBits)
             switch(state)
             {
                 case AsBytes: assert(bytes.areMatching(bits));
-                    num16.updateBits(bits);
-                    num32.updateBits(bits);
-                    num64.updateBits(bits);
+                    num16.updatePositive(bits);
+                    num32.updatePositive(bits);
+                    num64.updatePositive(bits);
                     break;
 
                 case AsNum16: assert(num16.areMatching(bits));
-                    bytes.updateBits(bits);
-                    num32.updateBits(bits);
-                    num64.updateBits(bits);
+                    bytes.updatePositive(bits);
+                    num32.updatePositive(bits);
+                    num64.updatePositive(bits);
                     break;
 
                 case AsNum32: assert(num32.areMatching(bits));
-                    bytes.updateBits(bits);
-                    num16.updateBits(bits);
-                    num64.updateBits(bits);
+                    bytes.updatePositive(bits);
+                    num16.updatePositive(bits);
+                    num64.updatePositive(bits);
                     break;
 
                 case AsNum64: assert(num64.areMatching(bits));
-                    bytes.updateBits(bits);
-                    num16.updateBits(bits);
-                    num32.updateBits(bits);
+                    bytes.updatePositive(bits);
+                    num16.updatePositive(bits);
+                    num32.updatePositive(bits);
                     break;
 
             }
