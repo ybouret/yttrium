@@ -12,8 +12,17 @@ namespace Yttrium
     {
         Y_SHALLOW_IMPL(ToNum64);
 
-        const char * const Element:: CallSign = "MPK::Element";
-        const State        Element:: Inner[Sizes] = { AsBytes, AsNum16, AsNum32, AsNum64 };
+        const char * const Element:: CallSign              = "MPK::Element";
+        const State        Element:: Inner[Sizes]          = { AsBytes, AsNum16, AsNum32, AsNum64 };
+        const State        Element:: Outer[Sizes][Sizes-1] =
+        {
+            { AsNum16, AsNum32, AsNum64 },
+            { AsBytes, AsNum32, AsNum64 },
+            { AsBytes, AsNum16, AsNum64 },
+            { AsBytes, AsNum16, AsNum32 }
+        };
+
+
         const Ops          Element:: Proto[Kinds] =
         {
             Ops64_32,
@@ -270,6 +279,40 @@ num64(entry,num32.capacity>>1,bits,AsBits)
             }
             catch(...) {}
             return guard.yield();
+        }
+
+
+
+        Element * Element:: revise() noexcept
+        {
+            switch(state)
+            {
+                case AsBytes: assert(bytes.areMatching(bits));
+                    num16.updateBits(bits);
+                    num32.updateBits(bits);
+                    num64.updateBits(bits);
+                    break;
+
+                case AsNum16: assert(num16.areMatching(bits));
+                    bytes.updateBits(bits);
+                    num32.updateBits(bits);
+                    num64.updateBits(bits);
+                    break;
+
+                case AsNum32: assert(num32.areMatching(bits));
+                    bytes.updateBits(bits);
+                    num16.updateBits(bits);
+                    num64.updateBits(bits);
+                    break;
+
+                case AsNum64: assert(num64.areMatching(bits));
+                    bytes.updateBits(bits);
+                    num16.updateBits(bits);
+                    num32.updateBits(bits);
+                    break;
+
+            }
+            return this;
         }
 
 

@@ -162,7 +162,14 @@ namespace Yttrium
 #if !defined(NDEBUG)
                 if(positive>0) assert(0!=item[positive-1]);
 #endif
-                
+            }
+
+            inline bool areMatching(const size_t bits) const noexcept
+            {
+                assert(capacity>0);
+                assert(IsPowerOfTwo(capacity));
+                assert(positive<=capacity);
+                return BitsToPositive(bits) == positive;
             }
 
             //! get leat significant 64 bits

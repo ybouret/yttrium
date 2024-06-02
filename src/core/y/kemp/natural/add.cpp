@@ -30,12 +30,8 @@ namespace Yttrium
 
         void Natural:: incr()
         {
-            std::cerr << "incr(" << *this << ") code=" << *code << std::endl;
             Element *res = Element::Add[Strategy]( **this, 1);
-            std::cerr << "res=" << *res << std::endl;
             Swap(res,code);
-            std::cerr << "old =" << *res  << std::endl;
-            std::cerr << "code=" << *code << " @state=" << code->state << std::endl;
             delete res;
         }
 

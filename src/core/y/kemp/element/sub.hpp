@@ -114,7 +114,7 @@ namespace Yttrium
             {
                 AutoPtr<Element>  s = New(l,r);
                 s->bits = Run( s->get<WORD>(), l, r);
-                return Element::Shrink(s.yield());
+                return Element::Shrink(s.yield()->revise());
             }
 
             //__________________________________________________________________
@@ -132,7 +132,7 @@ namespace Yttrium
                 Y_Kemp_TMX_Ini();
                 s->bits = Run( s->get<WORD>(), l, r);
                 Y_Kemp_TMX_Add();
-                return Element::Shrink(s.yield());
+                return Element::Shrink(s.yield()->revise());
             }
 
         };

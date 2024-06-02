@@ -70,6 +70,7 @@ namespace Yttrium
             static const size_t       One = 1;                          //!< alias
             static const unsigned     Sizes = 4;                        //!< 8,16,32 and 64 bits
             static const State        Inner[Sizes];                     //!< aliases
+            static const State        Outer[Sizes][Sizes-1];            //!< aliases
             static const unsigned     Kinds = ( Sizes *(Sizes-1 )) / 2; //!< combinations
             static const Ops          Proto[Kinds];                     //!< aliases
 
@@ -137,7 +138,7 @@ namespace Yttrium
             Element &       set(const State)             noexcept; //!< ensure state
             static State    TuneUp(Element &, Element &) noexcept; //!< tune to largest integral
             static Element *Shrink(Element *)            noexcept; //!< try to reduce capacity
-
+            Element *       revise()                     noexcept; //!< update positive in other states
 
             //__________________________________________________________________
             //
