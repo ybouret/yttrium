@@ -1,39 +1,57 @@
-
-#include "y/kemp/element.hpp"
+#include "y/kemp/element/add.hpp"
 
 namespace Yttrium
 {
     namespace Kemp
     {
 
-        template <typename T>
-        static inline size_t SHR(Assembly<T> &arg) noexcept
+        namespace
         {
-            static const unsigned lo2hi = sizeof(T)*8-1;
-            T mask = 0x00;
-            for(size_t i=arg.positive;i>0;)
+            static const uint8_t vbit[8] = { 1,2,4,8,16,32,64,128 };
+
+
+            static inline
+            bool getBit(const uint8_t * const item, const size_t ibit) noexcept
             {
-                T       &word = arg.item[--i];
-                const T  next = (word&1);
-                word >>= 1;
-                word |=  mask;
-                mask = next << lo2hi;
+                const size_t q = ibit >> 3;
+                const size_t r = ibit &  7;
+                return 0 != (item[q] & vbit[r]);
             }
-            return arg.updateBits();
+
+            static inline
+            void  setBit(uint8_t * const item, const size_t ibit) noexcept
+            {
+                const size_t q = ibit >> 3;
+                const size_t r = ibit &  7;
+                item[q] |= vbit[r];
+            }
         }
 
-        Element & Element:: shr() noexcept
+
+        Element * Element:: shr(const size_t nbit)
         {
-            switch(state)
+            if(nbit>=bits)
             {
-                case AsBytes: bits = SHR(bytes); break;
-                case AsNum16: bits = SHR(num16); break;
-                case AsNum32: bits = SHR(num32); break;
-                case AsNum64: bits = SHR(num64); break;
+                return new Element(0,AsCapacity);
             }
-            
-            return *revise();
+            else
+            {
+                const size_t outBits = bits-nbit;
+                const size_t outSize = Bytes::BitsToPositive(outBits);
+                Element     *out     = new Element( outSize, AsCapacity );
+                assert(AsBytes==out->state);
+                uint8_t       * const target = out->bytes.item;
+                const uint8_t * const source = get<uint8_t>().item;
+                for(size_t i=0,j=nbit;i<outBits;++i,++j)
+                {
+                    if( getBit(source,j) ) setBit(target,i);
+                }
+                out->bits           = outBits;
+                out->bytes.positive = outSize;
+                return out->revise();
+            }
         }
 
     }
 }
+

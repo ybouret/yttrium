@@ -304,6 +304,21 @@ RATE(tmx[Kemp::Ops16_8])
         }
     }
 
+    std::cerr << "<SHR64>" << std::endl;
+    for(unsigned i=0;i<=64;++i)
+    {
+        const uint64_t l = ran.to<uint64_t>(i);
+        Kemp::Element  L(l,Kemp::ToNum64);
+        for(size_t j=0;j<64;++j)
+        {
+            const uint64_t s = l>>j;
+            //std::cerr << Hexadecimal(l) << ">>" << j << " = " << Hexadecimal(s) << std::endl;
+            AutoPtr<Kemp::Element> S = L.shr(j);
+            //std::cerr << S << std::endl;
+            Y_ASSERT(S->u64() == s );
+        }
+    }
+
 
     std::cerr << std::endl;
     Y_SIZEOF(Kemp::Bytes);
