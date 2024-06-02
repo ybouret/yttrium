@@ -140,6 +140,15 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             Natural   operator--(int);              //!< post-decrement
             Y_Kemp_Natural_Binary_Decl(operator-);  //!< aliases
 
+            //__________________________________________________________________
+            //
+            //
+            // Multiplications
+            //
+            //__________________________________________________________________
+            Natural & operator*=(const Natural &);  //!< in place *
+            Natural & operator*=(const uint64_t );  //!< in place *
+            Y_Kemp_Natural_Binary_Decl(operator*);  //!< aliases
 
         private:
             mutable Element *code;

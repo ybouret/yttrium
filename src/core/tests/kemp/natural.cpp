@@ -22,9 +22,9 @@ Y_UTEST(kemp_natural)
     }
 
     std::cerr << "<Add/Cmp64>" << std::endl;
-    for(unsigned i=0;i<=31;++i)
+    for(unsigned i=0;i<=63;++i)
     {
-        for(unsigned j=0;j<=31;++j)
+        for(unsigned j=0;j<=63;++j)
         {
             const uint64_t lhs = ran.to<uint64_t>(i);
             const uint64_t rhs = ran.to<uint64_t>(j);
@@ -70,9 +70,11 @@ Y_UTEST(kemp_natural)
             const uint64_t dif = lhs-rhs;
             apn L = lhs;
             apn R = rhs;
-            apn D = L-R;   Y_ASSERT(D==dif);
-            D     = lhs-R; Y_ASSERT(D==dif);
-            D     = L-rhs; Y_ASSERT(D==dif);
+            apn D = L-R;    Y_ASSERT(D==dif);
+            D     = lhs-R;  Y_ASSERT(D==dif);
+            D     = L-rhs;  Y_ASSERT(D==dif);
+            D = L; D -= R;  Y_ASSERT(D==dif);
+            D = L; D -= rhs;Y_ASSERT(D==dif);
         }
 
     }
@@ -81,6 +83,29 @@ Y_UTEST(kemp_natural)
     std::cerr << std::endl;
     for(apn i=10;i>0;i--) std::cerr << i << "/";
     std::cerr << std::endl;
+
+    std::cerr << "<Mul64>" << std::endl;
+    for(unsigned i=0;i<=32;++i)
+    {
+        for(unsigned j=0;j<=32;++j)
+        {
+            const uint64_t lhs = ran.to<uint64_t>(i);
+            const uint64_t rhs = ran.to<uint64_t>(j);
+            const uint64_t prod = rhs*lhs;
+            {
+                apn L = lhs;
+                apn R = rhs;
+                apn P = L*R;     Y_ASSERT(P==prod);
+                P = lhs*R;       Y_ASSERT(P==prod);
+                P = L*rhs;       Y_ASSERT(P==prod);
+                P = L; P *= R;   Y_ASSERT(P==prod);
+                P = L; P *= rhs; Y_ASSERT(P==prod);
+
+            }
+
+        }
+
+    }
 
 }
 Y_UDONE()

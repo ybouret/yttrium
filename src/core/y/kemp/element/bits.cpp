@@ -31,7 +31,8 @@ namespace Yttrium
                 case AsNum32: bits = SHR(num32); break;
                 case AsNum64: bits = SHR(num64); break;
             }
-            return *this;
+            
+            return *revise();
         }
 
     }
