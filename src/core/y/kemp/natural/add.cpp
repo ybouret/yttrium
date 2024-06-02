@@ -14,25 +14,19 @@ namespace Yttrium
 
         Natural & Natural:: operator+=(const Natural &rhs)
         {
-            Element *res = Element::Add[Strategy]( **this, *rhs);
-            Swap(res,code);
-            delete res;
+            make( Element::Add[Strategy]( **this, *rhs) );
             return *this;
         }
 
         Natural & Natural:: operator+=(const uint64_t rhs)
         {
-            Element *res = Element::Add[Strategy]( **this, rhs);
-            Swap(res,code);
-            delete res;
+            make( Element::Add[Strategy]( **this, rhs) );
             return *this;
         }
 
         void Natural:: incr()
         {
-            Element *res = Element::Add[Strategy]( **this, 1);
-            Swap(res,code);
-            delete res;
+            make(Element::Add[Strategy]( **this, 1));
         }
 
         Natural & Natural:: operator++()

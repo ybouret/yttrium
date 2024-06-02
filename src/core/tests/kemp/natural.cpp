@@ -52,7 +52,10 @@ Y_UTEST(kemp_natural)
         }
     }
     
-    for(apn i=0;i<=10;++i) std::cerr << i << std::endl;
+    for(apn i=0;i<=10;++i) std::cerr << i << "/";
+    std::cerr << std::endl;
+    for(apn i=0;i<=10;i++) std::cerr << i << "/";
+    std::cerr << std::endl;
 
 
 }

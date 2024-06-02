@@ -112,8 +112,10 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
 
         private:
             mutable Element *code;
-            void incr();
+
             Natural(Element * const, const AsElement_ &) noexcept;
+            void incr();                    //!< add 1
+            void make(Element *) noexcept;  //!< replace code
         };
 
     }

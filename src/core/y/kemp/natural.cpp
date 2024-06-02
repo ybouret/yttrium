@@ -18,6 +18,14 @@ namespace Yttrium
             assert(0!=code);
         }
 
+        void Natural:: make(Element *el) noexcept
+        {
+            assert(0!=el);
+            assert(0!=code);
+            Swap(code,el);
+            delete el;
+        }
+
 
         Element & Natural:: operator*() const noexcept
         {
