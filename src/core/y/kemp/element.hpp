@@ -148,6 +148,7 @@ namespace Yttrium
             //__________________________________________________________________
             Element & shr() noexcept; //!< in place shift right 1 bit, noexcept (a.k.a fast divide by two)
             Element * shr(const size_t nbit);
+            Element * shl(const size_t nbit);
 
             //__________________________________________________________________
             //
