@@ -58,5 +58,29 @@ Y_UTEST(kemp_natural)
     std::cerr << std::endl;
 
 
+    std::cerr << "<Sub64>" << std::endl;
+    for(unsigned i=0;i<=64;++i)
+    {
+        for(unsigned j=0;j<=64;++j)
+        {
+            uint64_t lhs = ran.to<uint64_t>(i);
+            uint64_t rhs = ran.to<uint64_t>(j);
+            if(lhs<rhs) Swap(lhs,rhs);
+            assert(lhs>=rhs);
+            const uint64_t dif = lhs-rhs;
+            apn L = lhs;
+            apn R = rhs;
+            apn D = L-R;   Y_ASSERT(D==dif);
+            D     = lhs-R; Y_ASSERT(D==dif);
+            D     = L-rhs; Y_ASSERT(D==dif);
+        }
+
+    }
+
+    for(apn i=10;i>0;--i) std::cerr << i << "/";
+    std::cerr << std::endl;
+    for(apn i=10;i>0;i--) std::cerr << i << "/";
+    std::cerr << std::endl;
+
 }
 Y_UDONE()

@@ -125,8 +125,20 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             Natural & operator+=(const Natural &);  //!< in place +
             Natural & operator+=(const uint64_t );  //!< in place +
             Natural & operator++();                 //!< pre-increment
-            Natural   operator++(int);              //!< pos-decrement
+            Natural   operator++(int);              //!< post-increment
             Y_Kemp_Natural_Binary_Decl(operator+);  //!< aliases
+
+            //__________________________________________________________________
+            //
+            //
+            // Subtractions
+            //
+            //__________________________________________________________________
+            Natural & operator-=(const Natural &);  //!< in place -
+            Natural & operator-=(const uint64_t );  //!< in place -
+            Natural & operator--();                 //!< pre-decrement
+            Natural   operator--(int);              //!< post-decrement
+            Y_Kemp_Natural_Binary_Decl(operator-);  //!< aliases
 
 
         private:
@@ -134,6 +146,7 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
 
             Natural(Element * const, const AsElement_ &) noexcept;
             void incr();                    //!< add 1
+            void decr();                    //!< sub 1
             void make(Element *) noexcept;  //!< replace code
         };
 
