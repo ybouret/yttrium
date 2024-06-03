@@ -37,29 +37,64 @@ namespace Yttrium
             // 2^p * den < num < 2^(p+1) * den
             //
             //__________________________________________________________________
-            size_t           p     = N.bits-D.bits; std::cerr << "p=" << p << std::endl;
-            Natural          probe = den << p;
+
             AutoPtr<Natural> lower = 0;
             AutoPtr<Natural> upper = 0;
 
-            switch( Compare(probe,num) )
             {
-                case Negative:
-                    std::cerr << "negative" << std::endl;
-                    lower = new Natural(probe); assert(*lower<num);
-                    probe <<= 1;
-                    upper = new Natural(probe); assert(num<*upper);
-                    break;
-                case __Zero__: return probe;
-                case Positive:
-                    std::cerr << "positive" << std::endl;
-                    upper = new Natural(probe); assert(num<*upper);
-                    probe.shr();
-                    lower = new Natural(probe); assert(*lower<num);
-                    break;
+                size_t           p     = N.bits-D.bits; //std::cerr << "p=" << p << std::endl;
+                Natural          probe = den << p;
+                switch( Compare(probe,num) )
+                {
+                    case Negative:
+                        //std::cerr << "negative" << std::endl;
+                        lower = new Natural(TwoToThe,p);   assert(*lower*den<num);
+                        upper = new Natural(TwoToThe,++p); assert(num<*upper*den);
+                        break;
+                    case __Zero__: return Natural(TwoToThe,p);
+                    case Positive:
+                        //std::cerr << "positive" << std::endl;
+                        upper = new Natural(TwoToThe,p);   assert(num<*upper*den);
+                        lower = new Natural(TwoToThe,--p); assert(*lower*den<num);
+                        break;
+                }
             }
-            
-            return Natural();
+
+
+            //__________________________________________________________________
+            //
+            //
+            // bracket
+            //
+            //__________________________________________________________________
+            Natural &lo = *lower;
+            Natural &up = *upper;
+
+
+
+            assert(lo*den<num);
+            assert(num<up*den);
+
+            const Natural one(1);
+            while(true)
+            {
+                {
+                    const Natural del = up-lo;
+                    if(del<=1) return lo;
+                }
+
+                Natural        mid = (lo+up).shr();
+                const Natural probe = mid * den;
+
+                switch( Compare(probe,num) )
+                {
+                    case Negative: lo.xch(mid); break;
+                    case __Zero__: return mid;
+                    case Positive: up.xch(mid); break;
+                }
+
+            }
+
         }
 
 

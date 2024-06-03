@@ -117,7 +117,12 @@ Y_UTEST(kemp_natural)
             {
                 const apn N = num;
                 const apn D = den;
-                const apn Q = N/D;
+                { const apn Q = N/D;   Y_ASSERT(Q==q); }
+                { const apn Q = N/den; Y_ASSERT(Q==q); }
+                { const apn Q = num/D; Y_ASSERT(Q==q); }
+                { apn Q=N; Q/=D;       Y_ASSERT(Q==q); }
+                { apn Q=N; Q/=den;     Y_ASSERT(Q==q); }
+
             }
 
         }
