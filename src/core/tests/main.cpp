@@ -261,6 +261,7 @@ Y_UTEST_DECL(256)
     
     Y_UTEST(kemp_element);
     Y_UTEST(kemp_natural);
+    Y_UTEST(kemp_addsub);
 
 }
 Y_UTEST_EXEC()

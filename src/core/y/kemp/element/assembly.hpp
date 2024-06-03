@@ -128,7 +128,7 @@ namespace Yttrium
             inline bool mayShrinkAbove(const size_t minBytes) const noexcept
             {
                 const bool flag = ( (capacity*WordSize>minBytes) && (positive < (capacity>>1)) );
-                if(flag) std::cerr << "May Shrink(positive=" << positive << "/capacity=" << capacity << ")!" << std::endl;
+                //if(flag) std::cerr << "May Shrink(positive=" << positive << "/capacity=" << capacity << ")!" << std::endl;
                 return flag;
             }
 

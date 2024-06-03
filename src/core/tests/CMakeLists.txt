@@ -342,4 +342,5 @@ add_test(tow:api test-core tow_api)
 #kemp
 add_test(kemp:element test-core kemp_element)
 add_test(kemp:natural test-core kemp_natural)
+add_test(kemp:natural test-core kemp_addsub)
 
