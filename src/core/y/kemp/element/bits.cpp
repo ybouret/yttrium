@@ -30,29 +30,27 @@ namespace Yttrium
 
         Element * Element:: shr(const size_t nbit)
         {
-            if(nbit>=bits)
+            if(nbit>=bits) return new Element(0,AsCapacity);
+
+            const size_t          outBits = bits-nbit;
+            const size_t          outSize = Bytes::BitsToPositive(outBits);
+            Element       *       out     = new Element( outSize, AsCapacity ); assert(AsBytes==out->state);
+            uint8_t       * const target  = out->bytes.item;
+            const uint8_t * const source  = get<uint8_t>().item;
+            for(size_t i=0,j=nbit;i<outBits;++i,++j)
             {
-                return new Element(0,AsCapacity);
+                if( getBit(source,j) ) setBit(target,i);
             }
-            else
-            {
-                const size_t          outBits = bits-nbit;
-                const size_t          outSize = Bytes::BitsToPositive(outBits);
-                Element       *       out     = new Element( outSize, AsCapacity ); assert(AsBytes==out->state);
-                uint8_t       * const target  = out->bytes.item;
-                const uint8_t * const source  = get<uint8_t>().item;
-                for(size_t i=0,j=nbit;i<outBits;++i,++j)
-                {
-                    if( getBit(source,j) ) setBit(target,i);
-                }
-                out->bits           = outBits;
-                out->bytes.positive = outSize;
-                return Shrink( out->revise() );
-            }
+            out->bits           = outBits;
+            out->bytes.positive = outSize;
+            return Shrink( out->revise() );
+
         }
 
         Element * Element:: shl(const size_t nbit)
         {
+
+            if(bits<=0) return new Element(0,AsCapacity);
 
             const size_t          outBits = bits+nbit;
             const size_t          outSize = Bytes::BitsToPositive(outBits);
@@ -60,7 +58,7 @@ namespace Yttrium
             uint8_t       * const target  = out->bytes.item;
             const uint8_t * const source  = get<uint8_t>().item;
 
-            for(size_t i=0,j=bits;i<bits;++i,++j)
+            for(size_t i=0,j=nbit;i<bits;++i,++j)
             {
                 if( getBit(source,i) ) setBit(target,j);
             }

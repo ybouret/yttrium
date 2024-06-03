@@ -327,7 +327,8 @@ RATE(tmx[Kemp::Ops16_8])
         for(unsigned j=0;j<=64-i;++j)
         {
             const uint64_t s = l<<j;
-            std::cerr << Hexadecimal(l) << "<<" << j << " = " << Hexadecimal(s) << std::endl;
+            std::cerr << Hexadecimal(l) << "<<" << j << " = " << Hexadecimal(s);
+            AutoPtr<Kemp::Element> S = L.shl(i);
             if(i>0)
             {
                 Y_ASSERT(i+j==BitCount::For(s));
@@ -336,6 +337,8 @@ RATE(tmx[Kemp::Ops16_8])
             {
                 Y_ASSERT(0==s);
             }
+            std::cerr << " => " << S << std::endl;
+            Y_ASSERT(S->u64() == s);
 
         }
     }

@@ -39,13 +39,13 @@ namespace Yttrium
             return Natural::Divide(lhs,rhs);
         }
 
-        Natural operator*(const uint64_t lhs, const Natural &rhs)
+        Natural operator/(const uint64_t lhs, const Natural &rhs)
         {
             const Natural num(lhs);
             return Natural::Divide(num,rhs);
         }
 
-        Natural operator*(const Natural &lhs, const uint64_t rhs)
+        Natural operator/(const Natural &lhs, const uint64_t rhs)
         {
             const Natural den(rhs);
             return Natural::Divide(lhs,den);
