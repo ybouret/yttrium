@@ -31,9 +31,7 @@ namespace Yttrium
             {
                 case Negative: return Natural();
                 case __Zero__: return Natural(1);
-                case Positive:
-                    assert(N.bits>=D.bits);
-                    break;
+                case Positive: assert(N.bits>=D.bits); break;
             }
 
 

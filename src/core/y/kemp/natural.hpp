@@ -98,7 +98,6 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             String toHex()           const; //!< render to hexadecimal
             String toDec()           const; //!< render to decimal
 
-            
             //__________________________________________________________________
             //
             //
@@ -187,7 +186,14 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             Natural & operator%=(const uint64_t );  //!< in place /
             Y_Kemp_Natural_Binary_Decl(operator%);  //!< aliases
 
-
+            //__________________________________________________________________
+            //
+            //
+            // Conversion
+            //
+            //__________________________________________________________________
+            
+            
         private:
             mutable Element *code;
 
@@ -198,6 +204,8 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
 
             static Natural Divide(const Natural &den, const Natural &num);
             static Natural Modulo(const Natural &den, const Natural &num);
+
+
         };
 
     }
