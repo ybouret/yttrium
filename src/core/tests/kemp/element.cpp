@@ -10,6 +10,7 @@
 
 
 #include "y/kemp/element/fft.hpp"
+#include "y/text/ascii/convert.hpp"
 
 using namespace Yttrium;
 
@@ -17,6 +18,8 @@ Y_UTEST(kemp_element)
 {
     Random::ParkMiller ran;
     size_t             cycles=1;
+
+    if(argc>1) cycles = ASCII::Convert::To<size_t>(argv[1],"cycles");
 
     for(unsigned i=0;i<=64;++i)
     {
@@ -294,13 +297,11 @@ RATE(tmx[Kemp::Ops16_8])
     std::cerr << "<SHR>" << std::endl;
     for(unsigned k=0;k<4;++k)
     {
-        std::cerr << "bits=" << ((1<<k) * 8) << std::endl;
         Kemp::Element x(Kemp::TwoToThe,80);
         x.set(Kemp::Element::Inner[k]);
         while(x.bits>0)
         {
             const size_t nextBits = x.bits-1;
-            std::cerr << std::setw(3) << x.bits << x  << std::endl;
             x.shr();
             Y_ASSERT(nextBits==x.bits);
         }
@@ -347,7 +348,7 @@ RATE(tmx[Kemp::Ops16_8])
     std::cerr << "<FFT64>" << std::endl;
 
     total = 0;
-    memset(tmx,0,sizeof(tmx));
+    uint64_t tmx_fft = 0;
     for(unsigned i=0;i<=32;++i)
     {
         for(unsigned j=0;j<=32;++j)
@@ -360,19 +361,40 @@ RATE(tmx[Kemp::Ops16_8])
                 const uint64_t prod = lhs*rhs;
                 const size_t   bits = BitCount::For(prod);
 
-                std::cerr << "prod=" << Hexadecimal(prod,Hexadecimal::Compact) << std::endl;
+                //std::cerr << "prod=" << Hexadecimal(prod,Hexadecimal::Compact) << std::endl;
 
                 Kemp::Element L(lhs,Kemp::ToNum64);
                 Kemp::Element R(rhs,Kemp::ToNum64);
 
-                AutoPtr<const Kemp::Element> P = Kemp::FFTMul::Get(L,R);
-                Y_ASSERT(bits == P->bits);
-                Y_ASSERT(P->u64() == prod);
+                {
+                    AutoPtr<const Kemp::Element> P = Kemp::Element::MulFFT(L,R);
+                    Y_ASSERT(bits == P->bits);
+                    Y_ASSERT(P->u64() == prod);
+                }
+
+                {
+                    AutoPtr<const Kemp::Element> P = Kemp::Element::MulFFT(L,R,tmx_fft);
+                    Y_ASSERT(bits == P->bits);
+                    Y_ASSERT(P->u64() == prod);
+                }
+
+
+                {
+                    AutoPtr<const Kemp::Element> P = Kemp::Element::MulFFT(lhs,R);
+                    Y_ASSERT(bits == P->bits);
+                    Y_ASSERT(P->u64() == prod);
+                }
+
+                {
+                    AutoPtr<const Kemp::Element> P = Kemp::Element::MulFFT(L,rhs);
+                    Y_ASSERT(bits == P->bits);
+                    Y_ASSERT(P->u64() == prod);
+                }
+
             }
-
         }
-
     }
+    RATE(tmx_fft);
 
 
 

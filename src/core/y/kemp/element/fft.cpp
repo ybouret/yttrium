@@ -3,26 +3,44 @@
 #include "y/type/utils.hpp"
 #include "y/memory/allocator/archon.hpp"
 #include "y/fft/fft.hpp"
+#include "y/ptr/auto.hpp"
+#include "y/system/wtime.hpp"
 
 namespace Yttrium
 {
     namespace Kemp
     {
 
-
-        Element * FFTMul:: Get( Element &lhs, Element &rhs )
+        const Element::BinaryAPI Element:: MulFFT =
         {
-            
+            FFT_Multiplication:: Result,
+            FFT_Multiplication:: ResTMX,
+            FFT_Multiplication:: ResL64,
+            FFT_Multiplication:: ResR64
+        };
+
+        Element * FFT_Multiplication:: Get(const Assembly<uint8_t> & lhs,
+                                           const Assembly<uint8_t> & rhs,
+                                           uint64_t * const          tmx)
+        {
+
+            //__________________________________________________________________
+            //
+            //
             // get array of bytes
-            const Assembly<uint8_t> & u = lhs.get<uint8_t>();
-            const size_t              n = u.positive;
-            const Assembly<uint8_t> & v = rhs.get<uint8_t>();
-            const size_t              m = v.positive;
+            //
+            //__________________________________________________________________
+            const size_t              n = lhs.positive;
+            const size_t              m = rhs.positive;
 
             if(n<=0||m<=0) return new Element(0,AsCapacity);
 
-
+            //__________________________________________________________________
+            //
+            //
             // get common size, extend to avoid overlapping
+            //
+            //__________________________________________________________________
             size_t       nn = 1;
             unsigned     ns = 0;
             const size_t mn = Max(n,m);
@@ -30,8 +48,11 @@ namespace Yttrium
             nn <<= 1; ++ns;
 
 
-            const size_t mpn = m+n;
-            AutoPtr<Element> P = new Element(mpn,AsCapacity);
+            const bool       tag    = 0!=tmx;
+            const size_t     mpn    = m+n;
+            AutoPtr<Element> P      = new Element(mpn,AsCapacity);
+            const uint64_t   mark64 = tag ? WallTime::Ticks() : 0;
+
             {
                 typedef double        Real;
                 static const unsigned Log2RealSize = iLog2< sizeof(Real) >::Value;
@@ -41,18 +62,18 @@ namespace Yttrium
                 // acquire local memory
                 //
                 //--------------------------------------------------------------
-                unsigned              shift = 1 + (ns+Log2RealSize); assert( (1<<shift)/sizeof(Real) == 2*nn );
-                void * const          entry = Memory::Archon::Acquire(shift);
-                Real * const b = static_cast<Real *>(entry)-1;
-                Real * const a = b + nn;
+                unsigned     shift = 1 + (ns+Log2RealSize); assert( (1<<shift)/sizeof(Real) == 2*nn );
+                void * const entry = Memory::Archon::Acquire(shift);
+                Real * const b     = static_cast<Real *>(entry)-1;
+                Real * const a     = b + nn;
 
                 //--------------------------------------------------------------
                 //
                 // fill arrays
                 //
                 //--------------------------------------------------------------
-                for(size_t i=n;i>0;--i) a[i] = u.item[n-i];
-                for(size_t i=m;i>0;--i) b[i] = v.item[m-i];
+                for(size_t i=n;i>0;--i) a[i] = lhs.item[n-i];
+                for(size_t i=m;i>0;--i) b[i] = rhs.item[m-i];
 
                 //--------------------------------------------------------------
                 //
@@ -111,8 +132,10 @@ namespace Yttrium
                     *(--w) = uint8_t( cy );
                     for (size_t j=1;j<mpn;++j)
                         *(--w) = *(const uint8_t *) &b[j];
-                    Hexadecimal::Display(std::cerr << "w=", w, mpn) << std::endl;
+                    //Hexadecimal::Display(std::cerr << "w=", w, mpn) << std::endl;
                 }
+
+
 
                 //--------------------------------------------------------------
                 //
@@ -120,10 +143,11 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 P->bytes.positive = mpn;
-                P->bits = P->bytes.updateBits();
+                P->bits           = P->bytes.updateBits();
                 Memory::Archon::Release(entry,shift);
             }
 
+            if(tag) *tmx += (WallTime::Ticks() - mark64);
             return P.yield()->revise();
         }
 
