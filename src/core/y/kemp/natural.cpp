@@ -1,6 +1,7 @@
 #include "y/kemp/natural.hpp"
 #include "y/kemp/element.hpp"
 #include "y/type/nullify.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -11,6 +12,12 @@ namespace Yttrium
         const char * const Natural:: CallSign = "apn";
 
         Y_SHALLOW_IMPL(AsElement);
+
+        void Natural::CastOverflow(const char *ctx)
+        {
+            throw Specific::Exception(CallSign, "cast overflow for '%s'", ctx?ctx:Core::Unknown);
+        }
+
 
         Natural:: Natural(Element * const el, const AsElement_ &) noexcept :
         code(el)
