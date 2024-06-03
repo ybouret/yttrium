@@ -16,6 +16,8 @@ using namespace Yttrium;
 Y_UTEST(kemp_element)
 {
     Random::ParkMiller ran;
+    size_t             cycles=1;
+
     for(unsigned i=0;i<=64;++i)
     {
         const uint64_t qw = ran.to<uint64_t>(i); Y_ASSERT(BitCount::For(qw)==i);
@@ -125,7 +127,7 @@ Y_UTEST(kemp_element)
     {
         for(unsigned j=0;j<=63;++j)
         {
-            for(size_t cycle=0;cycle<16;++cycle)
+            for(size_t cycle=0;cycle<cycles;++cycle)
             {
                 ++total;
 
@@ -193,7 +195,7 @@ RATE(tmx[Kemp::Ops16_8])
     {
         for(unsigned j=0;j<=64;++j)
         {
-            for(size_t cycle=0;cycle<16;++cycle)
+            for(size_t cycle=0;cycle<cycles;++cycle)
             {
                 ++total;
                 uint64_t lhs = ran.to<uint64_t>(i);
@@ -247,7 +249,7 @@ RATE(tmx[Kemp::Ops16_8])
     {
         for(unsigned j=0;j<=32;++j)
         {
-            for(size_t cycle=0;cycle<16;++cycle)
+            for(size_t cycle=0;cycle<cycles;++cycle)
             {
                 ++total;
                 uint64_t lhs = ran.to<uint64_t>(i);
