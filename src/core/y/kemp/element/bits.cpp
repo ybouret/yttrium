@@ -36,21 +36,41 @@ namespace Yttrium
             }
             else
             {
-                const size_t outBits = bits-nbit;
-                const size_t outSize = Bytes::BitsToPositive(outBits);
-                Element     *out     = new Element( outSize, AsCapacity );
-                assert(AsBytes==out->state);
-                uint8_t       * const target = out->bytes.item;
-                const uint8_t * const source = get<uint8_t>().item;
+                const size_t          outBits = bits-nbit;
+                const size_t          outSize = Bytes::BitsToPositive(outBits);
+                Element       *       out     = new Element( outSize, AsCapacity ); assert(AsBytes==out->state);
+                uint8_t       * const target  = out->bytes.item;
+                const uint8_t * const source  = get<uint8_t>().item;
                 for(size_t i=0,j=nbit;i<outBits;++i,++j)
                 {
                     if( getBit(source,j) ) setBit(target,i);
                 }
                 out->bits           = outBits;
                 out->bytes.positive = outSize;
-                return out->revise();
+                return Shrink( out->revise() );
             }
         }
+
+        Element * Element:: shl(const size_t nbit)
+        {
+
+            const size_t          outBits = bits+nbit;
+            const size_t          outSize = Bytes::BitsToPositive(outBits);
+            Element       *       out     = new Element( outSize, AsCapacity ); assert(AsBytes==out->state);
+            uint8_t       * const target  = out->bytes.item;
+            const uint8_t * const source  = get<uint8_t>().item;
+
+            for(size_t i=0,j=bits;i<bits;++i,++j)
+            {
+                if( getBit(source,i) ) setBit(target,j);
+            }
+
+            out->bits           = outBits;
+            out->bytes.positive = outSize;
+            return  out->revise();
+        }
+
+
 
     }
 }

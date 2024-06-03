@@ -319,6 +319,28 @@ RATE(tmx[Kemp::Ops16_8])
         }
     }
 
+    std::cerr << "<SHL64>" << std::endl;
+    for(unsigned i=0;i<64;++i)
+    {
+        const uint64_t l = ran.to<uint64_t>(i);
+        Kemp::Element  L(l,Kemp::ToNum64);
+        for(unsigned j=0;j<=64-i;++j)
+        {
+            const uint64_t s = l<<j;
+            std::cerr << Hexadecimal(l) << "<<" << j << " = " << Hexadecimal(s) << std::endl;
+            if(i>0)
+            {
+                Y_ASSERT(i+j==BitCount::For(s));
+            }
+            else
+            {
+                Y_ASSERT(0==s);
+            }
+
+        }
+    }
+
+
 
     std::cerr << std::endl;
     Y_SIZEOF(Kemp::Bytes);
