@@ -263,6 +263,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(kemp_natural);
     Y_UTEST(kemp_addsub);
     Y_UTEST(kemp_muldiv);
+    Y_UTEST(kemp_mulperf);
 
 }
 Y_UTEST_EXEC()
