@@ -32,7 +32,7 @@ namespace Yttrium
                 case AsNum64: bits = SHR(num64); break;
             }
             
-            return *revise();
+            return * revise();
         }
 
     }

@@ -78,10 +78,10 @@ namespace Yttrium
             {
                 {
                     const Natural del = up-lo;
-                    if(del<=1) return lo;
+                    if(del<=one) return lo;
                 }
 
-                Natural        mid = (lo+up).shr();
+                Natural        mid  = (lo+up).shr();
                 const Natural probe = mid * den;
 
                 switch( Compare(probe,num) )
