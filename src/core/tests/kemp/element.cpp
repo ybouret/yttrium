@@ -9,7 +9,7 @@
 #include "y/text/human-readable.hpp"
 
 
-#include "y/kemp/element/mul.hpp"
+#include "y/kemp/element/fft.hpp"
 
 using namespace Yttrium;
 
@@ -343,6 +343,37 @@ RATE(tmx[Kemp::Ops16_8])
             Y_ASSERT(S->u64() == s);
         }
     }
+
+    std::cerr << "<FFT64>" << std::endl;
+
+    total = 0;
+    memset(tmx,0,sizeof(tmx));
+    for(unsigned i=0;i<=32;++i)
+    {
+        for(unsigned j=0;j<=32;++j)
+        {
+            for(size_t cycle=0;cycle<cycles;++cycle)
+            {
+                ++total;
+                uint64_t       lhs = ran.to<uint64_t>(i);
+                uint64_t       rhs = ran.to<uint64_t>(j);
+                const uint64_t prod = lhs*rhs;
+                const size_t   bits = BitCount::For(prod);
+
+                std::cerr << "prod=" << Hexadecimal(prod,Hexadecimal::Compact) << std::endl;
+
+                Kemp::Element L(lhs,Kemp::ToNum64);
+                Kemp::Element R(rhs,Kemp::ToNum64);
+
+                AutoPtr<const Kemp::Element> P = Kemp::FFTMul::Get(L,R);
+                Y_ASSERT(bits == P->bits);
+                Y_ASSERT(P->u64() == prod);
+            }
+
+        }
+
+    }
+
 
 
 
