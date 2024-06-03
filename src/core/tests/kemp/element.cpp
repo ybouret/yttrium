@@ -339,7 +339,6 @@ RATE(tmx[Kemp::Ops16_8])
             }
             //std::cerr << " => " << S << std::endl;
             Y_ASSERT(S->u64() == s);
-
         }
     }
 

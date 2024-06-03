@@ -119,6 +119,20 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             //__________________________________________________________________
             //
             //
+            // Bits
+            //
+            //__________________________________________________________________
+            Natural & shr() noexcept; //!< in place 1 bit right shift: /=2
+            Natural & shr(const size_t);
+            Natural & shl(const size_t);
+            Natural & operator<<=(const size_t);
+            Natural & operator>>=(const size_t);
+            friend Natural operator<<(const Natural &, const size_t);
+            friend Natural operator>>(const Natural &, const size_t);
+
+            //__________________________________________________________________
+            //
+            //
             // Additions
             //
             //__________________________________________________________________
