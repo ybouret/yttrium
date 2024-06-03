@@ -18,16 +18,26 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             Element &D = *den; if(D.bits<=0) throw Libc::Exception(EDOM, "%s division by zero", CallSign);
-            Element &N = *num; if(N.bits<D.bits) { assert(num<den); return Natural(); }
+            Element &N = *num;
+
+            switch( Element::Compare(N,D) )
+            {
+                case Negative: return Natural();
+                case __Zero__: return Natural(1);
+                case Positive:
+                    break;
+            }
+
 
             //__________________________________________________________________
             //
             //
-            // 2^p * den <= num < 2^(p+1) * den
+            // 2^p * den < num <= 2^(p+1) * den
             //
             //__________________________________________________________________
-            Natural lower = den; assert(lower<=num);
-            
+            Natural lower = den; assert(den<num);
+
+
             return Natural();
         }
 
