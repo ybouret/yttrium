@@ -1,6 +1,7 @@
 #include "y/kemp/natural.hpp"
 #include "y/kemp/element.hpp"
 #include "y/system/exception.hpp"
+#include <cerrno>
 
 namespace Yttrium
 {
@@ -10,10 +11,22 @@ namespace Yttrium
         // num = q*den (+rem)
         Natural Natural:: Divide(const Natural &num, const Natural &den)
         {
+            //__________________________________________________________________
+            //
+            //
+            // get and check elements
+            //
+            //------------------------------------------------------------------
             Element &D = *den; if(D.bits<=0) throw Libc::Exception(EDOM, "%s division by zero", CallSign);
             Element &N = *num; if(N.bits<D.bits) { assert(num<den); return Natural(); }
 
+            //__________________________________________________________________
+            //
+            //
             // 2^p * den <= num < 2^(p+1) * den
+            //
+            //__________________________________________________________________
+            Natural lower = den; assert(lower<=num);
             
             return Natural();
         }
@@ -27,7 +40,7 @@ namespace Yttrium
             return *this;
         }
 
-        Natural & Natural:: operator*=(const uint64_t rhs)
+        Natural & Natural:: operator/=(const uint64_t rhs)
         {
             const Natural den(rhs);
             return *this /= den;

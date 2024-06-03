@@ -104,8 +104,28 @@ Y_UTEST(kemp_natural)
             }
 
         }
-
     }
+
+    std::cerr << "<Div64>" << std::endl;
+    for(unsigned i=0;i<=64;++i)
+    {
+        for(unsigned j=1;j<=64;++j)
+        {
+            const uint64_t num = ran.to<uint64_t>(i);
+            const uint64_t den = ran.to<uint64_t>(j);
+            const uint64_t q   = num/den;
+            {
+                const apn N = num;
+                const apn D = den;
+                const apn Q = N/D;
+            }
+
+        }
+    }
+
+
+
+
 
 }
 Y_UDONE()
