@@ -97,6 +97,8 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             void   xch(Natural &) noexcept; //!< noexcept exchange content
             String toHex()           const; //!< render to hexadecimal
             String toDec()           const; //!< render to decimal
+            size_t bits()   const noexcept; //!< get current bits
+            
 
             //__________________________________________________________________
             //
@@ -186,14 +188,15 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             Natural & operator%=(const uint64_t );  //!< in place /
             Y_Kemp_Natural_Binary_Decl(operator%);  //!< aliases
 
+
             //__________________________________________________________________
             //
             //
             // Conversion
             //
             //__________________________________________________________________
-            
-            
+
+
         private:
             mutable Element *code;
 

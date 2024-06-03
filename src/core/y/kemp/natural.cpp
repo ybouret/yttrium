@@ -84,8 +84,11 @@ namespace Yttrium
         }
         
 
-
-
+        size_t Natural:: bits()   const noexcept
+        {
+            assert(0!=code);
+            return code->bits;
+        }
 
     }
 
