@@ -30,8 +30,8 @@ namespace Yttrium
             // get array of bytes
             //
             //__________________________________________________________________
-            const size_t              n = lhs.positive;
-            const size_t              m = rhs.positive;
+            const size_t n = lhs.positive;
+            const size_t m = rhs.positive;
 
             if(n<=0||m<=0) return new Element(0,AsCapacity);
 
@@ -59,7 +59,7 @@ namespace Yttrium
 
                 //--------------------------------------------------------------
                 //
-                // acquire local memory
+                // acquire local memory : 2 arrays of nn reals
                 //
                 //--------------------------------------------------------------
                 unsigned     shift = 1 + (ns+Log2RealSize); assert( (1<<shift)/sizeof(Real) == 2*nn );
@@ -119,7 +119,7 @@ namespace Yttrium
                 {
                     const Real t =  floor(b[j]/nh+cy+half);
                     cy=(unsigned long) (t/RX);
-                    *(uint8_t *)&b[j]=uint8_t(t-cy*RX);
+                    *(uint8_t *)&b[j]= static_cast<uint8_t>(t-cy*RX);
                 }
 
                 //--------------------------------------------------------------
@@ -132,7 +132,6 @@ namespace Yttrium
                     *(--w) = uint8_t( cy );
                     for (size_t j=1;j<mpn;++j)
                         *(--w) = *(const uint8_t *) &b[j];
-                    //Hexadecimal::Display(std::cerr << "w=", w, mpn) << std::endl;
                 }
 
 
