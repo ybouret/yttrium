@@ -220,7 +220,7 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
                 }
             }
 
-            //! cast with exception raisinbg
+            //! cast with exception raising
             template <typename T> inline
             T cast(const char *ctx=0) const
             {

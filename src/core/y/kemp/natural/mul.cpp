@@ -14,8 +14,7 @@ namespace Yttrium
         {
             return Element::Mul[ Natural::Strategy ];
         }
-
-
+        
 
         Natural & Natural:: operator*=(const Natural &rhs)
         {
