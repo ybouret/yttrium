@@ -9,32 +9,40 @@ namespace Yttrium
     {
 
 
+        static inline
+        const Element::BinaryAPI & mapi() noexcept
+        {
+            return Element::Mul[ Natural::Strategy ];
+        }
+
+
+
         Natural & Natural:: operator*=(const Natural &rhs)
         {
-            make( Element::Mul[Strategy]( **this, *rhs) );
+            make( mapi() ( **this, *rhs) );
             return *this;
         }
 
         Natural & Natural:: operator*=(const uint64_t rhs)
         {
-            make( Element::Mul[Strategy]( **this, rhs) );
+            make( mapi() ( **this, rhs) );
             return *this;
         }
 
 
         Natural operator*(const Natural &lhs, const Natural &rhs)
         {
-            return Natural(Element::Mul[Natural::Strategy](*lhs,*rhs),AsElement);
+            return Natural( mapi() (*lhs,*rhs),AsElement);
         }
 
         Natural operator*(const uint64_t lhs, const Natural &rhs)
         {
-            return Natural(Element::Mul[Natural::Strategy](lhs,*rhs),AsElement);
+            return Natural(mapi() (lhs,*rhs),AsElement);
         }
 
         Natural operator*(const Natural &lhs, const uint64_t rhs)
         {
-            return Natural(Element::Mul[Natural::Strategy](*lhs,rhs),AsElement);
+            return Natural(mapi()(*lhs,rhs),AsElement);
         }
 
     }
