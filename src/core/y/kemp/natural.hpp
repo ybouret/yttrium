@@ -5,6 +5,7 @@
 
 #include "y/kemp/number.hpp"
 #include "y/kemp/types.hpp"
+#include "y/type/ints.hpp"
 
 namespace Yttrium
 {
@@ -64,9 +65,9 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             // definitions
             //
             //__________________________________________________________________
-            static Ops Strategy; //!< global strategy
-            static const char * const CallSign;
-            
+            static Ops                Strategy; //!< global strategy
+            static const char * const CallSign; //!< "apn"
+
             //__________________________________________________________________
             //
             //
@@ -94,11 +95,12 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             // Methods
             //
             //__________________________________________________________________
-            void   xch(Natural &) noexcept; //!< noexcept exchange content
-            String toHex()           const; //!< render to hexadecimal
-            String toDec()           const; //!< render to decimal
-            size_t bits()   const noexcept; //!< get current bits
-            
+            void   xch(Natural &)                  noexcept; //!< noexcept exchange content
+            String toHex()                            const; //!< render to hexadecimal
+            String toDec()                            const; //!< render to decimal
+            size_t bits()                    const noexcept; //!< get current bits
+            size_t size()                    const noexcept; //!< get current bytes
+            uint8_t operator[](const size_t) const noexcept; //!< access in 0..size()-1
 
             //__________________________________________________________________
             //
@@ -124,13 +126,13 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             // Bits
             //
             //__________________________________________________________________
-            Natural & shr() noexcept; //!< in place 1 bit right shift: /=2
-            Natural & shr(const size_t);
-            Natural & shl(const size_t);
-            Natural & operator<<=(const size_t);
-            Natural & operator>>=(const size_t);
-            friend Natural operator<<(const Natural &, const size_t);
-            friend Natural operator>>(const Natural &, const size_t);
+            Natural & shr() noexcept;                                 //!< in place 1 bit right shift: /=2
+            Natural & shr(const size_t);                              //!< right shift
+            Natural & shl(const size_t);                              //!< left shift
+            Natural & operator<<=(const size_t);                      //!< left shift
+            Natural & operator>>=(const size_t);                      //!< righ shift
+            friend Natural operator<<(const Natural &, const size_t); //!< left shift
+            friend Natural operator>>(const Natural &, const size_t); //!< right shift
 
             //__________________________________________________________________
             //
@@ -176,6 +178,8 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             Natural & operator/=(const Natural &);  //!< in place /
             Natural & operator/=(const uint64_t );  //!< in place /
             Y_Kemp_Natural_Binary_Decl(operator/);  //!< aliases
+
+            //! num = q * den + r
             static void Div(Natural &q, Natural &r, const Natural &num, const Natural &den);
 
             //__________________________________________________________________
@@ -195,6 +199,12 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             // Conversion
             //
             //__________________________________________________________________
+            template <typename T> inline
+            bool tryCast(T &target) const noexcept
+            {
+                
+            }
+
 
 
         private:

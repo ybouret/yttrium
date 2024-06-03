@@ -8,7 +8,7 @@ namespace Yttrium
     {
 
         Ops                Natural:: Strategy = Ops64_32;
-        const char * const Natural:: CallSign = "Kemp::Natural";
+        const char * const Natural:: CallSign = "apn";
 
         Y_SHALLOW_IMPL(AsElement);
 
@@ -38,13 +38,13 @@ namespace Yttrium
             Nullify(code);
         }
 
-        Natural:: Natural() : 
+        Natural:: Natural() :
         Number(),
         code( new Element(0,AsCapacity) )
         {
         }
 
-        Natural:: Natural(const Natural &n) : 
+        Natural:: Natural(const Natural &n) :
         Number(),
         code( new Element( *n.code) )
         {}
@@ -65,7 +65,7 @@ namespace Yttrium
             {Natural _(qw); xch(_);}
             return *this;
         }
-        
+
         Natural::Natural(const uint64_t qw) : Number(), code( new Element(qw,ToNum64) )
         {
         }
@@ -82,13 +82,27 @@ namespace Yttrium
         code( new Element(_,ibit) )
         {
         }
-        
+
 
         size_t Natural:: bits()   const noexcept
         {
             assert(0!=code);
             return code->bits;
         }
+
+        size_t Natural:: size()   const noexcept
+        {
+            assert(0!=code);
+            return code->bytes.positive;
+        }
+
+        uint8_t Natural:: operator[](const size_t i) const noexcept
+        {
+            assert(0!=code);
+            const Assembly<uint8_t> &data = code->get<uint8_t>(); assert(i<data.positive);
+            return data.item[i];
+        }
+
 
     }
 
