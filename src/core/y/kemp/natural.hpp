@@ -94,10 +94,11 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             // Methods
             //
             //__________________________________________________________________
-            void xch(Natural &) noexcept; //!< noexcept exchange content
-            String toHex()         const; //!< render to hexadecimal
+            void   xch(Natural &) noexcept; //!< noexcept exchange content
+            String toHex()           const; //!< render to hexadecimal
+            String toDec()           const; //!< render to decimal
 
-
+            
             //__________________________________________________________________
             //
             //
@@ -174,6 +175,17 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             Natural & operator/=(const Natural &);  //!< in place /
             Natural & operator/=(const uint64_t );  //!< in place /
             Y_Kemp_Natural_Binary_Decl(operator/);  //!< aliases
+            static void Div(Natural &q, Natural &r, const Natural &num, const Natural &den);
+
+            //__________________________________________________________________
+            //
+            //
+            // Modulos
+            //
+            //__________________________________________________________________
+            Natural & operator%=(const Natural &);  //!< in place /
+            Natural & operator%=(const uint64_t );  //!< in place /
+            Y_Kemp_Natural_Binary_Decl(operator%);  //!< aliases
 
 
         private:
@@ -185,6 +197,7 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             void make(Element *) noexcept;  //!< replace code
 
             static Natural Divide(const Natural &den, const Natural &num);
+            static Natural Modulo(const Natural &den, const Natural &num);
         };
 
     }

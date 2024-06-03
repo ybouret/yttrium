@@ -27,9 +27,45 @@ namespace Yttrium
             return s;
         }
 
+
+        String Natural:: toDec() const
+        {
+            String s;
+            
+            if(code->bits<=0)
+            {
+                s << '0';
+            }
+            else
+            {
+                const Natural ten = 10;
+                Natural       self = *this;
+                Natural       q,r;
+                do
+                {
+                    Div(q,r,self,ten);
+                    assert(r<10);
+                    assert(r.code->u64()<10);               // will use r
+                    s << Hexadecimal::Lower[r.code->u64()]; // use existing chars
+                    self.xch(q);                            // update
+                } while(self.code->bits>0);
+                s.reverse();
+            }
+            return s;
+        }
+
         std::ostream & operator<<(std::ostream &os, const Natural &n)
         {
-            os << n.toHex();
+            if( os.flags() & std::ios_base::hex )
+            {
+                os << n.toHex();
+            }
+            else
+            {
+                os << n.toDec();
+            }
+
+
             return os;
         }
     }

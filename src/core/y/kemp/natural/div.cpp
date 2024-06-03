@@ -9,6 +9,12 @@ namespace Yttrium
     namespace Kemp
     {
 
+        void Natural::Div(Natural &q, Natural &r, const Natural &num, const Natural &den)
+        {
+            q = Divide(num,den);
+            r = num - den*q;
+        }
+
         // num = q*den (+rem)
         Natural Natural:: Divide(const Natural &num, const Natural &den)
         {
@@ -37,23 +43,19 @@ namespace Yttrium
             // 2^p * den < num < 2^(p+1) * den
             //
             //__________________________________________________________________
-
             AutoPtr<Natural> lower = 0;
             AutoPtr<Natural> upper = 0;
-
             {
-                size_t           p     = N.bits-D.bits; //std::cerr << "p=" << p << std::endl;
+                size_t           p     = N.bits-D.bits;
                 Natural          probe = den << p;
                 switch( Compare(probe,num) )
                 {
                     case Negative:
-                        //std::cerr << "negative" << std::endl;
                         lower = new Natural(TwoToThe,p);   assert(*lower*den<num);
                         upper = new Natural(TwoToThe,++p); assert(num<*upper*den);
                         break;
                     case __Zero__: return Natural(TwoToThe,p);
                     case Positive:
-                        //std::cerr << "positive" << std::endl;
                         upper = new Natural(TwoToThe,p);   assert(num<*upper*den);
                         lower = new Natural(TwoToThe,--p); assert(*lower*den<num);
                         break;
@@ -69,8 +71,6 @@ namespace Yttrium
             //__________________________________________________________________
             Natural &lo = *lower;
             Natural &up = *upper;
-
-
 
             assert(lo*den<num);
             assert(num<up*den);

@@ -114,6 +114,7 @@ Y_UTEST(kemp_natural)
             const uint64_t num = ran.to<uint64_t>(i);
             const uint64_t den = ran.to<uint64_t>(j);
             const uint64_t q   = num/den;
+            const uint64_t r   = num%den;
             {
                 const apn N = num;
                 const apn D = den;
@@ -122,6 +123,11 @@ Y_UTEST(kemp_natural)
                 { const apn Q = num/D; Y_ASSERT(Q==q); }
                 { apn Q=N; Q/=D;       Y_ASSERT(Q==q); }
                 { apn Q=N; Q/=den;     Y_ASSERT(Q==q); }
+                { const apn R = N%D;   Y_ASSERT(R==r); }
+                { const apn R = N%den; Y_ASSERT(R==r); }
+                { const apn R = num%D; Y_ASSERT(R==r); }
+                { apn R=N; R%=D;       Y_ASSERT(R==r); }
+                { apn R=N; R%=den;     Y_ASSERT(R==r); }
 
             }
 
