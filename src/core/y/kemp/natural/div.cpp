@@ -1,6 +1,7 @@
 #include "y/kemp/natural.hpp"
 #include "y/kemp/element.hpp"
 #include "y/system/exception.hpp"
+#include "y/ptr/auto.hpp"
 #include <cerrno>
 
 namespace Yttrium
@@ -25,6 +26,7 @@ namespace Yttrium
                 case Negative: return Natural();
                 case __Zero__: return Natural(1);
                 case Positive:
+                    assert(N.bits>=D.bits);
                     break;
             }
 
@@ -32,12 +34,31 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // 2^p * den < num <= 2^(p+1) * den
+            // 2^p * den < num < 2^(p+1) * den
             //
             //__________________________________________________________________
-            Natural lower = den; assert(den<num);
+            size_t           p     = N.bits-D.bits; std::cerr << "p=" << p << std::endl;
+            Natural          probe = den << p;
+            AutoPtr<Natural> lower = 0;
+            AutoPtr<Natural> upper = 0;
 
-
+            switch( Compare(probe,num) )
+            {
+                case Negative:
+                    std::cerr << "negative" << std::endl;
+                    lower = new Natural(probe); assert(*lower<num);
+                    probe <<= 1;
+                    upper = new Natural(probe); assert(num<*upper);
+                    break;
+                case __Zero__: return probe;
+                case Positive:
+                    std::cerr << "positive" << std::endl;
+                    upper = new Natural(probe); assert(num<*upper);
+                    probe.shr();
+                    lower = new Natural(probe); assert(*lower<num);
+                    break;
+            }
+            
             return Natural();
         }
 
