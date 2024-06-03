@@ -202,7 +202,15 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             template <typename T> inline
             bool tryCast(T &target) const noexcept
             {
-                
+                static const size_t Size  = sizeof(T);
+                static const size_t Bits  = IsSigned<T>::Value ? (8*Size-1) : 8*Size;
+                const Natural       &self = *this; if(self.bits()>Bits) return false;
+                const size_t         ncpy = self.size(); assert(ncpy<=Size);
+                typename UnsignedInt<Size>::Type u = 0;
+                for(size_t i=ncpy;i>0;)
+                    u = UnsignedInt<Size>::SHL8(u) | self[--i];
+                target = static_cast<T>(u);
+                return true;
             }
 
 
@@ -217,6 +225,7 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
 
             static Natural Divide(const Natural &den, const Natural &num);
             static Natural Modulo(const Natural &den, const Natural &num);
+
 
 
         };

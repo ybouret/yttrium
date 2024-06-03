@@ -2,6 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/random/park-miller.hpp"
 #include "y/text/hexadecimal.hpp"
+#include "y/calculus/bit-count.hpp"
 
 using namespace Yttrium;
 
@@ -133,6 +134,98 @@ Y_UTEST(kemp_natural)
 
         }
     }
+
+
+    std::cerr << "<Cast>" << std::endl;
+
+    {
+        for(unsigned i=0;i<=7;++i)
+        {
+            const uint64_t u = ran.to<uint64_t>(i);
+            const apn      U = u;
+            uint8_t u8 = 0;
+            int8_t  i8 = 0;
+            Y_ASSERT(U.tryCast(u8)); Y_ASSERT(u==u8);
+            Y_ASSERT(U.tryCast(i8)); Y_ASSERT(u==uint8_t(i8));
+        }
+
+        for(unsigned i=0;i<=8;++i)
+        {
+            const uint64_t u = ran.to<uint64_t>(i);
+            const apn      U = u;
+            uint8_t u8 = 0;
+            Y_ASSERT(U.tryCast(u8)); Y_ASSERT(u==u8);
+        }
+
+    }
+
+    {
+        for(unsigned i=0;i<=15;++i)
+        {
+            const uint64_t u = ran.to<uint64_t>(i);
+            const apn      U = u;
+            uint16_t u16 = 0;
+            int16_t  i16 = 0;
+            Y_ASSERT(U.tryCast(u16)); Y_ASSERT(u==u16);
+            Y_ASSERT(U.tryCast(i16)); Y_ASSERT(u==uint16_t(i16));
+        }
+
+        for(unsigned i=0;i<=16;++i)
+        {
+            const uint64_t u = ran.to<uint64_t>(i);
+            const apn      U = u;
+            uint16_t u16 = 0;
+            Y_ASSERT(U.tryCast(u16)); Y_ASSERT(u==u16);
+        }
+
+    }
+
+
+    {
+        for(unsigned i=0;i<=31;++i)
+        {
+            const uint64_t u = ran.to<uint64_t>(i);
+            const apn      U = u;
+            uint32_t u32 = 0;
+            int32_t  i32 = 0;
+            Y_ASSERT(U.tryCast(u32)); Y_ASSERT(u==u32);
+            Y_ASSERT(U.tryCast(i32)); Y_ASSERT(u==uint32_t(i32));
+        }
+
+        for(unsigned i=0;i<=32;++i)
+        {
+            const uint64_t u = ran.to<uint64_t>(i);
+            const apn      U = u;
+            uint32_t u32 = 0;
+            Y_ASSERT(U.tryCast(u32)); Y_ASSERT(u==u32);
+        }
+
+    }
+
+
+    {
+        for(unsigned i=0;i<=63;++i)
+        {
+            const uint64_t u = ran.to<uint64_t>(i);
+            const apn      U = u;
+            uint64_t u64 = 0;
+            int64_t  i64 = 0;
+            Y_ASSERT(U.tryCast(u64)); Y_ASSERT(u==u64);
+            Y_ASSERT(U.tryCast(i64)); Y_ASSERT(u==uint64_t(i64));
+        }
+
+        for(unsigned i=0;i<=64;++i)
+        {
+            const uint64_t u = ran.to<uint64_t>(i);
+            const apn      U = u;
+            uint64_t u64 = 0;
+            Y_ASSERT(U.tryCast(u64)); Y_ASSERT(u==u64);
+        }
+
+    }
+
+
+
 
 
 
