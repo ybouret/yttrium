@@ -10,7 +10,7 @@
 #include "y/tow/api.hpp"
 #include "y/text/hexadecimal.hpp"
 #include "y/calculus/bit-count.hpp"
-
+#include "y/memory/out-of-reach.hpp"
 #include <iostream>
 #include <iomanip>
 
@@ -61,7 +61,7 @@ namespace Yttrium
             inline Assembly(uint64_t &qw) noexcept :
             capacity( sizeof(uint64_t) / WordSize ),
             positive( Push64::To( (T*)&qw, qw)    ),
-            item( (T*) & qw )
+            item( static_cast<T*>(Memory::OutOfReach::Addr( & qw )) )
             {
                 assert(0!=item);
                 assert(capacity>0);
