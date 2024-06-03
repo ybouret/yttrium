@@ -8,10 +8,12 @@ namespace Yttrium
     namespace Kemp
     {
 
+        bool Natural:: MulByFFT = false;
 
         static inline
         const Element::BinaryAPI & mapi() noexcept
         {
+            if(Natural::MulByFFT) return Element::MulFFT;
             return Element::Mul[ Natural::Strategy ];
         }
         

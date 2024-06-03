@@ -67,7 +67,8 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             //__________________________________________________________________
             static Ops                Strategy; //!< global strategy
             static const char * const CallSign; //!< "apn"
-
+            static bool               MulByFFT; //!< flag
+            
             //__________________________________________________________________
             //
             //
