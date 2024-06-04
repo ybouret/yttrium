@@ -397,6 +397,65 @@ RATE(tmx[Kemp::Ops16_8])
     RATE(tmx_fft);
 
 
+    std::cerr << "<Bitwise64>" << std::endl;
+    for(unsigned i=0;i<64;++i)
+    {
+        for(unsigned j=0;j<=64;++j)
+        {
+            const uint64_t l = ran.to<uint64_t>(i);
+            const uint64_t r = ran.to<uint64_t>(j);
+            Kemp::Element  L(l,Kemp::ToNum64);
+            Kemp::Element  R(r,Kemp::ToNum64);
+
+            {
+                const uint64_t x = l|r;
+                for(unsigned k=0;k<4;++k)
+                {
+                    for(unsigned l=0;l<4;++l)
+                    {
+                        L.set( Kemp::Element::Inner[k]);
+                        L.set( Kemp::Element::Inner[l]);
+                        AutoPtr<Kemp::Element> X = Kemp::Element::Bitwise(Kemp::OR,L,R);
+                        Y_ASSERT(X->u64() == x);
+                    }
+                }
+            }
+
+            {
+                const uint64_t x = l&r;
+                for(unsigned k=0;k<4;++k)
+                {
+                    for(unsigned l=0;l<4;++l)
+                    {
+                        L.set( Kemp::Element::Inner[k]);
+                        L.set( Kemp::Element::Inner[l]);
+                        AutoPtr<Kemp::Element> X = Kemp::Element::Bitwise(Kemp::AND,L,R);
+                        Y_ASSERT(X->u64() == x);
+                    }
+                }
+            }
+
+            {
+                const uint64_t x = l^r;
+                for(unsigned k=0;k<4;++k)
+                {
+                    for(unsigned l=0;l<4;++l)
+                    {
+                        L.set( Kemp::Element::Inner[k]);
+                        L.set( Kemp::Element::Inner[l]);
+                        AutoPtr<Kemp::Element> X = Kemp::Element::Bitwise(Kemp::XOR,L,R);
+                        Y_ASSERT(X->u64() == x);
+                    }
+                }
+            }
+
+
+
+
+        }
+
+    }
+
 
 
     std::cerr << std::endl;

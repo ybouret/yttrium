@@ -44,7 +44,13 @@ namespace Yttrium
             AsNum64  //!< use Num64
         };
 
-       
+        enum Logical
+        {
+            AND,
+            OR,
+            XOR
+        };
+
         
         //! alias
         Y_SHALLOW_DECL(ToNum64);
@@ -146,9 +152,9 @@ namespace Yttrium
             // Bits
             //
             //__________________________________________________________________
-            Element & shr() noexcept;           //!< in place shift right 1 bit, noexcept (a.k.a fast divide by two)
-            Element * shr(const size_t nbit);   //!< shift right
-            Element * shl(const size_t nbit);   //!< shift left
+            Element & shr() noexcept;           //!< IN PLACE shift right 1 bit, noexcept (a.k.a fast divide by two)
+            Element * shr(const size_t nbit);   //!< shift right, new element
+            Element * shl(const size_t nbit);   //!< shift left,  new element
 
             //__________________________________________________________________
             //
@@ -159,6 +165,7 @@ namespace Yttrium
             static SignType Compare(Element &, Element&)          noexcept; //!< compare with TuneUp
             static SignType Compare(const Element &, uint64_t qw) noexcept; //!< compare using element's state
             static SignType Compare(uint64_t qw, const Element &) noexcept; //!< compare using element's state
+            static Element *Bitwise(Logical op, Element &, Element &);
 
 
             //__________________________________________________________________
