@@ -50,45 +50,63 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
+            // Comparisons
+            //
+            //__________________________________________________________________
+            static SignType Compare(const Integer &lhs, const Integer &rhs);
+
+            //__________________________________________________________________
+            //
+            //
             // Additions
             //
             //__________________________________________________________________
+
+            //! unary +
             inline Integer operator+() const { return *this; }
 
+            //! in-place +
             inline Integer & operator+=( const Integer &rhs ) {
                 Integer _ = Add(*this,rhs); xch(_);
                 return *this;
             }
 
+            //! in place +
             inline Integer & operator+=( const Natural &rhs ) {
                 Integer _ = Add(s,n,Positive,rhs); xch(_);
                 return *this;
             }
 
+            //! in place +
             inline Integer & operator+=( const int64_t rhs ) {
                 const Integer r(rhs);
                 Integer _ = Add(*this,r);
                 return *this;
             }
 
+            //! +
             inline friend Integer operator+(const Integer &lhs, const Integer &rhs) {
                 return Add(lhs,rhs);
             }
 
+            //! +
             inline friend Integer operator+(const Integer &lhs, const Natural &rhs) {
                 return Add(lhs.s,lhs.n,Positive,rhs);
             }
 
+            //! +
             inline friend Integer operator+(const Natural &lhs, const Integer &rhs) {
                 return Add(Positive,lhs,rhs.s,rhs.n);
             }
 
 
+            //! +
             inline friend Integer operator+(const Integer &lhs, const int64_t rhs) {
                 const Integer _(rhs);
                 return Add(lhs,_);
             }
 
+            //! +
             inline friend Integer operator+(const int64_t lhs, const Integer &rhs) {
                 const Integer _(lhs);
                 return Add(_,rhs);
@@ -100,6 +118,8 @@ namespace Yttrium
             // Subtractions
             //
             //__________________________________________________________________
+
+            //! unary minus
             inline Integer operator-() const { return Integer( Sign::Opposite(s), n ); }
 
             //__________________________________________________________________
@@ -112,6 +132,19 @@ namespace Yttrium
             const Natural  n; //!< absolute value
                               //!
         private:
+            static
+            SignType Cmp(const SignType  ls,
+                         const Natural  &ln,
+                         const SignType  rs,
+                         const Natural  &rn) noexcept;
+
+            static inline
+            SignType Cmp(const Integer &lhs, const Integer &rhs) noexcept
+            {
+                return Cmp(lhs.s,lhs.n,rhs.s,rhs.n);
+            }
+
+
             static
             Integer Add(const SignType  ls,
                         const Natural  &ln,
