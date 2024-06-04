@@ -162,6 +162,7 @@ namespace Yttrium
                 positive = BitsToPositive(bits);
 #if !defined(NDEBUG)
                 if(positive>0) assert(0!=item[positive-1]);
+                assert(Memory::OutOfReach::Are0(item+positive,(capacity-positive)*sizeof(T)));
 #endif
             }
 
