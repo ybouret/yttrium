@@ -9,6 +9,12 @@ namespace Yttrium
         {
         }
 
+        Integer:: ~Integer() noexcept
+        {
+            Coerce(s) = __Zero__;
+        }
+
+
         static inline uint64_t i2u(const int64_t i) noexcept
         {
             return i < 0 ? static_cast<uint64_t>(-i) : static_cast<uint64_t>(i);

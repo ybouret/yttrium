@@ -31,6 +31,8 @@ namespace Yttrium
 
     }
 
+    typedef Kemp::Integer apz;
+
 }
 
 #endif

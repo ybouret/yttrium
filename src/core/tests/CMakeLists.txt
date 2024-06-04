@@ -344,4 +344,6 @@ add_test(kemp:element test-core kemp_element)
 add_test(kemp:natural test-core kemp_natural)
 add_test(kemp:addsub  test-core kemp_addsub)
 add_test(kemp:muldiv  test-core kemp_muldiv)
+add_test(kemp:integer test-core kemp_integer)
+
 
