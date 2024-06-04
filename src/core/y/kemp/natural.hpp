@@ -199,13 +199,13 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             // Arithmetic
             //
             //__________________________________________________________________
-            static Natural GCD(const Natural &, const Natural &);
-            static Natural LCM(const Natural &, const Natural &);
-            static Natural Factorial(const size_t n);
-            static Natural Comb(const size_t n, const size_t k);
-            static Natural Sqrt(const Natural &);
-            Natural        sqrt() const;
-            static void    Simplify(Natural &num, Natural &den);
+            static Natural GCD(const Natural &, const Natural &); //!< Greatest Common Divider (safe)
+            static Natural LCM(const Natural &, const Natural &); //!< Least Common Multiplier (args>0)
+            static Natural Factorial(const size_t n);             //!< n!
+            static Natural Comb(const size_t n, const size_t k);  //!< n!/k!/(n-k)!
+            static Natural Sqrt(const Natural &);                 //!< square root
+            Natural        sqrt() const;                          //!< square root
+            static void    Simplify(Natural &num, Natural &den);  //!< safe simplification
 
             //__________________________________________________________________
             //

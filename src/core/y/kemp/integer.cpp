@@ -28,8 +28,19 @@ namespace Yttrium
 
         }
 
+        Integer:: Integer(const Natural &N) : Number(),
+        s( (N>0) ? Positive : __Zero__ ),
+        n( N )
+        {
+        }
+
         Integer:: Integer(const Integer &z) : Number(), s(z.s), n(z.n)
         {
+        }
+
+        void Integer:: chk() noexcept
+        {
+            if(n<=0) Coerce(s) = __Zero__;
         }
 
         Integer:: Integer(const SignType S, const Natural &N) :
@@ -37,22 +48,23 @@ namespace Yttrium
         s(S),
         n(N)
         {
-            if(n<=0) Coerce(S) = __Zero__;
+            chk();
         }
 
-        Integer & Integer:: operator=(const Integer &z)
-        {
-            Coerce(s) = z.s;
-            Coerce(n) = z.n;
-            return *this;
+        Integer & Integer:: operator=(const Integer &z) {
+            Integer _(z); xch(_); return *this;
         }
 
-        Integer & Integer:: operator=(const int64_t  z)
-        {
-            Integer _(z);
-            xch(_);
-            return *this;
+        Integer & Integer:: operator=(const int64_t  z) {
+            Integer _(z); xch(_); return *this;
         }
+
+        Integer & Integer:: operator=(const Natural &N) {
+            Integer _(N); xch(_); return *this;
+        }
+
+
+
 
         void Integer:: xch(Integer &z) noexcept
         {
