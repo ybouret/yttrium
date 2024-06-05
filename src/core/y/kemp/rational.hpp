@@ -101,6 +101,14 @@ inline friend Rational operator OP (const int64_t  &lhs, const Rational &rhs) { 
             //__________________________________________________________________
             //
             //
+            // Division
+            //
+            //__________________________________________________________________
+            Y_Kemp_Rational_Operator(/,Div)
+
+            //__________________________________________________________________
+            //
+            //
             // Members
             //
             //__________________________________________________________________
@@ -116,6 +124,14 @@ inline friend Rational operator OP (const int64_t  &lhs, const Rational &rhs) { 
             static Rational Mul(const Natural  &lhs, const Rational &rhs);
             static Rational Mul(const int64_t   lhs, const Rational &rhs);
 
+            static void     DivisionByZero();
+            static Rational Div(const Rational &lhs, const Rational &rhs);
+            static Rational Div(const Rational &lhs, const Integer &rhs);
+            static Rational Div(const Rational &lhs, const Natural &rhs);
+            static Rational Div(const Rational &lhs, const int64_t  rhs);
+            static Rational Div(const Integer  &lhs, const Rational &rhs);
+            static Rational Div(const Natural  &lhs, const Rational &rhs);
+            static Rational Div(const int64_t   lhs, const Rational &rhs);
 
         };
 

@@ -16,7 +16,13 @@ Y_UTEST(kemp_rational)
     std::cerr << q << std::endl;
 
     q = apq(7,13); q *= apq(-4,5); std::cerr << q << std::endl;
-    q = apq(7,13); q *= -4;        std::cerr << q << std::endl;
+    q = apq(7,13); q /= apq(5,4);   std::cerr << q << std::endl;
+
+    q = apq(7,13); apz z = -3; q/=z; std::cerr << q << std::endl;
+
+    q = apq(7,13); apn n =  7; q/=n; std::cerr << q << std::endl;
+
+
 }
 Y_UDONE()
 
