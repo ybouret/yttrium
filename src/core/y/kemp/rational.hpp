@@ -125,6 +125,7 @@ Y_Kemp_Rational_Cmp(OP, int64_t  , Rational&,EXPR)
             //
             //__________________________________________________________________
             virtual size_t       serialize(OutputStream &) const;
+            static  Rational     ReadFrom(InputStream &);
             virtual const char * callSign()       const noexcept;
 
 

@@ -10,6 +10,13 @@ namespace Yttrium
             return nw + denom.serialize(os);
         }
 
+        Rational Rational:: ReadFrom(InputStream &fp)
+        {
+            const Integer num = Integer::ReadFrom(fp);
+            const Natural den = Natural::ReadFrom(fp);
+            return Rational(num,den);
+        }
+
     }
 
 }
