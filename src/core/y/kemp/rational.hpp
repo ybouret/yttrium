@@ -43,6 +43,10 @@ inline friend Rational operator OP (const Integer  &lhs, const Rational &rhs) { 
 inline friend Rational operator OP (const Natural  &lhs, const Rational &rhs) { return CALL(lhs,rhs); }          \
 inline friend Rational operator OP (const int64_t  &lhs, const Rational &rhs) { return CALL(lhs,rhs); }
 
+        //______________________________________________________________________
+        //
+        //! helper for various arguments
+        //______________________________________________________________________
 #define Y_Kemp_Rational_Call(RETURN,FUNC)                     \
 static RETURN FUNC(const Rational &lhs, const Rational &rhs); \
 static RETURN FUNC(const Rational &lhs, const Integer  &rhs); \
@@ -53,6 +57,18 @@ static RETURN FUNC(const Natural  &lhs, const Rational &rhs); \
 static RETURN FUNC(const int64_t   lhs, const Rational &rhs)
 
 #define Y_Kemp_Rational_API(FUNC) Y_Kemp_Rational_Call(Rational,FUNC)
+
+#define Y_Kemp_Rational_Cmp(OP,LTYPE,RTYPE,EXPR) \
+inline friend bool operator OP (const LTYPE lhs, const RTYPE rhs) { return Compare(lhs,rhs) EXPR; }
+
+#define Y_Kemp_Rational_Compare(OP,EXPR)           \
+Y_Kemp_Rational_Cmp(OP, Rational&, Rational&,EXPR) \
+Y_Kemp_Rational_Cmp(OP, Rational&, Integer &,EXPR) \
+Y_Kemp_Rational_Cmp(OP, Rational&, Natural &,EXPR) \
+Y_Kemp_Rational_Cmp(OP, Rational&, int64_t  ,EXPR) \
+Y_Kemp_Rational_Cmp(OP, Integer &, Rational&,EXPR) \
+Y_Kemp_Rational_Cmp(OP, Natural &, Rational&,EXPR) \
+Y_Kemp_Rational_Cmp(OP, int64_t  , Rational&,EXPR)
 
 
 
@@ -130,6 +146,14 @@ static RETURN FUNC(const int64_t   lhs, const Rational &rhs)
             //__________________________________________________________________
             Y_Kemp_Rational_Call(SignType,Compare);
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+            Y_Kemp_Rational_Compare(==,  == __Zero__)
+            Y_Kemp_Rational_Compare(!=,  != __Zero__)
+            Y_Kemp_Rational_Compare(<,   == Negative)
+            Y_Kemp_Rational_Compare(>,   == Positive)
+            Y_Kemp_Rational_Compare(<=,  != Positive)
+            Y_Kemp_Rational_Compare(>=,  != Negative)
+#endif
 
             //__________________________________________________________________
             //

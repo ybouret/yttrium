@@ -90,7 +90,6 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
 
             Element & operator*() const noexcept; //!< get internal element
 
-
             //__________________________________________________________________
             //
             //

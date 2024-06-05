@@ -82,6 +82,18 @@ Y_UTEST(kemp_rational)
 
     }
 
+    std::cerr << "fwd" << std::endl;
+    for(apq i(-1,2); i <= 3; ++i)
+    {
+        std::cerr << i << " => " << i.square() << std::endl;
+    }
+
+    std::cerr << "rev" << std::endl;
+    for(apq i(5,2);  i > -7 ; i--)
+    {
+        std::cerr << i << " => " << i.square() << std::endl;
+    }
+
 
 
 }
