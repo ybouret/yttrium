@@ -41,7 +41,17 @@ inline friend Rational operator OP (const Rational &lhs, const Natural  &rhs) { 
 inline friend Rational operator OP (const Rational &lhs, const int64_t   rhs) { return CALL(lhs,rhs); } \
 inline friend Rational operator OP (const Integer  &lhs, const Rational &rhs) { return CALL(lhs,rhs); } \
 inline friend Rational operator OP (const Natural  &lhs, const Rational &rhs) { return CALL(lhs,rhs); } \
-inline friend Rational operator OP (const int64_t  &lhs, const Rational &rhs) { return CALL(lhs,rhs); } 
+inline friend Rational operator OP (const int64_t  &lhs, const Rational &rhs) { return CALL(lhs,rhs); }
+
+#define Y_Kemp_Rational_API(FUNC)  \
+static Rational FUNC(const Rational &lhs, const Rational &rhs);\
+static Rational FUNC(const Rational &lhs, const Integer &rhs);\
+static Rational FUNC(const Rational &lhs, const Natural &rhs);\
+static Rational FUNC(const Rational &lhs, const int64_t  rhs);\
+static Rational FUNC(const Integer  &lhs, const Rational &rhs);\
+static Rational FUNC(const Natural  &lhs, const Rational &rhs);\
+static Rational FUNC(const int64_t   lhs, const Rational &rhs)\
+
 
 
         //______________________________________________________________________
@@ -75,7 +85,7 @@ inline friend Rational operator OP (const int64_t  &lhs, const Rational &rhs) { 
             Rational();                                              //!< 0/1
             Rational(const Rational &);                              //!< copy
             Rational & operator=(const Rational &);                  //!< assign
-          
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
             Y_Rational_Copy_and_Assign(Integer&)
             Y_Rational_Copy_and_Assign(Natural&)
@@ -131,6 +141,28 @@ inline friend Rational operator OP (const int64_t  &lhs, const Rational &rhs) { 
             //__________________________________________________________________
             //
             //
+            // Additions
+            //
+            //__________________________________________________________________
+            Y_Kemp_Rational_Operator(+,Add)
+            void incr();
+            Rational & operator++();                 //!< pre-increment
+            Rational   operator++(int);              //!< post-increment
+
+            //__________________________________________________________________
+            //
+            //
+            // Subtractions
+            //
+            //__________________________________________________________________
+            Y_Kemp_Rational_Operator(-,Sub)
+            void decr();
+            Rational & operator--();                 //!< pre-decrement
+            Rational   operator--(int);              //!< post-decrement
+
+            //__________________________________________________________________
+            //
+            //
             // Members
             //
             //__________________________________________________________________
@@ -138,23 +170,11 @@ inline friend Rational operator OP (const int64_t  &lhs, const Rational &rhs) { 
             const Natural denom; //!< denominator
 
         private:
-            static Rational Mul(const Rational &lhs, const Rational &rhs);
-            static Rational Mul(const Rational &lhs, const Integer &rhs);
-            static Rational Mul(const Rational &lhs, const Natural &rhs);
-            static Rational Mul(const Rational &lhs, const int64_t  rhs);
-            static Rational Mul(const Integer  &lhs, const Rational &rhs);
-            static Rational Mul(const Natural  &lhs, const Rational &rhs);
-            static Rational Mul(const int64_t   lhs, const Rational &rhs);
-
             static void     DivisionByZero();
-            static Rational Div(const Rational &lhs, const Rational &rhs);
-            static Rational Div(const Rational &lhs, const Integer &rhs);
-            static Rational Div(const Rational &lhs, const Natural &rhs);
-            static Rational Div(const Rational &lhs, const int64_t  rhs);
-            static Rational Div(const Integer  &lhs, const Rational &rhs);
-            static Rational Div(const Natural  &lhs, const Rational &rhs);
-            static Rational Div(const int64_t   lhs, const Rational &rhs);
-
+            Y_Kemp_Rational_API(Mul);
+            Y_Kemp_Rational_API(Div);
+            Y_Kemp_Rational_API(Add);
+            Y_Kemp_Rational_API(Sub);
         };
 
     }

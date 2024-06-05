@@ -143,8 +143,6 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
             Integer & operator++();                 //!< pre-increment
             Integer   operator++(int);              //!< post-increment
 
-            static Integer Square(const Integer &);
-            Integer        square() const;
 
 
             //__________________________________________________________________
@@ -166,8 +164,9 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
             // Multiplication
             //
             //__________________________________________________________________
-
             Y_Kemp_Integer_Operator(*,Mul)
+            static Integer Square(const Integer &);
+            Integer        square() const;
 
 
             //__________________________________________________________________

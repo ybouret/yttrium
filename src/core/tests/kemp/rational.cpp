@@ -32,6 +32,29 @@ Y_UTEST(kemp_rational)
 
     std::cerr << 4 << "/(" << q << ") = " << 4/q << std::endl;
 
+    q = apq(7,13);
+    apq one(1);
+    z = 1;
+    n = 1;
+    std::cerr << q + one <<  " | " << one+q << std::endl;
+    std::cerr << q + z   <<  " | " <<  z+q << std::endl;
+    std::cerr << q + n   <<  " | " <<  n+q << std::endl;
+    std::cerr << q + 1   <<  " | " <<  1+q << std::endl;
+
+    std::cerr << ++q << std::endl;
+    std::cerr << q++ << std::endl;
+    std::cerr << q   << std::endl;
+
+    q = apq(7,13);
+    std::cerr << q - one <<  " | " << one-q << std::endl;
+    std::cerr << q - z   <<  " | " <<  z-q << std::endl;
+    std::cerr << q - n   <<  " | " <<  n-q << std::endl;
+    std::cerr << q - 1   <<  " | " <<  1-q << std::endl;
+
+    std::cerr << --q << std::endl;
+    std::cerr << q-- << std::endl;
+    std::cerr << q   << std::endl;
+
 
 }
 Y_UDONE()
