@@ -128,7 +128,7 @@ static RETURN FUNC(const int64_t   lhs, const Rational &rhs)
             // Comparisons
             //
             //__________________________________________________________________
-            Y_Kemp_Rational_Call(bool,Compare);
+            Y_Kemp_Rational_Call(SignType,Compare);
 
 
             //__________________________________________________________________
