@@ -155,6 +155,12 @@ Y_UTEST(kemp_integer)
         }
     }
 
+    for(apz i=-m;i<=m;++i) std::cerr << i << "/";
+    std::cerr << std::endl;
+    for(apz i=-m;i<=m;i++) std::cerr << i << "/";
+    std::cerr << std::endl;
+
+
 
 
 }

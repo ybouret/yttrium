@@ -129,7 +129,8 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
             //! unary +
             inline Integer operator+() const { return *this; }
             Y_Kemp_Integer_Operator(+,Add)
-
+            Integer & operator++();                 //!< pre-increment
+            Integer   operator++(int);              //!< post-increment
 
 
             //__________________________________________________________________
@@ -142,7 +143,9 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
             //! unary minus
             inline Integer operator-() const { return Integer( Sign::Opposite(s), n ); }
             Y_Kemp_Integer_Operator(-,Sub)
-
+            Integer & operator--();                 //!< pre-decrement
+            Integer   operator--(int);              //!< post-decrement
+                                                    //!
             //__________________________________________________________________
             //
             //
@@ -173,6 +176,10 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
             const Natural  n; //!< absolute value
 
         private:
+
+            void incr();                    //!< add 1
+            void decr();                    //!< sub 1
+                                            
             //__________________________________________________________________
             //
             //! generic comparison with NO EXCEPTION

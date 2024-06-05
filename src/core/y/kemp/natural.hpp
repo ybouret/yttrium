@@ -136,7 +136,9 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             Natural & operator>>=(const size_t);                      //!< righ shift
             friend Natural operator<<(const Natural &, const size_t); //!< left shift
             friend Natural operator>>(const Natural &, const size_t); //!< right shift
-
+            void incr(); //!< add 1
+            void decr(); //!< sub 1
+            
             //__________________________________________________________________
             //
             //
@@ -252,8 +254,7 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             mutable Element *code;
 
             Natural(Element * const, const AsElement_ &) noexcept;
-            void incr();                    //!< add 1
-            void decr();                    //!< sub 1
+
             void make(Element *) noexcept;  //!< replace code
 
             static Natural Divide(const Natural &den, const Natural &num);

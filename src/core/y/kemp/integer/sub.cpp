@@ -44,6 +44,23 @@ namespace Yttrium
             return rhs;
         }
 
+        void Integer:: decr()
+        {
+            
+        }
+
+        Integer & Integer:: operator--()
+        {
+            decr();
+            return *this;
+        }
+
+        Integer Integer:: operator--(int)
+        {
+            const Integer temp(*this);
+            decr();
+            return temp;
+        }
     }
 
 }
