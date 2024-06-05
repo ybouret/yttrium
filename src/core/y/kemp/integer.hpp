@@ -10,6 +10,28 @@ namespace Yttrium
 {
     namespace Kemp
     {
+
+#define Y_Kemp_Integer_Operator(OP,CALL) \
+inline Integer & operator OP##= ( const Integer &rhs ) { Integer _ = CALL(*this,rhs); xch(_); return *this; } \
+inline Integer & operator OP##= ( const Natural &rhs ) { Integer _ = CALL(*this,rhs); xch(_); return *this; } \
+inline Integer & operator OP##= ( const int64_t  rhs ) { Integer _ = CALL(*this,rhs); xch(_); return *this; } \
+inline friend Integer operator OP (const Integer &lhs, const Integer &rhs) { return CALL(lhs,rhs); } \
+inline friend Integer operator OP (const Integer &lhs, const Natural &rhs) { return CALL(lhs,rhs); } \
+inline friend Integer operator OP (const Natural &lhs, const Integer &rhs) { return CALL(lhs,rhs); } \
+inline friend Integer operator OP (const Integer &lhs, const int64_t  rhs) { return CALL(lhs,rhs); } \
+inline friend Integer operator OP (const int64_t  lhs, const Integer &rhs) { return CALL(lhs,rhs); } \
+
+
+#define Y_Kemp_Integer_Cmp(OP,LTYPE,RTYPE,RESULT) \
+inline friend bool operator OP (const LTYPE lhs, const RTYPE rhs) noexcept { return Compare(lhs,rhs) RESULT; }
+
+#define Y_Kemp_Integer_Compare(OP,RESULT)       \
+Y_Kemp_Integer_Cmp(OP,Integer&,Integer&,RESULT) \
+Y_Kemp_Integer_Cmp(OP,Integer&,Natural&,RESULT) \
+Y_Kemp_Integer_Cmp(OP,Natural&,Integer&,RESULT) \
+Y_Kemp_Integer_Cmp(OP,Integer&,int64_t, RESULT) \
+Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
+
         //______________________________________________________________________
         //
         //
@@ -55,54 +77,27 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! comparison
-            static inline
-            SignType Compare(const Integer &lhs, const Integer &rhs) noexcept
-            {
-                return Cmp(lhs.s,lhs.n,rhs.s,rhs.n);
-            }
+            static SignType Compare(const Integer &lhs, const Integer &rhs) noexcept;
+            static SignType Compare(const Integer &lhs, const Natural &rhs) noexcept;
+            static SignType Compare(const Natural &lhs, const Integer &rhs) noexcept;
+            static SignType Compare(const Integer &lhs, const int64_t  rhs) noexcept;
+            static SignType Compare(const int64_t  lhs, const Integer &rhs) noexcept;
 
-            //! comparison
-            static inline
-            SignType Compare(const Integer &lhs, const Natural &rhs) noexcept
-            {
-                return Cmp(lhs.s,lhs.n,rhs.sign(),rhs);
-            }
+            //__________________________________________________________________
+            //
+            //
+            // Comparisons
+            //
+            //__________________________________________________________________
 
-            //! comparison
-            static inline
-            SignType Compare(const Natural &lhs, const Integer &rhs) noexcept
-            {
-                return Cmp(lhs.sign(),lhs,rhs.s,rhs.n);
-            }
+            Y_Kemp_Integer_Compare(==, == __Zero__)
+            Y_Kemp_Integer_Compare(!=, != __Zero__)
+            Y_Kemp_Integer_Compare(<,  == Negative)
+            Y_Kemp_Integer_Compare(>,  == Positive)
+            Y_Kemp_Integer_Compare(<=, != Positive)
+            Y_Kemp_Integer_Compare(>=, != Negative)
 
-            //! comparison
-            static inline
-            SignType Compare(const Integer &lhs, const int64_t rhs) noexcept
-            {
-                static const uint64_t zero = 0;
-                switch( Sign::Of(rhs) )
-                {
-                    case __Zero__: break;
-                    case Negative: { const uint64_t u = static_cast<uint64_t>(-rhs); return Cmp(lhs.s,lhs.n,Negative,u); }
-                    case Positive: { const uint64_t u = static_cast<uint64_t>( rhs); return Cmp(lhs.s,lhs.n,Positive,u); }
-                }
-                return Cmp(lhs.s,lhs.n,__Zero__,zero);
-            }
 
-            //! comparison
-            static inline
-            SignType Compare(const int64_t lhs, const Integer &rhs) noexcept
-            {
-                static const uint64_t zero = 0;
-                switch( Sign::Of(lhs) )
-                {
-                    case __Zero__: break;
-                    case Negative: { const uint64_t u = static_cast<uint64_t>(-lhs); return Cmp(Negative,u,rhs.s,rhs.n); }
-                    case Positive: { const uint64_t u = static_cast<uint64_t>( lhs); return Cmp(Positive,u,rhs.s,rhs.n); }
-                }
-                return Cmp(__Zero__,zero,rhs.s,rhs.n);
-            }
 
             //__________________________________________________________________
             //
@@ -113,47 +108,9 @@ namespace Yttrium
 
             //! unary +
             inline Integer operator+() const { return *this; }
-
-            //! in-place +
-            inline Integer & operator+=( const Integer &rhs ) {
-                Integer _ = Add(*this,rhs); xch(_); return *this;
-            }
-
-            //! in place +
-            inline Integer & operator+=( const Natural &rhs ) {
-                Integer _ = Add(*this,rhs); xch(_); return *this;
-            }
-
-            //! in place +
-            inline Integer & operator+=( const int64_t rhs ) {
-                Integer _ = Add(*this,rhs); xch(_); return *this;
-            }
-
-            //! +
-            inline friend Integer operator+(const Integer &lhs, const Integer &rhs) {
-                return Add(lhs,rhs);
-            }
-
-            //! +
-            inline friend Integer operator+(const Integer &lhs, const Natural &rhs) {
-                return Add(lhs,rhs);
-            }
-
-            //! +
-            inline friend Integer operator+(const Natural &lhs, const Integer &rhs) {
-                return Add(lhs,rhs);
-            }
+            Y_Kemp_Integer_Operator(+,Add)
 
 
-            //! +
-            inline friend Integer operator+(const Integer &lhs, const int64_t rhs) {
-                return Add(lhs,rhs);
-            }
-
-            //! +
-            inline friend Integer operator+(const int64_t lhs, const Integer &rhs) {
-                return Add(lhs,rhs);
-            }
 
             //__________________________________________________________________
             //
@@ -164,6 +121,8 @@ namespace Yttrium
 
             //! unary minus
             inline Integer operator-() const { return Integer( Sign::Opposite(s), n ); }
+            Y_Kemp_Integer_Operator(-,Sub)
+
 
             //__________________________________________________________________
             //
@@ -173,9 +132,10 @@ namespace Yttrium
             //__________________________________________________________________
             const SignType s; //!< sign
             const Natural  n; //!< absolute value
-                              //!
-        private:
 
+        private:
+            //__________________________________________________________________
+            //
             //! generic comparison
             /**
              \param ls lhs sign
@@ -183,6 +143,7 @@ namespace Yttrium
              \param rs rhs sign
              \param rn rhs natural (Natural|uint64_t)
              */
+            //__________________________________________________________________
             template <typename LHS_UNSIGNED, typename RHS_UNSIGNED> static inline
             SignType Cmp(const SignType      ls,
                          const LHS_UNSIGNED &ln,
@@ -216,6 +177,8 @@ namespace Yttrium
             }
 
 
+            //__________________________________________________________________
+            //
             //! generic addition
             /**
              \param ls lhs sign
@@ -223,6 +186,7 @@ namespace Yttrium
              \param rs rhs sign
              \param rn rhs natural (Natural|uint64_t)
              */
+            //__________________________________________________________________
             template <typename LHS_UNSIGNED, typename RHS_UNSIGNED> static inline
             Integer Add(const SignType      ls,
                         const LHS_UNSIGNED &ln,
@@ -283,7 +247,11 @@ namespace Yttrium
             static Integer Add(const Integer &lhs, const uint64_t rhs);
             static Integer Add(const uint64_t lhs, const Integer &rhs);
 
-
+            static Integer Sub(const Integer &lhs, const Integer &rhs);
+            static Integer Sub(const Integer &lhs, const Natural &rhs);
+            static Integer Sub(const Natural &lhs, const Integer &rhs);
+            static Integer Sub(const Integer &lhs, const uint64_t rhs);
+            static Integer Sub(const uint64_t lhs, const Integer &rhs);
 
         };
 

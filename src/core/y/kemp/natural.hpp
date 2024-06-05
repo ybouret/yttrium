@@ -117,6 +117,7 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
 
             //! aliases
             Y_Kemp_Natural_Cmp(operator==, ==__Zero__)
+            Y_Kemp_Natural_Cmp(operator!=, !=__Zero__)
             Y_Kemp_Natural_Cmp(operator<,  ==Negative)
             Y_Kemp_Natural_Cmp(operator<=, !=Positive)
             Y_Kemp_Natural_Cmp(operator>,  ==Positive)

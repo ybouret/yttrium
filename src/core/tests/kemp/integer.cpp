@@ -53,9 +53,11 @@ Y_UTEST(kemp_integer)
         std::cerr << std::setw(8)  << (ran.to<int16_t>());
         std::cerr << std::setw(12) << (ran.to<int32_t>());
         std::cerr << std::setw(22) << (ran.to<int64_t>());
-
         std::cerr << std::endl;
     }
+
+    std::cerr << "<Add64/Sub64>" << std::endl;
+
 
 
 

@@ -1,26 +1,28 @@
 
+
 #include "y/kemp/integer.hpp"
 
 namespace Yttrium
 {
     namespace Kemp
     {
-        Integer Integer:: Add(const Integer &lhs, const Integer &rhs)
+        Integer Integer:: Sub(const Integer &lhs, const Integer &rhs)
         {
-            return Add(lhs.s,lhs.n,rhs.s,rhs.n);
+            return Add(lhs.s,lhs.n,Sign::Opposite(rhs.s),rhs.n);
         }
 
-        Integer Integer:: Add(const Integer &lhs, const Natural &rhs)
+        Integer Integer:: Sub(const Integer &lhs, const Natural &rhs)
         {
-            return Add(lhs.s,lhs.n,rhs.sign(),rhs);
+            return Add(lhs.s,lhs.n,Sign::Opposite(rhs.sign()),rhs);
         }
 
-        Integer Integer:: Add(const Natural &lhs, const Integer &rhs)
+        Integer Integer:: Sub(const Natural &lhs, const Integer &rhs)
         {
-            return Add(lhs.sign(),lhs,rhs.s,rhs.n);
+            return Add(lhs.sign(),lhs,Sign::Opposite(rhs.s),rhs.n);
         }
 
 
+#if 0
         Integer Integer:: Add(const Integer &lhs, const uint64_t rhs)
         {
             switch( Sign::Of(rhs) )
@@ -42,6 +44,8 @@ namespace Yttrium
             }
             return rhs;
         }
+#endif
+        
     }
 
 }
