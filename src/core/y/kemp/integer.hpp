@@ -96,6 +96,7 @@ static Integer FUNC(const int64_t  lhs, const Integer &rhs)
             //
             //__________________________________________________________________
             virtual size_t       serialize(OutputStream &) const;
+            static  Integer      ReadFrom(InputStream &);
             virtual const char * callSign()       const noexcept;
 
             //__________________________________________________________________
