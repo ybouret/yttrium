@@ -139,7 +139,7 @@ Y_UTEST(kemp_integer)
     }
 
     std::cerr << "<Compact>" << std::endl;
-    const int m = 5;
+    const int m = 10;
     for(int64_t i=-m;i<=m;++i)
     {
         const apz I = i;
@@ -157,7 +157,15 @@ Y_UTEST(kemp_integer)
 
     for(apz i=-m;i<=m;++i) std::cerr << i << "/";
     std::cerr << std::endl;
+ 
     for(apz i=-m;i<=m;i++) std::cerr << i << "/";
+    std::cerr << std::endl;
+
+
+    for(apz i=m;i>=-m;--i) std::cerr << i << "/";
+    std::cerr << std::endl;
+
+    for(apz i=m;i>=-m;i--) std::cerr << i << "/";
     std::cerr << std::endl;
 
 

@@ -46,7 +46,30 @@ namespace Yttrium
 
         void Integer:: decr()
         {
-            
+            switch(s)
+            {
+                case Negative: {
+                    assert(n>=1);
+                    Coerce(n).incr();
+                } break;
+
+                case __Zero__: {
+                    assert(0==n);
+                    Integer _(Negative,1);
+                    xch(_);
+                } break;
+
+                case Positive: {
+                    assert(n>=1);
+                    if(n<=1)
+                    {
+                        Integer _;
+                        xch(_);
+                    }
+                    else
+                        Coerce(n).decr();
+                }
+            }
         }
 
         Integer & Integer:: operator--()
