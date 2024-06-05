@@ -97,6 +97,7 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             //
             //__________________________________________________________________
             virtual size_t       serialize(OutputStream &) const;
+            static  Natural      ReadFrom(InputStream &);
             virtual const char * callSign()       const noexcept;
 
             //__________________________________________________________________
@@ -230,6 +231,10 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             // Conversion
             //
             //__________________________________________________________________
+
+            template <typename T> static
+            T ToReal(const Natural &numer, const Natural &denom); //!< positive, floating point approximation float|double|long double
+
 
             //! try cast to integral T
             template <typename T> inline

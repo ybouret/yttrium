@@ -16,6 +16,11 @@ namespace Yttrium
             return nw + toWrite;
         }
 
+
+        Natural Natural:: ReadFrom(InputStream &fp)
+        {
+            
+        }
     }
 
 }
