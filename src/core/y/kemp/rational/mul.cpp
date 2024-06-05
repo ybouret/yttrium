@@ -75,21 +75,3 @@ namespace Yttrium
 
 }
 
-namespace Yttrium
-{
-    namespace Kemp
-    {
-        Rational Rational::Square(const Rational &q)
-        {
-            const Natural n2 = q.numer.n.square();
-            const Natural d2 = q.denom.square();
-            return Rational(n2,d2);
-        }
-
-        Rational Rational:: square() const
-        {
-            return Square(*this);
-        }
-    }
-
-}

@@ -162,8 +162,7 @@ Y_Kemp_Rational_Cmp(OP, int64_t  , Rational&,EXPR)
             //
             //__________________________________________________________________
             Y_Kemp_Rational_Operator(*,Mul)
-            static Rational Square(const Rational &);
-            Rational        square() const;
+
 
             //__________________________________________________________________
             //
@@ -194,6 +193,23 @@ Y_Kemp_Rational_Cmp(OP, int64_t  , Rational&,EXPR)
             void decr();
             Rational & operator--();                 //!< pre-decrement
             Rational   operator--(int);              //!< post-decrement
+
+            //__________________________________________________________________
+            //
+            //
+            // Other methods
+            //
+            //__________________________________________________________________
+            static Rational Square(const Rational &q); //!< |q|^2
+            Rational        square() const;            //!< |*this|^2
+            static Rational Abs(const Rational &q);    //!< |n|
+            Rational        abs() const;               //!< |*this|
+            static Rational Sqrt(const Rational &q);   //!< sqrt(q)
+            Rational        sqrt() const;              //!< sqrt(*this)
+            
+            template <typename T>
+            T toReal() const; //!< floating point approximation [XReal](float|double|long double)
+
 
             //__________________________________________________________________
             //

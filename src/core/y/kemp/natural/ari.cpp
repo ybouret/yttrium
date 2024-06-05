@@ -104,6 +104,16 @@ namespace Yttrium
             return Sqrt(*this);
         }
 
+        Natural Natural:: Abs(const Natural &n)
+        {
+            return n;
+        }
+
+        Natural Natural::abs() const
+        {
+            return *this;
+        }
+
         void Natural:: Simplify(Natural &num, Natural &den)
         {
             if(den<=0) throw Specific::Exception(CallSign, "Simplify Division By Zero");

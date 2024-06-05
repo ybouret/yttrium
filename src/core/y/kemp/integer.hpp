@@ -44,6 +44,13 @@ Y_Kemp_Integer_Cmp(OP,Natural&,Integer&,RESULT) \
 Y_Kemp_Integer_Cmp(OP,Integer&,int64_t, RESULT) \
 Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
 
+#define Y_Kemp_Integer_API(FUNC) \
+static Integer FUNC(const Integer &lhs, const Integer &rhs); \
+static Integer FUNC(const Integer &lhs, const Natural &rhs); \
+static Integer FUNC(const Natural &lhs, const Integer &rhs); \
+static Integer FUNC(const Integer &lhs, const int64_t  rhs); \
+static Integer FUNC(const int64_t  lhs, const Integer &rhs)
+
         //______________________________________________________________________
         //
         //
@@ -90,7 +97,7 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
             //__________________________________________________________________
             virtual size_t       serialize(OutputStream &) const;
             virtual const char * callSign()       const noexcept;
-            
+
             //__________________________________________________________________
             //
             //
@@ -157,7 +164,7 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
             Y_Kemp_Integer_Operator(-,Sub)
             Integer & operator--();                 //!< pre-decrement
             Integer   operator--(int);              //!< post-decrement
-                                                    //!
+
             //__________________________________________________________________
             //
             //
@@ -165,8 +172,6 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
             //
             //__________________________________________________________________
             Y_Kemp_Integer_Operator(*,Mul)
-            static Integer Square(const Integer &);
-            Integer        square() const;
 
 
             //__________________________________________________________________
@@ -175,9 +180,21 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
             // Division
             //
             //__________________________________________________________________
-
             Y_Kemp_Integer_Operator(/,Div)
 
+            //__________________________________________________________________
+            //
+            //
+            // Other
+            //
+            //__________________________________________________________________
+
+            static Integer Square(const Integer &z); //!< z^2
+            Integer        square() const;           //!< *this^2
+            static Integer Abs(const Integer &z);    //!< |n|
+            Integer        abs() const;              //!< |*this|
+            static Integer Sqrt(const Integer &);    //!< integer square root
+            Integer        sqrt() const;             //!< integer square root
 
             //__________________________________________________________________
             //
@@ -192,7 +209,7 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
 
             void incr();                    //!< add 1
             void decr();                    //!< sub 1
-                                            
+
             //__________________________________________________________________
             //
             //! generic comparison with NO EXCEPTION
@@ -320,18 +337,8 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
                 return Integer();
             }
 
-
-            static Integer Add(const Integer &lhs, const Integer &rhs);
-            static Integer Add(const Integer &lhs, const Natural &rhs);
-            static Integer Add(const Natural &lhs, const Integer &rhs);
-            static Integer Add(const Integer &lhs, const int64_t  rhs);
-            static Integer Add(const int64_t  lhs, const Integer &rhs);
-
-            static Integer Sub(const Integer &lhs, const Integer &rhs);
-            static Integer Sub(const Integer &lhs, const Natural &rhs);
-            static Integer Sub(const Natural &lhs, const Integer &rhs);
-            static Integer Sub(const Integer &lhs, const int64_t  rhs);
-            static Integer Sub(const int64_t  lhs, const Integer &rhs);
+            Y_Kemp_Integer_API(Add);
+            Y_Kemp_Integer_API(Sub);
 
 
             //__________________________________________________________________
@@ -378,11 +385,8 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
                 return Integer();
             }
 
-            static Integer Mul(const Integer &lhs, const Integer &rhs);
-            static Integer Mul(const Integer &lhs, const Natural &rhs);
-            static Integer Mul(const Natural &lhs, const Integer &rhs);
-            static Integer Mul(const Integer &lhs, const int64_t  rhs);
-            static Integer Mul(const int64_t  lhs, const Integer &rhs);
+            Y_Kemp_Integer_API(Mul);
+
 
 
             static void DivisionByZero();
@@ -441,11 +445,8 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
                 return Integer();
             }
 
-            static Integer Div(const Integer &lhs, const Integer &rhs);
-            static Integer Div(const Integer &lhs, const Natural &rhs);
-            static Integer Div(const Natural &lhs, const Integer &rhs);
-            static Integer Div(const Integer &lhs, const int64_t  rhs);
-            static Integer Div(const int64_t  lhs, const Integer &rhs);
+            Y_Kemp_Integer_API(Div);
+
 
         };
 
