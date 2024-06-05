@@ -115,17 +115,45 @@ Y_UTEST(kemp_integer)
             { apz X = L; X *= R; Y_ASSERT(X==P); };
             { apz X = L; X *= r; Y_ASSERT(X==P); };
 
+
+            if(r>0)
+            {
+                Y_ASSERT(L == P/R);
+                Y_ASSERT(L == P/r);
+                Y_ASSERT(L == prod/R);
+            }
+
+
             if(r>=0)
             {
                 const apn N = r;
                 Y_ASSERT(L*N==P);
                 Y_ASSERT(N*L==P);
                 { apz X = L; X *= N; Y_ASSERT(X==P); };
-
+                if(r>0)
+                {
+                    apz Q = P; Q /= N; Y_ASSERT(Q==L);
+                }
             }
         }
     }
 
+    std::cerr << "<Compact>" << std::endl;
+    const int m = 5;
+    for(int64_t i=-m;i<=m;++i)
+    {
+        const apz I = i;
+        for(int64_t j=-m;j<=m;++j)
+        {
+            const apz J = j;
+            Y_ASSERT(I+J==i+j);
+            Y_ASSERT(I*J==i*j);
+            if(j!=0)
+            {
+                Y_ASSERT(I/J==i/j);
+            }
+        }
+    }
 
 
 

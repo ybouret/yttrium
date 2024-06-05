@@ -30,7 +30,7 @@ namespace Yttrium
                 case Positive: { const uint64_t u = static_cast<uint64_t>( rhs); return Mul(lhs.s,lhs.n,Positive,u); }
                 case Negative: { const uint64_t u = static_cast<uint64_t>(-rhs); return Mul(lhs.s,lhs.n,Negative,u); };
             }
-            return lhs;
+            return Integer();
         }
 
         Integer Integer:: Mul(const int64_t lhs, const Integer &rhs)
@@ -41,7 +41,7 @@ namespace Yttrium
                 case Positive: { const uint64_t u = static_cast<uint64_t>( lhs);  return Mul(Positive,u,rhs.s,rhs.n); }
                 case Negative: { const uint64_t u = static_cast<uint64_t>(-lhs);  return Mul(Negative,u,rhs.s,rhs.n); }
             }
-            return rhs;
+            return Integer();
         }
     }
 

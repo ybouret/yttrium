@@ -5,6 +5,9 @@ namespace Yttrium
 {
     namespace Kemp
     {
+
+        const char * const Integer:: CallSign = "apz";
+
         Integer::Integer() : Number(), s(__Zero__), n()
         {
         }
