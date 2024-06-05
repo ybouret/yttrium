@@ -217,15 +217,33 @@ namespace Yttrium
             return static_cast<uint8_t>( floor(255.0 * to<double>() + 0.5) );
         }
 
+        template <> int8_t Bits:: to<int8_t>() noexcept
+        {
+            return static_cast<int8_t>( floor(255.0 * to<double>() - 127.5) );
+        }
+
+
         template <> uint16_t Bits:: to<uint16_t>() noexcept
         {
             return static_cast<uint16_t>( floor(65535.0 * to<double>() + 0.5) );
         }
 
+        template <> int16_t Bits:: to<int16_t>() noexcept
+        {
+            return static_cast<int16_t>( floor(65535.0 * to<double>() - 32767.5) );
+        }
+
+
         template <> uint32_t Bits:: to<uint32_t>() noexcept
         {
             return static_cast<uint32_t>( floor(4294967295 * to<double>() + 0.5) );
         }
+
+        template <> int32_t Bits:: to<int32_t>() noexcept
+        {
+            return static_cast<int32_t>( floor(4294967295 * to<double>() - 2147483647.5) );
+        }
+
 
         template <> uint64_t Bits:: to<uint64_t>() noexcept
         {
@@ -237,6 +255,18 @@ namespace Yttrium
             alias.dw[1] = to<uint32_t>();
             return alias.qw;
         }
+
+        template <> int64_t Bits:: to<int64_t>() noexcept
+        {
+            union {
+                int64_t qw;
+                int32_t dw[2];
+            } alias =  { 0 };
+            alias.dw[0] = to<int32_t>();
+            alias.dw[1] = to<int32_t>();
+            return alias.qw;
+        }
+
 
         template <> float Bits:: symm<float>() noexcept
         {

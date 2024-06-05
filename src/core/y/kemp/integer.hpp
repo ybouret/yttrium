@@ -53,8 +53,51 @@ namespace Yttrium
             // Comparisons
             //
             //__________________________________________________________________
-            static SignType Compare(const Integer &lhs, const Integer &rhs);
+            static inline 
+            SignType Compare(const Integer &lhs, const Integer &rhs) noexcept
+            {
+                return Cmp(lhs.s,lhs.n,rhs.s,rhs.n);
+            }
 
+            static inline 
+            SignType Compare(const Integer &lhs, const Natural &rhs) noexcept
+            {
+                return Cmp(lhs.s,lhs.n,rhs<=0?__Zero__:Positive,rhs);
+            }
+
+            static inline 
+            SignType Compare(const Natural &lhs, const Integer &rhs) noexcept
+            {
+                return Cmp(lhs<=0?__Zero__:Positive,lhs,rhs.s,rhs.n);
+            }
+
+            static inline
+            SignType Compare(const Integer &lhs, const int64_t rhs) noexcept
+            {
+                static const uint64_t zero = 0;
+                switch( Sign::Of(rhs) )
+                {
+                    case __Zero__: break;
+                    case Negative: { const uint64_t u = static_cast<uint64_t>(-rhs); return Cmp(lhs.s,lhs.n,Negative,u); }
+                    case Positive: { const uint64_t u = static_cast<uint64_t>( rhs); return Cmp(lhs.s,lhs.n,Positive,u); }
+                }
+                return Cmp(lhs.s,lhs.n,__Zero__,zero);
+            }
+
+            static inline
+            SignType Compare(const int64_t lhs, const Integer &rhs) noexcept
+            {
+                static const uint64_t zero = 0;
+                switch( Sign::Of(lhs) )
+                {
+                    case __Zero__: break;
+                    case Negative: { const uint64_t u = static_cast<uint64_t>(-lhs); return Cmp(Negative,u,rhs.s,rhs.n); }
+                    case Positive: { const uint64_t u = static_cast<uint64_t>( lhs); return Cmp(Positive,u,rhs.s,rhs.n); }
+                }
+                return Cmp(__Zero__,zero,rhs.s,rhs.n);
+            }
+
+#if 0
             //__________________________________________________________________
             //
             //
@@ -121,7 +164,8 @@ namespace Yttrium
 
             //! unary minus
             inline Integer operator-() const { return Integer( Sign::Opposite(s), n ); }
-
+#endif
+            
             //__________________________________________________________________
             //
             //
@@ -132,17 +176,47 @@ namespace Yttrium
             const Natural  n; //!< absolute value
                               //!
         private:
-            static
-            SignType Cmp(const SignType  ls,
-                         const Natural  &ln,
-                         const SignType  rs,
-                         const Natural  &rn) noexcept;
 
-            static inline
-            SignType Cmp(const Integer &lhs, const Integer &rhs) noexcept
+            //! generic comparison
+            /**
+             \param ls lhs sign
+             \param ln rhs natural (Natural|uint64_t)
+             \param rs rhs sign
+             \param rn rhs natural (Natural|uint64)
+             */
+            template <typename LHS_UNSIGNED, typename RHS_UNSIGNED> static inline
+            SignType Cmp(const SignType      ls,
+                         const LHS_UNSIGNED &ln,
+                         const SignType      rs,
+                         const RHS_UNSIGNED &rn) noexcept
             {
-                return Cmp(lhs.s,lhs.n,rhs.s,rhs.n);
+                switch( Sign::MakePair(ls,rs) )
+                {
+                        // special case
+                    case ZZ_Signs: assert(0==ln); assert(0==rn); break;
+
+                        // trivial POSITIVE signs ls > rs
+                    case PZ_Signs: return Positive;
+                    case PN_Signs: return Positive;
+                    case ZN_Signs: return Positive;
+
+
+                        // trivial NEGATIVE signs ls < rs
+                    case ZP_Signs: return Negative;
+                    case NP_Signs: return Negative;
+                    case NZ_Signs: return Negative;
+
+                        // all positive signs
+                    case PP_Signs: return Natural::Compare(ln,rn);
+
+                        // all negative signs
+                    case NN_Signs: return Natural::Compare(rn,ln);
+                }
+
+                return __Zero__;
             }
+
+
 
 
             static

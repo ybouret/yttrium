@@ -67,8 +67,8 @@ namespace Yttrium
             T in(const T lo, const T hi) noexcept
             {
                 static const long double half(0.5);
-                const long double delta = hi-lo;
                 const long double start = lo;
+                const long double delta = static_cast<long double>(hi)-start;
                 return static_cast<T>( floorl( start + delta * to<long double>() + half) ) ;
             }
 
