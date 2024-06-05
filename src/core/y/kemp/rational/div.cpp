@@ -172,3 +172,64 @@ namespace Yttrium
     }
 
 }
+
+namespace Yttrium
+{
+    namespace Kemp
+    {
+
+        static inline
+        Rational DivAsV4(const SignType s, const Integer &lhs, const Rational &rhs)
+        {
+            const Natural num = lhs.n * rhs.denom;
+            return Rational(s,num,rhs.numer.n);
+        }
+
+        Rational Rational:: Div(const Integer &lhs, const Rational &rhs)
+        {
+            switch( Sign::MakePair(lhs.s, rhs.numer.s) )
+            {
+                    // division by zero
+                case ZZ_Signs:
+                case NZ_Signs:
+                case PZ_Signs:
+                    break;
+
+                    // trivial cases
+                case ZP_Signs:
+                case ZN_Signs:
+                    return Rational();
+
+                    // positive
+                case PP_Signs:
+                case NN_Signs:
+                    return DivAsV4(Positive,lhs,rhs);
+
+                    // negative
+                case PN_Signs:
+                case NP_Signs:
+                    return DivAsV4(Negative,lhs,rhs);
+            }
+            DivisionByZero();
+            return Rational();
+        }
+    }
+
+}
+
+namespace Yttrium
+{
+    namespace Kemp
+    {
+        Rational Rational:: Div(const Natural &lhs, const Rational &rhs)
+        {
+            const SignType s = rhs.numer.s;
+            if(s == __Zero__) DivisionByZero();
+            const Natural num = lhs * rhs.denom;
+            return Rational(s,num,rhs.numer.n);
+        }
+    }
+
+}
+
+
