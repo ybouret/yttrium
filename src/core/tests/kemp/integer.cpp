@@ -66,6 +66,7 @@ Y_UTEST(kemp_integer)
         {
             const int64_t sum = i+j;
             const int64_t dif = i-j;
+
             Y_ASSERT( I+J == sum );
             Y_ASSERT( I+j == sum );
             Y_ASSERT( i+J == sum );
@@ -87,13 +88,44 @@ Y_UTEST(kemp_integer)
                 }
                 const apn N = j;
                 Y_ASSERT( I+N == sum );
+                Y_ASSERT( N+I == sum );
                 Y_ASSERT( I-N == dif );
+                Y_ASSERT( N-I == -dif );
                 { apz S = I; S += N; Y_ASSERT(S==sum); }
                 { apz D = I; D -= N; Y_ASSERT(D==dif); }
             }
         }
     }
     std::cerr << std::endl;
+
+    std::cerr << "<Mul64/Div64>" << std::endl;
+    for(unsigned i=0;i<=31;++i)
+    {
+        for(unsigned j=0;j<=31;++j)
+        {
+            const int64_t l = ran.choice() ? -int64_t( ran.to<uint32_t>(i) ) : int64_t( ran.to<uint32_t>(i) );
+            const int64_t r = ran.choice() ? -int64_t( ran.to<uint32_t>(i) ) : int64_t( ran.to<uint32_t>(i) );
+            const int64_t prod = l*r;
+            const apz L = l;
+            const apz R = r;
+            const apz P = L*R;
+            Y_ASSERT(P   == prod);
+            Y_ASSERT(l*R == prod);
+            Y_ASSERT(R*l == prod);
+            { apz X = L; X *= R; Y_ASSERT(X==P); };
+            { apz X = L; X *= r; Y_ASSERT(X==P); };
+
+            if(r>=0)
+            {
+                const apn N = r;
+                Y_ASSERT(L*N==P);
+                Y_ASSERT(N*L==P);
+                { apz X = L; X *= N; Y_ASSERT(X==P); };
+
+            }
+        }
+    }
+
 
 
 

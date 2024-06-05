@@ -43,6 +43,8 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
         class Integer : public Number
         {
         public:
+            static const char * const CallSign; //!< "apz"
+
             //__________________________________________________________________
             //
             //
@@ -123,6 +125,18 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
             inline Integer operator-() const { return Integer( Sign::Opposite(s), n ); }
             Y_Kemp_Integer_Operator(-,Sub)
 
+            //__________________________________________________________________
+            //
+            //
+            // Multiplication
+            //
+            //__________________________________________________________________
+
+            //! unary minus
+            Y_Kemp_Integer_Operator(*,Mul)
+
+
+
 
             //__________________________________________________________________
             //
@@ -136,7 +150,7 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
         private:
             //__________________________________________________________________
             //
-            //! generic comparison
+            //! generic comparison with NO EXCEPTION
             /**
              \param ls lhs sign
              \param ln rhs natural (Natural|uint64_t)
@@ -252,6 +266,51 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
             static Integer Sub(const Natural &lhs, const Integer &rhs);
             static Integer Sub(const Integer &lhs, const int64_t  rhs);
             static Integer Sub(const int64_t  lhs, const Integer &rhs);
+
+
+            //__________________________________________________________________
+            //
+            //! generic multiplication
+            /**
+             \param ls lhs sign
+             \param ln rhs natural (Natural|uint64_t)
+             \param rs rhs sign
+             \param rn rhs natural (Natural|uint64_t)
+             */
+            //__________________________________________________________________
+            template <typename LHS_UNSIGNED, typename RHS_UNSIGNED> static inline
+            Integer Mul(const SignType      ls,
+                        const LHS_UNSIGNED &ln,
+                        const SignType      rs,
+                        const RHS_UNSIGNED &rn)
+            {
+                switch( Sign::MakePair(ls,rs) )
+                {
+                        // trivial __Zero__
+                    case ZZ_Signs:
+                    case ZN_Signs:
+                    case ZP_Signs:
+                    case NZ_Signs:
+                    case PZ_Signs:
+                        break;
+
+                        // Positive Result
+                    case PP_Signs:
+                    case NN_Signs: { const Natural p = ln * rn; return Integer(Positive,p); }
+
+                        // Negative Result
+                    case PN_Signs:
+                    case NP_Signs: { const Natural p = ln * rn; return Integer(Negative,p); }
+
+                }
+                return Integer();
+            }
+
+            static Integer Mul(const Integer &lhs, const Integer &rhs);
+            static Integer Mul(const Integer &lhs, const Natural &rhs);
+            static Integer Mul(const Natural &lhs, const Integer &rhs);
+            static Integer Mul(const Integer &lhs, const int64_t  rhs);
+            static Integer Mul(const int64_t  lhs, const Integer &rhs);
 
         };
 

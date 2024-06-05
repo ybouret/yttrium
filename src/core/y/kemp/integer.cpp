@@ -29,7 +29,7 @@ namespace Yttrium
         }
 
         Integer:: Integer(const Natural &N) : Number(),
-        s( (N>0) ? Positive : __Zero__ ),
+        s( N.sign() ),
         n( N )
         {
         }
@@ -40,7 +40,7 @@ namespace Yttrium
 
         void Integer:: chk() noexcept
         {
-            if(n<=0) Coerce(s) = __Zero__;
+            if(__Zero__==n.sign()) Coerce(s) = __Zero__;
         }
 
         Integer:: Integer(const SignType S, const Natural &N) :
