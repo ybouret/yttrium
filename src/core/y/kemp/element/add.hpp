@@ -1,7 +1,7 @@
 #ifndef Y_Kemp_Element_Add_Included
 #define Y_Kemp_Element_Add_Included 1
 
-#include "y/kemp/element/compute.hpp"
+#include "y/kemp/element/compute-binary.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/type/utils.hpp"
 

@@ -98,7 +98,7 @@ namespace Yttrium
             typedef Element * (*BinR64Proc)(Element &lhs, uint64_t rhs);               //!< binary procedure with unsigned rhs
 
             typedef Element * (*UnaryProc)(Element &);
-            typedef Element * (*UnaryProcEx)(Element &, uint64_t);;
+            typedef Element * (*UnaryProcEx)(Element &, uint64_t &);
 
             //__________________________________________________________________
             //
@@ -126,6 +126,7 @@ namespace Yttrium
             {
                 UnaryProc   const Result; //!< produce result (arg)
                 UnaryProcEx const ResTMX; //!< produce result (arg,tmx)
+             
                 inline Element * operator()(Element &arg)                const { return Result(arg);     }
                 inline Element * operator()(Element &arg, uint64_t &tmx) const { return ResTMX(arg,tmx); }
 

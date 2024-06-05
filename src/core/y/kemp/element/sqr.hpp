@@ -3,8 +3,7 @@
 #ifndef Y_Kemp_Element_Mul_Included
 #define Y_Kemp_Element_Mul_Included 1
 
-#include "y/kemp/element.hpp"
-#include "y/kemp/element/tmx.hpp"
+#include "y/kemp/element/compute-unary.hpp"
 #include "y/ptr/auto.hpp"
 
 namespace Yttrium

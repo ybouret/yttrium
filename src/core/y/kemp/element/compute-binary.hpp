@@ -1,6 +1,6 @@
 
-#ifndef Y_Kemp_Element_Compute_Included
-#define Y_Kemp_Element_Compute_Included 1
+#ifndef Y_Kemp_Element_Compute_Binary_Included
+#define Y_Kemp_Element_Compute_Binary_Included 1
 
 #include "y/kemp/element.hpp"
 #include "y/kemp/element/tmx.hpp"
@@ -21,7 +21,7 @@ namespace Yttrium
          */
         //______________________________________________________________________
         template <template <typename,typename> class ENGINE,typename CORE, typename WORD>
-        struct Compute
+        struct ComputeBinary
         {
 
             //__________________________________________________________________
@@ -63,10 +63,10 @@ namespace Yttrium
 
         //! declare functions for Binary ips
 #define Y_Kemp_BinaryAPI(ENGINE,CORE,WORD) { \
-Compute<ENGINE,CORE,WORD>::Result, \
-Compute<ENGINE,CORE,WORD>::ResTMX, \
-Compute<ENGINE,CORE,WORD>::ResL64, \
-Compute<ENGINE,CORE,WORD>::ResR64  \
+ComputeBinary<ENGINE,CORE,WORD>::Result, \
+ComputeBinary<ENGINE,CORE,WORD>::ResTMX, \
+ComputeBinary<ENGINE,CORE,WORD>::ResL64, \
+ComputeBinary<ENGINE,CORE,WORD>::ResR64  \
 }
 
         //! declare table of Binary ops
