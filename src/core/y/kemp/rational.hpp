@@ -18,6 +18,20 @@ inline Rational & operator=(const TYPE rhs) { Rational _(rhs); xch(_); return *t
 #define Y_Rational_Ctor(LHS,RHS) \
 inline Rational(const LHS num, const RHS den) : Number(), numer(num), denom(den) { validate(); }
 
+#define Y_Kemp_Rational_Operator(OP,CALL) \
+inline Rational & operator OP##= ( const Rational &rhs ) { Rational _ = CALL(*this,rhs); xch(_); return *this; } \
+inline Rational & operator OP##= ( const Integer  &rhs ) { Rational _ = CALL(*this,rhs); xch(_); return *this; } \
+inline Rational & operator OP##= ( const Natural  &rhs ) { Rational _ = CALL(*this,rhs); xch(_); return *this; } \
+inline Rational & operator OP##= ( const int64_t   rhs ) { Rational _ = CALL(*this,rhs); xch(_); return *this; } \
+inline friend Rational operator OP (const Rational &lhs, const Rational &rhs) { return CALL(lhs,rhs); } \
+inline friend Rational operator OP (const Rational &lhs, const Integer  &rhs) { return CALL(lhs,rhs); } \
+inline friend Rational operator OP (const Rational &lhs, const Natural  &rhs) { return CALL(lhs,rhs); } \
+inline friend Rational operator OP (const Rational &lhs, const int64_t   rhs) { return CALL(lhs,rhs); } \
+inline friend Rational operator OP (const Integer  &lhs, const Rational &rhs) { return CALL(lhs,rhs); } \
+inline friend Rational operator OP (const Natural  &lhs, const Rational &rhs) { return CALL(lhs,rhs); } \
+inline friend Rational operator OP (const int64_t  &lhs, const Rational &rhs) { return CALL(lhs,rhs); } 
+
+
         class Rational : public Number
         {
         public:
@@ -54,6 +68,8 @@ inline Rational(const LHS num, const RHS den) : Number(), numer(num), denom(den)
             Y_Rational_Ctor(Natural &, uint64_t)
             Y_Rational_Ctor(int64_t,   uint64_t)
 
+            Rational(const SignType, const Natural &, const Natural &);
+
             //__________________________________________________________________
             //
             //
@@ -77,11 +93,30 @@ inline Rational(const LHS num, const RHS den) : Number(), numer(num), denom(den)
             //__________________________________________________________________
             //
             //
+            // Multiplications
+            //
+            //__________________________________________________________________
+            Y_Kemp_Rational_Operator(*,Mul)
+
+            //__________________________________________________________________
+            //
+            //
             // Members
             //
             //__________________________________________________________________
             const Integer numer; //!< numerator
             const Natural denom; //!< denominator
+
+        private:
+            static Rational Mul(const Rational &lhs, const Rational &rhs);
+            static Rational Mul(const Rational &lhs, const Integer &rhs);
+            static Rational Mul(const Rational &lhs, const Natural &rhs);
+            static Rational Mul(const Rational &lhs, const int64_t  rhs);
+            static Rational Mul(const Integer  &lhs, const Rational &rhs);
+            static Rational Mul(const Natural  &lhs, const Rational &rhs);
+            static Rational Mul(const int64_t   lhs, const Rational &rhs);
+
+
         };
 
     }

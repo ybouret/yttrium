@@ -41,6 +41,15 @@ namespace Yttrium
         }
 
 
+        Rational:: Rational(const SignType snum, const Natural &anum, const Natural &den) :
+        Number(),
+        numer(snum,anum),
+        denom(den)
+        {
+            validate();
+        }
+
+
 
         void Rational:: xch(Rational &q) noexcept
         {
@@ -64,12 +73,7 @@ namespace Yttrium
             return os;
         }
 
-        size_t Rational:: serialize(OutputStream &os) const
-        {
-            size_t nw = numer.serialize(os);
-            return nw + denom.serialize(os);
-        }
-
+      
 
     }
 
