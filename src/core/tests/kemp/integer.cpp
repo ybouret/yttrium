@@ -29,7 +29,6 @@ Y_UTEST(kemp_integer)
         const SignType cmp = Sign::Of(i,j);
         const apz      I   = i;
         const apz      J   = j;
-        std::cerr << i << "/" << j << std::endl;
         Y_ASSERT( Integer::Compare(I,J) == cmp );
         Y_ASSERT( Integer::Compare(I,j) == cmp );
         Y_ASSERT( Integer::Compare(i,J) == cmp );
@@ -57,7 +56,44 @@ Y_UTEST(kemp_integer)
     }
 
     std::cerr << "<Add64/Sub64>" << std::endl;
+    bool found = false;
+    for(size_t k=0; !found || k<100;++k)
+    {
+        const int64_t  i   = ran.to<int32_t>();
+        const int64_t  j   = ran.to<int32_t>();
+        const apz      I   = i;
+        const apz      J   = j;
+        {
+            const int64_t sum = i+j;
+            const int64_t dif = i-j;
+            Y_ASSERT( I+J == sum );
+            Y_ASSERT( I+j == sum );
+            Y_ASSERT( i+J == sum );
+           
+            Y_ASSERT( I-J == dif );
+            Y_ASSERT( I-j == dif );
+            Y_ASSERT( i-J == dif );
 
+            { apz S = I; S += J; Y_ASSERT(S==sum); }
+            { apz S = I; S += j; Y_ASSERT(S==sum); }
+            { apz D = I; D -= J; Y_ASSERT(D==dif); }
+            { apz D = I; D -= j; Y_ASSERT(D==dif); }
+            if(j>=0)
+            {
+                if(!found)
+                {
+                    found = true;
+                    std::cerr << '*';
+                }
+                const apn N = j;
+                Y_ASSERT( I+N == sum );
+                Y_ASSERT( I-N == dif );
+                { apz S = I; S += N; Y_ASSERT(S==sum); }
+                { apz D = I; D -= N; Y_ASSERT(D==dif); }
+            }
+        }
+    }
+    std::cerr << std::endl;
 
 
 

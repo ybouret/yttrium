@@ -244,14 +244,14 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
             static Integer Add(const Integer &lhs, const Integer &rhs);
             static Integer Add(const Integer &lhs, const Natural &rhs);
             static Integer Add(const Natural &lhs, const Integer &rhs);
-            static Integer Add(const Integer &lhs, const uint64_t rhs);
-            static Integer Add(const uint64_t lhs, const Integer &rhs);
+            static Integer Add(const Integer &lhs, const int64_t  rhs);
+            static Integer Add(const int64_t  lhs, const Integer &rhs);
 
             static Integer Sub(const Integer &lhs, const Integer &rhs);
             static Integer Sub(const Integer &lhs, const Natural &rhs);
             static Integer Sub(const Natural &lhs, const Integer &rhs);
-            static Integer Sub(const Integer &lhs, const uint64_t rhs);
-            static Integer Sub(const uint64_t lhs, const Integer &rhs);
+            static Integer Sub(const Integer &lhs, const int64_t  rhs);
+            static Integer Sub(const int64_t  lhs, const Integer &rhs);
 
         };
 

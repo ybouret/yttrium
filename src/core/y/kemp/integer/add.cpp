@@ -21,7 +21,7 @@ namespace Yttrium
         }
 
 
-        Integer Integer:: Add(const Integer &lhs, const uint64_t rhs)
+        Integer Integer:: Add(const Integer &lhs, const int64_t rhs)
         {
             switch( Sign::Of(rhs) )
             {
@@ -32,7 +32,7 @@ namespace Yttrium
             return lhs;
         }
 
-        Integer Integer:: Add(const uint64_t lhs, const Integer &rhs)
+        Integer Integer:: Add(const int64_t lhs, const Integer &rhs)
         {
             switch( Sign::Of(lhs) )
             {
