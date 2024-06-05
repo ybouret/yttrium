@@ -21,6 +21,7 @@ Y_UTEST(kemp_rational)
     q = apq(7,13); apz z = -3; q/=z; std::cerr << q << std::endl;
 
     q = apq(7,13); apn n =  7; q/=n; std::cerr << q << std::endl;
+    q = apq(7,13);  q/=8;            std::cerr << q << std::endl;
 
 
 }
