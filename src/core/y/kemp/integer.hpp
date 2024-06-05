@@ -120,14 +120,14 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
             //
             //__________________________________________________________________
 
-            //! aliases
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
             Y_Kemp_Integer_Compare(==, == __Zero__)
             Y_Kemp_Integer_Compare(!=, != __Zero__)
             Y_Kemp_Integer_Compare(<,  == Negative)
             Y_Kemp_Integer_Compare(>,  == Positive)
             Y_Kemp_Integer_Compare(<=, != Positive)
             Y_Kemp_Integer_Compare(>=, != Negative)
-
+#endif
 
 
             //__________________________________________________________________
@@ -142,6 +142,9 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
             Y_Kemp_Integer_Operator(+,Add)
             Integer & operator++();                 //!< pre-increment
             Integer   operator++(int);              //!< post-increment
+
+            static Integer Square(const Integer &);
+            Integer        square() const;
 
 
             //__________________________________________________________________

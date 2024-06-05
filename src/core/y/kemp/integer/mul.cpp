@@ -43,6 +43,17 @@ namespace Yttrium
             }
             return Integer();
         }
+
+        Integer Integer:: Square(const Integer &z)
+        {
+            const Natural z2 = z.n.square();
+            return Integer(Positive,z2);
+        }
+
+        Integer Integer:: square() const
+        {
+            return Square(*this);
+        }
     }
 
 }
