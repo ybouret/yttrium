@@ -35,22 +35,24 @@ inline Rational & operator OP##= ( const Rational &rhs ) { Rational _ = CALL(*th
 inline Rational & operator OP##= ( const Integer  &rhs ) { Rational _ = CALL(*this,rhs); xch(_); return *this; } \
 inline Rational & operator OP##= ( const Natural  &rhs ) { Rational _ = CALL(*this,rhs); xch(_); return *this; } \
 inline Rational & operator OP##= ( const int64_t   rhs ) { Rational _ = CALL(*this,rhs); xch(_); return *this; } \
-inline friend Rational operator OP (const Rational &lhs, const Rational &rhs) { return CALL(lhs,rhs); } \
-inline friend Rational operator OP (const Rational &lhs, const Integer  &rhs) { return CALL(lhs,rhs); } \
-inline friend Rational operator OP (const Rational &lhs, const Natural  &rhs) { return CALL(lhs,rhs); } \
-inline friend Rational operator OP (const Rational &lhs, const int64_t   rhs) { return CALL(lhs,rhs); } \
-inline friend Rational operator OP (const Integer  &lhs, const Rational &rhs) { return CALL(lhs,rhs); } \
-inline friend Rational operator OP (const Natural  &lhs, const Rational &rhs) { return CALL(lhs,rhs); } \
+inline friend Rational operator OP (const Rational &lhs, const Rational &rhs) { return CALL(lhs,rhs); }          \
+inline friend Rational operator OP (const Rational &lhs, const Integer  &rhs) { return CALL(lhs,rhs); }          \
+inline friend Rational operator OP (const Rational &lhs, const Natural  &rhs) { return CALL(lhs,rhs); }          \
+inline friend Rational operator OP (const Rational &lhs, const int64_t   rhs) { return CALL(lhs,rhs); }          \
+inline friend Rational operator OP (const Integer  &lhs, const Rational &rhs) { return CALL(lhs,rhs); }          \
+inline friend Rational operator OP (const Natural  &lhs, const Rational &rhs) { return CALL(lhs,rhs); }          \
 inline friend Rational operator OP (const int64_t  &lhs, const Rational &rhs) { return CALL(lhs,rhs); }
 
-#define Y_Kemp_Rational_API(FUNC)  \
-static Rational FUNC(const Rational &lhs, const Rational &rhs);\
-static Rational FUNC(const Rational &lhs, const Integer &rhs);\
-static Rational FUNC(const Rational &lhs, const Natural &rhs);\
-static Rational FUNC(const Rational &lhs, const int64_t  rhs);\
-static Rational FUNC(const Integer  &lhs, const Rational &rhs);\
-static Rational FUNC(const Natural  &lhs, const Rational &rhs);\
-static Rational FUNC(const int64_t   lhs, const Rational &rhs)\
+#define Y_Kemp_Rational_Call(RETURN,FUNC)                     \
+static RETURN FUNC(const Rational &lhs, const Rational &rhs); \
+static RETURN FUNC(const Rational &lhs, const Integer  &rhs); \
+static RETURN FUNC(const Rational &lhs, const Natural  &rhs); \
+static RETURN FUNC(const Rational &lhs, const int64_t   rhs); \
+static RETURN FUNC(const Integer  &lhs, const Rational &rhs); \
+static RETURN FUNC(const Natural  &lhs, const Rational &rhs); \
+static RETURN FUNC(const int64_t   lhs, const Rational &rhs)
+
+#define Y_Kemp_Rational_API(FUNC) Y_Kemp_Rational_Call(Rational,FUNC)
 
 
 
@@ -119,6 +121,15 @@ static Rational FUNC(const int64_t   lhs, const Rational &rhs)\
             String toString() const;          //!< convert to string
             void   validate();                //!< simplify
             void   xch(Rational &q) noexcept; //!< no-throw exchange
+
+            //__________________________________________________________________
+            //
+            //
+            // Comparisons
+            //
+            //__________________________________________________________________
+            Y_Kemp_Rational_Call(bool,Compare);
+
 
             //__________________________________________________________________
             //
