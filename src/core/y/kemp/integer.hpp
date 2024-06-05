@@ -75,6 +75,7 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
             Integer(const Natural &);                 //!< copy
             Integer(const SignType, const Natural &); //!< copy/chk
             Integer(const SignType, const uint64_t);  //!< copy/chk
+            Integer(const size_t, Random::Bits&);     //!< random
             virtual ~Integer() noexcept;              //!< cleanup
             Integer & operator=(const Integer &z);    //!< assign
             Integer & operator=(const int64_t  z);    //!< assign
@@ -84,11 +85,21 @@ Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
             //__________________________________________________________________
             //
             //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual size_t       serialize(OutputStream &) const;
+            virtual const char * callSign()       const noexcept;
+            
+            //__________________________________________________________________
+            //
+            //
             // Methods
             //
             //__________________________________________________________________
-            void chk()           noexcept; //!< sign in sync with absolute value
-            void xch(Integer &z) noexcept; //!< safe exchange
+            void   chk()            noexcept; //!< sign in sync with absolute value
+            void   xch(Integer &z)  noexcept; //!< safe exchange
+            String toString()          const; //!< make string
 
             //__________________________________________________________________
             //

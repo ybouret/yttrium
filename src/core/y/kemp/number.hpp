@@ -4,6 +4,7 @@
 #define Y_Kemp_Number_Included 1
 
 #include "y/string.hpp"
+#include "y/stream/serializable.hpp"
 
 namespace Yttrium
 {
@@ -18,7 +19,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Number
+        class Number : public Serializable, public Identifiable
         {
         public:
             virtual ~Number() noexcept;

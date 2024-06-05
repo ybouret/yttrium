@@ -1,5 +1,6 @@
 
 #include "y/kemp/integer.hpp"
+#include "y/random/bits.hpp"
 
 namespace Yttrium
 {
@@ -62,6 +63,14 @@ namespace Yttrium
             chk();
         }
 
+        Integer:: Integer(const size_t nbits, Random::Bits &ran) :
+        Number(),
+        s( (nbits <= 0) ? __Zero__ : ( ran.choice() ? Negative : Positive) ),
+        n(nbits,ran)
+        {
+        }
+
+
         Integer & Integer:: operator=(const Integer &z) {
             Integer _(z); xch(_); return *this;
         }
@@ -83,18 +92,21 @@ namespace Yttrium
             Coerce(n).xch( Coerce(z.n) );
         }
 
+        String Integer:: toString() const
+        {
+            if(Negative==s) 
+                return '-' + n.toDec();
+            else
+                return n.toDec();
+        }
 
         std::ostream & operator<<(std::ostream &os, const Integer &z)
         {
-            switch(z.s)
-            {
-                case Negative: assert(z.n>0);  os << '-' << z.n; break;
-                case __Zero__: assert(0==z.n); os << z.n; break;
-                case Positive: assert(z.n>0);  os << z.n; break;
-            }
+            os << z.toString();
             return os;
         }
-
+        
+        const char * Integer:: callSign() const noexcept { return CallSign; }
 
     }
 }

@@ -340,10 +340,10 @@ add_test(color:channels test-core color_channels)
 add_test(tow:api test-core tow_api)
 
 #kemp
-add_test(kemp:element test-core kemp_element)
-add_test(kemp:natural test-core kemp_natural)
-add_test(kemp:addsub  test-core kemp_addsub)
-add_test(kemp:muldiv  test-core kemp_muldiv)
-add_test(kemp:integer test-core kemp_integer)
-
+add_test(kemp:element  test-core kemp_element)
+add_test(kemp:natural  test-core kemp_natural)
+add_test(kemp:addsub   test-core kemp_addsub)
+add_test(kemp:muldiv   test-core kemp_muldiv)
+add_test(kemp:integer  test-core kemp_integer)
+add_test(kemp:rational test-core kemp_rational)
 

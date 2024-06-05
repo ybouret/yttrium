@@ -115,7 +115,11 @@ namespace Yttrium
             assert(0!=code);
             return code->bits <= 0 ? __Zero__ : Positive;
         }
+
+        const char * Natural:: callSign() const noexcept { return CallSign; }
+
     }
+
 
 }
 

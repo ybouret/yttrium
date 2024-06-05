@@ -90,6 +90,16 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
 
             Element & operator*() const noexcept; //!< get internal element
 
+
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual size_t       serialize(OutputStream &) const;
+            virtual const char * callSign()       const noexcept;
+
             //__________________________________________________________________
             //
             //

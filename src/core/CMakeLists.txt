@@ -78,6 +78,7 @@ kemp
 kemp/element
 kemp/natural
 kemp/integer
+kemp/rational
 apex
 apex/m
 apex/n

@@ -106,18 +106,21 @@ namespace Yttrium
 
         void Natural:: Simplify(Natural &num, Natural &den)
         {
-            if(den<=0) throw Specific::Exception(CallSign, "Simplify with zero denominator");
+            if(den<=0) throw Specific::Exception(CallSign, "Simplify Division By Zero");
             if(num<=0) { den=1; return; }
             if(1==den) return;
 
             assert(num>0);
             assert(den>1);
             const Natural g = __GCD(num,den);
-            Natural n = num/g;
-            Natural d = den/g;
+            if(g>1)
+            {
+                Natural n = num/g;
+                Natural d = den/g;
 
-            num.xch(n);
-            den.xch(d);
+                num.xch(n);
+                den.xch(d);
+            }
 
 
         }
