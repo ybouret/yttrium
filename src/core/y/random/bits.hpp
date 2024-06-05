@@ -50,7 +50,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             virtual uint32_t        next32() noexcept = 0; //!< generate next 32bit value in [0..umax]
-            template <typename T> T to()     noexcept;     //!< float|double|long double|uint[8|16|32|64]_t
+            template <typename T> T to()     noexcept;     //!< float|double|long double|[u]int[8|16|32|64]_t
             template <typename T> T symm()   noexcept;     //!< float|double|long double
 
             //__________________________________________________________________

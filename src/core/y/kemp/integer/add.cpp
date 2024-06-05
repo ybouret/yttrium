@@ -5,6 +5,22 @@ namespace Yttrium
 {
     namespace Kemp
     {
+        Integer Integer:: Add(const Integer &lhs, const Integer &rhs)
+        {
+            return Add(lhs.s,lhs.n,rhs.s,rhs.n);
+        }
+
+        Integer Integer:: Add(const Integer &lhs, const Natural &rhs)
+        {
+            return Add(lhs.s,lhs.n,rhs.sign(),rhs);
+        }
+
+        Integer Integer:: Add(const Natural &lhs, const Integer &rhs)
+        {
+            return Add(lhs.sign(),lhs,rhs.s,rhs.n);
+        }
+
+#if 0
         Integer Integer:: Add(const SignType ls, const Natural &ln, const SignType rs, const Natural &rn)
         {
             switch( Sign::MakePair(ls,rs) )
@@ -62,7 +78,7 @@ namespace Yttrium
             assert(__Zero__==rs);
             return Integer();
         }
-
+#endif
     }
 
 }

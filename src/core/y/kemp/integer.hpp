@@ -32,6 +32,7 @@ namespace Yttrium
             Integer(const Integer &);                 //!< copy
             Integer(const Natural &);                 //!< copy
             Integer(const SignType, const Natural &); //!< copy/chk
+            Integer(const SignType, const uint64_t);  //!< copy/chk
             virtual ~Integer() noexcept;              //!< cleanup
             Integer & operator=(const Integer &z);    //!< assign
             Integer & operator=(const int64_t  z);    //!< assign
@@ -53,24 +54,29 @@ namespace Yttrium
             // Comparisons
             //
             //__________________________________________________________________
-            static inline 
+
+            //! comparison
+            static inline
             SignType Compare(const Integer &lhs, const Integer &rhs) noexcept
             {
                 return Cmp(lhs.s,lhs.n,rhs.s,rhs.n);
             }
 
-            static inline 
+            //! comparison
+            static inline
             SignType Compare(const Integer &lhs, const Natural &rhs) noexcept
             {
-                return Cmp(lhs.s,lhs.n,rhs<=0?__Zero__:Positive,rhs);
+                return Cmp(lhs.s,lhs.n,rhs.sign(),rhs);
             }
 
-            static inline 
+            //! comparison
+            static inline
             SignType Compare(const Natural &lhs, const Integer &rhs) noexcept
             {
-                return Cmp(lhs<=0?__Zero__:Positive,lhs,rhs.s,rhs.n);
+                return Cmp(lhs.sign(),lhs,rhs.s,rhs.n);
             }
 
+            //! comparison
             static inline
             SignType Compare(const Integer &lhs, const int64_t rhs) noexcept
             {
@@ -84,6 +90,7 @@ namespace Yttrium
                 return Cmp(lhs.s,lhs.n,__Zero__,zero);
             }
 
+            //! comparison
             static inline
             SignType Compare(const int64_t lhs, const Integer &rhs) noexcept
             {
@@ -97,7 +104,6 @@ namespace Yttrium
                 return Cmp(__Zero__,zero,rhs.s,rhs.n);
             }
 
-#if 0
             //__________________________________________________________________
             //
             //
@@ -110,21 +116,17 @@ namespace Yttrium
 
             //! in-place +
             inline Integer & operator+=( const Integer &rhs ) {
-                Integer _ = Add(*this,rhs); xch(_);
-                return *this;
+                Integer _ = Add(*this,rhs); xch(_); return *this;
             }
 
             //! in place +
             inline Integer & operator+=( const Natural &rhs ) {
-                Integer _ = Add(s,n,Positive,rhs); xch(_);
-                return *this;
+                Integer _ = Add(*this,rhs); xch(_); return *this;
             }
 
             //! in place +
             inline Integer & operator+=( const int64_t rhs ) {
-                const Integer r(rhs);
-                Integer _ = Add(*this,r);
-                return *this;
+                Integer _ = Add(*this,rhs); xch(_); return *this;
             }
 
             //! +
@@ -134,25 +136,23 @@ namespace Yttrium
 
             //! +
             inline friend Integer operator+(const Integer &lhs, const Natural &rhs) {
-                return Add(lhs.s,lhs.n,Positive,rhs);
+                return Add(lhs,rhs);
             }
 
             //! +
             inline friend Integer operator+(const Natural &lhs, const Integer &rhs) {
-                return Add(Positive,lhs,rhs.s,rhs.n);
+                return Add(lhs,rhs);
             }
 
 
             //! +
             inline friend Integer operator+(const Integer &lhs, const int64_t rhs) {
-                const Integer _(rhs);
-                return Add(lhs,_);
+                return Add(lhs,rhs);
             }
 
             //! +
             inline friend Integer operator+(const int64_t lhs, const Integer &rhs) {
-                const Integer _(lhs);
-                return Add(_,rhs);
+                return Add(lhs,rhs);
             }
 
             //__________________________________________________________________
@@ -164,8 +164,7 @@ namespace Yttrium
 
             //! unary minus
             inline Integer operator-() const { return Integer( Sign::Opposite(s), n ); }
-#endif
-            
+
             //__________________________________________________________________
             //
             //
@@ -182,7 +181,7 @@ namespace Yttrium
              \param ls lhs sign
              \param ln rhs natural (Natural|uint64_t)
              \param rs rhs sign
-             \param rn rhs natural (Natural|uint64)
+             \param rn rhs natural (Natural|uint64_t)
              */
             template <typename LHS_UNSIGNED, typename RHS_UNSIGNED> static inline
             SignType Cmp(const SignType      ls,
@@ -217,30 +216,75 @@ namespace Yttrium
             }
 
 
+            //! generic addition
+            /**
+             \param ls lhs sign
+             \param ln rhs natural (Natural|uint64_t)
+             \param rs rhs sign
+             \param rn rhs natural (Natural|uint64_t)
+             */
+            template <typename LHS_UNSIGNED, typename RHS_UNSIGNED> static inline
+            Integer Add(const SignType      ls,
+                        const LHS_UNSIGNED &ln,
+                        const SignType      rs,
+                        const RHS_UNSIGNED &rn)
+            {
+                switch( Sign::MakePair(ls,rs) )
+                {
+                        // special case
+                    case ZZ_Signs: assert(0==ln); assert(0==rn); break;
 
+                        // special case with one ZERO
+                    case NZ_Signs: return Integer(ls,ln);
+                    case PZ_Signs: return Integer(ls,ln);
+                    case ZN_Signs: return Integer(rs,rn);
+                    case ZP_Signs: return Integer(rs,rn);
 
-            static
-            Integer Add(const SignType  ls,
-                        const Natural  &ln,
-                        const SignType  rs,
-                        const Natural  &rn);
+                        // all POSITIVE:
+                    case PP_Signs: { const Natural sum = ln+rn; return Integer(Positive,sum); }
 
-            static inline
-            Integer Add(const Integer &lhs, const Integer &rhs) {
-                return Add(lhs.s,lhs.n,rhs.s,rhs.n);
+                        // all NEGATIVE:
+                    case NN_Signs: { const Natural sum = ln+rn; return Integer(Negative,sum); }
+
+                        // mixed case
+                    case PN_Signs:  {
+                        assert(ln>0); assert(rn>0);
+                        assert(ls==Positive);
+                        assert(rs==Negative);
+                        switch( Natural::Compare(ln,rn) )
+                        {
+                            case Positive: { const Natural dif = ln-rn; return Integer(Positive,dif); }
+                            case __Zero__: break;
+                            case Negative: { const Natural dif = rn-ln; return Integer(Negative,dif); }
+                        }
+                    } return Integer();
+
+                        // mixed case
+                    case NP_Signs: {
+                        assert(ln>0); assert(rn>0);
+                        assert(ls==Negative);
+                        assert(rs==Positive);
+                        switch( Natural::Compare(ln,rn) )
+                        {
+                            case Positive: { const Natural dif = ln-rn; return Integer(Negative,dif); }
+                            case __Zero__: break;
+                            case Negative: { const Natural dif = rn-ln; return Integer(Positive,dif); }
+                        }
+                    } return Integer();
+
+                }
+                return Integer();
             }
 
 
-            static inline
-            Integer Sub(const SignType  ls,
-                        const Natural  &ln,
-                        const SignType  rs,
-                        const Natural  &rn) { return Add(ls,ln, Sign::Opposite(rs), rn); }
+            static Integer Add(const Integer &lhs, const Integer &rhs);
+            static Integer Add(const Integer &lhs, const Natural &rhs);
+            static Integer Add(const Natural &lhs, const Integer &rhs);
+            static Integer Add(const Integer &lhs, const uint64_t rhs);
+            static Integer Add(const uint64_t lhs, const Integer &rhs);
 
-            static inline
-            Integer Sub(const Integer &lhs, const Integer &rhs) {
-                return Sub(lhs.s,lhs.n,rhs.s,rhs.n);
-            }
+
+
         };
 
     }

@@ -110,7 +110,11 @@ namespace Yttrium
             return data.item[i];
         }
 
-
+        SignType Natural:: sign() const noexcept
+        {
+            assert(0!=code);
+            return code->bits <= 0 ? __Zero__ : Positive;
+        }
     }
 
 }

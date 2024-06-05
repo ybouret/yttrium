@@ -51,6 +51,14 @@ namespace Yttrium
             chk();
         }
 
+        Integer:: Integer(const SignType S, const uint64_t N) :
+        Number(),
+        s(S),
+        n(N)
+        {
+            chk();
+        }
+
         Integer & Integer:: operator=(const Integer &z) {
             Integer _(z); xch(_); return *this;
         }

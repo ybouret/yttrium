@@ -33,6 +33,7 @@ Y_UTEST(kemp_integer)
         Y_ASSERT( Integer::Compare(I,J) == cmp );
         Y_ASSERT( Integer::Compare(I,j) == cmp );
         Y_ASSERT( Integer::Compare(i,J) == cmp );
+        
         if(i>=0)
         {
             const Natural n = i;
