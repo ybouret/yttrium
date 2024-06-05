@@ -97,6 +97,9 @@ namespace Yttrium
             typedef Element * (*BinL64Proc)(uint64_t lhs, Element &rhs);               //!< binary procedure with unsigned lhs
             typedef Element * (*BinR64Proc)(Element &lhs, uint64_t rhs);               //!< binary procedure with unsigned rhs
 
+            typedef Element * (*UnaryProc)(Element &);
+            typedef Element * (*UnaryProcEx)(Element &, uint64_t);;
+
             //__________________________________________________________________
             //
             //! set of Binary procedures
@@ -112,6 +115,19 @@ namespace Yttrium
                 inline Element * operator()(Element &lhs, Element &rhs, uint64_t &tmx) const { return ResTMX(lhs,rhs,tmx); } //!< select result
                 inline Element * operator()(uint64_t lhs, Element &rhs)                const { return ResL64(lhs,rhs);     } //!< select result
                 inline Element * operator()(Element &lhs, uint64_t rhs)                const { return ResR64(lhs,rhs);     } //!< select result
+
+            };
+
+            //__________________________________________________________________
+            //
+            //! set of Unary procedures
+            //__________________________________________________________________
+            struct UnaryAPI
+            {
+                UnaryProc   const Result; //!< produce result (arg)
+                UnaryProcEx const ResTMX; //!< produce result (arg,tmx)
+                inline Element * operator()(Element &arg)                const { return Result(arg);     }
+                inline Element * operator()(Element &arg, uint64_t &tmx) const { return ResTMX(arg,tmx); }
 
             };
 
@@ -184,6 +200,7 @@ namespace Yttrium
             static const BinaryAPI Sub[Kinds]; //!< all possible subtractions
             static const BinaryAPI Mul[Kinds]; //!< all possible long multiplications
             static const BinaryAPI MulFFT;     //!< FFT multiplication API
+            static const UnaryAPI  Sqr[Kinds]; //!< all possible squares
 
             //__________________________________________________________________
             //

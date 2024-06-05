@@ -208,7 +208,7 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             static Natural Sqrt(const Natural &);                 //!< square root
             Natural        sqrt() const;                          //!< square root
             static void    Simplify(Natural &num, Natural &den);  //!< safe simplification
-
+            
             //__________________________________________________________________
             //
             //

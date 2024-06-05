@@ -1,8 +1,10 @@
 
+
 #ifndef Y_Kemp_Element_Mul_Included
 #define Y_Kemp_Element_Mul_Included 1
 
-#include "y/kemp/element/compute.hpp"
+#include "y/kemp/element.hpp"
+#include "y/kemp/element/tmx.hpp"
 #include "y/ptr/auto.hpp"
 
 namespace Yttrium
@@ -16,8 +18,9 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename CORE,typename WORD>
-        struct Multiplication
+        struct ComputeSquare
         {
+            
             //__________________________________________________________________
             //
             //
@@ -26,33 +29,31 @@ namespace Yttrium
             //__________________________________________________________________
             static inline
             size_t Run(Assembly<WORD>       &prod,
-                       const Assembly<WORD> &lhs,
-                       const Assembly<WORD> &rhs) noexcept
+                       const Assembly<WORD> &args) noexcept
             {
                 Y_STATIC_CHECK(sizeof(CORE)>sizeof(WORD),BadSetup);
-                assert(prod.capacity>=lhs.positive+rhs.positive);
+                assert(prod.capacity>=args.positive*2);
                 assert(0==prod.positive);
-                const size_t p=lhs.positive;
-                const size_t q=rhs.positive;
-                if(p<=0||q<=0) return 0;
+                const size_t n=args.positive;
+                if(n<=0) return 0;
 
-                const WORD * const a = lhs.item;
-                const WORD *       b = rhs.item;
+                const WORD * const a = args.item;
+                const WORD *       b = args.item;
                 WORD       *       product = prod.item;
-                for(size_t j=q;j>0;--j,++product)
+                for(size_t j=n;j>0;--j,++product)
                 {
                     const CORE B     = static_cast<CORE>(*(b++));
                     CORE       carry = 0;
-                    for(size_t i=0;i<p;++i)
+                    for(size_t i=0;i<n;++i)
                     {
                         carry += static_cast<CORE>(product[i]) + static_cast<CORE>(a[i]) * B;
                         product[i] = static_cast<WORD>(carry);
                         carry >>= Assembly<WORD>::WordBits;
                     }
-                    product[p] =  static_cast<WORD>(carry);
+                    product[n] =  static_cast<WORD>(carry);
                 }
 
-                prod.positive = p+q;
+                prod.positive = n<<1;
                 return prod.updateBits();
             }
 
@@ -63,10 +64,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static inline
-            Element *New(const Assembly<WORD> &l,
-                         const Assembly<WORD> &r)
+            Element *New(const Assembly<WORD> &args)
             {
-                return new Element( (l.positive+r.positive) * sizeof(WORD), AsCapacity);
+                return new Element( (args.positive<<1) * sizeof(WORD), AsCapacity);
             }
 
             //__________________________________________________________________
@@ -76,11 +76,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static inline
-            Element *Get(const Assembly<WORD> &l,
-                         const Assembly<WORD> &r)
+            Element *Get(const Assembly<WORD> &args)
             {
-                AutoPtr<Element>  s = New(l,r);
-                s->bits = Run( s->get<WORD>(), l, r);
+                AutoPtr<Element>  s = New(args);
+                s->bits = Run( s->get<WORD>(), args);
                 return s.yield()->revise();
             }
 
@@ -91,19 +90,17 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static inline
-            Element *GetEx(const Assembly<WORD> &l,
-                           const Assembly<WORD> &r,
+            Element *GetEx(const Assembly<WORD> &args,
                            uint64_t             &tmx)
             {
-                AutoPtr<Element>  s = New(l,r);
+                AutoPtr<Element>  s = New(args);
                 Y_Kemp_TMX_Ini();
-                s->bits = Run( s->get<WORD>(), l, r);
+                s->bits = Run( s->get<WORD>(), args);
                 Y_Kemp_TMX_Add();
                 return s.yield()->revise();
             }
 
         };
-
 
     }
 

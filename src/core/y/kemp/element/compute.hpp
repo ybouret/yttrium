@@ -3,7 +3,7 @@
 #define Y_Kemp_Element_Compute_Included 1
 
 #include "y/kemp/element.hpp"
-#include "y/system/wtime.hpp"
+#include "y/kemp/element/tmx.hpp"
 
 namespace Yttrium
 {
@@ -79,12 +79,7 @@ Y_Kemp_BinaryAPI(ENGINE,uint32_t,uint8_t),  \
 Y_Kemp_BinaryAPI(ENGINE,uint16_t,uint8_t),  \
 }
 
-        //! initialize timing
-#define Y_Kemp_TMX_Ini() const uint64_t ini64 = WallTime::Ticks()
-
-        //! update timing tmx
-#define Y_Kemp_TMX_Add() tmx += (WallTime::Ticks()-ini64)
-
+      
     }
 
 }
