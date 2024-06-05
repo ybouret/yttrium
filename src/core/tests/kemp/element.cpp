@@ -449,13 +449,36 @@ RATE(tmx[Kemp::Ops16_8])
                 }
             }
 
-
-
-
         }
 
     }
 
+    std::cerr << "<Square64>" << std::endl;
+    total = 0;
+    memset(tmx,0,sizeof(tmx));
+    for(unsigned i=0;i<=32;++i)
+    {
+        for(size_t cycle=0;cycle<=cycles;++cycle)
+        {
+            ++total;
+            const uint64_t arg = ran.to<uint64_t>(i);
+            const uint64_t sqr = arg*arg;
+            Kemp::Element  Arg(arg,Kemp::ToNum64);
+
+            for(unsigned k=0;k<Kemp::Element::Kinds;++k)
+            {
+                AutoPtr<Kemp::Element> S = Kemp::Element::Sqr[k](Arg);
+                Y_ASSERT(S->u64()==sqr);
+            }
+
+            for(unsigned k=0;k<Kemp::Element::Kinds;++k)
+            {
+                AutoPtr<Kemp::Element> S = Kemp::Element::Sqr[k](Arg,tmx[k]);
+                Y_ASSERT(S->u64()==sqr);
+            }
+        }
+    }
+    RATES(); std::cerr << std::endl;
 
 
     std::cerr << std::endl;

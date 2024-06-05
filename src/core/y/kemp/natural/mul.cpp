@@ -46,6 +46,18 @@ namespace Yttrium
             return Natural(mapi()(*lhs,rhs),AsElement);
         }
 
+
+
+        Natural Natural::Square(const Natural &n)
+        {
+            return Natural( Element::Sqr[Strategy](*n), AsElement );
+        }
+
+        Natural Natural:: square() const
+        {
+            return Square(*this);
+        }
+
     }
 
 
