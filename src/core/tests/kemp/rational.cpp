@@ -30,6 +30,8 @@ Y_UTEST(kemp_rational)
     n = 3;
     std::cerr << n << "/(" << q << ") = " << n/q << std::endl;
 
+    std::cerr << 4 << "/(" << q << ") = " << 4/q << std::endl;
+
 
 }
 Y_UDONE()

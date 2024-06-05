@@ -233,3 +233,55 @@ namespace Yttrium
 }
 
 
+namespace Yttrium
+{
+    namespace Kemp
+    {
+
+        static inline
+        Rational DivAsV5(const SignType s, const uint64_t &lhs, const Rational &rhs)
+        {
+            const Natural num = lhs * rhs.denom;
+            return Rational(s,num,rhs.numer.n);
+        }
+
+        Rational Rational:: Div(const int64_t lhs, const Rational &rhs)
+        {
+            uint64_t       u = 0;
+            const SignType s = Sign::Of(lhs);
+            switch(s)
+            {
+                case __Zero__: break;
+                case Negative: u = static_cast<uint64_t>(-lhs); break;
+                case Positive: u = static_cast<uint64_t>( lhs); break;
+            }
+
+            switch( Sign::MakePair(s, rhs.numer.s) )
+            {
+                    // division by zero
+                case ZZ_Signs:
+                case NZ_Signs:
+                case PZ_Signs:
+                    break;
+
+                    // trivial cases
+                case ZP_Signs:
+                case ZN_Signs:
+                    return Rational();
+
+                    // positive
+                case PP_Signs:
+                case NN_Signs:
+                    return DivAsV5(Positive,u,rhs);
+
+                    // negative
+                case PN_Signs:
+                case NP_Signs:
+                    return DivAsV5(Negative,u,rhs);
+            }
+            DivisionByZero();
+            return Rational();
+        }
+    }
+
+}
