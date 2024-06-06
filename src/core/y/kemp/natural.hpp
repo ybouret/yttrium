@@ -42,10 +42,20 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
         //! helper to duplicate arguments with same code
         //
         //______________________________________________________________________
-#define Y_Kemp_Natural_Binary_Decl(FUNC)                          \
-/**/ friend Natural FUNC(const Natural &lhs, const Natural &rhs); \
-/**/ friend Natural FUNC(const uint64_t lhs, const Natural &rhs); \
-/**/ friend Natural FUNC(const Natural &lhs, const uint64_t rhs)
+#define Y_Kemp_Natural_Unary_Decl(OP) \
+/**/ Natural & operator OP##=(const Natural &);\
+/**/ Natural & operator OP##=(const uint64_t )
+
+
+#define Y_Kemp_Natural_Binary_Decl(OP)                                   \
+/**/ friend Natural operator OP(const Natural &lhs, const Natural &rhs); \
+/**/ friend Natural operator OP(const uint64_t lhs, const Natural &rhs); \
+/**/ friend Natural operator OP(const Natural &lhs, const uint64_t rhs)
+
+#define Y_Kemp_Natural_Decl(OP) \
+Y_Kemp_Natural_Unary_Decl(OP);  \
+Y_Kemp_Natural_Binary_Decl(OP)
+
 
 
         //______________________________________________________________________
@@ -83,8 +93,8 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             Natural(const size_t n, Random::Bits &); //!< exactly n random bits
             Natural(const Exp2_ &, const size_t p);  //!< 2^p
             Natural(const String &);                 //!< parse string
-            Natural &operator=(const Natural &);     //!< assign
-            Natural &operator=(const uint64_t);      //!< assign qword
+            Natural & operator=(const Natural &);    //!< assign
+            Natural & operator=(const uint64_t);     //!< assign qword
             Element & operator*() const noexcept;    //!< get internal element
 
             //__________________________________________________________________
@@ -152,60 +162,22 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             //__________________________________________________________________
             //
             //
-            // Additions
+            // Operations
             //
             //__________________________________________________________________
-            Natural   operator+() const;            //!< unary +
-            Natural & operator+=(const Natural &);  //!< in place +
-            Natural & operator+=(const uint64_t );  //!< in place +
-            Natural & operator++();                 //!< pre-increment
-            Natural   operator++(int);              //!< post-increment
-            Y_Kemp_Natural_Binary_Decl(operator+);  //!< aliases
-
-            //__________________________________________________________________
-            //
-            //
-            // Subtractions
-            //
-            //__________________________________________________________________
-            Natural & operator-=(const Natural &);  //!< in place -
-            Natural & operator-=(const uint64_t );  //!< in place -
-            Natural & operator--();                 //!< pre-decrement
-            Natural   operator--(int);              //!< post-decrement
-            Y_Kemp_Natural_Binary_Decl(operator-);  //!< aliases
-
-            //__________________________________________________________________
-            //
-            //
-            // Multiplications
-            //
-            //__________________________________________________________________
-            Natural & operator*=(const Natural &);  //!< in place *
-            Natural & operator*=(const uint64_t );  //!< in place *
-            Y_Kemp_Natural_Binary_Decl(operator*);  //!< aliases
-
-            //__________________________________________________________________
-            //
-            //
-            // Divisions
-            //
-            //__________________________________________________________________
-            Natural & operator/=(const Natural &);  //!< in place /
-            Natural & operator/=(const uint64_t );  //!< in place /
-            Y_Kemp_Natural_Binary_Decl(operator/);  //!< aliases
+            Natural   operator+() const; //!< unary +
+            Natural & operator++();      //!< pre-increment
+            Natural   operator++(int);   //!< post-increment
+            Natural & operator--();      //!< pre-decrement
+            Natural   operator--(int);   //!< post-decrement
+            Y_Kemp_Natural_Decl(-);      //!< aliases
+            Y_Kemp_Natural_Decl(+);      //!< aliases
+            Y_Kemp_Natural_Decl(*);      //!< aliases
+            Y_Kemp_Natural_Decl(/);      //!< aliases
+            Y_Kemp_Natural_Decl(%);      //!< aliases
 
             //! num = q * den + r
             static void Div(Natural &q, Natural &r, const Natural &num, const Natural &den);
-
-            //__________________________________________________________________
-            //
-            //
-            // Modulos
-            //
-            //__________________________________________________________________
-            Natural & operator%=(const Natural &);  //!< in place /
-            Natural & operator%=(const uint64_t );  //!< in place /
-            Y_Kemp_Natural_Binary_Decl(operator%);  //!< aliases
 
             //__________________________________________________________________
             //
@@ -291,8 +263,7 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
 
             static Natural Divide(const Natural &den, const Natural &num);
             static Natural Modulo(const Natural &den, const Natural &num);
-
-            static void CastOverflow(const char *ctx);
+            static void    CastOverflow(const char *ctx);
 
 
         };
