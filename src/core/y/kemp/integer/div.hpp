@@ -1,5 +1,5 @@
 #ifndef Y_Kemp_Integer_Included
-#error "not permitted""
+#error "not permitted"
 #endif
 
 
