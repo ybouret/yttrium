@@ -51,6 +51,13 @@ namespace Yttrium
         {
         }
 
+        Natural:: Natural(const String &str) :
+        Number(),
+        code( new Element(0,AsCapacity) )
+        {
+
+        }
+
         Natural:: Natural(const Natural &n) :
         Number(),
         code( new Element( *n.code) )

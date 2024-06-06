@@ -44,6 +44,10 @@ Y_Kemp_Integer_Cmp(OP,Natural&,Integer&,RESULT) \
 Y_Kemp_Integer_Cmp(OP,Integer&,int64_t, RESULT) \
 Y_Kemp_Integer_Cmp(OP,int64_t, Integer&,RESULT)
 
+        //______________________________________________________________________
+        //
+        //! helper to implement all functions
+        //______________________________________________________________________
 #define Y_Kemp_Integer_API(FUNC) \
 static Integer FUNC(const Integer &lhs, const Integer &rhs); \
 static Integer FUNC(const Integer &lhs, const Natural &rhs); \
@@ -96,7 +100,7 @@ static Integer FUNC(const int64_t  lhs, const Integer &rhs)
             //
             //__________________________________________________________________
             virtual size_t       serialize(OutputStream &) const;
-            static  Integer      ReadFrom(InputStream &);
+            static  Integer      ReadFrom(InputStream &);         //!< read from stream
             virtual const char * callSign()       const noexcept;
 
             //__________________________________________________________________
@@ -124,7 +128,7 @@ static Integer FUNC(const int64_t  lhs, const Integer &rhs)
             //__________________________________________________________________
             //
             //
-            // Comparisons
+            // Methods
             //
             //__________________________________________________________________
 
@@ -135,53 +139,18 @@ static Integer FUNC(const int64_t  lhs, const Integer &rhs)
             Y_Kemp_Integer_Compare(>,  == Positive)
             Y_Kemp_Integer_Compare(<=, != Positive)
             Y_Kemp_Integer_Compare(>=, != Negative)
+            Y_Kemp_Integer_Operator(+,Add)
+            Y_Kemp_Integer_Operator(-,Sub)
+            Y_Kemp_Integer_Operator(*,Mul)
+            Y_Kemp_Integer_Operator(/,Div)
 #endif
 
-
-            //__________________________________________________________________
-            //
-            //
-            // Additions
-            //
-            //__________________________________________________________________
-
-            //! unary +
-            inline Integer operator+() const { return *this; }
-            Y_Kemp_Integer_Operator(+,Add)
-            Integer & operator++();                 //!< pre-increment
-            Integer   operator++(int);              //!< post-increment
-
-
-
-            //__________________________________________________________________
-            //
-            //
-            // Subtractions
-            //
-            //__________________________________________________________________
-
-            //! unary minus
-            inline Integer operator-() const { return Integer( Sign::Opposite(s), n ); }
-            Y_Kemp_Integer_Operator(-,Sub)
-            Integer & operator--();                 //!< pre-decrement
-            Integer   operator--(int);              //!< post-decrement
-
-            //__________________________________________________________________
-            //
-            //
-            // Multiplication
-            //
-            //__________________________________________________________________
-            Y_Kemp_Integer_Operator(*,Mul)
-
-
-            //__________________________________________________________________
-            //
-            //
-            // Division
-            //
-            //__________________________________________________________________
-            Y_Kemp_Integer_Operator(/,Div)
+            Integer   operator+() const; //!< unary plus
+            Integer & operator++();      //!< pre-increment
+            Integer   operator++(int);   //!< post-increment
+            Integer   operator-() const; //!< unary minus
+            Integer & operator--();      //!< pre-decrement
+            Integer   operator--(int);   //!< post-decrement
 
             //__________________________________________________________________
             //
@@ -189,13 +158,39 @@ static Integer FUNC(const int64_t  lhs, const Integer &rhs)
             // Other
             //
             //__________________________________________________________________
+            static Integer Sqr(const Integer &z); //!< z^2
+            Integer        sqr()           const; //!< *this^2
+            static Integer Abs(const Integer &z); //!< |n|
+            Integer        abs()           const; //!< |*this|
+            static Integer Sqrt(const Integer &); //!< integer square root
+            Integer        sqrt()          const; //!< integer square root
 
-            static Integer Sqr(const Integer &z);    //!< z^2
-            Integer        sqr() const;              //!< *this^2
-            static Integer Abs(const Integer &z);    //!< |n|
-            Integer        abs() const;              //!< |*this|
-            static Integer Sqrt(const Integer &);    //!< integer square root
-            Integer        sqrt() const;             //!< integer square root
+            //__________________________________________________________________
+            //
+            //
+            // Conversion
+            //
+            //__________________________________________________________________
+
+            //! try to cast to integer value
+            template <typename T> inline
+            bool tryCast(T &target) const noexcept
+            {
+                static const Int2Type< IsSigned<T>::Value > choice = {};
+                return tryCast(target,choice);
+            }
+
+            //__________________________________________________________________
+            //
+            //! cast with exception raising on overflow
+            //__________________________________________________________________
+            template <typename T> inline
+            T cast(const char *ctx=0) const
+            {
+                T target = 0;
+                if(!tryCast(target)) CastOverflow(ctx);
+                return target;
+            }
 
             //__________________________________________________________________
             //
@@ -207,247 +202,61 @@ static Integer FUNC(const int64_t  lhs, const Integer &rhs)
             const Natural  n; //!< absolute value
 
         private:
+            void        incr();           //!< add 1
+            void        decr();           //!< sub 1
+            static void DivisionByZero(); //!< raise exception
+            static void CastOverflow(const char *);
 
-            void incr();                    //!< add 1
-            void decr();                    //!< sub 1
-
-            //__________________________________________________________________
-            //
-            //! generic comparison with NO EXCEPTION
-            /**
-             \param ls lhs sign
-             \param ln rhs natural (Natural|uint64_t)
-             \param rs rhs sign
-             \param rn rhs natural (Natural|uint64_t)
-             */
-            //__________________________________________________________________
-            template <typename LHS_UNSIGNED, typename RHS_UNSIGNED> static inline
-            SignType Cmp(const SignType      ls,
-                         const LHS_UNSIGNED &ln,
-                         const SignType      rs,
-                         const RHS_UNSIGNED &rn) noexcept
-            {
-                switch( Sign::MakePair(ls,rs) )
-                {
-                        //------------------------------------------------------
-                        // special case
-                        //------------------------------------------------------
-                    case ZZ_Signs: assert(0==ln); assert(0==rn); break;
-
-                        //------------------------------------------------------
-                        // trivial POSITIVE signs ls > rs
-                        //------------------------------------------------------
-                    case PZ_Signs: return Positive;
-                    case PN_Signs: return Positive;
-                    case ZN_Signs: return Positive;
-
-                        //------------------------------------------------------
-                        // trivial NEGATIVE signs ls < rs
-                        //------------------------------------------------------
-                    case ZP_Signs: return Negative;
-                    case NP_Signs: return Negative;
-                    case NZ_Signs: return Negative;
-
-                        //------------------------------------------------------
-                        // all positive signs
-                        //------------------------------------------------------
-                    case PP_Signs: return Natural::Compare(ln,rn);
-
-                        //------------------------------------------------------
-                        // all negative signs
-                        //------------------------------------------------------
-                    case NN_Signs: return Natural::Compare(rn,ln);
-                }
-
-                return __Zero__;
-            }
-
-
-            //__________________________________________________________________
-            //
-            //! generic addition
-            /**
-             \param ls lhs sign
-             \param ln rhs natural (Natural|uint64_t)
-             \param rs rhs sign
-             \param rn rhs natural (Natural|uint64_t)
-             */
-            //__________________________________________________________________
-            template <typename LHS_UNSIGNED, typename RHS_UNSIGNED> static inline
-            Integer Add(const SignType      ls,
-                        const LHS_UNSIGNED &ln,
-                        const SignType      rs,
-                        const RHS_UNSIGNED &rn)
-            {
-                switch( Sign::MakePair(ls,rs) )
-                {
-                        //------------------------------------------------------
-                        // special case
-                        //------------------------------------------------------
-                    case ZZ_Signs: assert(0==ln); assert(0==rn); break;
-
-                        //------------------------------------------------------
-                        // special case with one ZERO
-                        //------------------------------------------------------
-                    case NZ_Signs: return Integer(ls,ln);
-                    case PZ_Signs: return Integer(ls,ln);
-                    case ZN_Signs: return Integer(rs,rn);
-                    case ZP_Signs: return Integer(rs,rn);
-
-                        //------------------------------------------------------
-                        // all POSITIVE:
-                        //------------------------------------------------------
-                    case PP_Signs: { const Natural sum = ln+rn; return Integer(Positive,sum); }
-
-                        //------------------------------------------------------
-                        // all NEGATIVE:
-                        //------------------------------------------------------
-                    case NN_Signs: { const Natural sum = ln+rn; return Integer(Negative,sum); }
-
-                        //------------------------------------------------------
-                        // mixed case
-                        //------------------------------------------------------
-                    case PN_Signs:  {
-                        assert(ln>0); assert(rn>0);
-                        assert(ls==Positive);
-                        assert(rs==Negative);
-                        switch( Natural::Compare(ln,rn) )
-                        {
-                            case Positive: { const Natural dif = ln-rn; return Integer(Positive,dif); }
-                            case __Zero__: break;
-                            case Negative: { const Natural dif = rn-ln; return Integer(Negative,dif); }
-                        }
-                    } return Integer();
-
-                        //------------------------------------------------------
-                        // mixed case
-                        //------------------------------------------------------
-                    case NP_Signs: {
-                        assert(ln>0); assert(rn>0);
-                        assert(ls==Negative);
-                        assert(rs==Positive);
-                        switch( Natural::Compare(ln,rn) )
-                        {
-                            case Positive: { const Natural dif = ln-rn; return Integer(Negative,dif); }
-                            case __Zero__: break;
-                            case Negative: { const Natural dif = rn-ln; return Integer(Positive,dif); }
-                        }
-                    } return Integer();
-
-                }
-                return Integer();
-            }
-
+#include "integer/cmp.hpp"
+#include "integer/add.hpp"
+#include "integer/mul.hpp"
+#include "integer/div.hpp"
             Y_Kemp_Integer_API(Add);
             Y_Kemp_Integer_API(Sub);
-
-
-            //__________________________________________________________________
-            //
-            //! generic multiplication
-            /**
-             \param ls lhs sign
-             \param ln rhs natural (Natural|uint64_t)
-             \param rs rhs sign
-             \param rn rhs natural (Natural|uint64_t)
-             */
-            //__________________________________________________________________
-            template <typename LHS_UNSIGNED, typename RHS_UNSIGNED> static inline
-            Integer Mul(const SignType      ls,
-                        const LHS_UNSIGNED &ln,
-                        const SignType      rs,
-                        const RHS_UNSIGNED &rn)
-            {
-                switch( Sign::MakePair(ls,rs) )
-                {
-                        //------------------------------------------------------
-                        // trivial __Zero__
-                        //------------------------------------------------------
-                    case ZZ_Signs:
-                    case ZN_Signs:
-                    case ZP_Signs:
-                    case NZ_Signs:
-                    case PZ_Signs:
-                        break;
-
-                        //------------------------------------------------------
-                        // Positive Result
-                        //------------------------------------------------------
-                    case PP_Signs:
-                    case NN_Signs: { const Natural p = ln * rn; return Integer(Positive,p); }
-
-                        //------------------------------------------------------
-                        // Negative Result
-                        //------------------------------------------------------
-                    case PN_Signs:
-                    case NP_Signs: { const Natural p = ln * rn; return Integer(Negative,p); }
-
-                }
-                return Integer();
-            }
-
             Y_Kemp_Integer_API(Mul);
-
-
-
-            static void DivisionByZero();
-            //__________________________________________________________________
-            //
-            //! generic division
-            /**
-             \param ls lhs sign
-             \param ln rhs natural (Natural|uint64_t)
-             \param rs rhs sign
-             \param rn rhs natural (Natural|uint64_t)
-             */
-            //__________________________________________________________________
-            template <typename LHS_UNSIGNED, typename RHS_UNSIGNED> static inline
-            Integer Div(const SignType      ls,
-                        const LHS_UNSIGNED &ln,
-                        const SignType      rs,
-                        const RHS_UNSIGNED &rn)
-            {
-                switch( Sign::MakePair(ls,rs) )
-                {
-                        //------------------------------------------------------
-                        // zero denominator
-                        //------------------------------------------------------
-                    case ZZ_Signs:
-                    case NZ_Signs:
-                    case PZ_Signs:
-                        DivisionByZero();
-                        break;
-
-                        //------------------------------------------------------
-                        // zero result
-                        //------------------------------------------------------
-                    case ZN_Signs:
-                    case ZP_Signs:
-                        break;
-
-                        //------------------------------------------------------
-                        // Positive result
-                        //------------------------------------------------------
-                    case NN_Signs:
-                    case PP_Signs: {
-                        const Natural q = ln/rn;
-                        return Integer(Positive,q);
-                    }
-
-                        //------------------------------------------------------
-                        // Negative result
-                        //------------------------------------------------------
-                    case NP_Signs:
-                    case PN_Signs: {
-                        const Natural q = ln/rn;
-                        return Integer(Negative,q);
-                    }
-                }
-                return Integer();
-            }
-
             Y_Kemp_Integer_API(Div);
 
+            //! unsigned conversion
+            template <typename T> inline
+            bool tryCast(T &target, const Int2Type<false> &) const noexcept
+            {
+                static const size_t MaxBits = sizeof(T) * 8;
+
+                switch(s)
+                {
+                    case Negative:           return false;
+                    case __Zero__: target=0; return true;
+                    case Positive:
+                        break;
+                }
+                if(n.bits()>MaxBits) return false;
+                target = n.buildWord<T>();
+                return true;
+            }
+
+            //! signed conversion
+            template <typename T> inline
+            bool tryCast(T &target, const Int2Type<true> &) const noexcept
+            {
+                static const size_t MaxBits = sizeof(T) * 8 - 1;
+
+                switch(s)
+                {
+                    case __Zero__: break;
+                    case Positive: 
+                        if(n.bits()>MaxBits) return false;
+                        target = n.buildWord<T>();
+                        return true;
+
+                    case Negative:
+                        if(n.bits()>MaxBits) return false;
+                        target = -n.buildWord<T>();
+                        return true;
+                }
+                
+                target = 0;
+                return true;
+            }
 
         };
 

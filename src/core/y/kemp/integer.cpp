@@ -1,6 +1,7 @@
 
 #include "y/kemp/integer.hpp"
 #include "y/random/bits.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -8,6 +9,12 @@ namespace Yttrium
     {
 
         const char * const Integer:: CallSign = "apz";
+
+        void Integer:: CastOverflow(const char *ctx)
+        {
+            throw Specific::Exception(CallSign, "cast overflow for '%s'", ctx ? ctx : Core::Unknown);
+        }
+
 
         Integer::Integer() : Number(), s(__Zero__), n()
         {

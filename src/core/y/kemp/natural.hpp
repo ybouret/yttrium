@@ -84,6 +84,7 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
 
             Natural(const size_t nbits, Random::Bits &);   //!< exactly nbits random bits
             Natural(const TwoToThe_ &, const size_t ibit); //!< 2^ibit
+            Natural(const String &);                       //!< parse string
 
             Natural &operator=(const Natural &); //!< assign
             Natural &operator=(const uint64_t);  //!< assign qword
@@ -97,7 +98,7 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             //
             //__________________________________________________________________
             virtual size_t       serialize(OutputStream &) const;
-            static  Natural      ReadFrom(InputStream &);
+            static  Natural      ReadFrom(InputStream &);         //!< read from stream
             virtual const char * callSign()       const noexcept;
 
             //__________________________________________________________________
@@ -234,31 +235,47 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             //
             //__________________________________________________________________
 
-            template <typename T> static
-            T ToReal(const Natural &numer, const Natural &denom); //!< positive, floating point approximation float|double|long double
+            //__________________________________________________________________
+            //
+            //! positive, floating point approximation float|double|long double
+            //__________________________________________________________________
+            template <typename T> static T ToReal(const Natural &numer, const Natural &denom);
 
-
+            //__________________________________________________________________
+            //
             //! try cast to integral T
+            //__________________________________________________________________
             template <typename T> inline
             bool tryCast(T &target) const noexcept
             {               
                 static const size_t         Size  = sizeof(T);
-                typedef UnsignedInt<Size>   Call;
-                typedef typename Call::Type WORD;
                 static const size_t         Bits  = IsSigned<T>::Value ? (8*Size-1) : 8*Size;
                 if(bits()>Bits)
                     return false;
                 else
                 {
-                    WORD u = 0;
-                    for(size_t i=size();i>0;)
-                        u = Call::SHL8(u) | (*this)[--i];
-                    target = static_cast<T>(u);
+                    target = buildWord<T>();
                     return true;
                 }
             }
 
-            //! cast with exception raisin
+            //! agnostic building of a word
+            template <typename T> inline
+            T buildWord() const noexcept
+            {
+                static const size_t         Size  = sizeof(T);
+                typedef UnsignedInt<Size>   Call;
+                typedef typename Call::Type WORD;
+                WORD u = 0;
+                for(size_t i=size();i>0;)
+                    u = Call::SHL8(u) | (*this)[--i];
+                return static_cast<T>(u);
+            }
+
+            //__________________________________________________________________
+            //
+            //! cast with exception raising on overflow
+            //__________________________________________________________________
             template <typename T> inline
             T cast(const char *ctx=0) const
             {

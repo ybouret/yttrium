@@ -56,11 +56,23 @@ static RETURN FUNC(const Integer  &lhs, const Rational &rhs); \
 static RETURN FUNC(const Natural  &lhs, const Rational &rhs); \
 static RETURN FUNC(const int64_t   lhs, const Rational &rhs)
 
+        //______________________________________________________________________
+        //
+        //! implement function with various arguments
+        //______________________________________________________________________
 #define Y_Kemp_Rational_API(FUNC) Y_Kemp_Rational_Call(Rational,FUNC)
 
+        //______________________________________________________________________
+        //
+        //! implement comparison
+        //______________________________________________________________________
 #define Y_Kemp_Rational_Cmp(OP,LTYPE,RTYPE,EXPR) \
 inline friend bool operator OP (const LTYPE lhs, const RTYPE rhs) { return Compare(lhs,rhs) EXPR; }
 
+        //______________________________________________________________________
+        //
+        //! implement comparisons
+        //______________________________________________________________________
 #define Y_Kemp_Rational_Compare(OP,EXPR)           \
 Y_Kemp_Rational_Cmp(OP, Rational&, Rational&,EXPR) \
 Y_Kemp_Rational_Cmp(OP, Rational&, Integer &,EXPR) \
@@ -125,7 +137,7 @@ Y_Kemp_Rational_Cmp(OP, int64_t  , Rational&,EXPR)
             //
             //__________________________________________________________________
             virtual size_t       serialize(OutputStream &) const;
-            static  Rational     ReadFrom(InputStream &);
+            static  Rational     ReadFrom(InputStream &); //!< read from stream
             virtual const char * callSign()       const noexcept;
 
 
@@ -136,7 +148,7 @@ Y_Kemp_Rational_Cmp(OP, int64_t  , Rational&,EXPR)
             //
             //__________________________________________________________________
             String toString() const;          //!< convert to string
-            void   validate();                //!< simplify
+            void   validate();                //!< simplify, check no zero denom
             void   xch(Rational &q) noexcept; //!< no-throw exchange
 
             //__________________________________________________________________
@@ -145,8 +157,14 @@ Y_Kemp_Rational_Cmp(OP, int64_t  , Rational&,EXPR)
             // Comparisons
             //
             //__________________________________________________________________
-            Y_Kemp_Rational_Call(SignType,Compare);
+            Y_Kemp_Rational_Call(SignType,Compare); //!< aliases
 
+            //__________________________________________________________________
+            //
+            //
+            // Operations
+            //
+            //__________________________________________________________________
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
             Y_Kemp_Rational_Compare(==,  == __Zero__)
             Y_Kemp_Rational_Compare(!=,  != __Zero__)
@@ -154,46 +172,21 @@ Y_Kemp_Rational_Cmp(OP, int64_t  , Rational&,EXPR)
             Y_Kemp_Rational_Compare(>,   == Positive)
             Y_Kemp_Rational_Compare(<=,  != Positive)
             Y_Kemp_Rational_Compare(>=,  != Negative)
+            Y_Kemp_Rational_Operator(*,Mul)
+            Y_Kemp_Rational_Operator(/,Div)
+            Y_Kemp_Rational_Operator(+,Add)
+            Y_Kemp_Rational_Operator(-,Sub)
 #endif
 
-            //__________________________________________________________________
-            //
-            //
-            // Multiplications
-            //
-            //__________________________________________________________________
-            Y_Kemp_Rational_Operator(*,Mul)
+
+            void       incr();          //!< +1
+            Rational & operator++();    //!< pre-increment
+            Rational   operator++(int); //!< post-increment
 
 
-            //__________________________________________________________________
-            //
-            //
-            // Division
-            //
-            //__________________________________________________________________
-            Y_Kemp_Rational_Operator(/,Div)
-
-            //__________________________________________________________________
-            //
-            //
-            // Additions
-            //
-            //__________________________________________________________________
-            Y_Kemp_Rational_Operator(+,Add)
-            void incr();
-            Rational & operator++();                 //!< pre-increment
-            Rational   operator++(int);              //!< post-increment
-
-            //__________________________________________________________________
-            //
-            //
-            // Subtractions
-            //
-            //__________________________________________________________________
-            Y_Kemp_Rational_Operator(-,Sub)
-            void decr();
-            Rational & operator--();                 //!< pre-decrement
-            Rational   operator--(int);              //!< post-decrement
+            void       decr();          //!< -1
+            Rational & operator--();    //!< pre-decrement
+            Rational   operator--(int); //!< post-decrement
 
             //__________________________________________________________________
             //

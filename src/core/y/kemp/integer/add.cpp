@@ -5,6 +5,8 @@ namespace Yttrium
 {
     namespace Kemp
     {
+        Integer Integer:: operator+() const { return *this; }
+
         Integer Integer:: Add(const Integer &lhs, const Integer &rhs)
         {
             return Add(lhs.s,lhs.n,rhs.s,rhs.n);

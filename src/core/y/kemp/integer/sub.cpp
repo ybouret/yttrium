@@ -6,6 +6,8 @@ namespace Yttrium
 {
     namespace Kemp
     {
+        Integer Integer:: operator-() const { return Integer( Sign::Opposite(s), n ); }
+
         Integer Integer:: Sub(const Integer &lhs, const Integer &rhs)
         {
             return Add(lhs.s,lhs.n,Sign::Opposite(rhs.s),rhs.n);
