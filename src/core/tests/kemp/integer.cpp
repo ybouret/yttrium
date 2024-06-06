@@ -11,8 +11,6 @@ Y_UTEST(kemp_integer)
     Random::ParkMiller ran;
 
 
-
-
     std::cerr << "<Output>" << std::endl;
     for(size_t k=0;k<10;++k)
     {

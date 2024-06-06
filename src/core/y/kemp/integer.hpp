@@ -87,6 +87,7 @@ static Integer FUNC(const int64_t  lhs, const Integer &rhs)
             Integer(const SignType, const Natural &); //!< copy/chk
             Integer(const SignType, const uint64_t);  //!< copy/chk
             Integer(const size_t, Random::Bits&);     //!< random
+            Integer(const String &);                  //!< [+/-] decimal
             virtual ~Integer() noexcept;              //!< cleanup
             Integer & operator=(const Integer &z);    //!< assign
             Integer & operator=(const int64_t  z);    //!< assign

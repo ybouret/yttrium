@@ -50,8 +50,9 @@ namespace Yttrium
             return res;
         }
 
-        static inline Natural StringToDec(const char * const s,
-                                          const size_t       n)
+        //! exported
+        Natural StringToDec(const char * const s,
+                            const size_t       n)
         {
             static const char fn[] = "String To Decimal";
             assert(0!=s);
