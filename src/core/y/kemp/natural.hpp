@@ -85,7 +85,7 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             Natural(const size_t nbits, Random::Bits &);   //!< exactly nbits random bits
             Natural(const TwoToThe_ &, const size_t ibit); //!< 2^ibit
             Natural(const String &);                       //!< parse string
-
+            //Natural(const char * const);
             Natural &operator=(const Natural &); //!< assign
             Natural &operator=(const uint64_t);  //!< assign qword
 
