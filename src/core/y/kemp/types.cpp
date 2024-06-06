@@ -6,7 +6,7 @@ namespace Yttrium
     namespace Kemp
     {
 
-        Y_SHALLOW_IMPL(TwoToThe);
+        Y_SHALLOW_IMPL(Exp2);
 
     }
 

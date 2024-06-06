@@ -44,7 +44,7 @@ Y_UTEST(kemp_element)
     std::cerr << "2^bits" << std::endl;
     for(size_t bits=0;bits<=80;++bits)
     {
-        const Kemp::Element el(Kemp::TwoToThe,bits);
+        const Kemp::Element el(Kemp::Exp2,bits);
         std::cerr << el << std::endl;
     }
 
@@ -296,7 +296,7 @@ RATE(tmx[Kemp::Ops16_8])
     std::cerr << "<SHR>" << std::endl;
     for(unsigned k=0;k<4;++k)
     {
-        Kemp::Element x(Kemp::TwoToThe,80);
+        Kemp::Element x(Kemp::Exp2,80);
         x.set(Kemp::Element::Inner[k]);
         while(x.bits>0)
         {

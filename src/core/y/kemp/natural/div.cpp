@@ -49,13 +49,13 @@ namespace Yttrium
                 switch( Compare(probe,num) )
                 {
                     case Negative:
-                        lower = new Natural(TwoToThe,p);   assert(*lower*den<num);
-                        upper = new Natural(TwoToThe,++p); assert(num<*upper*den);
+                        lower = new Natural(Exp2,p);   assert(*lower*den<num);
+                        upper = new Natural(Exp2,++p); assert(num<*upper*den);
                         break;
-                    case __Zero__: return Natural(TwoToThe,p);
+                    case __Zero__: return Natural(Exp2,p);
                     case Positive:
-                        upper = new Natural(TwoToThe,p);   assert(num<*upper*den);
-                        lower = new Natural(TwoToThe,--p); assert(*lower*den<num);
+                        upper = new Natural(Exp2,p);   assert(num<*upper*den);
+                        lower = new Natural(Exp2,--p); assert(*lower*den<num);
                         break;
                 }
             }

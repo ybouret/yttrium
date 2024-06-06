@@ -11,7 +11,7 @@ namespace Yttrium
     namespace Kemp
     {
 
-        Y_SHALLOW_DECL(TwoToThe); //!< alias
+        Y_SHALLOW_DECL(Exp2); //!< alias
 
 
         //______________________________________________________________________

@@ -2,6 +2,7 @@
 #include "y/kemp/rational.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/park-miller.hpp"
+#include "y/mkl/numeric.hpp"
 
 using namespace Yttrium;
 using namespace Kemp;
@@ -177,6 +178,12 @@ Y_UTEST(kemp_rational)
         }
     }
 
+    float f = 3.0;
+    int   ex = 0;
+    float m = frexp(f, &ex);
+    std::cerr << "m=" << m << ", ex=" << ex << std::endl;
+
+    Y_USHOW( MKL::Numeric<float>::MANT_DIG );
 
 
 }

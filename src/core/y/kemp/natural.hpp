@@ -75,21 +75,17 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             // C++
             //
             //__________________________________________________________________
-            Y_OSTREAM_PROTO(Natural);    //!< display decimal/hexadecimal
-            virtual ~Natural() noexcept; //!< cleanup
-
-            Natural();                //!< default setup = 0
-            Natural(const Natural &); //!< copy
-            Natural(const uint64_t);  //!< set to qword
-
-            Natural(const size_t nbits, Random::Bits &);   //!< exactly nbits random bits
-            Natural(const TwoToThe_ &, const size_t ibit); //!< 2^ibit
-            Natural(const String &);                       //!< parse string
-            //Natural(const char * const);
-            Natural &operator=(const Natural &); //!< assign
-            Natural &operator=(const uint64_t);  //!< assign qword
-
-            Element & operator*() const noexcept; //!< get internal element
+            Y_OSTREAM_PROTO(Natural);                //!< display decimal/hexadecimal
+            virtual ~Natural() noexcept;             //!< cleanup
+            Natural();                               //!< default setup = 0
+            Natural(const Natural &);                //!< copy
+            Natural(const uint64_t);                 //!< set to qword
+            Natural(const size_t n, Random::Bits &); //!< exactly n random bits
+            Natural(const Exp2_ &, const size_t p);  //!< 2^p
+            Natural(const String &);                 //!< parse string
+            Natural &operator=(const Natural &);     //!< assign
+            Natural &operator=(const uint64_t);      //!< assign qword
+            Element & operator*() const noexcept;    //!< get internal element
 
             //__________________________________________________________________
             //
@@ -128,13 +124,14 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
             static SignType Compare(const Natural &lhs, const uint64_t rhs) noexcept; //!< comparison
 
 
-            //! aliases
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
             Y_Kemp_Natural_Cmp(operator==, ==__Zero__)
             Y_Kemp_Natural_Cmp(operator!=, !=__Zero__)
             Y_Kemp_Natural_Cmp(operator<,  ==Negative)
             Y_Kemp_Natural_Cmp(operator<=, !=Positive)
             Y_Kemp_Natural_Cmp(operator>,  ==Positive)
             Y_Kemp_Natural_Cmp(operator>=, !=Negative)
+#endif
 
             //__________________________________________________________________
             //

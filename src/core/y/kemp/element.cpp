@@ -100,7 +100,7 @@ num64(entry,num32.capacity>>1,bits,AsBits)
             }
         }
 
-        Element:: Element(const TwoToThe_ &, const size_t i) :
+        Element:: Element(const Exp2_ &, const size_t i) :
         state( AsBytes ),
         bits( i+1 ),
         shift( ShiftFor( Bytes::BitsToPositive(bits)) ),

@@ -142,7 +142,7 @@ namespace Yttrium
             explicit Element(const Element &);                   //!< full copy
             explicit Element(const uint64_t, const ToNum64_ &);  //!< setup from qword
             explicit Element(const size_t, Random::Bits &);      //!< setup to random bits
-            explicit Element(const TwoToThe_ &, const size_t i); //!< 2^i
+            explicit Element(const Exp2_ &, const size_t i);     //!< 2^i
             virtual ~Element() noexcept;                         //!< cleanup
             Y_OSTREAM_PROTO(Element);                            //!< display
 

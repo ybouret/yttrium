@@ -18,7 +18,7 @@ Y_UTEST(kemp_natural)
 
     for(unsigned i=0;i<=80;++i)
     {
-        const apn n(Kemp::TwoToThe,i);
+        const apn n(Kemp::Exp2,i);
         std::cerr << n << std::endl;
     }
 

@@ -86,7 +86,7 @@ namespace Yttrium
 
         }
 
-        Natural:: Natural(const TwoToThe_ &_, const size_t ibit) :
+        Natural:: Natural(const Exp2_ &_, const size_t ibit) :
         Number(),
         code( new Element(_,ibit) )
         {
