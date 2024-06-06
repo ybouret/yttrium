@@ -118,6 +118,18 @@ namespace Yttrium
 
         const char * Natural:: callSign() const noexcept { return CallSign; }
 
+
+        bool Natural:: isOdd() const noexcept
+        {
+            assert(0!=code);
+            return 0 != (1&code->u64());
+        }
+
+        bool Natural:: isEven() const noexcept
+        {
+            assert(0!=code);
+            return 0 == (1&code->u64());
+        }
     }
 
 

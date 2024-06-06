@@ -266,6 +266,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(kemp_mulperf);
     Y_UTEST(kemp_integer);
     Y_UTEST(kemp_rational);
+    Y_UTEST(kemp_modular);
 
 }
 Y_UTEST_EXEC()

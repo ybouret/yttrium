@@ -190,8 +190,8 @@ static Integer FUNC(const int64_t  lhs, const Integer &rhs)
             //
             //__________________________________________________________________
 
-            static Integer Square(const Integer &z); //!< z^2
-            Integer        square() const;           //!< *this^2
+            static Integer Sqr(const Integer &z);    //!< z^2
+            Integer        sqr() const;              //!< *this^2
             static Integer Abs(const Integer &z);    //!< |n|
             Integer        abs() const;              //!< |*this|
             static Integer Sqrt(const Integer &);    //!< integer square root

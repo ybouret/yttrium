@@ -48,14 +48,14 @@ namespace Yttrium
 
 
 
-        Natural Natural::Square(const Natural &n)
+        Natural Natural::Sqr(const Natural &n)
         {
             return Natural( Element::Sqr[Strategy](*n), AsElement );
         }
 
-        Natural Natural:: square() const
+        Natural Natural:: sqr() const
         {
-            return Square(*this);
+            return Sqr(*this);
         }
 
     }

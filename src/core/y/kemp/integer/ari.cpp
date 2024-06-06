@@ -6,15 +6,15 @@ namespace Yttrium
 {
     namespace Kemp
     {
-        Integer Integer:: Square(const Integer &z)
+        Integer Integer:: Sqr(const Integer &z)
         {
-            const Natural z2 = z.n.square();
+            const Natural z2 = z.n.sqr();
             return Integer(Positive,z2);
         }
 
-        Integer Integer:: square() const
+        Integer Integer:: sqr() const
         {
-            return Square(*this);
+            return Sqr(*this);
         }
 
         Integer Integer:: Sqrt(const Integer &z)

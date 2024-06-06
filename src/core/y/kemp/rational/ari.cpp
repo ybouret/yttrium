@@ -4,16 +4,16 @@ namespace Yttrium
 {
     namespace Kemp
     {
-        Rational Rational::Square(const Rational &q)
+        Rational Rational:: Sqr(const Rational &q)
         {
-            const Natural n2 = q.numer.n.square();
-            const Natural d2 = q.denom.square();
+            const Natural n2 = q.numer.n.sqr();
+            const Natural d2 = q.denom.sqr();
             return Rational(n2,d2);
         }
 
-        Rational Rational:: square() const
+        Rational Rational:: sqr() const
         {
-            return Square(*this);
+            return Sqr(*this);
         }
 
         Rational Rational::Abs(const Rational &q)
