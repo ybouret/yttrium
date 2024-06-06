@@ -10,45 +10,45 @@ namespace Yttrium
             const Natural den = rhs.denom * lhs.denom;
             return Rational(num,den);
         }
-
-
-#define CODE1()                                  \
-const Integer num = lhs.numer + rhs * lhs.denom; \
-return Rational(num,lhs.denom)
-
+        
         Rational  Rational:: Add(const Rational &lhs, const Integer &rhs)
         {
-            CODE1();
+            const Integer num = lhs.numer + rhs * lhs.denom;
+            return Rational(num,lhs.denom);
         }
 
         Rational Rational:: Add(const Rational &lhs, const Natural &rhs)
         {
-            CODE1();
+            const Integer num = lhs.numer + rhs * lhs.denom;
+            return Rational(num,lhs.denom);
         }
 
         Rational Rational:: Add(const Rational &lhs, const int64_t  rhs)
         {
-            CODE1();
+            const Integer r   = rhs;
+            const Integer num = lhs.numer + r * lhs.denom;
+            return Rational(num,lhs.denom);
         }
 
-#define CODE2()                                  \
-const Integer num = lhs * rhs.denom + rhs.numer; \
-return Rational(num,rhs.denom)
 
         Rational Rational:: Add(const Integer  &lhs, const Rational &rhs)
         {
-            CODE2();
+            const Integer num = lhs * rhs.denom + rhs.numer;
+            return Rational(num,rhs.denom);
         }
 
         Rational Rational:: Add(const Natural  &lhs, const Rational &rhs)
         {
-            CODE2();
+            const Integer num = lhs * rhs.denom + rhs.numer;
+            return Rational(num,rhs.denom);   
         }
 
 
         Rational Rational:: Add(const int64_t   lhs, const Rational &rhs)
         {
-            CODE2();
+            const Integer l   = lhs;
+            const Integer num = l * rhs.denom + rhs.numer;
+            return Rational(num,rhs.denom);
         }
 
 

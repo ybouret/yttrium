@@ -94,6 +94,89 @@ Y_UTEST(kemp_rational)
         std::cerr << i << " => " << i.sqr() << std::endl;
     }
 
+    {
+        const apq     oneQ(1);
+        const int64_t oneI(1);
+        const apz     oneZ(1);
+        const apn     oneN(1);
+
+        const apq     negQ(1);
+        const int64_t negI(1);
+        const apz     negZ(1);
+        const apn     negN(1);
+
+        for(size_t k=0;k<16;++k)
+        {
+            const apq l(10,10,ran);
+            const apq r(10,10,ran);
+
+            std::cerr << "l=" << l << ", r=" << r << std::endl;
+            Y_ASSERT( Rational::Compare(l,r) == Sign::Opposite( Rational::Compare(r,l) ) );
+
+            {
+                const SignType cmp = Rational::Compare(l,oneQ);
+                Y_ASSERT( cmp == Rational::Compare(l,oneZ) );
+                Y_ASSERT( cmp == Sign::Opposite( Rational::Compare(oneZ,l) ) );
+                Y_ASSERT( cmp == Rational::Compare(l,oneN) );
+                Y_ASSERT( cmp == Sign::Opposite( Rational::Compare(oneN,l) ) );
+                Y_ASSERT( cmp == Rational::Compare(l,oneI) );
+                Y_ASSERT( cmp == Sign::Opposite( Rational::Compare(oneI,l) ) );
+            }
+
+            {
+                const SignType cmp = Rational::Compare(l,negQ);
+                Y_ASSERT( cmp == Rational::Compare(l,negZ) );
+                Y_ASSERT( cmp == Sign::Opposite( Rational::Compare(negZ,l) ) );
+                Y_ASSERT( cmp == Rational::Compare(l,negN) );
+                Y_ASSERT( cmp == Sign::Opposite( Rational::Compare(negN,l) ) );
+                Y_ASSERT( cmp == Rational::Compare(l,negI) );
+                Y_ASSERT( cmp == Sign::Opposite( Rational::Compare(negI,l) ) );
+            }
+
+            {
+                const apq sum = l+oneQ;
+                Y_ASSERT( sum == l+oneZ);
+                Y_ASSERT( sum == oneZ+l);
+                Y_ASSERT( sum == l+oneN);
+                Y_ASSERT( sum == oneN+l);
+                Y_ASSERT( sum == l+oneI);
+                Y_ASSERT( sum == oneI+l);
+            }
+
+            {
+                const apq sum = l+negQ;
+                Y_ASSERT( sum == l+negZ);
+                Y_ASSERT( sum == negZ+l);
+                Y_ASSERT( sum == l+negN);
+                Y_ASSERT( sum == negN+l);
+                Y_ASSERT( sum == l+negI);
+                Y_ASSERT( sum == negI+l);
+            }
+
+            {
+                const apq d1 = l-oneQ;
+                const apq d2 = oneQ-l;
+                Y_ASSERT(d1 == l-oneZ);
+                Y_ASSERT(d1 == l-oneN);
+                Y_ASSERT(d1 == l-oneI);
+                Y_ASSERT(d2 == oneZ-l);
+                Y_ASSERT(d2 == oneN-l);
+                Y_ASSERT(d2 == oneI-l);
+            }
+
+            {
+                const apq d1 = l-negQ;
+                const apq d2 = negQ-l;
+                Y_ASSERT(d1 == l-negZ);
+                Y_ASSERT(d1 == l-negN);
+                Y_ASSERT(d1 == l-negI);
+                Y_ASSERT(d2 == negZ-l);
+                Y_ASSERT(d2 == negN-l);
+                Y_ASSERT(d2 == negI-l);
+            }
+        }
+    }
+
 
 
 }
