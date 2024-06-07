@@ -1,4 +1,3 @@
-
 #include "y/kemp/integer.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/park-miller.hpp"
@@ -166,6 +165,14 @@ Y_UTEST(kemp_integer)
     for(apz i=m;i>=-m;i--) std::cerr << i << "/";
     std::cerr << std::endl;
 
+    std::cerr << "<Cast>" << std::endl;
+    {
+        apz z = 100;
+        std::cerr << z << "=>" << int(z.cast<uint8_t>("z")) << std::endl;
+        z = -100;
+        std::cerr << z << "=>" << int(z.cast<int8_t>("z")) << std::endl;
+
+    }
 
 
 

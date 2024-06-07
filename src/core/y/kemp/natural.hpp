@@ -257,18 +257,15 @@ Y_Kemp_Natural_Binary_Decl(OP)
         private:
             mutable Element *code;
 
-            Natural(Element * const, const AsElement_ &) noexcept;
-
-            void make(Element *) noexcept;  //!< replace code
+            Natural(Element * const, const AsElement_ &) noexcept; //!< direct setup
+            void make(Element *) noexcept;                         //!< replace code
 
             static Natural Divide(const Natural &den, const Natural &num);
             static Natural Modulo(const Natural &den, const Natural &num);
             static void    CastOverflow(const char *ctx);
-
-
         };
-
     }
+
     typedef Kemp::Natural apn; //!< alias
 
 }
