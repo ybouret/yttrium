@@ -275,8 +275,7 @@ namespace Yttrium
             static inline size_t CountNonZero(SOURCE &source)
             {
                 size_t count = 0;
-                for(size_t i=source.size();i>0;--i)
-                { if(0!=source[i]) ++count; }
+                for(size_t i=source.size();i>0;--i) { if(0!=source[i]) ++count; }
                 return count;
             }
 
@@ -289,6 +288,10 @@ namespace Yttrium
             //
             //
             //! keep only non trivially colinear row vectors
+            /**
+             \param target compatible with integer type
+             \param source matrix of integer rows
+             */
             //
             //__________________________________________________________________
             template <typename T, typename U> static inline
@@ -306,7 +309,6 @@ namespace Yttrium
                 {
                     const MatrixRow<U> &src = source[i];  if( CountNonZero(src) <=0 ) continue;
                     bool                bad = false;
-
                     for(const INode *node=indx.head;node;node=node->next)
                     {
                         const size_t k = **node;
@@ -320,6 +322,7 @@ namespace Yttrium
                     if(bad) continue;
                     indx << i;
                 }
+                
                 if(indx.size>0)
                 {
                     assert(cols>0);
@@ -338,7 +341,7 @@ namespace Yttrium
 
         private:
             static const Natural & Dispatch(size_t &numPos, size_t &numNeg, SignType &firstSign, const apq &q) noexcept;
-            static inline void     UpdateGCD(Natural &g, const apq &q);
+            static  void           UpdateGCD(Natural &g, const apq &q);
 
             template <typename ITERATOR> static inline
             void MulByPos(const Natural &common, ITERATOR curr, size_t n, Natural &g)

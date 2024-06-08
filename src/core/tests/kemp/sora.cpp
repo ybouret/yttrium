@@ -37,8 +37,29 @@ Y_UTEST(kemp_sora)
         V1 << 1;
         V2 << 2;
         Y_CHECK( Sora::AreColinear(V1,V2) );
-
+        V1 << -3;
+        V2 << 0;
+        Y_CHECK( ! Sora::AreColinear(V1,V2) );
+        V2.tail() = -6;
+        Y_CHECK( Sora::AreColinear(V1,V2) );
     }
+
+    {
+        for(size_t cycle=0;cycle<=10;++cycle)
+        {
+            for(size_t i=0;i<=6;++i)
+            {
+                Vector<apq> Q;
+                for(size_t j=0;j<i;++j)
+                    Q << apq(8,8,ran);
+                Vector<apq> U(Q);
+                Sora::Univocal(U);
+                std::cerr << Q << "->" << U << std::endl;
+            }
+        }
+    }
+
+
 
 
 }
