@@ -34,6 +34,9 @@ Y_UTEST(kemp_sora)
         V1 << 0;
         V2 << 0;
         Y_CHECK( Sora::AreColinear(V1,V2) );
+        V1 << 1;
+        V2 << 2;
+        Y_CHECK( Sora::AreColinear(V1,V2) );
 
     }
 
