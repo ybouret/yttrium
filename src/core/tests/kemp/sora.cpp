@@ -11,16 +11,30 @@ Y_UTEST(kemp_sora)
 {
     Random::ParkMiller ran;
 
-    Vector<apq> Q;
-    for(size_t n=0;n<=5;++n)
+    std::cerr << "Simplification" << std::endl;
     {
-        Q.free();
-        for(size_t i=0;i<n;++i) Q << apq(10,10,ran);
-        std::cerr << Q << std::endl;
-        const Natural g = Sora::CommonDenominator(Q);
-        std::cerr << "g=" << g << std::endl;
-        std::cerr << Sora::Simplify(Q) << std::endl;
-        
+        Vector<apq> Q;
+        for(size_t n=0;n<=5;++n)
+        {
+            Q.free();
+            for(size_t i=0;i<n;++i) Q << apq(10,10,ran);
+            std::cerr << Q << std::endl;
+            const Natural g = Sora::CommonDenominator(Q);
+            std::cerr << "g=" << g << std::endl;
+            std::cerr << Sora::Simplify(Q) << std::endl;
+
+        }
+    }
+
+
+    std::cerr << "Colinearity" << std::endl;
+    {
+        Vector<int> V1, V2;
+        Y_CHECK( Sora::AreColinear(V1,V2) );
+        V1 << 0;
+        V2 << 0;
+        Y_CHECK( Sora::AreColinear(V1,V2) );
+
     }
 
 

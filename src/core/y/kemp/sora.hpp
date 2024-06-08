@@ -205,7 +205,7 @@ namespace Yttrium
                     switch( Sign::MakePair(l.s,r.s) )
                     {
                             //--------------------------------------------------
-                            // zero in front of not zero => false
+                            // zero w.r.t not zero => false
                             //--------------------------------------------------
                         case ZP_Signs:
                         case ZN_Signs:
@@ -213,6 +213,9 @@ namespace Yttrium
                         case NZ_Signs:
                             return false;
 
+                            //--------------------------------------------------
+                            // zero w.r.t zero => ok
+                            //--------------------------------------------------
                         case ZZ_Signs:
                             continue;
 
