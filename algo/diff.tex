@@ -93,5 +93,31 @@ In a constant $D_i$ bulk:
 \end{array}
 \end{equation}
 
+\subsection{1D Three Bodies Problem}
+
+$h,w,y$
+\begin{itemize}
+\item $h_0,w_0=K/h_0$, $z_y y_0+h_0-K/h_0=0$
+\item $h_l,w_l=K/w_l$, $z_y y_l+h_l-K/w_l=0$
+\end{itemize}
+
+We search for the middle position.
+\begin{itemize}
+	\item $\vec{J}_{i_-} = D_i \left[z_i C_{i_-}  \dfrac{\mathcal{F}}{RT} \vec{E}_- - \vec{\nabla} C_{i_-} \right]$
+	\item $\vec{J}_{i_+} = D_i \left[z_i C_{i_+}  \dfrac{\mathcal{F}}{RT} \vec{E}_+ - \vec{\nabla} C_{i_+} \right]$
+	\item $C_{i_-}=\dfrac{1}{2}(C_{i_0}+C_i)$, $\vec{\nabla} C_{i_-} = 2(C_i-C_{i_0})/l$
+	\item $C_{i_+}=\dfrac{1}{2}(C_{i_l}+C_i)$, $\vec{\nabla} C_{i_+} = 2(C_{i_l}-C_i)/l$
+\end{itemize}
+
+$$\partial_t C_i = 0 \implies \vec{J}_{i_-} = \vec{J}_{i_+}$$
+
+$$
+	 	\left[z_i C_{i_-}  \dfrac{\mathcal{F}}{RT} \vec{E}_- - \vec{\nabla} C_{i_-} \right] = z_i \dfrac{1}{2} (C_{i_0}+C_i) \zeta_- - 2(C_i-C_{i_0})/l
+$$
+$$
+   \left[z_i C_{i_+}  \dfrac{\mathcal{F}}{RT} \vec{E}_+ - \vec{\nabla} C_{i_+} \right] 
+ =  z_i \dfrac{1}{2} (C_{i_l}+C_i) \zeta_+ - 2(C_{i_l}-C_i)/l
+$$
+
 
 \end{document}
