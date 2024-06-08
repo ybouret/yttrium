@@ -171,7 +171,6 @@ Y_UTEST(kemp_integer)
         std::cerr << z << "=>" << int(z.cast<uint8_t>("z")) << std::endl;
         z = -100;
         std::cerr << z << "=>" << int(z.cast<int8_t>("z")) << std::endl;
-
     }
 
 
