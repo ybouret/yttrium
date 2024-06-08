@@ -91,14 +91,14 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 switch(size)
                 {
-                    case 0:
-                        return;
+                        // do nothing
+                    case 0: return;
 
-                    case 1: { apq &q = Coerce(*curr); if(__Zero__!=q.numer.s) q = 1;}
-                        return;
+                        // left zero untouched or make positive 1
+                    case 1: { apq &q = Coerce(*curr); if(__Zero__!=q.numer.s) q = 1;} return;
 
-                    default:
-                        break;
+                        // generic case
+                    default: break;
                 }
 
                 //--------------------------------------------------------------
@@ -126,19 +126,13 @@ namespace Yttrium
 
                     //----------------------------------------------------------
                     //
-                    // update and gather GCD
+                    // update according to signs majority and and gather GCD
                     //
                     //----------------------------------------------------------
                     switch( Sign::Of(numPos,numNeg) )
                     {
-                        case Negative: assert(numPos<numNeg);
-                            MulByNeg(commonDen,curr,size,g);
-                            break;
-
-                        case Positive: assert(numPos>numNeg);
-                            MulByPos(commonDen,curr,size,g);
-                            break;
-
+                        case Negative: assert(numPos<numNeg); MulByNeg(commonDen,curr,size,g); break;
+                        case Positive: assert(numPos>numNeg); MulByPos(commonDen,curr,size,g); break;
                         case __Zero__: assert(numPos==numNeg);
                             switch(firstSign)
                             {
@@ -236,7 +230,7 @@ namespace Yttrium
                                     Natural::Simplify(numer=l.n,denom=r.n);
                                     break;
                                 case Positive: // test propto
-                                    if(r.n*numer != l.n * denom) return false;
+                                    if(r.n*numer != l.n*denom) return false;
                                     break;
 
                             }
@@ -341,20 +335,7 @@ namespace Yttrium
 
         private:
             static const Natural & Dispatch(size_t &numPos, size_t &numNeg, SignType &firstSign, const apq &q) noexcept;
-
-            static inline
-            void updateGCD(Natural &g, const apq &q)
-            {
-                const Natural &rhs = q.numer.n;
-                if(rhs>0)
-                {
-                    if(g<=0)
-                        g = rhs;
-                    else
-                        g = Natural::GCD(g,rhs);
-                }
-            }
-
+            static inline void     UpdateGCD(Natural &g, const apq &q);
 
             template <typename ITERATOR> static inline
             void MulByPos(const Natural &common, ITERATOR curr, size_t n, Natural &g)
@@ -364,7 +345,7 @@ namespace Yttrium
                 {
                     apq &q = Coerce(*curr);
                     q *= common;
-                    updateGCD(g,q);
+                    UpdateGCD(g,q);
                     ++curr;
                     assert(1==q.denom);
                 }
@@ -378,7 +359,7 @@ namespace Yttrium
                 {
                     apq &q = Coerce(*curr);
                     q *= common;
-                    updateGCD(g,q);
+                    UpdateGCD(g,q);
                     Sign::ReplaceByOpposite( Coerce(q.numer.s) );
                     ++curr;
                     assert(1==q.denom);
