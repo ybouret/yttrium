@@ -40,7 +40,7 @@ namespace Yttrium
                     const WORD  *l  = lhs.item;
                     const size_t nr = rhs.positive;
                     WORD  *      s  = sub.item;
-                    CarryType carry = 0;
+                    CarryType    cr = 0;
 
                     //__________________________________________________________
                     //
@@ -50,39 +50,44 @@ namespace Yttrium
                         const WORD  *r  = rhs.item;
                         for(size_t i=nr;i>0;--i)
                         {
-                            carry += static_cast<CarryType>(*(l++)) - static_cast<CarryType>(*(r++));
-                            if(carry<0)
+                            cr += static_cast<CarryType>(*(l++)) - static_cast<CarryType>(*(r++));
+                            if(cr<0)
                             {
-                                *(s++) = static_cast<WORD>(carry+Radix);
-                                carry  = -1;
+                                *(s++) = static_cast<WORD>(cr+Radix);
+                                cr  = -1;
                             }
                             else
                             {
-                                *(s++) = static_cast<WORD>(carry);
-                                carry  = 0;
+                                *(s++) = static_cast<WORD>(cr);
+                                cr  = 0;
                             }
                         }
                     }
 
                     //__________________________________________________________
                     //
-                    // propagate carry
+                    // propagate carry on extra part
                     //__________________________________________________________
                     for(size_t i=nl-nr;i>0;--i)
                     {
-                        carry += static_cast<CarryType>(*(l++));
-                        if(carry<0)
+                        cr += static_cast<CarryType>(*(l++));
+                        if(cr<0)
                         {
-                            *(s++) = static_cast<WORD>(carry+Radix);
-                            carry  = -1;
+                            *(s++) = static_cast<WORD>(cr+Radix);
+                            cr  = -1;
                         }
                         else
                         {
-                            *(s++) = static_cast<WORD>(carry);
-                            carry  = 0;
+                            *(s++) = static_cast<WORD>(cr);
+                            cr  = 0;
                         }
                     }
-                    if(carry<0) throw Libc::Exception(EDOM, "Assembly::Sub(lhs<rhs)");
+
+                    //__________________________________________________________
+                    //
+                    // check last carry
+                    //__________________________________________________________
+                    if(cr<0) throw Libc::Exception(EDOM, "Assembly::Sub(lhs<rhs)");
                 }
 
 
