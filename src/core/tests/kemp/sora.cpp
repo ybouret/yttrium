@@ -59,6 +59,20 @@ Y_UTEST(kemp_sora)
         }
     }
 
+    {
+        Matrix<int> a(5,5);
+        for(size_t i=1;i<=a.rows;++i)
+        {
+            for(size_t j=1;j<=a.cols;++j)
+            {
+                a[i][j] = ran.in<int>(-5,5);
+            }
+        }
+        std::cerr << "a=" << a << std::endl;
+        Sora::MakeUnivocalCast(a);
+        std::cerr << "u=" << a << std::endl;
+    }
+
 
 
 

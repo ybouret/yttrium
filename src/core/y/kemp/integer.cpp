@@ -54,6 +54,13 @@ namespace Yttrium
             if(__Zero__==n.sign()) Coerce(s) = __Zero__;
         }
 
+        Integer   & Integer:: neg() noexcept
+        {
+            Sign::ReplaceByOpposite( Coerce(s) );
+            return *this;
+        }
+
+
         Integer:: Integer(const SignType S, const Natural &N) :
         Number(),
         s(S),

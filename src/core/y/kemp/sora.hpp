@@ -188,6 +188,29 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
+            //! Make univocal rows of (signed) integral types
+            //
+            //__________________________________________________________________
+            template <typename T> static void
+            MakeUnivocalCast(Matrix<T> &a)
+            {
+                Matrix<apz> z(CopyOf,a);
+                MakeUnivocal(z);
+                const size_t n = a.cols;
+                for(size_t i=a.rows;i>0;--i)
+                {
+                    Writable<T>         &a_i = a[i];
+                    const Readable<apz> &z_i = z[i];
+                    for(size_t j=n;j>0;--j)
+                        a_i[j] = z_i[j].cast<T>("univocal");
+                }
+            }
+
+
+
+            //__________________________________________________________________
+            //
+            //
             //! Check colinearity of int/unsigned/apz arrays
             //
             //__________________________________________________________________
@@ -307,7 +330,7 @@ namespace Yttrium
                 const size_t rows = source.rows;
                 for(size_t i=1;i<=rows;++i)
                 {
-                    const MatrixRow<U> &src = source[i];  if( CountNonZero(src) <=0 ) continue;
+                    const MatrixRow<U> &src = source[i];  if( CountNonZero(src) <= 0 ) continue;
                     bool                bad = false;
                     for(const INode *node=indx.head;node;node=node->next)
                     {
@@ -341,20 +364,14 @@ namespace Yttrium
 
         private:
             static const Natural & Dispatch(size_t &numPos, size_t &numNeg, SignType &firstSign, const apq &q) noexcept;
-            static  void           UpdateGCD(Natural &g, const apq &q);
+            static  apq          & UpdateGCD(Natural &g, const apq &q);
 
             template <typename ITERATOR> static inline
             void MulByPos(const Natural &common, ITERATOR curr, size_t n, Natural &g)
             {
                 assert(0==g);
                 while(n-- > 0)
-                {
-                    apq &q = Coerce(*curr);
-                    q *= common;
-                    UpdateGCD(g,q);
-                    ++curr;
-                    assert(1==q.denom);
-                }
+                    (void) UpdateGCD(g,(Coerce(*(curr++)) *= common));
             }
 
             template <typename ITERATOR> static inline
@@ -362,14 +379,7 @@ namespace Yttrium
             {
                 assert(0==g);
                 while(n-- > 0)
-                {
-                    apq &q = Coerce(*curr);
-                    q *= common;
-                    UpdateGCD(g,q);
-                    Sign::ReplaceByOpposite( Coerce(q.numer.s) );
-                    ++curr;
-                    assert(1==q.denom);
-                }
+                    UpdateGCD(g,(Coerce(*(curr++)) *= common)).neg();
             }
         };
 

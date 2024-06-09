@@ -6,7 +6,7 @@ namespace Yttrium
     namespace Kemp
     {
 
-        void Sora:: UpdateGCD(Natural &g, const apq &q)
+        apq & Sora:: UpdateGCD(Natural &g, const apq &q)
         {
             const Natural &rhs = q.numer.n;
             if(rhs>0)
@@ -16,6 +16,7 @@ namespace Yttrium
                 else
                     g = Natural::GCD(g,rhs);
             }
+            return Coerce(q);
         }
 
         const Natural & Sora:: Dispatch(size_t    & numPos,

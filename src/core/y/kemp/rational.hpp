@@ -147,10 +147,11 @@ Y_Kemp_Rational_Cmp(OP, int64_t  , Rational&,EXPR)
             // Methods
             //
             //__________________________________________________________________
-            String toString() const;          //!< convert to string
-            void   validate();                //!< simplify, check no zero denom
-            void   xch(Rational &q) noexcept; //!< no-throw exchange
-
+            String     toString() const;          //!< convert to string
+            void       validate();                //!< simplify, check no zero denom
+            void       xch(Rational &q) noexcept; //!< no-throw exchange
+            Rational & neg()            noexcept; //!< change sign
+            
             //__________________________________________________________________
             //
             //

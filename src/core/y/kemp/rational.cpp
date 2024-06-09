@@ -58,6 +58,12 @@ namespace Yttrium
 
         }
 
+        Rational & Rational:: neg() noexcept
+        {
+            Sign::ReplaceByOpposite( Coerce(numer.s) );
+            return *this;
+        }
+
 
         String Rational:: toString() const
         {

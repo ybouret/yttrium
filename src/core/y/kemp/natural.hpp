@@ -47,11 +47,23 @@ Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXP
 /**/ Natural & operator OP##=(const uint64_t )
 
 
+        //______________________________________________________________________
+        //
+        //
+        //! helper to duplicate arguments with same code
+        //
+        //______________________________________________________________________
 #define Y_Kemp_Natural_Binary_Decl(OP)                                   \
 /**/ friend Natural operator OP(const Natural &lhs, const Natural &rhs); \
 /**/ friend Natural operator OP(const uint64_t lhs, const Natural &rhs); \
 /**/ friend Natural operator OP(const Natural &lhs, const uint64_t rhs)
 
+        //______________________________________________________________________
+        //
+        //
+        //! helper to duplicate arguments with same code
+        //
+        //______________________________________________________________________
 #define Y_Kemp_Natural_Decl(OP) \
 Y_Kemp_Natural_Unary_Decl(OP);  \
 Y_Kemp_Natural_Binary_Decl(OP)
