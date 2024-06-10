@@ -84,21 +84,6 @@ namespace Yttrium
                 MakeUnsigned(which,seq.begin(),seq.size());
             }
 
-            template <typename U, typename T> static inline
-            U AriDispatch(size_t &numPos, size_t &numNeg, SignType &firstSign, const T &z) noexcept
-            {
-                const SignType s = Sign::Of(z);
-
-                if(__Zero__==firstSign) firstSign = s;
-
-                switch(s)
-                {
-                    case Negative: ++numNeg; return static_cast<U>(-z);
-                    case Positive: ++numPos; return static_cast<U>( z);
-                    case __Zero__: break;
-                }
-                return 0;
-            }
 
             //__________________________________________________________________
             //
@@ -492,6 +477,22 @@ namespace Yttrium
             static  apq          & UpdateGCD(Natural &g, const apq &q);
             static const Natural & Dispatch(size_t &numPos, size_t &numNeg, SignType &firstSign, const apz &z) noexcept;
 
+            template <typename U, typename T> static inline
+            U AriDispatch(size_t &numPos, size_t &numNeg, SignType &firstSign, const T &z) noexcept
+            {
+                const SignType s = Sign::Of(z);
+
+                if(__Zero__==firstSign) firstSign = s;
+
+                switch(s)
+                {
+                    case Negative: ++numNeg; return static_cast<U>(-z);
+                    case Positive: ++numPos; return static_cast<U>( z);
+                    case __Zero__: break;
+                }
+                return 0;
+            }
+            
 
             template <typename ITERATOR> static inline
             void MulByPos(const Natural &common, ITERATOR curr, size_t n, Natural &g) { assert(0==g);
