@@ -62,9 +62,8 @@ namespace Yttrium
                                     ratio = l/r; assert(Positive==ratio.numer.s);
                                     break;
 
-                                case Positive: // test propto
+                                case Positive: // test propto existing ratio
                                     if( l/r != ratio) return false;
-                                    //if(r.n*numer != l.n*denom) return false;
                                     break;
 
                             }
@@ -82,7 +81,7 @@ namespace Yttrium
                                 case __Zero__: // initialize to negative value
                                     ratio = l/r; assert(Negative==ratio.numer.s);
                                     break;
-                                case Negative: // test propto
+                                case Negative: // test propto existing ratio
                                     if( l/r != ratio) return false;
                                     break;
                             }
