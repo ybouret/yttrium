@@ -6,6 +6,7 @@
 #include "y/kemp/colinearity.hpp"
 #include "y/kemp/count-non-zero.hpp"
 #include "y/container/matrix.hpp"
+#include "y/container/cxx/series.hpp"
 #include "y/data/small/heavy/list/bare.hpp"
 
 
@@ -23,12 +24,15 @@ namespace Yttrium
         //______________________________________________________________________
         struct Narrow
         {
-
-
-
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             typedef Small::BareHeavyList<size_t> IList; //!< list of indices
             typedef IList::NodeType              INode; //!< nodes for IList
-
+            typedef CxxSeries<size_t,Memory::Dyadic> Good;
 
             //__________________________________________________________________
             //
@@ -40,45 +44,51 @@ namespace Yttrium
              */
             //
             //__________________________________________________________________
-            template <typename T, typename U> static inline
-            void Down(Matrix<T>       &target,
-                      const Matrix<U> &source)
+            template <
+            typename T,
+            typename T_ALLOC,
+            typename U,
+            typename U_ALLOC> static inline
+            void Down(Matrix<T,T_ALLOC>       &target,
+                      const Matrix<U,U_ALLOC> &source)
             {
                 //--------------------------------------------------------------
                 // preparing indices
                 //--------------------------------------------------------------
                 target.release();
-                IList        indx;
                 const size_t cols = source.cols;
                 const size_t rows = source.rows;
+                Good         good(rows);
                 for(size_t i=1;i<=rows;++i)
                 {
-                    const MatrixRow<U> &src = source[i];  if( CountNonZero::In(src) <= 0 ) continue;
-                    bool                bad = false;
-                    for(const INode *node=indx.head;node;node=node->next)
-                    {
-                        const size_t k = **node;
-                        if( Colinearity::Of(src,source[k]) )
-                        {
-                            bad = true;
-                            break;
-                        }
-                    }
-                    
-                    if(bad) continue;
-                    indx << i;
+                    // get current row
+                    const MatrixRow<U> &src = source[i];
+
+                    // check not zero
+                    if( CountNonZero::In(src) <= 0 ) continue;
+
+                    // check not proportional to already good rows
+                    for(size_t j=good.size();j>0;--j)
+                        if( Colinearity::Of(src,source[ good[j] ])) goto NEXT;
+
+                    // register
+                    good << i;
+                NEXT:;
                 }
-                
-                if(indx.size>0)
+
+                //--------------------------------------------------------------
+                // building target
+                //--------------------------------------------------------------
+                const size_t ng = good.size();
+                if(ng>0)
                 {
                     assert(cols>0);
-                    target.make(indx.size,cols);
-                    size_t i=1;
-                    for(const INode *node=indx.head;node;node=node->next,++i)
+                    target.make(ng,cols);
+                    for(size_t i=1;i<=ng;++i)
                     {
-                        const size_t        k   = **node;
-                        MatrixRow<T>       &tgt = target[i];
-                        const MatrixRow<U> &src = source[k];
+                        const size_t       k   = good[i];
+                        const Readable<U> &src = source[k];
+                        MatrixRow<T>      &tgt = target[i];
                         for(size_t j=cols;j>0;--j) tgt[j] = src[j];
                     }
                 }
