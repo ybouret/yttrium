@@ -15,6 +15,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(quantized);
     Y_UTEST(endian);
     Y_UTEST(rtti);
+    Y_UTEST(eta);
 
     Y_UTEST(memory_chunk);
     Y_UTEST(memory_pages);
