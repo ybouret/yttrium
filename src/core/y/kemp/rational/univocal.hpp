@@ -239,6 +239,51 @@ namespace Yttrium
             template <typename SEQUENCE> static inline
             void MakeRational(SEQUENCE &seq) { MakeRational(seq.begin(),seq.size()); }
 
+
+            //! make for sequences
+            /**
+             - apn
+             - apz
+             - apq
+             - signed -> apz + cast
+             - unsigned -> apn + cast
+             */
+            template <typename SEQUENCE> static inline
+            void Make(SEQUENCE &seq)
+            {
+                typedef typename SEQUENCE::Type Type;
+                static const Type2Type<Type>    choice = {};
+                Call(seq,choice);
+            }
+
+            template <typename SEQUENCE> static inline
+            void Call(SEQUENCE &seq, const Type2Type<Natural> &)
+            {
+                MakeNatural(seq);
+            }
+
+            template <typename SEQUENCE> static inline
+            void Call(SEQUENCE &seq, const Type2Type<Integer> &)
+            {
+                MakeInteger(seq);
+            }
+
+
+            template <typename SEQUENCE> static inline
+            void Call(SEQUENCE &seq, const Type2Type<Rational> &)
+            {
+                MakeRational(seq);
+            }
+
+            template <typename SEQUENCE,typename T> static inline
+            void Call(SEQUENCE &seq, const Type2Type<T> &)
+            {
+                
+            }
+
+
+
+
             //__________________________________________________________________
             //
             //
@@ -247,6 +292,9 @@ namespace Yttrium
             //__________________________________________________________________
             static void MakeMatrix(Matrix<apz> &a);
 
+
+
+#if 0
             //__________________________________________________________________
             //
             //
@@ -267,7 +315,8 @@ namespace Yttrium
                         a_i[j] = z_i[j].cast<T>(CallSign);
                 }
             }
-
+#endif
+            
         private:
             static const Natural & Dispatch(size_t &numPos, size_t &numNeg, SignType &firstSign, const apq &q) noexcept;
             static  apq          & UpdateGCD(Natural &g, const apq &q);
@@ -296,8 +345,9 @@ namespace Yttrium
                 while(n-- > 0) (Coerce(*(curr++)) /= g).neg();
             }
 
-
         };
+
+
 
     }
 
