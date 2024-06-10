@@ -11,7 +11,6 @@ Y_UTEST(kemp_comden)
 {
     Random::ParkMiller ran;
 
-    std::cerr << "Simplification" << std::endl;
     {
         Vector<apq> Q;
         for(size_t n=0;n<=5;++n)
