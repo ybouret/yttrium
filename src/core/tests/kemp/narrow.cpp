@@ -16,7 +16,8 @@ Y_UTEST(kemp_narrow)
     Matrix<int> M;
     for(size_t nr=1;nr<=10;++nr)
     {
-        for(size_t nc=1;nc<=1;++nc)
+        std::cerr << "#nr=" << nr << std::endl;
+        for(size_t nc=1;nc<=4;++nc)
         {
             M.make(nr,nc);
             for(size_t i=1;i<=nr;++i)
