@@ -21,6 +21,53 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
+            //! Make univocal range of Naturals
+            //
+            //__________________________________________________________________
+            template <typename ITERATOR> static inline
+            void MakeNatural(ITERATOR curr, const size_t size)
+            {
+                //--------------------------------------------------------------
+                //
+                // sorting out cases
+                //
+                //--------------------------------------------------------------
+                switch(size)
+                {
+                        // do nothing
+                    case 0: return;
+
+                        // left zero untouched or make positive 1
+                    case 1: { apn &n = Coerce(*curr); if(n.bits()>0) n = 1;} return;
+
+                        // generic case
+                    default: break;
+                }
+                Natural g = *curr;
+                {
+                    ITERATOR temp = curr;
+                    for(size_t i=size;i>1;--i)
+                        g = Natural::GCD(g,*(++temp));
+                }
+                if(g>1) {
+                    for(size_t i=size;i>0;--i)
+                        *(curr++) /= g;
+                }
+
+            }
+
+            //__________________________________________________________________
+            //
+            //
+            //! Make univocal sequence of Integers
+            //
+            //__________________________________________________________________
+            template <typename SEQUENCE> static inline
+            void MakeNatural(SEQUENCE &seq) { MakeNatural(seq.begin(),seq.size()); }
+
+            //__________________________________________________________________
+            //
+            //
             //! Make univocal range of Integers
             //
             //__________________________________________________________________

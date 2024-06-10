@@ -1,5 +1,6 @@
 
 #include "y/kemp/rational/univocal.hpp"
+#include "y/kemp/colinearity.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/park-miller.hpp"
 #include "y/sequence/vector.hpp"
@@ -15,6 +16,20 @@ Y_UTEST(kemp_univocal)
         for(size_t cycle=0;cycle<=10;++cycle)
         {
 
+
+            std::cerr << "Naturals" << std::endl;
+            for(size_t i=0;i<=6;++i)
+            {
+                Vector<apn> N;
+                for(size_t j=0;j<i;++j)
+                    N << apn(4,ran);
+                Vector<apn> U(N);
+                Univocal::MakeNatural(U);
+                std::cerr << N << "->" << U << std::endl;
+                Y_ASSERT( Colinearity::Of(N,U) );
+            }
+            std::cerr << std::endl;
+
             std::cerr << "Integers" << std::endl;
             for(size_t i=0;i<=6;++i)
             {
@@ -24,6 +39,7 @@ Y_UTEST(kemp_univocal)
                 Vector<apz> U(Z);
                 Univocal::MakeInteger(U);
                 std::cerr << Z << "->" << U << std::endl;
+                Y_ASSERT( Colinearity::Of(Z,U) );
             }
             std::cerr << std::endl;
 
@@ -37,9 +53,12 @@ Y_UTEST(kemp_univocal)
                 Vector<apq> U(Q);
                 Univocal::MakeRational(U);
                 std::cerr << Q << "->" << U << std::endl;
+                Y_ASSERT( Colinearity::Of(Q,U) );
             }
             std::cerr << std::endl;
 
+
+            
 
 
         }
