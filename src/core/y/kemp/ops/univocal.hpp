@@ -31,8 +31,14 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const char * const CallSign; //!< "Kemp::Univocal"
-            
 
+
+            //__________________________________________________________________
+            //
+            //
+            //! Make univocal range of Unsigned arithmetic type
+            //
+            //__________________________________________________________________
             template <typename T, typename ITERATOR> static inline
             void MakeUnsigned( const Type2Type<T> &, ITERATOR curr, const size_t size)
             {
@@ -65,11 +71,110 @@ namespace Yttrium
                 }
             }
 
+            //__________________________________________________________________
+            //
+            //
+            //! Make univocal sequence of Unsigned arithmetic type
+            //
+            //__________________________________________________________________
             template <typename SEQUENCE> static inline
             void MakeUnsigned(SEQUENCE &seq)
             {
                 static const Type2Type< typename SEQUENCE::Type > which = {};
                 MakeUnsigned(which,seq.begin(),seq.size());
+            }
+
+            template <typename U, typename T> static inline
+            U AriDispatch(size_t &numPos, size_t &numNeg, SignType &firstSign, const T &z) noexcept
+            {
+                const SignType s = Sign::Of(z);
+
+                if(__Zero__==firstSign) firstSign = s;
+
+                switch(s)
+                {
+                    case Negative: ++numNeg; return static_cast<U>(-z);
+                    case Positive: ++numPos; return static_cast<U>( z);
+                    case __Zero__: break;
+                }
+                return 0;
+            }
+
+            //__________________________________________________________________
+            //
+            //
+            //! Make univocal range of Signed arithmetic type
+            //
+            //__________________________________________________________________
+            template <typename T, typename ITERATOR> static inline
+            void MakeSigned( const Type2Type<T> &, ITERATOR curr, const size_t size)
+            {
+                typedef typename UnsignedInt<sizeof(T)>::Type U;
+
+                //--------------------------------------------------------------
+                //
+                // sorting out cases
+                //
+                //--------------------------------------------------------------
+                switch(size)
+                {
+                        // do nothing
+                    case 0: return;
+
+                        // left zero untouched or make positive 1
+                    case 1: { T &z = Coerce(*curr); if(0!=z) z = 1;} return;
+
+                        // generic case
+                    default: break;
+                }
+
+                //--------------------------------------------------------------
+                //
+                // count signs and update GCD
+                //
+                //--------------------------------------------------------------
+                size_t   numPos    = 0;
+                size_t   numNeg    = 0;
+                SignType firstSign = __Zero__;
+                U        u         = AriDispatch<U,T>(numPos,numNeg,firstSign,*curr);
+                {
+                    ITERATOR temp = curr;
+                    for(size_t i=size;i>1;--i)
+                        u = GreatestCommonDivisor(u,AriDispatch<U,T>(numPos,numNeg,firstSign,*(++temp)));
+                }
+                const T g = static_cast<T>(u);
+
+                //--------------------------------------------------------------
+                //
+                // update according to signs majority and simplify by g
+                //
+                //--------------------------------------------------------------
+                switch( Sign::Of(numPos,numNeg) )
+                {
+                    case Negative: assert(numPos<numNeg); AriDivByNeg(curr,size,g); break;
+                    case Positive: assert(numPos>numNeg); AriDivByPos(curr,size,g); break;
+                    case __Zero__: assert(numPos==numNeg);
+                        switch(firstSign)
+                        {
+                            case __Zero__: break; // all zero
+                            case Positive: AriDivByPos(curr,size,g); break;
+                            case Negative: AriDivByNeg(curr,size,g); break;
+                        }
+                        break;
+                }
+                }
+
+            //__________________________________________________________________
+            //
+            //
+            //! Make univocal sequence of Unsigned arithmetic type
+            //
+            //__________________________________________________________________
+            template <typename SEQUENCE> static inline
+            void MakeSigned(SEQUENCE &seq)
+            {
+                static const Type2Type< typename SEQUENCE::Type > which = {};
+                MakeSigned(which,seq.begin(),seq.size());
             }
 
 
@@ -319,15 +424,14 @@ namespace Yttrium
             //
             //
             //! Make univocal according to type
-            //
-            //__________________________________________________________________
             /**
              - apn
              - apz
              - apq
-             - signed -> apz + cast
-             - unsigned -> apn + cast
+             - signed
+             - unsigned
              */
+            //__________________________________________________________________
             template <typename SEQUENCE> static inline
             void Make(SEQUENCE &seq)
             {
@@ -380,39 +484,9 @@ namespace Yttrium
             template <typename SEQUENCE, size_t N> static inline
             void Call_(SEQUENCE &seq, const Int2Type<true> &)
             {
-                //MakeSigned(seq);
+                MakeSigned(seq);
             }
 
-
-#if 0
-            //! use internal signed/Integer conversion
-            template <typename SEQUENCE, size_t N> static inline
-            void Call_(SEQUENCE &seq, const Int2Type<true> &)
-            {
-                static const Type2Type< typename SEQUENCE::Type> what = {};
-                const size_t                     size = seq.size();
-                CxxArray<Integer,Memory::Dyadic> temp(size);
-                Load(temp,seq.begin(),size);
-                MakeInteger(temp);
-                Save(what,seq.begin(),size,temp);
-            }
-
-            //! use built-in target type conversion
-            template <typename TARGET, typename ITERATOR> static inline
-            void Load(TARGET &tgt, ITERATOR curr, size_t size)
-            {
-                for(size_t i=1;i<=size;++i,++curr)
-                    tgt[i] = *curr;
-            }
-
-            //! use explicit backward cast
-            template <typename ITERATOR, typename SOURCE, typename T> static inline
-            void Save(const Type2Type<T> &, ITERATOR curr, size_t size, const SOURCE &src)
-            {
-                for(size_t i=1;i<=size;++i,++curr)
-                    *curr = src[i].template cast<T>( CallSign );
-            }
-#endif
 
             static const Natural & Dispatch(size_t &numPos, size_t &numNeg, SignType &firstSign, const apq &q) noexcept;
             static  apq          & UpdateGCD(Natural &g, const apq &q);
@@ -429,16 +503,27 @@ namespace Yttrium
                 while(n-- > 0) UpdateGCD(g,(Coerce(*(curr++)) *= common)).neg();
             }
 
-            template <typename ITERATOR> static inline
-            void DivByPos(ITERATOR curr, size_t n, const Natural &g) { assert(0!=g);
+            template <typename ITERATOR, typename T> static inline
+            void DivByPos(ITERATOR curr, size_t n, const T &g) { assert(0!=g);
                 while(n-- > 0) Coerce(*(curr++)) /= g;
             }
 
 
-            template <typename ITERATOR> static inline
-            void DivByNeg(ITERATOR curr, size_t n, const Natural &g) { assert(0!=g);
+            template <typename ITERATOR, typename T> static inline
+            void DivByNeg(ITERATOR curr, size_t n, const T &g) { assert(0!=g);
                 while(n-- > 0) (Coerce(*(curr++)) /= g).neg();
             }
+
+            template <typename ITERATOR, typename T> static inline
+            void AriDivByPos(ITERATOR curr, size_t n, const T &g) { assert(0!=g);
+                while(n-- > 0) Coerce(*(curr++)) /= g;
+            }
+
+            template <typename ITERATOR, typename T> static inline
+            void AriDivByNeg(ITERATOR curr, size_t n, const T &g) { assert(0!=g);
+                while(n-- > 0) Coerce(*(curr++)) /= -g;
+            }
+
 
         };
 
