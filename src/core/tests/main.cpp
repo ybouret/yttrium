@@ -271,6 +271,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(kemp_comden);
     Y_UTEST(kemp_univocal);
     Y_UTEST(kemp_colinear);
+    Y_UTEST(kemp_narrow);
 
 }
 Y_UTEST_EXEC()

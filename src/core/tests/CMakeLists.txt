@@ -351,4 +351,4 @@ add_test(kemp:input    test-core kemp_input)
 add_test(kemp:comden   test-core kemp_comden)
 add_test(kemp:univocal test-core kemp_univocal)
 add_test(kemp:colinear test-core kemp_colinear)
-
+add_test(kemp:narrow   test-core kemp_narrow)

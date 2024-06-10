@@ -17,15 +17,12 @@ namespace Yttrium
         //
         //
         //
-        //! Set Of Rationals Arithmetic
+        //! narrowing a matrix to non-colinear, non-zero rows
         //
         //
         //______________________________________________________________________
-        struct Sora
+        struct Narrow
         {
-
-            
-            
 
             //__________________________________________________________________
             //
@@ -181,25 +178,7 @@ namespace Yttrium
             }
 
 
-        private:
-            static const Natural & Dispatch(size_t &numPos, size_t &numNeg, SignType &firstSign, const apq &q) noexcept;
-            static  apq          & UpdateGCD(Natural &g, const apq &q);
-
-            template <typename ITERATOR> static inline
-            void MulByPos(const Natural &common, ITERATOR curr, size_t n, Natural &g)
-            {
-                assert(0==g);
-                while(n-- > 0)
-                    (void) UpdateGCD(g,(Coerce(*(curr++)) *= common));
-            }
-
-            template <typename ITERATOR> static inline
-            void MulByNeg(const Natural &common, ITERATOR curr, size_t n, Natural &g)
-            {
-                assert(0==g);
-                while(n-- > 0)
-                    UpdateGCD(g,(Coerce(*(curr++)) *= common)).neg();
-            }
+            
         };
 
     }

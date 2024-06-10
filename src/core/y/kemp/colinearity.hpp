@@ -14,27 +14,27 @@ namespace Yttrium
     {
         struct Colinearity
         {
+
             //__________________________________________________________________
             //
             //
-            //! Check colinearity of int/unsigned/apz arrays
+            //! Check colinearity of int/unsigned/apn/apz/apq arrays
             //
             //__________________________________________________________________
             template <typename LHS, typename RHS> static inline
             bool Of(LHS &lhs, RHS &rhs)
             {
-                const size_t n = lhs.size(); assert( lhs.size() == rhs.size() );
-
-                SignType s = __Zero__;
-                Natural  numer, denom;
-                for(size_t i=n;i>0;--i)
+                assert( lhs.size() == rhs.size() );
+                const size_t count = lhs.size();  // processing length
+                Rational     ratio;               // initial ratio, 0 means undefined
+                for(size_t i=count;i>0;--i)
                 {
-                    apz l = lhs[i];
-                    apz r = rhs[i];
-                    switch( Sign::MakePair(l.s,r.s) )
+                    apq l = lhs[i];
+                    apq r = rhs[i];
+                    switch( Sign::MakePair(l.numer.s,r.numer.s) )
                     {
                             //--------------------------------------------------
-                            // zero w.r.t not zero => false
+                            // zero against not zero => false
                             //--------------------------------------------------
                         case ZP_Signs:
                         case ZN_Signs:
@@ -43,7 +43,7 @@ namespace Yttrium
                             return false;
 
                             //--------------------------------------------------
-                            // zero w.r.t zero => ok
+                            // zero against zero => ok so far
                             //--------------------------------------------------
                         case ZZ_Signs:
                             continue;
@@ -53,16 +53,18 @@ namespace Yttrium
                             //--------------------------------------------------
                         case NN_Signs:
                         case PP_Signs:
-                            switch(s)
+                            switch(ratio.numer.s)
                             {
-                                case Negative: // => false
+                                case Negative: // ratio sign already negative! => false
                                     return false;
+
                                 case __Zero__: // initialize to positive value
-                                    s     = Positive;
-                                    Natural::Simplify(numer=l.n,denom=r.n);
+                                    ratio = l/r; assert(Positive==ratio.numer.s);
                                     break;
+
                                 case Positive: // test propto
-                                    if(r.n*numer != l.n*denom) return false;
+                                    if( l/r != ratio) return false;
+                                    //if(r.n*numer != l.n*denom) return false;
                                     break;
 
                             }
@@ -73,16 +75,15 @@ namespace Yttrium
                             //--------------------------------------------------
                         case NP_Signs:
                         case PN_Signs:
-                            switch(s)
+                            switch(ratio.numer.s)
                             {
-                                case Positive: // => false
+                                case Positive: // ratio sign already positive! => false
                                     return false;
                                 case __Zero__: // initialize to negative value
-                                    s     = Negative;
-                                    Natural::Simplify(numer=l.n,denom=r.n);
+                                    ratio = l/r; assert(Negative==ratio.numer.s);
                                     break;
                                 case Negative: // test propto
-                                    if(r.n*numer != l.n * denom) return false;
+                                    if( l/r != ratio) return false;
                                     break;
                             }
                             break;
@@ -92,6 +93,8 @@ namespace Yttrium
 
                 return true;
             }
+
+
         };
     }
 
