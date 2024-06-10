@@ -348,5 +348,6 @@ add_test(kemp:integer  test-core kemp_integer)
 add_test(kemp:rational test-core kemp_rational)
 add_test(kemp:modular  test-core kemp_modular)
 add_test(kemp:input    test-core kemp_input)
+add_test(kemp:comden   test-core kemp_comden)
 add_test(kemp:sora     test-core kemp_sora)
 
