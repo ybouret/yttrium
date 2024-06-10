@@ -12,6 +12,14 @@ namespace Yttrium
 {
     namespace Kemp
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Colinearity of sequence-like objects
+        //
+        //
+        //______________________________________________________________________
         struct Colinearity
         {
 
@@ -55,7 +63,7 @@ namespace Yttrium
                         case PP_Signs:
                             switch(ratio.numer.s)
                             {
-                                case Negative: // ratio sign already negative! => false
+                                case Negative: // ratio sign is already negative! => false
                                     return false;
 
                                 case __Zero__: // initialize to positive value
@@ -76,7 +84,7 @@ namespace Yttrium
                         case PN_Signs:
                             switch(ratio.numer.s)
                             {
-                                case Positive: // ratio sign already positive! => false
+                                case Positive: // ratio sign is already positive! => false
                                     return false;
                                 case __Zero__: // initialize to negative value
                                     ratio = l/r; assert(Negative==ratio.numer.s);

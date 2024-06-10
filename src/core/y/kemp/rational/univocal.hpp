@@ -13,9 +13,22 @@ namespace Yttrium
 {
     namespace Kemp
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Converting range/sequences to UNIVOCAL representation
+        //
+        //
+        //______________________________________________________________________
         struct Univocal
         {
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             static const char * const CallSign; //!< "Kemp::Univocal"
             
 
@@ -44,6 +57,12 @@ namespace Yttrium
                         // generic case
                     default: break;
                 }
+
+                //--------------------------------------------------------------
+                //
+                // Find and simplify by GCD
+                //
+                //--------------------------------------------------------------
                 Natural g = *curr;
                 {
                     ITERATOR temp = curr;
@@ -210,7 +229,7 @@ namespace Yttrium
 
                 //--------------------------------------------------------------
                 //
-                // Final reduction
+                // Final reduction by GCD
                 //
                 //--------------------------------------------------------------
                 if(g>1)
@@ -240,18 +259,27 @@ namespace Yttrium
             template <typename SEQUENCE> static inline
             void MakeRational(SEQUENCE &seq) { MakeRational(seq.begin(),seq.size()); }
 
+            //__________________________________________________________________
+            //
+            //
+            // Using proxies to convert any sequence
+            //
+            //__________________________________________________________________
 
 
+            typedef TL3(Natural,Integer,Rational) BuiltIn;                   //!< alias
+            static const int UseAPN = TL::IndexOf<BuiltIn,Natural>::  Value; //!< alias
+            static const int UseAPZ = TL::IndexOf<BuiltIn,Integer>::  Value; //!< alias
+            static const int UseAPQ = TL::IndexOf<BuiltIn,Rational>:: Value; //!< alias
+            static const int UseARI = -1;                                    //!< alias
 
 
-            //! make for sequences
-            typedef TL3(Natural,Integer,Rational) BuiltIn;
-            enum {
-                UseAPN = TL::IndexOf<BuiltIn,Natural>::  Value,
-                UseAPZ = TL::IndexOf<BuiltIn,Integer>::  Value,
-                UseAPQ = TL::IndexOf<BuiltIn,Rational>:: Value,
-                UseARI = -1
-            };
+            //__________________________________________________________________
+            //
+            //
+            //! Make univocal according to type
+            //
+            //__________________________________________________________________
             /**
              - apn
              - apz
@@ -267,26 +295,30 @@ namespace Yttrium
                 Call(seq,choice);
             }
 
+        private:
 
+            //! direct call
             template <typename SEQUENCE> static inline
             void Call(SEQUENCE &seq, const Int2Type<UseAPN> &)
             {
                 MakeNatural(seq);
             }
 
+            //! direct call
             template <typename SEQUENCE> static inline
             void Call(SEQUENCE &seq, const Int2Type<UseAPZ> &)
             {
                 MakeInteger(seq);
             }
 
-
+            //! direct call
             template <typename SEQUENCE> static inline
             void Call(SEQUENCE &seq, const Int2Type<UseAPQ> &)
             {
                 MakeRational(seq);
             }
 
+            //! direct call
             template <typename SEQUENCE> static inline
             void Call(SEQUENCE &seq, const Int2Type<UseARI> &)
             {
@@ -296,51 +328,48 @@ namespace Yttrium
             }
 
 
-
+            //! use internal unsigned/Natural conversion
             template <typename SEQUENCE, size_t N> static inline
             void Call_(SEQUENCE &seq, const Int2Type<false> &)
             {
+                static const Type2Type< typename SEQUENCE::Type> what = {};
                 const size_t                     size = seq.size();
                 CxxArray<Natural,Memory::Dyadic> temp(size);
                 Load(temp,seq.begin(),size);
-                std::cerr << "processing " << temp << " from " << seq << std::endl;
                 MakeNatural(temp);
-                std::cerr << " -> " << temp << std::endl;
-                //Save(temp.begin(),size,temp);
+                Save(what,seq.begin(),size,temp);
             }
 
+            //! use internal signed/Integer conversion
+            template <typename SEQUENCE, size_t N> static inline
+            void Call_(SEQUENCE &seq, const Int2Type<true> &)
+            {
+                static const Type2Type< typename SEQUENCE::Type> what = {};
+                const size_t                     size = seq.size();
+                CxxArray<Integer,Memory::Dyadic> temp(size);
+                Load(temp,seq.begin(),size);
+                MakeInteger(temp);
+                Save(what,seq.begin(),size,temp);
+            }
+
+            //! use built-in target type conversion
             template <typename TARGET, typename ITERATOR> static inline
             void Load(TARGET &tgt, ITERATOR curr, size_t size)
             {
                 for(size_t i=1;i<=size;++i,++curr)
-                {
                     tgt[i] = *curr;
-                }
             }
 
-            template <typename ITERATOR, typename SOURCE> static inline
-            void Save(ITERATOR curr, size_t size, const SOURCE &src)
+            //! use explicit backward cast
+            template <typename ITERATOR, typename SOURCE, typename T> static inline
+            void Save(const Type2Type<T> &, ITERATOR curr, size_t size, const SOURCE &src)
             {
                 for(size_t i=1;i<=size;++i,++curr)
-                {
-                    *curr = src[i].template cast<typename SOURCE::Type>( CallSign );
-                }
+                    *curr = src[i].template cast<T>( CallSign );
             }
 
-            //__________________________________________________________________
-            //
-            //
-            //! Make univocal rows of Integers
-            //
-            //__________________________________________________________________
-            static void MakeMatrix(Matrix<apz> &a);
-
-
-
-        private:
             static const Natural & Dispatch(size_t &numPos, size_t &numNeg, SignType &firstSign, const apq &q) noexcept;
             static  apq          & UpdateGCD(Natural &g, const apq &q);
-
             static const Natural & Dispatch(size_t &numPos, size_t &numNeg, SignType &firstSign, const apz &z) noexcept;
 
 

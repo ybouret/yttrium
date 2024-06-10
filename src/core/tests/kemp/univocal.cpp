@@ -1,4 +1,3 @@
-
 #include "y/kemp/rational/univocal.hpp"
 #include "y/kemp/colinearity.hpp"
 #include "y/utest/run.hpp"
@@ -15,7 +14,6 @@ Y_UTEST(kemp_univocal)
     {
         for(size_t cycle=0;cycle<=10;++cycle)
         {
-
 
             std::cerr << "Naturals" << std::endl;
             for(size_t i=0;i<=6;++i)
@@ -57,7 +55,7 @@ Y_UTEST(kemp_univocal)
             }
             std::cerr << std::endl;
 
-#if 1
+
             std::cerr << "Unsigned" << std::endl;
             for(size_t i=0;i<=6;++i)
             {
@@ -70,9 +68,20 @@ Y_UTEST(kemp_univocal)
                 Y_ASSERT( Colinearity::Of(Q,U) );
             }
             std::cerr << std::endl;
-#endif
-            
 
+
+            std::cerr << "Signed" << std::endl;
+            for(size_t i=0;i<=6;++i)
+            {
+                Vector<int> Q;
+                for(size_t j=0;j<i;++j)
+                    Q << ran.in<int>(-10,10);
+                Vector<int> U(Q);
+                Univocal::Make(U);
+                std::cerr << Q << "->" << U << std::endl;
+                Y_ASSERT( Colinearity::Of(Q,U) );
+            }
+            std::cerr << std::endl;
 
         }
     }

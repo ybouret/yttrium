@@ -5,9 +5,9 @@
 
 #include "y/kemp/colinearity.hpp"
 #include "y/kemp/count-non-zero.hpp"
+#include "y/kemp/univocal.hpp"
 #include "y/container/matrix.hpp"
 #include "y/container/cxx/series.hpp"
-#include "y/data/small/heavy/list/bare.hpp"
 
 
 namespace Yttrium
@@ -30,9 +30,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Small::BareHeavyList<size_t> IList; //!< list of indices
-            typedef IList::NodeType              INode; //!< nodes for IList
-            typedef CxxSeries<size_t,Memory::Dyadic> Good;
+            typedef CxxSeries<size_t,Memory::Dyadic> Good;  //!< alias
 
             //__________________________________________________________________
             //
@@ -71,7 +69,7 @@ namespace Yttrium
                     for(size_t j=good.size();j>0;--j)
                         if( Colinearity::Of(src,source[ good[j] ])) goto NEXT;
 
-                    // register
+                    // register a new good row index
                     good << i;
                 NEXT:;
                 }
