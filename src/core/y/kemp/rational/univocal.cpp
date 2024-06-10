@@ -31,7 +31,7 @@ namespace Yttrium
 
             if(__Zero__==firstSign) firstSign = s;
 
-            switch(q.numer.s)
+            switch(s)
             {
                 case Negative:
                     ++numNeg;
@@ -44,6 +44,30 @@ namespace Yttrium
             return q.denom;
         }
 
+
+        const Natural & Univocal:: Dispatch(size_t    & numPos,
+                                            size_t    & numNeg,
+                                            SignType  & firstSign,
+                                            const apz & z) noexcept
+        {
+            const SignType s = z.s;
+
+            if(__Zero__==firstSign) firstSign = s;
+
+            switch(s)
+            {
+                case Negative:
+                    ++numNeg;
+                    break;
+                case Positive:
+                    ++numPos;
+                    break;
+                case __Zero__: break;
+            }
+            return z.n;
+        }
+
+
         void Univocal:: MakeMatrix(Matrix<apz> &a)
         {
             if(a.rows<=0) return;
@@ -53,7 +77,7 @@ namespace Yttrium
             {
                 MatrixRow<apz> &r = a[i];
                 for(size_t j=n;j>0;--j) q[j] = r[j];
-                Make(q);
+                MakeRational(q);
                 for(size_t j=n;j>0;--j) r[j] = q[j].numer;
             }
         }

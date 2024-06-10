@@ -17,14 +17,87 @@ namespace Yttrium
         {
             static const char * const CallSign; //!< "Kemp::Univocal"
             
+
             //__________________________________________________________________
             //
             //
-            //! Make univocal range of rationals
+            //! Make univocal range of Integers
             //
             //__________________________________________________________________
             template <typename ITERATOR> static inline
-            void Make(ITERATOR curr, const size_t size)
+            void MakeInteger(ITERATOR curr, const size_t size)
+            {
+                //--------------------------------------------------------------
+                //
+                // sorting out cases
+                //
+                //--------------------------------------------------------------
+                switch(size)
+                {
+                        // do nothing
+                    case 0: return;
+
+                        // left zero untouched or make positive 1
+                    case 1: { apz &z = Coerce(*curr); if(__Zero__!=z.s) z = 1;} return;
+
+                        // generic case
+                    default: break;
+                }
+
+                //--------------------------------------------------------------
+                //
+                // count signs and update GCD
+                //
+                //--------------------------------------------------------------
+                size_t   numPos    = 0;
+                size_t   numNeg    = 0;
+                SignType firstSign = __Zero__;
+                Natural  g         = Dispatch(numPos,numNeg,firstSign,*curr);
+                {
+                    ITERATOR temp = curr;
+                    for(size_t i=size;i>1;--i)
+                        g = Natural::GCD(g,Dispatch(numPos,numNeg,firstSign,*(++temp)));
+                }
+
+                //--------------------------------------------------------------
+                //
+                // update according to signs majority and simplify by g
+                //
+                //--------------------------------------------------------------
+                switch( Sign::Of(numPos,numNeg) )
+                {
+                    case Negative: assert(numPos<numNeg); DivByNeg(curr,size,g); break;
+                    case Positive: assert(numPos>numNeg); DivByPos(curr,size,g); break;
+                    case __Zero__: assert(numPos==numNeg);
+                        switch(firstSign)
+                        {
+                            case __Zero__: break; // all zero
+                            case Positive: DivByPos(curr,size,g); break;
+                            case Negative: DivByNeg(curr,size,g); break;
+                        }
+                        break;
+                }
+
+            }
+
+
+            //__________________________________________________________________
+            //
+            //
+            //! Make univocal sequence of Integers
+            //
+            //__________________________________________________________________
+            template <typename SEQUENCE> static inline
+            void MakeInteger(SEQUENCE &seq) { MakeInteger(seq.begin(),seq.size()); }
+
+            //__________________________________________________________________
+            //
+            //
+            //! Make univocal range of Rationals
+            //
+            //__________________________________________________________________
+            template <typename ITERATOR> static inline
+            void MakeRational(ITERATOR curr, const size_t size)
             {
                 //--------------------------------------------------------------
                 //
@@ -45,7 +118,7 @@ namespace Yttrium
 
                 //--------------------------------------------------------------
                 //
-                // counting signs and computing common denomitor
+                // check univocal signs and set denominators to 1
                 //
                 //--------------------------------------------------------------
                 Natural  g = 0; // final scaling factor
@@ -117,7 +190,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename SEQUENCE> static inline
-            void Make(SEQUENCE &seq) { Make(seq.begin(),seq.size()); }
+            void MakeRational(SEQUENCE &seq) { MakeRational(seq.begin(),seq.size()); }
 
             //__________________________________________________________________
             //
@@ -152,6 +225,9 @@ namespace Yttrium
             static const Natural & Dispatch(size_t &numPos, size_t &numNeg, SignType &firstSign, const apq &q) noexcept;
             static  apq          & UpdateGCD(Natural &g, const apq &q);
 
+            static const Natural & Dispatch(size_t &numPos, size_t &numNeg, SignType &firstSign, const apz &z) noexcept;
+
+
             template <typename ITERATOR> static inline
             void MulByPos(const Natural &common, ITERATOR curr, size_t n, Natural &g) { assert(0==g);
                 while(n-- > 0) (void) UpdateGCD(g,(Coerce(*(curr++)) *= common));
@@ -161,6 +237,18 @@ namespace Yttrium
             void MulByNeg(const Natural &common, ITERATOR curr, size_t n, Natural &g) {
                 while(n-- > 0) UpdateGCD(g,(Coerce(*(curr++)) *= common)).neg();
             }
+
+            template <typename ITERATOR> static inline
+            void DivByPos(ITERATOR curr, size_t n, const Natural &g) { assert(0!=g);
+                while(n-- > 0) Coerce(*(curr++)) /= g;
+            }
+
+
+            template <typename ITERATOR> static inline
+            void DivByNeg(ITERATOR curr, size_t n, const Natural &g) { assert(0!=g);
+                while(n-- > 0) (Coerce(*(curr++)) /= g).neg();
+            }
+
 
         };
 

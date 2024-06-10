@@ -14,15 +14,34 @@ Y_UTEST(kemp_univocal)
     {
         for(size_t cycle=0;cycle<=10;++cycle)
         {
+
+            std::cerr << "Integers" << std::endl;
+            for(size_t i=0;i<=6;++i)
+            {
+                Vector<apz> Z;
+                for(size_t j=0;j<i;++j)
+                    Z << apz(3,ran);
+                Vector<apz> U(Z);
+                Univocal::MakeInteger(U);
+                std::cerr << Z << "->" << U << std::endl;
+            }
+            std::cerr << std::endl;
+
+
+            std::cerr << "Rationals" << std::endl;
             for(size_t i=0;i<=6;++i)
             {
                 Vector<apq> Q;
                 for(size_t j=0;j<i;++j)
-                    Q << apq(8,8,ran);
+                    Q << apq(4,4,ran);
                 Vector<apq> U(Q);
-                Univocal::Make(U);
+                Univocal::MakeRational(U);
                 std::cerr << Q << "->" << U << std::endl;
             }
+            std::cerr << std::endl;
+
+
+
         }
     }
 
