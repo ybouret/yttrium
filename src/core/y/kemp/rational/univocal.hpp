@@ -7,6 +7,7 @@
 
 #include "y/kemp/rational.hpp"
 #include "y/container/matrix.hpp"
+#include "y/container/cxx/array.hpp"
 
 namespace Yttrium
 {
@@ -240,7 +241,17 @@ namespace Yttrium
             void MakeRational(SEQUENCE &seq) { MakeRational(seq.begin(),seq.size()); }
 
 
+
+
+
             //! make for sequences
+            typedef TL3(Natural,Integer,Rational) BuiltIn;
+            enum {
+                UseAPN = TL::IndexOf<BuiltIn,Natural>::  Value,
+                UseAPZ = TL::IndexOf<BuiltIn,Integer>::  Value,
+                UseAPQ = TL::IndexOf<BuiltIn,Rational>:: Value,
+                UseARI = -1
+            };
             /**
              - apn
              - apz
@@ -252,37 +263,69 @@ namespace Yttrium
             void Make(SEQUENCE &seq)
             {
                 typedef typename SEQUENCE::Type Type;
-                static const Type2Type<Type>    choice = {};
+                static const Int2Type< TL::IndexOf<BuiltIn,Type>::Value > choice = {};
                 Call(seq,choice);
             }
 
+
             template <typename SEQUENCE> static inline
-            void Call(SEQUENCE &seq, const Type2Type<Natural> &)
+            void Call(SEQUENCE &seq, const Int2Type<UseAPN> &)
             {
                 MakeNatural(seq);
             }
 
             template <typename SEQUENCE> static inline
-            void Call(SEQUENCE &seq, const Type2Type<Integer> &)
+            void Call(SEQUENCE &seq, const Int2Type<UseAPZ> &)
             {
                 MakeInteger(seq);
             }
 
 
             template <typename SEQUENCE> static inline
-            void Call(SEQUENCE &seq, const Type2Type<Rational> &)
+            void Call(SEQUENCE &seq, const Int2Type<UseAPQ> &)
             {
                 MakeRational(seq);
             }
 
-            template <typename SEQUENCE,typename T> static inline
-            void Call(SEQUENCE &seq, const Type2Type<T> &)
+            template <typename SEQUENCE> static inline
+            void Call(SEQUENCE &seq, const Int2Type<UseARI> &)
             {
-                
+                typedef typename SEQUENCE::Type Type;
+                static const Int2Type< IsSigned<Type>::Value > which = {};
+                Call_<SEQUENCE,sizeof(Type)>(seq,which);
             }
 
 
 
+            template <typename SEQUENCE, size_t N> static inline
+            void Call_(SEQUENCE &seq, const Int2Type<false> &)
+            {
+                const size_t                     size = seq.size();
+                CxxArray<Natural,Memory::Dyadic> temp(size);
+                Load(temp,seq.begin(),size);
+                std::cerr << "processing " << temp << " from " << seq << std::endl;
+                MakeNatural(temp);
+                std::cerr << " -> " << temp << std::endl;
+                //Save(temp.begin(),size,temp);
+            }
+
+            template <typename TARGET, typename ITERATOR> static inline
+            void Load(TARGET &tgt, ITERATOR curr, size_t size)
+            {
+                for(size_t i=1;i<=size;++i,++curr)
+                {
+                    tgt[i] = *curr;
+                }
+            }
+
+            template <typename ITERATOR, typename SOURCE> static inline
+            void Save(ITERATOR curr, size_t size, const SOURCE &src)
+            {
+                for(size_t i=1;i<=size;++i,++curr)
+                {
+                    *curr = src[i].template cast<typename SOURCE::Type>( CallSign );
+                }
+            }
 
             //__________________________________________________________________
             //
@@ -294,29 +337,6 @@ namespace Yttrium
 
 
 
-#if 0
-            //__________________________________________________________________
-            //
-            //
-            //! Make univocal rows of (signed) integral types
-            //
-            //__________________________________________________________________
-            template <typename T> static void
-            MakeMatrixCast(Matrix<T> &a)
-            {
-                Matrix<apz> z(CopyOf,a);
-                MakeMatrix(z);
-                const size_t n = a.cols;
-                for(size_t i=a.rows;i>0;--i)
-                {
-                    Writable<T>         &a_i = a[i];
-                    const Readable<apz> &z_i = z[i];
-                    for(size_t j=n;j>0;--j)
-                        a_i[j] = z_i[j].cast<T>(CallSign);
-                }
-            }
-#endif
-            
         private:
             static const Natural & Dispatch(size_t &numPos, size_t &numNeg, SignType &firstSign, const apq &q) noexcept;
             static  apq          & UpdateGCD(Natural &g, const apq &q);

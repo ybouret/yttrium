@@ -24,7 +24,7 @@ Y_UTEST(kemp_univocal)
                 for(size_t j=0;j<i;++j)
                     N << apn(4,ran);
                 Vector<apn> U(N);
-                Univocal::MakeNatural(U);
+                Univocal::Make(U);
                 std::cerr << N << "->" << U << std::endl;
                 Y_ASSERT( Colinearity::Of(N,U) );
             }
@@ -37,7 +37,7 @@ Y_UTEST(kemp_univocal)
                 for(size_t j=0;j<i;++j)
                     Z << apz(3,ran);
                 Vector<apz> U(Z);
-                Univocal::MakeInteger(U);
+                Univocal::Make(U);
                 std::cerr << Z << "->" << U << std::endl;
                 Y_ASSERT( Colinearity::Of(Z,U) );
             }
@@ -51,13 +51,26 @@ Y_UTEST(kemp_univocal)
                 for(size_t j=0;j<i;++j)
                     Q << apq(4,4,ran);
                 Vector<apq> U(Q);
-                Univocal::MakeRational(U);
+                Univocal::Make(U);
                 std::cerr << Q << "->" << U << std::endl;
                 Y_ASSERT( Colinearity::Of(Q,U) );
             }
             std::cerr << std::endl;
 
-
+#if 1
+            std::cerr << "Unsigned" << std::endl;
+            for(size_t i=0;i<=6;++i)
+            {
+                Vector<unsigned> Q;
+                for(size_t j=0;j<i;++j)
+                    Q << ran.in<unsigned>(0,10);
+                Vector<unsigned> U(Q);
+                Univocal::Make(U);
+                std::cerr << Q << "->" << U << std::endl;
+                Y_ASSERT( Colinearity::Of(Q,U) );
+            }
+            std::cerr << std::endl;
+#endif
             
 
 
