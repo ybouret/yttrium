@@ -1,5 +1,5 @@
-#include "y/kemp/rational/univocal.hpp"
-#include "y/kemp/colinearity.hpp"
+#include "y/kemp/ops/colinearity.hpp"
+#include "y/kemp/ops/univocal.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/park-miller.hpp"
 #include "y/sequence/vector.hpp"

@@ -1,5 +1,5 @@
 
-#include "y/kemp/rational/common-denominator.hpp"
+#include "y/kemp/ops/common-denominator.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/park-miller.hpp"
 #include "y/sequence/vector.hpp"

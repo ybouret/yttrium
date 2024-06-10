@@ -1,5 +1,5 @@
 
-#include "y/kemp/narrow.hpp"
+#include "y/kemp/ops/narrow.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/park-miller.hpp"
 #include "y/sequence/vector.hpp"

@@ -1,6 +1,5 @@
 
-#include "y/kemp/rational/univocal.hpp"
-#include "y/container/cxx/array.hpp"
+#include "y/kemp/ops/univocal.hpp"
 
 namespace Yttrium
 {

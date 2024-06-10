@@ -8,6 +8,7 @@
 #include "y/kemp/rational.hpp"
 #include "y/container/matrix.hpp"
 #include "y/container/cxx/array.hpp"
+#include "y/calculus/gcd.hpp"
 
 namespace Yttrium
 {
@@ -31,6 +32,46 @@ namespace Yttrium
             //__________________________________________________________________
             static const char * const CallSign; //!< "Kemp::Univocal"
             
+
+            template <typename T, typename ITERATOR> static inline
+            void MakeUnsigned( const Type2Type<T> &, ITERATOR curr, const size_t size)
+            {
+
+                //--------------------------------------------------------------
+                //
+                // sorting out cases
+                //
+                //--------------------------------------------------------------
+                switch(size)
+                {
+                        // do nothing
+                    case 0: return;
+
+                        // left zero untouched or make positive 1
+                    case 1: { T &n = Coerce(*curr); if(n>0) n = 1;} return;
+
+                        // generic case
+                    default: break;
+                }
+                T g = *curr;
+                {
+                    ITERATOR temp = curr;
+                    for(size_t i=size;i>1;--i)
+                        g = GreatestCommonDivisor(g,*(++temp));
+                }
+                if(g>1) {
+                    for(size_t i=size;i>0;--i)
+                        *(curr++) /= g;
+                }
+            }
+
+            template <typename SEQUENCE> static inline
+            void MakeUnsigned(SEQUENCE &seq)
+            {
+                static const Type2Type< typename SEQUENCE::Type > which = {};
+                MakeUnsigned(which,seq.begin(),seq.size());
+            }
+
 
             //__________________________________________________________________
             //
@@ -297,28 +338,28 @@ namespace Yttrium
 
         private:
 
-            //! direct call
+            //! forward to Natural
             template <typename SEQUENCE> static inline
             void Call(SEQUENCE &seq, const Int2Type<UseAPN> &)
             {
                 MakeNatural(seq);
             }
 
-            //! direct call
+            //! forward to Integer
             template <typename SEQUENCE> static inline
             void Call(SEQUENCE &seq, const Int2Type<UseAPZ> &)
             {
                 MakeInteger(seq);
             }
 
-            //! direct call
+            //! forward to Rational
             template <typename SEQUENCE> static inline
             void Call(SEQUENCE &seq, const Int2Type<UseAPQ> &)
             {
                 MakeRational(seq);
             }
 
-            //! direct call
+            //! dispatch to Unsigned/Signed
             template <typename SEQUENCE> static inline
             void Call(SEQUENCE &seq, const Int2Type<UseARI> &)
             {
@@ -328,18 +369,22 @@ namespace Yttrium
             }
 
 
-            //! use internal unsigned/Natural conversion
+            //! forward to Unsigned
             template <typename SEQUENCE, size_t N> static inline
             void Call_(SEQUENCE &seq, const Int2Type<false> &)
             {
-                static const Type2Type< typename SEQUENCE::Type> what = {};
-                const size_t                     size = seq.size();
-                CxxArray<Natural,Memory::Dyadic> temp(size);
-                Load(temp,seq.begin(),size);
-                MakeNatural(temp);
-                Save(what,seq.begin(),size,temp);
+                MakeUnsigned(seq);
             }
 
+            //! forward to Signed
+            template <typename SEQUENCE, size_t N> static inline
+            void Call_(SEQUENCE &seq, const Int2Type<true> &)
+            {
+                //MakeSigned(seq);
+            }
+
+
+#if 0
             //! use internal signed/Integer conversion
             template <typename SEQUENCE, size_t N> static inline
             void Call_(SEQUENCE &seq, const Int2Type<true> &)
@@ -367,6 +412,7 @@ namespace Yttrium
                 for(size_t i=1;i<=size;++i,++curr)
                     *curr = src[i].template cast<T>( CallSign );
             }
+#endif
 
             static const Natural & Dispatch(size_t &numPos, size_t &numNeg, SignType &firstSign, const apq &q) noexcept;
             static  apq          & UpdateGCD(Natural &g, const apq &q);

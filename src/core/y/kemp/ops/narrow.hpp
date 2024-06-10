@@ -3,9 +3,9 @@
 #ifndef Y_Kemp_Sora_Included
 #define Y_Kemp_Sora_Included 1
 
-#include "y/kemp/colinearity.hpp"
-#include "y/kemp/count-non-zero.hpp"
-#include "y/kemp/univocal.hpp"
+#include "y/kemp/ops/colinearity.hpp"
+#include "y/kemp/ops/count-non-zero.hpp"
+#include "y/kemp/ops/univocal.hpp"
 #include "y/container/matrix.hpp"
 #include "y/container/cxx/series.hpp"
 
@@ -88,6 +88,7 @@ namespace Yttrium
                         const Readable<U> &src = source[k];
                         MatrixRow<T>      &tgt = target[i];
                         for(size_t j=cols;j>0;--j) tgt[j] = src[j];
+                        Univocal::Make(tgt);
                     }
                 }
             }
