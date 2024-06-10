@@ -3,10 +3,10 @@
 #ifndef Y_Kemp_Sora_Included
 #define Y_Kemp_Sora_Included 1
 
-#include "y/kemp/rational.hpp"
+#include "y/kemp/colinearity.hpp"
+#include "y/kemp/count-non-zero.hpp"
 #include "y/container/matrix.hpp"
 #include "y/data/small/heavy/list/bare.hpp"
-#include <iostream>
 
 
 namespace Yttrium
@@ -24,99 +24,6 @@ namespace Yttrium
         struct Narrow
         {
 
-            //__________________________________________________________________
-            //
-            //
-            //! Check colinearity of int/unsigned/apz arrays
-            //
-            //__________________________________________________________________
-            template <typename LHS, typename RHS> static inline
-            bool AreColinear(LHS &lhs, RHS &rhs)
-            {
-                const size_t n = lhs.size(); assert( lhs.size() == rhs.size() );
-
-                SignType s = __Zero__;
-                Natural  numer, denom;
-                for(size_t i=n;i>0;--i)
-                {
-                    apz l = lhs[i];
-                    apz r = rhs[i];
-                    switch( Sign::MakePair(l.s,r.s) )
-                    {
-                            //--------------------------------------------------
-                            // zero w.r.t not zero => false
-                            //--------------------------------------------------
-                        case ZP_Signs:
-                        case ZN_Signs:
-                        case PZ_Signs:
-                        case NZ_Signs:
-                            return false;
-
-                            //--------------------------------------------------
-                            // zero w.r.t zero => ok
-                            //--------------------------------------------------
-                        case ZZ_Signs:
-                            continue;
-
-                            //--------------------------------------------------
-                            // produce a positive factor
-                            //--------------------------------------------------
-                        case NN_Signs:
-                        case PP_Signs:
-                            switch(s)
-                            {
-                                case Negative: // => false
-                                    return false;
-                                case __Zero__: // initialize to positive value
-                                    s     = Positive;
-                                    Natural::Simplify(numer=l.n,denom=r.n);
-                                    break;
-                                case Positive: // test propto
-                                    if(r.n*numer != l.n*denom) return false;
-                                    break;
-
-                            }
-                            break;
-
-                            //--------------------------------------------------
-                            // produce a negative factor
-                            //--------------------------------------------------
-                        case NP_Signs:
-                        case PN_Signs:
-                            switch(s)
-                            {
-                                case Positive: // => false
-                                    return false;
-                                case __Zero__: // initialize to negative value
-                                    s     = Negative;
-                                    Natural::Simplify(numer=l.n,denom=r.n);
-                                    break;
-                                case Negative: // test propto
-                                    if(r.n*numer != l.n * denom) return false;
-                                    break;
-                            }
-                            break;
-
-                    }
-                }
-                
-                return true;
-            }
-
-
-            //__________________________________________________________________
-            //
-            //
-            //! count number of non-zero elements
-            //
-            //__________________________________________________________________
-            template <typename SOURCE>
-            static inline size_t CountNonZero(SOURCE &source)
-            {
-                size_t count = 0;
-                for(size_t i=source.size();i>0;--i) { if(0!=source[i]) ++count; }
-                return count;
-            }
 
 
             typedef Small::BareHeavyList<size_t> IList; //!< list of indices
@@ -134,8 +41,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename T, typename U> static inline
-            void Compress(Matrix<T>       &target,
-                          const Matrix<U> &source)
+            void Down(Matrix<T>       &target,
+                      const Matrix<U> &source)
             {
                 //--------------------------------------------------------------
                 // preparing indices
@@ -146,12 +53,12 @@ namespace Yttrium
                 const size_t rows = source.rows;
                 for(size_t i=1;i<=rows;++i)
                 {
-                    const MatrixRow<U> &src = source[i];  if( CountNonZero(src) <= 0 ) continue;
+                    const MatrixRow<U> &src = source[i];  if( CountNonZero::In(src) <= 0 ) continue;
                     bool                bad = false;
                     for(const INode *node=indx.head;node;node=node->next)
                     {
                         const size_t k = **node;
-                        if( AreColinear(src,source[k]) )
+                        if( Colinearity::Of(src,source[k]) )
                         {
                             bad = true;
                             break;
