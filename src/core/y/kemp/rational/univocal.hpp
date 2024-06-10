@@ -153,19 +153,13 @@ namespace Yttrium
             static  apq          & UpdateGCD(Natural &g, const apq &q);
 
             template <typename ITERATOR> static inline
-            void MulByPos(const Natural &common, ITERATOR curr, size_t n, Natural &g)
-            {
-                assert(0==g);
-                while(n-- > 0)
-                    (void) UpdateGCD(g,(Coerce(*(curr++)) *= common));
+            void MulByPos(const Natural &common, ITERATOR curr, size_t n, Natural &g) { assert(0==g);
+                while(n-- > 0) (void) UpdateGCD(g,(Coerce(*(curr++)) *= common));
             }
 
             template <typename ITERATOR> static inline
-            void MulByNeg(const Natural &common, ITERATOR curr, size_t n, Natural &g)
-            {
-                assert(0==g);
-                while(n-- > 0)
-                    UpdateGCD(g,(Coerce(*(curr++)) *= common)).neg();
+            void MulByNeg(const Natural &common, ITERATOR curr, size_t n, Natural &g) {
+                while(n-- > 0) UpdateGCD(g,(Coerce(*(curr++)) *= common)).neg();
             }
 
         };
