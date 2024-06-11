@@ -73,6 +73,7 @@ namespace Yttrium
                             fd_set * const errorfds,
                             Duration      &duration)
     {
+#if 0
 		std::cerr << "d=" << double(duration) << std::endl;
 		std::cerr << "d.tv@" << (void*)duration.tv() << std::endl;
 		std::cerr << "r@" << (void*)readfds << std::endl;
@@ -85,8 +86,9 @@ namespace Yttrium
 			tv->tv_usec = 0;
 			tv->tv_sec = 0;
 		}
-
-        const int res = ::select(nfds,readfds,writefds,errorfds,NULL);
+#endif
+        
+        const int res = ::select(nfds,readfds,writefds,errorfds,duration.tv());
 		std::cerr << "res=" << res << std::endl;
         if( IsError(res) ) throw Network::Exception( LastError(), "select");
         assert(res>=0);
@@ -100,8 +102,6 @@ namespace Yttrium
 		FD_ZERO(&w);
 		FD_ZERO(&x);
         Duration d = Max<double>(0,ns);
-		std::cerr << "d=" << double(d) << std::endl;
-		std::cerr << "d.tv@" << (void*)d.tv() << std::endl;
         (void) select(0,&r,&w,&x,d);
     }
 
