@@ -95,9 +95,10 @@ Y_UTEST(kemp_univocal)
                 a[i][j] = ran.in<int>(-5,5);
             }
         }
-        //std::cerr << "a=" << a << std::endl;
-        //Univocal::MakeMatrixCast(a);
-        //std::cerr << "u=" << a << std::endl;
+        std::cerr << "a=" << a << std::endl;
+        Univocal::MakeMatrix(a);
+        std::cerr << "u=" << a << std::endl;
+
     }
 
 }

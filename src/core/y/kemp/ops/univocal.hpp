@@ -425,6 +425,21 @@ namespace Yttrium
                 Call(seq,choice);
             }
 
+
+            //__________________________________________________________________
+            //
+            //
+            //! Make univocal matrix ROWS
+            //
+            //__________________________________________________________________
+            template <typename T, typename ALLOC> static inline
+            void MakeMatrix(Matrix<T,ALLOC> &M )
+            {
+                for(size_t i=M.rows;i>0;--i)
+                    Make(M[i]);
+            }
+
+
         private:
 
             //! forward to Natural

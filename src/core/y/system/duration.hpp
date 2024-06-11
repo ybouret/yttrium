@@ -14,28 +14,56 @@
 
 namespace Yttrium
 {
-
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Duration built around timeval
+    //
+    //
+    //__________________________________________________________________________
     class Duration
     {
     public:
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+      
+        //! Status
         enum Status
         {
-            Standard=0,
-            Infinite=1
+            Standard=0, //!< positive or zero time
+            Infinite=1  //!< negative time
         };
-        static const size_t Required = 4 * sizeof(uint64_t);
-        static const size_t MaxWait  = 60;
+        static const size_t Required = 4 * sizeof(uint64_t); //!< to store info
+        static const size_t MaxWait  = 60;                   //!< max wait in seconds
 
-        Duration(const double s)               noexcept;
-        Duration(const Duration &)             noexcept;
-        Duration & operator=(const Duration &) noexcept;
-        Duration & operator=(const double   s) noexcept;
-        ~Duration()                            noexcept;
 
-        Status                 status() const noexcept;
-        operator double()               const noexcept;
-        struct timeval *       tv()           noexcept;
-        const struct timeval * tv()     const noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        Duration(const double s)               noexcept; //!< setup
+        Duration(const Duration &)             noexcept; //!< copy
+        Duration & operator=(const Duration &) noexcept; //!< assign
+        Duration & operator=(const double   s) noexcept; //!< assign
+        ~Duration()                            noexcept; //!< cleanup
+
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        Status                 status() const noexcept; //!< status
+        operator double()               const noexcept; //!< conversion
+        struct timeval *       tv()           noexcept; //!< NULL or positive
+        const struct timeval * tv()     const noexcept; //!< NULL or positive
 
 
     private:

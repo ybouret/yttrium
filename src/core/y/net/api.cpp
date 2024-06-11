@@ -61,6 +61,7 @@ namespace Yttrium
 
 #if defined(Y_BSD)
 #include <sys/select.h>
+#include <sys/types.h>
 #endif
 #include "y/type/utils.hpp"
 
