@@ -69,9 +69,9 @@ namespace Yttrium
 {
 
     size_t Network:: select(int            nfds,
-                            fd_set * const readfds,
-                            fd_set * const writefds,
-                            fd_set * const errorfds,
+                            fd_set *   readfds,
+                            fd_set *   writefds,
+                            fd_set *   errorfds,
                             Duration      &duration)
     {
 #if 0
@@ -103,7 +103,7 @@ namespace Yttrium
 		FD_ZERO(&w);
 		FD_ZERO(&x);
         Duration d = Max<double>(0,ns);
-        (void) select(0,&r,&w,&x,d);
+        (void) Network::select(0,&r,&w,&x,d);
     }
 
 

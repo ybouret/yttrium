@@ -12,6 +12,10 @@
 #include <ws2tcpip.h>
 #endif
 
+#if defined(Y_BSD)
+#include <sys/select.h>
+#endif
+
 namespace Yttrium
 {
     
@@ -53,10 +57,10 @@ namespace Yttrium
         static int  LastError()                    noexcept; //!< errno, WSAGetLastError()...
 
         //! wrapper around the ::select function
-        size_t select(int            nfds,
-                      fd_set * const readfds,
-                      fd_set * const writefds,
-                      fd_set * const errorfds,
+        size_t select(int         nfds,
+                      fd_set *   readfds,
+                      fd_set *   writefds,
+                      fd_set *   errorfds,
                       Duration      &duration);
 
         void   sleepFor(double ns); //!< broken...
