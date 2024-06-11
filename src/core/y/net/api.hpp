@@ -10,23 +10,20 @@
 namespace Yttrium
 {
 
-    namespace Network
-    {
+	class Network : public Singleton<Network>
+	{
+	public:
+		static const char * const      CallSign; //!< "Network"
+		static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 9; //!< Longevity
 
-        class API : public Singleton<API>
-        {
-        public:
-            static const char * const      CallSign; //!< "Network"
-            static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 9; //!< Longevity
+	private:
+		Y_DISABLE_COPY_AND_ASSIGN(Network);
+		explicit Network();
+		virtual ~Network() noexcept;
+		friend class Singleton<Network>;
+	};
 
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(API);
-            explicit API();
-            virtual ~API() noexcept;
-            friend class Singleton<API>;
-        };
 
-    }
 
 }
 

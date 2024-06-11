@@ -278,7 +278,7 @@ macro(Y_LinkLibraries target)
         if(Y_GNU)
             target_link_libraries(${target} -static-libgcc -static-libstdc++) 
         endif()
-	target_link_libraries(${target} ws2_32)
+	list(APPEND libs ws2_32)
     endif()
     
     target_link_libraries(${target} ${ARGN} ${libs} )
