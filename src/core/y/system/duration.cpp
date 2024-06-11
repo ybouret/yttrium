@@ -119,11 +119,4 @@ namespace Yttrium
     }
 
 
-#if 0
-    struct timeval * Duration:: tv() noexcept
-    {
-        return static_cast<struct timeval *>( Memory::OutOfReach::Addr(wksp) );
-    }
-#endif
-
 }

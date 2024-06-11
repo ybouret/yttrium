@@ -73,7 +73,21 @@ namespace Yttrium
                             fd_set * const errorfds,
                             Duration      &duration)
     {
-        const int res = ::select(nfds,readfds,writefds,errorfds, duration.tv() );
+		std::cerr << "d=" << double(duration) << std::endl;
+		std::cerr << "d.tv@" << (void*)duration.tv() << std::endl;
+		std::cerr << "r@" << (void*)readfds << std::endl;
+		std::cerr << "w@" << (void*)writefds << std::endl;
+		struct timeval *tv = duration.tv();
+		if (tv)
+		{
+			std::cerr << "nsec=" << tv->tv_sec  << std::endl;
+			std::cerr << "usec=" << tv->tv_usec << std::endl;
+			tv->tv_usec = 0;
+			tv->tv_sec = 0;
+		}
+
+        const int res = ::select(nfds,readfds,writefds,errorfds,NULL);
+		std::cerr << "res=" << res << std::endl;
         if( IsError(res) ) throw Network::Exception( LastError(), "select");
         assert(res>=0);
         return static_cast<size_t>(res);
@@ -81,8 +95,14 @@ namespace Yttrium
 
     void Network:: sleepFor(double ns)
     {
+		fd_set r,w,x;
+		FD_ZERO(&r);
+		FD_ZERO(&w);
+		FD_ZERO(&x);
         Duration d = Max<double>(0,ns);
-        (void) select(0,0,0,0,d);
+		std::cerr << "d=" << double(d) << std::endl;
+		std::cerr << "d.tv@" << (void*)d.tv() << std::endl;
+        (void) select(0,&r,&w,&x,d);
     }
 
 
