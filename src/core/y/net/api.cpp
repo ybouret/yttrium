@@ -62,6 +62,7 @@ namespace Yttrium
 #if defined(Y_BSD)
 #include <sys/select.h>
 #endif
+#include "y/type/utils.hpp"
 
 namespace Yttrium
 {
@@ -74,11 +75,16 @@ namespace Yttrium
     {
         const int res = ::select(nfds,readfds,writefds,errorfds, duration.tv() );
         if( IsError(res) ) throw Network::Exception( LastError(), "select");
-
-
-
-        return 0;
+        assert(res>=0);
+        return static_cast<size_t>(res);
     }
+
+    void Network:: sleepFor(double ns)
+    {
+        Duration d = Max<double>(0,ns);
+        (void) select(0,0,0,0,d);
+    }
+
 
 }
 

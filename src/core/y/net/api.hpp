@@ -38,6 +38,8 @@ namespace Yttrium
                       fd_set * const errorfds,
                       Duration      &duration);
 
+        void   sleepFor(double ns);
+
 	private:
 		Y_DISABLE_COPY_AND_ASSIGN(Network);
 		explicit Network();
