@@ -357,4 +357,5 @@ add_test(kemp:narrow   test-core kemp_narrow)
 
 #net
 add_test(net:init      test-core net_init)
+add_test(net:duration  test-core net_duration)
 

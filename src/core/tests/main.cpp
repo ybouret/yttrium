@@ -275,6 +275,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(kemp_narrow);
 
     Y_UTEST(net_init);
+    Y_UTEST(net_duration);
 
 }
 Y_UTEST_EXEC()
