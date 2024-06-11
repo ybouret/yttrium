@@ -30,13 +30,13 @@ namespace Yttrium
         Duration(const Duration &)             noexcept;
         Duration & operator=(const Duration &) noexcept;
         Duration & operator=(const double   s) noexcept;
-        ~Duration() noexcept;
+        ~Duration()                            noexcept;
 
         Status                 status() const noexcept;
         operator double()               const noexcept;
         struct timeval *       tv()           noexcept;
         const struct timeval * tv()     const noexcept;
-        
+
 
     private:
         mutable void *wksp[ Y_WORDS_GEQ(Required) ];
