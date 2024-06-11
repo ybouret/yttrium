@@ -251,15 +251,15 @@ Y_UTEST_DECL(256)
     Y_UTEST(field4d);
     Y_UTEST(fieldmk);
     Y_UTEST(field_layouts);
-
+    
     Y_UTEST(color_rgb);
     Y_UTEST(color_rgba);
     Y_UTEST(color_yuv);
     Y_UTEST(color_conv);
     Y_UTEST(color_channels);
 
-    Y_UTEST(tow_api);    
-    
+    Y_UTEST(tow_api);
+
     Y_UTEST(kemp_element);
     Y_UTEST(kemp_natural);
     Y_UTEST(kemp_addsub);
@@ -273,6 +273,8 @@ Y_UTEST_DECL(256)
     Y_UTEST(kemp_univocal);
     Y_UTEST(kemp_colinear);
     Y_UTEST(kemp_narrow);
+
+    Y_UTEST(net_init);
 
 }
 Y_UTEST_EXEC()

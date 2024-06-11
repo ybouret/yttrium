@@ -122,6 +122,7 @@ field/meta-key
 color
 color/ramp
 color/rgb
+net
 )
 
 source_group(concurrent FILES ${quark})

@@ -28,6 +28,7 @@ woven
 rtld
 field
 color
+net
 )
 
 Y_LinkLibraries(test-core)
@@ -353,3 +354,7 @@ add_test(kemp:comden   test-core kemp_comden)
 add_test(kemp:univocal test-core kemp_univocal)
 add_test(kemp:colinear test-core kemp_colinear)
 add_test(kemp:narrow   test-core kemp_narrow)
+
+#net
+add_test(net:init      test-core net_init)
+
