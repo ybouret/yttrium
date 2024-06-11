@@ -7,10 +7,6 @@
 #include <cstring>
 
 
-#if defined(Y_WIN)
-#include <winsock2.h>
-#endif
-
 namespace Yttrium
 {
     Duration:: ~Duration() noexcept

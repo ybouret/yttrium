@@ -6,6 +6,12 @@
 #include "y/config/starting.hpp"
 #include "y/calculus/align.hpp"
 
+
+#if defined(Y_WIN)
+#include <winsock2.h>
+#endif
+
+
 namespace Yttrium
 {
 
