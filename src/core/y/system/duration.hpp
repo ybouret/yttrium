@@ -26,17 +26,17 @@ namespace Yttrium
         static const size_t Required = 4 * sizeof(uint64_t);
         static const size_t MaxWait  = 60;
 
-        Duration(const double s) noexcept;
-        Duration(const Duration &) noexcept;
+        Duration(const double s)               noexcept;
+        Duration(const Duration &)             noexcept;
         Duration & operator=(const Duration &) noexcept;
         Duration & operator=(const double   s) noexcept;
-
         ~Duration() noexcept;
 
         Status                 status() const noexcept;
+        operator double()               const noexcept;
         struct timeval *       tv()           noexcept;
         const struct timeval * tv()     const noexcept;
-        operator double() const noexcept;
+        
 
     private:
         mutable void *wksp[ Y_WORDS_GEQ(Required) ];
