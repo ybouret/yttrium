@@ -1,6 +1,13 @@
 
 #include "y/utest/run.hpp"
+
+#if defined(Y_BSD)
 #include <sys/select.h>
+#endif
+
+#if defined(Y_WIN)
+#include <winsock2.h>
+#endif
 
 using namespace Yttrium;
 
