@@ -18,10 +18,10 @@ Y_UTEST(kemp_kar)
         const uint64_t y0 = (y&0xffff);
 
         std::cerr << "x  = "  << Hexadecimal(x)  << std::endl;
-        std::cerr << "x0 = " << Hexadecimal(x0) << std::endl;
-        std::cerr << "x1 = " << Hexadecimal(x1) << std::endl;
+        std::cerr << "x0 = "  << Hexadecimal(x0) << std::endl;
+        std::cerr << "x1 = "  << Hexadecimal(x1) << std::endl;
 
-        std::cerr << "y  = "  << Hexadecimal(y)  << std::endl;
+        std::cerr << "y  = " << Hexadecimal(y)  << std::endl;
         std::cerr << "y0 = " << Hexadecimal(y0) << std::endl;
         std::cerr << "y1 = " << Hexadecimal(y1) << std::endl;
 
@@ -34,6 +34,12 @@ Y_UTEST(kemp_kar)
         const uint64_t z1 = (z3-z2-z0);
         std::cerr << "z1 = " << Hexadecimal(z1) << std::endl;
         Y_ASSERT(x0*y1+y0*x1==z1);
+        const uint64_t p0 = z0;
+        const uint64_t p1 = (z1<<16);
+        const uint64_t p2 = (z2<<32);
+        std::cerr << "p0 = " << Hexadecimal(p0) << std::endl;
+        std::cerr << "p1 = " << Hexadecimal(p1) << std::endl;
+        std::cerr << "p2 = " << Hexadecimal(p2) << std::endl;
         const uint64_t p = z0 +  (z1<<16) + (z2<<32);
         const uint64_t xy = x*y;
         std::cerr << "p  = " << Hexadecimal(p) << std::endl;
