@@ -175,9 +175,9 @@ namespace Yttrium
                 return BitsToPositive(bits) == positive;
             }
 
-            //! get leat significant 64 bits
+            //! get least significant 64 bits
             inline uint64_t pull64() const noexcept { return Pull64::From(item); }
-
+            
             
             //__________________________________________________________________
             //
@@ -187,7 +187,7 @@ namespace Yttrium
             //__________________________________________________________________
             const size_t    capacity; //!< current capacity
             size_t          positive; //!< current positive itmes
-            T * const       item;     //!< items
+            T * const       item;     //!< items in little endian
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Assembly);

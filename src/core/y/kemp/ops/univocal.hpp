@@ -40,7 +40,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename T, typename ITERATOR> static inline
-            void MakeUnsigned( const Type2Type<T> &, ITERATOR curr, const size_t size)
+            void MakeUnsigned(const Type2Type<T> &, ITERATOR curr, const size_t size)
             {
 
                 //--------------------------------------------------------------
@@ -59,12 +59,24 @@ namespace Yttrium
                         // generic case
                     default: break;
                 }
+
+                //--------------------------------------------------------------
+                //
+                // no problem of sign, just collect GCD
+                //
+                //--------------------------------------------------------------
                 T g = *curr;
                 {
                     ITERATOR temp = curr;
                     for(size_t i=size;i>1;--i)
                         g = GreatestCommonDivisor(g,*(++temp));
                 }
+
+                //--------------------------------------------------------------
+                //
+                // and simplify
+                //
+                //--------------------------------------------------------------
                 if(g>1) {
                     for(size_t i=size;i>0;--i)
                         *(curr++) /= g;

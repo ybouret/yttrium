@@ -109,7 +109,7 @@ num64(entry,num32.capacity>>1,bits,AsBits)
 
             assert(bytes.positive>0);
             const size_t msi = bytes.positive-1;
-            const size_t msb = bits - (msi<<3);  
+            const size_t msb = bits - (msi<<3);
             assert(msb>=1);
             assert(msb<=8);
             assert(bits==msi*8+msb);
@@ -131,7 +131,7 @@ num64(entry,num32.capacity>>1,bits,AsBits)
 
         size_t       Element ::measure() const noexcept { return bytes.capacity; }
         const void * Element:: ro_addr() const noexcept { return entry; }
-        
+
 
 
 
@@ -192,6 +192,20 @@ num64(entry,num32.capacity>>1,bits,AsBits)
             return num64.pull64();
         }
 
+        uint8_t Element:: u8() const noexcept
+        {
+            switch(state)
+            {
+                case AsNum16: return static_cast<uint8_t>(num16.item[0]);
+                case AsNum32: return static_cast<uint8_t>(num32.item[0]);
+                case AsNum64: return static_cast<uint8_t>(num64.item[0]);
+                case AsBytes: break;
+            }
+            return bytes.item[0];
+        }
+
+        
+
 
         Element & Element:: set(const State newState) noexcept
         {
@@ -216,7 +230,7 @@ num64(entry,num32.capacity>>1,bits,AsBits)
                         case AsNum64: num16.load(num64); break;
                     }
                     break;
-                    
+
                 case AsNum32:
                     switch(state)
                     {

@@ -163,7 +163,8 @@ namespace Yttrium
             //__________________________________________________________________  
             template <typename T>
             Assembly<T> &   get()                        noexcept; //!< return prepared assembly
-            uint64_t        u64()                  const noexcept; //!< least significant 64 bits
+            uint64_t        u64()                  const noexcept; //!< least significant 64-bits
+            uint8_t         u8()                   const noexcept; //!< least significant 8-bits
             Element &       set(const State)             noexcept; //!< ensure state
             static State    TuneUp(Element &, Element &) noexcept; //!< tune to largest integral
             static Element *Shrink(Element *)            noexcept; //!< try to reduce capacity
