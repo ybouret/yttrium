@@ -354,6 +354,7 @@ add_test(kemp:comden   test-core kemp_comden)
 add_test(kemp:univocal test-core kemp_univocal)
 add_test(kemp:colinear test-core kemp_colinear)
 add_test(kemp:narrow   test-core kemp_narrow)
+add_test(kemp:kar      test-core kemp_kar)
 
 #net
 add_test(net:init      test-core net_init)
