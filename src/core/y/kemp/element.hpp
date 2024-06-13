@@ -11,6 +11,7 @@
 #include "y/type/capacity.hpp"
 #include "y/random/bits.hpp"
 #include "y/type/signs.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace Yttrium
 {
@@ -179,6 +180,17 @@ namespace Yttrium
             Element & shr() noexcept;           //!< IN PLACE shift right 1 bit, noexcept (a.k.a fast divide by two)
             Element * shr(const size_t nbit);   //!< shift right, new element
             Element * shl(const size_t nbit);   //!< shift left,  new element
+
+            //__________________________________________________________________
+            //
+            //
+            // Words
+            //
+            //__________________________________________________________________
+            void split(AutoPtr<Element> &upper,
+                       AutoPtr<Element> &lower) const;
+
+
 
             //__________________________________________________________________
             //
