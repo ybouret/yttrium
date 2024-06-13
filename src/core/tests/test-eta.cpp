@@ -1,23 +1,16 @@
-
+#include "y/system/sleep.hpp"
 #include "y/utest/run.hpp"
-
-#if defined(Y_BSD)
-#include <sys/select.h>
-#endif
-
-#if defined(Y_WIN)
-#include <winsock2.h>
-#endif
+#include "y/system/wtime.hpp"
 
 using namespace Yttrium;
 
 Y_UTEST(eta)
 {
-    struct timeval tv = { 1, 200 };
-    
-    const int res = select(0, 0, 0, 0, &tv);
-
-    std::cerr << "res=" << res << std::endl;
+    WallTime tmx;
+    const uint64_t mark = WallTime::Ticks();
+    SystemSleep::For(50);
+    const double   ell = tmx(WallTime::Ticks() - mark);
+    std::cerr << "ell=" << ell*1000.0 << " ms" << std::endl;
 
 }
 Y_UDONE()

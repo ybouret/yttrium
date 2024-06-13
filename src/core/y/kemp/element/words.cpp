@@ -1,5 +1,8 @@
 
-#include "y/kemp/element.hpp"
+#include "y/kemp/element/add.hpp"
+#include "y/system/error.hpp"
+#include "y/system/exception.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
@@ -8,8 +11,8 @@ namespace Yttrium
 
         template <typename T> static inline
         size_t Split(AutoPtr<Element>  &lower,
-                   AutoPtr<Element>  &upper,
-                   const Assembly<T> &source)
+                     AutoPtr<Element>  &upper,
+                     const Assembly<T> &source)
         {
 
             const size_t np = source.positive;
@@ -33,7 +36,7 @@ namespace Yttrium
             U.positive = nu;
             upper->bits = U.updateBits();
             upper->revise();
-            
+
             return nl;
 
         }
@@ -48,9 +51,46 @@ namespace Yttrium
                 case AsNum32: return Split(lower,upper,num32);
                 case AsNum64: return Split(lower,upper,num64);
             }
-            return 0;
+            throw Specific::Exception(CallSign, "corrupted state to split");
         }
 
+
+        template <typename CORE, typename WORD> static inline
+        Element * Merge_(const Assembly<WORD> &lower,
+                         const Assembly<WORD> &upper,
+                         const size_t          m)
+        {
+            const size_t     newPositive = upper.positive + m;
+            AutoPtr<Element> newElement = new Element( newPositive * sizeof(WORD), AsCapacity );
+            Assembly<WORD>  &newUpper   = newElement->get<WORD>();
+            const size_t     upperPos   = upper.positive;
+            newUpper.positive = m + upperPos;
+            memcpy(newUpper.item+m,upper.item,upperPos * sizeof(WORD));
+
+            return Addition<CORE,WORD>::Get(lower,newUpper);
+
+        }
+
+
+        Element * Element:: Merge(const Ops   ops,
+                                  Element    &lower,
+                                  Element     &upper,
+                                  const size_t m)
+        {
+
+            switch(ops)
+            {
+                case Ops64_32: return Merge_<uint64_t,uint32_t>(lower.get<uint32_t>(), upper.get<uint32_t>(),m);
+                case Ops64_16: return Merge_<uint64_t,uint16_t>(lower.get<uint16_t>(), upper.get<uint16_t>(),m);
+                case Ops64_8:  return Merge_<uint64_t,uint8_t>(lower.get<uint8_t>(), upper.get<uint8_t>(),m);
+
+                case Ops32_16: return Merge_<uint32_t,uint16_t>(lower.get<uint16_t>(), upper.get<uint16_t>(),m);
+                case Ops32_8:  return Merge_<uint32_t,uint8_t>(lower.get<uint8_t>(), upper.get<uint8_t>(),m);
+
+                case Ops16_8:  return Merge_<uint16_t,uint8_t>(lower.get<uint8_t>(), upper.get<uint8_t>(),m);
+            }
+            throw Specific::Exception(CallSign, "corrupted ops to merge");
+        }
     }
 
 }

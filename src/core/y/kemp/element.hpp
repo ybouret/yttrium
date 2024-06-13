@@ -198,6 +198,12 @@ namespace Yttrium
                           AutoPtr<Element> &upper) const;
 
 
+            //! return lower + upper * B^m
+            static Element * Merge(const Ops      ops,
+                                   Element       &lower,
+                                   Element       &upper,
+                                   const size_t   m);
+
 
             //__________________________________________________________________
             //
