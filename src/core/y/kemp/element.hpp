@@ -187,8 +187,8 @@ namespace Yttrium
             // Words
             //
             //__________________________________________________________________
-            void split(AutoPtr<Element> &upper,
-                       AutoPtr<Element> &lower) const;
+            void split(AutoPtr<Element> &lower,
+                       AutoPtr<Element> &upper) const;
 
 
 

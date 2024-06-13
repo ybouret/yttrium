@@ -12,6 +12,27 @@ namespace Yttrium
                    const Assembly<T> &source)
         {
 
+            const size_t np = source.positive;
+            const size_t nl = np >> 1;
+            const size_t nu = np-nl;
+
+            lower = new Element( nl * sizeof(T), AsCapacity);
+            upper = new Element( nu * sizeof(T), AsCapacity);
+
+            Assembly<T> &L = lower->get<T>();
+            Assembly<T> &U = upper->get<T>();
+
+            for(size_t i=0;i<nl;++i)
+                L.item[i] = source.item[i];
+            L.positive  = nl;
+            lower->bits = L.updateBits();
+            lower->revise();
+
+            for(size_t i=0;i<nu;++i)
+                U.item[i] = source.item[nl+i];
+            U.positive = nu;
+            upper->bits = U.updateBits();
+            upper->revise();
             
         }
 

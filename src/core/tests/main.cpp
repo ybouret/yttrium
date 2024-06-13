@@ -274,6 +274,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(kemp_colinear);
     Y_UTEST(kemp_narrow);
     Y_UTEST(kemp_kar);
+    Y_UTEST(kemp_words);
 
     Y_UTEST(net_init);
     Y_UTEST(net_duration);
