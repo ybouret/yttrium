@@ -1,0 +1,60 @@
+\documentclass[aps,12pt]{revtex4}
+\usepackage[a4paper]{geometry}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{chemarr}
+\usepackage{mathptmx}
+\usepackage{bookman}
+
+  	 
+\begin{document}
+
+Let $x$ and $y$ be two $n$-digits words in base $B$.
+For any $m<n$, one can write:
+\begin{equation}
+\begin{array}{rcll}
+x & = & x_1 B^m + x_0, & x_0<B^m\\
+y & = & y_1 B^m + y_0, & y_0<B^m\\
+\end{array}
+\end{equation}
+
+With:
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Word & Digits\\
+\hline
+\hline
+$x_0$ & $m<n$\\
+$y_0$ & $m<n$\\
+$x_1$ & $n-m$\\
+$y_1$ & $n-m$\\
+\hline
+\end{tabular}
+\end{center}
+
+We obtain:
+\begin{equation}
+	xy = z_0 + z_1 B^m + z_2 B^{2m}\;\; [2n \text{ bits}]
+\end{equation}
+
+We need:
+\begin{equation}
+\begin{array}{rcll}
+	z_0 & = & x_0 y_0           & [2m\text{ bits}]\\
+	z_1 & = & x_1 y_0 + x_0 y_1 & [n+1\text{ bits}]\\
+	z_2 & = & x_1 y_1           & [2(n-m)\text{ bits}]\\
+\end{array}
+\end{equation}
+
+We suppress one multiplication using:
+\begin{equation}
+\begin{array}{rcll}
+	z_3 & = & (x_0+x_1) (y_0+y_1) & [2(n-m+1)\text{ bits}] \\
+	z_1 & = & z_3 - z2 - z_0      & [n+1\text{ bits}]\\
+\end{array}
+\end{equation}
+
+\end{document}

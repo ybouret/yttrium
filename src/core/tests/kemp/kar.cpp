@@ -31,7 +31,7 @@ void kar(const uint64_t x, const uint64_t y)
 
     const uint64_t z0 = x0*y0;
     const uint64_t z2 = x1*y1;
-    const uint64_t z3 = (x0+x1)*(y0+y1);
+    const uint64_t z3 = (x0+x1)*(y0+y1); // 17*2 = 34 bits max
     const uint64_t z1 = (z3-z2-z0);
     show(std::cerr << "z0 = ", z0) << std::endl;
     show(std::cerr << "z2 = ", z2) << std::endl;
