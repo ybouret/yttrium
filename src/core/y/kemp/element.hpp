@@ -187,8 +187,15 @@ namespace Yttrium
             // Words
             //
             //__________________________________________________________________
-            void split(AutoPtr<Element> &lower,
-                       AutoPtr<Element> &upper) const;
+
+            //! split element in lower and upper part w.r.t. the current base B
+            /**
+             \param lower lower part of element
+             \param upper upper part of element
+             \return m such that element = lower + B^m * upper
+             */
+            size_t  split(AutoPtr<Element> &lower,
+                          AutoPtr<Element> &upper) const;
 
 
 

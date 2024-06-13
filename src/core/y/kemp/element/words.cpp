@@ -7,7 +7,7 @@ namespace Yttrium
     {
 
         template <typename T> static inline
-        void Split(AutoPtr<Element>  &lower,
+        size_t Split(AutoPtr<Element>  &lower,
                    AutoPtr<Element>  &upper,
                    const Assembly<T> &source)
         {
@@ -34,18 +34,21 @@ namespace Yttrium
             upper->bits = U.updateBits();
             upper->revise();
             
+            return nl;
+
         }
 
-        void Element:: split(AutoPtr<Element> &lower,
-                             AutoPtr<Element> &upper) const
+        size_t Element:: split(AutoPtr<Element> &lower,
+                               AutoPtr<Element> &upper) const
         {
             switch( state )
             {
-                case AsBytes: Split(lower,upper,bytes); break;
-                case AsNum16: Split(lower,upper,num16); break;
-                case AsNum32: Split(lower,upper,num32); break;
-                case AsNum64: Split(lower,upper,num64); break;
+                case AsBytes: return Split(lower,upper,bytes);
+                case AsNum16: return Split(lower,upper,num16);
+                case AsNum32: return Split(lower,upper,num32);
+                case AsNum64: return Split(lower,upper,num64);
             }
+            return 0;
         }
 
     }

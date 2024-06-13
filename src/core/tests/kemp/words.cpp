@@ -16,22 +16,36 @@ Y_UTEST(kemp_words)
         AutoPtr<Element> up;
 
         std::cerr << el.set(AsBytes) << std::endl;
-        el.split(lo,up);
-        std::cerr << "lo=" << lo << std::endl;
-        std::cerr << "up=" << up << std::endl;
+        {
+            const size_t m = el.split(lo,up);
+            std::cerr << "lo = " << lo << std::endl;
+            std::cerr << "up = " << up << std::endl;
+            std::cerr << "m  = " << m  << std::endl;
+        }
+
         std::cerr << el.set(AsNum16) << std::endl;
-        el.split(lo,up);
-        std::cerr << "lo=" << lo << std::endl;
-        std::cerr << "up=" << up << std::endl;
+        {
+            const size_t m = el.split(lo,up);
+            std::cerr << "lo = " << lo << std::endl;
+            std::cerr << "up = " << up << std::endl;
+            std::cerr << "m  = " << m  << std::endl;
+        }
+
         std::cerr << el.set(AsNum32) << std::endl;
-        el.split(lo,up);
-        std::cerr << "lo=" << lo << std::endl;
-        std::cerr << "up=" << up << std::endl;
+        {
+            const size_t m = el.split(lo,up);
+            std::cerr << "lo = " << lo << std::endl;
+            std::cerr << "up = " << up << std::endl;
+            std::cerr << "m  = " << m  << std::endl;
+        }
 
         std::cerr << el.set(AsNum64) << std::endl;
-        el.split(lo,up);
-        std::cerr << "lo=" << lo << std::endl;
-        std::cerr << "up=" << up << std::endl;
+        {
+            const size_t m = el.split(lo,up);
+            std::cerr << "lo = " << lo << std::endl;
+            std::cerr << "up = " << up << std::endl;
+            std::cerr << "m  = " << m  << std::endl;
+        }
 
 
         std::cerr << std::endl;
