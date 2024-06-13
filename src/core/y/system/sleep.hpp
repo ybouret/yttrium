@@ -8,10 +8,16 @@
 
 namespace Yttrium
 {
+    //__________________________________________________________________________
+    //
+    //
+    //! sleep by suspended activity
+    //
+    //__________________________________________________________________________
     struct SystemSleep
     {
-        static const unsigned MaxMilliSeconds = 1000;
-        static void For(const unsigned ms);
+        static const unsigned MaxMilliSeconds = 1000; //!< limit
+        static void For(const unsigned ms);           //!< call system API
     };
 }
 

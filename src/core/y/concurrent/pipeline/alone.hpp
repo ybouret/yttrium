@@ -51,6 +51,7 @@ namespace Yttrium
             virtual ConstType &  operator[](const size_t) const noexcept; //!< self
             virtual void         flush()                        noexcept; //!< do nothing...
             virtual TaskFlag     query(const TaskUUID)    const noexcept; //!< always success
+            virtual size_t       cargo()                  const noexcept; //!< zero
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alone);

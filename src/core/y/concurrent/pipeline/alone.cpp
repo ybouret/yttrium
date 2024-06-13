@@ -52,6 +52,11 @@ namespace Yttrium
         }
 
 
+        size_t   Alone:: cargo() const noexcept
+        {
+            return 0;
+        }
+
         TaskUUID Alone:: enqueue(const Task &task, const TaskUUID tid)
         {
             Coerce(task).process(self);

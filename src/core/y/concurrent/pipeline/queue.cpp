@@ -550,6 +550,13 @@ namespace Yttrium
             return (code->meta[threadIndex])->wire;
         }
 
+        size_t Queue:: cargo() const noexcept
+        {
+            assert(0!=code);
+            Y_LOCK(code->sync);
+            return code->jobs.size;
+        }
+
     }
 
 }

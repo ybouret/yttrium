@@ -47,4 +47,7 @@ namespace Yttrium
     {
         return os << hrt.fmt;
     }
+
+    const char * HRT:: operator*() const noexcept { return fmt; }
+
 }

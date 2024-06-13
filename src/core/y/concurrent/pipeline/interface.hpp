@@ -32,6 +32,7 @@ namespace Yttrium
             //__________________________________________________________________
             virtual void     flush()                     noexcept = 0; //!< wait for all jobs to complete
             virtual TaskFlag query(const TaskUUID) const noexcept = 0; //!< query task status
+            virtual size_t   cargo()               const noexcept = 0; //!< current cargo
 
             //__________________________________________________________________
             //

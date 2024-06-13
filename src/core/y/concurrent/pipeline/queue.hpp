@@ -52,6 +52,7 @@ namespace Yttrium
             virtual ConstType &    operator[](const size_t)  const noexcept; //!< self
             virtual void           flush()                         noexcept; //!< wait for jobs to complete.
             virtual TaskFlag       query(const TaskUUID)     const noexcept; //!< probe task id
+            virtual size_t         cargo()                  const noexcept;  //!< internal jobs to do
             virtual const Thread & getThread(const size_t i) const noexcept; //!< getThread(1..size)
             virtual size_t         numThreads()              const noexcept; //!< size
 

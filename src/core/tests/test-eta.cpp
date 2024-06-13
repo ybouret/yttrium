@@ -2,6 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/system/wtime.hpp"
 #include "y/type/utils.hpp"
+#include "y/system/eta.hpp"
 #include "y/system/hrt.hpp"
 #include <cstring>
 
@@ -9,53 +10,6 @@ using namespace Yttrium;
 
 namespace Yttrium
 {
-    class ETA
-    {
-    public:
-
-        explicit ETA() :
-        wallTime(),
-        iniTicks(0),
-        nowTicks(0),
-        procTime(0)
-        {
-        }
-
-        virtual ~ETA() noexcept {}
-
-        void start() {
-            Coerce(iniTicks) = WallTime::LockedTicks();
-            Coerce(nowTicks) = iniTicks;
-            Coerce(procTime) = 0;
-        }
-
-        template <typename T>
-        inline double operator()(const T &istep,
-                                 const T &total)
-        {
-            const long double ella = Coerce(procTime) =wallTime( (Coerce(nowTicks) = WallTime::LockedTicks() ) - iniTicks );
-            const long double done = static_cast<long double>(istep) / total;
-            const long double todo = 1.0l - done;
-            const long double num  = todo * ella;
-            if( num >= done * HRT::MaxSeconds )
-            {
-                return HRT::MaxSeconds;
-            }
-            else
-            {
-                return double(num/done);
-            }
-        }
-
-        WallTime             wallTime;
-        const uint64_t       iniTicks;
-        const uint64_t       nowTicks;
-        const double         procTime;
-
-
-    private:
-        Y_DISABLE_COPY_AND_ASSIGN(ETA);
-    };
 }
 
 Y_UTEST(eta)
