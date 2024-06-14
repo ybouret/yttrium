@@ -1,6 +1,8 @@
 
 #include "y/system/progress.hpp"
 #include "y/system/hrt.hpp"
+#include <cstring>
+#include <cmath>
 
 namespace Yttrium
 {
@@ -34,7 +36,8 @@ namespace Yttrium
     {
         const size_t numChars = static_cast<size_t>( floor(width*eta.fraction+0.5));
         const double percent  = floor(eta.fraction*1000+0.5)/10;
-        cycle = ++cycle % Cycle;
+        ++cycle;
+        cycle = cycle % Cycle;
         os << '[' << Wheel[cycle] << ']';
         os << '[';
         for(size_t i=0;i<numChars;++i)     os << '#';

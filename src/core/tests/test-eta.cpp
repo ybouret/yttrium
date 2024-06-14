@@ -2,93 +2,12 @@
 #include "y/utest/run.hpp"
 #include "y/system/wtime.hpp"
 #include "y/type/utils.hpp"
-#include "y/system/eta.hpp"
+#include "y/system/progress.hpp"
 #include "y/system/hrt.hpp"
 #include <cstring>
 
 using namespace Yttrium;
 
-namespace Yttrium
-{
-
-    class Progress
-    {
-    public:
-        static const char   Wheel[4];
-        static const size_t Cycle = sizeof(Wheel)/sizeof(Wheel[0]);
-
-        explicit Progress() : eta(), width(32), cycle(0)
-        {
-            start();
-        }
-
-        virtual ~Progress() {}
-
-        ETA    eta;
-        size_t width;
-        size_t cycle;
-
-        void start() {
-            eta.start();
-        }
-
-        template <typename T> inline
-        void operator()(std::ostream &os, const T &istep, const T &total)
-        {
-            show(os,eta(istep,total));
-        }
-
-        void finish(std::ostream &os)
-        {
-            const size_t one=1;
-            show(os,eta(one,one));
-            os << std::endl;
-        }
-
-
-    private:
-        Y_DISABLE_COPY_AND_ASSIGN(Progress);
-        void show(std::ostream &os, const double required)
-        {
-            const size_t numChars = static_cast<size_t>( floor(width*eta.fraction+0.5));
-            const double percent  = floor(eta.fraction*1000+0.5)/10;
-            cycle = ++cycle % Cycle;
-            os << '[' << Wheel[cycle] << ']';
-            os << '[';
-            for(size_t i=0;i<numChars;++i)     os << '#';
-            for(size_t i=numChars;i<width;++i) os << ' ';
-            os << ']';
-
-            char buffer[16];
-            memset(buffer,0,sizeof(buffer));
-            snprintf(buffer,sizeof(buffer),"[%5.1f%%]",percent);
-            os << buffer;
-
-            if(eta.fraction<1.0)
-            {
-                const HRT    awaiting = required;
-                os << " ETA " << awaiting;
-            }
-            else
-            {
-                const HRT    run_time = eta.ellapsed;
-                os << " RUN " << run_time;
-            }
-
-
-            os << '\r';
-
-            os.flush();
-        }
-
-    };
-
-    const char Progress::Wheel[] =
-    {
-        '-', '\\', '|', '/'
-    };
-
-}
 
 Y_UTEST(eta)
 {
