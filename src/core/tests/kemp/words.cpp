@@ -9,7 +9,7 @@ Y_UTEST(kemp_words)
 {
     Random::ParkMiller ran;
 
-    for(size_t i=0;i<=17;++i)
+    for(size_t i=0;i<=19;++i)
     {
         Element          el(i*8,ran);
         AutoPtr<Element> lo;

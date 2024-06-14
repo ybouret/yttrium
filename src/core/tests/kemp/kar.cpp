@@ -2,6 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/text/hexadecimal.hpp"
 #include "y/calculus/bit-count.hpp"
+#include "y/kemp/element.hpp"
 
 using namespace Yttrium;
 
@@ -50,6 +51,9 @@ void kar(const uint64_t x, const uint64_t y)
     show(std::cerr << "xy = ",  xy) << std::endl;
     Y_CHECK(xy==p);
     std::cerr << std::endl;
+
+
+
 
 }
 
