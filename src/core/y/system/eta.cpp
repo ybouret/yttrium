@@ -1,6 +1,7 @@
 
 #include "y/system/eta.hpp"
 #include "y/system/hrt.hpp"
+#include "y/type/utils.hpp"
 
 namespace Yttrium
 {
@@ -8,7 +9,8 @@ namespace Yttrium
     wallTime(),
     iniTicks(0),
     nowTicks(0),
-    procTime(0)
+    fraction(0),
+    ellapsed(0)
     {
 
     }
@@ -19,25 +21,28 @@ namespace Yttrium
     void ETA:: start() {
         Coerce(iniTicks) = WallTime::LockedTicks();
         Coerce(nowTicks) = iniTicks;
-        Coerce(procTime) = 0;
+        Coerce(fraction) = 0;
+        Coerce(ellapsed) = 0;
     }
 
-    long double ETA:: ellapsed()
+    void ETA:: getEllapsed()
     {
-        return ( Coerce(procTime) = wallTime( (Coerce(nowTicks) = WallTime::LockedTicks() ) - iniTicks  ) );
+        Coerce(ellapsed) = static_cast<double>( wallTime( (Coerce(nowTicks) = WallTime::LockedTicks() ) - iniTicks  ) );
     }
 
-    double ETA:: estimate(const long double done, const long double ella) const noexcept
+    double ETA:: getEstimate() const noexcept
     {
-        const long double todo = 1.0l - done;
-        const long double num  = todo * ella;
+        Coerce(fraction) = Clamp<double>(0,fraction,1);
+        const double done = fraction;
+        const double todo = 1.0l - done;
+        const double num  = todo * ellapsed;
         if( num >= done * HRT::MaxSeconds )
         {
             return HRT::MaxSeconds;
         }
         else
         {
-            return double(num/done);
+            return (num/done);
         }
     }
 

@@ -10,6 +10,78 @@ using namespace Yttrium;
 
 namespace Yttrium
 {
+
+    class Progress
+    {
+    public:
+        static const char   Wheel[4];
+        static const size_t Cycle = sizeof(Wheel)/sizeof(Wheel[0]);
+
+        explicit Progress() : eta(), width(32), cycle(0)
+        {
+            init();
+        }
+
+        virtual ~Progress() {}
+
+        ETA    eta;
+        size_t width;
+        size_t cycle;
+
+        void init() {
+            eta.start();
+        }
+
+        template <typename T> inline
+        void display(std::ostream &os, const T &istep, const T &total)
+        {
+            show(os,eta(istep,total));
+        }
+
+        void finish(std::ostream &os)
+        {
+            const size_t one=1;
+            show(os,eta(one,one));
+            os << std::endl;
+        }
+
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(Progress);
+        void show(std::ostream &os, const double required)
+        {
+            const double ellapsed = eta.ellapsed;
+            const HRT    run_time = ellapsed;
+            const HRT    awaiting = required;
+            const size_t numChars = static_cast<size_t>( floor(width*eta.fraction+0.5));
+            const double percent  = floor(eta.fraction*1000+0.5)/10;
+            cycle = ++cycle % Cycle;
+            os << '[' << Wheel[cycle] << ']';
+            os << '[';
+            for(size_t i=0;i<numChars;++i)     os << '#';
+            for(size_t i=numChars;i<width;++i) os << ' ';
+            os << ']';
+
+            char buffer[16];
+            memset(buffer,0,sizeof(buffer));
+            snprintf(buffer,sizeof(buffer),"[%5.1f%%]",percent);
+            os << buffer;
+
+            os << " ETA " << awaiting;
+
+
+            os << '\r';
+
+            os.flush();
+        }
+
+    };
+
+    const char Progress::Wheel[] =
+    {
+        '-', '\\', '|', '/'
+    };
+
 }
 
 Y_UTEST(eta)
@@ -34,16 +106,32 @@ Y_UTEST(eta)
     }
 
 
-    ETA eta;
-    eta.start();
-    const size_t nmax = 100;
-    for(size_t i=1;i<=nmax;++i)
+#if 0
     {
-        SystemSleep::For(30);
-        const double t = eta(i,nmax);
-        (std::cerr << "ETA : " << HRT(t) << " | runtime : " << HRT(eta.procTime) << '\r').flush();
+        ETA eta;
+        eta.start();
+        const size_t nmax = 200;
+        for(size_t i=1;i<=nmax;++i)
+        {
+            SystemSleep::For(30);
+            const double t = eta(i,nmax);
+            (std::cerr << "ETA : " << HRT(t) << " | runtime : " << HRT(eta.ellapsed) << '\r').flush();
+        }
+        std::cerr << std::endl;
     }
-    std::cerr << std::endl;
+#endif
+
+
+    {
+        Progress bar;
+        const size_t nmax = 34;
+        for(size_t i=1;i<nmax;++i)
+        {
+            SystemSleep::For(75);
+            bar.display(std::cerr,i,nmax);
+        }
+        bar.finish(std::cerr);
+    }
 
 
 

@@ -190,6 +190,7 @@ namespace Yttrium
 
             //! split element in lower and upper part w.r.t. the current base B
             /**
+             lower and upper are set to this state
              \param lower lower part of element
              \param upper upper part of element
              \return m such that element = lower + B^m * upper
@@ -199,6 +200,12 @@ namespace Yttrium
 
 
             //! return lower + upper * B^m
+            /**
+             \param ops   must be coherent with split
+             \param lower lower part
+             \param upper upper part
+             \param m     from previous split
+             */
             static Element * Merge(const Ops      ops,
                                    Element       &lower,
                                    Element       &upper,

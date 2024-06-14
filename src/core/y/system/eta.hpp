@@ -52,7 +52,9 @@ namespace Yttrium
                                  const T &total)
         {
 
-            return estimate(static_cast<long double>(istep) / total,ellapsed());
+            getEllapsed();
+            Coerce(fraction) = static_cast<double>( static_cast<long double>(istep) / total );
+            return getEstimate();
         }
 
         //______________________________________________________________________
@@ -64,13 +66,14 @@ namespace Yttrium
         WallTime             wallTime; //!< internal wall time
         const uint64_t       iniTicks; //!< initial ticks
         const uint64_t       nowTicks; //!< probed ticks
-        const double         procTime; //!< computed while update
+        const double         fraction; //!< fraction of work
+        const double         ellapsed; //!< computed while update
 
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(ETA);
-        long double ellapsed();
-        double      estimate(const long double done, const long double ella) const noexcept;
+        void   getEllapsed();
+        double getEstimate() const noexcept;
     };
 
 }
