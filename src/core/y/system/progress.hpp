@@ -10,23 +10,45 @@
 
 namespace Yttrium
 { 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! command line progress bar
+    //
+    //
+    //__________________________________________________________________________
     class Progress
     {
     public:
-        static const char   Wheel[4];
-        static const size_t Cycle = sizeof(Wheel)/sizeof(Wheel[0]);
+        //______________________________________________________________________
+        //
+        //
+        // Definitions
+        //
+        //______________________________________________________________________
+        static const char   Wheel[4];                               //!< for animation
+        static const size_t Cycle = sizeof(Wheel)/sizeof(Wheel[0]); //!< for animation
 
-        explicit Progress();
-        virtual ~Progress() noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        explicit Progress();          //!< setup
+        virtual ~Progress() noexcept; //!< cleanup
 
-        ETA    eta;
-        size_t width;
-        size_t cycle;
-        bool   ended;
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
+        void start();                //!< initialize
+        void finish(std::ostream &); //!< set ended display finish line
 
-        void start();
-        void finish(std::ostream &);
-
+        //! compute status and display it
         template <typename T> inline
         void operator()(std::ostream &os, const T &istep, const T &total)
         {
@@ -34,7 +56,16 @@ namespace Yttrium
             show(os,eta(istep,total));
         }
 
-
+        //______________________________________________________________________
+        //
+        //
+        // Members
+        //
+        //______________________________________________________________________
+        ETA    eta;    //!< time related
+        size_t width;  //!< number of chars fir bar
+        size_t cycle;  //!< cycle counter for animation
+        bool   ended;  //!< completed or not
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Progress);
