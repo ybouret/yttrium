@@ -50,9 +50,6 @@ namespace Yttrium
         Y_DISABLE_COPY_AND_ASSIGN(Progress);
         void show(std::ostream &os, const double required)
         {
-            const double ellapsed = eta.ellapsed;
-            const HRT    run_time = ellapsed;
-            const HRT    awaiting = required;
             const size_t numChars = static_cast<size_t>( floor(width*eta.fraction+0.5));
             const double percent  = floor(eta.fraction*1000+0.5)/10;
             cycle = ++cycle % Cycle;
@@ -67,7 +64,17 @@ namespace Yttrium
             snprintf(buffer,sizeof(buffer),"[%5.1f%%]",percent);
             os << buffer;
 
-            os << " ETA " << awaiting;
+            if(eta.fraction<1.0)
+            {
+                const HRT    awaiting = required;
+                os << " ETA " << awaiting;
+            }
+            else
+            {
+                const HRT    run_time = eta.ellapsed;
+                os << " RUN " << run_time;
+
+            }
 
 
             os << '\r';
