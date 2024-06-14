@@ -19,7 +19,7 @@ namespace Yttrium
 
         explicit Progress() : eta(), width(32), cycle(0)
         {
-            init();
+            start();
         }
 
         virtual ~Progress() {}
@@ -28,12 +28,12 @@ namespace Yttrium
         size_t width;
         size_t cycle;
 
-        void init() {
+        void start() {
             eta.start();
         }
 
         template <typename T> inline
-        void display(std::ostream &os, const T &istep, const T &total)
+        void operator()(std::ostream &os, const T &istep, const T &total)
         {
             show(os,eta(istep,total));
         }
@@ -73,7 +73,6 @@ namespace Yttrium
             {
                 const HRT    run_time = eta.ellapsed;
                 os << " RUN " << run_time;
-
             }
 
 
@@ -135,7 +134,7 @@ Y_UTEST(eta)
         for(size_t i=1;i<nmax;++i)
         {
             SystemSleep::For(75);
-            bar.display(std::cerr,i,nmax);
+            bar(std::cerr,i,nmax);
         }
         bar.finish(std::cerr);
     }
