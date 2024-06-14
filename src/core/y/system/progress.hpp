@@ -22,6 +22,7 @@ namespace Yttrium
         ETA    eta;
         size_t width;
         size_t cycle;
+        bool   ended;
 
         void start();
         void finish(std::ostream &);
@@ -29,6 +30,7 @@ namespace Yttrium
         template <typename T> inline
         void operator()(std::ostream &os, const T &istep, const T &total)
         {
+            ended = istep >= total;
             show(os,eta(istep,total));
         }
 

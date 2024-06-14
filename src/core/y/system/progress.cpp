@@ -11,7 +11,7 @@ namespace Yttrium
         '-', '\\', '|', '/'
     };
 
-    Progress:: Progress() : eta(), width(32), cycle(0)
+    Progress:: Progress() : eta(), width(32), cycle(0), ended(false)
     {
         start();
     }
@@ -22,12 +22,17 @@ namespace Yttrium
 
     void Progress:: start() {
         eta.start();
+        ended = false;
     }
 
     void Progress:: finish(std::ostream &os)
     {
-        const size_t one=1;
-        show(os,eta(one,one));
+        if(!ended)
+        {
+            const size_t one=1;
+            (*this)(os,one,one);
+            assert(true==ended);
+        }
         os << std::endl;
     }
 
@@ -36,9 +41,18 @@ namespace Yttrium
     {
         const size_t numChars = static_cast<size_t>( floor(width*eta.fraction+0.5));
         const double percent  = floor(eta.fraction*1000+0.5)/10;
-        ++cycle;
-        cycle = cycle % Cycle;
-        os << '[' << Wheel[cycle] << ']';
+
+        if(ended)
+        {
+            os << "[*]";
+        }
+        else
+        {
+            ++cycle;
+            cycle = cycle % Cycle;
+            os << '[' << Wheel[cycle] << ']';
+        }
+        
         os << '[';
         for(size_t i=0;i<numChars;++i)     os << '#';
         for(size_t i=numChars;i<width;++i) os << ' ';
@@ -49,15 +63,16 @@ namespace Yttrium
         snprintf(buffer,sizeof(buffer),"[%5.1f%%]",percent);
         os << buffer;
 
-        if(eta.fraction<1.0)
-        {
-            const HRT    awaiting = required;
-            os << " ETA " << awaiting;
-        }
-        else
+        if(ended)
         {
             const HRT    run_time = eta.ellapsed;
             os << " RUN " << run_time;
+
+        }
+        else
+        {
+            const HRT    awaiting = required;
+            os << " ETA " << awaiting;
         }
 
 
