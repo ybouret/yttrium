@@ -106,6 +106,46 @@ namespace Yttrium
         }
 
 
+        template <typename CORE, typename WORD>
+        Element *MergeWith(Element     &lower,
+                           Element     &upper,
+                           const size_t m)
+        {
+            // getting old value
+            const Assembly<WORD> &oldSrc  = upper.get<WORD>();
+            const size_t          oldPos  = oldSrc.positive; assert(0==oldPos || oldSrc.item[oldPos-1]>0);
+
+            // creating new element by m-shifting
+            const size_t          newPos  = oldPos + m;
+            AutoPtr<Element>      newUpr  = new Element( newPos * sizeof(WORD), AsCapacity );
+            Assembly<WORD>       &newSrc  = newUpr->get<WORD>();
+            memcpy(newSrc.item+m,oldSrc.item,oldPos*sizeof(WORD));
+            newSrc.positive = newPos; assert(0==newPos || newSrc.item[newPos-1]>0 );
+
+            return Addition<CORE,WORD>::Get(lower.get<WORD>(),newSrc);
+        }
+
+
+        Element * Element:: Merge(Element       &lower,
+                                  Element       &upper,
+                                  const size_t   m,
+                                  const Ops      ops)
+        {
+            switch(ops)
+            {
+                case Ops64_32: return MergeWith<uint64_t,uint32_t>(lower,upper,m);
+                case Ops64_16: return MergeWith<uint64_t,uint16_t>(lower,upper,m);
+                case Ops64_8:  return MergeWith<uint64_t,uint8_t>(lower,upper,m);
+              
+                case Ops32_16: return MergeWith<uint32_t,uint16_t>(lower,upper,m);
+                case Ops32_8:  return MergeWith<uint32_t,uint8_t>(lower,upper,m);
+
+                case Ops16_8:  return MergeWith<uint16_t,uint8_t>(lower,upper,m);
+
+            }
+            return 0;
+        }
+
 
     }
 

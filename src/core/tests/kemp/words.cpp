@@ -5,6 +5,28 @@
 using namespace Yttrium;
 using namespace Kemp;
 
+static inline
+void DoSplit(Element &X, Element &Y, const Ops ops)
+{
+    Element::Words XP, YP;
+    const size_t m = Element::Split(X, XP, Y, YP, ops);
+    std::cerr << "m=" << m << std::endl;
+    if(XP.lower.isValid() && XP.upper.isValid())
+    {
+        AutoPtr<Element> merged = Element::Merge(*XP.lower, *XP.upper, m, ops);
+        std::cerr << "merged=" << merged << std::endl;
+        Y_ASSERT( Element::Compare(*merged,X) == __Zero__ );
+    }
+
+    if(YP.lower.isValid() && YP.upper.isValid())
+    {
+        AutoPtr<Element> merged = Element::Merge(*YP.lower, *YP.upper, m, ops);
+        std::cerr << "merged=" << merged << std::endl;
+        Y_ASSERT( Element::Compare(*merged,Y) == __Zero__ );
+    }
+    std::cerr << std::endl;
+}
+
 Y_UTEST(kemp_words)
 {
     Random::ParkMiller ran;
@@ -16,22 +38,9 @@ Y_UTEST(kemp_words)
         std::cerr << X << std::endl;
         std::cerr << Y << std::endl;
 
-        Element::Words XP, YP;
-        {
-            const size_t m = Element::Split(X, XP, Y, YP, Ops64_8);
-            std::cerr << "m8=" << m << std::endl;
-        }
-
-        {
-            const size_t m = Element::Split(X, XP, Y, YP, Ops64_16);
-            std::cerr << "m16=" << m << std::endl;
-        }
-
-        {
-            const size_t m = Element::Split(X, XP, Y, YP, Ops64_32);
-            std::cerr << "m32=" << m << std::endl;
-        }
-
+        DoSplit(X,Y,Ops64_8);
+        DoSplit(X,Y,Ops64_16);
+        DoSplit(X,Y,Ops64_32);
 
     }
 
