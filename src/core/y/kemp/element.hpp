@@ -220,6 +220,7 @@ namespace Yttrium
                                 Words     &YP,
                                 const Ops &ops);
 
+            //! Merge lower + B^m upper
             static Element * Merge(Element     &lower,
                                    Element     &upper,
                                    const size_t m,
