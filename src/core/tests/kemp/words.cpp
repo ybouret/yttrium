@@ -18,9 +18,21 @@ Y_UTEST(kemp_words)
 
         Element::Pair XP, YP;
         {
-            const size_t m = Element::Split(X, XP, Y, YP, Ops32_8);
-            std::cerr << "m=" << m << std::endl;
+            const size_t m = Element::Split(X, XP, Y, YP, Ops64_8);
+            std::cerr << "m8=" << m << std::endl;
         }
+
+        {
+            const size_t m = Element::Split(X, XP, Y, YP, Ops64_16);
+            std::cerr << "m16=" << m << std::endl;
+        }
+
+        {
+            const size_t m = Element::Split(X, XP, Y, YP, Ops64_32);
+            std::cerr << "m32=" << m << std::endl;
+        }
+
+
     }
 
 #if 0

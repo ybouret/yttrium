@@ -11,6 +11,43 @@ namespace Yttrium
 
         template <typename T>
         static inline
+        Element * makeLower(const Assembly<T> &source,
+                            size_t             nlower)
+        {
+            nlower = Min(nlower,source.positive);
+            if(nlower<=0) return 0;
+
+            const size_t toCopy  = nlower * sizeof(T);
+            Element     *element = new Element( toCopy, AsCapacity );
+            Assembly<T> &target  = element->get<T>();
+            memcpy(target.item,source.item,toCopy);
+            target.positive = nlower;
+            element->bits   = target.updateBits();
+            return element->revise();
+        }
+
+        template <typename T>
+        static inline
+        Element * makeUpper(const Assembly<T> &source,
+                            const size_t       nlower)
+        {
+            const size_t ntotal = source.positive;
+            if(nlower>=ntotal) return 0;
+            const size_t nupper  = ntotal-nlower;
+            const size_t toCopy  = nupper * sizeof(T);
+            Element     *element = new Element( toCopy, AsCapacity );
+            Assembly<T> &target  = element->get<T>();
+            memcpy(target.item,source.item+nlower,toCopy);
+            target.positive = nupper;
+            element->bits   = target.updateBits();
+            return element->revise();
+        }
+
+
+
+
+        template <typename T>
+        static inline
         size_t SplitWith(const Assembly<T> &X,
                          Element::Pair     &XP,
                          const Assembly<T> &Y,
@@ -39,28 +76,26 @@ namespace Yttrium
             //------------------------------------------------------------------
             {
                 std::cerr << "\tbig=" << *bigE << std::endl;
-                const size_t nl = m;     // lower words
-                bigP->lower = new Element( nl * sizeof(T), AsCapacity );
-                {
-                    Assembly<T> &target = bigP->lower->get<T>();
-                    memcpy(target.item,bigE->item,nl*sizeof(T));
-                    target.positive   = nl;
-                    bigP->lower->bits = target.updateBits();
-                    bigP->lower->revise();
-                    std::cerr << "\t\tlower=" << *(bigP->lower) << std::endl;
-                }
-
-                const size_t nu = n-m; // upper words
-                bigP->upper = new Element( nu * sizeof(T), AsCapacity );
-                {
-                    Assembly<T> &target = bigP->upper->get<T>();
-                    memcpy(target.item,bigE->item+nl,nu*sizeof(T));
-                    target.positive   = nu;
-                    bigP->upper->bits = target.updateBits();
-                    bigP->upper->revise();
-                }
-                std::cerr << "\t\tupper=" << *(bigP->upper) << std::endl;
+                std::cerr << "\t  m=" << m << std::endl;
+                bigP->lower = makeLower(*bigE,m);
+                bigP->upper = makeUpper(*bigE,m);
+                std::cerr << "\t\tlower=" << bigP->lower << std::endl;
+                std::cerr << "\t\tupper=" << bigP->upper << std::endl;
             }
+
+            //------------------------------------------------------------------
+            //
+            // process little
+            //
+            //------------------------------------------------------------------
+            {
+                std::cerr << "\tlit=" << *litE << std::endl;
+                litP->lower = makeLower(*litE,m);
+                litP->upper = makeUpper(*litE,m);
+                std::cerr << "\t\tlower=" << litP->lower << std::endl;
+                std::cerr << "\t\tupper=" << litP->upper << std::endl;
+            }
+
 
 
             return m;
