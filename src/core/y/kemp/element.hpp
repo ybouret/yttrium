@@ -187,7 +187,27 @@ namespace Yttrium
             // Words
             //
             //__________________________________________________________________
+            class Pair
+            {
+            public:
+                Pair()  noexcept : lower(0), upper(0) {}
+                ~Pair() noexcept {}
+                
+                AutoPtr<Element> lower;
+                AutoPtr<Element> upper;
 
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Pair);
+            };
+
+            
+            static size_t Split(Element   &X,
+                                Pair      &XP,
+                                Element   &Y,
+                                Pair      &YP,
+                                const Ops &ops);
+
+#if 0
             //! split element in lower and upper part w.r.t. the current base B
             /**
              lower and upper are set to this state
@@ -210,7 +230,8 @@ namespace Yttrium
                                    Element       &lower,
                                    Element       &upper,
                                    const size_t   m);
-
+#endif
+            
 
             //__________________________________________________________________
             //

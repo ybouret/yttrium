@@ -9,6 +9,21 @@ Y_UTEST(kemp_words)
 {
     Random::ParkMiller ran;
 
+    {
+        Element X( ran.in<size_t>(0,100), ran );
+        Element Y( ran.in<size_t>(0,100), ran );
+
+        std::cerr << X << std::endl;
+        std::cerr << Y << std::endl;
+
+        Element::Pair XP, YP;
+        {
+            const size_t m = Element::Split(X, XP, Y, YP, Ops32_8);
+            std::cerr << "m=" << m << std::endl;
+        }
+    }
+
+#if 0
     for(size_t i=0;i<=19;++i)
     {
         Element          el(i*8,ran);
@@ -81,6 +96,7 @@ Y_UTEST(kemp_words)
 
         std::cerr << std::endl;
     }
+#endif
 
 }
 Y_UDONE()

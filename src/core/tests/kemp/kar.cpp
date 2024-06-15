@@ -53,6 +53,7 @@ void kar(const uint64_t x, const uint64_t y)
     Y_CHECK(xy==p);
     std::cerr << std::endl;
 
+#if 0
     Element X(x,ToNum64); Y_ASSERT(X.u64()==x);
     Element Y(y,ToNum64); Y_ASSERT(Y.u64()==y);
 
@@ -63,7 +64,7 @@ void kar(const uint64_t x, const uint64_t y)
     AutoPtr<Element> Y0, Y1;
     const size_t my = Y.set(AsBytes).split(Y0,Y1);
     std::cerr << "my=" << my << std::endl;
-
+#endif
 
 
 }

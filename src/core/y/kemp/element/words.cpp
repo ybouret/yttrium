@@ -9,6 +9,90 @@ namespace Yttrium
     namespace Kemp
     {
 
+        template <typename T>
+        static inline
+        size_t SplitWith(const Assembly<T> &X,
+                         Element::Pair     &XP,
+                         const Assembly<T> &Y,
+                         Element::Pair     &YP)
+        {
+
+            std::cerr << "SplitWith" << std::endl;
+            const Assembly<T> *bigE = &X,  *litE = &Y;
+            Element::Pair     *bigP = &XP, *litP = &YP;
+
+            if(litE->positive>bigE->positive)
+            {
+                Swap(litE,bigE);
+                Swap(litP,bigP);
+            }
+            assert(litE->positive<=bigE->positive);
+            // std::cerr << "\tlit=" << *litE << std::endl;
+
+            const size_t n = bigE->positive;
+            const size_t m = n>>1;
+
+            //------------------------------------------------------------------
+            //
+            // process big
+            //
+            //------------------------------------------------------------------
+            {
+                std::cerr << "\tbig=" << *bigE << std::endl;
+                const size_t nl = m;     // lower words
+                bigP->lower = new Element( nl * sizeof(T), AsCapacity );
+                {
+                    Assembly<T> &target = bigP->lower->get<T>();
+                    memcpy(target.item,bigE->item,nl*sizeof(T));
+                    target.positive   = nl;
+                    bigP->lower->bits = target.updateBits();
+                    bigP->lower->revise();
+                    std::cerr << "\t\tlower=" << *(bigP->lower) << std::endl;
+                }
+
+                const size_t nu = n-m; // upper words
+                bigP->upper = new Element( nu * sizeof(T), AsCapacity );
+                {
+                    Assembly<T> &target = bigP->upper->get<T>();
+                    memcpy(target.item,bigE->item+nl,nu*sizeof(T));
+                    target.positive   = nu;
+                    bigP->upper->bits = target.updateBits();
+                    bigP->upper->revise();
+                }
+                std::cerr << "\t\tupper=" << *(bigP->upper) << std::endl;
+            }
+
+
+            return m;
+        }
+
+
+        size_t Element:: Split(Element   &X,
+                               Pair      &XP,
+                               Element   &Y,
+                               Pair      &YP,
+                               const Ops &ops)
+        {
+            switch(ops)
+            {
+                case Ops64_8:
+                case Ops32_8:
+                case Ops16_8:
+                    return SplitWith(X.get<uint8_t>(),XP,Y.get<uint8_t>(),YP);
+
+                case Ops64_16:
+                case Ops32_16:
+                    return SplitWith(X.get<uint16_t>(),XP,Y.get<uint16_t>(),YP);
+
+                case Ops64_32:
+                    return SplitWith(X.get<uint32_t>(),XP,Y.get<uint32_t>(),YP);
+
+            }
+            return 0;
+        }
+
+
+#if 0
         template <typename T> static inline
         size_t Split(AutoPtr<Element>  &lower,
                      AutoPtr<Element>  &upper,
@@ -91,6 +175,9 @@ namespace Yttrium
             }
             throw Specific::Exception(CallSign, "corrupted ops to merge");
         }
+
+#endif
+
     }
 
 }
