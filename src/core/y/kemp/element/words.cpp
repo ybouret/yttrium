@@ -167,11 +167,15 @@ namespace Yttrium
             const size_t nl = lhs.positive;
             const size_t nr = rhs.positive;
 
-            // Trivial termination
-            if(nl<=0||nr<=0) return 0; //new Element(0,AsCapacity);
-            assert(nl>0&&nr>0);
+            //------------------------------------------------------------------
+            // trivial termination
+            //------------------------------------------------------------------
+            if(nl<=0||nr<=0) return Element::Zero();
 
+            //------------------------------------------------------------------
             // recursive termination
+            //------------------------------------------------------------------
+            assert(nl>0&&nr>0);
             if(1==nl&&1==nr)
             {
                 const CORE L = lhs.item[0]; assert(L>0);
@@ -180,30 +184,52 @@ namespace Yttrium
                 Assembly<CORE> &p = P->get<CORE>();
                 p.positive = 1;
                 p.item[0]  = L*R;
-                P->bits = p.updateBits(); assert(P->bits>0);
+                P->bits    = p.updateBits(); assert(P->bits>0);
                 return P->revise();
             }
 
             // split assemblies @m
             Element::Words LP, RP;
-            const size_t       m    = SplitWith(lhs, LP, rhs, RP);
+            const size_t       m   = SplitWith(lhs, LP, rhs, RP);
             AutoPtr<Element>  &lo1 = LP.lower,  &hi1 = LP.upper;
             AutoPtr<Element>  &lo2 = RP.lower,  &hi2 = RP.upper;
 
+            static const unsigned NOP = 0x00;
             static const unsigned LO1 = 0x01;
             static const unsigned LO2 = 0x02;
             static const unsigned HI1 = 0x04;
             static const unsigned HI2 = 0x08;
-            unsigned flag = 0x00;
-            if(lo1.isValid()) { flag |= LO1; assert(lo1->bits>0); }
-            if(lo2.isValid()) { flag |= LO2; assert(lo2->bits>0); }
-            if(hi1.isValid()) { flag |= HI1; assert(hi1->bits>0); }
-            if(hi2.isValid()) { flag |= HI2; assert(hi2->bits>0); }
+            static const unsigned Z0  = (LO1|LO2);
+            static const unsigned Z2  = (HI1|HI2);
+            static const unsigned ALL = Z0|Z2;
 
-            AutoPtr<Element> z0 = (0!=(flag&(LO1|LO2))) ? KarMul<CORE,WORD>(lo1->get<WORD>(),lo2->get<WORD>()) : 0;
-            std::cerr << "z0=" << z0 << std::endl;
-            
+            unsigned          flag  = NOP;
+            if(lo1.isValid()) flag |= LO1;
+            if(lo2.isValid()) flag |= LO2;
+            if(hi1.isValid()) flag |= HI1;
+            if(hi2.isValid()) flag |= HI2;
 
+
+            // z0 = lo1 * lo2
+            AutoPtr<Element> z0;
+            if( Z0 == (flag & Z0) ) z0 = KarMul<CORE,WORD>(lo1->get<WORD>(), lo2->get<WORD>());
+
+            // z2 = hi1 * hi2
+            AutoPtr<Element> z2;
+            if( Z2 == (flag & Z2) ) z2 = KarMul<CORE,WORD>(hi1->get<WORD>(), hi2->get<WORD>());
+
+            AutoPtr<Element> z3;
+            switch(flag)
+            {
+                case ALL:
+                default:
+                    break;
+            }
+
+            // z3 = (lo1+hi1)*(lo2+hi2)
+
+
+            // z1 = z3 - z0 -z2
 
 
             return 0;

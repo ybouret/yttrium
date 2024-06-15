@@ -46,6 +46,12 @@ namespace Yttrium
         {
         }
 
+        Element * Element:: Zero()
+        {
+            return new Element(0,AsCapacity);
+        }
+
+
 
         Element:: Element(const Element &el) :
         Object(),

@@ -146,7 +146,8 @@ namespace Yttrium
             explicit Element(const Exp2_ &, const size_t i);     //!< 2^i
             virtual ~Element() noexcept;                         //!< cleanup
             Y_OSTREAM_PROTO(Element);                            //!< display
-
+            static Element * Zero();
+            
             //__________________________________________________________________
             //
             //
