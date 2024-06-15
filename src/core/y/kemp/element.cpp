@@ -192,6 +192,18 @@ num64(entry,num32.capacity>>1,bits,AsBits)
             return num64.pull64();
         }
 
+        size_t Element:: getStatePositive()     const noexcept
+        {
+            switch(state)
+            {
+                case AsBytes: return bytes.positive;
+                case AsNum16: return num16.positive;
+                case AsNum32: return num32.positive;
+                case AsNum64: break;
+            }
+            return num64.positive;
+        }
+
         uint8_t Element:: u8() const noexcept
         {
             switch(state)

@@ -16,7 +16,7 @@ Y_UTEST(kemp_words)
         std::cerr << X << std::endl;
         std::cerr << Y << std::endl;
 
-        Element::Pair XP, YP;
+        Element::Words XP, YP;
         {
             const size_t m = Element::Split(X, XP, Y, YP, Ops64_8);
             std::cerr << "m8=" << m << std::endl;

@@ -9,6 +9,10 @@ namespace Yttrium
     namespace Kemp
     {
 
+        Element:: Words::  Words() noexcept : lower(0), upper(0) {}
+        Element:: Words:: ~Words() noexcept {}
+
+
         template <typename T>
         static inline
         Element * makeLower(const Assembly<T> &source,
@@ -49,53 +53,28 @@ namespace Yttrium
         template <typename T>
         static inline
         size_t SplitWith(const Assembly<T> &X,
-                         Element::Pair     &XP,
+                         Element::Words    &XP,
                          const Assembly<T> &Y,
-                         Element::Pair     &YP)
+                         Element::Words    &YP)
         {
 
             std::cerr << "SplitWith" << std::endl;
-            const Assembly<T> *bigE = &X,  *litE = &Y;
-            Element::Pair     *bigP = &XP, *litP = &YP;
+            const size_t m = Max(X.positive,Y.positive) >> 1;
 
-            if(litE->positive>bigE->positive)
-            {
-                Swap(litE,bigE);
-                Swap(litP,bigP);
-            }
-            assert(litE->positive<=bigE->positive);
-            // std::cerr << "\tlit=" << *litE << std::endl;
+            XP.lower = makeLower(X,m);
+            XP.upper = makeUpper(X,m);
 
-            const size_t n = bigE->positive;
-            const size_t m = n>>1;
+            YP.lower = makeLower(Y,m);
+            YP.upper = makeUpper(Y,m);
 
-            //------------------------------------------------------------------
-            //
-            // process big
-            //
-            //------------------------------------------------------------------
-            {
-                std::cerr << "\tbig=" << *bigE << std::endl;
-                std::cerr << "\t  m=" << m << std::endl;
-                bigP->lower = makeLower(*bigE,m);
-                bigP->upper = makeUpper(*bigE,m);
-                std::cerr << "\t\tlower=" << bigP->lower << std::endl;
-                std::cerr << "\t\tupper=" << bigP->upper << std::endl;
-            }
+            std::cerr << "X       : " << X << std::endl;
+            std::cerr << "|_lower = " << XP.lower << std::endl;
+            std::cerr << "|_upper = " << XP.upper << std::endl;
 
-            //------------------------------------------------------------------
-            //
-            // process little
-            //
-            //------------------------------------------------------------------
-            {
-                std::cerr << "\tlit=" << *litE << std::endl;
-                litP->lower = makeLower(*litE,m);
-                litP->upper = makeUpper(*litE,m);
-                std::cerr << "\t\tlower=" << litP->lower << std::endl;
-                std::cerr << "\t\tupper=" << litP->upper << std::endl;
-            }
 
+            std::cerr << "Y       : " << Y << std::endl;
+            std::cerr << "|_lower = " << YP.lower << std::endl;
+            std::cerr << "|_upper = " << YP.upper << std::endl;
 
 
             return m;
@@ -103,9 +82,9 @@ namespace Yttrium
 
 
         size_t Element:: Split(Element   &X,
-                               Pair      &XP,
+                               Words     &XP,
                                Element   &Y,
-                               Pair      &YP,
+                               Words     &YP,
                                const Ops &ops)
         {
             switch(ops)
@@ -127,91 +106,6 @@ namespace Yttrium
         }
 
 
-#if 0
-        template <typename T> static inline
-        size_t Split(AutoPtr<Element>  &lower,
-                     AutoPtr<Element>  &upper,
-                     const Assembly<T> &source)
-        {
-
-            const size_t np = source.positive;
-            const size_t nl = np >> 1;
-            const size_t nu = np-nl;
-
-            lower = new Element( nl * sizeof(T), AsCapacity);
-            upper = new Element( nu * sizeof(T), AsCapacity);
-
-            Assembly<T> &L = lower->get<T>();
-            Assembly<T> &U = upper->get<T>();
-
-            for(size_t i=0;i<nl;++i)
-                L.item[i] = source.item[i];
-            L.positive  = nl;
-            lower->bits = L.updateBits();
-            lower->revise();
-
-            for(size_t i=0;i<nu;++i)
-                U.item[i] = source.item[nl+i];
-            U.positive = nu;
-            upper->bits = U.updateBits();
-            upper->revise();
-
-            return nl;
-
-        }
-
-        size_t Element:: split(AutoPtr<Element> &lower,
-                               AutoPtr<Element> &upper) const
-        {
-            switch( state )
-            {
-                case AsBytes: return Split(lower,upper,bytes);
-                case AsNum16: return Split(lower,upper,num16);
-                case AsNum32: return Split(lower,upper,num32);
-                case AsNum64: return Split(lower,upper,num64);
-            }
-            throw Specific::Exception(CallSign, "corrupted state to split");
-        }
-
-
-        template <typename CORE, typename WORD> static inline
-        Element * Merge_(const Assembly<WORD> &lower,
-                         const Assembly<WORD> &upper,
-                         const size_t          m)
-        {
-            const size_t     newPositive = upper.positive + m;
-            AutoPtr<Element> newElement = new Element( newPositive * sizeof(WORD), AsCapacity );
-            Assembly<WORD>  &newUpper   = newElement->get<WORD>();
-            const size_t     upperPos   = upper.positive;
-            newUpper.positive = m + upperPos;
-            memcpy(newUpper.item+m,upper.item,upperPos * sizeof(WORD));
-
-            return Addition<CORE,WORD>::Get(lower,newUpper);
-
-        }
-
-
-        Element * Element:: Merge(const Ops   ops,
-                                  Element    &lower,
-                                  Element     &upper,
-                                  const size_t m)
-        {
-
-            switch(ops)
-            {
-                case Ops64_32: return Merge_<uint64_t,uint32_t>(lower.get<uint32_t>(), upper.get<uint32_t>(),m);
-                case Ops64_16: return Merge_<uint64_t,uint16_t>(lower.get<uint16_t>(), upper.get<uint16_t>(),m);
-                case Ops64_8:  return Merge_<uint64_t,uint8_t>(lower.get<uint8_t>(), upper.get<uint8_t>(),m);
-
-                case Ops32_16: return Merge_<uint32_t,uint16_t>(lower.get<uint16_t>(), upper.get<uint16_t>(),m);
-                case Ops32_8:  return Merge_<uint32_t,uint8_t>(lower.get<uint8_t>(), upper.get<uint8_t>(),m);
-
-                case Ops16_8:  return Merge_<uint16_t,uint8_t>(lower.get<uint8_t>(), upper.get<uint8_t>(),m);
-            }
-            throw Specific::Exception(CallSign, "corrupted ops to merge");
-        }
-
-#endif
 
     }
 

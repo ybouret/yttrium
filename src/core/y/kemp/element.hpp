@@ -170,6 +170,7 @@ namespace Yttrium
             static State    TuneUp(Element &, Element &) noexcept; //!< tune to largest integral
             static Element *Shrink(Element *)            noexcept; //!< try to reduce capacity
             Element *       revise()                     noexcept; //!< update positive in other states
+            size_t          getStatePositive()     const noexcept; //!< w.r.t state, mostly to debug
 
             //__________________________________________________________________
             //
@@ -187,50 +188,38 @@ namespace Yttrium
             // Words
             //
             //__________________________________________________________________
-            class Pair
+          
+            //__________________________________________________________________
+            //
+            //! used to store lower/upper parts of a split element
+            //__________________________________________________________________
+            class Words
             {
             public:
-                Pair()  noexcept : lower(0), upper(0) {}
-                ~Pair() noexcept {}
-                
-                AutoPtr<Element> lower;
-                AutoPtr<Element> upper;
+                Words()  noexcept; //!< setup empty
+                ~Words() noexcept; //!< setup empty
+                AutoPtr<Element> lower; //!< lower part
+                AutoPtr<Element> upper; //!< upper part
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Pair);
+                Y_DISABLE_COPY_AND_ASSIGN(Words);
             };
 
-            
+            //! split element accordint to ops
+            /**
+             \param X   input, set to core part of ops
+             \param XP  X = XP.lower + B^m * XP.upper
+             \param Y   input, set to core part of ops
+             \param YP  Y = YP.lower + B^m * xp.lower
+             \param ops for internal mul/add
+             \return m, half of the maximum positive core size
+             */
             static size_t Split(Element   &X,
-                                Pair      &XP,
+                                Words     &XP,
                                 Element   &Y,
-                                Pair      &YP,
+                                Words     &YP,
                                 const Ops &ops);
 
-#if 0
-            //! split element in lower and upper part w.r.t. the current base B
-            /**
-             lower and upper are set to this state
-             \param lower lower part of element
-             \param upper upper part of element
-             \return m such that element = lower + B^m * upper
-             */
-            size_t  split(AutoPtr<Element> &lower,
-                          AutoPtr<Element> &upper) const;
-
-
-            //! return lower + upper * B^m
-            /**
-             \param ops   must be coherent with split
-             \param lower lower part
-             \param upper upper part
-             \param m     from previous split
-             */
-            static Element * Merge(const Ops      ops,
-                                   Element       &lower,
-                                   Element       &upper,
-                                   const size_t   m);
-#endif
             
 
             //__________________________________________________________________
