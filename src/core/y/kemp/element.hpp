@@ -146,8 +146,8 @@ namespace Yttrium
             explicit Element(const Exp2_ &, const size_t i);     //!< 2^i
             virtual ~Element() noexcept;                         //!< cleanup
             Y_OSTREAM_PROTO(Element);                            //!< display
-            static Element * Zero();
-            
+            static Element * Zero();                             //!< return minimal, zero element
+
             //__________________________________________________________________
             //
             //
@@ -208,6 +208,7 @@ namespace Yttrium
 
             //! split element accordint to ops
             /**
+             zero parts are set to NULL to avoid excessive memory work
              \param X   input, set to core part of ops
              \param XP  X = XP.lower + B^m * XP.upper
              \param Y   input, set to core part of ops

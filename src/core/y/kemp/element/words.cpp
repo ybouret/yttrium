@@ -199,9 +199,9 @@ namespace Yttrium
             static const unsigned LO2 = 0x02;
             static const unsigned HI1 = 0x04;
             static const unsigned HI2 = 0x08;
-            static const unsigned Z0  = (LO1|LO2);
-            static const unsigned Z2  = (HI1|HI2);
-            static const unsigned ALL = Z0|Z2;
+            //static const unsigned Z0  = (LO1|LO2);
+            //static const unsigned Z2  = (HI1|HI2);
+            //static const unsigned ALL = Z0|Z2;
 
             unsigned          flag  = NOP;
             if(lo1.isValid()) flag |= LO1;
@@ -211,25 +211,40 @@ namespace Yttrium
 
 
             // z0 = lo1 * lo2
-            AutoPtr<Element> z0;
-            if( Z0 == (flag & Z0) ) z0 = KarMul<CORE,WORD>(lo1->get<WORD>(), lo2->get<WORD>());
-
             // z2 = hi1 * hi2
-            AutoPtr<Element> z2;
-            if( Z2 == (flag & Z2) ) z2 = KarMul<CORE,WORD>(hi1->get<WORD>(), hi2->get<WORD>());
+            // z3 = (lo1+hi1)*(lo2+hi2)
+            // z1 = z3 - z0 -z2
 
+            AutoPtr<Element> z0;
+            AutoPtr<Element> z2;
             AutoPtr<Element> z3;
+
+#define SET_Z0() z0 = KarMul<CORE,WORD>(lo1->get<WORD>(), lo2->get<WORD>());
+#define SET_Z2() z2 = KarMul<CORE,WORD>(hi1->get<WORD>(), hi2->get<WORD>());
+
             switch(flag)
             {
-                case ALL:
-                default:
+                case LO1|LO2:     
                     break;
+                case LO1|LO2|HI1:   
+                    break;
+                case LO1|LO2|HI2:  
+                    break;
+                case LO1|LO2|HI1|HI2:
+                    break;
+                case LO1|HI1|HI2:    
+                    break;
+                case LO2|HI1|HI2:   
+                    break;
+                case HI1|HI2:       
+                    break;
+                default:
+                    std::cerr << "Should Be Zero" << std::endl;
             }
 
-            // z3 = (lo1+hi1)*(lo2+hi2)
 
 
-            // z1 = z3 - z0 -z2
+
 
 
             return 0;
