@@ -37,6 +37,7 @@ namespace Yttrium
         {
             const size_t ntotal = source.positive;
             if(nlower>=ntotal) return 0;
+            
             const size_t nupper  = ntotal-nlower;
             const size_t toCopy  = nupper * sizeof(T);
             Element     *element = new Element( toCopy, AsCapacity );
@@ -136,7 +137,7 @@ namespace Yttrium
                 case Ops64_32: return MergeWith<uint64_t,uint32_t>(lower,upper,m);
                 case Ops64_16: return MergeWith<uint64_t,uint16_t>(lower,upper,m);
                 case Ops64_8:  return MergeWith<uint64_t,uint8_t>(lower,upper,m);
-              
+
                 case Ops32_16: return MergeWith<uint32_t,uint16_t>(lower,upper,m);
                 case Ops32_8:  return MergeWith<uint32_t,uint8_t>(lower,upper,m);
 
@@ -145,6 +146,90 @@ namespace Yttrium
             }
             return 0;
         }
+
+    }
+
+}
+
+#include "y/kemp/element/kar.hpp"
+
+namespace Yttrium
+{
+
+    namespace Kemp
+    {
+
+        template <typename CORE, typename WORD>
+        static inline
+        Element *KarMul(const Assembly<WORD> &lhs,
+                        const Assembly<WORD> &rhs)
+        {
+            const size_t nl = lhs.positive;
+            const size_t nr = rhs.positive;
+
+            // Trivial termination
+            if(nl<=0||nr<=0) return 0; //new Element(0,AsCapacity);
+            assert(nl>0&&nr>0);
+
+            // recursive termination
+            if(1==nl&&1==nr)
+            {
+                const CORE L = lhs.item[0]; assert(L>0);
+                const CORE R = rhs.item[0]; assert(R>0);
+                Element   *P = new Element(sizeof(CORE),AsCapacity);
+                Assembly<CORE> &p = P->get<CORE>();
+                p.positive = 1;
+                p.item[0]  = L*R;
+                P->bits = p.updateBits(); assert(P->bits>0);
+                return P->revise();
+            }
+
+            // split assemblies @m
+            Element::Words LP, RP;
+            const size_t       m    = SplitWith(lhs, LP, rhs, RP);
+            AutoPtr<Element>  &lo1 = LP.lower,  &hi1 = LP.upper;
+            AutoPtr<Element>  &lo2 = RP.lower,  &hi2 = RP.upper;
+
+            static const unsigned LO1 = 0x01;
+            static const unsigned LO2 = 0x02;
+            static const unsigned HI1 = 0x04;
+            static const unsigned HI2 = 0x08;
+            unsigned flag = 0x00;
+            if(lo1.isValid()) { flag |= LO1; assert(lo1->bits>0); }
+            if(lo2.isValid()) { flag |= LO2; assert(lo2->bits>0); }
+            if(hi1.isValid()) { flag |= HI1; assert(hi1->bits>0); }
+            if(hi2.isValid()) { flag |= HI2; assert(hi2->bits>0); }
+
+            AutoPtr<Element> z0 = (0!=(flag&(LO1|LO2))) ? KarMul<CORE,WORD>(lo1->get<WORD>(),lo2->get<WORD>()) : 0;
+            std::cerr << "z0=" << z0 << std::endl;
+            
+
+
+
+            return 0;
+        }
+
+
+
+
+        Element *Karatsuba:: Mul(Element &lhs, Element &rhs, const Ops ops)
+        {
+            switch(ops)
+            {
+                case Ops64_32: return KarMul<uint64_t,uint32_t>(lhs.get<uint32_t>(),rhs.get<uint32_t>());
+                case Ops64_16: return KarMul<uint64_t,uint16_t>(lhs.get<uint16_t>(),rhs.get<uint16_t>());
+                case Ops64_8:  return KarMul<uint64_t,uint8_t>(lhs.get<uint8_t>(),rhs.get<uint8_t>());
+
+                case Ops32_16: return KarMul<uint32_t,uint16_t>(lhs.get<uint16_t>(),rhs.get<uint16_t>());
+                case Ops32_8:  return KarMul<uint32_t,uint8_t>(lhs.get<uint8_t>(),rhs.get<uint8_t>());
+
+                case Ops16_8:  return KarMul<uint16_t,uint8_t>(lhs.get<uint8_t>(),rhs.get<uint8_t>());
+
+            }
+
+            return 0;
+        }
+
 
 
     }

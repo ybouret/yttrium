@@ -2,7 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/text/hexadecimal.hpp"
 #include "y/calculus/bit-count.hpp"
-#include "y/kemp/element.hpp"
+#include "y/kemp/element/kar.hpp"
 
 using namespace Yttrium;
 using namespace Kemp;;
@@ -52,22 +52,9 @@ void kar(const uint64_t x, const uint64_t y)
     show(std::cerr << "xy = ",  xy) << std::endl;
     Y_CHECK(xy==p);
     std::cerr << std::endl;
-
-#if 0
-    Element X(x,ToNum64); Y_ASSERT(X.u64()==x);
-    Element Y(y,ToNum64); Y_ASSERT(Y.u64()==y);
-
-    AutoPtr<Element> X0, X1;
-    const size_t mx = X.set(AsBytes).split(X0,X1);
-    std::cerr << "mx=" << mx << std::endl;
-
-    AutoPtr<Element> Y0, Y1;
-    const size_t my = Y.set(AsBytes).split(Y0,Y1);
-    std::cerr << "my=" << my << std::endl;
-#endif
-
-
 }
+
+
 
 Y_UTEST(kemp_kar)
 {
@@ -79,6 +66,16 @@ Y_UTEST(kemp_kar)
         kar(x,y);
     }
     kar(0xffffffff,0xffffffff);
+
+    {
+        Element          lhs(10,ran);
+        Element          rhs(8,ran);
+        std::cerr << lhs << std::endl;
+        std::cerr << rhs << std::endl;
+        AutoPtr<Element> prod = Karatsuba::Mul(lhs,rhs,Ops64_8);
+        std::cerr << prod << std::endl;
+    }
+
 
 
 }
