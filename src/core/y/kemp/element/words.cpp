@@ -368,8 +368,7 @@ namespace Yttrium
 
             }
 
-
-
+            
             throw Specific::Exception(Element::CallSign,"Corrupted Karatsuba case");
         }
 
