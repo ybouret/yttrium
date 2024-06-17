@@ -6,6 +6,9 @@
 #include "y/config/starting.hpp"
 #include "y/calculus/align.hpp"
 
+#if defined(Y_BSD)
+#include <sys/time.h>
+#endif
 
 #if defined(Y_WIN)
 #include <winsock2.h>

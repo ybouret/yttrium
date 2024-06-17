@@ -6,9 +6,6 @@
 #include <cmath>
 #include <cstring>
 
-#if defined(Y_BSD)
-#include <sys/time.h>
-#endif
 
 
 namespace Yttrium
