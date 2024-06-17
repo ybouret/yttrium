@@ -20,10 +20,13 @@ Y_UTEST(kemp_mulperf)
     double             maxTmx  = 0.05;
     unsigned           maxBits = 4096;
 
-    uint64_t tmxOps[2*Element::Kinds+1] = { 0 };
-    uint64_t & tmxFFT = tmxOps[2*Element::Kinds];
+    uint64_t tmxStd = 0, tmxKar = 0, tmxFFT = 0;
 
-    OutputFile fp("mulperf.dat");
+    OutputFile fpStd("mulstd.dat");
+    OutputFile fpKar("mulkar.dat");
+    OutputFile fpFFT("mulfft.dat");
+
+
     for(unsigned i=8;i<=maxBits;i *= 2)
     {
 
@@ -33,24 +36,25 @@ Y_UTEST(kemp_mulperf)
             (std::cerr << '*').flush();
 
             size_t  cycles = 0;
-            memset(tmxOps,0,sizeof(tmxOps));
+            tmxStd = 0;
+            tmxKar = 0;
+            tmxFFT = 0;
             do
             {
                 ++cycles;
                 Element L(i,ran);
                 Element R(j,ran);
-                for(unsigned k=0;k<Element::Kinds;++k)
+
                 {
                     L.set( Element::Inner[ ran.in<size_t>(0,3)] );
                     R.set( Element::Inner[ ran.in<size_t>(0,3)] );
-                    AutoPtr<Element> P = Element::Mul[k](L,R,tmxOps[k]);
+                    AutoPtr<Element> P = Element::Mul[Ops64_32](L,R,tmxStd);
                 }
 
-                for(unsigned k=0;k<Element::Kinds;++k)
                 {
                     L.set( Element::Inner[ ran.in<size_t>(0,3)] );
                     R.set( Element::Inner[ ran.in<size_t>(0,3)] );
-                    AutoPtr<Element> P = Element::Kar[k](L,R,tmxOps[k+Element::Kinds]);
+                    AutoPtr<Element> P = Element::Kar[Ops64_32](L,R,tmxKar);
                 }
 
                 {
@@ -60,17 +64,44 @@ Y_UTEST(kemp_mulperf)
 
             } while( chrono(tmxFFT) < maxTmx);
 
-            fp("%u %u",i,j);
-            for(size_t k=0;k<=Element::Kinds;++k)
+            fpStd("%u %u",i,j);
+            fpKar("%u %u",i,j);
+            fpFFT("%u %u",i,j);
+
             {
-                const long double ell  = chrono(tmxOps[k]);
+                const long double ell  = chrono(tmxStd);
                 const double      rate = double(cycles/ell);
-                fp(" %.15g",rate);
+                fpStd(" %.15g",rate);
             }
-            fp << '\n';
-            fp.flush();
+
+
+            {
+                const long double ell  = chrono(tmxKar);
+                const double      rate = double(cycles/ell);
+                fpKar(" %.15g",rate);
+            }
+
+            {
+                const long double ell  = chrono(tmxFFT);
+                const double      rate = double(cycles/ell);
+                fpFFT(" %.15g",rate);
+            }
+
+
+            fpStd << '\n';
+            fpStd.flush();
+
+            fpKar << '\n';
+            fpKar.flush();
+
+            fpFFT << '\n';
+            fpFFT.flush();
+
         }
-        fp << '\n';
+        fpStd << '\n';
+        fpKar << '\n';
+        fpFFT << '\n';
+
         std::cerr << "]" << std::endl;
     }
 
