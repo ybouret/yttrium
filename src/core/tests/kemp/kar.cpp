@@ -62,10 +62,8 @@ void TestKar(Element &lhs, Element &rhs)
 {
     for(unsigned i=0;i<Element::Kinds;++i)
     {
-        AutoPtr<Element> kprod = Karatsuba::Mul(lhs,rhs,Element::Proto[i]);
+        AutoPtr<Element> kprod = Element::Kar[i](lhs,rhs);
         AutoPtr<Element> sprod = Element::Mul[i](lhs,rhs);
-        //std::cerr << "kprod=" << kprod << std::endl;
-        //std::cerr << "sprod=" << sprod << std::endl;
         Y_ASSERT(__Zero__ == Element::Compare(*kprod,*sprod));
     }
 }

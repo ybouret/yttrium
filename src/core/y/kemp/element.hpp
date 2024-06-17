@@ -250,6 +250,7 @@ namespace Yttrium
             static const BinaryAPI Add[Kinds]; //!< all possible additions
             static const BinaryAPI Sub[Kinds]; //!< all possible subtractions
             static const BinaryAPI Mul[Kinds]; //!< all possible long multiplications
+            static const BinaryAPI Kar[Kinds]; //!< Karatsuba multiplication API
             static const BinaryAPI MulFFT;     //!< FFT multiplication API
             static const UnaryAPI  Sqr[Kinds]; //!< all possible squares
 
