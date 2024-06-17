@@ -108,10 +108,12 @@ namespace Yttrium
         }
 
 
+
+        //! lower + upper * B^m
         template <typename CORE, typename WORD>
-        Element *MergeWith(Element     &lower,
-                           Element     &upper,
-                           const size_t m)
+        Element *DoMerge(Element     &lower,
+                         Element     &upper,
+                         const size_t m)
         {
             // getting old value
             const Assembly<WORD> &oldSrc  = upper.get<WORD>();
@@ -138,14 +140,14 @@ namespace Yttrium
         {
             switch(ops)
             {
-                case Ops64_32: return MergeWith<uint64_t,uint32_t>(lower,upper,m);
-                case Ops64_16: return MergeWith<uint64_t,uint16_t>(lower,upper,m);
-                case Ops64_8:  return MergeWith<uint64_t,uint8_t>(lower,upper,m);
+                case Ops64_32: return DoMerge<uint64_t,uint32_t>(lower,upper,m);
+                case Ops64_16: return DoMerge<uint64_t,uint16_t>(lower,upper,m);
+                case Ops64_8:  return DoMerge<uint64_t,uint8_t>(lower,upper,m);
 
-                case Ops32_16: return MergeWith<uint32_t,uint16_t>(lower,upper,m);
-                case Ops32_8:  return MergeWith<uint32_t,uint8_t>(lower,upper,m);
+                case Ops32_16: return DoMerge<uint32_t,uint16_t>(lower,upper,m);
+                case Ops32_8:  return DoMerge<uint32_t,uint8_t>(lower,upper,m);
 
-                case Ops16_8:  return MergeWith<uint16_t,uint8_t>(lower,upper,m);
+                case Ops16_8:  return DoMerge<uint16_t,uint8_t>(lower,upper,m);
 
             }
             return 0;
@@ -162,10 +164,10 @@ namespace Yttrium
 
     namespace Kemp
     {
-
+        // source * B^m
         template <typename WORD> static inline
-        Element *RightShift(const Assembly<WORD> &source,
-                            const size_t          m)
+        Element *DoRightShift(const Assembly<WORD> &source,
+                              const size_t          m)
         {
             const size_t     length = source.positive;
             const size_t     linear = length * sizeof(WORD);
@@ -176,7 +178,20 @@ namespace Yttrium
             memcpy(target.item+m,source.item, linear );
             result->bits = target.updateBits();
 
-            return result.yield();
+            return result.yield()->revise();
+        }
+
+
+        template <typename CORE, typename WORD>
+        Element *DoMergeRightShift(const Assembly<WORD> &lower,
+                                   const Assembly<WORD> &upper,
+                                   const size_t          m)
+        {
+
+            AutoPtr<Element> lhs = DoRightShift(lower,m);
+            AutoPtr<Element> rhs = DoRightShift(upper,m<<1);
+
+            return Addition<CORE,WORD>::Get(lhs->get<WORD>(),rhs->get<WORD>());
         }
 
 
@@ -192,7 +207,7 @@ namespace Yttrium
             Element * (*Mul)(const Assembly<WORD> &,const Assembly<WORD> &)  = KarMul<CORE,WORD>;
             Element * (*Add)(const Assembly<WORD> &,const Assembly<WORD> &)  = Addition<CORE,WORD>::Get;
             Element * (*Sub)(const Assembly<WORD> &,const Assembly<WORD> &)  = Subtraction<CORE,WORD>::Get;
-            Element * (*Mix)(Element &, Element &, const size_t)             = MergeWith<CORE,WORD>;
+            Element * (*Mix)(Element &, Element &, const size_t)             = DoMerge<CORE,WORD>;
 
 
             //------------------------------------------------------------------
@@ -276,7 +291,7 @@ namespace Yttrium
                 case LO1|LO2: return Z0;                                        // @ 6/16
                 case HI1|HI2: {                                                 // @ 7/16
                     AutoPtr<Element> z2 = Z2;
-                    return RightShift( z2->get<WORD>(), m<<1 );
+                    return DoRightShift( z2->get<WORD>(), m<<1 );
                 }
 
                     //----------------------------------------------------------
@@ -290,12 +305,12 @@ namespace Yttrium
                     //----------------------------------------------------------
                 case LO1|HI2: {                                                 // @10/16
                     AutoPtr<Element> z1 = Mul(lo1->get<WORD>(), hi2->get<WORD>());
-                    return RightShift( z1->get<WORD>(), m );
+                    return DoRightShift( z1->get<WORD>(), m );
                 }
 
                 case LO2|HI1: {                                                 // @11/16
                     AutoPtr<Element> z1 = Mul(lo2->get<WORD>(), hi1->get<WORD>());
-                    return RightShift( z1->get<WORD>(), m );
+                    return DoRightShift( z1->get<WORD>(), m );
                 }
 
 
@@ -326,13 +341,13 @@ namespace Yttrium
                 case LO1|HI1|HI2: {                                             // @14/16
                     AutoPtr<Element> z2 = Z2;
                     AutoPtr<Element> z1 = Mul(lo1->get<WORD>(), hi2->get<WORD>());
-                    break;
+                    return DoMergeRightShift<CORE,WORD>(z1->get<WORD>(), z2->get<WORD>(), m);
                 }
 
                 case LO2|HI1|HI2: {                                             // @15/16
                     AutoPtr<Element> z2 = Z2;
                     AutoPtr<Element> z1 = Mul(lo2->get<WORD>(), hi1->get<WORD>());
-                    break;
+                    return DoMergeRightShift<CORE,WORD>(z1->get<WORD>(), z2->get<WORD>(), m);
                 }
 
 
