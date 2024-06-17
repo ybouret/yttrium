@@ -95,7 +95,41 @@ In a constant $D_i$ bulk:
 
 \subsection{1D Three Bodies Problem}
 
-$h,w,y$
+$h,w,y,\Psi$ between $0$ and $L$.
+Are known: $h_0,w_0,y_0,\Psi_0$ and $h_l,w_l,y_l,\Psi_l$.
+
+\begin{equation}
+	\Delta \Psi = -\kappa_\rho \sum_i z_i C_i
+\end{equation}
+so that
+\begin{equation}
+	\dfrac{\Psi_0 - 2\Psi + \Psi_l}{l^2} = -\kappa_\rho \rho
+\end{equation}
+and
+\begin{equation}
+	\Psi = \dfrac{1}{2} \left( l^2\kappa_\rho + \Psi_0 + \Psi_l \right)
+\end{equation}
+
+For a given concentration:
+\begin{itemize}
+	\item 
+	$C_-  = \frac{1}{2}(C_0+C)$, 
+	$\vec{E}_- = -\dfrac{2}{l}\left(\Psi-\Psi_0\right) $,
+	$\partial_x C_- = \dfrac{2}{l}(C-C_0)$
+	\item 
+	$C_+  = \frac{1}{2}(C+C_l)$, 
+	$\vec{E}_+ = -\dfrac{2}{l}\left(\Psi_l-\Psi_0\right)$,
+	 $\partial_x C_+ = \dfrac{2}{l}(C_l-C)$
+\end{itemize}
+
+\begin{itemize}
+	\item $J_- = D \left[ z C_- \dfrac{\mathcal{F}E_-}{RT} - \partial_x C_-\right]$
+	\item $J_+ = D \left[ z C_+ \dfrac{\mathcal{F}E_+}{RT} - \partial_x C_+\right]$
+\end{itemize}
+
+
+\end{document}
+
 \begin{itemize}
 \item $h_0,w_0=K/h_0$, $z_y y_0+h_0-K/h_0=0$
 \item $h_l,w_l=K/w_l$, $z_y y_l+h_l-K/w_l=0$

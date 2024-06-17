@@ -53,6 +53,7 @@ namespace Yttrium
 
                 case Ops32_16: return Karatsuba<uint32_t,uint16_t>::Merge(lower,upper,m);
                 case Ops32_8:  return Karatsuba<uint32_t,uint8_t>::Merge(lower,upper,m);
+                
                 case Ops16_8:  return Karatsuba<uint16_t,uint8_t>::Merge(lower,upper,m);
 
             }
