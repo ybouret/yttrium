@@ -179,6 +179,9 @@ namespace Yttrium
             return result.yield();
         }
 
+
+
+
         template <typename CORE, typename WORD>
         static inline
         Element *KarMul(const Assembly<WORD> &lhs,
@@ -255,11 +258,11 @@ namespace Yttrium
                     // Single: [5 cases]
                     //
                     //----------------------------------------------------------
-                case NOP: return Element::Zero();
-                case LO1: return Element::Zero();
-                case LO2: return Element::Zero();
-                case HI1: return Element::Zero();
-                case HI2: return Element::Zero();
+                case NOP: return Element::Zero();                               // @ 1/16
+                case LO1: return Element::Zero();                               // @ 2/16
+                case LO2: return Element::Zero();                               // @ 3/16
+                case HI1: return Element::Zero();                               // @ 4/16
+                case HI2: return Element::Zero();                               // @ 5/16
 
                     //----------------------------------------------------------
                     //
@@ -270,8 +273,8 @@ namespace Yttrium
                     //----------------------------------------------------------
                     // [2/6 cases]: trivial not zero
                     //----------------------------------------------------------
-                case LO1|LO2: return Z0;
-                case HI1|HI2: {
+                case LO1|LO2: return Z0;                                        // @ 6/16
+                case HI1|HI2: {                                                 // @ 7/16
                     AutoPtr<Element> z2 = Z2;
                     return RightShift( z2->get<WORD>(), m<<1 );
                 }
@@ -279,18 +282,18 @@ namespace Yttrium
                     //----------------------------------------------------------
                     // [2/6 cases]: trivial zero
                     //----------------------------------------------------------
-                case LO1|HI1: return Element::Zero();
-                case LO2|HI2: return Element::Zero();
+                case LO1|HI1: return Element::Zero();                           // @ 8/16
+                case LO2|HI2: return Element::Zero();                           // @ 9/16
 
                     //----------------------------------------------------------
                     // [2/6 cases]: simplified not zero
                     //----------------------------------------------------------
-                case LO1|HI2: {
+                case LO1|HI2: {                                                 // @10/16
                     AutoPtr<Element> z1 = Mul(lo1->get<WORD>(), hi2->get<WORD>());
                     return RightShift( z1->get<WORD>(), m );
                 }
 
-                case LO2|HI1: {
+                case LO2|HI1: {                                                 // @11/16
                     AutoPtr<Element> z1 = Mul(lo2->get<WORD>(), hi1->get<WORD>());
                     return RightShift( z1->get<WORD>(), m );
                 }
@@ -305,13 +308,13 @@ namespace Yttrium
                     //----------------------------------------------------------
                     // [2/4 cases]: with Z0
                     //----------------------------------------------------------
-                case LO1|LO2|HI1: {
+                case LO1|LO2|HI1: {                                             // @12/16
                     AutoPtr<Element> z0 = Z0;
                     AutoPtr<Element> z1 = Mul(lo2->get<WORD>(), hi1->get<WORD>());
                     return Mix(*z0,*z1,m);
                 }
 
-                case LO1|LO2|HI2: {
+                case LO1|LO2|HI2: {                                             // @13/16
                     AutoPtr<Element> z0 = Z0;
                     AutoPtr<Element> z1 = Mul(lo1->get<WORD>(), hi2->get<WORD>());
                     return Mix(*z0,*z1,m);
@@ -320,6 +323,17 @@ namespace Yttrium
                     //----------------------------------------------------------
                     // [2/4 cases]: with Z2
                     //----------------------------------------------------------
+                case LO1|HI1|HI2: {                                             // @14/16
+                    AutoPtr<Element> z2 = Z2;
+                    AutoPtr<Element> z1 = Mul(lo1->get<WORD>(), hi2->get<WORD>());
+                    break;
+                }
+
+                case LO2|HI1|HI2: {                                             // @15/16
+                    AutoPtr<Element> z2 = Z2;
+                    AutoPtr<Element> z1 = Mul(lo2->get<WORD>(), hi1->get<WORD>());
+                    break;
+                }
 
 
 
@@ -328,7 +342,7 @@ namespace Yttrium
                     // full : 1
                     //
                     //----------------------------------------------------------
-                case LO1|LO2|HI1|HI2: {
+                case LO1|LO2|HI1|HI2: {                                         // @16/16
                     AutoPtr<Element> z0 = Z0;
                     AutoPtr<Element> z2 = Z2;
                     AutoPtr<Element> a1 = Add(lo1->get<WORD>(),hi1->get<WORD>());
