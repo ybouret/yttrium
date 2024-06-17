@@ -129,6 +129,8 @@ namespace Yttrium
         }
 
 
+
+
         Element * Element:: Merge(Element       &lower,
                                   Element       &upper,
                                   const size_t   m,
@@ -161,7 +163,21 @@ namespace Yttrium
     namespace Kemp
     {
 
+        template <typename WORD> static inline
+        Element *RightShift(const Assembly<WORD> &source,
+                            const size_t          m)
+        {
+            const size_t     length = source.positive;
+            const size_t     linear = length * sizeof(WORD);
+            AutoPtr<Element> result = new Element( linear, AsCapacity );
+            Assembly<WORD>  &target = result->get<WORD>();
 
+            target.positive =  length + m;
+            memcpy(target.item+m,source.item, linear );
+            result->bits = target.updateBits();
+
+            return result.yield();
+        }
 
         template <typename CORE, typename WORD>
         static inline
@@ -231,56 +247,67 @@ namespace Yttrium
 #define Z0 Mul(lo1->get<WORD>(), lo2->get<WORD>())
 #define Z2 Mul(hi1->get<WORD>(), hi2->get<WORD>())
 
-            AutoPtr<Element> z0;
-            AutoPtr<Element> z2;
-            AutoPtr<Element> z1;
-
             switch(flag)
             {
 
-            }
+                    //----------------------------------------------------------
+                    //
+                    // Single: [5]
+                    //
+                    //----------------------------------------------------------
+                case NOP: return Element::Zero();
+                case LO1: return Element::Zero();
+                case LO2: return Element::Zero();
+                case HI1: return Element::Zero();
+                case HI2: return Element::Zero();
 
+                    //----------------------------------------------------------
+                    //
+                    // Pairs : [6]
+                    //
+                    //----------------------------------------------------------
 
-
-
-#if 0
-            switch(flag)
-            {
+                    //----------------------------------------------------------
+                    // [2/6]: trivial not zero
+                    //----------------------------------------------------------
                 case LO1|LO2: return Z0;
-
-                case LO1|LO2|HI1: {
-
+                case HI1|HI2: {
+                    AutoPtr<Element> z2 = Z2;
+                    return RightShift( z2->get<WORD>(), m<<1 );
                 }
+
+                    //----------------------------------------------------------
+                    // [2/6]: trivial zero
+                    //----------------------------------------------------------
+                case LO1|HI1: return Element::Zero();
+                case LO2|HI2: return Element::Zero();
+
+                    //----------------------------------------------------------
+                    // [2/6]: simplified not zero
+                    //----------------------------------------------------------
+
+
+                    // triple: 4
+                default:
                     break;
-                    
 
-
+                    // full : 1
                 case LO1|LO2|HI1|HI2: {
                     AutoPtr<Element> z0 = Z0;
                     AutoPtr<Element> z2 = Z2;
                     AutoPtr<Element> a1 = Add(lo1->get<WORD>(),hi1->get<WORD>());
                     AutoPtr<Element> a2 = Add(lo2->get<WORD>(),hi2->get<WORD>());
-                    AutoPtr<Element> z3 = Mul(a1->get<WORD>(),a2->get<WORD>()); 
+                    AutoPtr<Element> z3 = Mul(a1->get<WORD>(),a2->get<WORD>());
                     AutoPtr<Element> dz = Sub(z3->get<WORD>(),z2->get<WORD>());
                     AutoPtr<Element> z1 = Sub(dz->get<WORD>(),z0->get<WORD>());
                     AutoPtr<Element> m1 = Mix(*z0,*z1,m);
                     return Mix(*m1,*z2,m<<1);
                 }
 
-                case HI1|HI2: return Z2;
 
-                case NOP:
-                case LO1:
-                case LO2:
-                case HI1:
-                case HI2:
-                    return Element::Zero();
-
-                default:
-                    break;
             }
 
-#endif
+
 
             throw Exception("not implemented");
         }
