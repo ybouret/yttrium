@@ -254,18 +254,19 @@ namespace Yttrium
                 }
 
                 case HI1|HI2: return Z2;
+
+                case NOP:
+                case LO1:
+                case LO2:
+                case HI1:
+                case HI2:
+                    return Element::Zero();
+
                 default:
                     break;
             }
 
             throw Exception("not implemented");
-
-
-
-
-
-
-            return Element::Zero();
         }
 
 
