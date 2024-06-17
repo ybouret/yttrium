@@ -3,6 +3,7 @@
 #include "y/system/hrt.hpp"
 #include <cstring>
 #include <cmath>
+#include <cstdio>
 
 namespace Yttrium
 {
