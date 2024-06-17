@@ -56,6 +56,22 @@ void kar(const uint64_t x, const uint64_t y)
 
 
 
+
+static inline
+void TestKar(Element &lhs, Element &rhs)
+{
+    for(unsigned i=0;i<Element::Kinds;++i)
+    {
+        AutoPtr<Element> kprod = Karatsuba::Mul(lhs,rhs,Element::Proto[i]);
+        AutoPtr<Element> sprod = Element::Mul[i](lhs,rhs);
+        std::cerr << "kprod=" << kprod << std::endl;
+        std::cerr << "sprod=" << sprod << std::endl;
+        Y_ASSERT(__Zero__ == Element::Compare(*kprod,*sprod));
+    }
+}
+
+
+
 Y_UTEST(kemp_kar)
 {
     Random::ParkMiller ran;
@@ -72,10 +88,13 @@ Y_UTEST(kemp_kar)
         Element          rhs(20,ran);
         std::cerr << "lhs=" << lhs << std::endl;
         std::cerr << "rhs=" << rhs << std::endl;
+        TestKar(lhs,rhs);
+        /*
         AutoPtr<Element> kprod = Karatsuba::Mul(lhs,rhs,Ops64_8);
         std::cerr << "kprod=" << kprod << std::endl;
         AutoPtr<Element> sprod = Element::Mul[Ops64_8](lhs,rhs);
         std::cerr << "sprod=" << sprod << std::endl;
+         */
     }
 
 
