@@ -20,8 +20,8 @@ Y_UTEST(kemp_mulperf)
     double             maxTmx  = 0.05;
     unsigned           maxBits = 4096;
 
-    uint64_t tmxOps[Element::Kinds+1] = { 0 };
-    uint64_t & tmxFFT = tmxOps[Element::Kinds];
+    uint64_t tmxOps[2*Element::Kinds+1] = { 0 };
+    uint64_t & tmxFFT = tmxOps[2*Element::Kinds];
 
     OutputFile fp("mulperf.dat");
     for(unsigned i=8;i<=maxBits;i *= 2)
@@ -45,9 +45,19 @@ Y_UTEST(kemp_mulperf)
                     R.set( Element::Inner[ ran.in<size_t>(0,3)] );
                     AutoPtr<Element> P = Element::Mul[k](L,R,tmxOps[k]);
                 }
+
+                for(unsigned k=0;k<Element::Kinds;++k)
+                {
+                    L.set( Element::Inner[ ran.in<size_t>(0,3)] );
+                    R.set( Element::Inner[ ran.in<size_t>(0,3)] );
+                    AutoPtr<Element> P = Element::Kar[k](L,R,tmxOps[k+Element::Kinds]);
+                }
+
                 {
                     AutoPtr<Element> P = Element::MulFFT(L,R,tmxFFT);
                 }
+
+
             } while( chrono(tmxFFT) < maxTmx);
 
             fp("%u %u",i,j);
