@@ -1,5 +1,6 @@
 
 #include "y/kemp/element/add.hpp"
+#include "y/kemp/element/sub.hpp"
 #include "y/system/error.hpp"
 #include "y/system/exception.hpp"
 #include <cstring>
@@ -123,6 +124,7 @@ namespace Yttrium
             memcpy(newSrc.item+m,oldSrc.item,oldPos*sizeof(WORD));
             newSrc.positive = newPos; assert(0==newPos || newSrc.item[newPos-1]>0 );
 
+            // and final addition
             return Addition<CORE,WORD>::Get(lower.get<WORD>(),newSrc);
         }
 
@@ -166,6 +168,11 @@ namespace Yttrium
         {
             const size_t nl = lhs.positive;
             const size_t nr = rhs.positive;
+            Element * (*Mul)(const Assembly<WORD> &,const Assembly<WORD> &)  = KarMul<CORE,WORD>;
+            Element * (*Add)(const Assembly<WORD> &,const Assembly<WORD> &)  = Addition<CORE,WORD>::Get;
+            Element * (*Sub)(const Assembly<WORD> &,const Assembly<WORD> &)  = Subtraction<CORE,WORD>::Get;
+            Element * (*Mix)(Element &, Element &, const size_t)             = MergeWith<CORE,WORD>;
+
 
             //------------------------------------------------------------------
             // trivial termination
@@ -178,9 +185,9 @@ namespace Yttrium
             assert(nl>0&&nr>0);
             if(1==nl&&1==nr)
             {
-                const CORE L = lhs.item[0]; assert(L>0);
-                const CORE R = rhs.item[0]; assert(R>0);
-                Element   *P = new Element(sizeof(CORE),AsCapacity);
+                const CORE      L = lhs.item[0]; assert(L>0);
+                const CORE      R = rhs.item[0]; assert(R>0);
+                Element        *P = new Element(sizeof(CORE),AsCapacity);
                 Assembly<CORE> &p = P->get<CORE>();
                 p.positive = 1;
                 p.item[0]  = L*R;
@@ -188,26 +195,17 @@ namespace Yttrium
                 return P->revise();
             }
 
+            //------------------------------------------------------------------
+            // recursive termination
+            //------------------------------------------------------------------
+
+
             // split assemblies @m
-            Element::Words LP, RP;
-            const size_t       m   = SplitWith(lhs, LP, rhs, RP);
-            AutoPtr<Element>  &lo1 = LP.lower,  &hi1 = LP.upper;
-            AutoPtr<Element>  &lo2 = RP.lower,  &hi2 = RP.upper;
+            Element::Words     w1,w2;
+            const size_t       m   = SplitWith(lhs, w1, rhs, w2);
+            AutoPtr<Element>  &lo1 = w1.lower,  &hi1 = w1.upper;
+            AutoPtr<Element>  &lo2 = w2.lower,  &hi2 = w2.upper;
 
-            static const unsigned NOP = 0x00;
-            static const unsigned LO1 = 0x01;
-            static const unsigned LO2 = 0x02;
-            static const unsigned HI1 = 0x04;
-            static const unsigned HI2 = 0x08;
-            //static const unsigned Z0  = (LO1|LO2);
-            //static const unsigned Z2  = (HI1|HI2);
-            //static const unsigned ALL = Z0|Z2;
-
-            unsigned          flag  = NOP;
-            if(lo1.isValid()) flag |= LO1;
-            if(lo2.isValid()) flag |= LO2;
-            if(hi1.isValid()) flag |= HI1;
-            if(hi2.isValid()) flag |= HI2;
 
 
             // z0 = lo1 * lo2
@@ -215,39 +213,59 @@ namespace Yttrium
             // z3 = (lo1+hi1)*(lo2+hi2)
             // z1 = z3 - z0 -z2
 
-            AutoPtr<Element> z0;
-            AutoPtr<Element> z2;
-            AutoPtr<Element> z3;
 
-#define SET_Z0() z0 = KarMul<CORE,WORD>(lo1->get<WORD>(), lo2->get<WORD>());
-#define SET_Z2() z2 = KarMul<CORE,WORD>(hi1->get<WORD>(), hi2->get<WORD>());
+
+            static const unsigned NOP = 0x00;
+            static const unsigned LO1 = 0x01;
+            static const unsigned LO2 = 0x02;
+            static const unsigned HI1 = 0x04;
+            static const unsigned HI2 = 0x08;
+
+            unsigned          flag  = NOP;
+            if(lo1.isValid()) flag |= LO1;
+            if(lo2.isValid()) flag |= LO2;
+            if(hi1.isValid()) flag |= HI1;
+            if(hi2.isValid()) flag |= HI2;
+
+#define Z0 Mul(lo1->get<WORD>(), lo2->get<WORD>())
+#define Z2 Mul(hi1->get<WORD>(), hi2->get<WORD>())
 
             switch(flag)
             {
-                case LO1|LO2:     
+                case LO1|LO2: return Z0;
+
+                case LO1|LO2|HI1: {
+
+                }
                     break;
-                case LO1|LO2|HI1:   
-                    break;
-                case LO1|LO2|HI2:  
-                    break;
-                case LO1|LO2|HI1|HI2:
-                    break;
-                case LO1|HI1|HI2:    
-                    break;
-                case LO2|HI1|HI2:   
-                    break;
-                case HI1|HI2:       
-                    break;
+                    
+
+
+                case LO1|LO2|HI1|HI2: {
+                    AutoPtr<Element> z0 = Z0;
+                    AutoPtr<Element> z2 = Z2;
+                    AutoPtr<Element> a1 = Add(lo1->get<WORD>(),hi1->get<WORD>());
+                    AutoPtr<Element> a2 = Add(lo2->get<WORD>(),hi2->get<WORD>());
+                    AutoPtr<Element> z3 = Mul(a1->get<WORD>(),a2->get<WORD>()); 
+                    AutoPtr<Element> dz = Sub(z3->get<WORD>(),z2->get<WORD>());
+                    AutoPtr<Element> z1 = Sub(dz->get<WORD>(),z0->get<WORD>());
+                    AutoPtr<Element> m1 = Mix(*z0,*z1,m);
+                    return Mix(*m1,*z2,m<<1);
+                }
+
+                case HI1|HI2: return Z2;
                 default:
-                    std::cerr << "Should Be Zero" << std::endl;
+                    break;
             }
 
+            throw Exception("not implemented");
 
 
 
 
 
-            return 0;
+
+            return Element::Zero();
         }
 
 
