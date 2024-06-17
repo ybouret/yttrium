@@ -13,6 +13,7 @@ void DoSplit(Element &X, Element &Y, const Ops ops)
 
 
     std::cerr << "m=" << m << std::endl;
+
     if(XP.lower.isValid() && XP.upper.isValid())
     {
         AutoPtr<Element> merged = Element::Merge(*XP.lower, *XP.upper, m, ops);

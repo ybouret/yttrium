@@ -70,10 +70,12 @@ Y_UTEST(kemp_kar)
     {
         Element          lhs(20,ran);
         Element          rhs(20,ran);
-        std::cerr << lhs << std::endl;
-        std::cerr << rhs << std::endl;
-        AutoPtr<Element> prod = Karatsuba::Mul(lhs,rhs,Ops64_8);
-        std::cerr << prod << std::endl;
+        std::cerr << "lhs=" << lhs << std::endl;
+        std::cerr << "rhs=" << rhs << std::endl;
+        AutoPtr<Element> kprod = Karatsuba::Mul(lhs,rhs,Ops64_8);
+        std::cerr << "kprod=" << kprod << std::endl;
+        AutoPtr<Element> sprod = Element::Mul[Ops64_8](lhs,rhs);
+        std::cerr << "sprod=" << sprod << std::endl;
     }
 
 

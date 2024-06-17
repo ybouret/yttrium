@@ -38,7 +38,7 @@ namespace Yttrium
         {
             const size_t ntotal = source.positive;
             if(nlower>=ntotal) return 0;
-            
+
             const size_t nupper  = ntotal-nlower;
             const size_t toCopy  = nupper * sizeof(T);
             Element     *element = new Element( toCopy, AsCapacity );
@@ -60,7 +60,6 @@ namespace Yttrium
                          Element::Words    &YP)
         {
 
-            std::cerr << "SplitWith" << std::endl;
             const size_t m = Max(X.positive,Y.positive) >> 1;
 
             XP.lower = makeLower(X,m);
@@ -69,6 +68,7 @@ namespace Yttrium
             YP.lower = makeLower(Y,m);
             YP.upper = makeUpper(Y,m);
 
+#if 1
             std::cerr << "X       : " << X << std::endl;
             std::cerr << "|_lower = " << XP.lower << std::endl;
             std::cerr << "|_upper = " << XP.upper << std::endl;
@@ -77,7 +77,7 @@ namespace Yttrium
             std::cerr << "Y       : " << Y << std::endl;
             std::cerr << "|_lower = " << YP.lower << std::endl;
             std::cerr << "|_upper = " << YP.upper << std::endl;
-
+#endif
 
             return m;
         }
@@ -108,6 +108,27 @@ namespace Yttrium
         }
 
 
+        // source * B^m
+        template <typename WORD> static inline
+        Element * LeftShift(const Assembly<WORD> &source,
+                            const size_t          m)
+        {
+
+            const size_t oldLength = source.positive;
+            const size_t newLength = oldLength + m;
+            const size_t oldLinear = oldLength * sizeof(WORD);
+            const size_t newLinear = newLength * sizeof(WORD);
+
+            AutoPtr<Element> result = new Element( newLinear, AsCapacity );
+            {
+                Assembly<WORD>  &target = result->get<WORD>();
+                memcpy(target.item+m,source.item,oldLinear);
+                target.positive = newLength;
+                result->bits    = target.updateBits();
+            }
+
+            return result.yield()->revise();
+        }
 
         //! lower + upper * B^m
         template <typename CORE, typename WORD>
@@ -115,19 +136,8 @@ namespace Yttrium
                          Element     &upper,
                          const size_t m)
         {
-            // getting old value
-            const Assembly<WORD> &oldSrc  = upper.get<WORD>();
-            const size_t          oldPos  = oldSrc.positive; assert(0==oldPos || oldSrc.item[oldPos-1]>0);
-
-            // creating new element by m-shifting
-            const size_t          newPos  = oldPos + m;
-            AutoPtr<Element>      newUpr  = new Element( newPos * sizeof(WORD), AsCapacity );
-            Assembly<WORD>       &newSrc  = newUpr->get<WORD>();
-            memcpy(newSrc.item+m,oldSrc.item,oldPos*sizeof(WORD));
-            newSrc.positive = newPos; assert(0==newPos || newSrc.item[newPos-1]>0 );
-
-            // and final addition
-            return Addition<CORE,WORD>::Get(lower.get<WORD>(),newSrc);
+            AutoPtr<Element> shift = LeftShift(upper.get<WORD>(),m);
+            return Addition<CORE,WORD>::Get(lower.get<WORD>(),shift->get<WORD>());
         }
 
 
@@ -164,33 +174,16 @@ namespace Yttrium
 
     namespace Kemp
     {
-        // source * B^m
-        template <typename WORD> static inline
-        Element *DoRightShift(const Assembly<WORD> &source,
-                              const size_t          m)
-        {
-            const size_t     length = source.positive;
-            const size_t     linear = length * sizeof(WORD);
-            AutoPtr<Element> result = new Element( linear, AsCapacity );
-            Assembly<WORD>  &target = result->get<WORD>();
-
-            target.positive =  length + m;
-            memcpy(target.item+m,source.item, linear );
-            result->bits = target.updateBits();
-
-            return result.yield()->revise();
-        }
 
 
         template <typename CORE, typename WORD>
-        Element *DoMergeRightShift(const Assembly<WORD> &lower,
+        Element *MergeLeftShift(const Assembly<WORD> &lower,
                                    const Assembly<WORD> &upper,
                                    const size_t          m)
         {
 
-            AutoPtr<Element> lhs = DoRightShift(lower,m);
-            AutoPtr<Element> rhs = DoRightShift(upper,m<<1);
-
+            AutoPtr<Element> lhs = LeftShift(lower,m);
+            AutoPtr<Element> rhs = LeftShift(upper,m<<1);
             return Addition<CORE,WORD>::Get(lhs->get<WORD>(),rhs->get<WORD>());
         }
 
@@ -235,26 +228,27 @@ namespace Yttrium
             // recursive termination
             //------------------------------------------------------------------
 
-
+            //------------------------------------------------------------------
             // split assemblies @m
+            //------------------------------------------------------------------
             Element::Words     w1,w2;
             const size_t       m   = SplitWith(lhs, w1, rhs, w2);
             AutoPtr<Element>  &lo1 = w1.lower,  &hi1 = w1.upper;
             AutoPtr<Element>  &lo2 = w2.lower,  &hi2 = w2.upper;
 
-            static const unsigned NOP = 0x00;
-            static const unsigned LO1 = 0x01;
-            static const unsigned LO2 = 0x02;
-            static const unsigned HI1 = 0x04;
-            static const unsigned HI2 = 0x08;
-            
-
-
-            unsigned          flag  = NOP;
-            if(lo1.isValid()) flag |= LO1;
-            if(lo2.isValid()) flag |= LO2;
-            if(hi1.isValid()) flag |= HI1;
-            if(hi2.isValid()) flag |= HI2;
+            //------------------------------------------------------------------
+            // build a case
+            //------------------------------------------------------------------
+            static const unsigned NOP   = 0x00;
+            static const unsigned LO1   = 0x01;
+            static const unsigned LO2   = 0x02;
+            static const unsigned HI1   = 0x04;
+            static const unsigned HI2   = 0x08;
+            unsigned              flag  =  NOP;
+            if(lo1.isValid())     flag |=  LO1;
+            if(lo2.isValid())     flag |=  LO2;
+            if(hi1.isValid())     flag |=  HI1;
+            if(hi2.isValid())     flag |=  HI2;
 
 
             // z0 = lo1 * lo2
@@ -291,7 +285,7 @@ namespace Yttrium
                 case LO1|LO2: return Z0;                                        // @ 6/16
                 case HI1|HI2: {                                                 // @ 7/16
                     AutoPtr<Element> z2 = Z2;
-                    return DoRightShift( z2->get<WORD>(), m<<1 );
+                    return LeftShift( z2->get<WORD>(), m<<1 );
                 }
 
                     //----------------------------------------------------------
@@ -305,12 +299,12 @@ namespace Yttrium
                     //----------------------------------------------------------
                 case LO1|HI2: {                                                 // @10/16
                     AutoPtr<Element> z1 = Mul(lo1->get<WORD>(), hi2->get<WORD>());
-                    return DoRightShift( z1->get<WORD>(), m );
+                    return LeftShift( z1->get<WORD>(), m );
                 }
 
                 case LO2|HI1: {                                                 // @11/16
                     AutoPtr<Element> z1 = Mul(lo2->get<WORD>(), hi1->get<WORD>());
-                    return DoRightShift( z1->get<WORD>(), m );
+                    return LeftShift( z1->get<WORD>(), m );
                 }
 
 
@@ -341,13 +335,13 @@ namespace Yttrium
                 case LO1|HI1|HI2: {                                             // @14/16
                     AutoPtr<Element> z2 = Z2;
                     AutoPtr<Element> z1 = Mul(lo1->get<WORD>(), hi2->get<WORD>());
-                    return DoMergeRightShift<CORE,WORD>(z1->get<WORD>(), z2->get<WORD>(), m);
+                    return MergeLeftShift<CORE,WORD>(z1->get<WORD>(), z2->get<WORD>(), m);
                 }
 
                 case LO2|HI1|HI2: {                                             // @15/16
                     AutoPtr<Element> z2 = Z2;
                     AutoPtr<Element> z1 = Mul(lo2->get<WORD>(), hi1->get<WORD>());
-                    return DoMergeRightShift<CORE,WORD>(z1->get<WORD>(), z2->get<WORD>(), m);
+                    return MergeLeftShift<CORE,WORD>(z1->get<WORD>(), z2->get<WORD>(), m);
                 }
 
 
@@ -376,7 +370,7 @@ namespace Yttrium
 
 
 
-            throw Exception("not implemented");
+            throw Specific::Exception(Element::CallSign,"Corrupted Karatsuba case");
         }
 
 
