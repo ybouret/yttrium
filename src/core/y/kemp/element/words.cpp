@@ -161,6 +161,8 @@ namespace Yttrium
     namespace Kemp
     {
 
+
+
         template <typename CORE, typename WORD>
         static inline
         Element *KarMul(const Assembly<WORD> &lhs,
@@ -206,20 +208,13 @@ namespace Yttrium
             AutoPtr<Element>  &lo1 = w1.lower,  &hi1 = w1.upper;
             AutoPtr<Element>  &lo2 = w2.lower,  &hi2 = w2.upper;
 
-
-
-            // z0 = lo1 * lo2
-            // z2 = hi1 * hi2
-            // z3 = (lo1+hi1)*(lo2+hi2)
-            // z1 = z3 - z0 -z2
-
-
-
             static const unsigned NOP = 0x00;
             static const unsigned LO1 = 0x01;
             static const unsigned LO2 = 0x02;
             static const unsigned HI1 = 0x04;
             static const unsigned HI2 = 0x08;
+            
+
 
             unsigned          flag  = NOP;
             if(lo1.isValid()) flag |= LO1;
@@ -227,9 +222,28 @@ namespace Yttrium
             if(hi1.isValid()) flag |= HI1;
             if(hi2.isValid()) flag |= HI2;
 
+
+            // z0 = lo1 * lo2
+            // z2 = hi1 * hi2
+            // z3 = (lo1+hi1)*(lo2+hi2)
+            // z1 = z3 - z0 -z2
+
 #define Z0 Mul(lo1->get<WORD>(), lo2->get<WORD>())
 #define Z2 Mul(hi1->get<WORD>(), hi2->get<WORD>())
 
+            AutoPtr<Element> z0;
+            AutoPtr<Element> z2;
+            AutoPtr<Element> z1;
+
+            switch(flag)
+            {
+
+            }
+
+
+
+
+#if 0
             switch(flag)
             {
                 case LO1|LO2: return Z0;
@@ -265,6 +279,8 @@ namespace Yttrium
                 default:
                     break;
             }
+
+#endif
 
             throw Exception("not implemented");
         }
