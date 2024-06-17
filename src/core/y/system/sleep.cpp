@@ -23,7 +23,7 @@ namespace Yttrium
 		const unsigned quot_s = ms / 1000;
 		const unsigned rem_ms = (ms - (quot_s * 1000));
 		const unsigned cnv_ns = rem_ms * 1000000;
-		struct timespec period = { quot_s, cnv_ns };
+		struct timespec period = { int(quot_s), int(cnv_ns) };
 		(void)nanosleep(&period, 0);
 #endif
 
