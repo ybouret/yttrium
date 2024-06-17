@@ -11,21 +11,22 @@
 
 namespace Yttrium
 {
-    void SystemSleep:: For(unsigned ms)
-    {
+	void SystemSleep::For(unsigned ms)
+	{
+		ms = Min(ms, MaxMilliSeconds);
+
 #if defined(Y_WIN)
-        ::Sleep(ms);
+		::Sleep(ms);
 #endif
 
 #if defined(Y_BSD)
-        ms = Min(ms,MaxMilliSeconds);
-        const unsigned quot_s = ms / 1000;
-        const unsigned rem_ms = (ms - (quot_s*1000));
-        const unsigned cnv_ns = rem_ms * 1000000;
-        struct timespec period = { quot_s, cnv_ns };
-        (void) nanosleep(&period,0);
+		const unsigned quot_s = ms / 1000;
+		const unsigned rem_ms = (ms - (quot_s * 1000));
+		const unsigned cnv_ns = rem_ms * 1000000;
+		struct timespec period = { quot_s, cnv_ns };
+		(void)nanosleep(&period, 0);
 #endif
 
-    }
+	}
 
 }
