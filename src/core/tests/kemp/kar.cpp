@@ -64,8 +64,8 @@ void TestKar(Element &lhs, Element &rhs)
     {
         AutoPtr<Element> kprod = Karatsuba::Mul(lhs,rhs,Element::Proto[i]);
         AutoPtr<Element> sprod = Element::Mul[i](lhs,rhs);
-        std::cerr << "kprod=" << kprod << std::endl;
-        std::cerr << "sprod=" << sprod << std::endl;
+        //std::cerr << "kprod=" << kprod << std::endl;
+        //std::cerr << "sprod=" << sprod << std::endl;
         Y_ASSERT(__Zero__ == Element::Compare(*kprod,*sprod));
     }
 }
@@ -83,19 +83,38 @@ Y_UTEST(kemp_kar)
     }
     kar(0xffffffff,0xffffffff);
 
+
+    std::cerr << "With zero..." << std::endl;
     {
-        Element          lhs(20,ran);
-        Element          rhs(20,ran);
-        std::cerr << "lhs=" << lhs << std::endl;
-        std::cerr << "rhs=" << rhs << std::endl;
-        TestKar(lhs,rhs);
-        /*
-        AutoPtr<Element> kprod = Karatsuba::Mul(lhs,rhs,Ops64_8);
-        std::cerr << "kprod=" << kprod << std::endl;
-        AutoPtr<Element> sprod = Element::Mul[Ops64_8](lhs,rhs);
-        std::cerr << "sprod=" << sprod << std::endl;
-         */
+        Element zero(0,ran);
+        Element any(ran.in<size_t>(0,1000),ran);
+        TestKar(zero,any);
+        TestKar(any,zero);
     }
+
+    std::cerr << "Power of two: [";
+    for(unsigned i=0;i<=70;++i)
+    {
+        Element lhs(Exp2,i);
+        (std::cerr << '.').flush();
+        for(unsigned j=0;j<=70;++j)
+        {
+            Element rhs(Exp2,j);
+            TestKar(lhs,rhs);
+        }
+    }
+    std::cerr << "]" << std::endl;
+
+    std::cerr << "Random: [";
+    for(size_t i=0;i<16;++i)
+    {
+        Element          lhs(ran.in<size_t>(0,2048),ran);
+        Element          rhs(ran.in<size_t>(0,2048),ran);
+        TestKar(lhs,rhs);
+        (std::cerr << '.').flush();
+    }
+    std::cerr << "]" << std::endl;
+
 
 
 

@@ -68,7 +68,7 @@ namespace Yttrium
             YP.lower = makeLower(Y,m);
             YP.upper = makeUpper(Y,m);
 
-#if 1
+#if 0
             std::cerr << "X       : " << X << std::endl;
             std::cerr << "|_lower = " << XP.lower << std::endl;
             std::cerr << "|_upper = " << XP.upper << std::endl;
