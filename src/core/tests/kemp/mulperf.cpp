@@ -70,20 +70,20 @@ Y_UTEST(kemp_mulperf)
 
             {
                 const long double ell  = chrono(tmxStd);
-                const double      rate = double(cycles/ell);
+                const double      rate = log10(double(cycles/ell));
                 fpStd(" %.15g",rate);
             }
 
 
             {
                 const long double ell  = chrono(tmxKar);
-                const double      rate = double(cycles/ell);
+                const double      rate = log10(double(cycles/ell));
                 fpKar(" %.15g",rate);
             }
 
             {
                 const long double ell  = chrono(tmxFFT);
-                const double      rate = double(cycles/ell);
+                const double      rate = log10(double(cycles/ell));
                 fpFFT(" %.15g",rate);
             }
 
