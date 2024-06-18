@@ -356,6 +356,7 @@ add_test(kemp:colinear test-core kemp_colinear)
 add_test(kemp:narrow   test-core kemp_narrow)
 add_test(kemp:kar      test-core kemp_kar)
 add_test(kemp:words    test-core kemp_words)
+add_test(kemp:ortho    test-core kemp_ortho)
 
 #net
 add_test(net:init      test-core net_init)
