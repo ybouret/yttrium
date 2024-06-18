@@ -93,7 +93,24 @@ In a constant $D_i$ bulk:
 \end{array}
 \end{equation}
 
-\subsection{1D Three Bodies Problem}
+\subsection{Couple problem}
+
+Assuming $\sum z_i C_i = 0$.
+
+\begin{equation}
+	\vec{J}_i = -D_i \vec{\nabla} C_i + \vec{\phi}_i
+\end{equation}
+
+\begin{equation}
+	\mathrm{div}{\vec{J}_i} = -D_i \Delta C_i + \mathrm{div} \vec{\phi}_i
+\end{equation}
+
+Steady State:
+\begin{equation}
+	\Delta C_i = \frac{1}{D_i} \mathrm{div} \vec{\phi}_i \implies \sum_i \dfrac{z_i}{D_i} \mathrm{div} \vec{\phi}_i = 0
+\end{equation}
+
+\end{document}
 
 \begin{equation}
 	\vec{J}_i = -D_i \vec{\nabla} C + z_i C_i D_i \vec{\eta}
