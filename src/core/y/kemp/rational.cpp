@@ -49,6 +49,21 @@ namespace Yttrium
             validate();
         }
 
+        Rational & Rational:: ldz() noexcept
+        {
+            Coerce(numer).ldz();
+            Coerce(denom).ld1();
+            return *this;
+        }
+
+
+        Rational & Rational:: ld1() noexcept
+        {
+            Coerce(numer).ld1();
+            Coerce(denom).ld1();
+            return *this;
+        }
+
 
 
         void Rational:: xch(Rational &q) noexcept

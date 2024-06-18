@@ -12,7 +12,7 @@ Y_UTEST(kemp_natural)
     for(unsigned i=0;i<=64;++i)
     {
         const uint64_t lhs = ran.to<uint64_t>(i);
-        const apn      L(lhs);
+        apn            L(lhs);
         std::cerr << Hexadecimal(lhs,Hexadecimal::Compact) << "/" << L << std::endl;
     }
 
@@ -225,7 +225,18 @@ Y_UTEST(kemp_natural)
     }
 
 
-
+    {
+        apn n(100,ran);
+        std::cerr << "n=" << n << std::endl;
+        n.ldz();
+        std::cerr << "n=" << n << std::endl;
+    }
+    {
+        apn n(100,ran);
+        std::cerr << "n=" << n << std::endl;
+        n.ld1();
+        std::cerr << "n=" << n << std::endl;
+    }
 
 
 

@@ -30,7 +30,7 @@ namespace Yttrium
 
         Element * Element:: shr(const size_t nbit)
         {
-            if(nbit>=bits) return new Element(0,AsCapacity);
+            if(nbit>=bits) return  Element::Zero();
 
             const size_t          outBits = bits-nbit;
             const size_t          outSize = Bytes::BitsToPositive(outBits);
@@ -50,7 +50,7 @@ namespace Yttrium
         Element * Element:: shl(const size_t nbit)
         {
 
-            if(bits<=0) return new Element(0,AsCapacity);
+            if(bits<=0) return Element::Zero();
 
             const size_t          outBits = bits+nbit;
             const size_t          outSize = Bytes::BitsToPositive(outBits);

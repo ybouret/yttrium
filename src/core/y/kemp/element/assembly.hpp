@@ -13,6 +13,7 @@
 #include "y/memory/out-of-reach.hpp"
 #include <iostream>
 #include <iomanip>
+#include <cstring>
 
 namespace Yttrium
 {
@@ -112,6 +113,23 @@ namespace Yttrium
                 os << '[' << std::setw(3) << self.positive << '/' << std::setw(3) << self.capacity <<  ']' << '@' << (const void *) self.item;
                 Hexadecimal::Display(os << '=',self.item,self.positive);
                 return os;
+            }
+
+            //! set to 0 => 0 bits for Elemebnt
+            inline void ldz() noexcept
+            {
+                assert(Memory::OutOfReach::Are0(item+positive,(capacity-positive)*sizeof(T)));
+                memset(item,0,positive*sizeof(T));
+                positive=0;
+            }
+
+            //! set to 1 => 1 bits for Element
+            inline void ld1() noexcept
+            {
+                assert(Memory::OutOfReach::Are0(item+positive,(capacity-positive)*sizeof(T)));
+                memset(item,0,positive*sizeof(T));
+                positive=1;
+                item[0] = 1;
             }
 
             //__________________________________________________________________

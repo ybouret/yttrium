@@ -33,7 +33,7 @@ namespace Yttrium
             const size_t n = lhs.positive;
             const size_t m = rhs.positive;
 
-            if(n<=0||m<=0) return new Element(0,AsCapacity);
+            if(n<=0||m<=0) return Element::Zero();
 
             //__________________________________________________________________
             //

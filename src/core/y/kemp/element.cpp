@@ -285,8 +285,9 @@ num64(entry,num32.capacity>>1,bits,AsBits)
             return lhs.state;
         }
 
-        Element * Element:: Shrink(Element *el) noexcept
+        Element * Element:: Shrink(Element * const el) noexcept
         {
+            assert(0!=el);
             static const size_t MinBytes = Memory::Archon::MinBytes;
             AutoPtr<Element>    guard(el);
             try {
@@ -313,6 +314,36 @@ num64(entry,num32.capacity>>1,bits,AsBits)
             return guard.yield();
         }
 
+        Element * Element:: Ldz(Element * const el) noexcept
+        {
+            assert(0!=el);
+            //AutoPtr<Element> guard(el);
+            switch(el->state)
+            {
+                case AsBytes: el->bytes.ldz(); break;
+                case AsNum16: el->num16.ldz(); break;
+                case AsNum32: el->num32.ldz(); break;
+                case AsNum64: el->num64.ldz(); break;
+            }
+            el->bits = 0;
+            return Shrink(el->revise());
+        }
+
+
+        Element * Element:: Ld1(Element * const el) noexcept
+        {
+            assert(0!=el);
+            //AutoPtr<Element> guard(el);
+            switch(el->state)
+            {
+                case AsBytes: el->bytes.ld1(); break;
+                case AsNum16: el->num16.ld1(); break;
+                case AsNum32: el->num32.ld1(); break;
+                case AsNum64: el->num64.ld1(); break;
+            }
+            el->bits = 1;
+            return Shrink(el->revise());
+        }
 
 
         Element * Element:: revise() noexcept

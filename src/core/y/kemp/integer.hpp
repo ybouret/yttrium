@@ -110,10 +110,12 @@ static Integer FUNC(const int64_t  lhs, const Integer &rhs)
             // Methods
             //
             //__________________________________________________________________
-            void     chk()            noexcept; //!< sign in sync with absolute value
-            void     xch(Integer &z)  noexcept; //!< safe exchange
-            String   toString()          const; //!< make string
-            Integer &neg()            noexcept; //!< change sign
+            void       chk()            noexcept; //!< sign in sync with absolute value
+            void       xch(Integer &z)  noexcept; //!< safe exchange
+            String     toString()          const; //!< make string
+            Integer  & neg()            noexcept; //!< change sign
+            Integer  & ldz()            noexcept; //!< set to zero
+            Integer  & ld1()            noexcept; //!< set to zero
 
             //__________________________________________________________________
             //

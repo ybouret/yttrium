@@ -172,6 +172,8 @@ namespace Yttrium
             static Element *Shrink(Element *)            noexcept; //!< try to reduce capacity
             Element *       revise()                     noexcept; //!< update positive in other states
             size_t          getStatePositive()     const noexcept; //!< w.r.t state, mostly to debug
+            static Element *Ldz(Element *)               noexcept; //!< zero, shrink
+            static Element *Ld1(Element *)               noexcept; //!< one, shrink
 
             //__________________________________________________________________
             //

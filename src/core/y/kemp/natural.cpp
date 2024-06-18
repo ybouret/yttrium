@@ -47,7 +47,7 @@ namespace Yttrium
 
         Natural:: Natural() :
         Number(),
-        code( new Element(0,AsCapacity) )
+        code( Element::Zero() )
         {
         }
 
@@ -57,6 +57,21 @@ namespace Yttrium
         Number(),
         code( new Element( *n.code) )
         {}
+
+        Natural  & Natural:: ldz() noexcept
+        {
+            assert(0!=code);
+            code = Element::Ldz(code);
+            return *this;
+        }
+
+        Natural  & Natural:: ld1() noexcept
+        {
+            assert(0!=code);
+            code = Element::Ld1(code);
+            return *this;
+        }
+
 
         void Natural:: xch(Natural &n) noexcept
         {

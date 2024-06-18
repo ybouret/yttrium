@@ -103,7 +103,7 @@ namespace Yttrium
 
         Natural:: Natural(const String &str) :
         Number(),
-        code( new Element(0,AsCapacity) )
+        code( Element::Zero() )
         {
             try {
                 Natural _ = StringToNatural(str.c_str(),str.size());

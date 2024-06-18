@@ -125,16 +125,18 @@ Y_Kemp_Natural_Binary_Decl(OP)
             // Methods
             //
             //__________________________________________________________________
-            void     xch(Natural &)                  noexcept; //!< noexcept exchange content
-            String   toHex()                            const; //!< render to hexadecimal
-            String   toDec()                            const; //!< render to decimal
-            size_t   bits()                    const noexcept; //!< get current bits
-            size_t   size()                    const noexcept; //!< get current bytes
-            SignType sign()                    const noexcept; //!< __Zero__/Positive
-            uint8_t operator[](const size_t)   const noexcept; //!< access in 0..size()-1
-            bool     isOdd()                   const noexcept; //!< check bit parity
-            bool     isEven()                  const noexcept; //!< check bit parity
-            
+            void       xch(Natural &)                  noexcept; //!< noexcept exchange content
+            Natural  & ldz()                           noexcept; //!< set to zero
+            Natural  & ld1()                           noexcept; //!< set to one
+            String     toHex()                            const; //!< render to hexadecimal
+            String     toDec()                            const; //!< render to decimal
+            size_t     bits()                    const noexcept; //!< get current bits
+            size_t     size()                    const noexcept; //!< get current bytes
+            SignType   sign()                    const noexcept; //!< __Zero__/Positive
+            uint8_t    operator[](const size_t)  const noexcept; //!< access in 0..size()-1
+            bool       isOdd()                   const noexcept; //!< check bit parity
+            bool       isEven()                  const noexcept; //!< check bit parity
+
             //__________________________________________________________________
             //
             //

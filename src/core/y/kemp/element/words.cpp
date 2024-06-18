@@ -32,6 +32,7 @@ namespace Yttrium
                     return WordOps:: SplitWith(X.get<uint32_t>(),XP,Y.get<uint32_t>(),YP);
 
             }
+            // never get here
             Libc::CriticalError(EINVAL, "corrupted ops type in %s::Split", CallSign);
             return 0;
         }
@@ -57,6 +58,7 @@ namespace Yttrium
                 case Ops16_8:  return Karatsuba<uint16_t,uint8_t>::Merge(lower,upper,m);
 
             }
+            // never get here
             Libc::CriticalError(EINVAL, "corrupted ops type in %s::Merge", CallSign);
             return 0;
         }
@@ -64,36 +66,4 @@ namespace Yttrium
     }
 
 }
-
-#if 0
-namespace Yttrium
-{
-
-    namespace Kemp
-    {
-
-        Element *KaratsubaMul(Element &lhs, Element &rhs, const Ops ops)
-        {
-            switch(ops)
-            {
-                case Ops64_32: return Karatsuba<uint64_t,uint32_t>::Get(lhs.get<uint32_t>(),rhs.get<uint32_t>());
-                case Ops64_16: return Karatsuba<uint64_t,uint16_t>::Get(lhs.get<uint16_t>(),rhs.get<uint16_t>());
-                case Ops64_8:  return Karatsuba<uint64_t,uint8_t>::Get(lhs.get<uint8_t>(),rhs.get<uint8_t>());
-
-                case Ops32_16: return Karatsuba<uint32_t,uint16_t>::Get(lhs.get<uint16_t>(),rhs.get<uint16_t>());
-                case Ops32_8:  return Karatsuba<uint32_t,uint8_t>::Get(lhs.get<uint8_t>(),rhs.get<uint8_t>());
-
-                case Ops16_8:  return Karatsuba<uint16_t,uint8_t>::Get(lhs.get<uint8_t>(),rhs.get<uint8_t>());
-
-            }
-            Libc::CriticalError(EINVAL, "corrupted ops type in %s::KMul", Element::CallSign);
-            return 0;
-        }
-
-
-
-    }
-
-}
-#endif
 

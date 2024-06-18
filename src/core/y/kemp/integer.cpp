@@ -49,6 +49,20 @@ namespace Yttrium
         {
         }
 
+        Integer  & Integer:: ldz() noexcept
+        {
+            Coerce(n).ldz();
+            Coerce(s) = __Zero__;
+            return *this;
+        }
+
+        Integer  & Integer:: ld1() noexcept
+        {
+            Coerce(n).ld1();
+            Coerce(s) = Positive;
+            return *this;
+        }
+
         void Integer:: chk() noexcept
         {
             if(__Zero__==n.sign()) Coerce(s) = __Zero__;

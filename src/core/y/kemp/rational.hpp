@@ -151,7 +151,9 @@ Y_Kemp_Rational_Cmp(OP, int64_t  , Rational&,EXPR)
             void       validate();                //!< simplify, check no zero denom
             void       xch(Rational &q) noexcept; //!< no-throw exchange
             Rational & neg()            noexcept; //!< change sign
-            
+            Rational & ldz()            noexcept; //!< set 0
+            Rational & ld1()            noexcept; //!< set 1
+
             //__________________________________________________________________
             //
             //

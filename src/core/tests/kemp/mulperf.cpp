@@ -18,7 +18,7 @@ Y_UTEST(kemp_mulperf)
     Random::ParkMiller ran;
     WallTime           chrono;
     double             maxTmx  = 0.05;
-    unsigned           maxBits = 4096;
+    unsigned           maxBits = 8192;
 
     uint64_t tmxStd = 0, tmxKar = 0, tmxFFT = 0;
 
