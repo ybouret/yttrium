@@ -14,7 +14,6 @@ namespace Yttrium
         const Element::BinaryAPI Element:: MulFFT =
         {
             FFT_Multiplication:: Result,
-            FFT_Multiplication:: ResTMX,
             FFT_Multiplication:: ResL64,
             FFT_Multiplication:: ResR64
         };

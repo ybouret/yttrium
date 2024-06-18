@@ -144,7 +144,9 @@ Y_UTEST(kemp_element)
                 for(unsigned k=0;k<Kemp::Element::Kinds;++k)
                 {
                     {
-                        AutoPtr<Kemp::Element> S = Kemp::Element::Add[k](L,R);
+                        const uint64_t         mark = WallTime::Ticks();
+                        AutoPtr<Kemp::Element> S    = Kemp::Element::Add[k](L,R);
+                        tmx[k] += WallTime::Ticks() - mark;
                         Y_ASSERT(S->bits==b);
                         Y_ASSERT(S->u64()==s);
                     }
@@ -161,12 +163,13 @@ Y_UTEST(kemp_element)
                         Y_ASSERT(S->u64()==s);
                     }
 
+#if 0
                     {
                         AutoPtr<Kemp::Element> S = Kemp::Element::Add[k](L,R,tmx[k]);
                         Y_ASSERT(S->bits==b);
                         Y_ASSERT(S->u64()==s);
                     }
-
+#endif
 
                 }
 
@@ -212,7 +215,9 @@ RATE(tmx[Kemp::Ops16_8])
                 for(unsigned k=0;k<Kemp::Element::Kinds;++k)
                 {
                     {
+                        const uint64_t mark = WallTime::Ticks();
                         AutoPtr<Kemp::Element> S = Kemp::Element::Sub[k](L,R);
+                        tmx[k] += WallTime::Ticks() - mark;
                         Y_ASSERT(S->bits==b);
                         Y_ASSERT(S->u64()==sub);
                     }
@@ -229,11 +234,13 @@ RATE(tmx[Kemp::Ops16_8])
                         Y_ASSERT(S->u64()==sub);
                     }
 
+#if 0
                     {
                         AutoPtr<Kemp::Element> S = Kemp::Element::Sub[k](L,R,tmx[k]);
                         Y_ASSERT(S->bits==b);
                         Y_ASSERT(S->u64()==sub);
                     }
+#endif
                 }
 
 
@@ -264,7 +271,9 @@ RATE(tmx[Kemp::Ops16_8])
                 for(unsigned k=0;k<Kemp::Element::Kinds;++k)
                 {
                     {
+                        const uint64_t mark = WallTime::Ticks();
                         AutoPtr<Kemp::Element> P = Kemp::Element::Mul[k](L,R);
+                        tmx[k] += WallTime::Ticks() - mark;
                         Y_ASSERT(P->bits==b);
                         Y_ASSERT(P->u64()==mul);
                     }
@@ -281,11 +290,13 @@ RATE(tmx[Kemp::Ops16_8])
                         Y_ASSERT(P->u64()==mul);
                     }
 
+#if 0
                     {
                         AutoPtr<Kemp::Element> S = Kemp::Element::Mul[k](L,R,tmx[k]);
                         Y_ASSERT(S->bits==b);
                         Y_ASSERT(S->u64()==mul);
                     }
+#endif
                 }
             }
         }
@@ -366,17 +377,20 @@ RATE(tmx[Kemp::Ops16_8])
                 Kemp::Element R(rhs,Kemp::ToNum64);
 
                 {
+                    const uint64_t mark = WallTime::Ticks();
                     AutoPtr<const Kemp::Element> P = Kemp::Element::MulFFT(L,R);
+                    tmx_fft += WallTime::Ticks() - mark;
                     Y_ASSERT(bits == P->bits);
                     Y_ASSERT(P->u64() == prod);
                 }
 
+#if 0
                 {
                     AutoPtr<const Kemp::Element> P = Kemp::Element::MulFFT(L,R,tmx_fft);
                     Y_ASSERT(bits == P->bits);
                     Y_ASSERT(P->u64() == prod);
                 }
-
+#endif
 
                 {
                     AutoPtr<const Kemp::Element> P = Kemp::Element::MulFFT(lhs,R);
@@ -466,15 +480,12 @@ RATE(tmx[Kemp::Ops16_8])
 
             for(unsigned k=0;k<Kemp::Element::Kinds;++k)
             {
+                const uint64_t mark = WallTime::Ticks();
                 AutoPtr<Kemp::Element> S = Kemp::Element::Sqr[k](Arg);
+                tmx[k] += WallTime::Ticks() - mark;
                 Y_ASSERT(S->u64()==sqr);
             }
 
-            for(unsigned k=0;k<Kemp::Element::Kinds;++k)
-            {
-                AutoPtr<Kemp::Element> S = Kemp::Element::Sqr[k](Arg,tmx[k]);
-                Y_ASSERT(S->u64()==sqr);
-            }
         }
     }
     RATES(); std::cerr << std::endl;

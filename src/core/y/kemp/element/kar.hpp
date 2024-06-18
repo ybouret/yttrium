@@ -361,21 +361,7 @@ namespace Yttrium
                 throw Specific::Exception(Element::CallSign,"Corrupted Karatsuba case");
             }
 
-            //__________________________________________________________________
-            //
-            //
-            //! return with global timing
-            //
-            //__________________________________________________________________
-            static inline Element *GetEx(const Assembly<WORD> &lhs,
-                                         const Assembly<WORD> &rhs,
-                                         uint64_t             &tmx)
-            {
-                Y_Kemp_TMX_Ini();
-                AutoPtr<Element> res = Get(lhs,rhs);
-                Y_Kemp_TMX_Add();
-                return res.yield();
-            }
+            
         };
 
 

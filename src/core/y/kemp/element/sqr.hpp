@@ -81,23 +81,7 @@ namespace Yttrium
                 s->bits = Run( s->get<WORD>(), args);
                 return s.yield()->revise();
             }
-
-            //__________________________________________________________________
-            //
-            //
-            //! low level compute from two assemblies+timing
-            //
-            //__________________________________________________________________
-            static inline
-            Element *GetEx(const Assembly<WORD> &args,
-                           uint64_t             &tmx)
-            {
-                AutoPtr<Element>  s = New(args);
-                Y_Kemp_TMX_Ini();
-                s->bits = Run( s->get<WORD>(), args);
-                Y_Kemp_TMX_Add();
-                return s.yield()->revise();
-            }
+            
 
         };
 

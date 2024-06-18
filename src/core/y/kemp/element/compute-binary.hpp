@@ -3,7 +3,6 @@
 #define Y_Kemp_Element_Compute_Binary_Included 1
 
 #include "y/kemp/element.hpp"
-#include "y/kemp/element/tmx.hpp"
 
 namespace Yttrium
 {
@@ -64,7 +63,6 @@ namespace Yttrium
         //! declare functions for Binary ips
 #define Y_Kemp_BinaryAPI(ENGINE,CORE,WORD) { \
 ComputeBinary<ENGINE,CORE,WORD>::Result, \
-ComputeBinary<ENGINE,CORE,WORD>::ResTMX, \
 ComputeBinary<ENGINE,CORE,WORD>::ResL64, \
 ComputeBinary<ENGINE,CORE,WORD>::ResR64  \
 }

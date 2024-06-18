@@ -94,12 +94,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef Element * (*BinaryProc)(Element &lhs, Element &rhs);               //!< binary procedure
-            typedef Element * (*BinaryProcEx)(Element &lhs, Element &rhs, uint64_t &); //!< binary procedure with timing
             typedef Element * (*BinL64Proc)(uint64_t lhs, Element &rhs);               //!< binary procedure with unsigned lhs
             typedef Element * (*BinR64Proc)(Element &lhs, uint64_t rhs);               //!< binary procedure with unsigned rhs
 
             typedef Element * (*UnaryProc)(Element &);               //!< unary prodecure
-            typedef Element * (*UnaryProcEx)(Element &, uint64_t &); //!< unary procedure with timing
 
             //__________________________________________________________________
             //
@@ -108,15 +106,12 @@ namespace Yttrium
             struct BinaryAPI
             {
                 BinaryProc   const Result; //!< produce result (lhs,rhs)
-                BinaryProcEx const ResTMX; //!< produce result (lhs,rhs,tmx)
                 BinL64Proc   const ResL64; //!< produce result (qw,rhs)
                 BinR64Proc   const ResR64; //!< produce result (rhs,qw)
 
                 inline Element * operator()(Element &lhs, Element &rhs)                const { return Result(lhs,rhs);     } //!< select result
-                inline Element * operator()(Element &lhs, Element &rhs, uint64_t &tmx) const { return ResTMX(lhs,rhs,tmx); } //!< select result
                 inline Element * operator()(uint64_t lhs, Element &rhs)                const { return ResL64(lhs,rhs);     } //!< select result
                 inline Element * operator()(Element &lhs, uint64_t rhs)                const { return ResR64(lhs,rhs);     } //!< select result
-
             };
 
             //__________________________________________________________________
@@ -126,11 +121,7 @@ namespace Yttrium
             struct UnaryAPI
             {
                 UnaryProc   const Result; //!< produce result (arg)
-                UnaryProcEx const ResTMX; //!< produce result (arg,tmx)
-             
                 inline Element * operator()(Element &arg)                const { return Result(arg);     } //!< alias
-                inline Element * operator()(Element &arg, uint64_t &tmx) const { return ResTMX(arg,tmx); } //!< alias
-
             };
 
             //__________________________________________________________________

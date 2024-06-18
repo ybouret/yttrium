@@ -48,17 +48,23 @@ Y_UTEST(kemp_mulperf)
                 {
                     L.set( Element::Inner[ ran.in<size_t>(0,3)] );
                     R.set( Element::Inner[ ran.in<size_t>(0,3)] );
-                    AutoPtr<Element> P = Element::Mul[Ops64_32](L,R,tmxStd);
+                    const uint64_t mark = WallTime::Ticks();
+                    AutoPtr<Element> P = Element::Mul[Ops64_32](L,R);
+                    tmxStd += WallTime::Ticks() - mark;
                 }
 
                 {
                     L.set( Element::Inner[ ran.in<size_t>(0,3)] );
                     R.set( Element::Inner[ ran.in<size_t>(0,3)] );
-                    AutoPtr<Element> P = Element::Kar[Ops64_32](L,R,tmxKar);
+                    const uint64_t mark = WallTime::Ticks();
+                    AutoPtr<Element> P = Element::Kar[Ops64_32](L,R);
+                    tmxKar += WallTime::Ticks() - mark;
                 }
 
                 {
-                    AutoPtr<Element> P = Element::MulFFT(L,R,tmxFFT);
+                    const uint64_t   mark = WallTime::Ticks();
+                    AutoPtr<Element> P    = Element::MulFFT(L,R);
+                    tmxFFT += WallTime::Ticks() - mark;
                 }
 
 

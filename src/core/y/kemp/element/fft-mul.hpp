@@ -22,7 +22,7 @@ namespace Yttrium
             static Element * Get(const Assembly<uint8_t> &lhs,
                                  const Assembly<uint8_t> &rhs,
                                  uint64_t * const         tmx);
-
+            
             //! format elements and get result
             static inline Element * Result( Element &lhs, Element &rhs )
             {

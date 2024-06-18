@@ -4,7 +4,6 @@
 #define Y_Kemp_Element_Compute_Unary_Included 1
 
 #include "y/kemp/element.hpp"
-#include "y/kemp/element/tmx.hpp"
 
 namespace Yttrium
 {
@@ -16,9 +15,8 @@ namespace Yttrium
         //
         //! high-level compute algorithms
         /**
-         assuming thate ENGINE has static methods:
+         assuming thate ENGINE has static method:
          - Element *Get(const Assembly<WORD> &)
-         - Element *GetEx(const Assembly<WORD> &l, uint64_t &tmx)
          */
         //______________________________________________________________________
         template <template <typename,typename> class ENGINE,typename CORE, typename WORD>
@@ -33,22 +31,11 @@ namespace Yttrium
                 return ENGINE<CORE,WORD>::Get( arg.get<WORD>()  );
             }
 
-            //__________________________________________________________________
-            //
-            //! Engine::Get with conversion + timing
-            //__________________________________________________________________
-            static inline Element * ResTMX(Element &arg, uint64_t &tmx) {
-                return ENGINE<CORE,WORD>::GetEx( arg.get<WORD>(),  tmx );
-            }
-
-
         };
 
         //! declare functions for Unary ops
 #define Y_Kemp_UnaryAPI(ENGINE,CORE,WORD) { \
-ComputeUnary<ENGINE,CORE,WORD>::Result, \
-ComputeUnary<ENGINE,CORE,WORD>::ResTMX, \
- }
+ComputeUnary<ENGINE,CORE,WORD>::Result    }
 
         //! declare table of Unary ops
 #define Y_Kemp_UnaryAPI_Table(ENGINE) {    \
