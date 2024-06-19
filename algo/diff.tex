@@ -96,59 +96,26 @@ In a constant $D_i$ bulk:
 \subsection{Three Bodies Problem}
 
  	
-Assuming $\sum z_i C_i(\vec{r},t) = 0$ and $\int C_i(\vec{r},t) \, \mathrm{d}\vec{r} = Q_i$.\\
-Let us assume that after $\delta t$:
-\begin{equation}
-	C_i(\vec{r},t+\delta t) = C_i(\vec{r},t) + \delta C_i(\vec{r},t)
-\end{equation}
-The charge excess is:
-\begin{equation}
-	\delta \rho(\vec{r}) = \sum_i z_i \delta C_i(\vec{r},t)
-\end{equation}
+Assuming $\sum z_i C_i(\vec{r},t) = 0$. All linear operators have the same property.
 
-\end{document}
-Let us assume that we have a left boundary condition and a right boundary condition
-and we start with:
+Let's assume that $C_i$ has a net physical flux $\vec{J}_i$ that may lead to a charge unbalance,
+we want to evaluate the response balancing flux $\vec{\phi}_i$.
+
 \begin{equation}
-	\sum z_i C_{il} = \sum z_i C_{ir} = \sum z_i C_i = 0
+	\delta C_i = - \delta t \left( \mathrm{div} \vec{J}_i - \mathrm{div} \vec{\phi}_i \right)
 \end{equation}
 
 \begin{equation}
-	\delta C_i \approx \dfrac{D_i\delta t}{L^2}\left(C_{il} - 2 C_i + C_{ir}\right) 
+	\sum_i z_i \delta C_i = 0
+	= - \delta t \left( \sum_i z_i \mathrm{div} \vec{J}_i - \sum_i z_i \mathrm{div} \vec{\phi}_i \right)
+\end{equation}
+So we look for:
+\begin{equation}
+	\sum_i z_i \mathrm{div} \vec{\phi}_i =   \sum_i z_i \mathrm{div} \vec{J}_i
 \end{equation}
 
 \begin{equation}
-	0 \not= \delta \rho \approx \sum_i z_i \delta C_i 
-\end{equation}
-
-\begin{equation}
-	\delta C_i' = \delta C_i + \alpha_i \delta \rho, \; \sum_i z_i \delta C_i' = 0 \implies 0 = 1+\sum_i z_i \alpha_i
-\end{equation}
-
-\begin{equation}
-	\alpha_i = -\dfrac{z_i}{\sum_iz_i^2}
-\end{equation}
-
-Let's find a conservative formulation.
-
-Let us assume that $\delta \rho$ sets the matter in motion...
-
-\end{document}
-
-\begin{equation}
-	\vec{J}_i = -D_i \vec{\nabla} C + z_i C_i D_i \vec{\eta}
-\end{equation}
-	
-\begin{equation}
-	\sum_i z_i \vec{J}_i = -\left(\sum_i z_i D_i \vec{\nabla}C\right) + \left( \sum_i z_i^2 C_i D_i\right) \vec{\eta}
-\end{equation}
-
-\begin{equation}
-	\partial_t \rho = 0 \iff  \vec{\phi}_0 = -\left(\sum_i z_i D_i \vec{\nabla}C_i\right) + \left( \sum_i z_i^2 C_i D_i\right) \vec{\eta}
-\end{equation}
-
-\begin{equation}
-	\vec{\eta} = \left[\sum_i z_i^2 C_i D_i\right]^{-1}\left[\vec{\phi}_0+\sum_i z_i D_i \vec{\nabla}C_i\right]
+	\vec{\phi}_i = z_i D_i C_i \vec{\Phi}
 \end{equation}
 
 \end{document}
