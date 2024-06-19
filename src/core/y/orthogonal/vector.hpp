@@ -7,6 +7,7 @@
 #include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/orthogonal/metrics.hpp"
+#include "y/quantized.hpp"
 
 namespace Yttrium
 {
@@ -21,7 +22,7 @@ namespace Yttrium
         //______________________________________________________________________
         typedef CxxArray<const apz,Memory::Pooled> VectorType; //!< base type for a vector
         typedef CxxArray<apq,Memory::Pooled>       QArrayType; //!< workspace
-
+        typedef Quantized                          ObjectType; //!< alias
 
 
         //______________________________________________________________________
@@ -32,7 +33,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Vector : public Object, public Metrics, public VectorType
+        class Vector : public ObjectType, public Metrics, public VectorType
         {
         public:
             static const char * const DerivedCallSign; //!< new call sign
@@ -49,17 +50,20 @@ namespace Yttrium
             explicit Vector(QArrayType  &wksp);   //!< build from workspace
 
             //! setup from compatible array
+            /**
+             array of apq, apz, apn, int, unsigned
+             */
             template <typename ARRAY>
             inline Vector(const CopyOf_ &, ARRAY &arr):
-            Object(),
+            ObjectType(),
             Metrics(arr.size()),
             VectorType(dimensions),
             norm2(0),
             next(0),
             prev(0)
             {
-                QArrayType wksp(CopyOf,arr);
-                update(wksp);
+                QArrayType wksp(CopyOf,arr); // convert to apq
+                update(wksp);                // univocal   apz
             }
 
             //______________________________________________________________

@@ -95,16 +95,34 @@ In a constant $D_i$ bulk:
 
 \subsection{Three Bodies Problem}
 
+ 	
 Assuming $\sum z_i C_i = 0$.
 
+Let us assume that we have a left boundary condition and a right boundary condition
+and we start with:
 \begin{equation}
-	\vec{J}_i = -D_i \vec{\nabla} C_i + \vec{\phi}_i
+	\sum z_i C_{il} = \sum z_i C_{ir} = \sum z_i C_i = 0
 \end{equation}
 
 \begin{equation}
-	\mathrm{div}{\vec{J}_i} = -D_i \Delta C_i + \mathrm{div} \vec{\phi}_i
+	\delta C_i \approx \dfrac{D_i\delta t}{L^2}\left(C_{il} - 2 C_i + C_{ir}\right) 
 \end{equation}
 
+\begin{equation}
+	0 \not= \delta \rho \approx \sum_i z_i \delta C_i 
+\end{equation}
+
+\begin{equation}
+	\delta C_i' = \delta C_i + \alpha_i \delta \rho, \; \sum_i z_i \delta C_i' = 0 \implies 0 = 1+\sum_i z_i \alpha_i
+\end{equation}
+
+\begin{equation}
+	\alpha_i = -\dfrac{z_i}{\sum_iz_i^2}
+\end{equation}
+
+Let's find a conservative formulation.
+
+Let us assume that $\delta \rho$ sets the matter in motion...
 
 \end{document}
 

@@ -18,7 +18,7 @@ namespace Yttrium
 
         Vector:: Vector(const Vector &other) :
         Identifiable(), Collection(),
-        Object(),
+        ObjectType(),
         Metrics(other),
         VectorType(other),
         norm2(other.norm2),
@@ -34,7 +34,7 @@ namespace Yttrium
 
 
         Vector:: Vector(const size_t dims) :
-        Object(),
+        ObjectType(),
         Metrics(dims),
         VectorType(dimensions),
         norm2(0),
@@ -49,7 +49,7 @@ namespace Yttrium
         }
 
         Vector:: Vector(QArrayType &wksp) :
-        Object(),
+        ObjectType(),
         Metrics(wksp.size()),
         VectorType( dimensions ),
         norm2(0),

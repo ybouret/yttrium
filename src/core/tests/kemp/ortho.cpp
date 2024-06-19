@@ -5,7 +5,6 @@
 #include "y/sequence/vector.hpp"
 #include "y/random/park-miller.hpp"
 #include "y/container/light-array.hpp"
-//#include "../main.hpp"
 
 using namespace Yttrium;
 
@@ -32,6 +31,11 @@ Y_UTEST(kemp_ortho)
         std::cerr << "F=" << F << std::endl;
 
     }
+
+    Y_SIZEOF(Orthogonal::Vector);
+    Y_SIZEOF(apn);
+    Y_SIZEOF(apz);
+    Y_SIZEOF(apq);
 
 
 

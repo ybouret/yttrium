@@ -197,13 +197,13 @@ Y_Kemp_Rational_Cmp(OP, int64_t  , Rational&,EXPR)
             // Other methods
             //
             //__________________________________________________________________
-            static Rational Sqr(const Rational &q);    //!< |q|^2
-            Rational        sqr() const;               //!< |*this|^2
-            static Rational Abs(const Rational &q);    //!< |n|
-            Rational        abs() const;               //!< |*this|
-            static Rational Sqrt(const Rational &q);   //!< sqrt(q)
-            Rational        sqrt() const;              //!< sqrt(*this)
-            
+            static Rational Sqr(const Rational &q);  //!< |q|^2
+            Rational        sqr()            const;  //!< |*this|^2
+            static Rational Abs(const Rational &q);  //!< |q|
+            Rational        abs()            const;  //!< |*this|
+            static Rational Sqrt(const Rational &q); //!< sqrt(q)
+            Rational        sqrt()            const; //!< sqrt(*this)
+
             template <typename T>
             T toReal() const; //!< floating point approximation [XReal](float|double|long double)
 
