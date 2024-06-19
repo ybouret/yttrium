@@ -96,8 +96,17 @@ In a constant $D_i$ bulk:
 \subsection{Three Bodies Problem}
 
  	
-Assuming $\sum z_i C_i = 0$.
+Assuming $\sum z_i C_i(\vec{r},t) = 0$ and $\int C_i(\vec{r},t) \, \mathrm{d}\vec{r} = Q_i$.\\
+Let us assume that after $\delta t$:
+\begin{equation}
+	C_i(\vec{r},t+\delta t) = C_i(\vec{r},t) + \delta C_i(\vec{r},t)
+\end{equation}
+The charge excess is:
+\begin{equation}
+	\delta \rho(\vec{r}) = \sum_i z_i \delta C_i(\vec{r},t)
+\end{equation}
 
+\end{document}
 Let us assume that we have a left boundary condition and a right boundary condition
 and we start with:
 \begin{equation}
