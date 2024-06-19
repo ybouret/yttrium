@@ -68,9 +68,7 @@ namespace Yttrium
         void  Vector:: clear() noexcept
         {
             for(size_t i=dimensions;i>0;--i)
-            {
                 Coerce( (*this)[i] ).ldz();
-            }
             Coerce(norm2).ldz();
         }
 
