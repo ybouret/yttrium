@@ -98,36 +98,26 @@ In a constant $D_i$ bulk:
  	
 Assuming $\sum z_i C_i(\vec{r},t) = 0$. All linear operators have the same property.
 
-Let's assume that $C_i$ has a net physical flux $\vec{J}_i$ that may lead to a charge unbalance,
-we want to evaluate the response balancing flux $\vec{\psi}_i$.
-
+Let's assume that $C_i$ has a net physical flux $\vec{J}_i$ that may lead to a charge unbalance.
 
 \begin{equation}
-	\sum_i z_i \vec{J}_i + \sum_i zi \vec{\psi}_i = \vec{0}
-\end{equation}
-
-
-\begin{equation}
-	\vec{\psi}_i = z_i D_i C_i \vec{\Psi}
-\end{equation}
-
-\end{document}
-
-\begin{equation}
-	\delta C_i = - \delta t \left( \mathrm{div} \vec{J}_i - \mathrm{div} \vec{\phi}_i \right)
+	C_i(\vec{r},t+\delta t) \simeq C_i(\vec{r},t+\delta t) + \delta C_i(\vec{r},t)
 \end{equation}
 
 \begin{equation}
-	\sum_i z_i \delta C_i = 0
-	= - \delta t \left( \sum_i z_i \mathrm{div} \vec{J}_i - \sum_i z_i \mathrm{div} \vec{\phi}_i \right)
-\end{equation}
-So we look for:
-\begin{equation}
-	\sum_i z_i \mathrm{div} \vec{\phi}_i =   \sum_i z_i \mathrm{div} \vec{J}_i
+	\delta \rho(\vec{r},t) = \sum_i z_i \delta{C}_i(\vec{r},t)
 \end{equation}
 
 \begin{equation}
-	\vec{\phi}_i = z_i D_i C_i \vec{\Phi}
+	\Delta \zeta = -\kappa_\rho \delta \rho(\vec{r},t) 
+\end{equation}
+
+\begin{equation}
+	\vec{\eta} = -\vec{\nabla}{\zeta}
+\end{equation}
+
+\begin{equation}
+	\vec{\phi}_i = D_i z_i Ci(\vec{r},t) \vec{\eta}
 \end{equation}
 
 \end{document}
