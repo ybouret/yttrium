@@ -44,6 +44,7 @@ namespace Yttrium
 
             static void * Acquire(unsigned &shift);                             //!< acquire with internal instance
             static void   Release(void * entry, const unsigned shift) noexcept; //!< release with internal location
+            static size_t EngineSize() noexcept;                                //!< get internal engine size
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Archon);

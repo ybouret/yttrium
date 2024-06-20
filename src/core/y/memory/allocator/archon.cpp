@@ -18,7 +18,7 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            //! standalone dyadic allocator
+            //! standalone dyadic allocator data
             //
             //__________________________________________________________________
             class CoreEngine
@@ -147,6 +147,9 @@ namespace Yttrium
             self.release(entry,shift);
         }
 
-
+        size_t Archon:: EngineSize() noexcept
+        {
+            return sizeof(Engine);
+        }
     }
 }
