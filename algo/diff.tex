@@ -109,7 +109,7 @@ Let's assume that $C_i$ has a net physical flux $\vec{J}_i$ that may lead to a c
 \end{equation}
 
 \begin{equation}
-	\Delta \zeta = -\kappa_\rho \delta \rho(\vec{r},t) 
+	\Delta \zeta = -\kappa_\rho \delta \rho(\vec{r},t+\delta t) 
 \end{equation}
 
 \begin{equation}
@@ -123,6 +123,10 @@ Let's assume that $C_i$ has a net physical flux $\vec{J}_i$ that may lead to a c
 \begin{equation}
 	\delta C_i' = - \delta t \mathrm{div} \vec{\phi}_i 
 	=  \delta t D_i z_i \left[ C_i(\vec{r},t+\delta t) \mathrm{div}\vec{\eta} + \vec\eta \cdot \vec\nabla C_i(\vec{r},t+\delta t)\right]
+\end{equation}
+
+\begin{equation}
+	0 = \sum_i z_i \delta C_i + \sum_i z_i \delta C_i'
 \end{equation}
 
 \end{document}
