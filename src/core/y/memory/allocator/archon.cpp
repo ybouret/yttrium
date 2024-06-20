@@ -14,6 +14,12 @@ namespace Yttrium
 
         namespace
         {
+            //__________________________________________________________________
+            //
+            //
+            //! standalone dyadic allocator
+            //
+            //__________________________________________________________________
             class CoreEngine
             {
             public:
@@ -26,18 +32,56 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(CoreEngine);
             };
+
+            struct ZBlock
+            {
+                typedef PoolOf<ZBlock> Pool;
+                ZBlock *next;
+            };
         }
 
-        class Archon:: Engine : public CoreEngine, public Memory::Quarry
+        class Archon:: Engine : public CoreEngine
         {
         public:
-            explicit Engine() : CoreEngine(), Memory::Quarry(corpus)
+            explicit Engine() : CoreEngine(), quarry(corpus)
             {
             }
-            virtual ~Engine() noexcept {
+
+            inline void * acquire(unsigned &shift)
+            {
+                if(shift<=MinShift && zbpool.size>0)
+                {
+                    static const size_t one = 1;
+                    shift = MinShift;
+                    return memset( zbpool.query(), 0, one << shift);
+                }
+                else
+                {
+                    return quarry.acquire(shift);
+                }
             }
 
-        private:
+            inline void release(void *entry, const unsigned shift) noexcept
+            {
+                if(shift<=MinShift)
+                {
+                    assert(MinShift==shift);
+                    zbpool.store( static_cast<ZBlock *>(memset(entry,0,sizeof(ZBlock)) ) );
+                }
+                else
+                    quarry.release(entry,shift);
+            }
+
+            virtual ~Engine() noexcept
+            {
+                while(zbpool.size>0)
+                    quarry.release(zbpool.query(),MinShift);
+            }
+
+            Memory::Quarry        quarry;
+            ZBlock::Pool          zbpool;
+
+         private:
             Y_DISABLE_COPY_AND_ASSIGN(Engine);
         };
 

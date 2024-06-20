@@ -94,11 +94,18 @@ namespace Yttrium
             //__________________________________________________________________
             void * acquire(unsigned &shift);                            //!< fetch block 2^(MaxOf(shift,MinShift)), shift<=MaxShift
             void   release(void *entry, const unsigned shift) noexcept; //!< store previously acquire blocks
+            void   displayInfo(const size_t) const;                     //!< display statistics
 
+            
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
             virtual void release() noexcept;
             virtual void gc(const size_t maxBytes) noexcept;
 
-            void         displayInfo(const size_t) const; //!< display statistics
 
 
 
