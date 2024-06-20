@@ -24,13 +24,16 @@ Y_UTEST(kemp_modular)
     std::cerr << "e   = " << std::setw(20) << e   << std::endl;
     std::cerr << "d   = " << std::setw(20) << d   << std::endl;
 
+    std::cerr << '[';
     for(apn M=0;M<n;++M)
     {
         const apn C = Kemp::Modular::Exp(M,e,n);
         const apn D = Kemp::Modular::Exp(C,d,n);
-        std::cerr << "M=" << M << " => C=" << C << " => " << D << std::endl;
+        //std::cerr << "M=" << M << " => C=" << C << " => " << D << std::endl;
         Y_ASSERT(D==M);
+        (std::cerr << '#').flush();
     }
+    std::cerr << ']' << std::endl;
 
 }
 Y_UDONE()
