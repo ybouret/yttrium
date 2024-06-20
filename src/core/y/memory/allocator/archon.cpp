@@ -2,6 +2,7 @@
 #include "y/memory/album.hpp"
 #include "y/memory/corpus.hpp"
 #include "y/memory/quarry.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
@@ -43,10 +44,13 @@ namespace Yttrium
         class Archon:: Engine : public CoreEngine
         {
         public:
-            explicit Engine() : CoreEngine(), quarry(corpus)
+            inline explicit Engine() : CoreEngine(), quarry(corpus), zbpool() { }
+            inline virtual ~Engine() noexcept
             {
+                while(zbpool.size>0)
+                    quarry.release(zbpool.query(),MinShift);
             }
-
+            
             inline void * acquire(unsigned &shift)
             {
                 if(shift<=MinShift && zbpool.size>0)
@@ -72,11 +76,7 @@ namespace Yttrium
                     quarry.release(entry,shift);
             }
 
-            virtual ~Engine() noexcept
-            {
-                while(zbpool.size>0)
-                    quarry.release(zbpool.query(),MinShift);
-            }
+
 
             Memory::Quarry        quarry;
             ZBlock::Pool          zbpool;
