@@ -101,32 +101,46 @@ Assuming $\sum z_i C_i(\vec{r},t) = 0$. All linear operators have the same prope
 Let's assume that $C_i$ has a net physical flux $\vec{J}_i$ that may lead to a charge unbalance.
 
 \begin{equation}
-	C_i(\vec{r},t+\delta t) \simeq C_i(\vec{r},t+\delta t) + \delta C_i(\vec{r},t),\;\; \delta C_i = -\delta t \mathrm{div}\vec{J}_i
+\left\lbrace
+\begin{array}{rcl}
+	C_i(\vec{r},t+\delta t) & \simeq & C_i(\vec{r},t+\delta t) + \delta C_i(\vec{r},t)\\
+	\delta C_i(\vec{r},t) & = & -\delta t \mathrm{div}\vec{J}_i\\
+	 \delta \rho(\vec{r},t+\delta t) & = & \sum_i z_i \delta C_i(\vec{r},\delta t)\\
+\end{array}
+\right.
+\end{equation}
+
+The reduced potential is defined by:
+\begin{equation}
+	\Delta \zeta(\vec{r},t+\delta t) = -\kappa_\rho  \delta \rho(\vec{r},t+\delta t) 
+\end{equation}
+The reduced electric field is defined by:
+\begin{equation}
+	\vec{\eta}(\vec{r},t+\delta t) = -\vec{\nabla}{\zeta}(\vec{r},t+\delta t)
+ \end{equation}
+
+The initial balancing flux is defined by:
+\begin{equation}
+	\vec{\phi}_i = D_i z_i C_i(\vec{r},t+\delta t) \vec{\eta}(\vec{r},t+\delta t)
 \end{equation}
 
 \begin{equation}
-	\delta \rho(\vec{r},t+\delta t) = \sum_i z_i \delta{C}_i(\vec{r},t)
+	\delta C_i' = - \delta t \mathrm{div} \vec{\phi}_i
+\end{equation}
+
+We want:
+\begin{equation}
+	\sum_i z_i \delta C_i' = -\delta\rho(\vec{r},t+\delta t)
 \end{equation}
 
 \begin{equation}
-	\Delta \zeta = -\kappa_\rho \delta \rho(\vec{r},t+\delta t) 
+	\sum_i z_i^2 D_i \, \mathrm{div}\left[C_i(\vec{r},t+\delta t) \vec{\eta}(\vec{r},t+\delta t) \right] = -\dfrac{\delta\rho(\vec{r},t+\delta t)}{\delta t}
 \end{equation}
 
 \begin{equation}
-	\vec{\eta} = -\vec{\nabla}{\zeta}
+	\sum_i z_i^2 D_i\left[ C_i(\vec{r},t+\delta t) \mathrm{div}{\vec{\eta}} + \vec{\eta} \cdot \vec{\nabla} C_i(\vec{r},t+\delta t) \right]   = -\dfrac{\delta\rho(\vec{r},t+\delta t)}{\delta t}
 \end{equation}
 
-\begin{equation}
-	\vec{\phi}_i = D_i z_i C_i(\vec{r},t+\delta t) \vec{\eta}
-\end{equation}
-
-\begin{equation}
-	\delta C_i' = - \delta t \mathrm{div} \vec{\phi}_i 
-	=  \delta t D_i z_i \left[ C_i(\vec{r},t+\delta t) \mathrm{div}\vec{\eta} + \vec\eta \cdot \vec\nabla C_i(\vec{r},t+\delta t)\right]
-\end{equation}
-
-\begin{equation}
-	0 = \sum_i z_i \delta C_i + \sum_i z_i \delta C_i'
-\end{equation}
 
 \end{document}
+ 
