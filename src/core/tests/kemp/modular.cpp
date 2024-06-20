@@ -5,11 +5,16 @@ using namespace Yttrium;
 
 Y_UTEST(kemp_modular)
 {
+#if 0
     const apn p = 3;
     const apn q = 11;
+#endif
+
+    const apn p = 67;
+    const apn q = 107;
     const apn n = p * q;
     const apn phi = (p-1)*(q-1);
-    const apn e   = 3;
+    const apn e   = 7;
     const apn d   = Kemp::Modular::Inv(e,phi);
 
     std::cerr << "p   = " << std::setw(20) << p   << std::endl;
