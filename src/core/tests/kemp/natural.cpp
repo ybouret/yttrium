@@ -250,15 +250,14 @@ Y_CHECK(n._geq(x));  \
 Y_CHECK(n._leq(x))
 
 
-    std::cerr << "Cmp8" << std::endl;
+    std::cerr << "<Cmp8>" << std::endl;
     {
         apn n;
 
         Y_CHK8(0); Y_CHECK(n._lt(1)); Y_CHECK(n._leq(1));
         Y_CHK8(1);
-
-
     }
+    
 
 
 }
