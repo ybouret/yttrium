@@ -116,10 +116,29 @@ namespace Yttrium
 
         void Natural:: Simplify(Natural &num, Natural &den)
         {
-            if(den<=0) throw Specific::Exception(CallSign, "Simplify Division By Zero");
-            if(num<=0) { den=1; return; }
-            if(1==den) return;
+            //------------------------------------------------------------------
+            //
+            // specific cases
+            //
+            //------------------------------------------------------------------
+            if(den._eq(0)) 
+                throw Specific::Exception(CallSign, "Division By Zero in Simplify");
+            assert(den>0);
 
+            if(num._eq(0))
+            {
+                if(den._not(1)) den.ld1();
+                return;
+            }
+
+            if(den._eq(1)) 
+                return; // already simplified
+
+            //------------------------------------------------------------------
+            //
+            // generic case
+            //
+            //------------------------------------------------------------------
             assert(num>0);
             assert(den>1);
             const Natural g = __GCD(num,den);
