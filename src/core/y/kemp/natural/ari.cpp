@@ -88,7 +88,7 @@ namespace Yttrium
 
         Natural Natural:: Sqrt(const Natural &s)
         {
-            if(s<=1) return s;
+            if(s._leq(1)) return s;
             Natural x0 = s; x0.shr();
             while(true) {
                 Natural x1 = (x0+s/x0);
