@@ -222,7 +222,17 @@ num64(entry,num32.capacity>>1,bits,AsBits)
             return bytes.item[0];
         }
 
-        
+        SignType Element:: compareToByte(const uint8_t u) const noexcept
+        {
+            switch(state)
+            {
+                case AsNum16: return num16.compareToByte(u);
+                case AsNum32: return num32.compareToByte(u);
+                case AsNum64: return num64.compareToByte(u);
+                case AsBytes: break;
+            }
+            return bytes.compareToByte(u);
+        }
 
 
         Element & Element:: set(const State newState) noexcept

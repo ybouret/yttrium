@@ -239,7 +239,26 @@ Y_UTEST(kemp_natural)
     }
 
 
+#define Y_CHK8(x)    \
+std::cerr << "\t\t-- using " << x << " --" << std::endl;\
+n = x;               \
+Y_CHECK(n._eq(x));   \
+Y_CHECK(!n._lt(x));  \
+Y_CHECK(!n._gt(x));  \
+Y_CHECK(!n._not(x)); \
+Y_CHECK(n._geq(x));  \
+Y_CHECK(n._leq(x))
 
+
+    std::cerr << "Cmp8" << std::endl;
+    {
+        apn n;
+
+        Y_CHK8(0); Y_CHECK(n._lt(1)); Y_CHECK(n._leq(1));
+        Y_CHK8(1);
+
+
+    }
 
 
 }

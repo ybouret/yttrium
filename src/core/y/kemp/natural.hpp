@@ -35,6 +35,14 @@ namespace Yttrium
 #define Y_Kemp_Natural_Cmp(OP,EXPR) \
 Y_Kemp_Natural_Binary_NoExcept(friend inline bool,OP,return Compare(lhs,rhs) EXPR)
 
+        //______________________________________________________________________
+        //
+        //
+        //! generate comparators with byte
+        //
+        //______________________________________________________________________
+#define Y_Kemp_Natural_CmpByte(OP,RESULT) \
+inline bool OP(const uint8_t u) const noexcept { return compareToByte(u) RESULT; }
 
         //______________________________________________________________________
         //
@@ -146,6 +154,8 @@ Y_Kemp_Natural_Binary_Decl(OP)
             static SignType Compare(const Natural &lhs, const Natural &rhs) noexcept; //!< comparison
             static SignType Compare(const uint64_t lhs, const Natural &rhs) noexcept; //!< comparison
             static SignType Compare(const Natural &lhs, const uint64_t rhs) noexcept; //!< comparison
+            SignType        compareToByte(const uint8_t)              const noexcept; //!< specialized comparison
+
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -155,7 +165,15 @@ Y_Kemp_Natural_Binary_Decl(OP)
             Y_Kemp_Natural_Cmp(operator<=, !=Positive)
             Y_Kemp_Natural_Cmp(operator>,  ==Positive)
             Y_Kemp_Natural_Cmp(operator>=, !=Negative)
+
+            Y_Kemp_Natural_CmpByte(_eq,  == __Zero__)
+            Y_Kemp_Natural_CmpByte(_not, != __Zero__)
+            Y_Kemp_Natural_CmpByte(_lt,  == Negative)
+            Y_Kemp_Natural_CmpByte(_gt,  == Positive)
+            Y_Kemp_Natural_CmpByte(_leq, != Positive)
+            Y_Kemp_Natural_CmpByte(_geq, != Negative)
 #endif
+
 
             //__________________________________________________________________
             //

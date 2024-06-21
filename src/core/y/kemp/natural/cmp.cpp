@@ -20,6 +20,14 @@ namespace Yttrium
         {
             return Element::Compare(*lhs,rhs);
         }
+
+        SignType Natural:: compareToByte(const uint8_t u) const noexcept
+        {
+            assert(0!=code);
+            return code->compareToByte(u);
+        }
+
+        
     }
 
 }

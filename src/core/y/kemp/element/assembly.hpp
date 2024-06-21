@@ -11,6 +11,7 @@
 #include "y/text/hexadecimal.hpp"
 #include "y/calculus/bit-count.hpp"
 #include "y/memory/out-of-reach.hpp"
+#include "y/type/signs.hpp"
 #include <iostream>
 #include <iomanip>
 #include <cstring>
@@ -195,8 +196,21 @@ namespace Yttrium
 
             //! get least significant 64 bits
             inline uint64_t pull64() const noexcept { return Pull64::From(item); }
-            
-            
+
+            //! Compare(this,u)
+            inline SignType compareToByte(const uint8_t u) const noexcept
+            {
+                const T rhs = u;
+                switch(positive)
+                {
+                    case 0: return rhs<=0 ? __Zero__ : Negative;
+                    case 1: return Sign::Of(item[0],rhs);
+                    default: break;
+                }
+                return Positive;
+            }
+
+
             //__________________________________________________________________
             //
             //

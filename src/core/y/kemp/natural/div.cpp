@@ -29,9 +29,9 @@ namespace Yttrium
 
             switch( Element::Compare(N,D) )
             {
-                case Negative: return Natural();
-                case __Zero__: return Natural(1);
-                case Positive: assert(N.bits>=D.bits); break;
+                case Negative: return Natural();               // N < D
+                case __Zero__: return Natural(1);              // N == D
+                case Positive: assert(N.bits>=D.bits); break;  // N > D
             }
 
 
