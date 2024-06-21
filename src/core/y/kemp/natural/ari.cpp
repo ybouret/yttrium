@@ -12,7 +12,7 @@ namespace Yttrium
             Natural b = B;
             if(a<b) a.xch(b);
             assert(a>=b);
-            while(b>0)
+            while(b._gt(0))
             {
                 Natural r = a%b;
                 a.xch(b);
@@ -23,9 +23,9 @@ namespace Yttrium
 
         Natural Natural:: GCD(const Natural &a, const Natural &b)
         {
-            if(a<=0)
+            if(a._leq(0))
             {
-                if(b<=0)
+                if(b._leq(0))
                 {
                     return 1;
                 }
@@ -37,7 +37,7 @@ namespace Yttrium
             else
             {
                 assert(a>0);
-                if(b<=0)
+                if(b._leq(0))
                 {
                     return a;
                 }

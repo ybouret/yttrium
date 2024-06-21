@@ -73,12 +73,11 @@ namespace Yttrium
             assert(lo*den<num);
             assert(num<up*den);
 
-            const Natural one(1);
             while(true)
             {
                 {
                     const Natural del = up-lo;
-                    if(del<=one) return lo;
+                    if(del._leq(1)) return lo;
                 }
 
                 Natural        mid  = (lo+up).shr();
