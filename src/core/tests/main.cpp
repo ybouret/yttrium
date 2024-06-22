@@ -277,6 +277,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(kemp_kar);
     Y_UTEST(kemp_words);
     Y_UTEST(kemp_ortho);
+    Y_UTEST(kemp_rsa);
 
     Y_UTEST(net_init);
     Y_UTEST(net_duration);
