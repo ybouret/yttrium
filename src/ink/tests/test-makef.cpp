@@ -67,7 +67,6 @@ public:
             }
         }
         LightArray<apq> arr = m.asArray();
-        //Apex::Mylar::Simplify(arr);
         Kemp::CommonDenominator::Simplify(arr);
     }
 
