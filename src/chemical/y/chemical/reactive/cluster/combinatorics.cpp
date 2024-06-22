@@ -5,10 +5,9 @@
 #include "y/chemical/reactive/equilibrium/mixed.hpp"
 #include "y/woven/subspaces.hpp"
 #include "y/woven/survey/integer.hpp"
-#include "y/apex/mylar.hpp"
 #include "y/system/exception.hpp"
 #include "y/type/utils.hpp"
-
+#include "y/kemp/ops/narrow.hpp"
 
 
 namespace Yttrium
@@ -112,7 +111,8 @@ namespace Yttrium
             {
                 Matrix<int> NuT(TransposeOf,Nu);
                 Matrix<int> NuTx;
-                Apex::Mylar::Compress(NuTx,NuT);
+                //Apex::Mylar::Compress(NuTx,NuT);
+                Kemp::Narrow::Down(NuTx,NuT);
                 Y_XMLOG(xml,"NuT  = "   << NuT);
                 Y_XMLOG(xml,"NuTx = "  << NuTx);
                 WOVEn::Explore(NuTx, survey, false);

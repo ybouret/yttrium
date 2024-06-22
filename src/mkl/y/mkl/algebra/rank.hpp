@@ -5,7 +5,7 @@
 #define Y_MKL_LAK_LU_Included 1
 
 #include "y/container/matrix.hpp"
-#include "y/apex/rational.hpp"
+#include "y/kemp/rational.hpp"
 
 namespace Yttrium
 {

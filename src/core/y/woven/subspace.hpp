@@ -12,10 +12,10 @@ namespace Yttrium
     namespace WOVEn
     {
 
-        typedef Apex::Ortho::Vector                QVector;  //!< alias
-        typedef Apex::Ortho::Family                QFamily;  //!< alias
-        typedef Apex::Ortho::Metrics               QMetrics; //!< alias
-        typedef Apex::Ortho::Quality               Quality;  //!< alias
+        typedef Orthogonal::Vector                QVector;  //!< alias
+        typedef Orthogonal::Family                QFamily;  //!< alias
+        typedef Orthogonal::Metrics               QMetrics; //!< alias
+        typedef Orthogonal::Quality               Quality;  //!< alias
 
 
 
@@ -110,7 +110,7 @@ namespace Yttrium
             {
                 switch(quality)
                 {
-                    case Apex::Ortho::Fragmental:
+                    case Orthogonal::Fragmental:
                         //------------------------------------------------------
                         // need to test all the staying vectors
                         //------------------------------------------------------
@@ -123,7 +123,7 @@ namespace Yttrium
                         }
                         break;
 
-                    case Apex::Ortho::Hyperplane: {
+                    case Orthogonal::Hyperplane: {
                         //------------------------------------------------------
                         // there is AT MOST ONE new vector
                         //------------------------------------------------------
@@ -142,7 +142,7 @@ namespace Yttrium
 
                     } break;
 
-                    case Apex::Ortho::Generating:
+                    case Orthogonal::Generating:
                         //------------------------------------------------------
                         // base is complete, call fullfill for consistency
                         //------------------------------------------------------

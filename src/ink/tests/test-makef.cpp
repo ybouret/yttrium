@@ -2,7 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/calculus/ipower.hpp"
 #include "y/calculus/isqrt.hpp"
-#include "y/apex/mylar.hpp"
+#include "y/kemp/ops/common-denominator.hpp"
 
 using namespace Yttrium;
 
@@ -67,7 +67,8 @@ public:
             }
         }
         LightArray<apq> arr = m.asArray();
-        Apex::Mylar::Simplify(arr);
+        //Apex::Mylar::Simplify(arr);
+        Kemp::CommonDenominator::Simplify(arr);
     }
 
 

@@ -164,6 +164,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(string_tokenizer);
     Y_UTEST(string_env);
 
+#if 0
     Y_UTEST(apex_archon);
     Y_UTEST(apex_block);
     Y_UTEST(apex_batch);
@@ -177,6 +178,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(apex_mylar);
     Y_UTEST(apex_ortho);
     Y_UTEST(apex_modular);
+#endif
 
     Y_UTEST(ordered_PQ);
     Y_UTEST(ordered_heap);

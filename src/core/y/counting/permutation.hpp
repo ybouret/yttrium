@@ -3,7 +3,7 @@
 #define Y_Counting_Permutation_Included 1
 
 #include "y/counting/schedule.hpp"
-#include "y/apex/natural.hpp"
+#include "y/kemp/natural.hpp"
 
 namespace Yttrium
 {

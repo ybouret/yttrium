@@ -1,5 +1,5 @@
 #include "y/calculus/isqrt.hpp"
-#include "y/apex/natural.hpp"
+#include "y/kemp/natural.hpp"
 #include "y/utest/run.hpp"
 #include "y/stream/libc/output.hpp"
 

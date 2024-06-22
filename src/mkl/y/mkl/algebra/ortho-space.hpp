@@ -5,7 +5,7 @@
 #define Y_MKL_OrthoSpace_Included 1
 
 #include "y/container/matrix.hpp"
-#include "y/apex/integer.hpp"
+#include "y/kemp/integer.hpp"
 
 namespace Yttrium
 {

@@ -86,13 +86,13 @@ namespace Yttrium
             const QVector &   vec = sub->expandFrom( remaining );  // expand sub with this->remainng
             sub->indices += ir;                                    // update indices
             sub->staying -= ir;                                    // update staying
-            if(survey) survey->verify(vec);                             // take survey if any
+            if(survey) survey->verify(vec);                        // take survey if any
             if(sub->staying.size()<=0) return;                     // it was the final trial
             switch( (Coerce(sub->quality) = sub->getQuality(sub->size)) )
             {
-                case Apex::Ortho::Generating: return; // won't accept any more
-                case Apex::Ortho::Fragmental:
-                case Apex::Ortho::Hyperplane:
+                case Orthogonal::Generating: return; // won't accept any more
+                case Orthogonal::Fragmental:
+                case Orthogonal::Hyperplane:
                     break;
             }
             L.pushTail( sub.yield() );
@@ -101,7 +101,7 @@ namespace Yttrium
         void SubSpace:: fullfill()
         {
             assert(size==dimensions);
-            assert(Apex::Ortho::Generating==quality);
+            assert(Orthogonal::Generating==quality);
             indices |= staying;
             staying.free();
         }

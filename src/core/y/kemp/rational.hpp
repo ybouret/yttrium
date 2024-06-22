@@ -115,6 +115,7 @@ Y_Kemp_Rational_Cmp(OP, int64_t  , Rational&,EXPR)
             Rational();                                              //!< 0/1
             Rational(const Rational &);                              //!< copy
             Rational & operator=(const Rational &);                  //!< assign
+            
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
             Y_Rational_Copy_and_Assign(Integer&)
@@ -181,15 +182,15 @@ Y_Kemp_Rational_Cmp(OP, int64_t  , Rational&,EXPR)
             Y_Kemp_Rational_Operator(-,Sub)
 #endif
 
+            Rational   operator+() const; //!< unary plus
+            void       incr();            //!< +1
+            Rational & operator++();      //!< pre-increment
+            Rational   operator++(int);   //!< post-increment
 
-            void       incr();          //!< +1
-            Rational & operator++();    //!< pre-increment
-            Rational   operator++(int); //!< post-increment
-
-
-            void       decr();          //!< -1
-            Rational & operator--();    //!< pre-decrement
-            Rational   operator--(int); //!< post-decrement
+            Rational  operator-() const; //!< unary minus
+            void       decr();           //!< -1
+            Rational & operator--();     //!< pre-decrement
+            Rational   operator--(int);  //!< post-decrement
 
             //__________________________________________________________________
             //

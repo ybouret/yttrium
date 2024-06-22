@@ -8,7 +8,7 @@
 #include "y/mkl/xreal.hpp"
 #include "y/mkl/complex.hpp"
 #include "y/mkl/v3d.hpp"
-#include "y/apex/rational.hpp"
+#include "y/kemp/rational.hpp"
 #include "y/string.hpp"
 #include "y/container/matrix.hpp"
 

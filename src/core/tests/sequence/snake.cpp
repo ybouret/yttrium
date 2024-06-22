@@ -1,7 +1,7 @@
 #include "y/sequence/snake.hpp"
 #include "y/utest/run.hpp"
 #include "y/container/iterator/display-all.hpp"
-#include "y/apex/rational.hpp"
+#include "y/kemp/rational.hpp"
 #include "y/random/bits.hpp"
 
 using namespace Yttrium;

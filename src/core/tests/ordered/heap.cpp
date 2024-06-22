@@ -5,7 +5,7 @@
 
 #include "y/utest/run.hpp"
 #include "y/random/shuffle.hpp"
-#include "y/apex/natural.hpp"
+#include "y/kemp/natural.hpp"
 #include "y/comparison.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/memory/allocator/dyadic.hpp"

@@ -4,7 +4,7 @@
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/memory/allocator/global.hpp"
 #include "y/memory/allocator/pooled.hpp"
-#include "y/apex/natural.hpp"
+#include "y/kemp/natural.hpp"
 
 using namespace Yttrium;
 

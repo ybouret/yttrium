@@ -4,15 +4,15 @@
 #ifndef Y_WOVEn_Types_Included
 #define Y_WOVEn_Types_Included 1
 
-#include "y/apex/ortho/family.hpp"
+#include "y/orthogonal/family.hpp"
 
 namespace Yttrium
 {
     namespace WOVEn
     {
 
-        typedef Apex::Ortho::Vector                QVector; //!< alias
-        typedef Apex::Ortho::Family                QFamily; //!< alias
+        typedef  Orthogonal::Vector                QVector; //!< alias
+        typedef  Orthogonal::Family                QFamily; //!< alias
         
     }
 

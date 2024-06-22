@@ -2,7 +2,6 @@
 #include "y/container/matrix/ops.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/utest/run.hpp"
-#include "y/apex/natural.hpp"
 #include "y/container/iterator/display-all.hpp"
 #include "../main.hpp"
 #include <cstring>

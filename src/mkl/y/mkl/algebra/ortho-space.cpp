@@ -1,7 +1,7 @@
 
 #include "y/mkl/algebra/ortho-space.hpp"
 #include "y/mkl/algebra/lu.hpp"
-#include "y/apex/mylar.hpp"
+#include "y/kemp/ops/narrow.hpp"
 #include "y/container/cxx/array.hpp"
 #include "y/mkl/tao/seq/level3.hpp"
 
@@ -64,11 +64,11 @@ namespace Yttrium
             }
 
             // make univocal
-            Apex::Mylar::MakeUnivocal(QQ);
+            Kemp::Univocal::MakeMatrix(QQ);
 
             // avoid trivial repetitions
-            Apex::Mylar::Compress(Q,QQ);
-
+            Kemp::Narrow::Down(Q,QQ);
+            
 
             return true;
         }

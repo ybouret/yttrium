@@ -12,7 +12,7 @@ ptr
 io
 fft
 string
-apex
+#apex
 kemp
 tow
 ordered
@@ -227,7 +227,7 @@ add_test(strings          test-core strings)
 add_test(string:tokenizer test-core string_tokenizer)
 add_test(string:env       test-core string_env)
 
-
+if(FALSE)
 #apex
 add_test(apex:archon    test-core apex_archon)
 add_test(apex:block     test-core apex_block)
@@ -241,6 +241,7 @@ add_test(apex:conv      test-core apex_conv)
 add_test(apex:mylar     test-core apex_mylar)
 add_test(apex:ortho     test-core apex_ortho)
 add_test(apex:modular   test-core apex_modular)
+endif()
 
 #ordered
 add_test(ordered:PQ     test-core ordered_PQ)

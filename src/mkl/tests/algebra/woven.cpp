@@ -53,11 +53,11 @@ Y_UTEST(algebra_woven)
 
 
 
-    Apex::Ortho::Family family(Apex::Ortho::Basis,dims-1,survey);
+    Orthogonal::Family family(Orthogonal::Basis,dims-1,survey);
 
     {
         size_t indx=0;
-        for(const Apex::Ortho::Vector *v=family.head;v;v=v->next)
+        for(const Orthogonal::Vector *v=family.head;v;v=v->next)
         {
             std::cerr << "V" << ++indx  << " = " << *v << std::endl;
         }

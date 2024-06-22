@@ -55,6 +55,9 @@ static Integer FUNC(const Natural &lhs, const Integer &rhs); \
 static Integer FUNC(const Integer &lhs, const int64_t  rhs); \
 static Integer FUNC(const int64_t  lhs, const Integer &rhs)
 
+
+        class Rational;
+
         //______________________________________________________________________
         //
         //
@@ -92,6 +95,7 @@ static Integer FUNC(const int64_t  lhs, const Integer &rhs)
             Integer & operator=(const Integer &z);    //!< assign
             Integer & operator=(const int64_t  z);    //!< assign
             Integer & operator=(const Natural  &);    //!< assign
+            Integer & operator=(const Rational &);    //!< iff 1 denominator
             Y_OSTREAM_PROTO(Integer);                 //!< display
 
             //__________________________________________________________________
@@ -148,7 +152,6 @@ static Integer FUNC(const int64_t  lhs, const Integer &rhs)
             Y_Kemp_Integer_Operator(*,Mul)
             Y_Kemp_Integer_Operator(/,Div)
 #endif
-
             Integer   operator+() const; //!< unary plus
             Integer & operator++();      //!< pre-increment
             Integer   operator++(int);   //!< post-increment

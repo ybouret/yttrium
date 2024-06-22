@@ -1,4 +1,5 @@
 #include "y/kemp/rational.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -95,6 +96,29 @@ namespace Yttrium
         }
 
       
+        Rational Rational:: operator+() const
+        {
+            return *this;
+        }
+
+        Rational Rational:: operator-() const
+        {
+            Rational q = *this;
+            q.neg();
+            return q;
+        }
+
+        Integer & Integer:: operator=(const Rational &q)
+        {
+
+            if( q.denom._not(1) ) throw Specific::Exception(CallSign,"assign a non integer rational");
+
+            Integer temp = q.numer;
+            xch(temp);
+
+            return *this;
+
+        }
 
     }
 
