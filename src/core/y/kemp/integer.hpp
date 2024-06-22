@@ -269,7 +269,8 @@ static Integer FUNC(const int64_t  lhs, const Integer &rhs)
 
     }
 
-    typedef Kemp::Integer apz;
+
+    typedef Kemp::Integer apz; //!< alias
 
 }
 

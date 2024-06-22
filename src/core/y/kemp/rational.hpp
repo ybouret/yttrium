@@ -228,7 +228,7 @@ Y_Kemp_Rational_Cmp(OP, int64_t  , Rational&,EXPR)
 
     }
 
-    typedef Kemp::Rational apq;
+    typedef Kemp::Rational apq; //!< alias
 
 }
 
