@@ -258,6 +258,19 @@ Y_CHECK(n._leq(x))
         Y_CHK8(1);
     }
     
+    std::cerr << "<Mul/Div/Mod>" << std::endl;
+    for(size_t i=0;i<128;++i)
+    {
+        const apn den(80,ran);
+        const apn rem(ran.in<size_t>(0,den.bits()-1),ran);
+        const apn q(90,ran);
+        const apn num = rem + q * den;
+        std::cerr << num << "=" << q << "*" << den << "+" << rem << std::endl;
+        const apn ratio = num/den; Y_ASSERT(q==ratio);
+        const apn modul = num%den; Y_ASSERT(rem==modul);
+    }
+
+
 
 
 }
