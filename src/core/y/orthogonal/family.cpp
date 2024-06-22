@@ -98,7 +98,7 @@ namespace Yttrium
             }
             else
             {
-                Matrix<int> none;
+                const Matrix<int> none;
                 os << none;
             }
             return os;
