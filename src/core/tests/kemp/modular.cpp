@@ -10,13 +10,13 @@ Y_UTEST(kemp_modular)
     const apn q = 11;
 #endif
 
-    const apn p = 67;
-    const apn q = 107;
-    const apn n = p * q;
+    const apn p   = 67;
+    const apn q   = 107;
+    const apn n   = p * q;
     const apn phi = (p-1)*(q-1);
     const apn e   = 7;
     const apn d   = Kemp::Modular::Inv(e,phi);
-
+    
     std::cerr << "p   = " << std::setw(20) << p   << std::endl;
     std::cerr << "q   = " << std::setw(20) << q   << std::endl;
     std::cerr << "n   = " << std::setw(20) << n   << std::endl;
