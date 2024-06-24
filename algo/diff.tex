@@ -95,45 +95,40 @@ In a constant $D_i$ bulk:
 
 \subsection{Three Bodies Problem}
 
-We start from:
+We start from $\langle \vec Z \vert \vec C \rangle = 0$ and the physics:
 \begin{equation}
-	\langle \vec Z \vert \vec C \rangle = 0, \;\; \partial_t \vec{C} = \vec F (\vec C   )
+	\partial_t \vec C = \vec F \left(\vec C \right)
+\end{equation}
+
+The kinetic charge excess will modify each term with $\alpha_i$ so that:
+\begin{equation}
+		\langle \vec Z \vert \vec \alpha \otimes \vec F \rangle = 0
+\end{equation}
+We want to minimize the distance of $\vec \alpha $ to the weights $\vec \omega$.
+
+\begin{equation}
+	\mathcal L = \dfrac{1}{2} \left( \vec \alpha - \vec\omega\right)^2 - \lambda \langle \vec Z \vert \vec \alpha \otimes \vec F \rangle
+\end{equation} 
+
+\begin{equation}
+	\partial_{\vec \alpha} \mathcal L = \vec{\alpha} - \vec{\omega} - \lambda \vec Z \otimes \vec F  \implies \vec \alpha = \vec \omega + \lambda \vec Z \otimes \vec F
+\end{equation}
+
+
+\begin{equation}
+\langle \vec Z \vert \vec \alpha \otimes \vec F \rangle = 0 =  \langle \vec Z \otimes \vec F \vert \vec \alpha \rangle \implies 
+0 = \langle \vec Z \otimes \vec F \vert \vec \omega \rangle + \lambda \left[\vec Z \otimes \vec F\right]^2
 \end{equation}
 
 \begin{equation}
-	\partial_t \rho = \langle \vec Z \vert \partial_t \vec C \rangle = \langle \vec Z \vert \vec F (\vec C  ) \rangle
-\end{equation}
-
-The inner reduced potential extends according to:
-\begin{equation}
-	\Delta \partial_t \zeta = - \kappa_\rho \partial_t \rho
-\end{equation}
-and a global electric field is:
-\begin{equation}
-	\partial_t \vec \eta = - \vec\nabla \partial_t \zeta
+	\lambda = - \dfrac{\langle \vec Z \otimes \vec F \vert \vec \omega \rangle}{\left[\vec Z \otimes \vec F\right]^2}
 \end{equation}
 
 \begin{equation}
-	\vec \phi_i (t) = z_i D_i C_i(t) \vec \eta(t) =  z_i D_i C_i(t) \int_0^t \partial_t \vec \eta(u) \, \mathrm{d}u
+	\vec \alpha = \dfrac{1}{\left[\vec Z \otimes \vec F\right]^2}\left( \vert \vec Z \otimes \vec F \rangle \langle \vec Z \otimes \vec F \vert \right) \vec\omega
 \end{equation}
 
-\begin{equation}
-	\partial_t C_i' = -\mathrm{div} \vec \phi_i
-\end{equation}
 
-\begin{equation}
-\begin{array}{rcl}
-	\partial_t C_i' & = & -z_i D_i \left[ C_i(t) \mathrm{div} \vec\eta(t) + \vec\eta(t) \cdot \vec\nabla C_i(t)\right]\\
-	 & = & -z_i D_i\left[ C_i(t) \kappa_\rho \rho(t) + \vec\eta(t) \cdot \vec\nabla C_i(t) \right]\\
-\end{array}
-\end{equation}
-
-We must achieve:
-\begin{equation}
-	\partial_t \rho + \langle \vec Z \vert \partial_t \vec C' \rangle = 0
-\end{equation}
-
- 
- 
+  
 \end{document}
  
