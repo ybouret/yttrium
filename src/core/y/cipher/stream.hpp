@@ -19,6 +19,7 @@ namespace Yttrium
     public:
         virtual ~StreamCipher() noexcept;
 
+        virtual void reset() noexcept = 0;
 
 
     private:

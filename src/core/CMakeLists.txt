@@ -41,6 +41,7 @@ text
 text/ascii
 text/base64
 cipher
+cipher/stream
 data
 data/list
 data/pool
