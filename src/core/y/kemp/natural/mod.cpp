@@ -2,6 +2,7 @@
 #include "y/kemp/natural.hpp"
 #include "y/system/exception.hpp"
 #include "y/kemp/element.hpp"
+#include <cerrno>
 
 namespace Yttrium
 {
