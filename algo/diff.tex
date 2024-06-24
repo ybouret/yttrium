@@ -125,9 +125,11 @@ We want to minimize the distance of $\vec \alpha $ to the weights $\vec \omega$.
 \end{equation}
 
 \begin{equation}
-	\vec \alpha = \dfrac{1}{\left[\vec Z \otimes \vec F\right]^2}\left( \vert \vec Z \otimes \vec F \rangle \langle \vec Z \otimes \vec F \vert \right) \vec\omega
+	\vec \alpha = \left( \bm{I} - \dfrac{1}{\left[\vec Z \otimes \vec F\right]^2}\left( \vert \vec Z \otimes \vec F \rangle \langle \vec Z \otimes \vec F \vert \right) 
+	\right) \vec\omega
 \end{equation}
 
+For any $\omega$, this expression ensure a local charge conservation.
 
   
 \end{document}
