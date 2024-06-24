@@ -5,11 +5,13 @@
 #define Y_StreamCipher_Included 1
 
 #include "y/cipher/interface.hpp"
+#include "y/stream/input.hpp"
+#include "y/stream/output.hpp"
 
 namespace Yttrium
 {
 
-    class StreamCipher : public Cipher
+    class StreamCipher : public Cipher, public InputStream, public OutputStream
     {
     protected:
         explicit StreamCipher() noexcept;
