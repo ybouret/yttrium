@@ -3,6 +3,7 @@ memory
 type
 data
 text
+cipher
 calculus
 concurrent
 random
@@ -346,4 +347,7 @@ add_test(kemp:rsa      test-core kemp_rsa)
 #net
 add_test(net:init      test-core net_init)
 add_test(net:duration  test-core net_duration)
+
+#cipher
+add_test(cipher:base64 test-core cipher_base64)
 

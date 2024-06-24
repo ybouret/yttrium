@@ -40,6 +40,7 @@ stream/char
 text
 text/ascii
 text/base64
+cipher
 data
 data/list
 data/pool
