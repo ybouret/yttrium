@@ -11,15 +11,36 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Stream Cipher: write input data, query output transformed
+    //
+    //
+    //__________________________________________________________________________
     class StreamCipher : public Cipher, public InputStream, public OutputStream
     {
+        
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
     protected:
-        explicit StreamCipher() noexcept;
+        explicit StreamCipher() noexcept; //!< setup
 
     public:
-        virtual ~StreamCipher() noexcept;
+        virtual ~StreamCipher() noexcept; //!< cleanup
 
-        virtual void reset() noexcept = 0;
+        //______________________________________________________________________
+        //
+        //
+        // Interface
+        //
+        //______________________________________________________________________
+        virtual void reset() noexcept = 0; //!< reset all internal state
 
 
     private:
