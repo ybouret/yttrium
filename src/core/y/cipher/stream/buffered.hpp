@@ -22,7 +22,7 @@ namespace Yttrium
         virtual bool query(char &C);
         virtual void store(const char C);
         virtual bool ready() noexcept;
-
+        size_t       onTap() const noexcept;
 
 
 

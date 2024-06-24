@@ -36,4 +36,10 @@ namespace Yttrium
         }
     }
 
+    size_t BufferedStreamCipher:: onTap() const noexcept
+    {
+        return buffer.size;
+    }
+
+
 }
