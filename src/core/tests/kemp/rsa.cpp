@@ -92,8 +92,9 @@ Y_UTEST(kemp_rsa)
     AutoPtr<RSA::PublicKey>  pub = RSA::PublicKey::Create(p,q,e);
     AutoPtr<RSA::PrivateKey> prv = RSA::PrivateKey::Create(p,q,e);
 
+    for(size_t i=0;i<10;++i)
     {
-        const apn M = apn(pub->n.bits(),ran) % pub->n;
+        const apn M = pub->n.lt(ran);
         const apn C = pub->pub(M);
         const apn D = prv->prv(C);
         std::cerr << M << "->" << C << "->" << D << std::endl;

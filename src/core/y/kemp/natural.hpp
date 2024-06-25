@@ -144,6 +144,8 @@ Y_Kemp_Natural_Binary_Decl(OP)
             uint8_t    operator[](const size_t)  const noexcept; //!< access in 0..size()-1
             bool       isOdd()                   const noexcept; //!< check bit parity
             bool       isEven()                  const noexcept; //!< check bit parity
+            Natural    leq(Random::Bits &)                const; //!< in [0:this]
+            Natural    lt(Random::Bits &)                 const; //!< in [0:this-1]
 
             //__________________________________________________________________
             //

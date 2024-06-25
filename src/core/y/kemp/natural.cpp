@@ -139,16 +139,33 @@ namespace Yttrium
         bool Natural:: isOdd() const noexcept
         {
             assert(0!=code);
-            return 0 != (1&code->u64());
+            return 0 != (1&code->u8());
         }
 
         bool Natural:: isEven() const noexcept
         {
             assert(0!=code);
-            return 0 == (1&code->u64());
+            return 0 == (1&code->u8());
+        }
+
+
+        Natural Natural:: leq(Random::Bits &ran) const
+        {
+            const size_t nb = ran.in<size_t>(0,bits());
+            Natural      n(nb,ran);
+            while(n>*this) n.decr();
+            return n;
+        }
+
+        Natural Natural:: lt(Random::Bits &ran) const
+        {
+            if(bits()<=0) throw Specific::Exception(CallSign, "not lower than 0");
+            const size_t nb = ran.in<size_t>(0,bits());
+            Natural      n(nb,ran);
+            while(n>=*this) n.decr();
+            return n;
         }
     }
-
 
 }
 
