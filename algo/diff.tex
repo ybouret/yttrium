@@ -93,8 +93,9 @@ In a constant $D_i$ bulk:
 \end{array}
 \end{equation}
 
-\subsection{Three Bodies Problem}
+\section{Electroneutrality}
 
+\subsection{Acting on $\partial_t \vec C$}
 We start from $\langle \vec Z \vert \vec C \rangle = 0$ and the physics:
 \begin{equation}
 	\partial_t \vec C = \vec F \left(\vec C \right)
@@ -131,6 +132,25 @@ We want to minimize the distance of $\vec \alpha $ to the weights $\vec \omega$.
 
 For any $\vec\omega$, this expression ensure a local charge conservation.
 
+\subsection{Acting on $\vec J_i$}
+
+\begin{equation}
+	\partial_t C_i = -\mathrm{div}\left( \beta_i \vec J_i \right) =  
+	- \left( \beta_i \Phi_i + \underbrace{\vec J_i \cdot \vec \nabla \beta_i}_{\Psi_i} \right), \;\; \Phi_i = \mathrm{div} \vec J_i
+\end{equation}
+  
+\begin{equation}
+	\langle \vec Z \vert \partial_t \vec C \rangle = 0 \iff \langle \vec \beta \vert \vec Z \otimes \vec \Phi \rangle + \langle \vec Z \vert \vec \Psi \rangle = 0
+\end{equation}
+  
+ \begin{equation}
+	\mathcal L = \dfrac{1}{2} \left( \vec \beta - \vec\omega\right)^2 
+	- \lambda \left(\langle \vec \beta \vert \vec Z \otimes \vec \Phi \rangle + \langle \vec Z \vert \vec \Psi \rangle \right)
+\end{equation} 
+
+\begin{equation}
+	\vec \beta = \vec \omega + \lambda \vert \vec Z \otimes \vec \Phi \rangle 
+\end{equation}  
   
 \end{document}
  
