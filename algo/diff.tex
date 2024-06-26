@@ -151,25 +151,18 @@ We want to minimize the distance of $\vec \alpha $ to the weights $\vec \omega$.
 
 For any $\vec\omega$, this expression ensure a local charge conservation.
 
-\subsection{Acting on $\vec J_i$}
+\subsection{Strong condition on $\vec J_i$}
+
+The effect of the reaction field is to compensate exactly for the net electric displacement:
 
 \begin{equation}
-	\partial_t C_i = -\mathrm{div}\left( \beta_i \vec J_i \right) =  
-	- \left( \beta_i \Phi_i + \underbrace{\vec J_i \cdot \vec \nabla \beta_i}_{\Psi_i} \right), \;\; \Phi_i = \mathrm{div} \vec J_i
+	\vec \Phi_i = z_i D_i C_i \vec\eta
 \end{equation}
-  
+	
 \begin{equation}
-	\langle \vec Z \vert \partial_t \vec C \rangle = 0 \iff \langle \vec \beta \vert \vec Z \otimes \vec \Phi \rangle + \langle \vec Z \vert \vec \Psi \rangle = 0
+	\sum_i z_i(\vec J_i + \vec \Phi_i) = \vec 0 = \sum_i z_i \vec J_i + \left(\sum_i z_i^2 D_i C_i\right) \vec\eta
 \end{equation}
-  
- \begin{equation}
-	\mathcal L = \dfrac{1}{2} \left( \vec \beta - \vec\omega\right)^2 
-	- \lambda \left(\langle \vec \beta \vert \vec Z \otimes \vec \Phi \rangle + \langle \vec Z \vert \vec \Psi \rangle \right)
-\end{equation} 
 
-\begin{equation}
-	\vec \beta = \vec \omega + \lambda \vert \vec Z \otimes \vec \Phi \rangle 
-\end{equation}  
   
 \end{document}
  
