@@ -1,7 +1,6 @@
 #include "y/cipher/stream/base64/encoder.hpp"
-
+#include "y/string.hpp"
 #include "y/utest/run.hpp"
-#include <cstring>
 
 
 using namespace Yttrium;
@@ -11,8 +10,8 @@ using namespace Yttrium;
 Y_UTEST(cipher_base64)
 {
     Base64::Encoder b64(true);
-
-    b64 << "Yann";
+    const char * const msg = "Yann";
+    b64 << msg;
     b64.flush();
 
     std::cerr << b64.onTap() << std::endl;
@@ -23,7 +22,18 @@ Y_UTEST(cipher_base64)
         std::cerr << C;
     }
     std::cerr << std::endl;
+    
 
+    b64.reset();
+    b64(std::cerr,msg,true);
+    std::cerr << std::endl;
+
+    {
+        const String s = msg;
+        b64.reset();
+        b64(std::cerr,s,true);
+        std::cerr << std::endl;
+    }
 
 }
 Y_UDONE()
