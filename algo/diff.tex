@@ -161,7 +161,7 @@ We want $\delta \vec C(\vec r)$ such that
 \end{equation}
 
 \begin{equation}
-	\Delta \partial_t \zeta = -\kappa_\rho \partial_t \rho
+	\Delta \partial_t \zeta = -\kappa_\rho \partial_t \rho = -\kappa_\rho ( \partial_t \rho_F + \partial_t \rho_\Psi)
 \end{equation}
 
 \begin{equation}
@@ -177,8 +177,27 @@ We want $\delta \vec C(\vec r)$ such that
 \end{equation}
 
 \begin{equation}
-	\partial_t \rho_\Psi = \sum_i z_i \Psi_i
+\begin{array}{rcl}
+	\partial_t \rho_\Psi & = & \sum_i z_i \Psi_i \\
+	& = &  - \sum_i z_i^2 D_i \mathrm{div}\;(C_i \vec \eta_\Psi)\\
+	& = &  - \partial_t \rho_F\\
+	& = &  - \langle \vec Z \vert \vec F \rangle \\
+\end{array}
 \end{equation}
+
+\begin{equation}
+\begin{array}{rcl}
+\partial_t \rho_F & = & - \sum_i z_i^2 D_i \mathrm{div}\;(C_i \vec \eta_F)\\
+ & = & - \sum_i z_i^2 D_i \left[ C_i \mathrm{div}\;  \vec \eta_F + \vec \eta_F \cdot \vec \nabla C_i \right]\\
+ \end{array}
+\end{equation}
+
+\begin{equation}
+\partial_t \rho_F  = - \kappa_\rho \left[\sum_i z_i^2 D_i C_i\right] \rho_F - 
+\left[\sum_i z_i^2 D_i \vec \nabla C_i \right] \cdot \vec \eta_F
+\end{equation}
+
+
 
 \end{document}
 
