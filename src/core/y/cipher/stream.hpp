@@ -43,15 +43,15 @@ namespace Yttrium
         //______________________________________________________________________
         virtual void reset() noexcept = 0; //!< reset all internal state
 
+        //! send all internal chars to output via operator<<
+        template <typename OUTPUT> inline
+        void sendTo(OUTPUT &output) { char C=0; while(query(C)) output << C; }
 
         template <typename OUTPUT> inline
-        void sendTo(OUTPUT &output) {
-            char C = 0;
-            while(query(C)) output << C;
-        }
+        void flushIn(OUTPUT &output) { flush(); sendTo(output); }
 
 
-
+        //! process msg[len] and send to output, flushing if requested
         template <typename OUTPUT> inline
         void operator()(OUTPUT &output, const char * msg,size_t len, const bool wouldFlush)
         {
@@ -60,9 +60,10 @@ namespace Yttrium
                 target << *(msg++);
                 sendTo(output);
             }
-            if(wouldFlush) { flush(); sendTo(output); }
+            if(wouldFlush) flushIn(output);
         }
 
+        //! process binary input, flushing if requested
         template <typename OUTPUT> inline
         void operator()(OUTPUT &output, const Memory::ReadOnlyBuffer &input, const bool wouldFlush)
         {
@@ -71,6 +72,7 @@ namespace Yttrium
         }
 
 
+        //! process text, flushing if requested
         template <typename OUTPUT> inline
         void operator()(OUTPUT &output, const char * const msg, const bool wouldFlush)
         {
@@ -81,6 +83,19 @@ namespace Yttrium
                 sc(output, msg, 0, wouldFlush);
         }
 
+        //! process all input, flushing after EOF if requested
+        template <typename OUTPUT> inline
+        void operator()(OUTPUT &output, InputStream &input, bool wouldFlush)
+        {
+            OutputStream &target = *this;
+            char          C      = 0;
+            while(input.query(C))
+            {
+                target << C;
+                sendTo(output);
+            }
+            if(wouldFlush) flushIn(output);
+        }
 
 
     private:
