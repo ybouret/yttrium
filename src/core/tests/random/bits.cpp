@@ -5,10 +5,46 @@
 #include "y/type/utils.hpp"
 
 #include "y/utest/run.hpp"
+#include "y/text/hexadecimal.hpp"
 
 #include <cmath>
 
 using namespace Yttrium;
+
+namespace
+{
+    typedef uint32_t  u4;
+    typedef struct ranctx { u4 a; u4 b; u4 c; u4 d; } ranctx;
+
+#define rot(x,k) (((x)<<(k))|((x)>>(32-(k))))
+    u4 ranval2( ranctx *x ) {
+        u4 e = x->a - rot(x->b, 27);
+        x->a = x->b ^ rot(x->c, 17);
+        x->b = x->c + x->d;
+        x->c = x->d + e;
+        x->d = e + x->a;
+        return x->d;
+    }
+
+    u4 ranval3( ranctx *x ) {
+        u4 e = x->a - rot(x->b, 23);
+        x->a = x->b ^ rot(x->c, 16);
+        x->b = x->c + rot(x->d, 11);
+        x->c = x->d + e;
+        x->d = e + x->a;
+        return x->d;
+    }
+
+
+    void raninit( ranctx *x, u4 seed ) {
+        u4 i;
+        x->a = 0xf1ea5eed, x->b = x->c = x->d = seed;
+        for (i=0; i<20; ++i) {
+            (void)ranval2(x);
+        }
+    }
+}
+
 
 template <typename T>
 static inline void TestBits( Random::Bits &ran )
@@ -43,8 +79,9 @@ Y_UTEST(random_bits)
 
     Y_SIZEOF(Random::Bits);
 
+
     Random::Rand       ran1;
-    Random::ParkMiller ran2( SystemSeed::Get() );
+    Random::ParkMiller ran2;
 
     for(size_t i=0;i<10;++i)
     {
@@ -86,7 +123,16 @@ Y_UTEST(random_bits)
         }
     }
 
-    
+
+    ranctx ctx;
+    raninit(&ctx, SystemSeed::Get());
+
+    for(size_t i=0;i<10;++i)
+    {
+        std::cerr << Hexadecimal( ranval2(&ctx) ) << " / " << Hexadecimal( ranval3(&ctx) ) << std::endl;
+
+    }
+
 
 
 }
