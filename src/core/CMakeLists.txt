@@ -129,6 +129,9 @@ color/rgb
 net
 )
 
+add_executable(isaac_rand y/random/isaac/rand.c y/random/isaac/randtest.c)
+#set(ISAAC_RAND_OUT ${CMAKE_CURRENT_BINARY_DIR}/isaac.txt)
+
 source_group(concurrent FILES ${quark})
 add_subdirectory(tests)
 Y_Regression(core)
