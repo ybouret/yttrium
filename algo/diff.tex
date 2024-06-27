@@ -95,23 +95,93 @@ In a constant $D_i$ bulk:
 
 \section{Electroneutrality}
 
-\subsection{Physics}
+\subsection{Full Problem}
 
+Let us assume that we start from $\langle \vec Z \vert \vec V \rangle = 0$.
 \begin{equation}
-	\partial_t \vec C = \vec F + \vec \Psi
+	\partial_t \vec C = \vec F ( \vec C )
+\end{equation}
+Then during $\delta t$ we predict:
+\begin{equation}
+	\vec C (\vec r, t+\delta t) = \vec C ' (\vec r)
+\end{equation}
+
+On a fast scale, the internal charge separation.
+We want $\delta \vec C(\vec r)$ such that
+\begin{equation}
+	\langle \vec Z \vert \vec C' (\vec r) + \delta \vec C(\vec r) \rangle = 0
 \end{equation}
 
 \begin{equation}
-	\Delta \partial_t \zeta = -\kappa_\rho \partial_t \rho = \langle \vec Z \vert  \vec F \rangle + \langle \vec Z \vert  \vec \Psi \rangle
-\end{equation}	
-
-\begin{equation}
-	 \partial_t \vec \eta = - \vec \nabla \partial_t \zeta
+	\rho(\vec r,\tau) = \langle \vec Z \vert \vec C' (\vec r) + \delta \vec C(\vec r,\tau) \rangle
 \end{equation}
 
 \begin{equation}
-	\vec \phi_i = z_i D_i C_i \vec \eta(t) = z_i D_i (C_i + F_i \times t + \int \Psi_i dt) \vec \eta (t)
+	\Delta \zeta(\vec r, \tau) = - \kappa_\rho \rho(\vec r,\tau)
 \end{equation}
+
+\begin{equation}
+	\vec \eta(\vec r, \tau) = - \vec \nabla \zeta(\vec r,\tau)
+\end{equation}
+
+\begin{equation}
+	\vec \Phi_i(\vec r,\tau) = z_i D_i \left(   C'_i (\vec r) + \delta  C_i(\vec r,\tau) \right) \vec \eta(\vec r, \tau)
+\end{equation}
+
+\begin{equation}
+	\partial_\tau \delta   C_i(\vec r, \tau) = - \mathrm{div} \; \vec \Phi_i (\vec r,\tau)
+\end{equation}
+
+
+\begin{equation}
+	\partial_\tau \delta   C_i(\vec r, \tau) 
+	= - z_i D_i 
+	\left[
+	\left( C'_i (\vec r) + \delta  C_i(\vec r,\tau) \right) \kappa_\rho \rho(\vec r,\tau)
+	+ \vec \eta(\vec r,\tau) \cdot \vec \nabla \left( \ldots \right)
+	\right]
+\end{equation}
+
+\begin{equation}
+\begin{array}{rcl}
+	\partial_\tau   \rho(\vec r, \tau) &
+	= & - \kappa_\rho \left[ \sum_i z_i^2 D_i \left( C'_i (\vec r) + \delta  C_i(\vec r,\tau) \right) \right]   \rho(\vec r,\tau) \\
+	 & & - \vec \eta(\vec r,\tau) \cdot \left[\sum_i z_i^2 D_i \vec\nabla \left( C'_i (\vec r) + \delta  C_i(\vec r,\tau) \right) \right]\\
+\end{array}
+\end{equation}
+
+\subsection{Coupled Approach}
+
+\begin{equation}
+	\partial_t \vec C = \vec F ( \vec C ) + \vec \Psi
+\end{equation}
+
+\begin{equation}
+	\partial_t \rho = \langle \vec Z \vert \vec \partial_t \vec C \rangle = \partial_t \rho_F + \partial_t \rho_\Psi
+\end{equation}
+
+\begin{equation}
+	\Delta \partial_t \zeta = -\kappa_\rho \partial_t \rho
+\end{equation}
+
+\begin{equation}
+	\partial_t \vec \eta = - \vec\nabla \partial_t \zeta = \partial_t \vec\eta_F + \partial_t \vec\eta_\Psi
+\end{equation}
+
+\begin{equation}
+	\vec \Phi_i = z_i D_i C_i \vec\eta_\Psi
+\end{equation}
+
+\begin{equation}
+	\Psi_i = - \mathrm{div}\; \vec \Phi_i 
+\end{equation}
+
+\begin{equation}
+	\partial_t \rho_\Psi = \sum_i z_i \Psi_i
+\end{equation}
+
+\end{document}
+
 
 
 \subsection{Acting on $\partial_t \vec C$}
