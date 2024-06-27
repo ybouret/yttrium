@@ -31,36 +31,41 @@ Y_UTEST(text_base64)
     Base64::Encode::ShowInfo();
 
     char output[8] = { 0 };
-
-    Y_STATIC_ZARR(output);
-    Base64::Encode::_1(output, 'Y', Base64::Encode::Table, false); std::cerr << output << std::endl;
-    Y_STATIC_ZARR(output);
-    Base64::Encode::_1(output, 'Y', Base64::Encode::Table, true); std::cerr << output << std::endl;
-
-    Y_STATIC_ZARR(output);
-    Base64::Encode::_2(output, 'Y', 'b', Base64::Encode::Table, false); std::cerr << output << std::endl;
-    Y_STATIC_ZARR(output);
-    Base64::Encode::_2(output, 'Y', 'b', Base64::Encode::Table, true); std::cerr << output << std::endl;
-
-    Y_STATIC_ZARR(output);
-    Base64::Encode::_3(output, 'Y', 'b', '1', Base64::Encode::Table); std::cerr << output << std::endl;
-
-    std::cerr << "Loop..." << std::endl;
-    unsigned count = 0;
-    for(unsigned i=0;i<256;++i)
+    const char * const tables[2] = { Base64::Encode::Table, Base64::Encode::TableURL };
+    for(size_t t=0;t<2;++t)
     {
+        const char * const table = tables[t];
+
         Y_STATIC_ZARR(output);
-        Base64::Encode::_1(output, char(i), Base64::Encode::Table, false);
-        for(unsigned j=0;j<256;++j)
+        Base64::Encode::_1(output, 'Y', table, false); std::cerr << output << std::endl;
+        Y_STATIC_ZARR(output);
+        Base64::Encode::_1(output, 'Y', table, true); std::cerr << output << std::endl;
+
+        Y_STATIC_ZARR(output);
+        Base64::Encode::_2(output, 'Y', 'b', table, false); std::cerr << output << std::endl;
+        Y_STATIC_ZARR(output);
+        Base64::Encode::_2(output, 'Y', 'b', table, true); std::cerr << output << std::endl;
+
+        Y_STATIC_ZARR(output);
+        Base64::Encode::_3(output, 'Y', 'b', '1', table); std::cerr << output << std::endl;
+
+        std::cerr << "Loop..." << std::endl;
+        unsigned count = 0;
+        for(unsigned i=0;i<256;++i)
         {
-            Base64::Encode::_2(output, char(i), char(j), Base64::Encode::Table, false);
-            for(unsigned k=0;k<256;++k,++count)
+            Y_STATIC_ZARR(output);
+            Base64::Encode::_1(output, char(i), table, false);
+            for(unsigned j=0;j<256;++j)
             {
-                Base64::Encode::_3(output, char(i), char(j), char(k), Base64::Encode::Table );
+                Base64::Encode::_2(output, char(i), char(j), table, false);
+                for(unsigned k=0;k<256;++k,++count)
+                {
+                    Base64::Encode::_3(output, char(i), char(j), char(k), table );
+                }
             }
         }
+        std::cerr << "count=" << count << std::endl;
     }
-    std::cerr << "count=" << count << std::endl;
 
     std::cerr << "LengthFor(1)=" << Base64::Encode::LengthFor(1,false) << std::endl;
     std::cerr << "LengthFor(2)=" << Base64::Encode::LengthFor(2,false) << std::endl;
