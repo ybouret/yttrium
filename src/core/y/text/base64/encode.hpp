@@ -23,7 +23,9 @@ namespace Yttrium
         struct Encode
         {
             static const char Table[64];       //!< encoding table
+            static const char TableURL[64];    //!< encoding table, url type
             static const char Padding = '=';   //!< padding char
+
 
             template <size_t> struct OutputLengthFor;
             
@@ -34,19 +36,19 @@ namespace Yttrium
             //
             //! 1 code => 2 chars, 4 chars with padding
             //__________________________________________________________________
-            static size_t _1(char * output, const uint8_t code, const bool pad) noexcept;
+            static size_t _1(char * output, const uint8_t code, const char * const table, const bool pad) noexcept;
 
             //__________________________________________________________________
             //
             //! 2 code2 => 3 chars, 4 chars with padding
             //__________________________________________________________________
-            static size_t _2(char * ouput, const uint8_t c0, const uint8_t c1, const bool pad) noexcept;
+            static size_t _2(char * ouput, const uint8_t c0, const uint8_t c1, const char * const table, const bool pad) noexcept;
 
             //__________________________________________________________________
             //
             //! 3 codes => 4 chars
             //__________________________________________________________________
-            static size_t _3(char *ouput, const uint8_t c0, const uint8_t c1, const uint8_t c2) noexcept;
+            static size_t _3(char *ouput, const uint8_t c0, const uint8_t c1, const uint8_t c2, const char * const table) noexcept;
 
             //__________________________________________________________________
             //
@@ -58,7 +60,7 @@ namespace Yttrium
             //
             //! encode buffer length in output with size >= LengthFor(length,pad)
             //__________________________________________________________________
-            static size_t To(char * output, const void *buffer, const size_t length, const bool pad) noexcept;
+            static size_t To(char * output, const void *buffer, const size_t length, const char * const table, const bool pad) noexcept;
             
 
         };

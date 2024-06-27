@@ -80,7 +80,7 @@ namespace Yttrium
             assert(size<=sizeof(Type));
             assert(BufferSize>Base64::Encode::LengthFor(size,false));
             clear();
-            buflen = Base64::Encode::To(buffer, data, size, false);
+            buflen = Base64::Encode::To(buffer, data, size, Base64::Encode::Table, false);
             assert(strlen(buffer)==buflen);
             Algo::Reverse(buffer,buflen);    // TODO: depends on endianess ?
             assert(strlen(buffer)==buflen);

@@ -20,6 +20,20 @@ namespace Yttrium
             '4', '5', '6', '7', '8', '9', '+', '/'
         };
 
+        const char Encode::TableURL[64] =
+        {
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+            'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+            'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
+            'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
+            'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+            'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+            'w', 'x', 'y', 'z', '0', '1', '2', '3',
+            '4', '5', '6', '7', '8', '9', '-', '_'
+        };
+
+
+
         static const uint8_t maskLo2 = 0x03;
         static const uint8_t maskHi6 = 0xfc;
         static const uint8_t maskLo4 = 0x0f;
@@ -38,13 +52,15 @@ namespace Yttrium
 
         }
 
-        size_t Encode:: _1(char         *output,
-                           const uint8_t code,
-                           const bool    pad) noexcept
+        size_t Encode:: _1(char              *output,
+                           const uint8_t      code,
+                           const char * const table,
+                           const bool         pad) noexcept
         {
             assert(0!=output);
-            const uint8_t b0 = (code&maskHi6) >> 2; assert(b0<64); output[0] = Table[b0];
-            const uint8_t b1 = (code&maskLo2) << 4; assert(b1<64); output[1] = Table[b1];
+            assert(0!=table);
+            const uint8_t b0 = (code&maskHi6) >> 2; assert(b0<64); output[0] = table[b0];
+            const uint8_t b1 = (code&maskLo2) << 4; assert(b1<64); output[1] = table[b1];
             if( pad )
             {
                 output[2] = Padding;
@@ -57,12 +73,15 @@ namespace Yttrium
             }
         }
 
-        size_t Encode:: _2(char * output, const uint8_t c0, const uint8_t c1, const bool pad) noexcept
+        size_t Encode:: _2(char * output, const uint8_t c0, const uint8_t c1, 
+                           const char * const table,
+                           const bool pad) noexcept
         {
             assert(0!=output);
-            const uint8_t b0 = (c0&maskHi6) >> 2;                            assert(b0<64); output[0] = Table[b0];
-            const uint8_t b1 = ((c0&maskLo2) << 4) | ( (c1&maskHi4) >> 4);   assert(b1<64); output[1] = Table[b1];
-            const uint8_t b2 = (c1&maskLo4) << 2;                            assert(b2<64); output[2] = Table[b2];
+            assert(0!=table);
+            const uint8_t b0 = (c0&maskHi6) >> 2;                            assert(b0<64); output[0] = table[b0];
+            const uint8_t b1 = ((c0&maskLo2) << 4) | ( (c1&maskHi4) >> 4);   assert(b1<64); output[1] = table[b1];
+            const uint8_t b2 = (c1&maskLo4) << 2;                            assert(b2<64); output[2] = table[b2];
             if( pad )
             {
                 output[3] = Padding;
@@ -74,13 +93,13 @@ namespace Yttrium
             }
         }
 
-        size_t Encode:: _3(char *output, const uint8_t c0, const uint8_t c1, const uint8_t c2) noexcept
+        size_t Encode:: _3(char *output, const uint8_t c0, const uint8_t c1, const uint8_t c2, const char * const table) noexcept
         {
-
-            const uint8_t b0 = (c0&maskHi6) >> 2;                            assert(b0<64); output[0] = Table[b0];
-            const uint8_t b1 = ((c0&maskLo2) << 4) | ( (c1&maskHi4) >> 4);   assert(b1<64); output[1] = Table[b1];
-            const uint8_t b2 = (c1&maskLo4) << 2   | ( (c2&maskHi2) >> 6);   assert(b2<64); output[2] = Table[b2];
-            const uint8_t b3 = (c2&maskLo6);                                 assert(b3<64); output[3] = Table[b3];
+            assert(0!=table);
+            const uint8_t b0 = (c0&maskHi6) >> 2;                            assert(b0<64); output[0] = table[b0];
+            const uint8_t b1 = ((c0&maskLo2) << 4) | ( (c1&maskHi4) >> 4);   assert(b1<64); output[1] = table[b1];
+            const uint8_t b2 = (c1&maskLo4) << 2   | ( (c2&maskHi2) >> 6);   assert(b2<64); output[2] = table[b2];
+            const uint8_t b3 = (c2&maskLo6);                                 assert(b3<64); output[3] = table[b3];
 
             return 4;
         }
@@ -109,7 +128,11 @@ namespace Yttrium
 
         }
 
-        size_t Encode:: To(char * output, const void *buffer, const size_t length, const bool pad) noexcept
+        size_t Encode:: To(char * output,
+                           const void *buffer,
+                           const size_t length,
+                           const char * const table,
+                           const bool         pad) noexcept
         {
             assert( Good(buffer,length) );
             size_t         res = 0;
@@ -118,7 +141,7 @@ namespace Yttrium
 
             while(todo>=3)
             {
-                res    += _3(output, code[0], code[1], code[2]); //4
+                res    += _3(output, code[0], code[1], code[2], table); //4
                 code   += 3;
                 output += 4;
                 todo   -= 3;
@@ -127,8 +150,8 @@ namespace Yttrium
             assert(todo<3);
             switch(todo)
             {
-                case 1: res += _1(output,code[0],pad);         break;
-                case 2: res += _2(output,code[0],code[1],pad); break;
+                case 1: res += _1(output,code[0],table,pad);         break;
+                case 2: res += _2(output,code[0],code[1],table,pad); break;
                 default: assert(0==todo); break;
             }
 

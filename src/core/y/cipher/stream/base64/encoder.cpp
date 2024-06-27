@@ -15,7 +15,8 @@ namespace Yttrium
         BufferedStreamCipher(),
         doPad(padding),
         state(WaitFor1),
-        input()
+        input(),
+        table( Base64::Encode::Table )
         {}
 
         Encoder:: ~Encoder() noexcept
@@ -34,17 +35,17 @@ namespace Yttrium
 
         void  Encoder:: flush1() {
             char output[4] = {0,0,0,0};
-            send(output,Encode::_1(output, input[0], doPad));
+            send(output,Encode::_1(output, input[0], table, doPad));
         }
 
         void Encoder:: flush2() {
             char output[4] = {0,0,0,0};
-            send(output,Encode::_2(output, input[0], input[1], doPad));
+            send(output,Encode::_2(output, input[0], input[1], table, doPad));
         }
 
         void Encoder:: flush3() {
             char output[4] = {0,0,0,0};
-            send(output,Encode::_3(output, input[0], input[1], input[2]));
+            send(output,Encode::_3(output, input[0], input[1], input[2],table));
         }
 
         void Encoder:: send(const char *p, size_t n)

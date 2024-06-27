@@ -33,30 +33,30 @@ Y_UTEST(text_base64)
     char output[8] = { 0 };
 
     Y_STATIC_ZARR(output);
-    Base64::Encode::_1(output, 'Y', false); std::cerr << output << std::endl;
+    Base64::Encode::_1(output, 'Y', Base64::Encode::Table, false); std::cerr << output << std::endl;
     Y_STATIC_ZARR(output);
-    Base64::Encode::_1(output, 'Y', true); std::cerr << output << std::endl;
+    Base64::Encode::_1(output, 'Y', Base64::Encode::Table, true); std::cerr << output << std::endl;
 
     Y_STATIC_ZARR(output);
-    Base64::Encode::_2(output, 'Y', 'b', false); std::cerr << output << std::endl;
+    Base64::Encode::_2(output, 'Y', 'b', Base64::Encode::Table, false); std::cerr << output << std::endl;
     Y_STATIC_ZARR(output);
-    Base64::Encode::_2(output, 'Y', 'b', true); std::cerr << output << std::endl;
+    Base64::Encode::_2(output, 'Y', 'b', Base64::Encode::Table, true); std::cerr << output << std::endl;
 
     Y_STATIC_ZARR(output);
-    Base64::Encode::_3(output, 'Y', 'b', '1'); std::cerr << output << std::endl;
+    Base64::Encode::_3(output, 'Y', 'b', '1', Base64::Encode::Table); std::cerr << output << std::endl;
 
     std::cerr << "Loop..." << std::endl;
     unsigned count = 0;
     for(unsigned i=0;i<256;++i)
     {
         Y_STATIC_ZARR(output);
-        Base64::Encode::_1(output, char(i), false);
+        Base64::Encode::_1(output, char(i), Base64::Encode::Table, false);
         for(unsigned j=0;j<256;++j)
         {
-            Base64::Encode::_2(output, char(i), char(j), false);
+            Base64::Encode::_2(output, char(i), char(j), Base64::Encode::Table, false);
             for(unsigned k=0;k<256;++k,++count)
             {
-                Base64::Encode::_3(output, char(i), char(j), char(k) );
+                Base64::Encode::_3(output, char(i), char(j), char(k), Base64::Encode::Table );
             }
         }
     }
