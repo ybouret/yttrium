@@ -95,6 +95,35 @@ In a constant $D_i$ bulk:
 
 \section{Electroneutrality}
 
+\subsection{Diffusive Strength Field}
+
+\begin{equation}
+\begin{array}{|l|r|}
+\hline
+ \text{} & D[m^2/s]  \\
+ \hline
+ 	H^+	 &9.31\cdot10^{-9}	\\
+ 	Na^+ &1.33\cdot10^{-9}	 \\
+ 	K^+	 &1.96\cdot10^{-9}	 \\
+ 	HO^- &5.27\cdot10^{-9}	 \\
+ 	Cl^- & 2.03\cdot10^{-9} \\
+ 	Br^- & 2.01\cdot10^{-9} \\
+\hline
+\end{array}
+\end{equation}
+$$
+	K_w = 10^{-14}\; M^2
+$$
+
+\begin{equation}
+	\Omega(\vec r,t) = \sum_i z_i^2 D_i Ci(\vec r, t)
+\end{equation}
+
+In water,
+\begin{equation}
+	\Omega(\vec r,t) \geq [H^+] D_h + D_w K_w/[H^+]  \geq 2 \sqrt{D_h D_w K_w} \approx 1.40 \cdot 10^{-15} \; M.m^2.s^{-1} 
+\end{equation}
+
 \subsection{Full Problem}
 
 Let us assume that we start from $\langle \vec Z \vert \vec V \rangle = 0$.
@@ -197,6 +226,45 @@ We want $\delta \vec C(\vec r)$ such that
 \left[\sum_i z_i^2 D_i \vec \nabla C_i \right] \cdot \vec \eta_F
 \end{equation}
 
+
+\subsection{Finite Volumes}
+
+We take a linear part of length $2L$, and a control volume between $L_-=L/2$ and $L_+=3L/2$,
+with boundary conditions $\vec C_0$ and $\vec C_L$.
+
+\begin{equation}
+	\dfrac{1}{V} \iiint \partial_t C_i(\vec r,t)  \mathrm{d}\, \vec r
+	= - \oint  	\vec{J}_i \mathrm{d}\, \vec S + \dfrac{1}{V} \iiint \sigma_i \mathrm{d}\, \vec r
+\end{equation}
+ 
+\begin{equation}
+	\partial_t C_i = -\dfrac{S}{V}(J_{i+}-J_{i-}) + \sigma_i
+\end{equation}
+
+\begin{equation}
+	J_{i\pm} = \underbrace{\hat J_{i\pm}}_{-D_i \partial_x C_{i\pm}+\ldots} + z_i D_i C_{i\pm} \eta_\pm
+\end{equation}
+
+\begin{equation}
+	\partial_t C_i = -\dfrac{1}{L} \left[ \hat J_{i+}- \hat J_{i-} + z_i D_i (C_{i+} \eta_+ - C_{i-} \eta_-) \right] + \sigma_i
+\end{equation}
+
+\begin{equation}
+	\sum_i z_i C_i = 0 \implies \left(L \sum_i z_i \sigma_i\right) - \sum_i z_i \left[ \hat J_{i+}- \hat J_{i-} \right] = 
+	\Omega_{i+} \eta_+ - \Omega_{i-} \eta_-
+\end{equation}
+We look for the smallest field such that 
+\begin{equation}
+\Omega_{i+} \eta_+ - \Omega_{i-} \eta_- = \langle \vec Z \vert \vec F \rangle
+\end{equation}
+
+\begin{equation}
+\begin{array}{rcl}
+	\eta_- & = & -\dfrac{\Omega_{i-}}{ \Omega_{i-}^2 + \Omega_{i+}^2} \langle \vec Z \vert \vec F \rangle \\
+	\\
+ 	\eta_+ & = &  \dfrac{\Omega_{i+}}{ \Omega_{i-}^2 + \Omega_{i+}^2} \langle \vec Z \vert \vec F \rangle \\
+\end{array}
+\end{equation}
 
 
 \end{document}
