@@ -36,19 +36,30 @@ namespace Yttrium
             //
             //! 1 code => 2 chars, 4 chars with padding
             //__________________________________________________________________
-            static size_t _1(char * output, const uint8_t code, const char * const table, const bool pad) noexcept;
+            static size_t _1(char *             output,
+                             const uint8_t      code,
+                             const char * const table,
+                             const bool         pad) noexcept;
 
             //__________________________________________________________________
             //
             //! 2 code2 => 3 chars, 4 chars with padding
             //__________________________________________________________________
-            static size_t _2(char * ouput, const uint8_t c0, const uint8_t c1, const char * const table, const bool pad) noexcept;
+            static size_t _2(char *             ouput,
+                             const uint8_t      c0,
+                             const uint8_t      c1,
+                             const char * const table,
+                             const bool         pad) noexcept;
 
             //__________________________________________________________________
             //
             //! 3 codes => 4 chars
             //__________________________________________________________________
-            static size_t _3(char *ouput, const uint8_t c0, const uint8_t c1, const uint8_t c2, const char * const table) noexcept;
+            static size_t _3(char *             ouput,
+                             const uint8_t      c0,
+                             const uint8_t      c1,
+                             const uint8_t      c2,
+                             const char * const table) noexcept;
 
             //__________________________________________________________________
             //
