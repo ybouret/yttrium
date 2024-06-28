@@ -60,6 +60,19 @@ namespace Yttrium
             code[0] = (b0<<2) | (b1>>4);
         }
 
+        void Decode:: _2(uint8_t code[], const char c0, const char c1, char c2)
+        {
+            assert(0!=code);
+            const uint8_t b0 = Byte(c0); assert(b0<64);
+            const uint8_t b1 = Byte(c1); assert(b1<64);
+            const uint8_t b2 = Byte(c2); assert(b2<64);
+
+
+            code[0] = (b0<<2) | (b1&maskHi2)>>4;
+        }
+
+
+
     }
 }
 

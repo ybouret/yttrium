@@ -26,6 +26,7 @@ namespace Yttrium
             static const char * const CallSign;
             
             static void _1(uint8_t code[],const char c0, const char c1);
+            static void _2(uint8_t code[],const char c0, const char c1, const char c2);
 
         };
     }
